@@ -1,36 +1,21 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable import/no-extraneous-dependencies */
-
-import dotenv from 'dotenv';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
-import { Request, Response } from 'express';
-import { CronJob } from 'cron';
+import { Response } from 'express';
 import { getCollection } from '../../../database';
 import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
+import { EstoreRequest } from '../../../helpers/types/estore';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
 import { areValidUkefIds, objectIsEmpty } from '../../../helpers';
-import { eStoreTermStoreAndBuyerFolder, eStoreSiteCreationCron } from '../../../cron';
+import { eStoreTermStoreCreationJob, eStoreSiteCreationCron } from '../../../cron';
 import { createExporterSite, siteExists } from './eStoreApi';
 import { getNowAsEpoch } from '../../../helpers/date';
 
-dotenv.config();
-
-const { ESTORE_CRON_MANAGER_SCHEDULE, TZ } = process.env;
-
-export const create = async (req: Request, res: Response) => {
+export const create = async (req: EstoreRequest, res: Response) => {
   try {
+    const { body } = req;
+
     // Ensure `req.body` is valid
-    if (objectIsEmpty(req.body)) {
+    if (objectIsEmpty(body)) {
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid request' });
     }
 
@@ -38,12 +23,10 @@ export const create = async (req: Request, res: Response) => {
     const cronJobLogs = await getCollection('cron-job-logs');
     const tfmDeals = await getCollection('tfm-deals');
 
-    const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = req.body;
+    const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = body;
 
-    let eStoreData = {} as Estore;
-
-    eStoreData = {
-      dealId: new ObjectId(dealId),
+    const eStoreData: Estore = {
+      dealId,
       dealIdentifier,
       facilityIdentifiers,
       siteId,
@@ -82,27 +65,27 @@ export const create = async (req: Request, res: Response) => {
               site: {
                 status: ESTORE_CRON_STATUS.FAILED,
                 response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch,
+                timestamp: getNowAsEpoch(),
               },
               term: {
                 status: ESTORE_CRON_STATUS.FAILED,
                 response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch,
+                timestamp: getNowAsEpoch(),
               },
               buyer: {
                 status: ESTORE_CRON_STATUS.FAILED,
                 response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch,
+                timestamp: getNowAsEpoch(),
               },
               deal: {
                 status: ESTORE_CRON_STATUS.FAILED,
                 response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch,
+                timestamp: getNowAsEpoch(),
               },
               facility: {
                 status: ESTORE_CRON_STATUS.FAILED,
                 response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch,
+                timestamp: getNowAsEpoch(),
               },
             },
           },
@@ -153,7 +136,7 @@ export const create = async (req: Request, res: Response) => {
 
       const created = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED;
       const provisioning = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING;
-      const absent = siteExistsResponse?.data?.status === HttpStatusCode.NotFound;
+      const absent = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.NOT_FOUND;
 
       // Step 3: Site already exists in eStore
       if (created) {
@@ -165,10 +148,11 @@ export const create = async (req: Request, res: Response) => {
           { _id: { $eq: new ObjectId(_id) } },
           {
             $set: {
-              'response.site.siteId': siteExistsResponse.data.siteId,
               'cron.site.create': {
                 status: ESTORE_CRON_STATUS.COMPLETED,
+                response: siteExistsResponse.data.status,
                 timestamp: getNowAsEpoch(),
+                id: siteExistsResponse.data.siteId,
               },
               'cron.site.status': ESTORE_CRON_STATUS.COMPLETED,
             },
@@ -182,7 +166,7 @@ export const create = async (req: Request, res: Response) => {
         eStoreData.siteId = String(siteExistsResponse.data.siteId);
 
         // Add facility IDs to term store and create the buyer folder
-        eStoreTermStoreAndBuyerFolder(eStoreData);
+        await eStoreTermStoreCreationJob(eStoreData);
       } else if (absent || provisioning) {
         let siteCreationResponse: SiteExistsResponse | EstoreErrorResponse;
         // Step 3: Site does not exists in eStore
@@ -197,31 +181,13 @@ export const create = async (req: Request, res: Response) => {
           siteCreationResponse = await createExporterSite({ exporterName: eStoreData.exporterName });
         }
 
-        // Check if the siteCreation endpoint returns a siteId - this is usually a number (i.e. 12345)
+        /**
+         * Check if the siteCreation endpoint returns a siteId - this is usually a number (i.e. 12345)
+         * Returning a site ID does not state site creation has been completed, merely acknowledges site creation
+         * has been initiated.
+         */
         if (siteCreationResponse?.data?.siteId) {
-          /**
-           * Add a new site specific CRON job, which is initialised upon creation
-           */
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          const siteCreateCronId = `estore_cron_site_${eStoreData.dealId}`;
-          const siteCreateCronJob = new CronJob(
-            String(ESTORE_CRON_MANAGER_SCHEDULE), // Cron schedule
-            () => {
-              eStoreSiteCreationCron(eStoreData);
-            }, // On tick
-            () => {
-              console.info('✅ eStore site creation has been completed successfully for deal %s', eStoreData.dealId);
-            }, // On complete
-            false, // Start the job
-            TZ, // Timezone
-          );
-
-          // Only start if job is not already running
-          if (!siteCreateCronJob.running) {
-            siteCreateCronJob.start();
-          }
-
-          console.info('eStore site %s CRON job %s initiated.', siteCreationResponse.data.siteId, siteCreateCronId);
+          await eStoreSiteCreationCron(eStoreData);
         } else {
           console.error('eStore site creation failed for deal %s %o', eStoreData.dealIdentifier, siteCreationResponse?.data);
 
@@ -250,6 +216,7 @@ export const create = async (req: Request, res: Response) => {
             $set: {
               'cron.site.create': {
                 status: ESTORE_CRON_STATUS.FAILED,
+                response: siteExistsResponse?.data,
                 timestamp: getNowAsEpoch(),
               },
               'cron.site.status': ESTORE_CRON_STATUS.FAILED,
