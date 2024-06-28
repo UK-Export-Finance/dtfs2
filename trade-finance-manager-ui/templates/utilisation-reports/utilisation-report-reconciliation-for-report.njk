@@ -36,22 +36,22 @@
       </p>
 
       {% if canEdit %}
-      <div class="govuk-button-group">
-        <input
-          class="govuk-button govuk-!-margin-right-3"
-          formaction="/utilisation-reports/{{ reportId }}/add-payment"
-          value="Add a payment"
-          data-module="govuk-button"
-          type="submit"
-          data-cy="add-a-payment-button"/>
-        <input
-          class="govuk-button govuk-button--secondary govuk-!-margin-right-3"
-          formaction="/utilisation-reports/{{ reportId }}/check-keying-data"
-          value="Generate keying data"
-          data-module="govuk-button"
-          type="submit"
-          data-cy="generate-keying-data-button"/>
-      </div>
+        <div class="govuk-button-group">
+          <input
+            class="govuk-button govuk-!-margin-right-3"
+            formaction="/utilisation-reports/{{ reportId }}/add-payment"
+            value="Add a payment"
+            data-module="govuk-button"
+            type="submit"
+            data-cy="add-a-payment-button"/>
+          <input
+            class="govuk-button govuk-button--secondary govuk-!-margin-right-3"
+            formaction="/utilisation-reports/{{ reportId }}/check-keying-data"
+            value="Generate keying data"
+            data-module="govuk-button"
+            type="submit"
+            data-cy="generate-keying-data-button"/>
+        </div>
       {% endif %}
 
       {{ premiumPaymentsTable.render({
