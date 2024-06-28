@@ -106,6 +106,21 @@ export class FeeRecordEntityMockBuilder {
     return this;
   }
 
+  public withLastUpdatedByIsSystemUser(isSystemUser: boolean): FeeRecordEntityMockBuilder {
+    this.feeRecord.lastUpdatedByIsSystemUser = isSystemUser;
+    return this;
+  }
+
+  public withLastUpdatedByPortalUserId(userId: string | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.lastUpdatedByPortalUserId = userId;
+    return this;
+  }
+
+  public withLastUpdatedByTfmUserId(userId: string | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.lastUpdatedByTfmUserId = userId;
+    return this;
+  }
+
   public build(): FeeRecordEntity {
     return this.feeRecord;
   }
