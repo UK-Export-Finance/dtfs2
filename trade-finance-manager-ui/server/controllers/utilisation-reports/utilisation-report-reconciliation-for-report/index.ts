@@ -45,6 +45,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
       premiumPaymentFormError,
       facilityIdQueryError,
+      facilityIdQuery: validatedFacilityIdQuery,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

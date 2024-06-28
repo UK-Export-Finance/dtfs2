@@ -42,4 +42,5 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[];
   premiumPaymentFormError: [ErrorSummaryViewModel] | undefined;
   facilityIdQueryError: [ErrorSummaryViewModel] | undefined;
+  facilityIdQuery?: string;
 };
