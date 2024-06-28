@@ -92,6 +92,8 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
     });
 
     it("should update the deal's status in portal", async () => {
+      const auditDetails = generateTfmAuditDetails(tokenUser._id);
+
       mockUpdateDeal(miaDeal);
       when(api.findBankById)
         .calledWith(miaDeal.maker.bank.id)
@@ -99,7 +101,15 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
 
       await as(tokenUser).put(VALID_UNDERWRITER_MANAGERS_DECISION).to(`/v1/deals/${VALID_DEAL_ID}/underwriting/managers-decision`);
 
-      expect(updateDealStatus).toHaveBeenCalledWith(VALID_DEAL_ID, EXPECTED_NEW_PORTAL_STATUS);
+      expect(updateDealStatus).toHaveBeenCalledWith({
+        dealId: VALID_DEAL_ID,
+        status: EXPECTED_NEW_PORTAL_STATUS,
+        auditDetails: expect.anything(),
+      });
+      const { auditDetails: receivedAuditDetails } = updateDealStatus.mock.calls[0][0];
+      expect(JSON.parse(JSON.stringify(receivedAuditDetails))).toEqual(JSON.parse(JSON.stringify(auditDetails)));
+      expect(receivedAuditDetails.id.toString()).toEqual(auditDetails.id.toString());
+      expect(receivedAuditDetails.userType).toEqual(auditDetails.userType);
     });
 
     it('should add a comment to the deal in portal', async () => {

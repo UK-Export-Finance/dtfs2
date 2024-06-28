@@ -8,7 +8,7 @@ import { getNowAsEpoch } from '../helpers/date';
 
 const acceptableStatuses = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
-export const eStoreTermStoreAndBuyerFolder = async (eStoreData: Estore) => {
+export const eStoreTermStoreCreationJob = async (eStoreData: Estore) => {
   const cronJobLogs = await getCollection('cron-job-logs');
 
   // 1. Facilities existence check for addition to term store

@@ -119,10 +119,11 @@ const premiumTypeFields = (loan) => {
 
 exports.updateLoan = async (req, res) => {
   const {
-    user,
-    body,
     params: { id: dealId, loanId },
+    user,
+    body: update,
   } = req;
+
   const auditDetails = generatePortalAuditDetails(user._id);
 
   await findOneDeal(dealId, async (deal) => {
@@ -142,7 +143,7 @@ exports.updateLoan = async (req, res) => {
 
     let modifiedLoan = {
       ...existingLoan,
-      ...body,
+      ...update,
     };
 
     modifiedLoan = facilityStageFields(modifiedLoan);

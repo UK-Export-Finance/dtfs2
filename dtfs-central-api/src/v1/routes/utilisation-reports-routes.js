@@ -2,6 +2,7 @@ const express = require('express');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 const { validatePostPaymentPayload } = require('./middleware/payload-validation/validate-post-payment-payload');
+const { validateDeletePaymentPayload } = require('./middleware/payload-validation/validate-delete-payment-payload');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
   postUploadUtilisationReport,
@@ -16,6 +17,9 @@ const {
 } = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
 const { getSelectedFeeRecordDetails } = require('../controllers/utilisation-report-service/get-selected-fee-records-details.controller');
 const { postPayment } = require('../controllers/utilisation-report-service/post-payment.controller');
+const { deletePayment } = require('../controllers/utilisation-report-service/delete-payment.controller');
+const { postKeyingData } = require('../controllers/utilisation-report-service/post-keying-data.controller');
+const { getFeeRecordsToKey } = require('../controllers/utilisation-report-service/get-fee-records-to-key.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -219,6 +223,44 @@ utilisationReportsRouter
 
 /**
  * @openapi
+ * /utilisation-reports/:reportId/payment/:paymentId:
+ *   delete:
+ *     summary: Delete a payment
+ *     tags: [Utilisation Report]
+ *     description: Deletes a payment
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report the payment belongs to
+ *       - in: path
+ *         name: paymentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the payment to delete
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/payments/:paymentId')
+  .delete(
+    validation.sqlIdValidation('reportId'),
+    validation.sqlIdValidation('paymentId'),
+    handleExpressValidatorResult,
+    validateDeletePaymentPayload,
+    deletePayment,
+  );
+
+/**
+ * @openapi
  * /utilisation-reports/:reportId/payment:
  *   post:
  *     summary: Add a payment to the utilisation report
@@ -268,5 +310,62 @@ utilisationReportsRouter
 utilisationReportsRouter
   .route('/:reportId/payment')
   .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePostPaymentPayload, postPayment);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/keying-data:
+ *   post:
+ *     summary: Generate keying data for a utilisation report
+ *     tags: [Utilisation Report]
+ *     description: Generates keying data for the utilisation report with the supplied report id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report to generate keying data for
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter.route('/:reportId/keying-data').post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, postKeyingData);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/fee-records-to-key:
+ *   get:
+ *     summary: Get the fee records to key for a utilisation report
+ *     tags: [Utilisation Report]
+ *     description: Gets the fee record to key for the utilisation report with the supplied id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report to get the fee records for
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/FeeRecordsToKeyResponseBody'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter.route('/:reportId/fee-records-to-key').get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, getFeeRecordsToKey);
 
 module.exports = utilisationReportsRouter;

@@ -62,7 +62,7 @@ const updatePortalDeal = async (dealId, update, auditDetails) => {
   }
 };
 
-const updatePortalBssDealStatus = async (dealId, status) => {
+const updatePortalBssDealStatus = async ({ dealId, status, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -77,6 +77,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
       headers: headers.central,
       data: {
         status,
+        auditDetails,
       },
     });
 
@@ -111,7 +112,7 @@ const addPortalDealComment = async (dealId, commentType, comment, auditDetails) 
   return response.data;
 };
 
-const updatePortalFacilityStatus = async (facilityId, status) => {
+const updatePortalFacilityStatus = async (facilityId, status, auditDetails) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -126,6 +127,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
       headers: headers.central,
       data: {
         status,
+        auditDetails,
       },
     });
 
@@ -137,7 +139,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
   }
 };
 
-const updatePortalFacility = async (facilityId, update) => {
+const updatePortalFacility = async (facilityId, update, auditDetails) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -150,7 +152,7 @@ const updatePortalFacility = async (facilityId, update) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
       headers: headers.central,
-      data: update,
+      data: { facilityUpdate: update, auditDetails },
     });
 
     return response.data;
@@ -1033,7 +1035,7 @@ const findOneGefDeal = async (dealId) => {
   }
 };
 
-const updatePortalGefDealStatus = async (dealId, status) => {
+const updatePortalGefDealStatus = async ({ dealId, status, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -1048,6 +1050,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
       headers: headers.central,
       data: {
         status,
+        auditDetails,
       },
     });
 
@@ -1059,7 +1062,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
   }
 };
 
-const updatePortalGefDeal = async (dealId, update) => {
+const updatePortalGefDeal = async ({ dealId, dealUpdate, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -1073,7 +1076,8 @@ const updatePortalGefDeal = async (dealId, update) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}`,
       headers: headers.central,
       data: {
-        dealUpdate: update,
+        dealUpdate,
+        auditDetails,
       },
     });
 
@@ -1085,7 +1089,7 @@ const updatePortalGefDeal = async (dealId, update) => {
   }
 };
 
-const updateGefMINActivity = async (dealId) => {
+const updateGefMINActivity = async ({ dealId, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -1098,6 +1102,9 @@ const updateGefMINActivity = async (dealId) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/activity/${dealId}`,
       headers: headers.central,
+      data: {
+        auditDetails,
+      },
     });
 
     return response.data;
@@ -1326,6 +1333,34 @@ const addPaymentToFeeRecords = async (reportId, feeRecordIds, user, paymentCurre
   return response.data;
 };
 
+/**
+ * Generates keying data for the utilisation report
+ * with the supplied id
+ * @param {string} reportId - The report id
+ * @returns {Promise<{}>}
+ */
+const generateKeyingData = async (reportId) => {
+  const response = await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/keying-data`,
+    method: 'post',
+    headers: headers.central,
+  });
+  return response.data;
+};
+
+/**
+ * Gets the utilisation report with the supplied id and the
+ * fee records to key
+ * @param {string} reportId - The report id
+ * @returns {Promise<import('./api-response-types').FeeRecordsToKeyResponseBody>} The utilisation report with fee records to key
+ */
+const getUtilisationReportWithFeeRecordsToKey = async (reportId) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records-to-key`, {
+    headers: headers.central,
+  });
+  return response.data;
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1389,4 +1424,6 @@ module.exports = {
   getSelectedFeeRecordsDetails,
   getUtilisationReportSummariesByBankIdAndYear,
   addPaymentToFeeRecords,
+  generateKeyingData,
+  getUtilisationReportWithFeeRecordsToKey,
 };

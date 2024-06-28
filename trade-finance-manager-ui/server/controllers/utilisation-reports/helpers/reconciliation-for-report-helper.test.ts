@@ -1,7 +1,7 @@
 import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems } from './reconciliation-for-report-helper';
-import { FeeRecordItem, FeeRecordPaymentGroup, Payment } from '../../../api-response-types';
-import { aFeeRecordPaymentGroup, aFeeRecordItem } from '../../../../test-helpers';
+import { FeeRecord, FeeRecordPaymentGroup, Payment } from '../../../api-response-types';
+import { aFeeRecordPaymentGroup, aFeeRecord } from '../../../../test-helpers';
 
 describe('reconciliation-for-report-helper', () => {
   describe('mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems', () => {
@@ -10,10 +10,10 @@ describe('reconciliation-for-report-helper', () => {
     it('maps the group feeRecords id to the view model feeRecords id', () => {
       // Arrange
       const firstFeeRecordId = 10;
-      const firstFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), id: firstFeeRecordId };
+      const firstFeeRecord: FeeRecord = { ...aFeeRecord(), id: firstFeeRecordId };
 
       const secondFeeRecordId = 30;
-      const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), id: secondFeeRecordId };
+      const secondFeeRecord: FeeRecord = { ...aFeeRecord(), id: secondFeeRecordId };
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
@@ -35,10 +35,10 @@ describe('reconciliation-for-report-helper', () => {
     it('maps the group feeRecords facilityId to the view model feeRecords facilityId', () => {
       // Arrange
       const firstFeeRecordFacilityId = '12345678';
-      const firstFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), facilityId: firstFeeRecordFacilityId };
+      const firstFeeRecord: FeeRecord = { ...aFeeRecord(), facilityId: firstFeeRecordFacilityId };
 
       const secondFeeRecordFacilityId = '87654321';
-      const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), facilityId: secondFeeRecordFacilityId };
+      const secondFeeRecord: FeeRecord = { ...aFeeRecord(), facilityId: secondFeeRecordFacilityId };
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
@@ -60,10 +60,10 @@ describe('reconciliation-for-report-helper', () => {
     it('maps the group feeRecords exporter to the view model feeRecords exporter', () => {
       // Arrange
       const firstFeeRecordExporter = 'Test exporter 1';
-      const firstFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), exporter: firstFeeRecordExporter };
+      const firstFeeRecord: FeeRecord = { ...aFeeRecord(), exporter: firstFeeRecordExporter };
 
       const secondFeeRecordExporter = 'Test exporter 2';
-      const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), exporter: secondFeeRecordExporter };
+      const secondFeeRecord: FeeRecord = { ...aFeeRecord(), exporter: secondFeeRecordExporter };
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {
@@ -85,11 +85,11 @@ describe('reconciliation-for-report-helper', () => {
     it('maps the group feeRecords reportedFees to the view model feeRecords reportedFees formatted currency and amount', () => {
       // Arrange
       const firstFeeRecordReportedFees: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
-      const firstFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), reportedFees: firstFeeRecordReportedFees };
+      const firstFeeRecord: FeeRecord = { ...aFeeRecord(), reportedFees: firstFeeRecordReportedFees };
       const firstFeeRecordFormattedReportedFees = 'GBP 100.00';
 
       const secondFeeRecordReportedFees: CurrencyAndAmount = { currency: 'EUR', amount: 314.59 };
-      const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), reportedFees: secondFeeRecordReportedFees };
+      const secondFeeRecord: FeeRecord = { ...aFeeRecord(), reportedFees: secondFeeRecordReportedFees };
       const secondFeeRecordFormattedReportedFees = 'EUR 314.59';
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
@@ -112,11 +112,11 @@ describe('reconciliation-for-report-helper', () => {
     it('maps the group feeRecords reportedPayments to the view model feeRecords reportedPayments formatted currency and amount', () => {
       // Arrange
       const firstFeeRecordReportedPayments: CurrencyAndAmount = { currency: 'EUR', amount: 314.59 };
-      const firstFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), reportedPayments: firstFeeRecordReportedPayments };
+      const firstFeeRecord: FeeRecord = { ...aFeeRecord(), reportedPayments: firstFeeRecordReportedPayments };
       const firstFeeRecordFormattedReportedPayments = 'EUR 314.59';
 
       const secondFeeRecordReportedPayments: CurrencyAndAmount = { currency: 'GBP', amount: 100 };
-      const secondFeeRecord: FeeRecordItem = { ...aFeeRecordItem(), reportedPayments: secondFeeRecordReportedPayments };
+      const secondFeeRecord: FeeRecord = { ...aFeeRecord(), reportedPayments: secondFeeRecordReportedPayments };
       const secondFeeRecordFormattedReportedPayments = 'GBP 100.00';
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
@@ -138,12 +138,12 @@ describe('reconciliation-for-report-helper', () => {
 
     it('sorts the view model feeRecords reportedPayments by currency first and amount second in ascending order', () => {
       // Arrange
-      const unsortedFeeRecords: FeeRecordItem[] = [
-        { ...aFeeRecordItem(), reportedPayments: { currency: 'GBP', amount: 100 } }, // after sorting: 'GBP 100.00' at index 1
-        { ...aFeeRecordItem(), reportedPayments: { currency: 'USD', amount: 200 } }, // after sorting: 'USD 200.00' at index 4
-        { ...aFeeRecordItem(), reportedPayments: { currency: 'EUR', amount: 100 } }, // after sorting: 'EUR 100.00' at index 0
-        { ...aFeeRecordItem(), reportedPayments: { currency: 'USD', amount: 100 } }, // after sorting: 'USD 100.00' at index 3
-        { ...aFeeRecordItem(), reportedPayments: { currency: 'GBP', amount: 500 } }, // after sorting: 'GBP 500.00' at index 2
+      const unsortedFeeRecords: FeeRecord[] = [
+        { ...aFeeRecord(), reportedPayments: { currency: 'GBP', amount: 100 } }, // after sorting: 'GBP 100.00' at index 1
+        { ...aFeeRecord(), reportedPayments: { currency: 'USD', amount: 200 } }, // after sorting: 'USD 200.00' at index 4
+        { ...aFeeRecord(), reportedPayments: { currency: 'EUR', amount: 100 } }, // after sorting: 'EUR 100.00' at index 0
+        { ...aFeeRecord(), reportedPayments: { currency: 'USD', amount: 100 } }, // after sorting: 'USD 100.00' at index 3
+        { ...aFeeRecord(), reportedPayments: { currency: 'GBP', amount: 500 } }, // after sorting: 'GBP 500.00' at index 2
       ];
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
@@ -360,8 +360,8 @@ describe('reconciliation-for-report-helper', () => {
       const feeRecordIds = [1, 20];
 
       const firstFeeRecordReportedPaymentsCurrency: Currency = 'GBP';
-      const firstFeeRecord: FeeRecordItem = {
-        ...aFeeRecordItem(),
+      const firstFeeRecord: FeeRecord = {
+        ...aFeeRecord(),
         id: feeRecordIds[0],
         reportedPayments: {
           currency: firstFeeRecordReportedPaymentsCurrency,
@@ -369,8 +369,8 @@ describe('reconciliation-for-report-helper', () => {
         },
       };
 
-      const secondFeeRecord: FeeRecordItem = {
-        ...aFeeRecordItem(),
+      const secondFeeRecord: FeeRecord = {
+        ...aFeeRecord(),
         id: feeRecordIds[1],
         reportedPayments: {
           currency: 'EUR',
@@ -397,8 +397,8 @@ describe('reconciliation-for-report-helper', () => {
       // Arrange
       const feeRecordId = 1;
       const feeRecordReportedPaymentsCurrency: Currency = 'GBP';
-      const feeRecord: FeeRecordItem = {
-        ...aFeeRecordItem(),
+      const feeRecord: FeeRecord = {
+        ...aFeeRecord(),
         id: feeRecordId,
         reportedPayments: {
           currency: feeRecordReportedPaymentsCurrency,
@@ -426,8 +426,8 @@ describe('reconciliation-for-report-helper', () => {
       const feeRecordId = 1;
       const nonMatchingFeeRecordId = 5;
       const feeRecordReportedPaymentsCurrency: Currency = 'GBP';
-      const feeRecord: FeeRecordItem = {
-        ...aFeeRecordItem(),
+      const feeRecord: FeeRecord = {
+        ...aFeeRecord(),
         id: feeRecordId,
         reportedPayments: {
           currency: feeRecordReportedPaymentsCurrency,

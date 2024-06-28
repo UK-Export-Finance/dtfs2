@@ -937,7 +937,7 @@ const getReportSummariesByBankAndYear = async (userToken, bankId, year) => {
 };
 
 /**
- *
+ * Adds a payment to the supplied fee records
  * @param {string} reportId - The report id
  * @param {import('./types/add-payment-form-values').ParsedAddPaymentFormValues} parsedAddPaymentFormValues - The parsed submitted form values
  * @param {number[]} feeRecordIds - The list of fee record ids to add the payment to
@@ -959,6 +959,36 @@ const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeR
       paymentReference,
       user,
     },
+  });
+  return response.data;
+};
+
+/**
+ * Generates keying data for the utilisation report
+ * with the supplied id
+ * @param {string} reportId - The report id
+ * @param {string} userToken - The user token
+ * @returns {Promise<{}>}
+ */
+const generateKeyingData = async (reportId, userToken) => {
+  const response = await axios({
+    method: 'post',
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/keying-data`,
+    headers: generateHeaders(userToken),
+  });
+  return response.data;
+};
+
+/**
+ * Gets the utilisation report with the fee
+ * records to key
+ * @param {string} reportId - The report id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').FeeRecordsToKeyResponseBody>}
+ */
+const getUtilisationReportWithFeeRecordsToKey = async (reportId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records-to-key`, {
+    headers: generateHeaders(userToken),
   });
   return response.data;
 };
@@ -1006,4 +1036,6 @@ module.exports = {
   getSelectedFeeRecordsDetails,
   getReportSummariesByBankAndYear,
   addPaymentToFeeRecords,
+  generateKeyingData,
+  getUtilisationReportWithFeeRecordsToKey,
 };

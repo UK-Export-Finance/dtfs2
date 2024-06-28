@@ -13,10 +13,10 @@ const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker, auditDeta
       manualInclusionNoticeSubmissionDate: getNowAsEpochMillisecondString(),
     };
 
-    await api.updatePortalGefDeal(dealId, dealUpdate);
+    await api.updatePortalGefDeal({ dealId, dealUpdate, auditDetails });
 
     // adds portal activity object for min submission and facilities changed -> issued
-    await api.updateGefMINActivity(dealId);
+    await api.updateGefMINActivity({ dealId, auditDetails });
   } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     dealUpdate = {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
