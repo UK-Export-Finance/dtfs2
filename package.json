@@ -53,8 +53,10 @@
     "**/package.json": "sort-package-json",
     "**/*.{js,ts}": [
       "eslint --fix",
-      "prettier --write",
-      "validate:yml"
+      "prettier --write"
+    ],
+    "**/*.yml": [
+      "npm run validate:yml"
     ],
     "**/*": [
       "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"

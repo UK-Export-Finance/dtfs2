@@ -25,6 +25,7 @@
   {% endif %}
     <form method="post" data-cy="premium-payments-form">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      <input type="hidden" name="canGenerateKeyingData" value="{{ canGenerateKeyingData }}"/>
 
       <h2 class="govuk-heading-l" data-cy="premium-payments-heading">Premium payments</h2>
 
@@ -42,16 +43,13 @@
           data-module="govuk-button"
           type="submit"
           data-cy="add-a-payment-button"/>
-        {{ govukButton({
-          text: "Generate keying data",
-          name: "generate-keying-data",
-          value: "generate-keying-data",
-          href: "#",
-          classes: "govuk-button--secondary",
-          attributes: {
-            "data-cy": "generate-keying-data-button"
-          }
-        }) }}
+        <input
+          class="govuk-button govuk-button--secondary govuk-!-margin-right-3"
+          formaction="/utilisation-reports/{{ reportId }}/check-keying-data"
+          value="Generate keying data"
+          data-module="govuk-button"
+          type="submit"
+          data-cy="generate-keying-data-button"/>
       </div>
 
       {{ premiumPaymentsTable.render({
