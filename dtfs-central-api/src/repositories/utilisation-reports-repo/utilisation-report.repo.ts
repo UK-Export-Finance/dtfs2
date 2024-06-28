@@ -155,7 +155,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
    * @returns The utilisation report with the attached fee records
    */
   async findOneByIdWithFeeRecordsFilteredByIdWithPayments(reportId: number, feeRecordIds: number[]): Promise<UtilisationReportEntity | null> {
-    return await UtilisationReportRepo.findOne({
+    return await this.findOne({
       where: {
         id: reportId,
         feeRecords: {
@@ -175,15 +175,21 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
    * @returns The utilisation report with attached fee records
    */
   async findOneByIdWithFeeRecordsFilteredByStatus(reportId: number, feeRecordStatuses: FeeRecordStatus[]): Promise<UtilisationReportEntity | null> {
-    return await UtilisationReportRepo.findOne({
-      where: {
-        id: reportId,
-        feeRecords: {
-          status: In(feeRecordStatuses),
-        },
-      },
-      relations: { feeRecords: true },
+    const report = await this.findOne({
+      where: { id: reportId },
     });
+
+    if (!report) {
+      return null;
+    }
+
+    report.feeRecords = await FeeRecordRepo.find({
+      where: {
+        status: In(feeRecordStatuses),
+        report: { id: report.id },
+      },
+    });
+    return report;
   },
 
   /**
@@ -195,15 +201,23 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
    * @returns The utilisation report with attached fee records and payments
    */
   async findOneByIdWithFeeRecordsFilteredByStatusWithPayments(reportId: number, feeRecordStatuses: FeeRecordStatus[]): Promise<UtilisationReportEntity | null> {
-    return await UtilisationReportRepo.findOne({
-      where: {
-        id: reportId,
-        feeRecords: {
-          status: In(feeRecordStatuses),
-        },
-      },
-      relations: { feeRecords: { payments: true } },
+    const report = await this.findOne({
+      where: { id: reportId },
     });
+
+    if (!report) {
+      return null;
+    }
+
+    report.feeRecords = await FeeRecordRepo.find({
+      where: {
+        status: In(feeRecordStatuses),
+        report: { id: report.id },
+      },
+      relations: { payments: true },
+    });
+
+    return report;
   },
 
   /**

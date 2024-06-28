@@ -184,4 +184,25 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
       },
     ]);
   });
+
+  it('returns a body containing an empty fee records array when there are no fee records at the MATCH status', async () => {
+    // Arrange
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+
+    const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+
+    const toDoFeeRecords = [
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('TO_DO').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('TO_DO').build(),
+    ];
+    report.feeRecords = toDoFeeRecords;
+
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    // Act
+    const response: CustomResponse = await api.get(getUrl(reportId));
+
+    // Assert
+    expect(response.body.feeRecords).toEqual([]);
+  });
 });
