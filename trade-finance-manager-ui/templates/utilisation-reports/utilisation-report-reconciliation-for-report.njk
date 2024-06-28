@@ -57,7 +57,8 @@
       {{ premiumPaymentsTable.render({
         reportId: reportId,
         feeRecordPaymentGroups: feeRecordPaymentGroups,
-        enablePaymentsReceivedSorting: enablePaymentsReceivedSorting
+        enablePaymentsReceivedSorting: enablePaymentsReceivedSorting,
+        canEdit: canEdit
       }) }}
     </form>
   {% if errorSummary %}

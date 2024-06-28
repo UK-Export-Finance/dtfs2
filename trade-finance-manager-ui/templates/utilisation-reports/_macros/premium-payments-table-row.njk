@@ -4,6 +4,7 @@
 {% macro render(params) %}
   {% set reportId = params.reportId %}
   {% set feeRecordPaymentGroup = params.feeRecordPaymentGroup %}
+  {% set canEdit = params.canEdit %}
 
   {% set feeRecords = feeRecordPaymentGroup.feeRecords %}
   {% set totalReportedPayments = feeRecordPaymentGroup.totalReportedPayments %}
@@ -76,15 +77,16 @@
           displayStatus: displayStatus
         }) if isFirstFeeRecordInGroup else "" }}
       </td>
-
-      <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}">
-        {% if status === 'TO_DO' or status === 'DOES_NOT_MATCH' %}
-          {{ tableCellCheckbox.render({
-            checkboxId: checkboxId,
-            checked: isChecked
-          }) if isFirstFeeRecordInGroup }}
-        {% endif %}
-      </td>
+      {% if canEdit %}
+        <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}">
+          {% if status === 'TO_DO' or status === 'DOES_NOT_MATCH' %}
+            {{ tableCellCheckbox.render({
+              checkboxId: checkboxId,
+              checked: isChecked
+            }) if isFirstFeeRecordInGroup }}
+          {% endif %}
+        </td>
+      {% endif %}
     </tr>
   {% endfor %}
 {% endmacro %}
