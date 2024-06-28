@@ -47,7 +47,7 @@
     "express-rate-limit": "^6.11.2",
     "express-validator": "7.0.1",
     "is-port-reachable": "^3.1.0",
-    "joi": "^17.13.3",
+    "joi": "^17.13.1",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongo-dot-notation": "^3.1.0",
@@ -77,8 +77,8 @@
     "jest-when": "^3.6.0",
     "node-mocks-http": "^1.14.1",
     "supertest": "^6.3.4",
-    "ts-jest": "^29.1.5",
-    "typescript": "^5.5.2"
+    "ts-jest": "^29.1.4",
+    "typescript": "^5.4.5"
   },
   "engines": {
     "node": ">=20",
