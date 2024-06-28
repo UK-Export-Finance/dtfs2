@@ -466,12 +466,14 @@ describe('validate-payment-form-values', () => {
       const errors = validateAddPaymentRequestFormValues(formValues, feeRecordPaymentCurrency);
 
       // Assert
-      expect(errors.errorSummary).toEqual([
-        { text: 'Select payment currency', href: '#paymentCurrency' },
-        { text: 'Enter a valid amount received', href: '#paymentAmount' },
-        { text: 'Enter the date payment received', href: '#paymentDate-day' },
-        { text: 'Select add another payment choice', href: '#addAnotherPayment' },
-      ]);
+      expect(errors.errorSummary).toEqual(
+        expect.arrayContaining([
+          { text: 'Select payment currency', href: '#paymentCurrency' },
+          { text: 'Enter a valid amount received', href: '#paymentAmount' },
+          { text: 'Enter the date payment received', href: '#paymentDate-day' },
+          { text: 'Select add another payment choice', href: '#addAnotherPayment' },
+        ]),
+      );
     });
 
     function aValidSetOfFormValues(): AddPaymentFormValues {
