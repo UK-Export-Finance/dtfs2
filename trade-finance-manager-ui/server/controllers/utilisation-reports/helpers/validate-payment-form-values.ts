@@ -1,8 +1,9 @@
 import { CURRENCY, Currency, isNonEmptyString } from '@ukef/dtfs2-common';
 import { isBefore, isValid, parseISO, startOfDay } from 'date-fns';
 import { REGEX } from '../../../constants';
-import { AddPaymentErrorsViewModel, AddPaymentPaymentDateErrorViewModel, ErrorSummaryViewModel } from '../../../types/view-models';
+import { PaymentErrorsViewModel, PaymentDateErrorViewModel, ErrorSummaryViewModel } from '../../../types/view-models';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
+import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 const isCurrencyNumberOptionallyWithThousandsSeparators = (value: string) => {
   const currencyNumberWithOptionalThousandsSeparatorsRegex = /^(\d+|\d{1,3}(,\d{3})+)(\.\d{1,2})?$/;
@@ -66,7 +67,7 @@ const getMissingDateFields = (day: string | undefined, month: string | undefined
   return missingFields;
 };
 
-const getMissingDateFieldsError = (fieldTitle: string, missingFields: DateFieldName[]): AddPaymentPaymentDateErrorViewModel => {
+const getMissingDateFieldsError = (fieldTitle: string, missingFields: DateFieldName[]): PaymentDateErrorViewModel => {
   if (missingFields.length === 3) {
     return { message: `Enter the ${fieldTitle}`, dayError: true, monthError: true, yearError: true };
   }
@@ -92,7 +93,7 @@ const validatePaymentDateAndReturnErrorIfInvalid = (
   day: string | undefined,
   month: string | undefined,
   year: string | undefined,
-): AddPaymentPaymentDateErrorViewModel | undefined => {
+): PaymentDateErrorViewModel | undefined => {
   const fieldTitle = 'date payment received';
 
   const missingFields = getMissingDateFields(day, month, year);
@@ -125,7 +126,7 @@ const validatePaymentDateAndReturnErrorIfInvalid = (
   return undefined;
 };
 
-const getPaymentDateHref = (paymentDateError: AddPaymentPaymentDateErrorViewModel): string => {
+const getPaymentDateHref = (paymentDateError: PaymentDateErrorViewModel): string => {
   if (paymentDateError.dayError) {
     return '#paymentDate-day';
   }
@@ -137,13 +138,8 @@ const getPaymentDateHref = (paymentDateError: AddPaymentPaymentDateErrorViewMode
   return '#paymentDate-year';
 };
 
-export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormValues, feeRecordPaymentCurrency: Currency): AddPaymentErrorsViewModel => {
+const validateCommonPaymentRequestFormValues = (formValues: AddPaymentFormValues | EditPaymentFormValues): PaymentErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
-
-  const paymentCurrencyErrorMessage = getPaymentCurrencyValidationsErrors(formValues.paymentCurrency, feeRecordPaymentCurrency);
-  if (paymentCurrencyErrorMessage) {
-    errorSummary.push({ text: paymentCurrencyErrorMessage, href: '#paymentCurrency' });
-  }
 
   const paymentAmountErrorMessage = isPaymentAmountValid(formValues.paymentAmount) ? undefined : 'Enter a valid amount received';
   if (paymentAmountErrorMessage) {
@@ -162,6 +158,26 @@ export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormVa
     errorSummary.push({ text: paymentDateError.message, href: getPaymentDateHref(paymentDateError) });
   }
 
+  return {
+    errorSummary,
+    paymentAmountErrorMessage,
+    paymentReferenceErrorMessage,
+    paymentDateError,
+  };
+};
+
+export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormValues, feeRecordPaymentCurrency: Currency): PaymentErrorsViewModel => {
+  const errorSummary: ErrorSummaryViewModel[] = [];
+
+  const commonPaymentFormErrors = validateCommonPaymentRequestFormValues(formValues);
+  const { paymentAmountErrorMessage, paymentReferenceErrorMessage, paymentDateError } = commonPaymentFormErrors;
+  errorSummary.push(...commonPaymentFormErrors.errorSummary);
+
+  const paymentCurrencyErrorMessage = getPaymentCurrencyValidationsErrors(formValues.paymentCurrency, feeRecordPaymentCurrency);
+  if (paymentCurrencyErrorMessage) {
+    errorSummary.push({ text: paymentCurrencyErrorMessage, href: '#paymentCurrency' });
+  }
+
   const addAnotherPaymentErrorMessage = isAddAnotherPaymentChoiceValid(formValues.addAnotherPayment) ? undefined : 'Select add another payment choice';
   if (addAnotherPaymentErrorMessage) {
     errorSummary.push({ text: addAnotherPaymentErrorMessage, href: '#addAnotherPayment' });
@@ -176,3 +192,6 @@ export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormVa
     paymentDateError,
   };
 };
+
+export const validateEditPaymentRequestFormValues = (formValues: EditPaymentFormValues): PaymentErrorsViewModel =>
+  validateCommonPaymentRequestFormValues(formValues);

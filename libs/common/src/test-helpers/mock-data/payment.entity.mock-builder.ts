@@ -35,7 +35,7 @@ export class PaymentEntityMockBuilder {
     return this;
   }
 
-  public withReference(reference: string): PaymentEntityMockBuilder {
+  public withReference(reference: string | undefined): PaymentEntityMockBuilder {
     this.payment.reference = reference;
     return this;
   }

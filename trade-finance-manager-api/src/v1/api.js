@@ -1361,6 +1361,19 @@ const getUtilisationReportWithFeeRecordsToKey = async (reportId) => {
   return response.data;
 };
 
+/**
+ * Gets the payment details
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @returns {Promise<import('./api-response-types').PaymentDetailsResponseBody>} The payment details
+ */
+const getPaymentDetails = async (reportId, paymentId) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`, {
+    headers: headers.central,
+  });
+  return response.data;
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1426,4 +1439,5 @@ module.exports = {
   addPaymentToFeeRecords,
   generateKeyingData,
   getUtilisationReportWithFeeRecordsToKey,
+  getPaymentDetails,
 };

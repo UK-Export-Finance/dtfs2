@@ -1,5 +1,5 @@
-import { CURRENCY, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from './fee-record-mapper';
+import { CURRENCY, Currency, FeeRecordEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { mapFeeRecordEntityToFeeRecord, mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from './fee-record-mapper';
 
 describe('fee record mapper', () => {
   describe('mapFeeRecordEntityToReportedFees', () => {
@@ -82,5 +82,141 @@ describe('fee record mapper', () => {
       // Assert
       expect(reportedPayments.amount).toEqual(expectedReportedPaymentAmount);
     });
+  });
+
+  describe('mapFeeRecordEntityToFeeRecord', () => {
+    it('maps the fee record entity id to the fee record id', () => {
+      // Arrange
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withId(10).build();
+
+      // Act
+      const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
+
+      // Assert
+      expect(feeRecord.id).toBe(10);
+    });
+
+    it('maps the fee record entity facility id to the fee record facilityId', () => {
+      // Arrange
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId('27182818').build();
+
+      // Act
+      const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
+
+      // Assert
+      expect(feeRecord.facilityId).toBe('27182818');
+    });
+
+    it('maps the fee record entity exporter to the fee record exporter', () => {
+      // Arrange
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withExporter('Test exporter').build();
+
+      // Act
+      const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
+
+      // Assert
+      expect(feeRecord.exporter).toBe('Test exporter');
+    });
+
+    it('maps the fee record entity fees paid currency to the fee record reported fees currency', () => {
+      // Arrange
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFeesPaidToUkefForThePeriodCurrency('EUR').build();
+
+      // Act
+      const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
+
+      // Assert
+      expect(feeRecord.reportedFees.currency).toBe('EUR');
+    });
+
+    it('maps the fee record entity fees paid to the fee record reported fees amount', () => {
+      // Arrange
+      const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFeesPaidToUkefForThePeriod(314.59).build();
+
+      // Act
+      const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
+
+      // Assert
+      expect(feeRecord.reportedFees.amount).toBe(314.59);
+    });
+
+    describe('when the fee record entity payment currency matches the fees paid currency', () => {
+      const currency: Currency = 'EUR';
+
+      it('maps the fee record entity fees paid currency to the fee record reported payments currency', () => {
+        // Arrange
+        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+          .withFeesPaidToUkefForThePeriodCurrency(currency)
+          .withPaymentCurrency(currency)
+          .build();
+
+        // Act
+        const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
+
+        // Assert
+        expect(feeRecord.reportedPayments.currency).toBe('EUR');
+      });
+
+      it('maps the fee record entity fees paid to the fee record reported payment amount', () => {
+        // Arrange
+        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+          .withFeesPaidToUkefForThePeriodCurrency(currency)
+          .withPaymentCurrency(currency)
+          .withFeesPaidToUkefForThePeriod(314.59)
+          .build();
+
+        // Act
+        const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
+
+        // Assert
+        expect(feeRecord.reportedPayments.amount).toBe(314.59);
+      });
+    });
+
+    describe('when the fee record entity payment currency does not match the fees paid currency', () => {
+      const feesPaidCurrency: Currency = 'EUR';
+      const paymentCurrency: Currency = 'GBP';
+
+      const paymentExchangeRate = 1.1;
+
+      const feesPaidAmount = 100;
+      const feesPaidInPaymentCurrencyAmount = 90.91; // 100 / 1.1
+
+      it('maps the fee record entity payment currency to the fee record reported payments currency', () => {
+        // Arrange
+        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+          .withFeesPaidToUkefForThePeriodCurrency(feesPaidCurrency)
+          .withFeesPaidToUkefForThePeriod(feesPaidAmount)
+          .withPaymentCurrency(paymentCurrency)
+          .withPaymentExchangeRate(paymentExchangeRate)
+          .build();
+
+        // Act
+        const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
+
+        // Assert
+        expect(feeRecord.reportedPayments.currency).toBe(paymentCurrency);
+      });
+
+      it('maps the fee record entity fees paid to the fee record reported payment amount in the payment currency', () => {
+        // Arrange
+        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+          .withFeesPaidToUkefForThePeriodCurrency(feesPaidCurrency)
+          .withFeesPaidToUkefForThePeriod(feesPaidAmount)
+          .withPaymentCurrency(paymentCurrency)
+          .withPaymentExchangeRate(paymentExchangeRate)
+          .build();
+
+        // Act
+        const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntity);
+
+        // Assert
+        expect(feeRecord.reportedPayments.amount).toBe(feesPaidInPaymentCurrencyAmount);
+      });
+    });
+
+    function aUtilisationReport(): UtilisationReportEntity {
+      return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    }
   });
 });
