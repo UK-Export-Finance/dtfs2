@@ -1,5 +1,5 @@
 import axios, { AxiosError, HttpStatusCode } from 'axios';
-import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
+import { HEADERS, MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 
 const { when } = require('jest-when');
 const { getCompanyByRegistrationNumber } = require('./companies-api');
@@ -136,7 +136,7 @@ describe('getCompanyByRegistrationNumber()', () => {
       .calledWith(`${PORTAL_API_URL}/v1/companies/${registrationNumber}`, {
         headers: {
           Authorization: token,
-          'Content-Type': 'application/json',
+          [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         },
       })
       .mockResolvedValueOnce(response);
@@ -147,7 +147,7 @@ describe('getCompanyByRegistrationNumber()', () => {
       .calledWith(`${PORTAL_API_URL}/v1/companies/${registrationNumber}`, {
         headers: {
           Authorization: token,
-          'Content-Type': 'application/json',
+          [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         },
       })
       .mockRejectedValueOnce(error);

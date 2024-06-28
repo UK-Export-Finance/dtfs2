@@ -12,6 +12,7 @@
 
 require('dotenv').config();
 const axios = require('axios');
+const { HEADERS } = require('@ukef/dtfs2-common');
 
 // Domain
 const apim = {
@@ -22,11 +23,11 @@ const apim = {
 // Headers declaration
 const tfs = {
   [String(process.env.APIM_TFS_KEY)]: process.env.APIM_TFS_VALUE,
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 const mdm = {
   [String(process.env.APIM_MDM_KEY)]: process.env.APIM_MDM_VALUE,
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 
 const badRequest = {

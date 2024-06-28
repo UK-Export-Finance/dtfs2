@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId, isValidBankId } = require('./helpers/validateIds');
 const { assertValidIsoMonth, assertValidIsoYear } = require('./helpers/date');
 const PageOutOfBoundsError = require('./errors/page-out-of-bounds.error');
@@ -9,7 +10,7 @@ const { TFM_API_URL, TFM_API_KEY } = process.env;
 
 const generateHeaders = (token) => ({
   Authorization: token,
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   'x-api-key': TFM_API_KEY,
 });
 
@@ -400,7 +401,7 @@ const login = async (username, password) => {
       method: 'post',
       url: `${TFM_API_URL}/v1/login`,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       },
       data: { username, password },
     });

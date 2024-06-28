@@ -20,7 +20,7 @@
 # Sets the timezone using the specified value.
 # Checks out the repository code.
 # Sets up the specified Node.js version.
-# Installs dependencies using npm run ci:all.
+# Installs dependencies using npm ci.
 # Runs linting using the command npm run lint:all.
 #
 # Key Points:
@@ -96,7 +96,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm run ci:all
+        run: npm ci
 
       - name: Linting
         working-directory: ./
@@ -124,7 +124,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm run ci:all
+        run: npm ci
 
       - name: Linting
         working-directory: ./
@@ -152,7 +152,7 @@ jobs:
 
       - name: Dependencies
         working-directory: ./
-        run: npm run ci:all
+        run: npm ci
 
       - name: Linting
         working-directory: ./

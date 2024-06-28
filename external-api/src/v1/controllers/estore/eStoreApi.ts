@@ -1,6 +1,6 @@
 import { get, post, HttpStatusCode } from 'axios';
 import dotenv from 'dotenv';
-import { customValidateStatus } from '@ukef/dtfs2-common';
+import { HEADERS, customValidateStatus } from '@ukef/dtfs2-common';
 import {
   Estore,
   EstoreSite,
@@ -31,7 +31,7 @@ const twoMinutes = 1000 * 120; // 120 seconds timeout to handle long timeouts
 
 const { APIM_ESTORE_URL, APIM_ESTORE_KEY, APIM_ESTORE_VALUE, UKEF_INTERNAL_NOTIFICATION } = process.env;
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_ESTORE_KEY)]: APIM_ESTORE_VALUE,
 };
 

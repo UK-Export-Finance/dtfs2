@@ -4,6 +4,7 @@
 import * as dotenv from 'dotenv';
 import axios, { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
+import { HEADERS } from '@ukef/dtfs2-common';
 import { NumberGeneratorResponse, NumberGeneratorErrorResponse } from '../../interfaces';
 import { InvalidEntityTypeError } from '../errors';
 import { ENTITY_TYPE, NUMBER_TYPE, USER } from '../../constants';
@@ -15,7 +16,7 @@ const { APIM_MDM_URL, APIM_MDM_VALUE, APIM_MDM_KEY } = process.env;
 const headers = {
   headers: {
     [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   },
 };
 
