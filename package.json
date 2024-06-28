@@ -43,7 +43,7 @@
     "start:detach": "npm run start -- --detach",
     "stop": "docker compose down",
     "type-check:all": "npm run type-check --workspaces --if-present",
-    "update:all": "npm update --save --if-present",
+    "update:all": "npm update --save",
     "validate:yml": "npx yaml-lint **/*.yml"
   },
   "lint-staged": {
