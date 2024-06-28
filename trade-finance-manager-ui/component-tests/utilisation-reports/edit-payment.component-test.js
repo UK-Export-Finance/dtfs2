@@ -1,5 +1,5 @@
 const pageRenderer = require('../pageRenderer');
-const { aEditPaymentViewModel } = require('../../test-helpers');
+const { anEditPaymentViewModel } = require('../../test-helpers');
 
 const page = '../templates/utilisation-reports/edit-payment.njk';
 const render = pageRenderer(page);
@@ -10,7 +10,7 @@ describe(page, () => {
     const formattedReportPeriod = 'January 2024';
 
     const viewModel = {
-      ...aEditPaymentViewModel(),
+      ...anEditPaymentViewModel(),
       bank: { id: '123', name: bankName },
       formattedReportPeriod,
     };
@@ -22,20 +22,20 @@ describe(page, () => {
   });
 
   it('should render the fee record table with a caption', () => {
-    const wrapper = render(aEditPaymentViewModel());
+    const wrapper = render(anEditPaymentViewModel());
 
     wrapper.expectElement('table[data-cy="fee-record-details-table"]').toExist();
     wrapper.expectElement('table[data-cy="fee-record-details-table"] caption:contains("Added reported fees details")').toExist();
   });
 
   it('should render the payment details heading', () => {
-    const wrapper = render(aEditPaymentViewModel());
+    const wrapper = render(anEditPaymentViewModel());
 
     wrapper.expectText('h2.govuk-heading-m').toMatch(/Payment details/);
   });
 
   it('should display the amount received input with the supplied payment currency', () => {
-    const viewModel = aEditPaymentViewModel();
+    const viewModel = anEditPaymentViewModel();
     viewModel.paymentCurrency = 'GBP';
     const wrapper = render(viewModel);
 
@@ -43,7 +43,7 @@ describe(page, () => {
   });
 
   it('should initialise the amount received with the supplied payment amount', () => {
-    const viewModel = aEditPaymentViewModel();
+    const viewModel = anEditPaymentViewModel();
     viewModel.formValues.paymentAmount = '5 million';
     const wrapper = render(viewModel);
 
@@ -51,7 +51,7 @@ describe(page, () => {
   });
 
   it('should display error message when there is an error with the amount received', () => {
-    const viewModel = aEditPaymentViewModel();
+    const viewModel = anEditPaymentViewModel();
     viewModel.errors.paymentAmountErrorMessage = 'That is not a valid amount';
     const wrapper = render(viewModel);
 
@@ -59,7 +59,7 @@ describe(page, () => {
   });
 
   it('should initialise the payment date with the supplied payment date', () => {
-    const viewModel = aEditPaymentViewModel();
+    const viewModel = anEditPaymentViewModel();
     viewModel.formValues.paymentDate = {
       day: '12',
       month: '13',
@@ -73,7 +73,7 @@ describe(page, () => {
   });
 
   it('should display error message when there is an error with the payment date', () => {
-    const viewModel = aEditPaymentViewModel();
+    const viewModel = anEditPaymentViewModel();
     viewModel.errors.paymentDateError = { message: 'That is not a valid date', dayError: true, monthError: false, yearError: true };
     const wrapper = render(viewModel);
 
@@ -81,7 +81,7 @@ describe(page, () => {
   });
 
   it('should add error state to date fields with error', () => {
-    const viewModel = aEditPaymentViewModel();
+    const viewModel = anEditPaymentViewModel();
     viewModel.errors.paymentDateError = { message: 'That is not a valid date', dayError: true, monthError: false, yearError: true };
     const wrapper = render(viewModel);
 
@@ -91,7 +91,7 @@ describe(page, () => {
   });
 
   it('should initialise the payment reference with the supplied value', () => {
-    const viewModel = aEditPaymentViewModel();
+    const viewModel = anEditPaymentViewModel();
     viewModel.formValues.paymentReference = 'transaction';
     const wrapper = render(viewModel);
 
@@ -99,7 +99,7 @@ describe(page, () => {
   });
 
   it('should display error message when there is an error with the payment reference', () => {
-    const viewModel = aEditPaymentViewModel();
+    const viewModel = anEditPaymentViewModel();
     viewModel.errors.paymentReferenceErrorMessage = 'That is far too long';
     const wrapper = render(viewModel);
 
@@ -108,7 +108,7 @@ describe(page, () => {
 
   it('should render the save changes button which links to the edit payment url', () => {
     const viewModel = {
-      ...aEditPaymentViewModel(),
+      ...anEditPaymentViewModel(),
       reportId: '12',
       paymentId: '34',
     };
@@ -120,7 +120,7 @@ describe(page, () => {
   });
 
   it('should render the delete payment button', () => {
-    const wrapper = render(aEditPaymentViewModel());
+    const wrapper = render(anEditPaymentViewModel());
 
     wrapper.expectElement('button[data-cy="delete-payment-button"]').toExist();
     wrapper.expectElement('button[data-cy="delete-payment-button"]').hasClass('govuk-button--warning');
@@ -128,7 +128,7 @@ describe(page, () => {
 
   it('should render the cancel link which links to the premium payments table', () => {
     const viewModel = {
-      ...aEditPaymentViewModel(),
+      ...anEditPaymentViewModel(),
       reportId: '12',
     };
     const wrapper = render(viewModel);

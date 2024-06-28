@@ -1362,13 +1362,13 @@ const getUtilisationReportWithFeeRecordsToKey = async (reportId) => {
 };
 
 /**
- * Gets the payment details required for the edit payment screen
+ * Gets the payment details
  * @param {string} reportId - The report id
  * @param {string} paymentId - The payment id
- * @returns {Promise<import('./api-response-types').EditPaymentDetailsResponseBody>} The edit payment details
+ * @returns {Promise<import('./api-response-types').PaymentDetailsResponseBody>} The payment details
  */
-const getEditPaymentDetails = async (reportId, paymentId) => {
-  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}/edit`, {
+const getPaymentDetails = async (reportId, paymentId) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`, {
     headers: headers.central,
   });
   return response.data;
@@ -1439,5 +1439,5 @@ module.exports = {
   addPaymentToFeeRecords,
   generateKeyingData,
   getUtilisationReportWithFeeRecordsToKey,
-  getEditPaymentDetails,
+  getPaymentDetails,
 };

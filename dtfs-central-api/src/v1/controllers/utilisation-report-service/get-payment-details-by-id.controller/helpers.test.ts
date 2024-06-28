@@ -7,7 +7,7 @@ import {
   ReportPeriod,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { mapToEditPaymentDetails } from './helpers';
+import { mapToPaymentDetails } from './helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { Payment } from '../../../../types/payments';
@@ -15,8 +15,8 @@ import { FeeRecord } from '../../../../types/fee-records';
 
 jest.mock('../../../../repositories/banks-repo');
 
-describe('get-edit-payment.controller helpers', () => {
-  describe('mapToEditPaymentDetails', () => {
+describe('get-payment.controller helpers', () => {
+  describe('mapToPaymentDetails', () => {
     const bankId = '123';
 
     const paymentCurrency: Currency = 'GBP';
@@ -41,7 +41,7 @@ describe('get-edit-payment.controller helpers', () => {
       jest.mocked(getBankNameById).mockResolvedValue(undefined);
 
       // Act / Assert
-      await expect(mapToEditPaymentDetails(payment)).rejects.toThrow(NotFoundError);
+      await expect(mapToPaymentDetails(payment)).rejects.toThrow(NotFoundError);
       expect(getBankNameById).toHaveBeenCalledWith(bankId);
     });
 
@@ -53,10 +53,10 @@ describe('get-edit-payment.controller helpers', () => {
       jest.mocked(getBankNameById).mockResolvedValue(bankName);
 
       // Act
-      const editPaymentDetails = await mapToEditPaymentDetails(payment);
+      const paymentDetails = await mapToPaymentDetails(payment);
 
       // Assert
-      expect(editPaymentDetails.bank).toEqual({ id: bankId, name: bankName });
+      expect(paymentDetails.bank).toEqual({ id: bankId, name: bankName });
     });
 
     it('returns an object containing the report period', async () => {
@@ -69,10 +69,10 @@ describe('get-edit-payment.controller helpers', () => {
       payment.feeRecords[0].report.reportPeriod = reportPeriod;
 
       // Act
-      const editPaymentDetails = await mapToEditPaymentDetails(payment);
+      const paymentDetails = await mapToPaymentDetails(payment);
 
       // Assert
-      expect(editPaymentDetails.reportPeriod).toEqual(reportPeriod);
+      expect(paymentDetails.reportPeriod).toEqual(reportPeriod);
     });
 
     it('returns an object containing the mapped payment', async () => {
@@ -94,10 +94,10 @@ describe('get-edit-payment.controller helpers', () => {
       payment.reference = mappedPayment.reference;
 
       // Act
-      const editPaymentDetails = await mapToEditPaymentDetails(payment);
+      const paymentDetails = await mapToPaymentDetails(payment);
 
       // Assert
-      expect(editPaymentDetails.payment).toEqual(mappedPayment);
+      expect(paymentDetails.payment).toEqual(mappedPayment);
     });
 
     it('returns an object containing the mapped fee records', async () => {
@@ -142,10 +142,10 @@ describe('get-edit-payment.controller helpers', () => {
       ];
 
       // Act
-      const editPaymentDetails = await mapToEditPaymentDetails(payment);
+      const paymentDetails = await mapToPaymentDetails(payment);
 
       // Assert
-      expect(editPaymentDetails.feeRecords).toEqual(feeRecords);
+      expect(paymentDetails.feeRecords).toEqual(feeRecords);
     });
 
     it('returns an object containing the total reported payments', async () => {
@@ -178,10 +178,10 @@ describe('get-edit-payment.controller helpers', () => {
       };
 
       // Act
-      const editPaymentDetails = await mapToEditPaymentDetails(payment);
+      const paymentDetails = await mapToPaymentDetails(payment);
 
       // Assert
-      expect(editPaymentDetails.totalReportedPayments).toEqual(totalReportedPayments);
+      expect(paymentDetails.totalReportedPayments).toEqual(totalReportedPayments);
     });
   });
 });

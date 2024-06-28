@@ -1,7 +1,7 @@
 /**
  * @openapi
  * definitions:
- *   EditPaymentDetailsResponseBody:
+ *   PaymentDetailsResponseBody:
  *     type: object
  *     properties:
  *       bank:

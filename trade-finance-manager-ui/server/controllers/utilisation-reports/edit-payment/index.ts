@@ -18,8 +18,8 @@ export const getEditPayment = async (req: Request, res: Response) => {
   const { reportId, paymentId } = req.params;
 
   try {
-    const editPaymentDetails = await api.getEditPaymentDetails(reportId, paymentId, userToken);
-    const editPaymentViewModel = getEditPaymentViewModel(editPaymentDetails, reportId, paymentId);
+    const paymentDetails = await api.getPaymentDetails(reportId, paymentId, userToken);
+    const editPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId);
     return renderEditPaymentPage(res, editPaymentViewModel);
   } catch (error) {
     console.error('Error updating utilisation report status:', error);
@@ -45,8 +45,8 @@ export const postEditPayment = async (req: PostEditPaymentRequest, res: Response
       return res.redirect(`/utilisation-reports/${reportId}`);
     }
 
-    const editPaymentDetails = await api.getEditPaymentDetails(reportId, paymentId, userToken);
-    const editPaymentViewModel = getEditPaymentViewModelWithFormValuesAndErrors(editPaymentDetails, reportId, paymentId, formValues, editPaymentErrors);
+    const paymentDetails = await api.getPaymentDetails(reportId, paymentId, userToken);
+    const editPaymentViewModel = getEditPaymentViewModelWithFormValuesAndErrors(paymentDetails, reportId, paymentId, formValues, editPaymentErrors);
     return renderEditPaymentPage(res, editPaymentViewModel);
   } catch (error) {
     console.error('Error updating utilisation report status:', error);

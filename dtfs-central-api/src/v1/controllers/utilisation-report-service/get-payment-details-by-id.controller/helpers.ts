@@ -1,5 +1,5 @@
 import { PaymentEntity } from '@ukef/dtfs2-common';
-import { EditPaymentDetails } from '../../../../types/payments';
+import { GetPaymentDetailsResponseBody } from '.';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { mapFeeRecordEntityToFeeRecord } from '../../../../mapping/fee-record-mapper';
@@ -7,11 +7,11 @@ import { mapPaymentEntityToPayment } from '../../../../mapping/payment-mapper';
 import { calculateTotalCurrencyAndAmount } from '../../../../helpers';
 
 /**
- * Maps the supplied payment entity to the selected payment details
+ * Maps the supplied payment entity to the payment details
  * @param payment - The payment entity with fee records and utilisation report attached
- * @returns The selected payment details
+ * @returns The payment details
  */
-export const mapToEditPaymentDetails = async (payment: PaymentEntity): Promise<EditPaymentDetails> => {
+export const mapToPaymentDetails = async (payment: PaymentEntity): Promise<GetPaymentDetailsResponseBody> => {
   const { feeRecords } = payment;
   const {
     report: { bankId, reportPeriod },

@@ -5,5 +5,5 @@ export * from './fee-record-view-model-item';
 export * from './fee-record-payment-group-item';
 export * from './fee-records-to-key-response-body';
 export * from './payment';
-export * from './edit-payment-details-response-body';
+export * from './payment-details-response-body';
 export * from './edit-payment-view-model';

@@ -1,6 +1,6 @@
 import { EditPaymentViewModel } from '../server/types/view-models';
 
-export const aEditPaymentViewModel = (): EditPaymentViewModel => ({
+export const anEditPaymentViewModel = (): EditPaymentViewModel => ({
   reportId: '1',
   paymentId: '1',
   paymentCurrency: 'GBP',

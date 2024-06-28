@@ -1,16 +1,16 @@
 import httpMocks from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
-import { getEditPayment } from './get-edit-payment.controller';
+import { getPaymentDetailsById } from './get-payment-details-by-id.controller';
 import api from '../../api';
-import { EditPaymentDetailsResponseBody } from '../../api-response-types';
+import { PaymentDetailsResponseBody } from '../../api-response-types';
 import { aPayment } from '../../../../test-helpers';
 
 console.error = jest.fn();
 
 jest.mock('../../api');
 
-describe('get-edit-payment.controller', () => {
-  describe('getEditPayment', () => {
+describe('get-payment-details-by-id.controller', () => {
+  describe('getPaymentDetailsById', () => {
     const reportId = '1';
     const paymentId = '2';
 
@@ -19,7 +19,7 @@ describe('get-edit-payment.controller', () => {
         params: { reportId, paymentId },
       });
 
-    const aEditPaymentDetailsResponseBody = (): EditPaymentDetailsResponseBody => ({
+    const aPaymentDetailsResponseBody = (): PaymentDetailsResponseBody => ({
       bank: { id: '123', name: 'Test bank' },
       reportPeriod: {
         start: { month: 1, year: 2024 },
@@ -33,15 +33,15 @@ describe('get-edit-payment.controller', () => {
       },
     });
 
-    it('gets the edit payment details', async () => {
+    it('gets the payment details', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const responseBody = aEditPaymentDetailsResponseBody();
-      jest.mocked(api.getEditPaymentDetails).mockResolvedValue(aEditPaymentDetailsResponseBody());
+      const responseBody = aPaymentDetailsResponseBody();
+      jest.mocked(api.getPaymentDetails).mockResolvedValue(aPaymentDetailsResponseBody());
 
       // Act
-      await getEditPayment(req, res);
+      await getPaymentDetailsById(req, res);
 
       // Assert
       expect(res._getData()).toEqual(responseBody);
@@ -51,10 +51,10 @@ describe('get-edit-payment.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      jest.mocked(api.getEditPaymentDetails).mockResolvedValue(aEditPaymentDetailsResponseBody());
+      jest.mocked(api.getPaymentDetails).mockResolvedValue(aPaymentDetailsResponseBody());
 
       // Act
-      await getEditPayment(req, res);
+      await getPaymentDetailsById(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -64,10 +64,10 @@ describe('get-edit-payment.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      jest.mocked(api.getEditPaymentDetails).mockRejectedValue(new Error('Some error'));
+      jest.mocked(api.getPaymentDetails).mockRejectedValue(new Error('Some error'));
 
       // Act
-      await getEditPayment(req, res);
+      await getPaymentDetailsById(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
@@ -81,10 +81,10 @@ describe('get-edit-payment.controller', () => {
       const errorStatus = HttpStatusCode.BadRequest;
       const axiosError = new AxiosError(undefined, undefined, undefined, undefined, { status: errorStatus } as AxiosResponse);
 
-      jest.mocked(api.getEditPaymentDetails).mockRejectedValue(axiosError);
+      jest.mocked(api.getPaymentDetails).mockRejectedValue(axiosError);
 
       // Act
-      await getEditPayment(req, res);
+      await getPaymentDetailsById(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(errorStatus);
@@ -95,13 +95,13 @@ describe('get-edit-payment.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      jest.mocked(api.getEditPaymentDetails).mockRejectedValue(new Error('Some error'));
+      jest.mocked(api.getPaymentDetails).mockRejectedValue(new Error('Some error'));
 
       // Act
-      await getEditPayment(req, res);
+      await getPaymentDetailsById(req, res);
 
       // Assert
-      expect(res._getData()).toBe('Failed to get edit payment details');
+      expect(res._getData()).toBe('Failed to get payment details');
       expect(res._isEndCalled()).toBe(true);
     });
   });

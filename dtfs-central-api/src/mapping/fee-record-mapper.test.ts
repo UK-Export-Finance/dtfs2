@@ -85,7 +85,7 @@ describe('fee record mapper', () => {
   });
 
   describe('mapFeeRecordEntityToFeeRecord', () => {
-    it('maps the fee record entity id to the fee record it', () => {
+    it('maps the fee record entity id to the fee record id', () => {
       // Arrange
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withId(10).build();
 
@@ -96,7 +96,7 @@ describe('fee record mapper', () => {
       expect(feeRecord.id).toBe(10);
     });
 
-    it('maps the fee record entity facility id to the fee record id', () => {
+    it('maps the fee record entity facility id to the fee record facilityId', () => {
       // Arrange
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId('27182818').build();
 

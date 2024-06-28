@@ -1,6 +1,6 @@
 import { isValid, parseISO } from 'date-fns';
 import { IsoDateTimeStamp, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth, getOneIndexedMonth } from '@ukef/dtfs2-common';
-import { GetEditPaymentDetailsResponseBody, FeeRecord, Payment } from '../../../api-response-types';
+import { GetPaymentDetailsResponseBody, FeeRecord, Payment } from '../../../api-response-types';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { PaymentErrorsViewModel, EditPaymentViewModel } from '../../../types/view-models';
@@ -48,12 +48,12 @@ const mapToEditPaymentFormValues = (payment: Payment): EditPaymentFormValues => 
 });
 
 /**
- * Maps the edit payment response body to the edit payment view model
- * @param editPaymentResponse - The GET edit payment response body
+ * Maps the payment details response body to the edit payment view model
+ * @param editPaymentResponse - The GET payment details response body
  * @param reportId - The report id
  * @returns The edit payment view model
  */
-export const getEditPaymentViewModel = (editPaymentResponse: GetEditPaymentDetailsResponseBody, reportId: string, paymentId: string): EditPaymentViewModel => ({
+export const getEditPaymentViewModel = (editPaymentResponse: GetPaymentDetailsResponseBody, reportId: string, paymentId: string): EditPaymentViewModel => ({
   reportId,
   paymentId,
   paymentCurrency: editPaymentResponse.payment.currency,
@@ -66,13 +66,13 @@ export const getEditPaymentViewModel = (editPaymentResponse: GetEditPaymentDetai
 });
 
 /**
- * Maps the edit payment response body to the edit payment view model
- * @param editPaymentResponse - The GET edit payment response body
+ * Maps the payment details response body to the edit payment view model
+ * @param editPaymentResponse - The GET payment details response body
  * @param reportId - The report id
  * @returns The edit payment view model
  */
 export const getEditPaymentViewModelWithFormValuesAndErrors = (
-  editPaymentResponse: GetEditPaymentDetailsResponseBody,
+  editPaymentResponse: GetPaymentDetailsResponseBody,
   reportId: string,
   paymentId: string,
   formValues: EditPaymentFormValues,

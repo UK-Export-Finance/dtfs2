@@ -1,8 +1,8 @@
-import { GetEditPaymentDetailsResponseBody } from '../server/api-response-types';
+import { GetPaymentDetailsResponseBody } from '../server/api-response-types';
 import { aFeeRecord } from './fee-record';
 import { aPayment } from './payment';
 
-export const aEditPaymentDetailsResponseBody = (): GetEditPaymentDetailsResponseBody => ({
+export const aPaymentDetailsResponseBody = (): GetPaymentDetailsResponseBody => ({
   bank: {
     id: '123',
     name: 'Test bank',

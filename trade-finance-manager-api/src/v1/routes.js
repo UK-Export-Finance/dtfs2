@@ -170,12 +170,12 @@ authRouter
   .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.getFeeRecordsToKey);
 
 authRouter
-  .route('/utilisation-reports/:reportId/payment/:paymentId/edit')
+  .route('/utilisation-reports/:reportId/payment/:paymentId')
   .get(
     validation.sqlIdValidation('reportId'),
     validation.sqlIdValidation('paymentId'),
     handleExpressValidatorResult,
-    utilisationReportsController.getEditPayment,
+    utilisationReportsController.getPaymentDetailsById,
   );
 
 module.exports = { authRouter, openRouter };

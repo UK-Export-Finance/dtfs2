@@ -2,17 +2,16 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { FeeRecordEntityMockBuilder, PaymentEntity, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { getEditPayment } from '.';
-import { mapToEditPaymentDetails } from './helpers';
+import { getPaymentDetailsById, GetPaymentDetailsResponseBody } from '.';
+import { mapToPaymentDetails } from './helpers';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
-import { EditPaymentDetails } from '../../../../types/payments';
 
 console.error = jest.fn();
 
 jest.mock('./helpers');
 
-describe('get-edit-payment.controller', () => {
-  describe('getEditPayment', () => {
+describe('get-payment-details-by-id.controller', () => {
+  describe('getPaymentDetailsById', () => {
     const reportId = 3;
     const paymentId = 14;
     const bankId = '123';
@@ -54,7 +53,7 @@ describe('get-edit-payment.controller', () => {
         .mockResolvedValue(null);
 
       // Act
-      await getEditPayment(req, res);
+      await getPaymentDetailsById(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
@@ -75,13 +74,13 @@ describe('get-edit-payment.controller', () => {
         .mockResolvedValue(aPaymentWithFeeRecordsAndReportAttached());
 
       // Act
-      await getEditPayment(req, res);
+      await getPaymentDetailsById(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
     });
 
-    it('responds with a body matching the return value of the mapping function', async () => {
+    it('responds with the payment details', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -95,17 +94,17 @@ describe('get-edit-payment.controller', () => {
         })
         .mockResolvedValue(aPaymentWithFeeRecordsAndReportAttached());
 
-      const editPaymentDetails = {
+      const paymentDetails = {
         field1: 'Some value',
         field2: 'Another value',
-      } as unknown as EditPaymentDetails;
-      jest.mocked(mapToEditPaymentDetails).mockResolvedValue(editPaymentDetails);
+      } as unknown as GetPaymentDetailsResponseBody;
+      jest.mocked(mapToPaymentDetails).mockResolvedValue(paymentDetails);
 
       // Act
-      await getEditPayment(req, res);
+      await getPaymentDetailsById(req, res);
 
       // Assert
-      expect(res._getData()).toEqual(editPaymentDetails);
+      expect(res._getData()).toEqual(paymentDetails);
     });
   });
 });
