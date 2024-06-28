@@ -5,5 +5,6 @@ module.exports = {
   coverageReporters: ['text', 'text-summary'],
   testMatch: ['**/*.api-test.{js,ts}'],
   testTimeout: 80000,
+  workerIdleMemoryLimit: '512MB',
   ...commonSettings,
 };
