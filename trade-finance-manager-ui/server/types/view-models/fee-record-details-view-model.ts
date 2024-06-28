@@ -2,12 +2,17 @@ import { SortedAndFormattedCurrencyAndAmount } from './utilisation-report-reconc
 
 export type FeeRecordDetailsCheckboxId = `feeRecordId-${number}`;
 
-export type FeeRecordDetailsViewModel = {
+type BaseFeeRecordDetailsViewModel = {
   id: number;
   facilityId: string;
   exporter: string;
   reportedFees: SortedAndFormattedCurrencyAndAmount;
   reportedPayments: SortedAndFormattedCurrencyAndAmount;
+};
+
+export type FeeRecordDetailsWithCheckboxesViewModel = (BaseFeeRecordDetailsViewModel & {
   checkboxId?: FeeRecordDetailsCheckboxId;
   isChecked?: boolean;
-}[];
+})[];
+
+export type FeeRecordDetailsWithoutCheckboxesViewModel = BaseFeeRecordDetailsViewModel[];

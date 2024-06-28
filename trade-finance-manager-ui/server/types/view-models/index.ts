@@ -5,5 +5,5 @@ export * from './error-summary-view-model';
 export * from './add-payment-view-model';
 export * from './check-keying-data-view-model';
 export * from './fee-record-details-view-model';
-export * from './payment-form-view-model';
+export * from './payment-errors-view-model';
 export * from './edit-payment-view-model';

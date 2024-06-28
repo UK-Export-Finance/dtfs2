@@ -1,10 +1,11 @@
 import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
 import { BaseViewModel } from './base-view-model';
-import { PaymentFormViewModel } from './payment-form-view-model';
-import { FeeRecordDetailsViewModel } from './fee-record-details-view-model';
+import { PaymentErrorsViewModel } from './payment-errors-view-model';
+import { FeeRecordDetailsWithoutCheckboxesViewModel } from './fee-record-details-view-model';
+import { AddPaymentFormValues } from '../add-payment-form-values';
 
 export type SelectedReportedFeesDetailsViewModel = {
-  feeRecords: FeeRecordDetailsViewModel;
+  feeRecords: FeeRecordDetailsWithoutCheckboxesViewModel;
   totalReportedPayments: CurrencyAndAmountString;
 };
 
@@ -14,12 +15,15 @@ export type RecordedPaymentDetailsViewModel = {
   reference?: string;
 };
 
-export type AddPaymentViewModel = BaseViewModel &
-  PaymentFormViewModel & {
-    reportId: string;
-    bank: { name: string };
-    formattedReportPeriod: string;
-    reportedFeeDetails: SelectedReportedFeesDetailsViewModel;
-    recordedPaymentsDetails: RecordedPaymentDetailsViewModel[];
-    multipleFeeRecordsSelected: boolean;
-  };
+export type AddPaymentViewModel = BaseViewModel & {
+  reportId: string;
+  bank: { name: string };
+  formattedReportPeriod: string;
+  reportedFeeDetails: SelectedReportedFeesDetailsViewModel;
+  recordedPaymentsDetails: RecordedPaymentDetailsViewModel[];
+  paymentNumber: number;
+  selectedFeeRecordCheckboxIds: string[];
+  formValues: AddPaymentFormValues;
+  errors: PaymentErrorsViewModel;
+  multipleFeeRecordsSelected: boolean;
+};
