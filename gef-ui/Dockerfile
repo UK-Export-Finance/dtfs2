@@ -13,7 +13,7 @@ COPY package-lock.json .
 COPY libs libs
 COPY gef-ui gef-ui
 
-RUN npm run ci:all
+RUN npm ci
 RUN npm cache clean --force
 
 # Execute Script
