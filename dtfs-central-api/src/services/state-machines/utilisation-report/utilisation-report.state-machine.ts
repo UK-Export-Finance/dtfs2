@@ -7,8 +7,8 @@ import {
   handleUtilisationReportManuallySetCompletedEvent,
   handleUtilisationReportManuallySetIncompleteEvent,
   handleUtilisationReportAddAPaymentEvent,
-  handleUtilisationReportPaymentRemovedFromFeeRecordEvent,
   handleUtilisationReportReportUploadedEvent,
+  handleUtilisationReportDeletePaymentEvent,
 } from './event-handlers';
 import { UtilisationReportEvent } from './event/utilisation-report.event';
 
@@ -86,8 +86,8 @@ export class UtilisationReportStateMachine {
         switch (event.type) {
           case 'ADD_A_PAYMENT':
             return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
-          case 'PAYMENT_REMOVED_FROM_FEE_RECORD':
-            return handleUtilisationReportPaymentRemovedFromFeeRecordEvent(this.report, event.payload);
+          case 'DELETE_PAYMENT':
+            return handleUtilisationReportDeletePaymentEvent(this.report, event.payload);
           case 'FEE_RECORD_KEYED':
             return handleUtilisationReportFeeRecordKeyedEvent(this.report, event.payload);
           default:

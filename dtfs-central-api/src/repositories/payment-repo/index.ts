@@ -1,1 +1,1 @@
-export { PaymentRepo } from './payment.repo';
+export * from './payment.repo';

@@ -6,4 +6,4 @@
  * stamp of '2023-12-18T11:51:54Z'
  *
  */
-export const getNowAsEpoch = () => Date.now();
+export const getNowAsEpoch = (): number => Date.now();
