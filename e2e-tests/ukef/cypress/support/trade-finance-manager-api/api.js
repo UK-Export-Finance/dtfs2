@@ -5,11 +5,9 @@ const api = () => {
   return url;
 };
 
-const tfmApiKey = Cypress.config('tfmApiKey');
-
 const genericHeaders = {
+  'x-api-key': Cypress.config('tfmApiKey'),
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
-  'x-api-key': tfmApiKey,
 };
 
 const headers = (token) => ({

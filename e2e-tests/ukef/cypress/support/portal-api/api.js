@@ -20,7 +20,7 @@ const completeLoginWithSignInLink = ({ token2fa, username }) => {
         url: `${api()}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
         method: 'POST',
         headers: {
-          [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+          ...headers,
           Authorization: token2fa,
         },
       })

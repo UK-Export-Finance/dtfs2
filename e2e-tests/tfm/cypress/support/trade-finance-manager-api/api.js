@@ -6,11 +6,9 @@ const api = () => {
   return url;
 };
 
-const apiKey = Cypress.config('apiKey');
-
 const headers = {
+  'x-api-key': Cypress.config('apiKey'),
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
-  'x-api-key': apiKey,
 };
 
 module.exports.submitDeal = (dealId, dealType, token) =>
@@ -67,9 +65,7 @@ module.exports.login = (username, password) =>
       url: `${api()}/v1/login`,
       method: 'POST',
       body: { username, password },
-      headers: {
-        ...headers,
-      },
+      headers,
     })
     .then((resp) => {
       expect(resp.status).to.equal(200);

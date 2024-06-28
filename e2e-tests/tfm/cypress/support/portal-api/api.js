@@ -6,6 +6,11 @@ const api = () => {
   return url;
 };
 
+const headers = {
+  'x-api-key': Cypress.config('apiKey'),
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+};
+
 const completeLoginWithSignInLink = ({ token2fa, username }) => {
   const signInToken = SIGN_IN_TOKENS.VALID_FORMAT_SIGN_IN_TOKEN_ONE;
   cy.overridePortalUserSignInTokenWithValidTokenByUsername({ username, newSignInToken: signInToken });
@@ -15,7 +20,7 @@ const completeLoginWithSignInLink = ({ token2fa, username }) => {
         url: `${api()}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
         method: 'POST',
         headers: {
-          [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+          ...headers,
           Authorization: token2fa,
         },
       })
@@ -33,9 +38,7 @@ module.exports.logIn = (opts) => {
       url: `${api()}/v1/login`,
       method: 'POST',
       body: { username, password },
-      headers: {
-        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
-      },
+      headers,
     })
     .then((loginResponse) => {
       expect(loginResponse.status).to.equal(200);

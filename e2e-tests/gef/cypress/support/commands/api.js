@@ -9,11 +9,9 @@ const centralApiUrl = () => {
   return url;
 };
 
-const apiKey = Cypress.config('apiKey');
-
 const headers = {
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
-  'x-api-key': apiKey,
+  'x-api-key': Cypress.config('apiKey'),
 };
 
 const tfmApiUrl = () => {
@@ -30,7 +28,7 @@ const completeLoginWithSignInLink = ({ token2fa, username }) => {
         url: `${portalApi}/users/${userId}/sign-in-link/${signInToken}/login`,
         method: 'POST',
         headers: {
-          [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+          ...headers,
           Authorization: token2fa,
         },
       })
@@ -48,9 +46,7 @@ const login = ({ username, password }) => {
       url: `${portalApi}/login`,
       method: 'POST',
       body: { username, password },
-      headers: {
-        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
-      },
+      headers,
     })
     .then((loginResponse) => {
       expect(loginResponse.status).to.equal(200);
