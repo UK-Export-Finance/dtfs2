@@ -237,8 +237,12 @@ describe('/v1/deals', () => {
 
         const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
 
-        expect(updateGefFacilitySpy).toHaveBeenCalledWith(facilityId, {
-          hasBeenIssuedAndAcknowledged: true,
+        expect(updateGefFacilitySpy).toHaveBeenCalledWith({
+          auditDetails,
+          facilityId,
+          facilityUpdate: {
+            hasBeenIssuedAndAcknowledged: true,
+          },
         });
       });
     });

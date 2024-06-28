@@ -16,15 +16,18 @@ const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../con
  * @param {Object} facilities
  */
 const updateChangedToIssued = async ({ facilities, auditDetails }) => {
-  facilities.forEach(async (facility) => {
-    const { _id: facilityId, canResubmitIssuedFacilities } = facility;
-    if (canResubmitIssuedFacilities) {
-      const facilityUpdate = {
-        canResubmitIssuedFacilities: false,
-      };
-      await updateFacility({ facilityId, facilityUpdate, auditDetails });
-    }
-  });
+  await Promise.all(
+    facilities.map((facility) => {
+      const { _id: facilityId, canResubmitIssuedFacilities } = facility;
+      if (canResubmitIssuedFacilities) {
+        const facilityUpdate = {
+          canResubmitIssuedFacilities: false,
+        };
+        updateFacility({ facilityId, facilityUpdate, auditDetails });
+      }
+      return Promise.resolve();
+    }),
+  );
 };
 
 // retrieves user information from database

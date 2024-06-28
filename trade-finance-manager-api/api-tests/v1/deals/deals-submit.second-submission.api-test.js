@@ -45,7 +45,7 @@ const updatePortalFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.
 
 const updateGefActivitySpy = jest.fn(() => Promise.resolve(MOCK_GEF_DEAL_MIN));
 
-const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve(facilityUpdate));
+const updateGefFacilitySpy = jest.fn(({ facilityUpdate }) => Promise.resolve(facilityUpdate));
 
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));

@@ -82,7 +82,9 @@ module.exports = {
     };
     return Promise.resolve(updatedFacility);
   },
-  updateGefFacility: (facilityId, facilityUpdate) => Promise.resolve(facilityUpdate),
+  updateGefFacility: ({ facilityUpdate }) => {
+    return facilityUpdate;
+  },
   addPortalDealComment: jest.fn(),
   addUnderwriterCommentToGefDeal: jest.fn(),
   queryDeals: jest.fn(),
