@@ -59,25 +59,6 @@ class TestApi {
     const to = async (url: string) => await request(this.app).delete(url).send(data).set(headers);
     return { to };
   }
-
-  public as(user?: { token?: string }) {
-    this.assertIsInitialised();
-    const token = user?.token || '';
-
-    const post = (data: object) => ({
-      to: async (url: string) => await request(this.app).post(url).set({ authorization: token }).send(data).set(headers),
-    });
-
-    const put = (data: object) => ({
-      to: async (url: string) => await request(this.app).put(url).set({ authorization: token }).send(data).set(headers),
-    });
-
-    const get = async (url: string, query = {}) => await request(this.app).get(url).set({ authorization: token }).query(query).set(headers);
-
-    const remove = async (url: string) => await request(this.app).delete(url).set({ authorization: token }).send().set(headers);
-
-    return { post, put, get, remove };
-  }
 }
 
 export const testApi = new TestApi();

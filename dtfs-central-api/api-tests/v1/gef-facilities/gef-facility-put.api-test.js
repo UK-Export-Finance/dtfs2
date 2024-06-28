@@ -6,8 +6,6 @@ const { testApi } = require('../../test-api');
 
 const { APPLICATION } = require('../../mocks/gef/gef-applications');
 
-const testUserCache = require('../../mocks/test-users/api-test-users');
-
 const baseUrl = '/v1/portal/gef/facilities';
 const applicationBaseUrl = '/v1/portal/gef/deals';
 
@@ -17,20 +15,14 @@ const createDeal = async () => {
 };
 
 describe('PUT updateGefFacilities', () => {
-  let aMaker;
   let mockApplication;
-
-  beforeAll(async () => {
-    const testUsers = await testUserCache.initialise();
-    aMaker = testUsers().withRole('maker').one();
-  });
 
   beforeEach(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.DEALS]);
   });
 
   it('returns 404 if facility does not exist', async () => {
-    const { status } = await testApi.as().put({}).to(`${baseUrl}/6215fed9a216070012c365af`);
+    const { status } = await testApi.put({}).to(`${baseUrl}/6215fed9a216070012c365af`);
 
     expect(status).toEqual(404);
   });
@@ -45,12 +37,9 @@ describe('PUT updateGefFacilities', () => {
 
     mockApplication = await createDeal();
 
-    const item = await testApi
-      .as(aMaker)
-      .post({ dealId: mockApplication._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false })
-      .to(baseUrl);
+    const item = await testApi.post({ dealId: mockApplication._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
-    const { status, body } = await testApi.as(aMaker).put(update).to(`${baseUrl}/${item.body._id}`);
+    const { status, body } = await testApi.put(update).to(`${baseUrl}/${item.body._id}`);
 
     const expected = {
       hasBeenIssued: false,
@@ -89,12 +78,9 @@ describe('PUT updateGefFacilities', () => {
 
     mockApplication = await createDeal();
 
-    const item = await testApi
-      .as(aMaker)
-      .post({ dealId: mockApplication._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false })
-      .to(baseUrl);
+    const item = await testApi.post({ dealId: mockApplication._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
-    const { status, body } = await testApi.as(aMaker).put(update).to(`${baseUrl}/${item.body._id}`);
+    const { status, body } = await testApi.put(update).to(`${baseUrl}/${item.body._id}`);
 
     const expected = {
       hasBeenIssued: true,

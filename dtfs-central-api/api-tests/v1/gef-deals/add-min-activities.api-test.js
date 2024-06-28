@@ -1,5 +1,6 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, ROLES } = require('@ukef/dtfs2-common');
 const { format, fromUnixTime } = require('date-fns');
+const { ObjectId } = require('mongodb');
 
 const {
   ukefSubmissionPortalActivity,
@@ -8,9 +9,6 @@ const {
   getUserInfo,
   updateChangedToIssued,
 } = require('../../../src/v1/controllers/portal/gef-deal/add-min-activities.controller');
-
-const collectionName = MONGO_DB_COLLECTIONS.FACILITIES;
-const applicationCollectionName = MONGO_DB_COLLECTIONS.DEALS;
 
 const { mongoDbClient: db } = require('../../../src/drivers/db-client');
 
@@ -24,27 +22,33 @@ const MOCK_APPLICATION_FACILITIES = APPLICATION[1];
 
 const wipeDB = require('../../wipeDB');
 
-const testUserCache = require('../../mocks/test-users/api-test-users');
-
 const { testApi } = require('../../test-api');
+const { aPortalUser } = require('../../mocks/test-users/portal-user');
 
 const baseUrl = '/v1/portal/gef/facilities';
 const applicationBaseUrl = '/v1/portal/gef/deals';
 
+const checker = {
+  ...aPortalUser(),
+  roles: [ROLES.CHECKER],
+  _id: new ObjectId(),
+};
+
+const maker = {
+  ...aPortalUser(),
+  roles: [ROLES.MAKER],
+  _id: new ObjectId(),
+};
+
+beforeAll(async () => {
+  const usersCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
+  await usersCollection.insertMany([checker, maker]);
+});
+
 describe('submissionPortalActivity()', () => {
   it('should return a populated array with submission activity object and MIA', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
-    // adds user to db incase empty
-    await testUserCache.initialise();
-
-    /*
-   As _id's can change for checker, need to access db and find a checker
-   These details then added to the MOCK_APPLICATION
-   */
-    const userCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
-    // finds someone with role checker only
-    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS]);
 
     MOCK_APPLICATION.checkerId = checker._id;
     MOCK_APPLICATION.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
@@ -85,13 +89,8 @@ describe('facilityChangePortalActivity()', () => {
   const mockFacilitiesArray = [mockFacilities[4], mockFacilities[5]];
 
   it('should return a populated array with issued facility activity object', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
-
-    const userCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
-
-    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
-    const maker = await userCollection.findOne({ roles: { $eq: ['maker'] } });
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS]);
 
     MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
 
@@ -161,16 +160,11 @@ describe('facilityChangePortalActivity()', () => {
   });
 
   it('should return a populated array with 2 in the issued facility activity object', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS]);
 
     // resets array to length 0
     MOCK_APPLICATION_FACILITIES.portalActivities = [];
-
-    const userCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
-
-    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
-    const maker = await userCollection.findOne({ roles: { $eq: ['maker'] } });
 
     MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
 
@@ -200,14 +194,10 @@ describe('facilityChangePortalActivity()', () => {
 
 describe('getUserInfo()', () => {
   it('should return correctly formatted userObj', async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS]);
 
     // ensures that user object returned is correctly formatted
-
-    const userCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
-    // finds someone with role checker only
-    const checker = await userCollection.findOne({ roles: { $eq: ['checker'] } });
 
     const returnedUser = await getUserInfo(checker._id);
 
@@ -234,16 +224,6 @@ describe('portalActivityGenerator()', () => {
     type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
     ukefFacilityId: 123456,
     _id: 123,
-  };
-  const maker = {
-    firstname: 'Joe',
-    surname: 'Bloggs',
-    id: '12345',
-  };
-  const checker = {
-    firstname: 'Bob',
-    surname: 'Smith',
-    id: '4567',
   };
   const activityHTML = 'facility';
 
@@ -381,24 +361,18 @@ describe('portalActivityGenerator()', () => {
 });
 
 describe('updateChangedToIssued()', () => {
-  let aMaker;
-  let aChecker;
   let mockApplication;
 
   beforeAll(async () => {
-    await wipeDB.wipe([collectionName]);
-    await wipeDB.wipe([applicationCollectionName]);
-    const testUsers = await testUserCache.initialise();
-    aMaker = testUsers().withRole('maker').one();
-    aChecker = testUsers().withRole('checker').one();
-    mockApplication = await testApi.as(aMaker).post(APPLICATION[0]).to(applicationBaseUrl);
-    await testApi.as(aMaker).put(APPLICATION[0]).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS]);
+    mockApplication = await testApi.post(APPLICATION[0]).to(applicationBaseUrl);
+    await testApi.put(APPLICATION[0]).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
   });
 
   beforeEach(async () => {
     // posts facility with canResubmitIssuedFacilities as true
     await testApi
-      .as(aMaker)
       .post({
         dealId: mockApplication.body._id,
         type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
@@ -409,7 +383,7 @@ describe('updateChangedToIssued()', () => {
 
     const mockQuery = { dealId: mockApplication.body._id };
 
-    const { body } = await testApi.as(aChecker).get(baseUrl, mockQuery);
+    const { body } = await testApi.get(baseUrl, mockQuery);
 
     // changes to false to test
     await updateChangedToIssued(body);
@@ -419,7 +393,7 @@ describe('updateChangedToIssued()', () => {
     const mockQuery = { dealId: mockApplication.body._id };
 
     // gets facilities from DB
-    const { body } = await testApi.as(aChecker).get(baseUrl, mockQuery);
+    const { body } = await testApi.get(baseUrl, mockQuery);
 
     // gets value from body for changedToIssued
     const changedToIssuedValue = body[0].canResubmitIssuedFacilities;
