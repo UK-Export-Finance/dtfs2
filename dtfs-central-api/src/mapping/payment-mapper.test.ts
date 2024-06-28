@@ -41,5 +41,42 @@ describe('payment mapper', () => {
       // Assert
       expect(payment.id).toBe(paymentId);
     });
+
+    it('maps the payment entity dateReceived to the payment dateReceived', () => {
+      // Arrange
+      const dateReceived = new Date();
+
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withDateReceived(dateReceived).build();
+
+      // Act
+      const payment = mapPaymentEntityToPayment(paymentEntity);
+
+      // Assert
+      expect(payment.dateReceived).toEqual(dateReceived);
+    });
+
+    it('maps the payment entity reference to the payment reference when the reference is defined', () => {
+      // Arrange
+      const reference = 'A reference';
+
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withReference(reference).build();
+
+      // Act
+      const payment = mapPaymentEntityToPayment(paymentEntity);
+
+      // Assert
+      expect(payment.reference).toBe(reference);
+    });
+
+    it('maps the payment entity reference to the payment reference when the reference is not defined', () => {
+      // Arrange
+      const paymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withReference(undefined).build();
+
+      // Act
+      const payment = mapPaymentEntityToPayment(paymentEntity);
+
+      // Assert
+      expect(payment.reference).toBeUndefined();
+    });
   });
 });

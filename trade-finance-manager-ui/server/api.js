@@ -993,6 +993,20 @@ const getUtilisationReportWithFeeRecordsToKey = async (reportId, userToken) => {
   return response.data;
 };
 
+/**
+ * Gets the payment details required to render the edit payment page
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').GetPaymentDetailsResponseBody>}
+ */
+const getPaymentDetails = async (reportId, paymentId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`, {
+    headers: generateHeaders(userToken),
+  });
+  return response.data;
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1038,4 +1052,5 @@ module.exports = {
   addPaymentToFeeRecords,
   generateKeyingData,
   getUtilisationReportWithFeeRecordsToKey,
+  getPaymentDetails,
 };
