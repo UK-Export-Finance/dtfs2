@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
 
     const facilityParameters = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
 
-    const facilityToInsert = new Facility(facilityParameters, existingDeal.version);
+    const facilityToInsert = new Facility(facilityParameters, existingDeal?.version);
     const createdFacility = await facilitiesCollection.insertOne(facilityToInsert);
 
     const { insertedId } = createdFacility;
@@ -49,7 +49,7 @@ exports.create = async (req, res) => {
     const response = {
       status: facilitiesStatus(facility),
       details: facility,
-      validation: facilitiesValidation(facility),
+      validation: facilitiesValidation(facility, existingDeal?.version),
     };
     return res.status(201).json(response);
   } catch (error) {
@@ -70,9 +70,9 @@ const getAllFacilitiesByDealId = async (dealId) => {
   if (!ObjectId.isValid(dealId)) {
     throw new InvalidDatabaseQueryError('Invalid deal id');
   }
-  const doc = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
+  const matchingFacilities = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
 
-  return doc;
+  return matchingFacilities;
 };
 exports.getAllFacilitiesByDealId = getAllFacilitiesByDealId;
 
@@ -92,20 +92,22 @@ exports.getAllGET = async (req, res) => {
     }
   }
 
+  const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+  const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(req.query.dealId) } });
   const facilities = [];
 
   if (doc && doc.length) {
-    doc.forEach((item) => {
+    doc.forEach((facility) => {
       facilities.push({
-        status: facilitiesStatus(item),
-        details: item,
-        validation: facilitiesValidation(item),
+        status: facilitiesStatus(facility),
+        details: facility,
+        validation: facilitiesValidation(facility, existingDeal?.version),
       });
     });
   }
 
   return res.status(200).send({
-    status: facilitiesOverallStatus(facilities),
+    status: facilitiesOverallStatus(facilities, doc.version),
     items: facilities,
   });
 };
@@ -115,13 +117,16 @@ exports.getById = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
 
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
-  const doc = await collection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
-  if (doc) {
+  const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
+  const facility = await facilitiesCollection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
+  if (facility) {
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+    const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(facility.dealId) } });
+
     return res.status(200).send({
-      status: facilitiesStatus(doc),
-      details: doc,
-      validation: facilitiesValidation(doc),
+      status: facilitiesStatus(facility),
+      details: facility,
+      validation: facilitiesValidation(facility, existingDeal?.version),
     });
   }
 
@@ -219,10 +224,13 @@ exports.updatePUT = async (req, res) => {
   }
 
   if (updatedFacility.value) {
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+    const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(updatedFacility.value.dealId) } });
+
     response = {
       status: facilitiesStatus(updatedFacility.value),
       details: updatedFacility.value,
-      validation: facilitiesValidation(updatedFacility.value),
+      validation: facilitiesValidation(updatedFacility.value, existingDeal.version),
     };
   }
 
