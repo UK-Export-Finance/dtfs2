@@ -4,6 +4,7 @@
 import * as dotenv from 'dotenv';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
+import { HEADERS } from '@ukef/dtfs2-common';
 import { MDM } from '../../constants';
 import { getNowAsEpoch } from '../../helpers/date';
 
@@ -14,7 +15,7 @@ const notifyKey: string = process.env.GOV_NOTIFY_API_KEY || '';
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
   [String(MDM.GOV_UK_NOTIFY_KEY_HEADER_NAME)]: notifyKey,
 };
@@ -60,7 +61,7 @@ export const sendEmail = async (templateId: string, sendToEmailAddress: string, 
       method: 'post',
       url: `${referenceProxyUrl}/email`,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       },
       data: {
         templateId,

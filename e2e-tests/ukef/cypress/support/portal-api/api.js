@@ -1,3 +1,4 @@
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { SIGN_IN_TOKEN_LINK_TOKEN } = require('../../../../../portal-api/api-tests/fixtures/sign-in-token-constants');
 
 const api = () => {
@@ -7,7 +8,7 @@ const api = () => {
 
 const headers = {
   'x-api-key': Cypress.config('portalApiKey'),
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 
 const completeLoginWithSignInLink = ({ token2fa, username }) => {
@@ -19,7 +20,7 @@ const completeLoginWithSignInLink = ({ token2fa, username }) => {
         url: `${api()}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
           Authorization: token2fa,
         },
       })
@@ -55,7 +56,7 @@ module.exports.insertDeal = (deal, token) =>
       method: 'POST',
       body: deal,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -70,7 +71,7 @@ module.exports.getDeal = (dealId, token) =>
       url: `${api()}/v1/deals/${dealId}`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -87,7 +88,7 @@ module.exports.createFacilities = (dealId, facilities, user, token) =>
         user,
       },
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })

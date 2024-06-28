@@ -1,13 +1,14 @@
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
-import { isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
+
+import { HEADERS, isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
 
 dotenv.config();
 
 const { APIM_MDM_KEY, APIM_MDM_VALUE, APIM_MDM_URL } = process.env;
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 

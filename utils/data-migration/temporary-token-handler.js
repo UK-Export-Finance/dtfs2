@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { HEADERS } = require('@ukef/dtfs2-common');
 require('dotenv').config();
 const {
   ROLES: { MAKER, ADMIN },
@@ -9,7 +10,7 @@ const { PORTAL_API_KEY } = process.env;
 
 const headers = {
   'x-api-key': PORTAL_API_KEY,
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 
 let migrationUserId;

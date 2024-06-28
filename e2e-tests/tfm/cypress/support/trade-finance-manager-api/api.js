@@ -1,3 +1,4 @@
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { BANK1_CHECKER1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/portal-users.fixture');
 
 const api = () => {
@@ -8,7 +9,7 @@ const api = () => {
 const apiKey = Cypress.config('apiKey');
 
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   'x-api-key': apiKey,
 };
 

@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { when } = require('jest-when');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const api = require('./api');
 const { LOGIN_STATUS } = require('./constants');
 
@@ -7,7 +8,7 @@ jest.mock('axios');
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
 
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   'x-api-key': PORTAL_API_KEY,
 };
 
@@ -66,7 +67,7 @@ describe('api.loginWithSignInLink', () => {
         method: 'post',
         url: `${PORTAL_API_URL}/v1/users/${userId}/sign-in-link/${signInToken}/login`,
         headers: {
-          'Content-Type': 'application/json',
+          [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
           Authorization: token2fa,
         },
       })

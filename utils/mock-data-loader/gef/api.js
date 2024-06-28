@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const ApiError = require('../errors/api.error');
 const { mockDataLoaderPortalAuditDetails } = require('../constants/mockDataLoaderAuditDetails');
 require('dotenv').config();
@@ -7,11 +8,11 @@ const { PORTAL_API_URL, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.e
 
 const headers = {
   portal: {
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     Accepts: 'application/json',
   },
   central: {
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     Accepts: 'application/json',
     'x-api-key': DTFS_CENTRAL_API_KEY,
   },
