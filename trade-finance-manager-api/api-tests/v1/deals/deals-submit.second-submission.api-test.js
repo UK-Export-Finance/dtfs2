@@ -645,7 +645,7 @@ describe('/v1/deals', () => {
 
       it('calls updateGefMINActivity when deal is MIA', async () => {
         await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
-        expect(updateGefActivitySpy).toHaveBeenCalledWith('MOCK_GEF_DEAL_SECOND_SUBMIT_MIA');
+        expect(updateGefActivitySpy).toHaveBeenCalledWith({ auditDetails: expectAnyPortalUserAuditDetails, dealId: 'MOCK_GEF_DEAL_SECOND_SUBMIT_MIA' });
       });
 
       it('Should update the application from MIA to MIN', async () => {
