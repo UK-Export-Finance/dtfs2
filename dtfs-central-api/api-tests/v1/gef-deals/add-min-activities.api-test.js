@@ -36,10 +36,8 @@ describe('submissionPortalActivity()', () => {
     await wipeDB.wipe([collectionName]);
     await wipeDB.wipe([applicationCollectionName]);
     // adds user to db incase empty
-    const testUsers = await testUserCache.initialise();
+    await testUserCache.initialise();
 
-    testUsers().withRole('maker').one();
-    testUsers().withRole('checker').one();
     /*
    As _id's can change for checker, need to access db and find a checker
    These details then added to the MOCK_APPLICATION
