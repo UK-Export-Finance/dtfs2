@@ -1,5 +1,7 @@
+import { ObjectId } from 'mongodb';
 import { Bank, PortalRole, PortalUser } from '@ukef/dtfs2-common';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { Response } from 'supertest';
+import { testApi } from '../../test-api';
 
 const banks = {
   Barclays: {
@@ -90,8 +92,6 @@ const testUsers = [
   },
 ] as unknown as PortalUser[];
 
-let notYetInitialised = true;
-
 const finder = (allUsers: PortalUser[]) => () => {
   const fluidBuilder = (users: PortalUser[]) => ({
     all: () => users,
@@ -121,16 +121,33 @@ const finder = (allUsers: PortalUser[]) => () => {
   return fluidBuilder(allUsers);
 };
 
+interface GetUsersResponse extends Response {
+  body: {
+    users: { _id: ObjectId }[];
+  };
+}
+
+interface PostUserResponse extends Response {
+  body: {
+    _id: ObjectId;
+  };
+}
+
 export const initialise = async () => {
-  const usersCollection = await mongoDbClient.getCollection('users');
+  const userResponse: GetUsersResponse = await testApi.as().get('/v1/user');
+  const existingUsers = userResponse.body.users;
 
-  if (notYetInitialised) {
-    await usersCollection.deleteMany({});
-    await usersCollection.insertMany(testUsers);
-    notYetInitialised = false;
-  }
+  await Promise.all(existingUsers.map((user) => testApi.as().remove(`/v1/users/${user._id.toString()}`)));
 
-  const loadedUsers = await usersCollection.find({}).toArray();
+  const loadedUsers = await Promise.all(
+    testUsers.map(async (user) => {
+      const response: PostUserResponse = await testApi.as().post(user).to('/v1/user');
+      return {
+        ...user,
+        _id: response.body._id,
+      };
+    }),
+  );
 
   return finder(loadedUsers);
 };
