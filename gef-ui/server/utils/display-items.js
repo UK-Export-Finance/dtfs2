@@ -55,7 +55,7 @@ const eligibilityCriteriaItems = (coverUrl) => [
   },
 ];
 
-const facilityItems = (facilityUrl, { type, hasBeenIssued, shouldCoverStartOnSubmission, ukefFacilityId, feeType, issueDate }) => {
+const facilityItems = (facilityUrl, { type, hasBeenIssued, shouldCoverStartOnSubmission, ukefFacilityId, feeType, issueDate, facilityEndDateExists }) => {
   const AT_MATURITY = 'At maturity';
   return [
     {
@@ -108,6 +108,35 @@ const facilityItems = (facilityUrl, { type, hasBeenIssued, shouldCoverStartOnSub
         return format(date, 'd MMMM yyyy');
       },
       isHidden: !hasBeenIssued,
+    },
+    {
+      label: 'Has a facility end date',
+      id: 'facilityEndDateExists',
+      href: `${facilityUrl}/about-facility?status=change`,
+      method: (value) => (isTrueSet(value) ? BOOLEAN.YES : BOOLEAN.NO),
+      // TODO DTFS2-7171: Add logic to also hide if deal version doesn't exist or is < 1
+    },
+    {
+      label: 'Facility end date',
+      id: 'facilityEndDate',
+      href: `${facilityUrl}/about-facility?status=change`, // TODO DTFS2-7171: Update URL
+      method: (value) => {
+        // facilityEndDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+        const date = parseISO(value);
+        return format(date, 'd MMMM yyyy');
+      },
+      isHidden: !isTrueSet(facilityEndDateExists), // TODO DTFS2-7171: Add logic to also hide if deal version doesn't exist or is < 1
+    },
+    {
+      label: 'Bank review date',
+      id: 'bankReviewDate',
+      href: `${facilityUrl}/about-facility?status=change`, // TODO DTFS2-7171: Update URL
+      method: (value) => {
+        // bankReviewDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+        const date = parseISO(value);
+        return format(date, 'd MMMM yyyy');
+      },
+      isHidden: isTrueSet(facilityEndDateExists), // TODO DTFS2-7171: Add logic to also hide if deal version doesn't exist or is < 1
     },
     {
       label: 'Months the UKEF guarantee will be in place for',
