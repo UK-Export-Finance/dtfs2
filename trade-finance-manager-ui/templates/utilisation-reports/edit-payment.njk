@@ -1,10 +1,10 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
+{% import "./_macros/payment-date-input.njk" as paymentDateInput %}
 {% extends "index.njk" %}
 {% set backLink = {"href": '/utilisation-reports/' + reportId} %}
 {% block pageTitle %}Edit payment{% endblock %}
@@ -54,38 +54,9 @@
           text: errors.paymentAmountErrorMessage
         }
     }) }}
-    {{ govukDateInput({
-      id: "paymentDate",
-      namePrefix: "paymentDate",
-      fieldset: {
-        legend: {
-          text: "Date payment received",
-          classes: "govuk-fieldset__legend--s"
-        }
-      },
-      hint: {
-        text: "For example, 27 03 2023"
-      },
-      errorMessage: errors.paymentDateError and {
-        text: errors.paymentDateError.message
-      },
-      items: [
-        {
-          classes: (errors.paymentDateError.dayError and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
-          name: "day",
-          value: formValues.paymentDate.day
-        },
-        {
-          classes: (errors.paymentDateError.monthError and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
-          name: "month",
-          value: formValues.paymentDate.month
-        },
-        {
-          classes: (errors.paymentDateError.yearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
-          name: "year",
-          value: formValues.paymentDate.year
-        }
-      ]
+    {{ paymentDateInput.render({
+      paymentDate: formValues.paymentDate,
+      paymentDateError: errors.paymentDateError
     }) }}
     {{ govukInput({
         label: {

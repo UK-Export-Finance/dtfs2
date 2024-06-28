@@ -28,6 +28,12 @@ describe(page, () => {
     wrapper.expectElement('table[data-cy="fee-record-details-table"] caption:contains("Added reported fees details")').toExist();
   });
 
+  it('should render the remove selected fees button', () => {
+    const wrapper = render(anEditPaymentViewModel());
+
+    wrapper.expectElement('input[data-cy="remove-selected-fees-button"]').toExist();
+  });
+
   it('should render the payment details heading', () => {
     const wrapper = render(anEditPaymentViewModel());
 
