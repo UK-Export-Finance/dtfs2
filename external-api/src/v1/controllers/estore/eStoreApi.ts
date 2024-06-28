@@ -1,18 +1,6 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable import/no-extraneous-dependencies */
-
-import axios from 'axios';
+import { get, post, HttpStatusCode } from 'axios';
 import dotenv from 'dotenv';
-import { HEADERS } from '@ukef/dtfs2-common';
+import { HEADERS, customValidateStatus } from '@ukef/dtfs2-common';
 import {
   Estore,
   EstoreSite,
@@ -38,7 +26,6 @@ import { estoreInternalServerError } from '../../../helpers/errors/estore-intern
 
 dotenv.config();
 
-const { HttpStatusCode } = axios;
 const oneMinute = 1000 * 60; // 60 seconds timeout to handle medium timeouts
 const twoMinutes = 1000 * 120; // 120 seconds timeout to handle long timeouts
 
@@ -70,7 +57,12 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
     }
 
     // Make a GET request to the eStore API to check if a site exists
-    const response = await axios.get(`${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`, { headers }).catch((error: any) => error);
+    const response: SiteExistsResponse = await get(`${APIM_ESTORE_URL}/sites?exporterName=${exporterName}`, {
+      validateStatus(status) {
+        return customValidateStatus(status);
+      },
+      headers,
+    });
 
     if (!response) {
       throw new Error('❌ Invalid site exist response received');
@@ -81,26 +73,26 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
     let siteId: string = '';
 
     /**
-     * `404` response is returned inside `response`
+     * `404` response is returned inside `data.message`
      * object if the site does not exist.
      * @example response: { "message": "Not found", "statusCode": 404 }
      */
-    if (response.response) {
-      statusCode = response.response?.data?.statusCode;
-      status = response.response?.data?.message;
+    if (response?.data?.message) {
+      statusCode = response?.status;
+      status = response?.data?.message;
       siteId = '';
     }
 
     /**
-     * If not `404` response is returned inside
-     * `data` object.
+     * If not `404`, response is returned inside
+     * `data.siteId` object.
      * @example data: { "siteId": "1234567", "status": "Provisioning",  }
      * @example data: { "siteId": "1234567", "status": "Created" }
      */
-    if (response.data) {
-      statusCode = response.status;
-      status = response.data.status;
-      siteId = response.data.siteId;
+    if (response?.data?.siteId) {
+      statusCode = response?.status;
+      status = response?.data?.status;
+      siteId = response?.data?.siteId;
     }
 
     return {
@@ -110,8 +102,8 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
         siteId,
       },
     };
-  } catch (error: any) {
-    console.error('❌ eStore site exist check failed %o', error?.response?.data);
+  } catch (error: unknown) {
+    console.error('❌ eStore site exist check failed %o', error);
     return estoreInternalServerError(error);
   }
 };
@@ -132,7 +124,7 @@ const postToEstore = async (
 ): Promise<EstoreResponse | EstoreErrorResponse> => {
   try {
     console.info('Invoking eStore endpoint %s with payload %o', endpoint, data);
-    const response = await axios.post(`${APIM_ESTORE_URL}${endpoint}`, data, { headers, timeout }).catch((error: any) => error);
+    const response: EstoreResponse = await post(`${APIM_ESTORE_URL}${endpoint}`, data, { headers, timeout });
 
     if (!response) {
       throw new Error('❌ Invalid post to estore response received');
@@ -142,9 +134,9 @@ const postToEstore = async (
       status: response.status,
       data: response.data,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Error calling eStore endpoint %s %o, email has been dispatched.', endpoint, error);
-    sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, String(UKEF_INTERNAL_NOTIFICATION), data);
+    await sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, String(UKEF_INTERNAL_NOTIFICATION), data);
     return estoreInternalServerError(error);
   }
 };
@@ -157,18 +149,15 @@ const postToEstore = async (
  */
 export const createExporterSite = async (exporterName: EstoreSite): Promise<SiteCreationResponse | EstoreErrorResponse> => {
   try {
-    const response = await postToEstore(ENDPOINT.SITE, [exporterName], oneMinute);
+    const response: EstoreResponse = await postToEstore(ENDPOINT.SITE, [exporterName], oneMinute);
 
     if (!response) {
       throw new Error('❌ Invalid response received');
     }
 
     return response;
-  } catch (error: any) {
-    console.error('❌ eStore create exporter site has failed %o', {
-      data: error?.response?.data,
-      status: error?.response?.status,
-    });
+  } catch (error: unknown) {
+    console.error('❌ eStore create exporter site has failed %o', error);
     return estoreInternalServerError(error);
   }
 };
@@ -181,18 +170,15 @@ export const createExporterSite = async (exporterName: EstoreSite): Promise<Site
  */
 export const addFacilityToTermStore = async (facilityId: EstoreTermStore): Promise<TermStoreResponse | EstoreErrorResponse> => {
   try {
-    const response = await postToEstore(ENDPOINT.TERM, [facilityId], oneMinute);
+    const response: EstoreResponse = await postToEstore(ENDPOINT.TERM, [facilityId], oneMinute);
 
     if (!response) {
       throw new Error('❌ Invalid response received');
     }
 
     return response;
-  } catch (error: any) {
-    console.error('❌ eStore adding facility term has failed %o', {
-      data: error?.response?.data,
-      status: error?.response?.status,
-    });
+  } catch (error: unknown) {
+    console.error('❌ eStore adding facility term has failed %o', error);
     return estoreInternalServerError(error);
   }
 };
@@ -213,11 +199,8 @@ export const createBuyerFolder = async (siteId: string, buyerName: EstoreBuyer):
 
     const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.BUYER}`;
     return postToEstore(endpoint, [buyerName], oneMinute);
-  } catch (error: any) {
-    console.error('❌ eStore create buyer folder request has failed %o', {
-      data: error?.response?.data,
-      status: error?.response?.status,
-    });
+  } catch (error: unknown) {
+    console.error('❌ eStore create buyer folder request has failed %o', error);
     return estoreInternalServerError(error);
   }
 };
@@ -238,11 +221,8 @@ export const createDealFolder = async (siteId: string, data: EstoreDealFolder): 
 
     const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}`;
     return postToEstore(endpoint, [data], twoMinutes);
-  } catch (error: any) {
-    console.error('❌ eStore create deal folder request has failed %o', {
-      data: error?.response?.data,
-      status: error?.response?.status,
-    });
+  } catch (error: unknown) {
+    console.error('❌ eStore create deal folder request has failed %o', error);
     return estoreInternalServerError(error);
   }
 };
@@ -268,11 +248,8 @@ export const createFacilityFolder = async (
 
     const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.FACILITY}`;
     return postToEstore(endpoint, [data], twoMinutes);
-  } catch (error: any) {
-    console.error('❌ eStore create facility folder request has failed %o', {
-      data: error?.response?.data,
-      status: error?.response?.status,
-    });
+  } catch (error: unknown) {
+    console.error('❌ eStore create facility folder request has failed %o', error);
     return estoreInternalServerError(error);
   }
 };
@@ -298,11 +275,8 @@ export const uploadSupportingDocuments = async (
 
     const endpoint = `${ENDPOINT.SITE}/${siteId}/${ENDPOINT.DEAL}/${dealIdentifier}/${ENDPOINT.DOCUMENT}`;
     return postToEstore(endpoint, [file], oneMinute);
-  } catch (error: any) {
-    console.error('❌ eStore uploading document has failed %o', {
-      data: error?.response?.data,
-      status: error?.response?.status,
-    });
+  } catch (error: unknown) {
+    console.error('❌ eStore uploading document has failed %o', error);
     return estoreInternalServerError(error);
   }
 };

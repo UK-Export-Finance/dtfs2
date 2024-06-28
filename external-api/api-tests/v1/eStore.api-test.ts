@@ -1,31 +1,20 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable import/no-extraneous-dependencies */
-
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 import { UKEF_ID, ESTORE_CRON_STATUS } from '../../src/constants';
+import { Estore, EstoreAxiosResponse } from '../../src/interfaces';
 
 const { post } = api(app);
 
 const { APIM_ESTORE_URL } = process.env;
 
-const payload = {
-  dealId: new ObjectId('6597dffeb5ef5ff4267e5044'),
+const payload: Estore = {
+  dealId: '6597dffeb5ef5ff4267e5044',
   siteId: 'ukef',
   facilityIdentifiers: [1234567890, 1234567891],
-  supportingInformation: 'test',
+  supportingInformation: ['test'],
   exporterName: 'testName',
   buyerName: 'testBuyer',
   dealIdentifier: '1234567890',
@@ -48,7 +37,6 @@ jest.mock('../../src/database/mongo-client', () => ({
   })),
 }));
 
-jest.mock('axios', () => jest.requireActual('axios'));
 const mockExporterResponse = {
   siteId: 'test',
   status: 'Created',
@@ -66,7 +54,7 @@ axiosMock.onPost(estoreSitesRegex).reply(HttpStatusCode.Ok, mockApiResponse);
 describe('/estore', () => {
   describe('Empty payload', () => {
     it('should return a status of 400 and an invalid request message', async () => {
-      const { status, body } = await post().to('/estore');
+      const { status, body } = (await post().to('/estore')) as EstoreAxiosResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body.message).toEqual('Invalid request');
@@ -79,7 +67,7 @@ describe('/estore', () => {
         ...payload,
         dealIdentifier: UKEF_ID.TEST,
       };
-      const { status, body } = await post(invalidPayload).to('/estore');
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body.message).toEqual('Invalid IDs');
@@ -91,7 +79,7 @@ describe('/estore', () => {
         dealIdentifier: UKEF_ID.PENDING,
       };
 
-      const { status, body } = await post(invalidPayload).to('/estore');
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body.message).toEqual('Invalid IDs');
@@ -104,7 +92,7 @@ describe('/estore', () => {
         ...payload,
         facilityIdentifiers: [UKEF_ID.TEST],
       };
-      const { status, body } = await post(invalidPayload).to('/estore');
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body.message).toEqual('Invalid IDs');
@@ -116,7 +104,7 @@ describe('/estore', () => {
         facilityIdentifiers: [UKEF_ID.PENDING],
       };
 
-      const { status, body } = await post(invalidPayload).to('/estore');
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
       expect(body.message).toEqual('Invalid IDs');
@@ -124,21 +112,23 @@ describe('/estore', () => {
   });
 
   describe('When the Mongo deal ID is not a valid Mongo ObjectID', () => {
-    it('Should return 500 with catch-all error message', async () => {
+    const invalidObjectIds = [[], {}, '', 'invalid', '!"£'];
+    it.each(invalidObjectIds)('Should return 400 for a %s string which is neither 12 bytes nor 24 bytes hex characters or an integer', async (dealId) => {
       const invalidPayload = {
         ...payload,
-        dealId: 'invalid',
+        dealId,
       };
 
-      const { status, body } = await post(invalidPayload).to('/estore');
+      const { status, body } = (await post(invalidPayload).to('/estore')) as EstoreAxiosResponse;
 
-      expect(status).toEqual(HttpStatusCode.InternalServerError);
-      expect(body.message).toEqual('Unable to create eStore directories');
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(body.message).toEqual('Invalid deal ObjectId');
     });
   });
 
   describe('eStore CRON jobs', () => {
     beforeEach(() => {
+      mockFindOne.mockReset();
       mockInsertOne.mockReset();
     });
 
@@ -152,12 +142,14 @@ describe('/estore', () => {
       await post(payload).to('/estore');
 
       // Look up for the deal ID in the collection
+      expect(mockFindOne).toHaveBeenCalledTimes(1);
       expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: new ObjectId(payload.dealId) } });
 
       // Insert a new entry in the collection
+      expect(mockInsertOne).toHaveBeenCalledTimes(1);
       expect(mockInsertOne).toHaveBeenCalledWith({
         payload,
-        timestamp: expect.any(Number),
+        timestamp: expect.any(Number) as number,
         cron: {
           site: { status: ESTORE_CRON_STATUS.PENDING },
           term: { status: ESTORE_CRON_STATUS.PENDING },
