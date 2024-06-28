@@ -5,11 +5,11 @@ import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems } from '../helpers';
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
-import { getAndClearAddPaymentFieldsFromRedirectSessionData } from './get-and-clear-add-payment-fields-from-redirect-session-data';
+import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
 import { FeeRecordPaymentGroup } from '../../../api-response-types';
 
-const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroup: FeeRecordPaymentGroup[]): boolean =>
-  feeRecordPaymentGroup.some(({ paymentsReceived }) => paymentsReceived !== null);
+const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): boolean =>
+  feeRecordPaymentGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
 
 const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
   res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
@@ -19,7 +19,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
   const { reportId } = req.params;
 
   try {
-    const { addPaymentErrorSummary, isCheckboxChecked } = getAndClearAddPaymentFieldsFromRedirectSessionData(req);
+    const { errorSummary, isCheckboxChecked } = getAndClearFieldsFromRedirectSessionData(req);
 
     const { feeRecordPaymentGroups, reportPeriod, bank } = await api.getUtilisationReportReconciliationDetailsById(reportId, userToken);
 
@@ -37,7 +37,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       reportId,
       enablePaymentsReceivedSorting,
       feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
-      errorSummary: addPaymentErrorSummary,
+      errorSummary,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);
