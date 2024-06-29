@@ -41,15 +41,6 @@ const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
 api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
 
 describe('/v1/deals', () => {
-  beforeAll(() => {
-    jest.useFakeTimers();
-    jest.setSystemTime(new Date('2024-06-28'));
-  });
-
-  afterAll(() => {
-    jest.useRealTimers();
-  });
-
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
     api.getFacilityExposurePeriod.mockClear();
