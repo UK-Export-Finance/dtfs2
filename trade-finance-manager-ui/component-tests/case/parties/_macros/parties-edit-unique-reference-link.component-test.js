@@ -1,7 +1,7 @@
-const pageRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 
 const page = '../templates/case/parties/_macros/parties-edit-unique-reference-link.njk';
-const render = pageRenderer(page);
+const render = componentRenderer(page);
 
 describe(page, () => {
   it('should render link with correct url', () => {

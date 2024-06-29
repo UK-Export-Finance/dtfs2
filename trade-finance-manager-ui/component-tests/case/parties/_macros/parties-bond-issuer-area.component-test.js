@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 
 const page = '../templates/case/parties/_macros/parties-bond-issuer-area.njk';
 const render = componentRenderer(page);

@@ -1,5 +1,5 @@
 const { FEE_RECORD_STATUS } = require('@ukef/dtfs2-common');
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 
 const component = '../templates/utilisation-reports/_macros/check-keying-data-table-row.njk';
 

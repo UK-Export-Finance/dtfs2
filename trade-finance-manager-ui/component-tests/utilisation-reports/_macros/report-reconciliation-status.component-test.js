@@ -1,5 +1,5 @@
 const { UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 
 const component = '../templates/utilisation-reports/_macros/report-reconciliation-status.njk';
 const statusTagSelector = '[data-cy="utilisation-report-reconciliation-status"]';

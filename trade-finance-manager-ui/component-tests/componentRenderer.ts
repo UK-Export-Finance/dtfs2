@@ -1,13 +1,12 @@
-/* eslint-disable import/no-import-module-exports */
-import cheerio from 'cheerio';
-import assertions from './assertions';
+import { load } from 'cheerio';
+import { assertions } from './assertions';
 import configureNunjucks from '../server/nunjucks-configuration';
 
-const nunjucks = configureNunjucks({});
+const nunjucks = configureNunjucks({}) as { renderString: (pageLocation: string, params: object) => string };
 
-const componentRenderer =
-  (componentLocation, renderTableContainer = false) =>
-  (params) => {
+export const componentRenderer =
+  (componentLocation: string, renderTableContainer = false) =>
+  (params: object) => {
     let fakePage;
 
     if (renderTableContainer) {
@@ -28,8 +27,6 @@ const componentRenderer =
 
     const html = nunjucks.renderString(fakePage, { payload: params });
 
-    const wrapper = cheerio.load(html);
+    const wrapper = load(html);
     return assertions(wrapper, html, params);
   };
-
-module.exports = componentRenderer;

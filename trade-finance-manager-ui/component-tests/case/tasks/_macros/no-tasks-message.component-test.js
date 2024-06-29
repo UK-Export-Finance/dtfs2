@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 
 const component = '../templates/case/tasks/_macros/no-tasks-message.njk';
 

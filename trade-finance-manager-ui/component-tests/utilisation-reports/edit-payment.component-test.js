@@ -1,4 +1,4 @@
-const pageRenderer = require('../pageRenderer');
+const { pageRenderer } = require('../pageRenderer');
 const { anEditPaymentViewModel } = require('../../test-helpers');
 
 const page = '../templates/utilisation-reports/edit-payment.njk';

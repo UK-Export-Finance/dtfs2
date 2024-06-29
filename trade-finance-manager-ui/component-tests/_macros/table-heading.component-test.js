@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const componentRenderer = require('../componentRenderer');
+const { componentRenderer } = require('../componentRenderer');
 
 const component = '../templates/_macros/table-heading.njk';
 
