@@ -1,5 +1,6 @@
 const { isValidCompanyRegistrationNumber } = require('@ukef/dtfs2-common');
 const axios = require('axios');
+const { HEADERS } = require('@ukef/dtfs2-common');
 
 const { HttpStatusCode } = axios;
 const dotenv = require('dotenv');
@@ -8,7 +9,7 @@ dotenv.config();
 const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   'x-api-key': String(EXTERNAL_API_KEY),
 };
 

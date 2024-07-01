@@ -1,26 +1,27 @@
 import httpMocks from 'node-mocks-http';
 import { CURRENCY, SelectedFeeRecordDetails } from '@ukef/dtfs2-common';
 import api from '../../../api';
-import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
-import { AddPaymentRequestBody, addPayment } from '.';
-import { AddPaymentErrorsViewModel, AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../types/view-models';
-import * as validation from './add-payment-form-values-validator';
+import { addPayment } from '.';
+import { PaymentErrorsViewModel, AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../types/view-models';
+import * as validation from '../helpers/validate-payment-form-values';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { SelectedFeeRecordsDetailsResponseBody, SelectedFeeRecordsPaymentDetailsResponse } from '../../../api-response-types';
+import { aTfmSessionUser } from '../../../../test-helpers';
+import { AddPaymentFormRequestBody } from '../helpers';
 
 jest.mock('../../../api');
 
 console.error = jest.fn();
 
-describe('controllers/utilisation-reports/:id/add-payment', () => {
+describe('controllers/utilisation-reports/add-payment', () => {
   const userToken = 'user-token';
   const requestSession = {
     userToken,
-    user: MOCK_TFM_SESSION_USER,
+    user: aTfmSessionUser(),
   };
 
   describe('when navigating from premium payments table', () => {
-    const requestBodyForPostFromPremiumPaymentsPage: AddPaymentRequestBody = {
+    const requestBodyForPostFromPremiumPaymentsPage: AddPaymentFormRequestBody = {
       'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
     };
 
@@ -83,11 +84,11 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
         totalReportedPayments: 'JPY 1,000.00',
         feeRecords: [
           {
-            feeRecordId: 456,
+            id: 456,
             facilityId: '000123',
             exporter: 'Export Company',
-            reportedFee: { value: 'EUR 2,000.00', dataSortValue: 0 },
-            reportedPayments: { value: 'USD 3,000.00', dataSortValue: 0 },
+            reportedFees: { formattedCurrencyAndAmount: 'EUR 2,000.00', dataSortValue: 0 },
+            reportedPayments: { formattedCurrencyAndAmount: 'USD 3,000.00', dataSortValue: 0 },
           },
         ],
       });
@@ -236,12 +237,12 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/add-payment.njk');
-      expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[0].reportedFee.dataSortValue).toEqual(0);
-      expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[1].reportedFee.dataSortValue).toEqual(1);
-      expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[2].reportedFee.dataSortValue).toEqual(3);
-      expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[3].reportedFee.dataSortValue).toEqual(4);
-      expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[4].reportedFee.dataSortValue).toEqual(2);
-      expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[5].reportedFee.dataSortValue).toEqual(5);
+      expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[0].reportedFees.dataSortValue).toEqual(0);
+      expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[1].reportedFees.dataSortValue).toEqual(1);
+      expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[2].reportedFees.dataSortValue).toEqual(3);
+      expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[3].reportedFees.dataSortValue).toEqual(4);
+      expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[4].reportedFees.dataSortValue).toEqual(2);
+      expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[5].reportedFees.dataSortValue).toEqual(5);
     });
 
     it('should set data sort values for reported payments column to order by currency alphabetically then value', async () => {
@@ -303,7 +304,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
 
   describe('when add payment form is submitted', () => {
     describe('and the data is not valid', () => {
-      const addPaymentFormSubmissionRequestBodyWithIncompleteData: AddPaymentRequestBody = {
+      const addPaymentFormSubmissionRequestBodyWithIncompleteData: AddPaymentFormRequestBody = {
         'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
         addPaymentFormSubmission: 'true',
       };
@@ -380,7 +381,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
           },
           feeRecordPaymentCurrency,
         );
-        expect((res._getRenderData() as AddPaymentViewModel).errors).toEqual<AddPaymentErrorsViewModel>({
+        expect((res._getRenderData() as AddPaymentViewModel).errors).toEqual<PaymentErrorsViewModel>({
           errorSummary: [{ text: 'Enter a valid amount received', href: '#paymentAmount' }],
           paymentAmountErrorMessage: 'Enter a valid amount received',
         });
@@ -388,7 +389,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
 
       it('sets form values to submitted values', async () => {
         // Arrange
-        const requestBody: AddPaymentRequestBody = {
+        const requestBody: AddPaymentFormRequestBody = {
           'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
           addPaymentFormSubmission: 'true',
           paymentCurrency: 'JPY',
@@ -467,11 +468,11 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
           totalReportedPayments: 'JPY 1,000.00',
           feeRecords: [
             {
-              feeRecordId: 456,
+              id: 456,
               facilityId: '000123',
               exporter: 'Export Company',
-              reportedFee: { value: 'EUR 2,000.00', dataSortValue: 0 },
-              reportedPayments: { value: 'USD 3,000.00', dataSortValue: 0 },
+              reportedFees: { formattedCurrencyAndAmount: 'EUR 2,000.00', dataSortValue: 0 },
+              reportedPayments: { formattedCurrencyAndAmount: 'USD 3,000.00', dataSortValue: 0 },
             },
           ],
         });
@@ -569,12 +570,12 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
 
         // Assert
         expect(res._getRenderView()).toEqual('utilisation-reports/add-payment.njk');
-        expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[0].reportedFee.dataSortValue).toEqual(0);
-        expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[1].reportedFee.dataSortValue).toEqual(1);
-        expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[2].reportedFee.dataSortValue).toEqual(3);
-        expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[3].reportedFee.dataSortValue).toEqual(4);
-        expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[4].reportedFee.dataSortValue).toEqual(2);
-        expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[5].reportedFee.dataSortValue).toEqual(5);
+        expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[0].reportedFees.dataSortValue).toEqual(0);
+        expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[1].reportedFees.dataSortValue).toEqual(1);
+        expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[2].reportedFees.dataSortValue).toEqual(3);
+        expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[3].reportedFees.dataSortValue).toEqual(4);
+        expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[4].reportedFees.dataSortValue).toEqual(2);
+        expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails.feeRecords[5].reportedFees.dataSortValue).toEqual(5);
       });
 
       it('should set data sort values for reported payments column to order by currency alphabetically then value', async () => {
@@ -637,7 +638,7 @@ describe('controllers/utilisation-reports/:id/add-payment', () => {
     describe('and the data is valid', () => {
       const feeRecordIds = [123];
 
-      const addPaymentFormSubmissionRequestBody: AddPaymentRequestBody = {
+      const addPaymentFormSubmissionRequestBody: AddPaymentFormRequestBody = {
         'feeRecordIds-123-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
         addPaymentFormSubmission: 'true',
         paymentCurrency: CURRENCY.GBP,

@@ -2,8 +2,7 @@ const { ObjectId } = require('mongodb');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { withDeleteOneTests, generateMockTfmUserAuditDatabaseRecord, withDeleteManyTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
+const { testApi } = require('../../../test-api');
 const { DEALS, FACILITIES } = require('../../../../src/constants');
 const aDeal = require('../../deal-builder');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
@@ -47,11 +46,11 @@ describe('/v1/tfm/deal/:id', () => {
     let tfmFacilitiesToDeleteIds;
 
     beforeEach(async () => {
-      const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const postResult = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const portalDealId = postResult.body._id;
-      await Promise.all(newFacilities.map((facility) => createFacility({ api, facility: { ...facility, dealId: portalDealId }, user: MOCK_PORTAL_USER })));
+      await Promise.all(newFacilities.map((facility) => createFacility({ facility: { ...facility, dealId: portalDealId }, user: MOCK_PORTAL_USER })));
 
-      const submitResult = await api
+      const submitResult = await testApi
         .put({
           dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId: portalDealId,
@@ -71,7 +70,7 @@ describe('/v1/tfm/deal/:id', () => {
 
     withValidateAuditDetailsTests({
       makeRequest: async (auditDetails) =>
-        await api
+        await testApi
           .remove({
             auditDetails,
           })
@@ -81,7 +80,7 @@ describe('/v1/tfm/deal/:id', () => {
 
     withDeleteOneTests({
       makeRequest: () =>
-        api
+        testApi
           .remove({
             auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
           })
@@ -94,7 +93,7 @@ describe('/v1/tfm/deal/:id', () => {
 
     withDeleteManyTests({
       makeRequest: () =>
-        api
+        testApi
           .remove({
             auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
           })

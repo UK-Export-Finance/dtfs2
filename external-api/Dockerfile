@@ -13,7 +13,7 @@ COPY package-lock.json .
 COPY libs libs
 COPY external-api external-api
 
-RUN npm run ci:all
+RUN npm ci
 RUN npm cache clean --force
 
 # Execute Script

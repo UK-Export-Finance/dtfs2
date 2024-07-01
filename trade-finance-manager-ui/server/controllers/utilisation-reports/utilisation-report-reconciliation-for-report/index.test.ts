@@ -4,7 +4,7 @@ import api from '../../../api';
 import { getUtilisationReportReconciliationByReportId } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { aFeeRecordPaymentGroup, aUtilisationReportReconciliationDetailsResponse } from '../../../../test-helpers';
+import { aFeeRecordPaymentGroup, aUtilisationReportReconciliationDetailsResponse, aPayment } from '../../../../test-helpers';
 import { UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
 import { FeeRecordPaymentGroupViewModelItem, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 
@@ -83,7 +83,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
               },
             ],
             totalReportedPayments: { currency: 'GBP', amount: 100 },
-            paymentsReceived: [{ id: 1, currency: 'GBP', amount: 100 }],
+            paymentsReceived: [{ ...aPayment(), id: 1, currency: 'GBP', amount: 100 }],
             totalPaymentsReceived: { currency: 'GBP', amount: 100 },
             status: 'TO_DO',
           },
@@ -183,7 +183,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           },
           {
             ...aFeeRecordPaymentGroup(),
-            paymentsReceived: [{ id: 1, currency: 'GBP', amount: 100 }],
+            paymentsReceived: [{ ...aPayment(), id: 1, currency: 'GBP', amount: 100 }],
             totalPaymentsReceived: { currency: 'GBP', amount: 100 },
           },
         ],

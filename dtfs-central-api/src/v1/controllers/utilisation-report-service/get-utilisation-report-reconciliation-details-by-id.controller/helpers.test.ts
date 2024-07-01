@@ -289,6 +289,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
               currency: payments[index].currency,
               amount: payments[index].amount,
               id: payments[index].id,
+              dateReceived: payments[index].dateReceived,
+              reference: payments[index].reference,
             };
             expect(paymentsReceivedItem).toEqual(expectedPaymentsReceived);
           });
@@ -760,11 +762,14 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
             .withId(1)
             .withFeeRecords([feeRecordOneAttachedToPayment, feeRecordTwoAttachedToPayment])
             .withAmount(100)
+            .withDateReceived(new Date('2000-1-1'))
             .build();
           const paymentTwo = PaymentEntityMockBuilder.forCurrency('GBP')
             .withId(2)
             .withFeeRecords([feeRecordOneAttachedToPayment, feeRecordTwoAttachedToPayment])
             .withAmount(200)
+            .withDateReceived(new Date('2000-2-2'))
+            .withReference('REF123')
             .build();
           const feeRecordOne = FeeRecordEntityMockBuilder.forReport(uploadedReport).withId(1).withPayments([paymentOne, paymentTwo]).build();
 
@@ -779,8 +784,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           // Assert
           const paymentOneMapped = result.feeRecordPaymentGroups[0].paymentsReceived?.find((payment) => payment.id === 1);
           const paymentTwoMapped = result.feeRecordPaymentGroups[0].paymentsReceived?.find((payment) => payment.id === 2);
-          expect(paymentOneMapped).toEqual<Payment>({ currency: 'GBP', amount: 100, id: 1 });
-          expect(paymentTwoMapped).toEqual<Payment>({ currency: 'GBP', amount: 200, id: 2 });
+          expect(paymentOneMapped).toEqual<Payment>({ currency: 'GBP', amount: 100, id: 1, dateReceived: new Date('2000-1-1') });
+          expect(paymentTwoMapped).toEqual<Payment>({ currency: 'GBP', amount: 200, id: 2, dateReceived: new Date('2000-2-2'), reference: 'REF123' });
         });
 
         it('sets total payments received to the sum of all the payments attached to the fee record', async () => {

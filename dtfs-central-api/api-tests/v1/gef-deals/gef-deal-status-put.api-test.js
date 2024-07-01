@@ -4,8 +4,7 @@ const { ObjectId } = require('mongodb');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../wipeDB');
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { testApi } = require('../../test-api');
 const CONSTANTS = require('../../../src/constants');
 
 describe('/v1/portal/gef/deals/:id/status', () => {
@@ -28,12 +27,12 @@ describe('/v1/portal/gef/deals/:id/status', () => {
       await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
       ({
         body: { _id: createdDealId },
-      } = await api.post(mockDeal).to(`/v1/portal/gef/deals`));
+      } = await testApi.post(mockDeal).to(`/v1/portal/gef/deals`));
     });
 
     withValidateAuditDetailsTests({
       makeRequest: (auditDetailsToUse) =>
-        api
+        testApi
           .put({
             status: acknowledgedStatus,
             auditDetails: auditDetailsToUse,
@@ -42,13 +41,13 @@ describe('/v1/portal/gef/deals/:id/status', () => {
     });
 
     it('should return audit record', async () => {
-      const { status, body } = await api.put(acknowledgedStatusUpdateRequest).to(`/v1/portal/gef/deals/${createdDealId}/status`);
+      const { status, body } = await testApi.put(acknowledgedStatusUpdateRequest).to(`/v1/portal/gef/deals/${createdDealId}/status`);
       expect(status).toEqual(200);
       expect(body.auditRecord).toEqual(generateParsedMockAuditDatabaseRecord(auditDetails));
     });
 
     it('updates a deal status and previousStatus', async () => {
-      const { body, status } = await api.put(acknowledgedStatusUpdateRequest).to(`/v1/portal/gef/deals/${createdDealId}/status`);
+      const { body, status } = await testApi.put(acknowledgedStatusUpdateRequest).to(`/v1/portal/gef/deals/${createdDealId}/status`);
 
       expect(status).toEqual(200);
 
@@ -60,17 +59,17 @@ describe('/v1/portal/gef/deals/:id/status', () => {
 
     it("returns 400 bad request status code when the new status is same as application's existing status", async () => {
       // First status update
-      const { status } = await api.put(acknowledgedStatusUpdateRequest).to(`/v1/portal/gef/deals/${createdDealId}/status`);
+      const { status } = await testApi.put(acknowledgedStatusUpdateRequest).to(`/v1/portal/gef/deals/${createdDealId}/status`);
       expect(status).toEqual(200);
 
       // Second status update
-      const { status: secondStatus } = await api.put(acknowledgedStatusUpdateRequest).to(`/v1/portal/gef/deals/${createdDealId}/status`);
+      const { status: secondStatus } = await testApi.put(acknowledgedStatusUpdateRequest).to(`/v1/portal/gef/deals/${createdDealId}/status`);
       expect(secondStatus).toEqual(400);
     });
 
     it('returns 404 when deal does not exist ', async () => {
       const invalidDealId = '123456789f0ffe00219319c1';
-      const { status } = await api.put(acknowledgedStatusUpdateRequest).to(`/v1/portal/gef/deals/${invalidDealId}/status`);
+      const { status } = await testApi.put(acknowledgedStatusUpdateRequest).to(`/v1/portal/gef/deals/${invalidDealId}/status`);
 
       expect(status).toEqual(404);
     });

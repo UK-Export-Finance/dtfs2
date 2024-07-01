@@ -1,7 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
+const { testApi } = require('../../../test-api');
 const { newDeal, createAndSubmitDeals, updateDealsTfm } = require('./tfm-deals-get.api-test');
 const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
 const setObjectPropertyValueFromStringPath = require('../../../helpers/set-object-property-value-from-string-path');
@@ -70,7 +69,7 @@ describe('/v1/tfm/deals', () => {
           const urlWithoutPagination = `/v1/tfm/deals?sortBy[order]=${order}&sortBy[field]=${nonBssPath}`;
 
           it('without pagination', async () => {
-            const { status, body } = await api.get(urlWithoutPagination);
+            const { status, body } = await testApi.get(urlWithoutPagination);
 
             expect(status).toEqual(200);
             expect(body.deals.length).toEqual(4);
@@ -94,7 +93,7 @@ describe('/v1/tfm/deals', () => {
 
             const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
 
-            const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
+            const { status: page1Status, body: page1Body } = await testApi.get(urlWithPagination(0));
 
             expect(page1Status).toEqual(200);
             expect(page1Body.deals.length).toEqual(2);
@@ -116,7 +115,7 @@ describe('/v1/tfm/deals', () => {
               expect(secondFieldValue).toEqual(values[2]);
             }
 
-            const { status: page2Status, body: page2Body } = await api.get(urlWithPagination(1));
+            const { status: page2Status, body: page2Body } = await testApi.get(urlWithPagination(1));
 
             expect(page2Status).toEqual(200);
             expect(page2Body.deals.length).toEqual(2);
@@ -194,7 +193,7 @@ describe('/v1/tfm/deals', () => {
           it('without pagination', async () => {
             const expectedDeals = [{ _id: submittedDealWith1Bond?._id }, { _id: submittedDealWithBondAndLoans?._id }, { _id: submittedDealWith1Loan?._id }];
 
-            const { status, body } = await api.get(urlWithoutPagination);
+            const { status, body } = await testApi.get(urlWithoutPagination);
 
             expect(status).toEqual(200);
             expect(body.pagination.totalItems).toEqual(3);
@@ -221,7 +220,7 @@ describe('/v1/tfm/deals', () => {
 
             const expectedDeals = [{ _id: submittedDealWith1Bond?._id }, { _id: submittedDealWithBondAndLoans?._id }, { _id: submittedDealWith1Loan?._id }];
 
-            const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
+            const { status: page1Status, body: page1Body } = await testApi.get(urlWithPagination(0));
 
             expect(page1Status).toEqual(200);
             expect(page1Body.deals.length).toEqual(2);
@@ -241,7 +240,7 @@ describe('/v1/tfm/deals', () => {
               expect(getDealsPage1OnlyIds).toEqual(JSON.parse(JSON.stringify(expectedDeals)).reverse().slice(0, 2));
             }
 
-            const { status: page2Status, body: page2Body } = await api.get(urlWithPagination(1));
+            const { status: page2Status, body: page2Body } = await testApi.get(urlWithPagination(1));
 
             expect(page2Status).toEqual(200);
             expect(page2Body.deals.length).toEqual(1);

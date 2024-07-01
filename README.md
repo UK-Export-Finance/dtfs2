@@ -52,7 +52,7 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
    - `JWT_VALIDATING_KEY=your_public_key`
 6. Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`.
 7. Run `npm run env:copy` to copy your root .env file into all the individual projects that need it.
-8. Run `npm run ci:all` in the root folder of the repository. (note: this will install dependencies for the entire project, including those specified in sub-packages. More details on this in the [npm workspaces](./doc/npm-workspaces.md) docs)
+8. Run `npm ci` in the root folder of the repository. (note: this will install dependencies for the entire project, including those specified in sub-packages. More details on this in the [npm workspaces](./doc/npm-workspaces.md) docs)
 9. Start your local environment with `npm run start`.
 10. Create mock data in the MongoDB database by running `npm run load` from the root folder of the repository. This should generate mocks in your database.
 11. Run migrations on the SQL Server database (see [SQL DB docs](./doc/sql-db.md#--run-migrations) for details)

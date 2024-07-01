@@ -1,3 +1,5 @@
+const { HEADERS } = require('@ukef/dtfs2-common');
+
 const api = () => {
   const url = `${Cypress.config('tfmApiProtocol')}${Cypress.config('tfmApiHost')}:${Cypress.config('tfmApiPort')}`;
   return url;
@@ -10,7 +12,7 @@ module.exports.submitDeal = (dealId, dealType) =>
       method: 'PUT',
       body: { dealId, dealType },
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       },
     })
     .then((resp) => {
@@ -26,7 +28,7 @@ module.exports.submitDealAfterUkefIds = (dealId, dealType, checker) =>
       method: 'PUT',
       body: { dealId, dealType, checker },
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       },
     })
     .then((resp) => {
@@ -40,7 +42,7 @@ module.exports.getUser = (username) =>
       url: `${api()}/v1/users/${username}`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       },
     })
     .then((resp) => {

@@ -1,9 +1,6 @@
 import { IsoDateTimeStamp, ReportPeriod, UtilisationReportReconciliationStatus, FeeRecordStatus, CurrencyAndAmount } from '@ukef/dtfs2-common';
 import { FeeRecord } from './fee-record';
-
-type Payment = CurrencyAndAmount & {
-  id: number;
-};
+import { Payment } from './payment';
 
 type FeeRecordPaymentGroup = {
   feeRecords: FeeRecord[];

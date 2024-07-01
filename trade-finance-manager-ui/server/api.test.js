@@ -1,5 +1,6 @@
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const api = require('./api');
 const { MOCK_BANK_HOLIDAYS } = require('./test-mocks/mock-bank-holidays');
 const { getUkBankHolidays } = require('./api');
@@ -22,7 +23,7 @@ describe('getDeals()', () => {
   const token = 'testToken';
   const headers = {
     Authorization: token,
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     'x-api-key': TFM_API_KEY,
   };
 
@@ -81,7 +82,7 @@ describe('getFacilities()', () => {
   const token = 'testToken';
   const headers = {
     Authorization: token,
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     'x-api-key': TFM_API_KEY,
   };
 

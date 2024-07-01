@@ -1,3 +1,4 @@
+import { HEADERS } from '@ukef/dtfs2-common';
 import { SIGN_IN_TOKENS } from '../../fixtures/constants';
 import { BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../e2e-fixtures/portal-users.fixture';
 import { UNDERWRITER_1_WITH_MOCK_ID } from '../../../../e2e-fixtures/tfm-users.fixture';
@@ -8,11 +9,9 @@ const centralApiUrl = () => {
   return url;
 };
 
-const apiKey = Cypress.config('apiKey');
-
 const headers = {
-  'Content-Type': 'application/json',
-  'x-api-key': apiKey,
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+  'x-api-key': Cypress.config('apiKey'),
 };
 
 const tfmApiUrl = () => {
@@ -29,7 +28,7 @@ const completeLoginWithSignInLink = ({ token2fa, username }) => {
         url: `${portalApi}/users/${userId}/sign-in-link/${signInToken}/login`,
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          ...headers,
           Authorization: token2fa,
         },
       })
@@ -47,9 +46,7 @@ const login = ({ username, password }) => {
       url: `${portalApi}/login`,
       method: 'POST',
       body: { username, password },
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
     })
     .then((loginResponse) => {
       expect(loginResponse.status).to.equal(200);
@@ -68,7 +65,7 @@ const fetchAllGefApplications = (token) =>
       url: `${portalApi}/gef/application`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -82,7 +79,7 @@ const fetchAllApplications = (token) =>
       method: 'GET',
       body: {},
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -94,7 +91,7 @@ const fetchApplicationById = (dealId, token) =>
       url: `${portalApi}/gef/application/${dealId}`,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -109,7 +106,7 @@ const fetchAllFacilities = (dealId, token) =>
       },
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -122,7 +119,7 @@ const createApplication = (user, token) =>
       method: 'POST',
       body: user,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -135,7 +132,7 @@ const updateApplication = (dealId, token, update) =>
       method: 'PUT',
       body: update,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -148,7 +145,7 @@ const createFacility = (dealId, type, token) =>
       method: 'POST',
       body: { dealId, type },
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -161,7 +158,7 @@ const updateFacility = (facilityId, token, update) =>
       method: 'PUT',
       body: update,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })
@@ -174,7 +171,7 @@ const setApplicationStatus = (dealId, token, status) =>
       method: 'PUT',
       body: { status },
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         Authorization: token,
       },
     })

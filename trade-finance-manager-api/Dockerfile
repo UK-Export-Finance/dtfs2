@@ -13,7 +13,7 @@ COPY package-lock.json .
 COPY libs libs
 COPY trade-finance-manager-api trade-finance-manager-api
 
-RUN npm run ci:all
+RUN npm ci
 RUN npm cache clean --force
 
 # Execute Script

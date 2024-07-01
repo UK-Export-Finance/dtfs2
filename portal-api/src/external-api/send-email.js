@@ -1,5 +1,6 @@
 const axios = require('axios');
 const dotenv = require('dotenv');
+const { HEADERS } = require('@ukef/dtfs2-common');
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ const sendEmail = async (templateId, sendToEmailAddress, emailVariables) => {
       method: 'post',
       url: `${EXTERNAL_API_URL}/email`,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         'x-api-key': String(EXTERNAL_API_KEY),
       },
       data: {
