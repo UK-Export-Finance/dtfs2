@@ -1,5 +1,5 @@
 import { Response } from 'supertest';
-import { HttpStatusCode } from 'axios';
+import { HttpStatusCode, getUri } from 'axios';
 import { Bank, Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -15,7 +15,11 @@ interface CustomResponse extends Response {
 console.error = jest.fn();
 
 describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
-  const getUrl = (reportId: number | string, paymentId: number | string) => `/v1/utilisation-reports/${reportId}/payment/${paymentId}`;
+  const getUrl = (reportId: number | string, paymentId: number | string, includeFeeRecords: boolean | undefined = false) =>
+    getUri({
+      url: `/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
+      params: { includeFeeRecords },
+    });
 
   const bankId = '123';
   const bankName = 'Test bank';
@@ -133,5 +137,32 @@ describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
+  });
+
+  it('returns a request body containing the feeRecords and totalReportedPayments when the includeFeeRecords query is set to true', async () => {
+    // Act
+    const response: CustomResponse = await testApi.get(getUrl(reportId, paymentId, true));
+
+    // Assert
+    expect(response.body.feeRecords).toBeDefined();
+    expect(response.body.totalReportedPayments).toBeDefined();
+  });
+
+  it('returns a request body not containing the feeRecords and totalReportedPayments when the includeFeeRecords query is set to false', async () => {
+    // Act
+    const response: CustomResponse = await testApi.get(getUrl(reportId, paymentId, false));
+
+    // Assert
+    expect(response.body.feeRecords).toBeUndefined();
+    expect(response.body.totalReportedPayments).toBeUndefined();
+  });
+
+  it('returns a request body not containing the feeRecords and totalReportedPayments when the includeFeeRecords query is undefined', async () => {
+    // Act
+    const response: CustomResponse = await testApi.get(getUrl(reportId, paymentId, undefined));
+
+    // Assert
+    expect(response.body.feeRecords).toBeUndefined();
+    expect(response.body.totalReportedPayments).toBeUndefined();
   });
 });

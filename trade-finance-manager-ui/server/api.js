@@ -995,17 +995,54 @@ const getUtilisationReportWithFeeRecordsToKey = async (reportId, userToken) => {
 };
 
 /**
- * Gets the payment details required to render the edit payment page
+ * Gets the payment details with the attached fee records
  * @param {string} reportId - The report id
  * @param {string} paymentId - The payment id
  * @param {string} userToken - The user token
- * @returns {Promise<import('./api-response-types').GetPaymentDetailsResponseBody>}
+ * @returns {Promise<import('./api-response-types').GetPaymentDetailsWithFeeRecordsResponseBody>}
  */
-const getPaymentDetails = async (reportId, paymentId, userToken) => {
+const getPaymentDetailsWithFeeRecords = async (reportId, paymentId, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`, {
     headers: generateHeaders(userToken),
+    params: {
+      includeFeeRecords: true,
+    },
   });
   return response.data;
+};
+
+/**
+ * Gets the payment details without the attached fee records
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').GetPaymentDetailsWithoutFeeRecordsResponseBody>}
+ */
+const getPaymentDetailsWithoutFeeRecords = async (reportId, paymentId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`, {
+    headers: generateHeaders(userToken),
+    params: {
+      includeFeeRecords: false,
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Deletes the payment with the specified id
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {string} userToken - The user token
+ * @returns {Promise<void>}
+ */
+const deletePaymentById = async (reportId, paymentId, user, userToken) => {
+  await axios({
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
+    method: 'delete',
+    headers: generateHeaders(userToken),
+    data: { user },
+  });
 };
 
 module.exports = {
@@ -1053,5 +1090,7 @@ module.exports = {
   addPaymentToFeeRecords,
   generateKeyingData,
   getUtilisationReportWithFeeRecordsToKey,
-  getPaymentDetails,
+  getPaymentDetailsWithFeeRecords,
+  getPaymentDetailsWithoutFeeRecords,
+  deletePaymentById,
 };

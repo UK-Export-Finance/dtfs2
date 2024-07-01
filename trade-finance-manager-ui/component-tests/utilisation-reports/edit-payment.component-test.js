@@ -125,11 +125,16 @@ describe(page, () => {
     wrapper.expectElement(saveChangesButtonSelector).toHaveAttribute('formaction', '/utilisation-reports/12/edit-payment/34');
   });
 
-  it('should render the delete payment button', () => {
-    const wrapper = render(anEditPaymentViewModel());
+  it('should render the delete payment button which links to the confirm delete payment url', () => {
+    const viewModel = {
+      ...anEditPaymentViewModel(),
+      reportId: '12',
+      paymentId: '34',
+    };
+    const wrapper = render(viewModel);
 
-    wrapper.expectElement('button[data-cy="delete-payment-button"]').toExist();
-    wrapper.expectElement('button[data-cy="delete-payment-button"]').hasClass('govuk-button--warning');
+    wrapper.expectElement('a[data-cy="delete-payment-button"]').toExist();
+    wrapper.expectWarningButton('a[data-cy="delete-payment-button"]').toLinkTo('/utilisation-reports/12/edit-payment/34/confirm-delete', 'Delete payment');
   });
 
   it('should render the cancel link which links to the premium payments table', () => {

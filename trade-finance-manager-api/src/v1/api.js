@@ -1366,13 +1366,33 @@ const getUtilisationReportWithFeeRecordsToKey = async (reportId) => {
  * Gets the payment details
  * @param {string} reportId - The report id
  * @param {string} paymentId - The payment id
+ * @param {boolean} includeFeeRecords - Whether or not to include the fee records in the response
  * @returns {Promise<import('./api-response-types').PaymentDetailsResponseBody>} The payment details
  */
-const getPaymentDetails = async (reportId, paymentId) => {
+const getPaymentDetails = async (reportId, paymentId, includeFeeRecords) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`, {
     headers: headers.central,
+    params: {
+      includeFeeRecords,
+    },
   });
   return response.data;
+};
+
+/**
+ * Deletes the payment with the specified id
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The session user
+ * @returns {Promise<void>}
+ */
+const deletePaymentById = async (reportId, paymentId, user) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
+    method: 'delete',
+    headers: headers.central,
+    data: { user },
+  });
 };
 
 module.exports = {
@@ -1441,4 +1461,5 @@ module.exports = {
   generateKeyingData,
   getUtilisationReportWithFeeRecordsToKey,
   getPaymentDetails,
+  deletePaymentById,
 };

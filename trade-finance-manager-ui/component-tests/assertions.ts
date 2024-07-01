@@ -53,6 +53,15 @@ export const assertions = (wrapper: CheerioAPI, html: string, params: object) =>
       expect(wrapper(selector).text().trim()).toEqual(text);
     },
   }),
+  expectWarningButton: (selector: string) => ({
+    toLinkTo: (href: string, text: string) => {
+      expect(wrapper(selector).hasClass('govuk-button--disabled')).toEqual(false);
+      expect(wrapper(selector).hasClass('govuk-button--warning')).toEqual(true);
+      expect(wrapper(selector).attr('href')).toEqual(href);
+      expect(wrapper(selector).attr('disabled')).toBeUndefined();
+      expect(wrapper(selector).text().trim()).toEqual(text);
+    },
+  }),
   expectText: (selector: string) => ({
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();
