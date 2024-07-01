@@ -1,4 +1,4 @@
-const pageRenderer = require('../pageRenderer');
+const { pageRenderer } = require('../pageRenderer');
 
 const page = '../templates/utilisation-reports/confirm-delete-payment.njk';
 const render = pageRenderer(page);
