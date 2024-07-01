@@ -118,7 +118,7 @@ describe(page, () => {
     wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).notToExist();
   });
 
-  it('should pass userCanEdit as true to the premium payments table macro for a PDC_RECONCILE user', () => {
+  it('should render edit actions within the premium payments table for PDC_RECONCILE users', () => {
     const user = aTfmSessionUser();
 
     wrapper = render({
@@ -129,7 +129,7 @@ describe(page, () => {
     wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).toExist();
   });
 
-  it('should pass userCanEdit as false to the premium payments table macro for a PDC_READ user', () => {
+  it('should not render edit actions within the premium payments table for PDC_READ users', () => {
     const user = {
       ...aTfmSessionUser(),
       teams: [TEAM_IDS.PDC_READ],
