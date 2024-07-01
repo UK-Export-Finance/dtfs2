@@ -633,7 +633,7 @@ const updateGefFacility = async ({ facilityId, facilityUpdate, auditDetails }) =
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/facilities/${facilityId}`,
       headers: headers.central,
-      data: { facilityUpdate, auditDetails }, // TODO: DTFS2-6966
+      data: { facilityUpdate, auditDetails },
     });
 
     return response.data;

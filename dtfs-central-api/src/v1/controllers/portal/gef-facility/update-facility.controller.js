@@ -1,5 +1,12 @@
 const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError, FacilityNotFoundError, InvalidDealIdError, InvalidFacilityIdError } = require('@ukef/dtfs2-common');
+const {
+  MONGO_DB_COLLECTIONS,
+  InvalidAuditDetailsError,
+  FacilityNotFoundError,
+  InvalidDealIdError,
+  InvalidFacilityIdError,
+  ApiError,
+} = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
@@ -27,7 +34,7 @@ const updateFacility = async ({ facilityId, facilityUpdate, auditDetails }) => {
 
     const facilityUpdateWithAuditRecord = { ...facilityUpdate, auditRecord };
 
-    const updatedFacility = await facilitiesCollection.findOneAndUpdate(
+    const updatedFacilityResponse = await facilitiesCollection.findOneAndUpdate(
       { _id: { $eq: ObjectId(facilityId) } },
       { $set: facilityUpdateWithAuditRecord },
       { returnNewDocument: true, returnDocument: 'after' },
@@ -38,7 +45,7 @@ const updateFacility = async ({ facilityId, facilityUpdate, auditDetails }) => {
 
     await dealsCollection.updateOne({ _id: { $eq: ObjectId(dealId) } }, { $set: dealUpdateObj });
 
-    return updatedFacility;
+    return updatedFacilityResponse;
   } catch (error) {
     console.error('Unable to update the facility %o', error);
     throw error;
@@ -73,9 +80,10 @@ exports.updateFacilityPut = async (req, res) => {
       return res.status(404).send({ status: 404, message: error.message });
     }
 
-    if (error instanceof InvalidDealIdError || error instanceof InvalidFacilityIdError) {
-      return res.status(400).send({ status: 400, message: error.message });
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({ status: error.status, message: error.message });
     }
+
     return res.status(500).send({ status: 500, error });
   }
 };
