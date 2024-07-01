@@ -95,7 +95,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "rimraf": "^5.0.7",
     "sass": "^1.77.4",
-    "sass-loader": "13.2.2",
+    "sass-loader": "14.2.1",
     "style-loader": "3.3.2",
     "supertest": "^6.3.4",
     "terser-webpack-plugin": "^5.3.10",
