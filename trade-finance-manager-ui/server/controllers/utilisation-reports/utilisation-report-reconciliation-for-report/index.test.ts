@@ -6,7 +6,7 @@ import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aFeeRecordPaymentGroup, aUtilisationReportReconciliationDetailsResponse } from '../../../../test-helpers';
 import { UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
-import { ErrorSummaryViewModel, FeeRecordPaymentGroupViewModelItem, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
+import { FeeRecordPaymentGroupViewModelItem, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
@@ -136,6 +136,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
         premiumPaymentFormError: undefined,
         facilityIdQueryError: undefined,
+        facilityIdQuery,
       });
     });
 
@@ -163,8 +164,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
       expect(viewModel.premiumPaymentFormError).toBeDefined();
-      expect((viewModel.premiumPaymentFormError as [ErrorSummaryViewModel])[0].href).toBe('#different-fee-record-statuses');
-      expect((viewModel.premiumPaymentFormError as [ErrorSummaryViewModel])[0].text).toBe('Select a fee or fees with the same status');
+      expect(viewModel.premiumPaymentFormError?.href).toBe('#different-fee-record-statuses');
+      expect(viewModel.premiumPaymentFormError?.text).toBe('Select a fee or fees with the same status');
       expect(viewModel.feeRecordPaymentGroups[0].isChecked).toBe(true);
     });
 
@@ -269,8 +270,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
       expect(viewModel.facilityIdQueryError).toBeDefined();
-      expect((viewModel.facilityIdQueryError as [ErrorSummaryViewModel])[0].href).toBe('#facility-id-filter');
-      expect((viewModel.facilityIdQueryError as [ErrorSummaryViewModel])[0].text).toBe('Enter 4-10 characters of a facility ID');
+      expect(viewModel.facilityIdQueryError?.href).toBe('#facility-id-filter');
+      expect(viewModel.facilityIdQueryError?.text).toBe('Enter 4-10 characters of a facility ID');
     });
   });
 });

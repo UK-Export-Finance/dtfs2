@@ -7,23 +7,21 @@ export const validateFacilityIdQuery = (
   req: Request,
 ): {
   validatedFacilityIdQuery: string | undefined;
-  facilityIdQueryError: [ErrorSummaryViewModel] | undefined;
+  facilityIdQueryError: ErrorSummaryViewModel | undefined;
 } => {
   const { facilityIdQuery } = req.query;
   const { originalUrl } = req;
   const facilityIdQueryAsString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
-  let facilityIdQueryError: [ErrorSummaryViewModel] | undefined;
+  let facilityIdQueryError: ErrorSummaryViewModel | undefined;
 
   if (
     originalUrl.includes('?') &&
     (!facilityIdQueryAsString || !isNonEmptyString(facilityIdQueryAsString) || !REGEX.PARTIAL_FACILITY_ID.test(facilityIdQueryAsString))
   ) {
-    facilityIdQueryError = [
-      {
-        text: 'Enter 4-10 characters of a facility ID',
-        href: '#facility-id-filter',
-      },
-    ];
+    facilityIdQueryError = {
+      text: 'Enter 4-10 characters of a facility ID',
+      href: '#facility-id-filter',
+    };
   }
 
   return { validatedFacilityIdQuery: facilityIdQueryAsString, facilityIdQueryError };

@@ -14,7 +14,7 @@
   {% if premiumPaymentFormError or facilityIdQueryError %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: [premiumPaymentFormError[0], facilityIdQueryError[0]],
+      errorList: [premiumPaymentFormError, facilityIdQueryError],
       attributes: {
         'data-cy': 'error-summary'
       }

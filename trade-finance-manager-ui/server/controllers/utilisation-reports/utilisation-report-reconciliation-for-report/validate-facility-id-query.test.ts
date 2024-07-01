@@ -32,12 +32,10 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
       // Assert
       expect(validatedFacilityIdQuery).toEqual(facilityIdQuery);
-      expect(facilityIdQueryError).toEqual([
-        {
-          text: 'Enter 4-10 characters of a facility ID',
-          href: '#facility-id-filter',
-        },
-      ]);
+      expect(facilityIdQueryError).toEqual({
+        text: 'Enter 4-10 characters of a facility ID',
+        href: '#facility-id-filter',
+      });
     });
 
     it.each(['abcd', '123', 'c3c3c', '?????', '12345678901'])(
@@ -51,12 +49,10 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
         // Assert
         expect(validatedFacilityIdQuery).toEqual(facilityIdQuery);
-        expect(facilityIdQueryError).toEqual([
-          {
-            text: 'Enter 4-10 characters of a facility ID',
-            href: '#facility-id-filter',
-          },
-        ]);
+        expect(facilityIdQueryError).toEqual({
+          text: 'Enter 4-10 characters of a facility ID',
+          href: '#facility-id-filter',
+        });
       },
     );
 
