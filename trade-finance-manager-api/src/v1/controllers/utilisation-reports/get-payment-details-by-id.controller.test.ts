@@ -17,6 +17,7 @@ describe('get-payment-details-by-id.controller', () => {
     const getHttpMocks = () =>
       httpMocks.createMocks({
         params: { reportId, paymentId },
+        query: { includeFeeRecords: 'true' },
       });
 
     const aPaymentDetailsResponseBody = (): PaymentDetailsResponseBody => ({
@@ -38,13 +39,55 @@ describe('get-payment-details-by-id.controller', () => {
       const { req, res } = getHttpMocks();
 
       const responseBody = aPaymentDetailsResponseBody();
-      jest.mocked(api.getPaymentDetails).mockResolvedValue(aPaymentDetailsResponseBody());
+      jest.mocked(api.getPaymentDetails).mockResolvedValue(responseBody);
 
       // Act
       await getPaymentDetailsById(req, res);
 
       // Assert
       expect(res._getData()).toEqual(responseBody);
+    });
+
+    it("includes the attached fee records when the includeFeeRecords query is set to 'true'", async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.query = { includeFeeRecords: 'true' };
+
+      jest.mocked(api.getPaymentDetails).mockResolvedValue(aPaymentDetailsResponseBody());
+
+      // Act
+      await getPaymentDetailsById(req, res);
+
+      // Assert
+      expect(api.getPaymentDetails).toHaveBeenCalledWith(reportId, paymentId, true);
+    });
+
+    it("does not include the attached fee records when the includeFeeRecords query is set to 'false'", async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.query = { includeFeeRecords: 'false' };
+
+      jest.mocked(api.getPaymentDetails).mockResolvedValue(aPaymentDetailsResponseBody());
+
+      // Act
+      await getPaymentDetailsById(req, res);
+
+      // Assert
+      expect(api.getPaymentDetails).toHaveBeenCalledWith(reportId, paymentId, false);
+    });
+
+    it('does not include the attached fee records when the includeFeeRecords query is undefined', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.query = {};
+
+      jest.mocked(api.getPaymentDetails).mockResolvedValue(aPaymentDetailsResponseBody());
+
+      // Act
+      await getPaymentDetailsById(req, res);
+
+      // Assert
+      expect(api.getPaymentDetails).toHaveBeenCalledWith(reportId, paymentId, false);
     });
 
     it('responds with a 200', async () => {

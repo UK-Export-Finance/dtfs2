@@ -41,7 +41,7 @@ describe('get-payment.controller helpers', () => {
       jest.mocked(getBankNameById).mockResolvedValue(undefined);
 
       // Act / Assert
-      await expect(mapToPaymentDetails(payment)).rejects.toThrow(NotFoundError);
+      await expect(mapToPaymentDetails(payment, false)).rejects.toThrow(NotFoundError);
       expect(getBankNameById).toHaveBeenCalledWith(bankId);
     });
 
@@ -53,7 +53,7 @@ describe('get-payment.controller helpers', () => {
       jest.mocked(getBankNameById).mockResolvedValue(bankName);
 
       // Act
-      const paymentDetails = await mapToPaymentDetails(payment);
+      const paymentDetails = await mapToPaymentDetails(payment, false);
 
       // Assert
       expect(paymentDetails.bank).toEqual({ id: bankId, name: bankName });
@@ -69,7 +69,7 @@ describe('get-payment.controller helpers', () => {
       payment.feeRecords[0].report.reportPeriod = reportPeriod;
 
       // Act
-      const paymentDetails = await mapToPaymentDetails(payment);
+      const paymentDetails = await mapToPaymentDetails(payment, false);
 
       // Assert
       expect(paymentDetails.reportPeriod).toEqual(reportPeriod);
@@ -94,94 +94,120 @@ describe('get-payment.controller helpers', () => {
       payment.reference = mappedPayment.reference;
 
       // Act
-      const paymentDetails = await mapToPaymentDetails(payment);
+      const paymentDetails = await mapToPaymentDetails(payment, false);
 
       // Assert
       expect(paymentDetails.payment).toEqual(mappedPayment);
     });
 
-    it('returns an object containing the mapped fee records', async () => {
-      // Arrange
-      const payment = aPayment();
+    describe('when includeFeeRecords is set to true', () => {
+      const includeFeeRecords = true;
 
-      const feeRecordEntities = [
-        FeeRecordEntityMockBuilder.forReport(utilisationReport)
-          .withId(1)
-          .withFacilityId('12345678')
-          .withExporter('Test exporter 1')
-          .withPaymentCurrency(paymentCurrency)
-          .withFeesPaidToUkefForThePeriod(100)
-          .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
-          .build(),
-        FeeRecordEntityMockBuilder.forReport(utilisationReport)
-          .withId(2)
-          .withFacilityId('87654321')
-          .withExporter('Test exporter 2')
-          .withPaymentCurrency(paymentCurrency)
-          .withFeesPaidToUkefForThePeriod(200)
-          .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
-          .build(),
-      ];
-      payment.feeRecords = feeRecordEntities;
+      it('returns an object containing the mapped fee records', async () => {
+        // Arrange
+        const payment = aPayment();
 
-      const feeRecords: FeeRecord[] = [
-        {
-          id: 1,
-          facilityId: '12345678',
-          exporter: 'Test exporter 1',
-          reportedFees: { currency: paymentCurrency, amount: 100 },
-          reportedPayments: { currency: paymentCurrency, amount: 100 },
-        },
-        {
-          id: 2,
-          facilityId: '87654321',
-          exporter: 'Test exporter 2',
-          reportedFees: { currency: paymentCurrency, amount: 200 },
-          reportedPayments: { currency: paymentCurrency, amount: 200 },
-        },
-      ];
+        const feeRecordEntities = [
+          FeeRecordEntityMockBuilder.forReport(utilisationReport)
+            .withId(1)
+            .withFacilityId('12345678')
+            .withExporter('Test exporter 1')
+            .withPaymentCurrency(paymentCurrency)
+            .withFeesPaidToUkefForThePeriod(100)
+            .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
+            .build(),
+          FeeRecordEntityMockBuilder.forReport(utilisationReport)
+            .withId(2)
+            .withFacilityId('87654321')
+            .withExporter('Test exporter 2')
+            .withPaymentCurrency(paymentCurrency)
+            .withFeesPaidToUkefForThePeriod(200)
+            .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
+            .build(),
+        ];
+        payment.feeRecords = feeRecordEntities;
 
-      // Act
-      const paymentDetails = await mapToPaymentDetails(payment);
+        const feeRecords: FeeRecord[] = [
+          {
+            id: 1,
+            facilityId: '12345678',
+            exporter: 'Test exporter 1',
+            reportedFees: { currency: paymentCurrency, amount: 100 },
+            reportedPayments: { currency: paymentCurrency, amount: 100 },
+          },
+          {
+            id: 2,
+            facilityId: '87654321',
+            exporter: 'Test exporter 2',
+            reportedFees: { currency: paymentCurrency, amount: 200 },
+            reportedPayments: { currency: paymentCurrency, amount: 200 },
+          },
+        ];
 
-      // Assert
-      expect(paymentDetails.feeRecords).toEqual(feeRecords);
+        // Act
+        const paymentDetails = await mapToPaymentDetails(payment, includeFeeRecords);
+
+        // Assert
+        expect(paymentDetails.feeRecords).toEqual(feeRecords);
+      });
+
+      it('returns an object containing the total reported payments', async () => {
+        // Arrange
+        const payment = aPayment();
+
+        const feeRecordEntities = [
+          FeeRecordEntityMockBuilder.forReport(utilisationReport)
+            .withId(1)
+            .withFacilityId('12345678')
+            .withExporter('Test exporter 1')
+            .withPaymentCurrency(paymentCurrency)
+            .withFeesPaidToUkefForThePeriod(100)
+            .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
+            .build(),
+          FeeRecordEntityMockBuilder.forReport(utilisationReport)
+            .withId(2)
+            .withFacilityId('87654321')
+            .withExporter('Test exporter 2')
+            .withPaymentCurrency(paymentCurrency)
+            .withFeesPaidToUkefForThePeriod(200)
+            .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
+            .build(),
+        ];
+        payment.feeRecords = feeRecordEntities;
+
+        const totalReportedPayments: CurrencyAndAmount = {
+          currency: paymentCurrency,
+          amount: 300,
+        };
+
+        // Act
+        const paymentDetails = await mapToPaymentDetails(payment, includeFeeRecords);
+
+        // Assert
+        expect(paymentDetails.totalReportedPayments).toEqual(totalReportedPayments);
+      });
     });
 
-    it('returns an object containing the total reported payments', async () => {
-      // Arrange
-      const payment = aPayment();
+    describe('when includeFeeRecords is set to false', () => {
+      const includeFeeRecords = false;
 
-      const feeRecordEntities = [
-        FeeRecordEntityMockBuilder.forReport(utilisationReport)
-          .withId(1)
-          .withFacilityId('12345678')
-          .withExporter('Test exporter 1')
-          .withPaymentCurrency(paymentCurrency)
-          .withFeesPaidToUkefForThePeriod(100)
-          .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
-          .build(),
-        FeeRecordEntityMockBuilder.forReport(utilisationReport)
-          .withId(2)
-          .withFacilityId('87654321')
-          .withExporter('Test exporter 2')
-          .withPaymentCurrency(paymentCurrency)
-          .withFeesPaidToUkefForThePeriod(200)
-          .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
-          .build(),
-      ];
-      payment.feeRecords = feeRecordEntities;
+      it('returns an object which does not contain the fee records or the total reported payments', async () => {
+        // Arrange
+        const payment = aPayment();
 
-      const totalReportedPayments: CurrencyAndAmount = {
-        currency: paymentCurrency,
-        amount: 300,
-      };
+        const feeRecordEntities = [
+          FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build(),
+          FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build(),
+        ];
+        payment.feeRecords = feeRecordEntities;
 
-      // Act
-      const paymentDetails = await mapToPaymentDetails(payment);
+        // Act
+        const paymentDetails = await mapToPaymentDetails(payment, includeFeeRecords);
 
-      // Assert
-      expect(paymentDetails.totalReportedPayments).toEqual(totalReportedPayments);
+        // Assert
+        expect(paymentDetails.feeRecords).toBeUndefined();
+        expect(paymentDetails.totalReportedPayments).toBeUndefined();
+      });
     });
   });
 });

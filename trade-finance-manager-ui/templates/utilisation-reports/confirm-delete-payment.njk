@@ -1,0 +1,35 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% extends "index.njk" %}
+{% block pageTitle %}
+  Confirm delete payment
+{% endblock %}
+{% block content %}
+  <h1 class="govuk-heading-1">Are you sure you want to delete the payment?</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukSummaryList({
+        rows: paymentSummaryListRows
+      }) }}
+    </div>
+  </div>
+  <form method="post">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> {{ govukRadios({
+      classes: "govuk-radios--inline",
+      name: "confirmDeletePayment",
+      items: [
+        {
+          value: "yes",
+          text: "Yes"
+        },
+        {
+          value: "no",
+          text: "No"
+        }
+      ]
+    }) }}
+    {{ govukButton({ "text": "Continue" }) }}
+  </form>
+{% endblock %}
+{% block subcontent %}{% endblock %}

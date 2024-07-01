@@ -82,6 +82,7 @@
         {{ govukButton({
       text: "Delete payment",
       classes: "govuk-button--warning",
+      href: ["/utilisation-reports/", reportId, "/edit-payment/", paymentId, "/confirm-delete"] | join,
       attributes: {
         "data-cy": "delete-payment-button"
       }
