@@ -46,7 +46,7 @@ describe(component, () => {
 
   const numericCellClass = 'govuk-table__cell--numeric';
 
-  it('should render the table headings', () => {
+  it('should render table headings with the checkbox column when userCanEdit is true', () => {
     const wrapper = getWrapper();
     wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(9);
     wrapper.expectElement(`${tableSelector} thead th:contains("")`).toExist();
