@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { HttpStatusCode, isAxiosError } from 'axios';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { PaymentDetailsResponseBody } from '../../api-response-types';
 import api from '../../api';
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
 
 type GetPaymentDetailsByIdRequest = CustomExpressRequest<{
   query: {

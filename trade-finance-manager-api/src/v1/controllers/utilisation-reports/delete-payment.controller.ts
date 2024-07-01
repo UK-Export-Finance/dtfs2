@@ -1,8 +1,16 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { HttpStatusCode, isAxiosError } from 'axios';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import api from '../../api';
+import { TfmSessionUser } from '../../../types/tfm-session-user';
 
-export const deletePayment = async (req: Request, res: Response) => {
+type DeletePaymentRequest = CustomExpressRequest<{
+  reqBody: {
+    user: TfmSessionUser;
+  };
+}>;
+
+export const deletePayment = async (req: DeletePaymentRequest, res: Response) => {
   const { reportId, paymentId } = req.params;
   const { user } = req.body;
 
