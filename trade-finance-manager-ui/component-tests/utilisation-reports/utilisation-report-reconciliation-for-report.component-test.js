@@ -91,12 +91,12 @@ describe(page, () => {
   it('should not render add payment button for PDC_READ user', () => {
     const user = {
       ...aTfmSessionUser(),
-      teams: [TEAM_IDS.PDC_READ]
+      teams: [TEAM_IDS.PDC_READ],
     };
 
     wrapper = render({
       ...params,
-      user
+      user,
     });
 
     const premiumPaymentsTabSelector = 'div#premium-payments';
@@ -106,16 +106,15 @@ describe(page, () => {
   it('should not render generate keying data button for PDC_READ user', () => {
     const user = {
       ...aTfmSessionUser(),
-      teams: [TEAM_IDS.PDC_READ]
+      teams: [TEAM_IDS.PDC_READ],
     };
 
     wrapper = render({
       ...params,
-      user
+      user,
     });
 
     const premiumPaymentsTabSelector = 'div#premium-payments';
     wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).notToExist();
   });
-
 });
