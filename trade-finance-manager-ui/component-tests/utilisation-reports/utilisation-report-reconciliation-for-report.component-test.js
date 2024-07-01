@@ -1,3 +1,4 @@
+const { TEAM_IDS } = require('@ukef/dtfs2-common');
 const { PRIMARY_NAVIGATION_KEYS } = require('../../server/constants');
 const { pageRenderer } = require('../pageRenderer');
 const { aTfmSessionUser } = require('../../test-helpers/test-data/tfm-session-user');
@@ -101,4 +102,20 @@ describe(page, () => {
     const premiumPaymentsTabSelector = 'div#premium-payments';
     wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`).notToExist();
   });
+
+  it('should not render generate keying data button for PDC_READ user', () => {
+    const user = {
+      ...aTfmSessionUser(),
+      teams: [TEAM_IDS.PDC_READ]
+    };
+
+    wrapper = render({
+      ...params,
+      user
+    });
+
+    const premiumPaymentsTabSelector = 'div#premium-payments';
+    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).notToExist();
+  });
+
 });
