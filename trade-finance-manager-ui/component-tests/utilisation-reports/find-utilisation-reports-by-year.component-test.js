@@ -1,4 +1,4 @@
-const pageRenderer = require('../pageRenderer');
+const { pageRenderer } = require('../pageRenderer');
 const { MOCK_TFM_SESSION_USER } = require('../../server/test-mocks/mock-tfm-session-user');
 const { PRIMARY_NAVIGATION_KEYS } = require('../../server/constants');
 

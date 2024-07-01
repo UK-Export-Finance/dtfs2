@@ -1,5 +1,5 @@
 const { PRIMARY_NAVIGATION_KEYS } = require('../../server/constants');
-const pageRenderer = require('../pageRenderer');
+const { pageRenderer } = require('../pageRenderer');
 
 const page = '../templates/utilisation-reports/utilisation-report-reconciliation-for-report.njk';
 const render = pageRenderer(page);

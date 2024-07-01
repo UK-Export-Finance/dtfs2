@@ -1,6 +1,6 @@
 const difference = require('lodash/difference');
 const { FEE_RECORD_STATUS } = require('@ukef/dtfs2-common');
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 const { aFeeRecordPaymentGroup, aFeeRecordViewModelItem } = require('../../../test-helpers');
 
 jest.mock('../../../server/api');

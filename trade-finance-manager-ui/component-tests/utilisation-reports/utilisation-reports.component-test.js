@@ -1,4 +1,4 @@
-const pageRenderer = require('../pageRenderer');
+const { pageRenderer } = require('../pageRenderer');
 const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
 const { getReportReconciliationSummariesViewModel } = require('../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
 const { getUkBankHolidays } = require('../../server/api');

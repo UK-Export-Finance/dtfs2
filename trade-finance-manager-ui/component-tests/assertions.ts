@@ -1,8 +1,9 @@
-// eslint-disable-next-line no-unused-vars
-const assertions = (wrapper, html, params) => ({
+import { CheerioAPI } from 'cheerio';
+
+export const assertions = (wrapper: CheerioAPI, html: string, params: object) => ({
   html,
   params,
-  expectLink: (selector) => ({
+  expectLink: (selector: string) => ({
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();
     },
@@ -10,13 +11,13 @@ const assertions = (wrapper, html, params) => ({
       expect(wrapper(selector).attr('href')).toBeUndefined();
       expect(wrapper(selector).attr('disabled')).toEqual('disabled');
     },
-    toLinkTo: (href, text) => {
+    toLinkTo: (href: string, text: string) => {
       expect(wrapper(selector).attr('href')).toEqual(href);
       expect(wrapper(selector).attr('disabled')).toBeUndefined();
       expect(wrapper(selector).text().trim()).toEqual(text);
     },
   }),
-  expectPrimaryButton: (selector) => ({
+  expectPrimaryButton: (selector: string) => ({
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();
     },
@@ -26,7 +27,7 @@ const assertions = (wrapper, html, params) => ({
       expect(wrapper(selector).attr('href')).toBeUndefined();
       expect(wrapper(selector).attr('disabled')).toEqual('disabled');
     },
-    toLinkTo: (href, text) => {
+    toLinkTo: (href: string, text: string) => {
       expect(wrapper(selector).hasClass('govuk-button--disabled')).toEqual(false);
       expect(wrapper(selector).hasClass('govuk-button--secondary')).toEqual(false);
       expect(wrapper(selector).attr('href')).toEqual(href);
@@ -34,7 +35,7 @@ const assertions = (wrapper, html, params) => ({
       expect(wrapper(selector).text().trim()).toEqual(text);
     },
   }),
-  expectSecondaryButton: (selector) => ({
+  expectSecondaryButton: (selector: string) => ({
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();
     },
@@ -44,7 +45,7 @@ const assertions = (wrapper, html, params) => ({
       expect(wrapper(selector).attr('href')).toBeUndefined();
       expect(wrapper(selector).attr('disabled')).toEqual('disabled');
     },
-    toLinkTo: (href, text) => {
+    toLinkTo: (href: string, text: string) => {
       expect(wrapper(selector).hasClass('govuk-button--disabled')).toEqual(false);
       expect(wrapper(selector).hasClass('govuk-button--secondary')).toEqual(true);
       expect(wrapper(selector).attr('href')).toEqual(href);
@@ -52,8 +53,8 @@ const assertions = (wrapper, html, params) => ({
       expect(wrapper(selector).text().trim()).toEqual(text);
     },
   }),
-  expectWarningButton: (selector) => ({
-    toLinkTo: (href, text) => {
+  expectWarningButton: (selector: string) => ({
+    toLinkTo: (href: string, text: string) => {
       expect(wrapper(selector).hasClass('govuk-button--disabled')).toEqual(false);
       expect(wrapper(selector).hasClass('govuk-button--warning')).toEqual(true);
       expect(wrapper(selector).attr('href')).toEqual(href);
@@ -61,49 +62,49 @@ const assertions = (wrapper, html, params) => ({
       expect(wrapper(selector).text().trim()).toEqual(text);
     },
   }),
-  expectText: (selector) => ({
+  expectText: (selector: string) => ({
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();
     },
-    toRead: (text) => {
+    toRead: (text: string) => {
       expect(wrapper(selector).text().trim()).toEqual(text);
     },
-    toMatch: (regex) => {
+    toMatch: (regex: RegExp) => {
       expect(wrapper(selector).text().trim()).toMatch(regex);
     },
-    toContain: (text) => {
+    toContain: (text: string) => {
       expect(wrapper(selector).text().trim()).toContain(text);
     },
-    notToContain: (text) => {
+    notToContain: (text: string) => {
       expect(wrapper(selector).text().trim()).not.toContain(text);
     },
   }),
-  expectElement: (selector) => ({
+  expectElement: (selector: string) => ({
     toExist: () => {
       expect(wrapper(selector).html()).not.toBeNull();
     },
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();
     },
-    hasClass: (value) => {
+    hasClass: (value: string) => {
       expect(wrapper(selector).hasClass(value)).toEqual(true);
     },
-    doesNotHaveClass: (value) => {
+    doesNotHaveClass: (value: string) => {
       expect(wrapper(selector).hasClass(value)).toEqual(false);
     },
-    lengthToEqual: (expectedLength) => {
+    lengthToEqual: (expectedLength: string) => {
       const expected = expectedLength + 1; // cheerio html() assertion automatically adds 1.
-      expect(wrapper(selector).html().length).toEqual(expected);
+      expect(wrapper(selector).html()?.length).toEqual(expected);
     },
-    toHaveCount: (expectedCount) => {
+    toHaveCount: (expectedCount: number) => {
       expect(wrapper(selector).length).toEqual(expectedCount);
     },
-    toHaveAttribute: (attr, value) => {
+    toHaveAttribute: (attr: string, value: string) => {
       expect(wrapper(selector).attr(attr)).toEqual(value);
     },
   }),
-  expectInput: (selector) => ({
-    toHaveValue: (value) => {
+  expectInput: (selector: string) => ({
+    toHaveValue: (value: string) => {
       expect(wrapper(selector).attr('value')).toEqual(value);
     },
     toBeChecked: () => {
@@ -113,21 +114,19 @@ const assertions = (wrapper, html, params) => ({
       expect(wrapper(selector).is(':checked')).toEqual(false);
     },
   }),
-  expectTextArea: (selector) => ({
-    toHaveValue: (value) => {
+  expectTextArea: (selector: string) => ({
+    toHaveValue: (value: string) => {
       expect(wrapper(selector).val()).toEqual(value);
     },
   }),
-  expectAriaLabel: (selector) => ({
-    toEqual: (text) => {
+  expectAriaLabel: (selector: string) => ({
+    toEqual: (text: string) => {
       expect(wrapper(selector).attr('aria-label')).toEqual(text);
     },
   }),
-  expectAriaSort: (selector) => ({
-    toEqual: (text) => {
+  expectAriaSort: (selector: string) => ({
+    toEqual: (text: string) => {
       expect(wrapper(selector).attr('aria-sort')).toEqual(text);
     },
   }),
 });
-
-export default assertions;

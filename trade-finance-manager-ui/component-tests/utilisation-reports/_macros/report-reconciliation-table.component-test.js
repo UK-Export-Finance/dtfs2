@@ -1,5 +1,5 @@
 const { TEAM_IDS, UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 const { getUkBankHolidays } = require('../../../server/api');
 const { getReportReconciliationSummariesViewModel } = require('../../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
 const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../../server/test-mocks/mock-utilisation-report-reconciliation-summary');

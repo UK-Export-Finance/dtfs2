@@ -1,5 +1,5 @@
 const { TEAM_IDS } = require('@ukef/dtfs2-common');
-const componentRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 const { localiseTimestamp } = require('../../../../server/nunjucks-configuration/filter-localiseTimestamp');
 
 const component = '../templates/case/tasks/_macros/tasks-table.njk';

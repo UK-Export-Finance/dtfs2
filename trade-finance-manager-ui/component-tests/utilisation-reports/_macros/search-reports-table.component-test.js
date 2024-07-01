@@ -1,5 +1,5 @@
 const { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder } = require('@ukef/dtfs2-common');
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 const { getFindReportSummaryItemViewModel } = require('../../../server/controllers/utilisation-reports/helpers/find-reports-by-year-helper');
 const { MOCK_TFM_SESSION_USER } = require('../../../server/test-mocks/mock-tfm-session-user');
 
