@@ -117,4 +117,29 @@ describe(page, () => {
     const premiumPaymentsTabSelector = 'div#premium-payments';
     wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).notToExist();
   });
+
+  it('should pass userCanEdit as true to the premium payments table macro for a PDC_RECONCILE user', () => {
+    const user = aTfmSessionUser();
+
+    wrapper = render({
+      ...params,
+      user,
+    });
+
+    wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).toExist();
+  });
+
+  it('should pass userCanEdit as false to the premium payments table macro for a PDC_READ user', () => {
+    const user = {
+      ...aTfmSessionUser(),
+      teams: [TEAM_IDS.PDC_READ],
+    };
+
+    wrapper = render({
+      ...params,
+      user,
+    });
+
+    wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).notToExist();
+  });
 });
