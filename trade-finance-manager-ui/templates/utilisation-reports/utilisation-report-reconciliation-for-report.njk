@@ -27,8 +27,8 @@
 
     <h2 class="govuk-heading-l" data-cy="premium-payments-heading">Premium payments</h2>
 
-    <div class="govuk-grid-row ukef-grid-container">
-      <div class="govuk-grid-column-one-half ukef-grid-65">
+    <div class="govuk-grid-row premium-payments-description-filter-container">
+      <div class="govuk-grid-column-one-half premium-payments-description-container">
         <p class="govuk-body">Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button.</p>
 
         <p class="govuk-body">
@@ -36,9 +36,9 @@
         </p>
       </div>
 
-      <div class="govuk-grid-column-one-half govuk-!-text-align-right ukef-grid-35">
+      <div class="govuk-grid-column-one-half govuk-!-text-align-right premium-payments-filter-container">
         <form method="GET" data-cy="facility-filter-form">
-          <div class="govuk-!-text-align-left govuk-!-display-inline-block ukef-margin-bottom-0">
+          <div class="govuk-!-text-align-left govuk-!-display-inline-block premium-payments-filter-control">
             {{ govukInput({
               label: {
                 text: "Filter by facility ID",
@@ -56,7 +56,7 @@
           <div class="govuk-!-display-inline-block">
             {{ govukButton({
               text: "Filter",
-              classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 ukef-margin-bottom-0",
+              classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 premium-payments-filter-control",
               id: "facility-id-filter-button",
               attributes: {'data-cy': 'facility-filter-submit-button'}
             }) }}
@@ -64,7 +64,7 @@
           <div class="govuk-!-display-inline-block">
             {{ govukButton({
               text: "Clear filter",
-              classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 ukef-margin-bottom-0",
+              classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 premium-payments-filter-control",
               id: "facility-id-clear-button",
               href: clearButtonHref,
               attributes: {'data-cy': 'facility-filter-clear-button'}
