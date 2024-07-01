@@ -363,6 +363,38 @@ describe(component, () => {
     },
   );
 
+  it.each(Object.values(FEE_RECORD_STATUS))(
+    "should render all payments received as plain text when userCanEdit is false, regardless of fee record status '%s'",
+    (status) => {
+      const feeRecordId = 1;
+      const feeRecordItems = [{ ...aFeeRecordViewModelItem(), id: feeRecordId }];
+  
+      const paymentsReceived = [
+        { formattedCurrencyAndAmount: 'GBP 100.00', id: 1 },
+        { formattedCurrencyAndAmount: 'GBP 200.00', id: 2 },
+      ];
+  
+      const feeRecordPaymentGroups = [
+        {
+          ...aFeeRecordPaymentGroup(),
+          feeRecords: feeRecordItems,
+          status,
+          paymentsReceived,
+        },
+      ];
+  
+      const reportId = 12;
+  
+      const wrapper = render({ userCanEdit: false, reportId, feeRecordPaymentGroups });
+  
+      const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
+      paymentsReceived.forEach((payment) => {
+        wrapper.expectElement(`${rowSelector} td li:contains(${payment.formattedCurrencyAndAmount})`).toExist();
+        wrapper.expectElement(`${rowSelector} td a:contains(${payment.formattedCurrencyAndAmount})`).notToExist();
+      });
+    },
+  );  
+
   it('should not render the payments received list when the group payments received is undefined', () => {
     const feeRecordId = 1;
     const feeRecordItems = [{ ...aFeeRecordViewModelItem(), id: feeRecordId }];
