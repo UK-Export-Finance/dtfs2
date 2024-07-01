@@ -59,6 +59,20 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
   });
 
+  it('should render table headings without the checkbox column when userCanEdit is false', () => {
+    const wrapper = render({ userCanEdit: false, feeRecordPaymentGroups: aFeeRecordPaymentGroupList() });
+
+    wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(8);
+    wrapper.expectElement(`${tableSelector} thead th:contains("Facility ID")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th:contains("Exporter")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th:contains("Reported fees")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th:contains("Reported payments")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th:contains("Total reported payments")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th:contains("Payments received")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
+  });  
+
   it("should use the 'govuk-table__header--numeric' class for numeric columns", () => {
     const wrapper = getWrapper();
     const numericHeaderClass = 'govuk-table__header--numeric';
@@ -102,6 +116,11 @@ describe(component, () => {
   it('should render the select all checkbox in the table headings row when userCanEdit is true', () => {
     const wrapper = getWrapper();
     wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).toExist();
+  });
+
+  it('should not render the select all checkbox in the table headings row when userCanEdit is false', () => {
+    const wrapper = render({ userCanEdit: false });
+    wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).notToExist();
   });
 
   it('should render a row for each fee record defined in each fee record payment group', () => {
@@ -429,6 +448,19 @@ describe(component, () => {
       wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).notToExist();
     },
   );
+
+  it('should not render any checkboxes when userCanEdit is false', () => {
+    const feeRecordPaymentGroups = Object.values(FEE_RECORD_STATUS).map(status => ({
+      ...aFeeRecordPaymentGroup(),
+      status,
+      checkboxId: `checkbox-${status}`,
+    }));
+    const wrapper = render({ userCanEdit: false, feeRecordPaymentGroups });
+  
+    feeRecordPaymentGroups.forEach(group => {
+      wrapper.expectElement(`input#${group.checkboxId}[type="checkbox"]`).notToExist();
+    });
+  });
 
   it('should render a checkbox with the checkbox id specified in the group only in the first row of the group', () => {
     const feeRecordIds = [1, 2, 3];
