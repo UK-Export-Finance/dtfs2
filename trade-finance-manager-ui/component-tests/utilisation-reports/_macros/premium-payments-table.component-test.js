@@ -41,7 +41,8 @@ describe(component, () => {
     },
   ];
 
-  const getWrapper = () => render({ userCanEdit: true, reportId: 1, feeRecordPaymentGroups: aFeeRecordPaymentGroupList(), enablePaymentsReceivedSorting: true });
+  const getWrapper = () =>
+    render({ userCanEdit: true, reportId: 1, feeRecordPaymentGroups: aFeeRecordPaymentGroupList(), enablePaymentsReceivedSorting: true });
 
   const numericCellClass = 'govuk-table__cell--numeric';
 
@@ -71,7 +72,7 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Payments received")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
-  });  
+  });
 
   it("should use the 'govuk-table__header--numeric' class for numeric columns", () => {
     const wrapper = getWrapper();
@@ -368,12 +369,12 @@ describe(component, () => {
     (status) => {
       const feeRecordId = 1;
       const feeRecordItems = [{ ...aFeeRecordViewModelItem(), id: feeRecordId }];
-  
+
       const paymentsReceived = [
         { formattedCurrencyAndAmount: 'GBP 100.00', id: 1 },
         { formattedCurrencyAndAmount: 'GBP 200.00', id: 2 },
       ];
-  
+
       const feeRecordPaymentGroups = [
         {
           ...aFeeRecordPaymentGroup(),
@@ -382,18 +383,18 @@ describe(component, () => {
           paymentsReceived,
         },
       ];
-  
+
       const reportId = 12;
-  
+
       const wrapper = render({ userCanEdit: false, reportId, feeRecordPaymentGroups });
-  
+
       const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
         wrapper.expectElement(`${rowSelector} td li:contains(${payment.formattedCurrencyAndAmount})`).toExist();
         wrapper.expectElement(`${rowSelector} td a:contains(${payment.formattedCurrencyAndAmount})`).notToExist();
       });
     },
-  );  
+  );
 
   it('should not render the payments received list when the group payments received is undefined', () => {
     const feeRecordId = 1;
@@ -450,19 +451,22 @@ describe(component, () => {
 
   const FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH];
 
-  it.each(FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST)('should render the checkbox when userCanEdit is true and the fee record status is %s', (feeRecordStatus) => {
-    const checkboxId = 'some-checkbox-id';
-    const feeRecordPaymentGroups = [
-      {
-        ...aFeeRecordPaymentGroup(),
-        status: feeRecordStatus,
-        checkboxId,
-      },
-    ];
-    const wrapper = render({ userCanEdit: true, feeRecordPaymentGroups });
+  it.each(FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST)(
+    'should render the checkbox when userCanEdit is true and the fee record status is %s',
+    (feeRecordStatus) => {
+      const checkboxId = 'some-checkbox-id';
+      const feeRecordPaymentGroups = [
+        {
+          ...aFeeRecordPaymentGroup(),
+          status: feeRecordStatus,
+          checkboxId,
+        },
+      ];
+      const wrapper = render({ userCanEdit: true, feeRecordPaymentGroups });
 
-    wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).toExist();
-  });
+      wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).toExist();
+    },
+  );
 
   it.each(difference(Object.values(FEE_RECORD_STATUS), FEE_RECORD_STATUSES_WHERE_CHECKBOX_SHOULD_EXIST))(
     'should not render the checkbox when userCanEdit is true and the fee record status is %s',
@@ -482,14 +486,14 @@ describe(component, () => {
   );
 
   it('should not render any checkboxes when userCanEdit is false', () => {
-    const feeRecordPaymentGroups = Object.values(FEE_RECORD_STATUS).map(status => ({
+    const feeRecordPaymentGroups = Object.values(FEE_RECORD_STATUS).map((status) => ({
       ...aFeeRecordPaymentGroup(),
       status,
       checkboxId: `checkbox-${status}`,
     }));
     const wrapper = render({ userCanEdit: false, feeRecordPaymentGroups });
-  
-    feeRecordPaymentGroups.forEach(group => {
+
+    feeRecordPaymentGroups.forEach((group) => {
       wrapper.expectElement(`input#${group.checkboxId}[type="checkbox"]`).notToExist();
     });
   });
