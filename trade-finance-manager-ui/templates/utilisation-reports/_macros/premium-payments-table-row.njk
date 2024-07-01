@@ -4,7 +4,7 @@
 {% macro render(params) %}
   {% set reportId = params.reportId %}
   {% set feeRecordPaymentGroup = params.feeRecordPaymentGroup %}
-  {% set canEdit = params.canEdit %}
+  {% set userCanEdit = params.userCanEdit %}
 
   {% set feeRecords = feeRecordPaymentGroup.feeRecords %}
   {% set totalReportedPayments = feeRecordPaymentGroup.totalReportedPayments %}
@@ -51,7 +51,7 @@
           <ul class="payments-list">
             {% for paymentReceived in paymentsReceived %}
               <li class="payments-list-item">
-                {% if canEdit and (status === 'MATCH' or status === 'DOES_NOT_MATCH') %}
+                {% if userCanEdit and (status === 'MATCH' or status === 'DOES_NOT_MATCH') %}
                   <a href="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentReceived.id }}">
                     {{ paymentReceived.formattedCurrencyAndAmount }}
                   </a>
@@ -77,7 +77,7 @@
           displayStatus: displayStatus
         }) if isFirstFeeRecordInGroup else "" }}
       </td>
-      {% if canEdit %}
+      {% if userCanEdit %}
         <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}">
           {% if status === 'TO_DO' or status === 'DOES_NOT_MATCH' %}
             {{ tableCellCheckbox.render({

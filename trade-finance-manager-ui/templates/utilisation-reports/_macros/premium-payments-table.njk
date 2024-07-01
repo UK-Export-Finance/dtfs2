@@ -6,7 +6,7 @@
   {% set reportId = params.reportId %}
   {% set feeRecordPaymentGroups = params.feeRecordPaymentGroups %}
   {% set enablePaymentsReceivedSorting = params.enablePaymentsReceivedSorting %}
-  {% set canEdit = params.canEdit %}
+  {% set userCanEdit = params.userCanEdit %}
 
   {% macro tableHeader(params) %}
     {% set headerText = params.headerText %}
@@ -37,7 +37,7 @@
         {{ tableHeader({ headerText: 'Payments received', isNumericColumn: true, enableSorting: false }) }}
         {{ tableHeader({ headerText: 'Total payments received', isNumericColumn: true, enableSorting: enablePaymentsReceivedSorting, ariaSort: 'none' }) }}
         {{ tableHeader({ headerText: 'Status', isNumericColumn: false, enableSorting: true, ariaSort: 'none' }) }}
-        {% if canEdit %}
+        {% if userCanEdit %}
           <th scope="col" class="govuk-table__header">
             {{ selectAllTableCellCheckbox.render() }}
           </th>
@@ -47,7 +47,7 @@
 
     <tbody class="govuk-table__body">
     {% for feeRecordPaymentGroup in feeRecordPaymentGroups %}
-      {{ premiumPaymentsTableRow.render({ reportId: reportId, feeRecordPaymentGroup: feeRecordPaymentGroup, canEdit: canEdit }) }}
+      {{ premiumPaymentsTableRow.render({ reportId: reportId, feeRecordPaymentGroup: feeRecordPaymentGroup, userCanEdit: userCanEdit }) }}
     {% endfor %}
     </tbody>
   </table>

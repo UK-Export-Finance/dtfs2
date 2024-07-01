@@ -5,6 +5,8 @@
 
 {% extends "index.njk" %}
 
+{% set userCanEdit = user | userIsInTeam(['PDC_RECONCILE']) %}
+
 {% block pageTitle %}
   {{ bank.name }}, {{ formattedReportPeriod }}
 {% endblock %}
@@ -35,7 +37,7 @@
         When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when you select the 'Generate keying data' button.
       </p>
 
-      {% if canEdit %}
+      {% if userCanEdit %}
         <div class="govuk-button-group">
           <input
             class="govuk-button govuk-!-margin-right-3"
@@ -58,7 +60,7 @@
         reportId: reportId,
         feeRecordPaymentGroups: feeRecordPaymentGroups,
         enablePaymentsReceivedSorting: enablePaymentsReceivedSorting,
-        canEdit: canEdit
+        userCanEdit: userCanEdit
       }) }}
     </form>
   {% if errorSummary %}
