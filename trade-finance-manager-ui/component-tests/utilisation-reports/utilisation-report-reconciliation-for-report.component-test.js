@@ -1,5 +1,6 @@
 const { PRIMARY_NAVIGATION_KEYS } = require('../../server/constants');
 const { pageRenderer } = require('../pageRenderer');
+const { aTfmSessionUser } = require('../../test-helpers/test-data/tfm-session-user');
 
 const page = '../templates/utilisation-reports/utilisation-report-reconciliation-for-report.njk';
 const render = pageRenderer(page);
@@ -16,6 +17,7 @@ describe(page, () => {
   const reportId = 1;
 
   const params = {
+    user: aTfmSessionUser(),
     activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
     bank,
     formattedReportPeriod,
