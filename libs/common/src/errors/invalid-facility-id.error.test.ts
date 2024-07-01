@@ -1,3 +1,4 @@
+import { ApiError } from './api.error';
 import { InvalidFacilityIdError } from './invalid-facility-id.error';
 
 describe('InvalidFacilityIdError', () => {
@@ -25,6 +26,14 @@ describe('InvalidFacilityIdError', () => {
 
     // Assert
     expect(exception).toBeInstanceOf(InvalidFacilityIdError);
+  });
+
+  it('is an instance of ApiError', () => {
+    // Act
+    const exception = new InvalidFacilityIdError(facilityId);
+
+    // Assert
+    expect(exception).toBeInstanceOf(ApiError);
   });
 
   it('exposes the name of the exception', () => {

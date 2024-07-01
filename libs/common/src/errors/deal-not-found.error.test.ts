@@ -1,4 +1,4 @@
-import { DatabaseError } from './database.error';
+import { ApiError } from './api.error';
 import { DealNotFoundError } from './deal-not-found.error';
 
 describe('DealNotFoundError', () => {
@@ -28,12 +28,12 @@ describe('DealNotFoundError', () => {
     expect(exception).toBeInstanceOf(DealNotFoundError);
   });
 
-  it('is an instance of DatabaseError', () => {
+  it('is an instance of ApiError', () => {
     // Act
     const exception = new DealNotFoundError(dealId);
 
     // Assert
-    expect(exception).toBeInstanceOf(DatabaseError);
+    expect(exception).toBeInstanceOf(ApiError);
   });
 
   it('exposes the name of the exception', () => {

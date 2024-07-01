@@ -1,9 +1,10 @@
-import { DatabaseError } from './database.error';
+import { HttpStatusCode } from 'axios';
+import { ApiError } from './api.error';
 
-export class FacilityNotFoundError extends DatabaseError {
+export class FacilityNotFoundError extends ApiError {
   constructor(facilityId?: string) {
     const message = facilityId ? `Facility not found: ${facilityId}` : 'Facility not found';
-    super(message);
+    super({ message, status: HttpStatusCode.NotFound });
 
     this.name = 'FacilityNotFoundError';
   }

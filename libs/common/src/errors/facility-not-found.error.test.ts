@@ -1,4 +1,4 @@
-import { DatabaseError } from './database.error';
+import { ApiError } from './api.error';
 import { FacilityNotFoundError } from './facility-not-found.error';
 
 describe('FacilityNotFoundError', () => {
@@ -28,12 +28,12 @@ describe('FacilityNotFoundError', () => {
     expect(exception).toBeInstanceOf(FacilityNotFoundError);
   });
 
-  it('is an instance of DatabaseError', () => {
+  it('is an instance of ApiError', () => {
     // Act
     const exception = new FacilityNotFoundError(facilityId);
 
     // Assert
-    expect(exception).toBeInstanceOf(DatabaseError);
+    expect(exception).toBeInstanceOf(ApiError);
   });
 
   it('exposes the name of the exception', () => {

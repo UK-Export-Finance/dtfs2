@@ -1,3 +1,4 @@
+import { ApiError } from './api.error';
 import { InvalidDealIdError } from './invalid-deal-id.error';
 
 describe('InvalidDealIdError', () => {
@@ -25,6 +26,14 @@ describe('InvalidDealIdError', () => {
 
     // Assert
     expect(exception).toBeInstanceOf(InvalidDealIdError);
+  });
+
+  it('is an instance of ApiError', () => {
+    // Act
+    const exception = new InvalidDealIdError(dealId);
+
+    // Assert
+    expect(exception).toBeInstanceOf(ApiError);
   });
 
   it('exposes the name of the exception', () => {

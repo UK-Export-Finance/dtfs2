@@ -76,10 +76,6 @@ exports.updateFacilityPut = async (req, res) => {
       });
     }
 
-    if (error instanceof FacilityNotFoundError) {
-      return res.status(404).send({ status: 404, message: error.message });
-    }
-
     if (error instanceof ApiError) {
       return res.status(error.status).send({ status: error.status, message: error.message });
     }
