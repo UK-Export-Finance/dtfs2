@@ -212,7 +212,7 @@ jobs:
       - name: Initialise
         working-directory: ./
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
       - name: SQL
@@ -222,6 +222,8 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_QA }}
         run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
@@ -403,7 +405,7 @@ jobs:
       - name: Initialise
         working-directory: ./
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
       - name: SQL
@@ -477,7 +479,7 @@ jobs:
       - name: Initialise
         working-directory: ./
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
       - name: SQL
@@ -549,7 +551,7 @@ jobs:
       - name: Initialise
         working-directory: ./
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
       - name: SQL
@@ -630,7 +632,7 @@ jobs:
       - name: Initialise
         working-directory: ./
         run: |
-          sleep 60s
+          sleep 100s
           npm run load
 
       - name: SQL

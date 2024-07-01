@@ -2,8 +2,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { getTime, format } = require('date-fns');
 const wipeDB = require('../../../wipeDB');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
+const { testApi } = require('../../../test-api');
 const { newDeal, createAndSubmitDeals, updateDealsTfm } = require('./tfm-deals-get.api-test');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
@@ -47,7 +46,7 @@ describe('/v1/tfm/deals', () => {
           MOCK_TFM_USER,
         );
 
-        const { status, body } = await api.get('/v1/tfm/deals?byField[0][name]=tfm.dateReceived&byField[0][value]=12-11-2021');
+        const { status, body } = await testApi.get('/v1/tfm/deals?byField[0][name]=tfm.dateReceived&byField[0][value]=12-11-2021');
 
         expect(status).toEqual(200);
 
@@ -83,7 +82,7 @@ describe('/v1/tfm/deals', () => {
 
         const [submittedMIADeal] = await createAndSubmitDeals([miaDeal, minDeal]);
 
-        const { status, body } = await api.get(`/v1/tfm/deals?byField[0][name]=dealSnapshot.eligibility.lastUpdated&byField[0][value]=${todayFormatted}`);
+        const { status, body } = await testApi.get(`/v1/tfm/deals?byField[0][name]=dealSnapshot.eligibility.lastUpdated&byField[0][value]=${todayFormatted}`);
 
         expect(status).toEqual(200);
 
@@ -144,7 +143,7 @@ describe('/v1/tfm/deals', () => {
         }
 
         // GET API CAll
-        const { status, body } = await api.get(`/v1/tfm/deals?byField[0][name]=tfm.lastUpdated&byField[0][value]=${todayFormatted}`);
+        const { status, body } = await testApi.get(`/v1/tfm/deals?byField[0][name]=tfm.lastUpdated&byField[0][value]=${todayFormatted}`);
 
         // Test evaluation
         expect(status).toEqual(200);

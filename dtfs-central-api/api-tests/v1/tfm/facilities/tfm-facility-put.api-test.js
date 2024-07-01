@@ -2,8 +2,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
+const { testApi } = require('../../../test-api');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const aDeal = require('../../deal-builder');
 const CONSTANTS = require('../../../../src/constants');
@@ -42,7 +41,7 @@ describe('/v1/tfm/facilities', () => {
   });
 
   beforeEach(async () => {
-    const { body: deal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER, auditDetails: portalAuditDetails });
+    const { body: deal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER, auditDetails: portalAuditDetails });
 
     dealId = deal._id;
     newFacility.dealId = dealId;
@@ -50,8 +49,8 @@ describe('/v1/tfm/facilities', () => {
 
   describe('PUT /v1/tfm/facilities/:id', () => {
     it('returns 404 when adding facility to non-existent deal', async () => {
-      await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
-      await api
+      await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
+      await testApi
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId: '61e54e2e532cf2027303e001',
@@ -59,7 +58,7 @@ describe('/v1/tfm/facilities', () => {
         })
         .to('/v1/tfm/deals/submit');
 
-      const { status } = await api
+      const { status } = await testApi
         .put({ facility: newFacility, user: MOCK_PORTAL_USER, auditDetails: tfmAuditDetails })
         .to('/v1/tfm/facilities/61e54e2e532cf2027303e001');
 
@@ -70,9 +69,9 @@ describe('/v1/tfm/facilities', () => {
       let createdFacility;
 
       beforeEach(async () => {
-        const postResult = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
+        const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
 
-        await api
+        await testApi
           .put({
             dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
             dealId,
@@ -85,7 +84,7 @@ describe('/v1/tfm/facilities', () => {
 
       withValidateAuditDetailsTests({
         makeRequest: (auditDetails) =>
-          api.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to(`/v1/tfm/facilities/${createdFacility._id}`),
+          testApi.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to(`/v1/tfm/facilities/${createdFacility._id}`),
       });
 
       it('returns the updated facility', async () => {
@@ -96,7 +95,7 @@ describe('/v1/tfm/facilities', () => {
           auditDetails: portalAuditDetails,
         };
 
-        const { body, status } = await api.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacility._id}`);
+        const { body, status } = await testApi.put(updatedFacility).to(`/v1/tfm/facilities/${createdFacility._id}`);
 
         expect(status).toEqual(200);
         expect(body.tfm).toEqual(updatedFacility.tfmUpdate);

@@ -3,8 +3,7 @@ const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { testApi } = require('../../test-api');
 const { expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
@@ -34,7 +33,7 @@ describe('/v1/portal/deals', () => {
 
     beforeEach(async () => {
       await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
-      ({ body: createdDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER }));
+      ({ body: createdDeal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER }));
     });
 
     afterAll(async () => {
@@ -43,7 +42,7 @@ describe('/v1/portal/deals', () => {
 
     withValidateAuditDetailsTests({
       makeRequest: async (auditDetails) =>
-        await api
+        await testApi
           .put({
             dealUpdate: {
               additionalRefName: 'change this field',
@@ -65,7 +64,7 @@ describe('/v1/portal/deals', () => {
         },
       };
 
-      const { status, body } = await api
+      const { status, body } = await testApi
         .put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER, auditDetails: updateAuditDetails })
         .to(`/v1/portal/deals/${createdDeal._id}`);
 
@@ -92,12 +91,12 @@ describe('/v1/portal/deals', () => {
         },
       };
 
-      const { status: putStatus } = await api
+      const { status: putStatus } = await testApi
         .put({ dealUpdate: partialUpdate, user: MOCK_PORTAL_USER, auditDetails: updateAuditDetails })
         .to(`/v1/portal/deals/${createdDeal._id}`);
       expect(putStatus).toEqual(200);
 
-      const { status, body } = await api.get(`/v1/portal/deals/${createdDeal._id}`);
+      const { status, body } = await testApi.get(`/v1/portal/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
       expect(body.deal).toEqual(
@@ -112,9 +111,9 @@ describe('/v1/portal/deals', () => {
         additionalRefName: 'change this field',
       };
 
-      await api.put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER, auditDetails: updateAuditDetails }).to(`/v1/portal/deals/${createdDeal._id}`);
+      await testApi.put({ dealUpdate: updatedDeal, user: MOCK_PORTAL_USER, auditDetails: updateAuditDetails }).to(`/v1/portal/deals/${createdDeal._id}`);
 
-      const { status, body } = await api.get(`/v1/portal/deals/${createdDeal._id}`);
+      const { status, body } = await testApi.get(`/v1/portal/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
 
@@ -128,18 +127,18 @@ describe('/v1/portal/deals', () => {
         additionalRefName: 'change this field',
       };
 
-      await api.put({ dealUpdate: firstUpdate, user: MOCK_PORTAL_USER, auditDetails: updateAuditDetails }).to(`/v1/portal/deals/${createdDeal._id}`);
+      await testApi.put({ dealUpdate: firstUpdate, user: MOCK_PORTAL_USER, auditDetails: updateAuditDetails }).to(`/v1/portal/deals/${createdDeal._id}`);
 
-      const dealAfterFirstUpdate = await api.get(`/v1/portal/deals/${createdDeal._id}`);
+      const dealAfterFirstUpdate = await testApi.get(`/v1/portal/deals/${createdDeal._id}`);
 
       const secondUpdate = {
         ...dealAfterFirstUpdate.body.deal,
         additionalRefName: 'change this field again',
       };
 
-      await api.put({ dealUpdate: secondUpdate, user: MOCK_PORTAL_USER, auditDetails: updateTwoAuditDetails }).to(`/v1/portal/deals/${createdDeal._id}`);
+      await testApi.put({ dealUpdate: secondUpdate, user: MOCK_PORTAL_USER, auditDetails: updateTwoAuditDetails }).to(`/v1/portal/deals/${createdDeal._id}`);
 
-      const dealAfterSecondUpdate = await api.get(`/v1/portal/deals/${createdDeal._id}`);
+      const dealAfterSecondUpdate = await testApi.get(`/v1/portal/deals/${createdDeal._id}`);
       expect(dealAfterSecondUpdate.status).toEqual(200);
 
       expect(dealAfterSecondUpdate.body.deal.editedBy.length).toEqual(2);

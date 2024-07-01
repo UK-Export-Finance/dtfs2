@@ -1,8 +1,7 @@
 import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
 import { Bank, Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import app from '../../../src/createApp';
-import createApi from '../../api';
+import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
@@ -14,8 +13,6 @@ interface CustomResponse extends Response {
 }
 
 console.error = jest.fn();
-
-const api = createApi(app);
 
 describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
   const getUrl = (reportId: number | string, paymentId: number | string) => `/v1/utilisation-reports/${reportId}/payment/${paymentId}`;
@@ -85,7 +82,7 @@ describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
 
   it('returns a 400 when the report id is not a valid id', async () => {
     // Act
-    const response: CustomResponse = await api.get(getUrl('invalid-id', paymentId));
+    const response: CustomResponse = await testApi.get(getUrl('invalid-id', paymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -93,7 +90,7 @@ describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
 
   it('returns a 400 when the payment id is not a valid id', async () => {
     // Act
-    const response: CustomResponse = await api.get(getUrl(reportId, 'invalid-id'));
+    const response: CustomResponse = await testApi.get(getUrl(reportId, 'invalid-id'));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -101,7 +98,7 @@ describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
 
   it('returns a 404 when no payment with the supplied id can be found', async () => {
     // Act
-    const response: CustomResponse = await api.get(getUrl(reportId, paymentId + 1));
+    const response: CustomResponse = await testApi.get(getUrl(reportId, paymentId + 1));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -109,7 +106,7 @@ describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
 
   it('returns a 404 when the payment is not attached to a report with the supplied id', async () => {
     // Act
-    const response: CustomResponse = await api.get(getUrl(reportId + 1, paymentId));
+    const response: CustomResponse = await testApi.get(getUrl(reportId + 1, paymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -124,7 +121,7 @@ describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
     await SqlDbHelper.saveNewEntry('Payment', paymentForNewReport);
 
     // Act
-    const response: CustomResponse = await api.get(getUrl(2, 2));
+    const response: CustomResponse = await testApi.get(getUrl(2, 2));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -132,7 +129,7 @@ describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
 
   it('returns a 200 with a valid report and payment id', async () => {
     // Act
-    const response: CustomResponse = await api.get(getUrl(reportId, paymentId));
+    const response: CustomResponse = await testApi.get(getUrl(reportId, paymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);

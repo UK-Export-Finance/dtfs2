@@ -1,8 +1,7 @@
 import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
 import { Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import app from '../../../src/createApp';
-import createApi from '../../api';
+import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
@@ -11,8 +10,6 @@ import { aTfmUser } from '../../../test-helpers/test-data/tfm-user';
 import { aTfmSessionUser } from '../../../test-helpers/test-data/tfm-session-user';
 
 console.error = jest.fn();
-
-const api = createApi(app);
 
 describe('DELETE /v1/utilisation-reports/:reportId/payments/:paymentId', () => {
   const getUrl = (reportId: number | string, paymentId: number | string) => `/v1/utilisation-reports/${reportId}/payments/${paymentId}`;
@@ -72,7 +69,7 @@ describe('DELETE /v1/utilisation-reports/:reportId/payments/:paymentId', () => {
 
   it('returns a 200 when payment can be deleted', async () => {
     // Act
-    const response: Response = await api.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, paymentId));
+    const response: Response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, paymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -80,7 +77,7 @@ describe('DELETE /v1/utilisation-reports/:reportId/payments/:paymentId', () => {
 
   it('returns a 400 when the report id is not a valid id', async () => {
     // Act
-    const response: Response = await api.remove(aDeletePaymentRequestBody()).to(getUrl('invalid-id', paymentId));
+    const response: Response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl('invalid-id', paymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -88,7 +85,7 @@ describe('DELETE /v1/utilisation-reports/:reportId/payments/:paymentId', () => {
 
   it('returns a 400 when the payment id is not a valid id', async () => {
     // Act
-    const response: Response = await api.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, 'invalid-id'));
+    const response: Response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, 'invalid-id'));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -101,7 +98,7 @@ describe('DELETE /v1/utilisation-reports/:reportId/payments/:paymentId', () => {
     };
 
     // Act
-    const response: Response = await api.remove(requestBody).to(getUrl(reportId, paymentId));
+    const response: Response = await testApi.remove(requestBody).to(getUrl(reportId, paymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -112,7 +109,7 @@ describe('DELETE /v1/utilisation-reports/:reportId/payments/:paymentId', () => {
     const invalidReportId = reportId + 1;
 
     // Act
-    const response: Response = await api.remove(aDeletePaymentRequestBody()).to(getUrl(invalidReportId, paymentId));
+    const response: Response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(invalidReportId, paymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -123,7 +120,7 @@ describe('DELETE /v1/utilisation-reports/:reportId/payments/:paymentId', () => {
     const invalidPaymentId = paymentId + 1;
 
     // Act
-    const response: Response = await api.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, invalidPaymentId));
+    const response: Response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, invalidPaymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);

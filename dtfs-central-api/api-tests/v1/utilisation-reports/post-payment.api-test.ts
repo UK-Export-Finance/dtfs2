@@ -1,4 +1,3 @@
-import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
 import {
   CURRENCY,
@@ -10,8 +9,7 @@ import {
   PaymentEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import app from '../../../src/createApp';
-import createApi from '../../api';
+import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
@@ -20,8 +18,6 @@ import { aTfmUser } from '../../../test-helpers/test-data/tfm-user';
 import { aTfmSessionUser } from '../../../test-helpers/test-data/tfm-session-user';
 
 console.error = jest.fn();
-
-const api = createApi(app);
 
 describe('POST /v1/utilisation-reports/:reportId/payment', () => {
   const getUrl = (reportId: number | string) => `/v1/utilisation-reports/${reportId}/payment`;
@@ -92,7 +88,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -103,7 +99,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl('invalid-id'));
+    const response = await testApi.post(requestBody).to(getUrl('invalid-id'));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -117,7 +113,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -131,7 +127,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -153,7 +149,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -167,7 +163,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -181,7 +177,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -195,7 +191,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -209,7 +205,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -223,7 +219,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -237,7 +233,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -259,7 +255,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBodyWithEURPaymentCurrency).to(getUrl(reportId));
+    const response = await testApi.post(requestBodyWithEURPaymentCurrency).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -289,7 +285,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    await api.post(requestBody).to(getUrl(reportId));
+    await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     const feeRecordWithPayments = await SqlDbHelper.manager.findOne(FeeRecordEntity, {
@@ -351,7 +347,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    await api.post(requestBody).to(getUrl(reportId));
+    await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     const feeRecordsWithPayments = await SqlDbHelper.manager.find(FeeRecordEntity, {
@@ -401,7 +397,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    await api.post(requestBody).to(getUrl(reportId));
+    await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     const feeRecordsWithPayments = await SqlDbHelper.manager.find(FeeRecordEntity, {
