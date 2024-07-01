@@ -48,7 +48,7 @@
     "node-cron": "^3.0.3",
     "reflect-metadata": "^0.2.2",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^4.6.3",
+    "swagger-ui-express": "^5.0.1",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.3",
     "typeorm": "^0.3.20",
