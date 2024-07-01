@@ -17,6 +17,11 @@ const { userIsInTeam, userIsOnlyInTeams } = require('../helpers/user');
 
 dotenv.config();
 
+/**
+ *
+ * @param {nunjucks.ConfigureOptions} opts - The configuration options
+ * @returns {nunjucks.Environment}
+ */
 const configureNunjucks = (opts) => {
   const { CONTACT_US_SELF_SERVICE_PORTAL_URL, CONTACT_US_EMAIL_ADDRESS } = process.env;
 

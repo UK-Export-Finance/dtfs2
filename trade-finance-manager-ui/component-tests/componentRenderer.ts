@@ -2,7 +2,7 @@ import { load } from 'cheerio';
 import { assertions } from './assertions';
 import configureNunjucks from '../server/nunjucks-configuration';
 
-const nunjucks = configureNunjucks({}) as { renderString: (pageLocation: string, params: object) => string };
+const nunjucks = configureNunjucks({});
 
 export const componentRenderer =
   (componentLocation: string, renderTableContainer = false) =>
