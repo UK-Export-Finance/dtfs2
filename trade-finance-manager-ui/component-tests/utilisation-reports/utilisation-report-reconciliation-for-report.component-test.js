@@ -86,4 +86,19 @@ describe(page, () => {
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
   });
+
+  it('should not render add payment button for PDC_READ user', () => {
+    const user = {
+      ...aTfmSessionUser(),
+      teams: [TEAM_IDS.PDC_READ]
+    };
+
+    wrapper = render({
+      ...params,
+      user
+    });
+
+    const premiumPaymentsTabSelector = 'div#premium-payments';
+    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`).notToExist();
+  });
 });
