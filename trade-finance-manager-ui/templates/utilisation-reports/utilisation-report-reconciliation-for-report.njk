@@ -25,10 +25,11 @@
   {% if errorSummary %}
     <div class="govuk-form-group--error">
   {% endif %}
+  {% if userCanEdit %}
     <form method="post" data-cy="premium-payments-form">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
       <input type="hidden" name="canGenerateKeyingData" value="{{ canGenerateKeyingData }}"/>
-
+  {% endif %}
       <h2 class="govuk-heading-l" data-cy="premium-payments-heading">Premium payments</h2>
 
       <p class="govuk-body">Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button.</p>
@@ -62,7 +63,9 @@
         enablePaymentsReceivedSorting: enablePaymentsReceivedSorting,
         userCanEdit: userCanEdit
       }) }}
+  {% if userCanEdit %}
     </form>
+  {% endif %}
   {% if errorSummary %}
     </div>
   {% endif %}
