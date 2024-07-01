@@ -1,14 +1,12 @@
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { IsoDateTimeStamp, PortalUser, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import app from '../../../src/createApp';
-import apiModule from '../../api';
+import { testApi } from '../../test-api';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 
-const api = apiModule(app);
 const getUrl = (id: string) => `/v1/utilisation-reports/${id}`;
 
 type UtilisationReportResponse = GetUtilisationReportResponse & {
@@ -51,7 +49,7 @@ describe('/v1/utilisation-reports/:id', () => {
   describe('GET /v1/utilisation-reports/:id', () => {
     it('returns 400 when an invalid report ID is provided', async () => {
       // Act
-      const response: CustomErrorResponse = await api.get(getUrl('invalid-id'));
+      const response: CustomErrorResponse = await testApi.get(getUrl('invalid-id'));
 
       // Assert
       expect(response.status).toEqual(400);
@@ -64,7 +62,7 @@ describe('/v1/utilisation-reports/:id', () => {
       const { id } = await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedReport);
 
       // Act
-      const response: CustomSuccessResponse = await api.get(getUrl(id.toString()));
+      const response: CustomSuccessResponse = await testApi.get(getUrl(id.toString()));
 
       // Assert
       expect(response.status).toEqual(200);

@@ -17,7 +17,7 @@ describe('get-fee-records-to-key.controller', () => {
         params: { reportId },
       });
 
-    const aUtilisationReportWithFeeRecordsToKeyResponseBody = (): FeeRecordsToKeyResponseBody => ({
+    const aFeeRecordsToKeyResponseBody = (): FeeRecordsToKeyResponseBody => ({
       reportId: 1,
       bank: { id: '123', name: 'Test bank' },
       reportPeriod: {
@@ -31,7 +31,7 @@ describe('get-fee-records-to-key.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const responseBody = aUtilisationReportWithFeeRecordsToKeyResponseBody();
+      const responseBody = aFeeRecordsToKeyResponseBody();
       jest.mocked(api.getUtilisationReportWithFeeRecordsToKey).mockResolvedValue(responseBody);
 
       // Act
@@ -45,7 +45,7 @@ describe('get-fee-records-to-key.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      jest.mocked(api.getUtilisationReportWithFeeRecordsToKey).mockResolvedValue(aUtilisationReportWithFeeRecordsToKeyResponseBody());
+      jest.mocked(api.getUtilisationReportWithFeeRecordsToKey).mockResolvedValue(aFeeRecordsToKeyResponseBody());
 
       // Act
       await getFeeRecordsToKey(req, res);

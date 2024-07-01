@@ -5,8 +5,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
 
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { testApi } = require('../../test-api');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
@@ -41,18 +40,18 @@ describe('/v1/portal/deals', () => {
       status: submittedStatus,
     };
 
-    ({ body: createdDeal } = await createDeal({ api, deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER }));
+    ({ body: createdDeal } = await createDeal({ deal: dealWithSubmittedStatus, user: MOCK_PORTAL_USER }));
   });
 
   describe('PUT /v1/portal/deals/:id/status', () => {
     withValidateAuditDetailsTests({
       makeRequest: (auditDetailsToUse) => {
-        return api.put({ status: acknowledgedStatus, auditDetails: auditDetailsToUse }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+        return testApi.put({ status: acknowledgedStatus, auditDetails: auditDetailsToUse }).to(`/v1/portal/deals/${createdDeal._id}/status`);
       },
     });
 
     it('should return audit record', async () => {
-      const { status, body } = await api.put({ status: acknowledgedStatus, auditDetails }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      const { status, body } = await testApi.put({ status: acknowledgedStatus, auditDetails }).to(`/v1/portal/deals/${createdDeal._id}/status`);
 
       expect(status).toEqual(200);
       expect(body.auditRecord).toEqual(generateParsedMockAuditDatabaseRecord(auditDetails));
@@ -61,17 +60,17 @@ describe('/v1/portal/deals', () => {
     it('Should return 400 bad request status code when the new status is same and existing application status', async () => {
       // First status update - 200
       let statusUpdate = acknowledgedStatus;
-      const { status } = await api.put({ status: statusUpdate, auditDetails }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      const { status } = await testApi.put({ status: statusUpdate, auditDetails }).to(`/v1/portal/deals/${createdDeal._id}/status`);
       expect(status).toEqual(200);
 
       // Second status update - 400
       statusUpdate = acknowledgedStatus;
-      const { status: secondStatus } = await api.put({ status: statusUpdate, auditDetails }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      const { status: secondStatus } = await testApi.put({ status: statusUpdate, auditDetails }).to(`/v1/portal/deals/${createdDeal._id}/status`);
       expect(secondStatus).toEqual(400);
     });
 
     it('returns the updated deal with updated statuses', async () => {
-      const { status, body } = await api.put({ status: acknowledgedStatus, auditDetails }).to(`/v1/portal/deals/${createdDeal._id}/status`);
+      const { status, body } = await testApi.put({ status: acknowledgedStatus, auditDetails }).to(`/v1/portal/deals/${createdDeal._id}/status`);
 
       expect(status).toEqual(200);
 

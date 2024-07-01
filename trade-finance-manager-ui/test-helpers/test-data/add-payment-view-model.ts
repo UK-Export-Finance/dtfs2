@@ -12,11 +12,11 @@ export const anAddPaymentViewModel = (): AddPaymentViewModel => ({
     totalReportedPayments: 'GBP 200',
     feeRecords: [
       {
-        feeRecordId: 123,
+        id: 123,
         facilityId: '12345',
         exporter: 'export',
-        reportedFee: { value: 'GBP 200', dataSortValue: 1 },
-        reportedPayments: { value: 'GBP 200', dataSortValue: 1 },
+        reportedFees: { formattedCurrencyAndAmount: 'GBP 200', dataSortValue: 1 },
+        reportedPayments: { formattedCurrencyAndAmount: 'GBP 200', dataSortValue: 1 },
       },
     ],
   },

@@ -1,8 +1,7 @@
 import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
 import { Bank, Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import app from '../../../src/createApp';
-import createApi from '../../api';
+import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
@@ -15,8 +14,6 @@ interface CustomResponse extends Response {
 }
 
 console.error = jest.fn();
-
-const api = createApi(app);
 
 describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
   const getUrl = (reportId: number | string) => `/v1/utilisation-reports/${reportId}/fee-records-to-key`;
@@ -99,7 +96,7 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
 
   it('returns a 400 when the report id is not a valid id', async () => {
     // Act
-    const response: CustomResponse = await api.get(getUrl('invalid-id'));
+    const response: CustomResponse = await testApi.get(getUrl('invalid-id'));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -107,7 +104,7 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
 
   it('returns a 404 when no report with the supplied id can be found', async () => {
     // Act
-    const response: CustomResponse = await api.get(getUrl(reportId + 1));
+    const response: CustomResponse = await testApi.get(getUrl(reportId + 1));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -120,7 +117,7 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', reportWithDifferentBankId);
 
     // Act
-    const response: CustomResponse = await api.get(getUrl(2));
+    const response: CustomResponse = await testApi.get(getUrl(2));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -128,7 +125,7 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
 
   it('returns a 200 with a valid report id', async () => {
     // Act
-    const response: CustomResponse = await api.get(getUrl(reportId));
+    const response: CustomResponse = await testApi.get(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -136,7 +133,7 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
 
   it('returns a body containing the report id', async () => {
     // Act
-    const response: CustomResponse = await api.get(getUrl(reportId));
+    const response: CustomResponse = await testApi.get(getUrl(reportId));
 
     // Assert
     expect(response.body.reportId).toBe(reportId);
@@ -144,7 +141,7 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
 
   it('returns a body containing the session bank', async () => {
     // Act
-    const response: CustomResponse = await api.get(getUrl(reportId));
+    const response: CustomResponse = await testApi.get(getUrl(reportId));
 
     // Assert
     expect(response.body.bank).toEqual({ id: bankId, name: bankName });
@@ -152,7 +149,7 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
 
   it('returns a body containing the report period', async () => {
     // Act
-    const response: CustomResponse = await api.get(getUrl(reportId));
+    const response: CustomResponse = await testApi.get(getUrl(reportId));
 
     // Assert
     expect(response.body.reportPeriod).toEqual(reportPeriod);
@@ -160,7 +157,7 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
 
   it('returns a body containing the fee records to key', async () => {
     // Act
-    const response: CustomResponse = await api.get(getUrl(reportId));
+    const response: CustomResponse = await testApi.get(getUrl(reportId));
 
     // Assert
     expect(response.body.feeRecords).toEqual<FeeRecordToKey[]>([
@@ -200,7 +197,7 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     // Act
-    const response: CustomResponse = await api.get(getUrl(reportId));
+    const response: CustomResponse = await testApi.get(getUrl(reportId));
 
     // Assert
     expect(response.body.feeRecords).toEqual([]);

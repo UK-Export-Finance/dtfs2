@@ -2,6 +2,7 @@ import { ValuesOf } from '@ukef/dtfs2-common';
 
 export const FEE_RECORD_EVENT_TYPE = {
   PAYMENT_ADDED: 'PAYMENT_ADDED',
+  PAYMENT_DELETED: 'PAYMENT_DELETED',
 } as const;
 
 export const FEE_RECORD_EVENT_TYPES = Object.values(FEE_RECORD_EVENT_TYPE);

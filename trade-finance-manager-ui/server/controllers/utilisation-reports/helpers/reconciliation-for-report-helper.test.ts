@@ -1,7 +1,7 @@
 import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems } from './reconciliation-for-report-helper';
 import { FeeRecord, FeeRecordPaymentGroup, Payment } from '../../../api-response-types';
-import { aFeeRecordPaymentGroup, aFeeRecord } from '../../../../test-helpers';
+import { aFeeRecordPaymentGroup, aFeeRecord, aPayment } from '../../../../test-helpers';
 
 describe('reconciliation-for-report-helper', () => {
   describe('mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems', () => {
@@ -223,7 +223,7 @@ describe('reconciliation-for-report-helper', () => {
 
     it('maps the group paymentsReceived to the view model paymentsReceived formatted currency and amount', () => {
       // Arrange
-      const paymentsReceived: Payment[] = [{ id: 1, currency: 'GBP', amount: 314.59 }];
+      const paymentsReceived: Payment[] = [{ ...aPayment(), id: 1, currency: 'GBP', amount: 314.59 }];
       const paymentsReceivedFormattedCurrencyAndAmount = 'GBP 314.59';
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
@@ -243,7 +243,7 @@ describe('reconciliation-for-report-helper', () => {
 
     it('maps the group paymentsReceived id to the view model paymentsReceived id', () => {
       // Arrange
-      const paymentsReceived: Payment[] = [{ id: 1, currency: 'GBP', amount: 100 }];
+      const paymentsReceived: Payment[] = [{ ...aPayment(), id: 1, currency: 'GBP', amount: 100 }];
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
         {

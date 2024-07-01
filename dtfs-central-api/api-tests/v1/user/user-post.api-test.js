@@ -1,7 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { testApi } = require('../../test-api');
 
 const newUser = {
   username: 'maker1@ukexportfinance.gov.uk',
@@ -38,13 +37,13 @@ describe('/v1/user', () => {
 
   describe('POST /v1/user', () => {
     it('creates a user', async () => {
-      const { body, status } = await api.post(newUser).to('/v1/user');
+      const { body, status } = await testApi.post(newUser).to('/v1/user');
 
       expect(status).toEqual(200);
 
       expect(body).toEqual({ _id: expect.any(String) });
 
-      const { body: userAfterCreation } = await api.get(`/v1/user/${body._id}`);
+      const { body: userAfterCreation } = await testApi.get(`/v1/user/${body._id}`);
 
       expect(userAfterCreation).toEqual({
         _id: body._id,

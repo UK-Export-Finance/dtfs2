@@ -1,14 +1,11 @@
 import { Response } from 'supertest';
 import { Bank, FeeRecordEntityMockBuilder, SelectedFeeRecordDetails, SelectedFeeRecordsDetails, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import app from '../../../src/createApp';
-import apiModule from '../../api';
+import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { aBank } from '../../../test-helpers/test-data/bank';
 import { aReportPeriod } from '../../../test-helpers/test-data/report-period';
-
-const api = apiModule(app);
 
 const getUrl = (reportId: number | string) => `/v1/utilisation-reports/${reportId}/selected-fee-records-details`;
 
@@ -68,7 +65,7 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
       const invalidReportId = 'invalid-id';
 
       // Act
-      const response: CustomResponse = await api.get(getUrl(invalidReportId), { feeRecordIds: [45] });
+      const response: CustomResponse = await testApi.get(getUrl(invalidReportId), { feeRecordIds: [45] });
 
       // Assert
       expect(response.status).toEqual(400);
@@ -76,7 +73,7 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
 
     it('gets selected fee record details', async () => {
       // Act
-      const response: CustomResponse = await api.get(getUrl(reportId), { feeRecordIds: [45] });
+      const response: CustomResponse = await testApi.get(getUrl(reportId), { feeRecordIds: [45] });
 
       // Assert
       expect(response.status).toEqual(200);

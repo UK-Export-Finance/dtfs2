@@ -2,6 +2,7 @@ const express = require('express');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 const { validatePostPaymentPayload } = require('./middleware/payload-validation/validate-post-payment-payload');
+const { validateDeletePaymentPayload } = require('./middleware/payload-validation/validate-delete-payment-payload');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
   postUploadUtilisationReport,
@@ -16,8 +17,10 @@ const {
 } = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
 const { getSelectedFeeRecordDetails } = require('../controllers/utilisation-report-service/get-selected-fee-records-details.controller');
 const { postPayment } = require('../controllers/utilisation-report-service/post-payment.controller');
+const { deletePayment } = require('../controllers/utilisation-report-service/delete-payment.controller');
 const { postKeyingData } = require('../controllers/utilisation-report-service/post-keying-data.controller');
 const { getFeeRecordsToKey } = require('../controllers/utilisation-report-service/get-fee-records-to-key.controller');
+const { getPaymentDetailsById } = require('../controllers/utilisation-report-service/get-payment-details-by-id.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -221,6 +224,44 @@ utilisationReportsRouter
 
 /**
  * @openapi
+ * /utilisation-reports/:reportId/payment/:paymentId:
+ *   delete:
+ *     summary: Delete a payment
+ *     tags: [Utilisation Report]
+ *     description: Deletes a payment
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report the payment belongs to
+ *       - in: path
+ *         name: paymentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the payment to delete
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/payments/:paymentId')
+  .delete(
+    validation.sqlIdValidation('reportId'),
+    validation.sqlIdValidation('paymentId'),
+    handleExpressValidatorResult,
+    validateDeletePaymentPayload,
+    deletePayment,
+  );
+
+/**
+ * @openapi
  * /utilisation-reports/:reportId/payment:
  *   post:
  *     summary: Add a payment to the utilisation report
@@ -327,5 +368,44 @@ utilisationReportsRouter.route('/:reportId/keying-data').post(validation.sqlIdVa
  *         description: Internal Server Error
  */
 utilisationReportsRouter.route('/:reportId/fee-records-to-key').get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, getFeeRecordsToKey);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/payment/:paymentId:
+ *   get:
+ *     summary: Get the payment details
+ *     tags: [Utilisation Report]
+ *     description: Gets the payment details for the payment with the supplied id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: paymentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the payment
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/PaymentDetailsResponseBody'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/payment/:paymentId')
+  .get(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('paymentId'), handleExpressValidatorResult, getPaymentDetailsById);
 
 module.exports = utilisationReportsRouter;

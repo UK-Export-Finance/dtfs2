@@ -1,8 +1,7 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
+const { testApi } = require('../../../test-api');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
@@ -28,16 +27,16 @@ describe('/v1/tfm/facilities', () => {
   describe('GET /v1/tfm/facilities', () => {
     it('returns the requested resource', async () => {
       // create deal
-      const { body: createdDeal } = await api.post(newDeal).to('/v1/portal/gef/deals');
+      const { body: createdDeal } = await testApi.post(newDeal).to('/v1/portal/gef/deals');
 
       const dealId = createdDeal._id;
 
       // create some facilities
       newFacility.dealId = dealId;
-      await api.post(newFacility).to('/v1/portal/gef/facilities');
+      await testApi.post(newFacility).to('/v1/portal/gef/facilities');
 
       // submit deal/facilities
-      await api
+      await testApi
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
           dealId,
@@ -46,7 +45,9 @@ describe('/v1/tfm/facilities', () => {
         .to('/v1/tfm/deals/submit');
 
       // get facilities after they've been created so we have all the data
-      const { body: allFacilitiesAfterCreation } = await api.get('/v1/tfm/facilities?page=0&pagesize=20&sortBy[order]=ascending&sortBy[field]=ukefFacilityId');
+      const { body: allFacilitiesAfterCreation } = await testApi.get(
+        '/v1/tfm/facilities?page=0&pagesize=20&sortBy[order]=ascending&sortBy[field]=ukefFacilityId',
+      );
 
       const expectedFacilityShape = {
         companyName: expect.any(String),

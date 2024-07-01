@@ -6,25 +6,19 @@ const wipeDB = require('../../wipeDB');
 const CONSTANTS = require('../../../src/constants');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 
-const app = require('../../../src/createApp');
-const { as } = require('../../api')(app);
+const { testApi } = require('../../test-api');
 
 const { APPLICATION } = require('../../mocks/gef/gef-applications');
-
-const testUserCache = require('../../mocks/test-users/api-test-users');
 
 const baseUrl = '/v1/portal/gef/facilities';
 const applicationBaseUrl = '/v1/portal/gef/deals';
 
-const api = require('../../api')(app);
-
 const createDeal = async () => {
-  const { body } = await api.post(APPLICATION[0]).to(applicationBaseUrl);
+  const { body } = await testApi.post(APPLICATION[0]).to(applicationBaseUrl);
   return body;
 };
 
 describe('PUT updateGefFacilities', () => {
-  let aMaker;
   let aDeal;
   let aValidFacilityId;
   let auditDetails;
@@ -36,25 +30,20 @@ describe('PUT updateGefFacilities', () => {
     currency: { id: 'GBP' },
   };
 
-  beforeAll(async () => {
-    const testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole('maker').one();
-  });
-
   beforeEach(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.DEALS]);
     aDeal = await createDeal();
 
     ({
       body: { _id: aValidFacilityId },
-    } = await as(aMaker).post({ dealId: aDeal._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl));
+    } = await testApi.post({ dealId: aDeal._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl));
 
     auditDetails = generatePortalAuditDetails(new ObjectId());
   });
 
   withValidateAuditDetailsTests({
     makeRequest: (auditDetailsToUse) => {
-      return api
+      return testApi
         .put({
           facilityUpdate: aValidFacilityUpdate,
           auditDetails: auditDetailsToUse,
@@ -65,20 +54,20 @@ describe('PUT updateGefFacilities', () => {
 
   it('returns a 404 if the facility does not exist', async () => {
     const aValidButNonExistantFacilityId = new ObjectId();
-    const { status } = await as().put({ facilityUpdate: aValidFacilityUpdate, auditDetails }).to(`${baseUrl}/${aValidButNonExistantFacilityId}`);
+    const { status } = await testApi.put({ facilityUpdate: aValidFacilityUpdate, auditDetails }).to(`${baseUrl}/${aValidButNonExistantFacilityId}`);
 
     expect(status).toEqual(404);
   });
 
   it('returns a 400 if the facility id is invalid', async () => {
     const anInvalidFacilityId = 'aaaa';
-    const { status } = await as().put({ facilityUpdate: aValidFacilityUpdate, auditDetails }).to(`${baseUrl}/${anInvalidFacilityId}`);
+    const { status } = await testApi.put({ facilityUpdate: aValidFacilityUpdate, auditDetails }).to(`${baseUrl}/${anInvalidFacilityId}`);
 
     expect(status).toEqual(400);
   });
 
   it('updates a facility', async () => {
-    const { status, body } = await as(aMaker).put({ facilityUpdate: aValidFacilityUpdate, auditDetails }).to(`${baseUrl}/${aValidFacilityId}`);
+    const { status, body } = await testApi.put({ facilityUpdate: aValidFacilityUpdate, auditDetails }).to(`${baseUrl}/${aValidFacilityId}`);
 
     const expected = {
       hasBeenIssued: false,
@@ -115,7 +104,7 @@ describe('PUT updateGefFacilities', () => {
       type: 'Cash',
     };
 
-    const { status, body } = await as(aMaker).put({ facilityUpdate, auditDetails }).to(`${baseUrl}/${aValidFacilityId}`);
+    const { status, body } = await testApi.put({ facilityUpdate, auditDetails }).to(`${baseUrl}/${aValidFacilityId}`);
 
     const expected = {
       hasBeenIssued: true,
