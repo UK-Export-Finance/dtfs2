@@ -467,9 +467,12 @@ describe(component, () => {
         isChecked: true,
       },
     ];
-    const wrapper = render({ feeRecordPaymentGroups });
+    const wrapper = render({ userCanEdit: true, feeRecordPaymentGroups });
 
-    wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).toHaveAttribute('checked', 'checked');
+    const checkboxElement = wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`);
+
+    checkboxElement.toExist();
+    checkboxElement.toHaveAttribute('checked', 'checked');
   });
 
   it("should render an unchecked checkbox id when the 'isChecked' property is set to false", () => {
@@ -482,8 +485,11 @@ describe(component, () => {
         isChecked: false,
       },
     ];
-    const wrapper = render({ feeRecordPaymentGroups });
+    const wrapper = render({ userCanEdit: true, feeRecordPaymentGroups });
 
-    wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).toHaveAttribute('checked', undefined);
+    const checkboxElement = wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`);
+
+    checkboxElement.toExist();
+    checkboxElement.toHaveAttribute('checked', undefined);
   });
 });
