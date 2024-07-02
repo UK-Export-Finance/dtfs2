@@ -3,4 +3,5 @@ export const REGEX = {
   INT: /^-?\d+$/,
   YEAR: /^\d{4}$/,
   BANK_ID: /^\d+$/,
+  PARTIAL_FACILITY_ID: /^\d{4,10}$/,
 } as const;

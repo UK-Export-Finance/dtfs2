@@ -33,6 +33,8 @@ $govuk-new-link-styles: true;
 @import "./accessibility.scss";
 @import "./footer.scss";
 
+@import "./utilisation-reports.scss";
+
 .js-enabled .js-hidden {
   display: none;
 }

@@ -12,7 +12,7 @@ const clearRedirectSessionData = (req: Request): void => {
 export const getAndClearFieldsFromRedirectSessionData = (
   req: Request,
 ): {
-  errorSummary: [ErrorSummaryViewModel] | undefined;
+  errorSummary: ErrorSummaryViewModel | undefined;
   isCheckboxChecked: (checkboxId: string) => boolean;
 } => {
   const { addPaymentErrorKey, generateKeyingDataErrorKey } = req.session;

@@ -5,6 +5,7 @@ import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems } from '../helpers';
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
+import { validateFacilityIdQuery } from './validate-facility-id-query';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
 import { FeeRecordPaymentGroup } from '../../../api-response-types';
 
@@ -19,9 +20,14 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
   const { reportId } = req.params;
 
   try {
-    const { errorSummary, isCheckboxChecked } = getAndClearFieldsFromRedirectSessionData(req);
+    const { validatedFacilityIdQuery, facilityIdQueryError } = validateFacilityIdQuery(req);
+    const { errorSummary: premiumPaymentFormError, isCheckboxChecked } = getAndClearFieldsFromRedirectSessionData(req);
 
-    const { feeRecordPaymentGroups, reportPeriod, bank } = await api.getUtilisationReportReconciliationDetailsById(reportId, userToken);
+    const { feeRecordPaymentGroups, reportPeriod, bank } = await api.getUtilisationReportReconciliationDetailsById(
+      reportId,
+      validatedFacilityIdQuery,
+      userToken,
+    );
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
@@ -37,7 +43,9 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       reportId,
       enablePaymentsReceivedSorting,
       feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
-      errorSummary,
+      premiumPaymentFormError,
+      facilityIdQueryError,
+      facilityIdQuery: validatedFacilityIdQuery,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

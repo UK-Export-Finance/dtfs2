@@ -1,6 +1,6 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { UtilisationReportEntity, ReportPeriod, FeeRecordStatus } from '@ukef/dtfs2-common';
-import { Not, Equal, FindOptionsWhere, LessThan, In } from 'typeorm';
+import { Not, Equal, FindOptionsWhere, LessThan, In, Like } from 'typeorm';
 import { FeeRecordRepo } from '../fee-record-repo';
 
 export type GetUtilisationReportDetailsOptions = {
@@ -217,6 +217,50 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       relations: { payments: true },
     });
 
+    return report;
+  },
+
+  /**
+   * Finds a utilisation report with the supplied id and attaches
+   * all the fee records and their payments
+   * @param reportId - The report id
+   * @returns The utilisation report with attached fee records and payments
+   */
+  async findOneByIdWithFeeRecordsWithPayments(reportId: number): Promise<UtilisationReportEntity | null> {
+    return await UtilisationReportRepo.findOne({
+      where: { id: Number(reportId) },
+      relations: {
+        feeRecords: {
+          payments: true,
+        },
+      },
+    });
+  },
+
+  /**
+   * Finds a utilisation report with the supplied id and attaches
+   * all the fee records which match the supplied facility id
+   * query with the payments attached and all the fee records attached
+   * to the payments
+   * @param reportId - The report id
+   * @param feeRecordFacilityIdQuery - The fee record statuses to filter by
+   * @returns The utilisation report with attached fee records and payments
+   */
+  async findOneByIdWithFeeRecordsFilteredByPartialFacilityId(reportId: number, feeRecordFacilityIdQuery: string): Promise<UtilisationReportEntity | null> {
+    const report = await this.findOne({
+      where: { id: reportId },
+    });
+
+    if (!report) {
+      return null;
+    }
+
+    report.feeRecords = await FeeRecordRepo.find({
+      where: {
+        facilityId: Like(`%${feeRecordFacilityIdQuery}%`),
+      },
+      relations: { payments: { feeRecords: true } },
+    });
     return report;
   },
 });

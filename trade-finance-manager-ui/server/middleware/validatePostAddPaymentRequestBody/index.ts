@@ -11,6 +11,21 @@ import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-tab
 
 const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof body === 'object';
 
+const FACILITY_ID_QUERY_REGEX = /facilityIdQuery=(?<facilityIdQuery>\d+)/;
+
+const getFacilityIdQueryFromReferer = (req: Request): string | undefined => {
+  const { referer } = req.headers;
+  if (!referer) {
+    return undefined;
+  }
+
+  const captureGroups = FACILITY_ID_QUERY_REGEX.exec(referer)?.groups;
+  if (!captureGroups) {
+    return undefined;
+  }
+  return captureGroups.facilityIdQuery;
+};
+
 const redirectWithError = (
   req: Request,
   res: Response,
@@ -20,6 +35,10 @@ const redirectWithError = (
 ) => {
   req.session.addPaymentErrorKey = addPaymentError;
   req.session.checkedCheckboxIds = checkedCheckboxIds;
+  const facilityIdQuery = getFacilityIdQueryFromReferer(req);
+  if (facilityIdQuery) {
+    return res.redirect(`/utilisation-reports/${reportId}?facilityIdQuery=${facilityIdQuery}`);
+  }
   return res.redirect(`/utilisation-reports/${reportId}`);
 };
 
