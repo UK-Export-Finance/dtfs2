@@ -9,6 +9,7 @@ import {
   handleUtilisationReportAddAPaymentEvent,
   handleUtilisationReportReportUploadedEvent,
   handleUtilisationReportDeletePaymentEvent,
+  handleUtilisationReportEditPaymentEvent,
 } from './event-handlers';
 import { UtilisationReportEvent } from './event/utilisation-report.event';
 
@@ -90,6 +91,8 @@ export class UtilisationReportStateMachine {
             return handleUtilisationReportDeletePaymentEvent(this.report, event.payload);
           case 'FEE_RECORD_KEYED':
             return handleUtilisationReportFeeRecordKeyedEvent(this.report, event.payload);
+          case 'EDIT_PAYMENT':
+            return handleUtilisationReportEditPaymentEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

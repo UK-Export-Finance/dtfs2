@@ -173,6 +173,7 @@ authRouter
   .route('/utilisation-reports/:reportId/payment/:paymentId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('paymentId'), handleExpressValidatorResult)
   .get(utilisationReportsController.getPaymentDetailsById)
-  .delete(utilisationReportsController.deletePayment);
+  .delete(utilisationReportsController.deletePayment)
+  .patch(utilisationReportsController.patchPayment);
 
 module.exports = { authRouter, openRouter };

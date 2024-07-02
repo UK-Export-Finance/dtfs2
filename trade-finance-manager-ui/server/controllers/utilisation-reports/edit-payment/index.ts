@@ -7,9 +7,11 @@ import {
   extractEditPaymentFormValues,
   getEditPaymentViewModel,
   getEditPaymentViewModelWithFormValuesAndErrors,
+  parseValidatedEditPaymentFormValues,
   validateEditPaymentRequestFormValues,
 } from '../helpers';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
+import { ValidatedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 const renderEditPaymentPage = (res: Response, viewModel: EditPaymentViewModel) => res.render('utilisation-reports/edit-payment.njk', viewModel);
 
@@ -42,6 +44,8 @@ export const postEditPayment = async (req: PostEditPaymentRequest, res: Response
     const formHasErrors = editPaymentErrors.errorSummary.length !== 0;
 
     if (!formHasErrors) {
+      const parsedEditPaymentFormValues = parseValidatedEditPaymentFormValues(formValues as ValidatedEditPaymentFormValues);
+      await api.editPayment(reportId, paymentId, parsedEditPaymentFormValues, user, userToken);
       return res.redirect(`/utilisation-reports/${reportId}`);
     }
 

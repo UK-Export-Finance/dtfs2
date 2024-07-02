@@ -59,6 +59,12 @@ class TestApi {
     const to = async (url: string) => await request(this.app).delete(url).send(data).set(headers);
     return { to };
   }
+
+  public patch(data: object) {
+    this.assertIsInitialised();
+    const to = async (url: string) => await request(this.app).patch(url).send(data).set(headers);
+    return { to };
+  }
 }
 
 export const testApi = new TestApi();

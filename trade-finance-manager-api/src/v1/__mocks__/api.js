@@ -244,4 +244,5 @@ module.exports = {
   getUtilisationReportWithFeeRecordsToKey: jest.fn(),
   getPaymentDetails: jest.fn(),
   deletePaymentById: jest.fn(),
+  editPayment: jest.fn(),
 };

@@ -1,26 +1,29 @@
 import { EntityManager } from 'typeorm';
 import { DbRequestSource, FeeRecordEntity, PaymentEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { NewPaymentDetails } from '../../../../../types/utilisation-reports';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';
 
-type AddAPaymentEventPayload = {
+type EditPayloadEventPayload = {
   transactionEntityManager: EntityManager;
+  payment: PaymentEntity;
   feeRecords: FeeRecordEntity[];
-  paymentDetails: NewPaymentDetails;
+  paymentAmount: number;
+  datePaymentReceived: Date;
+  paymentReference: string | undefined;
   requestSource: DbRequestSource;
 };
 
-export type UtilisationReportAddAPaymentEvent = BaseUtilisationReportEvent<'ADD_A_PAYMENT', AddAPaymentEventPayload>;
+export type UtilisationReportEditPaymentEvent = BaseUtilisationReportEvent<'EDIT_PAYMENT', EditPayloadEventPayload>;
 
-export const handleUtilisationReportAddAPaymentEvent = async (
+export const handleUtilisationReportEditPaymentEvent = async (
   report: UtilisationReportEntity,
-  { transactionEntityManager, feeRecords, paymentDetails, requestSource }: AddAPaymentEventPayload,
+  { transactionEntityManager, payment, feeRecords, paymentAmount, datePaymentReceived, paymentReference, requestSource }: EditPayloadEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  const payment = PaymentEntity.create({
-    ...paymentDetails,
-    feeRecords,
+  payment.update({
+    amount: paymentAmount,
+    dateReceived: datePaymentReceived,
+    reference: paymentReference,
     requestSource,
   });
   await transactionEntityManager.save(PaymentEntity, payment);
@@ -31,7 +34,7 @@ export const handleUtilisationReportAddAPaymentEvent = async (
   await Promise.all(
     feeRecordStateMachines.map((stateMachine) =>
       stateMachine.handleEvent({
-        type: 'PAYMENT_ADDED',
+        type: 'PAYMENT_EDITED',
         payload: {
           transactionEntityManager,
           feeRecordsAndPaymentsMatch,
@@ -41,10 +44,6 @@ export const handleUtilisationReportAddAPaymentEvent = async (
     ),
   );
 
-  if (report.status === 'PENDING_RECONCILIATION') {
-    report.updateWithStatus({ status: 'RECONCILIATION_IN_PROGRESS', requestSource });
-  } else {
-    report.updateLastUpdatedBy(requestSource);
-  }
+  report.updateLastUpdatedBy(requestSource);
   return await transactionEntityManager.save(UtilisationReportEntity, report);
 };

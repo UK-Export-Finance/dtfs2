@@ -1,5 +1,5 @@
 import { Currency } from '@ukef/dtfs2-common';
-import { parseValidatedAddPaymentFormValues } from './parse-validated-add-payment-form-values';
+import { parseValidatedAddPaymentFormValues } from './parse-payment-form-values';
 import { ValidatedAddPaymentFormValues } from '../../../types/add-payment-form-values';
 
 describe('parseValidatedAddPaymentFormValues', () => {
