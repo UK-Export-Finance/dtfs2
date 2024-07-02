@@ -50,6 +50,10 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateDay();
       aboutFacility.coverEndDateMonth();
       aboutFacility.coverEndDateYear();
+      if (applications[1].version >= 1) {
+        aboutFacility.facilityEndDateExistsYes();
+        aboutFacility.facilityEndDateExistsNo();
+      }
       aboutFacility.continueButton();
       aboutFacility.saveAndReturnButton();
       aboutFacility.monthsOfCover().should('not.exist');
@@ -68,6 +72,9 @@ context('About Facility Page', () => {
       aboutFacility.facilityNameError();
       aboutFacility.shouldCoverStartOnSubmissionError();
       aboutFacility.coverEndDateError();
+      if (applications[1].version >= 1) {
+        aboutFacility.facilityEndDateExistsError();
+      }
     });
 
     it('redirects user to application page when clicking on `save and return` button', () => {
@@ -177,11 +184,45 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateDay().type(now.getDate());
       aboutFacility.coverEndDateMonth().type(now.getMonth());
       aboutFacility.coverEndDateYear().type(now.getFullYear() + 1);
+      if (applications[1].version >= 1) {
+        aboutFacility.facilityEndDateExistsYes().click();
+      }
       aboutFacility.continueButton().click();
       cy.url().should(
         'eq',
         relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/provided-facility`),
       );
+    });
+
+    it('stores the values when returning to the page', () => {
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      aboutFacility.facilityName().type('Name');
+      aboutFacility.shouldCoverStartOnSubmissionNo().click();
+      aboutFacility.coverStartDateDay().type(now.getDate());
+      aboutFacility.coverStartDateMonth().type(now.getMonth() + 1);
+      aboutFacility.coverStartDateYear().type(now.getFullYear());
+      aboutFacility.coverEndDateDay().type(now.getDate());
+      aboutFacility.coverEndDateMonth().type(now.getMonth());
+      aboutFacility.coverEndDateYear().type(now.getFullYear() + 1);
+      if (applications[1].version >= 1) {
+        aboutFacility.facilityEndDateExistsYes().click();
+      }
+      aboutFacility.continueButton().click();
+
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      if (applications[1].version >= 1) {
+        aboutFacility.facilityEndDateExistsYes().should('be.checked');
+        aboutFacility.facilityEndDateExistsNo().should('be.not.checked');
+        aboutFacility.facilityEndDateExistsNo().click();
+      }
+
+      aboutFacility.continueButton().click();
+
+      cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[0].details._id}/about-facility`));
+      if (applications[1].version >= 1) {
+        aboutFacility.facilityEndDateExistsNo().should('be.checked');
+        aboutFacility.facilityEndDateExistsYes().should('be.not.checked');
+      }
     });
   });
 
@@ -200,6 +241,10 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateDay().should('not.exist');
       aboutFacility.coverEndDateMonth().should('not.exist');
       aboutFacility.coverEndDateYear().should('not.exist');
+      if (applications[1].version >= 1) {
+        aboutFacility.facilityEndDateExistsYes();
+        aboutFacility.facilityEndDateExistsNo();
+      }
       aboutFacility.continueButton();
       aboutFacility.saveAndReturnButton();
       aboutFacility.monthsOfCover();
@@ -208,6 +253,9 @@ context('About Facility Page', () => {
     it('does not validate facility name field as its optional', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
       aboutFacility.monthsOfCover().type('10');
+      if (applications[1].version >= 1) {
+        aboutFacility.facilityEndDateExistsYes().click();
+      }
       aboutFacility.continueButton().click();
       aboutFacility.errorSummary().should('not.exist');
       aboutFacility.facilityNameError().should('not.exist');
@@ -244,6 +292,10 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateMonth();
       aboutFacility.coverEndDateYear();
       aboutFacility.continueButton();
+      if (applications[2].version >= 1) {
+        aboutFacility.facilityEndDateExistsYes();
+        aboutFacility.facilityEndDateExistsNo();
+      }
       aboutFacility.saveAndReturnButton();
       aboutFacility.monthsOfCover().should('not.exist');
     });
@@ -265,6 +317,10 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateMonth().should('not.exist');
       aboutFacility.coverEndDateYear().should('not.exist');
       aboutFacility.continueButton();
+      if (applications[2].version >= 1) {
+        aboutFacility.facilityEndDateExistsYes();
+        aboutFacility.facilityEndDateExistsNo();
+      }
       aboutFacility.saveAndReturnButton();
       aboutFacility.monthsOfCover();
     });

@@ -1,6 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { mongoDbClient: db } = require('../../../src/drivers/db-client');
 const { FACILITY_TYPE } = require('../../../src/v1/gef/enums');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
@@ -30,8 +29,6 @@ const facilitiesCollectionName = DB_COLLECTIONS.FACILITIES;
 const dealsCollectionName = DB_COLLECTIONS.DEALS;
 const applicationBaseUrl = '/v1/gef/application';
 
-const MOCK_APPLICATION = mockApplications[0];
-const MOCK_APPLICATION_FACILITIES = mockApplications[15];
 const CONSTANTS = require('../../../src/constants');
 
 const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/v1/portalActivity-object-generator/activityConstants');
@@ -40,19 +37,23 @@ const mockFacilities = require('../../fixtures/gef/facilities');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 describe('submissionPortalActivity()', () => {
-  it('should return a populated array with submission activity object and MIA if submission count is 0', async () => {
+  let MOCK_APPLICATION;
+  let MOCK_APPLICATION_FACILITIES;
+  let aMaker;
+  let aChecker;
+  beforeEach(async () => {
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
-    /* As _ids can change for checker, need to access db and find a checker
-    These details then added to the MOCK_APPLICATION */
-    await testUserCache.initialise(app);
-    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
-    // finds someone with role checker only
-    const checker = await userCollection.findOne({ roles: { $eq: [CHECKER] } });
-    MOCK_APPLICATION.checkerId = checker._id;
-    MOCK_APPLICATION.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
-    MOCK_APPLICATION.portalActivities = [];
 
+    const testUsers = await testUserCache.initialise(app);
+    aMaker = testUsers().withRole(MAKER).one();
+    aChecker = testUsers().withRole(CHECKER).one();
+
+    MOCK_APPLICATION = { ...mockApplications[0], checkerId: aChecker._id, portalActivities: [], submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA };
+    MOCK_APPLICATION_FACILITIES = { ...mockApplications[15], checkerId: aChecker._id, portalActivities: [] };
+  });
+
+  it('should return a populated array with submission activity object and MIA if submission count is 0', async () => {
     const result = await submissionPortalActivity(MOCK_APPLICATION);
 
     // ensure that only 1 object added to empty array
@@ -74,9 +75,9 @@ describe('submissionPortalActivity()', () => {
 
     // get author object from checker from db
     const author = {
-      firstName: checker.firstname,
-      lastName: checker.surname,
-      _id: checker._id,
+      firstName: aChecker.firstname,
+      lastName: aChecker.surname,
+      _id: aChecker._id,
     };
     expect(portalActivityObject.author).toEqual(author);
 
@@ -88,22 +89,7 @@ describe('submissionPortalActivity()', () => {
   });
 
   it('should not return a populated array with facility changed if submission count above 1 and facility changed to issued and MIA', async () => {
-    await databaseHelper.wipe([facilitiesCollectionName]);
-    await databaseHelper.wipe([dealsCollectionName]);
-
-    const testUsers = await testUserCache.initialise(app);
-    const aMaker = testUsers().withRole(MAKER).one();
-
-    /*
-   As _id's can change for checker, need to access db and find a checker
-   These details then added to the MOCK_APPLICATION
-   */
-    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
-    // finds someone with role checker only
-    const checker = await userCollection.findOne({ roles: { $eq: [CHECKER] } });
-    MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
     MOCK_APPLICATION_FACILITIES.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
-    MOCK_APPLICATION_FACILITIES.portalActivities = [];
     MOCK_APPLICATION_FACILITIES._id = '61e54dd5b578247e14575882';
 
     const req = {
@@ -125,28 +111,17 @@ describe('submissionPortalActivity()', () => {
   });
 
   it('should return a populated array with facility changed if submission count above 1 and facility changed to issued and AIN', async () => {
-    await databaseHelper.wipe([facilitiesCollectionName]);
-    await databaseHelper.wipe([dealsCollectionName]);
-
-    const testUsers = await testUserCache.initialise(app);
-    const aMaker = testUsers().withRole(MAKER).one();
-    const aChecker = testUsers().withRole(CHECKER).one();
-    /*
-   As _id's can change for checker, need to access db and find a checker
-   These details then added to the MOCK_APPLICATION
-   */
-    const userCollection = await db.getCollection(DB_COLLECTIONS.USERS);
-    // finds someone with role checker only
-    const checker = await userCollection.findOne({ roles: { $eq: [CHECKER] } });
-    MOCK_APPLICATION_FACILITIES.checkerId = checker._id;
     MOCK_APPLICATION_FACILITIES.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
-    MOCK_APPLICATION_FACILITIES.portalActivities = [];
-    MOCK_APPLICATION_FACILITIES._id = '61e54dd5b578247e14575882';
+    delete MOCK_APPLICATION_FACILITIES._id;
+
+    const { status: dealStatus, body: dealBody } = await as(aMaker).post(MOCK_APPLICATION_FACILITIES).to(applicationBaseUrl);
+
+    expect(dealStatus).toBe(201);
 
     const req = {
       body: {
         type: 'Cash',
-        dealId: MOCK_APPLICATION_FACILITIES._id,
+        dealId: dealBody._id,
         paymentType: 'IN_ARREARS_MONTHLY',
       },
     };
@@ -210,13 +185,13 @@ describe('updateChangedToIssued()', () => {
     const testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole(MAKER).one();
     aChecker = testUsers().withRole(CHECKER).one();
-    mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
   });
 
   beforeEach(async () => {
     await databaseHelper.wipe([facilitiesCollectionName]);
     await databaseHelper.wipe([dealsCollectionName]);
 
+    mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
     // posts facility with canResubmitIssuedFacilities as true
     await as(aMaker)
       .post({

@@ -1,3 +1,4 @@
+const { getDefaultGefDealVersion } = require('@ukef/dtfs2-common');
 const { DEAL_TYPE, DEAL_STATUS } = require('../enums');
 
 class Application {
@@ -7,6 +8,8 @@ class Application {
     if (eligibility) {
       // New Application
       this.dealType = DEAL_TYPE;
+
+      this.version = getDefaultGefDealVersion();
 
       // ensure we don't consume any sensitive fields
       const { token: _token, password: _password, lastLogin: _lastLogin, ...sanitisedMaker } = req.maker;

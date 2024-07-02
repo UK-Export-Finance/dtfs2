@@ -39,6 +39,11 @@ describe(baseUrl, () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole(MAKER).one();
+  });
+
+  beforeEach(async () => {
+    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
+
     mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
 
     newFacility = {
@@ -102,10 +107,6 @@ describe(baseUrl, () => {
       issueDate: null,
       hasBeenIssuedAndAcknowledged: true,
     };
-  });
-
-  beforeEach(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
   });
 
   describe(`GET ${baseUrl}?dealId=`, () => {
@@ -183,10 +184,6 @@ describe(baseUrl, () => {
   });
 
   describe(`PUT ${baseUrl}/:id`, () => {
-    beforeEach(async () => {
-      await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
-    });
-
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put({}).to(`${baseUrl}/1`);
       expect(status).toEqual(401);

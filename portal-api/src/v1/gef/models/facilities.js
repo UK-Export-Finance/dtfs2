@@ -19,7 +19,7 @@ class Facility {
   constructor(req) {
     if (req.dealId) {
       // new facility
-      this.dealId = req.dealId ? ObjectId(req.dealId) : null;
+      this.dealId = ObjectId(req.dealId);
       this.type = checkType(req.type);
       this.hasBeenIssued = null;
       if (req.hasBeenIssued != null) {
@@ -186,6 +186,10 @@ class Facility {
 
       if (req.specialIssuePermission != null) {
         this.specialIssuePermission = Object(req.specialIssuePermission);
+      }
+
+      if (typeof req.facilityEndDateExists === 'boolean') {
+        this.facilityEndDateExists = req.facilityEndDateExists;
       }
 
       this.updatedAt = Date.now();

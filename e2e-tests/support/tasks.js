@@ -5,6 +5,7 @@ const { UtilisationReportEntity } = require('@ukef/dtfs2-common');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
+const { getVersion0GefDeal, getVersion0GefFacility } = require('../e2e-fixtures/deal-versioning.fixture');
 
 SqlDbDataSource.initialize()
   .then(() => console.info('✅ Successfully initialised connection to SQL database'))
@@ -185,6 +186,21 @@ module.exports = {
       return facilities.deleteMany({});
     };
 
+    const insertVersion0Deal = async (makerUserName) => {
+      const dealsCollection = await db.getCollection(DB_COLLECTIONS.DEALS);
+      const usersCollection = await getUsersCollection();
+
+      const maker = await usersCollection.findOne({ username: makerUserName });
+
+      return dealsCollection.insertOne(getVersion0GefDeal(maker));
+    };
+
+    const insertVersion0Facility = async (dealId) => {
+      const facilitiesCollection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+
+      return facilitiesCollection.insertOne(getVersion0GefFacility(dealId));
+    };
+
     return {
       log,
       getUserFromDbByEmail,
@@ -202,6 +218,8 @@ module.exports = {
       getAllBanks,
       insertUtilisationReportsIntoDb,
       removeAllUtilisationReportsFromDb,
+      insertVersion0Deal,
+      insertVersion0Facility,
     };
   },
 };

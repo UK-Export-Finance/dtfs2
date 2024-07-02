@@ -9,3 +9,4 @@ export * from './facility-not-found.error';
 export * from './deal-not-found.error';
 export * from './invalid-deal-id.error';
 export * from './invalid-facility-id.error';
+export * from './deal-version.error';
