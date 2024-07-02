@@ -620,7 +620,7 @@ const getAllAmendmentsInProgress = async () => {
   }
 };
 
-const updateGefFacility = async (facilityId, facilityUpdate) => {
+const updateGefFacility = async ({ facilityId, facilityUpdate, auditDetails }) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -633,7 +633,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/facilities/${facilityId}`,
       headers: headers.central,
-      data: facilityUpdate,
+      data: { facilityUpdate, auditDetails },
     });
 
     return response.data;

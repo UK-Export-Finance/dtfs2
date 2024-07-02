@@ -1,3 +1,4 @@
+const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { MONGO_DB_COLLECTIONS, ROLES } = require('@ukef/dtfs2-common');
 const { format, fromUnixTime } = require('date-fns');
 const { ObjectId } = require('mongodb');
@@ -362,12 +363,14 @@ describe('portalActivityGenerator()', () => {
 
 describe('updateChangedToIssued()', () => {
   let mockApplication;
+  let auditDetails;
 
   beforeAll(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES]);
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS]);
     mockApplication = await testApi.post(APPLICATION[0]).to(applicationBaseUrl);
     await testApi.put(APPLICATION[0]).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+    auditDetails = generatePortalAuditDetails(new ObjectId());
   });
 
   beforeEach(async () => {
@@ -386,7 +389,7 @@ describe('updateChangedToIssued()', () => {
     const { body } = await testApi.get(baseUrl, mockQuery);
 
     // changes to false to test
-    await updateChangedToIssued(body);
+    await updateChangedToIssued({ facilities: body, auditDetails });
   });
 
   it('changes canResubmitIssuedFacilities to false', async () => {

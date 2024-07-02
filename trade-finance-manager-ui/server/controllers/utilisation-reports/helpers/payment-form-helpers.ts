@@ -1,5 +1,5 @@
 import { Currency } from '@ukef/dtfs2-common';
-import { PremiumPaymentsTableCheckboxId } from 'server/types/premium-payments-table-checkbox-id';
+import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { PaymentErrorsViewModel } from '../../../types/view-models';

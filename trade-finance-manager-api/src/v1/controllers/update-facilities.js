@@ -39,7 +39,7 @@ const updateFacilities = async (deal, auditDetails) => {
           // only changes flag if AIN or MIA
           if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
             // updates GEF facility collection
-            const updatedPortalFacility = await api.updateGefFacility(facilityId, portalFacilityUpdate);
+            const updatedPortalFacility = await api.updateGefFacility({ facilityId, facilityUpdate: portalFacilityUpdate, auditDetails });
 
             facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
           }

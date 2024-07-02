@@ -827,7 +827,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
 
-      const response = await api.updateGefFacility(urlTraversal);
+      const response = await api.updateGefFacility({ facilityId: urlTraversal, facilityUpdate: {}, auditDetails: MOCK_PORTAL_USER_AUDIT_DETAILS });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -836,7 +836,7 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
 
-      const response = await api.updateGefFacility(localIp);
+      const response = await api.updateGefFacility({ facilityId: localIp, facilityUpdate: {}, auditDetails: MOCK_PORTAL_USER_AUDIT_DETAILS });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -844,7 +844,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the facility id is valid', async () => {
       const validFacility = '5ce819935e539c343f141ece';
 
-      const response = await api.updateGefFacility(validFacility);
+      const response = await api.updateGefFacility({ facilityId: validFacility, facilityUpdate: {}, auditDetails: MOCK_PORTAL_USER_AUDIT_DETAILS });
 
       expect(response).toEqual(mockResponse);
     });

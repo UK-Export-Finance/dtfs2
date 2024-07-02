@@ -1,4 +1,4 @@
-import { PaymentErrorsViewModel } from 'server/types/view-models';
+import { PaymentErrorsViewModel } from '../../../types/view-models';
 import {
   AddPaymentFormRequestBody,
   EMPTY_ADD_PAYMENT_FORM_VALUES,
