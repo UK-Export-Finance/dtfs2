@@ -4,7 +4,7 @@ const databaseHelper = require('./database-helper');
 
 const app = require('../src/createApp');
 const testUserCache = require('./api-test-users');
-const { MAKER } = require('../src/v1/roles/roles');
+const { MAKER, ADMIN } = require('../src/v1/roles/roles');
 
 const { as } = require('./api')(app);
 const { expectMongoId } = require('./expectMongoIds');
@@ -14,8 +14,6 @@ const { FACILITY_TYPE } = require('../src/v1/gef/enums');
 
 const mockEligibilityCriteria = require('./fixtures/gef/eligibilityCriteria');
 
-const { DB_COLLECTIONS } = require('./fixtures/constants');
-
 const expectedEligibilityCriteriaAuditRecord = {
   ...generateParsedMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
   lastUpdatedByPortalUserId: expect.any(String),
@@ -24,7 +22,8 @@ const expectedEligibilityCriteriaAuditRecord = {
 const gefApplicationsUrl = '/v1/gef/application';
 const gefFacilitiesUrl = '/v1/gef/facilities';
 
-const mockEligibilityCriteriaLatestVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 2.1);
+// NOTE: to maintain backwards compatibility we shouldn't change this from version 2.1
+const mockEligibilityCriteriaVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 2.1);
 
 const originalEnv = { ...process.env };
 
@@ -71,7 +70,7 @@ const getVersion0Application = (makerId) => ({
     product: expect.any(String),
     createdAt: expect.any(Number),
     isInDraft: false,
-    criteria: mockEligibilityCriteriaLatestVersion.criteria.map((criterion) => ({
+    criteria: mockEligibilityCriteriaVersion.criteria.map((criterion) => ({
       ...criterion,
       answer: null,
     })),
@@ -133,17 +132,18 @@ const getVersion0Facility = (dealId, makerId) => ({
 
 describe('GEF deal versioning', () => {
   let aMaker;
+  let anAdmin;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole(MAKER).one();
-
-    await databaseHelper.wipe(DB_COLLECTIONS.DEALS);
+    anAdmin = testUsers().withRole(ADMIN).one();
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES]);
+    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA]);
+    await as(anAdmin).post(mockEligibilityCriteriaVersion).to('/v1/gef/eligibility-criteria');
   });
 
   describe(`when GEF_DEAL_VERSION set to '0'`, () => {
