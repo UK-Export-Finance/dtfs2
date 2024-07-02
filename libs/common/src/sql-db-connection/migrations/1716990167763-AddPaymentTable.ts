@@ -16,9 +16,6 @@ export class AddPaymentTable1716990167763 implements MigrationInterface {
                 "lastUpdatedByTfmUserId" nvarchar(255),
                 "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_c095a0510351d4262872da05235" DEFAULT 0,
                 CONSTRAINT "PK_07e9fb9a8751923eb876d57a575" PRIMARY KEY ("id")
-            ) WITH (
-                SYSTEM_VERSIONING = ON,
-                LEDGER = ON
             )
         `);
     await queryRunner.query(`
