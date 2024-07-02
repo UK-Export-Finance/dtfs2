@@ -23,11 +23,15 @@ const MOCK_USER = {
 
 describe('a user', () => {
   let aNonAdmin;
+  let anAdmin;
+  let aMaker;
+  let aChecker;
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     const testUsers = await testUserCache.initialise(app);
     aNonAdmin = testUsers().withoutRole(ADMIN).one();
+    anAdmin = testUsers().withRole(ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -61,7 +65,7 @@ describe('a user', () => {
 
       await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
 
-      const { status, body } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
+      const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
 
       expect(status).toEqual(200);
       expect(body).toMatchObject({
@@ -159,11 +163,11 @@ describe('a user', () => {
 
   it('User already exists', async () => {
     // User creation - first instance
-    const first = await as(aNonAdmin).post(MOCK_USER).to('/v1/users');
+    const first = await as(anAdmin).post(MOCK_USER).to('/v1/users');
     expect(first.status).toEqual(200);
 
     // User creation - second instance
-    const second = await as(aNonAdmin).post(MOCK_USER).to('/v1/users');
+    const second = await as(anAdmin).post(MOCK_USER).to('/v1/users');
     expect(second.status).toEqual(400);
   });
 
@@ -256,9 +260,27 @@ describe('a user', () => {
 
       expect(status).toEqual(401);
     });
+
+    it('does not allow a Maker to create a user', async () => {
+      const userToCreate = { ...MOCK_USER, roles: ['Maker'] };
+
+      const { status, body } = await as(aMaker).post(userToCreate).to('/v1/users');
+
+      expect(status).toEqual(403);
+      expect(body).toHaveProperty('error', 'Forbidden');
+    });
+
+    it('does not allow a Checker to create a user', async () => {
+      const userToCreate = { ...MOCK_USER, roles: ['Checker'] };
+
+      const { status, body } = await as(aChecker).post(userToCreate).to('/v1/users');
+
+      expect(status).toEqual(403);
+      expect(body).toHaveProperty('error', 'Forbidden');
+    });
   });
 
   async function createUser(userToCreate) {
-    return as(aNonAdmin).post(userToCreate).to('/v1/users');
+    return as(anAdmin).post(userToCreate).to('/v1/users');
   }
 });

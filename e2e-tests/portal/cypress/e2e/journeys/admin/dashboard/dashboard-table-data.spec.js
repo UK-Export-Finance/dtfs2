@@ -5,7 +5,7 @@ const relative = require('../../../relativeURL');
 
 const { GEF_DEAL_DRAFT, GEF_FACILITY_CASH, GEF_FACILITY_CONTINGENT } = require('../fixtures');
 
-const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('Admin dashboard', () => {
   let deal;

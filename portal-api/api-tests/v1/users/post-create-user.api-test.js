@@ -90,9 +90,12 @@ describe('a user', () => {
     });
 
     describe('it creates the user', () => {
-      it('it creates the user if all provided data is valid', async () => {
-        await createUser(MOCK_USER);
-        const { status, body } = await as(aNonAdmin).get(BASE_URL);
+      it('it creates the user with Admin role if all provided data is valid', async () => {
+        const userWithRoles = {
+          ...MOCK_USER,
+          roles: ['Admin'],
+        };
+        const { status, body } = await createUser(userWithRoles);
 
         expect(status).toEqual(200);
         expect(body).toStrictEqual(
@@ -136,7 +139,7 @@ describe('a user', () => {
         };
 
         await createUser(newUser);
-        const { status, body } = await as(aNonAdmin).get(BASE_URL);
+        const { status, body } = await as(anAdmin).get(BASE_URL);
 
         expect(status).toEqual(200);
         expect(body.users.find((user) => user.username === MOCK_USER.username).roles).toStrictEqual([READ_ONLY]);
@@ -145,6 +148,6 @@ describe('a user', () => {
   });
 
   async function createUser(userToCreate) {
-    return as(aNonAdmin).post(userToCreate).to(BASE_URL);
+    return as(anAdmin).post(userToCreate).to(BASE_URL);
   }
 });
