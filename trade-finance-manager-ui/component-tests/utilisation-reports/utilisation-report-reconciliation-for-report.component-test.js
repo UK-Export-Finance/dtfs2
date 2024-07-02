@@ -1,5 +1,7 @@
+const { TEAM_IDS } = require('@ukef/dtfs2-common');
 const { PRIMARY_NAVIGATION_KEYS } = require('../../server/constants');
 const { pageRenderer } = require('../pageRenderer');
+const { aTfmSessionUser } = require('../../test-helpers/test-data/tfm-session-user');
 
 const page = '../templates/utilisation-reports/utilisation-report-reconciliation-for-report.njk';
 const render = pageRenderer(page);
@@ -16,6 +18,7 @@ describe(page, () => {
   const reportId = 1;
 
   const params = {
+    user: aTfmSessionUser(),
     activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
     bank,
     formattedReportPeriod,
@@ -83,5 +86,60 @@ describe(page, () => {
       .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/check-keying-data`);
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
+  });
+
+  it('should not render add payment button for PDC_READ user', () => {
+    const user = {
+      ...aTfmSessionUser(),
+      teams: [TEAM_IDS.PDC_READ],
+    };
+
+    wrapper = render({
+      ...params,
+      user,
+    });
+
+    const premiumPaymentsTabSelector = 'div#premium-payments';
+    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`).notToExist();
+  });
+
+  it('should not render generate keying data button for PDC_READ user', () => {
+    const user = {
+      ...aTfmSessionUser(),
+      teams: [TEAM_IDS.PDC_READ],
+    };
+
+    wrapper = render({
+      ...params,
+      user,
+    });
+
+    const premiumPaymentsTabSelector = 'div#premium-payments';
+    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).notToExist();
+  });
+
+  it('should render edit actions within the premium payments table for PDC_RECONCILE users', () => {
+    const user = aTfmSessionUser();
+
+    wrapper = render({
+      ...params,
+      user,
+    });
+
+    wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).toExist();
+  });
+
+  it('should not render edit actions within the premium payments table for PDC_READ users', () => {
+    const user = {
+      ...aTfmSessionUser(),
+      teams: [TEAM_IDS.PDC_READ],
+    };
+
+    wrapper = render({
+      ...params,
+      user,
+    });
+
+    wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).notToExist();
   });
 });

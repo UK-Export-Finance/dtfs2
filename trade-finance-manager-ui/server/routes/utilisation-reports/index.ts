@@ -34,7 +34,7 @@ utilisationReportsRoutes.get(
 utilisationReportsRoutes.post(
   '/:reportId/add-payment',
   validateTfmPaymentReconciliationFeatureFlagIsEnabled,
-  validateUserTeam(Object.values(PDC_TEAM_IDS)),
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validatePostAddPaymentRequestBody,
   addPayment,
