@@ -17,7 +17,7 @@
   <form method="post">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
     <table class="govuk-table" data-module="moj-sortable-table" data-cy="fee-record-details-table">
-      <caption class="govuk-table__caption govuk-table__caption--m">{{ captionText }}</caption>
+      <caption class="govuk-table__caption govuk-table__caption--m" id="addedReportedFeesDetails" tabindex="-1">{{ captionText }}</caption>
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header" aria-sort="ascending">Facility ID</th>
@@ -68,6 +68,7 @@
       </tfoot>
     </table>
     {% if enableSelectingFeeRecords %}
+      <input type="hidden" name="totalSelectableFeeRecords" value="{{ feeRecords.length }}">
       <input
         class="govuk-button govuk-button__secondary govuk-!-margin-right-3"
         formaction="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentId }}/unlink-fees"

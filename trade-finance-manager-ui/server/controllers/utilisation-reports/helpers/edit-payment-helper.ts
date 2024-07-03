@@ -57,6 +57,7 @@ export const getEditPaymentViewModel = (
   editPaymentResponse: GetPaymentDetailsWithFeeRecordsResponseBody,
   reportId: string,
   paymentId: string,
+  errors: PaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
 ): EditPaymentViewModel => ({
   reportId,
   paymentId,
@@ -66,7 +67,7 @@ export const getEditPaymentViewModel = (
   feeRecords: mapToEditPaymentFeeRecords(editPaymentResponse.feeRecords),
   totalReportedPayments: getFormattedCurrencyAndAmount(editPaymentResponse.totalReportedPayments),
   formValues: mapToEditPaymentFormValues(editPaymentResponse.payment),
-  errors: EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
+  errors,
 });
 
 /**
