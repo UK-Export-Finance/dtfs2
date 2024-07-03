@@ -1,16 +1,14 @@
 import { EntityManager } from 'typeorm';
 import {
-  Currency,
   DbRequestSource,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   PaymentEntity,
-  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  PaymentEntityMockBuilder,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { handleUtilisationReportAddAPaymentEvent } from './add-a-payment.event-handler';
-import { NewPaymentDetails } from '../../../../../types/utilisation-reports';
+import { handleUtilisationReportEditPaymentEvent } from './edit-payment.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';
 
@@ -28,18 +26,14 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     save: mockSave,
   } as unknown as EntityManager;
 
-  const paymentCurrency: Currency = 'GBP';
-  const paymentDetails: NewPaymentDetails = {
-    currency: paymentCurrency,
-    amount: 100,
-    dateReceived: new Date(),
-    reference: 'A payment reference',
-  };
+  const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
 
   const aListOfFeeRecordsForReport = (report: UtilisationReportEntity): FeeRecordEntity[] => [
-    FeeRecordEntityMockBuilder.forReport(report).withId(1).withPaymentCurrency(paymentCurrency).build(),
-    FeeRecordEntityMockBuilder.forReport(report).withId(2).withPaymentCurrency(paymentCurrency).build(),
+    FeeRecordEntityMockBuilder.forReport(report).withId(1).withPaymentCurrency('GBP').build(),
+    FeeRecordEntityMockBuilder.forReport(report).withId(2).withPaymentCurrency('GBP').build(),
   ];
+
+  const aPayment = () => PaymentEntityMockBuilder.forCurrency('GBP').build();
 
   const aMockEventHandler = () => jest.fn();
   const aMockFeeRecordStateMachine = (eventHandler: jest.Mock): FeeRecordStateMachine =>
@@ -57,34 +51,40 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     jest.restoreAllMocks();
   });
 
-  it('creates and saves the new payment entity using the supplied entity manager', async () => {
+  it('updates and saves the payment entity using the supplied entity manager', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
-
+    const utilisationReport = aReconciliationInProgressReport();
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
 
-    const newPaymentEntity = PaymentEntity.create({
-      ...paymentDetails,
-      feeRecords,
-      requestSource,
-    });
+    const newPaymentAmount = 200;
+    const newDatePaymentReceived = new Date('2024-01-01');
+    const newPaymentReference = 'A new payment reference';
+
+    const payment = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(100).withDateReceived(new Date('2023-12-01')).withReference(undefined).build();
 
     // Act
-    await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
+    await handleUtilisationReportEditPaymentEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
+      payment,
       feeRecords,
-      paymentDetails,
+      paymentAmount: newPaymentAmount,
+      datePaymentReceived: newDatePaymentReceived,
+      paymentReference: newPaymentReference,
       requestSource,
     });
 
     // Assert
-    expect(mockSave).toHaveBeenCalledWith(PaymentEntity, newPaymentEntity);
+    expect(mockSave).toHaveBeenCalledWith(PaymentEntity, payment);
+    expect(payment.amount).toBe(newPaymentAmount);
+    expect(payment.dateReceived).toBe(newDatePaymentReceived);
+    expect(payment.reference).toBe(newPaymentReference);
   });
 
   it('calls the fee record state machine event handler for each fee record in the payload', async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const payment = PaymentEntityMockBuilder.forCurrency('GBP').build();
 
+    const utilisationReport = aReconciliationInProgressReport();
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
     const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
     const feeRecordStateMachines = feeRecords.reduce(
@@ -95,10 +95,13 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
     // Act
-    await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
+    await handleUtilisationReportEditPaymentEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecords,
-      paymentDetails,
+      payment,
+      paymentAmount: 100,
+      datePaymentReceived: new Date(),
+      paymentReference: undefined,
       requestSource,
     });
 
@@ -106,7 +109,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     feeRecords.forEach(({ id }) => {
       const eventHandler = eventHandlers[id];
       expect(eventHandler).toHaveBeenCalledWith({
-        type: 'PAYMENT_ADDED',
+        type: 'PAYMENT_EDITED',
         payload: {
           transactionEntityManager: mockEntityManager,
           feeRecordsAndPaymentsMatch: false,
@@ -118,7 +121,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
   it("calls the fee record state machine event handler with 'feeRecordsAndPaymentsMatch' set to true if the fee records match the payments", async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = aReconciliationInProgressReport();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
     const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
@@ -132,10 +135,11 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(true);
 
     // Act
-    await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
+    await handleUtilisationReportEditPaymentEvent(utilisationReport, {
+      ...aSetOfPayloadPaymentValues(),
       transactionEntityManager: mockEntityManager,
       feeRecords,
-      paymentDetails,
+      payment: aPayment(),
       requestSource,
     });
 
@@ -144,7 +148,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
       const eventHandler = eventHandlers[id];
       expect(eventHandler).toHaveBeenCalledWith(
         expect.objectContaining({
-          type: 'PAYMENT_ADDED',
+          type: 'PAYMENT_EDITED',
           payload: expect.objectContaining({
             feeRecordsAndPaymentsMatch: true,
           }) as { feeRecordsAndPaymentsMatch: boolean },
@@ -155,7 +159,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
 
   it("calls the fee record state machine event handler with 'feeRecordsAndPaymentsMatch' set to false if the fee records do not match the payments", async () => {
     // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    const utilisationReport = aReconciliationInProgressReport();
 
     const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
     const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
@@ -169,10 +173,11 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(false);
 
     // Act
-    await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
+    await handleUtilisationReportEditPaymentEvent(utilisationReport, {
+      ...aSetOfPayloadPaymentValues(),
       transactionEntityManager: mockEntityManager,
+      payment: aPayment(),
       feeRecords,
-      paymentDetails,
       requestSource,
     });
 
@@ -181,7 +186,7 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
       const eventHandler = eventHandlers[id];
       expect(eventHandler).toHaveBeenCalledWith(
         expect.objectContaining({
-          type: 'PAYMENT_ADDED',
+          type: 'PAYMENT_EDITED',
           payload: expect.objectContaining({
             feeRecordsAndPaymentsMatch: false,
           }) as { feeRecordsAndPaymentsMatch: boolean },
@@ -190,62 +195,31 @@ describe('handleUtilisationReportAddAPaymentEvent', () => {
     });
   });
 
-  it('saves the updated report', async () => {
+  it('updates and saves the updated report', async () => {
     // Arrange
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
-    const feeRecords = aListOfFeeRecordsForReport(utilisationReport);
-
     // Act
-    await handleUtilisationReportAddAPaymentEvent(utilisationReport, {
+    await handleUtilisationReportEditPaymentEvent(utilisationReport, {
+      ...aSetOfPayloadPaymentValues(),
       transactionEntityManager: mockEntityManager,
-      feeRecords,
-      paymentDetails,
+      feeRecords: aListOfFeeRecordsForReport(utilisationReport),
+      payment: aPayment(),
       requestSource,
     });
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
+    expect(utilisationReport.lastUpdatedByIsSystemUser).toBe(false);
+    expect(utilisationReport.lastUpdatedByPortalUserId).toBeNull();
+    expect(utilisationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
   });
 
-  it(`only updates the report audit fields if the report status is '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS}'`, async () => {
-    // Arrange
-    const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-
-    const feeRecords = aListOfFeeRecordsForReport(reconciliationInProgressReport);
-
-    // Act
-    await handleUtilisationReportAddAPaymentEvent(reconciliationInProgressReport, {
-      transactionEntityManager: mockEntityManager,
-      feeRecords,
-      paymentDetails,
-      requestSource,
-    });
-
-    // Assert
-    expect(reconciliationInProgressReport.lastUpdatedByIsSystemUser).toBe(false);
-    expect(reconciliationInProgressReport.lastUpdatedByPortalUserId).toBeNull();
-    expect(reconciliationInProgressReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
-  });
-
-  it(`updates the report audit fields and status if the report status is '${UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION}'`, async () => {
-    // Arrange
-    const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
-
-    const feeRecords = aListOfFeeRecordsForReport(pendingReconciliationReport);
-
-    // Act
-    await handleUtilisationReportAddAPaymentEvent(pendingReconciliationReport, {
-      transactionEntityManager: mockEntityManager,
-      feeRecords,
-      paymentDetails,
-      requestSource,
-    });
-
-    // Assert
-    expect(pendingReconciliationReport.lastUpdatedByIsSystemUser).toBe(false);
-    expect(pendingReconciliationReport.lastUpdatedByPortalUserId).toBeNull();
-    expect(pendingReconciliationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
-    expect(pendingReconciliationReport.status).toBe(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS);
-  });
+  function aSetOfPayloadPaymentValues() {
+    return {
+      paymentAmount: 100,
+      datePaymentReceived: new Date(),
+      paymentReference: undefined,
+    };
+  }
 });

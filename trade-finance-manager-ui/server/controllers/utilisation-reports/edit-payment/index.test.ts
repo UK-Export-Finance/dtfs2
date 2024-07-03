@@ -6,14 +6,14 @@ import { aPaymentDetailsWithFeeRecordsResponseBody, aTfmSessionUser, aPayment, a
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL, EditPaymentFormRequestBody } from '../helpers';
 import { EditPaymentViewModel } from '../../../types/view-models/edit-payment-view-model';
 import { SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
+import { ParsedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 jest.mock('../../../api');
 
 describe('controllers/utilisation-reports/edit-payment', () => {
-  const userToken = 'abc123';
   const aRequestSession = () => ({
     user: aTfmSessionUser(),
-    userToken,
+    userToken: 'abc123',
   });
 
   beforeEach(() => {
@@ -444,7 +444,44 @@ describe('controllers/utilisation-reports/edit-payment', () => {
           body: aPostEditPaymentRequestBody(),
         });
 
-      it('redirects to /utilisation-reports/:reportId when the edit payments form is valid', async () => {
+      beforeEach(() => {
+        jest.mocked(api.editPayment).mockResolvedValue();
+      });
+
+      it('edits the payment with the supplied data', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
+
+        const user = aTfmSessionUser();
+        const userToken = 'abc123';
+        req.session.user = user;
+        req.session.userToken = userToken;
+
+        const paymentAmount = 100;
+        req.body.paymentAmount = '100';
+
+        const datePaymentReceived = new Date('2024-5-12');
+        req.body['paymentDate-day'] = '12';
+        req.body['paymentDate-month'] = '5';
+        req.body['paymentDate-year'] = '2024';
+
+        const paymentReference = 'A payment reference';
+        req.body.paymentReference = paymentReference;
+
+        const expectedParsedFormValues: ParsedEditPaymentFormValues = {
+          paymentAmount,
+          datePaymentReceived,
+          paymentReference,
+        };
+
+        // Act
+        await postEditPayment(req, res);
+
+        // Assert
+        expect(api.editPayment).toHaveBeenCalledWith(reportId, paymentId, expectedParsedFormValues, user, userToken);
+      });
+
+      it('redirects to /utilisation-reports/:reportId', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
 

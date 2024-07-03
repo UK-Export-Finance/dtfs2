@@ -7,5 +7,5 @@ export * from './get-generate-keying-data-error-helper';
 export * from './get-fee-record-display-status';
 export * from './edit-payment-helper';
 export * from './validate-payment-form-values';
-export * from './parse-validated-add-payment-form-values';
+export * from './parse-payment-form-values';
 export * from './payment-form-helpers';
