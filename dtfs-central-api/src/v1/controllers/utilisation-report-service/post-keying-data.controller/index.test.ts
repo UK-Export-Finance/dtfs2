@@ -1,9 +1,17 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
+import { EntityManager } from 'typeorm';
 import { ApiError, FeeRecordEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { postKeyingData } from '.';
-import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { postKeyingData, PostKeyingDataRequest } from '.';
+import { GenerateKeyingDataDetails, getGenerateKeyingDataDetails } from './helpers';
+import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
+import { executeWithSqlTransaction } from '../../../../helpers';
+import { aTfmSessionUser } from '../../../../../test-helpers/test-data';
+import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
+
+jest.mock('./helpers');
+jest.mock('../../../../helpers');
 
 console.error = jest.fn();
 
@@ -17,26 +25,49 @@ describe('post-keying-data.controller', () => {
   describe('postKeyingData', () => {
     const reportId = 12;
 
+    const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+
     const getHttpMocks = () =>
-      httpMocks.createMocks({
+      httpMocks.createMocks<PostKeyingDataRequest>({
         params: { reportId: reportId.toString() },
+        body: { user: aTfmSessionUser() },
       });
 
-    const findOneByIdWithFeeRecordsFilteredByStatusSpy = jest.spyOn(UtilisationReportRepo, 'findOneByIdWithFeeRecordsFilteredByStatus');
+    const someFeeRecordsForReport = (report: UtilisationReportEntity) => [
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('MATCH').build(),
+    ];
+
+    const feeRecordRepoFindSpy = jest.spyOn(FeeRecordRepo, 'findByReportIdAndStatusesWithReport');
+
+    const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReport');
+
+    const mockEventHandler = jest.fn();
+    const mockUtilisationReportStateMachine = {
+      handleEvent: mockEventHandler,
+    } as unknown as UtilisationReportStateMachine;
+
+    const mockEntityManager = {} as unknown as EntityManager;
 
     beforeEach(() => {
-      findOneByIdWithFeeRecordsFilteredByStatusSpy.mockResolvedValue(aUtilisationReportWithToDoFeeRecords());
+      feeRecordRepoFindSpy.mockResolvedValue([]);
+      utilisationReportStateMachineConstructorSpy.mockReturnValue(mockUtilisationReportStateMachine);
+      jest.mocked(getGenerateKeyingDataDetails).mockRejectedValue(new Error('Not properly mocked'));
+
+      jest.mocked(executeWithSqlTransaction).mockImplementation(async (functionToExecute) => {
+        await functionToExecute(mockEntityManager);
+      });
     });
 
     afterEach(() => {
       jest.resetAllMocks();
     });
 
-    it('responds with a 404 if a utilisation report with the supplied id cannot be found', async () => {
+    it('responds with a 404 (Not Found) if no fee records matching the supplied criteria can be found', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      when(findOneByIdWithFeeRecordsFilteredByStatusSpy).calledWith(reportId, ['MATCH']).mockResolvedValue(null);
+      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH', 'READY_TO_KEY']).mockResolvedValue([]);
 
       // Act
       await postKeyingData(req, res);
@@ -46,37 +77,59 @@ describe('post-keying-data.controller', () => {
       expect(res._isEndCalled()).toBe(true);
     });
 
-    it("responds with a 400 if the report contains no fee records with the 'MATCH' status", async () => {
+    it('responds with a 500 (Internal Server Error) if the returned fee records have an undefined report', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
-      reconciliationInProgressReport.feeRecords = [];
-
-      when(findOneByIdWithFeeRecordsFilteredByStatusSpy).calledWith(reportId, ['MATCH']).mockResolvedValue(reconciliationInProgressReport);
+      const undefinedReport = undefined as unknown as UtilisationReportEntity;
+      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH', 'READY_TO_KEY']).mockResolvedValue(someFeeRecordsForReport(undefinedReport));
 
       // Act
       await postKeyingData(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
       expect(res._isEndCalled()).toBe(true);
     });
 
-    it('responds with the 200 error status', async () => {
+    it('responds with a 200 and generates the keying data', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
-      reconciliationInProgressReport.feeRecords = [FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport).withStatus('MATCH').build()];
+      const userId = 'abc123';
+      req.body.user._id = userId;
 
-      when(findOneByIdWithFeeRecordsFilteredByStatusSpy).calledWith(reportId, ['MATCH']).mockResolvedValue(reconciliationInProgressReport);
+      const feeRecords = [
+        FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus('MATCH').build(),
+      ];
+
+      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH', 'READY_TO_KEY']).mockResolvedValue(feeRecords);
+
+      const generateKeyingDataDetails: GenerateKeyingDataDetails = [
+        { feeRecord: feeRecords[0], isFacilityReadyToKey: true },
+        { feeRecord: feeRecords[1], isFacilityReadyToKey: false },
+      ];
+
+      when(getGenerateKeyingDataDetails).calledWith(feeRecords).mockResolvedValue(generateKeyingDataDetails);
 
       // Act
       await postKeyingData(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._isEndCalled()).toBe(true);
+      expect(mockEventHandler).toHaveBeenCalledWith({
+        type: 'GENERATE_KEYING_DATA',
+        payload: {
+          transactionEntityManager: mockEntityManager,
+          generateKeyingDataDetails,
+          requestSource: {
+            platform: 'TFM',
+            userId,
+          },
+        },
+      });
     });
 
     it("responds with the specific error message if saving the report throws an 'ApiError'", async () => {
@@ -84,7 +137,7 @@ describe('post-keying-data.controller', () => {
       const { req, res } = getHttpMocks();
 
       const errorMessage = 'Some error message';
-      findOneByIdWithFeeRecordsFilteredByStatusSpy.mockRejectedValue(new TestApiError(undefined, errorMessage));
+      feeRecordRepoFindSpy.mockRejectedValue(new TestApiError(undefined, errorMessage));
 
       // Act
       await postKeyingData(req, res);
@@ -97,7 +150,7 @@ describe('post-keying-data.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      findOneByIdWithFeeRecordsFilteredByStatusSpy.mockRejectedValue(new Error('Some error'));
+      feeRecordRepoFindSpy.mockRejectedValue(new Error('Some error'));
 
       // Act
       await postKeyingData(req, res);
@@ -110,7 +163,7 @@ describe('post-keying-data.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      findOneByIdWithFeeRecordsFilteredByStatusSpy.mockRejectedValue(new Error('Some error'));
+      feeRecordRepoFindSpy.mockRejectedValue(new Error('Some error'));
 
       // Act
       await postKeyingData(req, res);
@@ -118,15 +171,5 @@ describe('post-keying-data.controller', () => {
       // Assert
       expect(res._getData()).toBe('Failed to generate keying data');
     });
-
-    function aUtilisationReportWithToDoFeeRecords(): UtilisationReportEntity {
-      const report = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
-      const toDoFeeRecords = [
-        FeeRecordEntityMockBuilder.forReport(report).withStatus('TO_DO').build(),
-        FeeRecordEntityMockBuilder.forReport(report).withStatus('TO_DO').build(),
-      ];
-      report.feeRecords = toDoFeeRecords;
-      return report;
-    }
   });
 });

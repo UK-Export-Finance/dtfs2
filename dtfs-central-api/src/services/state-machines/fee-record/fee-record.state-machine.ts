@@ -2,7 +2,12 @@ import { FeeRecordEntity } from '@ukef/dtfs2-common';
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FeeRecordRepo } from '../../../repositories/fee-record-repo';
 import { FeeRecordEvent } from './event/fee-record.event';
-import { handleFeeRecordPaymentAddedEvent, handleFeeRecordPaymentDeletedEvent, handleFeeRecordPaymentEditedEvent } from './event-handlers';
+import {
+  handleFeeRecordKeyingDataGeneratedEvent,
+  handleFeeRecordPaymentAddedEvent,
+  handleFeeRecordPaymentDeletedEvent,
+  handleFeeRecordPaymentEditedEvent,
+} from './event-handlers';
 
 export class FeeRecordStateMachine {
   private readonly feeRecord: FeeRecordEntity;
@@ -46,6 +51,8 @@ export class FeeRecordStateMachine {
             return handleFeeRecordPaymentDeletedEvent(this.feeRecord, event.payload);
           case 'PAYMENT_EDITED':
             return handleFeeRecordPaymentEditedEvent(this.feeRecord, event.payload);
+          case 'KEYING_DATA_GENERATED':
+            return handleFeeRecordKeyingDataGeneratedEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
@@ -62,6 +69,8 @@ export class FeeRecordStateMachine {
         }
       case 'READY_TO_KEY':
         switch (event.type) {
+          case 'KEYING_DATA_GENERATED':
+            return handleFeeRecordKeyingDataGeneratedEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

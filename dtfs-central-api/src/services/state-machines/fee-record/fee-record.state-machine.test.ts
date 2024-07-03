@@ -4,7 +4,12 @@ import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FEE_REC
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FEE_RECORD_EVENT_TYPE, FEE_RECORD_EVENT_TYPES, FeeRecordEventType } from './event/fee-record.event-type';
 import { FeeRecordStateMachine } from './fee-record.state-machine';
-import { handleFeeRecordPaymentAddedEvent, handleFeeRecordPaymentDeletedEvent, handleFeeRecordPaymentEditedEvent } from './event-handlers';
+import {
+  handleFeeRecordKeyingDataGeneratedEvent,
+  handleFeeRecordPaymentAddedEvent,
+  handleFeeRecordPaymentDeletedEvent,
+  handleFeeRecordPaymentEditedEvent,
+} from './event-handlers';
 
 jest.mock('./event-handlers');
 
@@ -100,7 +105,25 @@ describe('FeeRecordStateMachine', () => {
       expect(handleFeeRecordPaymentDeletedEvent).toHaveBeenCalledTimes(1);
     });
 
-    const VALID_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_DELETED', 'PAYMENT_EDITED'];
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.KEYING_DATA_GENERATED}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'KEYING_DATA_GENERATED',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          isFacilityReadyToKey: false,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordKeyingDataGeneratedEvent).toHaveBeenCalledTimes(1);
+    });
+
+    const VALID_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_DELETED', 'PAYMENT_EDITED', 'KEYING_DATA_GENERATED'];
     const INVALID_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_MATCH_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_MATCH_FEE_RECORD_EVENT_TYPES.length !== 0) {
@@ -197,7 +220,25 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const READY_TO_KEY_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('READY_TO_KEY').build();
 
-    const VALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [];
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.KEYING_DATA_GENERATED}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(READY_TO_KEY_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'KEYING_DATA_GENERATED',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          isFacilityReadyToKey: false,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordKeyingDataGeneratedEvent).toHaveBeenCalledTimes(1);
+    });
+
+    const VALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['KEYING_DATA_GENERATED'];
     const INVALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES.length !== 0) {
