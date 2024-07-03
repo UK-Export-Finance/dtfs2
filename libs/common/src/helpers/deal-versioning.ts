@@ -24,4 +24,3 @@ const minimumSupportedVersions: Record<Feature, number> = {
 const isGefDealFeatureEnabledOnVersion = (feature: Feature, version: number): boolean => version >= minimumSupportedVersions[feature];
 
 export const isFacilityEndDateEnabledOnDeal = (version: number) => isGefDealFeatureEnabledOnVersion('FACILITY_END_DATE', version);
-export const isFacilityEndDateEnabledByDefault = () => isGefDealFeatureEnabledOnVersion('FACILITY_END_DATE', getDefaultGefDealVersion());

@@ -1,5 +1,5 @@
 import { ZodError } from 'zod';
-import { isFacilityEndDateEnabledOnDeal, isFacilityEndDateEnabledByDefault, getDefaultGefDealVersion } from './is-deal-feature-enabled';
+import { isFacilityEndDateEnabledOnDeal, getDefaultGefDealVersion } from './deal-versioning';
 
 const originalEnv = process.env;
 
@@ -63,48 +63,6 @@ describe('is-deal-feature-enabled helpers', () => {
 
     it('returns false when deal version less than 1', () => {
       const result = isFacilityEndDateEnabledOnDeal(0);
-
-      expect(result).toBe(false);
-    });
-  });
-
-  describe('isFacilityEndDateEnabledByDefault', () => {
-    it("returns true when deal version set to '1'", () => {
-      process.env.GEF_DEAL_VERSION = '1';
-
-      const result = isFacilityEndDateEnabledByDefault();
-
-      expect(result).toBe(true);
-    });
-
-    it('returns true when deal version greater than 1', () => {
-      process.env.GEF_DEAL_VERSION = '2';
-
-      const result = isFacilityEndDateEnabledByDefault();
-
-      expect(result).toBe(true);
-    });
-
-    it('returns false when deal version less than 1', () => {
-      process.env.GEF_DEAL_VERSION = '0';
-
-      const result = isFacilityEndDateEnabledByDefault();
-
-      expect(result).toBe(false);
-    });
-
-    it('returns false when deal version empty string', () => {
-      process.env.GEF_DEAL_VERSION = '';
-
-      const result = isFacilityEndDateEnabledByDefault();
-
-      expect(result).toBe(false);
-    });
-
-    it('returns false when deal version undefined', () => {
-      delete process.env.GEF_DEAL_VERSION;
-
-      const result = isFacilityEndDateEnabledByDefault();
 
       expect(result).toBe(false);
     });

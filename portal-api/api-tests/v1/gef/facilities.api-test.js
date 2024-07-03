@@ -181,6 +181,18 @@ describe(baseUrl, () => {
       const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       expect(body).toEqual(newFacility);
     });
+
+    it('returns a 400 if the dealId is invalid', async () => {
+      const { body, status } = await as(aMaker).post({ dealId: 'test', type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      expect(status).toBe(400);
+      expect(body).toEqual({ status: 404, message: 'Invalid dealId' });
+    });
+
+    it('returns a 404 if the dealId is valid but does not exist', async () => {
+      const { body, status } = await as(aMaker).post({ dealId: 'abcdef123456abcdef123456', type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      expect(status).toBe(404);
+      expect(body).toEqual({ status: 404, message: 'Deal not found' });
+    });
   });
 
   describe(`PUT ${baseUrl}/:id`, () => {

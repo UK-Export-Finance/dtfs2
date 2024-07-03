@@ -1,5 +1,5 @@
 import { add, sub, format } from 'date-fns';
-import { getDefaultGefDealVersion, isFacilityEndDateEnabledByDefault } from '@ukef/dtfs2-common';
+import { getDefaultGefDealVersion, isFacilityEndDateEnabledOnDeal } from '@ukef/dtfs2-common';
 import { aboutFacility, validateAndUpdateAboutFacility } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
@@ -88,7 +88,7 @@ describe('controllers/about-facility', () => {
           dealId: '123',
           facilityId: 'xyz',
           status: 'change',
-          isFacilityEndDateEnabled: isFacilityEndDateEnabledByDefault(),
+          isFacilityEndDateEnabled: isFacilityEndDateEnabledOnDeal(getDefaultGefDealVersion()),
         }),
       );
     });
@@ -127,7 +127,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      if (isFacilityEndDateEnabledByDefault()) {
+      if (isFacilityEndDateEnabledOnDeal(getDefaultGefDealVersion())) {
         mockRequest.body.facilityEndDateExists = 'true';
       }
 
@@ -141,7 +141,7 @@ describe('controllers/about-facility', () => {
         name: undefined,
         coverDateConfirmed: null,
       };
-      if (isFacilityEndDateEnabledByDefault()) {
+      if (isFacilityEndDateEnabledOnDeal(getDefaultGefDealVersion())) {
         expectedPayload.facilityEndDateExists = true;
       }
       expect(api.updateFacility).toHaveBeenCalledWith({
@@ -808,7 +808,7 @@ describe('controllers/about-facility', () => {
       );
     });
 
-    if (isFacilityEndDateEnabledByDefault()) {
+    if (isFacilityEndDateEnabledOnDeal(getDefaultGefDealVersion())) {
       it('shows error message if facilityEndDateExists is not a boolean', async () => {
         mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
         mockRequest.body.hasBeenIssued = 'true';
@@ -837,7 +837,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
       mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
 
-      if (isFacilityEndDateEnabledByDefault()) {
+      if (isFacilityEndDateEnabledOnDeal(getDefaultGefDealVersion())) {
         mockRequest.body.facilityEndDateExists = 'true';
       }
 

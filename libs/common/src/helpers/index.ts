@@ -5,4 +5,4 @@ export * from './currency';
 export * from './schema';
 export * from './custom-axios-validate-status';
 export { isTfmPaymentReconciliationFeatureFlagEnabled } from './is-feature-flag-enabled';
-export * from './is-deal-feature-enabled';
+export * from './deal-versioning';

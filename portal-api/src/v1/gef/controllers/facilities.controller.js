@@ -133,7 +133,7 @@ exports.getById = async (req, res) => {
  * @param {ObjectId | string} id - facility id to update
  * @param {object} updateBody - update to make
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
- * @returns {Promise<import("mongodb").ModifyResult | false>} - Modify Result from the db operation
+ * @returns {Promise<import("mongodb").ModifyResult | false>} - Modify Result from the db operation or false if the facility or deal id are invalid
  * @throws {DealVersionError} if adding a facility end date to invalid deal version
  */
 const update = async (id, updateBody, auditDetails) => {
