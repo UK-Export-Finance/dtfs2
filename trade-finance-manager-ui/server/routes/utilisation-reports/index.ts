@@ -3,7 +3,13 @@ import express from 'express';
 import { PDC_TEAM_IDS } from '@ukef/dtfs2-common';
 import { getUtilisationReports } from '../../controllers/utilisation-reports';
 import { updateUtilisationReportStatus } from '../../controllers/utilisation-reports/update-utilisation-report-status';
-import { validateSqlId, validateUserTeam, validateTfmPaymentReconciliationFeatureFlagIsEnabled, validatePostAddPaymentRequestBody } from '../../middleware';
+import {
+  validateSqlId,
+  validateUserTeam,
+  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
+  validatePostAddPaymentRequestBody,
+  validatePostUnlinkPaymentFeesRequestBody,
+} from '../../middleware';
 import { getReportDownload } from '../../controllers/utilisation-reports/report-download';
 import { getUtilisationReportReconciliationByReportId } from '../../controllers/utilisation-reports/utilisation-report-reconciliation-for-report';
 import { getFindReportsByYear } from '../../controllers/utilisation-reports/find-reports-by-year';
@@ -12,6 +18,7 @@ import { postKeyingData } from '../../controllers/utilisation-reports/keying-dat
 import { postCheckKeyingData } from '../../controllers/utilisation-reports/check-keying-data';
 import { getEditPayment, postEditPayment } from '../../controllers/utilisation-reports/edit-payment';
 import { getConfirmDeletePayment, postConfirmDeletePayment } from '../../controllers/utilisation-reports/confirm-delete-payment';
+import { unlinkPaymentFees } from '../../controllers/utilisation-reports/unlink-payment-fees';
 
 export const utilisationReportsRoutes = express.Router();
 
@@ -90,4 +97,14 @@ utilisationReportsRoutes.post(
   validateSqlId('reportId'),
   validateSqlId('paymentId'),
   postConfirmDeletePayment,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/edit-payment/:paymentId/unlink-fees',
+  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('paymentId'),
+  validatePostUnlinkPaymentFeesRequestBody,
+  unlinkPaymentFees,
 );
