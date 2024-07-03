@@ -88,10 +88,14 @@ describe('submissionPortalActivity()', () => {
     MOCK_APPLICATION_FACILITIES.submissionType = CONSTANTS.DEAL.SUBMISSION_TYPE.MIA;
     MOCK_APPLICATION_FACILITIES._id = '61e54dd5b578247e14575882';
 
+    const { status: dealStatus, body: dealBody } = await as(aMaker).post(MOCK_APPLICATION_FACILITIES).to(applicationBaseUrl);
+
+    expect(dealStatus).toBe(201);
+
     const req = {
       body: {
         type: 'Cash',
-        dealId: MOCK_APPLICATION_FACILITIES._id,
+        dealId: dealBody._id,
         paymentType: 'IN_ARREARS_MONTHLY',
       },
     };
@@ -218,18 +222,28 @@ describe('updateChangedToIssued()', () => {
 });
 
 describe('checkCoverDateConfirmed()', () => {
-  it('Should return and set `coverDateConfirmed` to true with following conditions:\n\n1. AIN\n2. Have one issued facility \n3. Not yet submitted to UKEF', async () => {
-    const testUsers = await testUserCache.initialise(app);
-    const aMaker = testUsers().withRole(MAKER).one();
-    const mockAIN = mockApplications[0];
-    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+  const mockAIN = mockApplications[0];
+  let aMaker;
+  let mockApplicationId;
 
+  beforeAll(async () => {
+    const testUsers = await testUserCache.initialise(app);
+    aMaker = testUsers().withRole(MAKER).one();
+  });
+
+  beforeEach(async () => {
     await databaseHelper.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.DEALS]);
+
+    const { body: applicationBody } = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplicationId = applicationBody._id;
+  });
+
+  it('Should return and set `coverDateConfirmed` to true with following conditions:\n\n1. AIN\n2. Have one issued facility \n3. Not yet submitted to UKEF', async () => {
+    const mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplicationId}`);
 
     await as(aMaker)
       .post({
-        dealId: mockApplication.body._id,
+        dealId: mockApplicationId,
         type: FACILITY_TYPE.CASH,
         hasBeenIssued: true,
         coverDateConfirmed: null,
@@ -240,17 +254,11 @@ describe('checkCoverDateConfirmed()', () => {
   });
 
   it('Should return false and set `coverDateConfirmed` to false with following conditions:\n\n1. AIN\n2. Have one unissued facility and cover date is not true \n3. Not yet submitted to UKEF', async () => {
-    const testUsers = await testUserCache.initialise(app);
-    const aMaker = testUsers().withRole(MAKER).one();
-    const mockAIN = mockApplications[0];
-    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
-
-    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.DEALS]);
+    const mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN }).to(`${applicationBaseUrl}/${mockApplicationId}`);
 
     await as(aMaker)
       .post({
-        dealId: mockApplication.body._id,
+        dealId: mockApplicationId,
         type: FACILITY_TYPE.CASH,
         hasBeenIssued: false,
         coverDateConfirmed: null,
@@ -261,17 +269,11 @@ describe('checkCoverDateConfirmed()', () => {
   });
 
   it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued facility \n3. Not yet submitted to UKEF', async () => {
-    const testUsers = await testUserCache.initialise(app);
-    const aMaker = testUsers().withRole(MAKER).one();
-    const mockAIN = mockApplications[0];
-    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
-
-    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.DEALS]);
+    const mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplicationId}`);
 
     await as(aMaker)
       .post({
-        dealId: mockApplication.body._id,
+        dealId: mockApplicationId,
         type: FACILITY_TYPE.CASH,
         hasBeenIssued: true,
         coverDateConfirmed: null,
@@ -282,17 +284,11 @@ describe('checkCoverDateConfirmed()', () => {
   });
 
   it('Should return false and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one unissued facility \n3. Not yet submitted to UKEF', async () => {
-    const testUsers = await testUserCache.initialise(app);
-    const aMaker = testUsers().withRole(MAKER).one();
-    const mockAIN = mockApplications[0];
-    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
-
-    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.DEALS]);
+    const mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplicationId}`);
 
     await as(aMaker)
       .post({
-        dealId: mockApplication.body._id,
+        dealId: mockApplicationId,
         type: FACILITY_TYPE.CASH,
         hasBeenIssued: false,
         coverDateConfirmed: null,
@@ -303,17 +299,11 @@ describe('checkCoverDateConfirmed()', () => {
   });
 
   it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued facility with cover date set to true \n3. Not yet submitted to UKEF', async () => {
-    const testUsers = await testUserCache.initialise(app);
-    const aMaker = testUsers().withRole(MAKER).one();
-    const mockAIN = mockApplications[0];
-    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
-
-    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.DEALS]);
+    const mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplicationId}`);
 
     await as(aMaker)
       .post({
-        dealId: mockApplication.body._id,
+        dealId: mockApplicationId,
         type: FACILITY_TYPE.CASH,
         hasBeenIssued: true,
         coverDateConfirmed: true,
@@ -324,17 +314,11 @@ describe('checkCoverDateConfirmed()', () => {
   });
 
   it('Should return true and set `coverDateConfirmed` to false with following conditions:\n\n1. MIA\n2. Have one issued and unissued facilities with cover date set to true \n3. Not yet submitted to UKEF', async () => {
-    const testUsers = await testUserCache.initialise(app);
-    const aMaker = testUsers().withRole(MAKER).one();
-    const mockAIN = mockApplications[0];
-    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
-
-    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.DEALS]);
+    const mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplicationId}`);
 
     await as(aMaker)
       .post({
-        dealId: mockApplication.body._id,
+        dealId: mockApplicationId,
         type: FACILITY_TYPE.CASH,
         hasBeenIssued: true,
         coverDateConfirmed: true,
@@ -343,7 +327,7 @@ describe('checkCoverDateConfirmed()', () => {
 
     await as(aMaker)
       .post({
-        dealId: mockApplication.body._id,
+        dealId: mockApplicationId,
         type: FACILITY_TYPE.CASH,
         hasBeenIssued: false,
         coverDateConfirmed: true,
@@ -355,15 +339,23 @@ describe('checkCoverDateConfirmed()', () => {
 });
 
 describe('addSubmissionDateToIssuedFacilities()', () => {
-  it('if facility hasBeenIssued but not hasBeenIssuedAndAcknowledged then should add coverStartDate and submittedAsIssuedDate', async () => {
+  let aMaker;
+  let mockApplication;
+  const mockAIN = mockApplications[0];
+
+  beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    const aMaker = testUsers().withRole(MAKER).one();
+    aMaker = testUsers().withRole(MAKER).one();
+  });
+
+  beforeEach(async () => {
     await databaseHelper.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.DEALS]);
 
-    const mockAIN = mockApplications[0];
-    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
+    mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
     mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
+  });
 
+  it('if facility hasBeenIssued but not hasBeenIssuedAndAcknowledged then should add coverStartDate and submittedAsIssuedDate', async () => {
     await as(aMaker)
       .post({
         dealId: mockApplication.body._id,
@@ -399,14 +391,6 @@ describe('addSubmissionDateToIssuedFacilities()', () => {
   });
 
   it('if facility hasBeenIssued and hasBeenIssuedAndAcknowledged then should not override coverStartDate or submittedAsIssuedDate', async () => {
-    const testUsers = await testUserCache.initialise(app);
-    const aMaker = testUsers().withRole(MAKER).one();
-    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.DEALS]);
-
-    const mockAIN = mockApplications[0];
-    let mockApplication = await as(aMaker).post(mockAIN).to(applicationBaseUrl);
-    mockApplication = await as(aMaker).put({ submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA }).to(`${applicationBaseUrl}/${mockApplication.body._id}`);
-
     await as(aMaker)
       .post({
         dealId: mockApplication.body._id,
