@@ -11,7 +11,7 @@ import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-tab
 
 const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof body === 'object';
 
-const FACILITY_ID_QUERY_REGEX = /facilityIdQuery=(?<facilityIdQuery>\d+)/;
+const FACILITY_ID_QUERY_REGEX = /facilityIdQuery=(?<facilityIdQuery>\d{4,10})/;
 
 const getFacilityIdQueryFromReferer = (req: Request): string | undefined => {
   const { referer } = req.headers;

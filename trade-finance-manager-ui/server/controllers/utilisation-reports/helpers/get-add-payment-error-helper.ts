@@ -1,5 +1,7 @@
 import { ErrorSummaryViewModel } from '../../../types/view-models';
 
+const PREMIUM_PAYMENTS_TABLE_HREF = '#premium-payments-table';
+
 export type AddPaymentErrorKey =
   | 'no-fee-records-selected'
   | 'different-fee-record-statuses'
@@ -9,19 +11,19 @@ export type AddPaymentErrorKey =
 const addPaymentErrorMap: Record<AddPaymentErrorKey, ErrorSummaryViewModel> = {
   'no-fee-records-selected': {
     text: 'Select a fee or fees to add a payment to',
-    href: '#no-fee-records-selected',
+    href: PREMIUM_PAYMENTS_TABLE_HREF,
   },
   'different-fee-record-statuses': {
     text: 'Select a fee or fees with the same status',
-    href: '#different-fee-record-statuses',
+    href: PREMIUM_PAYMENTS_TABLE_HREF,
   },
   'different-fee-record-payment-currencies': {
     text: 'Select fees with the same Reported payment currency',
-    href: '#different-fee-record-payment-currencies',
+    href: PREMIUM_PAYMENTS_TABLE_HREF,
   },
   'multiple-does-not-match-selected': {
     text: "Select only one fee or fee group at 'Does not match' status",
-    href: '#multiple-does-not-match-selected',
+    href: PREMIUM_PAYMENTS_TABLE_HREF,
   },
 };
 

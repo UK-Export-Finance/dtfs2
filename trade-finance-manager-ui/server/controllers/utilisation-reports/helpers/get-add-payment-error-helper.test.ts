@@ -11,7 +11,7 @@ describe('get-add-payment-error-helper', () => {
 
       // Assert
       expect(addPaymentError.text).toBe('Select a fee or fees to add a payment to');
-      expect(addPaymentError.href).toBe('#no-fee-records-selected');
+      expect(addPaymentError.href).toBe('#premium-payments-table');
     });
 
     it("returns the error text and href when the payment error key is 'different-fee-record-statuses'", () => {
@@ -23,7 +23,7 @@ describe('get-add-payment-error-helper', () => {
 
       // Assert
       expect(addPaymentError.text).toBe('Select a fee or fees with the same status');
-      expect(addPaymentError.href).toBe('#different-fee-record-statuses');
+      expect(addPaymentError.href).toBe('#premium-payments-table');
     });
 
     it("returns the error text and href when the payment error key is 'different-fee-record-payment-currencies'", () => {
@@ -35,7 +35,7 @@ describe('get-add-payment-error-helper', () => {
 
       // Assert
       expect(addPaymentError.text).toBe('Select fees with the same Reported payment currency');
-      expect(addPaymentError.href).toBe('#different-fee-record-payment-currencies');
+      expect(addPaymentError.href).toBe('#premium-payments-table');
     });
 
     it("returns the error text and href when the payment error key is 'multiple-does-not-match-selected'", () => {
@@ -47,7 +47,7 @@ describe('get-add-payment-error-helper', () => {
 
       // Assert
       expect(addPaymentError.text).toBe("Select only one fee or fee group at 'Does not match' status");
-      expect(addPaymentError.href).toBe('#multiple-does-not-match-selected');
+      expect(addPaymentError.href).toBe('#premium-payments-table');
     });
   });
 });
