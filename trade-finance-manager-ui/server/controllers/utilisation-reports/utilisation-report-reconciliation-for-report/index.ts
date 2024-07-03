@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { asString, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -20,12 +20,14 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
   const { reportId } = req.params;
 
   try {
-    const { validatedFacilityIdQuery, facilityIdQueryError } = validateFacilityIdQuery(req);
+    const { facilityIdQuery } = req.query;
+    const facilityIdQueryAsString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
+    const facilityIdQueryError = validateFacilityIdQuery(facilityIdQueryAsString, req.originalUrl);
     const { errorSummary: premiumPaymentFormError, isCheckboxChecked } = getAndClearFieldsFromRedirectSessionData(req);
 
     const { feeRecordPaymentGroups, reportPeriod, bank } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
-      validatedFacilityIdQuery,
+      facilityIdQueryAsString,
       userToken,
     );
 
@@ -45,7 +47,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
       premiumPaymentFormError,
       facilityIdQueryError,
-      facilityIdQuery: validatedFacilityIdQuery,
+      facilityIdQuery: facilityIdQueryAsString,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);
