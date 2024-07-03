@@ -68,23 +68,23 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
   });
 
   it('should render the selected fee record details', () => {
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('11111111');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('Exporter 1');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('JPY 100');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('GBP 50');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('11111111').should('exist');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('Exporter 1').should('exist');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('JPY 100').should('exist');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('GBP 50').should('exist');
 
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('22222222');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('Exporter 2');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('EUR 200');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('GBP 400');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('22222222').should('exist');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('Exporter 2').should('exist');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('EUR 200').should('exist');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('GBP 400').should('exist');
 
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('Total reported payments GBP 450');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('Total reported payments GBP 450').should('exist');
   });
 
   it('should render the recorded payment details table', () => {
-    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().contains('GBP 60');
-    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().contains('2 Feb 2023');
-    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().contains('REF01234');
+    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().contains('GBP 60').should('exist');
+    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().contains('2 Feb 2023').should('exist');
+    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().contains('REF01234').should('exist');
   });
 
   it('should display errors when form submitted with invalid values', () => {
@@ -95,13 +95,13 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.contains('button', 'Continue').click();
 
-    cy.get('a').contains('Select payment currency');
-    cy.get('a').contains('The date payment received must be a real date');
-    cy.get('a').contains('Select add another payment choice');
+    cy.get('a').contains('Select payment currency').should('exist');
+    cy.get('a').contains('The date payment received must be a real date').should('exist');
+    cy.get('a').contains('Select add another payment choice').should('exist');
 
-    cy.get('form').contains('Select payment currency');
-    cy.get('form').contains('The date payment received must be a real date');
-    cy.get('form').contains('Select add another payment choice');
+    cy.get('form').contains('Select payment currency').should('exist');
+    cy.get('form').contains('The date payment received must be a real date').should('exist');
+    cy.get('form').contains('Select add another payment choice').should('exist');
 
     cy.getInputByLabelText('Amount received').should('have.value', '100');
     cy.getInputByLabelText('Day').should('have.value', '56');
@@ -119,7 +119,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.contains('button', 'Continue').click();
 
-    cy.contains('Premium payments');
+    cy.contains('Premium payments').should('exist');
   });
 
   it('submits form and reloads the page with no values when user submits form with valid values and user selects yes to adding another payment', () => {
