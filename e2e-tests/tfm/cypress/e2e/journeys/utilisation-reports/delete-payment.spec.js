@@ -6,11 +6,11 @@ import {
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import pages from '../../../pages';
-import { PDC_TEAMS } from '../../../../fixtures/teams';
-import { NODE_TASKS } from '../../../../../../e2e-fixtures';
-import USERS from '../../../../fixtures/users';
-import relative from '../../../relativeURL';
+import pages from '../../pages';
+import { PDC_TEAMS } from '../../../fixtures/teams';
+import { NODE_TASKS } from '../../../../../e2e-fixtures';
+import USERS from '../../../fixtures/users';
+import relative from '../../relativeURL';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
   const reportIdGenerator = idGenerator();
@@ -72,7 +72,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${payment.id}`));
   });
 
-  it(`allows the user to delete the payment a resets the status to '${FEE_RECORD_STATUS.DOES_NOT_MATCH}' when the remaining payments do not match`, () => {
+  it(`allows the user to delete the payment and resets the status to '${FEE_RECORD_STATUS.DOES_NOT_MATCH}' when the remaining payments do not match`, () => {
     const report = aUtilisationReport();
 
     const firstPayment = aPaymentWithAmount(100);
@@ -104,7 +104,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
   });
 
-  it(`allows the user to delete the payment a resets the status to '${FEE_RECORD_STATUS.MATCH}' when the remaining payments match`, () => {
+  it(`allows the user to delete the payment and resets the status to '${FEE_RECORD_STATUS.MATCH}' when the remaining payments match`, () => {
     const report = aUtilisationReport();
 
     const firstPayment = aPaymentWithAmount(100);
@@ -136,7 +136,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
   });
 
-  it(`allows the user to delete the payment a resets the status to '${FEE_RECORD_STATUS.TO_DO}' when all payments are deleted`, () => {
+  it(`allows the user to delete the payment and resets the status to '${FEE_RECORD_STATUS.TO_DO}' when all payments are deleted`, () => {
     const report = aUtilisationReport();
 
     const payment = aPaymentWithAmount(100);
