@@ -22,27 +22,24 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(facilityIdQueryError).toEqual(undefined);
     });
 
-    it('returns error when no facilityIdQuery but originalUrl has query param', () => {
+    it('returns no error when no facilityIdQuery but originalUrl has query param', () => {
       // Arrange
       const facilityIdQuery = undefined;
-      const req = getMockRequest({ facilityIdQuery, originalUrl: '?' });
+      const req = getMockRequest({ facilityIdQuery, originalUrl: '?someOtherQueryParam' });
 
       // Act
       const { validatedFacilityIdQuery, facilityIdQueryError } = validateFacilityIdQuery(req);
 
       // Assert
       expect(validatedFacilityIdQuery).toEqual(facilityIdQuery);
-      expect(facilityIdQueryError).toEqual({
-        text: 'Enter 4-10 characters of a facility ID',
-        href: '#facility-id-filter',
-      });
+      expect(facilityIdQueryError).toEqual(undefined);
     });
 
     it.each(['abcd', '123', 'c3c3c', '?????', '12345678901'])(
       'returns error when facilityIdQuery %p is invalid and originalUrl has query param',
       (facilityIdQuery) => {
         // Arrange
-        const req = getMockRequest({ facilityIdQuery, originalUrl: '?' });
+        const req = getMockRequest({ facilityIdQuery, originalUrl: '?facilityIdQuery' });
 
         // Act
         const { validatedFacilityIdQuery, facilityIdQueryError } = validateFacilityIdQuery(req);
@@ -59,7 +56,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     it('returns no error with valid facilityIdQuery and originalUrl has query param', () => {
       // Arrange
       const facilityIdQuery = '1234';
-      const req = getMockRequest({ facilityIdQuery, originalUrl: '?' });
+      const req = getMockRequest({ facilityIdQuery, originalUrl: '?someOtherQueryParam=1234&facilityIdQuery=1234' });
 
       // Act
       const { validatedFacilityIdQuery, facilityIdQueryError } = validateFacilityIdQuery(req);

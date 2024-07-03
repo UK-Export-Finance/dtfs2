@@ -25,7 +25,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
     const reportId = '1';
     const facilityIdQuery = '1234';
-    const originalUrl = '?';
+    const originalUrl = '?facilityIdQuery';
 
     const getHttpMocksWithSessionData = (sessionData: Partial<SessionData>) =>
       httpMocks.createMocks({

@@ -868,7 +868,7 @@ const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken)
 
 /**
  * @param {string} reportId - The report id
- * @param {string | undefined} facilityIdQuery - A facility id
+ * @param {string | undefined} facilityIdQuery - A partial facility id to filter the report fee records by
  * @param {string} userToken - The user token
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */

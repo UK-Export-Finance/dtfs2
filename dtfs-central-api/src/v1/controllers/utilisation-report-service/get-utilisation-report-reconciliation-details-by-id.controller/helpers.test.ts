@@ -39,7 +39,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       jest.resetAllMocks();
     });
 
-    describe('without filters', () => {
+    describe('without query parameters', () => {
       it("throws an error if the 'dateUploaded' property does not exist", async () => {
         // Arrange
         const notUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withDateUploaded(null).build();
@@ -403,7 +403,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       });
     });
 
-    describe('with facility id filter', () => {
+    describe('with facilityIdQuery query parameter', () => {
       it("throws an error if the 'dateUploaded' property does not exist", async () => {
         // Arrange
         const notUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withDateUploaded(null).build();
