@@ -17,5 +17,5 @@ export const parseValidatedAddPaymentFormValues = (
 export const parseValidatedEditPaymentFormValues = (validatedFormValues: ValidatedEditPaymentFormValues): ParsedEditPaymentFormValues => ({
   paymentAmount: getPaymentAmountAsNumber(validatedFormValues.paymentAmount),
   datePaymentReceived: getDatePaymentReceived(validatedFormValues.paymentDate),
-  paymentReference: validatedFormValues.paymentReference,
+  paymentReference: validatedFormValues.paymentReference || null,
 });

@@ -6,7 +6,7 @@ import { TfmSessionUserSchema } from './schemas';
 const PatchPaymentSchema = z.object({
   paymentAmount: z.number().gte(0),
   datePaymentReceived: z.coerce.date(),
-  paymentReference: z.string().optional(),
+  paymentReference: z.union([z.string(), z.null().transform(() => undefined)]),
   user: TfmSessionUserSchema,
 });
 

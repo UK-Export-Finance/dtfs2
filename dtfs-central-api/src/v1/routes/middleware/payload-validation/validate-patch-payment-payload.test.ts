@@ -6,7 +6,7 @@ import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-sessi
 describe('validatePatchPaymentPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
-  const requiredPayloadKeys: (keyof PatchPaymentPayload)[] = ['paymentAmount', 'datePaymentReceived', 'user'];
+  const requiredPayloadKeys: (keyof PatchPaymentPayload)[] = ['paymentAmount', 'datePaymentReceived', 'paymentReference', 'user'];
 
   const aValidPayload = (): PatchPaymentPayload => ({
     paymentAmount: 100,
@@ -98,14 +98,14 @@ describe('validatePatchPaymentPayload', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it("calls the 'next' function if the 'paymentReference' is undefined", () => {
+  it("calls the 'next' function if the 'paymentReference' is null and sets the request body 'paymentReference' to undefined", () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
 
     const validPayload = {
       ...aValidPayload(),
-      paymentReference: undefined,
+      paymentReference: null,
     };
     req.body = validPayload;
 
@@ -115,9 +115,13 @@ describe('validatePatchPaymentPayload', () => {
     // Assert
     expect(next).toHaveBeenCalled();
     expect(res._isEndCalled()).toBe(false);
+
+    const requestBody = req.body as PatchPaymentPayload;
+    expect('paymentReference' in requestBody).toBe(true);
+    expect(requestBody.paymentReference).toBeUndefined();
   });
 
-  it("calls the 'next' function if the 'paymentReference' is a string", () => {
+  it("calls the 'next' function if the 'paymentReference' is a string and does not change the request body 'paymentReference' value", () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
@@ -134,5 +138,8 @@ describe('validatePatchPaymentPayload', () => {
     // Assert
     expect(next).toHaveBeenCalled();
     expect(res._isEndCalled()).toBe(false);
+
+    const requestBody = req.body as PatchPaymentPayload;
+    expect(requestBody.paymentReference).toBe('Some payment reference');
   });
 });

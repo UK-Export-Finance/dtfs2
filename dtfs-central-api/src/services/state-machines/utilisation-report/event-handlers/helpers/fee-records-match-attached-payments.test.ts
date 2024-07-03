@@ -1,49 +1,20 @@
 import { EntityManager } from 'typeorm';
-import {
-  Currency,
-  FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
-  PaymentEntity,
-  PaymentEntityMockBuilder,
-  UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+import { when } from 'jest-when';
+import { Currency, FeeRecordEntity, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { feeRecordsMatchAttachedPayments } from './fee-records-match-attached-payments';
 
 describe('feeRecordsMatchAttachedPayments', () => {
-  const mockFind = jest.fn();
+  const mockFindOneOrFail = jest.fn();
   const mockEntityManager = {
-    find: mockFind,
+    findOneOrFail: mockFindOneOrFail,
   } as unknown as EntityManager;
 
-  const addPaymentsToFeeRecords = (feeRecords: FeeRecordEntity[], payments?: PaymentEntity[]): FeeRecordEntity[] =>
-    feeRecords.map((feeRecord) => {
-      // eslint-disable-next-line no-param-reassign
-      feeRecord.payments = payments ?? [];
-      return feeRecord;
-    });
+  beforeEach(() => {
+    mockFindOneOrFail.mockRejectedValue(new Error('Some error'));
+  });
 
   afterEach(() => {
     jest.resetAllMocks();
-  });
-
-  it('finds the fee record corresponding to the first supplied fee record with the attached payments included', async () => {
-    // Arrange
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
-    const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build(),
-    ];
-
-    jest.mocked(mockFind).mockResolvedValue(addPaymentsToFeeRecords(feeRecords));
-
-    // Act
-    await feeRecordsMatchAttachedPayments(feeRecords, mockEntityManager);
-
-    // Assert
-    expect(mockFind).toHaveBeenCalledWith(FeeRecordEntity, {
-      where: { id: feeRecords[0].id },
-      relations: { payments: true },
-    });
   });
 
   it('returns true when the payments attached to the fee records have the same total payments', async () => {
@@ -55,27 +26,35 @@ describe('feeRecordsMatchAttachedPayments', () => {
     const secondPaymentAmount = 120;
 
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
-    const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport)
-        .withId(1)
-        .withPaymentCurrency(paymentCurrency)
-        .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
-        .withFeesPaidToUkefForThePeriod(firstFeeRecordAmount)
-        .build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport)
-        .withId(2)
-        .withPaymentCurrency(paymentCurrency)
-        .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
-        .withFeesPaidToUkefForThePeriod(secondFeeRecordAmount)
-        .build(),
-    ];
 
     const payments = [
       PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmount(firstPaymentAmount).build(),
       PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmount(secondPaymentAmount).build(),
     ];
 
-    jest.mocked(mockFind).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withId(1)
+        .withPaymentCurrency(paymentCurrency)
+        .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
+        .withFeesPaidToUkefForThePeriod(firstFeeRecordAmount)
+        .withPayments(payments)
+        .build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withId(2)
+        .withPaymentCurrency(paymentCurrency)
+        .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
+        .withFeesPaidToUkefForThePeriod(secondFeeRecordAmount)
+        .withPayments(payments)
+        .build(),
+    ];
+
+    when(mockFindOneOrFail)
+      .calledWith(FeeRecordEntity, {
+        where: { id: feeRecords[0].id },
+        relations: { payments: true },
+      })
+      .mockResolvedValue(feeRecords[0]);
 
     // Act
     const result = await feeRecordsMatchAttachedPayments(feeRecords, mockEntityManager);
@@ -93,27 +72,35 @@ describe('feeRecordsMatchAttachedPayments', () => {
     const secondPaymentAmount = 100;
 
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
-    const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport)
-        .withId(1)
-        .withPaymentCurrency(paymentCurrency)
-        .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
-        .withFeesPaidToUkefForThePeriod(firstFeeRecordAmount)
-        .build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport)
-        .withId(2)
-        .withPaymentCurrency(paymentCurrency)
-        .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
-        .withFeesPaidToUkefForThePeriod(secondFeeRecordAmount)
-        .build(),
-    ];
 
     const payments = [
       PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmount(firstPaymentAmount).build(),
       PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmount(secondPaymentAmount).build(),
     ];
 
-    jest.mocked(mockFind).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withId(1)
+        .withPaymentCurrency(paymentCurrency)
+        .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
+        .withFeesPaidToUkefForThePeriod(firstFeeRecordAmount)
+        .withPayments(payments)
+        .build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withId(2)
+        .withPaymentCurrency(paymentCurrency)
+        .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
+        .withFeesPaidToUkefForThePeriod(secondFeeRecordAmount)
+        .withPayments(payments)
+        .build(),
+    ];
+
+    when(mockFindOneOrFail)
+      .calledWith(FeeRecordEntity, {
+        where: { id: feeRecords[0].id },
+        relations: { payments: true },
+      })
+      .mockResolvedValue(feeRecords[0]);
 
     // Act
     const result = await feeRecordsMatchAttachedPayments(feeRecords, mockEntityManager);
@@ -134,6 +121,12 @@ describe('feeRecordsMatchAttachedPayments', () => {
     const secondPaymentAmount = 106.36;
 
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+
+    const payments = [
+      PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmount(firstPaymentAmount).build(),
+      PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmount(secondPaymentAmount).build(),
+    ];
+
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withId(1)
@@ -141,6 +134,7 @@ describe('feeRecordsMatchAttachedPayments', () => {
         .withPaymentExchangeRate(paymentExchangeRate)
         .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
         .withFeesPaidToUkefForThePeriod(firstFeeRecordAmount)
+        .withPayments(payments)
         .build(),
       FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withId(2)
@@ -148,15 +142,16 @@ describe('feeRecordsMatchAttachedPayments', () => {
         .withPaymentExchangeRate(paymentExchangeRate)
         .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
         .withFeesPaidToUkefForThePeriod(secondFeeRecordAmount)
+        .withPayments(payments)
         .build(),
     ];
 
-    const payments = [
-      PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmount(firstPaymentAmount).build(),
-      PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmount(secondPaymentAmount).build(),
-    ];
-
-    jest.mocked(mockFind).mockResolvedValue(addPaymentsToFeeRecords(feeRecords, payments));
+    when(mockFindOneOrFail)
+      .calledWith(FeeRecordEntity, {
+        where: { id: feeRecords[0].id },
+        relations: { payments: true },
+      })
+      .mockResolvedValue(feeRecords[0]);
 
     // Act
     const result = await feeRecordsMatchAttachedPayments(feeRecords, mockEntityManager);

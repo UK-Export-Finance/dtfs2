@@ -448,10 +448,6 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         jest.mocked(api.editPayment).mockResolvedValue();
       });
 
-      afterEach(() => {
-        jest.resetAllMocks();
-      });
-
       it('edits the payment with the supplied data', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
@@ -472,7 +468,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         const paymentReference = 'A payment reference';
         req.body.paymentReference = paymentReference;
 
-        const parsedFormValues: ParsedEditPaymentFormValues = {
+        const expectedParsedFormValues: ParsedEditPaymentFormValues = {
           paymentAmount,
           datePaymentReceived,
           paymentReference,
@@ -482,7 +478,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         await postEditPayment(req, res);
 
         // Assert
-        expect(api.editPayment).toHaveBeenCalledWith(reportId, paymentId, parsedFormValues, user, userToken);
+        expect(api.editPayment).toHaveBeenCalledWith(reportId, paymentId, expectedParsedFormValues, user, userToken);
       });
 
       it('redirects to /utilisation-reports/:reportId', async () => {

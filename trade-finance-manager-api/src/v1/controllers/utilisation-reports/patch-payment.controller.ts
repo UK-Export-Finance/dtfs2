@@ -8,7 +8,7 @@ export type PatchPaymentRequest = CustomExpressRequest<{
   reqBody: {
     paymentAmount: number;
     datePaymentReceived: IsoDateTimeStamp;
-    paymentReference?: string;
+    paymentReference: string | null;
     user: TfmSessionUser;
   };
 }>;

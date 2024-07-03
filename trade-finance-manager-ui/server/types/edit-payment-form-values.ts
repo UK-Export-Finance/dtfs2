@@ -21,5 +21,5 @@ export type ValidatedEditPaymentFormValues = {
 export type ParsedEditPaymentFormValues = {
   paymentAmount: number;
   datePaymentReceived: Date;
-  paymentReference?: string;
+  paymentReference: string | null;
 };

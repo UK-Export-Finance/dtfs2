@@ -1401,7 +1401,7 @@ const deletePaymentById = async (reportId, paymentId, user) => {
  * @param {string} paymentId - The payment id
  * @param {number} paymentAmount - The payment amount
  * @param {import('@ukef/dtfs2-common').IsoDateTimeStamp} datePaymentReceived - The date the payment was received
- * @param {string | undefined} paymentReference - The payment reference
+ * @param {string | null} paymentReference - The payment reference
  * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user
  */
 const editPayment = async (reportId, paymentId, paymentAmount, datePaymentReceived, paymentReference, user) => {

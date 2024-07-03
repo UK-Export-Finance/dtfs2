@@ -259,7 +259,7 @@ utilisationReportsRouter
  *                 description: the date the payment was received as an ISO date string
  *               paymentReference:
  *                 type: string
- *                 required: false
+ *                 nullable: true
  *     responses:
  *       200:
  *         description: OK

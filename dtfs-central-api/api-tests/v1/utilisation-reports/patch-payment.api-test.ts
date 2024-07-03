@@ -1,7 +1,10 @@
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
+import { In } from 'typeorm';
 import {
+  FeeRecordEntity,
   FeeRecordEntityMockBuilder,
+  FeeRecordStatus,
   PaymentEntity,
   PaymentEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
@@ -122,7 +125,7 @@ describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
     expect(response.status).toBe(HttpStatusCode.Ok);
   });
 
-  it('updates the payment and report with the fields supplied in the payload', async () => {
+  it('updates the payment, fee records and report with the fields supplied in the payload', async () => {
     // Arrange
     const paymentAmount = 314.59;
     const datePaymentReceived = new Date('2024-02-04');
@@ -160,5 +163,116 @@ describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
     expect(reportEntity.lastUpdatedByTfmUserId).toBe(tfmUserId);
     expect(reportEntity.lastUpdatedByPortalUserId).toBeNull();
     expect(reportEntity.lastUpdatedByIsSystemUser).toBe(false);
+
+    const feeRecordEntities = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([1, 2]) });
+
+    expect(feeRecordEntities).toHaveLength(2);
+    feeRecordEntities.forEach((feeRecord) => {
+      expect(feeRecord.lastUpdatedByTfmUserId).toBe(tfmUserId);
+      expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
+      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+    });
+  });
+
+  it('sets the fee record status to MATCH if the edited payment amount matches the fee record amounts', async () => {
+    // Arrange
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+
+    const report = aReport();
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(report)
+        .withId(1)
+        .withStatus('DOES_NOT_MATCH')
+        .withFeesPaidToUkefForThePeriod(100)
+        .withFeesPaidToUkefForThePeriodCurrency('GBP')
+        .withPaymentCurrency('GBP')
+        .withPayments([payment])
+        .build(),
+      FeeRecordEntityMockBuilder.forReport(report)
+        .withId(2)
+        .withStatus('DOES_NOT_MATCH')
+        .withFeesPaidToUkefForThePeriod(200)
+        .withFeesPaidToUkefForThePeriodCurrency('GBP')
+        .withPaymentCurrency('GBP')
+        .withPayments([payment])
+        .build(),
+    ];
+    report.feeRecords = feeRecords;
+
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    const requestBody: PatchPaymentPayload = {
+      ...aPatchPaymentRequestBody(),
+      paymentAmount: 300,
+    };
+
+    // Act
+    const oldFeeRecords = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([1, 2]) });
+    const response = await testApi.patch(requestBody).to(getUrl(reportId, paymentId));
+    const newFeeRecords = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([1, 2]) });
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.Ok);
+
+    expect(oldFeeRecords).toHaveLength(feeRecords.length);
+    oldFeeRecords.forEach((feeRecord) => {
+      expect(feeRecord.status).toBe<FeeRecordStatus>('DOES_NOT_MATCH');
+    });
+
+    expect(newFeeRecords).toHaveLength(feeRecords.length);
+    newFeeRecords.forEach((feeRecord) => {
+      expect(feeRecord.status).toBe<FeeRecordStatus>('MATCH');
+    });
+  });
+
+  it('sets the fee record status to DOES_NOT_MATCH if the edited payment amount does not match the fee record amounts', async () => {
+    // Arrange
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+
+    const report = aReport();
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(report)
+        .withId(1)
+        .withStatus('MATCH')
+        .withFeesPaidToUkefForThePeriod(100)
+        .withFeesPaidToUkefForThePeriodCurrency('GBP')
+        .withPaymentCurrency('GBP')
+        .withPayments([payment])
+        .build(),
+      FeeRecordEntityMockBuilder.forReport(report)
+        .withId(2)
+        .withStatus('MATCH')
+        .withFeesPaidToUkefForThePeriod(200)
+        .withFeesPaidToUkefForThePeriodCurrency('GBP')
+        .withPaymentCurrency('GBP')
+        .withPayments([payment])
+        .build(),
+    ];
+    report.feeRecords = feeRecords;
+
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    const requestBody: PatchPaymentPayload = {
+      ...aPatchPaymentRequestBody(),
+      paymentAmount: 200,
+    };
+
+    // Act
+    const oldFeeRecords = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([1, 2]) });
+    const response = await testApi.patch(requestBody).to(getUrl(reportId, paymentId));
+    const newFeeRecords = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([1, 2]) });
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.Ok);
+
+    expect(oldFeeRecords).toHaveLength(feeRecords.length);
+    oldFeeRecords.forEach((feeRecord) => {
+      expect(feeRecord.status).toBe<FeeRecordStatus>('MATCH');
+    });
+
+    expect(newFeeRecords).toHaveLength(feeRecords.length);
+    newFeeRecords.forEach((feeRecord) => {
+      expect(feeRecord.status).toBe<FeeRecordStatus>('DOES_NOT_MATCH');
+    });
   });
 });
