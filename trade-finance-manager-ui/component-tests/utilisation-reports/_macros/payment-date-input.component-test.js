@@ -1,4 +1,4 @@
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 
 const component = '../templates/utilisation-reports/_macros/payment-date-input.njk';
 

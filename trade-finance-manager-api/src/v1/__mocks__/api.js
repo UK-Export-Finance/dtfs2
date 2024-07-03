@@ -82,7 +82,9 @@ module.exports = {
     };
     return Promise.resolve(updatedFacility);
   },
-  updateGefFacility: (facilityId, facilityUpdate) => Promise.resolve(facilityUpdate),
+  updateGefFacility: ({ facilityUpdate }) => {
+    return Promise.resolve(facilityUpdate);
+  },
   addPortalDealComment: jest.fn(),
   addUnderwriterCommentToGefDeal: jest.fn(),
   queryDeals: jest.fn(),
@@ -241,4 +243,6 @@ module.exports = {
   generateKeyingData: jest.fn(),
   getUtilisationReportWithFeeRecordsToKey: jest.fn(),
   getPaymentDetails: jest.fn(),
+  deletePaymentById: jest.fn(),
+  editPayment: jest.fn(),
 };

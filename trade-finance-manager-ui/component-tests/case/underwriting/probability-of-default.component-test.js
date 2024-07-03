@@ -1,4 +1,4 @@
-const pageRenderer = require('../../pageRenderer');
+const { pageRenderer } = require('../../pageRenderer');
 
 const page = '../templates/case/underwriting/pricing-and-risk/probability-of-default.njk';
 

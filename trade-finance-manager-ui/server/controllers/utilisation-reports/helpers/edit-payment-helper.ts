@@ -1,6 +1,6 @@
 import { isValid, parseISO } from 'date-fns';
 import { IsoDateTimeStamp, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth, getOneIndexedMonth } from '@ukef/dtfs2-common';
-import { GetPaymentDetailsResponseBody, FeeRecord, Payment } from '../../../api-response-types';
+import { GetPaymentDetailsWithFeeRecordsResponseBody, FeeRecord, Payment } from '../../../api-response-types';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { PaymentErrorsViewModel, EditPaymentViewModel } from '../../../types/view-models';
@@ -53,7 +53,11 @@ const mapToEditPaymentFormValues = (payment: Payment): EditPaymentFormValues => 
  * @param reportId - The report id
  * @returns The edit payment view model
  */
-export const getEditPaymentViewModel = (editPaymentResponse: GetPaymentDetailsResponseBody, reportId: string, paymentId: string): EditPaymentViewModel => ({
+export const getEditPaymentViewModel = (
+  editPaymentResponse: GetPaymentDetailsWithFeeRecordsResponseBody,
+  reportId: string,
+  paymentId: string,
+): EditPaymentViewModel => ({
   reportId,
   paymentId,
   paymentCurrency: editPaymentResponse.payment.currency,
@@ -72,7 +76,7 @@ export const getEditPaymentViewModel = (editPaymentResponse: GetPaymentDetailsRe
  * @returns The edit payment view model
  */
 export const getEditPaymentViewModelWithFormValuesAndErrors = (
-  editPaymentResponse: GetPaymentDetailsResponseBody,
+  editPaymentResponse: GetPaymentDetailsWithFeeRecordsResponseBody,
   reportId: string,
   paymentId: string,
   formValues: EditPaymentFormValues,

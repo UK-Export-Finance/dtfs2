@@ -2,22 +2,22 @@ import httpMocks from 'node-mocks-http';
 import { Currency, CurrencyAndAmount, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
 import { PostEditPaymentRequest, getEditPayment, postEditPayment } from '.';
 import api from '../../../api';
-import { aPaymentDetailsResponseBody, aTfmSessionUser, aPayment, aFeeRecord } from '../../../../test-helpers';
+import { aPaymentDetailsWithFeeRecordsResponseBody, aTfmSessionUser, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL, EditPaymentFormRequestBody } from '../helpers';
 import { EditPaymentViewModel } from '../../../types/view-models/edit-payment-view-model';
 import { SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
+import { ParsedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 jest.mock('../../../api');
 
 describe('controllers/utilisation-reports/edit-payment', () => {
-  const userToken = 'abc123';
   const aRequestSession = () => ({
     user: aTfmSessionUser(),
-    userToken,
+    userToken: 'abc123',
   });
 
   beforeEach(() => {
-    jest.mocked(api.getPaymentDetails).mockResolvedValue(aPaymentDetailsResponseBody());
+    jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue(aPaymentDetailsWithFeeRecordsResponseBody());
   });
 
   afterEach(() => {
@@ -75,8 +75,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
       const paymentCurrency: Currency = 'USD';
 
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           currency: paymentCurrency,
@@ -97,8 +97,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
       const bank: SessionBank = { id: '123', name: 'Test bank' };
 
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         bank,
       });
 
@@ -120,8 +120,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       };
       const formattedReportPeriod = 'January 2024';
 
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         reportPeriod,
       });
 
@@ -140,8 +140,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       const feeRecordIds = [1, 2];
       const feeRecords = feeRecordIds.map((id) => ({ ...aFeeRecord(), id }));
 
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       });
 
@@ -161,8 +161,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       const feeRecordFacilityIds = ['12345678', '87654321'];
       const feeRecords = feeRecordFacilityIds.map((facilityId) => ({ ...aFeeRecord(), facilityId }));
 
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       });
 
@@ -182,8 +182,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       const feeRecordExporters = ['12345678', '87654321'];
       const feeRecords = feeRecordExporters.map((exporter) => ({ ...aFeeRecord(), exporter }));
 
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       });
 
@@ -210,8 +210,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       ];
       const feeRecords = feeRecordReportedFees.map((reportedFees) => ({ ...aFeeRecord(), reportedFees }));
 
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       });
 
@@ -238,8 +238,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       ];
       const feeRecords = feeRecordReportedPayments.map((reportedPayments) => ({ ...aFeeRecord(), reportedPayments }));
 
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       });
 
@@ -259,8 +259,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       const feeRecordIds = [1, 2];
       const feeRecords = feeRecordIds.map((id) => ({ ...aFeeRecord(), id }));
 
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       });
 
@@ -279,8 +279,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
       const feeRecords = [aFeeRecord(), aFeeRecord(), aFeeRecord(), aFeeRecord()];
 
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       });
 
@@ -298,8 +298,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       const { req, res } = getHttpMocks();
 
       const totalReportedPayments: CurrencyAndAmount = { currency: 'USD', amount: 314.59 };
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         totalReportedPayments,
       });
 
@@ -328,8 +328,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       const { req, res } = getHttpMocks();
 
       const paymentAmount = 100;
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           amount: paymentAmount,
@@ -350,8 +350,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
       const day = '10';
       const dateReceived = new Date(`2024-05-${day}`).toISOString();
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           dateReceived,
@@ -372,8 +372,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
       const month = '5';
       const dateReceived = new Date(`2024-${month}-1`).toISOString();
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           dateReceived,
@@ -394,8 +394,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
       const year = '2024';
       const dateReceived = new Date(`${year}-5-1`).toISOString();
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           dateReceived,
@@ -415,8 +415,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       const { req, res } = getHttpMocks();
 
       const reference = 'A payment reference';
-      jest.mocked(api.getPaymentDetails).mockResolvedValue({
-        ...aPaymentDetailsResponseBody(),
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           reference,
@@ -444,7 +444,44 @@ describe('controllers/utilisation-reports/edit-payment', () => {
           body: aPostEditPaymentRequestBody(),
         });
 
-      it('redirects to /utilisation-reports/:reportId when the edit payments form is valid', async () => {
+      beforeEach(() => {
+        jest.mocked(api.editPayment).mockResolvedValue();
+      });
+
+      it('edits the payment with the supplied data', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
+
+        const user = aTfmSessionUser();
+        const userToken = 'abc123';
+        req.session.user = user;
+        req.session.userToken = userToken;
+
+        const paymentAmount = 100;
+        req.body.paymentAmount = '100';
+
+        const datePaymentReceived = new Date('2024-5-12');
+        req.body['paymentDate-day'] = '12';
+        req.body['paymentDate-month'] = '5';
+        req.body['paymentDate-year'] = '2024';
+
+        const paymentReference = 'A payment reference';
+        req.body.paymentReference = paymentReference;
+
+        const expectedParsedFormValues: ParsedEditPaymentFormValues = {
+          paymentAmount,
+          datePaymentReceived,
+          paymentReference,
+        };
+
+        // Act
+        await postEditPayment(req, res);
+
+        // Assert
+        expect(api.editPayment).toHaveBeenCalledWith(reportId, paymentId, expectedParsedFormValues, user, userToken);
+      });
+
+      it('redirects to /utilisation-reports/:reportId', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
@@ -515,8 +552,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         const paymentCurrency: Currency = 'USD';
 
-        jest.mocked(api.getPaymentDetails).mockResolvedValue({
-          ...aPaymentDetailsResponseBody(),
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
           payment: {
             ...aPayment(),
             currency: paymentCurrency,
@@ -537,8 +574,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         const bank: SessionBank = { id: '123', name: 'Test bank' };
 
-        jest.mocked(api.getPaymentDetails).mockResolvedValue({
-          ...aPaymentDetailsResponseBody(),
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
           bank,
         });
 
@@ -560,8 +597,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         };
         const formattedReportPeriod = 'January 2024';
 
-        jest.mocked(api.getPaymentDetails).mockResolvedValue({
-          ...aPaymentDetailsResponseBody(),
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
           reportPeriod,
         });
 
@@ -580,8 +617,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         const feeRecordIds = [1, 2];
         const feeRecords = feeRecordIds.map((id) => ({ ...aFeeRecord(), id }));
 
-        jest.mocked(api.getPaymentDetails).mockResolvedValue({
-          ...aPaymentDetailsResponseBody(),
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
           feeRecords,
         });
 
@@ -601,8 +638,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         const feeRecordFacilityIds = ['12345678', '87654321'];
         const feeRecords = feeRecordFacilityIds.map((facilityId) => ({ ...aFeeRecord(), facilityId }));
 
-        jest.mocked(api.getPaymentDetails).mockResolvedValue({
-          ...aPaymentDetailsResponseBody(),
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
           feeRecords,
         });
 
@@ -622,8 +659,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         const feeRecordExporters = ['12345678', '87654321'];
         const feeRecords = feeRecordExporters.map((exporter) => ({ ...aFeeRecord(), exporter }));
 
-        jest.mocked(api.getPaymentDetails).mockResolvedValue({
-          ...aPaymentDetailsResponseBody(),
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
           feeRecords,
         });
 
@@ -650,8 +687,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         ];
         const feeRecords = feeRecordReportedFees.map((reportedFees) => ({ ...aFeeRecord(), reportedFees }));
 
-        jest.mocked(api.getPaymentDetails).mockResolvedValue({
-          ...aPaymentDetailsResponseBody(),
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
           feeRecords,
         });
 
@@ -678,8 +715,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         ];
         const feeRecords = feeRecordReportedPayments.map((reportedPayments) => ({ ...aFeeRecord(), reportedPayments }));
 
-        jest.mocked(api.getPaymentDetails).mockResolvedValue({
-          ...aPaymentDetailsResponseBody(),
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
           feeRecords,
         });
 
@@ -699,8 +736,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         const feeRecordIds = [1, 2];
         const feeRecords = feeRecordIds.map((id) => ({ ...aFeeRecord(), id }));
 
-        jest.mocked(api.getPaymentDetails).mockResolvedValue({
-          ...aPaymentDetailsResponseBody(),
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
           feeRecords,
         });
 
@@ -719,8 +756,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
 
         const feeRecords = [aFeeRecord(), aFeeRecord(), aFeeRecord(), aFeeRecord()];
 
-        jest.mocked(api.getPaymentDetails).mockResolvedValue({
-          ...aPaymentDetailsResponseBody(),
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
           feeRecords,
         });
 
@@ -738,8 +775,8 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         const { req, res } = getHttpMocks();
 
         const totalReportedPayments: CurrencyAndAmount = { currency: 'USD', amount: 314.59 };
-        jest.mocked(api.getPaymentDetails).mockResolvedValue({
-          ...aPaymentDetailsResponseBody(),
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
           totalReportedPayments,
         });
 

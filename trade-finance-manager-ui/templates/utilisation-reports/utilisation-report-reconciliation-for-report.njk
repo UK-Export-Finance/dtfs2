@@ -6,6 +6,8 @@
 
 {% extends "index.njk" %}
 
+{% set userCanEdit = user | userIsInTeam(['PDC_RECONCILE']) %}
+
 {% block pageTitle %}
   {{ bank.name }}, {{ formattedReportPeriod }}
 {% endblock %}
@@ -24,7 +26,6 @@
   {% set clearButtonHref %}
       /utilisation-reports/{{ reportId }}
   {% endset %}
-
     <h2 class="govuk-heading-l" data-cy="premium-payments-heading">Premium payments</h2>
 
     <div class="govuk-grid-row premium-payments-description-filter-container">
@@ -77,10 +78,10 @@
 {% if premiumPaymentFormError %}
     <div class="govuk-form-group--error">
   {% endif %}
+  {% if userCanEdit %}
     <form method="post" data-cy="premium-payments-form">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
       <input type="hidden" name="canGenerateKeyingData" value="{{ canGenerateKeyingData }}"/>
-
       <div class="govuk-button-group">
         <input
           class="govuk-button govuk-!-margin-right-3"
@@ -97,13 +98,16 @@
           type="submit"
           data-cy="generate-keying-data-button"/>
       </div>
-
-      {{ premiumPaymentsTable.render({
-        reportId: reportId,
-        feeRecordPaymentGroups: feeRecordPaymentGroups,
-        enablePaymentsReceivedSorting: enablePaymentsReceivedSorting
-      }) }}
+  {% endif %}
+  {{ premiumPaymentsTable.render({
+    reportId: reportId,
+    feeRecordPaymentGroups: feeRecordPaymentGroups,
+    enablePaymentsReceivedSorting: enablePaymentsReceivedSorting,
+    userCanEdit: userCanEdit
+  }) }}
+  {% if userCanEdit %}
     </form>
+  {% endif %}
   {% if premiumPaymentFormError %}
     </div>
   {% endif %}

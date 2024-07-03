@@ -11,6 +11,7 @@ import { addPayment } from '../../controllers/utilisation-reports/add-payment';
 import { postKeyingData } from '../../controllers/utilisation-reports/keying-data';
 import { postCheckKeyingData } from '../../controllers/utilisation-reports/check-keying-data';
 import { getEditPayment, postEditPayment } from '../../controllers/utilisation-reports/edit-payment';
+import { getConfirmDeletePayment, postConfirmDeletePayment } from '../../controllers/utilisation-reports/confirm-delete-payment';
 
 export const utilisationReportsRoutes = express.Router();
 
@@ -33,7 +34,7 @@ utilisationReportsRoutes.get(
 utilisationReportsRoutes.post(
   '/:reportId/add-payment',
   validateTfmPaymentReconciliationFeatureFlagIsEnabled,
-  validateUserTeam(Object.values(PDC_TEAM_IDS)),
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validatePostAddPaymentRequestBody,
   addPayment,
@@ -71,4 +72,22 @@ utilisationReportsRoutes.post(
   validateSqlId('reportId'),
   validateSqlId('paymentId'),
   postEditPayment,
+);
+
+utilisationReportsRoutes.get(
+  '/:reportId/edit-payment/:paymentId/confirm-delete',
+  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('paymentId'),
+  getConfirmDeletePayment,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/edit-payment/:paymentId/confirm-delete',
+  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('paymentId'),
+  postConfirmDeletePayment,
 );

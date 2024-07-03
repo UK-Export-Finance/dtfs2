@@ -1,15 +1,24 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { HttpStatusCode, isAxiosError } from 'axios';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { PaymentDetailsResponseBody } from '../../api-response-types';
 import api from '../../api';
 
+type GetPaymentDetailsByIdRequest = CustomExpressRequest<{
+  query: {
+    includeFeeRecords?: 'true' | 'false';
+  };
+}>;
+
 type GetPaymentDetailsByIdResponse = Response<PaymentDetailsResponseBody | string>;
 
-export const getPaymentDetailsById = async (req: Request, res: GetPaymentDetailsByIdResponse) => {
+export const getPaymentDetailsById = async (req: GetPaymentDetailsByIdRequest, res: GetPaymentDetailsByIdResponse) => {
   const { reportId, paymentId } = req.params;
+  const { includeFeeRecords } = req.query;
 
   try {
-    const paymentDetails = await api.getPaymentDetails(reportId, paymentId);
+    const includeFeeRecordsQuery = includeFeeRecords === 'true';
+    const paymentDetails = await api.getPaymentDetails(reportId, paymentId, includeFeeRecordsQuery);
 
     return res.status(HttpStatusCode.Ok).send(paymentDetails);
   } catch (error) {

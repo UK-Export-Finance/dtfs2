@@ -9,9 +9,10 @@ import { calculateTotalCurrencyAndAmount } from '../../../../helpers';
 /**
  * Maps the supplied payment entity to the payment details
  * @param payment - The payment entity with fee records and utilisation report attached
+ * @param includeFeeRecords - Whether or not to include the fee record related fields
  * @returns The payment details
  */
-export const mapToPaymentDetails = async (payment: PaymentEntity): Promise<GetPaymentDetailsResponseBody> => {
+export const mapToPaymentDetails = async (payment: PaymentEntity, includeFeeRecords: boolean): Promise<GetPaymentDetailsResponseBody> => {
   const { feeRecords } = payment;
   const {
     report: { bankId, reportPeriod },
@@ -22,17 +23,23 @@ export const mapToPaymentDetails = async (payment: PaymentEntity): Promise<GetPa
     throw new NotFoundError(`Failed to find a bank with id '${bankId}'`);
   }
 
-  const mappedFeeRecords = feeRecords.map(mapFeeRecordEntityToFeeRecord);
-
-  const totalReportedPayments = calculateTotalCurrencyAndAmount(mappedFeeRecords.map(({ reportedPayments }) => reportedPayments));
-
-  return {
+  const paymentDetailsWithoutFeeRecords: GetPaymentDetailsResponseBody = {
     bank: {
       id: bankId,
       name: bankName,
     },
     reportPeriod,
     payment: mapPaymentEntityToPayment(payment),
+  };
+
+  if (!includeFeeRecords) {
+    return paymentDetailsWithoutFeeRecords;
+  }
+
+  const mappedFeeRecords = feeRecords.map(mapFeeRecordEntityToFeeRecord);
+  const totalReportedPayments = calculateTotalCurrencyAndAmount(mappedFeeRecords.map(({ reportedPayments }) => reportedPayments));
+  return {
+    ...paymentDetailsWithoutFeeRecords,
     feeRecords: mappedFeeRecords,
     totalReportedPayments,
   };

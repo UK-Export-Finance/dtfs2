@@ -1,4 +1,4 @@
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 const { formatDateString } = require('../../../server/nunjucks-configuration/filter-formatDateString');
 
 const component = '../templates/deals/_macros/deals-table.njk';

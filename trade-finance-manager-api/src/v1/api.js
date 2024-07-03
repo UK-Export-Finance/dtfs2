@@ -620,7 +620,7 @@ const getAllAmendmentsInProgress = async () => {
   }
 };
 
-const updateGefFacility = async (facilityId, facilityUpdate) => {
+const updateGefFacility = async ({ facilityId, facilityUpdate, auditDetails }) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -633,7 +633,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/facilities/${facilityId}`,
       headers: headers.central,
-      data: facilityUpdate,
+      data: { facilityUpdate, auditDetails },
     });
 
     return response.data;
@@ -1370,13 +1370,56 @@ const getUtilisationReportWithFeeRecordsToKey = async (reportId) => {
  * Gets the payment details
  * @param {string} reportId - The report id
  * @param {string} paymentId - The payment id
+ * @param {boolean} includeFeeRecords - Whether or not to include the fee records in the response
  * @returns {Promise<import('./api-response-types').PaymentDetailsResponseBody>} The payment details
  */
-const getPaymentDetails = async (reportId, paymentId) => {
+const getPaymentDetails = async (reportId, paymentId, includeFeeRecords) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`, {
     headers: headers.central,
+    params: {
+      includeFeeRecords,
+    },
   });
   return response.data;
+};
+
+/**
+ * Deletes the payment with the specified id
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The session user
+ * @returns {Promise<void>}
+ */
+const deletePaymentById = async (reportId, paymentId, user) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
+    method: 'delete',
+    headers: headers.central,
+    data: { user },
+  });
+};
+
+/**
+ * Edits the payment with the supplied payment information
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {number} paymentAmount - The payment amount
+ * @param {import('@ukef/dtfs2-common').IsoDateTimeStamp} datePaymentReceived - The date the payment was received
+ * @param {string | null} paymentReference - The payment reference
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user
+ */
+const editPayment = async (reportId, paymentId, paymentAmount, datePaymentReceived, paymentReference, user) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
+    method: 'patch',
+    headers: headers.central,
+    data: {
+      paymentAmount,
+      datePaymentReceived,
+      paymentReference,
+      user,
+    },
+  });
 };
 
 module.exports = {
@@ -1445,4 +1488,6 @@ module.exports = {
   generateKeyingData,
   getUtilisationReportWithFeeRecordsToKey,
   getPaymentDetails,
+  deletePaymentById,
+  editPayment,
 };

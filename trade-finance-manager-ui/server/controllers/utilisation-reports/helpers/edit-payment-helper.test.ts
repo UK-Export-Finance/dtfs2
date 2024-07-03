@@ -1,7 +1,7 @@
 import { Currency, CurrencyAndAmount } from '@ukef/dtfs2-common';
 import { getEditPaymentViewModel, getEditPaymentViewModelWithFormValuesAndErrors } from './edit-payment-helper';
-import { aPaymentDetailsResponseBody, aPayment, aFeeRecord } from '../../../../test-helpers';
-import { GetPaymentDetailsResponseBody } from '../../../api-response-types';
+import { aPaymentDetailsWithFeeRecordsResponseBody, aPayment, aFeeRecord } from '../../../../test-helpers';
+import { GetPaymentDetailsWithFeeRecordsResponseBody } from '../../../api-response-types';
 import { PaymentErrorsViewModel, SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL } from './payment-form-helpers';
@@ -13,7 +13,7 @@ describe('edit-payment-helper', () => {
 
     it('sets the view model reportId the supplied reportId', () => {
       // Arrange
-      const editPaymentResponseBody = aPaymentDetailsResponseBody();
+      const editPaymentResponseBody = aPaymentDetailsWithFeeRecordsResponseBody();
 
       // Act
       const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
@@ -24,7 +24,7 @@ describe('edit-payment-helper', () => {
 
     it('sets the view model paymentId the supplied paymentId', () => {
       // Arrange
-      const editPaymentResponseBody = aPaymentDetailsResponseBody();
+      const editPaymentResponseBody = aPaymentDetailsWithFeeRecordsResponseBody();
 
       // Act
       const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
@@ -35,8 +35,8 @@ describe('edit-payment-helper', () => {
 
     it('sets the view model paymentCurrency to the edit payment response payment currency', () => {
       // Arrange
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           currency: 'USD',
@@ -52,8 +52,8 @@ describe('edit-payment-helper', () => {
 
     it('sets the view model bank to the edit payment response bank', () => {
       // Arrange
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         bank: {
           id: '123',
           name: 'Test bank',
@@ -69,8 +69,8 @@ describe('edit-payment-helper', () => {
 
     it('sets the view model formattedReportPeriod to the formatted edit payment response reportPeriod', () => {
       // Arrange
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         reportPeriod: {
           start: { month: 1, year: 2024 },
           end: { month: 1, year: 2024 },
@@ -88,8 +88,8 @@ describe('edit-payment-helper', () => {
       // Arrange
       const paymentCurrency: Currency = 'USD';
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           currency: paymentCurrency,
@@ -108,8 +108,8 @@ describe('edit-payment-helper', () => {
       const feeRecordIds = [1, 2];
       const feeRecords = feeRecordIds.map((id) => ({ ...aFeeRecord(), id }));
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -126,8 +126,8 @@ describe('edit-payment-helper', () => {
       const feeRecordFacilityIds = ['12345678', '87654321'];
       const feeRecords = feeRecordFacilityIds.map((facilityId) => ({ ...aFeeRecord(), facilityId }));
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -144,8 +144,8 @@ describe('edit-payment-helper', () => {
       const feeRecordExporters = ['12345678', '87654321'];
       const feeRecords = feeRecordExporters.map((exporter) => ({ ...aFeeRecord(), exporter }));
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -169,8 +169,8 @@ describe('edit-payment-helper', () => {
       ];
       const feeRecords = feeRecordReportedFees.map((reportedFees) => ({ ...aFeeRecord(), reportedFees }));
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -194,8 +194,8 @@ describe('edit-payment-helper', () => {
       ];
       const feeRecords = feeRecordReportedPayments.map((reportedPayments) => ({ ...aFeeRecord(), reportedPayments }));
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -212,8 +212,8 @@ describe('edit-payment-helper', () => {
       const feeRecordIds = [1, 2];
       const feeRecords = feeRecordIds.map((id) => ({ ...aFeeRecord(), id }));
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -229,8 +229,8 @@ describe('edit-payment-helper', () => {
       // Arrange
       const feeRecords = [aFeeRecord(), aFeeRecord(), aFeeRecord(), aFeeRecord()];
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -245,8 +245,8 @@ describe('edit-payment-helper', () => {
     it('sets the render view model totalReportedPayments to the edit payment details response formatted totalReportedPayments', () => {
       // Arrange
       const totalReportedPayments: CurrencyAndAmount = { currency: 'USD', amount: 314.59 };
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         totalReportedPayments,
       };
 
@@ -259,7 +259,7 @@ describe('edit-payment-helper', () => {
 
     it('sets the render view model errors to the empty errors', () => {
       // Act
-      const viewModel = getEditPaymentViewModel(aPaymentDetailsResponseBody(), reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId);
 
       // Assert
       expect(viewModel.errors).toEqual(EMPTY_PAYMENT_ERRORS_VIEW_MODEL);
@@ -268,8 +268,8 @@ describe('edit-payment-helper', () => {
     it('sets the render view model formValues paymentAmount to the edit payment details response payment amount', () => {
       // Arrange
       const paymentAmount = 100;
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           amount: paymentAmount,
@@ -287,8 +287,8 @@ describe('edit-payment-helper', () => {
       // Arrange
       const day = '10';
       const dateReceived = new Date(`2024-05-${day}`).toISOString();
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           dateReceived,
@@ -306,8 +306,8 @@ describe('edit-payment-helper', () => {
       // Arrange
       const month = '5';
       const dateReceived = new Date(`2024-${month}-1`).toISOString();
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           dateReceived,
@@ -325,8 +325,8 @@ describe('edit-payment-helper', () => {
       // Arrange
       const year = '2024';
       const dateReceived = new Date(`${year}-5-1`).toISOString();
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           dateReceived,
@@ -343,8 +343,8 @@ describe('edit-payment-helper', () => {
     it('sets the render view model formValues paymentReference to the edit payment details response payment reference', () => {
       // Arrange
       const reference = 'A payment reference';
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           reference,
@@ -365,7 +365,7 @@ describe('edit-payment-helper', () => {
 
     it('sets the view model reportId the supplied reportId', () => {
       // Arrange
-      const editPaymentResponseBody = aPaymentDetailsResponseBody();
+      const editPaymentResponseBody = aPaymentDetailsWithFeeRecordsResponseBody();
 
       // Act
       const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
@@ -382,7 +382,7 @@ describe('edit-payment-helper', () => {
 
     it('sets the view model paymentId the supplied paymentId', () => {
       // Arrange
-      const editPaymentResponseBody = aPaymentDetailsResponseBody();
+      const editPaymentResponseBody = aPaymentDetailsWithFeeRecordsResponseBody();
 
       // Act
       const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
@@ -399,8 +399,8 @@ describe('edit-payment-helper', () => {
 
     it('sets the view model paymentCurrency to the edit payment response payment currency', () => {
       // Arrange
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           currency: 'USD',
@@ -422,8 +422,8 @@ describe('edit-payment-helper', () => {
 
     it('sets the view model bank to the edit payment response bank', () => {
       // Arrange
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         bank: {
           id: '123',
           name: 'Test bank',
@@ -445,8 +445,8 @@ describe('edit-payment-helper', () => {
 
     it('sets the view model formattedReportPeriod to the formatted edit payment response reportPeriod', () => {
       // Arrange
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         reportPeriod: {
           start: { month: 1, year: 2024 },
           end: { month: 1, year: 2024 },
@@ -470,8 +470,8 @@ describe('edit-payment-helper', () => {
       // Arrange
       const paymentCurrency: Currency = 'USD';
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         payment: {
           ...aPayment(),
           currency: paymentCurrency,
@@ -496,8 +496,8 @@ describe('edit-payment-helper', () => {
       const feeRecordIds = [1, 2];
       const feeRecords = feeRecordIds.map((id) => ({ ...aFeeRecord(), id }));
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -520,8 +520,8 @@ describe('edit-payment-helper', () => {
       const feeRecordFacilityIds = ['12345678', '87654321'];
       const feeRecords = feeRecordFacilityIds.map((facilityId) => ({ ...aFeeRecord(), facilityId }));
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -544,8 +544,8 @@ describe('edit-payment-helper', () => {
       const feeRecordExporters = ['12345678', '87654321'];
       const feeRecords = feeRecordExporters.map((exporter) => ({ ...aFeeRecord(), exporter }));
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -575,8 +575,8 @@ describe('edit-payment-helper', () => {
       ];
       const feeRecords = feeRecordReportedFees.map((reportedFees) => ({ ...aFeeRecord(), reportedFees }));
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -606,8 +606,8 @@ describe('edit-payment-helper', () => {
       ];
       const feeRecords = feeRecordReportedPayments.map((reportedPayments) => ({ ...aFeeRecord(), reportedPayments }));
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -630,8 +630,8 @@ describe('edit-payment-helper', () => {
       const feeRecordIds = [1, 2];
       const feeRecords = feeRecordIds.map((id) => ({ ...aFeeRecord(), id }));
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -653,8 +653,8 @@ describe('edit-payment-helper', () => {
       // Arrange
       const feeRecords = [aFeeRecord(), aFeeRecord(), aFeeRecord(), aFeeRecord()];
 
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         feeRecords,
       };
 
@@ -675,8 +675,8 @@ describe('edit-payment-helper', () => {
     it('sets the render view model totalReportedPayments to the edit payment details response formatted totalReportedPayments', () => {
       // Arrange
       const totalReportedPayments: CurrencyAndAmount = { currency: 'USD', amount: 314.59 };
-      const editPaymentResponseBody: GetPaymentDetailsResponseBody = {
-        ...aPaymentDetailsResponseBody(),
+      const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
         totalReportedPayments,
       };
 
@@ -702,7 +702,7 @@ describe('edit-payment-helper', () => {
 
       // Act
       const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
-        aPaymentDetailsResponseBody(),
+        aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
         aValidEditPaymentFormValuesObject(),
@@ -722,7 +722,7 @@ describe('edit-payment-helper', () => {
 
       // Act
       const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
-        aPaymentDetailsResponseBody(),
+        aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
         formValues,
@@ -746,7 +746,7 @@ describe('edit-payment-helper', () => {
 
       // Act
       const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
-        aPaymentDetailsResponseBody(),
+        aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
         formValues,
@@ -770,7 +770,7 @@ describe('edit-payment-helper', () => {
 
       // Act
       const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
-        aPaymentDetailsResponseBody(),
+        aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
         formValues,

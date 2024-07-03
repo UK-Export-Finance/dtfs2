@@ -12,9 +12,9 @@ import {
 import { handleUtilisationReportAddAPaymentEvent } from './add-a-payment.event-handler';
 import { NewPaymentDetails } from '../../../../../types/utilisation-reports';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
-import { feeRecordsMatchAttachedPayments } from './helpers';
+import { feeRecordsMatchAttachedPayments } from '../helpers';
 
-jest.mock('./helpers');
+jest.mock('../helpers');
 
 describe('handleUtilisationReportAddAPaymentEvent', () => {
   const tfmUserId = 'abc123';

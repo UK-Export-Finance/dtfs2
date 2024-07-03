@@ -1,4 +1,4 @@
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 
 const component = '../templates/case/_macros/ukef-deal-stage.njk';
 const render = componentRenderer(component);
