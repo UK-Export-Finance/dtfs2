@@ -25,6 +25,17 @@ exports.create = async (req, res) => {
   if (enumValidationErr) {
     return res.status(422).send(enumValidationErr);
   }
+
+  if (!ObjectId.isValid(req.body.dealId)) {
+    return res.status(400).send({ status: 404, message: 'Invalid dealId' });
+  }
+
+  const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+  const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(req.body.dealId) } });
+
+  if (!existingDeal) {
+    return res.status(404).send({ status: 404, message: 'Deal not found' });
+  }
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   const facilitiesQuery = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
@@ -122,7 +133,8 @@ exports.getById = async (req, res) => {
  * @param {ObjectId | string} id - facility id to update
  * @param {object} updateBody - update to make
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
- * @returns {Promise<import("mongodb").ModifyResult | false>}
+ * @returns {Promise<import("mongodb").ModifyResult | false>} - Modify Result from the db operation
+ * @throws {DealVersionError} if adding a facility end date to invalid deal version
  */
 const update = async (id, updateBody, auditDetails) => {
   try {
