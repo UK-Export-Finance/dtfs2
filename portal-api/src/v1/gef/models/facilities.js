@@ -63,6 +63,7 @@ class Facility {
       }
       // used to store the user details of maker who changed unissued facility to issued
       this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker) || null;
+      this.facilityEndDateExists = req.facilityEndDateExists;
     } else {
       // update facility
       if (req.hasBeenIssued != null) {

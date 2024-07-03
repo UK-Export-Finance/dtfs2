@@ -176,5 +176,16 @@ describe('GEF deal versioning', () => {
       expect(status).toBe(400);
       expect(body).toEqual({ status: 400, message: 'Cannot add facility end date to deal version 0' });
     });
+
+    it('returns 400 when creating a version 0 facility with facility end date', async () => {
+      const { body: dealBody } = await as(aMaker).post(getVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
+      const { body: facilityBody } = await as(aMaker)
+        .post({ dealId: dealBody._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDateExists: true })
+        .to(gefFacilitiesUrl);
+      const { status, body } = await as(aMaker).put({ facilityEndDateExists: true }).to(`${gefFacilitiesUrl}/${facilityBody.details._id}`);
+
+      expect(status).toBe(400);
+      expect(body).toEqual({ status: 400, message: 'Cannot add facility end date to deal version 0' });
+    });
   });
 });

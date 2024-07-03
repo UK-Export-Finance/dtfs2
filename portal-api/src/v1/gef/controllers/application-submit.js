@@ -110,18 +110,15 @@ const addSubmissionDateToIssuedFacilities = async (dealId, auditDetails) => {
 const updateChangedToIssued = async (dealId, auditDetails) => {
   const facilities = await getAllFacilitiesByDealId(dealId);
   await Promise.all(
-    facilities.map(async (facility) => {
-      const { _id, canResubmitIssuedFacilities } = facility;
-
-      if (canResubmitIssuedFacilities) {
+    facilities
+      .filter(({ canResubmitIssuedFacilities }) => canResubmitIssuedFacilities)
+      .map(async ({ _id }) => {
         const update = {
           canResubmitIssuedFacilities: false,
         };
 
         return updateFacility(_id, update, auditDetails);
-      }
-      return Promise.resolve();
-    }),
+      }),
   );
 };
 

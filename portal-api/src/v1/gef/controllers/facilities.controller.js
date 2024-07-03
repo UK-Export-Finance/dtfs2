@@ -36,12 +36,22 @@ exports.create = async (req, res) => {
   if (!existingDeal) {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
+
+  if (!isFacilityEndDateEnabledOnDeal(existingDeal.version) && req.body.facilityEndDateExists) {
+    return res.status(400).send({ status: 400, message: `Cannot add facility end date to deal version ${existingDeal.version}` });
+  }
+
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
-  const facilitiesQuery = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
-  const createdFacility = await facilitiesQuery.insertOne(
-    new Facility({ ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }),
-  );
+  const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
+
+  const facilityParameters = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+
+  if (isFacilityEndDateEnabledOnDeal(existingDeal.version)) {
+    facilityParameters.facilityEndDateExist = facilityParameters.facilityEndDateExist ?? null;
+  }
+
+  const createdFacility = await facilitiesCollection.insertOne(new Facility(facilityParameters));
 
   const { insertedId } = createdFacility;
 
@@ -49,7 +59,7 @@ exports.create = async (req, res) => {
     return res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
   }
 
-  const facility = await facilitiesQuery.findOne({
+  const facility = await facilitiesCollection.findOne({
     _id: { $eq: ObjectId(insertedId) },
   });
 
@@ -207,25 +217,27 @@ exports.updatePUT = async (req, res) => {
     return res.status(422).send(enumValidationErr);
   }
 
+  let response;
+  let updatedFacility;
+
   try {
-    let response;
-    const updatedFacility = await update(req.params.id, req.body, generatePortalAuditDetails(req.user._id));
-
-    if (updatedFacility.value) {
-      response = {
-        status: facilitiesStatus(updatedFacility.value),
-        details: updatedFacility.value,
-        validation: facilitiesValidation(updatedFacility.value),
-      };
-    }
-
-    return res.status(utils.mongoStatus(updatedFacility)).send(response);
+    updatedFacility = await update(req.params.id, req.body, generatePortalAuditDetails(req.user._id));
   } catch (error) {
     if (error instanceof ApiError) {
       return res.status(error.status).send({ status: error.status, message: error.message });
     }
     throw error;
   }
+
+  if (updatedFacility.value) {
+    response = {
+      status: facilitiesStatus(updatedFacility.value),
+      details: updatedFacility.value,
+      validation: facilitiesValidation(updatedFacility.value),
+    };
+  }
+
+  return res.status(utils.mongoStatus(updatedFacility)).send(response);
 };
 
 exports.delete = async (req, res) => {
