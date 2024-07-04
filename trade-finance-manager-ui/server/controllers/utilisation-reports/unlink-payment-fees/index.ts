@@ -16,11 +16,11 @@ export const unlinkPaymentFees = (req: AddPaymentRequest, res: Response) => {
     const checkedCheckboxIds = getEditPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
     const feeRecordIds = getFeeRecordIdsFromEditPremiumPaymentsCheckboxIds(checkedCheckboxIds);
 
-    // TODO: Remove after adding the API call logic.
+    // TODO - FN-1719 PR 2: Remove after adding the API call logic.
     // eslint-disable-next-line no-console
     console.log('feeRecordIds:', feeRecordIds);
 
-    // TODO: Make and await API call passing through feeRecordIds and paymentId.
+    // TODO - FN-1719 PR 2: Make and await API call passing through feeRecordIds, paymentId, etc.
     return res.redirect(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
   } catch (error) {
     console.error('Failed to unlink payment fees', error);
