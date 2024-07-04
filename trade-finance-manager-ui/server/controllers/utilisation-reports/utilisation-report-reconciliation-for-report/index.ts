@@ -18,9 +18,9 @@ const renderUtilisationReportReconciliationForReport = (res: Response, viewModel
 export const getUtilisationReportReconciliationByReportId = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId } = req.params;
+  const { facilityIdQuery } = req.query;
 
   try {
-    const { facilityIdQuery } = req.query;
     const facilityIdQueryAsString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
     const facilityIdQueryError = validateFacilityIdQuery(facilityIdQueryAsString, req.originalUrl);
     const { errorSummary: premiumPaymentFormError, isCheckboxChecked } = getAndClearFieldsFromRedirectSessionData(req);

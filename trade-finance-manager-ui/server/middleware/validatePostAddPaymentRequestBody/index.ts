@@ -1,5 +1,6 @@
 import { Currency, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { NextFunction, Request, Response } from 'express';
+import axios from 'axios';
 import { asUserSession } from '../../helpers/express-session';
 import { AddPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
 import {
@@ -36,10 +37,7 @@ const redirectWithError = (
   req.session.addPaymentErrorKey = addPaymentError;
   req.session.checkedCheckboxIds = checkedCheckboxIds;
   const facilityIdQuery = getFacilityIdQueryFromReferer(req);
-  if (facilityIdQuery) {
-    return res.redirect(`/utilisation-reports/${reportId}?facilityIdQuery=${facilityIdQuery}`);
-  }
-  return res.redirect(`/utilisation-reports/${reportId}`);
+  return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { facilityIdQuery } }));
 };
 
 const mapCheckedCheckboxesToRecord = (checkedCheckboxIds: string[]): Record<string, true | undefined> => {
