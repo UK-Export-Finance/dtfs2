@@ -115,11 +115,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
     pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
-    cy.get('a').contains('Enter a valid amount received').should('exist');
-    cy.get('a').contains('The date payment received must be a real date').should('exist');
+    cy.get('a').should('contain', 'Enter a valid amount received');
+    cy.get('a').should('contain', 'The date payment received must be a real date');
 
-    cy.get('form').contains('Enter a valid amount received').should('exist');
-    cy.get('form').contains('The date payment received must be a real date').should('exist');
+    cy.get('form').should('contain', 'Enter a valid amount received');
+    cy.get('form').should('contain', 'The date payment received must be a real date');
 
     cy.getInputByLabelText('Amount received').should('have.value', 'nonsense');
     cy.getInputByLabelText('Day').should('have.value', 'nonsense');
