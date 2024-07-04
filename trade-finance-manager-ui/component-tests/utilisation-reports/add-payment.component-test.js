@@ -341,4 +341,11 @@ describe(page, () => {
     // Assert
     wrapper.expectLink('a:contains("Uh oh")').toLinkTo('#uh-oh', 'Uh oh');
   });
+
+  it('should not render edit actions within the fee record details table', () => {
+    const addPaymentViewModel = anAddPaymentViewModel();
+    const wrapper = render(addPaymentViewModel);
+
+    wrapper.expectElement(`[data-cy="remove-selected-fees-button"]`).notToExist();
+  });
 });

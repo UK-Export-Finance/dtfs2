@@ -27,8 +27,13 @@ describe(component, () => {
     },
   ];
 
+  const reportId = '7';
+  const paymentId = '77';
+
   const getWrapper = ({ captionText, feeRecords, totalReportedPayments, enableSelectingFeeRecords, overrides } = {}) =>
     render({
+      reportId,
+      paymentId,
       captionText: captionText ?? 'Some caption',
       feeRecords: feeRecords ?? aFeeRecordDetailsViewModel(),
       totalReportedPayments: totalReportedPayments ?? 'GBP 100.00',
@@ -246,5 +251,19 @@ describe(component, () => {
     const wrapper = getWrapper({ enableSelectingFeeRecords: false });
 
     wrapper.expectElement(`${totalReportedPaymentsRowSelector} td:is(:empty)`).notToExist();
+  });
+
+  it('renders the "remove selected fees" button when enableSelectingFeeRecords is set to true which links to the unlink payment fees url', async () => {
+    const wrapper = getWrapper({ enableSelectingFeeRecords: true });
+
+    const saveChangesButtonSelector = 'input[data-cy="remove-selected-fees-button"]';
+    wrapper.expectInput(saveChangesButtonSelector).toHaveValue('Remove selected fees');
+    wrapper.expectElement(saveChangesButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/${reportId}/edit-payment/${paymentId}/unlink-fees`);
+  });
+
+  it('does not render the "remove selected fees" button when enableSelectingFeeRecords is set to false', async () => {
+    const wrapper = getWrapper({ enableSelectingFeeRecords: false });
+
+    wrapper.expectElement(`[data-cy="remove-selected-fees-button"]`).notToExist();
   });
 });

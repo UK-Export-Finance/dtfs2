@@ -146,4 +146,11 @@ describe(page, () => {
 
     wrapper.expectLink('a[data-cy="cancel-edit-payment-link"]').toLinkTo('/utilisation-reports/12', 'Cancel');
   });
+
+  it('should render edit actions within the fee record details table', () => {
+    const viewModel = anEditPaymentViewModel();
+    const wrapper = render(viewModel);
+
+    wrapper.expectElement(`[data-cy="remove-selected-fees-button"]`).toExist();
+  });
 });

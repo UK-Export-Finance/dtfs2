@@ -1,11 +1,13 @@
 import httpMocks from 'node-mocks-http';
 import { Currency, CurrencyAndAmount, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
+import { SessionData } from 'express-session';
+import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { PostEditPaymentRequest, getEditPayment, postEditPayment } from '.';
 import api from '../../../api';
 import { aPaymentDetailsWithFeeRecordsResponseBody, aTfmSessionUser, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL, EditPaymentFormRequestBody } from '../helpers';
 import { EditPaymentViewModel } from '../../../types/view-models/edit-payment-view-model';
-import { SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
+import { ErrorSummaryViewModel, SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
 import { ParsedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 jest.mock('../../../api');
@@ -25,8 +27,21 @@ describe('controllers/utilisation-reports/edit-payment', () => {
   });
 
   describe('getEditPayment', () => {
+    const userToken = 'user-token';
+    const user = MOCK_TFM_SESSION_USER;
+    const session = { userToken, user };
+
     const reportId = '12';
     const paymentId = '34';
+
+    const getHttpMocksWithSessionData = (sessionData: Partial<SessionData>) =>
+      httpMocks.createMocks({
+        session: { ...session, ...sessionData },
+        params: {
+          reportId,
+          paymentId,
+        },
+      });
 
     const getHttpMocks = () =>
       httpMocks.createMocks({
@@ -67,6 +82,28 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       // Assert
       const viewModel = res._getRenderData() as EditPaymentViewModel;
       expect(viewModel.paymentId).toBe(paymentId);
+    });
+
+    it('sets error summary to contain passed in session data', async () => {
+      // Arrange
+      const sessionData: Partial<SessionData> = {
+        unlinkPaymentFeesErrorKey: 'no-fee-records-selected',
+      };
+      const { req, res } = getHttpMocksWithSessionData(sessionData);
+
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
+      });
+
+      // Act
+      await getEditPayment(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/edit-payment.njk');
+      const viewModel = res._getRenderData() as EditPaymentViewModel;
+      expect(viewModel.errors.errorSummary).toBeDefined();
+      expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].href).toBe('#addedReportedFeesDetails');
+      expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].text).toBe('Select fee or fees to remove from the payment');
     });
 
     it('sets the render view model paymentCurrency to the edit payment details response payment currency', async () => {
