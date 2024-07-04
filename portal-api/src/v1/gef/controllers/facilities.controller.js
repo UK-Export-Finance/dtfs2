@@ -37,8 +37,8 @@ exports.create = async (req, res) => {
 
     const facilityParameters = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
 
-    const FacilityToInsert = new Facility(facilityParameters, existingDeal.version);
-    const createdFacility = await facilitiesCollection.insertOne(FacilityToInsert);
+    const facilityToInsert = new Facility(facilityParameters, existingDeal.version);
+    const createdFacility = await facilitiesCollection.insertOne(facilityToInsert);
 
     const { insertedId } = createdFacility;
 
@@ -133,7 +133,8 @@ exports.getById = async (req, res) => {
  * @param {object} updateBody - update to make
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns {Promise<import("mongodb").ModifyResult | false>} - Modify Result from the db operation or false if the facility or deal id are invalid
- * @throws {DealVersionError} if adding a facility end date to invalid deal version
+ * @throws {import("@ukef/dtfs2-common").DealVersionError} - if `dealVersion` is too low & `updateBody` has property `isUsingFacilityEndDate`
+ * @throws {import("@ukef/dtfs2-common").InvalidParameterError} - if `isUsingFacilityEndDate` is not a boolean
  */
 const update = async (id, updateBody, auditDetails) => {
   try {

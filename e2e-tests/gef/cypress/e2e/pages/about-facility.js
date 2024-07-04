@@ -22,9 +22,9 @@ const aboutFacility = {
   coverEndDateYear: () => cy.get('[data-cy="cover-end-date-year"]'),
   monthsOfCover: () => cy.get('[data-cy="months-of-cover"]'),
   monthsOfCoverError: () => cy.get('[data-cy="months-of-cover-error"]'),
-  isUsingFacilityEndDateError: () => cy.get('[data-cy="facility-end-date-exists-error"]'),
-  isUsingFacilityEndDateYes: () => cy.get('[data-cy="facility-end-date-exists-yes"]'),
-  isUsingFacilityEndDateNo: () => cy.get('[data-cy="facility-end-date-exists-no"]'),
+  isUsingFacilityEndDateError: () => cy.get('[data-cy="is-using-facility-end-date-error"]'),
+  isUsingFacilityEndDateYes: () => cy.get('[data-cy="is-using-facility-end-date-yes"]'),
+  isUsingFacilityEndDateNo: () => cy.get('[data-cy="is-using-facility-end-date-no"]'),
   continueButton: () => cy.get('[data-cy="continue-button"]'),
   saveAndReturnButton: () => cy.get('[data-cy="save-and-return-button"]'),
 };

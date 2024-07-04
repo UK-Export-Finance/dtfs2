@@ -219,7 +219,7 @@ describe('GEF deal versioning', () => {
       const { body: facilityBody } = await as(aMaker).post({ dealId: dealBody._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(gefFacilitiesUrl);
       const { status, body } = await as(aMaker).put({ isUsingFacilityEndDate: 'true' }).to(`${gefFacilitiesUrl}/${facilityBody.details._id}`);
 
-      expect(body).toEqual({ status: 400, message: 'isUsingFacilityEndDate must be a boolean' });
+      expect(body).toEqual({ status: 400, message: 'Invalid isUsingFacilityEndDate: "true"' });
       expect(status).toEqual(400);
     });
 
@@ -229,7 +229,7 @@ describe('GEF deal versioning', () => {
         .post({ dealId: dealBody._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, isUsingFacilityEndDate: 'true' })
         .to(gefFacilitiesUrl);
 
-      expect(body).toEqual({ status: 400, message: 'isUsingFacilityEndDate must be a boolean' });
+      expect(body).toEqual({ status: 400, message: 'Invalid isUsingFacilityEndDate: "true"' });
       expect(status).toEqual(400);
     });
   });

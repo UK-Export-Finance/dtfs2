@@ -74,8 +74,8 @@ describe(page, () => {
 
     it(`renders the 'Do you have a facility end date?' question`, () => {
       wrapper.expectText('.govuk-fieldset__legend--m').toRead('Do you have a facility end date?');
-      wrapper.expectInput('[data-cy="facility-end-date-exists-yes"]').toNotBeChecked();
-      wrapper.expectInput('[data-cy="facility-end-date-exists-no"]').toNotBeChecked();
+      wrapper.expectInput('[data-cy="is-using-facility-end-date-yes"]').toNotBeChecked();
+      wrapper.expectInput('[data-cy="is-using-facility-end-date-no"]').toNotBeChecked();
     });
   });
 
@@ -89,8 +89,8 @@ describe(page, () => {
     });
 
     it(`does not render the 'Do you have a facility end date?' radio buttons`, () => {
-      wrapper.expectElement('[data-cy="facility-end-date-exists-yes"]').notToExist();
-      wrapper.expectElement('[data-cy="facility-end-date-exists-no"]').notToExist();
+      wrapper.expectElement('[data-cy="is-using-facility-end-date-yes"]').notToExist();
+      wrapper.expectElement('[data-cy="is-using-facility-end-date-no"]').notToExist();
     });
   });
 

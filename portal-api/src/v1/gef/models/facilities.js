@@ -1,6 +1,5 @@
-const { isFacilityEndDateEnabledOnGefVersion, DealVersionError } = require('@ukef/dtfs2-common');
+const { isFacilityEndDateEnabledOnGefVersion, DealVersionError, InvalidParameterError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const { InvalidIsUsingFacilityEndDate } = require('../../errors/invalid-is-using-facility-end-date.error');
 const convertToTimestamp = require('../../helpers/convertToTimestamp');
 
 const checkType = (type) => {
@@ -22,7 +21,7 @@ class Facility {
    * @param {object} req - The facility properties to create/update
    * @param {number | undefined} dealVersion
    * @throws {DealVersionError} - if `dealVersion` is too low & `req` has property `isUsingFacilityEndDate`
-   * @throws {InvalidIsUsingFacilityEndDate} - if `isUsingFacilityEndDate` is not a boolean
+   * @throws {InvalidParameterError} - if `isUsingFacilityEndDate` is not a boolean
    */
   constructor(req, dealVersion) {
     if (!isFacilityEndDateEnabledOnGefVersion(dealVersion) && 'isUsingFacilityEndDate' in req) {
@@ -77,7 +76,7 @@ class Facility {
       this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker) || null;
       if (isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
         if ('isUsingFacilityEndDate' in req && !(typeof req.isUsingFacilityEndDate === 'boolean')) {
-          throw new InvalidIsUsingFacilityEndDate('isUsingFacilityEndDate must be a boolean');
+          throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
         }
         this.isUsingFacilityEndDate = req.isUsingFacilityEndDate ?? null;
       }
@@ -208,7 +207,7 @@ class Facility {
 
       if ('isUsingFacilityEndDate' in req) {
         if (!(typeof req.isUsingFacilityEndDate === 'boolean')) {
-          throw new InvalidIsUsingFacilityEndDate('isUsingFacilityEndDate must be a boolean');
+          throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
         }
         this.isUsingFacilityEndDate = req.isUsingFacilityEndDate;
       }
