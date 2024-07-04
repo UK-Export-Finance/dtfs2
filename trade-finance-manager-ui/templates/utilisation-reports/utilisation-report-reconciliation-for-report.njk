@@ -3,6 +3,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% import "./_macros/premium-payments-table.njk" as premiumPaymentsTable %}
+{% import "./_macros/keying-sheet-table.njk" as keyingSheetTable %}
 
 {% extends "index.njk" %}
 
@@ -75,13 +76,12 @@
       </div>
     </div>
 
-{% if premiumPaymentFormError %}
+  {% if premiumPaymentFormError %}
     <div class="govuk-form-group--error">
   {% endif %}
   {% if userCanEdit %}
     <form method="post" data-cy="premium-payments-form">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-      <input type="hidden" name="canGenerateKeyingData" value="{{ canGenerateKeyingData }}"/>
       <div class="govuk-button-group">
         <input
           class="govuk-button govuk-!-margin-right-3"
@@ -114,7 +114,40 @@
 {% endset %}
 
 {% set keyingSheetHtml %}
-  <div></div>
+  <h2 class="govuk-heading-l" data-cy="keying-sheet-heading">Keying sheet</h2>
+
+  <p class="govuk-body">Select payments and mark as done when the adjustments have been keyed into ACBS.</p>
+
+  <p class="govuk-body">Payments on the premium payments tab will show as reconciled when they have been marked as done here.</p>
+  
+  <form method="post" data-cy="keying-sheet-form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+    {% if userCanEdit %}
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Mark as done",
+          classes: "govuk-!-margin-right-3",
+          attributes: {
+            "data-cy": "keying-sheet-mark-as-done-button"
+          }
+        }) }}
+        
+        {{ govukButton({
+          text: "Mark as to do",
+          classes: "govuk-button--secondary",
+          attributes: {
+            "data-cy": "keying-sheet-mark-as-to-do-button"
+          }
+        }) }}
+      </div>
+    {% endif %}
+
+    {{ keyingSheetTable.render({
+      keyingSheet: keyingSheet,
+      userCanEdit: userCanEdit
+    }) }}
+  </form>
 {% endset %}
 
 {% set paymentDetailsHtml %}

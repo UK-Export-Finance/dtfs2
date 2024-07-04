@@ -1,0 +1,75 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import "../../_macros/select-all-table-cell-checkbox.njk" as selectAllTableCellCheckbox %}
+{% import "./keying-sheet-status.njk" as keyingSheetStatus %}
+{% import "../../_macros/table-cell-checkbox.njk" as tableCellCheckbox %}
+{% macro render(params) %}
+  {% set reportId = params.reportId %}
+  {% set keyingSheet = params.keyingSheet %}
+  {% set userCanEdit = params.userCanEdit %}
+  {% macro adjustmentColumns(params) %}
+    {% set amount = params.amount %}
+    {% set change = params.change %}
+    <td class="govuk-table__cell" data-cy="keying-sheet-adjustment--increase">
+      {{ amount if change === "INCREASE" else "-" }}
+    </td>
+    <td class="govuk-table__cell" data-cy="keying-sheet-adjustment--decrease">
+      {{ amount if change === "DECREASE" else "-" }}
+    </td>
+  {% endmacro %}
+  <table class="govuk-table" data-module="moj-sortable-table" data-cy="keying-sheet-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header" aria-sort="none" rowspan="2">Status</th>
+        <th scope="col" class="govuk-table__header" aria-sort="ascending" rowspan="2">Facility ID</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none" rowspan="2">Exporter</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none" rowspan="2">Date</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric" rowspan="2">Fee payment</th>
+        <th scope="col" class="govuk-table__header" rowspan="2">Base currency</th>
+        <th scope="col" class="govuk-table__header" colspan="2">Fixed fee adjustment</th>
+        <th scope="col" class="govuk-table__header" colspan="2">Premium accrual balance adjustment</th>
+        <th scope="col" class="govuk-table__header" colspan="2">Principal balance adjustment</th>
+        {% if userCanEdit %}
+          <th scope="col" class="govuk-table__header" rowspan="2">
+            {{ selectAllTableCellCheckbox.render() }}
+          </th>
+        {% endif %}
+      </tr>
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Increase</th>
+        <th scope="col" class="govuk-table__header">Decrease</th>
+        <th scope="col" class="govuk-table__header">Increase</th>
+        <th scope="col" class="govuk-table__header">Decrease</th>
+        <th scope="col" class="govuk-table__header">Increase</th>
+        <th scope="col" class="govuk-table__header">Decrease</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for keyingSheetItem in keyingSheet %}
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">
+            {{ keyingSheetStatus.render({
+              status: keyingSheetItem.status,
+              displayStatus: keyingSheetItem.displayStatus
+            }) }}
+          </td>
+          <td class="govuk-table__cell">{{ keyingSheetItem.facilityId }}</td>
+          <td class="govuk-table__cell">{{ keyingSheetItem.exporter }}</td>
+          <td class="govuk-table__cell">{{ keyingSheetItem.formattedDatePaymentReceived }}</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric">{{ keyingSheetItem.feePayment }}</td>
+          <td class="govuk-table__cell">{{ keyingSheetItem.baseCurrency }}</td>
+          {{ adjustmentColumns(keyingSheetItem.fixedFeeAdjustment) }}
+          {{ adjustmentColumns(keyingSheetItem.premiumAccrualBalanceAdjustment) }}
+          {{ adjustmentColumns(keyingSheetItem.principalBalanceAdjustment) }}
+          {% if userCanEdit %}
+            <td class="govuk-table__cell">
+              {{ tableCellCheckbox.render({
+                checkboxId: keyingSheetItem.checkboxId,
+                checked: keyingSheetItem.isChecked
+              }) }}
+            </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endmacro %}

@@ -1,10 +1,18 @@
 import orderBy from 'lodash.orderby';
 import { FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
-import { FeeRecord, FeeRecordPaymentGroup, Payment } from '../../../api-response-types';
-import { FeeRecordPaymentGroupViewModelItem, FeeRecordViewModelItem, PaymentViewModelItem } from '../../../types/view-models';
+import { format } from 'date-fns';
+import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetAdjustment, Payment } from '../../../api-response-types';
+import {
+  FeeRecordPaymentGroupViewModelItem,
+  FeeRecordViewModelItem,
+  KeyingSheetAdjustmentViewModel,
+  KeyingSheetViewModel,
+  PaymentViewModelItem,
+} from '../../../types/view-models';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
+import { getKeyingSheetDisplayStatus } from './get-keying-sheet-display-status';
 
 const sortFeeRecordsByReportedPayments = (feeRecords: FeeRecord[]): FeeRecord[] =>
   orderBy(feeRecords, [({ reportedPayments }) => reportedPayments.currency, ({ reportedPayments }) => reportedPayments.amount], ['asc']);
@@ -101,3 +109,29 @@ export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
     };
   });
 };
+
+const getKeyingSheetAdjustmentViewModel = (adjustment: KeyingSheetAdjustment | null): KeyingSheetAdjustmentViewModel => {
+  if (!adjustment) {
+    return { amount: undefined, change: 'NONE' };
+  }
+  return {
+    amount: adjustment.amount.toFixed(2),
+    change: adjustment.change,
+  };
+};
+
+export const mapKeyingSheetToKeyingSheetViewModel = (keyingSheet: KeyingSheet): KeyingSheetViewModel =>
+  keyingSheet.map((keyingSheetItem) => ({
+    status: keyingSheetItem.status,
+    displayStatus: getKeyingSheetDisplayStatus(keyingSheetItem.status),
+    facilityId: keyingSheetItem.facilityId,
+    exporter: keyingSheetItem.exporter,
+    formattedDatePaymentReceived: format(new Date(keyingSheetItem.datePaymentReceived), 'd MMM yyyy'),
+    baseCurrency: keyingSheetItem.baseCurrency,
+    feePayment: getFormattedCurrencyAndAmount(keyingSheetItem.feePayment),
+    fixedFeeAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetItem.fixedFeeAdjustment),
+    premiumAccrualBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetItem.premiumAccrualBalanceAdjustment),
+    principalBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetItem.principalBalanceAdjustment),
+    checkboxId: `feeRecordId-${keyingSheetItem.feeRecordId}`,
+    isChecked: false,
+  }));

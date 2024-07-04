@@ -65,4 +65,6 @@
  *         type: array
  *         items:
  *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecordPaymentGroup'
+ *       keyingSheet:
+ *         $ref: '#/definitions/KeyingSheet'
  */

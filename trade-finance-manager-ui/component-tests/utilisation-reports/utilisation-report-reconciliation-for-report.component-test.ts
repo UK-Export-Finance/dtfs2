@@ -1,13 +1,15 @@
-const { TEAM_IDS } = require('@ukef/dtfs2-common');
-const { PRIMARY_NAVIGATION_KEYS } = require('../../server/constants');
-const { pageRenderer } = require('../pageRenderer');
-const { aTfmSessionUser } = require('../../test-helpers/test-data/tfm-session-user');
+import { PRIMARY_NAVIGATION_KEYS } from '../../server/constants';
+import { pageRenderer } from '../pageRenderer';
+import { aTfmSessionUser } from '../../test-helpers/test-data/tfm-session-user';
+import { UtilisationReportReconciliationForReportViewModel } from '../../server/types/view-models';
+import { TfmSessionUser } from '../../server/types/tfm-session-user';
 
 const page = '../templates/utilisation-reports/utilisation-report-reconciliation-for-report.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
-  let wrapper;
+  const aPdcReconcileUser = (): TfmSessionUser => ({ ...aTfmSessionUser(), teams: ['PDC_RECONCILE'] });
+  const aPdcReadUser = (): TfmSessionUser => ({ ...aTfmSessionUser(), teams: ['PDC_READ'] });
 
   const bank = {
     id: '123',
@@ -19,27 +21,29 @@ describe(page, () => {
 
   const facilityIdQuery = '1234';
 
-  const params = {
+  const params: UtilisationReportReconciliationForReportViewModel = {
     user: aTfmSessionUser(),
     activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
     bank,
     formattedReportPeriod,
-    reportId,
-    feeRecords: [],
+    reportId: reportId.toString(),
+    feeRecordPaymentGroups: [],
     enablePaymentsReceivedSorting: false,
-    errorSummary: undefined,
+    premiumPaymentFormError: undefined,
+    facilityIdQueryError: undefined,
     facilityIdQuery,
+    keyingSheet: [],
   };
 
-  beforeEach(() => {
-    wrapper = render(params);
-  });
+  const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
 
   it('should render the main heading', () => {
+    const wrapper = getWrapper();
     wrapper.expectElement('[data-cy="utilisation-report-reconciliation-for-report-heading"]').toExist();
   });
 
   it('should render the report period heading', () => {
+    const wrapper = getWrapper();
     wrapper.expectText('[data-cy="report-period-heading"]').toRead(`${formattedReportPeriod}`);
   });
 
@@ -49,7 +53,8 @@ describe(page, () => {
     ${'Keying sheet'}     | ${'bank-report-tab-keying-sheet'}     | ${'#keying-sheet'}
     ${'Payment details'}  | ${'bank-report-tab-payment-details'}  | ${'#payment-details'}
     ${'Utilisation'}      | ${'bank-report-tab-utilisation'}      | ${'#utilisation'}
-  `("should render the '$tabName' tab", ({ dataCy, tabName, href }) => {
+  `("should render the '$tabName' tab", ({ dataCy, tabName, href }: { dataCy: string; tabName: string; href: string }) => {
+    const wrapper = getWrapper();
     const tabSelector = `[data-cy="${dataCy}"]`;
     wrapper.expectElement(tabSelector).toExist();
     wrapper.expectText(tabSelector).toRead(tabName);
@@ -57,6 +62,7 @@ describe(page, () => {
   });
 
   it('should render the premium payments tab with headings, text, table and buttons', () => {
+    const wrapper = getWrapper();
     const premiumPaymentsTabSelector = 'div#premium-payments';
 
     wrapper.expectElement(premiumPaymentsTabSelector).toExist();
@@ -92,48 +98,39 @@ describe(page, () => {
   });
 
   it('should render the facility ID filter input', () => {
+    const wrapper = getWrapper();
     wrapper.expectElement('[data-cy="facility-filter-input"]').toExist();
     wrapper.expectText('[data-cy="facility-filter-form"]').toContain('Filter by facility ID');
   });
 
   it('initialises the filter input value to the facilityIdQuery', () => {
+    const wrapper = getWrapper();
     wrapper.expectInput('[data-cy="facility-filter-input"]').toHaveValue(facilityIdQuery);
   });
 
   it('should render the facility ID filter submit button', () => {
+    const wrapper = getWrapper();
     wrapper.expectElement('[data-cy="facility-filter-submit-button"]').toExist();
     wrapper.expectText('[data-cy="facility-filter-submit-button"]').toRead('Filter');
   });
 
   it('should render the facility ID filter clear button', () => {
+    const wrapper = getWrapper();
     wrapper.expectElement('[data-cy="facility-filter-clear-button"]').toExist();
     wrapper.expectText('[data-cy="facility-filter-clear-button"]').toRead('Clear filter');
   });
 
   it('should not render add payment button for PDC_READ user', () => {
-    const user = {
-      ...aTfmSessionUser(),
-      teams: [TEAM_IDS.PDC_READ],
-    };
-
-    wrapper = render({
-      ...params,
-      user,
-    });
+    const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
 
     const premiumPaymentsTabSelector = 'div#premium-payments';
     wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`).notToExist();
   });
 
   it('should not render generate keying data button for PDC_READ user', () => {
-    const user = {
-      ...aTfmSessionUser(),
-      teams: [TEAM_IDS.PDC_READ],
-    };
-
-    wrapper = render({
+    const wrapper = getWrapper({
       ...params,
-      user,
+      user: aPdcReadUser(),
     });
 
     const premiumPaymentsTabSelector = 'div#premium-payments';
@@ -141,27 +138,64 @@ describe(page, () => {
   });
 
   it('should render edit actions within the premium payments table for PDC_RECONCILE users', () => {
-    const user = aTfmSessionUser();
-
-    wrapper = render({
+    const wrapper = getWrapper({
       ...params,
-      user,
+      user: aPdcReconcileUser(),
     });
 
     wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).toExist();
   });
 
   it('should not render edit actions within the premium payments table for PDC_READ users', () => {
-    const user = {
-      ...aTfmSessionUser(),
-      teams: [TEAM_IDS.PDC_READ],
-    };
-
-    wrapper = render({
+    const wrapper = getWrapper({
       ...params,
-      user,
+      user: aPdcReadUser(),
     });
 
     wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).notToExist();
+  });
+
+  it('should render the keying sheet tab with headings, text, table and buttons for PDC_RECONCILE users', () => {
+    const wrapper = getWrapper({ ...params, user: aPdcReconcileUser() });
+    const keyingSheetTabSelector = 'div#keying-sheet';
+
+    wrapper.expectElement(keyingSheetTabSelector).toExist();
+
+    wrapper.expectText(`${keyingSheetTabSelector} h2[data-cy="keying-sheet-heading"]`).toRead('Keying sheet');
+    wrapper.expectText(`${keyingSheetTabSelector} p`).toMatch(/Select payments and mark as done when the adjustments have been keyed into ACBS./);
+    wrapper
+      .expectText(`${keyingSheetTabSelector} p`)
+      .toMatch(/Payments on the premium payments tab will show as reconciled when they have been marked as done here./);
+
+    wrapper.expectElement(`${keyingSheetTabSelector} form[data-cy="keying-sheet-form"]`).toExist();
+
+    wrapper.expectElement(`${keyingSheetTabSelector} div.govuk-button-group`).toExist();
+
+    wrapper.expectPrimaryButton(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-done-button"]`).toLinkTo(undefined, 'Mark as done');
+
+    wrapper.expectSecondaryButton(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-to-do-button"]`).toLinkTo(undefined, 'Mark as to do');
+
+    wrapper.expectElement(`${keyingSheetTabSelector} table[data-cy="keying-sheet-table"]`).toExist();
+  });
+
+  it('should render the keying sheet tab with headings, text, table but not buttons for PDC_READ users', () => {
+    const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
+    const keyingSheetTabSelector = 'div#keying-sheet';
+
+    wrapper.expectElement(keyingSheetTabSelector).toExist();
+
+    wrapper.expectText(`${keyingSheetTabSelector} h2[data-cy="keying-sheet-heading"]`).toRead('Keying sheet');
+    wrapper.expectText(`${keyingSheetTabSelector} p`).toMatch(/Select payments and mark as done when the adjustments have been keyed into ACBS./);
+    wrapper
+      .expectText(`${keyingSheetTabSelector} p`)
+      .toMatch(/Payments on the premium payments tab will show as reconciled when they have been marked as done here./);
+
+    wrapper.expectElement(`${keyingSheetTabSelector} form[data-cy="keying-sheet-form"]`).toExist();
+
+    wrapper.expectElement(`${keyingSheetTabSelector} div.govuk-button-group`).notToExist();
+    wrapper.expectElement(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-done-button"]`).notToExist();
+    wrapper.expectElement(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-to-do-button"]`).notToExist();
+
+    wrapper.expectElement(`${keyingSheetTabSelector} table[data-cy="keying-sheet-table"]`).toExist();
   });
 });

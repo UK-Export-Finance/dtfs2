@@ -1,4 +1,4 @@
-import { CurrencyAndAmountString, FeeRecordStatus, SessionBank } from '@ukef/dtfs2-common';
+import { Currency, CurrencyAndAmountString, FeeRecordStatus, KeyingSheetStatus, SessionBank } from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
 import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
 import { BaseViewModel } from './base-view-model';
@@ -23,6 +23,28 @@ export type PaymentViewModelItem = {
   formattedCurrencyAndAmount: CurrencyAndAmountString;
 };
 
+export type KeyingSheetDisplayStatus = 'TO DO' | 'DONE';
+
+export type KeyingSheetAdjustmentViewModel = {
+  amount: string | undefined;
+  change: 'INCREASE' | 'DECREASE' | 'NONE';
+};
+
+export type KeyingSheetViewModel = {
+  status: KeyingSheetStatus;
+  displayStatus: KeyingSheetDisplayStatus;
+  facilityId: string;
+  exporter: string;
+  formattedDatePaymentReceived: string;
+  baseCurrency: Currency;
+  feePayment: CurrencyAndAmountString;
+  fixedFeeAdjustment: KeyingSheetAdjustmentViewModel;
+  premiumAccrualBalanceAdjustment: KeyingSheetAdjustmentViewModel;
+  principalBalanceAdjustment: KeyingSheetAdjustmentViewModel;
+  checkboxId: `feeRecordId-${number}`;
+  isChecked: boolean;
+}[];
+
 export type FeeRecordPaymentGroupViewModelItem = {
   feeRecords: FeeRecordViewModelItem[];
   totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
@@ -44,4 +66,5 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   premiumPaymentFormError: ErrorSummaryViewModel | undefined;
   facilityIdQueryError: ErrorSummaryViewModel | undefined;
   facilityIdQuery?: string;
+  keyingSheet: KeyingSheetViewModel;
 };

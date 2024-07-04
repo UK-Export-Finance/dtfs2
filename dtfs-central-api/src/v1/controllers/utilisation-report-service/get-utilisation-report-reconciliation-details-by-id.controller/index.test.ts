@@ -1,10 +1,12 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { ApiError } from '@ukef/dtfs2-common';
+import { when } from 'jest-when';
+import { ApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import { getUtilisationReportReconciliationDetails } from './helpers';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
 import { aReportPeriod } from '../../../../../test-helpers/test-data/report-period';
+import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 
 jest.mock('./helpers');
 
@@ -29,16 +31,22 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
         },
       });
 
+    const utilisationReportRepoFindSpy = jest.spyOn(UtilisationReportRepo, 'findOneByIdWithFeeRecordsWithPayments');
+
+    beforeEach(() => {
+      utilisationReportRepoFindSpy.mockRejectedValue(new Error('Some error'));
+    });
+
     afterEach(() => {
       jest.resetAllMocks();
     });
 
-    it("responds with the specific error message if saving the report throws an 'ApiError'", async () => {
+    it("responds with the specific error message if getting the report throws an 'ApiError'", async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
       const errorMessage = 'Some error message';
-      jest.mocked(getUtilisationReportReconciliationDetails).mockRejectedValue(new TestApiError(undefined, errorMessage));
+      when(utilisationReportRepoFindSpy).calledWith(reportId).mockRejectedValue(new TestApiError(undefined, errorMessage));
 
       // Act
       await getUtilisationReportReconciliationDetailsById(req, res);
@@ -51,7 +59,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       // Arrange
       const { req, res } = getHttpMocks();
 
-      jest.mocked(getUtilisationReportReconciliationDetails).mockRejectedValue(new Error('Some error'));
+      when(utilisationReportRepoFindSpy).calledWith(reportId).mockRejectedValue(new Error('Some error'));
 
       // Act
       await getUtilisationReportReconciliationDetailsById(req, res);
@@ -64,7 +72,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       // Arrange
       const { req, res } = getHttpMocks();
 
-      jest.mocked(getUtilisationReportReconciliationDetails).mockRejectedValue(new Error('Some error'));
+      when(utilisationReportRepoFindSpy).calledWith(reportId).mockRejectedValue(new Error('Some error'));
 
       // Act
       await getUtilisationReportReconciliationDetailsById(req, res);
@@ -77,6 +85,9 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       // Arrange
       const { req, res } = getHttpMocks();
 
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+      when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);
+
       const reportDetails = aUtilisationReportReconciliationDetails();
       jest.mocked(getUtilisationReportReconciliationDetails).mockResolvedValue(reportDetails);
 
@@ -87,7 +98,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(res._getData()).toBe(reportDetails);
       expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledTimes(1);
-      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(reportId, undefined);
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, undefined);
     });
 
     it('fetches details filtering by facility id query and responds with 200 when there is a facility id query provided', async () => {
@@ -95,6 +106,9 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       const query = '1234';
       const { req, res } = getHttpMocks(query);
 
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+      when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);
+
       const reportDetails = aUtilisationReportReconciliationDetails();
       jest.mocked(getUtilisationReportReconciliationDetails).mockResolvedValue(reportDetails);
 
@@ -105,14 +119,18 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(res._getData()).toBe(reportDetails);
       expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledTimes(1);
-      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(reportId, '1234');
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, '1234');
     });
 
     it('fetches details filtering without filtering and responds with 200 when there is an invalid facility id query', async () => {
+      // Should this throw if the facility id query is invalid? I think it probably should
       // Arrange
       const query = '123';
       const { req, res } = getHttpMocks(query);
 
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+      when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);
+
       const reportDetails = aUtilisationReportReconciliationDetails();
       jest.mocked(getUtilisationReportReconciliationDetails).mockResolvedValue(reportDetails);
 
@@ -123,7 +141,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(res._getData()).toBe(reportDetails);
       expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledTimes(1);
-      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(reportId, undefined);
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, undefined);
     });
 
     function aUtilisationReportReconciliationDetails(): UtilisationReportReconciliationDetails {
@@ -137,6 +155,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
         reportPeriod: aReportPeriod(),
         dateUploaded: new Date(),
         feeRecordPaymentGroups: [],
+        keyingSheet: [],
       };
     }
   });
