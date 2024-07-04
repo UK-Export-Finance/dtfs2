@@ -1,7 +1,7 @@
 const crypto = require('node:crypto');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
-const { UtilisationReportEntity } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntity, FeeRecordEntity, PaymentEntity } = require('@ukef/dtfs2-common');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
@@ -98,6 +98,18 @@ module.exports = {
      */
     const removeAllUtilisationReportsFromDb = async () => await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
 
+    /**
+     * Inserts fee records to the SQL database
+     * @param {FeeRecordEntity[]} feeRecords
+     * @returns {FeeRecordEntity[]} The inserted fee records
+     */
+    const insertFeeRecordsIntoDb = async (feeRecords) => await SqlDbDataSource.manager.save(FeeRecordEntity, feeRecords);
+
+    /**
+     * Deletes all the rows from the payment table
+     */
+    const removeAllPaymentsFromDb = async () => await SqlDbDataSource.manager.delete(PaymentEntity, {});
+
     const getAllBanks = async () => {
       const banks = await db.getCollection(DB_COLLECTIONS.BANKS);
       return banks.find().toArray();
@@ -113,16 +125,6 @@ module.exports = {
           },
         },
       );
-    };
-
-    const insertUtilisationReportDetailsIntoDb = async (utilisationReportDetails) => {
-      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-      return utilisationReports.insertMany(utilisationReportDetails);
-    };
-
-    const removeAllUtilisationReportDetailsFromDb = async () => {
-      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-      return utilisationReports.deleteMany({});
     };
 
     /**
@@ -209,17 +211,17 @@ module.exports = {
       overridePortalUserSignInTokensByUsername,
       resetPortalUserStatusAndNumberOfSignInLinks,
       disablePortalUserByUsername,
-      insertUtilisationReportDetailsIntoDb,
       insertManyTfmDeals,
       deleteAllTfmDeals,
       insertManyTfmFacilitiesAndTwoLinkedDeals,
       deleteAllTfmFacilities,
-      removeAllUtilisationReportDetailsFromDb,
       getAllBanks,
       insertUtilisationReportsIntoDb,
       removeAllUtilisationReportsFromDb,
       insertVersion0Deal,
       insertVersion0Facility,
+      insertFeeRecordsIntoDb,
+      removeAllPaymentsFromDb,
     };
   },
 };

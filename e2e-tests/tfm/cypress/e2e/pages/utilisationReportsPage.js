@@ -12,6 +12,8 @@ const utilisationReportsPage = {
     cy.get(`[data-cy="utilisation-reports-form--${submissionMonth}"]`).within(($form) => {
       cy.wrap($form).get('[data-cy="mark-as-not-completed-button"]').click();
     }),
+  getPaymentLink: (paymentId) => cy.get(`a[data-cy="edit-payment-link--paymentId-${paymentId}"]`),
+  clickPaymentLink: (paymentId) => cy.get(`a[data-cy="edit-payment-link--paymentId-${paymentId}"]`).click(),
 };
 
-module.exports = utilisationReportsPage;
+module.exports = { utilisationReportsPage };

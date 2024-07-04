@@ -10,3 +10,10 @@ export type CreatePaymentParams = {
   feeRecords: FeeRecordEntity[];
   requestSource: DbRequestSource;
 };
+
+export type UpdatePaymentParams = {
+  amount: number;
+  dateReceived: Date;
+  reference: string | undefined;
+  requestSource: DbRequestSource;
+};

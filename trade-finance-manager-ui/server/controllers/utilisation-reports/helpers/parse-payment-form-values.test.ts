@@ -1,6 +1,7 @@
 import { Currency } from '@ukef/dtfs2-common';
-import { parseValidatedAddPaymentFormValues } from './parse-validated-add-payment-form-values';
+import { parseValidatedAddPaymentFormValues, parseValidatedEditPaymentFormValues } from './parse-payment-form-values';
 import { ValidatedAddPaymentFormValues } from '../../../types/add-payment-form-values';
+import { ValidatedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 describe('parseValidatedAddPaymentFormValues', () => {
   const aValidatedAddPaymentFormValuesObject = (): Omit<ValidatedAddPaymentFormValues, 'addAnotherPayment'> => ({
@@ -132,4 +133,78 @@ describe('parseValidatedAddPaymentFormValues', () => {
     // Assert
     expect(parsedFormValues.paymentAmount).toBe(paymentAmount);
   });
+});
+
+describe('parseValidatedEditPaymentFormValues', () => {
+  it('sets the paymentAmount field to a number matching the supplied paymentAmount', () => {
+    // Arrange
+    const validatedFormValues: ValidatedEditPaymentFormValues = {
+      ...aValidatedEditPaymentFormValueSet(),
+      paymentAmount: '314.59',
+    };
+
+    // Act
+    const result = parseValidatedEditPaymentFormValues(validatedFormValues);
+
+    // Assert
+    expect(result.paymentAmount).toBe(314.59);
+  });
+
+  it('sets the datePaymentReceived field to a date matching the supplied paymentDate object', () => {
+    // Arrange
+    const validatedFormValues: ValidatedEditPaymentFormValues = {
+      ...aValidatedEditPaymentFormValueSet(),
+      paymentDate: {
+        day: '12',
+        month: '5',
+        year: '2024',
+      },
+    };
+
+    // Act
+    const result = parseValidatedEditPaymentFormValues(validatedFormValues);
+
+    // Assert
+    expect(result.datePaymentReceived).toEqual(new Date('2024-5-12'));
+  });
+
+  it('sets the paymentReference field to the supplied paymentReference string', () => {
+    // Arrange
+    const validatedFormValues: ValidatedEditPaymentFormValues = {
+      ...aValidatedEditPaymentFormValueSet(),
+      paymentReference: 'A payment reference',
+    };
+
+    // Act
+    const result = parseValidatedEditPaymentFormValues(validatedFormValues);
+
+    // Assert
+    expect(result.paymentReference).toBe('A payment reference');
+  });
+
+  it('sets the paymentReference field to null when the supplied paymentReference is undefined', () => {
+    // Arrange
+    const validatedFormValues: ValidatedEditPaymentFormValues = {
+      ...aValidatedEditPaymentFormValueSet(),
+      paymentReference: undefined,
+    };
+
+    // Act
+    const result = parseValidatedEditPaymentFormValues(validatedFormValues);
+
+    // Assert
+    expect(result.paymentReference).toBeNull();
+  });
+
+  function aValidatedEditPaymentFormValueSet(): ValidatedEditPaymentFormValues {
+    return {
+      paymentAmount: '100',
+      paymentDate: {
+        day: '1',
+        month: '12',
+        year: '2024',
+      },
+      paymentReference: 'A payment reference',
+    };
+  }
 });
