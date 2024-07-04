@@ -109,6 +109,11 @@ module.exports = {
      */
     const removeAllPaymentsFromDb = async () => await SqlDbDataSource.manager.delete(PaymentEntity, {});
 
+    /**
+     * Deletes all the rows from the payment table
+     */
+    const removeAllFeeRecordsFromDb = async () => await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
+
     const getAllBanks = async () => {
       const banks = await db.getCollection(DB_COLLECTIONS.BANKS);
       return banks.find().toArray();
@@ -204,6 +209,7 @@ module.exports = {
       removeAllUtilisationReportsFromDb,
       insertFeeRecordsIntoDb,
       removeAllPaymentsFromDb,
+      removeAllFeeRecordsFromDb,
     };
   },
 };
