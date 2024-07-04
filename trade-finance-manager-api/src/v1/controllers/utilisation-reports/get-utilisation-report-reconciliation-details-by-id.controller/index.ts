@@ -8,6 +8,9 @@ export type GetUtilisationReportReconciliationDetailsByIdRequest = CustomExpress
   params: {
     reportId: string;
   };
+  query: {
+    facilityIdQuery?: string;
+  };
 }>;
 
 type ResponseBody = UtilisationReportReconciliationDetailsResponseBody | string;
@@ -16,7 +19,8 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
   const { reportId } = req.params;
 
   try {
-    const utilisationReportReconciliationDetails = await api.getUtilisationReportReconciliationDetailsById(reportId);
+    const { facilityIdQuery } = req.query;
+    const utilisationReportReconciliationDetails = await api.getUtilisationReportReconciliationDetailsById(reportId, facilityIdQuery);
 
     return res.status(HttpStatusCode.Ok).send(utilisationReportReconciliationDetails);
   } catch (error) {

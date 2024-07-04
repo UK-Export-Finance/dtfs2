@@ -17,6 +17,8 @@ describe(page, () => {
 
   const reportId = 1;
 
+  const facilityIdQuery = '1234';
+
   const params = {
     user: aTfmSessionUser(),
     activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -26,6 +28,7 @@ describe(page, () => {
     feeRecords: [],
     enablePaymentsReceivedSorting: false,
     errorSummary: undefined,
+    facilityIdQuery,
   };
 
   beforeEach(() => {
@@ -86,6 +89,25 @@ describe(page, () => {
       .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/check-keying-data`);
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
+  });
+
+  it('should render the facility ID filter input', () => {
+    wrapper.expectElement('[data-cy="facility-filter-input"]').toExist();
+    wrapper.expectText('[data-cy="facility-filter-form"]').toContain('Filter by facility ID');
+  });
+
+  it('initialises the filter input value to the facilityIdQuery', () => {
+    wrapper.expectInput('[data-cy="facility-filter-input"]').toHaveValue(facilityIdQuery);
+  });
+
+  it('should render the facility ID filter submit button', () => {
+    wrapper.expectElement('[data-cy="facility-filter-submit-button"]').toExist();
+    wrapper.expectText('[data-cy="facility-filter-submit-button"]').toRead('Filter');
+  });
+
+  it('should render the facility ID filter clear button', () => {
+    wrapper.expectElement('[data-cy="facility-filter-clear-button"]').toExist();
+    wrapper.expectText('[data-cy="facility-filter-clear-button"]').toRead('Clear filter');
   });
 
   it('should not render add payment button for PDC_READ user', () => {

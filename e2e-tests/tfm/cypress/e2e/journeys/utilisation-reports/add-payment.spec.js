@@ -1,4 +1,5 @@
 import {
+  FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
@@ -15,7 +16,6 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     const FEE_RECORD_ID_ONE = '11';
     const FEE_RECORD_ID_TWO = '22';
     const PAYMENT_CURRENCY = 'GBP';
-    const FEE_RECORD_STATUS = 'TO_DO';
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 
     const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
@@ -35,7 +35,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       .withFeesPaidToUkefForThePeriod(100)
       .withFeesPaidToUkefForThePeriodCurrency('JPY')
       .withPaymentExchangeRate(2)
-      .withStatus('TO_DO')
+      .withStatus('DOES_NOT_MATCH')
       .withPayments([payment])
       .build();
     const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(undefined)
@@ -46,7 +46,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       .withFeesPaidToUkefForThePeriodCurrency('EUR')
       .withPaymentCurrency(PAYMENT_CURRENCY)
       .withPaymentExchangeRate(0.5)
-      .withStatus('TO_DO')
+      .withStatus('DOES_NOT_MATCH')
       .withPayments([payment])
       .build();
     report.feeRecords = [feeRecordOne, feeRecordTwo];
@@ -58,7 +58,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
     cy.get(
-      `[type="checkbox"][id="feeRecordIds-${FEE_RECORD_ID_ONE},${FEE_RECORD_ID_TWO}-reportedPaymentsCurrency-${PAYMENT_CURRENCY}-status-${FEE_RECORD_STATUS}"]`,
+      `[type="checkbox"][id="feeRecordIds-${FEE_RECORD_ID_ONE},${FEE_RECORD_ID_TWO}-reportedPaymentsCurrency-${PAYMENT_CURRENCY}-status-${FEE_RECORD_STATUS.DOES_NOT_MATCH}"]`,
     ).check();
     cy.get('[type="submit"]').contains('Add a payment').click();
   });
@@ -68,23 +68,23 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
   });
 
   it('should render the selected fee record details', () => {
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('11111111');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('Exporter 1');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('JPY 100');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('GBP 50');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', '11111111');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'Exporter 1');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'JPY 100');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'GBP 50');
 
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('22222222');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('Exporter 2');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('EUR 200');
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('GBP 400');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', '22222222');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'Exporter 2');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'EUR 200');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'GBP 400');
 
-    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('Total reported payments GBP 450');
+    pages.utilisationReportAddPaymentPage.selectedReportedFeesDetailsTable().contains('Total reported payments GBP 450').should('exist');
   });
 
   it('should render the recorded payment details table', () => {
-    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().contains('GBP 60');
-    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().contains('2 Feb 2023');
-    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().contains('REF01234');
+    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().should('contain', 'GBP 60');
+    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().should('contain', '2 Feb 2023');
+    pages.utilisationReportAddPaymentPage.recordedPaymentsDetailsTable().should('contain', 'REF01234');
   });
 
   it('should display errors when form submitted with invalid values', () => {
@@ -95,13 +95,13 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.contains('button', 'Continue').click();
 
-    cy.get('a').contains('Select payment currency');
-    cy.get('a').contains('The date payment received must be a real date');
-    cy.get('a').contains('Select add another payment choice');
+    cy.get('a').should('contain', 'Select payment currency');
+    cy.get('a').should('contain', 'The date payment received must be a real date');
+    cy.get('a').should('contain', 'Select add another payment choice');
 
-    cy.get('form').contains('Select payment currency');
-    cy.get('form').contains('The date payment received must be a real date');
-    cy.get('form').contains('Select add another payment choice');
+    cy.get('form').should('contain', 'Select payment currency');
+    cy.get('form').should('contain', 'The date payment received must be a real date');
+    cy.get('form').should('contain', 'Select add another payment choice');
 
     cy.getInputByLabelText('Amount received').should('have.value', '100');
     cy.getInputByLabelText('Day').should('have.value', '56');
@@ -119,7 +119,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.contains('button', 'Continue').click();
 
-    cy.contains('Premium payments');
+    cy.contains('Premium payments').should('exist');
   });
 
   it('submits form and reloads the page with no values when user submits form with valid values and user selects yes to adding another payment', () => {

@@ -40,5 +40,7 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   reportId: string;
   enablePaymentsReceivedSorting: boolean;
   feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[];
-  errorSummary: [ErrorSummaryViewModel] | undefined;
+  premiumPaymentFormError: ErrorSummaryViewModel | undefined;
+  facilityIdQueryError: ErrorSummaryViewModel | undefined;
+  facilityIdQuery?: string;
 };
