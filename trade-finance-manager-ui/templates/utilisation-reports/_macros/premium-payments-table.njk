@@ -51,4 +51,11 @@
     {% endfor %}
     </tbody>
   </table>
+
+  {% if feeRecordPaymentGroups.length === 0 %}
+    <div data-cy="no-matched-facilities-message">
+      <div class="govuk-body govuk-!-font-weight-bold">Your search matched no facilities</div>
+      <div class="govuk-body">There are no results for the facility ID you entered</div>
+    </div>
+  {% endif %}
 {% endmacro %}
