@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS, getDefaultGefDealVersion } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, getCurrentGefDealVersion } = require('@ukef/dtfs2-common');
 const { format, fromUnixTime } = require('date-fns');
 const {
   generateParsedMockPortalUserAuditDatabaseRecord,
@@ -155,7 +155,7 @@ describe(baseUrl, () => {
           checkerId: null,
           portalActivities: [],
           auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id),
-          version: getDefaultGefDealVersion(),
+          version: getCurrentGefDealVersion(),
         })),
       };
 
@@ -223,7 +223,7 @@ describe(baseUrl, () => {
         checkerId: null,
         portalActivities: [],
         auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id),
-        version: getDefaultGefDealVersion(),
+        version: getCurrentGefDealVersion(),
       };
       expect(body).toEqual(expectMongoId(expected));
     });
@@ -295,7 +295,7 @@ describe(baseUrl, () => {
         ukefDealId: null,
         checkerId: null,
         portalActivities: [],
-        version: getDefaultGefDealVersion(),
+        version: getCurrentGefDealVersion(),
         eligibility: {
           version: expect.any(Number),
           _id: expect.any(String),

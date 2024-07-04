@@ -3,7 +3,7 @@ const {
   MONGO_DB_COLLECTIONS,
   DocumentNotDeletedError,
   DocumentNotFoundError,
-  isFacilityEndDateEnabledOnDeal,
+  isFacilityEndDateEnabledOnGefVersion,
   DealVersionError,
   ApiError,
 } = require('@ukef/dtfs2-common');
@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
 
-  if (!isFacilityEndDateEnabledOnDeal(existingDeal.version) && req.body.facilityEndDateExists) {
+  if (!isFacilityEndDateEnabledOnGefVersion(existingDeal.version) && req.body.facilityEndDateExists) {
     return res.status(400).send({ status: 400, message: `Cannot add facility end date to deal version ${existingDeal.version}` });
   }
 
@@ -47,7 +47,7 @@ exports.create = async (req, res) => {
 
   const facilityParameters = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
 
-  if (isFacilityEndDateEnabledOnDeal(existingDeal.version)) {
+  if (isFacilityEndDateEnabledOnGefVersion(existingDeal.version)) {
     facilityParameters.facilityEndDateExist = facilityParameters.facilityEndDateExist ?? null;
   }
 
@@ -169,7 +169,7 @@ const update = async (id, updateBody, auditDetails) => {
       throw new Error('Facility `dealId` deal does not exist');
     }
 
-    if (!isFacilityEndDateEnabledOnDeal(existingDeal.version) && updateBody.facilityEndDateExists) {
+    if (!isFacilityEndDateEnabledOnGefVersion(existingDeal.version) && updateBody.facilityEndDateExists) {
       throw new DealVersionError(`Cannot add facility end date to deal version ${existingDeal.version}`);
     }
 

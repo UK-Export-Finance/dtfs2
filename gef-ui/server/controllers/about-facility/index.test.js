@@ -1,5 +1,5 @@
 import { add, sub, format } from 'date-fns';
-import { getDefaultGefDealVersion, isFacilityEndDateEnabledOnDeal } from '@ukef/dtfs2-common';
+import { getCurrentGefDealVersion, isFacilityEndDateEnabledOnGefVersion } from '@ukef/dtfs2-common';
 import { aboutFacility, validateAndUpdateAboutFacility } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
@@ -56,7 +56,7 @@ describe('controllers/about-facility', () => {
     mockRequest = MockRequest();
     mockFacilityResponse = MockFacilityResponse();
 
-    api.getApplication.mockResolvedValue({ version: getDefaultGefDealVersion() });
+    api.getApplication.mockResolvedValue({ version: getCurrentGefDealVersion() });
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.updateFacility.mockResolvedValue({});
     api.updateApplication = updateApplicationSpy;
@@ -88,7 +88,7 @@ describe('controllers/about-facility', () => {
           dealId: '123',
           facilityId: 'xyz',
           status: 'change',
-          isFacilityEndDateEnabled: isFacilityEndDateEnabledOnDeal(getDefaultGefDealVersion()),
+          isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion()),
         }),
       );
     });
@@ -100,7 +100,7 @@ describe('controllers/about-facility', () => {
     });
   });
 
-  describe('POST About Facility', () => {
+  describe('validateAndUpdateAboutFacility', () => {
     const now = new Date();
     const tomorrow = add(now, { days: 1 });
     const yesterday = sub(now, { days: 1 });
@@ -127,7 +127,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      if (isFacilityEndDateEnabledOnDeal(getDefaultGefDealVersion())) {
+      if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
         mockRequest.body.facilityEndDateExists = 'true';
       }
 
@@ -141,7 +141,7 @@ describe('controllers/about-facility', () => {
         name: undefined,
         coverDateConfirmed: null,
       };
-      if (isFacilityEndDateEnabledOnDeal(getDefaultGefDealVersion())) {
+      if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
         expectedPayload.facilityEndDateExists = true;
       }
       expect(api.updateFacility).toHaveBeenCalledWith({
@@ -808,7 +808,7 @@ describe('controllers/about-facility', () => {
       );
     });
 
-    if (isFacilityEndDateEnabledOnDeal(getDefaultGefDealVersion())) {
+    if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
       it('shows error message if facilityEndDateExists is not a boolean', async () => {
         mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
         mockRequest.body.hasBeenIssued = 'true';
@@ -837,7 +837,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
       mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
 
-      if (isFacilityEndDateEnabledOnDeal(getDefaultGefDealVersion())) {
+      if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
         mockRequest.body.facilityEndDateExists = 'true';
       }
 

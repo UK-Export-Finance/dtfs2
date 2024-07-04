@@ -1,10 +1,11 @@
 import { ObjectId } from 'mongodb';
 
 /**
- * NOTE: A migration needs to be run on production if this fixture is changed.
- * We should maintain backwards compatibility with version 0 deals
+ * NOTE: If you change this fixture, then a migration needs to be run on production.
+ * This function creates a version 0 GEF deal, which is used in tests to maintain backwards compatability with in-flight deals.
+ * Therefore, if you find yourself needing to change this, then existing version 0 GEF deals will also need updating.
  */
-export const getVersion0GefDeal = (maker: { _id: ObjectId | string; bank: object }) => ({
+export const generateVersion0GefDealDatabaseDocument = (maker: { _id: ObjectId | string; bank: object }) => ({
   dealType: 'GEF',
   version: 0,
   maker,
@@ -133,12 +134,11 @@ export const getVersion0GefDeal = (maker: { _id: ObjectId | string; bank: object
 });
 
 /**
- * An unissued cash facility.
- *
- * NOTE: A migration needs to be run on production if this fixture is changed.
- * We should maintain backwards compatibility with version 0 facilities
+ * NOTE: If you change this fixture, then a migration needs to be run on production.
+ * This function creates an unissued cash facility for a version 0 GEF deal, which is used in tests to maintain backwards compatability with in-flight facilities.
+ * Therefore, if you find yourself needing to change this, then existing version 0 GEF facilities will also need updating.
  */
-export const getVersion0GefFacility = (dealId: ObjectId) => ({
+export const generateVersion0GefFacilityDatabaseDocument = (dealId: ObjectId) => ({
   dealId,
   type: 'Cash',
   hasBeenIssued: false,

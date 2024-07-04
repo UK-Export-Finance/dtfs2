@@ -1,5 +1,5 @@
 const { format, set } = require('date-fns');
-const { isFacilityEndDateEnabledOnDeal } = require('@ukef/dtfs2-common');
+const { isFacilityEndDateEnabledOnGefVersion, parseDealVersion } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { FACILITY_TYPE, DATE_FORMAT, DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
@@ -47,12 +47,34 @@ const aboutFacility = async (req, res) => {
       dealId,
       facilityId,
       status,
-      isFacilityEndDateEnabled: isFacilityEndDateEnabledOnDeal(deal.version ?? 0),
+      isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
       facilityEndDateExists,
     });
   } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
+};
+
+/**
+ * @param {number} year
+ * @param {number} month
+ * @param {number} date
+ * @returns the start of the date
+ */
+const calculateDateFromYearMonthDate = (year, month, date) => {
+  const dateFullyComplete = date && month && year;
+
+  return dateFullyComplete
+    ? set(new Date(), {
+        year,
+        month: month - 1,
+        date,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+      })
+    : null;
 };
 
 const validateAndUpdateAboutFacility = async (req, res) => {
@@ -85,28 +107,8 @@ const validateAndUpdateAboutFacility = async (req, res) => {
   const coverStartDateIsFullyComplete = coverStartDateDay && coverStartDateMonth && coverStartDateYear;
   const coverEndDateIsFullyComplete = coverEndDateDay && coverEndDateMonth && coverEndDateYear;
 
-  const coverStartDate = coverStartDateIsFullyComplete
-    ? set(new Date(), {
-        year: coverStartDateYear,
-        month: coverStartDateMonth - 1,
-        date: coverStartDateDay,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-        milliseconds: 0,
-      })
-    : null;
-  const coverEndDate = coverEndDateIsFullyComplete
-    ? set(new Date(), {
-        year: coverEndDateYear,
-        month: coverEndDateMonth - 1,
-        date: coverEndDateDay,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-        milliseconds: 0,
-      })
-    : null;
+  const coverStartDate = calculateDateFromYearMonthDate(coverStartDateYear, coverStartDateMonth, coverStartDateDay);
+  const coverEndDate = calculateDateFromYearMonthDate(coverEndDateYear, coverEndDateMonth, coverEndDateDay);
 
   const aboutFacilityErrors = validateAboutFacility({
     coverStartDateDay,
@@ -126,7 +128,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
     facilityName,
     shouldCoverStartOnSubmission,
     facilityEndDateExists,
-    isFacilityEndDateEnabled: isFacilityEndDateEnabledOnDeal(deal.version ?? 0),
+    isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
   });
 
   if (aboutFacilityErrors.length > 0) {
@@ -147,7 +149,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       dealId,
       facilityId,
       status,
-      isFacilityEndDateEnabled: isFacilityEndDateEnabledOnDeal(deal.version ?? 0),
+      isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
       facilityEndDateExists,
     });
   }
@@ -162,7 +164,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
         coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
         coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
         coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN ? true : null,
-        facilityEndDateExists: isFacilityEndDateEnabledOnDeal(deal.version ?? 0) ? isTrueSet(facilityEndDateExists) : undefined,
+        facilityEndDateExists: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) ? isTrueSet(facilityEndDateExists) : undefined,
       },
       userToken,
     });
