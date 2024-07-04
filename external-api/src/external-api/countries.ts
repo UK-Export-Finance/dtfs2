@@ -181,7 +181,6 @@ export const COUNTRIES: Country[] = [
     id: 108,
     name: 'Burundi',
     code: 'BDI',
-    disabled: true,
   },
   {
     id: 116,
