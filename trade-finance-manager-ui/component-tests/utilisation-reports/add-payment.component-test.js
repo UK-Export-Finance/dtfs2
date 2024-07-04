@@ -342,7 +342,7 @@ describe(page, () => {
     wrapper.expectLink('a:contains("Uh oh")').toLinkTo('#uh-oh', 'Uh oh');
   });
 
-  it('should not render edit actions within the fee record details table', () => {
+  it('should not render selection actions within the fee record details table', () => {
     const addPaymentViewModel = anAddPaymentViewModel();
     const wrapper = render(addPaymentViewModel);
 

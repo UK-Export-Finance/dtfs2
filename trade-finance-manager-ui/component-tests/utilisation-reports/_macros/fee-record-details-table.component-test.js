@@ -253,10 +253,11 @@ describe(component, () => {
     wrapper.expectElement(`${totalReportedPaymentsRowSelector} td:is(:empty)`).notToExist();
   });
 
-  it('renders the "remove selected fees" button when enableSelectingFeeRecords is set to true which links to the unlink payment fees url', async () => {
+  it('renders the "remove selected fees" button when enableSelectingFeeRecords is set to true', async () => {
     const wrapper = getWrapper({ enableSelectingFeeRecords: true });
 
     const saveChangesButtonSelector = 'input[data-cy="remove-selected-fees-button"]';
+    wrapper.expectElement(saveChangesButtonSelector).toExist();
     wrapper.expectInput(saveChangesButtonSelector).toHaveValue('Remove selected fees');
     wrapper.expectElement(saveChangesButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/${reportId}/edit-payment/${paymentId}/unlink-fees`);
   });
