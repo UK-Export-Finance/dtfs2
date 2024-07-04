@@ -6,7 +6,7 @@ import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { getBankById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { mapReportToSummaryItem } from '../helper';
+import { mapReportToSummaryItem } from './reconciliation-summary-item-mapper';
 
 export const getUtilisationReportsReconciliationSummary = async (
   req: Request<{ submissionMonth: IsoMonthStamp }>,

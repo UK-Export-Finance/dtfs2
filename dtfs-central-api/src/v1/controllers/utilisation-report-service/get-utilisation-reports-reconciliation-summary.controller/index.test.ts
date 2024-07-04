@@ -240,6 +240,7 @@ describe('getReconciliationSummary', () => {
             },
             status: mockUtilisationReport.status,
             dateUploaded: mockDate,
+            totalFacilitiesReported: 1,
             totalFeesReported: 1,
             reportedFeesLeftToReconcile: 1,
           },
