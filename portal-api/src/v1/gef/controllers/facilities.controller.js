@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
 
-  if (!isFacilityEndDateEnabledOnGefVersion(existingDeal.version) && req.body.facilityEndDateExists) {
+  if (!isFacilityEndDateEnabledOnGefVersion(existingDeal.version) && req.body.isUsingFacilityEndDate) {
     return res.status(400).send({ status: 400, message: `Cannot add facility end date to deal version ${existingDeal.version}` });
   }
 
@@ -169,7 +169,7 @@ const update = async (id, updateBody, auditDetails) => {
       throw new Error('Facility `dealId` deal does not exist');
     }
 
-    if (!isFacilityEndDateEnabledOnGefVersion(existingDeal.version) && updateBody.facilityEndDateExists) {
+    if (!isFacilityEndDateEnabledOnGefVersion(existingDeal.version) && updateBody.isUsingFacilityEndDate) {
       throw new DealVersionError(`Cannot add facility end date to deal version ${existingDeal.version}`);
     }
 

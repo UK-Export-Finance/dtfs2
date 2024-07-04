@@ -23,12 +23,12 @@ const aboutFacility = async (req, res) => {
     const coverEndDate = details.coverEndDate ? new Date(details.coverEndDate) : null;
     const monthsOfCover = JSON.stringify(details.monthsOfCover);
 
-    let facilityEndDateExists;
-    if (details.facilityEndDateExists === true) {
-      facilityEndDateExists = 'true';
+    let isUsingFacilityEndDate;
+    if (details.isUsingFacilityEndDate === true) {
+      isUsingFacilityEndDate = 'true';
     }
-    if (details.facilityEndDateExists === false) {
-      facilityEndDateExists = 'false';
+    if (details.isUsingFacilityEndDate === false) {
+      isUsingFacilityEndDate = 'false';
     }
 
     return res.render('partials/about-facility.njk', {
@@ -48,7 +48,7 @@ const aboutFacility = async (req, res) => {
       facilityId,
       status,
       isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
-      facilityEndDateExists,
+      isUsingFacilityEndDate,
     });
   } catch (error) {
     return res.render('partials/problem-with-service.njk');
@@ -91,7 +91,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       monthsOfCover,
       facilityName,
       shouldCoverStartOnSubmission,
-      facilityEndDateExists,
+      isUsingFacilityEndDate,
     },
     query: { saveAndReturn, status },
     params: { dealId, facilityId },
@@ -127,7 +127,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
     monthsOfCover,
     facilityName,
     shouldCoverStartOnSubmission,
-    facilityEndDateExists,
+    isUsingFacilityEndDate,
     isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
   });
 
@@ -150,7 +150,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       facilityId,
       status,
       isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
-      facilityEndDateExists,
+      isUsingFacilityEndDate,
     });
   }
 
@@ -164,7 +164,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
         coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
         coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
         coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN ? true : null,
-        facilityEndDateExists: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) ? isTrueSet(facilityEndDateExists) : undefined,
+        isUsingFacilityEndDate: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) ? isTrueSet(isUsingFacilityEndDate) : undefined,
       },
       userToken,
     });
@@ -179,7 +179,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    if (isTrueSet(facilityEndDateExists)) {
+    if (isTrueSet(isUsingFacilityEndDate)) {
       // TODO: DTFS2-7161 - Implement page to submit facilityEndDate
     }
 

@@ -39,7 +39,7 @@ const validateAboutFacility = ({
   monthsOfCover,
   facilityName,
   shouldCoverStartOnSubmission,
-  facilityEndDateExists,
+  isUsingFacilityEndDate,
   isFacilityEndDateEnabled,
 }) => {
   let coverEndDateValid = true;
@@ -303,9 +303,9 @@ const validateAboutFacility = ({
   }
 
   if (isFacilityEndDateEnabled) {
-    if (!facilityEndDateExists && !saveAndReturn) {
+    if (!isUsingFacilityEndDate && !saveAndReturn) {
       aboutFacilityErrors.push({
-        errRef: 'facilityEndDateExists',
+        errRef: 'isUsingFacilityEndDate',
         errMsg: 'Select if there is an end date for this facility',
       });
     }

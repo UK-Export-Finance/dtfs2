@@ -132,7 +132,7 @@
         {% endif %}
 
         {% if isFacilityEndDateEnabled %}
-          {{ facilityEndDateSection.render(facilityEndDateExists, errors)}}
+          {{ facilityEndDateSection.render(isUsingFacilityEndDate, errors)}}
           {{ whatIsAFacilityEndDate.render() }}
         {% endif %}
 

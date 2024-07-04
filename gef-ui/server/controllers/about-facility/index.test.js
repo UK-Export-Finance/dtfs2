@@ -128,7 +128,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
       if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
-        mockRequest.body.facilityEndDateExists = 'true';
+        mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
@@ -142,7 +142,7 @@ describe('controllers/about-facility', () => {
         coverDateConfirmed: null,
       };
       if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
-        expectedPayload.facilityEndDateExists = true;
+        expectedPayload.isUsingFacilityEndDate = true;
       }
       expect(api.updateFacility).toHaveBeenCalledWith({
         facilityId: 'xyz',
@@ -181,7 +181,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-day'] = format(now, 'd');
       mockRequest.body['cover-start-date-month'] = format(now, 'M');
       mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
-      mockRequest.body.facilityEndDateExists = 'false';
+      mockRequest.body.isUsingFacilityEndDate = 'false';
 
       mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
@@ -809,7 +809,7 @@ describe('controllers/about-facility', () => {
     });
 
     if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
-      it('shows error message if facilityEndDateExists is not a boolean', async () => {
+      it('shows error message if isUsingFacilityEndDate is not a boolean', async () => {
         mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
         mockRequest.body.hasBeenIssued = 'true';
 
@@ -819,7 +819,7 @@ describe('controllers/about-facility', () => {
           'partials/about-facility.njk',
           expect.objectContaining({
             errors: expect.objectContaining({
-              errorSummary: expect.arrayContaining([{ href: '#facilityEndDateExists', text: 'Select if there is an end date for this facility' }]),
+              errorSummary: expect.arrayContaining([{ href: '#isUsingFacilityEndDate', text: 'Select if there is an end date for this facility' }]),
             }),
           }),
         );
@@ -838,7 +838,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
 
       if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
-        mockRequest.body.facilityEndDateExists = 'true';
+        mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);

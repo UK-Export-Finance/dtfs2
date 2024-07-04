@@ -36,8 +36,8 @@ context('About Facility Page', () => {
       cy.visit(relative(`/gef/application-details/${version0DealId}/facilities/${version0FacilityId}/about-facility`));
 
       aboutFacility.facilityName();
-      aboutFacility.facilityEndDateExistsYes().should('not.exist');
-      aboutFacility.facilityEndDateExistsNo().should('not.exist');
+      aboutFacility.isUsingFacilityEndDateYes().should('not.exist');
+      aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
     });
   });
 
@@ -50,8 +50,8 @@ context('About Facility Page', () => {
       facilities.continueButton().click();
 
       aboutFacility.facilityName();
-      aboutFacility.facilityEndDateExistsYes().should('not.exist');
-      aboutFacility.facilityEndDateExistsNo().should('not.exist');
+      aboutFacility.isUsingFacilityEndDateYes().should('not.exist');
+      aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
     });
   });
 });
