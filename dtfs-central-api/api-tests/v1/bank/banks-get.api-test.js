@@ -1,9 +1,8 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
-const app = require('../../../src/createApp');
 const { MOCK_BANKS } = require('../../mocks/banks');
 const { withoutMongoId } = require('../../../src/helpers/mongodb');
-const api = require('../../api')(app);
+const { testApi } = require('../../test-api');
 
 describe('/v1/bank', () => {
   beforeAll(async () => {
@@ -13,11 +12,11 @@ describe('/v1/bank', () => {
   describe('GET /v1/bank', () => {
     it('returns all banks', async () => {
       // Arrange
-      const { body: createdBarclaysBank } = await api.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
-      const { body: createdHsbcBank } = await api.post(withoutMongoId(MOCK_BANKS.HSBC)).to('/v1/bank');
+      const { body: createdBarclaysBank } = await testApi.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
+      const { body: createdHsbcBank } = await testApi.post(withoutMongoId(MOCK_BANKS.HSBC)).to('/v1/bank');
 
       // Act
-      const { body, status } = await api.get('/v1/bank');
+      const { body, status } = await testApi.get('/v1/bank');
 
       // Assert
       expect(status).toEqual(200);

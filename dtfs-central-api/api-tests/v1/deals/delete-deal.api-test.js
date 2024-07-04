@@ -4,8 +4,7 @@ const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream
 const { withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { testApi } = require('../../test-api');
 const { DEALS } = require('../../../src/constants');
 const aDeal = require('../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
@@ -22,7 +21,7 @@ describe('DELETE /v1/portal/deals', () => {
   let dealToDeleteId;
 
   beforeEach(async () => {
-    const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+    const postResult = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
     dealToDeleteId = new ObjectId(postResult.body._id);
   });
 
@@ -32,7 +31,7 @@ describe('DELETE /v1/portal/deals', () => {
 
   withValidateAuditDetailsTests({
     makeRequest: (auditDetails) =>
-      api
+      testApi
         .remove({
           auditDetails,
         })
@@ -42,7 +41,7 @@ describe('DELETE /v1/portal/deals', () => {
 
   withDeleteOneTests({
     makeRequest: () =>
-      api
+      testApi
         .remove({
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })

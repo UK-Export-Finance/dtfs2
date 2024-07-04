@@ -15,18 +15,19 @@ const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../con
  * canResubmitIssuedFacilities - changes flags to false
  * @param {Object} facilities
  */
-const updateChangedToIssued = async (facilities) => {
-  facilities.forEach(async (facility) => {
-    const { _id, canResubmitIssuedFacilities } = facility;
-
-    if (canResubmitIssuedFacilities) {
-      const update = {
-        canResubmitIssuedFacilities: false,
-      };
-
-      await updateFacility(_id, update);
-    }
-  });
+const updateChangedToIssued = async ({ facilities, auditDetails }) => {
+  await Promise.all(
+    facilities.map((facility) => {
+      const { _id: facilityId, canResubmitIssuedFacilities } = facility;
+      if (canResubmitIssuedFacilities) {
+        const facilityUpdate = {
+          canResubmitIssuedFacilities: false,
+        };
+        updateFacility({ facilityId, facilityUpdate, auditDetails });
+      }
+      return Promise.resolve();
+    }),
+  );
 };
 
 // retrieves user information from database
@@ -191,7 +192,7 @@ const generateMINActivities = async (req, res) => {
         portalActivities,
       };
 
-      await updateChangedToIssued(facilities);
+      await updateChangedToIssued({ facilities, auditDetails });
 
       const response = await updateDeal({ dealId, dealUpdate: update, auditDetails });
       const status = isNumber(response?.status, 3);

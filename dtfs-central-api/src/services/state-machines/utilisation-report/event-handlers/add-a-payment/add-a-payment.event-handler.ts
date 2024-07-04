@@ -3,7 +3,7 @@ import { DbRequestSource, FeeRecordEntity, PaymentEntity, UtilisationReportEntit
 import { NewPaymentDetails } from '../../../../../types/utilisation-reports';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
-import { feeRecordsMatchAttachedPayments } from './helpers';
+import { feeRecordsMatchAttachedPayments } from '../helpers';
 
 type AddAPaymentEventPayload = {
   transactionEntityManager: EntityManager;

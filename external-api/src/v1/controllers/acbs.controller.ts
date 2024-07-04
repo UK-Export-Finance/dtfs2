@@ -10,6 +10,7 @@
 
 import axios from 'axios';
 import * as dotenv from 'dotenv';
+import { HEADERS } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import { Amendment } from '../../interfaces';
 import { ENTITY_TYPE, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
@@ -21,7 +22,7 @@ const apimUrl = process.env.APIM_TFS_URL;
 const acbsUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 
 export const checkDealId = async (dealId: any) => {

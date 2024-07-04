@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
@@ -7,11 +8,11 @@ const { DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY, TFM_API_URL, TFM_API_KEY } =
 
 const headers = {
   central: {
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     'x-api-key': DTFS_CENTRAL_API_KEY,
   },
   tfm: {
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     'x-api-key': TFM_API_KEY,
   },
 };

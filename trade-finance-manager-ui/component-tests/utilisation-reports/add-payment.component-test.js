@@ -1,4 +1,4 @@
-const pageRenderer = require('../pageRenderer');
+const { pageRenderer } = require('../pageRenderer');
 const { anAddPaymentViewModel, aRecordedPaymentDetailsViewModel } = require('../../test-helpers/test-data/add-payment-view-model');
 
 const page = '../templates/utilisation-reports/add-payment.njk';
@@ -14,7 +14,8 @@ describe(page, () => {
 
     // Assert
     wrapper.expectText('h1').toRead('Add a payment');
-    wrapper.expectText('main').toContain('My bank, December 1998');
+    wrapper.expectText('span[data-cy="add-payment-heading-caption"]').toMatch(/My bank,/);
+    wrapper.expectText('span[data-cy="add-payment-heading-caption"]').toMatch(/December 1998/);
   });
 
   it('should display the recorded payments accordion when there are previously recorded payments', () => {
@@ -71,7 +72,7 @@ describe(page, () => {
     wrapper.expectText('main').toContain('Recorded payments for these fees');
   });
 
-  it('should display selected fee record details table', () => {
+  it('should display fee record details table', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
     addPaymentViewModel.reportedFeeDetails.totalReportedPayments = 'JPY 1';
@@ -80,19 +81,20 @@ describe(page, () => {
         feeRecordId: 12,
         facilityId: '000123',
         exporter: 'abcde',
-        reportedFee: { value: 'EUR 0.01', dataSortValue: 0 },
-        reportedPayments: { value: 'JPY 3', dataSortValue: 0 },
+        reportedFees: { formattedCurrencyAndAmount: 'EUR 0.01', dataSortValue: 0 },
+        reportedPayments: { formattedCurrencyAndAmount: 'JPY 3', dataSortValue: 0 },
       },
     ];
     const wrapper = render(addPaymentViewModel);
 
     // Assert
-    wrapper.expectElement('[data-cy="selected-reported-fees-details-table"]').toExist();
-    wrapper.expectText('[data-cy="selected-reported-fees-details-table"]').toContain('000123');
-    wrapper.expectText('[data-cy="selected-reported-fees-details-table"]').toContain('abcde');
-    wrapper.expectText('[data-cy="selected-reported-fees-details-table"]').toContain('EUR 0.01');
-    wrapper.expectText('[data-cy="selected-reported-fees-details-table"]').toContain('JPY 3');
-    wrapper.expectText('[data-cy="selected-reported-fees-details-table"]').toContain('JPY 1');
+    const tableSelector = 'table[data-cy="fee-record-details-table"]';
+    wrapper.expectElement(tableSelector).toExist();
+    wrapper.expectText(tableSelector).toContain('000123');
+    wrapper.expectText(tableSelector).toContain('abcde');
+    wrapper.expectText(tableSelector).toContain('EUR 0.01');
+    wrapper.expectText(tableSelector).toContain('JPY 3');
+    wrapper.expectText(tableSelector).toContain('JPY 1');
   });
 
   it('should display a currency option for each currency', () => {

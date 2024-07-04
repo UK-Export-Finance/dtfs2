@@ -4,8 +4,9 @@ import {
   UtilisationReportManuallySetCompletedEvent,
   UtilisationReportManuallySetIncompleteEvent,
   UtilisationReportAddAPaymentEvent,
-  UtilisationReportPaymentRemovedFromFeeRecordEvent,
+  UtilisationReportDeletePaymentEvent,
   UtilisationReportReportUploadedEvent,
+  UtilisationReportEditPaymentEvent,
 } from '../event-handlers';
 
 export type UtilisationReportEvent =
@@ -14,5 +15,6 @@ export type UtilisationReportEvent =
   | UtilisationReportManuallySetCompletedEvent
   | UtilisationReportManuallySetIncompleteEvent
   | UtilisationReportAddAPaymentEvent
-  | UtilisationReportPaymentRemovedFromFeeRecordEvent
-  | UtilisationReportReportUploadedEvent;
+  | UtilisationReportDeletePaymentEvent
+  | UtilisationReportReportUploadedEvent
+  | UtilisationReportEditPaymentEvent;

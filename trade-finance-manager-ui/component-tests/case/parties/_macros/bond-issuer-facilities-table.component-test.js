@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../componentRenderer');
+const { componentRenderer } = require('../../../componentRenderer');
 
 const component = '../templates/case/parties/_macros/bond-issuer-facilities-table.njk';
 

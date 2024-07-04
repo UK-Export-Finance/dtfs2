@@ -3,8 +3,7 @@ const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/ch
 const { ObjectId } = require('mongodb');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { testApi } = require('../../test-api');
 const aDeal = require('../deal-builder');
 const CONSTANTS = require('../../../src/constants');
 const { MOCK_DEAL } = require('../mocks/mock-data');
@@ -37,7 +36,7 @@ describe('/v1/portal/facilities', () => {
   });
 
   beforeEach(async () => {
-    const { body: deal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+    const { body: deal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
 
     dealId = deal._id;
     newFacility.dealId = dealId;
@@ -59,52 +58,52 @@ describe('/v1/portal/facilities', () => {
         status: 'Submitted',
       };
 
-      const originalDeal = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
+      const originalDeal = await testApi.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       expect(originalDeal.body.deal.editedBy).toEqual([]);
 
       ({
         body: { _id: facilityIdToUpdate },
-      } = await createFacility({ api, facility: mockSubmittedFacility, user: MOCK_PORTAL_USER }));
+      } = await createFacility({ facility: mockSubmittedFacility, user: MOCK_PORTAL_USER }));
     });
 
     withValidateAuditDetailsTests({
       makeRequest: async (auditDetailsToUse) => {
-        return api.put({ status: 'Test new status', auditDetails: auditDetailsToUse }).to(`/v1/portal/facilities/${facilityIdToUpdate}/status`);
+        return testApi.put({ status: 'Test new status', auditDetails: auditDetailsToUse }).to(`/v1/portal/facilities/${facilityIdToUpdate}/status`);
       },
     });
 
     it('changes facility status', async () => {
-      await api.put(updateFacilityStatusBody).to(`/v1/portal/facilities/${facilityIdToUpdate}/status`);
+      await testApi.put(updateFacilityStatusBody).to(`/v1/portal/facilities/${facilityIdToUpdate}/status`);
 
-      const { body } = await api.get(`/v1/portal/facilities/${facilityIdToUpdate}`);
+      const { body } = await testApi.get(`/v1/portal/facilities/${facilityIdToUpdate}`);
 
       expect(body.status).toEqual(updateFacilityStatusBody.status);
     });
 
     it('updates audit record', async () => {
-      await api.put(updateFacilityStatusBody).to(`/v1/portal/facilities/${facilityIdToUpdate}/status`);
+      await testApi.put(updateFacilityStatusBody).to(`/v1/portal/facilities/${facilityIdToUpdate}/status`);
 
-      const { body } = await api.get(`/v1/portal/facilities/${facilityIdToUpdate}`);
+      const { body } = await testApi.get(`/v1/portal/facilities/${facilityIdToUpdate}`);
 
       expect(body.auditRecord).toEqual(generateParsedMockAuditDatabaseRecord(updateAuditDetails));
     });
 
     it('does NOT update `editedBy` in the associated deal', async () => {
-      const getDealResponse = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
+      const getDealResponse = await testApi.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       // editedBy is updated once when `create facility` is called
       expect(getDealResponse.body.deal.editedBy.length).toEqual(1);
 
-      await api.put(updateFacilityStatusBody).to(`/v1/tfm/facilities/${facilityIdToUpdate}/status`);
+      await testApi.put(updateFacilityStatusBody).to(`/v1/tfm/facilities/${facilityIdToUpdate}/status`);
 
-      const { body } = await api.get(`/v1/portal/deals/${newFacility.dealId}`);
+      const { body } = await testApi.get(`/v1/portal/deals/${newFacility.dealId}`);
 
       expect(body.deal.editedBy.length).toEqual(1);
     });
 
     it('returns 404 when facility does not exist', async () => {
-      const { status } = await api.put(updateFacilityStatusBody).to('/v1/portal/facilities/61e54e2e532cf2027303e011/status');
+      const { status } = await testApi.put(updateFacilityStatusBody).to('/v1/portal/facilities/61e54e2e532cf2027303e011/status');
 
       expect(status).toEqual(404);
     });

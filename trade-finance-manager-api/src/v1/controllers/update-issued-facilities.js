@@ -77,7 +77,7 @@ const updatedIssuedFacilities = async (deal, auditDetails) => {
                 hasBeenIssuedAndAcknowledged: true,
               };
 
-              const updatedPortalFacility = await api.updateGefFacility(facilityId, facilityUpdatePortal);
+              const updatedPortalFacility = await api.updateGefFacility({ facilityId, facilityUpdate: facilityUpdatePortal, auditDetails });
               facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
 
               feeRecord = calculateGefFacilityFeeRecord(facility);

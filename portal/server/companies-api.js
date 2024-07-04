@@ -1,4 +1,4 @@
-const { isValidCompanyRegistrationNumber } = require('@ukef/dtfs2-common');
+const { HEADERS, isValidCompanyRegistrationNumber } = require('@ukef/dtfs2-common');
 const axios = require('axios');
 
 const { HttpStatusCode } = axios;
@@ -24,7 +24,7 @@ const getCompanyByRegistrationNumber = async (registrationNumber, token) => {
     const { data } = await axios.get(`${PORTAL_API_URL}/v1/companies/${registrationNumber}`, {
       headers: {
         Authorization: token,
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       },
     });
 

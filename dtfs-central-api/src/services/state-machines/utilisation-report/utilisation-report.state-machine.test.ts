@@ -1,14 +1,21 @@
 import difference from 'lodash/difference';
 import { EntityManager } from 'typeorm';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO, DbRequestSource } from '@ukef/dtfs2-common';
+import {
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntityMockBuilder,
+  MOCK_AZURE_FILE_INFO,
+  DbRequestSource,
+  PaymentEntity,
+} from '@ukef/dtfs2-common';
 import {
   handleUtilisationReportDueReportInitialisedEvent,
   handleUtilisationReportFeeRecordKeyedEvent,
   handleUtilisationReportManuallySetCompletedEvent,
   handleUtilisationReportManuallySetIncompleteEvent,
   handleUtilisationReportAddAPaymentEvent,
-  handleUtilisationReportPaymentRemovedFromFeeRecordEvent,
   handleUtilisationReportReportUploadedEvent,
+  handleUtilisationReportDeletePaymentEvent,
+  handleUtilisationReportEditPaymentEvent,
 } from './event-handlers';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { UtilisationReportStateMachine } from './utilisation-report.state-machine';
@@ -202,18 +209,22 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportAddAPaymentEvent).toHaveBeenCalledTimes(1);
     });
 
-    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.PAYMENT_REMOVED_FROM_FEE_RECORD}' event`, async () => {
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT}' event`, async () => {
       // Arrange
       const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
 
       // Act
       await stateMachine.handleEvent({
-        type: 'PAYMENT_REMOVED_FROM_FEE_RECORD',
-        payload: { feeRecordId: 1, paymentId: 2 },
+        type: 'DELETE_PAYMENT',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          paymentId: 1,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
       });
 
       // Assert
-      expect(handleUtilisationReportPaymentRemovedFromFeeRecordEvent).toHaveBeenCalledTimes(1);
+      expect(handleUtilisationReportDeletePaymentEvent).toHaveBeenCalledTimes(1);
     });
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.FEE_RECORD_KEYED}' event`, async () => {
@@ -230,10 +241,33 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportFeeRecordKeyedEvent).toHaveBeenCalledTimes(1);
     });
 
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT}' event`, async () => {
+      // Arrange
+      const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'EDIT_PAYMENT',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          payment: {} as PaymentEntity,
+          feeRecords: [],
+          paymentAmount: 100,
+          datePaymentReceived: new Date(),
+          paymentReference: undefined,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleUtilisationReportEditPaymentEvent).toHaveBeenCalledTimes(1);
+    });
+
     const VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES = [
       UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
-      UTILISATION_REPORT_EVENT_TYPE.PAYMENT_REMOVED_FROM_FEE_RECORD,
+      UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT,
       UTILISATION_REPORT_EVENT_TYPE.FEE_RECORD_KEYED,
+      UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT,
     ];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES))(

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { mockDataLoaderTfmAuditDetails } = require('../constants/mockDataLoaderAuditDetails');
 const ApiError = require('../errors/api.error');
 require('dotenv').config({ path: `${__dirname}/../.env` });
@@ -9,7 +10,7 @@ const createTeam = async (team) => {
   const response = await axios({
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
@@ -26,7 +27,7 @@ const listTeams = async () => {
   const response = await axios({
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
@@ -42,7 +43,7 @@ const deleteTeam = async (team) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
@@ -61,7 +62,7 @@ const createTfmUser = async (user, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
       'x-api-key': TFM_API_KEY,
@@ -79,7 +80,7 @@ const listUsers = async () => {
   const response = await axios({
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
@@ -95,7 +96,7 @@ const deleteUser = async (user) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
@@ -114,7 +115,7 @@ const listDeals = async () => {
   const response = await axios({
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },
@@ -130,7 +131,7 @@ const deleteDeal = async (deal) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       'x-api-key': DTFS_CENTRAL_API_KEY,
     },

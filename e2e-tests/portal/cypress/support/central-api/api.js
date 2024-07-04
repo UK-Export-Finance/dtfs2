@@ -1,3 +1,5 @@
+const { HEADERS } = require('@ukef/dtfs2-common');
+
 const api = () => {
   const url = `${Cypress.config('centralApiProtocol')}${Cypress.config('centralApiHost')}:${Cypress.config('centralApiPort')}`;
   return url;
@@ -6,7 +8,7 @@ const api = () => {
 const apiKey = Cypress.config('apiKey');
 
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   'x-api-key': apiKey,
 };
 

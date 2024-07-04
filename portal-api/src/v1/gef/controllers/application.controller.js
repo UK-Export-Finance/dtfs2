@@ -1,5 +1,12 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, DocumentNotFoundError } = require('@ukef/dtfs2-common');
+const {
+  MONGO_DB_COLLECTIONS,
+  DocumentNotDeletedError,
+  DocumentNotFoundError,
+  InvalidDealIdError,
+  FacilityNotFoundError,
+  DealNotFoundError,
+} = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteMany, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -228,65 +235,75 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
 };
 
 exports.changeStatus = async (req, res) => {
-  const dealId = req.params.id;
+  try {
+    const dealId = req.params.id;
 
-  if (!ObjectId.isValid(dealId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
-  }
+    if (!ObjectId.isValid(dealId)) {
+      throw new InvalidDealIdError(dealId);
+    }
 
-  const enumValidationErr = validatorStatusCheckEnums(req.body);
+    const enumValidationErr = validatorStatusCheckEnums(req.body);
 
-  if (enumValidationErr) {
-    return res.status(422).send(enumValidationErr);
-  }
+    if (enumValidationErr) {
+      return res.status(422).send(enumValidationErr);
+    }
 
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
-  const existingApplication = await collection.findOne({ _id: { $eq: ObjectId(dealId) } });
-  if (!existingApplication) {
-    return res.status(404).send();
-  }
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+    const existingApplication = await collection.findOne({ _id: { $eq: ObjectId(dealId) } });
+    if (!existingApplication) {
+      throw new DealNotFoundError(dealId);
+    }
 
-  const { status } = req.body;
+    const { status } = req.body;
 
-  const auditDetails = generatePortalAuditDetails(req.user._id);
-  let applicationUpdate = {
-    status,
-    updatedAt: Date.now(),
-    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-  };
-
-  if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
-    const submissionData = await addSubmissionData(dealId, existingApplication, generatePortalAuditDetails(req.user._id));
-
-    applicationUpdate = {
-      ...applicationUpdate,
-      ...submissionData,
+    const auditDetails = generatePortalAuditDetails(req.user._id);
+    let applicationUpdate = {
+      status,
+      updatedAt: Date.now(),
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
     };
-  }
-
-  const updatedDocument = await collection.findOneAndUpdate(
-    { _id: { $eq: ObjectId(dealId) } },
-    { $set: applicationUpdate },
-    { returnNewDocument: true, returnDocument: 'after' },
-  );
-
-  let response;
-
-  if (updatedDocument.value) {
-    response = updatedDocument.value;
 
     if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
-      await api.tfmDealSubmit(dealId, existingApplication.dealType, req.user);
+      const submissionData = await addSubmissionData(dealId, existingApplication, auditDetails);
+
+      applicationUpdate = {
+        ...applicationUpdate,
+        ...submissionData,
+      };
     }
-  }
 
-  // If status of correct type, send update email
-  if ([DEAL_STATUS.READY_FOR_APPROVAL, DEAL_STATUS.CHANGES_REQUIRED, DEAL_STATUS.SUBMITTED_TO_UKEF].includes(status)) {
-    const { user } = req;
-    await sendStatusUpdateEmail(user, existingApplication, status);
-  }
+    const updatedDocument = await collection.findOneAndUpdate(
+      { _id: { $eq: ObjectId(dealId) } },
+      { $set: applicationUpdate },
+      { returnNewDocument: true, returnDocument: 'after' },
+    );
 
-  return res.status(utils.mongoStatus(updatedDocument)).send(response);
+    let response;
+
+    if (updatedDocument.value) {
+      response = updatedDocument.value;
+
+      if (status === DEAL_STATUS.SUBMITTED_TO_UKEF) {
+        await api.tfmDealSubmit(dealId, existingApplication.dealType, req.user);
+      }
+    }
+
+    // If status of correct type, send update email
+    if ([DEAL_STATUS.READY_FOR_APPROVAL, DEAL_STATUS.CHANGES_REQUIRED, DEAL_STATUS.SUBMITTED_TO_UKEF].includes(status)) {
+      const { user } = req;
+      await sendStatusUpdateEmail(user, existingApplication, status);
+    }
+
+    return res.status(utils.mongoStatus(updatedDocument)).send(response);
+  } catch (error) {
+    if (error instanceof InvalidDealIdError) {
+      return res.status(400).send({ status: 400, message: error.message });
+    }
+    if (error instanceof DealNotFoundError) {
+      return res.status(404).send({ status: 404, message: error.message });
+    }
+    return res.status(500).send({ status: 500, error });
+  }
 };
 
 exports.delete = async (req, res) => {
@@ -315,8 +332,12 @@ exports.delete = async (req, res) => {
 
     return res.status(200).send(applicationDeleteResult);
   } catch (error) {
-    if (error instanceof DocumentNotDeletedError) {
-      return res.sendStatus(404);
+    if (error instanceof DocumentNotDeletedError || error instanceof DealNotFoundError || error instanceof FacilityNotFoundError) {
+      return res.status(404).send({ status: 404, message: error.message });
+    }
+
+    if (error instanceof InvalidDealIdError) {
+      return res.sendStatus(400).send({ status: 400, message: error.message });
     }
 
     if (error instanceof DocumentNotFoundError) {
@@ -324,6 +345,7 @@ exports.delete = async (req, res) => {
       // DocumentNotFoundError is returned if no facilities are found, which occurs after the deal is successfully deleted
       return res.status(200).send({ acknowledged: true, deletedCount: 1 });
     }
+
     console.error(error);
     return res.status(500).send({ status: 500, error });
   }

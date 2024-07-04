@@ -16,7 +16,7 @@ readonly time_limit_seconds=60
 readonly interval_seconds=5
 readonly start_time=$(get_now_unix_timestamp)
 
-echo "Waiting for SQL Server to start..."
+echo "⚡ Initialising MSSQL Server"
 
 # Wait for SQL Server to start
 while ! execute_sql_command "SELECT 1;"
@@ -25,20 +25,20 @@ do
   elapsed_seconds=$((current_time - start_time))
 
   if [ $elapsed_seconds -gt $time_limit_seconds ]; then
-    echo "Error: Failed to create database '$SQL_DB_NAME' - SQL Server did not start within $time_limit_seconds seconds."
+    echo "❌ Error: Failed to create database '$SQL_DB_NAME' - SQL Server did not start within $time_limit_seconds seconds."
     exit 1
   fi
 
-  echo "SQL Server not yet started after $elapsed_seconds seconds. Waiting for $interval_seconds more seconds..."
+  echo "❌ MSSQL failed to start after $elapsed_seconds seconds. Waiting for $interval_seconds more seconds."
   sleep $interval_seconds
 done
 
-echo "SQL Server has started! Attempting to create database '$SQL_DB_NAME'..."
+echo "✅ MSSQL initialised, creating database '$SQL_DB_NAME'..."
 
 # Create the database
 execute_sql_command "CREATE DATABASE [$SQL_DB_NAME];"
 
-echo "Attempting to create database user '$SQL_DB_USERNAME'..."
+echo "⚡Creating user '$SQL_DB_USERNAME'..."
 
 # Create a new login
 execute_sql_command "CREATE LOGIN $SQL_DB_USERNAME WITH PASSWORD = '$SQL_DB_PASSWORD';"

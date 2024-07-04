@@ -273,6 +273,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
             currency: payments[index].currency,
             amount: payments[index].amount,
             id: payments[index].id,
+            dateReceived: payments[index].dateReceived,
+            reference: payments[index].reference,
           };
           expect(paymentsReceivedItem).toEqual(expectedPaymentsReceived);
         });

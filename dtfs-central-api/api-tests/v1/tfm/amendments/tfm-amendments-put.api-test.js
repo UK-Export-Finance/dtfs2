@@ -3,8 +3,7 @@ const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/d
 const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../../wipeDB');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
+const { testApi } = require('../../../test-api');
 const CONSTANTS = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
@@ -37,7 +36,7 @@ describe('PUT TFM amendments', () => {
   });
 
   beforeEach(async () => {
-    const { body: deal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+    const { body: deal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
     dealId = deal._id;
 
     newFacility.dealId = dealId;
@@ -49,10 +48,10 @@ describe('PUT TFM amendments', () => {
       let amendmentId;
 
       beforeEach(async () => {
-        const postResult = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
+        const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
         facilityId = postResult.body._id;
 
-        await api
+        await testApi
           .put({
             dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
             dealId,
@@ -60,13 +59,13 @@ describe('PUT TFM amendments', () => {
           })
           .to('/v1/tfm/deals/submit');
 
-        const { body } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments/`);
+        const { body } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments/`);
         amendmentId = body.amendmentId;
       });
 
       withValidateAuditDetailsTests({
         makeRequest: (auditDetails) =>
-          api
+          testApi
             .put({ payload: { updatePayload: { createdBy: MOCK_PORTAL_USER } }, auditDetails })
             .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`),
         validUserTypes: [AUDIT_USER_TYPES.TFM],
@@ -74,7 +73,7 @@ describe('PUT TFM amendments', () => {
 
       it('should update an amendment based on facilityId and amendmentId', async () => {
         const updatePayload = { createdBy: MOCK_PORTAL_USER };
-        const { body: bodyPutResponse } = await api
+        const { body: bodyPutResponse } = await testApi
           .put({ payload: { updatePayload }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
 
@@ -93,21 +92,21 @@ describe('PUT TFM amendments', () => {
 
       it('should update the auditRecord on the facility document', async () => {
         const updatePayload = { createdBy: MOCK_PORTAL_USER };
-        await api
+        await testApi
           .put({ payload: { updatePayload }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
 
-        const { body: updatedFacility } = await api.get(`/v1/tfm/facilities/${facilityId}`);
+        const { body: updatedFacility } = await testApi.get(`/v1/tfm/facilities/${facilityId}`);
 
         expect(updatedFacility.auditRecord).toEqual(generateParsedMockTfmUserAuditDatabaseRecord(MOCK_TFM_USER._id));
       });
     });
 
     it('should return 404 if facilityId and amendmentId are valid but are NOT associated to a record', async () => {
-      const postResult = await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
+      const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       const newId = postResult.body._id;
 
-      await api
+      await testApi
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
@@ -116,8 +115,8 @@ describe('PUT TFM amendments', () => {
         .to('/v1/tfm/deals/submit');
 
       const updatePayload = { createdBy: MOCK_PORTAL_USER };
-      const { status } = await api.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${newId}/amendments/`);
-      const { body: bodyPutResponse } = await api
+      const { status } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${newId}/amendments/`);
+      const { body: bodyPutResponse } = await testApi
         .put({ payload: updatePayload, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to(`/v1/tfm/facilities/${newId}/amendments/626aa00e2446022434c52148`);
 
@@ -126,8 +125,8 @@ describe('PUT TFM amendments', () => {
     });
 
     it('should return 400 if invalid dealId', async () => {
-      await createFacility({ api, facility: newFacility, user: MOCK_PORTAL_USER });
-      await api
+      await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
+      await testApi
         .put({
           dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
@@ -135,7 +134,7 @@ describe('PUT TFM amendments', () => {
         })
         .to('/v1/tfm/deals/submit');
 
-      const { status, body } = await api
+      const { status, body } = await testApi
         .put({ payload: { amendmentsUpdate: {} }, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to('/v1/tfm/facilities/123/amendments/1234');
       expect(status).toEqual(400);

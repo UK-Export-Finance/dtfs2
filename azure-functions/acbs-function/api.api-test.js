@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { getFacility, createParty, updateFacility, updateFacilityLoan } = require('./api');
 
 describe('get function', () => {

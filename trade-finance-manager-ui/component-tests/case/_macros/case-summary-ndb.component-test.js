@@ -1,5 +1,5 @@
 const fs = require('fs');
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 
 const component = '../templates/case/_macros/case-summary-ndb.njk';
 

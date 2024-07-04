@@ -1,9 +1,8 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateMockPortalUserAuditDatabaseRecord, withDeleteManyTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generatePortalAuditDetails, generateSystemAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
-const app = require('../../../src/createApp');
 const { mongoDbClient } = require('../../../src/drivers/db-client');
-const api = require('../../api')(app);
+const { testApi } = require('../../test-api');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
@@ -25,7 +24,7 @@ describe('DELETE v1/portal/cron-jobs', () => {
 
   withValidateAuditDetailsTests({
     makeRequest: (auditDetails) =>
-      api
+      testApi
         .remove({
           auditDetails,
         })
@@ -35,7 +34,7 @@ describe('DELETE v1/portal/cron-jobs', () => {
 
   withDeleteManyTests({
     makeRequest: () =>
-      api
+      testApi
         .remove({
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
@@ -47,12 +46,12 @@ describe('DELETE v1/portal/cron-jobs', () => {
   });
 
   it('returns 200 if there are no cron job logs to delete', async () => {
-    const { status: firstStatus } = await api
+    const { status: firstStatus } = await testApi
       .remove({
         auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
       .to(`/v1/portal/cron-jobs`);
-    const { status: secondStatus } = await api
+    const { status: secondStatus } = await testApi
       .remove({
         auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })

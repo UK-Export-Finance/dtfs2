@@ -1,4 +1,4 @@
-const componentRenderer = require('../componentRenderer');
+const { componentRenderer } = require('../componentRenderer');
 
 const component = '../templates/_macros/select-all-table-cell-checkbox.njk';
 

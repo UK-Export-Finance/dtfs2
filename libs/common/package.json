@@ -43,10 +43,12 @@
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
   },
   "dependencies": {
+    "axios": "^1.7.2",
     "big.js": "^6.2.1",
     "date-fns": "^3.3.1",
     "date-fns-tz": "^2.0.1",
     "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "mongodb": "^4.17.2",
     "mssql": "^10.0.2",
     "node-cron": "^3.0.3",

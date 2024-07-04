@@ -1,13 +1,13 @@
+const { HEADERS } = require('@ukef/dtfs2-common');
+
 const api = () => {
   const url = `${Cypress.config('tfmApiProtocol')}${Cypress.config('tfmApiHost')}:${Cypress.config('tfmApiPort')}`;
   return url;
 };
 
-const apiKey = Cypress.config('apiKey');
-
 const genericHeaders = {
-  'Content-Type': 'application/json',
-  'x-api-key': apiKey,
+  'x-api-key': Cypress.config('tfmApiKey'),
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 
 const headers = (token) => ({
