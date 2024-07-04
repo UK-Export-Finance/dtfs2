@@ -5,16 +5,8 @@ import { getEditPremiumPaymentsCheckboxIdsFromObjectKeys } from '../../helpers/e
 
 const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof body === 'object';
 
-const redirectWithError = (
-  req: Request,
-  res: Response,
-  reportId: string,
-  paymentId: string,
-  unlinkPaymentFeesErrorKey: UnlinkPaymentFeesErrorKey,
-  checkedCheckboxIds: Record<string, true | undefined> = {},
-) => {
+const redirectWithError = (req: Request, res: Response, reportId: string, paymentId: string, unlinkPaymentFeesErrorKey: UnlinkPaymentFeesErrorKey) => {
   req.session.unlinkPaymentFeesErrorKey = unlinkPaymentFeesErrorKey;
-  req.session.checkedCheckboxIds = checkedCheckboxIds;
   return res.redirect(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
 };
 
