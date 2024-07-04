@@ -46,6 +46,13 @@ const baseRules = {
       consistent: true,
     },
   ],
+  'prefer-destructuring': [
+    'error',
+    {
+      array: false,
+      object: true,
+    },
+  ],
   'cypress/no-assigning-return-values': 'error',
   'cypress/no-unnecessary-waiting': 'error',
   'cypress/assertion-before-screenshot': 'warn',

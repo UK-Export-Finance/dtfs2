@@ -1,4 +1,6 @@
+const { isFacilityEndDateEnabledOnGefVersion, DealVersionError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
+const { InvalidIsUsingFacilityEndDate } = require('../../errors/invalid-is-using-facility-end-date.error');
 const convertToTimestamp = require('../../helpers/convertToTimestamp');
 
 const checkType = (type) => {
@@ -16,7 +18,17 @@ const checkType = (type) => {
 };
 
 class Facility {
-  constructor(req) {
+  /**
+   * @param {object} req - The facility properties to create/update
+   * @param {number | undefined} dealVersion
+   * @throws {DealVersionError} - if `dealVersion` is too low & `req` has property `isUsingFacilityEndDate`
+   * @throws {InvalidIsUsingFacilityEndDate} - if `isUsingFacilityEndDate` is not a boolean
+   */
+  constructor(req, dealVersion) {
+    if (!isFacilityEndDateEnabledOnGefVersion(dealVersion) && 'isUsingFacilityEndDate' in req) {
+      throw new DealVersionError(`Cannot add facility end date to deal version ${dealVersion}`);
+    }
+
     if (req.dealId) {
       // new facility
       this.dealId = ObjectId(req.dealId);
@@ -63,7 +75,12 @@ class Facility {
       }
       // used to store the user details of maker who changed unissued facility to issued
       this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker) || null;
-      this.isUsingFacilityEndDate = req.isUsingFacilityEndDate;
+      if (isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
+        if ('isUsingFacilityEndDate' in req && !(typeof req.isUsingFacilityEndDate === 'boolean')) {
+          throw new InvalidIsUsingFacilityEndDate('isUsingFacilityEndDate must be a boolean');
+        }
+        this.isUsingFacilityEndDate = req.isUsingFacilityEndDate ?? null;
+      }
     } else {
       // update facility
       if (req.hasBeenIssued != null) {
@@ -189,7 +206,10 @@ class Facility {
         this.specialIssuePermission = Object(req.specialIssuePermission);
       }
 
-      if (typeof req.isUsingFacilityEndDate === 'boolean') {
+      if ('isUsingFacilityEndDate' in req) {
+        if (!(typeof req.isUsingFacilityEndDate === 'boolean')) {
+          throw new InvalidIsUsingFacilityEndDate('isUsingFacilityEndDate must be a boolean');
+        }
         this.isUsingFacilityEndDate = req.isUsingFacilityEndDate;
       }
 

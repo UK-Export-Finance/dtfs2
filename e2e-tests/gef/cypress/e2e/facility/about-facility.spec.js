@@ -35,8 +35,13 @@ context('About Facility Page', () => {
   });
 
   describe('Visiting page with already issued cash facility', () => {
-    const application = applications[1];
-    const facilityId = application.facilities[0].details._id;
+    let application;
+    let facilityId;
+
+    before(() => {
+      application = applications[1];
+      facilityId = application.facilities[0].details._id;
+    });
 
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
@@ -234,8 +239,13 @@ context('About Facility Page', () => {
   });
 
   describe('Visiting page with unissued cash facility', () => {
-    const application = applications[1];
-    const facilityId = application.facilities[1].details._id;
+    let application;
+    let facilityId;
+
+    before(() => {
+      application = applications[1];
+      facilityId = application.facilities[1].details._id;
+    });
 
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
@@ -286,8 +296,13 @@ context('About Facility Page', () => {
   });
 
   describe('Visiting page with already issued contingent facility', () => {
-    const application = applications[2];
-    const facilityId = application.facilities[2].details._id;
+    let application;
+    let facilityId;
+
+    before(() => {
+      application = applications[2];
+      facilityId = application.facilities[2].details._id;
+    });
 
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
@@ -315,8 +330,13 @@ context('About Facility Page', () => {
   });
 
   describe('Visiting page with unissued contingent facility', () => {
-    const application = applications[2];
-    const facilityId = application.facilities[3].details._id;
+    let application;
+    let facilityId;
+
+    before(() => {
+      application = applications[2];
+      facilityId = application.facilities[3].details._id;
+    });
 
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));

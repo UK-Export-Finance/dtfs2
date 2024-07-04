@@ -27,7 +27,7 @@ const mockEligibilityCriteriaVersion = mockEligibilityCriteria.find((criteria) =
 
 const originalEnv = { ...process.env };
 
-const getVersion0ApplicationToSubmit = () => ({
+const generateVersion0ApplicationToSubmit = () => ({
   dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
   maker: {},
   bank: {},
@@ -44,13 +44,12 @@ const getVersion0ApplicationToSubmit = () => ({
 });
 
 /**
- * NOTE: A migration needs to be run on production if this test is changed.
- * We should maintain backwards compatibility with version 0 deals
- *
- * @returns a version 0 GEF application.
+ * NOTE: If you change this fixture, then a migration needs to be run on production.
+ * This function creates a version 0 GEF deal, which is used in tests to maintain backwards compatability with in-flight deals.
+ * Therefore, if you find yourself needing to change this, then existing version 0 GEF deals will also need updating.
  */
-const getVersion0Application = (makerId) => ({
-  ...getVersion0ApplicationToSubmit(),
+const generateVersion0ApplicationResponse = (makerId) => ({
+  ...generateVersion0ApplicationToSubmit(),
   version: 0,
   status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
   editedBy: expect.any(Array),
@@ -85,12 +84,11 @@ const getVersion0Application = (makerId) => ({
 });
 
 /**
- * NOTE: A migration needs to be run on production if this test is changed.
- * We should maintain backwards compatibility with version 0 facilities
- *
- * @returns a version 0 GEF facility.
+ * NOTE: If you change this fixture, then a migration needs to be run on production.
+ * This function creates a facility for a version 0 GEF deal, which is used in tests to maintain backwards compatability with in-flight deals.
+ * Therefore, if you find yourself needing to change this, then existing version 0 GEF facilities will also need updating.
  */
-const getVersion0Facility = (dealId, makerId) => ({
+const generateVersion0Facility = (dealId, makerId) => ({
   status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
   details: {
     _id: expect.any(String),
@@ -156,36 +154,83 @@ describe('GEF deal versioning', () => {
     });
 
     it('returns the expected version 0 application upon creation', async () => {
-      const { body } = await as(aMaker).post(getVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
+      const { body } = await as(aMaker).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
 
-      expect(body).toEqual(expectMongoId(getVersion0Application(aMaker._id)));
+      expect(body).toEqual(expectMongoId(generateVersion0ApplicationResponse(aMaker._id)));
     });
 
     it('returns the expected version 0 facility on creation', async () => {
-      const { body: dealBody } = await as(aMaker).post(getVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
+      const { body: dealBody } = await as(aMaker).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
       const { body } = await as(aMaker).post({ dealId: dealBody._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(gefFacilitiesUrl);
 
-      expect(body).toEqual(getVersion0Facility(dealBody._id, aMaker._id));
+      expect(body).toEqual(generateVersion0Facility(dealBody._id, aMaker._id));
     });
 
-    it('returns 400 when adding a facility end date to a version 0 facility', async () => {
-      const { body: dealBody } = await as(aMaker).post(getVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
+    it('returns 400 when updating isUsingFacilityEndDate on a version 0 facility', async () => {
+      const { body: dealBody } = await as(aMaker).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
       const { body: facilityBody } = await as(aMaker).post({ dealId: dealBody._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(gefFacilitiesUrl);
       const { status, body } = await as(aMaker).put({ isUsingFacilityEndDate: true }).to(`${gefFacilitiesUrl}/${facilityBody.details._id}`);
 
-      expect(status).toBe(400);
       expect(body).toEqual({ status: 400, message: 'Cannot add facility end date to deal version 0' });
+      expect(status).toBe(400);
     });
 
-    it('returns 400 when creating a version 0 facility with facility end date', async () => {
-      const { body: dealBody } = await as(aMaker).post(getVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
-      const { body: facilityBody } = await as(aMaker)
+    it('returns 400 when creating a version 0 facility with isUsingFacilityEndDate', async () => {
+      const { body: dealBody } = await as(aMaker).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
+      const { status, body } = await as(aMaker)
         .post({ dealId: dealBody._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, isUsingFacilityEndDate: true })
         .to(gefFacilitiesUrl);
-      const { status, body } = await as(aMaker).put({ isUsingFacilityEndDate: true }).to(`${gefFacilitiesUrl}/${facilityBody.details._id}`);
 
-      expect(status).toBe(400);
       expect(body).toEqual({ status: 400, message: 'Cannot add facility end date to deal version 0' });
+      expect(status).toBe(400);
+    });
+  });
+
+  describe(`when GEF_DEAL_VERSION set to '1'`, () => {
+    beforeAll(() => {
+      process.env.GEF_DEAL_VERSION = '1';
+    });
+
+    afterAll(() => {
+      process.env = originalEnv;
+    });
+
+    it('returns 200 when updating isUsingFacilityEndDate on a version 0 facility', async () => {
+      const { body: dealBody } = await as(aMaker).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
+      const { body: facilityBody } = await as(aMaker).post({ dealId: dealBody._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(gefFacilitiesUrl);
+
+      const { status } = await as(aMaker).put({ isUsingFacilityEndDate: true }).to(`${gefFacilitiesUrl}/${facilityBody.details._id}`);
+
+      expect(status).toBe(200);
+    });
+
+    it('returns 201 when creating a version 0 facility with isUsingFacilityEndDate', async () => {
+      const { body: dealBody } = await as(aMaker).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
+
+      const { status } = await as(aMaker)
+        .post({ dealId: dealBody._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, isUsingFacilityEndDate: true })
+        .to(gefFacilitiesUrl);
+
+      expect(status).toBe(201);
+    });
+
+    it('returns 400 when adding isUsingFacilityEndDate to a version 0 facility', async () => {
+      const { body: dealBody } = await as(aMaker).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
+      const { body: facilityBody } = await as(aMaker).post({ dealId: dealBody._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(gefFacilitiesUrl);
+      const { status, body } = await as(aMaker).put({ isUsingFacilityEndDate: 'true' }).to(`${gefFacilitiesUrl}/${facilityBody.details._id}`);
+
+      expect(body).toEqual({ status: 400, message: 'isUsingFacilityEndDate must be a boolean' });
+      expect(status).toEqual(400);
+    });
+
+    it('returns 400 when creating a version 0 facility with isUsingFacilityEndDate', async () => {
+      const { body: dealBody } = await as(aMaker).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
+      const { status, body } = await as(aMaker)
+        .post({ dealId: dealBody._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, isUsingFacilityEndDate: 'true' })
+        .to(gefFacilitiesUrl);
+
+      expect(body).toEqual({ status: 400, message: 'isUsingFacilityEndDate must be a boolean' });
+      expect(status).toEqual(400);
     });
   });
 });

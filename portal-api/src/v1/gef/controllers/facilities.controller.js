@@ -1,12 +1,5 @@
 const { ObjectId } = require('mongodb');
-const {
-  MONGO_DB_COLLECTIONS,
-  DocumentNotDeletedError,
-  DocumentNotFoundError,
-  isFacilityEndDateEnabledOnGefVersion,
-  DealVersionError,
-  ApiError,
-} = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, DocumentNotFoundError, ApiError, DealNotFoundError, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne, deleteMany } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -17,58 +10,54 @@ const { calculateUkefExposure, calculateGuaranteeFee } = require('../calculation
 const { InvalidDatabaseQueryError } = require('../../errors/invalid-database-query.error');
 
 exports.create = async (req, res) => {
-  const enumValidationErr = facilitiesCheckEnums(req.body);
-  if (!req.body.type || !req.body.dealId) {
-    return res.status(422).send([{ status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
+  try {
+    const enumValidationErr = facilitiesCheckEnums(req.body);
+    if (!req.body.type || !req.body.dealId) {
+      return res.status(422).send([{ status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
+    }
+
+    if (enumValidationErr) {
+      return res.status(422).send(enumValidationErr);
+    }
+
+    if (!ObjectId.isValid(req.body.dealId)) {
+      throw new InvalidDealIdError(req.body.dealId);
+    }
+
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+    const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(req.body.dealId) } });
+
+    if (!existingDeal) {
+      throw new DealNotFoundError(req.body.dealId);
+    }
+
+    const auditDetails = generatePortalAuditDetails(req.user._id);
+
+    const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
+
+    const facilityParameters = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+
+    const FacilityToInsert = new Facility(facilityParameters, existingDeal.version);
+    const createdFacility = await facilitiesCollection.insertOne(FacilityToInsert);
+
+    const { insertedId } = createdFacility;
+
+    const facility = await facilitiesCollection.findOne({
+      _id: { $eq: ObjectId(insertedId) },
+    });
+
+    const response = {
+      status: facilitiesStatus(facility),
+      details: facility,
+      validation: facilitiesValidation(facility),
+    };
+    return res.status(201).json(response);
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({ status: error.status, message: error.message });
+    }
+    throw error;
   }
-
-  if (enumValidationErr) {
-    return res.status(422).send(enumValidationErr);
-  }
-
-  if (!ObjectId.isValid(req.body.dealId)) {
-    return res.status(400).send({ status: 404, message: 'Invalid dealId' });
-  }
-
-  const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
-  const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(req.body.dealId) } });
-
-  if (!existingDeal) {
-    return res.status(404).send({ status: 404, message: 'Deal not found' });
-  }
-
-  if (!isFacilityEndDateEnabledOnGefVersion(existingDeal.version) && req.body.isUsingFacilityEndDate) {
-    return res.status(400).send({ status: 400, message: `Cannot add facility end date to deal version ${existingDeal.version}` });
-  }
-
-  const auditDetails = generatePortalAuditDetails(req.user._id);
-
-  const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
-
-  const facilityParameters = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
-
-  if (isFacilityEndDateEnabledOnGefVersion(existingDeal.version)) {
-    facilityParameters.facilityEndDateExist = facilityParameters.facilityEndDateExist ?? null;
-  }
-
-  const createdFacility = await facilitiesCollection.insertOne(new Facility(facilityParameters));
-
-  const { insertedId } = createdFacility;
-
-  if (!ObjectId.isValid(insertedId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
-  }
-
-  const facility = await facilitiesCollection.findOne({
-    _id: { $eq: ObjectId(insertedId) },
-  });
-
-  const response = {
-    status: facilitiesStatus(facility),
-    details: facility,
-    validation: facilitiesValidation(facility),
-  };
-  return res.status(201).json(response);
 };
 
 const getAllFacilitiesByDealId = async (dealId) => {
@@ -169,16 +158,15 @@ const update = async (id, updateBody, auditDetails) => {
       throw new Error('Facility `dealId` deal does not exist');
     }
 
-    if (!isFacilityEndDateEnabledOnGefVersion(existingDeal.version) && updateBody.isUsingFacilityEndDate) {
-      throw new DealVersionError(`Cannot add facility end date to deal version ${existingDeal.version}`);
-    }
-
-    const facilityUpdate = new Facility({
-      ...updateBody,
-      ukefExposure: calculateUkefExposure(updateBody, existingFacility),
-      guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
-      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-    });
+    const facilityUpdate = new Facility(
+      {
+        ...updateBody,
+        ukefExposure: calculateUkefExposure(updateBody, existingFacility),
+        guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      },
+      existingDeal.version,
+    );
 
     const updatedFacility = await facilitiesCollection.findOneAndUpdate(
       { _id: { $eq: facilityId } },
