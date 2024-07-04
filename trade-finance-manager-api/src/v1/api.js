@@ -1265,11 +1265,15 @@ const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
 /**
  * Gets the utilisation report reconciliation details by report id
  * @param {string} reportId - The report id
+ * @param { string | undefined } facilityIdQuery - query params object containing a facility ID query
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
-const getUtilisationReportReconciliationDetailsById = async (reportId) => {
+const getUtilisationReportReconciliationDetailsById = async (reportId, facilityIdQuery) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
     headers: headers.central,
+    params: {
+      facilityIdQuery,
+    },
   });
 
   return response.data;
