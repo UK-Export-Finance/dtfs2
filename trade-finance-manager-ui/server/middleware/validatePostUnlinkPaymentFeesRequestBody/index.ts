@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { asUserSession } from '../../helpers/express-session';
 import { UnlinkPaymentFeesErrorKey } from '../../controllers/utilisation-reports/helpers';
 import { getEditPremiumPaymentsCheckboxIdsFromObjectKeys } from '../../helpers/edit-premium-payments-table-checkbox-id-helper';
+import { extractTotalSelectableFeeRecordsFromRequestBody } from '../../helpers/unlink-payment-fees-helper';
 
 const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof body === 'object';
 
@@ -15,21 +16,6 @@ const renderProblemWithServiceView = (req: Request, res: Response) => {
   return res.render('_partials/problem-with-service.njk', { user });
 };
 
-// TODO: Could we pull all these body types and the extraction func out into another file?
-type UnlinkPaymentFeesFormRequestBody = {
-  totalSelectableFeeRecords?: string;
-};
-
-type UnlinkPaymentFeesFormValues = {
-  totalSelectableFeeRecords?: string;
-};
-
-const extractTotalSelectableFeeRecords = (requestBody: UnlinkPaymentFeesFormRequestBody): UnlinkPaymentFeesFormValues => {
-  return {
-    totalSelectableFeeRecords: requestBody.totalSelectableFeeRecords,
-  };
-};
-
 export const validatePostUnlinkPaymentFeesRequestBody = (req: Request, res: Response, next: NextFunction) => {
   const { reportId, paymentId } = req.params;
 
@@ -39,7 +25,7 @@ export const validatePostUnlinkPaymentFeesRequestBody = (req: Request, res: Resp
     return renderProblemWithServiceView(req, res);
   }
 
-  const formValues = extractTotalSelectableFeeRecords(body);
+  const formValues = extractTotalSelectableFeeRecordsFromRequestBody(body);
   const checkedCheckboxIds = getEditPremiumPaymentsCheckboxIdsFromObjectKeys(body);
 
   if (checkedCheckboxIds.length === 0) {
