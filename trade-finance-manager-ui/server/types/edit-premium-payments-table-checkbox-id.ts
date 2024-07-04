@@ -1,1 +1,1 @@
-export type EditPremiumPaymentsTableCheckboxId = `feeRecordIds-${string}`;
+export type EditPremiumPaymentsTableCheckboxId = `feeRecordId-${string}`;
