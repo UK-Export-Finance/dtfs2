@@ -1045,6 +1045,29 @@ const deletePaymentById = async (reportId, paymentId, user, userToken) => {
   });
 };
 
+/**
+ * Updated the payment with the supplied edit payment form values
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {import('./types/edit-payment-form-values').ParsedEditPaymentFormValues} parsedEditPaymentFormValues - The parsed edit payment form values
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {string} userToken - The user token
+ */
+const editPayment = async (reportId, paymentId, parsedEditPaymentFormValues, user, userToken) => {
+  const { paymentAmount, datePaymentReceived, paymentReference } = parsedEditPaymentFormValues;
+  await axios({
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
+    method: 'patch',
+    headers: generateHeaders(userToken),
+    data: {
+      paymentAmount,
+      datePaymentReceived,
+      paymentReference,
+      user,
+    },
+  });
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1093,4 +1116,5 @@ module.exports = {
   getPaymentDetailsWithFeeRecords,
   getPaymentDetailsWithoutFeeRecords,
   deletePaymentById,
+  editPayment,
 };
