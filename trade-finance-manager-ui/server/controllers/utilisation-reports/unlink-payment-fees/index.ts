@@ -10,7 +10,7 @@ export type AddPaymentRequest = CustomExpressRequest<{
   reqBody: AddPaymentFormRequestBody;
 }>;
 
-export const unlinkPaymentFees = (req: AddPaymentRequest, res: Response) => {
+export const postUnlinkPaymentFees = (req: AddPaymentRequest, res: Response) => {
   try {
     const { reportId, paymentId } = req.params;
     const checkedCheckboxIds = getEditPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);

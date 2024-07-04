@@ -18,7 +18,7 @@ import { postKeyingData } from '../../controllers/utilisation-reports/keying-dat
 import { postCheckKeyingData } from '../../controllers/utilisation-reports/check-keying-data';
 import { getEditPayment, postEditPayment } from '../../controllers/utilisation-reports/edit-payment';
 import { getConfirmDeletePayment, postConfirmDeletePayment } from '../../controllers/utilisation-reports/confirm-delete-payment';
-import { unlinkPaymentFees } from '../../controllers/utilisation-reports/unlink-payment-fees';
+import { postUnlinkPaymentFees } from '../../controllers/utilisation-reports/unlink-payment-fees';
 
 export const utilisationReportsRoutes = express.Router();
 
@@ -106,5 +106,5 @@ utilisationReportsRoutes.post(
   validateSqlId('reportId'),
   validateSqlId('paymentId'),
   validatePostUnlinkPaymentFeesRequestBody,
-  unlinkPaymentFees,
+  postUnlinkPaymentFees,
 );
