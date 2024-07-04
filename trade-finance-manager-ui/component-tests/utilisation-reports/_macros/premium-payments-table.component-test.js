@@ -48,8 +48,8 @@ describe(component, () => {
 
   it('should render all table headings when userCanEdit is true', () => {
     const wrapper = getWrapper();
-    wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(9);
-    wrapper.expectElement(`${tableSelector} thead th:contains("")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(8);
+    wrapper.expectElement(`${tableSelector} thead td:contains("")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Facility ID")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Exporter")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Reported fees")`).toExist();
@@ -116,7 +116,7 @@ describe(component, () => {
 
   it('should render the select all checkbox in the table headings row when userCanEdit is true', () => {
     const wrapper = getWrapper();
-    wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).toExist();
+    wrapper.expectElement(`${tableSelector} thead td input[type="checkbox"]#select-all-checkbox`).toExist();
   });
 
   it('should not render the select all checkbox in the table headings row when userCanEdit is false', () => {
@@ -559,5 +559,20 @@ describe(component, () => {
 
     checkboxElement.toExist();
     checkboxElement.toHaveAttribute('checked', undefined);
+  });
+
+  it('should set aria-labels for checkboxes', () => {
+    const checkboxId = 'some-checkbox-id';
+    const feeRecordPaymentGroups = [
+      {
+        ...aFeeRecordPaymentGroup(),
+        status: FEE_RECORD_STATUS.TO_DO,
+        checkboxAriaLabel: 'select me!',
+        checkboxId,
+      },
+    ];
+    const wrapper = render({ userCanEdit: true, feeRecordPaymentGroups });
+
+    wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).toHaveAttribute('aria-label', 'select me!');
   });
 });
