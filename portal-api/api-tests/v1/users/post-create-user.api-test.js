@@ -101,20 +101,18 @@ describe('a user', () => {
         expect(body).toStrictEqual(
           expect.objectContaining({
             success: true,
-            users: expect.arrayContaining([
-              {
-                username: MOCK_USER.username,
-                email: MOCK_USER.email,
-                roles: MOCK_USER.roles,
-                bank: MOCK_USER.bank,
-                _id: expect.any(String),
-                firstname: MOCK_USER.firstname,
-                surname: MOCK_USER.surname,
-                timezone: 'Europe/London',
-                'user-status': STATUS.ACTIVE,
-                isTrusted: MOCK_USER.isTrusted,
-              },
-            ]),
+            user: expect.objectContaining({
+              username: MOCK_USER.username,
+              email: MOCK_USER.email,
+              roles: ['Admin'],
+              bank: MOCK_USER.bank,
+              _id: expect.any(String),
+              firstname: MOCK_USER.firstname,
+              surname: MOCK_USER.surname,
+              timezone: 'Europe/London',
+              'user-status': STATUS.ACTIVE,
+              isTrusted: MOCK_USER.isTrusted,
+            }),
           }),
         );
       });
