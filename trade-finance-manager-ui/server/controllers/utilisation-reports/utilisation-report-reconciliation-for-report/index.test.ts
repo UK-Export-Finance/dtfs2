@@ -164,7 +164,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
       expect(viewModel.premiumPaymentFormError).toBeDefined();
-      expect(viewModel.premiumPaymentFormError?.href).toBe('#different-fee-record-statuses');
+      expect(viewModel.premiumPaymentFormError?.href).toBe('#premium-payments-table');
       expect(viewModel.premiumPaymentFormError?.text).toBe('Select a fee or fees with the same status');
       expect(viewModel.feeRecordPaymentGroups[0].isChecked).toBe(true);
     });
