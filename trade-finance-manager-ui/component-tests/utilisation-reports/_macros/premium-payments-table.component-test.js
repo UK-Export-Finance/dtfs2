@@ -124,6 +124,31 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th input[type="checkbox"]#select-all-checkbox`).notToExist();
   });
 
+  it('should render message informing there are no matched records when no fee record groups', () => {
+    const feeRecordPaymentGroups = [];
+
+    const wrapper = render({ feeRecordPaymentGroups });
+
+    wrapper.expectElement('[data-cy="no-matched-facilities-message"]').toExist();
+    wrapper.expectText('[data-cy="no-matched-facilities-message"]').toContain('Your search matched no facilities');
+    wrapper.expectText('[data-cy="no-matched-facilities-message"]').toContain('There are no results for the facility ID you entered');
+  });
+
+  it('should not render message informing there are no matched records when at least one fee record group is returned', () => {
+    const feeRecordPaymentGroups = [
+      {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [aFeeRecordViewModelItem()],
+      },
+    ];
+
+    const wrapper = render({ feeRecordPaymentGroups });
+
+    wrapper.expectElement('[data-cy="no-matched-facilities-message"]').notToExist();
+    wrapper.expectText('html').notToContain('Your search matched no facilities');
+    wrapper.expectText('html').notToContain('There are no results for the facility ID you entered');
+  });
+
   it('should render a row for each fee record defined in each fee record payment group', () => {
     const feeRecordIds = [1, 2, 3];
     const feeRecordItems = feeRecordIds.map((id) => ({ ...aFeeRecordViewModelItem(), id }));
