@@ -1,19 +1,9 @@
 const utilisationReportsPage = {
-  visit: () => cy.visit('/utilisation-reports'),
-  heading: (submissionMonth) => cy.get(`[data-cy="${submissionMonth}-submission-month-report-period-heading"]`),
-  dueDateText: (submissionMonth) => cy.get(`[data-cy="${submissionMonth}-submission-month-report-due-date-text"]`),
-  tableRowSelector: (bankId, submissionMonth) =>
-    cy.get(`[data-cy="utilisation-report-reconciliation-table-row-bank-${bankId}-submission-month-${submissionMonth}"]`),
-  clickMarkReportAsCompletedButton: (submissionMonth) =>
-    cy.get(`[data-cy="utilisation-reports-form--${submissionMonth}"]`).within(($form) => {
-      cy.wrap($form).get('[data-cy="mark-report-as-completed-button"]').click();
-    }),
-  clickMarkReportAsNotCompletedButton: (submissionMonth) =>
-    cy.get(`[data-cy="utilisation-reports-form--${submissionMonth}"]`).within(($form) => {
-      cy.wrap($form).get('[data-cy="mark-as-not-completed-button"]').click();
-    }),
   getPaymentLink: (paymentId) => cy.get(`a[data-cy="edit-payment-link--paymentId-${paymentId}"]`),
   clickPaymentLink: (paymentId) => cy.get(`a[data-cy="edit-payment-link--paymentId-${paymentId}"]`).click(),
+  getPremiumPaymentsTableRow: (feeRecordId) => cy.get(`tr[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
+  getFacilityIdFilterInput: () => cy.getInputByLabelText('Filter by facility ID'),
+  submitFacilityIdFilter: () => cy.get('button[data-cy="facility-filter-submit-button"]').click(),
 };
 
 module.exports = { utilisationReportsPage };

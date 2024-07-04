@@ -25,6 +25,7 @@ import amendmentsPage from './amendments/amendmentsPage';
 import feedbackPage from './feedbackPage';
 import footer from './footer';
 import activitiesPage from './activities/activitiesPage';
+import { utilisationReportsSummaryPage } from './utilisationReportsSummaryPage';
 import { utilisationReportsPage } from './utilisationReportsPage';
 import { searchUtilisationReportsFormPage, searchUtilisationReportsResultsPage } from './searchUtilisationReportsPage';
 import { utilisationReportAddPaymentPage } from './utilisationReportAddPaymentPage';
@@ -59,6 +60,7 @@ export default {
   amendmentsPage,
   footer,
   activitiesPage,
+  utilisationReportsSummaryPage,
   utilisationReportsPage,
   searchUtilisationReportsFormPage,
   searchUtilisationReportsResultsPage,
