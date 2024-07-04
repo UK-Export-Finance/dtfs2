@@ -28,4 +28,6 @@ module.exports = {
   NUMBER,
   BANKS,
   ALL: 'all',
+  ADMIN: 'admin',
+  MAKER: 'maker',
 };

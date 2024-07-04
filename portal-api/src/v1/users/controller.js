@@ -186,6 +186,13 @@ exports.update = async (_id, update, auditDetails, callback) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
+    if (error) {
+      return callback(error);
+    }
+
+    if (!existingUser) {
+      return callback(new Error('User not found'));
+    }
     if (existingUser['user-status'] !== USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.BLOCKED) {
       // User is being blocked.
       await sendBlockedEmail(existingUser.email);
@@ -248,10 +255,15 @@ exports.update = async (_id, update, auditDetails, callback) => {
     if (userUnsetUpdate) {
       userUpdate.$unset = userUnsetUpdate;
     }
-    const updatedUser = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, {
-      returnDocument: 'after',
-    });
-    return callback(null, updatedUser);
+    try {
+      const result = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, {
+        returnDocument: 'after',
+      });
+      const updatedUser = result.value;
+      return callback(null, updatedUser);
+    } catch (updateError) {
+      return callback(updateError);
+    }
   });
 };
 

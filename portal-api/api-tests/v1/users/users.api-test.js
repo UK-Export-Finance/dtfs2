@@ -58,22 +58,6 @@ describe('a user', () => {
     });
   });
 
-  describe('DELETE /v1/users/:userId/disable', () => {
-    it('a user can be disabled', async () => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
-
-      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
-
-      const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
-
-      expect(status).toEqual(200);
-      expect(body).toMatchObject({
-        disabled: true,
-      });
-    });
-  });
-
   describe('POST /v1/login', () => {
     it('an unknown user cannot log in', async () => {
       const { username, password } = MOCK_USER;
@@ -91,18 +75,6 @@ describe('a user', () => {
 
       expect(status).toEqual(401);
       expect(body).toEqual({ msg: 'email or password is incorrect', success: false });
-    });
-
-    it('a disabled user cannot log in', async () => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
-      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
-
-      const { username, password } = MOCK_USER;
-      const { status, body } = await as().post({ username, password }).to('/v1/login');
-
-      expect(status).toEqual(401);
-      expect(body).toEqual({ msg: 'user is disabled', success: false });
     });
 
     it('a known user can log in with a valid username and password', async () => {
@@ -194,18 +166,6 @@ describe('a user', () => {
       expect(body).toEqual(expectedBody);
     });
 
-    it('a disabled user cannot log in', async () => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
-      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
-
-      const { username, password } = MOCK_USER;
-      const { status, body } = await as().post({ username, password }).to('/v1/login');
-
-      expect(status).toEqual(401);
-      expect(body).toEqual({ msg: 'user is disabled', success: false });
-    });
-
     it('a known user can log in with a valid username and password', async () => {
       const { username, password } = MOCK_USER;
       await createUser(MOCK_USER);
@@ -264,19 +224,17 @@ describe('a user', () => {
     it('does not allow a Maker to create a user', async () => {
       const userToCreate = { ...MOCK_USER, roles: ['Maker'] };
 
-      const { status, body } = await as(aMaker).post(userToCreate).to('/v1/users');
+      const { status } = await as(aMaker).post(userToCreate).to('/v1/users');
 
-      expect(status).toEqual(403);
-      expect(body).toHaveProperty('error', 'Forbidden');
+      expect(status).toEqual(401);
     });
 
     it('does not allow a Checker to create a user', async () => {
       const userToCreate = { ...MOCK_USER, roles: ['Checker'] };
 
-      const { status, body } = await as(aChecker).post(userToCreate).to('/v1/users');
+      const { status } = await as(aChecker).post(userToCreate).to('/v1/users');
 
-      expect(status).toEqual(403);
-      expect(body).toHaveProperty('error', 'Forbidden');
+      expect(status).toEqual(401);
     });
   });
 

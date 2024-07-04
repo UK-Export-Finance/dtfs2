@@ -1,6 +1,6 @@
 import relative from '../relativeURL';
 import applicationActivities from '../pages/application-activities';
-import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
+import { BANK1_MAKER1, BANK1_CHECKER1, ADMIN } from '../../../../e2e-fixtures/portal-users.fixture';
 import applicationDetails from '../pages/application-details';
 import automaticCover from '../pages/automatic-cover';
 import statusBanner from '../pages/application-status-banner';
@@ -70,7 +70,7 @@ context('Submit AIN deal and check portalActivities', () => {
   describe('check portalActivity Page', () => {
     beforeEach(() => {
       cy.saveSession();
-      cy.login(BANK1_MAKER1);
+      cy.login(ADMIN);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
