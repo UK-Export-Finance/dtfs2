@@ -3,16 +3,13 @@ import { extractTotalSelectableFeeRecordsFromRequestBody } from './unlink-paymen
 describe('unlink payment fees helper', () => {
   describe('extractTotalSelectableFeeRecordsFromRequestBody', () => {
     it('should extract totalSelectableFeeRecords when present', () => {
-      const totalSelectableFeeRecords = '7';
       const requestBody = {
-        totalSelectableFeeRecords,
+        totalSelectableFeeRecords: '7',
       };
 
       const result = extractTotalSelectableFeeRecordsFromRequestBody(requestBody);
 
-      expect(result).toEqual({
-        totalSelectableFeeRecords,
-      });
+      expect(result).toEqual(7);
     });
 
     it('should return undefined for totalSelectableFeeRecords when not present', () => {
@@ -20,9 +17,7 @@ describe('unlink payment fees helper', () => {
 
       const result = extractTotalSelectableFeeRecordsFromRequestBody(requestBody);
 
-      expect(result).toEqual({
-        totalSelectableFeeRecords: undefined,
-      });
+      expect(result).toEqual(undefined);
     });
   });
 });
