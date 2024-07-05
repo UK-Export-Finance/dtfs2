@@ -110,6 +110,19 @@
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Cover end date</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-cover-end-date">{{ facility.dates.coverEndDate | dashIfEmpty }}</dd>
 
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank has provided a Facility end date</dt>
+        <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-end-date-exists">{{ facility.dates.facilityEndDateExists | formatBooleanAsString | dashIfEmpty }}</dd>
+
+      {% if facility.dates.facilityEndDateExists %}
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Facility end date</dt>
+                <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-end-date">{{ facility.dates.facilityEndDate | localiseTimestamp('d MMMM yyyy', user.timezone) | dashIfEmpty }}</dd>
+
+      {% elseif (facility.dates.facilityEndDateExists === false) %}
+        <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank review date</dt>
+                <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="bank-review-date">{{ facility.dates.bankReviewDate | localiseTimestamp('d MMMM yyyy', user.timezone) | dashIfEmpty }}</dd>
+
+      {% endif %}
+
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Tenor</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-tenor">{{ facility.dates.tenor | dashIfEmpty }}</dd>
       </dl>
