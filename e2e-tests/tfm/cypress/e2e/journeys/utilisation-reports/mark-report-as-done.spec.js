@@ -80,7 +80,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
-    pages.utilisationReportsPage.visit();
+    pages.utilisationReportsSummaryPage.visit();
   });
 
   it(`should only allow users to manually mark a report as completed/not completed if the report is not in the '${UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED}' state`, () => {
@@ -91,7 +91,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { bankId, id, reportPeriod, status } = utilisationReport;
 
-      pages.utilisationReportsPage
+      pages.utilisationReportsSummaryPage
         .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
@@ -110,7 +110,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, notReceivedUtilisationReports).each((notReceivedReport) => {
       const { bankId, id, status } = notReceivedReport;
 
-      pages.utilisationReportsPage
+      pages.utilisationReportsSummaryPage
         .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
@@ -124,7 +124,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
       const { id, bankId, status } = utilisationReport;
       const displayStatus = getDisplayStatus(status);
 
-      pages.utilisationReportsPage
+      pages.utilisationReportsSummaryPage
         .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
@@ -133,13 +133,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
         });
     });
 
-    pages.utilisationReportsPage.clickMarkReportAsCompletedButton(currentSubmissionMonth);
+    pages.utilisationReportsSummaryPage.clickMarkReportAsCompletedButton(currentSubmissionMonth);
 
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { bankId } = utilisationReport;
       const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
 
-      pages.utilisationReportsPage
+      pages.utilisationReportsSummaryPage
         .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
@@ -153,7 +153,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
       const { id, bankId, status } = utilisationReport;
       const displayStatus = getDisplayStatus(status);
 
-      pages.utilisationReportsPage
+      pages.utilisationReportsSummaryPage
         .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
@@ -162,7 +162,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
         });
     });
 
-    pages.utilisationReportsPage.clickMarkReportAsCompletedButton(currentSubmissionMonth);
+    pages.utilisationReportsSummaryPage.clickMarkReportAsCompletedButton(currentSubmissionMonth);
 
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { bankId, id } = utilisationReport;
@@ -170,7 +170,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
       const completedStatus = UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED;
       const displayStatus = getDisplayStatus(completedStatus);
 
-      pages.utilisationReportsPage
+      pages.utilisationReportsSummaryPage
         .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
@@ -179,13 +179,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
         });
     });
 
-    pages.utilisationReportsPage.clickMarkReportAsNotCompletedButton(currentSubmissionMonth);
+    pages.utilisationReportsSummaryPage.clickMarkReportAsNotCompletedButton(currentSubmissionMonth);
 
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { bankId } = utilisationReport;
       const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
 
-      pages.utilisationReportsPage
+      pages.utilisationReportsSummaryPage
         .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
@@ -199,7 +199,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
       const { id, bankId, status } = utilisationReport;
       const displayStatus = getDisplayStatus(status);
 
-      pages.utilisationReportsPage
+      pages.utilisationReportsSummaryPage
         .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
@@ -208,13 +208,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
         });
     });
 
-    pages.utilisationReportsPage.clickMarkReportAsNotCompletedButton(currentSubmissionMonth);
+    pages.utilisationReportsSummaryPage.clickMarkReportAsNotCompletedButton(currentSubmissionMonth);
 
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { bankId } = utilisationReport;
       const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION);
 
-      pages.utilisationReportsPage
+      pages.utilisationReportsSummaryPage
         .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
@@ -250,7 +250,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
       const { bankId, id, status } = reconciliationCompletedReport;
       const displayStatus = getDisplayStatus(status);
 
-      pages.utilisationReportsPage
+      pages.utilisationReportsSummaryPage
         .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
@@ -259,13 +259,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
         });
     });
 
-    pages.utilisationReportsPage.clickMarkReportAsCompletedButton(currentSubmissionMonth);
+    pages.utilisationReportsSummaryPage.clickMarkReportAsCompletedButton(currentSubmissionMonth);
 
     cy.get(aliasSelector(utilisationReportsAlias)).each((utilisationReport) => {
       const { bankId } = utilisationReport;
       const displayStatus = getDisplayStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED);
 
-      pages.utilisationReportsPage
+      pages.utilisationReportsSummaryPage
         .tableRowSelector(bankId, currentSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
@@ -298,7 +298,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
     cy.get(aliasSelector(previousUtilisationReportAlias)).then((utilisationReport) => {
       const { id, bankId, status } = utilisationReport;
 
-      pages.utilisationReportsPage
+      pages.utilisationReportsSummaryPage
         .tableRowSelector(bankId, previousSubmissionMonth)
         .should('exist')
         .within(($tableRow) => {
@@ -306,12 +306,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can mark reports as done and not done`
         });
     });
 
-    pages.utilisationReportsPage.clickMarkReportAsCompletedButton(previousSubmissionMonth);
+    pages.utilisationReportsSummaryPage.clickMarkReportAsCompletedButton(previousSubmissionMonth);
 
     cy.get(aliasSelector(previousUtilisationReportAlias)).then((utilisationReport) => {
       const { bankId } = utilisationReport;
 
-      pages.utilisationReportsPage.tableRowSelector(bankId, previousSubmissionMonth).should('not.exist');
+      pages.utilisationReportsSummaryPage.tableRowSelector(bankId, previousSubmissionMonth).should('not.exist');
     });
   });
 });
