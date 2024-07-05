@@ -18,4 +18,10 @@ describe(component, () => {
 
     wrapper.expectElement('label').toHaveAttribute('id', 'select-all-checkbox-label');
   });
+
+  it("sets the aria-label to 'Select all'", () => {
+    const wrapper = getWrapper();
+
+    wrapper.expectElement('input[type="checkbox"]').toHaveAttribute('aria-label', 'Select all');
+  });
 });

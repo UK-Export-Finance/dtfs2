@@ -12,6 +12,7 @@
   {% set displayStatus = feeRecordPaymentGroup.displayStatus %}
   {% set checkboxId = feeRecordPaymentGroup.checkboxId %}
   {% set isChecked = feeRecordPaymentGroup.isChecked %}
+  {% set checkboxAriaLabel = feeRecordPaymentGroup.checkboxAriaLabel %}
   {% for feeRecord in feeRecords %}
     {% set isFirstFeeRecordInGroup = loop.index === 1 %}
     {% set isLastFeeRecordInGroup = loop.index === feeRecords.length %}
@@ -64,7 +65,8 @@
           {% if status === 'TO_DO' or status === 'DOES_NOT_MATCH' %}
             {{ tableCellCheckbox.render({
               checkboxId: checkboxId,
-              checked: isChecked
+              checked: isChecked,
+              ariaLabel: checkboxAriaLabel
             }) if isFirstFeeRecordInGroup }}
           {% endif %}
         </td>
