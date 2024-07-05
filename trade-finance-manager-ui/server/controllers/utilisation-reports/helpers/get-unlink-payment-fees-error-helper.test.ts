@@ -12,7 +12,7 @@ describe('get-unlink-payment-fees-error-helper', () => {
       // Assert
       expect(unlinkPaymentFeesError).toHaveLength(1);
       expect(unlinkPaymentFeesError[0].text).toBe('Select fee or fees to remove from the payment');
-      expect(unlinkPaymentFeesError[0].href).toBe('#addedReportedFeesDetails');
+      expect(unlinkPaymentFeesError[0].href).toBe('#added-reported-fees-details-header');
     });
 
     it("returns an array containing a single object containing the error text and href when the payment error key is 'all-fee-records-selected'", () => {
@@ -25,7 +25,7 @@ describe('get-unlink-payment-fees-error-helper', () => {
       // Assert
       expect(unlinkPaymentFeesError).toHaveLength(1);
       expect(unlinkPaymentFeesError[0].text).toBe('You cannot remove all the fees. Delete the payment instead.');
-      expect(unlinkPaymentFeesError[0].href).toBe('#addedReportedFeesDetails');
+      expect(unlinkPaymentFeesError[0].href).toBe('#added-reported-fees-details-header');
     });
   });
 });

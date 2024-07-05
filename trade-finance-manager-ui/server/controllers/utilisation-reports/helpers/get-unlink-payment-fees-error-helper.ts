@@ -6,13 +6,13 @@ const unlinkPaymentFeesErrorMap: Record<UnlinkPaymentFeesErrorKey, [ErrorSummary
   'no-fee-records-selected': [
     {
       text: 'Select fee or fees to remove from the payment',
-      href: '#addedReportedFeesDetails',
+      href: '#added-reported-fees-details-header',
     },
   ],
   'all-fee-records-selected': [
     {
       text: 'You cannot remove all the fees. Delete the payment instead.',
-      href: '#addedReportedFeesDetails',
+      href: '#added-reported-fees-details-header',
     },
   ],
 };

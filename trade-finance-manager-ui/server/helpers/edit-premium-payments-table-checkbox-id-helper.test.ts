@@ -6,7 +6,7 @@ import { EditPremiumPaymentsTableCheckboxId } from '../types/edit-premium-paymen
 
 describe('edit premium payments table checkbox id helper', () => {
   describe('getFeeRecordIdsFromEditPremiumPaymentsCheckboxIds', () => {
-    it('extracts all the fee records ids from multiple checkbox ids', () => {
+    it('extracts all the fee record ids from multiple checkbox ids', () => {
       // Arrange
       const checkboxId1: EditPremiumPaymentsTableCheckboxId = `feeRecordId-7`;
       const checkboxId2: EditPremiumPaymentsTableCheckboxId = `feeRecordId-77`;

@@ -102,7 +102,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       expect(res._getRenderView()).toEqual('utilisation-reports/edit-payment.njk');
       const viewModel = res._getRenderData() as EditPaymentViewModel;
       expect(viewModel.errors.errorSummary).toBeDefined();
-      expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].href).toBe('#addedReportedFeesDetails');
+      expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].href).toBe('#added-reported-fees-details-header');
       expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].text).toBe('Select fee or fees to remove from the payment');
     });
 
