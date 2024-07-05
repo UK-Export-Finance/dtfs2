@@ -2,12 +2,5 @@ type UnlinkPaymentFeesFormRequestBody = {
   totalSelectableFeeRecords?: string;
 };
 
-type UnlinkPaymentFeesFormValues = {
-  totalSelectableFeeRecords?: string;
-};
-
-export const extractTotalSelectableFeeRecordsFromRequestBody = (requestBody: UnlinkPaymentFeesFormRequestBody): UnlinkPaymentFeesFormValues => {
-  return {
-    totalSelectableFeeRecords: requestBody.totalSelectableFeeRecords,
-  };
-};
+export const extractTotalSelectableFeeRecordsFromRequestBody = ({ totalSelectableFeeRecords }: UnlinkPaymentFeesFormRequestBody): number | undefined =>
+  totalSelectableFeeRecords ? parseInt(totalSelectableFeeRecords, 10) : undefined;
