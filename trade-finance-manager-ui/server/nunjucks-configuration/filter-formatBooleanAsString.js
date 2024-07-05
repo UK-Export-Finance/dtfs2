@@ -1,9 +1,9 @@
-const formatBooleanAsString = (boolean) => {
-  if (boolean) {
+const formatBooleanAsString = (bool) => {
+  if (bool) {
     return 'Yes';
   }
 
-  if (boolean === false) {
+  if (bool === false) {
     return 'No';
   }
 

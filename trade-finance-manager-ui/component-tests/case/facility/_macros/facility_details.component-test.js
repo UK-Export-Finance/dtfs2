@@ -7,33 +7,45 @@ const render = componentRenderer(component);
 
 describe(component, () => {
   let wrapper;
-  const params = {
-    facility: {
-      _id: '12345678',
-      ukefFacilityId: '0040004833',
-      type: 'Performance Bond',
-      facilityStage: 'Commitment',
-      hasBeenIssued: true,
-      facilityProduct: {
-        name: 'Bond Support Scheme',
-      },
-      coverEndDate: '1 Feb 2021',
-      coveredPercentage: '10%',
-      facilityValueExportCurrency: 'GBP 12,345.00',
-      value: 'GBP 12,345.00',
-      ukefExposure: 'GBP 1,234.00',
-      bankFacilityReference: '123456',
-      guaranteeFeePayableToUkef: '10%',
-      banksInterestMargin: '10%',
-      firstDrawdownAmountInExportCurrency: 'GBP 1,234',
-      dates: {
-        inclusionNoticeReceived: '1606900616651',
-        bankIssueNoticeReceived: '1606900616652',
-        coverStartDate: '1606900616653',
-        coverEndDate: '20 Oct 2020',
-        tenor: '3 months',
-      },
+
+  const baseFacility = {
+    _id: '12345678',
+    ukefFacilityId: '0040004833',
+    type: 'Performance Bond',
+    facilityStage: 'Commitment',
+    hasBeenIssued: true,
+    facilityProduct: {
+      name: 'Bond Support Scheme',
     },
+    coverEndDate: '1 Feb 2021',
+    coveredPercentage: '10%',
+    facilityValueExportCurrency: 'GBP 12,345.00',
+    value: 'GBP 12,345.00',
+    ukefExposure: 'GBP 1,234.00',
+    bankFacilityReference: '123456',
+    guaranteeFeePayableToUkef: '10%',
+    banksInterestMargin: '10%',
+    firstDrawdownAmountInExportCurrency: 'GBP 1,234',
+    dates: {
+      inclusionNoticeReceived: '1606900616651',
+      bankIssueNoticeReceived: '1606900616652',
+      coverStartDate: '1606900616653',
+      coverEndDate: '20 Oct 2020',
+      tenor: '3 months',
+    },
+  };
+
+  const facilityWithFacilityEndDate = {
+    ...baseFacility,
+    dates: { ...baseFacility.dates, facilityEndDateExists: true, facilityEndDate: '1783514853' },
+  };
+  const facilityWithBankReviewDate = {
+    ...baseFacility,
+    dates: { ...baseFacility.dates, facilityEndDateExists: false, bankReviewDate: '1815050853' },
+  };
+
+  const params = {
+    facility: baseFacility,
     facilityTfm: {
       exchangeRate: '0.89',
       ukefExposure: {
@@ -158,7 +170,6 @@ describe(component, () => {
 
     it('should render coverStartDate', () => {
       const expected = localiseTimestamp(params.facility.dates.coverStartDate, 'd MMMM yyyy', params.user.timezone);
-
       wrapper.expectText('[data-cy="facility-cover-start-date"]').toRead(expected);
     });
 
@@ -168,6 +179,78 @@ describe(component, () => {
 
     it('should render tenor', () => {
       wrapper.expectText('[data-cy="facility-tenor"]').toRead(params.facility.dates.tenor);
+    });
+
+    describe('when facility end date feature flag is not enabled', () => {
+      beforeEach(() => {
+        wrapper = render({ ...params, facility: facilityWithFacilityEndDate, isTfmFacilityEndDateFeatureFlagEnabled: false });
+      });
+      it('should not render facilityEndDateExists', () => {
+        wrapper.expectText('[data-cy="facility-end-date"]').notToExist();
+      });
+
+      it('should not render facilityEndDate', () => {
+        wrapper.expectText('[data-cy="facility-end-date"]').notToExist();
+      });
+
+      it('should not render bankReviewDate', () => {
+        wrapper.expectText('[data-cy="bank-review-date"]').notToExist();
+      });
+    });
+
+    describe('when facility end date feature flag is enabled', () => {
+      describe('when the facility has no end date information', () => {
+        beforeEach(() => {
+          wrapper = render({ ...params, isTfmFacilityEndDateFeatureFlagEnabled: true });
+        });
+        it('should render a dash for facilityEndDateExists', () => {
+          wrapper.expectText('[data-cy="facility-end-date-exists"]').toRead('-');
+        });
+
+        it('should not render facilityEndDate', () => {
+          wrapper.expectText('[data-cy="facility-end-date"]').notToExist();
+        });
+
+        it('should not render bankReviewDate', () => {
+          wrapper.expectText('[data-cy="bank-review-date"]').notToExist();
+        });
+      });
+
+      describe('when the facility has an end date', () => {
+        beforeEach(() => {
+          wrapper = render({ ...params, facility: facilityWithFacilityEndDate, isTfmFacilityEndDateFeatureFlagEnabled: true });
+        });
+        it('should render facilityEndDateExists', () => {
+          wrapper.expectText('[data-cy="facility-end-date-exists"]').toRead('Yes');
+        });
+
+        it('should render facilityEndDate', () => {
+          const expected = localiseTimestamp(facilityWithFacilityEndDate.dates.facilityEndDate, 'd MMMM yyyy', params.user.timezone);
+          wrapper.expectText('[data-cy="facility-end-date"]').toRead(expected);
+        });
+
+        it('should not render bankReviewDate', () => {
+          wrapper.expectText('[data-cy="bank-review-date"]').notToExist();
+        });
+      });
+
+      describe('when the facility does not have an end date', () => {
+        beforeEach(() => {
+          wrapper = render({ ...params, facility: facilityWithBankReviewDate, isTfmFacilityEndDateFeatureFlagEnabled: true });
+        });
+        it('should render facilityEndDateExists', () => {
+          wrapper.expectText('[data-cy="facility-end-date-exists"]').toRead('No');
+        });
+
+        it('should render facilityEndDate', () => {
+          wrapper.expectText('[data-cy="facility-end-date"]').notToExist();
+        });
+
+        it('should not render bankReviewDate', () => {
+          const expected = localiseTimestamp(facilityWithBankReviewDate.dates.bankReviewDate, 'd MMMM yyyy', params.user.timezone);
+          wrapper.expectText('[data-cy="bank-review-date"]').toRead(expected);
+        });
+      });
     });
   });
 
