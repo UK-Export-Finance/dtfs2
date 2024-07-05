@@ -8,7 +8,7 @@ const { MOCK_BANK_HOLIDAYS } = require('../../../server/test-mocks/mock-bank-hol
 
 jest.mock('../../../server/api');
 
-const component = '../templates/utilisation-reports/_macros/report-reconciliation-table.njk';
+const component = '../templates/utilisation-reports/_macros/report-reconciliation-table-manual-reconciliation.njk';
 const tableSelector = '[data-cy="utilisation-report-reconciliation-table"]';
 
 const render = componentRenderer(component);
@@ -25,13 +25,12 @@ describe(component, () => {
     process.env = { ...originalProcessEnv };
   });
 
-  const getWrapper = async ({ userTeams, isTfmPaymentReconciliationFeatureFlagEnabled } = {}) => {
+  const getWrapper = async ({ userTeams } = {}) => {
     const reportPeriodSummaries = await getReportReconciliationSummariesViewModel(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY, 'user-token');
     const params = {
       user: { ...MOCK_TFM_SESSION_USER, teams: userTeams ?? [TEAM_IDS.PDC_RECONCILE] },
       summaryItems: reportPeriodSummaries[0].items,
       submissionMonth: reportPeriodSummaries[0].submissionMonth,
-      isTfmPaymentReconciliationFeatureFlagEnabled: isTfmPaymentReconciliationFeatureFlagEnabled ?? false,
     };
     return render(params);
   };
@@ -48,8 +47,8 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Select")`).toExist();
   });
 
-  it('should render the table data with no links to the utilisation report reconciliation for bank page when the TFM 6 flag is disabled', async () => {
-    const wrapper = await getWrapper({ isTfmPaymentReconciliationFeatureFlagEnabled: false });
+  it('should render the table data', async () => {
+    const wrapper = await getWrapper();
     const { summaryItems, submissionMonth } = wrapper.params;
 
     summaryItems.forEach((summaryItem) => {
@@ -59,45 +58,6 @@ describe(component, () => {
       wrapper.expectElement(`${rowSelector} th:contains("${summaryItem.bank.name}")`).toExist();
 
       wrapper.expectText(`${rowSelector} th > p`).toRead(summaryItem.bank.name);
-      wrapper.expectElement(`${rowSelector} th > p > a`).notToExist();
-
-      wrapper.expectElement(`${rowSelector} td`).toHaveCount(6);
-      wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.displayStatus}")`).toExist();
-      if (summaryItem.formattedDateUploaded) {
-        wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.formattedDateUploaded}")`).toExist();
-      }
-      if (summaryItem.totalFeesReported) {
-        wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.totalFeesReported}")`).toExist();
-      }
-      if (summaryItem.reportedFeesLeftToReconcile) {
-        wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.reportedFeesLeftToReconcile}")`).toExist();
-      }
-      if (summaryItem.downloadPath) {
-        wrapper.expectLink(`${rowSelector} a:contains("Download")`).toLinkTo(summaryItem.downloadPath, 'Download');
-      }
-
-      if (summaryItem.status !== UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
-        const checkboxSelector = `${rowSelector} > td > div > div > input`;
-        wrapper.expectElement(checkboxSelector).toExist();
-      }
-    });
-  });
-
-  it('should render the table data with links to the utilisation report reconciliation for bank page when the TFM 6 flag is enabled', async () => {
-    const wrapper = await getWrapper({ isTfmPaymentReconciliationFeatureFlagEnabled: true });
-    const { summaryItems, submissionMonth } = wrapper.params;
-
-    summaryItems.forEach((summaryItem) => {
-      const rowSelector = `[data-cy="utilisation-report-reconciliation-table-row-bank-${summaryItem.bank.id}-submission-month-${submissionMonth}"]`;
-
-      wrapper.expectElement(`${rowSelector} th`).toHaveCount(1);
-      wrapper.expectElement(`${rowSelector} th:contains("${summaryItem.bank.name}")`).toExist();
-
-      if (summaryItem.status === UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED) {
-        wrapper.expectText(`${rowSelector} th > p`).toRead(summaryItem.bank.name);
-      } else {
-        wrapper.expectLink(`${rowSelector} th > p > a`).toLinkTo(`/utilisation-reports/${summaryItem.reportId}`, summaryItem.bank.name);
-      }
 
       wrapper.expectElement(`${rowSelector} td`).toHaveCount(6);
       wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.displayStatus}")`).toExist();

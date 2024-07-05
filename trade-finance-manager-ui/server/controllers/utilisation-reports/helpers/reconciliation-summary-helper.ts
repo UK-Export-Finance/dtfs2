@@ -3,21 +3,7 @@ import { IsoMonthStamp, ReportPeriod, UtilisationReportReconciliationStatus, get
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
 import { getReportDueDate } from '../../../services/utilisation-report-service';
 import api from '../../../api';
-
-type SummaryItemViewModel = UtilisationReportReconciliationSummaryItem & {
-  displayStatus: string;
-  formattedDateUploaded?: string;
-  downloadPath?: string;
-};
-
-type ReportPeriodSummaryViewModel = {
-  items: SummaryItemViewModel[];
-  submissionMonth: IsoMonthStamp;
-  reportPeriodHeading: string;
-  dueDateText: string;
-};
-
-type SummaryViewModel = ReportPeriodSummaryViewModel[];
+import { SummaryItemViewModel, SummaryViewModel } from '../../../types/view-models';
 
 export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not received',
