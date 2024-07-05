@@ -44,23 +44,23 @@ context('PDC_RECONCILE users can route to the payments page for a bank', () => {
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
-    pages.utilisationReportsPage.visit();
+    pages.utilisationReportsSummaryPage.visit();
   });
 
   it('should only render a table row for the banks which should be visible', () => {
-    pages.utilisationReportsPage.heading(submissionMonth).should('exist');
+    pages.utilisationReportsSummaryPage.heading(submissionMonth).should('exist');
 
     cy.get(aliasSelector(allBanksAlias)).each((bank) => {
       const { id, isVisibleInTfmUtilisationReports } = bank;
 
       if (isVisibleInTfmUtilisationReports) {
         if (bank.id === '10') {
-          pages.utilisationReportsPage.tableRowSelector(id, latestQuarterlySubmissionMonth).should('exist');
+          pages.utilisationReportsSummaryPage.tableRowSelector(id, latestQuarterlySubmissionMonth).should('exist');
           return;
         }
-        pages.utilisationReportsPage.tableRowSelector(id, submissionMonth).should('exist');
+        pages.utilisationReportsSummaryPage.tableRowSelector(id, submissionMonth).should('exist');
       } else {
-        pages.utilisationReportsPage.tableRowSelector(id, submissionMonth).should('not.exist');
+        pages.utilisationReportsSummaryPage.tableRowSelector(id, submissionMonth).should('not.exist');
       }
     });
   });
@@ -68,7 +68,7 @@ context('PDC_RECONCILE users can route to the payments page for a bank', () => {
   it('should show the problem with service page if there are no reports in the database', () => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 
-    pages.utilisationReportsPage.visit();
+    pages.utilisationReportsSummaryPage.visit();
 
     cy.get('.govuk-heading-xl')
       .should('exist')

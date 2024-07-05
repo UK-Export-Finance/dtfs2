@@ -105,6 +105,13 @@ module.exports = {
     const insertFeeRecordsIntoDb = async (feeRecords) => await SqlDbDataSource.manager.save(FeeRecordEntity, feeRecords);
 
     /**
+     * Inserts payments to the SQL database
+     * @param {PaymentEntity[]} payments
+     * @returns The inserted payments
+     */
+    const insertPaymentsIntoDb = async (payments) => await SqlDbDataSource.manager.save(PaymentEntity, payments);
+
+    /**
      * Deletes all the rows from the payment table
      */
     const removeAllPaymentsFromDb = async () => await SqlDbDataSource.manager.delete(PaymentEntity, {});
@@ -208,6 +215,7 @@ module.exports = {
       insertUtilisationReportsIntoDb,
       removeAllUtilisationReportsFromDb,
       insertFeeRecordsIntoDb,
+      insertPaymentsIntoDb,
       removeAllPaymentsFromDb,
       removeAllFeeRecordsFromDb,
     };
