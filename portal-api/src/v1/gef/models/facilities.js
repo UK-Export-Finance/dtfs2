@@ -24,7 +24,8 @@ class Facility {
    * @throws {InvalidParameterError} - if `isUsingFacilityEndDate` is not a boolean
    */
   constructor(req, dealVersion) {
-    if (!isFacilityEndDateEnabledOnGefVersion(dealVersion) && 'isUsingFacilityEndDate' in req) {
+    const reqContainsFacilityEndDateFields = 'isUsingFacilityEndDate' in req || 'bankReviewDate' in req;
+    if (!isFacilityEndDateEnabledOnGefVersion(dealVersion) && reqContainsFacilityEndDateFields) {
       throw new DealVersionError(`Cannot add facility end date to deal version ${dealVersion}`);
     }
 
@@ -79,6 +80,12 @@ class Facility {
           throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
         }
         this.isUsingFacilityEndDate = req.isUsingFacilityEndDate ?? null;
+
+        if ('bankReviewDate' in req && typeof req.bankReviewDate !== 'string') {
+          // add more validation
+          throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
+        }
+        this.bankReviewDate = req.bankReviewDate ?? null;
       }
     } else {
       // update facility
@@ -210,6 +217,14 @@ class Facility {
           throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
         }
         this.isUsingFacilityEndDate = req.isUsingFacilityEndDate;
+      }
+
+      if ('bankReviewDate' in req) {
+        // add validation
+        if (typeof req.bankReviewDate !== 'string') {
+          throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
+        }
+        this.bankReviewDate = req.bankReviewDate;
       }
 
       this.updatedAt = Date.now();
