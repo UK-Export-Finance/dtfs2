@@ -115,6 +115,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           displayStatus: 'TO DO',
           checkboxId: 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO',
           isChecked: false,
+          checkboxAriaLabel: 'Select 12345678',
         },
       ];
 

@@ -32,6 +32,7 @@ export type FeeRecordPaymentGroupViewModelItem = {
   displayStatus: FeeRecordDisplayStatus;
   checkboxId: PremiumPaymentsTableCheckboxId;
   isChecked: boolean;
+  checkboxAriaLabel: string;
 };
 
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {

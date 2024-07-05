@@ -449,5 +449,28 @@ describe('reconciliation-for-report-helper', () => {
       // Assert
       expect(viewModel[0].isChecked).toBe(false);
     });
+
+    it('sets the checkbox aria label to "Select" followed by the fee record facility ids', () => {
+      // Arrange
+      const firstFeeRecord: FeeRecord = {
+        ...aFeeRecord(),
+        facilityId: '123',
+      };
+
+      const secondFeeRecord: FeeRecord = {
+        ...aFeeRecord(),
+        facilityId: '456',
+      };
+
+      const feeRecords = [firstFeeRecord, secondFeeRecord];
+
+      const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords }];
+
+      // Act
+      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+
+      // Assert
+      expect(viewModel[0].checkboxAriaLabel).toBe('Select 123 456');
+    });
   });
 });
