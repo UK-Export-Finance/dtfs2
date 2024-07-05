@@ -20,11 +20,11 @@ export const getEditPayment = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId, paymentId } = req.params;
 
-  const { errors, isCheckboxChecked } = getAndClearFieldsFromRedirectSessionData(req);
+  const { errors, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
 
   try {
     const paymentDetails = await api.getPaymentDetailsWithFeeRecords(reportId, paymentId, userToken);
-    const editPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId, isCheckboxChecked, errors);
+    const editPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId, allCheckboxesChecked, errors);
     return renderEditPaymentPage(res, editPaymentViewModel);
   } catch (error) {
     console.error('Error updating utilisation report status:', error);

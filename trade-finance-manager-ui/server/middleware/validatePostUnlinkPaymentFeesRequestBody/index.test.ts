@@ -29,15 +29,8 @@ describe('validatePostUnlinkPaymentFeesRequestBody', () => {
   const getRequestBodyFromCheckboxIds = (checkboxIds: EditPremiumPaymentsTableCheckboxId[], totalSelectableFeeRecords: number) =>
     checkboxIds.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: 'on' }), { totalSelectableFeeRecords });
 
-  const assertRequestSessionHasBeenPopulated = (
-    req: ReturnType<typeof getHttpMocks>['req'],
-    unlinkPaymentFeesErrorKey: UnlinkPaymentFeesErrorKey,
-    checkedCheckboxIdList: EditPremiumPaymentsTableCheckboxId[],
-  ) => {
+  const assertRequestSessionHasBeenPopulated = (req: ReturnType<typeof getHttpMocks>['req'], unlinkPaymentFeesErrorKey: UnlinkPaymentFeesErrorKey) => {
     expect(req.session.unlinkPaymentFeesErrorKey).toBe(unlinkPaymentFeesErrorKey);
-
-    const expectedCheckedCheckboxIds = checkedCheckboxIdList.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: true }), {});
-    expect(req.session.checkedCheckboxIds).toEqual(expectedCheckedCheckboxIds);
   };
 
   afterEach(() => {
@@ -82,7 +75,7 @@ describe('validatePostUnlinkPaymentFeesRequestBody', () => {
       validatePostUnlinkPaymentFeesRequestBody(req, res, next);
 
       // Assert
-      assertRequestSessionHasBeenPopulated(req, 'no-fee-records-selected', []);
+      assertRequestSessionHasBeenPopulated(req, 'no-fee-records-selected');
     });
 
     it("does not call the 'next' function", () => {
@@ -133,7 +126,7 @@ describe('validatePostUnlinkPaymentFeesRequestBody', () => {
       validatePostUnlinkPaymentFeesRequestBody(req, res, next);
 
       // Assert
-      assertRequestSessionHasBeenPopulated(req, 'all-fee-records-selected', checkedCheckboxIds);
+      assertRequestSessionHasBeenPopulated(req, 'all-fee-records-selected');
     });
 
     it("does not call the 'next' function", () => {

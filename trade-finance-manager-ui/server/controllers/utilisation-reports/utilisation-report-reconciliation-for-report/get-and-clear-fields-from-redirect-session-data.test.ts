@@ -1,7 +1,6 @@
 import { createRequest } from 'node-mocks-http';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
 import { AddPaymentErrorKey, GenerateKeyingDataErrorKey } from '../helpers';
-import { assertIsCheckboxCheckedReturnsValueWithInput } from '../../../../test-helpers/checkbox';
 
 type RedirectSessionData = {
   addPaymentErrorKey: AddPaymentErrorKey | undefined;
@@ -23,6 +22,10 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     expect(req.session.addPaymentErrorKey).toBeUndefined();
     expect(req.session.checkedCheckboxIds).toBeUndefined();
     expect(req.session.generateKeyingDataErrorKey).toBeUndefined();
+  };
+
+  const assertIsCheckboxCheckedReturnsValueWithInput = (isCheckboxChecked: (checkboxId: string) => boolean, input: string, expectedOutput: boolean) => {
+    expect(isCheckboxChecked(input)).toBe(expectedOutput);
   };
 
   it('clears the session and returns an undefined errorSummary when the session error keys are undefined', () => {

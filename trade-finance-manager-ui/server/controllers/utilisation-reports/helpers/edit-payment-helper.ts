@@ -3,38 +3,30 @@ import { IsoDateTimeStamp, getFormattedCurrencyAndAmount, getFormattedReportPeri
 import { GetPaymentDetailsWithFeeRecordsResponseBody, FeeRecord, Payment } from '../../../api-response-types';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
-import { PaymentErrorsViewModel, EditPaymentViewModel, FeeRecordDetailsCheckboxId } from '../../../types/view-models';
+import { PaymentErrorsViewModel, EditPaymentViewModel } from '../../../types/view-models';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL } from './payment-form-helpers';
 
-const mapToEditPaymentFeeRecords = (
-  feeRecords: FeeRecord[],
-  isCheckboxChecked: (checkboxId: string) => boolean = () => false,
-): EditPaymentViewModel['feeRecords'] => {
+const mapToEditPaymentFeeRecords = (feeRecords: FeeRecord[], allCheckboxesChecked: boolean = false): EditPaymentViewModel['feeRecords'] => {
   const reportedFeesDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(feeRecords.map(({ reportedFees }, index) => ({ ...reportedFees, key: index })));
   const reportedPaymentsDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
     feeRecords.map(({ reportedPayments }, index) => ({ ...reportedPayments, key: index })),
   );
 
-  return feeRecords.map((feeRecord, index) => {
-    const checkboxId: FeeRecordDetailsCheckboxId = `feeRecordId-${feeRecord.id}`;
-    const isChecked = isCheckboxChecked(checkboxId);
-
-    return {
-      id: feeRecord.id,
-      facilityId: feeRecord.facilityId,
-      exporter: feeRecord.exporter,
-      reportedFees: {
-        formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(feeRecord.reportedFees),
-        dataSortValue: reportedFeesDataSortValueMap[index],
-      },
-      reportedPayments: {
-        formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(feeRecord.reportedPayments),
-        dataSortValue: reportedPaymentsDataSortValueMap[index],
-      },
-      checkboxId,
-      isChecked,
-    };
-  });
+  return feeRecords.map((feeRecord, index) => ({
+    id: feeRecord.id,
+    facilityId: feeRecord.facilityId,
+    exporter: feeRecord.exporter,
+    reportedFees: {
+      formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(feeRecord.reportedFees),
+      dataSortValue: reportedFeesDataSortValueMap[index],
+    },
+    reportedPayments: {
+      formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(feeRecord.reportedPayments),
+      dataSortValue: reportedPaymentsDataSortValueMap[index],
+    },
+    checkboxId: `feeRecordId-${feeRecord.id}`,
+    isChecked: allCheckboxesChecked,
+  }));
 };
 
 const mapToEditPaymentFormPaymentDate = (dateReceived: IsoDateTimeStamp): EditPaymentFormValues['paymentDate'] => {
@@ -65,7 +57,7 @@ export const getEditPaymentViewModel = (
   editPaymentResponse: GetPaymentDetailsWithFeeRecordsResponseBody,
   reportId: string,
   paymentId: string,
-  isCheckboxChecked: (checkboxId: string) => boolean = () => false,
+  allCheckboxesChecked: boolean = false,
   errors: PaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
 ): EditPaymentViewModel => ({
   reportId,
@@ -73,7 +65,7 @@ export const getEditPaymentViewModel = (
   paymentCurrency: editPaymentResponse.payment.currency,
   bank: editPaymentResponse.bank,
   formattedReportPeriod: getFormattedReportPeriodWithLongMonth(editPaymentResponse.reportPeriod),
-  feeRecords: mapToEditPaymentFeeRecords(editPaymentResponse.feeRecords, isCheckboxChecked),
+  feeRecords: mapToEditPaymentFeeRecords(editPaymentResponse.feeRecords, allCheckboxesChecked),
   totalReportedPayments: getFormattedCurrencyAndAmount(editPaymentResponse.totalReportedPayments),
   formValues: mapToEditPaymentFormValues(editPaymentResponse.payment),
   errors,

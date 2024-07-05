@@ -4,27 +4,23 @@ import { getUnlinkPaymentFeesError } from '../helpers/get-unlink-payment-fees-er
 
 const clearRedirectSessionData = (req: Request): void => {
   delete req.session.unlinkPaymentFeesErrorKey;
-  delete req.session.checkedCheckboxIds;
 };
 
 export const getAndClearFieldsFromRedirectSessionData = (
   req: Request,
 ): {
   errors: PaymentErrorsViewModel | undefined;
-  isCheckboxChecked: (checkboxId: string) => boolean;
+  allCheckboxesChecked?: boolean;
 } => {
   const { unlinkPaymentFeesErrorKey } = req.session;
 
   if (!unlinkPaymentFeesErrorKey) {
     return {
       errors: undefined,
-      isCheckboxChecked: () => false,
     };
   }
 
-  const checkedCheckboxIds = { ...req.session.checkedCheckboxIds };
-
-  const isCheckboxChecked = (checkboxId: string): boolean => Boolean(checkedCheckboxIds[checkboxId]);
+  const allCheckboxesChecked = unlinkPaymentFeesErrorKey === 'all-fee-records-selected';
 
   switch (unlinkPaymentFeesErrorKey) {
     case 'no-fee-records-selected':
@@ -34,7 +30,7 @@ export const getAndClearFieldsFromRedirectSessionData = (
         errors: {
           errorSummary: getUnlinkPaymentFeesError(unlinkPaymentFeesErrorKey),
         },
-        isCheckboxChecked,
+        allCheckboxesChecked,
       };
     default:
       clearRedirectSessionData(req);

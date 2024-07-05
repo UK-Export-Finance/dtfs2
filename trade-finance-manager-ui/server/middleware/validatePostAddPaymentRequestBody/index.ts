@@ -9,7 +9,6 @@ import {
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from '../../helpers/premium-payments-table-checkbox-id-helper';
 import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-table-checkbox-id';
-import { mapCheckedCheckboxesToRecord } from '../../helpers/checkbox-helpers';
 
 const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof body === 'object';
 
@@ -39,6 +38,10 @@ const redirectWithError = (
   req.session.checkedCheckboxIds = checkedCheckboxIds;
   const facilityIdQuery = getFacilityIdQueryFromReferer(req);
   return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { facilityIdQuery } }));
+};
+
+const mapCheckedCheckboxesToRecord = (checkedCheckboxIds: string[]): Record<string, true | undefined> => {
+  return checkedCheckboxIds.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: true }), {});
 };
 
 const allSelectedFeeRecordsHaveSameCurrency = (checkedCheckboxIds: PremiumPaymentsTableCheckboxId[]) => {
