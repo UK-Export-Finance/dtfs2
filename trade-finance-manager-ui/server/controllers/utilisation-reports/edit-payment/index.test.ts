@@ -84,10 +84,13 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       expect(viewModel.paymentId).toBe(paymentId);
     });
 
-    it('sets error summary to contain passed in session data', async () => {
+    it('sets unlink payment fees error and checks selected checkboxes based on passed in session data', async () => {
       // Arrange
       const sessionData: Partial<SessionData> = {
         unlinkPaymentFeesErrorKey: 'no-fee-records-selected',
+        checkedCheckboxIds: {
+          'feeRecordId-1': true,
+        },
       };
       const { req, res } = getHttpMocksWithSessionData(sessionData);
 
@@ -104,6 +107,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       expect(viewModel.errors.errorSummary).toBeDefined();
       expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].href).toBe('#addedReportedFeesDetails');
       expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].text).toBe('Select fee or fees to remove from the payment');
+      expect(viewModel.feeRecords[0].isChecked).toBe(true);
     });
 
     it('sets the render view model paymentCurrency to the edit payment details response payment currency', async () => {

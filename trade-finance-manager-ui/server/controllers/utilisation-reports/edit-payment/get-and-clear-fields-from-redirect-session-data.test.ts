@@ -1,21 +1,25 @@
 import { createRequest } from 'node-mocks-http';
+import { assertIsCheckboxCheckedReturnsValueWithInput } from '../../../../test-helpers/checkbox';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
 import { UnlinkPaymentFeesErrorKey } from '../helpers';
 
 type RedirectSessionData = {
   unlinkPaymentFeesErrorKey: UnlinkPaymentFeesErrorKey | undefined;
+  checkedCheckboxIds?: Record<string, true | undefined>;
 };
 
 describe('getAndClearFieldsFromRedirectSessionData', () => {
-  const getMockRequest = ({ unlinkPaymentFeesErrorKey }: RedirectSessionData) =>
+  const getMockRequest = ({ unlinkPaymentFeesErrorKey, checkedCheckboxIds }: RedirectSessionData) =>
     createRequest({
       session: {
         unlinkPaymentFeesErrorKey,
+        checkedCheckboxIds,
       },
     });
 
   const assertSessionHasBeenCleared = (req: ReturnType<typeof getMockRequest>) => {
     expect(req.session.unlinkPaymentFeesErrorKey).toBeUndefined();
+    expect(req.session.checkedCheckboxIds).toBeUndefined();
   };
 
   it('clears the session and returns an undefined errorSummary when the session error keys are undefined', () => {
@@ -38,6 +42,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
       // Arrange
       const req = getMockRequest({
         unlinkPaymentFeesErrorKey,
+        checkedCheckboxIds: {},
       });
 
       // Act
@@ -61,5 +66,26 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     // Act / Assert
     expect(() => getAndClearFieldsFromRedirectSessionData(req)).toThrow(Error);
     assertSessionHasBeenCleared(req);
+  });
+
+  it('returns a function which returns true for a checkbox id defined in req.session.checkedCheckboxIds and false otherwise', () => {
+    // Arrange
+    const checkedCheckboxId = 'some-checkbox-id';
+    const uncheckedCheckboxId = 'another-checkbox-id';
+
+    const req = getMockRequest({
+      unlinkPaymentFeesErrorKey: 'all-fee-records-selected',
+      checkedCheckboxIds: {
+        [checkedCheckboxId]: true,
+      },
+    });
+
+    // Act
+    const { isCheckboxChecked } = getAndClearFieldsFromRedirectSessionData(req);
+
+    // Assert
+    assertSessionHasBeenCleared(req);
+    assertIsCheckboxCheckedReturnsValueWithInput(isCheckboxChecked, checkedCheckboxId, true);
+    assertIsCheckboxCheckedReturnsValueWithInput(isCheckboxChecked, uncheckedCheckboxId, false);
   });
 });

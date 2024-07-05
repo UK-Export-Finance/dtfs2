@@ -3,11 +3,20 @@ import { asUserSession } from '../../helpers/express-session';
 import { UnlinkPaymentFeesErrorKey } from '../../controllers/utilisation-reports/helpers';
 import { getEditPremiumPaymentsCheckboxIdsFromObjectKeys } from '../../helpers/edit-premium-payments-table-checkbox-id-helper';
 import { extractTotalSelectableFeeRecordsFromRequestBody } from '../../helpers/unlink-payment-fees-helper';
+import { mapCheckedCheckboxesToRecord } from '../../helpers/checkbox-helpers';
 
 const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof body === 'object';
 
-const redirectWithError = (req: Request, res: Response, reportId: string, paymentId: string, unlinkPaymentFeesErrorKey: UnlinkPaymentFeesErrorKey) => {
+const redirectWithError = (
+  req: Request,
+  res: Response,
+  reportId: string,
+  paymentId: string,
+  unlinkPaymentFeesErrorKey: UnlinkPaymentFeesErrorKey,
+  checkedCheckboxIds: Record<string, true | undefined> = {},
+) => {
   req.session.unlinkPaymentFeesErrorKey = unlinkPaymentFeesErrorKey;
+  req.session.checkedCheckboxIds = checkedCheckboxIds;
   return res.redirect(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
 };
 
@@ -38,7 +47,7 @@ export const validatePostUnlinkPaymentFeesRequestBody = (req: Request, res: Resp
 
   const totalSelectableFeeRecords = parseInt(formValues.totalSelectableFeeRecords, 10);
   if (checkedCheckboxIds.length === totalSelectableFeeRecords) {
-    return redirectWithError(req, res, reportId, paymentId, 'all-fee-records-selected');
+    return redirectWithError(req, res, reportId, paymentId, 'all-fee-records-selected', mapCheckedCheckboxesToRecord(checkedCheckboxIds));
   }
 
   return next();
