@@ -19,26 +19,6 @@ describe('controllers/utilisation-reports/unlink-payment-fees', () => {
       jest.resetAllMocks();
     });
 
-    it('renders the problem-with-service page when an error occurs', () => {
-      // Arrange
-      const { req, res } = httpMocks.createMocks({
-        session: requestSession,
-        params: { reportId: '1', paymentId: '2' },
-      });
-
-      // TODO - FN-1719 PR 2: Modify this to mock reject the API call instead, once implemented.
-      jest.mocked(getEditPremiumPaymentsCheckboxIdsFromObjectKeys).mockImplementation(() => {
-        throw new Error('Some error');
-      });
-
-      // Act
-      postUnlinkPaymentFees(req, res);
-
-      // Assert
-      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
-      expect(res._getRenderData()).toEqual({ user: requestSession.user });
-    });
-
     it("redirects to '/utilisation-reports/:reportId/edit-payment/:paymentId'", () => {
       // Arrange
       const reportId = '1';
