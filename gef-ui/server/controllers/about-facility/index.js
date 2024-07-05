@@ -179,8 +179,12 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    if (isTrueSet(isUsingFacilityEndDate)) {
+    if (isUsingFacilityEndDate === 'true') {
       // TODO: DTFS2-7161 - Implement page to submit facilityEndDate
+    }
+
+    if (isUsingFacilityEndDate === 'false') {
+      return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/bank-review-date`);
     }
 
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);

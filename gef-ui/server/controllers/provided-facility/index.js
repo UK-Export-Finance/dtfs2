@@ -1,3 +1,4 @@
+const { isFacilityEndDateEnabledOnGefVersion, parseDealVersion } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { FACILITY_TYPE, FACILITY_PROVIDED_DETAILS } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
@@ -13,8 +14,19 @@ const providedFacility = async (req, res) => {
 
   try {
     const { details } = await api.getFacility({ facilityId, userToken });
+    const deal = await api.getApplication({ dealId, userToken });
     const facilityTypeConst = FACILITY_TYPE[details.type.toUpperCase()];
     const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
+
+    let previousPage;
+    if (!isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || details.isUsingFacilityEndDate === null) {
+      previousPage = `/gef/application-details/${dealId}/facilities/${facilityId}/about-facility`;
+    } else if (details.isUsingFacilityEndDate) {
+      // TODO: DTFS2-7161 - update this link
+      previousPage = `/gef/application-details/${dealId}/facilities/${facilityId}/about-facility`;
+    } else {
+      previousPage = `/gef/application-details/${dealId}/facilities/${facilityId}/bank-review-date`;
+    }
 
     return res.render('partials/provided-facility.njk', {
       facilityType: FACILITY_TYPE[details.type.toUpperCase()],
@@ -24,6 +36,7 @@ const providedFacility = async (req, res) => {
       dealId,
       facilityId,
       status,
+      previousPage,
     });
   } catch (error) {
     return res.render('partials/problem-with-service.njk');

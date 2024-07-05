@@ -30,6 +30,7 @@ const confirmCoverStartDate = require('./confirm-cover-start-date');
 const portalActivities = require('./application-activities');
 const cloneGefDeal = require('./clone-gef-deal');
 const unissuedFacilities = require('./unissued-facilities');
+const { default: bankReviewDate } = require('./bank-review-date');
 
 const router = express.Router();
 
@@ -50,6 +51,7 @@ router.use(selectExportersCorrespondenceAddressRoutes);
 router.use(enterExportersCorrespondenceAddressRoutes);
 router.use(aboutExporterRoutes);
 router.use(facilitiesRoutes);
+router.use(bankReviewDate);
 router.use(aboutFacilityRoutes);
 router.use(providedFacilityRoutes);
 router.use(facilityCurrencyRoutes);
