@@ -259,7 +259,7 @@ describe(component, () => {
     const saveChangesButtonSelector = 'input[data-cy="remove-selected-fees-button"]';
     wrapper.expectElement(saveChangesButtonSelector).toExist();
     wrapper.expectInput(saveChangesButtonSelector).toHaveValue('Remove selected fees');
-    wrapper.expectElement(saveChangesButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/${reportId}/edit-payment/${paymentId}/unlink-fees`);
+    wrapper.expectElement(saveChangesButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/${reportId}/edit-payment/${paymentId}/remove-selected-fees`);
   });
 
   it('does not render the "remove selected fees" button when enableSelectingFeeRecords is set to false', async () => {

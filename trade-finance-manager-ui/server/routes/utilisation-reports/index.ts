@@ -100,7 +100,7 @@ utilisationReportsRoutes.post(
 );
 
 utilisationReportsRoutes.post(
-  '/:reportId/edit-payment/:paymentId/unlink-fees',
+  '/:reportId/edit-payment/:paymentId/remove-selected-fees',
   validateTfmPaymentReconciliationFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
