@@ -2,9 +2,9 @@ import { Response } from 'express';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { AddPaymentFormRequestBody } from '../helpers';
 import {
-  getEditPremiumPaymentsCheckboxIdsFromObjectKeys,
-  getFeeRecordIdsFromEditPremiumPaymentsCheckboxIds,
-} from '../../../helpers/edit-premium-payments-table-checkbox-id-helper';
+  getEditPaymentsCheckboxIdsFromObjectKeys,
+  getFeeRecordIdsFromEditPaymentsCheckboxIds,
+} from '../../../helpers/edit-payments-table-checkbox-id-helper';
 
 export type AddPaymentRequest = CustomExpressRequest<{
   reqBody: AddPaymentFormRequestBody;
@@ -13,8 +13,8 @@ export type AddPaymentRequest = CustomExpressRequest<{
 export const postUnlinkPaymentFees = (req: AddPaymentRequest, res: Response) => {
   try {
     const { reportId, paymentId } = req.params;
-    const checkedCheckboxIds = getEditPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
-    const feeRecordIds = getFeeRecordIdsFromEditPremiumPaymentsCheckboxIds(checkedCheckboxIds);
+    const checkedCheckboxIds = getEditPaymentsCheckboxIdsFromObjectKeys(req.body);
+    const feeRecordIds = getFeeRecordIdsFromEditPaymentsCheckboxIds(checkedCheckboxIds);
 
     // TODO - FN-1719 PR 2: Remove after adding the API call logic.
     // eslint-disable-next-line no-console

@@ -1,11 +1,10 @@
 import httpMocks from 'node-mocks-http';
 import { postUnlinkPaymentFees } from '.';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
-import { getEditPremiumPaymentsCheckboxIdsFromObjectKeys } from '../../../helpers/edit-premium-payments-table-checkbox-id-helper';
 
 console.error = jest.fn();
 
-jest.mock('../../../helpers/edit-premium-payments-table-checkbox-id-helper');
+jest.mock('../../../helpers/edit-payments-table-checkbox-id-helper');
 
 describe('controllers/utilisation-reports/unlink-payment-fees', () => {
   describe('postUnlinkPaymentFees', () => {

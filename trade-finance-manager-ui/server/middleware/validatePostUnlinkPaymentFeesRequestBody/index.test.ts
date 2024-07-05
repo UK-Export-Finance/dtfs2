@@ -2,7 +2,7 @@ import httpMocks from 'node-mocks-http';
 import { validatePostUnlinkPaymentFeesRequestBody } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
 import { UnlinkPaymentFeesErrorKey } from '../../controllers/utilisation-reports/helpers';
-import { EditPremiumPaymentsTableCheckboxId } from '../../types/edit-premium-payments-table-checkbox-id';
+import { EditPaymentsTableCheckboxId } from '../../types/edit-payments-table-checkbox-id';
 
 console.error = jest.fn();
 
@@ -24,9 +24,9 @@ describe('validatePostUnlinkPaymentFeesRequestBody', () => {
       },
     });
 
-  const getCheckboxId = (feeRecordId: number): EditPremiumPaymentsTableCheckboxId => `feeRecordId-${feeRecordId}`;
+  const getCheckboxId = (feeRecordId: number): EditPaymentsTableCheckboxId => `feeRecordId-${feeRecordId}`;
 
-  const getRequestBodyFromCheckboxIds = (checkboxIds: EditPremiumPaymentsTableCheckboxId[], totalSelectableFeeRecords: number) =>
+  const getRequestBodyFromCheckboxIds = (checkboxIds: EditPaymentsTableCheckboxId[], totalSelectableFeeRecords: number) =>
     checkboxIds.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: 'on' }), { totalSelectableFeeRecords });
 
   const assertRequestSessionHasBeenPopulated = (req: ReturnType<typeof getHttpMocks>['req'], unlinkPaymentFeesErrorKey: UnlinkPaymentFeesErrorKey) => {
