@@ -10,9 +10,9 @@ import {
   UtilisationReportEntity,
   IsoMonthStamp,
 } from '@ukef/dtfs2-common';
-import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
-import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { getAllBanks } from '../../../../repositories/banks-repo';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../../types/utilisation-reports';
+import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
+import { getAllBanks } from '../../../../../repositories/banks-repo';
 import { mapReportToSummaryItem } from './reconciliation-summary-item-mapper';
 
 type UtilisationReportForSubmissionMonth = {
