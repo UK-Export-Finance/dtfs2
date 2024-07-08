@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios';
-import { In } from 'typeorm';
+import { IsNull, Not } from 'typeorm';
 import { FeeRecordEntity, FeeRecordEntityMockBuilder, FeeRecordStatus, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -181,41 +181,6 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     });
   });
 
-  it('only sets the keying sheet fields for fee records where all fee records with the same facility id are at the MATCH state', async () => {
-    // Arrange
-    const report = anUploadedUtilisationReport();
-    const feeRecords = [
-      // Fee records for same facility where only one has MATCH status
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('111111111').withStatus('TO_DO').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId('111111111').withStatus('MATCH').build(),
-      // Fee records for same facility where both have MATCH status
-      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId('222222222').withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(4).withFacilityId('222222222').withStatus('MATCH').build(),
-    ];
-    report.feeRecords = feeRecords;
-    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
-
-    const requestBody = aValidRequestBody();
-
-    // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId));
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
-
-    const feeRecordWithoutKeyingData = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: 2 });
-    expect(feeRecordWithoutKeyingData.fixedFeeAdjustment).toBeNull();
-    expect(feeRecordWithoutKeyingData.premiumAccrualBalanceAdjustment).toBeNull();
-    expect(feeRecordWithoutKeyingData.principalBalanceAdjustment).toBeNull();
-
-    const feeRecordsWithKeyingData = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([3, 4]) });
-    feeRecordsWithKeyingData.forEach((feeRecord) => {
-      expect(feeRecord.fixedFeeAdjustment).not.toBeNull();
-      expect(feeRecord.premiumAccrualBalanceAdjustment).not.toBeNull();
-      expect(feeRecord.principalBalanceAdjustment).not.toBeNull();
-    });
-  });
-
   it('updates the status of all MATCH fee records to READY_TO_KEY', async () => {
     // Arrange
     const report = anUploadedUtilisationReport();
@@ -246,55 +211,87 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     expect(allFeeRecords.find(({ id }) => id === 4)!.status).toBe<FeeRecordStatus>('READY_TO_KEY');
   });
 
-  it('sets the keying sheet values only once all attached fee records are either at the MATCH or READY_TO_KEY status', async () => {
-    // Arrange 1
-    const report = anUploadedUtilisationReport();
+  describe('when there are multiple fee records with the same facility id', () => {
+    const facilityId = '12345678';
 
-    const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('11111111').withStatus('TO_DO').build();
+    const getReadyToKeyFeeRecordsWithNonNullKeyingData = async (): Promise<FeeRecordEntity[]> =>
+      await SqlDbHelper.manager.find(FeeRecordEntity, {
+        where: {
+          status: 'READY_TO_KEY',
+          fixedFeeAdjustment: Not(IsNull()),
+          premiumAccrualBalanceAdjustment: Not(IsNull()),
+          principalBalanceAdjustment: Not(IsNull()),
+        },
+      });
 
-    const matchingFeeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId('11111111').withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId('11111111').withStatus('MATCH').build(),
-    ];
+    const getReadyToKeyFeeRecordsWithNullKeyingData = async (): Promise<FeeRecordEntity[]> =>
+      await SqlDbHelper.manager.find(FeeRecordEntity, {
+        where: {
+          status: 'READY_TO_KEY',
+          fixedFeeAdjustment: IsNull(),
+          premiumAccrualBalanceAdjustment: IsNull(),
+          principalBalanceAdjustment: IsNull(),
+        },
+      });
 
-    const allFeeRecords = [toDoFeeRecord, ...matchingFeeRecords];
+    it('generates keying data only for one of the fee records at MATCH status', async () => {
+      // Arrange
+      const report = anUploadedUtilisationReport();
 
-    report.feeRecords = allFeeRecords;
-    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+      const matchingFeeRecords = [
+        FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
+      ];
+      report.feeRecords = matchingFeeRecords;
 
-    const requestBody = aValidRequestBody();
+      await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
-    // Act 1
-    const response1 = await testApi.post(requestBody).to(getUrl(reportId));
+      // Act
+      const response1 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
 
-    // Assert 1
-    expect(response1.status).toBe(HttpStatusCode.Ok);
-
-    const readyToKeyFeeRecords1 = await SqlDbHelper.manager.findBy(FeeRecordEntity, { status: 'READY_TO_KEY' });
-    expect(readyToKeyFeeRecords1).toHaveLength(matchingFeeRecords.length);
-    readyToKeyFeeRecords1.forEach((feeRecord) => {
-      expect(feeRecord.fixedFeeAdjustment).toBeNull();
-      expect(feeRecord.premiumAccrualBalanceAdjustment).toBeNull();
-      expect(feeRecord.principalBalanceAdjustment).toBeNull();
+      // Assert
+      expect(response1.status).toBe(HttpStatusCode.Ok);
+      expect(await getReadyToKeyFeeRecordsWithNullKeyingData()).toHaveLength(2);
+      expect(await getReadyToKeyFeeRecordsWithNonNullKeyingData()).toHaveLength(1);
     });
 
-    // Arrange 2
-    const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { status: 'TO_DO' });
-    existingToDoFeeRecord.status = 'MATCH';
-    await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
+    it('only generates keying data once all the fee records are at the MATCH status', async () => {
+      // Arrange 1
+      const report = anUploadedUtilisationReport();
 
-    // Act 2
-    const response2 = await testApi.post(requestBody).to(getUrl(reportId));
+      const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('TO_DO').build();
 
-    // Assert
-    expect(response2.status).toBe(HttpStatusCode.Ok);
+      const matchingFeeRecords = [
+        FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
+      ];
 
-    const readyToKeyFeeRecords2 = await SqlDbHelper.manager.findBy(FeeRecordEntity, { status: 'READY_TO_KEY' });
-    expect(readyToKeyFeeRecords2).toHaveLength(allFeeRecords.length);
-    readyToKeyFeeRecords2.forEach((feeRecord) => {
-      expect(feeRecord.fixedFeeAdjustment).not.toBeNull();
-      expect(feeRecord.premiumAccrualBalanceAdjustment).not.toBeNull();
-      expect(feeRecord.principalBalanceAdjustment).not.toBeNull();
+      const allFeeRecords = [toDoFeeRecord, ...matchingFeeRecords];
+
+      report.feeRecords = allFeeRecords;
+      await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+      // Act 1
+      const response1 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
+
+      // Assert 1
+      expect(response1.status).toBe(HttpStatusCode.Ok);
+      expect(await getReadyToKeyFeeRecordsWithNullKeyingData()).toHaveLength(2);
+      expect(await getReadyToKeyFeeRecordsWithNonNullKeyingData()).toHaveLength(0);
+
+      // Arrange 2
+      const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { status: 'TO_DO' });
+      existingToDoFeeRecord.status = 'MATCH';
+      await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
+
+      // Act 2
+      const response2 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
+
+      // Assert 2
+      expect(response2.status).toBe(HttpStatusCode.Ok);
+      expect(await getReadyToKeyFeeRecordsWithNullKeyingData()).toHaveLength(2);
+      expect(await getReadyToKeyFeeRecordsWithNonNullKeyingData()).toHaveLength(1);
     });
   });
 });

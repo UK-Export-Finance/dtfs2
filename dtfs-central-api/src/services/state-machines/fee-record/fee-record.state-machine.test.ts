@@ -114,7 +114,7 @@ describe('FeeRecordStateMachine', () => {
         type: 'KEYING_DATA_GENERATED',
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
-          isFacilityReadyToKey: false,
+          generateKeyingData: false,
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });
@@ -220,25 +220,7 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const READY_TO_KEY_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('READY_TO_KEY').build();
 
-    it(`handles the '${FEE_RECORD_EVENT_TYPE.KEYING_DATA_GENERATED}' event`, async () => {
-      // Arrange
-      const stateMachine = FeeRecordStateMachine.forFeeRecord(READY_TO_KEY_FEE_RECORD);
-
-      // Act
-      await stateMachine.handleEvent({
-        type: 'KEYING_DATA_GENERATED',
-        payload: {
-          transactionEntityManager: {} as unknown as EntityManager,
-          isFacilityReadyToKey: false,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
-        },
-      });
-
-      // Assert
-      expect(handleFeeRecordKeyingDataGeneratedEvent).toHaveBeenCalledTimes(1);
-    });
-
-    const VALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['KEYING_DATA_GENERATED'];
+    const VALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [];
     const INVALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES.length !== 0) {

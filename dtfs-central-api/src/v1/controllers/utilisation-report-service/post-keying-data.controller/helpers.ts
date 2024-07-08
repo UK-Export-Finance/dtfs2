@@ -3,7 +3,7 @@ import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
 export type GenerateKeyingDataDetails = {
   feeRecord: FeeRecordEntity;
-  isFacilityReadyToKey: boolean;
+  generateKeyingData: boolean;
 }[];
 
 const getFeeRecordFacilityIdsWhichCannotBeKeyed = async (): Promise<Set<string>> => {
@@ -18,8 +18,17 @@ const getFeeRecordFacilityIdsWhichCannotBeKeyed = async (): Promise<Set<string>>
  */
 export const getGenerateKeyingDataDetails = async (feeRecordsWhichCanBeKeyed: FeeRecordEntity[]): Promise<GenerateKeyingDataDetails> => {
   const facilityIdsWhichCannotBeKeyed = await getFeeRecordFacilityIdsWhichCannotBeKeyed();
-  return feeRecordsWhichCanBeKeyed.map((feeRecord) => ({
-    feeRecord,
-    isFacilityReadyToKey: !facilityIdsWhichCannotBeKeyed.has(feeRecord.facilityId),
-  }));
+  const facilityIdsWhichHaveBeenProcessed = new Set<string>();
+  return feeRecordsWhichCanBeKeyed.map((feeRecord) => {
+    const { facilityId } = feeRecord;
+    if (facilityIdsWhichHaveBeenProcessed.has(facilityId)) {
+      return { feeRecord, generateKeyingData: false };
+    }
+
+    facilityIdsWhichHaveBeenProcessed.add(facilityId);
+    return {
+      feeRecord,
+      generateKeyingData: !facilityIdsWhichCannotBeKeyed.has(facilityId),
+    };
+  });
 };

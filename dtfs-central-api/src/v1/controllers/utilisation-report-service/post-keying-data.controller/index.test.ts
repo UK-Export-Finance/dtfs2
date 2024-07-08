@@ -67,7 +67,7 @@ describe('post-keying-data.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH', 'READY_TO_KEY']).mockResolvedValue([]);
+      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH']).mockResolvedValue([]);
 
       // Act
       await postKeyingData(req, res);
@@ -82,7 +82,7 @@ describe('post-keying-data.controller', () => {
       const { req, res } = getHttpMocks();
 
       const undefinedReport = undefined as unknown as UtilisationReportEntity;
-      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH', 'READY_TO_KEY']).mockResolvedValue(someFeeRecordsForReport(undefinedReport));
+      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH']).mockResolvedValue(someFeeRecordsForReport(undefinedReport));
 
       // Act
       await postKeyingData(req, res);
@@ -104,11 +104,11 @@ describe('post-keying-data.controller', () => {
         FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus('MATCH').build(),
       ];
 
-      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH', 'READY_TO_KEY']).mockResolvedValue(feeRecords);
+      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH']).mockResolvedValue(feeRecords);
 
       const generateKeyingDataDetails: GenerateKeyingDataDetails = [
-        { feeRecord: feeRecords[0], isFacilityReadyToKey: true },
-        { feeRecord: feeRecords[1], isFacilityReadyToKey: false },
+        { feeRecord: feeRecords[0], generateKeyingData: true },
+        { feeRecord: feeRecords[1], generateKeyingData: false },
       ];
 
       when(getGenerateKeyingDataDetails).calledWith(feeRecords).mockResolvedValue(generateKeyingDataDetails);

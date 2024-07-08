@@ -17,13 +17,13 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
   { transactionEntityManager, generateKeyingDataDetails, requestSource }: GenerateKeyingDataEventPayload,
 ): Promise<UtilisationReportEntity> => {
   await Promise.all(
-    generateKeyingDataDetails.map(({ feeRecord, isFacilityReadyToKey }) => {
+    generateKeyingDataDetails.map(({ feeRecord, generateKeyingData }) => {
       const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
       return stateMachine.handleEvent({
         type: 'KEYING_DATA_GENERATED',
         payload: {
           transactionEntityManager,
-          isFacilityReadyToKey,
+          generateKeyingData,
           requestSource,
         },
       });

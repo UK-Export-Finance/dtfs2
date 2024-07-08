@@ -69,8 +69,6 @@ export class FeeRecordStateMachine {
         }
       case 'READY_TO_KEY':
         switch (event.type) {
-          case 'KEYING_DATA_GENERATED':
-            return handleFeeRecordKeyingDataGeneratedEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

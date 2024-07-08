@@ -47,7 +47,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
       {} as { [id: number]: FeeRecordStateMachine },
     );
 
-    const generateKeyingDataDetails: GenerateKeyingDataDetails = feeRecords.map((feeRecord) => ({ feeRecord, isFacilityReadyToKey: false }));
+    const generateKeyingDataDetails: GenerateKeyingDataDetails = feeRecords.map((feeRecord) => ({ feeRecord, generateKeyingData: false }));
 
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
@@ -61,12 +61,12 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
     // Assert
     feeRecords.forEach(({ id }, index) => {
       const eventHandler = eventHandlers[id];
-      const { isFacilityReadyToKey } = generateKeyingDataDetails[index];
+      const { generateKeyingData } = generateKeyingDataDetails[index];
       expect(eventHandler).toHaveBeenCalledWith({
         type: 'KEYING_DATA_GENERATED',
         payload: {
           transactionEntityManager: mockEntityManager,
-          isFacilityReadyToKey,
+          generateKeyingData,
           requestSource,
         },
       });

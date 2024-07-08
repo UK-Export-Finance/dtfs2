@@ -23,7 +23,7 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     // Act
     await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      isFacilityReadyToKey: true,
+      generateKeyingData: true,
       requestSource,
     });
 
@@ -38,7 +38,7 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     // Act
     await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      isFacilityReadyToKey: true,
+      generateKeyingData: true,
       requestSource,
     });
 
@@ -53,7 +53,7 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     // Act
     await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      isFacilityReadyToKey: true,
+      generateKeyingData: true,
       requestSource,
     });
 
@@ -68,7 +68,7 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     // Act
     await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      isFacilityReadyToKey: true,
+      generateKeyingData: true,
       requestSource,
     });
 
@@ -83,7 +83,7 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     // Act
     await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      isFacilityReadyToKey: true,
+      generateKeyingData: true,
       requestSource,
     });
 
@@ -91,8 +91,8 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
   });
 
-  describe('when isFacilityReadyToKey is set to true', () => {
-    const isFacilityReadyToKey = true;
+  describe('when generateKeyingData is set to true', () => {
+    const generateKeyingData = true;
 
     it('sets the fee record fixedFeeAdjustment to 10', async () => {
       // Arrange
@@ -101,7 +101,7 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
       // Act
       await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        isFacilityReadyToKey,
+        generateKeyingData,
         requestSource,
       });
 
@@ -116,7 +116,7 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
       // Act
       await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        isFacilityReadyToKey,
+        generateKeyingData,
         requestSource,
       });
 
@@ -131,7 +131,7 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
       // Act
       await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        isFacilityReadyToKey,
+        generateKeyingData,
         requestSource,
       });
 
@@ -140,8 +140,8 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     });
   });
 
-  describe('when isFacilityReadyToKey is set to false', () => {
-    const isFacilityReadyToKey = false;
+  describe('when generateKeyingData is set to false', () => {
+    const generateKeyingData = false;
 
     it('does not set the fee record fixedFeeAdjustment', async () => {
       // Arrange
@@ -150,7 +150,7 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
       // Act
       await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        isFacilityReadyToKey,
+        generateKeyingData,
         requestSource,
       });
 
@@ -165,7 +165,7 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
       // Act
       await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        isFacilityReadyToKey,
+        generateKeyingData,
         requestSource,
       });
 
@@ -180,7 +180,7 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
       // Act
       await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        isFacilityReadyToKey,
+        generateKeyingData,
         requestSource,
       });
 

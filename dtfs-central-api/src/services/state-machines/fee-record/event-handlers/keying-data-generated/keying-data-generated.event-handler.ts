@@ -4,7 +4,7 @@ import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
 
 type KeyingDataGeneratedEventPayload = {
   transactionEntityManager: EntityManager;
-  isFacilityReadyToKey: boolean;
+  generateKeyingData: boolean;
   requestSource: DbRequestSource;
 };
 
@@ -12,9 +12,9 @@ export type FeeRecordKeyingDataGeneratedEvent = BaseFeeRecordEvent<'KEYING_DATA_
 
 export const handleFeeRecordKeyingDataGeneratedEvent = async (
   feeRecord: FeeRecordEntity,
-  { transactionEntityManager, isFacilityReadyToKey, requestSource }: KeyingDataGeneratedEventPayload,
+  { transactionEntityManager, generateKeyingData, requestSource }: KeyingDataGeneratedEventPayload,
 ): Promise<FeeRecordEntity> => {
-  if (isFacilityReadyToKey) {
+  if (generateKeyingData) {
     feeRecord.updateWithKeyingData({ fixedFeeAdjustment: 10, premiumAccrualBalanceAdjustment: 10, principalBalanceAdjustment: 10, requestSource });
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
