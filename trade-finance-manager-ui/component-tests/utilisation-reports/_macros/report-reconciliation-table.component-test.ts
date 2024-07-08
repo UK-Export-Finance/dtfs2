@@ -5,7 +5,7 @@ import { getReportReconciliationSummariesViewModel } from '../../../server/contr
 import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } from '../../../server/test-mocks/mock-utilisation-report-reconciliation-summary';
 import { MOCK_TFM_SESSION_USER } from '../../../server/test-mocks/mock-tfm-session-user';
 import { MOCK_BANK_HOLIDAYS } from '../../../server/test-mocks/mock-bank-holidays';
-import { SummaryItemViewModel } from '../../../server/types/view-models';
+import { UtilisationReportSummaryViewModel } from '../../../server/types/view-models';
 
 jest.mock('../../../server/api');
 
@@ -17,7 +17,7 @@ const render = componentRenderer(component);
 const originalProcessEnv = process.env;
 
 type ReportReconciliationTableParams = {
-  summaryItems: SummaryItemViewModel[];
+  summaryItems: UtilisationReportSummaryViewModel[];
   submissionMonth: IsoMonthStamp;
 };
 

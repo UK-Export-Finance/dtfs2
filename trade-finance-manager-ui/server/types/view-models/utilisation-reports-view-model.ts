@@ -2,21 +2,21 @@ import { IsoMonthStamp } from '@ukef/dtfs2-common';
 import { BaseViewModel } from './base-view-model';
 import { UtilisationReportReconciliationSummaryItem } from '../utilisation-reports';
 
-export type SummaryItemViewModel = UtilisationReportReconciliationSummaryItem & {
+export type UtilisationReportSummaryViewModel = UtilisationReportReconciliationSummaryItem & {
   displayStatus: string;
   formattedDateUploaded?: string;
   downloadPath?: string;
 };
 
 export type ReportPeriodSummaryViewModel = {
-  items: SummaryItemViewModel[];
+  items: UtilisationReportSummaryViewModel[];
   submissionMonth: IsoMonthStamp;
   reportPeriodHeading: string;
   dueDateText: string;
 };
 
-export type SummaryViewModel = ReportPeriodSummaryViewModel[];
+export type ReportPeriodSummariesViewModel = ReportPeriodSummaryViewModel[];
 
 export type UtilisationReportsViewModel = BaseViewModel & {
-  reportPeriodSummaries: SummaryViewModel;
+  reportPeriodSummaries: ReportPeriodSummariesViewModel;
 };

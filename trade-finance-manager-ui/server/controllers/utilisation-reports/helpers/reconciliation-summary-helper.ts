@@ -3,7 +3,7 @@ import { IsoMonthStamp, ReportPeriod, UtilisationReportReconciliationStatus, get
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
 import { getReportDueDate } from '../../../services/utilisation-report-service';
 import api from '../../../api';
-import { SummaryItemViewModel, SummaryViewModel } from '../../../types/view-models';
+import { UtilisationReportSummaryViewModel, ReportPeriodSummariesViewModel } from '../../../types/view-models';
 
 export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not received',
@@ -12,7 +12,7 @@ export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportRe
   RECONCILIATION_COMPLETED: 'Report completed',
 };
 
-const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummaryItem): SummaryItemViewModel => {
+const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummaryItem): UtilisationReportSummaryViewModel => {
   const { status, dateUploaded, reportId } = apiItem;
 
   return {
@@ -58,7 +58,7 @@ const getBankHolidayDates = async (userToken: string): Promise<Date[]> => {
 export const getReportReconciliationSummariesViewModel = async (
   summariesApiResponse: UtilisationReportReconciliationSummary[],
   userToken: string,
-): Promise<SummaryViewModel> => {
+): Promise<ReportPeriodSummariesViewModel> => {
   const bankHolidays = await getBankHolidayDates(userToken);
 
   return summariesApiResponse.map(({ items: apiItems, submissionMonth }) => {
