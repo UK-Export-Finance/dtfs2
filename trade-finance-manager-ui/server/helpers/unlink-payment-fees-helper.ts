@@ -1,4 +1,6 @@
-type UnlinkPaymentFeesFormRequestBody = {
+import { EditPaymentsTableCheckboxId } from '../types/edit-payments-table-checkbox-id';
+
+export type UnlinkPaymentFeesFormRequestBody = Partial<Record<EditPaymentsTableCheckboxId, 'on'>> & {
   totalSelectableFeeRecords?: string;
 };
 

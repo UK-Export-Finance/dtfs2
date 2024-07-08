@@ -1,13 +1,13 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
-import { AddPaymentFormRequestBody } from '../helpers';
 import { getEditPaymentsCheckboxIdsFromObjectKeys, getFeeRecordIdsFromEditPaymentsCheckboxIds } from '../../../helpers/edit-payments-table-checkbox-id-helper';
+import { UnlinkPaymentFeesFormRequestBody } from '../../../helpers/unlink-payment-fees-helper';
 
-export type AddPaymentRequest = CustomExpressRequest<{
-  reqBody: AddPaymentFormRequestBody;
+export type UnlinkPaymentRequest = CustomExpressRequest<{
+  reqBody: UnlinkPaymentFeesFormRequestBody;
 }>;
 
-export const postUnlinkPaymentFees = (req: AddPaymentRequest, res: Response) => {
+export const postUnlinkPaymentFees = (req: UnlinkPaymentRequest, res: Response) => {
   try {
     const { reportId, paymentId } = req.params;
     const checkedCheckboxIds = getEditPaymentsCheckboxIdsFromObjectKeys(req.body);
