@@ -55,10 +55,30 @@ describe('validatePostUnlinkPaymentFeesRequestBody', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  describe('when the body is an empty object', () => {
+  it("renders the 'problem-with-service.njk' page when the request body is an empty object", () => {
     // Arrange
     const { req, res } = getHttpMocks();
     req.body = {};
+
+    const next = jest.fn();
+
+    // Act
+    validatePostUnlinkPaymentFeesRequestBody(req, res, next);
+
+    // Assert
+    expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+    expect(res._getRenderData()).toEqual({
+      user: MOCK_TFM_SESSION_USER,
+    });
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  describe('when the body contains no checkbox ids', () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    req.body = {
+      totalSelectableFeeRecords: 7,
+    };
 
     const next = jest.fn();
 

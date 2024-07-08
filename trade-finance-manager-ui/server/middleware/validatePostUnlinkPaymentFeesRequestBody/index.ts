@@ -26,14 +26,15 @@ export const validatePostUnlinkPaymentFeesRequestBody = (req: Request, res: Resp
   }
 
   const totalSelectableFeeRecords = extractTotalSelectableFeeRecordsFromRequestBody(body);
+
+  if (!totalSelectableFeeRecords) {
+    return renderProblemWithServiceView(req, res);
+  }
+
   const checkedCheckboxIds = getEditPaymentsCheckboxIdsFromObjectKeys(body);
 
   if (checkedCheckboxIds.length === 0) {
     return redirectWithError(req, res, reportId, paymentId, 'no-fee-records-selected');
-  }
-
-  if (!totalSelectableFeeRecords) {
-    return renderProblemWithServiceView(req, res);
   }
 
   if (checkedCheckboxIds.length === totalSelectableFeeRecords) {
