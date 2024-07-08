@@ -1,8 +1,8 @@
 import { ErrorSummaryViewModel } from '../../../types/view-models';
 
-export type UnlinkPaymentFeesErrorKey = 'no-fee-records-selected' | 'all-fee-records-selected';
+export type RemoveFeesFromPaymentErrorKey = 'no-fee-records-selected' | 'all-fee-records-selected';
 
-const unlinkPaymentFeesErrorMap: Record<UnlinkPaymentFeesErrorKey, [ErrorSummaryViewModel]> = {
+const removeFeesFromPaymentErrorMap: Record<RemoveFeesFromPaymentErrorKey, [ErrorSummaryViewModel]> = {
   'no-fee-records-selected': [
     {
       text: 'Select fee or fees to remove from the payment',
@@ -17,5 +17,5 @@ const unlinkPaymentFeesErrorMap: Record<UnlinkPaymentFeesErrorKey, [ErrorSummary
   ],
 };
 
-export const getUnlinkPaymentFeesError = (unlinkPaymentFeesErrorKey: UnlinkPaymentFeesErrorKey): [ErrorSummaryViewModel] =>
-  unlinkPaymentFeesErrorMap[unlinkPaymentFeesErrorKey];
+export const getRemoveFeesFromPaymentError = (removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey): [ErrorSummaryViewModel] =>
+  removeFeesFromPaymentErrorMap[removeFeesFromPaymentErrorKey];

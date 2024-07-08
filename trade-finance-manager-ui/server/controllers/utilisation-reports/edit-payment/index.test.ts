@@ -84,10 +84,10 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       expect(viewModel.paymentId).toBe(paymentId);
     });
 
-    it('sets unlink payment fees error summary based on passed in session data', async () => {
+    it('sets remove fees from payment error summary based on passed in session data', async () => {
       // Arrange
       const sessionData: Partial<SessionData> = {
-        unlinkPaymentFeesErrorKey: 'no-fee-records-selected',
+        removeFeesFromPaymentErrorKey: 'no-fee-records-selected',
       };
       const { req, res } = getHttpMocksWithSessionData(sessionData);
 
