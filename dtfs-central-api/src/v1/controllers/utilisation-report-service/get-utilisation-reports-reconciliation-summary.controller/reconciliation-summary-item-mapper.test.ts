@@ -74,6 +74,19 @@ describe('reconciliation-summary-item-mapper', () => {
       },
     );
 
+    it('sets the reported fees left to reconcile to zero if the report is reconciled but not all fee records are', () => {
+      // Arrange
+      const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').withFeeRecords([]).build();
+      const aNotReconciledFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('1111').withStatus('TO_DO').build();
+      report.feeRecords = [aNotReconciledFeeRecord];
+
+      // Act
+      const summaryItem = mapReportToSummaryItem(aBank(), report);
+
+      // Assert
+      expect(summaryItem.reportedFeesLeftToReconcile).toEqual(0);
+    });
+
     it('does not set the reconciliation summary count fields if the report has not yet been received', () => {
       // Arrange
       const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withFeeRecords([]).build();

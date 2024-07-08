@@ -14,7 +14,10 @@ export const mapReportToSummaryItem = (bank: Bank, report: UtilisationReportEnti
   const reportReceived = report.status !== 'REPORT_NOT_RECEIVED';
   const totalFacilitiesReported = getCountOfDistinctFacilities(report.feeRecords);
   const totalFeesReported = report.feeRecords.length;
-  const reportedFeesLeftToReconcile = totalFeesReported - getCountOfReconciledFeeRecords(report.feeRecords);
+
+  // Reports which were marked as complete before the payment reconciliation journey was built will not have any fee records in the reconciled state,
+  // but all fee records should still be considered reconciled.
+  const reportedFeesLeftToReconcile = report.status === 'RECONCILIATION_COMPLETED' ? 0 : totalFeesReported - getCountOfReconciledFeeRecords(report.feeRecords);
 
   return {
     reportId: report.id,
