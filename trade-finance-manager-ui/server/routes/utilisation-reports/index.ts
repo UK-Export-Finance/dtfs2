@@ -8,7 +8,7 @@ import {
   validateUserTeam,
   validateTfmPaymentReconciliationFeatureFlagIsEnabled,
   validatePostAddPaymentRequestBody,
-  validatePostUnlinkPaymentFeesRequestBody,
+  validatePostRemoveFeesFromPaymentRequestBody,
 } from '../../middleware';
 import { getReportDownload } from '../../controllers/utilisation-reports/report-download';
 import { getUtilisationReportReconciliationByReportId } from '../../controllers/utilisation-reports/utilisation-report-reconciliation-for-report';
@@ -18,7 +18,7 @@ import { postKeyingData } from '../../controllers/utilisation-reports/keying-dat
 import { postCheckKeyingData } from '../../controllers/utilisation-reports/check-keying-data';
 import { getEditPayment, postEditPayment } from '../../controllers/utilisation-reports/edit-payment';
 import { getConfirmDeletePayment, postConfirmDeletePayment } from '../../controllers/utilisation-reports/confirm-delete-payment';
-import { postUnlinkPaymentFees } from '../../controllers/utilisation-reports/unlink-payment-fees';
+import { postRemoveFeesFromPayment } from '../../controllers/utilisation-reports/remove-fees-from-payment';
 
 export const utilisationReportsRoutes = express.Router();
 
@@ -105,6 +105,6 @@ utilisationReportsRoutes.post(
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('paymentId'),
-  validatePostUnlinkPaymentFeesRequestBody,
-  postUnlinkPaymentFees,
+  validatePostRemoveFeesFromPaymentRequestBody,
+  postRemoveFeesFromPayment,
 );

@@ -1,6 +1,6 @@
-import { extractTotalSelectableFeeRecordsFromRequestBody } from './unlink-payment-fees-helper';
+import { extractTotalSelectableFeeRecordsFromRequestBody } from './remove-fees-from-payment-helper';
 
-describe('unlink payment fees helper', () => {
+describe('remove fees from payment helper', () => {
   describe('extractTotalSelectableFeeRecordsFromRequestBody', () => {
     it('should extract totalSelectableFeeRecords when present', () => {
       const requestBody = {
