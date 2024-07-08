@@ -75,7 +75,7 @@ class Facility {
       // used to store the user details of maker who changed unissued facility to issued
       this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker) || null;
       if (isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
-        if ('isUsingFacilityEndDate' in req && !(typeof req.isUsingFacilityEndDate === 'boolean')) {
+        if ('isUsingFacilityEndDate' in req && typeof req.isUsingFacilityEndDate !== 'boolean') {
           throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
         }
         this.isUsingFacilityEndDate = req.isUsingFacilityEndDate ?? null;
@@ -206,7 +206,7 @@ class Facility {
       }
 
       if ('isUsingFacilityEndDate' in req) {
-        if (!(typeof req.isUsingFacilityEndDate === 'boolean')) {
+        if (typeof req.isUsingFacilityEndDate !== 'boolean') {
           throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
         }
         this.isUsingFacilityEndDate = req.isUsingFacilityEndDate;

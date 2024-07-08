@@ -22,6 +22,7 @@ const { isTrueSet } = require('../../utils/helpers');
  * @param {'true' | 'false' | undefined} params.shouldCoverStartOnSubmission,
  * @returns {{ errRef: string, errMsg: string }[]} array of validation errors
  */
+// Unit test coverage is in `index.validate-and-update-about-facility.test.js`
 const validateAboutFacility = ({
   coverStartDateDay,
   coverStartDateMonth,

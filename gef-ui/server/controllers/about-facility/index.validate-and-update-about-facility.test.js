@@ -1,6 +1,5 @@
 import { add, sub, format } from 'date-fns';
-import { getCurrentGefDealVersion, isFacilityEndDateEnabledOnGefVersion } from '@ukef/dtfs2-common';
-import { aboutFacility, validateAndUpdateAboutFacility } from './index';
+import { validateAndUpdateAboutFacility } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
 
@@ -44,68 +43,37 @@ const MockFacilityResponse = () => {
   return res;
 };
 
-describe('controllers/about-facility', () => {
+describe('validateAndUpdateAboutFacility', () => {
   let mockResponse;
   let mockRequest;
   let mockFacilityResponse;
 
+  const now = new Date();
+  const tomorrow = add(now, { days: 1 });
+  const yesterday = sub(now, { days: 1 });
+  const threeMonthsAndOneDayFromNow = add(now, { months: 3, days: 1 });
+  const oneDayLessThanThreeMonthsFromNow = sub(add(now, { months: 3 }), { days: 1 });
+
   const updateApplicationSpy = jest.fn();
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
     mockFacilityResponse = MockFacilityResponse();
 
-    api.getApplication.mockResolvedValue({ version: getCurrentGefDealVersion() });
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.updateFacility.mockResolvedValue({});
     api.updateApplication = updateApplicationSpy;
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
-  describe('GET About Facility', () => {
-    it('renders the `About Facility` template', async () => {
-      mockRequest.query.status = 'change';
-
-      await aboutFacility(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
-        expect.objectContaining({
-          facilityType: CONSTANTS.FACILITY_TYPE.CASH,
-          facilityName: 'UKEF123',
-          hasBeenIssued: true,
-          monthsOfCover: null,
-          shouldCoverStartOnSubmission: 'true',
-          coverStartDateDay: '2',
-          coverStartDateMonth: '1',
-          coverStartDateYear: '2030',
-          coverEndDateMonth: null,
-          coverEndDateYear: null,
-          facilityTypeString: 'cash',
-          dealId: '123',
-          facilityId: 'xyz',
-          status: 'change',
-          isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion()),
-        }),
-      );
+  describe.each([0, 1])('with deal version %s', (dealVersion) => {
+    beforeEach(() => {
+      api.getApplication.mockResolvedValue({ version: dealVersion });
     });
-
-    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-      api.getFacility.mockRejectedValueOnce();
-      await aboutFacility(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
-    });
-  });
-
-  describe('validateAndUpdateAboutFacility', () => {
-    const now = new Date();
-    const tomorrow = add(now, { days: 1 });
-    const yesterday = sub(now, { days: 1 });
-    const threeMonthsAndOneDayFromNow = add(now, { months: 3, days: 1 });
-    const oneDayLessThanThreeMonthsFromNow = sub(add(now, { months: 3 }), { days: 1 });
 
     it('redirects user to application page if save and return is set to true', async () => {
       mockRequest.query.saveAndReturn = 'true';
@@ -127,7 +95,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
+      if (dealVersion === 1) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -141,7 +109,7 @@ describe('controllers/about-facility', () => {
         name: undefined,
         coverDateConfirmed: null,
       };
-      if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
+      if (dealVersion === 1) {
         expectedPayload.isUsingFacilityEndDate = true;
       }
       expect(api.updateFacility).toHaveBeenCalledWith({
@@ -808,24 +776,6 @@ describe('controllers/about-facility', () => {
       );
     });
 
-    if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
-      it('shows error message if isUsingFacilityEndDate is not a boolean', async () => {
-        mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-        mockRequest.body.hasBeenIssued = 'true';
-
-        await validateAndUpdateAboutFacility(mockRequest, mockResponse);
-
-        expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/about-facility.njk',
-          expect.objectContaining({
-            errors: expect.objectContaining({
-              errorSummary: expect.arrayContaining([{ href: '#isUsingFacilityEndDate', text: 'Select if there is an end date for this facility' }]),
-            }),
-          }),
-        );
-      });
-    }
-
     it('redirects user to provided facility page if all of method passes', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -837,7 +787,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
       mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
 
-      if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
+      if (dealVersion === 1) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -853,6 +803,28 @@ describe('controllers/about-facility', () => {
       api.updateFacility.mockRejectedValueOnce();
       await validateAndUpdateAboutFacility(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    });
+  });
+
+  describe('with deal version 1', () => {
+    beforeEach(() => {
+      api.getApplication.mockResolvedValue({ version: 1 });
+    });
+
+    it('shows error message if isUsingFacilityEndDate is not a boolean', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#isUsingFacilityEndDate', text: 'Select if there is an end date for this facility' }]),
+          }),
+        }),
+      );
     });
   });
 });
