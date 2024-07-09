@@ -12,6 +12,7 @@ import {
 } from '../helpers';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { ValidatedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
+import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
 
 const renderEditPaymentPage = (res: Response, viewModel: EditPaymentViewModel) => res.render('utilisation-reports/edit-payment.njk', viewModel);
 
@@ -19,9 +20,11 @@ export const getEditPayment = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId, paymentId } = req.params;
 
+  const { errors, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
+
   try {
     const paymentDetails = await api.getPaymentDetailsWithFeeRecords(reportId, paymentId, userToken);
-    const editPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId);
+    const editPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId, allCheckboxesChecked, errors);
     return renderEditPaymentPage(res, editPaymentViewModel);
   } catch (error) {
     console.error('Error updating utilisation report status:', error);
