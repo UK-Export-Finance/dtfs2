@@ -237,12 +237,12 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
       // Arrange
       const report = anUploadedUtilisationReport();
 
-      const matchFeeRecords = [
+      const feeRecordsAtMatchStatus = [
         FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('MATCH').build(),
         FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
         FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
       ];
-      report.feeRecords = matchFeeRecords;
+      report.feeRecords = feeRecordsAtMatchStatus;
 
       await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
@@ -261,12 +261,12 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
 
       const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('TO_DO').build();
 
-      const matchFeeRecords = [
+      const feeRecordsAtMatchStatus = [
         FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
         FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
       ];
 
-      const allFeeRecords = [toDoFeeRecord, ...matchFeeRecords];
+      const allFeeRecords = [toDoFeeRecord, ...feeRecordsAtMatchStatus];
 
       report.feeRecords = allFeeRecords;
       await SqlDbHelper.saveNewEntry('UtilisationReport', report);

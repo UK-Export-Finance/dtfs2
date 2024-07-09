@@ -56,7 +56,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
     // Act
     await handleUtilisationReportGenerateKeyingDataEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
-      matchFeeRecords: feeRecords,
+      feeRecordsAtMatchStatus: feeRecords,
       requestSource,
     });
 
@@ -84,7 +84,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
   describe('when there are multiple fee records with the same facility id', () => {
     const facilityId = '12345678';
 
-    it('calculates keying data only for the first fee record in the payload', async () => {
+    it('calculates keying data for only one of the fee records in the payload with that facility id', async () => {
       // Arrange
       const utilisationReport = aReconciliationInProgressReport();
       const feeRecords = [
@@ -104,7 +104,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
       // Act
       await handleUtilisationReportGenerateKeyingDataEvent(utilisationReport, {
         transactionEntityManager: mockEntityManager,
-        matchFeeRecords: feeRecords,
+        feeRecordsAtMatchStatus: feeRecords,
         requestSource,
       });
 
@@ -162,7 +162,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
       // Act
       await handleUtilisationReportGenerateKeyingDataEvent(utilisationReport, {
         transactionEntityManager: mockEntityManager,
-        matchFeeRecords: feeRecords,
+        feeRecordsAtMatchStatus: feeRecords,
         requestSource,
       });
 
@@ -197,7 +197,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
     // Act
     await handleUtilisationReportGenerateKeyingDataEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
-      matchFeeRecords: [],
+      feeRecordsAtMatchStatus: [],
       requestSource,
     });
 

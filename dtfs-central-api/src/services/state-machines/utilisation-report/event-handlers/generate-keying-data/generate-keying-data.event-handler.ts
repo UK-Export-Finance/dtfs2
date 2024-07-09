@@ -3,19 +3,19 @@ import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEnt
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 
-const getFacilityIdsWhereKeyingDataCannotBeCalculated = async (entityManager: EntityManager, reportId: number): Promise<Set<string>> => {
-  const feeRecordsWhereKeyingDataCannotBeCalculated = await entityManager.find(FeeRecordEntity, {
+const getFacilityIdsAtToDoOrDoesNotMatchStatus = async (entityManager: EntityManager, reportId: number): Promise<Set<string>> => {
+  const feeRecordsAtToDoOrDoesNotMatchStatus = await entityManager.find(FeeRecordEntity, {
     where: {
       report: { id: reportId },
       status: In<FeeRecordStatus>(['TO_DO', 'DOES_NOT_MATCH']),
     },
   });
-  return feeRecordsWhereKeyingDataCannotBeCalculated.reduce((facilityIds, { facilityId }) => facilityIds.add(facilityId), new Set<string>());
+  return feeRecordsAtToDoOrDoesNotMatchStatus.reduce((facilityIds, { facilityId }) => facilityIds.add(facilityId), new Set<string>());
 };
 
 type GenerateKeyingDataEventPayload = {
   transactionEntityManager: EntityManager;
-  matchFeeRecords: FeeRecordEntity[];
+  feeRecordsAtMatchStatus: FeeRecordEntity[];
   requestSource: DbRequestSource;
 };
 
@@ -23,35 +23,33 @@ export type UtilisationReportGenerateKeyingDataEvent = BaseUtilisationReportEven
 
 export const handleUtilisationReportGenerateKeyingDataEvent = async (
   report: UtilisationReportEntity,
-  { transactionEntityManager, matchFeeRecords, requestSource }: GenerateKeyingDataEventPayload,
+  { transactionEntityManager, feeRecordsAtMatchStatus, requestSource }: GenerateKeyingDataEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  const facilityIdsWhereKeyingDataCannotBeCalculated = await getFacilityIdsWhereKeyingDataCannotBeCalculated(transactionEntityManager, report.id);
-  const processedFacilityIds = new Set<string>();
+  const finalFeeRecordFacilityIds = await getFacilityIdsAtToDoOrDoesNotMatchStatus(transactionEntityManager, report.id);
+
+  const feeRecordsWithPayloads = feeRecordsAtMatchStatus.map((feeRecord) => {
+    const { facilityId } = feeRecord;
+
+    if (finalFeeRecordFacilityIds.has(facilityId)) {
+      return {
+        feeRecord,
+        payload: { transactionEntityManager, isFinalFeeRecordForFacility: false, requestSource },
+      };
+    }
+
+    finalFeeRecordFacilityIds.add(facilityId);
+    return {
+      feeRecord,
+      payload: { transactionEntityManager, isFinalFeeRecordForFacility: true, requestSource },
+    };
+  });
 
   await Promise.all(
-    matchFeeRecords.map((feeRecord) => {
-      const { facilityId } = feeRecord;
+    feeRecordsWithPayloads.map(({ feeRecord, payload }) => {
       const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
-
-      if (processedFacilityIds.has(facilityId)) {
-        return stateMachine.handleEvent({
-          type: 'GENERATE_KEYING_DATA',
-          payload: {
-            transactionEntityManager,
-            isFinalFeeRecordForFacility: false,
-            requestSource,
-          },
-        });
-      }
-
-      processedFacilityIds.add(facilityId);
       return stateMachine.handleEvent({
         type: 'GENERATE_KEYING_DATA',
-        payload: {
-          transactionEntityManager,
-          isFinalFeeRecordForFacility: !facilityIdsWhereKeyingDataCannotBeCalculated.has(facilityId),
-          requestSource,
-        },
+        payload,
       });
     }),
   );

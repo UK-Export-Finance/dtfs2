@@ -236,7 +236,7 @@ describe('UtilisationReportStateMachine', () => {
         type: 'GENERATE_KEYING_DATA',
         payload: {
           transactionEntityManager: {} as EntityManager,
-          matchFeeRecords: [],
+          feeRecordsAtMatchStatus: [],
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });
