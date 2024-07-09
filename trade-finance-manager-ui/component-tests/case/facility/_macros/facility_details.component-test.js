@@ -207,8 +207,8 @@ describe(component, () => {
           wrapper.expectText('[data-cy="facility-end-date-exists"]').toRead('-');
         });
 
-        it('should not render facilityEndDate', () => {
-          wrapper.expectText('[data-cy="facility-end-date"]').notToExist();
+        it('should render a dash for facilityEndDate', () => {
+          wrapper.expectText('[data-cy="facility-end-date-exists"]').toRead('-');
         });
 
         it('should not render bankReviewDate', () => {
