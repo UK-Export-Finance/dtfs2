@@ -22,3 +22,7 @@ export type UpdateWithStatusParams = {
   status: FeeRecordStatus;
   requestSource: DbRequestSource;
 };
+
+export type RemoveAllPaymentsParams = {
+  requestSource: DbRequestSource;
+};

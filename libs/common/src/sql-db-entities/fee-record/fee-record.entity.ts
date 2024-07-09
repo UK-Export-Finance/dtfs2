@@ -3,7 +3,7 @@ import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency, FeeRecordStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
-import { CreateFeeRecordParams, UpdateWithStatusParams } from './fee-record.types';
+import { CreateFeeRecordParams, RemoveAllPaymentsParams, UpdateWithStatusParams } from './fee-record.types';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
 import { PaymentEntity } from '../payment';
 
@@ -157,6 +157,12 @@ export class FeeRecordEntity extends AuditableBaseEntity {
 
   public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
     this.status = status;
+    this.updateLastUpdatedBy(requestSource);
+  }
+
+  public removeAllPayments({ requestSource }: RemoveAllPaymentsParams): void {
+    this.payments = [];
+    this.status = 'TO_DO';
     this.updateLastUpdatedBy(requestSource);
   }
 }
