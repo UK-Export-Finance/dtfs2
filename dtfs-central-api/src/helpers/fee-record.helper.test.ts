@@ -1,7 +1,7 @@
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { feeRecordCsvRowToSqlEntity } from './fee-record.helper';
-import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
+import { aUtilisationReportRawCsvData } from '../../test-helpers/test-data';
 
 describe('fee-record.helper', () => {
   describe('feeRecordCsvRowToSqlEntity', () => {
@@ -25,8 +25,9 @@ describe('fee-record.helper', () => {
 
     it('returns an SQL entity with the correct data', () => {
       // Act
+      const rawCsvData = aUtilisationReportRawCsvData();
       const feeRecordEntity = feeRecordCsvRowToSqlEntity({
-        dataEntry: MOCK_UTILISATION_REPORT_RAW_CSV_DATA,
+        dataEntry: rawCsvData,
         requestSource,
         report,
       });
@@ -35,23 +36,49 @@ describe('fee-record.helper', () => {
       expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
       expect(feeRecordEntity).toEqual(
         expect.objectContaining<Partial<FeeRecordEntity>>({
-          facilityId: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['ukef facility id'],
-          exporter: MOCK_UTILISATION_REPORT_RAW_CSV_DATA.exporter,
-          baseCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['base currency'],
-          facilityUtilisation: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['facility utilisation']),
-          totalFeesAccruedForThePeriod: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['total fees accrued for the period']),
-          totalFeesAccruedForThePeriodCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual currency'],
-          totalFeesAccruedForThePeriodExchangeRate: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['accrual exchange rate']),
-          feesPaidToUkefForThePeriod: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef for the period']),
-          feesPaidToUkefForThePeriodCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['fees paid to ukef currency'],
-          paymentCurrency: MOCK_UTILISATION_REPORT_RAW_CSV_DATA['payment currency'],
-          paymentExchangeRate: Number(MOCK_UTILISATION_REPORT_RAW_CSV_DATA['payment exchange rate']),
+          facilityId: rawCsvData['ukef facility id'],
+          exporter: rawCsvData.exporter,
+          baseCurrency: rawCsvData['base currency'],
+          facilityUtilisation: Number(rawCsvData['facility utilisation']),
+          totalFeesAccruedForThePeriod: Number(rawCsvData['total fees accrued for the period']),
+          totalFeesAccruedForThePeriodCurrency: rawCsvData['accrual currency'],
+          totalFeesAccruedForThePeriodExchangeRate: Number(rawCsvData['accrual exchange rate']),
+          feesPaidToUkefForThePeriod: Number(rawCsvData['fees paid to ukef for the period']),
+          feesPaidToUkefForThePeriodCurrency: rawCsvData['fees paid to ukef currency'],
+          paymentCurrency: rawCsvData['payment currency'],
+          paymentExchangeRate: Number(rawCsvData['payment exchange rate']),
           lastUpdatedByIsSystemUser: false,
           lastUpdatedByPortalUserId: requestSource.userId,
           lastUpdatedByTfmUserId: null,
           report,
         }),
       );
+    });
+
+    it('sets the entity status to TO_DO when fees paid to ukef for the period is non zero', () => {
+      // Act
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({
+        dataEntry: { ...aUtilisationReportRawCsvData(), 'fees paid to ukef for the period': '0.01' },
+        requestSource,
+        report,
+      });
+
+      // Assert
+      expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
+      expect(feeRecordEntity.status).toEqual<FeeRecordStatus>('TO_DO');
+    });
+
+    it('sets the entity status to MATCH when fees paid to ukef for the period is zero', () => {
+      // Act
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({
+        dataEntry: { ...aUtilisationReportRawCsvData(), 'fees paid to ukef for the period': '0.00' },
+        requestSource,
+        report,
+      });
+
+      // Assert
+      expect(feeRecordEntity instanceof FeeRecordEntity).toBe(true);
+      expect(feeRecordEntity.status).toEqual<FeeRecordStatus>('MATCH');
     });
 
     it('converts the numeric string columns to numbers', () => {
@@ -62,7 +89,7 @@ describe('fee-record.helper', () => {
       const feesPaidToUkefForThePeriod = 35.41;
       const paymentExchangeRate = 2.5;
       const utilisationReportRawCsvData: UtilisationReportRawCsvData = {
-        ...MOCK_UTILISATION_REPORT_RAW_CSV_DATA,
+        ...aUtilisationReportRawCsvData(),
         'facility utilisation': facilityUtilisation.toString(),
         'total fees accrued for the period': totalFeesAccruedForThePeriod.toString(),
         'accrual exchange rate': totalFeesAccruedForThePeriodExchangeRate.toString(),
@@ -97,7 +124,7 @@ describe('fee-record.helper', () => {
     `('uses the default value of 1 when the exchange rate entries are $condition', ({ testValue }) => {
       // Arrange
       const feeRecordCsvRow: UtilisationReportRawCsvData = {
-        ...MOCK_UTILISATION_REPORT_RAW_CSV_DATA,
+        ...aUtilisationReportRawCsvData(),
         'accrual exchange rate': testValue as string,
         'payment exchange rate': testValue as string,
       };

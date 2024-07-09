@@ -970,14 +970,18 @@ const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeR
  * Generates keying data for the utilisation report
  * with the supplied id
  * @param {string} reportId - The report id
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<{}>}
  */
-const generateKeyingData = async (reportId, userToken) => {
+const generateKeyingData = async (reportId, user, userToken) => {
   const response = await axios({
     method: 'post',
     url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/keying-data`,
     headers: generateHeaders(userToken),
+    data: {
+      user,
+    },
   });
   return response.data;
 };

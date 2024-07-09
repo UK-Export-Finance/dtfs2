@@ -23,6 +23,13 @@ export type UpdateWithStatusParams = {
   requestSource: DbRequestSource;
 };
 
+export type UpdateWithKeyingDataParams = {
+  fixedFeeAdjustment: number;
+  premiumAccrualBalanceAdjustment: number;
+  principalBalanceAdjustment: number;
+  requestSource: DbRequestSource;
+};
+
 export type RemoveAllPaymentsParams = {
   requestSource: DbRequestSource;
 };

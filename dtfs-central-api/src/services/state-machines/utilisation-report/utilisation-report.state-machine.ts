@@ -3,7 +3,7 @@ import { UtilisationReportRepo } from '../../../repositories/utilisation-reports
 import { InvalidStateMachineTransitionError, NotFoundError } from '../../../errors';
 import {
   handleUtilisationReportDueReportInitialisedEvent,
-  handleUtilisationReportFeeRecordKeyedEvent,
+  handleUtilisationReportGenerateKeyingDataEvent,
   handleUtilisationReportManuallySetCompletedEvent,
   handleUtilisationReportManuallySetIncompleteEvent,
   handleUtilisationReportAddAPaymentEvent,
@@ -90,8 +90,8 @@ export class UtilisationReportStateMachine {
             return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
           case 'DELETE_PAYMENT':
             return handleUtilisationReportDeletePaymentEvent(this.report, event.payload);
-          case 'FEE_RECORD_KEYED':
-            return handleUtilisationReportFeeRecordKeyedEvent(this.report, event.payload);
+          case 'GENERATE_KEYING_DATA':
+            return handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
           case 'EDIT_PAYMENT':
             return handleUtilisationReportEditPaymentEvent(this.report, event.payload);
           case 'REMOVE_PAYMENT_FEES':

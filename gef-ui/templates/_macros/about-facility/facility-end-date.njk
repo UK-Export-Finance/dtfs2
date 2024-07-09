@@ -1,0 +1,39 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% macro render(isUsingFacilityEndDate, errors) %}
+  {{ govukRadios({
+      idPrefix: "isUsingFacilityEndDate",
+      name: "isUsingFacilityEndDate",
+      fieldset: {
+        legend: {
+          text: "Do you have a facility end date?",
+          classes: "govuk-fieldset__legend--m"
+        }
+      },
+      errorMessage: errors and errors.fieldErrors.isUsingFacilityEndDate and {
+        text: errors.fieldErrors.isUsingFacilityEndDate.text,
+        attributes: {
+          'data-cy': 'is-using-facility-end-date-error'
+        }
+      },
+      items: [
+        {
+          value: 'true',
+          text: "Yes",
+          checked: isUsingFacilityEndDate === 'true',
+          attributes: {
+            'data-cy': "is-using-facility-end-date-yes"
+          }
+        },
+        {
+          value: 'false',
+          text: "No",
+          checked: isUsingFacilityEndDate === 'false',
+          attributes: {
+            'data-cy': "is-using-facility-end-date-no"
+          }
+        }
+      ]
+    }) }}
+{% endmacro %}

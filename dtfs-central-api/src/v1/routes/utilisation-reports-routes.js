@@ -5,6 +5,7 @@ const {
   validatePostPaymentPayload,
   validateDeletePaymentPayload,
   validatePatchPaymentPayload,
+  validatePostKeyingDataPayload,
   validatePostRemoveFeesFromPaymentPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
@@ -294,6 +295,15 @@ utilisationReportsRouter
  *           type: string
  *         required: true
  *         description: the id for the report to generate keying data for
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
  *     responses:
  *       200:
  *         description: OK
@@ -304,7 +314,9 @@ utilisationReportsRouter
  *       500:
  *         description: Internal Server Error
  */
-utilisationReportsRouter.route('/:reportId/keying-data').post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, postKeyingData);
+utilisationReportsRouter
+  .route('/:reportId/keying-data')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePostKeyingDataPayload, postKeyingData);
 
 /**
  * @openapi
