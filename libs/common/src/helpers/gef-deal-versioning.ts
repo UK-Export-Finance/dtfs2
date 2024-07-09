@@ -11,9 +11,7 @@ const dealVersionSchema = z.object({
 
 export const getCurrentGefDealVersion = () => dealVersionSchema.parse(process.env).GEF_DEAL_VERSION;
 
-const FEATURES = ['FACILITY_END_DATE'] as const;
-
-type Feature = (typeof FEATURES)[number];
+type Feature = 'FACILITY_END_DATE';
 
 /**
  * GEF deals are versioned according to what features they include and support
