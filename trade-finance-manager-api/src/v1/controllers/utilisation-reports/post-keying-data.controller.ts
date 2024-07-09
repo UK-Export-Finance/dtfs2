@@ -1,12 +1,21 @@
 import { HttpStatusCode, isAxiosError } from 'axios';
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import api from '../../api';
+import { TfmSessionUser } from '../../../types/tfm-session-user';
 
-export const postKeyingData = async (req: Request, res: Response) => {
+type PostKeyingDataRequest = CustomExpressRequest<{
+  reqBody: {
+    user: TfmSessionUser;
+  };
+}>;
+
+export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) => {
   const { reportId } = req.params;
+  const { user } = req.body;
 
   try {
-    await api.generateKeyingData(reportId);
+    await api.generateKeyingData(reportId, user);
 
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {

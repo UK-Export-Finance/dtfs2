@@ -1,10 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { CURRENCY, Currency, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { CURRENCY, Currency, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { getExchangeRate } from '../helpers';
 
 const getRandomCurrency = (): Currency => faker.helpers.arrayElement(Object.values(CURRENCY));
-
-const getRandomStatus = (): FeeRecordStatus => faker.helpers.arrayElement(Object.values(FEE_RECORD_STATUS));
 
 const createRandomFeeRecordForReport = (report: UtilisationReportEntity): FeeRecordEntity => {
   const feeRecord = new FeeRecordEntity();
@@ -40,7 +38,7 @@ const createRandomFeeRecordForReport = (report: UtilisationReportEntity): FeeRec
     to: feeRecord.feesPaidToUkefForThePeriodCurrency,
   });
 
-  feeRecord.status = getRandomStatus();
+  feeRecord.status = 'TO_DO';
 
   feeRecord.updateLastUpdatedBy({ platform: 'SYSTEM' });
 

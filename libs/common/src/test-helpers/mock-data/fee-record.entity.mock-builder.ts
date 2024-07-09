@@ -106,6 +106,21 @@ export class FeeRecordEntityMockBuilder {
     return this;
   }
 
+  public withFixedFeeAdjustment(fixedFeeAdjustment: number | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.fixedFeeAdjustment = fixedFeeAdjustment;
+    return this;
+  }
+
+  public withPremiumAccrualBalanceAdjustment(premiumAccrualBalanceAdjustment: number | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.premiumAccrualBalanceAdjustment = premiumAccrualBalanceAdjustment;
+    return this;
+  }
+
+  public withPrincipalBalanceAdjustment(principalBalanceAdjustment: number | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.principalBalanceAdjustment = principalBalanceAdjustment;
+    return this;
+  }
+
   public withLastUpdatedByIsSystemUser(isSystemUser: boolean): FeeRecordEntityMockBuilder {
     this.feeRecord.lastUpdatedByIsSystemUser = isSystemUser;
     return this;

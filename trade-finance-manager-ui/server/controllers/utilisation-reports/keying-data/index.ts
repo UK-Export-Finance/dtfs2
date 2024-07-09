@@ -7,7 +7,7 @@ export const postKeyingData = async (req: Request, res: Response) => {
   const { reportId } = req.params;
 
   try {
-    await api.generateKeyingData(reportId, userToken);
+    await api.generateKeyingData(reportId, user, userToken);
 
     return res.redirect(`/utilisation-reports/${reportId}#keying-sheet`);
   } catch (error) {

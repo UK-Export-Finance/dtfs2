@@ -1,3 +1,3 @@
-import { FeeRecordPaymentAddedEvent, FeeRecordPaymentDeletedEvent, FeeRecordPaymentEditedEvent } from '../event-handlers';
+import { FeeRecordGenerateKeyingDataEvent, FeeRecordPaymentAddedEvent, FeeRecordPaymentDeletedEvent, FeeRecordPaymentEditedEvent } from '../event-handlers';
 
-export type FeeRecordEvent = FeeRecordPaymentAddedEvent | FeeRecordPaymentDeletedEvent | FeeRecordPaymentEditedEvent;
+export type FeeRecordEvent = FeeRecordPaymentAddedEvent | FeeRecordPaymentDeletedEvent | FeeRecordPaymentEditedEvent | FeeRecordGenerateKeyingDataEvent;
