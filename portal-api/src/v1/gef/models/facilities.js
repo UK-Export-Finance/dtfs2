@@ -1,3 +1,5 @@
+const { isValid, parseISO } = require('date-fns');
+
 const { isFacilityEndDateEnabledOnGefVersion, DealVersionError, InvalidParameterError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const convertToTimestamp = require('../../helpers/convertToTimestamp');
@@ -81,10 +83,16 @@ class Facility {
         }
         this.isUsingFacilityEndDate = req.isUsingFacilityEndDate ?? null;
 
-        if ('bankReviewDate' in req && typeof req.bankReviewDate !== 'string') {
-          // add more validation
-          throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
+        if ('bankReviewDate' in req) {
+          const bankReviewDate = parseISO(req.bankReviewDate);
+          if (!isValid(bankReviewDate)) {
+            throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
+          }
+          this.bankReviewDate = bankReviewDate;
+        } else {
+          this.bankReviewDate = null;
         }
+
         this.bankReviewDate = req.bankReviewDate ?? null;
       }
     } else {
@@ -220,11 +228,11 @@ class Facility {
       }
 
       if ('bankReviewDate' in req) {
-        // add validation
-        if (typeof req.bankReviewDate !== 'string') {
+        const bankReviewDate = parseISO(req.bankReviewDate);
+        if (!isValid(bankReviewDate)) {
           throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
         }
-        this.bankReviewDate = req.bankReviewDate;
+        this.bankReviewDate = bankReviewDate;
       }
 
       this.updatedAt = Date.now();
