@@ -9,6 +9,8 @@ let token;
 const now = new Date();
 const { yesterday } = dateConstants;
 
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
 context('About Facility Page', () => {
   before(() => {
     cy.loadData();
@@ -58,9 +60,12 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateDay();
       aboutFacility.coverEndDateMonth();
       aboutFacility.coverEndDateYear();
-      if (application.version >= 1) {
+      if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes();
         aboutFacility.isUsingFacilityEndDateNo();
+      } else {
+        aboutFacility.isUsingFacilityEndDateYes().should('not.exist');
+        aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
       }
       aboutFacility.continueButton();
       aboutFacility.saveAndReturnButton();
@@ -80,7 +85,7 @@ context('About Facility Page', () => {
       aboutFacility.facilityNameError();
       aboutFacility.shouldCoverStartOnSubmissionError();
       aboutFacility.coverEndDateError();
-      if (application.version >= 1) {
+      if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateError();
       }
     });
@@ -182,37 +187,27 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateError().contains('Cover end date cannot be before cover start date');
     });
 
-    it('redirects the user to `provided facility` page when form has been successfully filled in', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.facilityName().type('Name');
-      aboutFacility.shouldCoverStartOnSubmissionNo().click();
-      aboutFacility.coverStartDateDay().type(now.getDate());
-      aboutFacility.coverStartDateMonth().type(now.getMonth() + 1);
-      aboutFacility.coverStartDateYear().type(now.getFullYear());
-      aboutFacility.coverEndDateDay().type(now.getDate());
-      aboutFacility.coverEndDateMonth().type(now.getMonth());
-      aboutFacility.coverEndDateYear().type(now.getFullYear() + 1);
-      if (application.version >= 1) {
-        aboutFacility.isUsingFacilityEndDateYes().click();
-      }
-      aboutFacility.continueButton().click();
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
-    });
-
     it('stores the inputted values when returning to the page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.facilityName().type('Name');
+      aboutFacility.facilityName().clear().type('Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
-      aboutFacility.coverStartDateDay().type(now.getDate());
-      aboutFacility.coverStartDateMonth().type(now.getMonth() + 1);
-      aboutFacility.coverStartDateYear().type(now.getFullYear());
-      aboutFacility.coverEndDateDay().type(now.getDate());
-      aboutFacility.coverEndDateMonth().type(now.getMonth());
-      aboutFacility.coverEndDateYear().type(now.getFullYear() + 1);
-      if (application.version >= 1) {
+      aboutFacility.coverStartDateDay().clear().type(now.getDate());
+      aboutFacility
+        .coverStartDateMonth()
+        .clear()
+        .type(now.getMonth() + 1);
+      aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
+      aboutFacility.coverEndDateDay().clear().type(now.getDate());
+      aboutFacility.coverEndDateMonth().clear().type(now.getMonth());
+      aboutFacility
+        .coverEndDateYear()
+        .clear()
+        .type(now.getFullYear() + 1);
+      if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes().click();
       }
       aboutFacility.continueButton().click();
+      aboutFacility.errorSummary().should('not.exist');
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.facilityName().should('have.value', 'Name');
@@ -224,7 +219,7 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateMonth().should('have.value', now.getMonth());
       aboutFacility.coverEndDateYear().should('have.value', now.getFullYear() + 1);
 
-      if (application.version >= 1) {
+      if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes().should('be.checked');
         aboutFacility.isUsingFacilityEndDateNo().should('be.not.checked');
         aboutFacility.isUsingFacilityEndDateNo().click();
@@ -234,6 +229,55 @@ context('About Facility Page', () => {
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
         aboutFacility.isUsingFacilityEndDateNo().should('be.checked');
         aboutFacility.isUsingFacilityEndDateYes().should('be.not.checked');
+      }
+    });
+
+    describe('when the form has been correctly filled in', () => {
+      if (facilityEndDateEnabled) {
+        it('redirects user to `bank review date` page when not using facility end date', () => {
+          cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+          aboutFacility.facilityName().clear().type('Name');
+          aboutFacility.shouldCoverStartOnSubmissionNo().click();
+          aboutFacility.coverStartDateDay().clear().type(now.getDate());
+          aboutFacility
+            .coverStartDateMonth()
+            .clear()
+            .type(now.getMonth() + 1);
+          aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
+          aboutFacility.coverEndDateDay().clear().type(now.getDate());
+          aboutFacility.coverEndDateMonth().clear().type(now.getMonth());
+          aboutFacility
+            .coverEndDateYear()
+            .clear()
+            .type(now.getFullYear() + 1);
+          aboutFacility.isUsingFacilityEndDateNo().click();
+
+          aboutFacility.continueButton().click();
+
+          cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
+        });
+      } else {
+        it('redirects the user to `provided facility` page', () => {
+          cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+          aboutFacility.facilityName().clear().type('Name');
+          aboutFacility.shouldCoverStartOnSubmissionNo().click();
+          aboutFacility.coverStartDateDay().clear().type(now.getDate());
+          aboutFacility
+            .coverStartDateMonth()
+            .clear()
+            .type(now.getMonth() + 1);
+          aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
+          aboutFacility.coverEndDateDay().clear().type(now.getDate());
+          aboutFacility.coverEndDateMonth().clear().type(now.getMonth());
+          aboutFacility
+            .coverEndDateYear()
+            .clear()
+            .type(now.getFullYear() + 1);
+
+          aboutFacility.continueButton().click();
+
+          cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
+        });
       }
     });
   });
@@ -261,9 +305,12 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateDay().should('not.exist');
       aboutFacility.coverEndDateMonth().should('not.exist');
       aboutFacility.coverEndDateYear().should('not.exist');
-      if (application.version >= 1) {
+      if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes();
         aboutFacility.isUsingFacilityEndDateNo();
+      } else {
+        aboutFacility.isUsingFacilityEndDateYes().should('not.exist');
+        aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
       }
       aboutFacility.continueButton();
       aboutFacility.saveAndReturnButton();
@@ -273,7 +320,7 @@ context('About Facility Page', () => {
     it('does not validate facility name field as its optional', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.monthsOfCover().type('10');
-      if (application.version >= 1) {
+      if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes().click();
       }
       aboutFacility.continueButton().click();
@@ -320,9 +367,12 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateMonth();
       aboutFacility.coverEndDateYear();
       aboutFacility.continueButton();
-      if (application.version >= 1) {
+      if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes();
         aboutFacility.isUsingFacilityEndDateNo();
+      } else {
+        aboutFacility.isUsingFacilityEndDateYes().should('not.exist');
+        aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
       }
       aboutFacility.saveAndReturnButton();
       aboutFacility.monthsOfCover().should('not.exist');
@@ -353,9 +403,12 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateMonth().should('not.exist');
       aboutFacility.coverEndDateYear().should('not.exist');
       aboutFacility.continueButton();
-      if (application.version >= 1) {
+      if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes();
         aboutFacility.isUsingFacilityEndDateNo();
+      } else {
+        aboutFacility.isUsingFacilityEndDateYes().should('not.exist');
+        aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
       }
       aboutFacility.saveAndReturnButton();
       aboutFacility.monthsOfCover();

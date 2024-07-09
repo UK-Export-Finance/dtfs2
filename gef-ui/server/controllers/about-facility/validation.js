@@ -77,7 +77,7 @@ const validateAboutFacility = ({
         });
 
         if (coverStartDateFormattingErrors) {
-          aboutFacilityErrors.push(coverStartDateFormattingErrors);
+          aboutFacilityErrors.push(...coverStartDateFormattingErrors);
         } else {
           const now = startOfDay(new Date());
           const threeMonthsFromNow = add(now, { months: 3 });
@@ -99,7 +99,7 @@ const validateAboutFacility = ({
       }
     }
 
-    if (!(coverEndDateIsBlank && !saveAndReturn)) {
+    if (!(coverEndDateIsBlank && saveAndReturn)) {
       const { errors: coverEndDateFormattingErrors } = validateAndParseDayMonthYear({
         day: coverEndDateDay,
         month: coverEndDateMonth,
@@ -109,7 +109,7 @@ const validateAboutFacility = ({
       });
 
       if (coverEndDateFormattingErrors) {
-        aboutFacilityErrors.push(coverEndDateFormattingErrors);
+        aboutFacilityErrors.push(...coverEndDateFormattingErrors);
       }
     }
   }

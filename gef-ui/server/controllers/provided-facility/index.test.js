@@ -13,7 +13,7 @@ const MockResponse = () => {
 
 const userToken = 'test-token';
 
-const MockRequest = () => {
+const generateMockRequest = () => {
   const req = {};
   req.params = {};
   req.query = {};
@@ -29,24 +29,24 @@ const MockRequest = () => {
   return req;
 };
 
-const MockProvidedFacilityResponse = () => {
-  const res = {};
-  res.details = {};
-  return res;
-};
+const generateMockProvidedFacilityResponse = () => ({ details: {} });
+const generateMockApplicationResponse = () => ({ version: 1 });
 
 describe('controllers/provided-facility', () => {
   let mockResponse;
   let mockRequest;
   let mockProvidedFacilityResponse;
+  let mockApplicationResponse;
   const updateApplicationSpy = jest.fn();
 
   beforeEach(() => {
     mockResponse = MockResponse();
-    mockRequest = MockRequest();
-    mockProvidedFacilityResponse = MockProvidedFacilityResponse();
+    mockRequest = generateMockRequest();
+    mockProvidedFacilityResponse = generateMockProvidedFacilityResponse();
+    mockApplicationResponse = generateMockApplicationResponse();
 
     api.getFacility.mockResolvedValue(mockProvidedFacilityResponse);
+    api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
     api.updateFacility.mockResolvedValue(mockProvidedFacilityResponse);
     api.updateApplication = updateApplicationSpy;
   });
@@ -74,6 +74,47 @@ describe('controllers/provided-facility', () => {
           dealId: '123',
           facilityId: 'xyz',
           status: 'change',
+        }),
+      );
+    });
+
+    it('back link goes to the about facility page if on a v0 deal', async () => {
+      mockRequest.query.status = 'change';
+      mockProvidedFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
+      mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
+
+      mockApplicationResponse.version = 0;
+
+      api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
+      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+      await providedFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/provided-facility.njk',
+        expect.objectContaining({
+          previousPage: `/gef/application-details/${mockRequest.params.dealId}/facilities/${mockRequest.params.facilityId}/about-facility`,
+        }),
+      );
+    });
+
+    it('back link goes to the bank review date page if on a v1 deal & not using facility end date', async () => {
+      mockRequest.query.status = 'change';
+      mockProvidedFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
+      mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
+      mockProvidedFacilityResponse.details.isUsingFacilityEndDate = false;
+
+      mockApplicationResponse.version = 1;
+
+      api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
+      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+      await providedFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/provided-facility.njk',
+        expect.objectContaining({
+          previousPage: `/gef/application-details/${mockRequest.params.dealId}/facilities/${mockRequest.params.facilityId}/bank-review-date`,
         }),
       );
     });

@@ -15,7 +15,7 @@
       titleText: "There is a problem",
       errorList: errors.errorSummary,
       attributes: {
-        'data-cy': 'amendment--error-summary'
+        'data-cy': 'error-summary'
       },
       classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
     }) }}
@@ -39,7 +39,7 @@
 
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
     <div class="govuk-grid-column-three-quarters">
-      <form method="post" data-cy="form">
+      <form method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {{ govukDateInput({
           id: "bankReviewDate",
@@ -64,24 +64,36 @@
             {
               classes: (errors.fieldErrors['bankReviewDate-day'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
               name: "day",
-              value: bankReviewDate.day
+              value: bankReviewDate.day,
+              attributes: {
+                'data-cy': 'bank-review-date-day'
+              }            
             },
             {
               classes: (errors.fieldErrors['bankReviewDate-month'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
               name: "month",
-              value: bankReviewDate.month
+              value: bankReviewDate.month,
+              attributes: {
+                'data-cy': 'bank-review-date-month'
+              }   
             },
             {
               classes: (errors.fieldErrors['bankReviewDate-year'] and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
               name: "year",
-              value: bankReviewDate.year
+              value: bankReviewDate.year,
+              attributes: {
+                'data-cy': 'bank-review-date-year'
+              }   
             }
           ]
         }) }}
 
         {{ govukDetails({
-              summaryText: "What is a bank review date",
-              text: "The bank review date is when you decide in accordance with your usual policies and procedures for such facilities whether to continue or terminate the facility based on the borrower's needs and circumstances."
+          summaryText: "What is a bank review date",
+          text: "The bank review date is when you decide in accordance with your usual policies and procedures for such facilities whether to continue or terminate the facility based on the borrower's needs and circumstances.",
+          attributes: {
+            'data-cy': 'bank-review-date-details'
+          }   
         }) }}
 
         <div class="govuk-button-group">

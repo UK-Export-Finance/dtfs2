@@ -1,3 +1,4 @@
+const { isFacilityEndDateEnabledOnGefVersion, getCurrentGefDealVersion } = require('@ukef/dtfs2-common');
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../../database-helper');
 const CONSTANTS = require('../../../../src/constants');
@@ -73,6 +74,11 @@ describe(baseUrl, () => {
         required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
       },
     };
+
+    if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
+      newFacility.details.isUsingFacilityEndDate = null;
+      newFacility.details.bankReviewDate = null;
+    }
   });
 
   describe(`GET ${baseUrl}?dealId=`, () => {

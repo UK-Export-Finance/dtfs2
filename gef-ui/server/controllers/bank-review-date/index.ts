@@ -21,7 +21,7 @@ export const getBankReviewDate = async (req: CustomExpressRequest<{ params: Bank
     const deal = (await api.getApplication({ dealId, userToken })) as Record<string, unknown> & { version?: number };
 
     if (!isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version))) {
-      throw new Error('Invalid deal version number');
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
 
     const bankReviewDateViewModel: BankReviewDateViewModel = {
