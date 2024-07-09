@@ -21,6 +21,7 @@
     "**.scss",
     "**/migrations/*",
     "**/*.drawio",
+    "**/*.sql",
     "CHANGELOG.md"
   ],
   "language": "en",
@@ -201,7 +202,6 @@
     "WCAG",
     "wordprocessingml",
     "wovens",
-    "xact",
     "XLXS"
   ],
   "dictionaries": [
