@@ -6,7 +6,7 @@ import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { PaymentErrorsViewModel, EditPaymentViewModel } from '../../../types/view-models';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL } from './payment-form-helpers';
 
-const mapToEditPaymentFeeRecords = (feeRecords: FeeRecord[]): EditPaymentViewModel['feeRecords'] => {
+const mapToEditPaymentFeeRecords = (feeRecords: FeeRecord[], allCheckboxesChecked: boolean = false): EditPaymentViewModel['feeRecords'] => {
   const reportedFeesDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(feeRecords.map(({ reportedFees }, index) => ({ ...reportedFees, key: index })));
   const reportedPaymentsDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
     feeRecords.map(({ reportedPayments }, index) => ({ ...reportedPayments, key: index })),
@@ -25,7 +25,7 @@ const mapToEditPaymentFeeRecords = (feeRecords: FeeRecord[]): EditPaymentViewMod
       dataSortValue: reportedPaymentsDataSortValueMap[index],
     },
     checkboxId: `feeRecordId-${feeRecord.id}`,
-    isChecked: false,
+    isChecked: allCheckboxesChecked,
   }));
 };
 
@@ -57,16 +57,18 @@ export const getEditPaymentViewModel = (
   editPaymentResponse: GetPaymentDetailsWithFeeRecordsResponseBody,
   reportId: string,
   paymentId: string,
+  allCheckboxesChecked: boolean = false,
+  errors: PaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
 ): EditPaymentViewModel => ({
   reportId,
   paymentId,
   paymentCurrency: editPaymentResponse.payment.currency,
   bank: editPaymentResponse.bank,
   formattedReportPeriod: getFormattedReportPeriodWithLongMonth(editPaymentResponse.reportPeriod),
-  feeRecords: mapToEditPaymentFeeRecords(editPaymentResponse.feeRecords),
+  feeRecords: mapToEditPaymentFeeRecords(editPaymentResponse.feeRecords, allCheckboxesChecked),
   totalReportedPayments: getFormattedCurrencyAndAmount(editPaymentResponse.totalReportedPayments),
   formValues: mapToEditPaymentFormValues(editPaymentResponse.payment),
-  errors: EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
+  errors,
 });
 
 /**

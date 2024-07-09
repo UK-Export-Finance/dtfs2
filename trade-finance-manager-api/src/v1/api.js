@@ -1342,15 +1342,18 @@ const addPaymentToFeeRecords = async (reportId, feeRecordIds, user, paymentCurre
  * Generates keying data for the utilisation report
  * with the supplied id
  * @param {string} reportId - The report id
- * @returns {Promise<{}>}
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The session user
+ * @returns {Promise<void>}
  */
-const generateKeyingData = async (reportId) => {
-  const response = await axios({
+const generateKeyingData = async (reportId, user) => {
+  await axios({
     url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/keying-data`,
     method: 'post',
     headers: headers.central,
+    data: {
+      user,
+    },
   });
-  return response.data;
 };
 
 /**

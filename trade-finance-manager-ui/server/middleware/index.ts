@@ -5,3 +5,4 @@ export { validateSqlId } from './validateSqlId';
 export { validateTfmPaymentReconciliationFeatureFlagIsEnabled } from './validateTfmPaymentReconciliationFeatureFlagIsEnabled';
 export { validateTfmPaymentReconciliationFeatureFlagIsNotEnabled } from './validateTfmPaymentReconciliationFeatureFlagIsNotEnabled';
 export { validatePostAddPaymentRequestBody } from './validatePostAddPaymentRequestBody';
+export { validatePostRemoveFeesFromPaymentRequestBody } from './validatePostRemoveFeesFromPaymentRequestBody';

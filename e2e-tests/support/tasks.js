@@ -5,6 +5,7 @@ const { UtilisationReportEntity, FeeRecordEntity, PaymentEntity } = require('@uk
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
+const { generateVersion0GefDealDatabaseDocument, generateVersion0GefFacilityDatabaseDocument } = require('../e2e-fixtures/deal-versioning.fixture');
 
 SqlDbDataSource.initialize()
   .then(() => console.info('✅ Successfully initialised connection to SQL database'))
@@ -105,6 +106,13 @@ module.exports = {
     const insertFeeRecordsIntoDb = async (feeRecords) => await SqlDbDataSource.manager.save(FeeRecordEntity, feeRecords);
 
     /**
+     * Inserts payments to the SQL database
+     * @param {PaymentEntity[]} payments
+     * @returns The inserted payments
+     */
+    const insertPaymentsIntoDb = async (payments) => await SqlDbDataSource.manager.save(PaymentEntity, payments);
+
+    /**
      * Deletes all the rows from the payment table
      */
     const removeAllPaymentsFromDb = async () => await SqlDbDataSource.manager.delete(PaymentEntity, {});
@@ -192,6 +200,21 @@ module.exports = {
       return facilities.deleteMany({});
     };
 
+    const insertVersion0Deal = async (makerUserName) => {
+      const dealsCollection = await db.getCollection(DB_COLLECTIONS.DEALS);
+      const usersCollection = await getUsersCollection();
+
+      const maker = await usersCollection.findOne({ username: makerUserName });
+
+      return dealsCollection.insertOne(generateVersion0GefDealDatabaseDocument(maker));
+    };
+
+    const insertVersion0Facility = async (dealId) => {
+      const facilitiesCollection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+
+      return facilitiesCollection.insertOne(generateVersion0GefFacilityDatabaseDocument(dealId));
+    };
+
     return {
       log,
       getUserFromDbByEmail,
@@ -207,7 +230,10 @@ module.exports = {
       getAllBanks,
       insertUtilisationReportsIntoDb,
       removeAllUtilisationReportsFromDb,
+      insertVersion0Deal,
+      insertVersion0Facility,
       insertFeeRecordsIntoDb,
+      insertPaymentsIntoDb,
       removeAllPaymentsFromDb,
       removeAllFeeRecordsFromDb,
     };

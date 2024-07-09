@@ -24,8 +24,8 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     expect(req.session.generateKeyingDataErrorKey).toBeUndefined();
   };
 
-  const assertIsCheckboxCheckedReturnsValueWithInput = (isCheckboxChecked: (checkboxId: string) => boolean, input: string, output: boolean) => {
-    expect(isCheckboxChecked(input)).toBe(output);
+  const assertIsCheckboxCheckedReturnsValueWithInput = (isCheckboxChecked: (checkboxId: string) => boolean, input: string, expectedOutput: boolean) => {
+    expect(isCheckboxChecked(input)).toBe(expectedOutput);
   };
 
   it('clears the session and returns an undefined errorSummary when the session error keys are undefined', () => {
