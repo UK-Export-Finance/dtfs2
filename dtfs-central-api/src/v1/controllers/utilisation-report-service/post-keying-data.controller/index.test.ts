@@ -4,13 +4,11 @@ import { when } from 'jest-when';
 import { EntityManager } from 'typeorm';
 import { ApiError, FeeRecordEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { postKeyingData, PostKeyingDataRequest } from '.';
-import { GenerateKeyingDataDetails, getGenerateKeyingDataDetails } from './helpers';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 
-jest.mock('./helpers');
 jest.mock('../../../../helpers');
 
 console.error = jest.fn();
@@ -52,7 +50,6 @@ describe('post-keying-data.controller', () => {
     beforeEach(() => {
       feeRecordRepoFindSpy.mockResolvedValue([]);
       utilisationReportStateMachineConstructorSpy.mockReturnValue(mockUtilisationReportStateMachine);
-      jest.mocked(getGenerateKeyingDataDetails).mockRejectedValue(new Error('Not properly mocked'));
 
       jest.mocked(executeWithSqlTransaction).mockImplementation(async (functionToExecute) => {
         await functionToExecute(mockEntityManager);
@@ -106,13 +103,6 @@ describe('post-keying-data.controller', () => {
 
       when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH']).mockResolvedValue(feeRecords);
 
-      const generateKeyingDataDetails: GenerateKeyingDataDetails = [
-        { feeRecord: feeRecords[0], generateKeyingData: true },
-        { feeRecord: feeRecords[1], generateKeyingData: false },
-      ];
-
-      when(getGenerateKeyingDataDetails).calledWith(feeRecords).mockResolvedValue(generateKeyingDataDetails);
-
       // Act
       await postKeyingData(req, res);
 
@@ -123,7 +113,7 @@ describe('post-keying-data.controller', () => {
         type: 'GENERATE_KEYING_DATA',
         payload: {
           transactionEntityManager: mockEntityManager,
-          generateKeyingDataDetails,
+          matchFeeRecords: feeRecords,
           requestSource: {
             platform: 'TFM',
             userId,

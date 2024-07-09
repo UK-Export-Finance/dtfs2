@@ -5,7 +5,6 @@ import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { NotFoundError } from '../../../../errors';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
-import { getGenerateKeyingDataDetails } from './helpers';
 import { PostKeyingDataPayload } from '../../../routes/middleware/payload-validation';
 
 export type PostKeyingDataRequest = CustomExpressRequest<{
@@ -17,18 +16,16 @@ export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) 
   const { user } = req.body;
 
   try {
-    const feeRecordsWhichCanBeKeyed = await FeeRecordRepo.findByReportIdAndStatusesWithReport(Number(reportId), ['MATCH']);
+    const matchFeeRecords = await FeeRecordRepo.findByReportIdAndStatusesWithReport(Number(reportId), ['MATCH']);
 
-    if (feeRecordsWhichCanBeKeyed.length === 0) {
+    if (matchFeeRecords.length === 0) {
       throw new NotFoundError(`Failed to find any fee records which can be keyed attached to report with id '${reportId}'`);
     }
 
-    const utilisationReport = feeRecordsWhichCanBeKeyed[0].report;
+    const utilisationReport = matchFeeRecords[0].report;
     if (!utilisationReport) {
       throw new Error('The report on the found fee records is not defined');
     }
-
-    const generateKeyingDataDetails = await getGenerateKeyingDataDetails(feeRecordsWhichCanBeKeyed);
 
     const utilisationReportStateMachine = UtilisationReportStateMachine.forReport(utilisationReport);
     await executeWithSqlTransaction((transactionEntityManager) =>
@@ -36,7 +33,7 @@ export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) 
         type: 'GENERATE_KEYING_DATA',
         payload: {
           transactionEntityManager,
-          generateKeyingDataDetails,
+          matchFeeRecords,
           requestSource: {
             platform: 'TFM',
             userId: user._id.toString(),

@@ -3,7 +3,7 @@ import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FeeRecordRepo } from '../../../repositories/fee-record-repo';
 import { FeeRecordEvent } from './event/fee-record.event';
 import {
-  handleFeeRecordKeyingDataGeneratedEvent,
+  handleFeeRecordGenerateKeyingDataEvent,
   handleFeeRecordPaymentAddedEvent,
   handleFeeRecordPaymentDeletedEvent,
   handleFeeRecordPaymentEditedEvent,
@@ -51,8 +51,8 @@ export class FeeRecordStateMachine {
             return handleFeeRecordPaymentDeletedEvent(this.feeRecord, event.payload);
           case 'PAYMENT_EDITED':
             return handleFeeRecordPaymentEditedEvent(this.feeRecord, event.payload);
-          case 'KEYING_DATA_GENERATED':
-            return handleFeeRecordKeyingDataGeneratedEvent(this.feeRecord, event.payload);
+          case 'GENERATE_KEYING_DATA':
+            return handleFeeRecordGenerateKeyingDataEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

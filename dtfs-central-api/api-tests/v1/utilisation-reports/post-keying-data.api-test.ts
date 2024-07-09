@@ -50,7 +50,6 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
   });
 
   afterAll(async () => {
-    await SqlDbHelper.deleteAllEntries('UtilisationReport');
     await wipe(['users', 'tfm-users']);
   });
 
@@ -96,7 +95,7 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     expect(response.status).toBe(HttpStatusCode.NotFound);
   });
 
-  it('returns a 200 with a valid request body when there are matching fee records', async () => {
+  it('returns a 200 with a valid request body when there are fee records at the MATCH status', async () => {
     // Arrange
     const report = anUploadedUtilisationReport();
     const feeRecords = [
@@ -238,12 +237,12 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
       // Arrange
       const report = anUploadedUtilisationReport();
 
-      const matchingFeeRecords = [
+      const matchFeeRecords = [
         FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('MATCH').build(),
         FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
         FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
       ];
-      report.feeRecords = matchingFeeRecords;
+      report.feeRecords = matchFeeRecords;
 
       await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
@@ -262,12 +261,12 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
 
       const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('TO_DO').build();
 
-      const matchingFeeRecords = [
+      const matchFeeRecords = [
         FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
         FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
       ];
 
-      const allFeeRecords = [toDoFeeRecord, ...matchingFeeRecords];
+      const allFeeRecords = [toDoFeeRecord, ...matchFeeRecords];
 
       report.feeRecords = allFeeRecords;
       await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -291,7 +290,9 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
       // Assert 2
       expect(response2.status).toBe(HttpStatusCode.Ok);
       expect(await getReadyToKeyFeeRecordsWithNullKeyingData()).toHaveLength(2);
-      expect(await getReadyToKeyFeeRecordsWithNonNullKeyingData()).toHaveLength(1);
+      const feeRecordWithKeyingData = await getReadyToKeyFeeRecordsWithNonNullKeyingData();
+      expect(feeRecordWithKeyingData).toHaveLength(1);
+      expect(feeRecordWithKeyingData[0].id).toBe(1);
     });
   });
 });

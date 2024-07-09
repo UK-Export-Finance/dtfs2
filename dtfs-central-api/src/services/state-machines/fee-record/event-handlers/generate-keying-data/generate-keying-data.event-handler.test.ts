@@ -1,8 +1,8 @@
 import { EntityManager } from 'typeorm';
 import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { handleFeeRecordKeyingDataGeneratedEvent } from './keying-data-generated.event-handler';
+import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 
-describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
+describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   const mockSave = jest.fn();
   const mockEntityManager = {
     save: mockSave,
@@ -21,9 +21,9 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     const feeRecord = aMatchingFeeRecord();
 
     // Act
-    await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
+    await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      generateKeyingData: true,
+      isFinalFeeRecordForFacility: true,
       requestSource,
     });
 
@@ -36,9 +36,9 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     const feeRecord = aMatchingFeeRecord();
 
     // Act
-    await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
+    await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      generateKeyingData: true,
+      isFinalFeeRecordForFacility: true,
       requestSource,
     });
 
@@ -51,9 +51,9 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     const feeRecord = aMatchingFeeRecord();
 
     // Act
-    await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
+    await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      generateKeyingData: true,
+      isFinalFeeRecordForFacility: true,
       requestSource,
     });
 
@@ -66,9 +66,9 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     const feeRecord = aMatchingFeeRecord();
 
     // Act
-    await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
+    await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      generateKeyingData: true,
+      isFinalFeeRecordForFacility: true,
       requestSource,
     });
 
@@ -81,9 +81,9 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     const feeRecord = aMatchingFeeRecord();
 
     // Act
-    await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
+    await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
-      generateKeyingData: true,
+      isFinalFeeRecordForFacility: true,
       requestSource,
     });
 
@@ -91,17 +91,17 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
   });
 
-  describe('when generateKeyingData is set to true', () => {
-    const generateKeyingData = true;
+  describe('when isFinalFeeRecordForFacility is set to true', () => {
+    const isFinalFeeRecordForFacility = true;
 
     it('sets the fee record fixedFeeAdjustment to 10', async () => {
       // Arrange
       const feeRecord = aMatchingFeeRecord();
 
       // Act
-      await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        generateKeyingData,
+        isFinalFeeRecordForFacility,
         requestSource,
       });
 
@@ -114,9 +114,9 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
       const feeRecord = aMatchingFeeRecord();
 
       // Act
-      await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        generateKeyingData,
+        isFinalFeeRecordForFacility,
         requestSource,
       });
 
@@ -129,9 +129,9 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
       const feeRecord = aMatchingFeeRecord();
 
       // Act
-      await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        generateKeyingData,
+        isFinalFeeRecordForFacility,
         requestSource,
       });
 
@@ -140,17 +140,17 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
     });
   });
 
-  describe('when generateKeyingData is set to false', () => {
-    const generateKeyingData = false;
+  describe('when isFinalFeeRecordForFacility is set to false', () => {
+    const isFinalFeeRecordForFacility = false;
 
     it('does not set the fee record fixedFeeAdjustment', async () => {
       // Arrange
       const feeRecord = aMatchingFeeRecord();
 
       // Act
-      await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        generateKeyingData,
+        isFinalFeeRecordForFacility,
         requestSource,
       });
 
@@ -163,9 +163,9 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
       const feeRecord = aMatchingFeeRecord();
 
       // Act
-      await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        generateKeyingData,
+        isFinalFeeRecordForFacility,
         requestSource,
       });
 
@@ -178,9 +178,9 @@ describe('handleFeeRecordKeyingDataGeneratedEvent', () => {
       const feeRecord = aMatchingFeeRecord();
 
       // Act
-      await handleFeeRecordKeyingDataGeneratedEvent(feeRecord, {
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
-        generateKeyingData,
+        isFinalFeeRecordForFacility,
         requestSource,
       });
 

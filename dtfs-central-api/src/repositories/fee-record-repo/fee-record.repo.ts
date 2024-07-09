@@ -29,15 +29,4 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
       relations: { report: true },
     });
   },
-
-  /**
-   * Finds all fee record entities which match the supplied statuses
-   * @param statuses - The fee record statuses to search by
-   * @returns The found fee record entities
-   */
-  async findByStatuses(statuses: FeeRecordStatus[]): Promise<FeeRecordEntity[]> {
-    return await this.find({
-      where: { status: In(statuses) },
-    });
-  },
 });
