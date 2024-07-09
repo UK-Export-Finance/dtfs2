@@ -1,12 +1,21 @@
 import { getDaysInMonth, set, startOfDay } from 'date-fns';
 import Joi from 'joi';
+import { uniq } from 'lodash';
 
-type ValidationParams = {
+type ValidationParamsWithDisplayName = {
   day: string;
   month: string;
   year: string;
   errRef: string;
   variableDisplayName: string;
+};
+
+type ValidationParamsWithErrMsgOverride = {
+  day: string;
+  month: string;
+  year: string;
+  errRef: string;
+  errMsgOverride: string;
 };
 
 type ValidationError = {
@@ -24,7 +33,7 @@ type ErrorsOrDate =
       errors: ValidationError[];
     };
 
-export const validateAndParseDayMonthYear = ({ day, month, year, errRef, variableDisplayName }: ValidationParams): ErrorsOrDate => {
+export const validateAndParseDayMonthYear = ({ day, month, year, errRef, variableDisplayName }: ValidationParamsWithDisplayName): ErrorsOrDate => {
   const dateIsBlank = !day && !month && !year;
   const dateIsFullyComplete = day && month && year;
 
@@ -109,7 +118,7 @@ export const validateAndParseDayMonthYear = ({ day, month, year, errRef, variabl
   if (Number(month) > 12 || Number(month) < 1) {
     errors.push({
       errRef,
-      errMsg: `The month for the ${variableDisplayName} must be between 1 and 12`,
+      errMsg: `${variableDisplayNameWithCapital} must be in the correct format DD/MM/YYYY`,
       subFieldErrorRefs: [`${errRef}-month`],
     });
   }
@@ -124,7 +133,7 @@ export const validateAndParseDayMonthYear = ({ day, month, year, errRef, variabl
   if (daysInMonth < Number(day) || Number(day) < 1) {
     errors.push({
       errRef,
-      errMsg: `The ${variableDisplayName} must be a valid date`,
+      errMsg: `${variableDisplayNameWithCapital} must be in the correct format DD/MM/YYYY`,
       subFieldErrorRefs: [`${errRef}-day`],
     });
   }
@@ -144,5 +153,31 @@ export const validateAndParseDayMonthYear = ({ day, month, year, errRef, variabl
         date: Number(day),
       }),
     ),
+  };
+};
+
+const getAllSubfieldErrorRefs = (errors: ValidationError[]) => uniq(errors.flatMap((error) => error.subFieldErrorRefs ?? []));
+
+export const validateAndParseDayMonthYearWithErrMsgOverride = ({
+  day,
+  month,
+  year,
+  errRef,
+  errMsgOverride,
+}: ValidationParamsWithErrMsgOverride): ErrorsOrDate => {
+  const errorsOrDate = validateAndParseDayMonthYear({ day, month, year, errRef, variableDisplayName: errRef });
+
+  if (!errorsOrDate.errors) {
+    return errorsOrDate;
+  }
+
+  return {
+    errors: [
+      {
+        errRef,
+        errMsg: errMsgOverride,
+        subFieldErrorRefs: getAllSubfieldErrorRefs(errorsOrDate.errors),
+      },
+    ],
   };
 };

@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { getDate, getMonth, getYear, parseISO } from 'date-fns';
 import { CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
 import { validationErrorHandler } from '../../utils/helpers';
-import { validateAndParseDayMonthYear } from '../../utils/day-month-year-validation';
+import { validateAndParseDayMonthYearWithErrMsgOverride } from '../../utils/day-month-year-validation';
 import * as api from '../../services/api';
 
 type BankReviewDateParams = { dealId: string; facilityId: string };
@@ -53,12 +53,12 @@ export const postBankReviewDate = async (req: CustomExpressRequest<{ reqBody: Ba
     session: { userToken, user },
   } = req;
 
-  const bankReviewDateErrorsAndDate = validateAndParseDayMonthYear({
+  const bankReviewDateErrorsAndDate = validateAndParseDayMonthYearWithErrMsgOverride({
     day: bankReviewDateDay,
     month: bankReviewDateMonth,
     year: bankReviewDateYear,
     errRef: 'bankReviewDate',
-    variableDisplayName: 'bank review date',
+    errMsgOverride: 'Bank review date must be in the correct format DD/MM/YYYY',
   });
 
   if (bankReviewDateErrorsAndDate.errors) {
