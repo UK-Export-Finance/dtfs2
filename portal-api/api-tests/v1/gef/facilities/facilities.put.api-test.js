@@ -1,33 +1,22 @@
-const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const {
-  generateParsedMockPortalUserAuditDatabaseRecord,
-  withDeleteManyTests,
-  withDeleteOneTests,
-  expectAnyPortalUserAuditDatabaseRecord,
-} = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { CURRENCY } = require('@ukef/dtfs2-common');
-const databaseHelper = require('../../database-helper');
-const CONSTANTS = require('../../../src/constants');
-const { FACILITY_TYPE, FACILITY_PAYMENT_TYPE, ERROR } = require('../../../src/v1/gef/enums');
+const databaseHelper = require('../../../database-helper');
+const CONSTANTS = require('../../../../src/constants');
+const { FACILITY_TYPE, FACILITY_PAYMENT_TYPE, ERROR } = require('../../../../src/v1/gef/enums');
 
-const app = require('../../../src/createApp');
-const testUserCache = require('../../api-test-users');
-const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const app = require('../../../../src/createApp');
+const testUserCache = require('../../../api-test-users');
+const { MAKER } = require('../../../../src/v1/roles/roles');
 
-const { as, get, remove } = require('../../api')(app);
+const { as } = require('../../../api')(app);
 
 const baseUrl = '/v1/gef/facilities';
-const mockFacilities = require('../../fixtures/gef/facilities');
 
 const applicationBaseUrl = '/v1/gef/application';
-const mockApplications = require('../../fixtures/gef/application');
+const mockApplications = require('../../../fixtures/gef/application');
 
-const { calculateUkefExposure, calculateGuaranteeFee } = require('../../../src/v1/gef/calculations/facility-calculations');
-const { roundNumber } = require('../../../src/utils/number');
-const { DB_COLLECTIONS } = require('../../fixtures/constants');
+const { calculateUkefExposure, calculateGuaranteeFee } = require('../../../../src/v1/gef/calculations/facility-calculations');
+const { DB_COLLECTIONS } = require('../../../fixtures/constants');
 
 describe(baseUrl, () => {
   let aMaker;
@@ -107,92 +96,6 @@ describe(baseUrl, () => {
       issueDate: null,
       hasBeenIssuedAndAcknowledged: true,
     };
-  });
-
-  describe(`GET ${baseUrl}?dealId=`, () => {
-    const facilitiesUrl = `${baseUrl}?dealId=620a1aa095a618b12da38c7b`;
-
-    withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => get(facilitiesUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(facilitiesUrl, { headers: { Authorization: authHeader } }),
-    });
-
-    withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      makeRequestAsUser: (user) => as(user).get(facilitiesUrl),
-      successStatusCode: 200,
-    });
-
-    it('returns a 400 error if the dealId is not a valid mongo id', async () => {
-      const { status, body } = await as(aMaker).get(`${baseUrl}?dealId=123`);
-      expect(status).toEqual(400);
-      expect(body).toStrictEqual({ message: 'Invalid Deal Id', status: 400 });
-    });
-  });
-
-  describe(`GET ${baseUrl}/:id`, () => {
-    let oneFacilityUrl;
-
-    beforeEach(async () => {
-      const {
-        body: {
-          details: { _id: createdFacilityId },
-        },
-      } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      oneFacilityUrl = `${baseUrl}/${createdFacilityId}`;
-    });
-
-    withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => get(oneFacilityUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(oneFacilityUrl, { headers: { Authorization: authHeader } }),
-    });
-
-    withRoleAuthorisationTests({
-      allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      makeRequestAsUser: (user) => as(user).get(oneFacilityUrl),
-      successStatusCode: 200,
-    });
-
-    it('returns an individual item', async () => {
-      const { body } = await as(aMaker).get(oneFacilityUrl);
-      expect(body).toEqual(newFacility);
-    });
-
-    it('returns a 204 - "No Content" if there are no records', async () => {
-      const { status } = await as(aMaker).get(`${baseUrl}/doesnotexist`);
-      expect(status).toEqual(204);
-    });
-  });
-
-  describe(`POST ${baseUrl}`, () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().post(mockFacilities[0]).to(baseUrl);
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const { status } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      expect(status).toEqual(201);
-    });
-
-    it('returns a new facility upon creation', async () => {
-      const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      expect(body).toEqual(newFacility);
-    });
-
-    it('returns a 400 if the dealId is invalid', async () => {
-      const { body, status } = await as(aMaker).post({ dealId: 'test', type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      expect(status).toBe(400);
-      expect(body).toEqual({ status: 400, message: 'Invalid deal ID: test' });
-    });
-
-    it('returns a 404 if the dealId is valid but does not exist', async () => {
-      const { body, status } = await as(aMaker).post({ dealId: 'abcdef123456abcdef123456', type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      expect(status).toBe(404);
-      expect(body).toEqual({ status: 404, message: 'Deal not found: abcdef123456abcdef123456' });
-    });
   });
 
   describe(`PUT ${baseUrl}/:id`, () => {
@@ -516,91 +419,19 @@ describe(baseUrl, () => {
       expect(body).toEqual(expected);
       expect(status).toEqual(200);
     });
-  });
 
-  describe(`DELETE ${baseUrl}/:id`, () => {
-    let facilityToDeleteId;
-    beforeEach(async () => {
+    it('returns an enum error when putting the wrong type', async () => {
       const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      facilityToDeleteId = new ObjectId(body.details._id);
-    });
-
-    withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => remove(`${baseUrl}/${facilityToDeleteId}`),
-      makeRequestWithAuthHeader: (authHeader) => remove(`${baseUrl}/${facilityToDeleteId}`, { headers: { Authorization: authHeader } }),
-    });
-
-    withRoleAuthorisationTests({
-      allowedRoles: [MAKER],
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).remove(`${baseUrl}/${facilityToDeleteId}`),
-      successStatusCode: 200,
-    });
-
-    withDeleteOneTests({
-      makeRequest: () => as(aMaker).remove(`${baseUrl}/${String(facilityToDeleteId)}`),
-      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
-      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
-      getDeletedDocumentId: () => facilityToDeleteId,
-    });
-  });
-
-  describe(`DELETE ${baseUrl}?dealId=`, () => {
-    let facilitiesToDeleteIds;
-
-    beforeEach(async () => {
-      const { body: cashBody } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      const { body: contingentBody } = await as(aMaker)
-        .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CONTINGENT, hasBeenIssued: false })
-        .to(baseUrl);
-      facilitiesToDeleteIds = [new ObjectId(cashBody.details._id), new ObjectId(contingentBody.details._id)];
-    });
-
-    withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
-      makeRequestWithAuthHeader: (authHeader) => remove(`${baseUrl}?dealId=${mockApplication.body._id}`, { headers: { Authorization: authHeader } }),
-    });
-
-    withRoleAuthorisationTests({
-      allowedRoles: [MAKER],
-      getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
-      successStatusCode: 200,
-    });
-
-    withDeleteManyTests({
-      makeRequest: () => as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
-      collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
-      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
-      getDeletedDocumentIds: () => facilitiesToDeleteIds,
-      expectedSuccessResponseBody: { acknowledged: true },
-    });
-
-    // This behaviour matches existing implimentation
-    // As this endpoint is called when deleting by deal id, there is a chance that there are
-    // no facilities to delete, but we can just handle this as a success
-    it('returns 200 if there are no facilities to delete', async () => {
-      const { status: firstStatus } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
-      const { status: secondStatus } = await as(aMaker).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
-      expect(firstStatus).toBe(200);
-      expect(secondStatus).toBe(200);
-    });
-  });
-
-  describe(`Overall Status: ${baseUrl}`, () => {
-    it(`overall status shows as "${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED}" if all status is marked as "${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED}"`, async () => {
-      await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-      await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-
-      const mockQuery = { dealId: mockApplication.body._id };
-      const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
-
-      expect(status).toEqual(200);
-      expect(body.status).toEqual(CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS);
-      expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
+      const res = await as(aMaker).put({ type: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
+      expect(res.status).toEqual(422);
+      expect(res.body).toEqual([
+        {
+          status: 422,
+          errCode: ERROR.ENUM_ERROR,
+          errMsg: 'Unrecognised enum',
+          errRef: 'type',
+        },
+      ]);
     });
 
     it(`overall status shows as "${CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS}" if some status is marked as "${CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS}"`, async () => {
@@ -632,148 +463,6 @@ describe(baseUrl, () => {
       expect(status).toEqual(200);
       expect(body.status).toEqual(CONSTANTS.DEAL.DEAL_STATUS.COMPLETED);
       expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
-    });
-  });
-
-  describe('ENUM errors', () => {
-    describe('POST', () => {
-      it('returns an enum error when putting the wrong type', async () => {
-        const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: 'TEST' }).to(baseUrl);
-        expect(status).toEqual(422);
-        expect(body).toEqual([
-          {
-            status: 422,
-            errCode: ERROR.ENUM_ERROR,
-            errMsg: 'Unrecognised enum',
-            errRef: 'type',
-          },
-        ]);
-      });
-    });
-    describe('PUT', () => {
-      it('returns an enum error when putting the wrong type', async () => {
-        const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-        const res = await as(aMaker).put({ type: 'TEST' }).to(`${baseUrl}/${body.details._id}`);
-        expect(res.status).toEqual(422);
-        expect(res.body).toEqual([
-          {
-            status: 422,
-            errCode: ERROR.ENUM_ERROR,
-            errMsg: 'Unrecognised enum',
-            errRef: 'type',
-          },
-        ]);
-      });
-    });
-  });
-
-  describe('Mandatory errors', () => {
-    it('returns an mandator error when an application ID is missing', async () => {
-      const { status, body } = await as(aMaker).post({ type: 'TEST' }).to(baseUrl);
-      expect(status).toEqual(422);
-      expect(body).toEqual([
-        {
-          status: 422,
-          errCode: ERROR.MANDATORY_FIELD,
-          errMsg: 'No Application ID and/or facility type sent with request',
-        },
-      ]);
-    });
-    it('returns an mandator error when facility type is missing', async () => {
-      const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id }).to(baseUrl);
-      expect(status).toEqual(422);
-      expect(body).toEqual([
-        {
-          status: 422,
-          errCode: ERROR.MANDATORY_FIELD,
-          errMsg: 'No Application ID and/or facility type sent with request',
-        },
-      ]);
-    });
-  });
-
-  describe('calculateUkefExposure', () => {
-    describe('when value and coverPercentage is present in the requested update', () => {
-      it('should calculate based on the provided values', () => {
-        const update = {
-          value: '1234',
-          coverPercentage: '25',
-        };
-        const existingFacility = {};
-
-        const result = calculateUkefExposure(update, existingFacility);
-
-        const expected = Number(update.value) * (Number(update.coverPercentage) / 100);
-        expect(result).toEqual(expected);
-      });
-
-      describe('when the calculated value generated from requested update contains more than 2 decimals', () => {
-        describe('when value and coverPercentage is present in the requested update', () => {
-          it('should calculate and round the number based on the provided values', () => {
-            const update = {
-              value: '1234567',
-              coverPercentage: '70',
-            };
-            const existingFacility = {};
-
-            const result = calculateUkefExposure(update, existingFacility);
-
-            const calculation = Number(update.value) * (Number(update.coverPercentage) / 100);
-
-            const expected = roundNumber(calculation);
-            expect(result).toEqual(expected);
-          });
-        });
-      });
-    });
-
-    describe('when value and coverPercentage is NOT present in the requested update', () => {
-      it('should calculate with existing values', () => {
-        const update = {};
-        const existingFacility = {
-          value: 1234,
-          coverPercentage: 25,
-        };
-
-        const result = calculateUkefExposure(update, existingFacility);
-
-        const expected = existingFacility.value * (existingFacility.coverPercentage / 100);
-        expect(result).toEqual(expected);
-      });
-    });
-  });
-
-  describe('calculateGuaranteeFee', () => {
-    describe('when interestPercentage is present in the requested update', () => {
-      it('should calculate using the the provided interestPercentage, limited to 3 decimal points', () => {
-        const update = {
-          interestPercentage: '25',
-        };
-        const existingFacility = {};
-
-        const result = calculateGuaranteeFee(update, existingFacility);
-
-        const calculation = 0.9 * Number(update.interestPercentage);
-        const expected = Number(calculation.toFixed(3));
-
-        expect(result).toEqual(expected);
-      });
-    });
-
-    describe('when interestPercentage is NOT present in the requested update', () => {
-      it('should calculate with existing interestPercentage', () => {
-        const update = {};
-        const existingFacility = {
-          interestPercentage: 25,
-        };
-
-        const result = calculateGuaranteeFee(update, existingFacility);
-
-        const calculation = 0.9 * Number(existingFacility.interestPercentage);
-        const expected = Number(calculation.toFixed(3));
-
-        expect(result).toEqual(expected);
-      });
     });
   });
 });
