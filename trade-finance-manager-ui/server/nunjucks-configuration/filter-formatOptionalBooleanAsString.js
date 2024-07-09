@@ -1,12 +1,7 @@
 const formatBooleanAsString = (bool) => {
-  if (bool) {
-    return 'Yes';
+  if (typeof bool === 'boolean') {
+    return bool ? 'Yes' : 'No';
   }
-
-  if (bool === false) {
-    return 'No';
-  }
-
   return '-';
 };
 

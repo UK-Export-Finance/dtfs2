@@ -37,11 +37,11 @@ describe(component, () => {
 
   const facilityWithFacilityEndDate = {
     ...baseFacility,
-    dates: { ...baseFacility.dates, facilityEndDateExists: true, facilityEndDate: '1783514853' },
+    dates: { ...baseFacility.dates, isUsingFacilityEndDate: true, facilityEndDate: '1783514853' },
   };
   const facilityWithBankReviewDate = {
     ...baseFacility,
-    dates: { ...baseFacility.dates, facilityEndDateExists: false, bankReviewDate: '1815050853' },
+    dates: { ...baseFacility.dates, isUsingFacilityEndDate: false, bankReviewDate: '1815050853' },
   };
 
   const params = {
@@ -185,7 +185,7 @@ describe(component, () => {
       beforeEach(() => {
         wrapper = render({ ...params, facility: facilityWithFacilityEndDate, isTfmFacilityEndDateFeatureFlagEnabled: false });
       });
-      it('should not render facilityEndDateExists', () => {
+      it('should not render isUsingFacilityEndDate', () => {
         wrapper.expectText('[data-cy="facility-end-date"]').notToExist();
       });
 
@@ -203,7 +203,7 @@ describe(component, () => {
         beforeEach(() => {
           wrapper = render({ ...params, isTfmFacilityEndDateFeatureFlagEnabled: true });
         });
-        it('should render a dash for facilityEndDateExists', () => {
+        it('should render a dash for isUsingFacilityEndDate', () => {
           wrapper.expectText('[data-cy="facility-end-date-exists"]').toRead('-');
         });
 
@@ -220,7 +220,7 @@ describe(component, () => {
         beforeEach(() => {
           wrapper = render({ ...params, facility: facilityWithFacilityEndDate, isTfmFacilityEndDateFeatureFlagEnabled: true });
         });
-        it('should render facilityEndDateExists', () => {
+        it('should render isUsingFacilityEndDate', () => {
           wrapper.expectText('[data-cy="facility-end-date-exists"]').toRead('Yes');
         });
 
@@ -238,15 +238,15 @@ describe(component, () => {
         beforeEach(() => {
           wrapper = render({ ...params, facility: facilityWithBankReviewDate, isTfmFacilityEndDateFeatureFlagEnabled: true });
         });
-        it('should render facilityEndDateExists', () => {
+        it('should render isUsingFacilityEndDate', () => {
           wrapper.expectText('[data-cy="facility-end-date-exists"]').toRead('No');
         });
 
-        it('should render facilityEndDate', () => {
+        it('should not render facilityEndDate', () => {
           wrapper.expectText('[data-cy="facility-end-date"]').notToExist();
         });
 
-        it('should not render bankReviewDate', () => {
+        it('should render bankReviewDate', () => {
           const expected = localiseTimestamp(facilityWithBankReviewDate.dates.bankReviewDate, 'd MMMM yyyy', params.user.timezone);
           wrapper.expectText('[data-cy="bank-review-date"]').toRead(expected);
         });

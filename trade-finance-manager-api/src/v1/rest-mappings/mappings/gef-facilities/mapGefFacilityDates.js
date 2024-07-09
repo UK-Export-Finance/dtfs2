@@ -4,7 +4,7 @@ const mapTenor = require('../facilities/mapTenor');
 const { convertDateToTimestamp } = require('../../../../utils/date');
 
 const mapGefFacilityDates = (facility, facilityTfm, dealSnapshot) => {
-  const { coverStartDate, coverEndDate, submittedAsIssuedDate, facilityEndDateExists, facilityEndDate, bankReviewDate } = facility.facilitySnapshot;
+  const { coverStartDate, coverEndDate, submittedAsIssuedDate, isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = facility.facilitySnapshot;
 
   const { submissionDate: dealSubmissionDate, manualInclusionNoticeSubmissionDate } = dealSnapshot;
 
@@ -25,13 +25,13 @@ const mapGefFacilityDates = (facility, facilityTfm, dealSnapshot) => {
     mapped.coverEndDate = mapCoverEndDate(format(date, 'dd'), format(date, 'MM'), format(date, 'yyyy'), facility);
   }
 
-  mapped.facilityEndDateExists = facilityEndDateExists;
+  mapped.isUsingFacilityEndDate = isUsingFacilityEndDate;
 
-  if (facilityEndDateExists) {
+  if (isUsingFacilityEndDate) {
     mapped.facilityEndDate = convertDateToTimestamp(facilityEndDate);
   }
 
-  if (facilityEndDateExists === false) {
+  if (isUsingFacilityEndDate === false) {
     mapped.bankReviewDate = convertDateToTimestamp(bankReviewDate);
   }
 

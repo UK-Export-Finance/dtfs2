@@ -113,13 +113,13 @@
 
         {% if isTfmFacilityEndDateFeatureFlagEnabled %}
           <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank has provided a facility end date</dt>
-          <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-end-date-exists">{{ facility.dates.facilityEndDateExists | formatBooleanAsString }}</dd>
+          <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-end-date-exists">{{ facility.dates.isUsingFacilityEndDate | formatBooleanAsString }}</dd>
 
-          {% if facility.dates.facilityEndDateExists %}
+          {% if facility.dates.isUsingFacilityEndDate %}
             <dt class="govuk-grid-column-one-quarter govuk-body-s">Facility end date</dt>
             <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-end-date">{{ facility.dates.facilityEndDate | localiseTimestamp('d MMMM yyyy', user.timezone) | dashIfEmpty }}</dd>
 
-          {% elseif (facility.dates.facilityEndDateExists === false) %}
+          {% elseif (facility.dates.isUsingFacilityEndDate === false) %}
             <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank review date</dt>
             <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="bank-review-date">{{ facility.dates.bankReviewDate | localiseTimestamp('d MMMM yyyy', user.timezone) | dashIfEmpty }}</dd>
 
