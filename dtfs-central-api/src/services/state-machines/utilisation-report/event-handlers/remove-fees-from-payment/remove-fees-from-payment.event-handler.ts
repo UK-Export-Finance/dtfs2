@@ -1,8 +1,8 @@
 import { EntityManager } from 'typeorm';
 import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { NotImplementedError } from '../../../../../errors';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
+import { feeRecordsMatchAttachedPayments } from '../helpers';
 
 type RemoveFeesFromPaymentEventPayload = {
   transactionEntityManager: EntityManager;
@@ -13,13 +13,10 @@ type RemoveFeesFromPaymentEventPayload = {
 
 export type UtilisationReportRemoveFeesFromPaymentEvent = BaseUtilisationReportEvent<'REMOVE_PAYMENT_FEES', RemoveFeesFromPaymentEventPayload>;
 
-export const handleUtilisationReportRemoveFeesFromPaymentEvent = async (
-  _report: UtilisationReportEntity,
-  { transactionEntityManager, selectedFeeRecords, requestSource }: RemoveFeesFromPaymentEventPayload,
-): Promise<UtilisationReportEntity> => {
-  const selectedFeeRecordStateMachines = selectedFeeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
+const removeSelectedFeePayments = async (transactionEntityManager: EntityManager, feeRecords: FeeRecordEntity[], requestSource: DbRequestSource) => {
+  const feeRecordStateMachines = feeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
   await Promise.all(
-    selectedFeeRecordStateMachines.map((stateMachine) =>
+    feeRecordStateMachines.map((stateMachine) =>
       stateMachine.handleEvent({
         type: 'REMOVE_FROM_PAYMENT',
         payload: {
@@ -29,8 +26,33 @@ export const handleUtilisationReportRemoveFeesFromPaymentEvent = async (
       }),
     ),
   );
+};
 
-  // TODO: Call fee record state machine with a new OTHER_FEE_REMOVED_FROM_GROUP event for all other fee records.
+const updateOtherFeePaymentsInGroup = async (transactionEntityManager: EntityManager, feeRecords: FeeRecordEntity[], requestSource: DbRequestSource) => {
+  const feeRecordsAndPaymentsMatch = await feeRecordsMatchAttachedPayments(feeRecords, transactionEntityManager);
 
-  throw new NotImplementedError('TODO - FN-1719: Finish implementing handling.');
+  const feeRecordStateMachines = feeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
+  await Promise.all(
+    feeRecordStateMachines.map((stateMachine) =>
+      stateMachine.handleEvent({
+        type: 'OTHER_FEE_REMOVED_FROM_GROUP',
+        payload: {
+          transactionEntityManager,
+          feeRecordsAndPaymentsMatch,
+          requestSource,
+        },
+      }),
+    ),
+  );
+};
+
+export const handleUtilisationReportRemoveFeesFromPaymentEvent = async (
+  report: UtilisationReportEntity,
+  { transactionEntityManager, selectedFeeRecords, otherFeeRecords, requestSource }: RemoveFeesFromPaymentEventPayload,
+): Promise<UtilisationReportEntity> => {
+  await removeSelectedFeePayments(transactionEntityManager, selectedFeeRecords, requestSource);
+  await updateOtherFeePaymentsInGroup(transactionEntityManager, otherFeeRecords, requestSource);
+
+  report.updateLastUpdatedBy(requestSource);
+  return await transactionEntityManager.save(UtilisationReportEntity, report);
 };
