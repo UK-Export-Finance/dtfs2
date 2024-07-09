@@ -57,6 +57,11 @@ const getCheckboxIdForFeeRecordsAndStatus = (feeRecords: FeeRecord[], status: Fe
   return `feeRecordIds-${feeRecordIdList}-reportedPaymentsCurrency-${reportedPaymentsCurrency}-status-${status}`;
 };
 
+const getCheckboxAriaLabel = (feeRecords: FeeRecord[]): string => {
+  const feeRecordFacilityIdList = feeRecords.map(({ facilityId }) => facilityId).join(' ');
+  return `Select ${feeRecordFacilityIdList}`;
+};
+
 export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
   feeRecordPaymentGroups: FeeRecordPaymentGroup[],
   isCheckboxChecked: (checkboxId: string) => boolean = () => false,
@@ -71,6 +76,7 @@ export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
 
     const checkboxId = getCheckboxIdForFeeRecordsAndStatus(feeRecords, status);
     const isChecked = isCheckboxChecked(checkboxId);
+    const checkboxAriaLabel = getCheckboxAriaLabel(feeRecords);
 
     const feeRecordsSortedByReportedPayments = sortFeeRecordsByReportedPayments(feeRecords);
     const feeRecordViewModelItems = mapFeeRecordsToFeeRecordViewModelItems(feeRecordsSortedByReportedPayments);
@@ -91,6 +97,7 @@ export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
       displayStatus,
       checkboxId,
       isChecked,
+      checkboxAriaLabel,
     };
   });
 };

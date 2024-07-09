@@ -24,6 +24,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       reportId,
     };
 
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
     it('responds with a 200 and the report with the correct id', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
@@ -36,6 +40,20 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(res._getData()).toBe(utilisationReportReconciliationDetailsResponse);
+    });
+
+    it('fetches report with facilityIdQuery query param when provided ', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.query = { facilityIdQuery: '1234' };
+
+      apiGetUtilisationReportReconciliationDetailsByIdSpy.mockResolvedValue(utilisationReportReconciliationDetailsResponse);
+
+      // Act
+      await getUtilisationReportReconciliationDetailsById(req, res);
+
+      // Assert
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), '1234');
     });
 
     it('responds with the specific axios error code when the api throws an error', async () => {

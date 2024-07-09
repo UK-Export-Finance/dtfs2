@@ -29,7 +29,10 @@
     captionText: "Added reported fees details",
     feeRecords: feeRecords,
     totalReportedPayments: totalReportedPayments,
-    enableSelectingFeeRecords: true
+    enableSelectingFeeRecords: true,
+    reportId: reportId,
+    paymentId: paymentId,
+    csrfToken: csrfToken
   }) }}
   <h2 class="govuk-heading-m">
     Payment details
@@ -45,7 +48,10 @@
           text: "The currency cannot be changed"
         },
         prefix: {
-          text: paymentCurrency
+          text: paymentCurrency,
+          attributes: {
+            "data-cy": "payment-currency-prefix"
+          }
         },
         id: "paymentAmount",
         name: "paymentAmount",

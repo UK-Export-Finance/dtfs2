@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, DocumentNotFoundError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, DocumentNotFoundError, ApiError, DealNotFoundError, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne, deleteMany } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -10,37 +10,54 @@ const { calculateUkefExposure, calculateGuaranteeFee } = require('../calculation
 const { InvalidDatabaseQueryError } = require('../../errors/invalid-database-query.error');
 
 exports.create = async (req, res) => {
-  const enumValidationErr = facilitiesCheckEnums(req.body);
-  if (!req.body.type || !req.body.dealId) {
-    return res.status(422).send([{ status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
+  try {
+    const enumValidationErr = facilitiesCheckEnums(req.body);
+    if (!req.body.type || !req.body.dealId) {
+      return res.status(422).send([{ status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
+    }
+
+    if (enumValidationErr) {
+      return res.status(422).send(enumValidationErr);
+    }
+
+    if (!ObjectId.isValid(req.body.dealId)) {
+      throw new InvalidDealIdError(req.body.dealId);
+    }
+
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+    const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(req.body.dealId) } });
+
+    if (!existingDeal) {
+      throw new DealNotFoundError(req.body.dealId);
+    }
+
+    const auditDetails = generatePortalAuditDetails(req.user._id);
+
+    const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
+
+    const facilityParameters = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+
+    const facilityToInsert = new Facility(facilityParameters, existingDeal.version);
+    const createdFacility = await facilitiesCollection.insertOne(facilityToInsert);
+
+    const { insertedId } = createdFacility;
+
+    const facility = await facilitiesCollection.findOne({
+      _id: { $eq: ObjectId(insertedId) },
+    });
+
+    const response = {
+      status: facilitiesStatus(facility),
+      details: facility,
+      validation: facilitiesValidation(facility),
+    };
+    return res.status(201).json(response);
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({ status: error.status, message: error.message });
+    }
+    throw error;
   }
-
-  if (enumValidationErr) {
-    return res.status(422).send(enumValidationErr);
-  }
-  const auditDetails = generatePortalAuditDetails(req.user._id);
-
-  const facilitiesQuery = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
-  const createdFacility = await facilitiesQuery.insertOne(
-    new Facility({ ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }),
-  );
-
-  const { insertedId } = createdFacility;
-
-  if (!ObjectId.isValid(insertedId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Inserted Id' });
-  }
-
-  const facility = await facilitiesQuery.findOne({
-    _id: { $eq: ObjectId(insertedId) },
-  });
-
-  const response = {
-    status: facilitiesStatus(facility),
-    details: facility,
-    validation: facilitiesValidation(facility),
-  };
-  return res.status(201).json(response);
 };
 
 const getAllFacilitiesByDealId = async (dealId) => {
@@ -115,7 +132,9 @@ exports.getById = async (req, res) => {
  * @param {ObjectId | string} id - facility id to update
  * @param {object} updateBody - update to make
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
- * @returns
+ * @returns {Promise<import("mongodb").ModifyResult | false>} - Modify Result from the db operation or false if the facility or deal id are invalid
+ * @throws {import("@ukef/dtfs2-common").DealVersionError} - if `dealVersion` is too low & `updateBody` has property `isUsingFacilityEndDate`
+ * @throws {import("@ukef/dtfs2-common").InvalidParameterError} - if `isUsingFacilityEndDate` is not a boolean
  */
 const update = async (id, updateBody, auditDetails) => {
   try {
@@ -129,12 +148,26 @@ const update = async (id, updateBody, auditDetails) => {
     }
 
     const existingFacility = await facilitiesCollection.findOne({ _id: { $eq: facilityId } });
-    const facilityUpdate = new Facility({
-      ...updateBody,
-      ukefExposure: calculateUkefExposure(updateBody, existingFacility),
-      guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
-      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-    });
+
+    if (!existingFacility) {
+      return { ok: true, value: existingFacility };
+    }
+
+    const existingDeal = await dealsCollection.findOne({ _id: { $eq: ObjectId(existingFacility.dealId) } });
+
+    if (!existingDeal) {
+      throw new Error('Facility `dealId` deal does not exist');
+    }
+
+    const facilityUpdate = new Facility(
+      {
+        ...updateBody,
+        ukefExposure: calculateUkefExposure(updateBody, existingFacility),
+        guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
+        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      },
+      existingDeal.version,
+    );
 
     const updatedFacility = await facilitiesCollection.findOneAndUpdate(
       { _id: { $eq: facilityId } },
@@ -158,6 +191,9 @@ const update = async (id, updateBody, auditDetails) => {
     }
     return updatedFacility;
   } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
     console.error('Unable to update the facility %o', error);
     return false;
   }
@@ -171,7 +207,16 @@ exports.updatePUT = async (req, res) => {
   }
 
   let response;
-  const updatedFacility = await update(req.params.id, req.body, generatePortalAuditDetails(req.user._id));
+  let updatedFacility;
+
+  try {
+    updatedFacility = await update(req.params.id, req.body, generatePortalAuditDetails(req.user._id));
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({ status: error.status, message: error.message });
+    }
+    throw error;
+  }
 
   if (updatedFacility.value) {
     response = {

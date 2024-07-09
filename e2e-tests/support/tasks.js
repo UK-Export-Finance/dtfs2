@@ -1,10 +1,11 @@
 const crypto = require('node:crypto');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
-const { UtilisationReportEntity } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntity, FeeRecordEntity, PaymentEntity } = require('@ukef/dtfs2-common');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
+const { generateVersion0GefDealDatabaseDocument, generateVersion0GefFacilityDatabaseDocument } = require('../e2e-fixtures/deal-versioning.fixture');
 
 SqlDbDataSource.initialize()
   .then(() => console.info('✅ Successfully initialised connection to SQL database'))
@@ -97,6 +98,30 @@ module.exports = {
      */
     const removeAllUtilisationReportsFromDb = async () => await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
 
+    /**
+     * Inserts fee records to the SQL database
+     * @param {FeeRecordEntity[]} feeRecords
+     * @returns {FeeRecordEntity[]} The inserted fee records
+     */
+    const insertFeeRecordsIntoDb = async (feeRecords) => await SqlDbDataSource.manager.save(FeeRecordEntity, feeRecords);
+
+    /**
+     * Inserts payments to the SQL database
+     * @param {PaymentEntity[]} payments
+     * @returns The inserted payments
+     */
+    const insertPaymentsIntoDb = async (payments) => await SqlDbDataSource.manager.save(PaymentEntity, payments);
+
+    /**
+     * Deletes all the rows from the payment table
+     */
+    const removeAllPaymentsFromDb = async () => await SqlDbDataSource.manager.delete(PaymentEntity, {});
+
+    /**
+     * Deletes all the rows from the payment table
+     */
+    const removeAllFeeRecordsFromDb = async () => await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
+
     const getAllBanks = async () => {
       const banks = await db.getCollection(DB_COLLECTIONS.BANKS);
       return banks.find().toArray();
@@ -112,16 +137,6 @@ module.exports = {
           },
         },
       );
-    };
-
-    const insertUtilisationReportDetailsIntoDb = async (utilisationReportDetails) => {
-      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-      return utilisationReports.insertMany(utilisationReportDetails);
-    };
-
-    const removeAllUtilisationReportDetailsFromDb = async () => {
-      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-      return utilisationReports.deleteMany({});
     };
 
     /**
@@ -185,6 +200,21 @@ module.exports = {
       return facilities.deleteMany({});
     };
 
+    const insertVersion0Deal = async (makerUserName) => {
+      const dealsCollection = await db.getCollection(DB_COLLECTIONS.DEALS);
+      const usersCollection = await getUsersCollection();
+
+      const maker = await usersCollection.findOne({ username: makerUserName });
+
+      return dealsCollection.insertOne(generateVersion0GefDealDatabaseDocument(maker));
+    };
+
+    const insertVersion0Facility = async (dealId) => {
+      const facilitiesCollection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+
+      return facilitiesCollection.insertOne(generateVersion0GefFacilityDatabaseDocument(dealId));
+    };
+
     return {
       log,
       getUserFromDbByEmail,
@@ -193,15 +223,19 @@ module.exports = {
       overridePortalUserSignInTokensByUsername,
       resetPortalUserStatusAndNumberOfSignInLinks,
       disablePortalUserByUsername,
-      insertUtilisationReportDetailsIntoDb,
       insertManyTfmDeals,
       deleteAllTfmDeals,
       insertManyTfmFacilitiesAndTwoLinkedDeals,
       deleteAllTfmFacilities,
-      removeAllUtilisationReportDetailsFromDb,
       getAllBanks,
       insertUtilisationReportsIntoDb,
       removeAllUtilisationReportsFromDb,
+      insertVersion0Deal,
+      insertVersion0Facility,
+      insertFeeRecordsIntoDb,
+      insertPaymentsIntoDb,
+      removeAllPaymentsFromDb,
+      removeAllFeeRecordsFromDb,
     };
   },
 };

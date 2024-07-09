@@ -126,4 +126,8 @@ export const NODE_TASKS = {
   GET_ALL_BANKS: 'getAllBanks',
   INSERT_UTILISATION_REPORTS_INTO_DB: 'insertUtilisationReportsIntoDb',
   REMOVE_ALL_UTILISATION_REPORTS_FROM_DB: 'removeAllUtilisationReportsFromDb',
+  INSERT_FEE_RECORDS_INTO_DB: 'insertFeeRecordsIntoDb',
+  INSERT_PAYMENTS_INTO_DB: 'insertPaymentsIntoDb',
+  REMOVE_ALL_PAYMENTS_FROM_DB: 'removeAllPaymentsFromDb',
+  REMOVE_ALL_FEE_RECORDS_FROM_DB: 'removeAllFeeRecordsFromDb',
 };

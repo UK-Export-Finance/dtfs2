@@ -1,18 +1,20 @@
 import {
   UtilisationReportDueReportInitialisedEvent,
-  UtilisationReportFeeRecordKeyedEvent,
+  UtilisationReportGenerateKeyingDataEvent,
   UtilisationReportManuallySetCompletedEvent,
   UtilisationReportManuallySetIncompleteEvent,
   UtilisationReportAddAPaymentEvent,
   UtilisationReportDeletePaymentEvent,
   UtilisationReportReportUploadedEvent,
+  UtilisationReportEditPaymentEvent,
 } from '../event-handlers';
 
 export type UtilisationReportEvent =
   | UtilisationReportDueReportInitialisedEvent
-  | UtilisationReportFeeRecordKeyedEvent
+  | UtilisationReportGenerateKeyingDataEvent
   | UtilisationReportManuallySetCompletedEvent
   | UtilisationReportManuallySetIncompleteEvent
   | UtilisationReportAddAPaymentEvent
   | UtilisationReportDeletePaymentEvent
-  | UtilisationReportReportUploadedEvent;
+  | UtilisationReportReportUploadedEvent
+  | UtilisationReportEditPaymentEvent;

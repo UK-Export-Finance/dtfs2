@@ -1,19 +1,21 @@
 import httpMocks from 'node-mocks-http';
 import { Currency, CurrencyAndAmount, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
+import { SessionData } from 'express-session';
+import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
 import { PostEditPaymentRequest, getEditPayment, postEditPayment } from '.';
 import api from '../../../api';
 import { aPaymentDetailsWithFeeRecordsResponseBody, aTfmSessionUser, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL, EditPaymentFormRequestBody } from '../helpers';
 import { EditPaymentViewModel } from '../../../types/view-models/edit-payment-view-model';
-import { SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
+import { ErrorSummaryViewModel, SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
+import { ParsedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 jest.mock('../../../api');
 
 describe('controllers/utilisation-reports/edit-payment', () => {
-  const userToken = 'abc123';
   const aRequestSession = () => ({
     user: aTfmSessionUser(),
-    userToken,
+    userToken: 'abc123',
   });
 
   beforeEach(() => {
@@ -25,8 +27,21 @@ describe('controllers/utilisation-reports/edit-payment', () => {
   });
 
   describe('getEditPayment', () => {
+    const userToken = 'user-token';
+    const user = MOCK_TFM_SESSION_USER;
+    const session = { userToken, user };
+
     const reportId = '12';
     const paymentId = '34';
+
+    const getHttpMocksWithSessionData = (sessionData: Partial<SessionData>) =>
+      httpMocks.createMocks({
+        session: { ...session, ...sessionData },
+        params: {
+          reportId,
+          paymentId,
+        },
+      });
 
     const getHttpMocks = () =>
       httpMocks.createMocks({
@@ -67,6 +82,28 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       // Assert
       const viewModel = res._getRenderData() as EditPaymentViewModel;
       expect(viewModel.paymentId).toBe(paymentId);
+    });
+
+    it('sets remove fees from payment error summary based on passed in session data', async () => {
+      // Arrange
+      const sessionData: Partial<SessionData> = {
+        removeFeesFromPaymentErrorKey: 'no-fee-records-selected',
+      };
+      const { req, res } = getHttpMocksWithSessionData(sessionData);
+
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
+      });
+
+      // Act
+      await getEditPayment(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/edit-payment.njk');
+      const viewModel = res._getRenderData() as EditPaymentViewModel;
+      expect(viewModel.errors.errorSummary).toBeDefined();
+      expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].href).toBe('#added-reported-fees-details-header');
+      expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].text).toBe('Select fee or fees to remove from the payment');
     });
 
     it('sets the render view model paymentCurrency to the edit payment details response payment currency', async () => {
@@ -444,7 +481,44 @@ describe('controllers/utilisation-reports/edit-payment', () => {
           body: aPostEditPaymentRequestBody(),
         });
 
-      it('redirects to /utilisation-reports/:reportId when the edit payments form is valid', async () => {
+      beforeEach(() => {
+        jest.mocked(api.editPayment).mockResolvedValue();
+      });
+
+      it('edits the payment with the supplied data', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
+
+        const user = aTfmSessionUser();
+        const userToken = 'abc123';
+        req.session.user = user;
+        req.session.userToken = userToken;
+
+        const paymentAmount = 100;
+        req.body.paymentAmount = '100';
+
+        const datePaymentReceived = new Date('2024-5-12');
+        req.body['paymentDate-day'] = '12';
+        req.body['paymentDate-month'] = '5';
+        req.body['paymentDate-year'] = '2024';
+
+        const paymentReference = 'A payment reference';
+        req.body.paymentReference = paymentReference;
+
+        const expectedParsedFormValues: ParsedEditPaymentFormValues = {
+          paymentAmount,
+          datePaymentReceived,
+          paymentReference,
+        };
+
+        // Act
+        await postEditPayment(req, res);
+
+        // Assert
+        expect(api.editPayment).toHaveBeenCalledWith(reportId, paymentId, expectedParsedFormValues, user, userToken);
+      });
+
+      it('redirects to /utilisation-reports/:reportId', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
 

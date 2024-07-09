@@ -1,8 +1,12 @@
 const express = require('express');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
-const { validatePostPaymentPayload } = require('./middleware/payload-validation/validate-post-payment-payload');
-const { validateDeletePaymentPayload } = require('./middleware/payload-validation/validate-delete-payment-payload');
+const {
+  validatePostPaymentPayload,
+  validateDeletePaymentPayload,
+  validatePatchPaymentPayload,
+  validatePostKeyingDataPayload,
+} = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
   postUploadUtilisationReport,
@@ -21,6 +25,7 @@ const { deletePayment } = require('../controllers/utilisation-report-service/del
 const { postKeyingData } = require('../controllers/utilisation-report-service/post-keying-data.controller');
 const { getFeeRecordsToKey } = require('../controllers/utilisation-report-service/get-fee-records-to-key.controller');
 const { getPaymentDetailsById } = require('../controllers/utilisation-report-service/get-payment-details-by-id.controller');
+const { patchPayment } = require('../controllers/utilisation-report-service/patch-payment.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -259,7 +264,7 @@ utilisationReportsRouter
  *                 description: the date the payment was received as an ISO date string
  *               paymentReference:
  *                 type: string
- *                 required: false
+ *                 nullable: true
  *     responses:
  *       200:
  *         description: OK
@@ -288,6 +293,15 @@ utilisationReportsRouter
  *           type: string
  *         required: true
  *         description: the id for the report to generate keying data for
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
  *     responses:
  *       200:
  *         description: OK
@@ -298,7 +312,9 @@ utilisationReportsRouter
  *       500:
  *         description: Internal Server Error
  */
-utilisationReportsRouter.route('/:reportId/keying-data').post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, postKeyingData);
+utilisationReportsRouter
+  .route('/:reportId/keying-data')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePostKeyingDataPayload, postKeyingData);
 
 /**
  * @openapi
@@ -399,11 +415,55 @@ utilisationReportsRouter.route('/:reportId/fee-records-to-key').get(validation.s
  *         description: Not Found
  *       500:
  *         description: Internal Server Error
+ *   patch:
+ *     summary: Edit the payment
+ *     tags: [Utilisation Report]
+ *     description: Edits the payment with the supplied id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: paymentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the payment
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               paymentAmount:
+ *                 type: number
+ *               datePaymentReceived:
+ *                 type: string
+ *                 format: date
+ *               paymentReference:
+ *                 type: string
+ *                 required: false
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
  */
 utilisationReportsRouter
   .route('/:reportId/payment/:paymentId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('paymentId'), handleExpressValidatorResult)
   .get(getPaymentDetailsById)
-  .delete(validateDeletePaymentPayload, deletePayment);
+  .delete(validateDeletePaymentPayload, deletePayment)
+  .patch(validatePatchPaymentPayload, patchPayment);
 
 module.exports = utilisationReportsRouter;

@@ -868,12 +868,14 @@ const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken)
 
 /**
  * @param {string} reportId - The report id
+ * @param {string | undefined} facilityIdQuery - A partial facility id to filter the report fee records by
  * @param {string} userToken - The user token
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
-const getUtilisationReportReconciliationDetailsById = async (reportId, userToken) => {
+const getUtilisationReportReconciliationDetailsById = async (reportId, facilityIdQuery, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
     headers: generateHeaders(userToken),
+    params: { facilityIdQuery },
   });
 
   return response.data;
@@ -968,14 +970,18 @@ const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeR
  * Generates keying data for the utilisation report
  * with the supplied id
  * @param {string} reportId - The report id
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<{}>}
  */
-const generateKeyingData = async (reportId, userToken) => {
+const generateKeyingData = async (reportId, user, userToken) => {
   const response = await axios({
     method: 'post',
     url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/keying-data`,
     headers: generateHeaders(userToken),
+    data: {
+      user,
+    },
   });
   return response.data;
 };
@@ -1045,6 +1051,29 @@ const deletePaymentById = async (reportId, paymentId, user, userToken) => {
   });
 };
 
+/**
+ * Updated the payment with the supplied edit payment form values
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {import('./types/edit-payment-form-values').ParsedEditPaymentFormValues} parsedEditPaymentFormValues - The parsed edit payment form values
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {string} userToken - The user token
+ */
+const editPayment = async (reportId, paymentId, parsedEditPaymentFormValues, user, userToken) => {
+  const { paymentAmount, datePaymentReceived, paymentReference } = parsedEditPaymentFormValues;
+  await axios({
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
+    method: 'patch',
+    headers: generateHeaders(userToken),
+    data: {
+      paymentAmount,
+      datePaymentReceived,
+      paymentReference,
+      user,
+    },
+  });
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1093,4 +1122,5 @@ module.exports = {
   getPaymentDetailsWithFeeRecords,
   getPaymentDetailsWithoutFeeRecords,
   deletePaymentById,
+  editPayment,
 };

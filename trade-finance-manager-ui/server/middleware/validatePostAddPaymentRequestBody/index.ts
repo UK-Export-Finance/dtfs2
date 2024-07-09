@@ -1,5 +1,6 @@
 import { Currency, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { NextFunction, Request, Response } from 'express';
+import axios from 'axios';
 import { asUserSession } from '../../helpers/express-session';
 import { AddPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
 import {
@@ -11,6 +12,21 @@ import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-tab
 
 const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof body === 'object';
 
+const FACILITY_ID_QUERY_REGEX = /facilityIdQuery=(?<facilityIdQuery>\d{4,10})/;
+
+const getFacilityIdQueryFromReferer = (req: Request): string | undefined => {
+  const { referer } = req.headers;
+  if (!referer) {
+    return undefined;
+  }
+
+  const captureGroups = FACILITY_ID_QUERY_REGEX.exec(referer)?.groups;
+  if (!captureGroups) {
+    return undefined;
+  }
+  return captureGroups.facilityIdQuery;
+};
+
 const redirectWithError = (
   req: Request,
   res: Response,
@@ -20,7 +36,8 @@ const redirectWithError = (
 ) => {
   req.session.addPaymentErrorKey = addPaymentError;
   req.session.checkedCheckboxIds = checkedCheckboxIds;
-  return res.redirect(`/utilisation-reports/${reportId}`);
+  const facilityIdQuery = getFacilityIdQueryFromReferer(req);
+  return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { facilityIdQuery } }));
 };
 
 const mapCheckedCheckboxesToRecord = (checkedCheckboxIds: string[]): Record<string, true | undefined> => {

@@ -24,8 +24,8 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     expect(req.session.generateKeyingDataErrorKey).toBeUndefined();
   };
 
-  const assertIsCheckboxCheckedReturnsValueWithInput = (isCheckboxChecked: (checkboxId: string) => boolean, input: string, output: boolean) => {
-    expect(isCheckboxChecked(input)).toBe(output);
+  const assertIsCheckboxCheckedReturnsValueWithInput = (isCheckboxChecked: (checkboxId: string) => boolean, input: string, expectedOutput: boolean) => {
+    expect(isCheckboxChecked(input)).toBe(expectedOutput);
   };
 
   it('clears the session and returns an undefined errorSummary when the session error keys are undefined', () => {
@@ -71,7 +71,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     assertSessionHasBeenCleared(req);
   });
 
-  it("clears the session and returns an array with a single error summary for the errorSummary when the generateKeyingDataErrorKey is 'no-matching-fee-records'", () => {
+  it("clears the session and returns the errorSummary when the generateKeyingDataErrorKey is 'no-matching-fee-records'", () => {
     // Arrange
     const req = getMockRequest({
       addPaymentErrorKey: undefined,
@@ -83,9 +83,8 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
 
     // Assert
     assertSessionHasBeenCleared(req);
-    expect(errorSummary).toHaveLength(1);
-    expect(errorSummary![0].text).toBeDefined();
-    expect(errorSummary![0].href).toBeDefined();
+    expect(errorSummary?.text).toBeDefined();
+    expect(errorSummary?.href).toBeDefined();
   });
 
   it('throws an error if the session addPaymentErrorKey is not recognised', () => {
@@ -106,7 +105,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     'multiple-does-not-match-selected',
     'no-fee-records-selected',
     'different-fee-record-payment-currencies',
-  ])("clears the session and returns an array with a single error summary for the errorSummary when the addPaymentErrorKey is '%s'", (addPaymentErrorKey) => {
+  ])("clears the session and returns the errorSummary when the addPaymentErrorKey is '%s'", (addPaymentErrorKey) => {
     // Arrange
     const req = getMockRequest({
       addPaymentErrorKey,
@@ -119,9 +118,8 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
 
     // Assert
     assertSessionHasBeenCleared(req);
-    expect(errorSummary).toHaveLength(1);
-    expect(errorSummary![0].text).toBeDefined();
-    expect(errorSummary![0].href).toBeDefined();
+    expect(errorSummary?.text).toBeDefined();
+    expect(errorSummary?.href).toBeDefined();
   });
 
   it('returns a function which returns true for a checkbox id defined in req.session.checkedCheckboxIds and false otherwise', () => {
