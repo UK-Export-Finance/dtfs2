@@ -176,4 +176,13 @@ authRouter
   .delete(utilisationReportsController.deletePayment)
   .patch(utilisationReportsController.patchPayment);
 
+authRouter
+  .route('/utilisation-reports/:reportId/payment/:paymentId/remove-selected-fees')
+  .post(
+    validation.sqlIdValidation('reportId'),
+    validation.sqlIdValidation('paymentId'),
+    handleExpressValidatorResult,
+    utilisationReportsController.postRemoveFeesFromPayment,
+  );
+
 module.exports = { authRouter, openRouter };
