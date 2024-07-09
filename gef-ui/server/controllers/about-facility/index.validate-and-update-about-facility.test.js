@@ -1,6 +1,5 @@
 import { add, sub, format } from 'date-fns';
-import { isFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
-import { aboutFacility, validateAboutFacility } from './index';
+import { validateAndUpdateAboutFacility } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
 
@@ -44,74 +43,43 @@ const MockFacilityResponse = () => {
   return res;
 };
 
-describe('controllers/about-facility', () => {
+describe('validateAndUpdateAboutFacility', () => {
   let mockResponse;
   let mockRequest;
   let mockFacilityResponse;
 
+  const now = new Date();
+  const tomorrow = add(now, { days: 1 });
+  const yesterday = sub(now, { days: 1 });
+  const threeMonthsAndOneDayFromNow = add(now, { months: 3, days: 1 });
+  const oneDayLessThanThreeMonthsFromNow = sub(add(now, { months: 3 }), { days: 1 });
+
   const updateApplicationSpy = jest.fn();
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = MockRequest();
     mockFacilityResponse = MockFacilityResponse();
 
-    api.getApplication.mockResolvedValue({});
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.updateFacility.mockResolvedValue({});
     api.updateApplication = updateApplicationSpy;
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
-  describe('GET About Facility', () => {
-    it('renders the `About Facility` template', async () => {
-      mockRequest.query.status = 'change';
-
-      await aboutFacility(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/about-facility.njk',
-        expect.objectContaining({
-          facilityType: CONSTANTS.FACILITY_TYPE.CASH,
-          facilityName: 'UKEF123',
-          hasBeenIssued: true,
-          monthsOfCover: null,
-          shouldCoverStartOnSubmission: 'true',
-          coverStartDateDay: '2',
-          coverStartDateMonth: '1',
-          coverStartDateYear: '2030',
-          coverEndDateMonth: null,
-          coverEndDateYear: null,
-          facilityTypeString: 'cash',
-          dealId: '123',
-          facilityId: 'xyz',
-          status: 'change',
-          isFacilityEndDateFeatureFlagEnabled: isFacilityEndDateFeatureFlagEnabled(),
-        }),
-      );
+  describe.each([0, 1])('with deal version %s', (dealVersion) => {
+    beforeEach(() => {
+      api.getApplication.mockResolvedValue({ version: dealVersion });
     });
-
-    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-      api.getFacility.mockRejectedValueOnce();
-      await aboutFacility(mockRequest, mockResponse);
-      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
-    });
-  });
-
-  describe('Validate About Facility', () => {
-    const now = new Date();
-    const tomorrow = add(now, { days: 1 });
-    const yesterday = sub(now, { days: 1 });
-    const threeMonthsAndOneDayFromNow = add(now, { months: 3, days: 1 });
-    const oneDayLessThanThreeMonthsFromNow = sub(add(now, { months: 3 }), { days: 1 });
 
     it('redirects user to application page if save and return is set to true', async () => {
       mockRequest.query.saveAndReturn = 'true';
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
     });
@@ -127,23 +95,31 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      if (dealVersion === 1) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
 
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+      const expectedPayload = {
+        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+        coverStartDate: format(now, 'MMMM d, yyyy'),
+        shouldCoverStartOnSubmission: null,
+        monthsOfCover: null,
+        name: undefined,
+        coverDateConfirmed: null,
+      };
+      if (dealVersion === 1) {
+        expectedPayload.isUsingFacilityEndDate = true;
+      }
       expect(api.updateFacility).toHaveBeenCalledWith({
         facilityId: 'xyz',
-        payload: {
-          coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-          coverStartDate: format(now, 'MMMM d, yyyy'),
-          shouldCoverStartOnSubmission: null,
-          monthsOfCover: null,
-          name: undefined,
-          coverDateConfirmed: null,
-        },
+        payload: expectedPayload,
         userToken,
       });
     });
 
-    it('calls api.updateApplication with editorId if successfully updates facility', async () => {
+    it('calls api.updateApplication with editorId if successfully updates facility when `saveAndReturn` true', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.query.saveAndReturn = 'true';
       mockRequest.body['cover-start-date-day'] = format(now, 'd');
@@ -154,7 +130,32 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+      const expectedUpdateObj = {
+        editorId: '12345',
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
+    });
+
+    it('calls api.updateApplication with editorId if successfully updates facility when `saveAndReturn` false', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.query.saveAndReturn = 'false';
+      mockRequest.body['cover-start-date-day'] = format(now, 'd');
+      mockRequest.body['cover-start-date-month'] = format(now, 'M');
+      mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+      mockRequest.body.isUsingFacilityEndDate = 'false';
+
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       const expectedUpdateObj = {
         editorId: '12345',
@@ -171,7 +172,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.monthsOfCover = 'ab';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -188,7 +189,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body.facilityName = 'name';
       mockRequest.body.hasBeenIssued = 'true';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -201,7 +202,7 @@ describe('controllers/about-facility', () => {
 
       mockRequest.body.facilityName = '';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -218,7 +219,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body.facilityName = 'name';
       mockRequest.body.hasBeenIssued = 'true';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -231,7 +232,7 @@ describe('controllers/about-facility', () => {
 
       mockRequest.body.facilityName = 'A string that is more than 30 characters in length to prove the point';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -248,7 +249,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body.facilityName = 'name .,;-';
       mockRequest.body.hasBeenIssued = 'true';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -261,7 +262,7 @@ describe('controllers/about-facility', () => {
 
       mockRequest.body.facilityName = 'name .,;-   *';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -278,7 +279,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'true';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -291,7 +292,7 @@ describe('controllers/about-facility', () => {
 
       mockRequest.body.shouldCoverStartOnSubmission = '';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -311,7 +312,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -324,7 +325,7 @@ describe('controllers/about-facility', () => {
 
       mockRequest.body['cover-start-date-day'] = '';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -338,7 +339,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
       mockRequest.body['cover-start-date-month'] = '';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -358,7 +359,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
       mockRequest.body['cover-start-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -378,7 +379,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-month'] = format(oneDayLessThanThreeMonthsFromNow, 'M');
       mockRequest.body['cover-start-date-year'] = format(oneDayLessThanThreeMonthsFromNow, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -398,7 +399,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
       mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -418,7 +419,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
       mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -436,7 +437,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
       mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -456,7 +457,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-month'] = `${format(yesterday, 'M')}=`;
       mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -474,7 +475,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-month'] = `${format(yesterday, 'M')}3}`;
       mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -494,7 +495,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
       mockRequest.body['cover-start-date-year'] = `${format(yesterday, 'yyyy')}+`;
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -512,7 +513,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
       mockRequest.body['cover-start-date-year'] = '20';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -532,7 +533,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
       mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -550,7 +551,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
       mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -570,7 +571,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = `${format(yesterday, 'M')}=`;
       mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -588,7 +589,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = `${format(yesterday, 'M')}3}`;
       mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -608,7 +609,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
       mockRequest.body['cover-end-date-year'] = `${format(yesterday, 'yyyy')}+`;
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -626,7 +627,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
       mockRequest.body['cover-end-date-year'] = '20';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -649,7 +650,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(now, 'M');
       mockRequest.body['cover-end-date-year'] = format(now, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -672,7 +673,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(now, 'M');
       mockRequest.body['cover-end-date-year'] = format(now, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -692,7 +693,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(now, 'M');
       mockRequest.body['cover-end-date-year'] = format(now, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -712,7 +713,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(yesterday, 'M');
       mockRequest.body['cover-end-date-year'] = format(yesterday, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -729,7 +730,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -746,7 +747,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '1ab';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -763,7 +764,7 @@ describe('controllers/about-facility', () => {
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '1000';
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/about-facility.njk',
@@ -786,7 +787,11 @@ describe('controllers/about-facility', () => {
       mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
       mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
 
-      await validateAboutFacility(mockRequest, mockResponse);
+      if (dealVersion === 1) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
+
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
 
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/provided-facility');
     });
@@ -796,8 +801,30 @@ describe('controllers/about-facility', () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
 
       api.updateFacility.mockRejectedValueOnce();
-      await validateAboutFacility(mockRequest, mockResponse);
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
       expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+    });
+  });
+
+  describe('with deal version 1', () => {
+    beforeEach(() => {
+      api.getApplication.mockResolvedValue({ version: 1 });
+    });
+
+    it('shows error message if isUsingFacilityEndDate is not a boolean', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/about-facility.njk',
+        expect.objectContaining({
+          errors: expect.objectContaining({
+            errorSummary: expect.arrayContaining([{ href: '#isUsingFacilityEndDate', text: 'Select if there is an end date for this facility' }]),
+          }),
+        }),
+      );
     });
   });
 });

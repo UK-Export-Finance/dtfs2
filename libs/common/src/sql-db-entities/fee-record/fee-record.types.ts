@@ -22,3 +22,10 @@ export type UpdateWithStatusParams = {
   status: FeeRecordStatus;
   requestSource: DbRequestSource;
 };
+
+export type UpdateWithKeyingDataParams = {
+  fixedFeeAdjustment: number;
+  premiumAccrualBalanceAdjustment: number;
+  principalBalanceAdjustment: number;
+  requestSource: DbRequestSource;
+};

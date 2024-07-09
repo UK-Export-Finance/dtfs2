@@ -39,6 +39,11 @@ describe(baseUrl, () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole(MAKER).one();
+  });
+
+  beforeEach(async () => {
+    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
+
     mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
 
     newFacility = {
@@ -102,10 +107,6 @@ describe(baseUrl, () => {
       issueDate: null,
       hasBeenIssuedAndAcknowledged: true,
     };
-  });
-
-  beforeEach(async () => {
-    await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
   });
 
   describe(`GET ${baseUrl}?dealId=`, () => {
@@ -180,13 +181,21 @@ describe(baseUrl, () => {
       const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
       expect(body).toEqual(newFacility);
     });
+
+    it('returns a 400 if the dealId is invalid', async () => {
+      const { body, status } = await as(aMaker).post({ dealId: 'test', type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      expect(status).toBe(400);
+      expect(body).toEqual({ status: 400, message: 'Invalid deal ID: test' });
+    });
+
+    it('returns a 404 if the dealId is valid but does not exist', async () => {
+      const { body, status } = await as(aMaker).post({ dealId: 'abcdef123456abcdef123456', type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      expect(status).toBe(404);
+      expect(body).toEqual({ status: 404, message: 'Deal not found: abcdef123456abcdef123456' });
+    });
   });
 
   describe(`PUT ${baseUrl}/:id`, () => {
-    beforeEach(async () => {
-      await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
-    });
-
     it('rejects requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put({}).to(`${baseUrl}/1`);
       expect(status).toEqual(401);

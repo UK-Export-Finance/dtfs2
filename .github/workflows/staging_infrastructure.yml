@@ -1448,7 +1448,8 @@ jobs:
                 CLAMAV_HOST="$clamav_host" \
                 CLAMAV_PORT="$clamav_port" \
                 CHANGE_STREAM_ENABLED="${{ vars.CHANGE_STREAM_ENABLED}}" \
-                DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}"
+                DELETION_AUDIT_LOGS_TTL_SECONDS="${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS}}" \
+                GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }}
 
       - name: Secrets
         uses: azure/cli@v1.0.9
@@ -2143,7 +2144,7 @@ jobs:
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
-                FF_FACILITY_END_DATE_ENABLED=${{ vars.FF_FACILITY_END_DATE_ENABLED }}
+                GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }}
 
       - name: Secrets
         uses: azure/cli@v1.0.9

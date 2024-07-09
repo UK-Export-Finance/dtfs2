@@ -2,6 +2,7 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode, AxiosError, AxiosResponse } from 'axios';
 import api from '../../api';
 import { postKeyingData } from './post-keying-data.controller';
+import { aTfmSessionUser } from '../../../../test-helpers';
 
 jest.mock('../../api');
 
@@ -13,26 +14,29 @@ describe('postKeyingData', () => {
   });
 
   beforeEach(() => {
-    jest.mocked(api.generateKeyingData).mockResolvedValue({});
+    jest.mocked(api.generateKeyingData).mockResolvedValue();
   });
 
   const getHttpMocks = () =>
     httpMocks.createMocks({
       params: { reportId: '1' },
+      body: { user: aTfmSessionUser() },
     });
 
   it('generates keying data', async () => {
     // Arrange
     const reportId = '12';
+    const user = aTfmSessionUser();
     const { req, res } = httpMocks.createMocks({
       params: { reportId },
+      body: { user },
     });
 
     // Act
     await postKeyingData(req, res);
 
     // Assert
-    expect(api.generateKeyingData).toHaveBeenCalledWith(reportId);
+    expect(api.generateKeyingData).toHaveBeenCalledWith(reportId, user);
   });
 
   it('responds with a 200', async () => {
