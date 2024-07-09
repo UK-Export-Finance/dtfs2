@@ -13,7 +13,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { GetUtilisationReportsByBankIdAndYearRequest, getUtilisationReportsReconciliationSummary, getUtilisationReportSummariesByBankIdAndYear } from './index';
-import { generateReconciliationSummaries } from './helpers/reconciliation-summary-generator';
+import { generateReconciliationSummaries } from './helpers';
 import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-report-reconciliation-summary';
 import { getBankById } from '../../../../repositories/banks-repo';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
