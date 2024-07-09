@@ -114,7 +114,7 @@ authRouter
   .route('/users/:_id')
   .get(users.findById)
   .put(users.updateById)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), users.remove);
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN, MAKER] }), users.remove);
 
 authRouter.use('/gef', gef);
 
