@@ -10,6 +10,8 @@ import {
   handleUtilisationReportReportUploadedEvent,
   handleUtilisationReportDeletePaymentEvent,
   handleUtilisationReportEditPaymentEvent,
+  handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent,
+  handleUtilisationReportMarkFeeRecordsAsReconciledEvent,
 } from './event-handlers';
 import { UtilisationReportEvent } from './event/utilisation-report.event';
 
@@ -93,6 +95,10 @@ export class UtilisationReportStateMachine {
             return handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
           case 'EDIT_PAYMENT':
             return handleUtilisationReportEditPaymentEvent(this.report, event.payload);
+          case 'MARK_FEE_RECORDS_AS_READY_TO_KEY':
+            return handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(this.report, event.payload);
+          case 'MARK_FEE_RECORDS_AS_RECONCILED':
+            return handleUtilisationReportMarkFeeRecordsAsReconciledEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
@@ -100,6 +106,8 @@ export class UtilisationReportStateMachine {
         switch (event.type) {
           case 'MANUALLY_SET_INCOMPLETE':
             return handleUtilisationReportManuallySetIncompleteEvent(this.report, event.payload);
+          case 'MARK_FEE_RECORDS_AS_READY_TO_KEY':
+            return handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

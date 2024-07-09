@@ -6,3 +6,5 @@ export * from './add-a-payment';
 export * from './delete-payment';
 export * from './report-uploaded';
 export * from './edit-payment';
+export * from './mark-fee-records-as-reconciled';
+export * from './mark-fee-records-as-ready-to-key';
