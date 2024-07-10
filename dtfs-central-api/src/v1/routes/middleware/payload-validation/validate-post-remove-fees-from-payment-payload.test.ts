@@ -1,0 +1,75 @@
+import httpMocks from 'node-mocks-http';
+import { HttpStatusCode } from 'axios';
+import { PostRemoveFeesFromPaymentPayload, validatePostRemoveFeesFromPaymentPayload } from './validate-post-remove-fees-from-payment-payload';
+import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
+
+describe('validatePostRemoveFeesFromPaymentPayload', () => {
+  const getHttpMocks = () => httpMocks.createMocks();
+
+  const requiredPayloadKeys: (keyof PostRemoveFeesFromPaymentPayload)[] = ['selectedFeeRecordIds', 'user'];
+
+  const aValidPayload = (): PostRemoveFeesFromPaymentPayload => ({
+    selectedFeeRecordIds: [7],
+    user: aTfmSessionUser(),
+  });
+
+  it.each(requiredPayloadKeys)(`responds with a '${HttpStatusCode.BadRequest}' if the '%s' field is missing`, (payloadKey) => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    const next = jest.fn();
+
+    const invalidPayload = {
+      ...aValidPayload(),
+      [payloadKey]: undefined,
+    };
+    req.body = invalidPayload;
+
+    // Act
+    validatePostRemoveFeesFromPaymentPayload(req, res, next);
+
+    // Assert
+    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(res._isEndCalled()).toBe(true);
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'selectedFeeRecordIds' list is empty`, () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    const next = jest.fn();
+
+    const invalidPayload = {
+      ...aValidPayload(),
+      selectedFeeRecordIds: [],
+    };
+    req.body = invalidPayload;
+
+    // Act
+    validatePostRemoveFeesFromPaymentPayload(req, res, next);
+
+    // Assert
+    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(res._isEndCalled()).toBe(true);
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it(`responds with a '${HttpStatusCode.BadRequest}' if one of the 'selectedFeeRecordIds' items is less than one`, () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    const next = jest.fn();
+
+    const invalidPayload = {
+      ...aValidPayload(),
+      selectedFeeRecordIds: [7, 8, -1],
+    };
+    req.body = invalidPayload;
+
+    // Act
+    validatePostRemoveFeesFromPaymentPayload(req, res, next);
+
+    // Assert
+    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(res._isEndCalled()).toBe(true);
+    expect(next).not.toHaveBeenCalled();
+  });
+});
