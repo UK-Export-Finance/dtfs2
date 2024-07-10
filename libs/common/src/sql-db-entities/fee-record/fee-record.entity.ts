@@ -199,5 +199,4 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     this.status = 'TO_DO';
     this.updateLastUpdatedBy(requestSource);
   }
-
 }
