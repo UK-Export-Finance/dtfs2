@@ -13,7 +13,7 @@ context('Admin user creates a new user; the new user sets their password and the
     firstname: 'first',
     surname: 'last',
     bank: 'all',
-    roles: ['maker'],
+    roles: ['admin'],
   };
 
   before(() => {

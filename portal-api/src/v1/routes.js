@@ -107,14 +107,14 @@ authRouter
 
 authRouter
   .route('/users')
-  .get(users.list)
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), users.list)
   .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), users.create);
-authRouter.route('/users/:_id').get(validateUserIsActingOnSelfToChangePasswordOrIsAdmin, users.list);
+
 authRouter
   .route('/users/:_id')
   .get(users.findById)
-  .put(users.updateById)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN, MAKER] }), users.remove);
+  .put(validateUserIsActingOnSelfToChangePasswordOrIsAdmin, users.updateById)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), users.remove);
 
 authRouter.use('/gef', gef);
 

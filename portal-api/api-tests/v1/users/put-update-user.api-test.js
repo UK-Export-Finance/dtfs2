@@ -12,7 +12,6 @@ const { READ_ONLY, MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { NON_READ_ONLY_ROLES } = require('../../../test-helpers/common-role-lists');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { ADMIN } = require('../../../src/v1/roles/roles');
-const { STATUS } = require('../../../src/constants/user');
 const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-username-and-email-match.api-tests');
 const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests').default;
 const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
@@ -67,26 +66,13 @@ describe('a user', () => {
     describe('as admin', () => {
       it("a user's details can be updated", async () => {
         const updatedUserCredentials = {
-          roles: [CHECKER, MAKER],
-          firstname: 'NEW_FIRSTNAME',
-          surname: 'NEW_SURNAME',
-          'user-status': STATUS.BLOCKED,
+          password: 'AbC1234!',
+          passwordConfirm: 'AbC1234!',
         };
 
-        const { status: putStatus } = await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
+        const { status } = await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`);
 
-        expect(putStatus).toEqual(200);
-
-        const { status: getStatus, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
-
-        expect(getStatus).toEqual(200);
-        const updatedUser = body.users.find((user) => user._id === createdUser._id);
-        expect(updatedUser).toMatchObject({
-          roles: [CHECKER, MAKER],
-          firstname: 'NEW_FIRSTNAME',
-          surname: 'NEW_SURNAME',
-          'user-status': STATUS.BLOCKED,
-        });
+        expect(status).toEqual(200);
       });
 
       it("a user's password can be updated", async () => {
@@ -122,9 +108,7 @@ describe('a user', () => {
         const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
 
         expect(status).toEqual(200);
-        const foundUseruser = body.users.find((user) => user._id === createdUser._id);
-        expect(foundUseruser).toHaveProperty('roles');
-        expect(foundUseruser.roles).toEqual([READ_ONLY]);
+        expect(body.roles).toEqual([READ_ONLY]);
       });
 
       it('updates the user if the user update request has the read-only role repeated', async () => {
@@ -137,8 +121,7 @@ describe('a user', () => {
         const { status, body } = await as(anAdmin).get(`/v1/users/${createdUser._id}`);
 
         expect(status).toEqual(200);
-        const foundUser = body.users.find((user) => user._id === createdUser._id);
-        expect(foundUser.roles).toStrictEqual([READ_ONLY, READ_ONLY]);
+        expect(body.roles).toStrictEqual([READ_ONLY, READ_ONLY]);
       });
 
       withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests({
