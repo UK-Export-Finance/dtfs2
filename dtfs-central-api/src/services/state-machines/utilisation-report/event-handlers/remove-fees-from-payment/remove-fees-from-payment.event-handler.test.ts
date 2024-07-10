@@ -37,11 +37,11 @@ describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
   });
 
   it.each([
-    [true, 'the fee records match the payments'],
-    [false, 'the fee records do not match the payments'],
+    { feeRecordsAndPaymentsMatch: true, testNameSuffix: 'the fee records match the payments' },
+    { feeRecordsAndPaymentsMatch: false, testNameSuffix: 'the fee records do not match the payments' },
   ])(
-    "calls the fee record state machine event handlers with 'feeRecordsAndPaymentsMatch' set to %s if %s",
-    async (feeRecordsMatchAttachedPaymentsFlag: boolean) => {
+    "calls the fee record state machine event handlers with 'feeRecordsAndPaymentsMatch' set to '$feeRecordsAndPaymentsMatch' if $testNameSuffix",
+    async ({ feeRecordsAndPaymentsMatch }) => {
       // Arrange
       const utilisationReport = aReconciliationInProgressReport();
 
@@ -58,7 +58,7 @@ describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
 
       jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
-      jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(feeRecordsMatchAttachedPaymentsFlag);
+      jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(feeRecordsAndPaymentsMatch);
 
       // Act
       await handleUtilisationReportRemoveFeesFromPaymentEvent(utilisationReport, {
@@ -86,7 +86,7 @@ describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
           type: 'OTHER_FEE_REMOVED_FROM_GROUP',
           payload: {
             transactionEntityManager: mockEntityManager,
-            feeRecordsAndPaymentsMatch: feeRecordsMatchAttachedPaymentsFlag,
+            feeRecordsAndPaymentsMatch: feeRecordsAndPaymentsMatch,
             requestSource,
           },
         });
