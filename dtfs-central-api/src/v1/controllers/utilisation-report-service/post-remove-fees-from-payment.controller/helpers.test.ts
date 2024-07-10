@@ -23,10 +23,7 @@ describe('post-remove-fees-from-payment.controller helpers', () => {
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
     const utilisationReportStateMachine = UtilisationReportStateMachine.forReport(utilisationReport);
 
-    const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build(),
-    ];
+    const feeRecords = [1, 2].map((id) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).build());
 
     const selectedFeeRecordIds = [feeRecords[0].id];
 
