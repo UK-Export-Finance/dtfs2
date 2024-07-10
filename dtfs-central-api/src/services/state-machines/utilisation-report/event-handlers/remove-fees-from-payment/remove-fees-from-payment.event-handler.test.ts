@@ -86,7 +86,7 @@ describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
           type: 'OTHER_FEE_REMOVED_FROM_GROUP',
           payload: {
             transactionEntityManager: mockEntityManager,
-            feeRecordsAndPaymentsMatch: feeRecordsAndPaymentsMatch,
+            feeRecordsAndPaymentsMatch,
             requestSource,
           },
         });
