@@ -3,8 +3,8 @@ import { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
 import { MonetaryColumn } from '../custom-columns';
 
-@Entity('Tolerance')
-export class ToleranceEntity extends AuditableBaseEntity {
+@Entity('PaymentMatchingTolerance')
+export class PaymentMatchingToleranceEntity extends AuditableBaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 

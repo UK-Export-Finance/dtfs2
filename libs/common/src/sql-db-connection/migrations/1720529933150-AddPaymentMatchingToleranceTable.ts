@@ -5,7 +5,7 @@ export class AddToleranceTable1720529933150 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-            CREATE TABLE "Tolerance" (
+            CREATE TABLE "PaymentMatchingTolerance" (
                 "id" int NOT NULL IDENTITY(1, 1),
                 "currency" nvarchar(255) NOT NULL,
                 "threshold" decimal(14, 2) NOT NULL CONSTRAINT "DF_84e964faf0832565e74acface1c" DEFAULT 0,
@@ -20,7 +20,7 @@ export class AddToleranceTable1720529933150 implements MigrationInterface {
         `);
 
     await queryRunner.query(`
-            INSERT INTO "Tolerance" (currency, threshold, isActive, lastUpdatedByIsSystemUser)
+            INSERT INTO "PaymentMatchingTolerance" (currency, threshold, isActive, lastUpdatedByIsSystemUser)
             VALUES
               ('GBP', 0, 1, 1),
               ('JPY', 0, 1, 1),
@@ -31,7 +31,7 @@ export class AddToleranceTable1720529933150 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-            DROP TABLE "Tolerance"
+            DROP TABLE "PaymentMatchingTolerance"
         `);
   }
 }
