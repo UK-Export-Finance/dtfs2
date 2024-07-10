@@ -1,10 +1,10 @@
 import { FeatureFlag, isTfmPaymentReconciliationFeatureFlagEnabled } from './is-feature-flag-enabled';
 
-const originalEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 describe('is-feature-flag-enabled helpers', () => {
   afterEach(() => {
-    process.env = { ...originalEnv };
+    process.env = originalProcessEnv;
   });
 
   describe('isTfmPaymentReconciliationFeatureFlagEnabled', () => {
