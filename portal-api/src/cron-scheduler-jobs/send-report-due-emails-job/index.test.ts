@@ -36,7 +36,7 @@ describe('sendReportDueEmailsJob', () => {
   });
 
   afterEach(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
     jest.resetAllMocks();
     jest.useRealTimers();
   });

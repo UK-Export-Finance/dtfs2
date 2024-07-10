@@ -25,7 +25,7 @@ const originalProcessEnv = { ...process.env };
 
 describe('utilisation-report-helpers', () => {
   afterEach(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
     jest.resetAllMocks();
     jest.useRealTimers();
   });

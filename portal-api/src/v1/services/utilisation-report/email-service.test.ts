@@ -19,7 +19,7 @@ const originalProcessEnv = { ...process.env };
 describe('emailService', () => {
   afterEach(() => {
     jest.resetAllMocks();
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
   });
 
   describe('sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam', () => {

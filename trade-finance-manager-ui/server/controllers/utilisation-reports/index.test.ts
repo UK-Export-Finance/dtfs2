@@ -18,7 +18,7 @@ describe('controllers/utilisation-reports', () => {
   const isTfmPaymentReconciliationFeatureFlagEnabledSpy = jest.spyOn(dtfs2Common, 'isTfmPaymentReconciliationFeatureFlagEnabled');
 
   afterEach(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
     jest.resetAllMocks();
     jest.useRealTimers();
   });

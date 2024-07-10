@@ -22,7 +22,7 @@ describe(component, () => {
   });
 
   afterAll(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
   });
 
   const getWrapper = async ({ userTeams, isTfmPaymentReconciliationFeatureFlagEnabled } = {}) => {

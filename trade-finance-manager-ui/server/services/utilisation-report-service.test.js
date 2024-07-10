@@ -4,7 +4,7 @@ const originalProcessEnv = { ...process.env };
 
 describe('utilisation-report-service', () => {
   afterEach(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
   });
 
   describe('getReportDueDate', () => {

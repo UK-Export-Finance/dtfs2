@@ -20,7 +20,7 @@ describe(page, () => {
   });
 
   afterAll(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
   });
 
   const getWrapper = async () => {

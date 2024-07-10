@@ -17,7 +17,7 @@ const originalProcessEnv = { ...process.env };
 
 describe('scheduler/jobs/create-utilisation-reports', () => {
   afterEach(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
   });
 
   describe('the task', () => {

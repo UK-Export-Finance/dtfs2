@@ -19,7 +19,7 @@ const originalProcessEnv = { ...process.env };
 
 describe('sendReportSubmissionPeriodStartEmailsJob', () => {
   afterEach(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
     jest.resetAllMocks();
     jest.useRealTimers();
   });

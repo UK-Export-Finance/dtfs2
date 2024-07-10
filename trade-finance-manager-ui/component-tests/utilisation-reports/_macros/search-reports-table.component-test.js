@@ -38,7 +38,7 @@ const BANK = {
 
 describe(component, () => {
   afterAll(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
   });
 
   const getWrapper = ({ isTfmPaymentReconciliationFeatureFlagEnabled } = {}) => {

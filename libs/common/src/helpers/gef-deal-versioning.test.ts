@@ -1,11 +1,11 @@
 import { ZodError } from 'zod';
 import { isFacilityEndDateEnabledOnGefVersion, getCurrentGefDealVersion } from './gef-deal-versioning';
 
-const originalEnv = { ...process.env };
+const originalProcessEnv = { ...process.env };
 
 describe('is-deal-feature-enabled helpers', () => {
   afterEach(() => {
-    process.env = originalEnv;
+    process.env = originalProcessEnv;
   });
 
   describe('getCurrentGefDealVersion', () => {
