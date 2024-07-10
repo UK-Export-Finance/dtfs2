@@ -15,8 +15,8 @@ import { aBank } from '../../../../../../test-helpers/test-data/bank';
 import { aMonthlyBankReportPeriodSchedule } from '../../../../../../test-helpers/test-data/bank-report-period-schedule';
 import { getAllBanks } from '../../../../../repositories/banks-repo';
 
-jest.mock('../../../../repositories/banks-repo');
-jest.mock('../../../../repositories/utilisation-reports-repo');
+jest.mock('../../../../../repositories/banks-repo');
+jest.mock('../../../../../repositories/utilisation-reports-repo');
 
 describe('get-utilisation-reports-reconciliation-summary.controller helper', () => {
   const getMockFeeRecordForReport = (report: UtilisationReportEntity): FeeRecordEntity => FeeRecordEntityMockBuilder.forReport(report).build();

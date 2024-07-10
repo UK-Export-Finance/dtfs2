@@ -20,7 +20,7 @@ import { UtilisationReportRepo } from '../../../../repositories/utilisation-repo
 import { UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
 import { getUserById } from '../../../../repositories/users-repo';
 
-jest.mock('./helpers');
+jest.mock('./helpers/reconciliation-summary-generator');
 jest.mock('../../../../repositories/utilisation-reports-repo');
 jest.mock('../../../../repositories/users-repo');
 jest.mock('../../../../repositories/banks-repo');
