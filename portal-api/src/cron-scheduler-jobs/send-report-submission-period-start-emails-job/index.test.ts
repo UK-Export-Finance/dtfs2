@@ -15,7 +15,7 @@ jest.mock('../../external-api/send-email', () => jest.fn());
 console.error = jest.fn();
 console.info = jest.fn();
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 describe('sendReportSubmissionPeriodStartEmailsJob', () => {
   afterEach(() => {

@@ -1,6 +1,6 @@
 const { getReportDueDate } = require('./utilisation-report-service');
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 describe('utilisation-report-service', () => {
   afterEach(() => {

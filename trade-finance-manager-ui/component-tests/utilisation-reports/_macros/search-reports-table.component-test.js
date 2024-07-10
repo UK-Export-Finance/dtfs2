@@ -8,7 +8,7 @@ const tableSelector = '[data-cy="utilisation-reports-by-bank-and-year-table"]';
 
 const render = componentRenderer(component);
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 const mapReportToSummaryItem = (bank, report) => {
   const totalFeesReported = report.feeRecords.length;

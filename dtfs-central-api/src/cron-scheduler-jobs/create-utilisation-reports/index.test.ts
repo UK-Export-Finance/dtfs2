@@ -13,7 +13,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
   getCurrentReportPeriodForBankSchedule: jest.fn(),
 }));
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 describe('scheduler/jobs/create-utilisation-reports', () => {
   afterEach(() => {

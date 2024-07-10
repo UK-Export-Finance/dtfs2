@@ -14,7 +14,7 @@ console.info = jest.fn();
 jest.mock('../../api');
 jest.mock('../../email');
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 describe('emailService', () => {
   afterEach(() => {

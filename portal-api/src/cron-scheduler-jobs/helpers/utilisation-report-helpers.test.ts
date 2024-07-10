@@ -21,7 +21,7 @@ jest.mock('../../v1/api');
 console.error = jest.fn();
 console.info = jest.fn();
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 describe('utilisation-report-helpers', () => {
   afterEach(() => {

@@ -6,7 +6,7 @@ import { postAuditDetails, postDeletionAuditDetails } from './changeStreamApi';
 jest.mock('axios', () => jest.fn(() => Promise.resolve('mockResponse')));
 
 describe('changeStreamApi', () => {
-  const originalEnv = process.env;
+  const originalEnv = { ...process.env };
   beforeEach(() => {
     jest.clearAllMocks();
     process.env = {

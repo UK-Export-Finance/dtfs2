@@ -12,7 +12,7 @@ jest.mock('../../api');
 
 console.error = jest.fn();
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 describe('controllers/utilisation-reports', () => {
   const isTfmPaymentReconciliationFeatureFlagEnabledSpy = jest.spyOn(dtfs2Common, 'isTfmPaymentReconciliationFeatureFlagEnabled');
