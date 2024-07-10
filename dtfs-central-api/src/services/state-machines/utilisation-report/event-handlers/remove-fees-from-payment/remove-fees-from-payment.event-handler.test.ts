@@ -44,7 +44,9 @@ describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
     async (feeRecordsMatchAttachedPaymentsFlag: boolean) => {
       // Arrange
       const utilisationReport = aReconciliationInProgressReport();
-      const feeRecords = [1, 2, 3, 4].map((id) => aFeeRecordForReport(utilisationReport, id));
+
+      const feeRecordIds = [1, 2, 3, 4];
+      const feeRecords = feeRecordIds.map((id) => aFeeRecordForReport(utilisationReport, id));
       const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
       const feeRecordStateMachines = feeRecords.reduce(
         (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine(eventHandlers[id]) }),
