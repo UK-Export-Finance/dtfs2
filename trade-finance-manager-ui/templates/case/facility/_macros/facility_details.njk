@@ -113,7 +113,7 @@
 
         {% if isTfmFacilityEndDateFeatureFlagEnabled %}
           <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank has provided a facility end date</dt>
-          <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-end-date-exists">{{ facility.dates.isUsingFacilityEndDate | formatBooleanAsString }}</dd>
+          <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="is-using-facility-end-date">{{ facility.dates.isUsingFacilityEndDate | formatBooleanAsString }}</dd>
 
           {% if (facility.dates.isUsingFacilityEndDate === false) %}
             <dt class="govuk-grid-column-one-quarter govuk-body-s">Bank review date</dt>

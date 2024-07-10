@@ -1,9 +1,11 @@
-const originalEnv = process.env;
+import { FeatureFlag } from './is-feature-flag-enabled';
 
-export const withBooleanFeatureFlagTests = ({ featureFlagName, getFeatureFlagValue }: { featureFlagName: string; getFeatureFlagValue: () => boolean }) => {
+const originalEnv = { ...process.env };
+
+export const withBooleanFeatureFlagTests = ({ featureFlagName, getFeatureFlagValue }: { featureFlagName: FeatureFlag; getFeatureFlagValue: () => boolean }) => {
   describe(`${featureFlagName}`, () => {
     afterAll(() => {
-      process.env = { ...originalEnv };
+      process.env = originalEnv;
     });
 
     it("returns false when the feature flag is set to 'false'", () => {
