@@ -68,6 +68,18 @@ describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selec
     expect(response.status).toBe(HttpStatusCode.Ok);
   });
 
+  it('returns a 400 when all selectable fee records are selected', async () => {
+    // Act
+    const paymentRequestBody = {
+      ...aRemoveFeesFromPaymentRequestBody(),
+      selectedFeeRecordIds: feeRecordIds,
+    };
+    const response = await testApi.post(paymentRequestBody).to(getUrl(reportId, paymentId));
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.BadRequest);
+  });
+
   it('returns a 400 when the report id is not a valid id', async () => {
     // Act
     const response = await testApi.post(aRemoveFeesFromPaymentRequestBody()).to(getUrl('invalid-id', paymentId));
