@@ -11,7 +11,7 @@ jest.mock('../../server/api');
 const page = '../templates/utilisation-reports/utilisation-reports.njk';
 const render = pageRenderer(page);
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 describe(page, () => {
   beforeAll(() => {
@@ -20,7 +20,7 @@ describe(page, () => {
   });
 
   afterAll(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
   });
 
   const getWrapper = async () => {

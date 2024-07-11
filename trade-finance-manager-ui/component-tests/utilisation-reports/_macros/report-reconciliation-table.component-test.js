@@ -13,7 +13,7 @@ const tableSelector = '[data-cy="utilisation-report-reconciliation-table"]';
 
 const render = componentRenderer(component);
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 describe(component, () => {
   beforeAll(() => {
@@ -22,7 +22,7 @@ describe(component, () => {
   });
 
   afterAll(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
   });
 
   const getWrapper = async ({ userTeams, isTfmPaymentReconciliationFeatureFlagEnabled } = {}) => {
