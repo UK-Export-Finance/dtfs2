@@ -29,3 +29,7 @@ export type UpdateWithKeyingDataParams = {
   principalBalanceAdjustment: number;
   requestSource: DbRequestSource;
 };
+
+export type RemoveAllPaymentsParams = {
+  requestSource: DbRequestSource;
+};

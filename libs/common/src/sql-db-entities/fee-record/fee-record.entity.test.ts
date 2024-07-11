@@ -1,5 +1,5 @@
 import { FEE_RECORD_STATUS } from '../../constants';
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 import { Currency } from '../../types';
 
 describe('FeeRecordEntity', () => {
@@ -77,6 +77,42 @@ describe('FeeRecordEntity', () => {
 
     function aUtilisationReport() {
       return UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+    }
+  });
+
+  describe('removeAllPayments', () => {
+    it("removes all payments, sets the report status to 'TO_DO' and updates the 'lastUpdatedBy...' fields", () => {
+      // Arrange
+      const paymentCurrency: Currency = 'GBP';
+      const paymentId = 123;
+      const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).build();
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+        .withStatus('MATCH')
+        .withPaymentCurrency(paymentCurrency)
+        .withPayments([payment])
+        .withLastUpdatedByIsSystemUser(true)
+        .withLastUpdatedByPortalUserId(null)
+        .withLastUpdatedByTfmUserId(null)
+        .build();
+
+      const userId = 'abc123';
+
+      // Act
+      feeRecord.removeAllPayments({
+        requestSource: { platform: 'TFM', userId },
+      });
+
+      // Assert
+      expect(feeRecord.payments).toHaveLength(0);
+      expect(feeRecord.status).toBe('TO_DO');
+      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+      expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
+      expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+    });
+
+    function aUtilisationReport() {
+      return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     }
   });
 });
