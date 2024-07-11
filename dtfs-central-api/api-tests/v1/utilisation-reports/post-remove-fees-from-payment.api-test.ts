@@ -10,7 +10,7 @@ import { aTfmSessionUser } from '../../../test-helpers/test-data/tfm-session-use
 console.error = jest.fn();
 
 describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selected-fees', () => {
-  const getUrl = (reportId: number | string, paymentId: number | string) => `/v1/utilisation-reports/${reportId}/payment/${paymentId}`;
+  const getUrl = (reportId: number | string, paymentId: number | string) => `/v1/utilisation-reports/${reportId}/payment/${paymentId}/remove-selected-fees`;
 
   const reportId = 1;
 
