@@ -277,8 +277,8 @@ describe('UtilisationReportStateMachine', () => {
         type: 'REMOVE_FEES_FROM_PAYMENT_GROUP',
         payload: {
           transactionEntityManager: {} as EntityManager,
-          selectedFeeRecords: [],
-          otherFeeRecords: [],
+          feeRecordsToRemove: [],
+          feeRecordsToUpdate: [],
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });

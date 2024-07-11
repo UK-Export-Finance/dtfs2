@@ -18,13 +18,12 @@ export const validateNotAllFeeRecordsSelected = (selectedFeeRecordIds: number[],
 
 export const removeFeesFromPaymentGroup = async (
   utilisationReport: UtilisationReportEntity,
-  allFeeRecords: FeeRecordEntity[],
-  selectedFeeRecordIds: number[],
+  feeRecordsInPaymentGroup: FeeRecordEntity[],
+  idsOfFeeRecordsToRemove: number[],
   user: TfmSessionUser,
 ) => {
-  const selectedFeeRecords = allFeeRecords.filter((record) => selectedFeeRecordIds.includes(record.id));
-  const otherFeeRecords = allFeeRecords.filter((record) => !selectedFeeRecordIds.includes(record.id));
-
+  const feeRecordsToRemove = feeRecordsInPaymentGroup.filter((record) => idsOfFeeRecordsToRemove.includes(record.id));
+  const feeRecordsToUpdate = feeRecordsInPaymentGroup.filter((record) => !idsOfFeeRecordsToRemove.includes(record.id));
   const utilisationReportStateMachine = UtilisationReportStateMachine.forReport(utilisationReport);
 
   await executeWithSqlTransaction(async (transactionEntityManager) => {
@@ -32,8 +31,8 @@ export const removeFeesFromPaymentGroup = async (
       type: 'REMOVE_FEES_FROM_PAYMENT_GROUP',
       payload: {
         transactionEntityManager,
-        selectedFeeRecords,
-        otherFeeRecords,
+        feeRecordsToRemove,
+        feeRecordsToUpdate,
         requestSource: {
           platform: 'TFM',
           userId: user._id.toString(),

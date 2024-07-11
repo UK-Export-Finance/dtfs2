@@ -6,8 +6,8 @@ import { feeRecordsMatchAttachedPayments } from '../helpers';
 
 type RemoveFeesFromPaymentGroupEventPayload = {
   transactionEntityManager: EntityManager;
-  selectedFeeRecords: FeeRecordEntity[];
-  otherFeeRecords: FeeRecordEntity[];
+  feeRecordsToRemove: FeeRecordEntity[];
+  feeRecordsToUpdate: FeeRecordEntity[];
   requestSource: DbRequestSource;
 };
 
@@ -16,7 +16,7 @@ export type UtilisationReportRemoveFeesFromPaymentGroupEvent = BaseUtilisationRe
   RemoveFeesFromPaymentGroupEventPayload
 >;
 
-const removeSelectedFeePayments = async (transactionEntityManager: EntityManager, feeRecords: FeeRecordEntity[], requestSource: DbRequestSource) => {
+const removeSelectedFeePaymentsFromGroup = async (transactionEntityManager: EntityManager, feeRecords: FeeRecordEntity[], requestSource: DbRequestSource) => {
   const feeRecordStateMachines = feeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
   await Promise.all(
     feeRecordStateMachines.map((stateMachine) =>
@@ -51,10 +51,10 @@ const updateOtherFeePaymentsInGroup = async (transactionEntityManager: EntityMan
 
 export const handleUtilisationReportRemoveFeesFromPaymentGroupEvent = async (
   report: UtilisationReportEntity,
-  { transactionEntityManager, selectedFeeRecords, otherFeeRecords, requestSource }: RemoveFeesFromPaymentGroupEventPayload,
+  { transactionEntityManager, feeRecordsToRemove, feeRecordsToUpdate, requestSource }: RemoveFeesFromPaymentGroupEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  await removeSelectedFeePayments(transactionEntityManager, selectedFeeRecords, requestSource);
-  await updateOtherFeePaymentsInGroup(transactionEntityManager, otherFeeRecords, requestSource);
+  await removeSelectedFeePaymentsFromGroup(transactionEntityManager, feeRecordsToRemove, requestSource);
+  await updateOtherFeePaymentsInGroup(transactionEntityManager, feeRecordsToUpdate, requestSource);
 
   report.updateLastUpdatedBy(requestSource);
   return await transactionEntityManager.save(UtilisationReportEntity, report);
