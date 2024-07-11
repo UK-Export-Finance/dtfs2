@@ -1,7 +1,7 @@
 /**
  * @openapi
  * definitions:
- *   KeyingSheetStatus:
+ *   KeyingSheetRowStatus:
  *     type: string
  *     enum:
  *       - TO_DO
@@ -17,13 +17,13 @@
  *           - NONE
  *       amount:
  *         type: number
- *   KeyingSheetItem:
+ *   KeyingSheetRow:
  *     type: object
  *     properties:
  *       feeRecordId:
  *         type: number
  *       status:
- *         $ref: '#/definitions/KeyingSheetStatus'
+ *         $ref: '#/definitions/KeyingSheetRowStatus'
  *       facilityId:
  *         type: string
  *       exporter:
@@ -49,5 +49,5 @@
  *   KeyingSheet:
  *     type: array
  *     items:
- *       $ref: '#/definitions/KeyingSheetItem'
+ *       $ref: '#/definitions/KeyingSheetRow'
  */

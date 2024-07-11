@@ -171,9 +171,9 @@ describe(page, () => {
 
     wrapper.expectElement(`${keyingSheetTabSelector} div.govuk-button-group`).toExist();
 
-    wrapper.expectPrimaryButton(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-done-button"]`).toLinkTo(undefined, 'Mark as done');
+    wrapper.expectPrimaryButton(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-done-button"]`).toLinkTo('#', 'Mark as done');
 
-    wrapper.expectSecondaryButton(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-to-do-button"]`).toLinkTo(undefined, 'Mark as to do');
+    wrapper.expectSecondaryButton(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-to-do-button"]`).toLinkTo('#', 'Mark as to do');
 
     wrapper.expectElement(`${keyingSheetTabSelector} table[data-cy="keying-sheet-table"]`).toExist();
   });

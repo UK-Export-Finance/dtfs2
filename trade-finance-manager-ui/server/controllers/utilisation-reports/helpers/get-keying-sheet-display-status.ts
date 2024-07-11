@@ -1,9 +1,9 @@
-import { KeyingSheetStatus } from '@ukef/dtfs2-common';
+import { KeyingSheetRowStatus } from '@ukef/dtfs2-common';
 import { KeyingSheetDisplayStatus } from '../../../types/view-models';
 
-const keyingSheetStatusToDisplayStatus: Record<KeyingSheetStatus, KeyingSheetDisplayStatus> = {
+const KeyingSheetRowStatusToDisplayStatus: Record<KeyingSheetRowStatus, KeyingSheetDisplayStatus> = {
   TO_DO: 'TO DO',
   DONE: 'DONE',
 };
 
-export const getKeyingSheetDisplayStatus = (status: KeyingSheetStatus): KeyingSheetDisplayStatus => keyingSheetStatusToDisplayStatus[status];
+export const getKeyingSheetDisplayStatus = (status: KeyingSheetRowStatus): KeyingSheetDisplayStatus => KeyingSheetRowStatusToDisplayStatus[status];

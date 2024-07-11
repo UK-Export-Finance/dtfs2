@@ -1,11 +1,11 @@
-import { KEYING_SHEET_STATUS, KeyingSheetStatus } from '@ukef/dtfs2-common';
+import { KEYING_SHEET_ROW_STATUS, KeyingSheetRowStatus } from '@ukef/dtfs2-common';
 import { componentRenderer } from '../../componentRenderer';
 
 const component = '../templates/utilisation-reports/_macros/keying-sheet-status.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const getWrapper = (viewModel: { status: KeyingSheetStatus; displayStatus: string }) => render(viewModel);
+  const getWrapper = (viewModel: { status: KeyingSheetRowStatus; displayStatus: string }) => render(viewModel);
 
   const statusTagSelector = '[data-cy="keying-sheet-status"]';
 
@@ -24,8 +24,8 @@ describe(component, () => {
   });
 
   it.each([
-    { status: KEYING_SHEET_STATUS.TO_DO, expectedColourClass: undefined },
-    { status: KEYING_SHEET_STATUS.DONE, expectedColourClass: 'govuk-tag--green' },
+    { status: KEYING_SHEET_ROW_STATUS.TO_DO, expectedColourClass: undefined },
+    { status: KEYING_SHEET_ROW_STATUS.DONE, expectedColourClass: 'govuk-tag--green' },
   ])("adds colour class '$expectedColourClass' when the status code is '$status'", ({ status, expectedColourClass }) => {
     // Arrange
     const expectedClass = `govuk-tag status-tag${expectedColourClass ? ` ${expectedColourClass}` : ''}`;

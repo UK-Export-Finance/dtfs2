@@ -4,8 +4,9 @@ import {
   UtilisationReportReconciliationStatus,
   FeeRecordStatus,
   CurrencyAndAmount,
-  KeyingSheetStatus,
+  KeyingSheetRowStatus,
   Currency,
+  KeyingSheetAdjustment,
 } from '@ukef/dtfs2-common';
 import { FeeRecord } from './fee-record';
 import { Payment } from './payment';
@@ -18,14 +19,9 @@ export type FeeRecordPaymentGroup = {
   status: FeeRecordStatus;
 };
 
-export type KeyingSheetAdjustment = {
-  change: 'INCREASE' | 'DECREASE' | 'NONE';
-  amount: number;
-};
-
-export type KeyingSheetItem = {
+export type KeyingSheetRow = {
   feeRecordId: number;
-  status: KeyingSheetStatus;
+  status: KeyingSheetRowStatus;
   facilityId: string;
   exporter: string;
   feePayments: {
@@ -39,7 +35,7 @@ export type KeyingSheetItem = {
   principalBalanceAdjustment: KeyingSheetAdjustment | null;
 };
 
-export type KeyingSheet = KeyingSheetItem[];
+export type KeyingSheet = KeyingSheetRow[];
 
 export type UtilisationReportReconciliationDetailsResponseBody = {
   reportId: number;

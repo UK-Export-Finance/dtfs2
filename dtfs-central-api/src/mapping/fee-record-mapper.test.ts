@@ -4,13 +4,13 @@ import {
   Currency,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
-  KeyingSheetStatus,
+  KeyingSheetRowStatus,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import {
   mapFeeRecordEntityToFeeRecord,
-  mapFeeRecordEntityToKeyingSheetStatus,
+  mapFeeRecordEntityToKeyingSheetRowStatus,
   mapFeeRecordEntityToReportedFees,
   mapFeeRecordEntityToReportedPayments,
 } from './fee-record-mapper';
@@ -230,7 +230,7 @@ describe('fee record mapper', () => {
     });
   });
 
-  describe('mapFeeRecordEntityToKeyingSheetStatus', () => {
+  describe('mapFeeRecordEntityToKeyingSheetRowStatus', () => {
     const INVALID_FEE_RECORD_STATUSES = difference(Object.values(FEE_RECORD_STATUS), [FEE_RECORD_STATUS.READY_TO_KEY, FEE_RECORD_STATUS.RECONCILED]);
 
     it.each(INVALID_FEE_RECORD_STATUSES)('throws an error when the fee record entity status is %s', (status) => {
@@ -238,7 +238,7 @@ describe('fee record mapper', () => {
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build();
 
       // Act / Assert
-      expect(() => mapFeeRecordEntityToKeyingSheetStatus(feeRecord)).toThrow(Error);
+      expect(() => mapFeeRecordEntityToKeyingSheetRowStatus(feeRecord)).toThrow(Error);
     });
 
     it('maps the fee record READY_TO_KEY status to the keying sheet TO_DO status', () => {
@@ -246,10 +246,10 @@ describe('fee record mapper', () => {
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('READY_TO_KEY').build();
 
       // Act
-      const result = mapFeeRecordEntityToKeyingSheetStatus(feeRecord);
+      const result = mapFeeRecordEntityToKeyingSheetRowStatus(feeRecord);
 
       // Assert
-      expect(result).toBe<KeyingSheetStatus>('TO_DO');
+      expect(result).toBe<KeyingSheetRowStatus>('TO_DO');
     });
 
     it('maps the fee record RECONCILED status to the keying sheet DONE status', () => {
@@ -257,10 +257,10 @@ describe('fee record mapper', () => {
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('RECONCILED').build();
 
       // Act
-      const result = mapFeeRecordEntityToKeyingSheetStatus(feeRecord);
+      const result = mapFeeRecordEntityToKeyingSheetRowStatus(feeRecord);
 
       // Assert
-      expect(result).toBe<KeyingSheetStatus>('DONE');
+      expect(result).toBe<KeyingSheetRowStatus>('DONE');
     });
   });
 

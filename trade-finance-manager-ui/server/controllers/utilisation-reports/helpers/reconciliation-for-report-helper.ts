@@ -1,7 +1,7 @@
 import orderBy from 'lodash.orderby';
-import { FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
+import { FeeRecordStatus, getFormattedCurrencyAndAmount, KeyingSheetAdjustment } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
-import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetAdjustment, KeyingSheetItem, Payment } from '../../../api-response-types';
+import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import {
   FeeRecordPaymentGroupViewModelItem,
   FeeRecordViewModelItem,
@@ -120,7 +120,7 @@ const getKeyingSheetAdjustmentViewModel = (adjustment: KeyingSheetAdjustment | n
   };
 };
 
-const mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel = (feePayments: KeyingSheetItem['feePayments']) =>
+const mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel = (feePayments: KeyingSheetRow['feePayments']) =>
   feePayments.map(({ currency, amount, dateReceived }) => ({
     formattedCurrencyAndAmount: getFormattedCurrencyAndAmount({ currency, amount }),
     formattedDateReceived: format(new Date(dateReceived), 'd MMM yyyy'),
@@ -132,16 +132,16 @@ const mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel = (feePayments:
  * @returns The keying sheet view model
  */
 export const mapKeyingSheetToKeyingSheetViewModel = (keyingSheet: KeyingSheet): KeyingSheetViewModel =>
-  keyingSheet.map((keyingSheetItem) => ({
-    status: keyingSheetItem.status,
-    displayStatus: getKeyingSheetDisplayStatus(keyingSheetItem.status),
-    facilityId: keyingSheetItem.facilityId,
-    exporter: keyingSheetItem.exporter,
-    baseCurrency: keyingSheetItem.baseCurrency,
-    feePayments: mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel(keyingSheetItem.feePayments),
-    fixedFeeAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetItem.fixedFeeAdjustment),
-    premiumAccrualBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetItem.premiumAccrualBalanceAdjustment),
-    principalBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetItem.principalBalanceAdjustment),
-    checkboxId: `feeRecordId-${keyingSheetItem.feeRecordId}`,
+  keyingSheet.map((keyingSheetRow) => ({
+    status: keyingSheetRow.status,
+    displayStatus: getKeyingSheetDisplayStatus(keyingSheetRow.status),
+    facilityId: keyingSheetRow.facilityId,
+    exporter: keyingSheetRow.exporter,
+    baseCurrency: keyingSheetRow.baseCurrency,
+    feePayments: mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel(keyingSheetRow.feePayments),
+    fixedFeeAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.fixedFeeAdjustment),
+    premiumAccrualBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.premiumAccrualBalanceAdjustment),
+    principalBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.principalBalanceAdjustment),
+    checkboxId: `feeRecordId-${keyingSheetRow.feeRecordId}`,
     isChecked: false,
   }));

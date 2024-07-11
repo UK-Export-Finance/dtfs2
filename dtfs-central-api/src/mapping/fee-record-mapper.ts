@@ -1,4 +1,4 @@
-import { CurrencyAndAmount, FeeRecordEntity, KeyingSheetStatus } from '@ukef/dtfs2-common';
+import { CurrencyAndAmount, FeeRecordEntity, KeyingSheetRowStatus } from '@ukef/dtfs2-common';
 import { FeeRecord } from '../types/fee-records';
 
 /**
@@ -52,7 +52,7 @@ export const mapFeeRecordEntityToFeeRecord = (feeRecord: FeeRecordEntity): FeeRe
  * @param feeRecord - The fee record entity
  * @returns The keying sheet status
  */
-export const mapFeeRecordEntityToKeyingSheetStatus = (feeRecord: FeeRecordEntity): KeyingSheetStatus => {
+export const mapFeeRecordEntityToKeyingSheetRowStatus = (feeRecord: FeeRecordEntity): KeyingSheetRowStatus => {
   switch (feeRecord.status) {
     case 'READY_TO_KEY':
       return 'TO_DO';

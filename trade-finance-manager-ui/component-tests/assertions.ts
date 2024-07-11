@@ -27,7 +27,7 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
       expect(wrapper(selector).attr('href')).toBeUndefined();
       expect(wrapper(selector).attr('disabled')).toEqual('disabled');
     },
-    toLinkTo: (href: string | undefined, text: string) => {
+    toLinkTo: (href: string, text: string) => {
       expect(wrapper(selector).hasClass('govuk-button--disabled')).toEqual(false);
       expect(wrapper(selector).hasClass('govuk-button--secondary')).toEqual(false);
       expect(wrapper(selector).attr('href')).toEqual(href);
@@ -45,7 +45,7 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
       expect(wrapper(selector).attr('href')).toBeUndefined();
       expect(wrapper(selector).attr('disabled')).toEqual('disabled');
     },
-    toLinkTo: (href: string | undefined, text: string) => {
+    toLinkTo: (href: string, text: string) => {
       expect(wrapper(selector).hasClass('govuk-button--disabled')).toEqual(false);
       expect(wrapper(selector).hasClass('govuk-button--secondary')).toEqual(true);
       expect(wrapper(selector).attr('href')).toEqual(href);
@@ -54,7 +54,7 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
     },
   }),
   expectWarningButton: (selector: string) => ({
-    toLinkTo: (href: string | undefined, text: string) => {
+    toLinkTo: (href: string, text: string) => {
       expect(wrapper(selector).hasClass('govuk-button--disabled')).toEqual(false);
       expect(wrapper(selector).hasClass('govuk-button--warning')).toEqual(true);
       expect(wrapper(selector).attr('href')).toEqual(href);

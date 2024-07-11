@@ -4,8 +4,9 @@ import {
   UtilisationReportReconciliationStatus,
   FeeRecordStatus,
   CurrencyAndAmount,
-  KeyingSheetStatus,
+  KeyingSheetRowStatus,
   Currency,
+  KeyingSheetAdjustment,
 } from '@ukef/dtfs2-common';
 import { FeeRecord } from './fee-record';
 import { Payment } from './payment';
@@ -18,14 +19,9 @@ type FeeRecordPaymentGroup = {
   status: FeeRecordStatus;
 };
 
-type KeyingSheetAdjustment = {
-  change: 'INCREASE' | 'DECREASE' | 'NONE';
-  amount: number;
-};
-
 type KeyingSheet = {
   feeRecordId: number;
-  status: KeyingSheetStatus;
+  status: KeyingSheetRowStatus;
   facilityId: string;
   exporter: string;
   datePaymentReceived: IsoDateTimeStamp;

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAndAmountString, FeeRecordStatus, KeyingSheetStatus, SessionBank } from '@ukef/dtfs2-common';
+import { Currency, CurrencyAndAmountString, FeeRecordStatus, KeyingSheetAdjustmentChange, KeyingSheetRowStatus, SessionBank } from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
 import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
 import { BaseViewModel } from './base-view-model';
@@ -27,11 +27,11 @@ export type KeyingSheetDisplayStatus = 'TO DO' | 'DONE';
 
 export type KeyingSheetAdjustmentViewModel = {
   amount: string | undefined;
-  change: 'INCREASE' | 'DECREASE' | 'NONE';
+  change: KeyingSheetAdjustmentChange;
 };
 
 export type KeyingSheetViewModel = {
-  status: KeyingSheetStatus;
+  status: KeyingSheetRowStatus;
   displayStatus: KeyingSheetDisplayStatus;
   facilityId: string;
   exporter: string;

@@ -77,11 +77,11 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
       // Assert
       const allFeeRecords = [...firstGroupFeeRecords, ...secondGroupFeeRecords, ...thirdGroupFeeRecords];
-      result.forEach((keyingSheetItem, index) => {
-        expect(keyingSheetItem.feeRecordId).toBe(allFeeRecords[index].id);
-        expect(keyingSheetItem.facilityId).toBe(allFeeRecords[index].facilityId);
-        expect(keyingSheetItem.exporter).toBe(allFeeRecords[index].exporter);
-        expect(keyingSheetItem.baseCurrency).toBe(allFeeRecords[index].baseCurrency);
+      result.forEach((KeyingSheetRow, index) => {
+        expect(KeyingSheetRow.feeRecordId).toBe(allFeeRecords[index].id);
+        expect(KeyingSheetRow.facilityId).toBe(allFeeRecords[index].facilityId);
+        expect(KeyingSheetRow.exporter).toBe(allFeeRecords[index].exporter);
+        expect(KeyingSheetRow.baseCurrency).toBe(allFeeRecords[index].baseCurrency);
       });
     });
 

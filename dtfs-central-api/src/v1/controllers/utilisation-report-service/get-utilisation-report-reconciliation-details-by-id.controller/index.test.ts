@@ -123,7 +123,6 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
     });
 
     it('fetches details filtering without filtering and responds with 200 when there is an invalid facility id query', async () => {
-      // Should this throw if the facility id query is invalid? I think it probably should
       // Arrange
       const query = '123';
       const { req, res } = getHttpMocks(query);

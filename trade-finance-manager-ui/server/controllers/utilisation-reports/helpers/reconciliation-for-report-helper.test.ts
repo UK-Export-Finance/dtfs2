@@ -1,6 +1,6 @@
 import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems, mapKeyingSheetToKeyingSheetViewModel } from './reconciliation-for-report-helper';
-import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetItem, Payment } from '../../../api-response-types';
+import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import { aFeeRecordPaymentGroup, aFeeRecord, aPayment } from '../../../../test-helpers';
 
 describe('reconciliation-for-report-helper', () => {
@@ -475,7 +475,7 @@ describe('reconciliation-for-report-helper', () => {
   });
 
   describe('mapKeyingSheetToKeyingSheetViewModel', () => {
-    const aKeyingSheetItem = (): KeyingSheetItem => ({
+    const aKeyingSheetRow = (): KeyingSheetRow => ({
       feeRecordId: 1,
       status: 'TO_DO',
       facilityId: '12345678',
@@ -491,7 +491,7 @@ describe('reconciliation-for-report-helper', () => {
       // Arrange
       const keyingSheet: KeyingSheet = [
         {
-          ...aKeyingSheetItem(),
+          ...aKeyingSheetRow(),
           status: 'TO_DO',
           facilityId: '11111111',
           exporter: 'Some exporter',
@@ -517,7 +517,7 @@ describe('reconciliation-for-report-helper', () => {
       "sets the keying sheet view model display status to '$displayStatus' when the keying sheet status is '$status'",
       ({ status, displayStatus }) => {
         // Arrange
-        const keyingSheet: KeyingSheet = [{ ...aKeyingSheetItem(), status }];
+        const keyingSheet: KeyingSheet = [{ ...aKeyingSheetRow(), status }];
 
         // Act
         const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
@@ -532,7 +532,7 @@ describe('reconciliation-for-report-helper', () => {
       // Arrange
       const keyingSheet: KeyingSheet = [
         {
-          ...aKeyingSheetItem(),
+          ...aKeyingSheetRow(),
           feePayments: [
             { currency: 'GBP', amount: 100.123, dateReceived: '2024-01-01T12:00:00.000' },
             { currency: 'EUR', amount: 90.91, dateReceived: '2023-12-05T12:00:00.000' },
@@ -574,7 +574,7 @@ describe('reconciliation-for-report-helper', () => {
         // Arrange
         const keyingSheet: KeyingSheet = [
           {
-            ...aKeyingSheetItem(),
+            ...aKeyingSheetRow(),
             fixedFeeAdjustment: value,
           },
         ];
@@ -607,7 +607,7 @@ describe('reconciliation-for-report-helper', () => {
         // Arrange
         const keyingSheet: KeyingSheet = [
           {
-            ...aKeyingSheetItem(),
+            ...aKeyingSheetRow(),
             premiumAccrualBalanceAdjustment: value,
           },
         ];
@@ -640,7 +640,7 @@ describe('reconciliation-for-report-helper', () => {
         // Arrange
         const keyingSheet: KeyingSheet = [
           {
-            ...aKeyingSheetItem(),
+            ...aKeyingSheetRow(),
             principalBalanceAdjustment: value,
           },
         ];
@@ -656,7 +656,7 @@ describe('reconciliation-for-report-helper', () => {
 
     it('sets the keying sheet view model checkbox id using the keying sheet fee record id', () => {
       // Arrange
-      const keyingSheet: KeyingSheet = [{ ...aKeyingSheetItem(), feeRecordId: 123 }];
+      const keyingSheet: KeyingSheet = [{ ...aKeyingSheetRow(), feeRecordId: 123 }];
 
       // Act
       const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);

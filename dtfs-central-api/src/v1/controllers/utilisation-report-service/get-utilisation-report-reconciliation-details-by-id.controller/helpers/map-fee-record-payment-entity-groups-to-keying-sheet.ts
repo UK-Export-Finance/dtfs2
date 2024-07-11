@@ -1,8 +1,8 @@
 import Big from 'big.js';
-import { FeeRecordEntity, FeeRecordStatus, PaymentEntity } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, FeeRecordStatus, KeyingSheetAdjustment } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentEntityGroup } from '../../../../../helpers';
-import { KeyingSheet, KeyingSheetAdjustment, KeyingSheetItem } from '../../../../../types/fee-records';
-import { mapFeeRecordEntityToKeyingSheetStatus, mapFeeRecordEntityToReportedPayments } from '../../../../../mapping/fee-record-mapper';
+import { KeyingSheet, KeyingSheetRow } from '../../../../../types/fee-records';
+import { mapFeeRecordEntityToKeyingSheetRowStatus, mapFeeRecordEntityToReportedPayments } from '../../../../../mapping/fee-record-mapper';
 
 const getKeyingSheetAdjustmentForAmount = (amount: number | null): KeyingSheetAdjustment | null => {
   if (amount === null) {
@@ -23,37 +23,36 @@ const getKeyingSheetAdjustmentForAmount = (amount: number | null): KeyingSheetAd
   };
 };
 
-const mapFeeRecordEntityToKeyingSheetItemWithPayments = (feeRecordEntity: FeeRecordEntity, paymentEntities: PaymentEntity[]): KeyingSheetItem => ({
+const mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments = (feeRecordEntity: FeeRecordEntity): Omit<KeyingSheetRow, 'feePayments'> => ({
   feeRecordId: feeRecordEntity.id,
-  status: mapFeeRecordEntityToKeyingSheetStatus(feeRecordEntity),
+  status: mapFeeRecordEntityToKeyingSheetRowStatus(feeRecordEntity),
   facilityId: feeRecordEntity.facilityId,
   exporter: feeRecordEntity.exporter,
-  feePayments: paymentEntities.map(({ currency, amount, dateReceived }) => ({ currency, amount, dateReceived })),
   baseCurrency: feeRecordEntity.baseCurrency,
   fixedFeeAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.fixedFeeAdjustment),
   premiumAccrualBalanceAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.premiumAccrualBalanceAdjustment),
   principalBalanceAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.principalBalanceAdjustment),
 });
 
-const mapFeeRecordEntitiesToKeyingSheetWithDatePaymentReceived = (feeRecordEntities: FeeRecordEntity[], datePaymentReceived: Date): KeyingSheet =>
-  feeRecordEntities.map((feeRecordEntity) => ({
-    feeRecordId: feeRecordEntity.id,
-    status: mapFeeRecordEntityToKeyingSheetStatus(feeRecordEntity),
-    facilityId: feeRecordEntity.facilityId,
-    exporter: feeRecordEntity.exporter,
+const STATUSES_OF_FEE_RECORDS_TO_DISPLAY_ON_KEYING_SHEET: FeeRecordStatus[] = ['READY_TO_KEY', 'RECONCILED'];
+
+const mapFeeRecordPaymentEntityGroupToKeyingSheetRows = ({ feeRecords, payments }: FeeRecordPaymentEntityGroup): KeyingSheetRow[] => {
+  if (feeRecords.length === 1) {
+    const feePayments = payments.map(({ currency, amount, dateReceived }) => ({ currency, amount, dateReceived }));
+    return [{ ...mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecords[0]), feePayments }];
+  }
+
+  const { dateReceived } = payments[0];
+  return feeRecords.map((feeRecord) => ({
+    ...mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecord),
     feePayments: [
       {
-        ...mapFeeRecordEntityToReportedPayments(feeRecordEntity),
-        dateReceived: datePaymentReceived,
+        ...mapFeeRecordEntityToReportedPayments(feeRecord),
+        dateReceived,
       },
     ],
-    baseCurrency: feeRecordEntity.baseCurrency,
-    fixedFeeAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.fixedFeeAdjustment),
-    premiumAccrualBalanceAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.premiumAccrualBalanceAdjustment),
-    principalBalanceAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.principalBalanceAdjustment),
   }));
-
-const VALID_FEE_RECORD_STATUSES: FeeRecordStatus[] = ['READY_TO_KEY', 'RECONCILED'];
+};
 
 /**
  * Maps the fee record payment entity groups to the keying sheet
@@ -62,11 +61,8 @@ const VALID_FEE_RECORD_STATUSES: FeeRecordStatus[] = ['READY_TO_KEY', 'RECONCILE
  */
 export const mapFeeRecordPaymentEntityGroupsToKeyingSheet = (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[]): KeyingSheet =>
   feeRecordPaymentEntityGroups
-    .filter(({ feeRecords }) => feeRecords.every(({ status }) => VALID_FEE_RECORD_STATUSES.includes(status)))
-    .reduce((keyingSheet, { feeRecords, payments }) => {
-      if (feeRecords.length === 1) {
-        return [...keyingSheet, mapFeeRecordEntityToKeyingSheetItemWithPayments(feeRecords[0], payments)];
-      }
-      const datePaymentReceived = payments[0].dateReceived;
-      return [...keyingSheet, ...mapFeeRecordEntitiesToKeyingSheetWithDatePaymentReceived(feeRecords, datePaymentReceived)];
-    }, [] as KeyingSheet);
+    .filter(({ feeRecords }) => feeRecords.every(({ status }) => STATUSES_OF_FEE_RECORDS_TO_DISPLAY_ON_KEYING_SHEET.includes(status)))
+    .reduce(
+      (keyingSheet, feeRecordPaymentGroup) => [...keyingSheet, ...mapFeeRecordPaymentEntityGroupToKeyingSheetRows(feeRecordPaymentGroup)],
+      [] as KeyingSheet,
+    );

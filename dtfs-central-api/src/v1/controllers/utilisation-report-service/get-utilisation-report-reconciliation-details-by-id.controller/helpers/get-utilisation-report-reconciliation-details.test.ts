@@ -1,5 +1,5 @@
 import { when } from 'jest-when';
-import { ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { ReportPeriod, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { getUtilisationReportReconciliationDetails } from './get-utilisation-report-reconciliation-details';
 import { getBankNameById } from '../../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../../errors';
@@ -17,16 +17,19 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       jest.resetAllMocks();
     });
 
-    it("throws an error if the 'dateUploaded' property does not exist", async () => {
-      // Arrange
-      const notUploadedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withDateUploaded(null).build();
+    it.each(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS))(
+      "throws an error if the report status is '%s' and the 'dateUploaded' property is null",
+      async (status) => {
+        // Arrange
+        const report = UtilisationReportEntityMockBuilder.forStatus(status).withId(reportId).withDateUploaded(null).build();
 
-      // Act / Assert
-      await expect(getUtilisationReportReconciliationDetails(notUploadedReport, undefined)).rejects.toThrow(
-        new Error(`Report with id '${reportId}' has not been uploaded`),
-      );
-      expect(getBankNameById).not.toHaveBeenCalled();
-    });
+        // Act / Assert
+        await expect(getUtilisationReportReconciliationDetails(report, undefined)).rejects.toThrow(
+          new Error(`Report with id '${reportId}' has not been uploaded`),
+        );
+        expect(getBankNameById).not.toHaveBeenCalled();
+      },
+    );
 
     it('throws an error if a bank with the same id as the report bankId does not exist', async () => {
       // Arrange

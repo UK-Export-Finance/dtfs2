@@ -36,11 +36,11 @@ describe(component, () => {
     isChecked: false,
   });
 
-  const getWrapper = ({ keyingSheetItem, userCanEdit }: { keyingSheetItem?: KeyingSheetTableRow; userCanEdit?: boolean } = {}) =>
-    render({ keyingSheetItem: keyingSheetItem ?? aKeyingSheetTableRow(), userCanEdit: userCanEdit ?? true });
+  const getWrapper = ({ KeyingSheetRow, userCanEdit }: { KeyingSheetRow?: KeyingSheetTableRow; userCanEdit?: boolean } = {}) =>
+    render({ KeyingSheetRow: KeyingSheetRow ?? aKeyingSheetTableRow(), userCanEdit: userCanEdit ?? true });
 
   it('renders the keying sheet status, facility id, exporter, base currency and fee payment in the table row', () => {
-    const keyingSheetItem: KeyingSheetTableRow = {
+    const KeyingSheetRow: KeyingSheetTableRow = {
       ...aKeyingSheetTableRow(),
       status: 'TO_DO',
       displayStatus: 'TO DO',
@@ -48,7 +48,7 @@ describe(component, () => {
       exporter: 'some exporter',
       baseCurrency: 'EUR',
     };
-    const wrapper = getWrapper({ keyingSheetItem });
+    const wrapper = getWrapper({ KeyingSheetRow });
 
     wrapper.expectElement(`tr td:contains("TO DO")`).toExist();
     wrapper.expectElement(`tr td:contains("some facility id")`).toExist();
@@ -57,7 +57,7 @@ describe(component, () => {
   });
 
   it('renders the fee payment column with the numeric cell class and date received column', () => {
-    const keyingSheetItem: KeyingSheetTableRow = {
+    const KeyingSheetRow: KeyingSheetTableRow = {
       ...aKeyingSheetTableRow(),
       feePayments: [
         {
@@ -66,7 +66,7 @@ describe(component, () => {
         },
       ],
     };
-    const wrapper = getWrapper({ keyingSheetItem });
+    const wrapper = getWrapper({ KeyingSheetRow });
 
     wrapper.expectElement('tr td:contains("GBP 111.11")').toExist();
     wrapper.expectElement('tr td:contains("GBP 111.11")').hasClass('govuk-table__cell--numeric');
@@ -82,13 +82,13 @@ describe(component, () => {
 
   it("renders the '-' in all the increase and decrease adjustment cells when the adjustment change is 'NONE'", () => {
     const change = 'NONE';
-    const keyingSheetItem: KeyingSheetTableRow = {
+    const KeyingSheetRow: KeyingSheetTableRow = {
       ...aKeyingSheetTableRow(),
       fixedFeeAdjustment: { change, amount: '111.11' },
       premiumAccrualBalanceAdjustment: { change, amount: '222.22' },
       principalBalanceAdjustment: { change, amount: '333.33' },
     };
-    const wrapper = getWrapper({ keyingSheetItem });
+    const wrapper = getWrapper({ KeyingSheetRow });
 
     wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--increase"]:contains("-")`).toHaveCount(3);
     wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--decrease"]:contains("-")`).toHaveCount(3);
@@ -103,46 +103,46 @@ describe(component, () => {
     const increaseColumnSelector = 'tr td[data-cy="keying-sheet-adjustment--increase"]';
 
     it('renders the fixed fee adjustment amount in the increase column with the numeric cell class', () => {
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         fixedFeeAdjustment: { change, amount: '111.11' },
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement(`${increaseColumnSelector}:contains("111.11")`).toExist();
       wrapper.expectElement(`${increaseColumnSelector}:contains("111.11")`).hasClass('govuk-table__cell--numeric');
     });
 
     it('renders the premium accrual balance adjustment in the increase column with the numeric cell class', () => {
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         premiumAccrualBalanceAdjustment: { change, amount: '222.22' },
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement(`${increaseColumnSelector}:contains("222.22")`).toExist();
       wrapper.expectElement(`${increaseColumnSelector}:contains("222.22")`).hasClass('govuk-table__cell--numeric');
     });
 
     it('renders the principal balance adjustment in the increase column with the numeric cell class', () => {
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         principalBalanceAdjustment: { change, amount: '333.33' },
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement(`${increaseColumnSelector}:contains("333.33")`).toExist();
       wrapper.expectElement(`${increaseColumnSelector}:contains("333.33")`).hasClass('govuk-table__cell--numeric');
     });
 
     it("sets all the decrease columns to the '-' character and does not use the numeric cell class", () => {
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         fixedFeeAdjustment: { change, amount: '111.11' },
         premiumAccrualBalanceAdjustment: { change, amount: '222.22' },
         principalBalanceAdjustment: { change, amount: '333.33' },
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--decrease"]:contains("-")`).toHaveCount(3);
       wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--decrease"]:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
@@ -155,46 +155,46 @@ describe(component, () => {
     const decreaseColumnSelector = 'tr td[data-cy="keying-sheet-adjustment--decrease"]';
 
     it('renders the fixed fee adjustment amount in the decrease column with the numeric cell class', () => {
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         fixedFeeAdjustment: { change, amount: '111.11' },
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement(`${decreaseColumnSelector}:contains("111.11")`).toExist();
       wrapper.expectElement(`${decreaseColumnSelector}:contains("111.11")`).hasClass('govuk-table__cell--numeric');
     });
 
     it('renders the premium accrual balance adjustment in the decrease column with the numeric cell class', () => {
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         premiumAccrualBalanceAdjustment: { change, amount: '222.22' },
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement(`${decreaseColumnSelector}:contains("222.22")`).toExist();
       wrapper.expectElement(`${decreaseColumnSelector}:contains("222.22")`).hasClass('govuk-table__cell--numeric');
     });
 
     it('renders the principal balance adjustment in the decrease column with the numeric cell class', () => {
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         principalBalanceAdjustment: { change, amount: '333.33' },
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement(`${decreaseColumnSelector}:contains("333.33")`).toExist();
       wrapper.expectElement(`${decreaseColumnSelector}:contains("333.33")`).hasClass('govuk-table__cell--numeric');
     });
 
     it("sets all the increase columns to the '-' character and does not use the numeric cell class", () => {
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         fixedFeeAdjustment: { change, amount: '111.11' },
         premiumAccrualBalanceAdjustment: { change, amount: '222.22' },
         principalBalanceAdjustment: { change, amount: '333.33' },
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--increase"]:contains("-")`).toHaveCount(3);
       wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--increase"]:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
@@ -205,23 +205,23 @@ describe(component, () => {
     const userCanEdit = true;
 
     it('renders the select fee record checkbox with the supplied checkbox id', () => {
-      const keyingSheetItem: KeyingSheetTableRow = { ...aKeyingSheetTableRow(), checkboxId: 'feeRecordId-123' };
-      const wrapper = getWrapper({ userCanEdit, keyingSheetItem });
+      const KeyingSheetRow: KeyingSheetTableRow = { ...aKeyingSheetTableRow(), checkboxId: 'feeRecordId-123' };
+      const wrapper = getWrapper({ userCanEdit, KeyingSheetRow });
 
       wrapper.expectElement('tr input[type="checkbox"]#feeRecordId-123').toExist();
     });
 
     it('renders the select fee record checkbox as checked when isChecked is set to true', () => {
-      const keyingSheetItem: KeyingSheetTableRow = { ...aKeyingSheetTableRow(), isChecked: true };
-      const wrapper = getWrapper({ userCanEdit, keyingSheetItem });
+      const KeyingSheetRow: KeyingSheetTableRow = { ...aKeyingSheetTableRow(), isChecked: true };
+      const wrapper = getWrapper({ userCanEdit, KeyingSheetRow });
 
       wrapper.expectElement('tr input[type="checkbox"]').toHaveCount(1);
       wrapper.expectInput('tr input[type="checkbox"]').toBeChecked();
     });
 
     it('renders the select fee record checkbox as not checked when isChecked is set to false', () => {
-      const keyingSheetItem: KeyingSheetTableRow = { ...aKeyingSheetTableRow(), isChecked: false };
-      const wrapper = getWrapper({ userCanEdit, keyingSheetItem });
+      const KeyingSheetRow: KeyingSheetTableRow = { ...aKeyingSheetTableRow(), isChecked: false };
+      const wrapper = getWrapper({ userCanEdit, KeyingSheetRow });
 
       wrapper.expectElement('tr input[type="checkbox"]').toHaveCount(1);
       wrapper.expectInput('tr input[type="checkbox"]').notToBeChecked();
@@ -245,17 +245,17 @@ describe(component, () => {
     });
 
     it('renders as many rows as there are fee payments', () => {
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         feePayments: [aFeePayment(), aFeePayment(), aFeePayment()],
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement('tr').toHaveCount(3);
     });
 
     it('renders the none-fee payment keying sheet data and checkbox only in the first row', () => {
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         facilityId: '12345678',
         exporter: 'Test exporter 1',
@@ -268,7 +268,7 @@ describe(component, () => {
         principalBalanceAdjustment: { change: 'NONE', amount: '0' },
         feePayments: [aFeePayment(), aFeePayment(), aFeePayment()],
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement('tr').toHaveCount(3);
 
@@ -298,7 +298,7 @@ describe(component, () => {
     });
 
     it('sets the data sort value for each row to match the value in the first row for the status, facility id and exporter', () => {
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         status: 'TO_DO',
         displayStatus: 'TO DO',
@@ -306,7 +306,7 @@ describe(component, () => {
         exporter: 'Test exporter 1',
         feePayments: [aFeePayment(), aFeePayment(), aFeePayment()],
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement('tr').toHaveCount(3);
 
@@ -324,11 +324,11 @@ describe(component, () => {
     });
 
     it('renders every cell except those in the last row using the no border class', () => {
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         feePayments: [aFeePayment(), aFeePayment(), aFeePayment()],
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement('tr:eq(0) td.no-border').toHaveCount(13);
       wrapper.expectElement('tr:eq(1) td.no-border').toHaveCount(13);
@@ -341,11 +341,11 @@ describe(component, () => {
         { formattedCurrencyAndAmount: 'GBP 222.22', formattedDateReceived: 'February 2' },
         { formattedCurrencyAndAmount: 'GBP 333.33', formattedDateReceived: 'March 3' },
       ];
-      const keyingSheetItem: KeyingSheetTableRow = {
+      const KeyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         feePayments,
       };
-      const wrapper = getWrapper({ keyingSheetItem });
+      const wrapper = getWrapper({ KeyingSheetRow });
 
       wrapper.expectElement('tr').toHaveCount(3);
 
