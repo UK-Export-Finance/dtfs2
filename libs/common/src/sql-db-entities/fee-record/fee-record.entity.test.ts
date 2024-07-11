@@ -1,5 +1,5 @@
 import { FEE_RECORD_STATUS } from '../../constants';
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 import { Currency } from '../../types';
 
 describe('FeeRecordEntity', () => {
@@ -83,7 +83,18 @@ describe('FeeRecordEntity', () => {
   describe('removeAllPayments', () => {
     it("removes all payments, sets the report status to 'TO_DO' and updates the 'lastUpdatedBy...' fields", () => {
       // Arrange
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).build();
+      const paymentCurrency: Currency = 'GBP';
+      const paymentId = 123;
+      const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).build();
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+        .withStatus('MATCH')
+        .withPaymentCurrency(paymentCurrency)
+        .withPayments([payment])
+        .withLastUpdatedByIsSystemUser(true)
+        .withLastUpdatedByPortalUserId(null)
+        .withLastUpdatedByTfmUserId(null)
+        .build();
 
       const userId = 'abc123';
 
