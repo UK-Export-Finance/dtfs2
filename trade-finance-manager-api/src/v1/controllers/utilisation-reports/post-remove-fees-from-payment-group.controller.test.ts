@@ -105,7 +105,7 @@ describe('postRemoveFeesFromPaymentGroup', () => {
     await postRemoveFeesFromPaymentGroup(req, res);
 
     // Assert
-    expect(res._getData()).toBe('Failed to remove fees from payment');
+    expect(res._getData()).toBe('Failed to remove fees from payment group');
     expect(res._isEndCalled()).toBe(true);
   });
 });
