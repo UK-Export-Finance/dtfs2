@@ -48,10 +48,10 @@ context('View dashboard facilities as a maker', () => {
     /*
      * insert BSS deal and facility by bank 1, maker 1
      */
-    cy.insertOneDeal(BSS_DEAL, BANK1_MAKER1).then((createdBssDeal) => {
+    cy.insertOneDeal(BSS_DEAL, ADMIN).then((createdBssDeal) => {
       ALL_DEALS.push(createdBssDeal);
 
-      cy.createFacilities(createdBssDeal._id, [BOND_FACILITY], BANK1_MAKER1).then((createdFacilities) => {
+      cy.createFacilities(createdBssDeal._id, [BOND_FACILITY], ADMIN).then((createdFacilities) => {
         ALL_FACILITIES = [...ALL_FACILITIES, ...createdFacilities];
       });
     });
@@ -59,10 +59,10 @@ context('View dashboard facilities as a maker', () => {
     /*
      * insert BSS deal and facility by bank 2, maker 2
      */
-    cy.insertOneDeal(BSS_DEAL_BANK_2_MAKER_2, BANK2_MAKER2).then((createdBssDeal) => {
+    cy.insertOneDeal(BSS_DEAL_BANK_2_MAKER_2, ADMIN).then((createdBssDeal) => {
       ALL_DEALS.push(createdBssDeal);
 
-      cy.createFacilities(createdBssDeal._id, [BOND_FACILITY], BANK2_MAKER2).then((createdFacilities) => {
+      cy.createFacilities(createdBssDeal._id, [BOND_FACILITY], ADMIN).then((createdFacilities) => {
         ALL_FACILITIES = [...ALL_FACILITIES, ...createdFacilities];
       });
     });
@@ -70,17 +70,17 @@ context('View dashboard facilities as a maker', () => {
     /*
      * insert GEF deal and facility by bank 1, maker 1
      */
-    cy.insertOneGefApplication(GEF_DEAL, BANK1_MAKER1).then((createdGefDeal) => {
-      cy.updateGefApplication(createdGefDeal._id, GEF_DEAL, BANK1_MAKER1).then((updatedGefDeal) => {
+    cy.insertOneGefApplication(GEF_DEAL, ADMIN).then((createdGefDeal) => {
+      cy.updateGefApplication(createdGefDeal._id, GEF_DEAL, ADMIN).then((updatedGefDeal) => {
         ALL_DEALS.push(updatedGefDeal);
       });
 
       CASH_FACILITY.dealId = createdGefDeal._id;
 
-      cy.insertOneGefFacility(CASH_FACILITY, BANK1_MAKER1).then((facility) => {
+      cy.insertOneGefFacility(CASH_FACILITY, ADMIN).then((facility) => {
         const { _id } = facility.details;
 
-        cy.updateGefFacility(_id, CASH_FACILITY, BANK1_MAKER1).then((updatedGefFacility) => {
+        cy.updateGefFacility(_id, CASH_FACILITY, ADMIN).then((updatedGefFacility) => {
           ALL_FACILITIES.push(updatedGefFacility.details);
         });
       });

@@ -5,7 +5,7 @@ const relative = require('../../../relativeURL');
 
 const { GEF_DEAL_DRAFT, GEF_FACILITY_CASH, GEF_FACILITY_CONTINGENT } = require('../fixtures');
 
-const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
+const { ADMIN } = MOCK_USERS;
 
 context('Admin dashboard', () => {
   let deal;
@@ -23,11 +23,11 @@ context('Admin dashboard', () => {
     // resets all facilities array
     ALL_FACILITIES.length = 0;
 
-    cy.insertOneDeal(dummyDeal, BANK1_MAKER1).then((insertedDeal) => {
+    cy.insertOneDeal(dummyDeal, ADMIN).then((insertedDeal) => {
       deal = insertedDeal;
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((dealGef) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((dealGef) => {
       const { _id: dealId } = dealGef;
 
       gefDeal = dealGef;
@@ -37,7 +37,7 @@ context('Admin dashboard', () => {
         { ...GEF_FACILITY_CONTINGENT, dealId, name: 'Contingent Facility name' },
       ];
 
-      cy.insertManyGefFacilities(facilities, BANK1_MAKER1).then((insertedFacilities) => {
+      cy.insertManyGefFacilities(facilities, ADMIN).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {
           ALL_FACILITIES.push(facility.details);
         });
@@ -87,7 +87,7 @@ context('Admin dashboard', () => {
   });
 
   it('clicking on a bss facility takes you to application details focussing on the facility (Admin)', () => {
-    cy.login(BANK1_MAKER1);
+    cy.login(ADMIN);
     cy.visit(relative(`/contract/${deal._id}`));
     // adds bond
     cy.addBondToDeal();

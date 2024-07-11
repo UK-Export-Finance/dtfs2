@@ -19,7 +19,7 @@ context('Dashboard facilities - sort', () => {
     // insert and update deals with random company names
     const manyBssDeals = Array.from(Array(15), () => BSS_DEAL_DRAFT);
     manyBssDeals.map((deal, index) => {
-      cy.insertOneDeal(deal, BANK1_MAKER1).then(({ _id }) => {
+      cy.insertOneDeal(deal, ADMIN).then(({ _id }) => {
         let companyName = '';
         // sets one company to lowercase
         if (index === 3) {
@@ -35,12 +35,12 @@ context('Dashboard facilities - sort', () => {
             },
             // adds company name to array
           },
-          BANK1_MAKER1,
+          ADMIN,
         ).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
 
         const facilities = [BSS_FACILITY_LOAN];
 
-        cy.createFacilities(_id, facilities, BANK1_MAKER1).then((insertedFacilities) => {
+        cy.createFacilities(_id, facilities, ADMIN).then((insertedFacilities) => {
           insertedFacilities.forEach((facility) => {
             ALL_FACILITIES.push(facility);
           });
@@ -52,7 +52,7 @@ context('Dashboard facilities - sort', () => {
 
     const manyGefDeals = Array.from(Array(15), () => GEF_DEAL_DRAFT);
     manyGefDeals.map((deal) => {
-      cy.insertOneGefApplication(deal, BANK1_MAKER1).then(({ _id }) => {
+      cy.insertOneGefApplication(deal, ADMIN).then(({ _id }) => {
         cy.updateGefApplication(
           _id,
           {
@@ -61,10 +61,10 @@ context('Dashboard facilities - sort', () => {
             },
             // adds company name to array
           },
-          BANK1_MAKER1,
+          ADMIN,
         ).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
         GEF_FACILITY_CASH.dealId = _id;
-        cy.insertOneGefFacility(GEF_FACILITY_CASH, BANK1_MAKER1).then((insertedFacility) => {
+        cy.insertOneGefFacility(GEF_FACILITY_CASH, ADMIN).then((insertedFacility) => {
           ALL_FACILITIES.push(insertedFacility);
         });
       });

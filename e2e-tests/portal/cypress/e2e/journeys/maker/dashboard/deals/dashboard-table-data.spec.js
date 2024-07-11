@@ -34,25 +34,25 @@ context('View dashboard deals as a maker', () => {
       GEF_DEAL_MAKER_2.maker = maker2;
     });
 
-    cy.insertOneGefApplication(GEF_DEAL, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL, ADMIN).then((deal) => {
       ALL_DEALS.push(deal);
     });
 
-    cy.insertOneDeal(BSS_DEAL, BANK1_MAKER1).then((deal) => {
+    cy.insertOneDeal(BSS_DEAL, ADMIN).then((deal) => {
       ALL_DEALS.push(deal);
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_MAKER_2, BANK1_MAKER2).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_MAKER_2, ADMIN).then((deal) => {
       ALL_DEALS.push(deal);
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_BANK_2_MAKER_2, BANK1_MAKER2).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_BANK_2_MAKER_2, ADMIN).then((deal) => {
       ALL_DEALS.push(deal);
     });
   });
 
   beforeEach(() => {
-    gefDeal = ALL_DEALS.find(({ dealType, maker }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && maker.username === BANK1_MAKER2.username);
+    gefDeal = ALL_DEALS.find(({ dealType, maker }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && maker.username === ADMIN.username);
 
     bssDeal = ALL_DEALS.find(({ dealType }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
 
