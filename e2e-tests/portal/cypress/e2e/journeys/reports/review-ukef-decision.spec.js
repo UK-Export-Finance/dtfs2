@@ -6,13 +6,13 @@ const MOCK_USERS = require('../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../fixtures/constants');
 const { reports } = require('../../pages');
 
-const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_CHECKER1, ADMIN } = MOCK_USERS;
 
 context('Dashboard: Review UKEF Decision report', () => {
   before(() => {
-    cy.deleteGefApplications(BANK1_MAKER1);
+    cy.deleteGefApplications(ADMIN);
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       cy.updateGefApplication(
         deal._id,
         {
@@ -22,12 +22,12 @@ context('Dashboard: Review UKEF Decision report', () => {
           },
           submissionDate: new Date().valueOf().toString(),
         },
-        BANK1_MAKER1,
+        ADMIN,
       );
-      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, BANK1_MAKER1);
+      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, ADMIN);
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       cy.updateGefApplication(
         deal._id,
         {
@@ -38,12 +38,12 @@ context('Dashboard: Review UKEF Decision report', () => {
           status: CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
           submissionDate: new Date().valueOf().toString(),
         },
-        BANK1_MAKER1,
+        ADMIN,
       );
-      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS, BANK1_MAKER1);
+      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS, ADMIN);
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       cy.updateGefApplication(
         deal._id,
         {
@@ -55,11 +55,11 @@ context('Dashboard: Review UKEF Decision report', () => {
           submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
           submissionDate: dateConstants.twentyFiveDaysAgoUnix * 1000,
         },
-        BANK1_MAKER1,
+        ADMIN,
       );
-      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, BANK1_MAKER1);
+      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS, ADMIN);
     });
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       cy.updateGefApplication(
         deal._id,
         {
@@ -71,9 +71,9 @@ context('Dashboard: Review UKEF Decision report', () => {
           submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIA,
           submissionDate: dateConstants.thirtyFiveDaysAgoUnix * 1000,
         },
-        BANK1_MAKER1,
+        ADMIN,
       );
-      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS, BANK1_MAKER1);
+      cy.setGefApplicationStatus(deal._id, CONSTANTS.DEALS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS, ADMIN);
     });
   });
 

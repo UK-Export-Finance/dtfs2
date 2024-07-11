@@ -12,7 +12,7 @@ context('Dashboard: Unissued facilities report', () => {
   before(() => {
     cy.deleteGefApplications(ADMIN);
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       // 90 days left
       const setDateToMidnight = new Date(parseInt(Date.now(), 10)).setHours(2, 0, 1, 0);
       const date = new Date(setDateToMidnight).valueOf().toString();
@@ -27,7 +27,7 @@ context('Dashboard: Unissued facilities report', () => {
           value: 123,
           currency: { id: 'GBP' },
         },
-        BANK1_MAKER1,
+        ADMIN,
       );
       cy.updateGefApplication(
         deal._id,
@@ -35,11 +35,11 @@ context('Dashboard: Unissued facilities report', () => {
           submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
           submissionDate: date,
         },
-        BANK1_MAKER1,
+        ADMIN,
       );
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       // 6 days left
       const setDateToMidnight = new Date(parseInt(Date.now(), 10)).setHours(2, 0, 1, 0);
       let daysInThePast = sub(setDateToMidnight, { days: 85 });
@@ -55,7 +55,7 @@ context('Dashboard: Unissued facilities report', () => {
           value: 1234567890.1,
           currency: { id: 'EUR' },
         },
-        BANK1_MAKER1,
+        ADMIN,
       );
       cy.updateGefApplication(
         deal._id,
@@ -64,11 +64,11 @@ context('Dashboard: Unissued facilities report', () => {
           submissionDate: daysInThePast,
           manualInclusionNoticeSubmissionDate: daysInThePast,
         },
-        BANK1_MAKER1,
+        ADMIN,
       );
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       // 4 days overdue
       const setDateToMidnight = new Date(parseInt(Date.now(), 10)).setHours(2, 0, 1, 0);
       let daysInThePast = sub(setDateToMidnight, { days: 95 });
@@ -84,7 +84,7 @@ context('Dashboard: Unissued facilities report', () => {
           value: 223344,
           currency: { id: 'EUR' },
         },
-        BANK1_MAKER1,
+        ADMIN,
       );
       cy.updateGefApplication(
         deal._id,
@@ -93,7 +93,7 @@ context('Dashboard: Unissued facilities report', () => {
           submissionDate: daysInThePast,
           manualInclusionNoticeSubmissionDate: daysInThePast,
         },
-        BANK1_MAKER1,
+        ADMIN,
       );
     });
   });
