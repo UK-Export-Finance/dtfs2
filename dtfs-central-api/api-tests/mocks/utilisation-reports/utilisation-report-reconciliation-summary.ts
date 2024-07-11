@@ -11,6 +11,7 @@ const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEM: UtilisationReportReco
   },
   status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
   dateUploaded: new Date('2024-01-14T15:36:00Z'),
+  totalFacilitiesReported: 3,
   totalFeesReported: 4,
   reportedFeesLeftToReconcile: 2,
 };

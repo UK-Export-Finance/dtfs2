@@ -1,46 +1,7 @@
-import { FeatureFlag, isTfmPaymentReconciliationFeatureFlagEnabled } from './is-feature-flag-enabled';
-
-const originalProcessEnv = { ...process.env };
+import { isTfmFacilityEndDateFeatureFlagEnabled, isTfmPaymentReconciliationFeatureFlagEnabled } from './is-feature-flag-enabled';
+import { withBooleanFeatureFlagTests } from './with-boolean-feature-flag.tests';
 
 describe('is-feature-flag-enabled helpers', () => {
-  afterEach(() => {
-    process.env = originalProcessEnv;
-  });
-
-  describe('isTfmPaymentReconciliationFeatureFlagEnabled', () => {
-    const tfm6FeatureFlag: FeatureFlag = 'FF_TFM_PAYMENT_RECONCILIATION_ENABLED';
-
-    it("returns false when the feature flag is set to 'false'", () => {
-      // Arrange
-      process.env[tfm6FeatureFlag] = 'false';
-
-      // Act
-      const result = isTfmPaymentReconciliationFeatureFlagEnabled();
-
-      // Assert
-      expect(result).toBe(false);
-    });
-
-    it("returns true when the feature flag is set to 'true'", () => {
-      // Arrange
-      process.env[tfm6FeatureFlag] = 'true';
-
-      // Act
-      const result = isTfmPaymentReconciliationFeatureFlagEnabled();
-
-      // Assert
-      expect(result).toBe(true);
-    });
-
-    it('defaults to false when the flag is not defined', () => {
-      // Arrange
-      delete process.env[tfm6FeatureFlag];
-
-      // Act
-      const result = isTfmPaymentReconciliationFeatureFlagEnabled();
-
-      // Assert
-      expect(result).toBe(false);
-    });
-  });
+  withBooleanFeatureFlagTests({ featureFlagName: 'FF_TFM_PAYMENT_RECONCILIATION_ENABLED', getFeatureFlagValue: isTfmPaymentReconciliationFeatureFlagEnabled });
+  withBooleanFeatureFlagTests({ featureFlagName: 'FF_TFM_FACILITY_END_DATE_ENABLED', getFeatureFlagValue: isTfmFacilityEndDateFeatureFlagEnabled });
 });
