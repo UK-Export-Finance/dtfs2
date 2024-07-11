@@ -2,9 +2,10 @@ import { UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { NotFoundError } from '../../../../../errors';
 import { getBankNameById } from '../../../../../repositories/banks-repo';
 import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
-import { mapFeeRecordEntitiesToKeyingSheet } from '../../../../../mapping/fee-record-mapper';
-import { getFilteredFeeRecordPaymentEntityGroups } from './get-filtered-fee-record-payment-entity-groups';
+import { filterFeeRecordPaymentEntityGroupsByFacilityId } from './filter-fee-record-payment-entity-groups-by-facility-id';
 import { mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups } from './map-fee-record-payment-entity-groups-to-fee-record-payment-groups';
+import { getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../../helpers';
+import { mapFeeRecordPaymentEntityGroupsToKeyingSheet } from './map-fee-record-payment-entity-groups-to-keying-sheet';
 
 /**
  * Gets the utilisation report reconciliation details for the supplied report entity
@@ -29,10 +30,13 @@ export const getUtilisationReportReconciliationDetails = async (
     throw new NotFoundError(`Failed to find a bank with id '${bankId}'`);
   }
 
-  const feeRecordPaymentEntityGroups = getFilteredFeeRecordPaymentEntityGroups(feeRecords, facilityIdFilter);
-  const feeRecordPaymentGroups = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
+  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecords);
 
-  const keyingSheet = mapFeeRecordEntitiesToKeyingSheet(feeRecords);
+  const feeRecordPaymentGroups = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(
+    facilityIdFilter ? filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityIdFilter) : feeRecordPaymentEntityGroups,
+  );
+
+  const keyingSheet = mapFeeRecordPaymentEntityGroupsToKeyingSheet(feeRecordPaymentEntityGroups);
 
   return {
     reportId: id,

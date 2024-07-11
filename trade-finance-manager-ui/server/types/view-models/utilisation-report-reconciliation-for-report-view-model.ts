@@ -35,9 +35,11 @@ export type KeyingSheetViewModel = {
   displayStatus: KeyingSheetDisplayStatus;
   facilityId: string;
   exporter: string;
-  formattedDatePaymentReceived: string;
   baseCurrency: Currency;
-  feePayment: CurrencyAndAmountString;
+  feePayments: {
+    formattedCurrencyAndAmount: CurrencyAndAmountString;
+    formattedDateReceived: string;
+  }[];
   fixedFeeAdjustment: KeyingSheetAdjustmentViewModel;
   premiumAccrualBalanceAdjustment: KeyingSheetAdjustmentViewModel;
   principalBalanceAdjustment: KeyingSheetAdjustmentViewModel;

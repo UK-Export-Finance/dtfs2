@@ -31,8 +31,10 @@
  *       datePaymentReceived:
  *         type: string
  *         format: date
- *       feePayment:
- *         $ref: '#/definitions/CurrencyAndAmount'
+ *       feePayments:
+ *         type: array
+ *         items:
+ *           $ref: '#/definitions/CurrencyAndAmount'
  *       baseCurrency:
  *         $ref: '#/definitions/Currency'
  *       fixedFeeAdjustment:

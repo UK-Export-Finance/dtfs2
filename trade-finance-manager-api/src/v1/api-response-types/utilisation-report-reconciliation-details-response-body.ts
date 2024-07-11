@@ -29,7 +29,11 @@ type KeyingSheet = {
   facilityId: string;
   exporter: string;
   datePaymentReceived: IsoDateTimeStamp;
-  feePayment: CurrencyAndAmount;
+  feePayments: {
+    currency: Currency;
+    amount: number;
+    dateReceived: IsoDateTimeStamp;
+  }[];
   baseCurrency: Currency;
   fixedFeeAdjustment: KeyingSheetAdjustment | null;
   premiumAccrualBalanceAdjustment: KeyingSheetAdjustment | null;

@@ -5,11 +5,11 @@ import {
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { getFilteredFeeRecordPaymentEntityGroups } from './get-filtered-fee-record-payment-entity-groups';
+import { filterFeeRecordPaymentEntityGroupsByFacilityId } from './filter-fee-record-payment-entity-groups-by-facility-id';
 import { FeeRecordPaymentEntityGroup } from '../../../../../helpers';
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
-  describe('getFilteredFeeRecordPaymentEntityGroups', () => {
+  describe('filterFeeRecordPaymentEntityGroupsByFacilityId', () => {
     const feeRecordIdGenerator = idGenerator();
 
     const aFeeRecordWithFacilityIdAndPayments = (facilityId: string, payments: PaymentEntity[]) =>
@@ -30,8 +30,6 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
     const secondFeeRecords = [aFeeRecordWithFacilityIdAndPayments('33333333', secondPayments), aFeeRecordWithFacilityIdAndPayments('55555555', secondPayments)];
 
-    const allFeeRecords = [...firstFeeRecords, ...secondFeeRecords];
-
     const firstFeeRecordPaymentGroup: FeeRecordPaymentEntityGroup = {
       feeRecords: firstFeeRecords,
       payments: firstPayments,
@@ -42,23 +40,14 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       payments: secondPayments,
     };
 
-    it('returns all the fee record payment groups if the facility id filter is undefined', () => {
-      // Arrange
-      const facilityIdFilter = undefined;
-
-      // Act
-      const result = getFilteredFeeRecordPaymentEntityGroups(allFeeRecords, facilityIdFilter);
-
-      // Assert
-      expect(result).toEqual([firstFeeRecordPaymentGroup, secondFeeRecordPaymentGroup]);
-    });
+    const allFeeRecordPaymentGroups = [firstFeeRecordPaymentGroup, secondFeeRecordPaymentGroup];
 
     it('returns the group where the supplied facility id filter matches one of the fee records in a group', () => {
       // Arrange
       const facilityIdFilter = firstFeeRecords[0].facilityId;
 
       // Act
-      const result = getFilteredFeeRecordPaymentEntityGroups(allFeeRecords, facilityIdFilter);
+      const result = filterFeeRecordPaymentEntityGroupsByFacilityId(allFeeRecordPaymentGroups, facilityIdFilter);
 
       // Assert
       expect(result).toContainEqual(firstFeeRecordPaymentGroup);
@@ -70,7 +59,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       const facilityIdFilter = '1111'; // corresponds to firstFeeRecords[0].facilityId
 
       // Act
-      const result = getFilteredFeeRecordPaymentEntityGroups(allFeeRecords, facilityIdFilter);
+      const result = filterFeeRecordPaymentEntityGroupsByFacilityId(allFeeRecordPaymentGroups, facilityIdFilter);
 
       // Assert
       expect(result).toContainEqual(firstFeeRecordPaymentGroup);
@@ -87,19 +76,20 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           .withPayments(anotherPayments)
           .build(),
       ];
+      const anotherFeeRecordPaymentGroup: FeeRecordPaymentEntityGroup = {
+        feeRecords: anotherFeeRecords,
+        payments: anotherPayments,
+      };
 
       const facilityIdFilter = '1111';
 
       // Act
-      const result = getFilteredFeeRecordPaymentEntityGroups([...allFeeRecords, ...anotherFeeRecords], facilityIdFilter);
+      const result = filterFeeRecordPaymentEntityGroupsByFacilityId([...allFeeRecordPaymentGroups, anotherFeeRecordPaymentGroup], facilityIdFilter);
 
       // Assert
       expect(result).toContainEqual(firstFeeRecordPaymentGroup);
       expect(result).not.toContainEqual(secondFeeRecordPaymentGroup);
-      expect(result).toContainEqual<FeeRecordPaymentEntityGroup>({
-        feeRecords: anotherFeeRecords,
-        payments: anotherPayments,
-      });
+      expect(result).toContainEqual(anotherFeeRecordPaymentGroup);
     });
 
     function aUtilisationReport(): UtilisationReportEntity {

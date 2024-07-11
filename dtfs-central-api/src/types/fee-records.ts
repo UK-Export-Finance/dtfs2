@@ -33,15 +33,20 @@ export type KeyingSheetAdjustment = {
   amount: number;
 };
 
-export type KeyingSheet = {
+export type KeyingSheetItem = {
   feeRecordId: number;
   status: KeyingSheetStatus;
   facilityId: string;
   exporter: string;
-  datePaymentReceived: Date;
-  feePayment: CurrencyAndAmount;
+  feePayments: {
+    dateReceived: Date;
+    currency: Currency;
+    amount: number;
+  }[];
   baseCurrency: Currency;
   fixedFeeAdjustment: KeyingSheetAdjustment | null;
   premiumAccrualBalanceAdjustment: KeyingSheetAdjustment | null;
   principalBalanceAdjustment: KeyingSheetAdjustment | null;
-}[];
+};
+
+export type KeyingSheet = KeyingSheetItem[];

@@ -1,7 +1,7 @@
 import orderBy from 'lodash.orderby';
 import { FeeRecordStatus, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
-import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetAdjustment, Payment } from '../../../api-response-types';
+import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetAdjustment, KeyingSheetItem, Payment } from '../../../api-response-types';
 import {
   FeeRecordPaymentGroupViewModelItem,
   FeeRecordViewModelItem,
@@ -120,15 +120,25 @@ const getKeyingSheetAdjustmentViewModel = (adjustment: KeyingSheetAdjustment | n
   };
 };
 
+const mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel = (feePayments: KeyingSheetItem['feePayments']) =>
+  feePayments.map(({ currency, amount, dateReceived }) => ({
+    formattedCurrencyAndAmount: getFormattedCurrencyAndAmount({ currency, amount }),
+    formattedDateReceived: format(new Date(dateReceived), 'd MMM yyyy'),
+  }));
+
+/**
+ * Maps the keying sheet to the keying sheet view model
+ * @param keyingSheet - The keying sheet
+ * @returns The keying sheet view model
+ */
 export const mapKeyingSheetToKeyingSheetViewModel = (keyingSheet: KeyingSheet): KeyingSheetViewModel =>
   keyingSheet.map((keyingSheetItem) => ({
     status: keyingSheetItem.status,
     displayStatus: getKeyingSheetDisplayStatus(keyingSheetItem.status),
     facilityId: keyingSheetItem.facilityId,
     exporter: keyingSheetItem.exporter,
-    formattedDatePaymentReceived: format(new Date(keyingSheetItem.datePaymentReceived), 'd MMM yyyy'),
     baseCurrency: keyingSheetItem.baseCurrency,
-    feePayment: getFormattedCurrencyAndAmount(keyingSheetItem.feePayment),
+    feePayments: mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel(keyingSheetItem.feePayments),
     fixedFeeAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetItem.fixedFeeAdjustment),
     premiumAccrualBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetItem.premiumAccrualBalanceAdjustment),
     principalBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetItem.principalBalanceAdjustment),

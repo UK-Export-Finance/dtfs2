@@ -23,18 +23,23 @@ export type KeyingSheetAdjustment = {
   amount: number;
 };
 
-export type KeyingSheet = {
+export type KeyingSheetItem = {
   feeRecordId: number;
   status: KeyingSheetStatus;
   facilityId: string;
   exporter: string;
-  datePaymentReceived: IsoDateTimeStamp;
-  feePayment: CurrencyAndAmount;
+  feePayments: {
+    currency: Currency;
+    amount: number;
+    dateReceived: IsoDateTimeStamp;
+  }[];
   baseCurrency: Currency;
   fixedFeeAdjustment: KeyingSheetAdjustment | null;
   premiumAccrualBalanceAdjustment: KeyingSheetAdjustment | null;
   principalBalanceAdjustment: KeyingSheetAdjustment | null;
-}[];
+};
+
+export type KeyingSheet = KeyingSheetItem[];
 
 export type UtilisationReportReconciliationDetailsResponseBody = {
   reportId: number;

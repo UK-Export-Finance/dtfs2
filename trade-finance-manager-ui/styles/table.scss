@@ -137,6 +137,10 @@ table.sortable {
   div.select-all-table-cell-checkbox {
     visibility: hidden;
   }
+
+  .no-border {
+    border-bottom: 0px;
+  }
 }
 
 .js-enabled .govuk-table div.select-all-table-cell-checkbox {
@@ -144,10 +148,6 @@ table.sortable {
 }
 
 table.premium-payments-table {
-  .no-border {
-    border-bottom: 0px;
-  }
-
   .payments-list {
     margin: 0;
     padding: 0;
