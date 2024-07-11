@@ -11,7 +11,7 @@ export const validateAtLeastOneFeeRecordSelected = (selectedFeeRecordIds: number
 };
 
 export const validateNotAllFeeRecordsSelected = (selectedFeeRecordIds: number[], totalSelectableFeeRecords: number) => {
-  if (selectedFeeRecordIds.length === totalSelectableFeeRecords) {
+  if (selectedFeeRecordIds.length >= totalSelectableFeeRecords) {
     throw new InvalidPayloadError('Not all fee records can be selected.');
   }
 };
