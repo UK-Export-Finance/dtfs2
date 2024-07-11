@@ -1,6 +1,5 @@
 import { getDaysInMonth, set, startOfDay } from 'date-fns';
 import Joi from 'joi';
-import { uniq } from 'lodash';
 
 type ValidationParamsWithDisplayName = {
   day: string;
@@ -8,14 +7,6 @@ type ValidationParamsWithDisplayName = {
   year: string;
   errRef: string;
   variableDisplayName: string;
-};
-
-type ValidationParamsWithErrMsgOverride = {
-  day: string;
-  month: string;
-  year: string;
-  errRef: string;
-  errMsgOverride: string;
 };
 
 type ValidationError = {
@@ -45,6 +36,7 @@ export const validateAndParseDayMonthYear = ({ day, month, year, errRef, variabl
         {
           errRef,
           errMsg: `Enter a ${variableDisplayName}`,
+          subFieldErrorRefs: [`${errRef}-day`, `${errRef}-month`, `${errRef}-year`],
         },
       ],
     };
@@ -153,31 +145,5 @@ export const validateAndParseDayMonthYear = ({ day, month, year, errRef, variabl
         date: Number(day),
       }),
     ),
-  };
-};
-
-const getAllSubfieldErrorRefs = (errors: ValidationError[]) => uniq(errors.flatMap((error) => error.subFieldErrorRefs ?? []));
-
-export const validateAndParseDayMonthYearWithErrMsgOverride = ({
-  day,
-  month,
-  year,
-  errRef,
-  errMsgOverride,
-}: ValidationParamsWithErrMsgOverride): ErrorsOrDate => {
-  const errorsOrDate = validateAndParseDayMonthYear({ day, month, year, errRef, variableDisplayName: errRef });
-
-  if (!errorsOrDate.errors) {
-    return errorsOrDate;
-  }
-
-  return {
-    errors: [
-      {
-        errRef,
-        errMsg: errMsgOverride,
-        subFieldErrorRefs: getAllSubfieldErrorRefs(errorsOrDate.errors),
-      },
-    ],
   };
 };
