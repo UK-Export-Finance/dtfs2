@@ -40,6 +40,7 @@ export type UtilisationReportReconciliationSummaryItem = {
   };
   status: UtilisationReportReconciliationStatus;
   dateUploaded?: Date;
+  totalFacilitiesReported?: number;
   totalFeesReported?: number;
   reportedFeesLeftToReconcile?: number;
 };

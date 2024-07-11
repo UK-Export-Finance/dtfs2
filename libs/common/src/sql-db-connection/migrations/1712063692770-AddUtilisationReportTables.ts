@@ -18,9 +18,6 @@ export class AddUtilisationReportTables1712063692770 implements MigrationInterfa
                 "lastUpdatedByTfmUserId" nvarchar(255),
                 "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_5b2813faa091ae4c63bc13a88ec" DEFAULT 0,
                 CONSTRAINT "PK_ea6ad35b38f9b9e248b432d1a1e" PRIMARY KEY ("id")
-            ) WITH (
-                SYSTEM_VERSIONING = ON,
-                LEDGER = ON
             )
         `);
     await queryRunner.query(`
@@ -47,9 +44,6 @@ export class AddUtilisationReportTables1712063692770 implements MigrationInterfa
                 "lastUpdatedByTfmUserId" nvarchar(255),
                 "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_7121ac2f65fd8b070ffd591ed37" DEFAULT 0,
                 CONSTRAINT "PK_9488afe4d9d39fec32e7c53d47a" PRIMARY KEY ("id")
-            ) WITH (
-                SYSTEM_VERSIONING = ON,
-                LEDGER = ON
             )
         `);
     await queryRunner.query(`
@@ -68,9 +62,6 @@ export class AddUtilisationReportTables1712063692770 implements MigrationInterfa
                 "lastUpdatedByTfmUserId" nvarchar(255),
                 "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_edb079a13cd83e211bc24c2b0b9" DEFAULT 0,
                 CONSTRAINT "PK_98a789a9ebdc731bd04ec00860a" PRIMARY KEY ("id")
-            ) WITH (
-                SYSTEM_VERSIONING = ON,
-                LEDGER = ON
             )
         `);
     await queryRunner.query(`
