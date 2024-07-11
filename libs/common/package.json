@@ -38,7 +38,7 @@
     "lint:fix": "eslint --fix --color **/*.{ts,js}",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js} --ignore-path ../../.prettierignore",
     "prettier:fix": "prettier --write **/*.{ts,js} --ignore-path ../.prettierignore",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc --noEmit --pretty",
     "typeorm": "typeorm-ts-node-commonjs",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js"

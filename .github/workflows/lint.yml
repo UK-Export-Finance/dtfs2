@@ -130,9 +130,9 @@ jobs:
         working-directory: ./
         run: npm run prettier:all
 
-  # 4. YAML
-  yaml:
-    name: YAML 🎨
+  # 4. Type check
+  typecheck:
+    name: TypeScript ⌨️
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -154,6 +154,34 @@ jobs:
         working-directory: ./
         run: npm ci
 
-      - name: Linting
+      - name: Validate
+        working-directory: ./
+        run: npm run type-check:all
+
+  # 5. YAML check
+  yaml:
+    name: YAML ⌨️
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Validate
         working-directory: ./
         run: npm run validate:yml
