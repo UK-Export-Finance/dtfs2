@@ -190,7 +190,7 @@ jobs:
 
     steps:
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -259,7 +259,7 @@ jobs:
 
     steps:
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -318,7 +318,7 @@ jobs:
 
     steps:
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -392,7 +392,7 @@ jobs:
           node-version: ${{ env.node }}
 
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -466,7 +466,7 @@ jobs:
           node-version: ${{ env.node }}
 
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -538,7 +538,7 @@ jobs:
           node-version: ${{ env.node }}
 
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -619,7 +619,7 @@ jobs:
           node-version: ${{ env.node }}
 
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
