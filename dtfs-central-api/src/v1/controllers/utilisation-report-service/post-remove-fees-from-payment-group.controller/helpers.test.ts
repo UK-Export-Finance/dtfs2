@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { removeFeesFromPayment, validateAtLeastOneFeeRecordSelected, validateNotAllFeeRecordsSelected } from './helpers';
+import { removeFeesFromPaymentGroup, validateAtLeastOneFeeRecordSelected, validateNotAllFeeRecordsSelected } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
@@ -11,7 +11,7 @@ import { InvalidPayloadError } from '../../../../errors';
 jest.mock('../../../../helpers');
 
 describe('post-remove-fees-from-payment.controller helpers', () => {
-  describe('removeFeesFromPayment', () => {
+  describe('removeFeesFromPaymentGroup', () => {
     const reportId = 1;
 
     const tfmUser: TfmSessionUser = {
@@ -51,7 +51,7 @@ describe('post-remove-fees-from-payment.controller helpers', () => {
 
     it('initialises a utilisation report state machine with the supplied report', async () => {
       // Act
-      await removeFeesFromPayment(utilisationReport, feeRecords, selectedFeeRecordIds, tfmUser);
+      await removeFeesFromPaymentGroup(utilisationReport, feeRecords, selectedFeeRecordIds, tfmUser);
 
       // Assert
       expect(utilisationReportStateMachineConstructorSpy).toHaveBeenCalledWith(utilisationReport);
@@ -59,14 +59,14 @@ describe('post-remove-fees-from-payment.controller helpers', () => {
 
     it('removes the payment fees using the utilisation report state machine', async () => {
       // Act
-      await removeFeesFromPayment(utilisationReport, feeRecords, selectedFeeRecordIds, tfmUser);
+      await removeFeesFromPaymentGroup(utilisationReport, feeRecords, selectedFeeRecordIds, tfmUser);
 
       const selectedFeeRecords = [feeRecords[0]];
       const otherFeeRecords = feeRecords.slice(1);
 
       // Assert
       expect(handleEventSpy).toHaveBeenCalledWith({
-        type: 'REMOVE_PAYMENT_FEES',
+        type: 'REMOVE_FEES_FROM_PAYMENT_GROUP',
         payload: {
           transactionEntityManager: mockEntityManager,
           selectedFeeRecords,

@@ -245,5 +245,5 @@ module.exports = {
   getPaymentDetails: jest.fn(),
   deletePaymentById: jest.fn(),
   editPayment: jest.fn(),
-  removeFeesFromPayment: jest.fn(),
+  removeFeesFromPaymentGroup: jest.fn(),
 };

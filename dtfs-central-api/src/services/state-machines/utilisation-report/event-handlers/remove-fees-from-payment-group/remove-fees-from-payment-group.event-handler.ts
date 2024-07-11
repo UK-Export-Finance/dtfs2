@@ -4,14 +4,17 @@ import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';
 
-type RemoveFeesFromPaymentEventPayload = {
+type RemoveFeesFromPaymentGroupEventPayload = {
   transactionEntityManager: EntityManager;
   selectedFeeRecords: FeeRecordEntity[];
   otherFeeRecords: FeeRecordEntity[];
   requestSource: DbRequestSource;
 };
 
-export type UtilisationReportRemoveFeesFromPaymentEvent = BaseUtilisationReportEvent<'REMOVE_PAYMENT_FEES', RemoveFeesFromPaymentEventPayload>;
+export type UtilisationReportRemoveFeesFromPaymentGroupEvent = BaseUtilisationReportEvent<
+  'REMOVE_FEES_FROM_PAYMENT_GROUP',
+  RemoveFeesFromPaymentGroupEventPayload
+>;
 
 const removeSelectedFeePayments = async (transactionEntityManager: EntityManager, feeRecords: FeeRecordEntity[], requestSource: DbRequestSource) => {
   const feeRecordStateMachines = feeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
@@ -46,9 +49,9 @@ const updateOtherFeePaymentsInGroup = async (transactionEntityManager: EntityMan
   );
 };
 
-export const handleUtilisationReportRemoveFeesFromPaymentEvent = async (
+export const handleUtilisationReportRemoveFeesFromPaymentGroupEvent = async (
   report: UtilisationReportEntity,
-  { transactionEntityManager, selectedFeeRecords, otherFeeRecords, requestSource }: RemoveFeesFromPaymentEventPayload,
+  { transactionEntityManager, selectedFeeRecords, otherFeeRecords, requestSource }: RemoveFeesFromPaymentGroupEventPayload,
 ): Promise<UtilisationReportEntity> => {
   await removeSelectedFeePayments(transactionEntityManager, selectedFeeRecords, requestSource);
   await updateOtherFeePaymentsInGroup(transactionEntityManager, otherFeeRecords, requestSource);

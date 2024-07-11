@@ -1,15 +1,15 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { getEditPaymentsCheckboxIdsFromObjectKeys, getFeeRecordIdsFromEditPaymentsCheckboxIds } from '../../../helpers/edit-payments-table-checkbox-id-helper';
-import { RemoveFeesFromPaymentFormRequestBody } from '../../../helpers/remove-fees-from-payment-helper';
+import { RemoveFeesFromPaymentGroupFormRequestBody } from '../../../helpers/remove-fees-from-payment-group-helper';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 
-export type RemoveFeesFromPaymentRequest = CustomExpressRequest<{
-  reqBody: RemoveFeesFromPaymentFormRequestBody;
+export type RemoveFeesFromPaymentGroupRequest = CustomExpressRequest<{
+  reqBody: RemoveFeesFromPaymentGroupFormRequestBody;
 }>;
 
-export const postRemoveFeesFromPayment = async (req: RemoveFeesFromPaymentRequest, res: Response) => {
+export const postRemoveFeesFromPaymentGroup = async (req: RemoveFeesFromPaymentGroupRequest, res: Response) => {
   try {
     const { user, userToken } = asUserSession(req.session);
     const { reportId, paymentId } = req.params;
@@ -17,7 +17,7 @@ export const postRemoveFeesFromPayment = async (req: RemoveFeesFromPaymentReques
     const checkedCheckboxIds = getEditPaymentsCheckboxIdsFromObjectKeys(req.body);
     const selectedFeeRecordIds = getFeeRecordIdsFromEditPaymentsCheckboxIds(checkedCheckboxIds);
 
-    await api.removeFeesFromPayment(reportId, paymentId, selectedFeeRecordIds, user, userToken);
+    await api.removeFeesFromPaymentGroup(reportId, paymentId, selectedFeeRecordIds, user, userToken);
 
     return res.redirect(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
   } catch (error) {

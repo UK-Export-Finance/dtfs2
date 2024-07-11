@@ -1,12 +1,12 @@
 import { EntityManager } from 'typeorm';
 import { UtilisationReportEntityMockBuilder, DbRequestSource, FeeRecordEntityMockBuilder, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { handleUtilisationReportRemoveFeesFromPaymentEvent } from './remove-fees-from-payment.event-handler';
+import { handleUtilisationReportRemoveFeesFromPaymentGroupEvent } from './remove-fees-from-payment-group.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';
 
 jest.mock('../helpers');
 
-describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
+describe('handleUtilisationReportRemoveFeesFromPaymentGroupEvent', () => {
   const tfmUserId = 'abc123';
   const requestSource: DbRequestSource = {
     platform: 'TFM',
@@ -60,7 +60,7 @@ describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
     // Act
-    await handleUtilisationReportRemoveFeesFromPaymentEvent(utilisationReport, {
+    await handleUtilisationReportRemoveFeesFromPaymentGroupEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       selectedFeeRecords,
       otherFeeRecords,
@@ -100,7 +100,7 @@ describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
       jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(feeRecordsAndPaymentsMatch);
 
       // Act
-      await handleUtilisationReportRemoveFeesFromPaymentEvent(utilisationReport, {
+      await handleUtilisationReportRemoveFeesFromPaymentGroupEvent(utilisationReport, {
         transactionEntityManager: mockEntityManager,
         selectedFeeRecords,
         otherFeeRecords,
@@ -127,7 +127,7 @@ describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
     const utilisationReport = aReconciliationInProgressReport();
 
     // Act
-    await handleUtilisationReportRemoveFeesFromPaymentEvent(utilisationReport, {
+    await handleUtilisationReportRemoveFeesFromPaymentGroupEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       selectedFeeRecords: [],
       otherFeeRecords: [],

@@ -27,7 +27,7 @@ const { postKeyingData } = require('../controllers/utilisation-report-service/po
 const { getFeeRecordsToKey } = require('../controllers/utilisation-report-service/get-fee-records-to-key.controller');
 const { getPaymentDetailsById } = require('../controllers/utilisation-report-service/get-payment-details-by-id.controller');
 const { patchPayment } = require('../controllers/utilisation-report-service/patch-payment.controller');
-const { postRemoveFeesFromPayment } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment.controller');
+const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -517,7 +517,7 @@ utilisationReportsRouter
     validation.sqlIdValidation('paymentId'),
     handleExpressValidatorResult,
     validatePostRemoveFeesFromPaymentPayload,
-    postRemoveFeesFromPayment,
+    postRemoveFeesFromPaymentGroup,
   );
 
 module.exports = utilisationReportsRouter;

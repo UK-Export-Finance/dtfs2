@@ -16,7 +16,7 @@ export const validateNotAllFeeRecordsSelected = (selectedFeeRecordIds: number[],
   }
 };
 
-export const removeFeesFromPayment = async (
+export const removeFeesFromPaymentGroup = async (
   utilisationReport: UtilisationReportEntity,
   allFeeRecords: FeeRecordEntity[],
   selectedFeeRecordIds: number[],
@@ -29,7 +29,7 @@ export const removeFeesFromPayment = async (
 
   await executeWithSqlTransaction(async (transactionEntityManager) => {
     await utilisationReportStateMachine.handleEvent({
-      type: 'REMOVE_PAYMENT_FEES',
+      type: 'REMOVE_FEES_FROM_PAYMENT_GROUP',
       payload: {
         transactionEntityManager,
         selectedFeeRecords,

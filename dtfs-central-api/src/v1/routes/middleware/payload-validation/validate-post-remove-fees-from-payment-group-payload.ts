@@ -3,15 +3,15 @@ import { NextFunction, Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { TfmSessionUserSchema } from './schemas';
 
-const PostRemoveFeesFromPaymentSchema = z.object({
+const PostRemoveFeesFromPaymentGroupSchema = z.object({
   selectedFeeRecordIds: z.array(z.number().gte(1)).min(1),
   user: TfmSessionUserSchema,
 });
 
-export type PostRemoveFeesFromPaymentPayload = z.infer<typeof PostRemoveFeesFromPaymentSchema>;
+export type PostRemoveFeesFromPaymentGroupPayload = z.infer<typeof PostRemoveFeesFromPaymentGroupSchema>;
 
-export const validatePostRemoveFeesFromPaymentPayload = (req: Request, res: Response, next: NextFunction) => {
-  const { success, error, data } = PostRemoveFeesFromPaymentSchema.safeParse(req.body);
+export const validatePostRemoveFeesFromPaymentGroupPayload = (req: Request, res: Response, next: NextFunction) => {
+  const { success, error, data } = PostRemoveFeesFromPaymentGroupSchema.safeParse(req.body);
   if (success) {
     req.body = data;
     return next();

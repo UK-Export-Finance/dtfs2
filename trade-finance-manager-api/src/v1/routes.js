@@ -182,7 +182,7 @@ authRouter
     validation.sqlIdValidation('reportId'),
     validation.sqlIdValidation('paymentId'),
     handleExpressValidatorResult,
-    utilisationReportsController.postRemoveFeesFromPayment,
+    utilisationReportsController.postRemoveFeesFromPaymentGroup,
   );
 
 module.exports = { authRouter, openRouter };

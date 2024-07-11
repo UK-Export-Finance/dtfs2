@@ -87,7 +87,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
     it('sets remove fees from payment error summary based on passed in session data', async () => {
       // Arrange
       const sessionData: Partial<SessionData> = {
-        removeFeesFromPaymentErrorKey: 'no-fee-records-selected',
+        removeFeesFromPaymentGroupErrorKey: 'no-fee-records-selected',
       };
       const { req, res } = getHttpMocksWithSessionData(sessionData);
 

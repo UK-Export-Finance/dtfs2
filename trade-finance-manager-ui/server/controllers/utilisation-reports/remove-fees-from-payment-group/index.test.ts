@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { postRemoveFeesFromPayment } from '.';
+import { postRemoveFeesFromPaymentGroup } from '.';
 import api from '../../../api';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
 
@@ -8,7 +8,7 @@ jest.mock('../../../api');
 console.error = jest.fn();
 
 describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
-  describe('postRemoveFeesFromPayment', () => {
+  describe('postRemoveFeesFromPaymentGroup', () => {
     const userToken = 'abc123';
     const requestSession = {
       user: aTfmSessionUser(),
@@ -26,10 +26,10 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
         params: { reportId: '1', paymentId: '2' },
       });
 
-      jest.mocked(api.removeFeesFromPayment).mockRejectedValue(new Error('Some error'));
+      jest.mocked(api.removeFeesFromPaymentGroup).mockRejectedValue(new Error('Some error'));
 
       // Act
-      await postRemoveFeesFromPayment(req, res);
+      await postRemoveFeesFromPaymentGroup(req, res);
 
       // Assert
       expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
@@ -46,7 +46,7 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
       });
 
       // Act
-      await postRemoveFeesFromPayment(req, res);
+      await postRemoveFeesFromPaymentGroup(req, res);
 
       // Assert
       expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
