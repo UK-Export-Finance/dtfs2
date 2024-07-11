@@ -1,4 +1,4 @@
-{% import './_macros/report-reconciliation-table.njk' as reportReconciliationTable %}
+{% import './_macros/report-reconciliation-table-manual-reconciliation.njk' as reportReconciliationTable %}
 
 {% extends "index.njk" %}
 
@@ -20,7 +20,16 @@
 
   <div class="govuk-grid-row">
     <div
-      class="govuk-grid-column-full ukef-stack ukef-stack-spacing-2"
+      class="
+        govuk-grid-column-full
+        ukef-stack
+        {% if user | userIsInTeam(["PDC_RECONCILE"]) %}
+          ukef-stack-divider
+          ukef-stack-spacing-7
+        {% else %}
+          ukef-stack-spacing-2
+        {% endif %}
+      "
     >
       {% for reportPeriodSummary in reportPeriodSummaries %}
         <div>
@@ -39,8 +48,10 @@
           </p>
 
           {{ reportReconciliationTable.render({
+            user: user,
             summaryItems: reportPeriodSummary.items,
-            submissionMonth: reportPeriodSummary.submissionMonth
+            submissionMonth: reportPeriodSummary.submissionMonth,
+            csrfToken: csrfToken
           }) }}
         </div>
       {% endfor %}

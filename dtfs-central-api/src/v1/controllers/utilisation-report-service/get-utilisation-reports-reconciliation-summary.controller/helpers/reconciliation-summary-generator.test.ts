@@ -8,15 +8,15 @@ import {
   IsoMonthStamp,
 } from '@ukef/dtfs2-common';
 
-import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { generateReconciliationSummaries, getAllReportsForSubmissionMonth, getPreviousOpenReportsBySubmissionMonth } from './helpers';
-import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../types/utilisation-reports';
-import { aBank } from '../../../../../test-helpers/test-data/bank';
-import { aMonthlyBankReportPeriodSchedule } from '../../../../../test-helpers/test-data/bank-report-period-schedule';
-import { getAllBanks } from '../../../../repositories/banks-repo';
+import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
+import { generateReconciliationSummaries, getAllReportsForSubmissionMonth, getPreviousOpenReportsBySubmissionMonth } from './reconciliation-summary-generator';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../../types/utilisation-reports';
+import { aBank } from '../../../../../../test-helpers/test-data/bank';
+import { aMonthlyBankReportPeriodSchedule } from '../../../../../../test-helpers/test-data/bank-report-period-schedule';
+import { getAllBanks } from '../../../../../repositories/banks-repo';
 
-jest.mock('../../../../repositories/banks-repo');
-jest.mock('../../../../repositories/utilisation-reports-repo');
+jest.mock('../../../../../repositories/banks-repo');
+jest.mock('../../../../../repositories/utilisation-reports-repo');
 
 describe('get-utilisation-reports-reconciliation-summary.controller helper', () => {
   const getMockFeeRecordForReport = (report: UtilisationReportEntity): FeeRecordEntity => FeeRecordEntityMockBuilder.forReport(report).build();
@@ -136,6 +136,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
             bank: { id: bankIdOne, name: bankNameOne },
             status: reportOne.status,
             dateUploaded: reportOne.dateUploaded ?? undefined,
+            totalFacilitiesReported: 1,
             totalFeesReported: 1,
             reportedFeesLeftToReconcile: 1,
           },
@@ -145,6 +146,7 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
             bank: { id: bankIdTwo, name: bankNameTwo },
             status: reportTwo.status,
             dateUploaded: reportTwo.dateUploaded ?? undefined,
+            totalFacilitiesReported: 1,
             totalFeesReported: 1,
             reportedFeesLeftToReconcile: 1,
           },
