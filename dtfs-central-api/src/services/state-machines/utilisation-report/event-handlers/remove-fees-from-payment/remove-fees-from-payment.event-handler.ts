@@ -18,7 +18,7 @@ const removeSelectedFeePayments = async (transactionEntityManager: EntityManager
   await Promise.all(
     feeRecordStateMachines.map((stateMachine) =>
       stateMachine.handleEvent({
-        type: 'REMOVE_FROM_PAYMENT',
+        type: 'REMOVE_FROM_PAYMENT_GROUP',
         payload: {
           transactionEntityManager,
           requestSource,

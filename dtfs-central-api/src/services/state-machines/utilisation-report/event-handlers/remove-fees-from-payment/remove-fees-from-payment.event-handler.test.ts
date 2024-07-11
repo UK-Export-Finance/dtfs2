@@ -72,7 +72,7 @@ describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
       selectedFeeRecords.forEach(({ id }) => {
         const eventHandler = eventHandlers[id];
         expect(eventHandler).toHaveBeenCalledWith({
-          type: 'REMOVE_FROM_PAYMENT',
+          type: 'REMOVE_FROM_PAYMENT_GROUP',
           payload: {
             transactionEntityManager: mockEntityManager,
             requestSource,

@@ -3,7 +3,7 @@ import {
   FeeRecordPaymentDeletedEvent,
   FeeRecordPaymentEditedEvent,
   FeeRecordGenerateKeyingDataEvent,
-  FeeRecordRemoveFromPaymentEvent,
+  FeeRecordRemoveFromPaymentGroupEvent,
   FeeRecordOtherFeeRemovedFromGroupEvent,
 } from '../event-handlers';
 
@@ -12,5 +12,5 @@ export type FeeRecordEvent =
   | FeeRecordPaymentDeletedEvent
   | FeeRecordPaymentEditedEvent
   | FeeRecordGenerateKeyingDataEvent
-  | FeeRecordRemoveFromPaymentEvent
+  | FeeRecordRemoveFromPaymentGroupEvent
   | FeeRecordOtherFeeRemovedFromGroupEvent;
