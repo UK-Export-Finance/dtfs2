@@ -3,14 +3,9 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PostRemoveFeesFromPaymentGroupPayload } from '../../../routes/middleware/payload-validation/validate-post-remove-fees-from-payment-group-payload';
-import { NotFoundError } from '../../../../errors';
+import { InvalidPayloadError, NotFoundError } from '../../../../errors';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
-import {
-  removeFeesFromPaymentGroup,
-  validateNotAllFeeRecordsSelected,
-  validateSelectedFeeRecordsDoesNotExceedTotal,
-  validateSelectedFeeRecordsExistInPayment,
-} from './helpers';
+import { removeFeesFromPaymentGroup } from './helpers';
 
 export type PostRemoveFeesFromPaymentGroupRequest = CustomExpressRequest<{
   params: {
@@ -41,14 +36,18 @@ export const postRemoveFeesFromPaymentGroup = async (req: PostRemoveFeesFromPaym
     }
 
     const allFeeRecords = payment.feeRecords;
+    const feeRecordsToRemove = allFeeRecords.filter((record) => selectedFeeRecordIds.includes(record.id));
+    const otherFeeRecordsInGroup = allFeeRecords.filter((record) => !selectedFeeRecordIds.includes(record.id));
 
-    validateSelectedFeeRecordsExistInPayment(selectedFeeRecordIds, allFeeRecords);
+    if (feeRecordsToRemove.length === 0) {
+      throw new InvalidPayloadError('No fee records selected that belong to the payment group.');
+    }
 
-    const totalFeeRecordsOnPayment = allFeeRecords.length;
-    validateSelectedFeeRecordsDoesNotExceedTotal(selectedFeeRecordIds, totalFeeRecordsOnPayment);
-    validateNotAllFeeRecordsSelected(selectedFeeRecordIds, totalFeeRecordsOnPayment);
+    if (otherFeeRecordsInGroup.length === 0) {
+      throw new InvalidPayloadError('Not all fee records can be selected.');
+    }
 
-    await removeFeesFromPaymentGroup(utilisationReport, allFeeRecords, selectedFeeRecordIds, user);
+    await removeFeesFromPaymentGroup(utilisationReport, feeRecordsToRemove, otherFeeRecordsInGroup, user);
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = `Failed to remove fees from payment with id ${paymentId}`;
