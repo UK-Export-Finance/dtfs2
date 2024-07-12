@@ -4,9 +4,8 @@ import { ApiError } from '@ukef/dtfs2-common';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
-import { NotFoundError } from '../../../../errors';
 import { PutKeyingDataMarkAsPayload } from '../../../routes/middleware/payload-validation';
-import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { getUtilisationReportAndSelectedFeeRecordsForKeyingSheetDataMarkAs } from '../helpers';
 
 export type PutKeyingDataMarkDoneRequest = CustomExpressRequest<{
   reqBody: PutKeyingDataMarkAsPayload;
@@ -17,21 +16,10 @@ export const putKeyingDataMarkAsDone = async (req: PutKeyingDataMarkDoneRequest,
   const { feeRecordIds: selectedFeeRecordIds, user } = req.body;
 
   try {
-    const utilisationReport = await UtilisationReportRepo.findOne({
-      where: { id: Number(reportId) },
-      relations: {
-        feeRecords: true,
-      },
-    });
-
-    if (!utilisationReport) {
-      throw new NotFoundError(`Could not find report with id ${reportId} and with fee records with ids ${selectedFeeRecordIds.join(', ')}`);
-    }
-
-    const selectedFeeRecords = utilisationReport.feeRecords.filter((report) => selectedFeeRecordIds.includes(report.id));
-    if (selectedFeeRecords.length !== selectedFeeRecordIds.length) {
-      throw new NotFoundError(`Could not find report with id ${reportId} and with fee records with ids ${selectedFeeRecordIds.join(', ')}`);
-    }
+    const { utilisationReport, selectedFeeRecords } = await getUtilisationReportAndSelectedFeeRecordsForKeyingSheetDataMarkAs(
+      Number(reportId),
+      selectedFeeRecordIds,
+    );
 
     const utilisationReportStateMachine = UtilisationReportStateMachine.forReport(utilisationReport);
     await executeWithSqlTransaction(
