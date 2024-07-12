@@ -38,7 +38,7 @@ describe(component, () => {
           amount: '100',
           change: 'INCREASE',
         },
-        checkboxId: 'feeRecordId-1',
+        checkboxId: 'feeRecordId-1-status-TO_DO',
         isChecked: false,
       },
     ],

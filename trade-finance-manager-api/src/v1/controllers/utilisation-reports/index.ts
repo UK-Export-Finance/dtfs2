@@ -11,3 +11,5 @@ export { getPaymentDetailsById } from './get-payment-details-by-id.controller';
 export { deletePayment } from './delete-payment.controller';
 export { patchPayment } from './patch-payment.controller';
 export { postRemoveFeesFromPayment } from './post-remove-fees-from-payment.controller';
+export { putKeyingDataMarkAsDone } from './put-keying-data-mark-as-done.controller';
+export { putKeyingDataMarkAsToDo } from './put-keying-data-mark-as-to-do.controller';

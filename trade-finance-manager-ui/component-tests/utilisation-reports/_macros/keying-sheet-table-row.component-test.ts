@@ -32,7 +32,7 @@ describe(component, () => {
       amount: '100',
       change: 'INCREASE',
     },
-    checkboxId: 'feeRecordId-1',
+    checkboxId: 'feeRecordId-1-status-TO_DO',
     isChecked: false,
   });
 
@@ -205,10 +205,10 @@ describe(component, () => {
     const userCanEdit = true;
 
     it('renders the select fee record checkbox with the supplied checkbox id', () => {
-      const KeyingSheetRow: KeyingSheetTableRow = { ...aKeyingSheetTableRow(), checkboxId: 'feeRecordId-123' };
+      const KeyingSheetRow: KeyingSheetTableRow = { ...aKeyingSheetTableRow(), checkboxId: 'feeRecordId-123-status-DONE' };
       const wrapper = getWrapper({ userCanEdit, KeyingSheetRow });
 
-      wrapper.expectElement('tr input[type="checkbox"]#feeRecordId-123').toExist();
+      wrapper.expectElement('tr input[type="checkbox"]#feeRecordId-123-status-DONE').toExist();
     });
 
     it('renders the select fee record checkbox as checked when isChecked is set to true', () => {
@@ -262,7 +262,7 @@ describe(component, () => {
         status: 'TO_DO',
         displayStatus: 'TO DO',
         baseCurrency: 'EUR',
-        checkboxId: 'feeRecordId-123',
+        checkboxId: 'feeRecordId-123-status-TO_DO',
         fixedFeeAdjustment: { change: 'NONE', amount: '0' },
         premiumAccrualBalanceAdjustment: { change: 'NONE', amount: '0' },
         principalBalanceAdjustment: { change: 'NONE', amount: '0' },

@@ -162,6 +162,14 @@ authRouter
   );
 
 authRouter
+  .route('/utilisation-reports/:reportId/keying-data/mark-as-done')
+  .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.putKeyingDataMarkAsDone);
+
+authRouter
+  .route('/utilisation-reports/:reportId/keying-data/mark-as-to-do')
+  .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.putKeyingDataMarkAsToDo);
+
+authRouter
   .route('/utilisation-reports/:reportId/keying-data')
   .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postKeyingData);
 
