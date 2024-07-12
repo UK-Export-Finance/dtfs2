@@ -23,7 +23,7 @@ describe('validateAndParseDayMonthYear', () => {
       expectedErrors: [
         {
           errRef,
-          errMsg: 'Test date include a day ',
+          errMsg: 'Test date include a day',
           subFieldErrorRefs: [`${errRef}-day`],
         },
       ],
@@ -34,7 +34,7 @@ describe('validateAndParseDayMonthYear', () => {
       expectedErrors: [
         {
           errRef,
-          errMsg: 'Test date include a month ',
+          errMsg: 'Test date include a month',
           subFieldErrorRefs: [`${errRef}-month`],
         },
       ],
@@ -56,7 +56,7 @@ describe('validateAndParseDayMonthYear', () => {
       expectedErrors: [
         {
           errRef,
-          errMsg: 'Test date include a day  and month ',
+          errMsg: 'Test date include a day and month',
           subFieldErrorRefs: [`${errRef}-day`, `${errRef}-month`],
         },
       ],
@@ -253,7 +253,7 @@ describe('validateAndParseDayMonthYear', () => {
   ];
 
   it.each(invalidDateCases)('$description', ({ dayMonthYear, expectedErrors }) => {
-    const result = validateAndParseDayMonthYear({ ...dayMonthYear, errRef, variableDisplayName });
+    const result = validateAndParseDayMonthYear(dayMonthYear, { errRef, variableDisplayName });
 
     expect(result).toEqual({
       errors: expectedErrors,
@@ -261,7 +261,7 @@ describe('validateAndParseDayMonthYear', () => {
   });
 
   it.each(validDateCases)('$description', ({ dayMonthYear, expectedDate }) => {
-    const result = validateAndParseDayMonthYear({ ...dayMonthYear, errRef: 'test', variableDisplayName: 'Test' });
+    const result = validateAndParseDayMonthYear(dayMonthYear, { errRef, variableDisplayName });
 
     expect(result).toEqual({
       errors: null,

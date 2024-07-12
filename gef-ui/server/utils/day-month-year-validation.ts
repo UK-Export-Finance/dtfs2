@@ -1,10 +1,8 @@
 import { getDaysInMonth, set, startOfDay } from 'date-fns';
 import Joi from 'joi';
+import { DayMonthYear } from '../types/date';
 
-type ValidationParamsWithDisplayName = {
-  day: string;
-  month: string;
-  year: string;
+type ValidationOptions = {
   errRef: string;
   variableDisplayName: string;
 };
@@ -24,7 +22,7 @@ type ErrorsOrDate =
       errors: ValidationError[];
     };
 
-export const validateAndParseDayMonthYear = ({ day, month, year, errRef, variableDisplayName }: ValidationParamsWithDisplayName): ErrorsOrDate => {
+export const validateAndParseDayMonthYear = ({ day, month, year }: DayMonthYear, { errRef, variableDisplayName }: ValidationOptions): ErrorsOrDate => {
   const dateIsBlank = !day && !month && !year;
   const dateIsFullyComplete = day && month && year;
 
@@ -47,15 +45,15 @@ export const validateAndParseDayMonthYear = ({ day, month, year, errRef, variabl
     const subFieldErrorRefs = [];
 
     if (!day) {
-      msg += 'day ';
+      msg += 'day';
       subFieldErrorRefs.push(`${errRef}-day`);
     }
     if (!month) {
-      msg += !day ? ' and month ' : 'month ';
+      msg += !day ? ' and month' : 'month';
       subFieldErrorRefs.push(`${errRef}-month`);
     }
     if (!year) {
-      msg += !day || !month ? 'and year' : 'year';
+      msg += !day || !month ? ' and year' : 'year';
       subFieldErrorRefs.push(`${errRef}-year`);
     }
 

@@ -67,14 +67,18 @@ const validateAboutFacility = ({
     }
 
     if (shouldCoverStartOnSubmission === 'false') {
-      if (!(coverStartDateIsBlank && saveAndReturn)) {
-        const { errors: coverStartDateFormattingErrors, date: startDate } = validateAndParseDayMonthYear({
-          day: coverStartDateDay,
-          month: coverStartDateMonth,
-          year: coverStartDateYear,
-          errRef: 'coverStartDate',
-          variableDisplayName: 'cover start date',
-        });
+      if (!coverStartDateIsBlank || !saveAndReturn) {
+        const { errors: coverStartDateFormattingErrors, date: startDate } = validateAndParseDayMonthYear(
+          {
+            day: coverStartDateDay,
+            month: coverStartDateMonth,
+            year: coverStartDateYear,
+          },
+          {
+            errRef: 'coverStartDate',
+            variableDisplayName: 'cover start date',
+          },
+        );
 
         if (coverStartDateFormattingErrors) {
           aboutFacilityErrors.push(...coverStartDateFormattingErrors);
@@ -99,14 +103,18 @@ const validateAboutFacility = ({
       }
     }
 
-    if (!(coverEndDateIsBlank && saveAndReturn)) {
-      const { errors: coverEndDateFormattingErrors } = validateAndParseDayMonthYear({
-        day: coverEndDateDay,
-        month: coverEndDateMonth,
-        year: coverEndDateYear,
-        errRef: 'coverEndDate',
-        variableDisplayName: 'cover end date',
-      });
+    if (!coverEndDateIsBlank || !saveAndReturn) {
+      const { errors: coverEndDateFormattingErrors } = validateAndParseDayMonthYear(
+        {
+          day: coverEndDateDay,
+          month: coverEndDateMonth,
+          year: coverEndDateYear,
+        },
+        {
+          errRef: 'coverEndDate',
+          variableDisplayName: 'cover end date',
+        },
+      );
 
       if (coverEndDateFormattingErrors) {
         aboutFacilityErrors.push(...coverEndDateFormattingErrors);

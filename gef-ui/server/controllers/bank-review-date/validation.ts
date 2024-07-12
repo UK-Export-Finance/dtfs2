@@ -1,16 +1,12 @@
 import { add, isAfter, isBefore, startOfDay } from 'date-fns';
 import { uniq } from 'lodash';
 import { validateAndParseDayMonthYear } from '../../utils/day-month-year-validation';
+import { DayMonthYear } from '../../types/date';
 
-type DayMonthYear = { day: string; month: string; year: string };
-
-export const validateAndParseBankReviewDate = ({ day, month, year }: DayMonthYear, coverStartDate: Date) => {
+export const validateAndParseBankReviewDate = (dayMonthYear: DayMonthYear, coverStartDate: Date) => {
   const errRef = 'bankReviewDate';
 
-  const formattingErrorsOrDate = validateAndParseDayMonthYear({
-    day,
-    month,
-    year,
+  const formattingErrorsOrDate = validateAndParseDayMonthYear(dayMonthYear, {
     errRef,
     variableDisplayName: 'bank review date',
   });

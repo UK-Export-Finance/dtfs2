@@ -13,9 +13,11 @@ describe('validateAndParseBankReviewDate', () => {
 
   it('calls validateAndParseDayMonthYear', () => {
     // Arrange
-    const day = 'x';
-    const year = '2024';
-    const month = '1';
+    const dayMonthYear = {
+      day: 'x',
+      year: '2024',
+      month: '1',
+    };
 
     const errors = [
       {
@@ -28,13 +30,10 @@ describe('validateAndParseBankReviewDate', () => {
     });
 
     // Act
-    validateAndParseBankReviewDate({ day, month, year }, new Date());
+    validateAndParseBankReviewDate(dayMonthYear, new Date());
 
     // Assert
-    expect(validateAndParseDayMonthYear).toHaveBeenCalledWith({
-      day,
-      month,
-      year,
+    expect(validateAndParseDayMonthYear).toHaveBeenCalledWith(dayMonthYear, {
       errRef: 'bankReviewDate',
       variableDisplayName: 'bank review date',
     });
@@ -42,9 +41,11 @@ describe('validateAndParseBankReviewDate', () => {
 
   it('combines the error messages', () => {
     // Arrange
-    const day = 'x';
-    const year = '2024';
-    const month = '1';
+    const dayMonthYear = {
+      day: 'x',
+      year: '2024',
+      month: '1',
+    };
     const errors = [
       {
         errRef: 'date',
@@ -63,7 +64,7 @@ describe('validateAndParseBankReviewDate', () => {
     });
 
     // Act
-    const result = validateAndParseBankReviewDate({ day, month, year }, new Date());
+    const result = validateAndParseBankReviewDate(dayMonthYear, new Date());
 
     // Assert
     expect(result).toEqual({
