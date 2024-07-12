@@ -13,9 +13,15 @@ export const validateSelectedFeeRecordsExistInPayment = (selectedFeeRecordIds: n
   }
 };
 
-export const validateNotAllFeeRecordsSelected = (selectedFeeRecordIds: number[], totalSelectableFeeRecords: number) => {
-  if (selectedFeeRecordIds.length >= totalSelectableFeeRecords) {
+export const validateNotAllFeeRecordsSelected = (selectedFeeRecordIds: number[], totalFeeRecordsOnPayment: number) => {
+  if (selectedFeeRecordIds.length === totalFeeRecordsOnPayment) {
     throw new InvalidPayloadError('Not all fee records can be selected.');
+  }
+};
+
+export const validateSelectedFeeRecordsDoesNotExceedTotal = (selectedFeeRecordIds: number[], totalFeeRecordsOnPayment: number) => {
+  if (selectedFeeRecordIds.length > totalFeeRecordsOnPayment) {
+    throw new InvalidPayloadError('More fee records selected than there are fee records on the payment.');
   }
 };
 

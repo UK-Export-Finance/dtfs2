@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { removeFeesFromPaymentGroup, validateNotAllFeeRecordsSelected, validateSelectedFeeRecordsExistInPayment } from './helpers';
+import { removeFeesFromPaymentGroup, validateNotAllFeeRecordsSelected, validateSelectedFeeRecordsDoesNotExceedTotal, validateSelectedFeeRecordsExistInPayment } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
@@ -113,10 +113,21 @@ describe('post-remove-fees-from-payment.controller helpers', () => {
     it("throws the 'InvalidPayloadError' if all of the selectable fee records are selected", () => {
       // Arrange
       const selectedFeeRecordIds = [7, 77];
-      const totalSelectableFeeRecords = selectedFeeRecordIds.length;
+      const totalFeeRecordsOnPayment = selectedFeeRecordIds.length;
 
       // Act / Assert
-      expect(() => validateNotAllFeeRecordsSelected(selectedFeeRecordIds, totalSelectableFeeRecords)).toThrow(InvalidPayloadError);
+      expect(() => validateNotAllFeeRecordsSelected(selectedFeeRecordIds, totalFeeRecordsOnPayment)).toThrow(InvalidPayloadError);
+    });
+  });
+
+  describe('validateSelectedFeeRecordsDoesNotExceedTotal', () => {
+    it("throws the 'InvalidPayloadError' if more fee records are selected than the total number of fee records on the payment", () => {
+      // Arrange
+      const selectedFeeRecordIds = [7, 77];
+      const totalFeeRecordsOnPayment = selectedFeeRecordIds.length - 1;
+
+      // Act / Assert
+      expect(() => validateSelectedFeeRecordsDoesNotExceedTotal(selectedFeeRecordIds, totalFeeRecordsOnPayment)).toThrow(InvalidPayloadError);
     });
   });
 });

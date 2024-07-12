@@ -5,7 +5,12 @@ import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PostRemoveFeesFromPaymentGroupPayload } from '../../../routes/middleware/payload-validation/validate-post-remove-fees-from-payment-group-payload';
 import { NotFoundError } from '../../../../errors';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
-import { removeFeesFromPaymentGroup, validateNotAllFeeRecordsSelected, validateSelectedFeeRecordsExistInPayment } from './helpers';
+import {
+  removeFeesFromPaymentGroup,
+  validateNotAllFeeRecordsSelected,
+  validateSelectedFeeRecordsDoesNotExceedTotal,
+  validateSelectedFeeRecordsExistInPayment,
+} from './helpers';
 
 export type PostRemoveFeesFromPaymentGroupRequest = CustomExpressRequest<{
   params: {
@@ -38,7 +43,10 @@ export const postRemoveFeesFromPaymentGroup = async (req: PostRemoveFeesFromPaym
     const allFeeRecords = payment.feeRecords;
 
     validateSelectedFeeRecordsExistInPayment(selectedFeeRecordIds, allFeeRecords);
-    validateNotAllFeeRecordsSelected(selectedFeeRecordIds, allFeeRecords.length);
+
+    const totalFeeRecordsOnPayment = allFeeRecords.length;
+    validateSelectedFeeRecordsDoesNotExceedTotal(selectedFeeRecordIds, totalFeeRecordsOnPayment);
+    validateNotAllFeeRecordsSelected(selectedFeeRecordIds, totalFeeRecordsOnPayment);
 
     await removeFeesFromPaymentGroup(utilisationReport, allFeeRecords, selectedFeeRecordIds, user);
     return res.sendStatus(HttpStatusCode.Ok);
