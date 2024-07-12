@@ -5,8 +5,7 @@ import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { UtilisationReportReconciliationDetails } from '../../../src/types/utilisation-reports';
-import { aBank } from '../../../test-helpers/test-data/bank';
-import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
+import { aBank, aPortalUser } from '../../../test-helpers/test-data';
 
 const getUrl = (reportId: number | string) => `/v1/utilisation-reports/reconciliation-details/${reportId}`;
 
@@ -17,6 +16,8 @@ type UtilisationReportReconciliationDetailsResponseBody = Omit<UtilisationReport
 interface CustomResponse extends Response {
   body: UtilisationReportReconciliationDetailsResponseBody;
 }
+
+console.error = jest.fn();
 
 describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
   const portalUser: PortalUser = aPortalUser();

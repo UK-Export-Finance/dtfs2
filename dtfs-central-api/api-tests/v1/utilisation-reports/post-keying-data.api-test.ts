@@ -1,13 +1,18 @@
 import { HttpStatusCode } from 'axios';
 import { IsNull, Not } from 'typeorm';
-import { FeeRecordEntity, FeeRecordEntityMockBuilder, FeeRecordStatus, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FacilityUtilisationDataEntityMockBuilder,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  FeeRecordStatus,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
-import { aTfmUser } from '../../../test-helpers/test-data/tfm-user';
-import { aTfmSessionUser } from '../../../test-helpers/test-data/tfm-session-user';
+import { aPortalUser, aTfmUser, aTfmSessionUser } from '../../../test-helpers/test-data';
 
 console.error = jest.fn();
 
@@ -32,9 +37,14 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     },
   });
 
+  const firstFacilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('11111111').build();
+  const secondFacilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('22222222').build();
+
   beforeAll(async () => {
     await SqlDbHelper.initialize();
-    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.deleteAll();
+
+    await SqlDbHelper.saveNewEntries('FacilityUtilisationData', [firstFacilityUtilisationData, secondFacilityUtilisationData]);
 
     await wipe(['users', 'tfm-users']);
 
@@ -45,11 +55,12 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     await tfmUsersCollection.insertOne(tfmUser);
   });
 
-  afterEach(async () => {
+  beforeEach(async () => {
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
   afterAll(async () => {
+    await SqlDbHelper.deleteAll();
     await wipe(['users', 'tfm-users']);
   });
 
@@ -82,8 +93,8 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     // Arrange
     const report = anUploadedUtilisationReport();
     const toDoFeeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('TO_DO').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('TO_DO').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('TO_DO').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('TO_DO').build(),
     ];
     report.feeRecords = toDoFeeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -99,8 +110,8 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     // Arrange
     const report = anUploadedUtilisationReport();
     const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('11111111').withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId('22222222').withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityUtilisationData(secondFacilityUtilisationData).withStatus('MATCH').build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -118,8 +129,8 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     // Arrange
     const report = anUploadedUtilisationReport();
     const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityUtilisationData(secondFacilityUtilisationData).withStatus('MATCH').build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -144,13 +155,14 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
+        .withFacilityUtilisationData(firstFacilityUtilisationData)
         .withStatus('TO_DO')
         .withLastUpdatedByPortalUserId(portalUserId)
         .withLastUpdatedByTfmUserId(null)
         .withLastUpdatedByIsSystemUser(false)
         .build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('MATCH').build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -185,11 +197,11 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     const report = anUploadedUtilisationReport();
     const feeRecords = [
       // Fee records for same facility where only one has MATCH status
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('111111111').withStatus('TO_DO').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId('111111111').withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('TO_DO').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('MATCH').build(),
       // Fee records for same facility where both have MATCH status
-      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId('222222222').withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(4).withFacilityId('222222222').withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityUtilisationData(secondFacilityUtilisationData).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(4).withFacilityUtilisationData(secondFacilityUtilisationData).withStatus('MATCH').build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
@@ -211,8 +223,6 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
   });
 
   describe('when there are multiple fee records with the same facility id', () => {
-    const facilityId = '12345678';
-
     const getReadyToKeyFeeRecordsWithNonNullKeyingData = async (): Promise<FeeRecordEntity[]> =>
       await SqlDbHelper.manager.find(FeeRecordEntity, {
         where: {
@@ -238,9 +248,9 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
       const report = anUploadedUtilisationReport();
 
       const feeRecordsAtMatchStatus = [
-        FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('MATCH').build(),
-        FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
-        FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('MATCH').build(),
       ];
       report.feeRecords = feeRecordsAtMatchStatus;
 
@@ -259,11 +269,15 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
       // Arrange 1
       const report = anUploadedUtilisationReport();
 
-      const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('TO_DO').build();
+      const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
+        .withId(1)
+        .withFacilityUtilisationData(firstFacilityUtilisationData)
+        .withStatus('TO_DO')
+        .build();
 
       const feeRecordsAtMatchStatus = [
-        FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
-        FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('MATCH').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityUtilisationData(firstFacilityUtilisationData).withStatus('MATCH').build(),
       ];
 
       const allFeeRecords = [toDoFeeRecord, ...feeRecordsAtMatchStatus];

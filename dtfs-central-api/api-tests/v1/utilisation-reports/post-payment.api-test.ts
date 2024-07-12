@@ -2,6 +2,7 @@ import { HttpStatusCode } from 'axios';
 import {
   CURRENCY,
   Currency,
+  FacilityUtilisationDataEntityMockBuilder,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
@@ -13,9 +14,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
-import { aTfmUser } from '../../../test-helpers/test-data/tfm-user';
-import { aTfmSessionUser } from '../../../test-helpers/test-data/tfm-session-user';
+import { aPortalUser, aTfmUser, aTfmSessionUser } from '../../../test-helpers/test-data';
 
 console.error = jest.fn();
 
@@ -37,9 +36,15 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
 
   const paymentCurrency: Currency = 'GBP';
 
+  const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678').build();
+
   const feeRecordIds = [1, 2];
   const feeRecords = feeRecordIds.map((id) =>
-    FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(id).withPaymentCurrency(paymentCurrency).build(),
+    FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)
+      .withId(id)
+      .withFacilityUtilisationData(facilityUtilisationData)
+      .withPaymentCurrency(paymentCurrency)
+      .build(),
   );
   uploadedUtilisationReport.feeRecords = feeRecords;
 
@@ -57,8 +62,9 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
-    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.deleteAll();
 
+    await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
     await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedUtilisationReport);
 
     await wipe(['users', 'tfm-users']);
@@ -79,7 +85,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
   });
 
   afterAll(async () => {
-    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.deleteAll();
     await wipe(['users', 'tfm-users']);
   });
 

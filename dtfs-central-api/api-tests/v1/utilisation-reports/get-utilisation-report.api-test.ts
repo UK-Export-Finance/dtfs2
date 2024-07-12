@@ -24,6 +24,8 @@ interface CustomSuccessResponse extends Response {
   body: UtilisationReportResponse;
 }
 
+console.error = jest.fn();
+
 describe('/v1/utilisation-reports/:id', () => {
   const portalUser = {
     _id: new ObjectId(),

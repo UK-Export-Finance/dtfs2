@@ -6,7 +6,7 @@ import { SqlDbHelper } from '../../sql-db-helper';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
+import { aPortalUser } from '../../../test-helpers/test-data';
 
 const saveReportsToDatabase = async (...reports: UtilisationReportEntity[]): Promise<UtilisationReportEntity[]> =>
   await SqlDbHelper.saveNewEntries('UtilisationReport', reports);
@@ -23,6 +23,8 @@ interface CustomSuccessResponse extends Response {
   body: UtilisationReportResponse[];
 }
 
+console.error = jest.fn();
+
 describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   const getUrl = (bankId: string) => `/v1/bank/${bankId}/utilisation-reports`;
 
@@ -38,7 +40,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     await usersCollection.insertOne(portalUser);
   });
 
-  afterEach(async () => {
+  beforeEach(async () => {
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 

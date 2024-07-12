@@ -18,6 +18,10 @@ describe('/v1/utilisation-reports/set-status', () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', mockReport);
   });
 
+  afterAll(async () => {
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+  });
+
   it(`should return a 404 error when trying to set a non-existent report to '${UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_COMPLETED}'`, async () => {
     // Arrange
     const invalidReportId = reportId + 1;

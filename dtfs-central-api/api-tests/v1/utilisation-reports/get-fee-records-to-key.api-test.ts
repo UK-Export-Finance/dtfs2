@@ -1,11 +1,19 @@
 import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
-import { Bank, Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  Bank,
+  Currency,
+  FacilityUtilisationDataEntityMockBuilder,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  ReportPeriod,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aBank } from '../../../test-helpers/test-data/bank';
+import { aBank } from '../../../test-helpers/test-data';
 import { FeeRecordToKey } from '../../../src/types/fee-records';
 import { GetFeeRecordsToKeyResponseBody } from '../../../src/v1/controllers/utilisation-report-service/get-fee-records-to-key.controller';
 
@@ -46,10 +54,13 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
     PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmount(50).build(),
   ];
 
+  const firstFacilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678').build();
+  const secondFacilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('87654321').build();
+
   const feeRecords = [
     FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
       .withId(1)
-      .withFacilityId('12345678')
+      .withFacilityUtilisationData(firstFacilityUtilisationData)
       .withExporter('Test exporter 1')
       .withStatus('MATCH')
       .withFeesPaidToUkefForThePeriod(75)
@@ -59,7 +70,7 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
       .build(),
     FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
       .withId(2)
-      .withFacilityId('87654321')
+      .withFacilityUtilisationData(secondFacilityUtilisationData)
       .withExporter('Test exporter 2')
       .withStatus('MATCH')
       .withFeesPaidToUkefForThePeriod(75)
@@ -72,8 +83,9 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
-    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.deleteAll();
 
+    await SqlDbHelper.saveNewEntries('FacilityUtilisationData', [firstFacilityUtilisationData, secondFacilityUtilisationData]);
     await SqlDbHelper.saveNewEntry('UtilisationReport', reconciliationInProgressReport);
 
     await wipe(['banks']);
@@ -91,7 +103,7 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
   });
 
   afterAll(async () => {
-    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.deleteAll();
   });
 
   it('returns a 400 when the report id is not a valid id', async () => {
