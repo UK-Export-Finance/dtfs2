@@ -3,7 +3,7 @@ import { asString, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-com
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems } from '../helpers';
+import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems, mapKeyingSheetToKeyingSheetViewModel } from '../helpers';
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { validateFacilityIdQuery } from './validate-facility-id-query';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
@@ -25,7 +25,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
     const facilityIdQueryError = validateFacilityIdQuery(facilityIdQueryAsString, req.originalUrl);
     const { errorSummary: premiumPaymentFormError, isCheckboxChecked } = getAndClearFieldsFromRedirectSessionData(req);
 
-    const { feeRecordPaymentGroups, reportPeriod, bank } = await api.getUtilisationReportReconciliationDetailsById(
+    const { feeRecordPaymentGroups, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
       facilityIdQueryAsString,
       userToken,
@@ -36,6 +36,8 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
     const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(feeRecordPaymentGroups);
 
     const feeRecordPaymentGroupViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
+
+    const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
     return renderUtilisationReportReconciliationForReport(res, {
       user,
@@ -48,6 +50,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       premiumPaymentFormError,
       facilityIdQueryError,
       facilityIdQuery: facilityIdQueryAsString,
+      keyingSheet: keyingSheetViewModel,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

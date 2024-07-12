@@ -155,7 +155,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.fixedFeeAdjustment).toBeUndefined();
+      expect(feeRecord.fixedFeeAdjustment).toBeNull();
     });
 
     it('does not set the fee record premiumAccrualBalanceAdjustment', async () => {
@@ -170,7 +170,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.premiumAccrualBalanceAdjustment).toBeUndefined();
+      expect(feeRecord.premiumAccrualBalanceAdjustment).toBeNull();
     });
 
     it('does not set the fee record principalBalanceAdjustment', async () => {
@@ -185,7 +185,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.principalBalanceAdjustment).toBeUndefined();
+      expect(feeRecord.principalBalanceAdjustment).toBeNull();
     });
   });
 

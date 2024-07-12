@@ -6,7 +6,7 @@ const nunjucks = configureNunjucks({});
 
 export const componentRenderer =
   (componentLocation: string, renderTableContainer = false) =>
-  (params: object) => {
+  <TParams extends object>(params: TParams) => {
     let fakePage;
 
     if (renderTableContainer) {
@@ -28,5 +28,5 @@ export const componentRenderer =
     const html = nunjucks.renderString(fakePage, { payload: params });
 
     const wrapper = load(html);
-    return assertions(wrapper, html, params);
+    return assertions<TParams>(wrapper, html, params);
   };

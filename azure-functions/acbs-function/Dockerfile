@@ -14,5 +14,6 @@ WORKDIR /home/site/wwwroot
 COPY package.json .
 
 RUN npm i
+RUN npm cache clean --force
 
 COPY . /home/site/wwwroot

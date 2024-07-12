@@ -18,9 +18,9 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 
 **CD** 🚀
 
-![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/development_deploy.yml/badge.svg?branch=dev)
-![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/staging_deploy.yml/badge.svg?branch=staging)
-![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/production_deploy.yml/badge.svg?branch=prod)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/deployment.yml/badge.svg?branch=dev)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/deployment.yml/badge.svg?branch=staging)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/deployment.yml/badge.svg?branch=prod)
 
 ## Getting Started :rocket:
 

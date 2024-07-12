@@ -29,7 +29,7 @@ describe(component, () => {
     { status: FEE_RECORD_STATUS.RECONCILED, expectedColourClass: 'govuk-tag--grey' },
   ])("adds colour class '$expectedColourClass' when the status code is '$status'", ({ status, expectedColourClass }) => {
     // Arrange
-    const expectedClass = `govuk-tag fee-record-status-tag${expectedColourClass ? ` ${expectedColourClass}` : ''}`;
+    const expectedClass = `govuk-tag status-tag${expectedColourClass ? ` ${expectedColourClass}` : ''}`;
 
     // Act
     const wrapper = render({

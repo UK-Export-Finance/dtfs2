@@ -41,12 +41,9 @@ describe('controllers/utilisation-reports', () => {
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
     });
 
-    it('renders the utilisation-reports.njk view with required data', async () => {
+    it('renders the view with required data', async () => {
       // Arrange
       const userToken = 'user-token';
-
-      const isTfmPaymentReconciliationFeatureFlagEnabledValue = true;
-      isTfmPaymentReconciliationFeatureFlagEnabledSpy.mockReturnValue(isTfmPaymentReconciliationFeatureFlagEnabledValue);
 
       const { res, req } = httpMocks.createMocks({
         session: { userToken, user: MOCK_TFM_SESSION_USER },
@@ -65,13 +62,58 @@ describe('controllers/utilisation-reports', () => {
       await getUtilisationReports(req, res);
 
       // Assert
-      expect(isTfmPaymentReconciliationFeatureFlagEnabledSpy).toHaveBeenCalledTimes(1);
-      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-reports.njk');
       expect(res._getRenderData()).toMatchObject({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         reportPeriodSummaries: expectedViewModel,
-        isTfmPaymentReconciliationFeatureFlagEnabled: isTfmPaymentReconciliationFeatureFlagEnabledValue,
       });
+    });
+
+    it('renders the utilisation-reports-manual-reconciliation.njk view when the payments reconciliation feature is disabled', async () => {
+      // Arrange
+      const userToken = 'user-token';
+
+      const isTfmPaymentReconciliationFeatureFlagEnabledValue = false;
+      isTfmPaymentReconciliationFeatureFlagEnabledSpy.mockReturnValue(isTfmPaymentReconciliationFeatureFlagEnabledValue);
+
+      const { res, req } = httpMocks.createMocks({
+        session: { userToken, user: MOCK_TFM_SESSION_USER },
+      });
+
+      process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = '10';
+
+      jest.mocked(api.getUkBankHolidays).mockResolvedValue(MOCK_BANK_HOLIDAYS);
+      jest.mocked(api.getUtilisationReportsReconciliationSummary).mockResolvedValue(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY);
+
+      // Act
+      await getUtilisationReports(req, res);
+
+      // Assert
+      expect(isTfmPaymentReconciliationFeatureFlagEnabledSpy).toHaveBeenCalledTimes(1);
+      expect(res._getRenderView()).toEqual(`utilisation-reports/utilisation-reports-manual-reconciliation.njk`);
+    });
+
+    it('renders the utilisation-reports.njk view when the payments reconciliation feature is enabled', async () => {
+      // Arrange
+      const userToken = 'user-token';
+
+      const isTfmPaymentReconciliationFeatureFlagEnabledValue = true;
+      isTfmPaymentReconciliationFeatureFlagEnabledSpy.mockReturnValue(isTfmPaymentReconciliationFeatureFlagEnabledValue);
+
+      const { res, req } = httpMocks.createMocks({
+        session: { userToken, user: MOCK_TFM_SESSION_USER },
+      });
+
+      process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = '10';
+
+      jest.mocked(api.getUkBankHolidays).mockResolvedValue(MOCK_BANK_HOLIDAYS);
+      jest.mocked(api.getUtilisationReportsReconciliationSummary).mockResolvedValue(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY);
+
+      // Act
+      await getUtilisationReports(req, res);
+
+      // Assert
+      expect(isTfmPaymentReconciliationFeatureFlagEnabledSpy).toHaveBeenCalledTimes(1);
+      expect(res._getRenderView()).toEqual(`utilisation-reports/utilisation-reports.njk`);
     });
   });
 });
