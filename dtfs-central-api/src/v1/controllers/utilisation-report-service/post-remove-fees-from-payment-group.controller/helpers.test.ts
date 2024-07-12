@@ -1,7 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { removeFeesFromPaymentGroup, validateNotAllFeeRecordsSelected, validateSelectedFeeRecordsDoesNotExceedTotal, validateSelectedFeeRecordsExistInPayment } from './helpers';
+import {
+  removeFeesFromPaymentGroup,
+  validateNotAllFeeRecordsSelected,
+  validateSelectedFeeRecordsDoesNotExceedTotal,
+  validateSelectedFeeRecordsExistInPayment,
+} from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
