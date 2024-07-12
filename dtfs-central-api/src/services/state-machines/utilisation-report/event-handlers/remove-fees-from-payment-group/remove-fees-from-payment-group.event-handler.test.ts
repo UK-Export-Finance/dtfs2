@@ -1,12 +1,12 @@
 import { EntityManager } from 'typeorm';
 import { UtilisationReportEntityMockBuilder, DbRequestSource, FeeRecordEntityMockBuilder, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { handleUtilisationReportRemoveFeesFromPaymentEvent } from './remove-fees-from-payment.event-handler';
+import { handleUtilisationReportRemoveFeesFromPaymentGroupEvent } from './remove-fees-from-payment-group.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';
 
 jest.mock('../helpers');
 
-describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
+describe('handleUtilisationReportRemoveFeesFromPaymentGroupEvent', () => {
   const tfmUserId = 'abc123';
   const requestSource: DbRequestSource = {
     platform: 'TFM',
@@ -28,6 +28,17 @@ describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
       handleEvent: eventHandler,
     }) as unknown as FeeRecordStateMachine;
 
+  const createFeeRecordsAndMocks = (utilisationReport: UtilisationReportEntity, feeRecordIds: number[]) => {
+    const feeRecords = feeRecordIds.map((id) => aFeeRecordForReport(utilisationReport, id));
+    const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
+    const feeRecordStateMachines = feeRecords.reduce(
+      (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine(eventHandlers[id]) }),
+      {} as { [id: number]: FeeRecordStateMachine },
+    );
+
+    return { feeRecords, eventHandlers, feeRecordStateMachines };
+  };
+
   beforeEach(() => {
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(aMockFeeRecordStateMachine(aMockEventHandler()));
   });
@@ -36,51 +47,67 @@ describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
     jest.resetAllMocks();
   });
 
+  it('calls the fee record state machine event handler for selected fee records', async () => {
+    // Arrange
+    const utilisationReport = aReconciliationInProgressReport();
+
+    const feeRecordIds = [1, 2, 3, 4];
+    const { feeRecords, eventHandlers, feeRecordStateMachines } = createFeeRecordsAndMocks(utilisationReport, feeRecordIds);
+
+    const expectedFeeRecordsToRemove = feeRecords.slice(0, 2);
+    const expectedFeeRecordsToUpdate = feeRecords.slice(2);
+    jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
+
+    // Act
+    await handleUtilisationReportRemoveFeesFromPaymentGroupEvent(utilisationReport, {
+      transactionEntityManager: mockEntityManager,
+      feeRecordsToRemove: expectedFeeRecordsToRemove,
+      feeRecordsToUpdate: expectedFeeRecordsToUpdate,
+      requestSource,
+    });
+
+    // Assert
+    expectedFeeRecordsToRemove.forEach(({ id }) => {
+      const eventHandler = eventHandlers[id];
+      expect(eventHandler).toHaveBeenCalledWith({
+        type: 'REMOVE_FROM_PAYMENT_GROUP',
+        payload: {
+          transactionEntityManager: mockEntityManager,
+          requestSource,
+        },
+      });
+    });
+  });
+
   it.each([
     { feeRecordsAndPaymentsMatch: true, testNameSuffix: 'the fee records match the payments' },
     { feeRecordsAndPaymentsMatch: false, testNameSuffix: 'the fee records do not match the payments' },
   ])(
-    "calls the fee record state machine event handlers with 'feeRecordsAndPaymentsMatch' set to '$feeRecordsAndPaymentsMatch' if $testNameSuffix",
+    "calls the fee record state machine event handlers for unselected fee records with 'feeRecordsAndPaymentsMatch' set to '$feeRecordsAndPaymentsMatch' if $testNameSuffix",
     async ({ feeRecordsAndPaymentsMatch }) => {
       // Arrange
       const utilisationReport = aReconciliationInProgressReport();
 
       const feeRecordIds = [1, 2, 3, 4];
-      const feeRecords = feeRecordIds.map((id) => aFeeRecordForReport(utilisationReport, id));
-      const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
-      const feeRecordStateMachines = feeRecords.reduce(
-        (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine(eventHandlers[id]) }),
-        {} as { [id: number]: FeeRecordStateMachine },
-      );
+      const { feeRecords, eventHandlers, feeRecordStateMachines } = createFeeRecordsAndMocks(utilisationReport, feeRecordIds);
 
-      const selectedFeeRecords = feeRecords.slice(0, 2);
-      const otherFeeRecords = feeRecords.slice(2);
+      const expectedFeeRecordsToRemove = feeRecords.slice(0, 2);
+      const expectedFeeRecordsToUpdate = feeRecords.slice(2);
 
       jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
       jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(feeRecordsAndPaymentsMatch);
 
       // Act
-      await handleUtilisationReportRemoveFeesFromPaymentEvent(utilisationReport, {
+      await handleUtilisationReportRemoveFeesFromPaymentGroupEvent(utilisationReport, {
         transactionEntityManager: mockEntityManager,
-        selectedFeeRecords,
-        otherFeeRecords,
+        feeRecordsToRemove: expectedFeeRecordsToRemove,
+        feeRecordsToUpdate: expectedFeeRecordsToUpdate,
         requestSource,
       });
 
       // Assert
-      selectedFeeRecords.forEach(({ id }) => {
-        const eventHandler = eventHandlers[id];
-        expect(eventHandler).toHaveBeenCalledWith({
-          type: 'REMOVE_FROM_PAYMENT',
-          payload: {
-            transactionEntityManager: mockEntityManager,
-            requestSource,
-          },
-        });
-      });
-
-      otherFeeRecords.forEach(({ id }) => {
+      expectedFeeRecordsToUpdate.forEach(({ id }) => {
         const eventHandler = eventHandlers[id];
         expect(eventHandler).toHaveBeenCalledWith({
           type: 'OTHER_FEE_REMOVED_FROM_GROUP',
@@ -99,10 +126,10 @@ describe('handleUtilisationReportRemoveFeesFromPaymentEvent', () => {
     const utilisationReport = aReconciliationInProgressReport();
 
     // Act
-    await handleUtilisationReportRemoveFeesFromPaymentEvent(utilisationReport, {
+    await handleUtilisationReportRemoveFeesFromPaymentGroupEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
-      selectedFeeRecords: [],
-      otherFeeRecords: [],
+      feeRecordsToRemove: [],
+      feeRecordsToUpdate: [],
       requestSource,
     });
 

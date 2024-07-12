@@ -1,14 +1,14 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { PostRemoveFeesFromPaymentPayload, validatePostRemoveFeesFromPaymentPayload } from './validate-post-remove-fees-from-payment-payload';
+import { PostRemoveFeesFromPaymentGroupPayload, validatePostRemoveFeesFromPaymentGroupPayload } from './validate-post-remove-fees-from-payment-group-payload';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
 
-describe('validatePostRemoveFeesFromPaymentPayload', () => {
+describe('validatePostRemoveFeesFromPaymentGroupPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
-  const requiredPayloadKeys: (keyof PostRemoveFeesFromPaymentPayload)[] = ['selectedFeeRecordIds', 'user'];
+  const requiredPayloadKeys: (keyof PostRemoveFeesFromPaymentGroupPayload)[] = ['selectedFeeRecordIds', 'user'];
 
-  const aValidPayload = (): PostRemoveFeesFromPaymentPayload => ({
+  const aValidPayload = (): PostRemoveFeesFromPaymentGroupPayload => ({
     selectedFeeRecordIds: [7],
     user: aTfmSessionUser(),
   });
@@ -25,7 +25,7 @@ describe('validatePostRemoveFeesFromPaymentPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePostRemoveFeesFromPaymentPayload(req, res, next);
+    validatePostRemoveFeesFromPaymentGroupPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -45,7 +45,7 @@ describe('validatePostRemoveFeesFromPaymentPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePostRemoveFeesFromPaymentPayload(req, res, next);
+    validatePostRemoveFeesFromPaymentGroupPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -65,7 +65,7 @@ describe('validatePostRemoveFeesFromPaymentPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePostRemoveFeesFromPaymentPayload(req, res, next);
+    validatePostRemoveFeesFromPaymentGroupPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);

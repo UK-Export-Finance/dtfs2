@@ -2,31 +2,34 @@ import { ApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
-import { PostRemoveFeesFromPaymentPayload } from '../../../routes/middleware/payload-validation/validate-post-remove-fees-from-payment-payload';
+import { PostRemoveFeesFromPaymentGroupPayload } from '../../../routes/middleware/payload-validation/validate-post-remove-fees-from-payment-group-payload';
 import { NotFoundError } from '../../../../errors';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
-import { removeFeesFromPayment, validateAtLeastOneFeeRecordSelected, validateNotAllFeeRecordsSelected } from './helpers';
+import {
+  removeFeesFromPaymentGroup,
+  validateNotAllFeeRecordsSelected,
+  validateSelectedFeeRecordsDoesNotExceedTotal,
+  validateSelectedFeeRecordsExistInPayment,
+} from './helpers';
 
-export type PostRemoveFeesFromPaymentRequest = CustomExpressRequest<{
+export type PostRemoveFeesFromPaymentGroupRequest = CustomExpressRequest<{
   params: {
     reportId: string;
     paymentId: string;
   };
-  reqBody: PostRemoveFeesFromPaymentPayload;
+  reqBody: PostRemoveFeesFromPaymentGroupPayload;
 }>;
 
 /**
- * Controller for the POST remove fees from payment route
+ * Controller for the POST remove fees from payment group route
  * @param req - The request object
  * @param res - The response object
  */
-export const postRemoveFeesFromPayment = async (req: PostRemoveFeesFromPaymentRequest, res: Response) => {
+export const postRemoveFeesFromPaymentGroup = async (req: PostRemoveFeesFromPaymentGroupRequest, res: Response) => {
   const { reportId, paymentId } = req.params;
   const { selectedFeeRecordIds, user } = req.body;
 
   try {
-    validateAtLeastOneFeeRecordSelected(selectedFeeRecordIds);
-
     const payment = await PaymentRepo.findOneByIdWithFeeRecordsAndReportFilteredById(Number(paymentId), Number(reportId));
     if (!payment) {
       throw new NotFoundError(`Failed to find a payment with id '${paymentId}' linked to report with id '${reportId}'.`);
@@ -39,9 +42,13 @@ export const postRemoveFeesFromPayment = async (req: PostRemoveFeesFromPaymentRe
 
     const allFeeRecords = payment.feeRecords;
 
-    validateNotAllFeeRecordsSelected(selectedFeeRecordIds, allFeeRecords.length);
+    validateSelectedFeeRecordsExistInPayment(selectedFeeRecordIds, allFeeRecords);
 
-    await removeFeesFromPayment(utilisationReport, allFeeRecords, selectedFeeRecordIds, user);
+    const totalFeeRecordsOnPayment = allFeeRecords.length;
+    validateSelectedFeeRecordsDoesNotExceedTotal(selectedFeeRecordIds, totalFeeRecordsOnPayment);
+    validateNotAllFeeRecordsSelected(selectedFeeRecordIds, totalFeeRecordsOnPayment);
+
+    await removeFeesFromPaymentGroup(utilisationReport, allFeeRecords, selectedFeeRecordIds, user);
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = `Failed to remove fees from payment with id ${paymentId}`;

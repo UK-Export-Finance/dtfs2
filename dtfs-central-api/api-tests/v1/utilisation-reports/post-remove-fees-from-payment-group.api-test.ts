@@ -29,7 +29,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selec
   );
   report.feeRecords = feeRecords;
 
-  const aRemoveFeesFromPaymentRequestBody = () => ({
+  const aRemoveFeesFromPaymentGroupRequestBody = () => ({
     selectedFeeRecordIds: feeRecordIds.slice(0, 1),
     user: {
       ...aTfmSessionUser(),
@@ -62,15 +62,27 @@ describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selec
 
   it('returns a 200 when fees can be removed from the payment', async () => {
     // Act
-    const response = await testApi.post(aRemoveFeesFromPaymentRequestBody()).to(getUrl(reportId, paymentId));
+    const response = await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl(reportId, paymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
   });
 
+  it('returns a 400 when all selectable fee records are selected', async () => {
+    // Act
+    const paymentRequestBody = {
+      ...aRemoveFeesFromPaymentGroupRequestBody(),
+      selectedFeeRecordIds: feeRecordIds,
+    };
+    const response = await testApi.post(paymentRequestBody).to(getUrl(reportId, paymentId));
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.BadRequest);
+  });
+
   it('returns a 400 when the report id is not a valid id', async () => {
     // Act
-    const response = await testApi.post(aRemoveFeesFromPaymentRequestBody()).to(getUrl('invalid-id', paymentId));
+    const response = await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl('invalid-id', paymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -78,7 +90,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selec
 
   it('returns a 400 when the payment id is not a valid id', async () => {
     // Act
-    const response = await testApi.post(aRemoveFeesFromPaymentRequestBody()).to(getUrl(reportId, 'invalid-id'));
+    const response = await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl(reportId, 'invalid-id'));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -102,7 +114,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selec
     const invalidReportId = reportId + 1;
 
     // Act
-    const response = await testApi.post(aRemoveFeesFromPaymentRequestBody()).to(getUrl(invalidReportId, paymentId));
+    const response = await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl(invalidReportId, paymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -113,7 +125,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selec
     const invalidPaymentId = paymentId + 1;
 
     // Act
-    const response = await testApi.post(aRemoveFeesFromPaymentRequestBody()).to(getUrl(reportId, invalidPaymentId));
+    const response = await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl(reportId, invalidPaymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);

@@ -21,6 +21,7 @@
     "**.scss",
     "**/migrations/*",
     "**/*.drawio",
+    "**/*.sql",
     "CHANGELOG.md"
   ],
   "language": "en",

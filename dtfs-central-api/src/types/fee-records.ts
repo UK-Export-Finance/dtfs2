@@ -1,4 +1,4 @@
-import { CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { Currency, CurrencyAndAmount, FeeRecordStatus, KeyingSheetAdjustment, KeyingSheetRowStatus } from '@ukef/dtfs2-common';
 
 export type FeeRecord = {
   /**
@@ -27,3 +27,21 @@ export type FeeRecordToKey = FeeRecord & {
   paymentsReceived: CurrencyAndAmount[];
   status: FeeRecordStatus;
 };
+
+export type KeyingSheetRow = {
+  feeRecordId: number;
+  status: KeyingSheetRowStatus;
+  facilityId: string;
+  exporter: string;
+  feePayments: {
+    dateReceived: Date;
+    currency: Currency;
+    amount: number;
+  }[];
+  baseCurrency: Currency;
+  fixedFeeAdjustment: KeyingSheetAdjustment | null;
+  premiumAccrualBalanceAdjustment: KeyingSheetAdjustment | null;
+  principalBalanceAdjustment: KeyingSheetAdjustment | null;
+};
+
+export type KeyingSheet = KeyingSheetRow[];

@@ -95,7 +95,7 @@ describe('postRemoveFeesFromPayment', () => {
     expect(res._isEndCalled()).toBe(true);
   });
 
-  it('responds with an error message', async () => {
+  it('responds with an error message when api call fails', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
@@ -105,7 +105,7 @@ describe('postRemoveFeesFromPayment', () => {
     await postRemoveFeesFromPayment(req, res);
 
     // Assert
-    expect(res._getData()).toBe('Failed to remove fees from payment');
+    expect(res._getData()).toBe('Failed to remove fees from payment group');
     expect(res._isEndCalled()).toBe(true);
   });
 });

@@ -27,7 +27,7 @@ export const postRemoveFeesFromPayment = async (req: PostRemoveFeesFromPaymentRe
     await api.removeFeesFromPayment(reportId, paymentId, selectedFeeRecordIds, user);
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
-    const errorMessage = 'Failed to remove fees from payment';
+    const errorMessage = 'Failed to remove fees from payment group';
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
     console.error(errorMessage, error);
     return res.status(errorStatus).send(errorMessage);

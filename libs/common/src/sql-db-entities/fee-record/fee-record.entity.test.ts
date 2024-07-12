@@ -3,9 +3,9 @@ import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReport
 import { Currency } from '../../types';
 
 describe('FeeRecordEntity', () => {
-  describe('getFeesPaidToUkefForThePeriodInThePaymentCurrency', () => {
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
+  describe('getFeesPaidToUkefForThePeriodInThePaymentCurrency', () => {
     it('returns the fees paid to ukef for the period with no exchange rate applied when the payment and fees paid currencies match', () => {
       // Arrange
       const feesPaidToUkefForThePeriod = 100.0;
@@ -58,7 +58,7 @@ describe('FeeRecordEntity', () => {
   describe('updateWithStatus', () => {
     it.each(Object.values(FEE_RECORD_STATUS))("sets the report status to '%s' and updates the 'lastUpdatedBy...' fields", (status) => {
       // Arrange
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(status).build();
 
       const userId = 'abc123';
 
@@ -74,10 +74,6 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
       expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
     });
-
-    function aUtilisationReport() {
-      return UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
-    }
   });
 
   describe('removeAllPayments', () => {
@@ -87,7 +83,7 @@ describe('FeeRecordEntity', () => {
       const paymentId = 123;
       const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).build();
 
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withStatus('MATCH')
         .withPaymentCurrency(paymentCurrency)
         .withPayments([payment])
@@ -110,9 +106,5 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
       expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
     });
-
-    function aUtilisationReport() {
-      return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    }
   });
 });

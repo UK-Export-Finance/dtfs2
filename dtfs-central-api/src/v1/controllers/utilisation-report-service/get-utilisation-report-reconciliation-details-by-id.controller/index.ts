@@ -2,9 +2,10 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
-import { ApiError } from '../../../../errors';
+import { NotFoundError, ApiError } from '../../../../errors';
 import { getUtilisationReportReconciliationDetails } from './helpers';
 import { REGEX } from '../../../../constants';
+import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 
 export type GetUtilisationReportReconciliationDetailsByIdRequest = CustomExpressRequest<{
   params: {
@@ -23,7 +24,14 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
 
   try {
     const facilityIdFilter = facilityIdQuery && REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityIdQuery) ? facilityIdQuery : undefined;
-    const utilisationReportReconciliationDetails = await getUtilisationReportReconciliationDetails(Number(reportId), facilityIdFilter);
+
+    const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsWithPayments(Number(reportId));
+    if (!utilisationReport) {
+      throw new NotFoundError(`Failed to find a report with id '${reportId}'`);
+    }
+
+    const utilisationReportReconciliationDetails = await getUtilisationReportReconciliationDetails(utilisationReport, facilityIdFilter);
+
     return res.status(HttpStatusCode.Ok).send(utilisationReportReconciliationDetails);
   } catch (error) {
     const errorMessage = `Failed to get utilisation report reconciliation for report with id '${reportId}'`;

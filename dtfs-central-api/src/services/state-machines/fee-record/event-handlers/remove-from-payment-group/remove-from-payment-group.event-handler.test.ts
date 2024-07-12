@@ -1,9 +1,9 @@
 import { EntityManager } from 'typeorm';
 import { FeeRecordEntity, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { handleFeeRecordRemoveFromPaymentEvent } from './remove-from-payment.event-handler';
+import { handleFeeRecordRemoveFromPaymentGroupEvent } from './remove-from-payment-group.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers/test-data/db-request-source';
 
-describe('handleFeeRecordRemoveFromPaymentEvent', () => {
+describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
   const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
 
   const mockSave = jest.fn();
@@ -21,7 +21,7 @@ describe('handleFeeRecordRemoveFromPaymentEvent', () => {
     const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withPayments(payments).build();
 
     // Act
-    await handleFeeRecordRemoveFromPaymentEvent(feeRecord, {
+    await handleFeeRecordRemoveFromPaymentGroupEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       requestSource: aDbRequestSource(),
     });
@@ -35,7 +35,7 @@ describe('handleFeeRecordRemoveFromPaymentEvent', () => {
     const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus('MATCH').build();
 
     // Act
-    await handleFeeRecordRemoveFromPaymentEvent(feeRecord, {
+    await handleFeeRecordRemoveFromPaymentGroupEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       requestSource: aDbRequestSource(),
     });
@@ -55,7 +55,7 @@ describe('handleFeeRecordRemoveFromPaymentEvent', () => {
     const userId = '123';
 
     // Act
-    await handleFeeRecordRemoveFromPaymentEvent(feeRecord, {
+    await handleFeeRecordRemoveFromPaymentGroupEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       requestSource: {
         platform: 'TFM',
@@ -74,7 +74,7 @@ describe('handleFeeRecordRemoveFromPaymentEvent', () => {
     const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).build();
 
     // Act
-    await handleFeeRecordRemoveFromPaymentEvent(feeRecord, {
+    await handleFeeRecordRemoveFromPaymentGroupEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       requestSource: aDbRequestSource(),
     });

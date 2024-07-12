@@ -1,6 +1,6 @@
 import { CheerioAPI } from 'cheerio';
 
-export const assertions = (wrapper: CheerioAPI, html: string, params: object) => ({
+export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: string, params: TParams) => ({
   html,
   params,
   expectLink: (selector: string) => ({

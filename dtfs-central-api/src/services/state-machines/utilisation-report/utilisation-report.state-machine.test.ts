@@ -16,7 +16,7 @@ import {
   handleUtilisationReportReportUploadedEvent,
   handleUtilisationReportDeletePaymentEvent,
   handleUtilisationReportEditPaymentEvent,
-  handleUtilisationReportRemoveFeesFromPaymentEvent,
+  handleUtilisationReportRemoveFeesFromPaymentGroupEvent,
 } from './event-handlers';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { UtilisationReportStateMachine } from './utilisation-report.state-machine';
@@ -268,23 +268,23 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportEditPaymentEvent).toHaveBeenCalledTimes(1);
     });
 
-    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.REMOVE_PAYMENT_FEES}' event`, async () => {
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP}' event`, async () => {
       // Arrange
       const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
 
       // Act
       await stateMachine.handleEvent({
-        type: 'REMOVE_PAYMENT_FEES',
+        type: 'REMOVE_FEES_FROM_PAYMENT_GROUP',
         payload: {
           transactionEntityManager: {} as EntityManager,
-          selectedFeeRecords: [],
-          otherFeeRecords: [],
+          feeRecordsToRemove: [],
+          feeRecordsToUpdate: [],
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });
 
       // Assert
-      expect(handleUtilisationReportRemoveFeesFromPaymentEvent).toHaveBeenCalledTimes(1);
+      expect(handleUtilisationReportRemoveFeesFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
     });
 
     const VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES = [
@@ -292,7 +292,7 @@ describe('UtilisationReportStateMachine', () => {
       UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT,
       UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
       UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT,
-      UTILISATION_REPORT_EVENT_TYPE.REMOVE_PAYMENT_FEES,
+      UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP,
     ];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES))(

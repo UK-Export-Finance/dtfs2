@@ -32,6 +32,9 @@ export class FeeRecordEntityMockBuilder {
     data.paymentExchangeRate = 1;
     data.status = 'TO_DO';
     data.payments = [];
+    data.fixedFeeAdjustment = null;
+    data.premiumAccrualBalanceAdjustment = null;
+    data.principalBalanceAdjustment = null;
     data.updateLastUpdatedBy(requestSource);
     return new FeeRecordEntityMockBuilder(data);
   }
