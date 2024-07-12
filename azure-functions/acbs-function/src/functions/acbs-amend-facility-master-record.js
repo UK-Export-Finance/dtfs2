@@ -75,6 +75,20 @@ df.app.orchestration('acbs-amend-facility-master-record', function* amendFacilit
         }
       }
 
+      // 2.2.3 - Covenant
+      if (amendment.amount || amendment.facilityGuaranteeDates.guaranteeExpiryDate) {
+        // todo - check these exist as accessed on the amendment
+        const covenant = yield context.df.callActivityWithRetry('update-facility-covenant', retryOptions, {
+          facilityId,
+          acbsFacilityLoanInput: mappings.facility.facilityCovenantAmend(amendment),
+        });
+
+        facilityMasterRecordAmendments = {
+          ...facilityMasterRecordAmendments,
+          covenant,
+        };
+      }
+
       return facilityMasterRecordAmendments;
     }
 
