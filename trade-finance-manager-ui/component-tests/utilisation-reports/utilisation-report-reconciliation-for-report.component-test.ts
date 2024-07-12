@@ -120,6 +120,12 @@ describe(page, () => {
     wrapper.expectText('[data-cy="facility-filter-clear-button"]').toRead('Clear filter');
   });
 
+  it('renders error when facilityIdQueryError is provided', () => {
+    const wrapper = getWrapper({ ...params, facilityIdQueryError: { text: 'Oh no that is not correct', href: '#filter-component' } });
+    wrapper.expectText('[data-cy="facility-filter-form"]').toContain('Oh no that is not correct');
+    wrapper.expectLink('[data-cy="error-summary"] a').toLinkTo('#filter-component', 'Oh no that is not correct');
+  });
+
   it('should not render add payment button for PDC_READ user', () => {
     const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
 

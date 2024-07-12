@@ -50,27 +50,29 @@
               name: "facilityIdQuery",
               value: facilityIdQuery,
               errorMessage: facilityIdQueryError and {
-                text: facilityIdQueryError[0].text
+                text: facilityIdQueryError.text
               },
               attributes: {'data-cy': 'facility-filter-input'}
             }) }}
           </div>
           <div class="govuk-!-display-inline-block">
-            {{ govukButton({
-              text: "Filter",
-              classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 premium-payments-filter-control",
-              id: "facility-id-filter-button",
-              attributes: {'data-cy': 'facility-filter-submit-button'}
-            }) }}
-          </div>
-          <div class="govuk-!-display-inline-block">
-            {{ govukButton({
-              text: "Clear filter",
-              classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 premium-payments-filter-control",
-              id: "facility-id-clear-button",
-              href: clearButtonHref,
-              attributes: {'data-cy': 'facility-filter-clear-button'}
-            }) }}
+            <div class="govuk-!-display-inline-block">
+              {{ govukButton({
+                text: "Filter",
+                classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 premium-payments-filter-control",
+                id: "facility-id-filter-button",
+                attributes: {'data-cy': 'facility-filter-submit-button'}
+              }) }}
+            </div>
+            <div class="govuk-!-display-inline-block">
+              {{ govukButton({
+                text: "Clear filter",
+                classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 premium-payments-filter-control",
+                id: "facility-id-clear-button",
+                href: clearButtonHref,
+                attributes: {'data-cy': 'facility-filter-clear-button'}
+              }) }}
+            </div>
           </div>
         </form>
       </div>
@@ -119,7 +121,7 @@
   <p class="govuk-body">Select payments and mark as done when the adjustments have been keyed into ACBS.</p>
 
   <p class="govuk-body">Payments on the premium payments tab will show as reconciled when they have been marked as done here.</p>
-  
+
   <form method="post" data-cy="keying-sheet-form">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
@@ -133,7 +135,7 @@
             "data-cy": "keying-sheet-mark-as-done-button"
           }
         }) }}
-        
+
         {{ govukButton({
           text: "Mark as to do",
           href: '#',
