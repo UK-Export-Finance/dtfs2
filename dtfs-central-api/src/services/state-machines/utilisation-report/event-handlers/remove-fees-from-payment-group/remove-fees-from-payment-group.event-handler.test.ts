@@ -55,14 +55,14 @@ describe('handleUtilisationReportRemoveFeesFromPaymentGroupEvent', () => {
     const { feeRecords, eventHandlers, feeRecordStateMachines } = createFeeRecordsAndMocks(utilisationReport, feeRecordIds);
 
     const expectedFeeRecordsToRemove = feeRecords.slice(0, 2);
-    const expectedFeeRecordsToUpdate = feeRecords.slice(2);
+    const expectedOtherFeeRecordsInGroup = feeRecords.slice(2);
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
     // Act
     await handleUtilisationReportRemoveFeesFromPaymentGroupEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecordsToRemove: expectedFeeRecordsToRemove,
-      feeRecordsToUpdate: expectedFeeRecordsToUpdate,
+      otherFeeRecordsInGroup: expectedOtherFeeRecordsInGroup,
       requestSource,
     });
 
@@ -92,7 +92,7 @@ describe('handleUtilisationReportRemoveFeesFromPaymentGroupEvent', () => {
       const { feeRecords, eventHandlers, feeRecordStateMachines } = createFeeRecordsAndMocks(utilisationReport, feeRecordIds);
 
       const expectedFeeRecordsToRemove = feeRecords.slice(0, 2);
-      const expectedFeeRecordsToUpdate = feeRecords.slice(2);
+      const expectedOtherFeeRecordsInGroup = feeRecords.slice(2);
 
       jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
@@ -102,12 +102,12 @@ describe('handleUtilisationReportRemoveFeesFromPaymentGroupEvent', () => {
       await handleUtilisationReportRemoveFeesFromPaymentGroupEvent(utilisationReport, {
         transactionEntityManager: mockEntityManager,
         feeRecordsToRemove: expectedFeeRecordsToRemove,
-        feeRecordsToUpdate: expectedFeeRecordsToUpdate,
+        otherFeeRecordsInGroup: expectedOtherFeeRecordsInGroup,
         requestSource,
       });
 
       // Assert
-      expectedFeeRecordsToUpdate.forEach(({ id }) => {
+      expectedOtherFeeRecordsInGroup.forEach(({ id }) => {
         const eventHandler = eventHandlers[id];
         expect(eventHandler).toHaveBeenCalledWith({
           type: 'OTHER_FEE_REMOVED_FROM_GROUP',
@@ -129,7 +129,7 @@ describe('handleUtilisationReportRemoveFeesFromPaymentGroupEvent', () => {
     await handleUtilisationReportRemoveFeesFromPaymentGroupEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecordsToRemove: [],
-      feeRecordsToUpdate: [],
+      otherFeeRecordsInGroup: [],
       requestSource,
     });
 

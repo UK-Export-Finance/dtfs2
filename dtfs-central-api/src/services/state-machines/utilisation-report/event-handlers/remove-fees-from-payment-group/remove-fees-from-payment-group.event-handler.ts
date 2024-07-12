@@ -7,7 +7,7 @@ import { feeRecordsMatchAttachedPayments } from '../helpers';
 type RemoveFeesFromPaymentGroupEventPayload = {
   transactionEntityManager: EntityManager;
   feeRecordsToRemove: FeeRecordEntity[];
-  feeRecordsToUpdate: FeeRecordEntity[];
+  otherFeeRecordsInGroup: FeeRecordEntity[];
   requestSource: DbRequestSource;
 };
 
@@ -51,10 +51,10 @@ const updateOtherFeePaymentsInGroup = async (transactionEntityManager: EntityMan
 
 export const handleUtilisationReportRemoveFeesFromPaymentGroupEvent = async (
   report: UtilisationReportEntity,
-  { transactionEntityManager, feeRecordsToRemove, feeRecordsToUpdate, requestSource }: RemoveFeesFromPaymentGroupEventPayload,
+  { transactionEntityManager, feeRecordsToRemove, otherFeeRecordsInGroup, requestSource }: RemoveFeesFromPaymentGroupEventPayload,
 ): Promise<UtilisationReportEntity> => {
   await removeSelectedFeePaymentsFromGroup(transactionEntityManager, feeRecordsToRemove, requestSource);
-  await updateOtherFeePaymentsInGroup(transactionEntityManager, feeRecordsToUpdate, requestSource);
+  await updateOtherFeePaymentsInGroup(transactionEntityManager, otherFeeRecordsInGroup, requestSource);
 
   report.updateLastUpdatedBy(requestSource);
   return await transactionEntityManager.save(UtilisationReportEntity, report);

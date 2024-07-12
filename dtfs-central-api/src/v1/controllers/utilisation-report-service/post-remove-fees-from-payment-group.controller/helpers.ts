@@ -17,7 +17,7 @@ export const removeFeesFromPaymentGroup = async (
       payload: {
         transactionEntityManager,
         feeRecordsToRemove,
-        feeRecordsToUpdate,
+        otherFeeRecordsInGroup,
         requestSource: {
           platform: 'TFM',
           userId: user._id.toString(),

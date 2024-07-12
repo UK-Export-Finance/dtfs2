@@ -68,7 +68,7 @@ describe('post-remove-fees-from-payment.controller helpers', () => {
         payload: {
           transactionEntityManager: mockEntityManager,
           feeRecordsToRemove,
-          feeRecordsToUpdate: otherFeeRecordsInGroup,
+          otherFeeRecordsInGroup,
           requestSource: {
             platform: 'TFM',
             userId: tfmUserId,

@@ -278,7 +278,7 @@ describe('UtilisationReportStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsToRemove: [],
-          feeRecordsToUpdate: [],
+          otherFeeRecordsInGroup: [],
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });
