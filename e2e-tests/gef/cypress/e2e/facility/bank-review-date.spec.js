@@ -85,6 +85,34 @@ context('Bank Review Date Page', () => {
     bankReviewDate.bankReviewDateError();
   });
 
+  it('redirects user to application page when clicking on `save and return` button', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
+    bankReviewDate.saveAndReturnButton().click();
+    cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
+  });
+
+  it('validates form if not blank when clicking on `save and return` button', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
+
+    bankReviewDate.bankReviewDateDay().clear().type(todayDay);
+    bankReviewDate.bankReviewDateMonth().clear();
+    bankReviewDate.saveAndReturnButton().click();
+    bankReviewDate.errorSummary();
+    bankReviewDate.bankReviewDateError();
+  });
+
+  it('redirects user to application page when clicking on `save and return` button and form has been successfully filled in', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
+
+    bankReviewDate.bankReviewDateDay().clear().type(todayDay);
+    bankReviewDate.bankReviewDateMonth().clear().type(todayMonth);
+    bankReviewDate.bankReviewDateYear().clear().type(nextYear);
+
+    bankReviewDate.saveAndReturnButton().click();
+
+    cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
+  });
+
   it('when cover start date is given, it validates bank review date is after the cover start date', () => {
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
     aboutFacility.facilityName().clear().type('Name');

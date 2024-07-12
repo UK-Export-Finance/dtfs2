@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { getDate, getMonth, getYear, parseISO, startOfDay } from 'date-fns';
 import { CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
-import { validationErrorHandler } from '../../utils/helpers';
+import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
 import * as api from '../../services/api';
 import { validateAndParseBankReviewDate } from './validation';
 
@@ -9,7 +9,14 @@ type BankReviewDateParams = { dealId: string; facilityId: string };
 type BankReviewDatePostBody = { 'bank-review-date-day': string; 'bank-review-date-month': string; 'bank-review-date-year': string };
 type BankReviewDateViewModel = { dealId: string; facilityId: string; status: string; bankReviewDate?: { day: string; month: string; year: string } };
 
-export const getBankReviewDate = async (req: CustomExpressRequest<{ params: BankReviewDateParams; query: { status: string } }>, res: Response) => {
+type GetBankReviewDateRequest = CustomExpressRequest<{ params: BankReviewDateParams; query: { status: string } }>;
+type PostBankReviewDateRequest = CustomExpressRequest<{
+  reqBody: BankReviewDatePostBody;
+  params: BankReviewDateParams;
+  query: { saveAndReturn: string; status: string };
+}>;
+
+export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Response) => {
   const {
     params: { dealId, facilityId },
     query: { status },
@@ -58,12 +65,19 @@ const getCoverStartDate = (facility: Record<string, unknown>) => {
   throw new Error('Invalid coverStartDate');
 };
 
-export const postBankReviewDate = async (req: CustomExpressRequest<{ reqBody: BankReviewDatePostBody; params: BankReviewDateParams }>, res: Response) => {
+export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Response) => {
   const {
     params: { dealId, facilityId },
     body: { 'bank-review-date-year': bankReviewDateYear, 'bank-review-date-month': bankReviewDateMonth, 'bank-review-date-day': bankReviewDateDay },
     session: { userToken, user },
+    query: { saveAndReturn, status },
   } = req;
+
+  const bankReviewDateIsBlank = !bankReviewDateYear && !bankReviewDateMonth && !bankReviewDateDay;
+
+  if (isTrueSet(saveAndReturn) && bankReviewDateIsBlank) {
+    return res.redirect(`/gef/application-details/${dealId}`);
+  }
 
   try {
     const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
@@ -87,6 +101,7 @@ export const postBankReviewDate = async (req: CustomExpressRequest<{ reqBody: Ba
           month: bankReviewDateMonth,
           year: bankReviewDateYear,
         },
+        status,
       });
     }
 
@@ -105,7 +120,9 @@ export const postBankReviewDate = async (req: CustomExpressRequest<{ reqBody: Ba
     };
     await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
-    // TODO: DTFS2-7162 - handle saveAndReturn
+    if (isTrueSet(saveAndReturn)) {
+      return res.redirect(`/gef/application-details/${dealId}`);
+    }
 
     return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);
   } catch (error) {
