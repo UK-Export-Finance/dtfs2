@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { removeFeesFromPaymentGroup, validateAtLeastOneFeeRecordSelected, validateNotAllFeeRecordsSelected } from './helpers';
+import { removeFeesFromPaymentGroup, validateNotAllFeeRecordsSelected, validateSelectedFeeRecordsExistInPayment } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
@@ -80,13 +80,33 @@ describe('post-remove-fees-from-payment.controller helpers', () => {
     });
   });
 
-  describe('validateAtLeastOneFeeRecordSelected', () => {
-    it("throws the 'InvalidPayloadError' if no fee records are selected", () => {
+  describe('validateSelectedFeeRecordsExistInPayment', () => {
+    const reportId = 1;
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+
+    const createPaymentFeeRecords = (paymentFeeRecordIds: number[]) =>
+      paymentFeeRecordIds.map((id) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).build());
+
+    it('does not throw an error when all selected fee records exist in the payment', () => {
       // Arrange
-      const selectedFeeRecordIds: number[] = [];
+      const paymentFeeRecordIds = [1, 2, 3];
+      const paymentFeeRecords = createPaymentFeeRecords(paymentFeeRecordIds);
+
+      const selectedFeeRecordIds = paymentFeeRecordIds.slice(0, 2);
 
       // Act / Assert
-      expect(() => validateAtLeastOneFeeRecordSelected(selectedFeeRecordIds)).toThrow(InvalidPayloadError);
+      expect(() => validateSelectedFeeRecordsExistInPayment(selectedFeeRecordIds, paymentFeeRecords)).not.toThrow();
+    });
+
+    it("throws the 'InvalidPayloadError' if the selected fee records don't exist in the payment", () => {
+      // Arrange
+      const paymentFeeRecordIds = [1, 2];
+      const paymentFeeRecords = createPaymentFeeRecords(paymentFeeRecordIds);
+
+      const selectedFeeRecordIds = [1, 7];
+
+      // Act / Assert
+      expect(() => validateSelectedFeeRecordsExistInPayment(selectedFeeRecordIds, paymentFeeRecords)).toThrow(InvalidPayloadError);
     });
   });
 

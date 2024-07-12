@@ -5,7 +5,7 @@ import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PostRemoveFeesFromPaymentGroupPayload } from '../../../routes/middleware/payload-validation/validate-post-remove-fees-from-payment-group-payload';
 import { NotFoundError } from '../../../../errors';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
-import { removeFeesFromPaymentGroup, validateAtLeastOneFeeRecordSelected, validateNotAllFeeRecordsSelected } from './helpers';
+import { removeFeesFromPaymentGroup, validateNotAllFeeRecordsSelected, validateSelectedFeeRecordsExistInPayment } from './helpers';
 
 export type PostRemoveFeesFromPaymentGroupRequest = CustomExpressRequest<{
   params: {
@@ -25,8 +25,6 @@ export const postRemoveFeesFromPaymentGroup = async (req: PostRemoveFeesFromPaym
   const { selectedFeeRecordIds, user } = req.body;
 
   try {
-    validateAtLeastOneFeeRecordSelected(selectedFeeRecordIds);
-
     const payment = await PaymentRepo.findOneByIdWithFeeRecordsAndReportFilteredById(Number(paymentId), Number(reportId));
     if (!payment) {
       throw new NotFoundError(`Failed to find a payment with id '${paymentId}' linked to report with id '${reportId}'.`);
@@ -39,6 +37,7 @@ export const postRemoveFeesFromPaymentGroup = async (req: PostRemoveFeesFromPaym
 
     const allFeeRecords = payment.feeRecords;
 
+    validateSelectedFeeRecordsExistInPayment(selectedFeeRecordIds, allFeeRecords);
     validateNotAllFeeRecordsSelected(selectedFeeRecordIds, allFeeRecords.length);
 
     await removeFeesFromPaymentGroup(utilisationReport, allFeeRecords, selectedFeeRecordIds, user);

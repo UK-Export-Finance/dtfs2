@@ -4,9 +4,12 @@ import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError } from '../../../../errors';
 
-export const validateAtLeastOneFeeRecordSelected = (selectedFeeRecordIds: number[]) => {
-  if (selectedFeeRecordIds.length === 0) {
-    throw new InvalidPayloadError('No fee records selected.');
+export const validateSelectedFeeRecordsExistInPayment = (selectedFeeRecordIds: number[], paymentFeeRecords: FeeRecordEntity[]) => {
+  const paymentFeeRecordIds = paymentFeeRecords.map((record) => record.id);
+  const unmatchedFeeRecordIds = selectedFeeRecordIds.filter((id) => !paymentFeeRecordIds.includes(id));
+
+  if (unmatchedFeeRecordIds.length > 0) {
+    throw new InvalidPayloadError(`The following fee record IDs do not belong to the payment (and may not exist): ${unmatchedFeeRecordIds.join(', ')}`);
   }
 };
 
