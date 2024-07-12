@@ -6,5 +6,4 @@ export { feeRecordsAndPaymentsMatch } from './fee-record-matching';
 export {
   FeeRecordPaymentEntityGroup,
   getFeeRecordPaymentEntityGroupsFromFeeRecordEntities,
-  getCompleteFeeRecordPaymentEntityGroupsFromFilteredFeeRecordEntities,
 } from './get-fee-record-payment-entity-groups-from-fee-record-entities';

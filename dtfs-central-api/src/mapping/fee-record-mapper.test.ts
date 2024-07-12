@@ -1,5 +1,19 @@
-import { CURRENCY, Currency, FeeRecordEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { mapFeeRecordEntityToFeeRecord, mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from './fee-record-mapper';
+import { difference } from 'lodash';
+import {
+  CURRENCY,
+  Currency,
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  KeyingSheetRowStatus,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
+import {
+  mapFeeRecordEntityToFeeRecord,
+  mapFeeRecordEntityToKeyingSheetRowStatus,
+  mapFeeRecordEntityToReportedFees,
+  mapFeeRecordEntityToReportedPayments,
+} from './fee-record-mapper';
 
 describe('fee record mapper', () => {
   describe('mapFeeRecordEntityToReportedFees', () => {
@@ -214,9 +228,43 @@ describe('fee record mapper', () => {
         expect(feeRecord.reportedPayments.amount).toBe(feesPaidInPaymentCurrencyAmount);
       });
     });
-
-    function aUtilisationReport(): UtilisationReportEntity {
-      return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    }
   });
+
+  describe('mapFeeRecordEntityToKeyingSheetRowStatus', () => {
+    const INVALID_FEE_RECORD_STATUSES = difference(Object.values(FEE_RECORD_STATUS), [FEE_RECORD_STATUS.READY_TO_KEY, FEE_RECORD_STATUS.RECONCILED]);
+
+    it.each(INVALID_FEE_RECORD_STATUSES)('throws an error when the fee record entity status is %s', (status) => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build();
+
+      // Act / Assert
+      expect(() => mapFeeRecordEntityToKeyingSheetRowStatus(feeRecord)).toThrow(Error);
+    });
+
+    it('maps the fee record READY_TO_KEY status to the keying sheet TO_DO status', () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('READY_TO_KEY').build();
+
+      // Act
+      const result = mapFeeRecordEntityToKeyingSheetRowStatus(feeRecord);
+
+      // Assert
+      expect(result).toBe<KeyingSheetRowStatus>('TO_DO');
+    });
+
+    it('maps the fee record RECONCILED status to the keying sheet DONE status', () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('RECONCILED').build();
+
+      // Act
+      const result = mapFeeRecordEntityToKeyingSheetRowStatus(feeRecord);
+
+      // Assert
+      expect(result).toBe<KeyingSheetRowStatus>('DONE');
+    });
+  });
+
+  function aUtilisationReport(): UtilisationReportEntity {
+    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  }
 });
