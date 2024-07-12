@@ -95,7 +95,7 @@ describe('postRemoveFeesFromPaymentGroup', () => {
     expect(res._isEndCalled()).toBe(true);
   });
 
-  it('responds with an error message', async () => {
+  it('responds with an error message when api call fails', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
