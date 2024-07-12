@@ -61,16 +61,15 @@ describe('post-remove-fees-from-payment.controller helpers', () => {
       // Act
       await removeFeesFromPaymentGroup(utilisationReport, feeRecords, selectedFeeRecordIds, tfmUser);
 
-      const feeRecordsToRemove = feeRecords.slice(0, 1);
-      const feeRecordsToUpdate = feeRecords.slice(1);
-
       // Assert
+      const expectedFeeRecordsToRemove = feeRecords.slice(0, 1);
+      const expectedFeeRecordsToUpdate = feeRecords.slice(1);
       expect(handleEventSpy).toHaveBeenCalledWith({
         type: 'REMOVE_FEES_FROM_PAYMENT_GROUP',
         payload: {
           transactionEntityManager: mockEntityManager,
-          feeRecordsToRemove,
-          feeRecordsToUpdate,
+          feeRecordsToRemove: expectedFeeRecordsToRemove,
+          feeRecordsToUpdate: expectedFeeRecordsToUpdate,
           requestSource: {
             platform: 'TFM',
             userId: tfmUserId,
