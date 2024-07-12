@@ -98,6 +98,27 @@ describe('controllers/provided-facility', () => {
       );
     });
 
+    it('back link goes to the about facility page if on a v1 deal and isUsingFacilityEndDate null', async () => {
+      mockRequest.query.status = 'change';
+      mockProvidedFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
+      mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
+      mockProvidedFacilityResponse.details.isUsingFacilityEndDate = null;
+
+      mockApplicationResponse.version = 1;
+
+      api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
+      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+      await providedFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/provided-facility.njk',
+        expect.objectContaining({
+          previousPage: `/gef/application-details/${mockRequest.params.dealId}/facilities/${mockRequest.params.facilityId}/about-facility`,
+        }),
+      );
+    });
+
     it('back link goes to the bank review date page if on a v1 deal & not using facility end date', async () => {
       mockRequest.query.status = 'change';
       mockProvidedFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];

@@ -48,7 +48,7 @@ export const getBankReviewDate = async (req: CustomExpressRequest<{ params: Bank
 
 const getCoverStartDate = (facility: Record<string, unknown>) => {
   if (typeof facility.coverStartDate === 'string') {
-    return parseISO(facility.coverStartDate);
+    return startOfDay(parseISO(facility.coverStartDate));
   }
 
   if (!facility.coverStartDate) {
@@ -64,6 +64,7 @@ export const postBankReviewDate = async (req: CustomExpressRequest<{ reqBody: Ba
     body: { 'bank-review-date-year': bankReviewDateYear, 'bank-review-date-month': bankReviewDateMonth, 'bank-review-date-day': bankReviewDateDay },
     session: { userToken, user },
   } = req;
+
   try {
     const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
 

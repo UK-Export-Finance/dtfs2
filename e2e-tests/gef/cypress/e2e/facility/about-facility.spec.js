@@ -187,6 +187,53 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateError().contains('Cover end date cannot be before cover start date');
     });
 
+    if (facilityEndDateEnabled) {
+      it('redirects user to `bank review date` page when not using facility end date', () => {
+        cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+        aboutFacility.facilityName().clear().type('Name');
+        aboutFacility.shouldCoverStartOnSubmissionNo().click();
+        aboutFacility.coverStartDateDay().clear().type(now.getDate());
+        aboutFacility
+          .coverStartDateMonth()
+          .clear()
+          .type(now.getMonth() + 1);
+        aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
+        aboutFacility.coverEndDateDay().clear().type(now.getDate());
+        aboutFacility.coverEndDateMonth().clear().type(now.getMonth());
+        aboutFacility
+          .coverEndDateYear()
+          .clear()
+          .type(now.getFullYear() + 1);
+        aboutFacility.isUsingFacilityEndDateNo().click();
+
+        aboutFacility.continueButton().click();
+
+        cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
+      });
+    } else {
+      it('redirects the user to `provided facility` page', () => {
+        cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+        aboutFacility.facilityName().clear().type('Name');
+        aboutFacility.shouldCoverStartOnSubmissionNo().click();
+        aboutFacility.coverStartDateDay().clear().type(now.getDate());
+        aboutFacility
+          .coverStartDateMonth()
+          .clear()
+          .type(now.getMonth() + 1);
+        aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
+        aboutFacility.coverEndDateDay().clear().type(now.getDate());
+        aboutFacility.coverEndDateMonth().clear().type(now.getMonth());
+        aboutFacility
+          .coverEndDateYear()
+          .clear()
+          .type(now.getFullYear() + 1);
+
+        aboutFacility.continueButton().click();
+
+        cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
+      });
+    }
+
     it('stores the inputted values when returning to the page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.facilityName().clear().type('Name');
@@ -229,55 +276,6 @@ context('About Facility Page', () => {
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
         aboutFacility.isUsingFacilityEndDateNo().should('be.checked');
         aboutFacility.isUsingFacilityEndDateYes().should('be.not.checked');
-      }
-    });
-
-    describe('when the form has been correctly filled in', () => {
-      if (facilityEndDateEnabled) {
-        it('redirects user to `bank review date` page when not using facility end date', () => {
-          cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-          aboutFacility.facilityName().clear().type('Name');
-          aboutFacility.shouldCoverStartOnSubmissionNo().click();
-          aboutFacility.coverStartDateDay().clear().type(now.getDate());
-          aboutFacility
-            .coverStartDateMonth()
-            .clear()
-            .type(now.getMonth() + 1);
-          aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
-          aboutFacility.coverEndDateDay().clear().type(now.getDate());
-          aboutFacility.coverEndDateMonth().clear().type(now.getMonth());
-          aboutFacility
-            .coverEndDateYear()
-            .clear()
-            .type(now.getFullYear() + 1);
-          aboutFacility.isUsingFacilityEndDateNo().click();
-
-          aboutFacility.continueButton().click();
-
-          cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-        });
-      } else {
-        it('redirects the user to `provided facility` page', () => {
-          cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-          aboutFacility.facilityName().clear().type('Name');
-          aboutFacility.shouldCoverStartOnSubmissionNo().click();
-          aboutFacility.coverStartDateDay().clear().type(now.getDate());
-          aboutFacility
-            .coverStartDateMonth()
-            .clear()
-            .type(now.getMonth() + 1);
-          aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
-          aboutFacility.coverEndDateDay().clear().type(now.getDate());
-          aboutFacility.coverEndDateMonth().clear().type(now.getMonth());
-          aboutFacility
-            .coverEndDateYear()
-            .clear()
-            .type(now.getFullYear() + 1);
-
-          aboutFacility.continueButton().click();
-
-          cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
-        });
       }
     });
   });

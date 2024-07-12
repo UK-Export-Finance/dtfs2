@@ -74,7 +74,7 @@ context('Changing facility details from application-details page should take you
       });
 
       it('should take you to provided-facility page from bank-review-date page', () => {
-        // TODO: click on row rather than visit page
+        // TODO DTFS2-7162: should click on row to visit bank-review-date page
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facility._id}/bank-review-date`));
         bankReviewDate.bankReviewDateDay().type(now.getDate());
         bankReviewDate.bankReviewDateMonth().type(now.getMonth());
