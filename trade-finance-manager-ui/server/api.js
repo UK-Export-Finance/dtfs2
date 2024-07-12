@@ -1082,7 +1082,7 @@ const editPayment = async (reportId, paymentId, parsedEditPaymentFormValues, use
  * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
  * @param {string} userToken - The user token
  */
-const removeFeesFromPaymentGroup = async (reportId, paymentId, selectedFeeRecordIds, user, userToken) => {
+const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, user, userToken) => {
   await axios({
     url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}/remove-selected-fees`,
     method: 'post',
@@ -1143,5 +1143,5 @@ module.exports = {
   getPaymentDetailsWithoutFeeRecords,
   deletePaymentById,
   editPayment,
-  removeFeesFromPaymentGroup,
+  removeFeesFromPayment,
 };

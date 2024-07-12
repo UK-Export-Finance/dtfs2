@@ -6,7 +6,7 @@ const {
   validateDeletePaymentPayload,
   validatePatchPaymentPayload,
   validatePostKeyingDataPayload,
-  validatePostRemoveFeesFromPaymentPayload,
+  validatePostRemoveFeesFromPaymentGroupPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
@@ -516,7 +516,7 @@ utilisationReportsRouter
     validation.sqlIdValidation('reportId'),
     validation.sqlIdValidation('paymentId'),
     handleExpressValidatorResult,
-    validatePostRemoveFeesFromPaymentPayload,
+    validatePostRemoveFeesFromPaymentGroupPayload,
     postRemoveFeesFromPaymentGroup,
   );
 

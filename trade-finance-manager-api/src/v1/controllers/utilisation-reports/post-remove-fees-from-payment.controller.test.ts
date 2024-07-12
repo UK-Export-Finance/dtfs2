@@ -2,18 +2,18 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode, AxiosError, AxiosResponse } from 'axios';
 import api from '../../api';
 import {
-  PostRemoveFeesFromPaymentGroupRequest,
-  PostRemoveFeesFromPaymentGroupRequestBody,
-  PostRemoveFeesFromPaymentGroupRequestParams,
-  postRemoveFeesFromPaymentGroup,
-} from './post-remove-fees-from-payment-group.controller';
+  PostRemoveFeesFromPaymentRequest,
+  PostRemoveFeesFromPaymentRequestBody,
+  PostRemoveFeesFromPaymentRequestParams,
+  postRemoveFeesFromPayment,
+} from './post-remove-fees-from-payment.controller';
 import { aTfmSessionUser } from '../../../../test-helpers';
 
 jest.mock('../../api');
 
 console.error = jest.fn();
 
-describe('postRemoveFeesFromPaymentGroup', () => {
+describe('postRemoveFeesFromPayment', () => {
   const reportId = '1';
   const paymentId = '2';
   const selectedFeeRecordIds = [1, 2, 3];
@@ -24,20 +24,20 @@ describe('postRemoveFeesFromPaymentGroup', () => {
   });
 
   beforeEach(() => {
-    jest.mocked(api.removeFeesFromPaymentGroup).mockResolvedValue();
+    jest.mocked(api.removeFeesFromPayment).mockResolvedValue();
   });
 
-  const aPostRemoveFeesFromPaymentGroupRequestBody = (): PostRemoveFeesFromPaymentGroupRequestBody => ({
+  const aPostRemoveFeesFromPaymentRequestBody = (): PostRemoveFeesFromPaymentRequestBody => ({
     selectedFeeRecordIds,
     user,
   });
 
-  const aPostRemoveFeesFromPaymentGroupRequestParams = (): PostRemoveFeesFromPaymentGroupRequestParams => ({ reportId, paymentId });
+  const aPostRemoveFeesFromPaymentRequestParams = (): PostRemoveFeesFromPaymentRequestParams => ({ reportId, paymentId });
 
   const getHttpMocks = () =>
-    httpMocks.createMocks<PostRemoveFeesFromPaymentGroupRequest>({
-      body: aPostRemoveFeesFromPaymentGroupRequestBody(),
-      params: aPostRemoveFeesFromPaymentGroupRequestParams(),
+    httpMocks.createMocks<PostRemoveFeesFromPaymentRequest>({
+      body: aPostRemoveFeesFromPaymentRequestBody(),
+      params: aPostRemoveFeesFromPaymentRequestParams(),
     });
 
   it('removes fee records from the payment', async () => {
@@ -45,11 +45,11 @@ describe('postRemoveFeesFromPaymentGroup', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await postRemoveFeesFromPaymentGroup(req, res);
+    await postRemoveFeesFromPayment(req, res);
 
     // Assert
-    expect(api.removeFeesFromPaymentGroup).toHaveBeenCalledTimes(1);
-    expect(api.removeFeesFromPaymentGroup).toHaveBeenCalledWith(reportId, paymentId, selectedFeeRecordIds, user);
+    expect(api.removeFeesFromPayment).toHaveBeenCalledTimes(1);
+    expect(api.removeFeesFromPayment).toHaveBeenCalledWith(reportId, paymentId, selectedFeeRecordIds, user);
   });
 
   it('responds with a 200', async () => {
@@ -57,7 +57,7 @@ describe('postRemoveFeesFromPaymentGroup', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await postRemoveFeesFromPaymentGroup(req, res);
+    await postRemoveFeesFromPayment(req, res);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
@@ -68,10 +68,10 @@ describe('postRemoveFeesFromPaymentGroup', () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    jest.mocked(api.removeFeesFromPaymentGroup).mockRejectedValue(new Error('Some error'));
+    jest.mocked(api.removeFeesFromPayment).mockRejectedValue(new Error('Some error'));
 
     // Act
-    await postRemoveFeesFromPaymentGroup(req, res);
+    await postRemoveFeesFromPayment(req, res);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
@@ -85,10 +85,10 @@ describe('postRemoveFeesFromPaymentGroup', () => {
     const errorStatus = HttpStatusCode.BadRequest;
     const axiosError = new AxiosError(undefined, undefined, undefined, undefined, { status: errorStatus } as AxiosResponse);
 
-    jest.mocked(api.removeFeesFromPaymentGroup).mockRejectedValue(axiosError);
+    jest.mocked(api.removeFeesFromPayment).mockRejectedValue(axiosError);
 
     // Act
-    await postRemoveFeesFromPaymentGroup(req, res);
+    await postRemoveFeesFromPayment(req, res);
 
     // Assert
     expect(res._getStatusCode()).toBe(errorStatus);
@@ -99,10 +99,10 @@ describe('postRemoveFeesFromPaymentGroup', () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    jest.mocked(api.removeFeesFromPaymentGroup).mockRejectedValue(new Error('Some error'));
+    jest.mocked(api.removeFeesFromPayment).mockRejectedValue(new Error('Some error'));
 
     // Act
-    await postRemoveFeesFromPaymentGroup(req, res);
+    await postRemoveFeesFromPayment(req, res);
 
     // Assert
     expect(res._getData()).toBe('Failed to remove fees from payment group');

@@ -1,27 +1,27 @@
 import { createRequest } from 'node-mocks-http';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
-import { RemoveFeesFromPaymentGroupErrorKey } from '../helpers';
+import { RemoveFeesFromPaymentErrorKey } from '../helpers';
 
 type RedirectSessionData = {
-  removeFeesFromPaymentGroupErrorKey: RemoveFeesFromPaymentGroupErrorKey | undefined;
+  removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey | undefined;
 };
 
 describe('getAndClearFieldsFromRedirectSessionData', () => {
-  const getMockRequest = ({ removeFeesFromPaymentGroupErrorKey }: RedirectSessionData) =>
+  const getMockRequest = ({ removeFeesFromPaymentErrorKey }: RedirectSessionData) =>
     createRequest({
       session: {
-        removeFeesFromPaymentGroupErrorKey,
+        removeFeesFromPaymentErrorKey,
       },
     });
 
   const assertSessionHasBeenCleared = (req: ReturnType<typeof getMockRequest>) => {
-    expect(req.session.removeFeesFromPaymentGroupErrorKey).toBeUndefined();
+    expect(req.session.removeFeesFromPaymentErrorKey).toBeUndefined();
   };
 
   it('clears the session and returns an undefined errorSummary when the session error keys are undefined', () => {
     // Arrange
     const req = getMockRequest({
-      removeFeesFromPaymentGroupErrorKey: undefined,
+      removeFeesFromPaymentErrorKey: undefined,
     });
 
     // Act
@@ -32,12 +32,12 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     expect(errorSummary).toBeUndefined();
   });
 
-  it.each<RemoveFeesFromPaymentGroupErrorKey>(['no-fee-records-selected', 'all-fee-records-selected'])(
-    "clears the session and returns an array with a single error summary for the errorSummary when the removeFeesFromPaymentGroupErrorKey is '%s'",
-    (removeFeesFromPaymentGroupErrorKey) => {
+  it.each<RemoveFeesFromPaymentErrorKey>(['no-fee-records-selected', 'all-fee-records-selected'])(
+    "clears the session and returns an array with a single error summary for the errorSummary when the removeFeesFromPaymentErrorKey is '%s'",
+    (removeFeesFromPaymentErrorKey) => {
       // Arrange
       const req = getMockRequest({
-        removeFeesFromPaymentGroupErrorKey,
+        removeFeesFromPaymentErrorKey,
       });
 
       // Act
@@ -51,11 +51,11 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     },
   );
 
-  it('throws an error if the session removeFeesFromPaymentGroupErrorKey is not recognised', () => {
+  it('throws an error if the session removeFeesFromPaymentErrorKey is not recognised', () => {
     // Arrange
-    const invalidRemoveFeesFromPaymentGroupError = 'invalid-error' as RemoveFeesFromPaymentGroupErrorKey;
+    const invalidRemoveFeesFromPaymentError = 'invalid-error' as RemoveFeesFromPaymentErrorKey;
     const req = getMockRequest({
-      removeFeesFromPaymentGroupErrorKey: invalidRemoveFeesFromPaymentGroupError,
+      removeFeesFromPaymentErrorKey: invalidRemoveFeesFromPaymentError,
     });
 
     // Act / Assert

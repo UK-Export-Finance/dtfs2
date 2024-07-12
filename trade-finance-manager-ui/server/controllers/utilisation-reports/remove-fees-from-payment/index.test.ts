@@ -1,22 +1,22 @@
 import httpMocks from 'node-mocks-http';
-import { postRemoveFeesFromPaymentGroup } from '.';
+import { postRemoveFeesFromPayment } from '.';
 import api from '../../../api';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
-import { RemoveFeesFromPaymentGroupFormRequestBody } from '../../../helpers/remove-fees-from-payment-group-helper';
+import { RemoveFeesFromPaymentFormRequestBody } from '../../../helpers/remove-fees-from-payment-helper';
 
 jest.mock('../../../api');
 
 console.error = jest.fn();
 
 describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
-  describe('postRemoveFeesFromPaymentGroup', () => {
+  describe('postRemoveFeesFromPayment', () => {
     const requestSession = {
       user: aTfmSessionUser(),
       userToken: 'abc123',
     };
 
     beforeEach(() => {
-      jest.mocked(api.removeFeesFromPaymentGroup).mockResolvedValue();
+      jest.mocked(api.removeFeesFromPayment).mockResolvedValue();
     });
 
     afterEach(() => {
@@ -26,7 +26,7 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
     it('removes the selected fee records from the payment', async () => {
       // Arrange
       const selectedFeeRecordIds = [1, 2];
-      const requestBodyForPostRemoveFeesFromPayment: RemoveFeesFromPaymentGroupFormRequestBody = {
+      const requestBodyForPostRemoveFeesFromPayment: RemoveFeesFromPaymentFormRequestBody = {
         ...selectedFeeRecordIds.map((id) => ({ [`feeRecordId-${id}`]: 'on' })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
         totalSelectableFeeRecords: selectedFeeRecordIds.length.toString(),
       };
@@ -40,10 +40,10 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
       });
 
       // Act
-      await postRemoveFeesFromPaymentGroup(req, res);
+      await postRemoveFeesFromPayment(req, res);
 
       // Assert
-      expect(api.removeFeesFromPaymentGroup).toHaveBeenCalledWith(reportId, paymentId, selectedFeeRecordIds, requestSession.user, requestSession.userToken);
+      expect(api.removeFeesFromPayment).toHaveBeenCalledWith(reportId, paymentId, selectedFeeRecordIds, requestSession.user, requestSession.userToken);
     });
 
     it("redirects to '/utilisation-reports/:reportId/edit-payment/:paymentId'", async () => {
@@ -56,7 +56,7 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
       });
 
       // Act
-      await postRemoveFeesFromPaymentGroup(req, res);
+      await postRemoveFeesFromPayment(req, res);
 
       // Assert
       expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
@@ -70,10 +70,10 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
         params: { reportId: '1', paymentId: '2' },
       });
 
-      jest.mocked(api.removeFeesFromPaymentGroup).mockRejectedValue(new Error('Some error'));
+      jest.mocked(api.removeFeesFromPayment).mockRejectedValue(new Error('Some error'));
 
       // Act
-      await postRemoveFeesFromPaymentGroup(req, res);
+      await postRemoveFeesFromPayment(req, res);
 
       // Assert
       expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');

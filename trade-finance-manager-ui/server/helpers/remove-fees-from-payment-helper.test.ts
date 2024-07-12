@@ -1,4 +1,4 @@
-import { extractTotalSelectableFeeRecordsFromRequestBody } from './remove-fees-from-payment-group-helper';
+import { extractTotalSelectableFeeRecordsFromRequestBody } from './remove-fees-from-payment-helper';
 
 describe('remove fees from payment helper', () => {
   describe('extractTotalSelectableFeeRecordsFromRequestBody', () => {

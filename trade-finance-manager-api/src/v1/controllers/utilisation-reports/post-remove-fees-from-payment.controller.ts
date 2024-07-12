@@ -4,27 +4,27 @@ import api from '../../api';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { TfmSessionUser } from '../../../types/tfm-session-user';
 
-export type PostRemoveFeesFromPaymentGroupRequestBody = {
+export type PostRemoveFeesFromPaymentRequestBody = {
   selectedFeeRecordIds: number[];
   user: TfmSessionUser;
 };
 
-export type PostRemoveFeesFromPaymentGroupRequestParams = {
+export type PostRemoveFeesFromPaymentRequestParams = {
   reportId: string;
   paymentId: string;
 };
 
-export type PostRemoveFeesFromPaymentGroupRequest = CustomExpressRequest<{
-  reqBody: PostRemoveFeesFromPaymentGroupRequestBody;
-  params: PostRemoveFeesFromPaymentGroupRequestParams;
+export type PostRemoveFeesFromPaymentRequest = CustomExpressRequest<{
+  reqBody: PostRemoveFeesFromPaymentRequestBody;
+  params: PostRemoveFeesFromPaymentRequestParams;
 }>;
 
-export const postRemoveFeesFromPaymentGroup = async (req: PostRemoveFeesFromPaymentGroupRequest, res: Response) => {
+export const postRemoveFeesFromPayment = async (req: PostRemoveFeesFromPaymentRequest, res: Response) => {
   try {
     const { reportId, paymentId } = req.params;
     const { selectedFeeRecordIds, user } = req.body;
 
-    await api.removeFeesFromPaymentGroup(reportId, paymentId, selectedFeeRecordIds, user);
+    await api.removeFeesFromPayment(reportId, paymentId, selectedFeeRecordIds, user);
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = 'Failed to remove fees from payment group';

@@ -1,12 +1,12 @@
 import httpMocks from 'node-mocks-http';
-import { validatePostRemoveFeesFromPaymentGroupRequestBody } from '.';
+import { validatePostRemoveFeesFromPaymentRequestBody } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
-import { RemoveFeesFromPaymentGroupErrorKey } from '../../controllers/utilisation-reports/helpers';
+import { RemoveFeesFromPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
 import { EditPaymentsTableCheckboxId } from '../../types/edit-payments-table-checkbox-id';
 
 console.error = jest.fn();
 
-describe('validatePostRemoveFeesFromPaymentGroupRequestBody', () => {
+describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
   const REPORT_ID = 1;
   const PAYMENT_ID = 2;
 
@@ -29,11 +29,8 @@ describe('validatePostRemoveFeesFromPaymentGroupRequestBody', () => {
   const getRequestBodyFromCheckboxIds = (checkboxIds: EditPaymentsTableCheckboxId[], totalSelectableFeeRecords: number) =>
     checkboxIds.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: 'on' }), { totalSelectableFeeRecords });
 
-  const assertRequestSessionHasBeenPopulated = (
-    req: ReturnType<typeof getHttpMocks>['req'],
-    removeFeesFromPaymentGroupErrorKey: RemoveFeesFromPaymentGroupErrorKey,
-  ) => {
-    expect(req.session.removeFeesFromPaymentGroupErrorKey).toBe(removeFeesFromPaymentGroupErrorKey);
+  const assertRequestSessionHasBeenPopulated = (req: ReturnType<typeof getHttpMocks>['req'], removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey) => {
+    expect(req.session.removeFeesFromPaymentErrorKey).toBe(removeFeesFromPaymentErrorKey);
   };
 
   afterEach(() => {
@@ -48,7 +45,7 @@ describe('validatePostRemoveFeesFromPaymentGroupRequestBody', () => {
     const next = jest.fn();
 
     // Act
-    validatePostRemoveFeesFromPaymentGroupRequestBody(req, res, next);
+    validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
     // Assert
     expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
@@ -66,7 +63,7 @@ describe('validatePostRemoveFeesFromPaymentGroupRequestBody', () => {
     const next = jest.fn();
 
     // Act
-    validatePostRemoveFeesFromPaymentGroupRequestBody(req, res, next);
+    validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
     // Assert
     expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
@@ -87,7 +84,7 @@ describe('validatePostRemoveFeesFromPaymentGroupRequestBody', () => {
 
     it(`redirects to '${REDIRECT_URL}'`, () => {
       // Act
-      validatePostRemoveFeesFromPaymentGroupRequestBody(req, res, next);
+      validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
       expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
@@ -95,7 +92,7 @@ describe('validatePostRemoveFeesFromPaymentGroupRequestBody', () => {
 
     it(`populates the session with the 'no-fee-records-selected' error`, () => {
       // Act
-      validatePostRemoveFeesFromPaymentGroupRequestBody(req, res, next);
+      validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
       assertRequestSessionHasBeenPopulated(req, 'no-fee-records-selected');
@@ -103,7 +100,7 @@ describe('validatePostRemoveFeesFromPaymentGroupRequestBody', () => {
 
     it("does not call the 'next' function", () => {
       // Act
-      validatePostRemoveFeesFromPaymentGroupRequestBody(req, res, next);
+      validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
       expect(next).not.toHaveBeenCalled();
@@ -121,7 +118,7 @@ describe('validatePostRemoveFeesFromPaymentGroupRequestBody', () => {
 
     it("does call the 'next' function", () => {
       // Act
-      validatePostRemoveFeesFromPaymentGroupRequestBody(req, res, next);
+      validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalled();
@@ -138,7 +135,7 @@ describe('validatePostRemoveFeesFromPaymentGroupRequestBody', () => {
 
     it(`redirects to '${REDIRECT_URL}'`, () => {
       // Act
-      validatePostRemoveFeesFromPaymentGroupRequestBody(req, res, next);
+      validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
       expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
@@ -146,7 +143,7 @@ describe('validatePostRemoveFeesFromPaymentGroupRequestBody', () => {
 
     it(`populates the session with the 'all-fee-records-selected' error and no checked checkbox ids`, () => {
       // Act
-      validatePostRemoveFeesFromPaymentGroupRequestBody(req, res, next);
+      validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
       assertRequestSessionHasBeenPopulated(req, 'all-fee-records-selected');
@@ -154,7 +151,7 @@ describe('validatePostRemoveFeesFromPaymentGroupRequestBody', () => {
 
     it("does not call the 'next' function", () => {
       // Act
-      validatePostRemoveFeesFromPaymentGroupRequestBody(req, res, next);
+      validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
       expect(next).not.toHaveBeenCalled();

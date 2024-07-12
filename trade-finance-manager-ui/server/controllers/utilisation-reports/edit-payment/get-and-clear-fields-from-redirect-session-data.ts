@@ -1,9 +1,9 @@
 import { Request } from 'express';
 import { PaymentErrorsViewModel } from '../../../types/view-models';
-import { getRemoveFeesFromPaymentGroupError } from '../helpers/get-remove-fees-from-payment-group-error-helper';
+import { getRemoveFeesFromPaymentError } from '../helpers/get-remove-fees-from-payment-error-helper';
 
 const clearRedirectSessionData = (req: Request): void => {
-  delete req.session.removeFeesFromPaymentGroupErrorKey;
+  delete req.session.removeFeesFromPaymentErrorKey;
 };
 
 export const getAndClearFieldsFromRedirectSessionData = (
@@ -12,28 +12,28 @@ export const getAndClearFieldsFromRedirectSessionData = (
   errors: PaymentErrorsViewModel | undefined;
   allCheckboxesChecked?: boolean;
 } => {
-  const { removeFeesFromPaymentGroupErrorKey } = req.session;
+  const { removeFeesFromPaymentErrorKey } = req.session;
 
-  if (!removeFeesFromPaymentGroupErrorKey) {
+  if (!removeFeesFromPaymentErrorKey) {
     return {
       errors: undefined,
     };
   }
 
-  const allCheckboxesChecked = removeFeesFromPaymentGroupErrorKey === 'all-fee-records-selected';
+  const allCheckboxesChecked = removeFeesFromPaymentErrorKey === 'all-fee-records-selected';
 
-  switch (removeFeesFromPaymentGroupErrorKey) {
+  switch (removeFeesFromPaymentErrorKey) {
     case 'no-fee-records-selected':
     case 'all-fee-records-selected':
       clearRedirectSessionData(req);
       return {
         errors: {
-          errorSummary: getRemoveFeesFromPaymentGroupError(removeFeesFromPaymentGroupErrorKey),
+          errorSummary: getRemoveFeesFromPaymentError(removeFeesFromPaymentErrorKey),
         },
         allCheckboxesChecked,
       };
     default:
       clearRedirectSessionData(req);
-      throw new Error(`Unrecognised remove fees from payment error key '${removeFeesFromPaymentGroupErrorKey}'`);
+      throw new Error(`Unrecognised remove fees from payment error key '${removeFeesFromPaymentErrorKey}'`);
   }
 };
