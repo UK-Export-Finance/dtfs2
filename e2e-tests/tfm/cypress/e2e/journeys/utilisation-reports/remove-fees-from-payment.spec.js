@@ -85,8 +85,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
   it('should remove the selected fees from the payment after clicking the remove selected fees button', () => {
     const getFeeRecordRow = (feeRecordId) => cy.get(`tbody tr[data-cy="fee-record-details-table-row--feeRecordId-${feeRecordId}"]`);
-    const feeRecordIdToRemove = feeRecordIds[0];
-    const otherFeeRecordIds = feeRecordIds.slice(1);
+    const [feeRecordIdToRemove, ...otherFeeRecordIds] = feeRecordIds;
 
     getFeeRecordCheckbox(feeRecordIdToRemove).check();
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
