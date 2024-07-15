@@ -111,7 +111,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
     pages.utilisationReportPage.getFacilityIdFilterInput().should('have.value', 'nonsense');
 
-    cy.get('a').should('contain', 'Enter 4-10 characters of a facility ID');
+    cy.get('a').should('contain', 'Facility ID must be a number');
   });
 
   it('should display an error if the facility id is submitted with no value', () => {
@@ -121,7 +121,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
     pages.utilisationReportPage.getFacilityIdFilterInput().should('be.empty');
 
-    cy.get('a').should('contain', 'Enter 4-10 characters of a facility ID');
+    cy.get('a').should('contain', 'Enter a facility ID');
   });
 
   it('should display the entire fee record payment group when only one of the fee records in the group has a matching facility id', () => {
