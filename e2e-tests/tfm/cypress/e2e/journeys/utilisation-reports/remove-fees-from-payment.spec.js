@@ -84,13 +84,19 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
   });
 
   it('should remove the selected fees from the payment after clicking the remove selected fees button', () => {
-    const feeRecordId = feeRecordIds[0];
+    const getFeeRecordRow = (feeRecordId) => cy.get(`tbody tr[data-cy="fee-record-details-table-row--feeRecordId-${feeRecordId}"]`);
+    const feeRecordIdToRemove = feeRecordIds[0];
+    const otherFeeRecordIds = feeRecordIds.slice(1);
 
-    getFeeRecordCheckbox(feeRecordId).check();
+    getFeeRecordCheckbox(feeRecordIdToRemove).check();
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
-    getFeeRecordCheckbox(feeRecordId).should('not.exist');
+
+    getFeeRecordRow(feeRecordIdToRemove).should('not.exist');
+    otherFeeRecordIds.forEach((feeRecordId) => {
+      getFeeRecordRow(feeRecordId).should('exist');
+    });
   });
 
   it(`should update the fee record status if another fee has been removed from the payment group`, () => {
