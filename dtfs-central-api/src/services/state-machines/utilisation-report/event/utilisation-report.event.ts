@@ -7,6 +7,7 @@ import {
   UtilisationReportDeletePaymentEvent,
   UtilisationReportReportUploadedEvent,
   UtilisationReportEditPaymentEvent,
+  UtilisationReportRemoveFeesFromPaymentGroupEvent,
 } from '../event-handlers';
 
 export type UtilisationReportEvent =
@@ -17,4 +18,5 @@ export type UtilisationReportEvent =
   | UtilisationReportAddAPaymentEvent
   | UtilisationReportDeletePaymentEvent
   | UtilisationReportReportUploadedEvent
-  | UtilisationReportEditPaymentEvent;
+  | UtilisationReportEditPaymentEvent
+  | UtilisationReportRemoveFeesFromPaymentGroupEvent;
