@@ -50,6 +50,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
       .withPayments(payments)
       .build();
 
+  const getFeeRecordCheckbox = (feeRecordId) => cy.get(`[type="checkbox"][id="feeRecordId-${feeRecordId}"]`);
+
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
@@ -71,24 +73,24 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
     pages.utilisationReportEditPaymentPage.errorSummary().contains('Select fee or fees to remove from the payment');
 
-    feeRecordIds.forEach((id) => {
-      cy.get(`[type="checkbox"][id="feeRecordId-${id}"]`).check();
+    feeRecordIds.forEach((feeRecordId) => {
+      getFeeRecordCheckbox(feeRecordId).check();
     });
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
     pages.utilisationReportEditPaymentPage.errorSummary().contains('You cannot remove all the fees. Delete the payment instead.');
-    feeRecordIds.forEach((id) => {
-      cy.get(`[type="checkbox"][id="feeRecordId-${id}"]`).should('be.checked');
+    feeRecordIds.forEach((feeRecordId) => {
+      getFeeRecordCheckbox(feeRecordId).should('be.checked');
     });
   });
 
   it('should remove the selected fees from the payment after clicking the remove selected fees button', () => {
     const feeRecordId = feeRecordIds[0];
 
-    cy.get(`[type="checkbox"][id="feeRecordId-${feeRecordId}"]`).check();
+    getFeeRecordCheckbox(feeRecordId).check();
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
-    cy.get(`[type="checkbox"][id="feeRecordId-${feeRecordId}"]`).should('not.exist');
+    getFeeRecordCheckbox(feeRecordId).should('not.exist');
   });
 
   it(`should update the fee record status if another fee has been removed from the payment group`, () => {
@@ -111,7 +113,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
-    cy.get(`[type="checkbox"][id="feeRecordId-${feeRecordId}"]`).check();
+    getFeeRecordCheckbox(feeRecordId).check();
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
