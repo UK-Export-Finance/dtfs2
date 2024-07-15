@@ -30,10 +30,8 @@ describe('post-remove-fees-from-payment-group.controller', () => {
 
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
 
-    const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build(),
-    ];
+    const feeRecordIds = [1, 2];
+    const feeRecords = feeRecordIds.map((id) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).build());
 
     const payment = PaymentEntityMockBuilder.forCurrency('GBP').withId(paymentId).withFeeRecords(feeRecords).build();
 
@@ -48,10 +46,8 @@ describe('post-remove-fees-from-payment-group.controller', () => {
       paymentId: paymentId.toString(),
     });
 
-    const selectedFeeRecordIds = [feeRecords[0].id];
-
     const aValidRequestBody = (): PostRemoveFeesFromPaymentGroupPayload => ({
-      selectedFeeRecordIds,
+      selectedFeeRecordIds: [feeRecordIds[0]],
       user: tfmUser,
     });
 
@@ -69,7 +65,9 @@ describe('post-remove-fees-from-payment-group.controller', () => {
       await postRemoveFeesFromPaymentGroup(req, res);
 
       // Assert
-      expect(removeFeesFromPaymentGroup).toHaveBeenCalledWith(utilisationReport, feeRecords, selectedFeeRecordIds, tfmUser);
+      const expectedFeeRecordsToRemove = [feeRecords[0]];
+      const expectedOtherFeeRecordsInGroup = [feeRecords[1]];
+      expect(removeFeesFromPaymentGroup).toHaveBeenCalledWith(utilisationReport, expectedFeeRecordsToRemove, expectedOtherFeeRecordsInGroup, tfmUser);
     });
 
     it("responds with a '200' if the report is saved successfully", async () => {
@@ -87,6 +85,42 @@ describe('post-remove-fees-from-payment-group.controller', () => {
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+    });
+
+    it("responds with a '400' if no matching fee records are found on the payment", async () => {
+      // Arrange
+      const req = httpMocks.createRequest<PostRemoveFeesFromPaymentGroupRequest>({
+        params: aValidRequestQuery(),
+        body: {
+          ...aValidRequestBody(),
+          selectedFeeRecordIds: [7777],
+        },
+      });
+      const res = httpMocks.createResponse();
+
+      // Act
+      await postRemoveFeesFromPaymentGroup(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    });
+
+    it("responds with a '400' if all of the payments fee records are selected", async () => {
+      // Arrange
+      const req = httpMocks.createRequest<PostRemoveFeesFromPaymentGroupRequest>({
+        params: aValidRequestQuery(),
+        body: {
+          ...aValidRequestBody(),
+          selectedFeeRecordIds: feeRecordIds,
+        },
+      });
+      const res = httpMocks.createResponse();
+
+      // Act
+      await postRemoveFeesFromPaymentGroup(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
     });
 
     it("responds with the specific error status if saving the report throws an 'ApiError'", async () => {
