@@ -1,7 +1,13 @@
 const express = require('express');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
-const { validatePostPaymentPayload, validateDeletePaymentPayload, validatePatchPaymentPayload } = require('./middleware/payload-validation');
+const {
+  validatePostPaymentPayload,
+  validateDeletePaymentPayload,
+  validatePatchPaymentPayload,
+  validatePostKeyingDataPayload,
+  validatePostRemoveFeesFromPaymentGroupPayload,
+} = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
   postUploadUtilisationReport,
@@ -21,6 +27,7 @@ const { postKeyingData } = require('../controllers/utilisation-report-service/po
 const { getFeeRecordsToKey } = require('../controllers/utilisation-report-service/get-fee-records-to-key.controller');
 const { getPaymentDetailsById } = require('../controllers/utilisation-report-service/get-payment-details-by-id.controller');
 const { patchPayment } = require('../controllers/utilisation-report-service/patch-payment.controller');
+const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -288,6 +295,15 @@ utilisationReportsRouter
  *           type: string
  *         required: true
  *         description: the id for the report to generate keying data for
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
  *     responses:
  *       200:
  *         description: OK
@@ -298,7 +314,9 @@ utilisationReportsRouter
  *       500:
  *         description: Internal Server Error
  */
-utilisationReportsRouter.route('/:reportId/keying-data').post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, postKeyingData);
+utilisationReportsRouter
+  .route('/:reportId/keying-data')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePostKeyingDataPayload, postKeyingData);
 
 /**
  * @openapi
@@ -449,5 +467,57 @@ utilisationReportsRouter
   .get(getPaymentDetailsById)
   .delete(validateDeletePaymentPayload, deletePayment)
   .patch(validatePatchPaymentPayload, patchPayment);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/payment/:paymentId/remove-selected-fees:
+ *   post:
+ *     summary: Remove the selected fee record ids
+ *     tags: [Utilisation Report]
+ *     description: Remove the selected fee record ids from the specified payment id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: paymentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the payment
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feeRecordIds:
+ *                 description: The ids of the selected fee records
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/payment/:paymentId/remove-selected-fees')
+  .post(
+    validation.sqlIdValidation('reportId'),
+    validation.sqlIdValidation('paymentId'),
+    handleExpressValidatorResult,
+    validatePostRemoveFeesFromPaymentGroupPayload,
+    postRemoveFeesFromPaymentGroup,
+  );
 
 module.exports = utilisationReportsRouter;

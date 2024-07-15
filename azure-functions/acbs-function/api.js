@@ -12,7 +12,9 @@
 
 require('dotenv').config();
 const axios = require('axios');
-const { HEADERS } = require('@ukef/dtfs2-common');
+const {
+  REQUEST: { HEADERS },
+} = require('./constants');
 
 // Domain
 const apim = {

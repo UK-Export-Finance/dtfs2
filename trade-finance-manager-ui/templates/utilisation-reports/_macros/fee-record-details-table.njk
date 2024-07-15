@@ -1,11 +1,14 @@
 {% import "./fee-record-status.njk" as feeRecordStatus %}
 {% import "../../_macros/table-cell-checkbox.njk" as tableCellCheckbox %}
 {% macro render(params) %}
+  {% set reportId = params.reportId %}
+  {% set paymentId = params.paymentId %}
   {% set captionText = params.captionText %}
   {% set feeRecords = params.feeRecords %}
   {% set totalReportedPayments = params.totalReportedPayments %}
   {% set enableSelectingFeeRecords = params.enableSelectingFeeRecords %}
   {% set reportedFeesHeader = "Reported fees" %}
+  {% set csrfToken = params.csrfToken %}
   {% if params.overrides %}
     {% if params.overrides.reportedFeesHeader %}
       {% set reportedFeesHeader = params.overrides.reportedFeesHeader %}
@@ -14,7 +17,7 @@
   <form method="post">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
     <table class="govuk-table" data-module="moj-sortable-table" data-cy="fee-record-details-table">
-      <caption class="govuk-table__caption govuk-table__caption--m">{{ captionText }}</caption>
+      <caption class="govuk-table__caption govuk-table__caption--m" id="added-reported-fees-details-header" tabindex="-1">{{ captionText }}</caption>
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header" aria-sort="ascending">Facility ID</th>
@@ -65,9 +68,10 @@
       </tfoot>
     </table>
     {% if enableSelectingFeeRecords %}
+      <input type="hidden" name="totalSelectableFeeRecords" value="{{ feeRecords.length }}">
       <input
         class="govuk-button govuk-button__secondary govuk-!-margin-right-3"
-        formaction="#"
+        formaction="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentId }}/remove-selected-fees"
         value="Remove selected fees"
         data-module="govuk-button"
         type="submit"

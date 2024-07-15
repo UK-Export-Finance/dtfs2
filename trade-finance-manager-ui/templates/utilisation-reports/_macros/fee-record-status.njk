@@ -16,9 +16,9 @@
   {% set tagColourClass = tagColourClassForStatus[status] %}
 
   {% if tagColourClass === '' %}
-    {% set tagClasses = 'fee-record-status-tag' %}
+    {% set tagClasses = 'status-tag' %}
   {% else %}
-    {% set tagClasses = ['fee-record-status-tag', tagColourClass] | join(' ') %}
+    {% set tagClasses = ['status-tag', tagColourClass] | join(' ') %}
   {% endif %}
 
   {{ govukTag({

@@ -3,7 +3,14 @@ import express from 'express';
 import { PDC_TEAM_IDS } from '@ukef/dtfs2-common';
 import { getUtilisationReports } from '../../controllers/utilisation-reports';
 import { updateUtilisationReportStatus } from '../../controllers/utilisation-reports/update-utilisation-report-status';
-import { validateSqlId, validateUserTeam, validateTfmPaymentReconciliationFeatureFlagIsEnabled, validatePostAddPaymentRequestBody } from '../../middleware';
+import {
+  validateSqlId,
+  validateUserTeam,
+  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
+  validatePostAddPaymentRequestBody,
+  validateTfmPaymentReconciliationFeatureFlagIsNotEnabled,
+  validatePostRemoveFeesFromPaymentRequestBody,
+} from '../../middleware';
 import { getReportDownload } from '../../controllers/utilisation-reports/report-download';
 import { getUtilisationReportReconciliationByReportId } from '../../controllers/utilisation-reports/utilisation-report-reconciliation-for-report';
 import { getFindReportsByYear } from '../../controllers/utilisation-reports/find-reports-by-year';
@@ -12,14 +19,26 @@ import { postKeyingData } from '../../controllers/utilisation-reports/keying-dat
 import { postCheckKeyingData } from '../../controllers/utilisation-reports/check-keying-data';
 import { getEditPayment, postEditPayment } from '../../controllers/utilisation-reports/edit-payment';
 import { getConfirmDeletePayment, postConfirmDeletePayment } from '../../controllers/utilisation-reports/confirm-delete-payment';
+import { postRemoveFeesFromPayment } from '../../controllers/utilisation-reports/remove-fees-from-payment';
 
 export const utilisationReportsRoutes = express.Router();
 
 utilisationReportsRoutes.get('/', validateUserTeam(Object.values(PDC_TEAM_IDS)), getUtilisationReports);
 
-utilisationReportsRoutes.post('/', validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]), updateUtilisationReportStatus);
+utilisationReportsRoutes.post(
+  '/',
+  validateTfmPaymentReconciliationFeatureFlagIsNotEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  updateUtilisationReportStatus,
+);
 
-utilisationReportsRoutes.get('/:id/download', validateUserTeam(Object.values(PDC_TEAM_IDS)), validateSqlId('id'), getReportDownload);
+utilisationReportsRoutes.get(
+  '/:id/download',
+  validateTfmPaymentReconciliationFeatureFlagIsNotEnabled,
+  validateUserTeam(Object.values(PDC_TEAM_IDS)),
+  validateSqlId('id'),
+  getReportDownload,
+);
 
 utilisationReportsRoutes.get('/find-reports-by-year', validateUserTeam(Object.values(PDC_TEAM_IDS)), getFindReportsByYear);
 
@@ -90,4 +109,14 @@ utilisationReportsRoutes.post(
   validateSqlId('reportId'),
   validateSqlId('paymentId'),
   postConfirmDeletePayment,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/edit-payment/:paymentId/remove-selected-fees',
+  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  validateSqlId('paymentId'),
+  validatePostRemoveFeesFromPaymentRequestBody,
+  postRemoveFeesFromPayment,
 );

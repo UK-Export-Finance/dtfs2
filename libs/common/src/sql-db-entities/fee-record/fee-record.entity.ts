@@ -3,7 +3,7 @@ import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency, FeeRecordStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
-import { CreateFeeRecordParams, UpdateWithStatusParams } from './fee-record.types';
+import { CreateFeeRecordParams, RemoveAllPaymentsParams, UpdateWithKeyingDataParams, UpdateWithStatusParams } from './fee-record.types';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
 import { PaymentEntity } from '../payment';
 
@@ -108,6 +108,24 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   @JoinTable()
   payments!: PaymentEntity[];
 
+  /**
+   * The keying sheet fixed fee adjustment
+   */
+  @MonetaryColumn({ nullable: true })
+  fixedFeeAdjustment!: number | null;
+
+  /**
+   * The keying sheet premium accrual balance adjustment
+   */
+  @MonetaryColumn({ nullable: true })
+  premiumAccrualBalanceAdjustment!: number | null;
+
+  /**
+   * The keying sheet principal balance adjustment
+   */
+  @MonetaryColumn({ nullable: true })
+  principalBalanceAdjustment!: number | null;
+
   // TODO FN-1726 - when we have a status on this entity we should make this method name specific to the initial status
   static create({
     facilityId,
@@ -141,6 +159,9 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.report = report;
     feeRecord.updateLastUpdatedBy(requestSource);
     feeRecord.payments = [];
+    feeRecord.fixedFeeAdjustment = null;
+    feeRecord.premiumAccrualBalanceAdjustment = null;
+    feeRecord.principalBalanceAdjustment = null;
     return feeRecord;
   }
 
@@ -157,6 +178,25 @@ export class FeeRecordEntity extends AuditableBaseEntity {
 
   public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
     this.status = status;
+    this.updateLastUpdatedBy(requestSource);
+  }
+
+  public updateWithKeyingData({
+    fixedFeeAdjustment,
+    premiumAccrualBalanceAdjustment,
+    principalBalanceAdjustment,
+    requestSource,
+  }: UpdateWithKeyingDataParams): void {
+    this.status = 'READY_TO_KEY';
+    this.fixedFeeAdjustment = fixedFeeAdjustment;
+    this.premiumAccrualBalanceAdjustment = premiumAccrualBalanceAdjustment;
+    this.principalBalanceAdjustment = principalBalanceAdjustment;
+    this.updateLastUpdatedBy(requestSource);
+  }
+
+  public removeAllPayments({ requestSource }: RemoveAllPaymentsParams): void {
+    this.payments = [];
+    this.status = 'TO_DO';
     this.updateLastUpdatedBy(requestSource);
   }
 }

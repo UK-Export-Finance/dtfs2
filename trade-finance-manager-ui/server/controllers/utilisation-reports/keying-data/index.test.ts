@@ -10,8 +10,9 @@ jest.mock('../../../api');
 describe('controllers/utilisation-reports/keying-data', () => {
   describe('postKeyingData', () => {
     const userToken = 'abc123';
+    const user = aTfmSessionUser();
     const requestSession = {
-      user: aTfmSessionUser(),
+      user,
       userToken,
     };
 
@@ -35,7 +36,7 @@ describe('controllers/utilisation-reports/keying-data', () => {
       await postKeyingData(req, res);
 
       // Assert
-      expect(api.generateKeyingData).toHaveBeenCalledWith(reportId, userToken);
+      expect(api.generateKeyingData).toHaveBeenCalledWith(reportId, user, userToken);
     });
 
     it("redirects to '/utilisation-reports/:reportId#keying-sheet'", async () => {

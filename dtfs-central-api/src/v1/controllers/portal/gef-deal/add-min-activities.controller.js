@@ -17,16 +17,14 @@ const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../con
  */
 const updateChangedToIssued = async ({ facilities, auditDetails }) => {
   await Promise.all(
-    facilities.map((facility) => {
-      const { _id: facilityId, canResubmitIssuedFacilities } = facility;
-      if (canResubmitIssuedFacilities) {
+    facilities
+      .filter(({ canResubmitIssuedFacilities }) => canResubmitIssuedFacilities)
+      .map(({ _id: facilityId }) => {
         const facilityUpdate = {
           canResubmitIssuedFacilities: false,
         };
-        updateFacility({ facilityId, facilityUpdate, auditDetails });
-      }
-      return Promise.resolve();
-    }),
+        return updateFacility({ facilityId, facilityUpdate, auditDetails });
+      }),
   );
 };
 

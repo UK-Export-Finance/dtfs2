@@ -31,3 +31,5 @@ Cypress.Commands.add('apiUpdateFacility', api.updateFacility);
 Cypress.Commands.add('addCommentObjToDeal', api.addCommentObjToDeal);
 Cypress.Commands.add('submitDealToTfm', api.submitDealToTfm);
 Cypress.Commands.add('addUnderwriterCommentToTfm', api.addUnderwriterCommentToTfm);
+Cypress.Commands.add('insertVersion0Deal', require('./commands/insertVersion0Deal'));
+Cypress.Commands.add('insertVersion0Facility', require('./commands/insertVersion0Facility'));

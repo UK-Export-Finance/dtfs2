@@ -115,6 +115,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           displayStatus: 'TO DO',
           checkboxId: 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO',
           isChecked: false,
+          checkboxAriaLabel: 'Select 12345678',
         },
       ];
 
@@ -137,6 +138,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         premiumPaymentFormError: undefined,
         facilityIdQueryError: undefined,
         facilityIdQuery,
+        keyingSheet: [],
       });
     });
 
@@ -271,7 +273,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
       expect(viewModel.facilityIdQueryError).toBeDefined();
       expect(viewModel.facilityIdQueryError?.href).toBe('#facility-id-filter');
-      expect(viewModel.facilityIdQueryError?.text).toBe('Enter 4-10 characters of a facility ID');
+      expect(viewModel.facilityIdQueryError?.text).toBe('Facility ID must be a number');
     });
   });
 });
