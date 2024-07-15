@@ -37,7 +37,7 @@ exports.create = async (req, res) => {
 
     const facilityParameters = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
 
-    const facilityToInsert = new Facility(facilityParameters, existingDeal?.version);
+    const facilityToInsert = new Facility(facilityParameters, existingDeal.version);
     const createdFacility = await facilitiesCollection.insertOne(facilityToInsert);
 
     const { insertedId } = createdFacility;
@@ -49,7 +49,7 @@ exports.create = async (req, res) => {
     const response = {
       status: facilitiesStatus(facility),
       details: facility,
-      validation: facilitiesValidation(facility, existingDeal?.version),
+      validation: facilitiesValidation(facility, existingDeal.version),
     };
     return res.status(201).json(response);
   } catch (error) {
@@ -77,60 +77,83 @@ const getAllFacilitiesByDealId = async (dealId) => {
 exports.getAllFacilitiesByDealId = getAllFacilitiesByDealId;
 
 exports.getAllGET = async (req, res) => {
-  let doc;
+  try {
+    let doc;
 
-  if (req.query && req.query.dealId) {
-    try {
-      doc = await getAllFacilitiesByDealId(req.query.dealId);
-    } catch (error) {
-      if (error instanceof InvalidDatabaseQueryError) {
-        console.error(error);
-        return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    if (req.query && req.query.dealId) {
+      try {
+        doc = await getAllFacilitiesByDealId(req.query.dealId);
+      } catch (error) {
+        if (error instanceof InvalidDatabaseQueryError) {
+          console.error(error);
+          return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+        }
+
+        throw error;
       }
-
-      throw error;
     }
-  }
 
-  const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
-  const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(req.query.dealId) } });
-  const facilities = [];
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+    const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(req.query.dealId) } });
 
-  if (doc && doc.length) {
-    doc.forEach((facility) => {
-      facilities.push({
-        status: facilitiesStatus(facility),
-        details: facility,
-        validation: facilitiesValidation(facility, existingDeal?.version),
+    if (!existingDeal) {
+      throw new DealNotFoundError(req.query.dealId);
+    }
+
+    const facilities = [];
+
+    if (doc && doc.length) {
+      doc.forEach((facility) => {
+        facilities.push({
+          status: facilitiesStatus(facility),
+          details: facility,
+          validation: facilitiesValidation(facility, existingDeal.version),
+        });
       });
-    });
-  }
+    }
 
-  return res.status(200).send({
-    status: facilitiesOverallStatus(facilities, doc.version),
-    items: facilities,
-  });
+    return res.status(200).send({
+      status: facilitiesOverallStatus(facilities),
+      items: facilities,
+    });
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({ status: error.status, message: error.message });
+    }
+    throw error;
+  }
 };
 
 exports.getById = async (req, res) => {
-  if (!ObjectId.isValid(String(req.params.id))) {
-    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+  try {
+    if (!ObjectId.isValid(String(req.params.id))) {
+      return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+    }
+
+    const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
+    const facility = await facilitiesCollection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
+    if (facility) {
+      const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+      const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(facility.dealId) } });
+
+      if (!existingDeal) {
+        throw new DealNotFoundError(facility.dealId);
+      }
+
+      return res.status(200).send({
+        status: facilitiesStatus(facility),
+        details: facility,
+        validation: facilitiesValidation(facility, existingDeal.version),
+      });
+    }
+
+    return res.status(204).send();
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({ status: error.status, message: error.message });
+    }
+    throw error;
   }
-
-  const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
-  const facility = await facilitiesCollection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
-  if (facility) {
-    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
-    const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(facility.dealId) } });
-
-    return res.status(200).send({
-      status: facilitiesStatus(facility),
-      details: facility,
-      validation: facilitiesValidation(facility, existingDeal?.version),
-    });
-  }
-
-  return res.status(204).send();
 };
 
 /**
@@ -206,35 +229,38 @@ const update = async (id, updateBody, auditDetails) => {
 exports.update = update;
 
 exports.updatePUT = async (req, res) => {
-  const enumValidationErr = facilitiesCheckEnums(req.body);
-  if (enumValidationErr) {
-    return res.status(422).send(enumValidationErr);
-  }
-
-  let response;
-  let updatedFacility;
-
   try {
-    updatedFacility = await update(req.params.id, req.body, generatePortalAuditDetails(req.user._id));
+    const enumValidationErr = facilitiesCheckEnums(req.body);
+    if (enumValidationErr) {
+      return res.status(422).send(enumValidationErr);
+    }
+
+    let response;
+
+    const updatedFacility = await update(req.params.id, req.body, generatePortalAuditDetails(req.user._id));
+
+    if (updatedFacility.value) {
+      const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+      const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(updatedFacility.value.dealId) } });
+
+      if (!existingDeal) {
+        throw new DealNotFoundError(updatedFacility.value.dealId);
+      }
+
+      response = {
+        status: facilitiesStatus(updatedFacility.value),
+        details: updatedFacility.value,
+        validation: facilitiesValidation(updatedFacility.value, existingDeal.version),
+      };
+    }
+
+    return res.status(utils.mongoStatus(updatedFacility)).send(response);
   } catch (error) {
     if (error instanceof ApiError) {
       return res.status(error.status).send({ status: error.status, message: error.message });
     }
     throw error;
   }
-
-  if (updatedFacility.value) {
-    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
-    const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(updatedFacility.value.dealId) } });
-
-    response = {
-      status: facilitiesStatus(updatedFacility.value),
-      details: updatedFacility.value,
-      validation: facilitiesValidation(updatedFacility.value, existingDeal.version),
-    };
-  }
-
-  return res.status(utils.mongoStatus(updatedFacility)).send(response);
 };
 
 exports.delete = async (req, res) => {

@@ -110,7 +110,11 @@ describe(baseUrl, () => {
   });
 
   describe(`GET ${baseUrl}?dealId=`, () => {
-    const facilitiesUrl = `${baseUrl}?dealId=620a1aa095a618b12da38c7b`;
+    let facilitiesUrl;
+
+    beforeEach(async () => {
+      facilitiesUrl = `${baseUrl}?dealId=${mockApplication.body._id}`;
+    });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(facilitiesUrl),
