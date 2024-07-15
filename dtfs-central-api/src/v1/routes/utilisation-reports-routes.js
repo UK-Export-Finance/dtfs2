@@ -7,6 +7,7 @@ const {
   validatePatchPaymentPayload,
   validatePostKeyingDataPayload,
   validatePutKeyingDataMarkAsPayload,
+  validatePostRemoveFeesFromPaymentGroupPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
@@ -29,6 +30,7 @@ const { getPaymentDetailsById } = require('../controllers/utilisation-report-ser
 const { patchPayment } = require('../controllers/utilisation-report-service/patch-payment.controller');
 const { putKeyingDataMarkAsDone } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-done.controller');
 const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-to-do.controller');
+const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -530,5 +532,57 @@ utilisationReportsRouter
   .get(getPaymentDetailsById)
   .delete(validateDeletePaymentPayload, deletePayment)
   .patch(validatePatchPaymentPayload, patchPayment);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/payment/:paymentId/remove-selected-fees:
+ *   post:
+ *     summary: Remove the selected fee record ids
+ *     tags: [Utilisation Report]
+ *     description: Remove the selected fee record ids from the specified payment id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: paymentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the payment
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feeRecordIds:
+ *                 description: The ids of the selected fee records
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/payment/:paymentId/remove-selected-fees')
+  .post(
+    validation.sqlIdValidation('reportId'),
+    validation.sqlIdValidation('paymentId'),
+    handleExpressValidatorResult,
+    validatePostRemoveFeesFromPaymentGroupPayload,
+    postRemoveFeesFromPaymentGroup,
+  );
 
 module.exports = utilisationReportsRouter;

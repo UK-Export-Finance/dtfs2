@@ -11,6 +11,8 @@ import {
   handleFeeRecordPaymentEditedEvent,
   handleFeeRecordMarkAsReconciledEvent,
   handleFeeRecordMarkAsReadyToKeyEvent,
+  handleFeeRecordRemoveFromPaymentGroupEvent,
+  handleFeeRecordOtherFeeRemovedFromGroupEvent,
 } from './event-handlers';
 
 jest.mock('./event-handlers');
@@ -125,7 +127,48 @@ describe('FeeRecordStateMachine', () => {
       expect(handleFeeRecordGenerateKeyingDataEvent).toHaveBeenCalledTimes(1);
     });
 
-    const VALID_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_DELETED', 'PAYMENT_EDITED', 'GENERATE_KEYING_DATA'];
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.REMOVE_FROM_PAYMENT_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'REMOVE_FROM_PAYMENT_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordRemoveFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.OTHER_FEE_REMOVED_FROM_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'OTHER_FEE_REMOVED_FROM_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordOtherFeeRemovedFromGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
+    const VALID_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [
+      'PAYMENT_DELETED',
+      'PAYMENT_EDITED',
+      'GENERATE_KEYING_DATA',
+      'REMOVE_FROM_PAYMENT_GROUP',
+      'OTHER_FEE_REMOVED_FROM_GROUP',
+    ];
     const INVALID_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_MATCH_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_MATCH_FEE_RECORD_EVENT_TYPES.length !== 0) {
@@ -201,7 +244,49 @@ describe('FeeRecordStateMachine', () => {
       expect(handleFeeRecordPaymentAddedEvent).toHaveBeenCalledTimes(1);
     });
 
-    const VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_ADDED', 'PAYMENT_DELETED', 'PAYMENT_EDITED'];
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.REMOVE_FROM_PAYMENT_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'REMOVE_FROM_PAYMENT_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordRemoveFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.OTHER_FEE_REMOVED_FROM_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'OTHER_FEE_REMOVED_FROM_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordOtherFeeRemovedFromGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
+    const VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [
+      'PAYMENT_ADDED',
+      'PAYMENT_DELETED',
+      'PAYMENT_EDITED',
+      'REMOVE_FROM_PAYMENT_GROUP',
+      'OTHER_FEE_REMOVED_FROM_GROUP',
+    ];
+
     const INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES.length !== 0) {

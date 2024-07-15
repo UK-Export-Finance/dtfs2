@@ -1425,6 +1425,25 @@ const editPayment = async (reportId, paymentId, paymentAmount, datePaymentReceiv
   });
 };
 
+/**
+ * Removes the supplied fee records from a supplied payment
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {number[]} selectedFeeRecordIds - The list of fee record ids to remove from the payment
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user
+ */
+const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, user) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}/remove-selected-fees`,
+    method: 'post',
+    headers: headers.central,
+    data: {
+      selectedFeeRecordIds,
+      user,
+    },
+  });
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1493,4 +1512,5 @@ module.exports = {
   getPaymentDetails,
   deletePaymentById,
   editPayment,
+  removeFeesFromPayment,
 };

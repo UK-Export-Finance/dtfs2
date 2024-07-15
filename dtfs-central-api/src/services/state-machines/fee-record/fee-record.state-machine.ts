@@ -3,12 +3,14 @@ import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FeeRecordRepo } from '../../../repositories/fee-record-repo';
 import { FeeRecordEvent } from './event/fee-record.event';
 import {
-  handleFeeRecordGenerateKeyingDataEvent,
   handleFeeRecordPaymentAddedEvent,
   handleFeeRecordPaymentDeletedEvent,
   handleFeeRecordPaymentEditedEvent,
   handleFeeRecordMarkAsReconciledEvent,
   handleFeeRecordMarkAsReadyToKeyEvent,
+  handleFeeRecordGenerateKeyingDataEvent,
+  handleFeeRecordRemoveFromPaymentGroupEvent,
+  handleFeeRecordOtherFeeRemovedFromGroupEvent,
 } from './event-handlers';
 
 export class FeeRecordStateMachine {
@@ -55,6 +57,10 @@ export class FeeRecordStateMachine {
             return handleFeeRecordPaymentEditedEvent(this.feeRecord, event.payload);
           case 'GENERATE_KEYING_DATA':
             return handleFeeRecordGenerateKeyingDataEvent(this.feeRecord, event.payload);
+          case 'REMOVE_FROM_PAYMENT_GROUP':
+            return handleFeeRecordRemoveFromPaymentGroupEvent(this.feeRecord, event.payload);
+          case 'OTHER_FEE_REMOVED_FROM_GROUP':
+            return handleFeeRecordOtherFeeRemovedFromGroupEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
@@ -66,6 +72,10 @@ export class FeeRecordStateMachine {
             return handleFeeRecordPaymentDeletedEvent(this.feeRecord, event.payload);
           case 'PAYMENT_EDITED':
             return handleFeeRecordPaymentEditedEvent(this.feeRecord, event.payload);
+          case 'REMOVE_FROM_PAYMENT_GROUP':
+            return handleFeeRecordRemoveFromPaymentGroupEvent(this.feeRecord, event.payload);
+          case 'OTHER_FEE_REMOVED_FROM_GROUP':
+            return handleFeeRecordOtherFeeRemovedFromGroupEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
