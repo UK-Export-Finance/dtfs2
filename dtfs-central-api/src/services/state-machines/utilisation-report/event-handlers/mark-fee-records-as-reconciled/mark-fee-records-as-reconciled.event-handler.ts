@@ -1,12 +1,12 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 
 type MarkFeeRecordsAsReconciledEventPayload = {
   requestSource: DbRequestSource;
   transactionEntityManager: EntityManager;
-  feeRecordsToReconcile: FeeRecordEntity[];
+  feeRecordIds: number[];
 };
 
 export type UtilisationReportMarkFeeRecordsAsReconciledEvent = BaseUtilisationReportEvent<
@@ -16,8 +16,9 @@ export type UtilisationReportMarkFeeRecordsAsReconciledEvent = BaseUtilisationRe
 
 export const handleUtilisationReportMarkFeeRecordsAsReconciledEvent = async (
   report: UtilisationReportEntity,
-  { requestSource, transactionEntityManager, feeRecordsToReconcile }: MarkFeeRecordsAsReconciledEventPayload,
+  { requestSource, transactionEntityManager, feeRecordIds }: MarkFeeRecordsAsReconciledEventPayload,
 ): Promise<UtilisationReportEntity> => {
+  const feeRecordsToReconcile = report.feeRecords.filter(({ id }) => feeRecordIds.includes(id));
   const feeRecordStateMachines = feeRecordsToReconcile.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
   await Promise.all(
     feeRecordStateMachines.map((stateMachine) =>
@@ -31,7 +32,8 @@ export const handleUtilisationReportMarkFeeRecordsAsReconciledEvent = async (
     ),
   );
 
-  if (report.feeRecords.every((record) => record.status === 'RECONCILED')) {
+  const { feeRecords: allFeeRecords } = await transactionEntityManager.findOneByOrFail(UtilisationReportEntity, { id: report.id });
+  if (allFeeRecords.every((record) => record.status === 'RECONCILED')) {
     report.updateWithStatus({ status: 'RECONCILIATION_COMPLETED', requestSource });
     return await transactionEntityManager.save(UtilisationReportEntity, report);
   }

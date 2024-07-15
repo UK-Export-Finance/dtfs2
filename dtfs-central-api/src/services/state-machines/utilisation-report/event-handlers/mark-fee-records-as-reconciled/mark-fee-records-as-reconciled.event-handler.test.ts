@@ -11,10 +11,10 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
   };
 
   const mockSave = jest.fn();
-  const mockFind = jest.fn();
+  const mockFindOneByOrFail = jest.fn();
   const mockEntityManager = {
     save: mockSave,
-    find: mockFind,
+    findOneByOrFail: mockFindOneByOrFail,
   } as unknown as EntityManager;
 
   const aMockEventHandler = () => jest.fn().mockImplementation();
@@ -25,6 +25,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
 
   beforeEach(() => {
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(aMockFeeRecordStateMachine(aMockEventHandler()));
+    mockFindOneByOrFail.mockResolvedValue(UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withFeeRecords([]).build());
   });
 
   afterEach(() => {
@@ -57,7 +58,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReconciledEvent(report, {
       requestSource,
-      feeRecordsToReconcile: [feeRecordOne, feeRecordTwo],
+      feeRecordIds: [feeRecordOne.id, feeRecordTwo.id],
       transactionEntityManager: mockEntityManager,
     });
 
@@ -81,7 +82,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     });
   });
 
-  it('sets report status to reconciled if all fee records are reconciled after calls to the fee record state machine', async () => {
+  it('sets report status to RECONCILED if all fee records are now reconciled', async () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
@@ -89,23 +90,22 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('RECONCILED').build();
     report.feeRecords = [feeRecordOne, feeRecordTwo, feeRecordThree];
 
-    jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) =>
-      aMockFeeRecordStateMachine(
-        jest.fn().mockImplementation(() => {
-          // eslint-disable-next-line no-param-reassign
-          feeRecord.status = 'RECONCILED';
-        }),
-      ),
-    );
+    const reportWithUpdatedFeeRecords = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const feeRecordOneUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
+    const feeRecordTwoUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('RECONCILED').build();
+    const feeRecordThreeUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('RECONCILED').build();
+    reportWithUpdatedFeeRecords.feeRecords = [feeRecordOneUpdated, feeRecordTwoUpdated, feeRecordThreeUpdated];
+    mockFindOneByOrFail.mockResolvedValue(reportWithUpdatedFeeRecords);
 
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReconciledEvent(report, {
       requestSource,
-      feeRecordsToReconcile: [feeRecordOne, feeRecordTwo],
+      feeRecordIds: [feeRecordOne.id, feeRecordTwo.id],
       transactionEntityManager: mockEntityManager,
     });
 
     // Assert
+    expect(mockFindOneByOrFail).toHaveBeenCalledWith(UtilisationReportEntity, { id: report.id });
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
     expect(report).toEqual(
       expect.objectContaining<Partial<UtilisationReportEntity>>({
@@ -117,7 +117,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     );
   });
 
-  it('does not set report status to reconciled if all fee records are not all reconciled after calls to the fee record state machine', async () => {
+  it('does not set report status to RECONCILED if not all fee records are now reconciled', async () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
@@ -125,23 +125,22 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('READY_TO_KEY').build();
     report.feeRecords = [feeRecordOne, feeRecordTwo, feeRecordThree];
 
-    jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) =>
-      aMockFeeRecordStateMachine(
-        jest.fn().mockImplementation(() => {
-          // eslint-disable-next-line no-param-reassign
-          feeRecord.status = 'RECONCILED';
-        }),
-      ),
-    );
+    const reportWithUpdatedFeeRecords = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+    const feeRecordOneUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
+    const feeRecordTwoUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('RECONCILED').build();
+    const feeRecordThreeUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('READY_TO_KEY').build();
+    reportWithUpdatedFeeRecords.feeRecords = [feeRecordOneUpdated, feeRecordTwoUpdated, feeRecordThreeUpdated];
+    mockFindOneByOrFail.mockResolvedValue(reportWithUpdatedFeeRecords);
 
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReconciledEvent(report, {
       requestSource,
-      feeRecordsToReconcile: [feeRecordOne, feeRecordTwo],
+      feeRecordIds: [feeRecordOne.id, feeRecordTwo.id],
       transactionEntityManager: mockEntityManager,
     });
 
     // Assert
+    expect(mockFindOneByOrFail).toHaveBeenCalledWith(UtilisationReportEntity, { id: report.id });
     expect(mockSave).not.toHaveBeenCalled();
     expect(report).toEqual(
       expect.objectContaining<Partial<UtilisationReportEntity>>({

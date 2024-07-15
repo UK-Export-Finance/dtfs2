@@ -385,7 +385,7 @@ utilisationReportsRouter
 
 /**
  * @openapi
- * /utilisation-reports/:reportId/keying-data/mark-as-done:
+ * /utilisation-reports/:reportId/keying-data/mark-as-to-do:
  *   put:
  *     summary: Put keying sheet data status to TO DO for multiple fee records
  *     tags: [Utilisation Report]

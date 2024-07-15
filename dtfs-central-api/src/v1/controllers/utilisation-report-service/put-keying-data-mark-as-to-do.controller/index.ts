@@ -5,7 +5,7 @@ import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { PutKeyingDataMarkAsPayload } from '../../../routes/middleware/payload-validation';
-import { getUtilisationReportAndSelectedFeeRecordsForKeyingSheetDataMarkAs } from '../helpers';
+import { getUtilisationReportAndValidateSelectedFeeRecordsExist } from '../helpers';
 
 export type PutKeyingDataMarkToDoRequest = CustomExpressRequest<{
   reqBody: PutKeyingDataMarkAsPayload;
@@ -16,10 +16,7 @@ export const putKeyingDataMarkAsToDo = async (req: PutKeyingDataMarkToDoRequest,
   const { feeRecordIds: selectedFeeRecordIds, user } = req.body;
 
   try {
-    const { utilisationReport, selectedFeeRecords } = await getUtilisationReportAndSelectedFeeRecordsForKeyingSheetDataMarkAs(
-      Number(reportId),
-      selectedFeeRecordIds,
-    );
+    const utilisationReport = await getUtilisationReportAndValidateSelectedFeeRecordsExist(Number(reportId), selectedFeeRecordIds);
 
     const utilisationReportStateMachine = UtilisationReportStateMachine.forReport(utilisationReport);
     await executeWithSqlTransaction(
@@ -28,7 +25,7 @@ export const putKeyingDataMarkAsToDo = async (req: PutKeyingDataMarkToDoRequest,
           type: 'MARK_FEE_RECORDS_AS_READY_TO_KEY',
           payload: {
             transactionEntityManager,
-            feeRecordsToMarkAsReadyToKey: selectedFeeRecords,
+            feeRecordIds: selectedFeeRecordIds,
             requestSource: {
               platform: 'TFM',
               userId: user._id.toString(),

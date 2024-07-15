@@ -296,7 +296,7 @@ describe('UtilisationReportStateMachine', () => {
         type: 'MARK_FEE_RECORDS_AS_READY_TO_KEY',
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
-          feeRecordsToMarkAsReadyToKey: [],
+          feeRecordIds: [],
           requestSource: {
             platform: 'TFM',
             userId: 'abc123',
@@ -317,7 +317,7 @@ describe('UtilisationReportStateMachine', () => {
         type: 'MARK_FEE_RECORDS_AS_RECONCILED',
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
-          feeRecordsToReconcile: [],
+          feeRecordIds: [],
           requestSource: {
             platform: 'TFM',
             userId: 'abc123',
@@ -385,7 +385,7 @@ describe('UtilisationReportStateMachine', () => {
         type: 'MARK_FEE_RECORDS_AS_READY_TO_KEY',
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
-          feeRecordsToMarkAsReadyToKey: [],
+          feeRecordIds: [],
           requestSource: {
             platform: 'TFM',
             userId: 'abc123',
