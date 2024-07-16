@@ -1,4 +1,5 @@
 import {
+  FacilityUtilisationDataEntityMockBuilder,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
@@ -16,7 +17,12 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     const FEE_RECORD_ID_ONE = '11';
     const FEE_RECORD_ID_TWO = '22';
     const PAYMENT_CURRENCY = 'GBP';
-    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+
+    const firstFacilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('11111111').build();
+    const secondFacilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('22222222').build();
+
+    cy.task(NODE_TASKS.INSERT_FACILITY_UTILISATION_DATA_INTO_DB, [firstFacilityUtilisationData, secondFacilityUtilisationData]);
 
     const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withId(REPORT_ID)
@@ -29,7 +35,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       .build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(undefined)
       .withId(FEE_RECORD_ID_ONE)
-      .withFacilityId('11111111')
+      .withFacilityUtilisationData(firstFacilityUtilisationData)
       .withExporter('Exporter 1')
       .withPaymentCurrency(PAYMENT_CURRENCY)
       .withFeesPaidToUkefForThePeriod(100)
@@ -40,7 +46,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       .build();
     const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(undefined)
       .withId(FEE_RECORD_ID_TWO)
-      .withFacilityId('22222222')
+      .withFacilityUtilisationData(secondFacilityUtilisationData)
       .withExporter('Exporter 2')
       .withFeesPaidToUkefForThePeriod(200)
       .withFeesPaidToUkefForThePeriodCurrency('EUR')

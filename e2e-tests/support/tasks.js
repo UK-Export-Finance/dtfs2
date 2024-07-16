@@ -1,7 +1,7 @@
 const crypto = require('node:crypto');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
-const { UtilisationReportEntity, FeeRecordEntity, PaymentEntity } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntity, FeeRecordEntity, PaymentEntity, AzureFileInfoEntity, FacilityUtilisationDataEntity } = require('@ukef/dtfs2-common');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
@@ -113,6 +113,14 @@ module.exports = {
     const insertPaymentsIntoDb = async (payments) => await SqlDbDataSource.manager.save(PaymentEntity, payments);
 
     /**
+     * Inserts facility utilisation data to the SQL database
+     * @param {FacilityUtilisationDataEntity[]} facilityUtilisationDataEntities
+     * @returns The inserted facility utilisation data
+     */
+    const insertFacilityUtilisationDataIntoDb = async (facilityUtilisationDataEntities) =>
+      await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationDataEntities);
+
+    /**
      * Deletes all the rows from the payment table
      */
     const removeAllPaymentsFromDb = async () => await SqlDbDataSource.manager.delete(PaymentEntity, {});
@@ -121,6 +129,18 @@ module.exports = {
      * Deletes all the rows from the payment table
      */
     const removeAllFeeRecordsFromDb = async () => await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
+
+    /**
+     * Deletes all data from the SQL database
+     */
+    const deleteAllFromSqlDb = async () =>
+      await Promise.all([
+        await SqlDbDataSource.manager.delete(PaymentEntity, {}),
+        await SqlDbDataSource.manager.delete(FeeRecordEntity, {}),
+        await SqlDbDataSource.manager.delete(UtilisationReportEntity, {}),
+        await SqlDbDataSource.manager.delete(AzureFileInfoEntity, {}),
+        await SqlDbDataSource.manager.delete(FacilityUtilisationDataEntity, {}),
+      ]);
 
     const getAllBanks = async () => {
       const banks = await db.getCollection(DB_COLLECTIONS.BANKS);
@@ -234,8 +254,10 @@ module.exports = {
       insertVersion0Facility,
       insertFeeRecordsIntoDb,
       insertPaymentsIntoDb,
+      insertFacilityUtilisationDataIntoDb,
       removeAllPaymentsFromDb,
       removeAllFeeRecordsFromDb,
+      deleteAllFromSqlDb,
     };
   },
 };
