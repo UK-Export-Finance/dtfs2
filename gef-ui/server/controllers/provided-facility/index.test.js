@@ -135,6 +135,27 @@ describe('controllers/provided-facility', () => {
       );
     });
 
+    it('back link goes to the facility end date page if on a v1 deal & using facility end date', async () => {
+      mockRequest.query.status = 'change';
+      mockProvidedFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
+      mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
+      mockProvidedFacilityResponse.details.isUsingFacilityEndDate = true;
+
+      mockApplicationResponse.version = 1;
+
+      api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
+      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+      await providedFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/provided-facility.njk',
+        expect.objectContaining({
+          previousPage: `/gef/application-details/${mockRequest.params.dealId}/facilities/${mockRequest.params.facilityId}/facility-end-date`,
+        }),
+      );
+    });
+
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
       api.getFacility.mockRejectedValueOnce();
       await providedFacility(mockRequest, mockResponse);
