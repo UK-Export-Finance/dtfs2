@@ -13,8 +13,7 @@ export const getNextPage = ({ dealId, facilityId, dealVersion, isUsingFacilityEn
   }
 
   if (isUsingFacilityEndDate) {
-    // TODO: DTFS2-7161 - update this link
-    return `/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`;
+    return `/gef/application-details/${dealId}/facilities/${facilityId}/facility-end-date`;
   }
 
   return `/gef/application-details/${dealId}/facilities/${facilityId}/bank-review-date`;
