@@ -40,6 +40,14 @@ const updateGefFacilitySpy = jest.fn(() => Promise.resolve({}));
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
 api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
 
+const createACBSMock = jest.spyOn(api, 'createACBS');
+createACBSMock.mockResolvedValue({});
+
+jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+  issueAcbsFacilities: jest.fn(),
+  createACBS: jest.fn(),
+}));
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();
