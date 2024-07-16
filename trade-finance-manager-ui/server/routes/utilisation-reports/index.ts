@@ -25,7 +25,12 @@ export const utilisationReportsRoutes = express.Router();
 
 utilisationReportsRoutes.get('/', validateUserTeam(Object.values(PDC_TEAM_IDS)), getUtilisationReports);
 
-utilisationReportsRoutes.post('/', validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]), updateUtilisationReportStatus);
+utilisationReportsRoutes.post(
+  '/',
+  validateTfmPaymentReconciliationFeatureFlagIsNotEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  updateUtilisationReportStatus,
+);
 
 utilisationReportsRoutes.get(
   '/:id/download',

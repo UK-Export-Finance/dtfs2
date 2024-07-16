@@ -3,6 +3,7 @@ const FACILITY = require('./facility');
 const PRODUCT = require('./product');
 const PARTY = require('./party');
 const INDUSTRY = require('./industry');
+const REQUEST = require('./request');
 
 module.exports = {
   DEAL,
@@ -10,4 +11,5 @@ module.exports = {
   PRODUCT,
   PARTY,
   INDUSTRY,
+  REQUEST,
 };

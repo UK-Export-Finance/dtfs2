@@ -10,7 +10,7 @@ import {
   FeeRecordStatus,
   CurrencyAndAmount,
 } from '@ukef/dtfs2-common';
-import { FeeRecord } from './fee-records';
+import { FeeRecord, KeyingSheet } from './fee-records';
 import { Payment } from './payments';
 
 export type GetUtilisationReportResponse = {
@@ -74,6 +74,7 @@ export type UtilisationReportReconciliationDetails = {
   reportPeriod: ReportPeriod;
   dateUploaded: Date;
   feeRecordPaymentGroups: FeeRecordPaymentGroup[];
+  keyingSheet: KeyingSheet;
 };
 
 export type NewPaymentDetails = {

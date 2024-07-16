@@ -13,4 +13,5 @@ export const aUtilisationReportReconciliationDetailsResponse = (): UtilisationRe
   },
   dateUploaded: new Date().toString(),
   feeRecordPaymentGroups: [],
+  keyingSheet: [],
 });

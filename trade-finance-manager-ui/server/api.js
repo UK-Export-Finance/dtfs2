@@ -1074,6 +1074,26 @@ const editPayment = async (reportId, paymentId, parsedEditPaymentFormValues, use
   });
 };
 
+/**
+ * Removes the supplied fee records from a supplied payment
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {number[]} selectedFeeRecordIds - The list of fee record ids to remove from the payment
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {string} userToken - The user token
+ */
+const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, user, userToken) => {
+  await axios({
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}/remove-selected-fees`,
+    method: 'post',
+    headers: generateHeaders(userToken),
+    data: {
+      selectedFeeRecordIds,
+      user,
+    },
+  });
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1123,4 +1143,5 @@ module.exports = {
   getPaymentDetailsWithoutFeeRecords,
   deletePaymentById,
   editPayment,
+  removeFeesFromPayment,
 };

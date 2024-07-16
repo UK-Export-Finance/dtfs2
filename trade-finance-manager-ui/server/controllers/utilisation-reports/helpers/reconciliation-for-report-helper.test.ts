@@ -1,6 +1,6 @@
 import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
-import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems } from './reconciliation-for-report-helper';
-import { FeeRecord, FeeRecordPaymentGroup, Payment } from '../../../api-response-types';
+import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems, mapKeyingSheetToKeyingSheetViewModel } from './reconciliation-for-report-helper';
+import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import { aFeeRecordPaymentGroup, aFeeRecord, aPayment } from '../../../../test-helpers';
 
 describe('reconciliation-for-report-helper', () => {
@@ -471,6 +471,199 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(viewModel[0].checkboxAriaLabel).toBe('Select 123 456');
+    });
+  });
+
+  describe('mapKeyingSheetToKeyingSheetViewModel', () => {
+    const aKeyingSheetRow = (): KeyingSheetRow => ({
+      feeRecordId: 1,
+      status: 'TO_DO',
+      facilityId: '12345678',
+      exporter: 'Test exporter',
+      feePayments: [],
+      baseCurrency: 'GBP',
+      fixedFeeAdjustment: null,
+      premiumAccrualBalanceAdjustment: null,
+      principalBalanceAdjustment: null,
+    });
+
+    it('maps the keying sheet status, facility id, exporter and base currency', () => {
+      // Arrange
+      const keyingSheet: KeyingSheet = [
+        {
+          ...aKeyingSheetRow(),
+          status: 'TO_DO',
+          facilityId: '11111111',
+          exporter: 'Some exporter',
+          baseCurrency: 'JPY',
+        },
+      ];
+
+      // Act
+      const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result[0].status).toBe('TO_DO');
+      expect(result[0].facilityId).toBe('11111111');
+      expect(result[0].exporter).toBe('Some exporter');
+      expect(result[0].baseCurrency).toBe('JPY');
+    });
+
+    it.each([
+      { status: 'TO_DO', displayStatus: 'TO DO' },
+      { status: 'DONE', displayStatus: 'DONE' },
+    ] as const)(
+      "sets the keying sheet view model display status to '$displayStatus' when the keying sheet status is '$status'",
+      ({ status, displayStatus }) => {
+        // Arrange
+        const keyingSheet: KeyingSheet = [{ ...aKeyingSheetRow(), status }];
+
+        // Act
+        const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
+
+        // Assert
+        expect(result).toHaveLength(1);
+        expect(result[0].displayStatus).toBe(displayStatus);
+      },
+    );
+
+    it('maps the keying sheet feePayments to the view model feePayments formattedCurrencyAndAmount and formattedDateReceived', () => {
+      // Arrange
+      const keyingSheet: KeyingSheet = [
+        {
+          ...aKeyingSheetRow(),
+          feePayments: [
+            { currency: 'GBP', amount: 100.123, dateReceived: '2024-01-01T12:00:00.000' },
+            { currency: 'EUR', amount: 90.91, dateReceived: '2023-12-05T12:00:00.000' },
+            { currency: 'GBP', amount: 0.0123123, dateReceived: '2024-05-01T12:00:00.000' },
+          ],
+        },
+      ];
+
+      // Act
+      const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result[0].feePayments).toHaveLength(3);
+      expect(result[0].feePayments[0].formattedCurrencyAndAmount).toBe('GBP 100.12');
+      expect(result[0].feePayments[0].formattedDateReceived).toBe('1 Jan 2024');
+      expect(result[0].feePayments[1].formattedCurrencyAndAmount).toBe('EUR 90.91');
+      expect(result[0].feePayments[1].formattedDateReceived).toBe('5 Dec 2023');
+      expect(result[0].feePayments[2].formattedCurrencyAndAmount).toBe('GBP 0.01');
+      expect(result[0].feePayments[2].formattedDateReceived).toBe('1 May 2024');
+    });
+
+    it.each([
+      { condition: 'is null', value: null, expectedMappedValue: { amount: undefined, change: 'NONE' } },
+      { condition: 'has zero amount (no change)', value: { amount: 0, change: 'NONE' }, expectedMappedValue: { amount: '0.00', change: 'NONE' } },
+      {
+        condition: 'has a positive amount (increase)',
+        value: { amount: 100, change: 'INCREASE' },
+        expectedMappedValue: { amount: '100.00', change: 'INCREASE' },
+      },
+      {
+        condition: 'has a negative amount (decrease)',
+        value: { amount: 100, change: 'DECREASE' },
+        expectedMappedValue: { amount: '100.00', change: 'DECREASE' },
+      },
+    ] as const)(
+      'sets the view model fixedFeeAdjustment to $expectedMappedValue when the fee record entity fixedFeeAdjustment $condition',
+      ({ value, expectedMappedValue }) => {
+        // Arrange
+        const keyingSheet: KeyingSheet = [
+          {
+            ...aKeyingSheetRow(),
+            fixedFeeAdjustment: value,
+          },
+        ];
+
+        // Act
+        const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
+
+        // Assert
+        expect(result).toHaveLength(1);
+        expect(result[0].fixedFeeAdjustment).toEqual(expectedMappedValue);
+      },
+    );
+
+    it.each([
+      { condition: 'is null', value: null, expectedMappedValue: { amount: undefined, change: 'NONE' } },
+      { condition: 'has zero amount (no change)', value: { amount: 0, change: 'NONE' }, expectedMappedValue: { amount: '0.00', change: 'NONE' } },
+      {
+        condition: 'has a positive amount (increase)',
+        value: { amount: 100, change: 'INCREASE' },
+        expectedMappedValue: { amount: '100.00', change: 'INCREASE' },
+      },
+      {
+        condition: 'has a negative amount (decrease)',
+        value: { amount: 100, change: 'DECREASE' },
+        expectedMappedValue: { amount: '100.00', change: 'DECREASE' },
+      },
+    ] as const)(
+      'sets the view model premiumAccrualBalanceAdjustment to $expectedMappedValue when the fee record entity premiumAccrualBalanceAdjustment $condition',
+      ({ value, expectedMappedValue }) => {
+        // Arrange
+        const keyingSheet: KeyingSheet = [
+          {
+            ...aKeyingSheetRow(),
+            premiumAccrualBalanceAdjustment: value,
+          },
+        ];
+
+        // Act
+        const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
+
+        // Assert
+        expect(result).toHaveLength(1);
+        expect(result[0].premiumAccrualBalanceAdjustment).toEqual(expectedMappedValue);
+      },
+    );
+
+    it.each([
+      { condition: 'is null', value: null, expectedMappedValue: { amount: undefined, change: 'NONE' } },
+      { condition: 'has zero amount (no change)', value: { amount: 0, change: 'NONE' }, expectedMappedValue: { amount: '0.00', change: 'NONE' } },
+      {
+        condition: 'has a positive amount (increase)',
+        value: { amount: 100, change: 'INCREASE' },
+        expectedMappedValue: { amount: '100.00', change: 'INCREASE' },
+      },
+      {
+        condition: 'has a negative amount (decrease)',
+        value: { amount: 100, change: 'DECREASE' },
+        expectedMappedValue: { amount: '100.00', change: 'DECREASE' },
+      },
+    ] as const)(
+      'sets the view model principalBalanceAdjustment to $expectedMappedValue when the keying sheet principalBalanceAdjustment $condition',
+      ({ value, expectedMappedValue }) => {
+        // Arrange
+        const keyingSheet: KeyingSheet = [
+          {
+            ...aKeyingSheetRow(),
+            principalBalanceAdjustment: value,
+          },
+        ];
+
+        // Act
+        const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
+
+        // Assert
+        expect(result).toHaveLength(1);
+        expect(result[0].principalBalanceAdjustment).toEqual(expectedMappedValue);
+      },
+    );
+
+    it('sets the keying sheet view model checkbox id using the keying sheet fee record id', () => {
+      // Arrange
+      const keyingSheet: KeyingSheet = [{ ...aKeyingSheetRow(), feeRecordId: 123 }];
+
+      // Act
+      const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result[0].checkboxId).toBe('feeRecordId-123');
     });
   });
 });
