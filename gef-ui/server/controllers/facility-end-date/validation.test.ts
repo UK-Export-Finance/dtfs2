@@ -35,7 +35,7 @@ describe('validateAndParseFacilityEndDate', () => {
     // Assert
     expect(validateAndParseDayMonthYear).toHaveBeenCalledWith(dayMonthYear, {
       errRef: 'facilityEndDate',
-      variableDisplayName: 'facility end-date',
+      variableDisplayName: 'facility end date',
     });
   });
 
