@@ -1,19 +1,23 @@
 const { utilisationReportUpload, confirmAndSend, problemWithService } = require('../../../pages');
-const MOCK_USERS = require('../../../../../../e2e-fixtures');
+const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
 const { february2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
-
-const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
+const { FACILITY_UTILISATION_DATA_FOR_REPORT } = require('../../../../fixtures/facilityUtilisationDataForReport');
 
 context('Confirm and send', () => {
+  before(() => {
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    cy.task(NODE_TASKS.INSERT_FACILITY_UTILISATION_DATA_INTO_DB, [FACILITY_UTILISATION_DATA_FOR_REPORT]);
+  });
+
   after(() => {
-    cy.removeAllUtilisationReports();
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
   });
 
   describe('After logging in and submitting a valid file', () => {
     beforeEach(() => {
-      cy.removeAllUtilisationReports();
-      cy.insertUtilisationReports(february2023ReportDetails);
+      cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [february2023ReportDetails]);
 
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));
@@ -48,8 +52,8 @@ context('Confirm and send', () => {
 
   describe('After logging in but not submitting a file', () => {
     before(() => {
-      cy.removeAllUtilisationReports();
-      cy.insertUtilisationReports(february2023ReportDetails);
+      cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [february2023ReportDetails]);
     });
 
     it('Should route to the Upload Report page when you try and access the confirm and send page directly', () => {
