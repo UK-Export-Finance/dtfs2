@@ -11,6 +11,8 @@ import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 
 jest.mock('./helpers');
 
+console.error = jest.fn();
+
 class TestApiError extends ApiError {
   constructor(status?: number, message?: string) {
     super({ status: status ?? 500, message: message ?? '' });
