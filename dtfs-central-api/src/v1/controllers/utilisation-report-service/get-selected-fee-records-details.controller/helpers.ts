@@ -10,6 +10,7 @@ import {
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
+import { PaymentRepo } from '../../../../repositories/payment-repo';
 
 const mapPaymentEntityToSelectedFeeRecordsPaymentDetails = (paymentEntity: PaymentEntity): SelectedFeeRecordsPaymentDetails => ({
   amount: paymentEntity.amount,
@@ -31,10 +32,24 @@ const getTotalReportedPayments = (feeRecords: SelectedFeeRecordDetails[]): Curre
   amount: feeRecords.map((feeRecord) => feeRecord.reportedPayments.amount).reduce((total, currentAmount) => total + currentAmount, 0),
 });
 
+export const canFeeRecordsBeAddedToExistingPayment = async (reportId: string, feeRecords: FeeRecordEntity[]): Promise<boolean> => {
+  if (feeRecords.length === 0) {
+    return false;
+  }
+
+  const allFeeRecordsHaveStatusToDo = feeRecords.every((record) => record.status === 'TO_DO');
+
+  const reportedPaymentCurrency = feeRecords[0].paymentCurrency;
+  const doesPaymentInCurrencyExist = await PaymentRepo.existsByReportIdAndCurrency(Number(reportId), reportedPaymentCurrency);
+
+  return allFeeRecordsHaveStatusToDo && doesPaymentInCurrencyExist;
+};
+
 export const mapToSelectedFeeRecordDetails = async (
   bankId: string,
   reportPeriod: ReportPeriod,
   selectedFeeRecordEntities: FeeRecordEntity[],
+  canAddToExistingPayment: boolean,
 ): Promise<SelectedFeeRecordsDetails> => {
   const bankName = await getBankNameById(bankId);
   if (!bankName) {
@@ -52,5 +67,6 @@ export const mapToSelectedFeeRecordDetails = async (
     totalReportedPayments: getTotalReportedPayments(selectedFeeRecordDetails),
     feeRecords: selectedFeeRecordDetails,
     payments: recordedPaymentDetails,
+    canAddToExistingPayment,
   };
 };
