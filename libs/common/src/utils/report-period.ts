@@ -1,4 +1,4 @@
-import { addMonths, subMonths, format } from 'date-fns';
+import { addMonths, subMonths, format, startOfMonth } from 'date-fns';
 import { getOneIndexedMonth, toIsoMonthStamp, getDateFromMonthAndYear, isEqualMonthAndYear } from './date';
 import { IsoMonthStamp, MonthAndYear, BankReportPeriodSchedule, ReportPeriod } from '../types';
 
@@ -225,3 +225,5 @@ export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod
  */
 export const getFormattedReportPeriodWithShortMonth = (reportPeriod: ReportPeriod, includePeriodicity: boolean, alwaysStateYear = false): string =>
   getFormattedReportPeriod(reportPeriod, 'MMM', includePeriodicity, alwaysStateYear);
+
+export const getStartOfReportPeriod = ({ start }: ReportPeriod): Date => startOfMonth(new Date(`${start.year}-${start.month}`));
