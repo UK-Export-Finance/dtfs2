@@ -1,4 +1,5 @@
 const api = require('../../../src/v1/api');
+const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
 const { calculateGefFacilityFeeRecord } = require('../../../src/v1/helpers/calculate-gef-facility-fee-record');
 const CONSTANTS = require('../../../src/constants');
@@ -21,8 +22,14 @@ const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
 api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
 
+jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+  issueAcbsFacilities: jest.fn(),
+  createACBS: jest.fn(),
+}));
+
 describe('/v1/deals', () => {
   beforeEach(() => {
+    acbsController.issueAcbsFacilities.mockClear();
     api.getFacilityExposurePeriod.mockClear();
     api.getPremiumSchedule.mockClear();
 
@@ -42,11 +49,6 @@ describe('/v1/deals', () => {
 
     api.updateDeal.mockReset();
     mockUpdateDeal();
-
-    jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
-      issueAcbsFacilities: jest.fn(),
-      createACBS: jest.fn(),
-    }));
   });
 
   describe('PUT /v1/deals/:dealId/submit', () => {
