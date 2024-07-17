@@ -348,4 +348,58 @@ describe(page, () => {
 
     wrapper.expectElement(`[data-cy="remove-selected-fees-button"]`).notToExist();
   });
+
+  it('should display singular "Add reported fee to an existing payment" button when hasExistingPayments is true and only one payment exists', () => {
+    // Arrange
+    const addPaymentViewModel = {
+      ...anAddPaymentViewModel(),
+      canAddToExistingPayment: true,
+    };
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    const addFeesToExistingPaymentButtonSelector = '[data-cy="add-fees-to-an-existing-payment-button"]';
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toExist();
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('value', 'Add reported fee to an existing payment');
+  });
+
+  it('should display plural "Add reported fees to an existing payment" button when hasExistingPayments is true and multiple payments exist', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.canAddToExistingPayment = true;
+    addPaymentViewModel.reportedFeeDetails.feeRecords = [
+      {
+        feeRecordId: 7,
+        facilityId: '000123',
+        exporter: 'abcde',
+        reportedFees: { formattedCurrencyAndAmount: 'EUR 0.01', dataSortValue: 0 },
+        reportedPayments: { formattedCurrencyAndAmount: 'GBP 7', dataSortValue: 0 },
+      },
+      {
+        feeRecordId: 8,
+        facilityId: '000123',
+        exporter: 'bcdef',
+        reportedFees: { formattedCurrencyAndAmount: 'EUR 0.01', dataSortValue: 0 },
+        reportedPayments: { formattedCurrencyAndAmount: 'GBP 8', dataSortValue: 0 },
+      },
+    ];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    const addFeesToExistingPaymentButtonSelector = '[data-cy="add-fees-to-an-existing-payment-button"]';
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toExist();
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('value', 'Add reported fees to an existing payment');
+  });
+
+  it('should not display "Add reported fee to an existing payment" button when hasExistingPayments is false', () => {
+    // Arrange
+    const addPaymentViewModel = {
+      ...anAddPaymentViewModel(),
+      canAddToExistingPayment: false,
+    };
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectElement(`[data-cy="add-fees-to-an-existing-payment-button"]`).notToExist();
+  });
 });
