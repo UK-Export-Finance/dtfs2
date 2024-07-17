@@ -40,12 +40,14 @@ exports.updateTfmAmendment = async (req, res) => {
 
   const update = { ...payload, updatedAt: getUnixTime(new Date()) };
 
-  await TfmFacilitiesRepo.custom(async (collection) => {
-    await collection.updateOne(
-      { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } },
-      $.flatten({ 'amendments.$': update, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }),
-    );
-  });
+  await TfmFacilitiesRepo.updateOneByIdAndAmendmentId(
+    facilityId,
+    amendmentId,
+    $.flatten({
+      'amendments.$': update,
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+    }),
+  );
 
   const updatedAmendment = await findAmendmentById(facilityId, amendmentId);
   return res.status(200).json({ ...updatedAmendment });

@@ -12,17 +12,16 @@ const CONSTANTS = require('../../../../constants');
  */
 const findAllAmendmentsByStatus = async (status) => {
   try {
-    const amendment = await TfmFacilitiesRepo.custom(
-      async (collection) =>
-        await collection
-          .aggregate([
-            { $project: { _id: false, amendments: '$amendments' } },
-            { $unwind: '$amendments' },
-            { $match: { 'amendments.status': { $eq: status } } },
-            { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-            { $project: { _id: false, amendments: true } },
-          ])
-          .toArray(),
+    const amendment = await TfmFacilitiesRepo.custom((collection) =>
+      collection
+        .aggregate([
+          { $project: { _id: false, amendments: '$amendments' } },
+          { $unwind: '$amendments' },
+          { $match: { 'amendments.status': { $eq: status } } },
+          { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+          { $project: { _id: false, amendments: true } },
+        ])
+        .toArray(),
     );
 
     // returns the amendment object for the given facilityId and amendmentId
@@ -52,19 +51,18 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
     if (!ObjectId.isValid(facilityId)) {
       throw new Error('Invalid facility Id');
     }
-    const amendment = await TfmFacilitiesRepo.custom(
-      async (collection) =>
-        await collection
-          .aggregate([
-            { $match: { _id: { $eq: ObjectId(facilityId) } } },
-            { $project: { _id: false, amendments: '$amendments' } },
-            { $unwind: '$amendments' },
-            { $sort: { 'amendments.version': -1 } },
-            { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED } } },
-            { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-            { $project: { _id: false, amendments: true } },
-          ])
-          .toArray(),
+    const amendment = await TfmFacilitiesRepo.custom((collection) =>
+      collection
+        .aggregate([
+          { $match: { _id: { $eq: ObjectId(facilityId) } } },
+          { $project: { _id: false, amendments: '$amendments' } },
+          { $unwind: '$amendments' },
+          { $sort: { 'amendments.version': -1 } },
+          { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED } } },
+          { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+          { $project: { _id: false, amendments: true } },
+        ])
+        .toArray(),
     );
 
     // returns the amendment object for the given facilityId and amendmentId
@@ -95,31 +93,30 @@ const findAmendmentById = async (facilityId, amendmentId) => {
   }
 
   try {
-    const amendment = await TfmFacilitiesRepo.custom(
-      async (collection) =>
-        await collection
-          .aggregate([
-            { $match: { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } } },
-            {
-              $addFields: {
-                'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
-              },
+    const amendment = await TfmFacilitiesRepo.custom((collection) =>
+      collection
+        .aggregate([
+          { $match: { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } } },
+          {
+            $addFields: {
+              'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
             },
-            {
-              $project: {
-                _id: false,
-                amendments: {
-                  $filter: {
-                    input: '$amendments',
-                    as: 'amendment',
-                    cond: { $eq: ['$$amendment.amendmentId', ObjectId(amendmentId)] },
-                  },
+          },
+          {
+            $project: {
+              _id: false,
+              amendments: {
+                $filter: {
+                  input: '$amendments',
+                  as: 'amendment',
+                  cond: { $eq: ['$$amendment.amendmentId', ObjectId(amendmentId)] },
                 },
               },
             },
-            { $unwind: '$amendments' },
-          ])
-          .toArray(),
+          },
+          { $unwind: '$amendments' },
+        ])
+        .toArray(),
     );
 
     // returns the amendment object for the given facilityId and amendmentId
@@ -147,29 +144,28 @@ const findAmendmentsByDealId = async (dealId) => {
   }
 
   try {
-    const amendment = await TfmFacilitiesRepo.custom(
-      async (collection) =>
-        await collection
-          .aggregate([
-            { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
-            {
-              $addFields: {
-                'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
-              },
+    const amendment = await TfmFacilitiesRepo.custom((collection) =>
+      collection
+        .aggregate([
+          { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
+          {
+            $addFields: {
+              'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
             },
-            { $project: { _id: false, amendments: true } },
-            { $unwind: '$amendments' },
-            { $sort: { 'amendments.submittedAt': -1 } },
-            {
-              $match: {
-                'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED },
-                'amendments.submittedByPim': { $eq: true },
-              },
+          },
+          { $project: { _id: false, amendments: true } },
+          { $unwind: '$amendments' },
+          { $sort: { 'amendments.submittedAt': -1 } },
+          {
+            $match: {
+              'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED },
+              'amendments.submittedByPim': { $eq: true },
             },
-            { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-            { $project: { _id: false, amendments: true } },
-          ])
-          .toArray(),
+          },
+          { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+          { $project: { _id: false, amendments: true } },
+        ])
+        .toArray(),
     );
     // returns the amendment object for the given dealId
     return amendment[0]?.amendments ?? null;
@@ -197,18 +193,17 @@ const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
   }
 
   try {
-    const amendment = await TfmFacilitiesRepo.custom(
-      async (collection) =>
-        await collection
-          .aggregate([
-            { $match: { _id: { $eq: ObjectId(facilityId) } } },
-            { $unwind: '$amendments' },
-            { $match: { 'amendments.status': { $eq: status } } },
-            { $project: { _id: false, amendments: true } },
-            { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-            { $project: { _id: false, amendments: true } },
-          ])
-          .toArray(),
+    const amendment = await TfmFacilitiesRepo.custom((collection) =>
+      collection
+        .aggregate([
+          { $match: { _id: { $eq: ObjectId(facilityId) } } },
+          { $unwind: '$amendments' },
+          { $match: { 'amendments.status': { $eq: status } } },
+          { $project: { _id: false, amendments: true } },
+          { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+          { $project: { _id: false, amendments: true } },
+        ])
+        .toArray(),
     );
     // returns the amendment object for the given facilityId
     return amendment[0]?.amendments ?? null;
@@ -235,24 +230,23 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
     return null;
   }
   try {
-    const amendment = await TfmFacilitiesRepo.custom(
-      async (collection) =>
-        await collection
-          .aggregate([
-            { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
-            {
-              $addFields: {
-                'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
-              },
+    const amendment = await TfmFacilitiesRepo.custom((collection) =>
+      collection
+        .aggregate([
+          { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
+          {
+            $addFields: {
+              'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
             },
-            { $unwind: '$amendments' },
-            { $match: { 'amendments.status': { $eq: status } } },
-            { $project: { _id: false, amendments: true } },
-            { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
+          },
+          { $unwind: '$amendments' },
+          { $match: { 'amendments.status': { $eq: status } } },
+          { $project: { _id: false, amendments: true } },
+          { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
 
-            { $project: { amendments: true, type: true, _id: false } },
-          ])
-          .toArray(),
+          { $project: { amendments: true, type: true, _id: false } },
+        ])
+        .toArray(),
     );
 
     // returns the amendment object for the given dealId
@@ -283,44 +277,43 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
   const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
 
   try {
-    const amendment = await TfmFacilitiesRepo.custom(
-      async (collection) =>
-        await collection
-          .aggregate([
-            { $match: { _id: { $eq: ObjectId(facilityId) } } },
-            { $unwind: '$amendments' },
-            {
-              $match: {
-                $or: [
-                  {
-                    'amendments.status': { $eq: COMPLETED },
-                    'amendments.submittedByPim': { $eq: true },
-                    'amendments.requireUkefApproval': { $eq: false },
-                    'amendments.changeFacilityValue': { $eq: true },
-                  },
-                  {
-                    'amendments.status': { $eq: COMPLETED },
-                    'amendments.bankDecision.decision': { $eq: PROCEED },
-                    'amendments.bankDecision.submitted': { $eq: true },
-                    'amendments.ukefDecision.value': { $eq: APPROVED_WITH_CONDITIONS },
-                    'amendments.changeFacilityValue': { $eq: true },
-                  },
-                  {
-                    'amendments.status': { $eq: COMPLETED },
-                    'amendments.bankDecision.decision': { $eq: PROCEED },
-                    'amendments.bankDecision.submitted': { $eq: true },
-                    'amendments.ukefDecision.value': { $eq: APPROVED_WITHOUT_CONDITIONS },
-                    'amendments.changeFacilityValue': { $eq: true },
-                  },
-                ],
-              },
+    const amendment = await TfmFacilitiesRepo.custom((collection) =>
+      collection
+        .aggregate([
+          { $match: { _id: { $eq: ObjectId(facilityId) } } },
+          { $unwind: '$amendments' },
+          {
+            $match: {
+              $or: [
+                {
+                  'amendments.status': { $eq: COMPLETED },
+                  'amendments.submittedByPim': { $eq: true },
+                  'amendments.requireUkefApproval': { $eq: false },
+                  'amendments.changeFacilityValue': { $eq: true },
+                },
+                {
+                  'amendments.status': { $eq: COMPLETED },
+                  'amendments.bankDecision.decision': { $eq: PROCEED },
+                  'amendments.bankDecision.submitted': { $eq: true },
+                  'amendments.ukefDecision.value': { $eq: APPROVED_WITH_CONDITIONS },
+                  'amendments.changeFacilityValue': { $eq: true },
+                },
+                {
+                  'amendments.status': { $eq: COMPLETED },
+                  'amendments.bankDecision.decision': { $eq: PROCEED },
+                  'amendments.bankDecision.submitted': { $eq: true },
+                  'amendments.ukefDecision.value': { $eq: APPROVED_WITHOUT_CONDITIONS },
+                  'amendments.changeFacilityValue': { $eq: true },
+                },
+              ],
             },
-            { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+          },
+          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
 
-            { $project: { _id: false, amendments: true } },
-            { $limit: 1 },
-          ])
-          .toArray(),
+          { $project: { _id: false, amendments: true } },
+          { $limit: 1 },
+        ])
+        .toArray(),
     );
 
     if (amendment[0]?.amendments?.value) {
@@ -357,44 +350,43 @@ const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
   const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
 
   try {
-    const amendment = await TfmFacilitiesRepo.custom(
-      async (collection) =>
-        await collection
-          .aggregate([
-            { $match: { _id: { $eq: ObjectId(facilityId) } } },
-            { $unwind: '$amendments' },
-            {
-              $match: {
-                $or: [
-                  {
-                    'amendments.status': { $eq: COMPLETED },
-                    'amendments.submittedByPim': { $eq: true },
-                    'amendments.requireUkefApproval': { $eq: false },
-                    'amendments.changeCoverEndDate': { $eq: true },
-                  },
-                  {
-                    'amendments.status': { $eq: COMPLETED },
-                    'amendments.bankDecision.decision': { $eq: PROCEED },
-                    'amendments.bankDecision.submitted': { $eq: true },
-                    'amendments.ukefDecision.coverEndDate': { $eq: APPROVED_WITH_CONDITIONS },
-                    'amendments.changeCoverEndDate': { $eq: true },
-                  },
-                  {
-                    'amendments.status': { $eq: COMPLETED },
-                    'amendments.bankDecision.decision': { $eq: PROCEED },
-                    'amendments.bankDecision.submitted': { $eq: true },
-                    'amendments.ukefDecision.coverEndDate': { $eq: APPROVED_WITHOUT_CONDITIONS },
-                    'amendments.changeCoverEndDate': { $eq: true },
-                  },
-                ],
-              },
+    const amendment = await TfmFacilitiesRepo.custom((collection) =>
+      collection
+        .aggregate([
+          { $match: { _id: { $eq: ObjectId(facilityId) } } },
+          { $unwind: '$amendments' },
+          {
+            $match: {
+              $or: [
+                {
+                  'amendments.status': { $eq: COMPLETED },
+                  'amendments.submittedByPim': { $eq: true },
+                  'amendments.requireUkefApproval': { $eq: false },
+                  'amendments.changeCoverEndDate': { $eq: true },
+                },
+                {
+                  'amendments.status': { $eq: COMPLETED },
+                  'amendments.bankDecision.decision': { $eq: PROCEED },
+                  'amendments.bankDecision.submitted': { $eq: true },
+                  'amendments.ukefDecision.coverEndDate': { $eq: APPROVED_WITH_CONDITIONS },
+                  'amendments.changeCoverEndDate': { $eq: true },
+                },
+                {
+                  'amendments.status': { $eq: COMPLETED },
+                  'amendments.bankDecision.decision': { $eq: PROCEED },
+                  'amendments.bankDecision.submitted': { $eq: true },
+                  'amendments.ukefDecision.coverEndDate': { $eq: APPROVED_WITHOUT_CONDITIONS },
+                  'amendments.changeCoverEndDate': { $eq: true },
+                },
+              ],
             },
-            { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+          },
+          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
 
-            { $project: { _id: false, amendments: true } },
-            { $limit: 1 },
-          ])
-          .toArray(),
+          { $project: { _id: false, amendments: true } },
+          { $limit: 1 },
+        ])
+        .toArray(),
     );
 
     if (amendment[0]?.amendments?.coverEndDate) {
@@ -420,18 +412,17 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
   const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
 
   try {
-    const amendment = await TfmFacilitiesRepo.custom(
-      async (collection) =>
-        await collection
-          .aggregate([
-            { $match: { _id: { $eq: ObjectId(facilityId) } } },
-            { $unwind: '$amendments' },
-            { $match: { 'amendments.status': { $eq: COMPLETED } } },
-            { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-            { $project: { _id: false, amendments: true } },
-            { $limit: 1 },
-          ])
-          .toArray(),
+    const amendment = await TfmFacilitiesRepo.custom((collection) =>
+      collection
+        .aggregate([
+          { $match: { _id: { $eq: ObjectId(facilityId) } } },
+          { $unwind: '$amendments' },
+          { $match: { 'amendments.status': { $eq: COMPLETED } } },
+          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+          { $project: { _id: false, amendments: true } },
+          { $limit: 1 },
+        ])
+        .toArray(),
     );
     return amendment[0]?.amendments?.version ?? null;
   } catch (error) {
@@ -458,18 +449,17 @@ const findLatestCompletedAmendmentByDealId = async (dealId) => {
   }
 
   try {
-    const amendment = await TfmFacilitiesRepo.custom(
-      async (collection) =>
-        await collection
-          .aggregate([
-            { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
-            { $unwind: '$amendments' },
-            { $match: { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED } },
-            { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-            { $project: { _id: false, amendments: true } },
-            { $limit: 1 },
-          ])
-          .toArray(),
+    const amendment = await TfmFacilitiesRepo.custom((collection) =>
+      collection
+        .aggregate([
+          { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
+          { $unwind: '$amendments' },
+          { $match: { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED } },
+          { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+          { $project: { _id: false, amendments: true } },
+          { $limit: 1 },
+        ])
+        .toArray(),
     );
     return amendment[0]?.amendments ?? null;
   } catch (error) {

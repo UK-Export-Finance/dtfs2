@@ -54,8 +54,8 @@ exports.postTfmAmendment = async (req, res) => {
   if (latestCompletedAmendmentVersion) {
     amendment.version = latestCompletedAmendmentVersion + 1;
   }
-  await TfmFacilitiesRepo.custom(async (collection) => {
-    await collection.updateOne(
+  await TfmFacilitiesRepo.custom((collection) => {
+    collection.updateOne(
       { _id: { $eq: ObjectId(facilityId) } },
       {
         $push: { amendments: amendment },

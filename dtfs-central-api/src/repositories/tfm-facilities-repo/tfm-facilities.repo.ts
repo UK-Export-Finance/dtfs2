@@ -57,11 +57,34 @@ export class TfmFacilitiesRepo {
    * @param id - The id to search by
    * @param update - The update to apply
    * @param [options] - Update options
-   * @returns The updated document
+   * @returns The document (returned after the update by default)
    */
-  public static async findOneByIdAndUpdate(id: string | ObjectId, update: UpdateFilter<WithoutId<RawTfmFacility>>, options: FindOneAndUpdateOptions = {}) {
+  public static async findOneByIdAndUpdate(
+    id: string | ObjectId,
+    update: UpdateFilter<WithoutId<RawTfmFacility>>,
+    options: FindOneAndUpdateOptions = { returnDocument: 'after' },
+  ) {
     const collection = await this.getCollection();
     return await collection.findOneAndUpdate({ _id: { $eq: new ObjectId(id) } }, update, options);
+  }
+
+  /**
+   * Updates the tfm facility with the supplied id
+   * and amendment id
+   * @param id - The facility id
+   * @param amendmentId - The amendment id
+   * @param update - The update to apply
+   * @returns The update result
+   */
+  public static async updateOneByIdAndAmendmentId(id: string | ObjectId, amendmentId: string | ObjectId, update: UpdateFilter<WithoutId<RawTfmFacility>>) {
+    const collection = await this.getCollection();
+    return await collection.updateOne(
+      {
+        _id: { $eq: new ObjectId(id) },
+        'amendments.amendmentId': { $eq: new ObjectId(amendmentId) },
+      },
+      update,
+    );
   }
 
   /**
