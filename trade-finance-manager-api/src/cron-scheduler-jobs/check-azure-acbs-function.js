@@ -1,4 +1,4 @@
-const defaultSchedule = '*/10 * * * * *';
+const defaultSchedule = '*/10 * * * *';
 const schedule = process.env.AZURE_ACBS_FUNCTION_SCHEDULE || defaultSchedule;
 
 const acbsController = require('../v1/controllers/acbs.controller');

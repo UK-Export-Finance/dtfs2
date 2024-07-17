@@ -1,7 +1,3 @@
-jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
-  issueAcbsFacilities: jest.fn(),
-}));
-
 const api = require('../../../src/v1/api');
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
@@ -25,6 +21,11 @@ const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
 api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
+
+jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+  issueAcbsFacilities: jest.fn(),
+  createACBS: jest.fn(),
+}));
 
 describe('/v1/deals', () => {
   beforeEach(() => {
