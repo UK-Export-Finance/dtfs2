@@ -14,17 +14,17 @@
     </td>
   {% endmacro %}
   {% set userCanEdit = params.userCanEdit %}
-  {% set status = params.KeyingSheetRow.status %}
-  {% set displayStatus = params.KeyingSheetRow.displayStatus %}
-  {% set facilityId = params.KeyingSheetRow.facilityId %}
-  {% set exporter = params.KeyingSheetRow.exporter %}
-  {% set feePayments = params.KeyingSheetRow.feePayments %}
-  {% set baseCurrency = params.KeyingSheetRow.baseCurrency %}
-  {% set fixedFeeAdjustment = params.KeyingSheetRow.fixedFeeAdjustment %}
-  {% set premiumAccrualBalanceAdjustment = params.KeyingSheetRow.premiumAccrualBalanceAdjustment %}
-  {% set principalBalanceAdjustment = params.KeyingSheetRow.principalBalanceAdjustment %}
-  {% set checkboxId = params.KeyingSheetRow.checkboxId %}
-  {% set isChecked = params.KeyingSheetRow.isChecked %}
+  {% set status = params.keyingSheetRow.status %}
+  {% set displayStatus = params.keyingSheetRow.displayStatus %}
+  {% set facilityId = params.keyingSheetRow.facilityId %}
+  {% set exporter = params.keyingSheetRow.exporter %}
+  {% set feePayments = params.keyingSheetRow.feePayments %}
+  {% set baseCurrency = params.keyingSheetRow.baseCurrency %}
+  {% set fixedFeeAdjustment = params.keyingSheetRow.fixedFeeAdjustment %}
+  {% set premiumAccrualBalanceAdjustment = params.keyingSheetRow.premiumAccrualBalanceAdjustment %}
+  {% set principalBalanceAdjustment = params.keyingSheetRow.principalBalanceAdjustment %}
+  {% set checkboxId = params.keyingSheetRow.checkboxId %}
+  {% set isChecked = params.keyingSheetRow.isChecked %}
   {% for feePayment in feePayments %}
     {% set isFirstLineOfRow = loop.index === 1 %}
     {% set isLastLineOfRow = loop.index === feePayments.length %}
