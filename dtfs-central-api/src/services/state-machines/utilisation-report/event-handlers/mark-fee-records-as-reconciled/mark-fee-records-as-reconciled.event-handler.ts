@@ -32,7 +32,11 @@ export const handleUtilisationReportMarkFeeRecordsAsReconciledEvent = async (
     ),
   );
 
-  const { feeRecords: allFeeRecords } = await transactionEntityManager.findOneByOrFail(UtilisationReportEntity, { id: report.id });
+  const { feeRecords: allFeeRecords } = await transactionEntityManager.findOneOrFail(UtilisationReportEntity, {
+    where: { id: report.id },
+    relations: { feeRecords: true },
+  });
+
   if (allFeeRecords.every((record) => record.status === 'RECONCILED')) {
     report.updateWithStatus({ status: 'RECONCILIATION_COMPLETED', requestSource });
     return await transactionEntityManager.save(UtilisationReportEntity, report);

@@ -11,10 +11,10 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
   };
 
   const mockSave = jest.fn();
-  const mockFindOneByOrFail = jest.fn();
+  const mockFindOneOrFail = jest.fn();
   const mockEntityManager = {
     save: mockSave,
-    findOneByOrFail: mockFindOneByOrFail,
+    findOneOrFail: mockFindOneOrFail,
   } as unknown as EntityManager;
 
   const aMockEventHandler = () => jest.fn().mockImplementation();
@@ -25,7 +25,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
 
   beforeEach(() => {
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(aMockFeeRecordStateMachine(aMockEventHandler()));
-    mockFindOneByOrFail.mockResolvedValue(UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withFeeRecords([]).build());
+    mockFindOneOrFail.mockResolvedValue(UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withFeeRecords([]).build());
   });
 
   afterEach(() => {
@@ -95,7 +95,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     const feeRecordTwoUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('RECONCILED').build();
     const feeRecordThreeUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('RECONCILED').build();
     reportWithUpdatedFeeRecords.feeRecords = [feeRecordOneUpdated, feeRecordTwoUpdated, feeRecordThreeUpdated];
-    mockFindOneByOrFail.mockResolvedValue(reportWithUpdatedFeeRecords);
+    mockFindOneOrFail.mockResolvedValue(reportWithUpdatedFeeRecords);
 
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReconciledEvent(report, {
@@ -105,7 +105,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     });
 
     // Assert
-    expect(mockFindOneByOrFail).toHaveBeenCalledWith(UtilisationReportEntity, { id: report.id });
+    expect(mockFindOneOrFail).toHaveBeenCalledWith(UtilisationReportEntity, { where: { id: report.id }, relations: { feeRecords: true } });
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, report);
     expect(report).toEqual(
       expect.objectContaining<Partial<UtilisationReportEntity>>({
@@ -130,7 +130,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     const feeRecordTwoUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('RECONCILED').build();
     const feeRecordThreeUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('READY_TO_KEY').build();
     reportWithUpdatedFeeRecords.feeRecords = [feeRecordOneUpdated, feeRecordTwoUpdated, feeRecordThreeUpdated];
-    mockFindOneByOrFail.mockResolvedValue(reportWithUpdatedFeeRecords);
+    mockFindOneOrFail.mockResolvedValue(reportWithUpdatedFeeRecords);
 
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReconciledEvent(report, {
@@ -140,7 +140,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     });
 
     // Assert
-    expect(mockFindOneByOrFail).toHaveBeenCalledWith(UtilisationReportEntity, { id: report.id });
+    expect(mockFindOneOrFail).toHaveBeenCalledWith(UtilisationReportEntity, { where: { id: report.id }, relations: { feeRecords: true } });
     expect(mockSave).not.toHaveBeenCalled();
     expect(report).toEqual(
       expect.objectContaining<Partial<UtilisationReportEntity>>({
