@@ -1,5 +1,5 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { PaymentEntity } from '@ukef/dtfs2-common';
+import { Currency, PaymentEntity } from '@ukef/dtfs2-common';
 
 export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
   /**
@@ -21,6 +21,24 @@ export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
         },
       },
       relations: { feeRecords: { report: true } },
+    });
+  },
+
+  /**
+   * Checks if a payment entity exists for a report with the
+   * supplied id and matching the supplied currency
+   * @param reportId - The report id
+   * @param currency - The payment currency to search by
+   * @returns True if a matching payment entity exists, false otherwise
+   */
+  async existsByReportIdAndCurrency(reportId: number, currency: Currency): Promise<boolean> {
+    return await this.exists({
+      where: {
+        feeRecords: {
+          report: { id: reportId },
+        },
+        currency,
+      },
     });
   },
 });
