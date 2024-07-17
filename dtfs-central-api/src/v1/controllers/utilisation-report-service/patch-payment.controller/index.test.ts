@@ -11,6 +11,8 @@ import { PaymentRepo } from '../../../../repositories/payment-repo';
 
 jest.mock('../../../../helpers');
 
+console.error = jest.fn();
+
 describe('patch-payment.controller', () => {
   describe('patchPayment', () => {
     const reportId = 12;

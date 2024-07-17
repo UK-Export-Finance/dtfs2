@@ -10,6 +10,8 @@ import { PaymentRepo } from '../../../../repositories/payment-repo';
 jest.mock('../../../../repositories/utilisation-reports-repo');
 jest.mock('../../../../repositories/banks-repo');
 
+console.error = jest.fn();
+
 describe('get selected fee records details controller', () => {
   const REPORT_ID = 12;
   const getHttpMocks = (feeRecordIds: number[]) =>
