@@ -259,7 +259,7 @@ exports.update = async (_id, update, auditDetails, callback) => {
       const result = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(_id) } }, userUpdate, {
         returnDocument: 'after',
       });
-      const updatedUser = result.value;
+      const updatedUser = result;
       return callback(null, updatedUser);
     } catch (updateError) {
       return callback(updateError);

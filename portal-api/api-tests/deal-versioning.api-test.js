@@ -4,7 +4,7 @@ const databaseHelper = require('./database-helper');
 
 const app = require('../src/createApp');
 const testUserCache = require('./api-test-users');
-const { MAKER, ADMIN } = require('../src/v1/roles/roles');
+const { ADMIN } = require('../src/v1/roles/roles');
 
 const { as } = require('./api')(app);
 const { expectMongoId } = require('./expectMongoIds');
@@ -135,7 +135,6 @@ describe('GEF deal versioning', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole(MAKER).one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 

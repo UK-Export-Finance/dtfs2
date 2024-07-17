@@ -22,7 +22,6 @@ const MOCK_USER = {
 };
 
 describe('a user', () => {
-  let aNonAdmin;
   let anAdmin;
   let aMaker;
   let aChecker;
@@ -30,7 +29,6 @@ describe('a user', () => {
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     const testUsers = await testUserCache.initialise(app);
-    aNonAdmin = testUsers().withoutRole(ADMIN).one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 
@@ -51,7 +49,7 @@ describe('a user', () => {
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(aNonAdmin).remove(`/v1/users/${userToDeleteId}`),
+      makeRequest: () => as(anAdmin).remove(`/v1/users/${userToDeleteId}`),
       collectionName: MONGO_DB_COLLECTIONS.USERS,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => userToDeleteId,
