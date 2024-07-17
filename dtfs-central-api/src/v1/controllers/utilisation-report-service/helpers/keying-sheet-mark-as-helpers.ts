@@ -1,26 +1,22 @@
-import { UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { NotFoundError } from '../../../../errors';
-import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
-export const getUtilisationReportAndValidateSelectedFeeRecordsExist = async (
+export const getSelectedFeeRecordsAndUtilisationReportForKeyingDataMarkAs = async (
   reportId: number,
   selectedFeeRecordIds: number[],
-): Promise<UtilisationReportEntity> => {
-  const utilisationReport = await UtilisationReportRepo.findOne({
-    where: { id: Number(reportId) },
-    relations: {
-      feeRecords: true,
-    },
-  });
+): Promise<{ selectedFeeRecords: FeeRecordEntity[]; utilisationReport: UtilisationReportEntity }> => {
+  const selectedFeeRecords = await FeeRecordRepo.findByIdAndReportIdWithReport(selectedFeeRecordIds, reportId);
+
+  if (selectedFeeRecords.length !== selectedFeeRecordIds.length) {
+    throw new NotFoundError(`Could not find report with id ${reportId} and with fee records with ids ${selectedFeeRecordIds.join(', ')}`);
+  }
+
+  const utilisationReport = selectedFeeRecords[0]?.report;
 
   if (!utilisationReport) {
     throw new NotFoundError(`Could not find report with id ${reportId} and with fee records with ids ${selectedFeeRecordIds.join(', ')}`);
   }
 
-  const selectedFeeRecords = utilisationReport.feeRecords.filter((report) => selectedFeeRecordIds.includes(report.id));
-  if (selectedFeeRecords.length !== selectedFeeRecordIds.length) {
-    throw new NotFoundError(`Could not find report with id ${reportId} and with fee records with ids ${selectedFeeRecordIds.join(', ')}`);
-  }
-
-  return utilisationReport;
+  return { selectedFeeRecords, utilisationReport };
 };

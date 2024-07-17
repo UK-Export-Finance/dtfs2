@@ -1,12 +1,12 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 
 type MarkFeeRecordsAsReadyToKeyEventPayload = {
   requestSource: DbRequestSource;
   transactionEntityManager: EntityManager;
-  feeRecordIds: number[];
+  feeRecordsToMarkAsReadyToKey: FeeRecordEntity[];
 };
 
 export type UtilisationReportMarkFeeRecordsAsReadyToKeyEvent = BaseUtilisationReportEvent<
@@ -16,9 +16,8 @@ export type UtilisationReportMarkFeeRecordsAsReadyToKeyEvent = BaseUtilisationRe
 
 export const handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent = async (
   report: UtilisationReportEntity,
-  { requestSource, transactionEntityManager, feeRecordIds }: MarkFeeRecordsAsReadyToKeyEventPayload,
+  { requestSource, transactionEntityManager, feeRecordsToMarkAsReadyToKey }: MarkFeeRecordsAsReadyToKeyEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  const feeRecordsToMarkAsReadyToKey = report.feeRecords.filter(({ id }) => feeRecordIds.includes(id));
   const feeRecordStateMachines = feeRecordsToMarkAsReadyToKey.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
   await Promise.all(
     feeRecordStateMachines.map((stateMachine) =>

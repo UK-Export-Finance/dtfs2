@@ -37,8 +37,6 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
     const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('READY_TO_KEY').build();
-    const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('READY_TO_KEY').build();
-    report.feeRecords = [feeRecordOne, feeRecordTwo, feeRecordThree];
 
     const eventHandlerOne = aMockEventHandler();
     const eventHandlerTwo = aMockEventHandler();
@@ -58,7 +56,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReconciledEvent(report, {
       requestSource,
-      feeRecordIds: [feeRecordOne.id, feeRecordTwo.id],
+      feeRecordsToReconcile: [feeRecordOne, feeRecordTwo],
       transactionEntityManager: mockEntityManager,
     });
 
@@ -87,8 +85,6 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
     const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('READY_TO_KEY').build();
-    const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('RECONCILED').build();
-    report.feeRecords = [feeRecordOne, feeRecordTwo, feeRecordThree];
 
     const reportWithUpdatedFeeRecords = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     const feeRecordOneUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
@@ -100,7 +96,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReconciledEvent(report, {
       requestSource,
-      feeRecordIds: [feeRecordOne.id, feeRecordTwo.id],
+      feeRecordsToReconcile: [feeRecordOne, feeRecordTwo],
       transactionEntityManager: mockEntityManager,
     });
 
@@ -122,8 +118,6 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
     const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('READY_TO_KEY').build();
-    const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('READY_TO_KEY').build();
-    report.feeRecords = [feeRecordOne, feeRecordTwo, feeRecordThree];
 
     const reportWithUpdatedFeeRecords = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     const feeRecordOneUpdated = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
@@ -135,7 +129,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReconciledEvent(report, {
       requestSource,
-      feeRecordIds: [feeRecordOne.id, feeRecordTwo.id],
+      feeRecordsToReconcile: [feeRecordOne, feeRecordTwo],
       transactionEntityManager: mockEntityManager,
     });
 

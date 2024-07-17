@@ -57,7 +57,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(report, {
       requestSource,
-      feeRecordIds: [firstFeeRecord.id, secondFeeRecord.id],
+      feeRecordsToMarkAsReadyToKey: [firstFeeRecord, secondFeeRecord],
       transactionEntityManager: mockEntityManager,
     });
 
@@ -92,7 +92,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(report, {
       requestSource,
-      feeRecordIds: [firstFeeRecord.id, secondFeeRecord.id],
+      feeRecordsToMarkAsReadyToKey: [firstFeeRecord, secondFeeRecord],
       transactionEntityManager: mockEntityManager,
     });
 
@@ -119,7 +119,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(report, {
       requestSource,
-      feeRecordIds: [firstFeeRecord.id, secondFeeRecord.id],
+      feeRecordsToMarkAsReadyToKey: [firstFeeRecord, secondFeeRecord],
       transactionEntityManager: mockEntityManager,
     });
 

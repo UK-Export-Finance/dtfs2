@@ -1,12 +1,12 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 
 type MarkFeeRecordsAsReconciledEventPayload = {
   requestSource: DbRequestSource;
   transactionEntityManager: EntityManager;
-  feeRecordIds: number[];
+  feeRecordsToReconcile: FeeRecordEntity[];
 };
 
 export type UtilisationReportMarkFeeRecordsAsReconciledEvent = BaseUtilisationReportEvent<
@@ -16,9 +16,8 @@ export type UtilisationReportMarkFeeRecordsAsReconciledEvent = BaseUtilisationRe
 
 export const handleUtilisationReportMarkFeeRecordsAsReconciledEvent = async (
   report: UtilisationReportEntity,
-  { requestSource, transactionEntityManager, feeRecordIds }: MarkFeeRecordsAsReconciledEventPayload,
+  { requestSource, transactionEntityManager, feeRecordsToReconcile }: MarkFeeRecordsAsReconciledEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  const feeRecordsToReconcile = report.feeRecords.filter(({ id }) => feeRecordIds.includes(id));
   const feeRecordStateMachines = feeRecordsToReconcile.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
   await Promise.all(
     feeRecordStateMachines.map((stateMachine) =>

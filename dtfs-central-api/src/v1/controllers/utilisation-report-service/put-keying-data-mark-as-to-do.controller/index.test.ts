@@ -6,9 +6,9 @@ import { EntityManager } from 'typeorm';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
-import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { PutKeyingDataMarkToDoRequest, putKeyingDataMarkAsToDo } from '.';
 import { PutKeyingDataMarkAsPayload } from '../../../routes/middleware/payload-validation';
+import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
 jest.mock('../../../../helpers');
 jest.mock('../../../../services/state-machines/utilisation-report/utilisation-report.state-machine');
@@ -33,7 +33,7 @@ describe('put-keying-data-mark-as-to-do.controller', () => {
       feeRecordIds: [feeRecordId],
     });
 
-    const utilisationReportRepoFindOneSpy = jest.spyOn(UtilisationReportRepo, 'findOne');
+    const feeRecordRepoFindByIdAndReportIdSpy = jest.spyOn(FeeRecordRepo, 'findByIdAndReportIdWithReport');
 
     const mockEntityManager = {} as unknown as EntityManager;
     const mockHandleEvent = jest.fn();
@@ -49,8 +49,7 @@ describe('put-keying-data-mark-as-to-do.controller', () => {
       UtilisationReportStateMachine.forReport = mockForReport;
       const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
       const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(feeRecordId).withStatus('RECONCILED').build();
-      report.feeRecords = [feeRecord];
-      utilisationReportRepoFindOneSpy.mockResolvedValue(report);
+      feeRecordRepoFindByIdAndReportIdSpy.mockResolvedValue([feeRecord]);
     });
 
     afterEach(() => {
