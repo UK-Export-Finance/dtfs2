@@ -1,32 +1,46 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const escapeStringRegexp = require('escape-string-regexp');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const CONSTANTS = require('../../../../constants');
+import { ObjectId } from 'mongodb';
+import escapeStringRegexp from 'escape-string-regexp';
+import { Request, Response } from 'express';
+import { CustomExpressRequest, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import CONSTANTS from '../../../../constants';
+import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
-exports.getFacilitiesByDealId = async (req, res) => {
+export const getFacilitiesByDealId = async (req: Request, res: Response) => {
   const { id: dealId } = req.params;
 
   if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
   // NOTE: only GEF facilities have dealId.
   // this could be adapted so that we get the deal, check dealType,
   // then search for either dealId or dealId.
-  const facilities = await collection.find({ 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } }).toArray();
+  const facilities = await TfmFacilitiesRepo.findByDealId(dealId);
+
   return res.status(200).send(facilities);
 };
 
-exports.getAllFacilities = async (req, res) => {
-  const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+type GetAllFacilitiesRequest = CustomExpressRequest<{
+  query: {
+    searchString?: string;
+    sortBy?: {
+      order: string;
+      field: string;
+    };
+    pagesize?: string;
+    page?: string;
+  };
+}>;
+
+export const getAllFacilities = async (req: GetAllFacilitiesRequest, res: Response) => {
+  const facilitiesCollection = await TfmFacilitiesRepo.getCollection();
 
   const { searchString, sortBy, pagesize, page = 0 } = req.query;
 
   const pageNumber = Number(page);
+  const pagesizeNumber = pagesize ? parseInt(pagesize, 10) : 0;
 
-  const fieldsToSortOn = {};
+  const fieldsToSortOn: Record<string, number> = {};
   if (sortBy) {
     fieldsToSortOn[sortBy.field] = sortBy.order === CONSTANTS.FACILITIES.SORT_BY.ASCENDING ? 1 : -1;
   }
@@ -155,7 +169,7 @@ exports.getAllFacilities = async (req, res) => {
       {
         $facet: {
           count: [{ $count: 'total' }],
-          facilities: [{ $skip: pageNumber * (pagesize ?? 0) }, ...(pagesize ? [{ $limit: parseInt(pagesize, 10) }] : [])],
+          facilities: [{ $skip: pageNumber * pagesizeNumber }, ...(pagesize ? [{ $limit: pagesizeNumber }] : [])],
         },
       },
       { $unwind: '$count' },
@@ -176,16 +190,16 @@ exports.getAllFacilities = async (req, res) => {
     };
     return res.status(200).send({ facilities: [], pagination });
   }
-  const { count, facilities } = doc[0];
+  const { count, facilities } = doc[0] as { count: number; facilities: object[] };
 
   const pagination = {
     totalItems: count,
     currentPage: pageNumber,
-    totalPages: pagesize ? Math.ceil(count / pagesize) : 1,
+    totalPages: pagesize ? Math.ceil(count / pagesizeNumber) : 1,
   };
 
   if (facilities) {
-    res.status(200).send({ facilities, pagination });
+    return res.status(200).send({ facilities, pagination });
   }
 
   return res.status(404).send();

@@ -1,20 +1,11 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
-const { findOneFacility } = require('./tfm-get-facility.controller');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+import { Response } from 'express';
+import { ObjectId } from 'mongodb';
+import { flatten } from 'mongo-dot-notation';
+import { AuditDetails, CustomExpressRequest, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
-const withoutId = (obj) => {
-  const cleanedObject = { ...obj };
-  delete cleanedObject._id;
-  return cleanedObject;
-};
-
-const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
-
+const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }: { facilityId: string | ObjectId; tfmUpdate: object; auditDetails: AuditDetails }) => {
   const update = {
     tfm: {
       ...tfmUpdate,
@@ -22,8 +13,7 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
-  const findAndUpdateResponse = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(facilityId) } }, $.flatten(withoutId(update)), {
-    returnNewDocument: true,
+  const findAndUpdateResponse = await TfmFacilitiesRepo.findOneByIdAndUpdate(facilityId, flatten(update), {
     returnDocument: 'after',
     upsert: true,
   });
@@ -33,13 +23,20 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
   return updatedFacility;
 };
 
-exports.updateFacilityPut = async (req, res) => {
+type UpdateFacilityPutRequest = CustomExpressRequest<{
+  reqBody: {
+    tfmUpdate: object;
+    auditDetails: AuditDetails;
+  };
+}>;
+
+export const updateFacilityPut = async (req: UpdateFacilityPutRequest, res: Response) => {
   const facilityId = req.params.id;
   if (!ObjectId.isValid(facilityId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
   }
 
-  const facility = await findOneFacility(facilityId);
+  const facility = await TfmFacilitiesRepo.findOneById(facilityId);
 
   if (!facility) {
     return res.status(404).send({ status: 404, message: 'Facility not found' });

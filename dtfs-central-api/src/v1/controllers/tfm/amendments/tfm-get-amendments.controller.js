@@ -1,6 +1,5 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+const { TfmFacilitiesRepo } = require('../../../../repositories/tfm-facilities-repo');
 const CONSTANTS = require('../../../../constants');
 
 /* returns an array of object containing all amendments in progress
@@ -13,7 +12,7 @@ const CONSTANTS = require('../../../../constants');
  */
 const findAllAmendmentsByStatus = async (status) => {
   try {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+    const collection = await TfmFacilitiesRepo.getCollection();
     const amendment = await collection
       .aggregate([
         { $project: { _id: false, amendments: '$amendments' } },
@@ -51,7 +50,7 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
     if (!ObjectId.isValid(facilityId)) {
       throw new Error('Invalid facility Id');
     }
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+    const collection = await TfmFacilitiesRepo.getCollection();
     const amendment = await collection
       .aggregate([
         { $match: { _id: { $eq: ObjectId(facilityId) } } },
@@ -92,7 +91,7 @@ const findAmendmentById = async (facilityId, amendmentId) => {
   }
 
   try {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+    const collection = await TfmFacilitiesRepo.getCollection();
     const amendment = await collection
       .aggregate([
         { $match: { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } } },
@@ -142,7 +141,7 @@ const findAmendmentsByDealId = async (dealId) => {
   }
 
   try {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+    const collection = await TfmFacilitiesRepo.getCollection();
     const amendment = await collection
       .aggregate([
         { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
@@ -190,7 +189,7 @@ const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
   }
 
   try {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+    const collection = await TfmFacilitiesRepo.getCollection();
     const amendment = await collection
       .aggregate([
         { $match: { _id: { $eq: ObjectId(facilityId) } } },
@@ -226,7 +225,7 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
     return null;
   }
   try {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+    const collection = await TfmFacilitiesRepo.getCollection();
     const amendment = await collection
       .aggregate([
         { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
@@ -272,7 +271,7 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
   const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
 
   try {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+    const collection = await TfmFacilitiesRepo.getCollection();
     const amendment = await collection
       .aggregate([
         { $match: { _id: { $eq: ObjectId(facilityId) } } },
@@ -344,7 +343,7 @@ const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
   const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
 
   try {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+    const collection = await TfmFacilitiesRepo.getCollection();
     const amendment = await collection
       .aggregate([
         { $match: { _id: { $eq: ObjectId(facilityId) } } },
@@ -405,7 +404,7 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
   const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
 
   try {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+    const collection = await TfmFacilitiesRepo.getCollection();
     const amendment = await collection
       .aggregate([
         { $match: { _id: { $eq: ObjectId(facilityId) } } },
@@ -441,7 +440,7 @@ const findLatestCompletedAmendmentByDealId = async (dealId) => {
   }
 
   try {
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+    const collection = await TfmFacilitiesRepo.getCollection();
     const amendment = await collection
       .aggregate([
         { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },

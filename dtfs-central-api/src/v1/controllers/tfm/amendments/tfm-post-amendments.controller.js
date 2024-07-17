@@ -1,12 +1,11 @@
 const { InvalidAuditDetailsError, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const { getUnixTime } = require('date-fns');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
 const { findAmendmentByStatusAndFacilityId, findLatestCompletedAmendmentByFacilityIdVersion } = require('./tfm-get-amendments.controller');
 const { findOneFacility } = require('../facility/tfm-get-facility.controller');
+const { TfmFacilitiesRepo } = require('../../../../repositories/tfm-facilities-repo');
 
 exports.postTfmAmendment = async (req, res) => {
   const { facilityId } = req.params;
@@ -55,7 +54,7 @@ exports.postTfmAmendment = async (req, res) => {
   if (latestCompletedAmendmentVersion) {
     amendment.version = latestCompletedAmendmentVersion + 1;
   }
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+  const collection = await TfmFacilitiesRepo.getCollection();
   await collection.updateOne(
     { _id: { $eq: ObjectId(facilityId) } },
     {
