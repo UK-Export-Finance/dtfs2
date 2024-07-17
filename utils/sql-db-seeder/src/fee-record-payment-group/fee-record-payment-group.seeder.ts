@@ -65,8 +65,7 @@ export class FeeRecordPaymentGroupSeeder {
   }
 
   private async saveFacilityUtilisationData(dataSource: DataSource): Promise<void> {
-    const facilityIdsWithUtilisation = this.feeRecords.map(({ facilityId, facilityUtilisation }) => ({ facilityId, facilityUtilisation }));
-    for (const { facilityId, facilityUtilisation } of facilityIdsWithUtilisation) {
+    for (const { facilityId, facilityUtilisation, report } of this.feeRecords) {
       const facilityUtilisationDataExists = await dataSource.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityId });
       if (facilityUtilisationDataExists) {
         // eslint-disable-next-line no-continue
@@ -74,6 +73,7 @@ export class FeeRecordPaymentGroupSeeder {
       }
       const facilityUtilisationData = new FacilityUtilisationDataEntity();
       facilityUtilisationData.id = facilityId;
+      facilityUtilisationData.reportPeriod = report.reportPeriod;
       facilityUtilisationData.utilisation = facilityUtilisation * faker.number.float({ min: 0.8, max: 1.2 });
       facilityUtilisationData.updateLastUpdatedBy({ platform: 'SYSTEM' });
       await dataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);

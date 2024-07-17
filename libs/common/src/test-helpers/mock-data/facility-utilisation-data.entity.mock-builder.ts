@@ -1,4 +1,5 @@
 import { FeeRecordEntity, FacilityUtilisationDataEntity } from '../../sql-db-entities';
+import { ReportPeriod } from '../../types';
 
 export class FacilityUtilisationDataEntityMockBuilder {
   private readonly data: FacilityUtilisationDataEntity;
@@ -11,6 +12,10 @@ export class FacilityUtilisationDataEntityMockBuilder {
     const facility = new FacilityUtilisationDataEntity();
     facility.id = id;
     facility.utilisation = 0;
+    facility.reportPeriod = {
+      start: { month: 1, year: 2024 },
+      end: { month: 1, year: 2024 },
+    };
     facility.updateLastUpdatedBy({ platform: 'SYSTEM' });
     return new FacilityUtilisationDataEntityMockBuilder(facility);
   }
@@ -22,6 +27,11 @@ export class FacilityUtilisationDataEntityMockBuilder {
 
   public withFeeRecords(feeRecords: FeeRecordEntity[]): FacilityUtilisationDataEntityMockBuilder {
     this.data.feeRecords = feeRecords;
+    return this;
+  }
+
+  public withReportPeriod(reportPeriod: ReportPeriod): FacilityUtilisationDataEntityMockBuilder {
+    this.data.reportPeriod = reportPeriod;
     return this;
   }
 
