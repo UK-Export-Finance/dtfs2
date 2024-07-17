@@ -20,7 +20,7 @@ export const TfmFacilitySchema = z.object({
     type: z.string(),
     hasBeenIssued: z.boolean(),
     name: z.string(),
-    shouldCoverStartOnSubmission: z.boolean(), // boolean or string?
+    shouldCoverStartOnSubmission: z.boolean(),
     coverStartDate: TfmFacilityDateFieldSchema,
     coverEndDate: TfmFacilityDateFieldSchema,
     issueDate: TfmFacilityDateFieldSchema,

@@ -32,7 +32,6 @@ exports.updateTfmAmendment = async (req, res) => {
     return res.status(404).send({ status: 404, message: 'The amendment does not exist' });
   }
 
-  const collection = await TfmFacilitiesRepo.getCollection();
   const protectedProperties = ['_id', 'amendmentId', 'facilityId', 'dealId', 'createdAt', 'updatedAt', 'version'];
 
   for (const property of protectedProperties) {
@@ -41,10 +40,12 @@ exports.updateTfmAmendment = async (req, res) => {
 
   const update = { ...payload, updatedAt: getUnixTime(new Date()) };
 
-  await collection.updateOne(
-    { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } },
-    $.flatten({ 'amendments.$': update, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }),
-  );
+  await TfmFacilitiesRepo.custom(async (collection) => {
+    await collection.updateOne(
+      { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } },
+      $.flatten({ 'amendments.$': update, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }),
+    );
+  });
 
   const updatedAmendment = await findAmendmentById(facilityId, amendmentId);
   return res.status(200).json({ ...updatedAmendment });

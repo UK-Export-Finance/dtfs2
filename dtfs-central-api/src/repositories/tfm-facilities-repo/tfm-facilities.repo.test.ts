@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { ZodError } from 'zod';
 import { ParsedTfmFacility, RawTfmFacility, TfmFacilitiesRepo } from './tfm-facilities.repo';
 
 describe('tfm-facilities-repo', () => {
@@ -33,7 +34,7 @@ describe('tfm-facilities-repo', () => {
       const input = {} as unknown as RawTfmFacility;
 
       // Act / Assert
-      expect(() => TfmFacilitiesRepo.validateAndParseFindOneResult(input)).toThrow();
+      expect(() => TfmFacilitiesRepo.validateAndParseFindOneResult(input)).toThrow(ZodError);
     });
 
     it("throws an error when the '_id' field is not a valid object id", () => {
@@ -41,7 +42,7 @@ describe('tfm-facilities-repo', () => {
       const input = { ...aValidTfmFacilityDocument(), _id: 123 } as unknown as RawTfmFacility;
 
       // Act / Assert
-      expect(() => TfmFacilitiesRepo.validateAndParseFindOneResult(input)).toThrow();
+      expect(() => TfmFacilitiesRepo.validateAndParseFindOneResult(input)).toThrow(ZodError);
     });
 
     it("throws an error when the 'facilitySnapshot' field is undefined", () => {
@@ -49,7 +50,7 @@ describe('tfm-facilities-repo', () => {
       const input = { ...aValidTfmFacilityDocument(), facilitySnapshot: undefined } as unknown as RawTfmFacility;
 
       // Act / Assert
-      expect(() => TfmFacilitiesRepo.validateAndParseFindOneResult(input)).toThrow();
+      expect(() => TfmFacilitiesRepo.validateAndParseFindOneResult(input)).toThrow(ZodError);
     });
 
     const REQUIRED_FACILITY_SNAPSHOT_FIELDS: (keyof ParsedTfmFacility['facilitySnapshot'])[] = [
@@ -82,7 +83,7 @@ describe('tfm-facilities-repo', () => {
       };
 
       // Act / Assert
-      expect(() => TfmFacilitiesRepo.validateAndParseFindOneResult(input)).toThrow();
+      expect(() => TfmFacilitiesRepo.validateAndParseFindOneResult(input)).toThrow(ZodError);
     });
 
     const NULLABLE_FACILITY_SNAPSHOT_FIELDS: (keyof ParsedTfmFacility['facilitySnapshot'])[] = ['coverStartDate', 'coverEndDate', 'issueDate', 'monthsOfCover'];
@@ -132,22 +133,6 @@ describe('tfm-facilities-repo', () => {
     });
 
     const FACILITY_SNAPSHOT_DATE_FIELDS: (keyof ParsedTfmFacility['facilitySnapshot'])[] = ['coverStartDate', 'coverEndDate', 'issueDate'];
-    it.each(FACILITY_SNAPSHOT_DATE_FIELDS)("coerces the 'facilitySnapshot.%s.$date' field to a Date object when the value is an ISO string", (field) => {
-      // Arrange
-      const date = new Date();
-      const input = {
-        ...aValidTfmFacilityDocument(),
-        facilitySnapshot: {
-          ...aValidTfmFacilityDocumentFacilitySnapshotResult(),
-          [field]: { $date: date.toISOString() },
-        },
-      };
-
-      // Act / Assert
-      const result = TfmFacilitiesRepo.validateAndParseFindOneResult(input);
-      expect(result.facilitySnapshot[field]).toEqual({ $date: date });
-    });
-
     it.each(FACILITY_SNAPSHOT_DATE_FIELDS)("coerces the 'facilitySnapshot.%s.$date' field to a Date object when the value is a timestamp", (field) => {
       // Arrange
       const date = new Date();

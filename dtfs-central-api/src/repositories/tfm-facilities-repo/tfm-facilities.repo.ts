@@ -8,11 +8,7 @@ export type RawTfmFacility = WithId<object>;
 export type ParsedTfmFacility = z.infer<typeof TfmFacilitySchema>;
 
 export class TfmFacilitiesRepo {
-  /**
-   * Gets the TFM facilities collection
-   * @returns The TFM facilities collection
-   */
-  public static async getCollection(): Promise<Collection<WithoutId<RawTfmFacility>>> {
+  private static async getCollection(): Promise<Collection<WithoutId<RawTfmFacility>>> {
     return await mongoDbClient.getCollection('tfm-facilities');
   }
 
@@ -20,7 +16,7 @@ export class TfmFacilitiesRepo {
    * Validates and parses the result of a mongo `findOne` operation
    * @param result - The result of any `findOne` operation
    * @returns The parsed result
-   * @throws If the result does not match the TFM facilities schema
+   * @throws {z.ZodError} If the result does not match the TFM facilities schema
    */
   public static validateAndParseFindOneResult(result: RawTfmFacility): ParsedTfmFacility {
     return TfmFacilitySchema.parse(result);
@@ -30,7 +26,7 @@ export class TfmFacilitiesRepo {
    * Validates and parses the result of a mongo `find` operation
    * @param result - The result of any `find` operation
    * @returns The parsed results
-   * @throws If the each item in the results array does not match the TFM facilities schema
+   * @throws {z.ZodError} If any item in the results array does not match the TFM facilities schema
    */
   public static validateAndParseFindResult(results: RawTfmFacility[]): ParsedTfmFacility[] {
     return results.map((result) => this.validateAndParseFindOneResult(result));
@@ -76,5 +72,16 @@ export class TfmFacilitiesRepo {
   public static async findByIds(ids: (string | ObjectId)[]): Promise<RawTfmFacility[]> {
     const collection = await this.getCollection();
     return await collection.find({ _id: { $in: ids } }).toArray();
+  }
+
+  /**
+   * Method to perform a custom operation on the TFM
+   * facilities collection
+   * @param operation - The database operation to perform
+   * @returns The result of the supplied operation
+   */
+  public static async custom<TReturn>(operation: (collection: Collection<WithoutId<RawTfmFacility>>) => TReturn | Promise<TReturn>): Promise<TReturn> {
+    const collection = await this.getCollection();
+    return await operation(collection);
   }
 }
