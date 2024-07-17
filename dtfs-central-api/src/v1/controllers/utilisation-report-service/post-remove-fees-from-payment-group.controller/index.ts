@@ -51,6 +51,7 @@ export const postRemoveFeesFromPaymentGroup = async (req: PostRemoveFeesFromPaym
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = `Failed to remove fees from payment with id ${paymentId}`;
+    console.error(errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }

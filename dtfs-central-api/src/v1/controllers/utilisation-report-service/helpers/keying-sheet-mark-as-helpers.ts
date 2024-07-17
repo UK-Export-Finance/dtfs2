@@ -9,13 +9,13 @@ export const getSelectedFeeRecordsAndUtilisationReportForKeyingDataMarkAs = asyn
   const selectedFeeRecords = await FeeRecordRepo.findByIdAndReportIdWithReport(selectedFeeRecordIds, reportId);
 
   if (selectedFeeRecords.length !== selectedFeeRecordIds.length) {
-    throw new NotFoundError(`Could not find report with id ${reportId} and with fee records with ids ${selectedFeeRecordIds.join(', ')}`);
+    throw new NotFoundError(`Could not find report with id ${reportId} with fee records with ids ${selectedFeeRecordIds.join(', ')}`);
   }
 
   const utilisationReport = selectedFeeRecords[0]?.report;
 
   if (!utilisationReport) {
-    throw new NotFoundError(`Could not find report with id ${reportId} and with fee records with ids ${selectedFeeRecordIds.join(', ')}`);
+    throw new Error(`The found fee record ids do not have a defined report`);
   }
 
   return { selectedFeeRecords, utilisationReport };

@@ -13,6 +13,8 @@ import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 jest.mock('../../../../helpers');
 jest.mock('../../../../services/state-machines/utilisation-report/utilisation-report.state-machine');
 
+console.error = jest.fn();
+
 class TestApiError extends ApiError {
   constructor(status?: number, message?: string) {
     super({ status: status ?? 500, message: message ?? '' });
