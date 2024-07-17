@@ -17,6 +17,7 @@ on:
       - "external-api/**"
       - "azure-functions/acbs-function/**"
       - "libs/common/**"
+      - ".github/**"
 
 env:
   environment: feature
