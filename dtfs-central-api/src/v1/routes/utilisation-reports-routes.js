@@ -286,68 +286,6 @@ utilisationReportsRouter
 
 /**
  * @openapi
- * /utilisation-reports/:reportId/keying-data/mark-as-done:
- *   put:
- *     summary: Put keying sheet data status to DONE for multiple fee records
- *     tags: [Utilisation Report]
- *     description: Mark multiple fee records within a keying sheet as keying sheet row status DONE
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               feeRecordIds:
- *                 type: array
- *                 items:
- *                   type: number
- *               user:
- *                 $ref: '#/definitions/TFMUser'
- *     responses:
- *       200:
- *         description: OK
- *       400:
- *         description: Bad request
- *       500:
- *         description: Internal Server Error
- */
-utilisationReportsRouter
-  .route('/:reportId/keying-data/mark-as-done')
-  .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePutKeyingDataMarkAsPayload, putKeyingDataMarkAsDone);
-
-/**
- * @openapi
- * /utilisation-reports/:reportId/keying-data/mark-as-to-do:
- *   put:
- *     summary: Put keying sheet data status to TO DO for multiple fee records
- *     tags: [Utilisation Report]
- *     description: Mark multiple fee records within a keying sheet as keying sheet row status TO DO
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               feeRecordIds:
- *                 type: array
- *                 items:
- *                   type: number
- *               user:
- *                 $ref: '#/definitions/TFMUser'
- *     responses:
- *       200:
- *         description: OK
- *       400:
- *         description: Bad request
- *       500:
- *         description: Internal Server Error
- */
-utilisationReportsRouter
-  .route('/:reportId/keying-data/mark-as-to-do')
-  .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePutKeyingDataMarkAsPayload, putKeyingDataMarkAsToDo);
-
-/**
- * @openapi
  * /utilisation-reports/:reportId/keying-data:
  *   post:
  *     summary: Generate keying data for a utilisation report
@@ -447,7 +385,7 @@ utilisationReportsRouter
 
 /**
  * @openapi
- * /utilisation-reports/:reportId/keying-data/mark-as-done:
+ * /utilisation-reports/:reportId/keying-data/mark-as-to-do:
  *   put:
  *     summary: Put keying sheet data status to TO DO for multiple fee records
  *     tags: [Utilisation Report]
