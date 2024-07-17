@@ -34,22 +34,22 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
   it('calls the fee record state machine with the MARK_AS_READY_TO_KEY event for every fee record to reconcile', async () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
-    const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('RECONCILED').build();
-    const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('RECONCILED').build();
-    report.feeRecords = [feeRecordOne, feeRecordTwo, feeRecordThree];
+    const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
+    const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('RECONCILED').build();
+    const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('RECONCILED').build();
+    report.feeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord];
 
-    const eventHandlerOne = aMockEventHandler();
-    const eventHandlerTwo = aMockEventHandler();
-    const feeRecordStateMachineOne = aMockFeeRecordStateMachine(eventHandlerOne);
-    const feeRecordStateMachineTwo = aMockFeeRecordStateMachine(eventHandlerTwo);
+    const firstEventHandler = aMockEventHandler();
+    const secondEventHandler = aMockEventHandler();
+    const firstFeeRecordStateMachine = aMockFeeRecordStateMachine(firstEventHandler);
+    const secondFeeRecordStateMachineTwo = aMockFeeRecordStateMachine(secondEventHandler);
 
     const feeRecordStateMachineConstructorSpy = jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => {
       if (feeRecord.id === 1) {
-        return feeRecordStateMachineOne;
+        return firstFeeRecordStateMachine;
       }
       if (feeRecord.id === 2) {
-        return feeRecordStateMachineTwo;
+        return secondFeeRecordStateMachineTwo;
       }
       return aMockFeeRecordStateMachine(aMockEventHandler());
     });
@@ -57,22 +57,22 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(report, {
       requestSource,
-      feeRecordIds: [feeRecordOne.id, feeRecordTwo.id],
+      feeRecordIds: [firstFeeRecord.id, secondFeeRecord.id],
       transactionEntityManager: mockEntityManager,
     });
 
     // Assert
     expect(feeRecordStateMachineConstructorSpy).toHaveBeenCalledTimes(2);
-    expect(eventHandlerOne).toHaveBeenCalledTimes(1);
-    expect(eventHandlerOne).toHaveBeenCalledWith({
+    expect(firstEventHandler).toHaveBeenCalledTimes(1);
+    expect(firstEventHandler).toHaveBeenCalledWith({
       type: 'MARK_AS_READY_TO_KEY',
       payload: {
         transactionEntityManager: mockEntityManager,
         requestSource,
       },
     });
-    expect(eventHandlerTwo).toHaveBeenCalledTimes(1);
-    expect(eventHandlerTwo).toHaveBeenCalledWith({
+    expect(secondEventHandler).toHaveBeenCalledTimes(1);
+    expect(secondEventHandler).toHaveBeenCalledWith({
       type: 'MARK_AS_READY_TO_KEY',
       payload: {
         transactionEntityManager: mockEntityManager,
@@ -84,15 +84,15 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
   it('updates the report status to RECONCILIATION_IN_PROGRESS if report status is RECONCILIATION_COMPLETED', async () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_COMPLETED').build();
-    const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
-    const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('RECONCILED').build();
-    const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('RECONCILED').build();
-    report.feeRecords = [feeRecordOne, feeRecordTwo, feeRecordThree];
+    const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
+    const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('RECONCILED').build();
+    const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('RECONCILED').build();
+    report.feeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord];
 
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(report, {
       requestSource,
-      feeRecordIds: [feeRecordOne.id, feeRecordTwo.id],
+      feeRecordIds: [firstFeeRecord.id, secondFeeRecord.id],
       transactionEntityManager: mockEntityManager,
     });
 
@@ -111,15 +111,15 @@ describe('handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent', () => {
   it('does not update the report status if the status is already RECONCILIATION_IN_PROGRESS', async () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
-    const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('RECONCILED').build();
-    const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('RECONCILED').build();
-    report.feeRecords = [feeRecordOne, feeRecordTwo, feeRecordThree];
+    const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
+    const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('RECONCILED').build();
+    const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('RECONCILED').build();
+    report.feeRecords = [firstFeeRecord, secondFeeRecord, thirdFeeRecord];
 
     // Act
     await handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(report, {
       requestSource,
-      feeRecordIds: [feeRecordOne.id, feeRecordTwo.id],
+      feeRecordIds: [firstFeeRecord.id, secondFeeRecord.id],
       transactionEntityManager: mockEntityManager,
     });
 
