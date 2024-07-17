@@ -1,5 +1,13 @@
 import { Response } from 'supertest';
-import { Bank, FeeRecordEntityMockBuilder, SelectedFeeRecordDetails, SelectedFeeRecordsDetails, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  Bank,
+  Currency,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  SelectedFeeRecordDetails,
+  SelectedFeeRecordsDetails,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
@@ -25,23 +33,34 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
     .withReportPeriod(reportPeriod)
     .withBankId(bankId)
     .build();
-  const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-    .withId(45)
-    .withFacilityId('000123')
-    .withExporter('Test company')
-    .withFeesPaidToUkefForThePeriod(100)
-    .withFeesPaidToUkefForThePeriodCurrency('GBP')
-    .withPaymentCurrency('GBP')
-    .build();
-  const anotherFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+
+  const aPaymentInGBP = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(90).withId(123).build();
+  const aPaymentInUSD = PaymentEntityMockBuilder.forCurrency('USD').withAmount(100).withId(124).build();
+
+  const aFeeRecordInGBP = aFeeRecordWithPaymentCurrency(45, 'GBP');
+  const aFeeRecordInGBPWithAPaymentAttached = FeeRecordEntityMockBuilder.forReport(utilisationReport)
     .withId(46)
     .withFacilityId('000123')
     .withExporter('Test company')
     .withFeesPaidToUkefForThePeriod(100)
     .withFeesPaidToUkefForThePeriodCurrency('GBP')
     .withPaymentCurrency('GBP')
+    .withPayments([aPaymentInGBP])
+    .withStatus('DOES_NOT_MATCH')
     .build();
-  utilisationReport.feeRecords = [feeRecord, anotherFeeRecord];
+  const aFeeRecordInUSD = aFeeRecordWithPaymentCurrency(47, 'USD');
+  const aFeeRecordInUSDWithAPaymentAttached = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+    .withId(48)
+    .withFacilityId('000123')
+    .withExporter('Test company')
+    .withFeesPaidToUkefForThePeriod(75)
+    .withFeesPaidToUkefForThePeriodCurrency('GBP')
+    .withPaymentCurrency('USD')
+    .withPayments([aPaymentInUSD])
+    .withStatus('MATCH')
+    .build();
+
+  utilisationReport.feeRecords = [aFeeRecordInGBP, aFeeRecordInGBPWithAPaymentAttached, aFeeRecordInUSD, aFeeRecordInUSDWithAPaymentAttached];
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
@@ -93,7 +112,46 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
           },
         ],
         payments: [],
+        canAddToExistingPayment: true,
+      });
+    });
+
+    it("gets selected fee record details with canAddToExistingPayment set to false when a payment exists in the same currency but has no fee records with the 'does not match' status", async () => {
+      // Act
+      const response: CustomResponse = await testApi.get(getUrl(reportId), { feeRecordIds: [47] });
+
+      // Assert
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual<SelectedFeeRecordsDetails>({
+        reportPeriod,
+        bank: {
+          name: bank.name,
+        },
+        totalReportedPayments: { currency: 'USD', amount: 100 },
+        feeRecords: [
+          {
+            id: 47,
+            facilityId: '000123',
+            exporter: 'Test company',
+            reportedFee: { currency: 'GBP', amount: 100 },
+            reportedPayments: { currency: 'USD', amount: 100 },
+          },
+        ],
+        payments: [],
+        canAddToExistingPayment: false,
       });
     });
   });
+
+  function aFeeRecordWithPaymentCurrency(id: number, paymentCurrency: Currency) {
+    return FeeRecordEntityMockBuilder.forReport(utilisationReport)
+      .withId(id)
+      .withFacilityId('000123')
+      .withExporter('Test company')
+      .withFeesPaidToUkefForThePeriod(100)
+      .withFeesPaidToUkefForThePeriodCurrency('GBP')
+      .withPaymentCurrency(paymentCurrency)
+      .withStatus('TO_DO')
+      .build();
+  }
 });

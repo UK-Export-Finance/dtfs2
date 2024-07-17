@@ -1,5 +1,6 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { Currency, PaymentEntity } from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS, PaymentEntity } from '@ukef/dtfs2-common';
+import { In } from 'typeorm';
 
 export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
   /**
@@ -36,6 +37,7 @@ export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
       where: {
         feeRecords: {
           report: { id: reportId },
+          status: In([FEE_RECORD_STATUS.DOES_NOT_MATCH]),
         },
         currency,
       },
