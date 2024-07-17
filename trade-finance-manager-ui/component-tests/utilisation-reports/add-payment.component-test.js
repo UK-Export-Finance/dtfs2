@@ -378,7 +378,7 @@ describe(page, () => {
       {
         feeRecordId: 8,
         facilityId: '000123',
-        exporter: 'bcdef',
+        exporter: 'abcdef',
         reportedFees: { formattedCurrencyAndAmount: 'EUR 0.01', dataSortValue: 0 },
         reportedPayments: { formattedCurrencyAndAmount: 'GBP 8', dataSortValue: 0 },
       },
