@@ -192,7 +192,7 @@ describe('get selected fee record details controller helpers', () => {
   describe('canFeeRecordsBeAddedToExistingPayment', () => {
     it('returns true when payment exists on report with matching reported currency', async () => {
       // Arrange
-      jest.spyOn(PaymentRepo, 'existsByReportIdAndCurrency').mockResolvedValue(true);
+      jest.spyOn(PaymentRepo, 'existsByReportIdCurrencyWithUnmatchedFeeRecords').mockResolvedValue(true);
 
       // Act
       const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecord()]);
@@ -203,7 +203,7 @@ describe('get selected fee record details controller helpers', () => {
 
     it('returns false when no matching payment exists', async () => {
       // Arrange
-      jest.spyOn(PaymentRepo, 'existsByReportIdAndCurrency').mockResolvedValue(false);
+      jest.spyOn(PaymentRepo, 'existsByReportIdCurrencyWithUnmatchedFeeRecords').mockResolvedValue(false);
 
       // Act
       const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecord()]);
@@ -214,7 +214,7 @@ describe('get selected fee record details controller helpers', () => {
 
     it('returns false when matching payment exists but fee record status is not TO_DO', async () => {
       // Arrange
-      jest.spyOn(PaymentRepo, 'existsByReportIdAndCurrency').mockResolvedValue(true);
+      jest.spyOn(PaymentRepo, 'existsByReportIdCurrencyWithUnmatchedFeeRecords').mockResolvedValue(true);
       const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withStatus('READY_TO_KEY').build();
 

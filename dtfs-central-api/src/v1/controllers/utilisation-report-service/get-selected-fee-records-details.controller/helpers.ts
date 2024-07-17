@@ -40,7 +40,7 @@ export const canFeeRecordsBeAddedToExistingPayment = async (reportId: string, fe
   const allFeeRecordsHaveStatusToDo = feeRecords.every((record) => record.status === 'TO_DO');
 
   const reportedPaymentCurrency = feeRecords[0].paymentCurrency;
-  const doesPaymentInCurrencyExist = await PaymentRepo.existsByReportIdAndCurrency(Number(reportId), reportedPaymentCurrency);
+  const doesPaymentInCurrencyExist = await PaymentRepo.existsByReportIdCurrencyWithUnmatchedFeeRecords(Number(reportId), reportedPaymentCurrency);
 
   return allFeeRecordsHaveStatusToDo && doesPaymentInCurrencyExist;
 };

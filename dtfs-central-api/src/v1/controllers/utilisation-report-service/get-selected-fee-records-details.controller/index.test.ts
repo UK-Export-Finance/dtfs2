@@ -118,7 +118,7 @@ describe('get selected fee records details controller', () => {
     reportEntity.feeRecords = [feeRecordOne, feeRecordTwo];
 
     findReportSpy.mockResolvedValue(reportEntity);
-    jest.spyOn(PaymentRepo, 'existsByReportIdAndCurrency').mockResolvedValue(true);
+    jest.spyOn(PaymentRepo, 'existsByReportIdCurrencyWithUnmatchedFeeRecords').mockResolvedValue(true);
     jest.mocked(getBankNameById).mockResolvedValue('Test Bank');
 
     // Act
