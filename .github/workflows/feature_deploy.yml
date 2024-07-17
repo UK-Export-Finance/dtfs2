@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - feat/FN-3202/use-feature-github-env-for-feature-deploy
     paths:
       - "portal/**"
       - "portal-api/**"
@@ -19,11 +20,11 @@ on:
 
 env:
   environment: feature
-  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+  credentials: ${{ secrets.AZURE_CREDENTIALS }}
   from: latest
-  acr: ${{ secrets.ACR_REGISTRY_FEATURE }}
-  acr_username: ${{ secrets.ACR_USERNAME_FEATURE }}
-  acr_password: ${{ secrets.ACR_PASSWORD_FEATURE }}
+  acr: ${{ secrets.ACR_REGISTRY }}
+  acr_username: ${{ secrets.ACR_USERNAME }}
+  acr_password: ${{ secrets.ACR_PASSWORD }}
   # TODO: FN-1077 NOTE: While we are using the dev GH environment, we can't use the RESOURCE_GROUP secret
   # (It doesn't need to be a secret anyway.) So we define our resource group in an environment variable
   # here and use that. The Azure region is the same so I've left that as using the secret.
@@ -43,7 +44,8 @@ jobs:
     needs: deployment-environment
     name: Run SQL Migrations
     runs-on: [self-hosted, linux, deployment]
-    environment: dev
+    environment:
+      name: ${{ needs.deployment-environment.outputs.environment }}
     env:
       SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
       SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
@@ -75,9 +77,9 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
     # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much.
     # Restore the parameterised version throughout!
-    environment: dev
-    # environment:
-    #   name: ${{ needs.deployment-environment.outputs.environment }}
+    # environment: feature
+    environment:
+      name: ${{ needs.deployment-environment.outputs.environment }}
     strategy:
       max-parallel: 1
       matrix:
@@ -158,9 +160,9 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
     # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much.
     # Restore the parameterised version throughout!
-    environment: dev
-    # environment:
-    #   name: ${{ needs.deployment-environment.outputs.environment }}
+    # environment: dev
+    environment:
+      name: ${{ needs.deployment-environment.outputs.environment }}
     strategy:
       matrix:
         repository:
