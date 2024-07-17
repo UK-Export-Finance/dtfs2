@@ -3,9 +3,12 @@ import { AuditDetails } from '../types/audit-details';
 import { AuditDatabaseRecord } from '../types/audit-database-record';
 import { getNowAsUtcISOString } from '../helpers/date';
 
+const isValidObjectId = (id: string | ObjectId): boolean => {
+  return typeof id === 'string' && /^[a-f\d]{24}$/i.test(id);
+};
 export const generatePortalUserAuditDatabaseRecord = (userId: string | ObjectId): AuditDatabaseRecord => ({
   lastUpdatedAt: getNowAsUtcISOString(),
-  lastUpdatedByPortalUserId: new ObjectId(userId),
+  lastUpdatedByPortalUserId: isValidObjectId(userId) ? new ObjectId(userId) : null,
   lastUpdatedByTfmUserId: null,
   lastUpdatedByIsSystem: null,
   noUserLoggedIn: null,

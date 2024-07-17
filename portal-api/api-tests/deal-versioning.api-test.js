@@ -4,7 +4,7 @@ const databaseHelper = require('./database-helper');
 
 const app = require('../src/createApp');
 const testUserCache = require('./api-test-users');
-const { ADMIN } = require('../src/v1/roles/roles');
+const { MAKER, ADMIN } = require('../src/v1/roles/roles');
 
 const { as } = require('./api')(app);
 const { expectMongoId } = require('./expectMongoIds');
@@ -16,7 +16,7 @@ const mockEligibilityCriteria = require('./fixtures/gef/eligibilityCriteria');
 
 const expectedEligibilityCriteriaAuditRecord = {
   ...generateParsedMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
-  lastUpdatedByPortalUserId: expect.any(String),
+  lastUpdatedByPortalUserId: null,
 };
 
 const gefApplicationsUrl = '/v1/gef/application';
@@ -135,6 +135,7 @@ describe('GEF deal versioning', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
+    aMaker = testUsers().withRole(MAKER).one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 
@@ -154,7 +155,6 @@ describe('GEF deal versioning', () => {
 
     it('returns the expected version 0 application upon creation', async () => {
       const { body } = await as(aMaker).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
-
       expect(body).toEqual(expectMongoId(generateVersion0ApplicationResponse(aMaker._id)));
     });
 
