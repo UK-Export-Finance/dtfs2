@@ -116,23 +116,11 @@ Use to remove the ledger tables if you have them enabled. This command will rest
 
 #### - Seeding data
 
-The seeder can be run from either the project root or the `utils` directory via the
-
 ```shell
 npm run db:seed
 ```
 
-command. This command first runs the `predb:seed` script (see details below) and then runs the seeder to insert mock data into the SQL database. Seeds and factories are defined as files in the `utils/sql-db-seeder/src/<name-of-entity>` directory with `<name-of-entity>.seed.ts` and `<name-of-entity>.factory.ts` file extensions respectively (see the [utilisation reports seeder](../libs/common/src/sql-db-seeder/utilisation-report/) for an example). Seed tracking is set to `true` by default such that, once a seed successfully runs, it will not run again through the `npm run db:seed` command. If you want to run the seeder again, you will first need to run the `npm run db:reset` command from `libs/common`.
-
-As a result of not building the project, the `typeorm-extension` executable needs to be run directly from the `node_modules` via `ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run`. The `node_modules` directory where `typeorm-extension` is located needs to be at the same level as the root of the seeder which, in this case, is `utils/sql-db-seeder`. Due to conflicting versions of `mongodb`, the `typeorm-extension` package actually gets placed within the root level `node_modules` after running `npm i`. To overcome this issue, the `predb:seed` script copies the required node modules to `utils/sql-db-seeder` before executing the `db:seed` script.
-
-After running the seeder, a table called `"seeds"` is created. This table will prevent you from running the same seeder twice, stopping unexpected errors with respect to inserting data with duplicate `id`s, for example. To remove all the rows inserted by the seeder, the
-
-```shell
-npm run db:seed:reset
-```
-
-command can be used. This will delete all rows from the `"seeds"` table as well as all the rows in the `"UtilisationReport"`, `"AzureFileInfo"` and `"FeeRecord"` tables which were inserted by the seeder.
+Use to seed data for utilisation reports into the SQL database.
 
 ## Adding DB access to a package
 
