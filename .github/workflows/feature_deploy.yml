@@ -77,7 +77,6 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
     # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much.
     # Restore the parameterised version throughout!
-    # environment: feature
     environment:
       name: ${{ needs.deployment-environment.outputs.environment }}
     strategy:
@@ -160,7 +159,6 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
     # TODO: FN-1077 NOTE: we don't currently have a `feature` GitHub environment yet so use the `dev` one while we're not doing much.
     # Restore the parameterised version throughout!
-    # environment: dev
     environment:
       name: ${{ needs.deployment-environment.outputs.environment }}
     strategy:
