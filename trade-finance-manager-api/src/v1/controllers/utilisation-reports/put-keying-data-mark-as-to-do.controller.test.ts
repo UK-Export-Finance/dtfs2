@@ -27,7 +27,7 @@ describe('put-keying-data-mark-as-to-do.controller', () => {
         },
       });
 
-    it('marks keying data as DONE and responds with a 200', async () => {
+    it('marks keying data as TO_DO and responds with a 200', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 

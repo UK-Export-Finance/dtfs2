@@ -180,10 +180,12 @@ describe(page, () => {
     const markAsDoneButtonSelector = `${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-done-button"]`;
     wrapper.expectInput(markAsDoneButtonSelector).toHaveValue('Mark as done');
     wrapper.expectElement(markAsDoneButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/${reportId}/keying-data/mark-as-done`);
+    wrapper.expectElement(markAsDoneButtonSelector).doesNotHaveClass('govuk-button--secondary');
 
     const markAsToDoButtonSelector = `${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-to-do-button"]`;
     wrapper.expectInput(markAsToDoButtonSelector).toHaveValue('Mark as to do');
     wrapper.expectElement(markAsToDoButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/${reportId}/keying-data/mark-as-to-do`);
+    wrapper.expectElement(markAsToDoButtonSelector).hasClass('govuk-button--secondary');
 
     wrapper.expectElement(`${keyingSheetTabSelector} table[data-cy="keying-sheet-table"]`).toExist();
   });
