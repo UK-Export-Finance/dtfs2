@@ -37,7 +37,7 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
   const aPaymentInGBP = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(90).withId(123).build();
   const aPaymentInUSD = PaymentEntityMockBuilder.forCurrency('USD').withAmount(100).withId(124).build();
 
-  const aFeeRecordInGBP = aFeeRecordWithPaymentCurrency(45, 'GBP');
+  const aFeeRecordInGBP = aFeeRecordWithPaymentCurrencyAndToDoStatus(45, 'GBP');
   const aFeeRecordInGBPWithAPaymentAttached = FeeRecordEntityMockBuilder.forReport(utilisationReport)
     .withId(46)
     .withFacilityId('000123')
@@ -48,7 +48,7 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
     .withPayments([aPaymentInGBP])
     .withStatus('DOES_NOT_MATCH')
     .build();
-  const aFeeRecordInUSD = aFeeRecordWithPaymentCurrency(47, 'USD');
+  const aFeeRecordInUSD = aFeeRecordWithPaymentCurrencyAndToDoStatus(47, 'USD');
   const aFeeRecordInUSDWithAPaymentAttached = FeeRecordEntityMockBuilder.forReport(utilisationReport)
     .withId(48)
     .withFacilityId('000123')
@@ -143,7 +143,7 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
     });
   });
 
-  function aFeeRecordWithPaymentCurrency(id: number, paymentCurrency: Currency) {
+  function aFeeRecordWithPaymentCurrencyAndToDoStatus(id: number, paymentCurrency: Currency) {
     return FeeRecordEntityMockBuilder.forReport(utilisationReport)
       .withId(id)
       .withFacilityId('000123')

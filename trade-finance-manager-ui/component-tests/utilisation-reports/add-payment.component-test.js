@@ -349,7 +349,7 @@ describe(page, () => {
     wrapper.expectElement(`[data-cy="remove-selected-fees-button"]`).notToExist();
   });
 
-  it('should display singular "Add reported fee to an existing payment" button when hasExistingPayments is true and only one payment exists', () => {
+  it('should display singular "Add reported fee to an existing payment" button when canAddToExistingPayment is true and only one payment exists', () => {
     // Arrange
     const addPaymentViewModel = {
       ...anAddPaymentViewModel(),
@@ -363,7 +363,7 @@ describe(page, () => {
     wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('value', 'Add reported fee to an existing payment');
   });
 
-  it('should display plural "Add reported fees to an existing payment" button when hasExistingPayments is true and multiple payments exist', () => {
+  it('should display plural "Add reported fees to an existing payment" button when canAddToExistingPayment is true and multiple payments exist', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
     addPaymentViewModel.canAddToExistingPayment = true;
@@ -391,7 +391,7 @@ describe(page, () => {
     wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('value', 'Add reported fees to an existing payment');
   });
 
-  it('should not display "Add reported fee to an existing payment" button when hasExistingPayments is false', () => {
+  it('should not display "Add reported fee to an existing payment" button when canAddToExistingPayment is false', () => {
     // Arrange
     const addPaymentViewModel = {
       ...anAddPaymentViewModel(),

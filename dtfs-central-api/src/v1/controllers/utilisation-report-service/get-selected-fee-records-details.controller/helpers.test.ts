@@ -27,7 +27,7 @@ describe('get selected fee record details controller helpers', () => {
     it('sets bank name', async () => {
       // Act
       const bankId = '123';
-      const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [aFeeRecord()], false);
+      const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [aFeeRecordWithToDoStatus()], false);
 
       // Assert
       expect(result.bank).toEqual({ name: BANK_NAME });
@@ -39,7 +39,7 @@ describe('get selected fee record details controller helpers', () => {
       const reportPeriod = aReportPeriod();
 
       // Act
-      const result = await mapToSelectedFeeRecordDetails(bankId, reportPeriod, [aFeeRecord()], false);
+      const result = await mapToSelectedFeeRecordDetails(bankId, reportPeriod, [aFeeRecordWithToDoStatus()], false);
 
       // Assert
       expect(result.reportPeriod).toEqual(reportPeriod);
@@ -182,7 +182,7 @@ describe('get selected fee record details controller helpers', () => {
       const canAddToExistingPayment = true;
 
       // Act
-      const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [aFeeRecord()], canAddToExistingPayment);
+      const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [aFeeRecordWithToDoStatus()], canAddToExistingPayment);
 
       // Assert
       expect(result.canAddToExistingPayment).toEqual(canAddToExistingPayment);
@@ -190,12 +190,12 @@ describe('get selected fee record details controller helpers', () => {
   });
 
   describe('canFeeRecordsBeAddedToExistingPayment', () => {
-    it('returns true when payment exists on report with matching reported currency', async () => {
+    it('returns true when payment exists on report with matching reported currency and fee records all have status TO_DO', async () => {
       // Arrange
-      jest.spyOn(PaymentRepo, 'existsByReportIdCurrencyWithUnmatchedFeeRecords').mockResolvedValue(true);
+      jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
 
       // Act
-      const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecord()]);
+      const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecordWithToDoStatus()]);
 
       // Assert
       expect(result).toEqual(true);
@@ -203,10 +203,10 @@ describe('get selected fee record details controller helpers', () => {
 
     it('returns false when no matching payment exists', async () => {
       // Arrange
-      jest.spyOn(PaymentRepo, 'existsByReportIdCurrencyWithUnmatchedFeeRecords').mockResolvedValue(false);
+      jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(false);
 
       // Act
-      const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecord()]);
+      const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecordWithToDoStatus()]);
 
       // Assert
       expect(result).toEqual(false);
@@ -214,7 +214,7 @@ describe('get selected fee record details controller helpers', () => {
 
     it('returns false when matching payment exists but fee record status is not TO_DO', async () => {
       // Arrange
-      jest.spyOn(PaymentRepo, 'existsByReportIdCurrencyWithUnmatchedFeeRecords').mockResolvedValue(true);
+      jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
       const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withStatus('READY_TO_KEY').build();
 
@@ -225,7 +225,7 @@ describe('get selected fee record details controller helpers', () => {
       expect(result).toEqual(false);
     });
 
-    it('returns false when no feerecords', async () => {
+    it('returns false when no fee records', async () => {
       // Arrange
       const bankId = '123';
       const emptyFeeRecords: FeeRecordEntity[] = [];
@@ -238,7 +238,7 @@ describe('get selected fee record details controller helpers', () => {
     });
   });
 
-  function aFeeRecord(): FeeRecordEntity {
+  function aFeeRecordWithToDoStatus(): FeeRecordEntity {
     const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     return FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withStatus('TO_DO').build();
   }

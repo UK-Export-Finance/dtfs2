@@ -33,7 +33,7 @@ export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
    * @param currency - The payment currency to search by
    * @returns True if a matching payment entity exists, false otherwise
    */
-  async existsByReportIdCurrencyWithUnmatchedFeeRecords(reportId: number, currency: Currency): Promise<boolean> {
+  async existsUnmatchedPaymentOfCurrencyForReportWithId(reportId: number, currency: Currency): Promise<boolean> {
     return await this.exists({
       where: {
         feeRecords: {
