@@ -192,37 +192,39 @@ describe('get selected fee record details controller helpers', () => {
   describe('canFeeRecordsBeAddedToExistingPayment', () => {
     it('returns true when payment exists on report with matching reported currency and fee records all have status TO_DO', async () => {
       // Arrange
-      jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
-
+      const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
       // Act
       const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecordWithToDoStatus()]);
 
       // Assert
       expect(result).toEqual(true);
+      expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, 'GBP');
     });
 
     it('returns false when no matching payment exists', async () => {
       // Arrange
-      jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(false);
+      const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(false);
 
       // Act
       const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecordWithToDoStatus()]);
 
       // Assert
       expect(result).toEqual(false);
+      expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, 'GBP');
     });
 
     it('returns false when matching payment exists but fee record status is not TO_DO', async () => {
       // Arrange
-      jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
+      const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
       const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withStatus('READY_TO_KEY').build();
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('USD').withStatus('READY_TO_KEY').build();
 
       // Act
       const result = await canFeeRecordsBeAddedToExistingPayment('123', [feeRecord]);
 
       // Assert
       expect(result).toEqual(false);
+      expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, 'USD');
     });
 
     it('returns false when no fee records', async () => {
