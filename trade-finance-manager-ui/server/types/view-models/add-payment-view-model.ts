@@ -26,4 +26,5 @@ export type AddPaymentViewModel = BaseViewModel & {
   formValues: AddPaymentFormValues;
   errors: PaymentErrorsViewModel;
   multipleFeeRecordsSelected: boolean;
+  canAddToExistingPayment: boolean;
 };

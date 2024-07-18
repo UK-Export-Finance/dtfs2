@@ -13,4 +13,5 @@ export type SelectedFeeRecordsDetailsResponseBody = {
   reportPeriod: ReportPeriod;
   feeRecords: SelectedFeeRecordDetails[];
   payments: SelectedFeeRecordsPaymentDetailsResponse[];
+  canAddToExistingPayment: boolean;
 };
