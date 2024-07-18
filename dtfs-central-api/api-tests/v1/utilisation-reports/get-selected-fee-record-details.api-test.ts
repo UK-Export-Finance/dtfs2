@@ -6,6 +6,7 @@ import {
   PaymentEntityMockBuilder,
   SelectedFeeRecordDetails,
   SelectedFeeRecordsDetails,
+  UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
@@ -26,51 +27,20 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
   const bank: Bank = { ...aBank(), id: bankId, name: 'Test bank' };
 
   const reportId = 1;
-
   const reportPeriod = aReportPeriod();
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
-    .withId(reportId)
-    .withReportPeriod(reportPeriod)
-    .withBankId(bankId)
-    .build();
-
-  const aPaymentInGBP = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(90).withId(123).build();
-  const aPaymentInUSD = PaymentEntityMockBuilder.forCurrency('USD').withAmount(100).withId(124).build();
-
-  const aFeeRecordInGBP = aFeeRecordWithPaymentCurrencyAndStatusToDo(45, 'GBP');
-  const aFeeRecordInGBPWithAPaymentAttached = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-    .withId(46)
-    .withFacilityId('000123')
-    .withExporter('Test company')
-    .withFeesPaidToUkefForThePeriod(100)
-    .withFeesPaidToUkefForThePeriodCurrency('GBP')
-    .withPaymentCurrency('GBP')
-    .withPayments([aPaymentInGBP])
-    .withStatus('DOES_NOT_MATCH')
-    .build();
-  const aFeeRecordInUSD = aFeeRecordWithPaymentCurrencyAndStatusToDo(47, 'USD');
-  const aFeeRecordInUSDWithAPaymentAttached = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-    .withId(48)
-    .withFacilityId('000123')
-    .withExporter('Test company')
-    .withFeesPaidToUkefForThePeriod(75)
-    .withFeesPaidToUkefForThePeriodCurrency('GBP')
-    .withPaymentCurrency('USD')
-    .withPayments([aPaymentInUSD])
-    .withStatus('MATCH')
-    .build();
-
-  utilisationReport.feeRecords = [aFeeRecordInGBP, aFeeRecordInGBPWithAPaymentAttached, aFeeRecordInUSD, aFeeRecordInUSDWithAPaymentAttached];
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
-    await SqlDbHelper.saveNewEntry('UtilisationReport', utilisationReport);
 
     await wipe(['banks']);
 
     const banksCollection = await mongoDbClient.getCollection('banks');
     await banksCollection.insertOne(bank);
+  });
+
+  afterEach(async () => {
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
   afterAll(async () => {
@@ -91,6 +61,27 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
     });
 
     it('gets selected fee record details', async () => {
+      // Arrange
+      const report = aReconciliationInProgressReport();
+
+      const aPaymentInGBP = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(90).withId(123).build();
+
+      const aFeeRecordInGBP = aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(45, report, 'GBP');
+      const aFeeRecordInGBPWithAPaymentAttached = FeeRecordEntityMockBuilder.forReport(report)
+        .withId(46)
+        .withFacilityId('000123')
+        .withExporter('Test company')
+        .withFeesPaidToUkefForThePeriod(100)
+        .withFeesPaidToUkefForThePeriodCurrency('GBP')
+        .withPaymentCurrency('GBP')
+        .withPayments([aPaymentInGBP])
+        .withStatus('DOES_NOT_MATCH')
+        .build();
+
+      report.feeRecords = [aFeeRecordInGBP, aFeeRecordInGBPWithAPaymentAttached];
+
+      await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
       // Act
       const response: CustomResponse = await testApi.get(getUrl(reportId), { feeRecordIds: [45] });
 
@@ -117,6 +108,26 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
     });
 
     it("gets selected fee record details with canAddToExistingPayment set to false when a payment exists in the same currency but has no fee records with the 'does not match' status", async () => {
+      // Arrange
+      const report = aReconciliationInProgressReport();
+
+      const aPaymentInUSD = PaymentEntityMockBuilder.forCurrency('USD').withAmount(100).withId(124).build();
+      const aFeeRecordInUSD = aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(47, report, 'USD');
+      const aFeeRecordInUSDWithAPaymentAttached = FeeRecordEntityMockBuilder.forReport(report)
+        .withId(48)
+        .withFacilityId('000123')
+        .withExporter('Test company')
+        .withFeesPaidToUkefForThePeriod(75)
+        .withFeesPaidToUkefForThePeriodCurrency('GBP')
+        .withPaymentCurrency('USD')
+        .withPayments([aPaymentInUSD])
+        .withStatus('MATCH')
+        .build();
+
+      report.feeRecords = [aFeeRecordInUSD, aFeeRecordInUSDWithAPaymentAttached];
+
+      await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
       // Act
       const response: CustomResponse = await testApi.get(getUrl(reportId), { feeRecordIds: [47] });
 
@@ -143,8 +154,16 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
     });
   });
 
-  function aFeeRecordWithPaymentCurrencyAndStatusToDo(id: number, paymentCurrency: Currency) {
-    return FeeRecordEntityMockBuilder.forReport(utilisationReport)
+  function aReconciliationInProgressReport() {
+    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+      .withId(reportId)
+      .withReportPeriod(reportPeriod)
+      .withBankId(bankId)
+      .build();
+  }
+
+  function aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(id: number, report: UtilisationReportEntity, paymentCurrency: Currency) {
+    return FeeRecordEntityMockBuilder.forReport(report)
       .withId(id)
       .withFacilityId('000123')
       .withExporter('Test company')
