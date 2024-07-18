@@ -654,16 +654,16 @@ describe('reconciliation-for-report-helper', () => {
       },
     );
 
-    it('sets the keying sheet view model checkbox id using the keying sheet fee record id', () => {
+    it('sets the keying sheet view model checkbox id using the keying sheet fee record id and status', () => {
       // Arrange
-      const keyingSheet: KeyingSheet = [{ ...aKeyingSheetRow(), feeRecordId: 123 }];
+      const keyingSheet: KeyingSheet = [{ ...aKeyingSheetRow(), feeRecordId: 123, status: 'TO_DO' }];
 
       // Act
       const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].checkboxId).toBe('feeRecordId-123');
+      expect(result[0].checkboxId).toBe('feeRecordId-123-status-TO_DO');
     });
   });
 });
