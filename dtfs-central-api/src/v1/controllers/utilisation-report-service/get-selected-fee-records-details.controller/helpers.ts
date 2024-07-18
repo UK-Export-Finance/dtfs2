@@ -37,15 +37,13 @@ export const canFeeRecordsBeAddedToExistingPayment = async (reportId: string, fe
     return false;
   }
 
-  const allFeeRecordsHaveStatusToDo = feeRecords.every((record) => record.status === 'TO_DO');
+  const anyFeeRecordDoesNotHaveStatusToDo = feeRecords.some((record) => record.status !== 'TO_DO');
+  if (anyFeeRecordDoesNotHaveStatusToDo) {
+    return false;
+  }
 
   const reportedPaymentCurrency = feeRecords[0].paymentCurrency;
-  const doesPaymentInCurrencyExistWithUnmatchedFeeRecords = await PaymentRepo.existsUnmatchedPaymentOfCurrencyForReportWithId(
-    Number(reportId),
-    reportedPaymentCurrency,
-  );
-
-  return allFeeRecordsHaveStatusToDo && doesPaymentInCurrencyExistWithUnmatchedFeeRecords;
+  return await PaymentRepo.existsUnmatchedPaymentOfCurrencyForReportWithId(Number(reportId), reportedPaymentCurrency);
 };
 
 export const mapToSelectedFeeRecordDetails = async (

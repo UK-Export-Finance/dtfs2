@@ -224,7 +224,7 @@ describe('get selected fee record details controller helpers', () => {
 
       // Assert
       expect(result).toEqual(false);
-      expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, 'USD');
+      expect(existsUnmatchedPaymentSpy).not.toHaveBeenCalled();
     });
 
     it('returns false when no fee records', async () => {
