@@ -1,4 +1,10 @@
-import { FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FacilityUtilisationDataEntityMockBuilder,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { testApi } from '../../test-api';
 import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
@@ -9,14 +15,20 @@ console.error = jest.fn();
 describe('/v1/utilisation-reports/:reportId/keying-data/mark-as-done', () => {
   const getUrl = (reportId: number | string) => `/v1/utilisation-reports/${reportId}/keying-data/mark-as-done`;
 
+  const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('11111111').build();
+
   beforeAll(async () => {
     await SqlDbHelper.initialize();
-
-    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.deleteAll();
+    await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
   });
 
   afterEach(async () => {
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
+  });
+
+  afterAll(async () => {
+    await SqlDbHelper.deleteAll();
   });
 
   it('returns a 400 when the report id is not a valid id', async () => {
@@ -96,7 +108,11 @@ describe('/v1/utilisation-reports/:reportId/keying-data/mark-as-done', () => {
     // Arrange
     const reportId = 1;
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report)
+      .withFacilityUtilisationData(facilityUtilisationData)
+      .withId(1)
+      .withStatus('READY_TO_KEY')
+      .build();
     report.feeRecords = [feeRecord];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
@@ -116,7 +132,11 @@ describe('/v1/utilisation-reports/:reportId/keying-data/mark-as-done', () => {
     // Arrange
     const reportId = 1;
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report)
+      .withFacilityUtilisationData(facilityUtilisationData)
+      .withId(1)
+      .withStatus('READY_TO_KEY')
+      .build();
     report.feeRecords = [feeRecord];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
@@ -137,8 +157,16 @@ describe('/v1/utilisation-reports/:reportId/keying-data/mark-as-done', () => {
     // Arrange
     const reportId = 1;
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
-    const anotherFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('RECONCILED').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report)
+      .withFacilityUtilisationData(facilityUtilisationData)
+      .withId(1)
+      .withStatus('READY_TO_KEY')
+      .build();
+    const anotherFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
+      .withFacilityUtilisationData(facilityUtilisationData)
+      .withId(2)
+      .withStatus('RECONCILED')
+      .build();
     report.feeRecords = [feeRecord, anotherFeeRecord];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
@@ -159,8 +187,16 @@ describe('/v1/utilisation-reports/:reportId/keying-data/mark-as-done', () => {
     // Arrange
     const reportId = 1;
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
-    const anotherFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('MATCH').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report)
+      .withFacilityUtilisationData(facilityUtilisationData)
+      .withId(1)
+      .withStatus('READY_TO_KEY')
+      .build();
+    const anotherFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
+      .withFacilityUtilisationData(facilityUtilisationData)
+      .withId(2)
+      .withStatus('MATCH')
+      .build();
     report.feeRecords = [feeRecord, anotherFeeRecord];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
