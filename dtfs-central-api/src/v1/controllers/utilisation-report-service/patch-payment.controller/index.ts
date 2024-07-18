@@ -50,6 +50,7 @@ export const patchPayment = async (req: PatchPaymentRequest, res: Response) => {
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = 'Failed to edit payment';
+    console.error(errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }

@@ -29,4 +29,21 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
       relations: { report: true },
     });
   },
+
+  /**
+   * Finds fee record entities with supplied ids attached to a report with the
+   * supplied report id with the report attached
+   * @param ids - The fee record ids to search by
+   * @param reportId - The report id of the report attached to the fee records
+   * @returns The found fee record entities
+   */
+  async findByIdAndReportIdWithReport(ids: number[], reportId: number): Promise<FeeRecordEntity[]> {
+    return await this.find({
+      where: {
+        id: In(ids),
+        report: { id: reportId },
+      },
+      relations: { report: true },
+    });
+  },
 });

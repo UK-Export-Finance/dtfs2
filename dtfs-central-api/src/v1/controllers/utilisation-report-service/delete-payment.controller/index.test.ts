@@ -11,8 +11,9 @@ import { UtilisationReportStateMachine } from '../../../../services/state-machin
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 
 jest.mock('../../../../helpers');
-
 jest.mock('../../../../services/state-machines/utilisation-report/utilisation-report.state-machine');
+
+console.error = jest.fn();
 
 class TestApiError extends ApiError {
   constructor(status?: number, message?: string) {
