@@ -79,6 +79,8 @@ class Facility {
           throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
         }
         this.isUsingFacilityEndDate = req.isUsingFacilityEndDate ?? null;
+        this.facilityEndDate = null;
+        this.bankReviewDate = null;
       }
     } else {
       // update facility
@@ -210,6 +212,14 @@ class Facility {
           throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
         }
         this.isUsingFacilityEndDate = req.isUsingFacilityEndDate;
+        if (req.facilityEndDate != null) {
+          const timestamp = convertToTimestamp(req.facilityEndDate);
+          this.facilityEndDate = new Date(timestamp);
+        }
+        if (req.bankReviewDate != null) {
+          const timestamp = convertToTimestamp(req.facilityEndDate);
+          this.bankReviewDate = new Date(timestamp);
+        }
       }
 
       this.updatedAt = Date.now();
