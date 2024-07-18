@@ -75,13 +75,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   });
 
   it('should allow the user to navigate to the edit payment page', () => {
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
   });
 
   it('should display the payment currency as a fixed value next to the payment amount', () => {
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -89,7 +89,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   });
 
   it('should populate the edit payment form values with the current payment values', () => {
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -101,7 +101,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   });
 
   it('should display errors when form submitted with invalid values and persist the inputted values', () => {
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -129,7 +129,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   });
 
   it('should return to the premium payments table after the user clicks the save changes button', () => {
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -145,7 +145,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     const newPaymentDateYear = '2021';
     const newPaymentReference = 'New payment reference';
 
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -167,7 +167,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
 
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -189,7 +189,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     cy.reload();
 
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -215,7 +215,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
     cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
 
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
