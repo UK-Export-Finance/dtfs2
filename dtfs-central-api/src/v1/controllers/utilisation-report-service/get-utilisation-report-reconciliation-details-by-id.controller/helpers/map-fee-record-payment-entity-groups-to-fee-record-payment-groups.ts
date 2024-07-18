@@ -1,7 +1,16 @@
+import { FeeRecordEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentEntityGroup, calculateTotalCurrencyAndAmount } from '../../../../../helpers';
 import { mapPaymentEntityToPayment } from '../../../../../mapping/payment-mapper';
 import { mapFeeRecordEntityToFeeRecord } from '../../../../../mapping/fee-record-mapper';
 import { FeeRecordPaymentGroup } from '../../../../../types/utilisation-reports';
+
+const getStatusForGroupOfFeeRecords = (feeRecordEntitiesInGroup: FeeRecordEntity[]): FeeRecordStatus => {
+  if (feeRecordEntitiesInGroup.some((feeRecordEntity) => feeRecordEntity.status === 'READY_TO_KEY')) {
+    return 'READY_TO_KEY';
+  }
+
+  return feeRecordEntitiesInGroup[0].status;
+};
 
 /**
  * Maps the fee record payment entity groups to the fee record payment groups
@@ -12,7 +21,7 @@ export const mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups = (
   feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[],
 ): FeeRecordPaymentGroup[] => {
   return feeRecordPaymentEntityGroups.map(({ feeRecords: feeRecordEntitiesInGroup, payments }) => {
-    const { status } = feeRecordEntitiesInGroup[0];
+    const status = getStatusForGroupOfFeeRecords(feeRecordEntitiesInGroup);
 
     if (payments.length === 0) {
       // If there are no payments, there is only one fee record in the group
