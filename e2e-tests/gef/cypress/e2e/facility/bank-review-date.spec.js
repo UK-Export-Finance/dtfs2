@@ -5,6 +5,7 @@ import {
   tomorrowDay,
   tomorrowMonth,
   tomorrowYear,
+  today,
   todayDay,
   todayMonth,
   todayYear,
@@ -17,7 +18,6 @@ import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 const applications = [];
 let token;
 
-const now = new Date();
 const nextYear = Number(todayYear) + 1;
 
 context('Bank Review Date Page', () => {
@@ -181,15 +181,15 @@ context('Bank Review Date Page', () => {
     bankReviewDate
       .bankReviewDateDay()
       .clear()
-      .type(now.getDate() + 1);
+      .type(today.getDate() + 1);
     bankReviewDate
       .bankReviewDateMonth()
       .clear()
-      .type(now.getMonth() + 1);
+      .type(today.getMonth() + 1);
     bankReviewDate
       .bankReviewDateYear()
       .clear()
-      .type(now.getFullYear() + 7);
+      .type(today.getFullYear() + 7);
 
     bankReviewDate.continueButton().click();
     bankReviewDate.errorSummary();
@@ -218,9 +218,9 @@ context('Bank Review Date Page', () => {
     bankReviewDate.continueButton().click();
 
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-    bankReviewDate.bankReviewDateDay().should('have.value', now.getDate());
-    bankReviewDate.bankReviewDateMonth().should('have.value', now.getMonth() + 1);
-    bankReviewDate.bankReviewDateYear().should('have.value', now.getFullYear() + 1);
+    bankReviewDate.bankReviewDateDay().should('have.value', today.getDate());
+    bankReviewDate.bankReviewDateMonth().should('have.value', today.getMonth() + 1);
+    bankReviewDate.bankReviewDateYear().should('have.value', today.getFullYear() + 1);
   });
 
   it('redirects to the Application Details page when using facility end date ', () => {

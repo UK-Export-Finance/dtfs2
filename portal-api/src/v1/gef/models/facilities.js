@@ -92,8 +92,6 @@ class Facility {
         } else {
           this.bankReviewDate = null;
         }
-
-        this.bankReviewDate = req.bankReviewDate ?? null;
       }
     } else {
       // update facility

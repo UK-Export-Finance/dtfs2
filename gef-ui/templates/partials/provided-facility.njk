@@ -41,6 +41,7 @@
     <div class="govuk-grid-column-three-quarters">
       <form method="post" data-cy="form">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
         <input
           class="govuk-visually-hidden"
           id="facilityType"

@@ -46,7 +46,7 @@ const providedFacility = async (req, res) => {
 const validateProvidedFacility = async (req, res) => {
   const { params, body, query, session } = req;
   const { dealId, facilityId } = params;
-  const { facilityType, detailsOther } = body;
+  const { facilityType, detailsOther, previousPage } = body;
   const { saveAndReturn, status } = query;
   const { user, userToken } = session;
   const { _id: editorId } = user;
@@ -81,6 +81,7 @@ const validateProvidedFacility = async (req, res) => {
       dealId,
       facilityId,
       status,
+      previousPage,
     });
   }
 

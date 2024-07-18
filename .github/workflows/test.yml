@@ -499,7 +499,7 @@ jobs:
 
   # 5.1 E2E - GEF backwards compatibility
   e2e-tests-gef-feature-flag-backwards-compatibility:
-    name: E2E GEF FF COMPATIBILITY👷
+    name: E2E GEF feature flag compatability 👷
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
