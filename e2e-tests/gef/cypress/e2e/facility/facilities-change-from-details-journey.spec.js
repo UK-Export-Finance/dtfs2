@@ -8,11 +8,10 @@ import facilityCurrency from '../pages/facility-currency';
 import facilityGuarantee from '../pages/facility-guarantee';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import bankReviewDate from '../pages/bank-review-date';
+import { todayDay, todayMonth, todayYear } from '../../../../e2e-fixtures/dateConstants';
 
 const applications = [];
 let token;
-
-const now = new Date();
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
@@ -76,9 +75,9 @@ context('Changing facility details from application-details page should take you
       it('should take you to provided-facility page from bank-review-date page', () => {
         // TODO DTFS2-7162: should click on row to visit bank-review-date page
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facility._id}/bank-review-date`));
-        bankReviewDate.bankReviewDateDay().type(now.getDate());
-        bankReviewDate.bankReviewDateMonth().type(now.getMonth());
-        bankReviewDate.bankReviewDateYear().type(now.getFullYear() + 1);
+        bankReviewDate.bankReviewDateDay().type(todayDay);
+        bankReviewDate.bankReviewDateMonth().type(todayMonth);
+        bankReviewDate.bankReviewDateYear().type(todayYear);
         bankReviewDate.continueButton().click();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));
       });
