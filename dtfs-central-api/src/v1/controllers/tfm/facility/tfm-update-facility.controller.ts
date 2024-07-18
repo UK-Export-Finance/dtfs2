@@ -13,12 +13,10 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }: { facilit
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
-  const findAndUpdateResponse = await TfmFacilitiesRepo.findOneByIdAndUpdate(facilityId, flatten(update), {
+  const updatedFacility = await TfmFacilitiesRepo.findOneByIdAndUpdate(facilityId, flatten(update), {
     returnDocument: 'after',
     upsert: true,
   });
-
-  const { value: updatedFacility } = findAndUpdateResponse;
 
   return updatedFacility;
 };

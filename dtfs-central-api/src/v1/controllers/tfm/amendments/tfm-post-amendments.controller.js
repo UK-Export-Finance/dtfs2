@@ -54,14 +54,9 @@ exports.postTfmAmendment = async (req, res) => {
   if (latestCompletedAmendmentVersion) {
     amendment.version = latestCompletedAmendmentVersion + 1;
   }
-  await TfmFacilitiesRepo.custom((collection) => {
-    collection.updateOne(
-      { _id: { $eq: ObjectId(facilityId) } },
-      {
-        $push: { amendments: amendment },
-        $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
-      },
-    );
+  await TfmFacilitiesRepo.updateOneById(facilityId, {
+    $push: { amendments: amendment },
+    $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
   });
 
   return res.status(200).json({ amendmentId: amendment.amendmentId.toHexString() });

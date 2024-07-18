@@ -1,11 +1,27 @@
 import z from 'zod';
-import { ObjectId, UpdateFilter, WithoutId, WithId, FindOneAndUpdateOptions, Collection } from 'mongodb';
+import {
+  ObjectId,
+  UpdateFilter,
+  WithoutId,
+  WithId,
+  FindOneAndUpdateOptions,
+  Collection,
+  Document,
+  AggregationCursor,
+  AggregateOptions,
+  UpdateResult,
+} from 'mongodb';
 import { TfmFacilitySchema } from './tfm-facility.schema';
 import { mongoDbClient } from '../../drivers/db-client';
 
 export type RawTfmFacility = WithId<object>;
 
 export type ParsedTfmFacility = z.infer<typeof TfmFacilitySchema>;
+
+type ExecuteAggregateResult = {
+  aggregationCursor: AggregationCursor<Document>;
+  resultsArray: Document[];
+};
 
 export class TfmFacilitiesRepo {
   private static async getCollection(): Promise<Collection<WithoutId<RawTfmFacility>>> {
@@ -63,9 +79,10 @@ export class TfmFacilitiesRepo {
     id: string | ObjectId,
     update: UpdateFilter<WithoutId<RawTfmFacility>>,
     options: FindOneAndUpdateOptions = { returnDocument: 'after' },
-  ) {
+  ): Promise<RawTfmFacility | null> {
     const collection = await this.getCollection();
-    return await collection.findOneAndUpdate({ _id: { $eq: new ObjectId(id) } }, update, options);
+    const { value } = await collection.findOneAndUpdate({ _id: { $eq: new ObjectId(id) } }, update, options);
+    return value;
   }
 
   /**
@@ -76,12 +93,32 @@ export class TfmFacilitiesRepo {
    * @param update - The update to apply
    * @returns The update result
    */
-  public static async updateOneByIdAndAmendmentId(id: string | ObjectId, amendmentId: string | ObjectId, update: UpdateFilter<WithoutId<RawTfmFacility>>) {
+  public static async updateOneByIdAndAmendmentId(
+    id: string | ObjectId,
+    amendmentId: string | ObjectId,
+    update: UpdateFilter<WithoutId<RawTfmFacility>>,
+  ): Promise<UpdateResult> {
     const collection = await this.getCollection();
     return await collection.updateOne(
       {
         _id: { $eq: new ObjectId(id) },
         'amendments.amendmentId': { $eq: new ObjectId(amendmentId) },
+      },
+      update,
+    );
+  }
+
+  /**
+   * Updates the tfm facility with the supplied id
+   * @param id - The facility id
+   * @param update - The update to apply
+   * @returns The update result
+   */
+  public static async updateOneById(id: string | ObjectId, update: UpdateFilter<WithoutId<RawTfmFacility>>): Promise<UpdateResult> {
+    const collection = await this.getCollection();
+    return await collection.updateOne(
+      {
+        _id: { $eq: new ObjectId(id) },
       },
       update,
     );
@@ -98,13 +135,15 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Method to perform a custom operation on the TFM
-   * facilities collection
-   * @param operation - The database operation to perform
-   * @returns The result of the supplied operation
+   * Method to execute an aggregate against the TFM facilities collection
+   * @param pipeline - The aggregate pipeline
+   * @param [options] - The aggregate options
+   * @returns The aggregation cursor
    */
-  public static async custom<TReturn>(operation: (collection: Collection<WithoutId<RawTfmFacility>>) => TReturn | Promise<TReturn>): Promise<TReturn> {
+  public static async executeAggregate(pipeline: Document[], options?: AggregateOptions): Promise<ExecuteAggregateResult> {
     const collection = await this.getCollection();
-    return await operation(collection);
+    const aggregationCursor = collection.aggregate(pipeline, options);
+    const resultsArray = await aggregationCursor.toArray();
+    return { aggregationCursor, resultsArray };
   }
 }
