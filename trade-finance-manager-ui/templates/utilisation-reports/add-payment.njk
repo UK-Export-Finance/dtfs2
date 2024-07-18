@@ -41,6 +41,20 @@
       multipleFeeRecordsSelected: multipleFeeRecordsSelected
     }) }}
   {% endif %}
+  {% if canAddToExistingPayment %}
+    {% set addToAnExistingPaymentButtonText = "Add reported fee" + ("s" if reportedFeeDetails.feeRecords | length > 1 else "") + " to an existing payment" %}
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      {% for id in selectedFeeRecordCheckboxIds %}<input type="hidden" name={{ id }} value="on"/>{% endfor %}
+      <input
+        class="govuk-button govuk-button--secondary"
+        formaction="/utilisation-reports/{{ reportId }}/add-to-an-existing-payment"
+        value="{{ addToAnExistingPaymentButtonText }}"
+        data-module="govuk-button"
+        type="submit"
+        data-cy="add-fees-to-an-existing-payment-button"/>
+    </form>
+  {% endif %}
   <h2 class="govuk-heading-m">
     {% if paymentNumber > 1 %}
       Payment {{ paymentNumber }} details

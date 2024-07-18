@@ -1,10 +1,13 @@
 import { Response } from 'supertest';
 import {
   Bank,
+  Currency,
   FacilityUtilisationDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
   SelectedFeeRecordDetails,
   SelectedFeeRecordsDetails,
+  UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
@@ -66,6 +69,10 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
     await banksCollection.insertOne(bank);
   });
 
+  afterEach(async () => {
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+  });
+
   afterAll(async () => {
     await SqlDbHelper.deleteAll();
     await wipe(['banks']);
@@ -84,6 +91,27 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
     });
 
     it('gets selected fee record details', async () => {
+      // Arrange
+      const report = aReconciliationInProgressReport();
+
+      const aPaymentInGBP = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(90).withId(123).build();
+
+      const aFeeRecordInGBP = aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(45, report, 'GBP');
+      const aFeeRecordInGBPWithAPaymentAttached = FeeRecordEntityMockBuilder.forReport(report)
+        .withId(46)
+        .withFacilityId('000123')
+        .withExporter('Test company')
+        .withFeesPaidToUkefForThePeriod(100)
+        .withFeesPaidToUkefForThePeriodCurrency('GBP')
+        .withPaymentCurrency('GBP')
+        .withPayments([aPaymentInGBP])
+        .withStatus('DOES_NOT_MATCH')
+        .build();
+
+      report.feeRecords = [aFeeRecordInGBP, aFeeRecordInGBPWithAPaymentAttached];
+
+      await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
       // Act
       const response: CustomResponse = await testApi.get(getUrl(reportId), { feeRecordIds: [45] });
 
@@ -105,7 +133,74 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
           },
         ],
         payments: [],
+        canAddToExistingPayment: true,
+      });
+    });
+
+    it("gets selected fee record details with canAddToExistingPayment set to false when a payment exists in the same currency but has no fee records with the 'does not match' status", async () => {
+      // Arrange
+      const report = aReconciliationInProgressReport();
+
+      const aPaymentInUSD = PaymentEntityMockBuilder.forCurrency('USD').withAmount(100).withId(124).build();
+      const aFeeRecordInUSD = aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(47, report, 'USD');
+      const aFeeRecordInUSDWithAPaymentAttached = FeeRecordEntityMockBuilder.forReport(report)
+        .withId(48)
+        .withFacilityId('000123')
+        .withExporter('Test company')
+        .withFeesPaidToUkefForThePeriod(75)
+        .withFeesPaidToUkefForThePeriodCurrency('GBP')
+        .withPaymentCurrency('USD')
+        .withPayments([aPaymentInUSD])
+        .withStatus('MATCH')
+        .build();
+
+      report.feeRecords = [aFeeRecordInUSD, aFeeRecordInUSDWithAPaymentAttached];
+
+      await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+      // Act
+      const response: CustomResponse = await testApi.get(getUrl(reportId), { feeRecordIds: [47] });
+
+      // Assert
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual<SelectedFeeRecordsDetails>({
+        reportPeriod,
+        bank: {
+          name: bank.name,
+        },
+        totalReportedPayments: { currency: 'USD', amount: 100 },
+        feeRecords: [
+          {
+            id: 47,
+            facilityId: '000123',
+            exporter: 'Test company',
+            reportedFee: { currency: 'GBP', amount: 100 },
+            reportedPayments: { currency: 'USD', amount: 100 },
+          },
+        ],
+        payments: [],
+        canAddToExistingPayment: false,
       });
     });
   });
+
+  function aReconciliationInProgressReport() {
+    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+      .withId(reportId)
+      .withReportPeriod(reportPeriod)
+      .withBankId(bankId)
+      .build();
+  }
+
+  function aFeeRecordWithReportAndPaymentCurrencyAndStatusToDo(id: number, report: UtilisationReportEntity, paymentCurrency: Currency) {
+    return FeeRecordEntityMockBuilder.forReport(report)
+      .withId(id)
+      .withFacilityId('000123')
+      .withExporter('Test company')
+      .withFeesPaidToUkefForThePeriod(100)
+      .withFeesPaidToUkefForThePeriodCurrency('GBP')
+      .withPaymentCurrency(paymentCurrency)
+      .withStatus('TO_DO')
+      .build();
+  }
 });

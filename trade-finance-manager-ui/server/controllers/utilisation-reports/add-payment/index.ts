@@ -92,6 +92,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       reportedFeeDetails: mapToSelectedReportedFeesDetailsViewModel(selectedFeeRecordDetails),
       recordedPaymentsDetails: selectedFeeRecordDetails.payments.map((payment) => mapToRecordedPaymentDetailsViewModel(payment)),
       multipleFeeRecordsSelected: selectedFeeRecordDetails.feeRecords.length > 1,
+      canAddToExistingPayment: selectedFeeRecordDetails.canAddToExistingPayment,
     });
   } catch (error) {
     console.error('Failed to add payment', error);

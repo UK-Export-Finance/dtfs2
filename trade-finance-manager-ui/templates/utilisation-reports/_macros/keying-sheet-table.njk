@@ -17,9 +17,9 @@
         <th scope="colgroup" class="govuk-table__header" colspan="2">Premium accrual balance adjustment</th>
         <th scope="colgroup" class="govuk-table__header" colspan="2">Principal balance adjustment</th>
         {% if userCanEdit %}
-          <th scope="col" class="govuk-table__header" rowspan="2">
+          <td class="govuk-table__header" rowspan="2">
             {{ selectAllTableCellCheckbox.render() }}
-          </th>
+          </td>
         {% endif %}
       </tr>
       <tr class="govuk-table__row">
@@ -32,9 +32,9 @@
       </tr>
     </thead>
     <tbody class="govuk-table__body">
-      {% for KeyingSheetRow in keyingSheet %}
+      {% for keyingSheetRow in keyingSheet %}
         {{ keyingSheetTableRow.render({
-          KeyingSheetRow: KeyingSheetRow,
+          keyingSheetRow: keyingSheetRow,
           userCanEdit: userCanEdit
         }) }}
       {% endfor %}

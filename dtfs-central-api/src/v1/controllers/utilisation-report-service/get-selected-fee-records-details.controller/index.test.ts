@@ -5,9 +5,12 @@ import { UtilisationReportRepo } from '../../../../repositories/utilisation-repo
 import { GetSelectedFeeRecordDetailsRequest, getSelectedFeeRecordDetails } from '.';
 import { aReportPeriod } from '../../../../../test-helpers/test-data/report-period';
 import { getBankNameById } from '../../../../repositories/banks-repo';
+import { PaymentRepo } from '../../../../repositories/payment-repo';
 
 jest.mock('../../../../repositories/utilisation-reports-repo');
 jest.mock('../../../../repositories/banks-repo');
+
+console.error = jest.fn();
 
 describe('get selected fee records details controller', () => {
   const REPORT_ID = 12;
@@ -115,7 +118,9 @@ describe('get selected fee records details controller', () => {
       .withPayments([paymentEntity])
       .build();
     reportEntity.feeRecords = [feeRecordOne, feeRecordTwo];
+
     findReportSpy.mockResolvedValue(reportEntity);
+    jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
     jest.mocked(getBankNameById).mockResolvedValue('Test Bank');
 
     // Act
@@ -167,6 +172,7 @@ describe('get selected fee records details controller', () => {
           reference: 'A payment',
         },
       ],
+      canAddToExistingPayment: true,
     });
   });
 });

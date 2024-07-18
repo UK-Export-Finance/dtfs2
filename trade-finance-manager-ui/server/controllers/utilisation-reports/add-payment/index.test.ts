@@ -69,6 +69,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             reference: 'A payment',
           },
         ],
+        canAddToExistingPayment: true,
       };
       jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(selectedFeeRecordDetailsResponse);
 
@@ -99,6 +100,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           reference: 'A payment',
         },
       ]);
+      expect((res._getRenderData() as AddPaymentViewModel).canAddToExistingPayment).toEqual(true);
     });
 
     it('should set payment number to number of payments plus 1', async () => {
@@ -455,6 +457,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
               reference: 'A payment',
             },
           ],
+          canAddToExistingPayment: true,
         });
 
         // Act
@@ -483,6 +486,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             reference: 'A payment',
           },
         ]);
+        expect((res._getRenderData() as AddPaymentViewModel).canAddToExistingPayment).toEqual(true);
       });
 
       it('should set selected checkbox ids', async () => {
@@ -785,6 +789,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
         },
       ],
       payments: [],
+      canAddToExistingPayment: false,
     };
   }
 
