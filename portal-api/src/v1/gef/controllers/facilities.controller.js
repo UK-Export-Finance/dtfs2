@@ -49,7 +49,7 @@ exports.create = async (req, res) => {
     const response = {
       status: facilitiesStatus(facility),
       details: facility,
-      validation: facilitiesValidation(facility),
+      validation: facilitiesValidation(facility, existingDeal.version),
     };
     return res.status(201).json(response);
   } catch (error) {
@@ -70,62 +70,90 @@ const getAllFacilitiesByDealId = async (dealId) => {
   if (!ObjectId.isValid(dealId)) {
     throw new InvalidDatabaseQueryError('Invalid deal id');
   }
-  const doc = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
+  const matchingFacilities = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
 
-  return doc;
+  return matchingFacilities;
 };
 exports.getAllFacilitiesByDealId = getAllFacilitiesByDealId;
 
 exports.getAllGET = async (req, res) => {
-  let doc;
+  try {
+    let doc;
 
-  if (req.query && req.query.dealId) {
-    try {
-      doc = await getAllFacilitiesByDealId(req.query.dealId);
-    } catch (error) {
-      if (error instanceof InvalidDatabaseQueryError) {
-        console.error(error);
-        return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    if (req.query && req.query.dealId) {
+      try {
+        doc = await getAllFacilitiesByDealId(req.query.dealId);
+      } catch (error) {
+        if (error instanceof InvalidDatabaseQueryError) {
+          console.error(error);
+          return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+        }
+
+        throw error;
       }
-
-      throw error;
     }
-  }
 
-  const facilities = [];
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+    const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(req.query.dealId) } });
 
-  if (doc && doc.length) {
-    doc.forEach((item) => {
-      facilities.push({
-        status: facilitiesStatus(item),
-        details: item,
-        validation: facilitiesValidation(item),
+    if (!existingDeal) {
+      throw new DealNotFoundError(req.query.dealId);
+    }
+
+    const facilities = [];
+
+    if (doc && doc.length) {
+      doc.forEach((facility) => {
+        facilities.push({
+          status: facilitiesStatus(facility),
+          details: facility,
+          validation: facilitiesValidation(facility, existingDeal.version),
+        });
       });
-    });
-  }
+    }
 
-  return res.status(200).send({
-    status: facilitiesOverallStatus(facilities),
-    items: facilities,
-  });
+    return res.status(200).send({
+      status: facilitiesOverallStatus(facilities),
+      items: facilities,
+    });
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({ status: error.status, message: error.message });
+    }
+    throw error;
+  }
 };
 
 exports.getById = async (req, res) => {
-  if (!ObjectId.isValid(String(req.params.id))) {
-    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
-  }
+  try {
+    if (!ObjectId.isValid(String(req.params.id))) {
+      return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+    }
 
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
-  const doc = await collection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
-  if (doc) {
-    return res.status(200).send({
-      status: facilitiesStatus(doc),
-      details: doc,
-      validation: facilitiesValidation(doc),
-    });
-  }
+    const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
+    const facility = await facilitiesCollection.findOne({ _id: { $eq: ObjectId(String(req.params.id)) } });
+    if (facility) {
+      const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+      const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(facility.dealId) } });
 
-  return res.status(204).send();
+      if (!existingDeal) {
+        throw new DealNotFoundError(facility.dealId);
+      }
+
+      return res.status(200).send({
+        status: facilitiesStatus(facility),
+        details: facility,
+        validation: facilitiesValidation(facility, existingDeal.version),
+      });
+    }
+
+    return res.status(204).send();
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return res.status(error.status).send({ status: error.status, message: error.message });
+    }
+    throw error;
+  }
 };
 
 /**
@@ -201,32 +229,38 @@ const update = async (id, updateBody, auditDetails) => {
 exports.update = update;
 
 exports.updatePUT = async (req, res) => {
-  const enumValidationErr = facilitiesCheckEnums(req.body);
-  if (enumValidationErr) {
-    return res.status(422).send(enumValidationErr);
-  }
-
-  let response;
-  let updatedFacility;
-
   try {
-    updatedFacility = await update(req.params.id, req.body, generatePortalAuditDetails(req.user._id));
+    const enumValidationErr = facilitiesCheckEnums(req.body);
+    if (enumValidationErr) {
+      return res.status(422).send(enumValidationErr);
+    }
+
+    let response;
+
+    const updatedFacility = await update(req.params.id, req.body, generatePortalAuditDetails(req.user._id));
+
+    if (updatedFacility.value) {
+      const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
+      const existingDeal = await dealsCollection.findOne({ _id: { $eq: new ObjectId(updatedFacility.value.dealId) } });
+
+      if (!existingDeal) {
+        throw new DealNotFoundError(updatedFacility.value.dealId);
+      }
+
+      response = {
+        status: facilitiesStatus(updatedFacility.value),
+        details: updatedFacility.value,
+        validation: facilitiesValidation(updatedFacility.value, existingDeal.version),
+      };
+    }
+
+    return res.status(utils.mongoStatus(updatedFacility)).send(response);
   } catch (error) {
     if (error instanceof ApiError) {
       return res.status(error.status).send({ status: error.status, message: error.message });
     }
     throw error;
   }
-
-  if (updatedFacility.value) {
-    response = {
-      status: facilitiesStatus(updatedFacility.value),
-      details: updatedFacility.value,
-      validation: facilitiesValidation(updatedFacility.value),
-    };
-  }
-
-  return res.status(utils.mongoStatus(updatedFacility)).send(response);
 };
 
 exports.delete = async (req, res) => {
