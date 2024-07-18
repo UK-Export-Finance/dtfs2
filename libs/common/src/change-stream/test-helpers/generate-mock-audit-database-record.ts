@@ -48,7 +48,6 @@ export const generateParsedMockTfmUserAuditDatabaseRecord = (mockUserId: string 
 export const generateParsedMockPortalUserAuditDatabaseRecord = (mockUserId: string | ObjectId) => ({
   ...JSON.parse(JSON.stringify(generatePortalUserAuditDatabaseRecord(mockUserId))),
   lastUpdatedAt: expect.any(String),
-  lastUpdatedByPortalUserId: null,
 });
 
 export const expectAnyPortalUserAuditDatabaseRecord = () => ({
