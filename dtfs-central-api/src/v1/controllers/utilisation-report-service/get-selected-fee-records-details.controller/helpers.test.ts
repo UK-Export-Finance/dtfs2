@@ -27,7 +27,7 @@ describe('get selected fee record details controller helpers', () => {
     it('sets bank name', async () => {
       // Act
       const bankId = '123';
-      const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [aFeeRecordWithToDoStatus()], false);
+      const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [aFeeRecordWithStatusToDo()], false);
 
       // Assert
       expect(result.bank).toEqual({ name: BANK_NAME });
@@ -39,7 +39,7 @@ describe('get selected fee record details controller helpers', () => {
       const reportPeriod = aReportPeriod();
 
       // Act
-      const result = await mapToSelectedFeeRecordDetails(bankId, reportPeriod, [aFeeRecordWithToDoStatus()], false);
+      const result = await mapToSelectedFeeRecordDetails(bankId, reportPeriod, [aFeeRecordWithStatusToDo()], false);
 
       // Assert
       expect(result.reportPeriod).toEqual(reportPeriod);
@@ -182,7 +182,7 @@ describe('get selected fee record details controller helpers', () => {
       const canAddToExistingPayment = true;
 
       // Act
-      const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [aFeeRecordWithToDoStatus()], canAddToExistingPayment);
+      const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [aFeeRecordWithStatusToDo()], canAddToExistingPayment);
 
       // Assert
       expect(result.canAddToExistingPayment).toEqual(canAddToExistingPayment);
@@ -194,7 +194,7 @@ describe('get selected fee record details controller helpers', () => {
       // Arrange
       const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
       // Act
-      const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecordWithToDoStatus()]);
+      const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecordWithStatusToDo()]);
 
       // Assert
       expect(result).toEqual(true);
@@ -206,7 +206,7 @@ describe('get selected fee record details controller helpers', () => {
       const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(false);
 
       // Act
-      const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecordWithToDoStatus()]);
+      const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecordWithStatusToDo()]);
 
       // Assert
       expect(result).toEqual(false);
@@ -240,7 +240,7 @@ describe('get selected fee record details controller helpers', () => {
     });
   });
 
-  function aFeeRecordWithToDoStatus(): FeeRecordEntity {
+  function aFeeRecordWithStatusToDo(): FeeRecordEntity {
     const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
     return FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('GBP').withStatus('TO_DO').build();
   }
