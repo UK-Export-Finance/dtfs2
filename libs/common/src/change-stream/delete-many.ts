@@ -1,5 +1,5 @@
 import 'dotenv/config.js';
-import { DeleteResult, Filter, ObjectId, OptionalId, TransactionOptions, WithoutId } from 'mongodb';
+import { DeleteResult, Filter, ObjectId, TransactionOptions, WithoutId } from 'mongodb';
 import { add } from 'date-fns';
 import { AuditDetails, DbModel, DeletionAuditLog, MongoDbCollectionName } from '../types';
 import { MongoDbClient } from '../mongo-db-client';
@@ -10,7 +10,7 @@ import { DocumentNotFoundError, WriteConcernError } from '../errors';
 const { DELETION_AUDIT_LOGS_TTL_SECONDS } = changeStreamConfig;
 
 type DeleteManyParams<CollectionName extends MongoDbCollectionName> = {
-  filter: Filter<OptionalId<DbModel<CollectionName>>>;
+  filter: Filter<WithoutId<DbModel<CollectionName>>>;
   collectionName: CollectionName;
   db: MongoDbClient;
   auditDetails: AuditDetails;
@@ -63,7 +63,7 @@ const deleteManyWithAuditLogs = async <CollectionName extends MongoDbCollectionN
 
       const deleteManyFilter = {
         _id: { $in: documentsToDeleteIds },
-      } as unknown as Filter<OptionalId<DbModel<CollectionName>>>;
+      } as unknown as Filter<WithoutId<DbModel<CollectionName>>>;
       const deleteResult = await collection.deleteMany(deleteManyFilter, { session });
       if (!(deleteResult.acknowledged && deleteResult.deletedCount === documentsToDeleteIds.length)) {
         throw new WriteConcernError();

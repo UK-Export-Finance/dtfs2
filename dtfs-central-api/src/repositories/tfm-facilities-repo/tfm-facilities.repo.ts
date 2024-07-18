@@ -141,7 +141,7 @@ export class TfmFacilitiesRepo {
    * Method to execute an aggregate against the TFM facilities collection
    * @param pipeline - The aggregate pipeline
    * @param [options] - The aggregate options
-   * @returns The aggregation cursor
+   * @returns The aggregation cursor and array of aggregate results
    */
   public static async executeAggregate(pipeline: Document[], options?: AggregateOptions): Promise<ExecuteAggregateResult> {
     const collection = await this.getCollection();

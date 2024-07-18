@@ -1,4 +1,4 @@
-import { Collection, Db as DbConnection, MongoClient, OptionalId } from 'mongodb';
+import { Collection, Db as DbConnection, MongoClient, WithoutId } from 'mongodb';
 import { MongoDbCollectionName } from '../types/mongo-db-models/mongo-db-collection-name';
 import { DbModel } from '../types/mongo-db-models/db-model';
 
@@ -65,7 +65,7 @@ export class MongoDbClient {
    */
   public async getCollection<CollectionName extends MongoDbCollectionName>(
     collectionName: CollectionName,
-  ): Promise<Collection<OptionalId<DbModel<CollectionName>>>> {
+  ): Promise<Collection<WithoutId<DbModel<CollectionName>>>> {
     return (await this.getOrInitialiseClient()).connection.collection(collectionName);
   }
 
