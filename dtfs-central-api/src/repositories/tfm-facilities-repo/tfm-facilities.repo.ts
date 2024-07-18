@@ -10,7 +10,10 @@ import {
   AggregationCursor,
   AggregateOptions,
   UpdateResult,
+  Filter,
 } from 'mongodb';
+import { AuditDetails } from '@ukef/dtfs2-common';
+import { deleteMany } from '@ukef/dtfs2-common/change-stream';
 import { TfmFacilitySchema } from './tfm-facility.schema';
 import { mongoDbClient } from '../../drivers/db-client';
 
@@ -145,5 +148,23 @@ export class TfmFacilitiesRepo {
     const aggregationCursor = collection.aggregate(pipeline, options);
     const resultsArray = await aggregationCursor.toArray();
     return { aggregationCursor, resultsArray };
+  }
+
+  /**
+   * Delete many TFM facilities by the supplied deal id
+   * @param dealId - The deal id
+   * @param auditDetails - The audit details
+   * @returns The delete result
+   */
+  public static async deleteManyByDealId(dealId: string | ObjectId, auditDetails: AuditDetails): Promise<{ acknowledged: boolean }> {
+    const filter: Filter<RawTfmFacility> = {
+      'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) },
+    };
+    return await deleteMany({
+      filter,
+      collectionName: 'tfm-facilities',
+      db: mongoDbClient,
+      auditDetails,
+    });
   }
 }
