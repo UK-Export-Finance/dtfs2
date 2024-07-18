@@ -354,6 +354,7 @@ describe(page, () => {
     const addPaymentViewModel = {
       ...anAddPaymentViewModel(),
       canAddToExistingPayment: true,
+      reportId: 123,
     };
     const wrapper = render(addPaymentViewModel);
 
@@ -361,11 +362,14 @@ describe(page, () => {
     const addFeesToExistingPaymentButtonSelector = '[data-cy="add-fees-to-an-existing-payment-button"]';
     wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toExist();
     wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('value', 'Add reported fee to an existing payment');
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).hasClass('govuk-button--secondary');
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/123/add-to-an-existing-payment`);
   });
 
   it('should display plural "Add reported fees to an existing payment" button when canAddToExistingPayment is true and multiple payments exist', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.reportId = 123;
     addPaymentViewModel.canAddToExistingPayment = true;
     addPaymentViewModel.reportedFeeDetails.feeRecords = [
       {
@@ -389,6 +393,8 @@ describe(page, () => {
     const addFeesToExistingPaymentButtonSelector = '[data-cy="add-fees-to-an-existing-payment-button"]';
     wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toExist();
     wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('value', 'Add reported fees to an existing payment');
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).hasClass('govuk-button--secondary');
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/123/add-to-an-existing-payment`);
   });
 
   it('should not display "Add reported fee to an existing payment" button when canAddToExistingPayment is false', () => {
