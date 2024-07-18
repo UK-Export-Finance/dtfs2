@@ -22,88 +22,92 @@ type ErrorsOrDate =
       errors: ValidationError[];
     };
 
-export const validateAndParseDayMonthYear = ({ day, month, year }: DayMonthYear, { errRef, variableDisplayName }: ValidationOptions): ErrorsOrDate => {
-  const dateIsBlank = !day && !month && !year;
-  const dateIsFullyComplete = day && month && year;
+const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-  const variableDisplayNameWithCapital = variableDisplayName.charAt(0).toUpperCase() + variableDisplayName.slice(1);
+const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYear, { errRef, variableDisplayName }: ValidationOptions): ValidationError[] => {
+  const dateIsBlank = !(day || month || year);
+  const dateIsFullyComplete = Boolean(day && month && year);
+
+  const variableDisplayNameWithCapital = capitalizeFirstLetter(variableDisplayName);
 
   if (dateIsBlank) {
-    return {
-      errors: [
-        {
-          errRef,
-          errMsg: `Enter a ${variableDisplayName}`,
-          subFieldErrorRefs: [`${errRef}-day`, `${errRef}-month`, `${errRef}-year`],
-        },
-      ],
-    };
+    return [
+      {
+        errRef,
+        errMsg: `Enter a ${variableDisplayName}`,
+        subFieldErrorRefs: [`${errRef}-day`, `${errRef}-month`, `${errRef}-year`],
+      },
+    ];
   }
 
   if (!dateIsFullyComplete) {
-    let msg = `${variableDisplayNameWithCapital} include a `;
-    const subFieldErrorRefs = [];
+    const fieldsToValidate = [
+      { field: day, name: 'day' },
+      { field: month, name: 'month' },
+      { field: year, name: 'year' },
+    ];
 
-    if (!day) {
-      msg += 'day';
-      subFieldErrorRefs.push(`${errRef}-day`);
-    }
-    if (!month) {
-      msg += !day ? ' and month' : 'month';
-      subFieldErrorRefs.push(`${errRef}-month`);
-    }
-    if (!year) {
-      msg += !day || !month ? ' and year' : 'year';
-      subFieldErrorRefs.push(`${errRef}-year`);
-    }
+    const { missingFields, subFieldErrorRefs } = fieldsToValidate.reduce(
+      (acc: { missingFields: string[]; subFieldErrorRefs: string[] }, { field, name }) => {
+        if (!field) {
+          acc.missingFields.push(name);
+          acc.subFieldErrorRefs.push(`${errRef}-${name}`);
+        }
+        return acc;
+      },
+      { missingFields: [], subFieldErrorRefs: [] },
+    );
 
-    return {
-      errors: [
-        {
-          errRef,
-          errMsg: msg,
-          subFieldErrorRefs,
-        },
-      ],
-    };
+    const msg = `${variableDisplayNameWithCapital} must include a ${missingFields.join(' and ')}`;
+
+    return [
+      {
+        errRef,
+        errMsg: msg,
+        subFieldErrorRefs,
+      },
+    ];
   }
 
-  const errors = [];
+  return [];
+};
 
+const validateAllFieldsAreNumbers = ({ day, month, year }: DayMonthYear, { errRef, variableDisplayName }: ValidationOptions): ValidationError[] => {
   const oneOrTwoDigitSchema = Joi.string().min(1).max(2).pattern(/^\d+$/);
   const fourDigitSchema = Joi.string().length(4).pattern(/^\d+$/).required();
 
-  const dayValidation = oneOrTwoDigitSchema.validate(day);
-  const monthValidation = oneOrTwoDigitSchema.validate(month);
-  const yearValidation = fourDigitSchema.validate(year);
+  const fieldsToValidate: { field: string; schema: Joi.StringSchema; fieldName: 'day' | 'month' | 'year' }[] = [
+    { field: day, schema: oneOrTwoDigitSchema, fieldName: 'day' },
+    { field: month, schema: oneOrTwoDigitSchema, fieldName: 'month' },
+    { field: year, schema: fourDigitSchema, fieldName: 'year' },
+  ];
 
-  if (dayValidation.error) {
-    errors.push({
-      errRef,
-      errMsg: `The day for the ${variableDisplayName} must include 1 or 2 numbers`,
-      subFieldErrorRefs: [`${errRef}-day`],
-    });
-  }
-  if (monthValidation.error) {
-    errors.push({
-      errRef,
-      errMsg: `The month for the ${variableDisplayName} must include 1 or 2 numbers`,
-      subFieldErrorRefs: [`${errRef}-month`],
-    });
-  }
-  if (yearValidation.error) {
-    errors.push({
-      errRef,
-      errMsg: `The year for the ${variableDisplayName} must include 4 numbers`,
-      subFieldErrorRefs: [`${errRef}-year`],
-    });
-  }
+  const errors: ValidationError[] = fieldsToValidate.reduce((acc: ValidationError[], { field, schema, fieldName }) => {
+    const validation = schema.validate(field);
+    if (validation.error) {
+      acc.push({
+        errRef,
+        errMsg: `The ${fieldName} for the ${variableDisplayName} must include ${fieldName === 'year' ? '4' : '1 or 2'} numbers`,
+        subFieldErrorRefs: [`${errRef}-${fieldName}`],
+      });
+    }
+    return acc;
+  }, []);
 
-  if (errors.length) {
-    return {
-      errors,
-    };
-  }
+  return errors;
+};
+
+const validateAllFieldsAreValid = ({ day, month, year }: DayMonthYear, { errRef, variableDisplayName }: ValidationOptions): ValidationError[] => {
+  const variableDisplayNameWithCapital = capitalizeFirstLetter(variableDisplayName);
+
+  const daysInMonth = getDaysInMonth(
+    set(new Date(), {
+      year: Number(year),
+      month: Number(month) - 1,
+    }),
+  );
+
+  const errors = [];
 
   if (Number(month) > 12 || Number(month) < 1) {
     errors.push({
@@ -113,13 +117,6 @@ export const validateAndParseDayMonthYear = ({ day, month, year }: DayMonthYear,
     });
   }
 
-  const daysInMonth = getDaysInMonth(
-    set(new Date(), {
-      year: Number(year),
-      month: Number(month) - 1,
-    }),
-  );
-
   if (daysInMonth < Number(day) || Number(day) < 1) {
     errors.push({
       errRef,
@@ -128,10 +125,23 @@ export const validateAndParseDayMonthYear = ({ day, month, year }: DayMonthYear,
     });
   }
 
-  if (errors.length) {
-    return {
-      errors,
-    };
+  return errors;
+};
+
+export const validateAndParseDayMonthYear = ({ day, month, year }: DayMonthYear, { errRef, variableDisplayName }: ValidationOptions): ErrorsOrDate => {
+  const validateAllFieldsArePresentErrors = validateAllFieldsArePresent({ day, month, year }, { errRef, variableDisplayName });
+  if (validateAllFieldsArePresentErrors.length) {
+    return { errors: validateAllFieldsArePresentErrors };
+  }
+
+  const validateAllFieldsAreNumbersErrors = validateAllFieldsAreNumbers({ day, month, year }, { errRef, variableDisplayName });
+  if (validateAllFieldsAreNumbersErrors.length) {
+    return { errors: validateAllFieldsAreNumbersErrors };
+  }
+
+  const validateAllFieldsAreValidErrors = validateAllFieldsAreValid({ day, month, year }, { errRef, variableDisplayName });
+  if (validateAllFieldsAreValidErrors.length) {
+    return { errors: validateAllFieldsAreValidErrors };
   }
 
   return {

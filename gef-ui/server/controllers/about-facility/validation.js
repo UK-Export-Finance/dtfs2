@@ -21,6 +21,8 @@ const { validateAndParseDayMonthYear } = require('../../utils/day-month-year-val
  * @param {string} params.monthsOfCover,
  * @param {string} params.facilityName,
  * @param {'true' | 'false' | undefined} params.shouldCoverStartOnSubmission,
+ * @param {boolean | undefined} params.isUsingFacilityEndDate,
+ * @param {boolean} params.isFacilityEndDateEnabled,
  * @returns {{ errRef: string, errMsg: string }[]} array of validation errors
  */
 // Unit test coverage is in `index.validate-and-update-about-facility.test.js`
@@ -239,7 +241,7 @@ const validateAboutFacility = ({
   }
 
   if (isFacilityEndDateEnabled) {
-    if (!isUsingFacilityEndDate && !saveAndReturn) {
+    if (isUsingFacilityEndDate === undefined && !saveAndReturn) {
       aboutFacilityErrors.push({
         errRef: 'isUsingFacilityEndDate',
         errMsg: 'Select if there is an end date for this facility',

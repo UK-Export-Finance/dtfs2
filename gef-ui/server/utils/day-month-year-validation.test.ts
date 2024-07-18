@@ -23,7 +23,7 @@ describe('validateAndParseDayMonthYear', () => {
       expectedErrors: [
         {
           errRef,
-          errMsg: 'Test date include a day',
+          errMsg: 'Test date must include a day',
           subFieldErrorRefs: [`${errRef}-day`],
         },
       ],
@@ -34,7 +34,7 @@ describe('validateAndParseDayMonthYear', () => {
       expectedErrors: [
         {
           errRef,
-          errMsg: 'Test date include a month',
+          errMsg: 'Test date must include a month',
           subFieldErrorRefs: [`${errRef}-month`],
         },
       ],
@@ -45,7 +45,7 @@ describe('validateAndParseDayMonthYear', () => {
       expectedErrors: [
         {
           errRef,
-          errMsg: 'Test date include a year',
+          errMsg: 'Test date must include a year',
           subFieldErrorRefs: [`${errRef}-year`],
         },
       ],
@@ -56,7 +56,7 @@ describe('validateAndParseDayMonthYear', () => {
       expectedErrors: [
         {
           errRef,
-          errMsg: 'Test date include a day and month',
+          errMsg: 'Test date must include a day and month',
           subFieldErrorRefs: [`${errRef}-day`, `${errRef}-month`],
         },
       ],
@@ -67,7 +67,7 @@ describe('validateAndParseDayMonthYear', () => {
       expectedErrors: [
         {
           errRef,
-          errMsg: 'Test date include a day and year',
+          errMsg: 'Test date must include a day and year',
           subFieldErrorRefs: [`${errRef}-day`, `${errRef}-year`],
         },
       ],
@@ -78,7 +78,7 @@ describe('validateAndParseDayMonthYear', () => {
       expectedErrors: [
         {
           errRef,
-          errMsg: 'Test date include a month and year',
+          errMsg: 'Test date must include a month and year',
           subFieldErrorRefs: [`${errRef}-month`, `${errRef}-year`],
         },
       ],

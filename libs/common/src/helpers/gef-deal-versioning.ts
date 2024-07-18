@@ -11,6 +11,16 @@ const dealVersionSchema = z.object({
 
 export const getCurrentGefDealVersion = () => dealVersionSchema.parse(process.env).GEF_DEAL_VERSION;
 
+/**
+ * When adding a new feature, we should add the environment variable here
+ * @example
+ * type Feature = 'FACILITY_END_DATE' | 'NEW_FEATURE';
+ * // ...
+ * const minimumSupportedVersions: Record<Feature, number> = {
+ *   FACILITY_END_DATE: 1,
+ *   NEW_FEATURE: 2,
+ * };
+ */
 type Feature = 'FACILITY_END_DATE';
 
 /**
