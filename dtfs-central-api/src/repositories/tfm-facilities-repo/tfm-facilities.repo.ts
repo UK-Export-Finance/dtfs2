@@ -1,30 +1,14 @@
 import z from 'zod';
-import {
-  ObjectId,
-  UpdateFilter,
-  WithoutId,
-  WithId,
-  FindOneAndUpdateOptions,
-  Collection,
-  Document,
-  AggregationCursor,
-  AggregateOptions,
-  UpdateResult,
-  Filter,
-} from 'mongodb';
+import { ObjectId, UpdateFilter, WithoutId, WithId, FindOneAndUpdateOptions, Collection, Document, UpdateResult, Filter } from 'mongodb';
 import { AuditDetails } from '@ukef/dtfs2-common';
 import { deleteMany } from '@ukef/dtfs2-common/change-stream';
 import { TfmFacilitySchema } from './tfm-facility.schema';
 import { mongoDbClient } from '../../drivers/db-client';
+import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
 
 export type RawTfmFacility = WithId<object>;
 
 export type ParsedTfmFacility = z.infer<typeof TfmFacilitySchema>;
-
-type ExecuteAggregateResult = {
-  aggregationCursor: AggregationCursor<Document>;
-  resultsArray: Document[];
-};
 
 export class TfmFacilitiesRepo {
   private static async getCollection(): Promise<Collection<WithoutId<RawTfmFacility>>> {
@@ -138,19 +122,6 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Method to execute an aggregate against the TFM facilities collection
-   * @param pipeline - The aggregate pipeline
-   * @param [options] - The aggregate options
-   * @returns The aggregation cursor and array of aggregate results
-   */
-  public static async executeAggregate(pipeline: Document[], options?: AggregateOptions): Promise<ExecuteAggregateResult> {
-    const collection = await this.getCollection();
-    const aggregationCursor = collection.aggregate(pipeline, options);
-    const resultsArray = await aggregationCursor.toArray();
-    return { aggregationCursor, resultsArray };
-  }
-
-  /**
    * Delete many TFM facilities by the supplied deal id
    * @param dealId - The deal id
    * @param auditDetails - The audit details
@@ -166,5 +137,128 @@ export class TfmFacilitiesRepo {
       db: mongoDbClient,
       auditDetails,
     });
+  }
+
+  /**
+   * Find amendments by the amendment status
+   * @param status - The amendment status
+   * @returns The found amendments
+   */
+  public static async findAmendmentsByStatus(status: string): Promise<Document[]> {
+    const collection = await this.getCollection();
+    return await collection
+      .aggregate(aggregatePipelines.amendmentsByStatus(status))
+      .map<Document>((doc) => doc.amendments as Document)
+      .toArray();
+  }
+
+  /**
+   * Finds amendments by the facility id
+   * @param facilityId - The facility id
+   * @returns The found amendments
+   */
+  public static async findAmendmentsByFacilityId(facilityId: string | ObjectId): Promise<Document[]> {
+    const collection = await this.getCollection();
+    return await collection
+      .aggregate(aggregatePipelines.amendmentsByFacilityId(facilityId))
+      .map<Document>((doc) => doc.amendments as Document)
+      .toArray();
+  }
+
+  /**
+   * Finds amendments by the facility id and status
+   * @param facilityId - The facility id
+   * @param status - The amendment status
+   * @returns The found amendments
+   */
+  public static async findAmendmentsByFacilityIdAndStatus(facilityId: string | ObjectId, status: string): Promise<Document[]> {
+    const collection = await this.getCollection();
+    return await collection
+      .aggregate(aggregatePipelines.amendmentsByFacilityIdAndStatus(facilityId, status))
+      .map<Document>((doc) => doc.amendments as Document)
+      .toArray();
+  }
+
+  /**
+   * Finds amendments by the facility id and amendment id
+   * @param facilityId - The facility id
+   * @param amendmentId - The amendment id
+   * @returns The found amendments
+   */
+  public static async findAmendmentsByFacilityIdAndAmendmentId(facilityId: string | ObjectId, amendmentId: string | ObjectId): Promise<Document[]> {
+    const collection = await this.getCollection();
+    return await collection
+      .aggregate(aggregatePipelines.amendmentsByFacilityIdAndAmendmentId(facilityId, amendmentId))
+      .map<Document>((doc) => doc.amendments as Document)
+      .toArray();
+  }
+
+  /**
+   * Finds amendments by the deal id
+   * @param dealId - The deal id
+   * @returns The found amendments
+   */
+  public static async findAmendmentsByDealId(dealId: string | ObjectId): Promise<Document[]> {
+    const collection = await this.getCollection();
+    return await collection
+      .aggregate(aggregatePipelines.amendmentsByDealId(dealId))
+      .map<Document>((doc) => doc.amendments as Document)
+      .toArray();
+  }
+
+  /**
+   * Finds amendments by the deal id and status
+   * @param dealId - The deal id
+   * @param status - The amendment status
+   * @returns The found amendments
+   */
+  public static async findAmendmentsByDealIdAndStatus(dealId: string | ObjectId, status: string): Promise<Document[]> {
+    const collection = await this.getCollection();
+    return await collection
+      .aggregate(aggregatePipelines.amendmentsByDealIdAndStatus(dealId, status))
+      .map<Document>((doc) => doc.amendments as Document)
+      .toArray();
+  }
+
+  /**
+   * Finds the latest completed amendment by facility id
+   * @param facilityId - The facility id
+   * @returns The latest completed amendment
+   */
+  public static async findLatestCompletedAmendmentByFacilityId(facilityId: string | ObjectId): Promise<Document | null> {
+    const collection = await this.getCollection();
+    const amendments = await collection
+      .aggregate(aggregatePipelines.latestCompletedAmendmentByFacilityId(facilityId))
+      .map<Document>((doc) => doc.amendments as Document)
+      .toArray();
+    return amendments.at(0) ?? null;
+  }
+
+  /**
+   * Finds the latest completed amendment by deal id
+   * @param dealId - The deal id
+   * @returns The latest completed amendment
+   */
+  public static async findLatestCompletedAmendmentByDealId(dealId: string | ObjectId): Promise<Document | null> {
+    const collection = await this.getCollection();
+    const amendments = await collection
+      .aggregate(aggregatePipelines.latestCompletedAmendmentByDealId(dealId))
+      .map<Document>((doc) => doc.amendments as Document)
+      .toArray();
+    return amendments.at(0) ?? null;
+  }
+
+  /**
+   * Finds all facilities after applying the aggregate options
+   * with the total count
+   * @param aggregateOptions - The aggregate options
+   * @returns The found facilities and count
+   */
+  public static async findAllFacilitiesAndFacilityCount(
+    aggregateOptions: AllFacilitiesAndFacilityCountAggregatePipelineOptions,
+  ): Promise<{ count: number; facilities: Document[] } | null> {
+    const collection = await this.getCollection();
+    const result = await collection.aggregate(aggregatePipelines.allFacilitiesAndFacilityCount(aggregateOptions)).toArray();
+    return (result.at(0) as { count: number; facilities: Document[] }) ?? null;
   }
 }

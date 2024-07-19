@@ -12,16 +12,10 @@ const CONSTANTS = require('../../../../constants');
  */
 const findAllAmendmentsByStatus = async (status) => {
   try {
-    const { resultsArray } = await TfmFacilitiesRepo.executeAggregate([
-      { $project: { _id: false, amendments: '$amendments' } },
-      { $unwind: '$amendments' },
-      { $match: { 'amendments.status': { $eq: status } } },
-      { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-      { $project: { _id: false, amendments: true } },
-    ]);
+    const amendmentsWithStatus = await TfmFacilitiesRepo.findAmendmentsByStatus(status);
 
-    // returns the amendment object for the given facilityId and amendmentId
-    return resultsArray[0]?.amendments ?? null;
+    // returns the amendment object for the given status
+    return amendmentsWithStatus.at(0) ?? null;
   } catch (error) {
     console.error('Unable to find amendments object %o', error);
     return null;
@@ -47,18 +41,10 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
     if (!ObjectId.isValid(facilityId)) {
       throw new Error('Invalid facility Id');
     }
-    const { resultsArray } = await TfmFacilitiesRepo.executeAggregate([
-      { $match: { _id: { $eq: ObjectId(facilityId) } } },
-      { $project: { _id: false, amendments: '$amendments' } },
-      { $unwind: '$amendments' },
-      { $sort: { 'amendments.version': -1 } },
-      { $match: { 'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED } } },
-      { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-      { $project: { _id: false, amendments: true } },
-    ]);
+    const amendmentsForFacility = await TfmFacilitiesRepo.findAmendmentsByFacilityId(facilityId);
 
-    // returns the amendment object for the given facilityId and amendmentId
-    return resultsArray[0]?.amendments ?? null;
+    // returns the amendment object for the given facilityId
+    return amendmentsForFacility.at(0) ?? null;
   } catch (error) {
     console.error('Unable to find amendments object %o', error);
     return null;
@@ -85,30 +71,10 @@ const findAmendmentById = async (facilityId, amendmentId) => {
   }
 
   try {
-    const { resultsArray } = await TfmFacilitiesRepo.executeAggregate([
-      { $match: { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } } },
-      {
-        $addFields: {
-          'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
-        },
-      },
-      {
-        $project: {
-          _id: false,
-          amendments: {
-            $filter: {
-              input: '$amendments',
-              as: 'amendment',
-              cond: { $eq: ['$$amendment.amendmentId', ObjectId(amendmentId)] },
-            },
-          },
-        },
-      },
-      { $unwind: '$amendments' },
-    ]);
+    const amendments = await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndAmendmentId(facilityId, amendmentId);
 
     // returns the amendment object for the given facilityId and amendmentId
-    return resultsArray[0]?.amendments ?? null;
+    return amendments.at(0) ?? null;
   } catch (error) {
     console.error('Unable to find amendments object %o', error);
     return null;
@@ -132,27 +98,10 @@ const findAmendmentsByDealId = async (dealId) => {
   }
 
   try {
-    const { resultsArray } = await TfmFacilitiesRepo.executeAggregate([
-      { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
-      {
-        $addFields: {
-          'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
-        },
-      },
-      { $project: { _id: false, amendments: true } },
-      { $unwind: '$amendments' },
-      { $sort: { 'amendments.submittedAt': -1 } },
-      {
-        $match: {
-          'amendments.status': { $ne: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED },
-          'amendments.submittedByPim': { $eq: true },
-        },
-      },
-      { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-      { $project: { _id: false, amendments: true } },
-    ]);
+    const amendments = await TfmFacilitiesRepo.findAmendmentsByDealId(dealId);
+
     // returns the amendment object for the given dealId
-    return resultsArray[0]?.amendments ?? null;
+    return amendments.at(0) ?? null;
   } catch (error) {
     console.error('Unable to find the amendments object by Deal Id %o', error);
     return null;
@@ -177,16 +126,10 @@ const findAmendmentByStatusAndFacilityId = async (facilityId, status) => {
   }
 
   try {
-    const { resultsArray } = await TfmFacilitiesRepo.executeAggregate([
-      { $match: { _id: { $eq: ObjectId(facilityId) } } },
-      { $unwind: '$amendments' },
-      { $match: { 'amendments.status': { $eq: status } } },
-      { $project: { _id: false, amendments: true } },
-      { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-      { $project: { _id: false, amendments: true } },
-    ]);
-    // returns the amendment object for the given facilityId
-    return resultsArray[0]?.amendments ?? null;
+    const amendments = await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndStatus(facilityId, status);
+
+    // returns the amendment object for the given facilityId and status
+    return amendments.at(0) ?? null;
   } catch (error) {
     console.error('Unable to find amendments object %o', error);
     return null;
@@ -210,23 +153,10 @@ const findAmendmentByStatusAndDealId = async (dealId, status) => {
     return null;
   }
   try {
-    const { resultsArray } = await TfmFacilitiesRepo.executeAggregate([
-      { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
-      {
-        $addFields: {
-          'amendments.ukefFacilityId': '$facilitySnapshot.ukefFacilityId',
-        },
-      },
-      { $unwind: '$amendments' },
-      { $match: { 'amendments.status': { $eq: status } } },
-      { $project: { _id: false, amendments: true } },
-      { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-
-      { $project: { amendments: true, type: true, _id: false } },
-    ]);
+    const amendments = await TfmFacilitiesRepo.findAmendmentsByDealIdAndStatus(dealId, status);
 
     // returns the amendment object for the given dealId
-    return resultsArray[0]?.amendments ?? null;
+    return amendments.at(0) ?? null;
   } catch (error) {
     console.error('Unable to find the amendments object %o', error);
     return null;
@@ -248,51 +178,15 @@ const findLatestCompletedValueAmendmentByFacilityId = async (facilityId) => {
     console.error('Invalid facility Id');
     return null;
   }
-  const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
-  const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
-  const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
 
   try {
-    const { resultsArray } = await TfmFacilitiesRepo.executeAggregate([
-      { $match: { _id: { $eq: ObjectId(facilityId) } } },
-      { $unwind: '$amendments' },
-      {
-        $match: {
-          $or: [
-            {
-              'amendments.status': { $eq: COMPLETED },
-              'amendments.submittedByPim': { $eq: true },
-              'amendments.requireUkefApproval': { $eq: false },
-              'amendments.changeFacilityValue': { $eq: true },
-            },
-            {
-              'amendments.status': { $eq: COMPLETED },
-              'amendments.bankDecision.decision': { $eq: PROCEED },
-              'amendments.bankDecision.submitted': { $eq: true },
-              'amendments.ukefDecision.value': { $eq: APPROVED_WITH_CONDITIONS },
-              'amendments.changeFacilityValue': { $eq: true },
-            },
-            {
-              'amendments.status': { $eq: COMPLETED },
-              'amendments.bankDecision.decision': { $eq: PROCEED },
-              'amendments.bankDecision.submitted': { $eq: true },
-              'amendments.ukefDecision.value': { $eq: APPROVED_WITHOUT_CONDITIONS },
-              'amendments.changeFacilityValue': { $eq: true },
-            },
-          ],
-        },
-      },
-      { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+    const latestCompletedAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
 
-      { $project: { _id: false, amendments: true } },
-      { $limit: 1 },
-    ]);
-
-    if (resultsArray[0]?.amendments?.value) {
+    if (latestCompletedAmendment) {
       return {
-        amendmentId: resultsArray[0].amendments.amendmentId,
-        value: resultsArray[0].amendments.value,
-        currency: resultsArray[0].amendments.currency,
+        amendmentId: latestCompletedAmendment.amendmentId,
+        value: latestCompletedAmendment.value,
+        currency: latestCompletedAmendment.currency,
       };
     }
     return null;
@@ -317,50 +211,14 @@ const findLatestCompletedDateAmendmentByFacilityId = async (facilityId) => {
     console.error('Invalid facility Id');
     return null;
   }
-  const { PROCEED } = CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION;
-  const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
-  const { APPROVED_WITH_CONDITIONS, APPROVED_WITHOUT_CONDITIONS } = CONSTANTS.AMENDMENT.AMENDMENT_MANAGER_DECISIONS;
 
   try {
-    const { resultsArray } = await TfmFacilitiesRepo.executeAggregate([
-      { $match: { _id: { $eq: ObjectId(facilityId) } } },
-      { $unwind: '$amendments' },
-      {
-        $match: {
-          $or: [
-            {
-              'amendments.status': { $eq: COMPLETED },
-              'amendments.submittedByPim': { $eq: true },
-              'amendments.requireUkefApproval': { $eq: false },
-              'amendments.changeCoverEndDate': { $eq: true },
-            },
-            {
-              'amendments.status': { $eq: COMPLETED },
-              'amendments.bankDecision.decision': { $eq: PROCEED },
-              'amendments.bankDecision.submitted': { $eq: true },
-              'amendments.ukefDecision.coverEndDate': { $eq: APPROVED_WITH_CONDITIONS },
-              'amendments.changeCoverEndDate': { $eq: true },
-            },
-            {
-              'amendments.status': { $eq: COMPLETED },
-              'amendments.bankDecision.decision': { $eq: PROCEED },
-              'amendments.bankDecision.submitted': { $eq: true },
-              'amendments.ukefDecision.coverEndDate': { $eq: APPROVED_WITHOUT_CONDITIONS },
-              'amendments.changeCoverEndDate': { $eq: true },
-            },
-          ],
-        },
-      },
-      { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+    const latestCompletedAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
 
-      { $project: { _id: false, amendments: true } },
-      { $limit: 1 },
-    ]);
-
-    if (resultsArray[0]?.amendments?.coverEndDate) {
+    if (latestCompletedAmendment) {
       return {
-        amendmentId: resultsArray[0].amendments.amendmentId,
-        coverEndDate: resultsArray[0].amendments.coverEndDate,
+        amendmentId: latestCompletedAmendment.amendmentId,
+        coverEndDate: latestCompletedAmendment.coverEndDate,
       };
     }
     return null;
@@ -377,18 +235,10 @@ const findLatestCompletedAmendmentByFacilityIdVersion = async (facilityId) => {
     console.error('Invalid facility Id');
     return null;
   }
-  const { COMPLETED } = CONSTANTS.AMENDMENT.AMENDMENT_STATUS;
 
   try {
-    const { resultsArray } = await TfmFacilitiesRepo.executeAggregate([
-      { $match: { _id: { $eq: ObjectId(facilityId) } } },
-      { $unwind: '$amendments' },
-      { $match: { 'amendments.status': { $eq: COMPLETED } } },
-      { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-      { $project: { _id: false, amendments: true } },
-      { $limit: 1 },
-    ]);
-    return resultsArray[0]?.amendments?.version ?? null;
+    const latestCompletedAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
+    return (latestCompletedAmendment && latestCompletedAmendment.version) ?? null;
   } catch (error) {
     console.error('Unable to find amendments object %o', error);
     return null;
@@ -413,15 +263,7 @@ const findLatestCompletedAmendmentByDealId = async (dealId) => {
   }
 
   try {
-    const { resultsArray } = await TfmFacilitiesRepo.executeAggregate([
-      { $match: { 'facilitySnapshot.dealId': { $eq: ObjectId(dealId) } } },
-      { $unwind: '$amendments' },
-      { $match: { 'amendments.status': CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED } },
-      { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
-      { $project: { _id: false, amendments: true } },
-      { $limit: 1 },
-    ]);
-    return resultsArray[0]?.amendments ?? null;
+    return await TfmFacilitiesRepo.findLatestCompletedAmendmentByDealId(dealId);
   } catch (error) {
     console.error('Unable to find amendments object %o', error);
     return null;
