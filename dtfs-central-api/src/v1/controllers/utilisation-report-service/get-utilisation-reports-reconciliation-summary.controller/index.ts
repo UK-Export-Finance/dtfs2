@@ -1,12 +1,11 @@
 import { Request, Response } from 'express';
 import { IsoMonthStamp, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { UtilisationReportReconciliationSummary } from '../../../../types/utilisation-reports';
-import { generateReconciliationSummaries } from './helpers';
+import { generateReconciliationSummaries, mapReportToSummaryItem } from './helpers';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { getBankById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { mapReportToSummaryItem } from '../helper';
 
 export const getUtilisationReportsReconciliationSummary = async (
   req: Request<{ submissionMonth: IsoMonthStamp }>,

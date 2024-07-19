@@ -18,9 +18,9 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 
 **CD** 🚀
 
-![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/development_deploy.yml/badge.svg?branch=dev)
-![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/staging_deploy.yml/badge.svg?branch=staging)
-![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/production_deploy.yml/badge.svg?branch=prod)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/deployment.yml/badge.svg?branch=dev)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/deployment.yml/badge.svg?branch=staging)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/deployment.yml/badge.svg?branch=prod)
 
 ## Getting Started :rocket:
 
@@ -102,7 +102,7 @@ There are 3 different docker compose files right now.
 ## Login Credentials :key:
 
 - For Portal (BSS & GEF) mock users: [utils/mock-data-loader/portal-users/index.js](utils/mock-data-loader/portal-users/index.js)
-- For Trade Finance Manager (TFM) mock users: [utils/mock-data-loader/tfm/mocks/users.js](utils/mock-data-loader/tfm/mocks/users.js)
+- For Trade Finance Manager (TFM) mock users: [utils/mock-data-loader/tfm/mocks/users.js](utils/mock-data-loader/tfm/mocks/users.js) (use the `username` to log in as opposed to the `email`)
 
 ## Environment Variables :keycap_ten:
 

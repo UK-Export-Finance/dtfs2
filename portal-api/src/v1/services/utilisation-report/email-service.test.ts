@@ -14,12 +14,12 @@ console.info = jest.fn();
 jest.mock('../../api');
 jest.mock('../../email');
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 describe('emailService', () => {
   afterEach(() => {
     jest.resetAllMocks();
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
   });
 
   describe('sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam', () => {

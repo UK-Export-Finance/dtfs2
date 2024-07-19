@@ -107,6 +107,7 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
         reportPeriod: reconciliationInProgressReport.reportPeriod,
         dateUploaded: reconciliationInProgressReport.dateUploaded!.toISOString(),
         feeRecordPaymentGroups: [],
+        keyingSheet: [],
       });
     });
   });

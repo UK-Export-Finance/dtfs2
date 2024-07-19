@@ -13,19 +13,19 @@ export class PaymentEntity extends AuditableBaseEntity {
   /**
    * The currency the payment was made in
    */
-  @Column({ type: 'nvarchar' })
+  @Column({ nullable: false, type: 'nvarchar' })
   currency!: Currency;
 
   /**
    * The amount received in the payment
    */
-  @MonetaryColumn({ nullable: true, defaultValue: 0 })
+  @MonetaryColumn({ nullable: false })
   amount!: number;
 
   /**
    * The date the payment was received
    */
-  @Column()
+  @Column({ nullable: false })
   dateReceived!: Date;
 
   /**

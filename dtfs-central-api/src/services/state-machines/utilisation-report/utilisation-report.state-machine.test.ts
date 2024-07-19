@@ -9,13 +9,14 @@ import {
 } from '@ukef/dtfs2-common';
 import {
   handleUtilisationReportDueReportInitialisedEvent,
-  handleUtilisationReportFeeRecordKeyedEvent,
+  handleUtilisationReportGenerateKeyingDataEvent,
   handleUtilisationReportManuallySetCompletedEvent,
   handleUtilisationReportManuallySetIncompleteEvent,
   handleUtilisationReportAddAPaymentEvent,
   handleUtilisationReportReportUploadedEvent,
   handleUtilisationReportDeletePaymentEvent,
   handleUtilisationReportEditPaymentEvent,
+  handleUtilisationReportRemoveFeesFromPaymentGroupEvent,
 } from './event-handlers';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { UtilisationReportStateMachine } from './utilisation-report.state-machine';
@@ -227,18 +228,22 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportDeletePaymentEvent).toHaveBeenCalledTimes(1);
     });
 
-    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.FEE_RECORD_KEYED}' event`, async () => {
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA}' event`, async () => {
       // Arrange
       const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
 
       // Act
       await stateMachine.handleEvent({
-        type: 'FEE_RECORD_KEYED',
-        payload: { feeRecordId: 1 },
+        type: 'GENERATE_KEYING_DATA',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAtMatchStatus: [],
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
       });
 
       // Assert
-      expect(handleUtilisationReportFeeRecordKeyedEvent).toHaveBeenCalledTimes(1);
+      expect(handleUtilisationReportGenerateKeyingDataEvent).toHaveBeenCalledTimes(1);
     });
 
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT}' event`, async () => {
@@ -263,11 +268,31 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportEditPaymentEvent).toHaveBeenCalledTimes(1);
     });
 
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'REMOVE_FEES_FROM_PAYMENT_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsToRemove: [],
+          otherFeeRecordsInGroup: [],
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleUtilisationReportRemoveFeesFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
     const VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES = [
       UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
       UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT,
-      UTILISATION_REPORT_EVENT_TYPE.FEE_RECORD_KEYED,
+      UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
       UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT,
+      UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP,
     ];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES))(

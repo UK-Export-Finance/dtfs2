@@ -6,11 +6,11 @@ import { postAuditDetails, postDeletionAuditDetails } from './changeStreamApi';
 jest.mock('axios', () => jest.fn(() => Promise.resolve('mockResponse')));
 
 describe('changeStreamApi', () => {
-  const originalEnv = process.env;
+  const originalProcessEnv = { ...process.env };
   beforeEach(() => {
     jest.clearAllMocks();
     process.env = {
-      ...originalEnv,
+      ...originalProcessEnv,
       AUDIT_API_URL: 'audit API url',
       AUDIT_API_USERNAME: 'audit API username',
       AUDIT_API_PASSWORD: 'audit API password',
@@ -18,7 +18,7 @@ describe('changeStreamApi', () => {
   });
 
   afterAll(() => {
-    process.env = originalEnv;
+    process.env = originalProcessEnv;
   });
 
   describe('postAuditDetails', () => {

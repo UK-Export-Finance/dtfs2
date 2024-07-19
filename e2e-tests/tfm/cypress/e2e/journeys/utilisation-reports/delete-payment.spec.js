@@ -58,7 +58,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
-    pages.utilisationReportsPage.clickPaymentLink(payment.id);
+    pages.utilisationReportPage.clickPaymentLink(payment.id);
 
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${payment.id}`));
 
@@ -87,7 +87,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     cy.visit(`/utilisation-reports/${report.id}`);
 
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
-    pages.utilisationReportsPage.clickPaymentLink(firstPayment.id);
+    pages.utilisationReportPage.clickPaymentLink(firstPayment.id);
 
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${firstPayment.id}`));
 
@@ -100,7 +100,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}`));
 
-    pages.utilisationReportsPage.getPaymentLink(firstPayment.id).should('not.exist');
+    pages.utilisationReportPage.getPaymentLink(firstPayment.id).should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
   });
 
@@ -119,7 +119,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     cy.visit(`/utilisation-reports/${report.id}`);
 
     cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
-    pages.utilisationReportsPage.clickPaymentLink(firstPayment.id);
+    pages.utilisationReportPage.clickPaymentLink(firstPayment.id);
 
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${firstPayment.id}`));
 
@@ -132,7 +132,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}`));
 
-    pages.utilisationReportsPage.getPaymentLink(firstPayment.id).should('not.exist');
+    pages.utilisationReportPage.getPaymentLink(firstPayment.id).should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
   });
 
@@ -148,7 +148,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
-    pages.utilisationReportsPage.clickPaymentLink(payment.id);
+    pages.utilisationReportPage.clickPaymentLink(payment.id);
 
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${payment.id}`));
 
@@ -159,7 +159,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
-    pages.utilisationReportsPage.getPaymentLink(payment.id).should('not.exist');
+    pages.utilisationReportPage.getPaymentLink(payment.id).should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("TO DO")').should('exist');
   });
 

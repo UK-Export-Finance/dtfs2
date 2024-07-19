@@ -1,4 +1,4 @@
-import { CurrencyAndAmountString, FeeRecordStatus, SessionBank } from '@ukef/dtfs2-common';
+import { Currency, CurrencyAndAmountString, FeeRecordStatus, KeyingSheetAdjustmentChange, KeyingSheetRowStatus, SessionBank } from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
 import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
 import { BaseViewModel } from './base-view-model';
@@ -23,6 +23,30 @@ export type PaymentViewModelItem = {
   formattedCurrencyAndAmount: CurrencyAndAmountString;
 };
 
+export type KeyingSheetDisplayStatus = 'TO DO' | 'DONE';
+
+export type KeyingSheetAdjustmentViewModel = {
+  amount: string | undefined;
+  change: KeyingSheetAdjustmentChange;
+};
+
+export type KeyingSheetViewModel = {
+  status: KeyingSheetRowStatus;
+  displayStatus: KeyingSheetDisplayStatus;
+  facilityId: string;
+  exporter: string;
+  baseCurrency: Currency;
+  feePayments: {
+    formattedCurrencyAndAmount: CurrencyAndAmountString;
+    formattedDateReceived: string;
+  }[];
+  fixedFeeAdjustment: KeyingSheetAdjustmentViewModel;
+  premiumAccrualBalanceAdjustment: KeyingSheetAdjustmentViewModel;
+  principalBalanceAdjustment: KeyingSheetAdjustmentViewModel;
+  checkboxId: `feeRecordId-${number}`;
+  isChecked: boolean;
+}[];
+
 export type FeeRecordPaymentGroupViewModelItem = {
   feeRecords: FeeRecordViewModelItem[];
   totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
@@ -32,6 +56,7 @@ export type FeeRecordPaymentGroupViewModelItem = {
   displayStatus: FeeRecordDisplayStatus;
   checkboxId: PremiumPaymentsTableCheckboxId;
   isChecked: boolean;
+  checkboxAriaLabel: string;
 };
 
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {
@@ -43,4 +68,5 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   premiumPaymentFormError: ErrorSummaryViewModel | undefined;
   facilityIdQueryError: ErrorSummaryViewModel | undefined;
   facilityIdQuery?: string;
+  keyingSheet: KeyingSheetViewModel;
 };

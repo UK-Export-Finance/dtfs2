@@ -1,4 +1,3 @@
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% import "../../_macros/select-all-table-cell-checkbox.njk" as selectAllTableCellCheckbox %}
 {% import "./premium-payments-table-row.njk" as premiumPaymentsTableRow %}
 
@@ -38,9 +37,9 @@
         {{ tableHeader({ headerText: 'Total payments received', isNumericColumn: true, enableSorting: enablePaymentsReceivedSorting, ariaSort: 'none' }) }}
         {{ tableHeader({ headerText: 'Status', isNumericColumn: false, enableSorting: true, ariaSort: 'none' }) }}
         {% if userCanEdit %}
-          <th scope="col" class="govuk-table__header">
+          <td scope="col" class="govuk-table__header">
             {{ selectAllTableCellCheckbox.render() }}
-          </th>
+          </td>
         {% endif %}
       </tr>
     </thead>
