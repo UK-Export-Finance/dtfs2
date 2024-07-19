@@ -105,8 +105,8 @@ context('Return to Maker as MIA', () => {
       applicationDetails.facilitySummaryListRowAction(0, 0).contains('Change');
       applicationDetails.facilitySummaryListRowAction(0, 1).contains('Change');
       applicationDetails.facilitySummaryListRowAction(0, 2).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(0, 3).contains('Change');
       applicationDetails.facilitySummaryListRowAction(0, 4).contains('Change');
+      applicationDetails.facilitySummaryListRowAction(0, 5).contains('Change');
 
       // should be able to edit company house reg number
       applicationDetails.exporterSummaryListRowAction(0, 0).contains('Change');

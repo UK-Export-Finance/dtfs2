@@ -72,8 +72,10 @@ context('Changing facility details from application-details page should take you
       });
 
       it('should take you to provided-facility page from bank-review-date page', () => {
-        // TODO DTFS2-7162: should click on row to visit bank-review-date page
-        cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facility._id}/bank-review-date`));
+        cy.visit(relative(`/gef/application-details/${application.id}`));
+
+        applicationDetails.facilitySummaryListRowAction(0, 4).click();
+
         bankReviewDate.bankReviewDateDay().type(todayDay);
         bankReviewDate.bankReviewDateMonth().type(todayMonth);
         bankReviewDate.bankReviewDateYear().type(todayYear);
@@ -84,28 +86,28 @@ context('Changing facility details from application-details page should take you
 
     it('should take you to facility-currency page from provided-facility page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}`));
-      applicationDetails.facilitySummaryListRowAction(0, 3).click();
+      applicationDetails.facilitySummaryListRowAction(0, facilityEndDateEnabled ? 5 : 3).click();
       providedFacility.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/facility-currency`));
     });
 
     it('should take you to facility-value page from facility-currency page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}`));
-      applicationDetails.facilitySummaryListRowAction(0, 4).click();
+      applicationDetails.facilitySummaryListRowAction(0, facilityEndDateEnabled ? 6 : 4).click();
       facilityCurrency.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/facility-value?status=change`));
     });
 
     it('should take you to facility-guarantee page from facility-value page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}`));
-      applicationDetails.facilitySummaryListRowAction(0, 6).click();
+      applicationDetails.facilitySummaryListRowAction(0, facilityEndDateEnabled ? 7 : 5).click();
       facilityValue.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/facility-guarantee`));
     });
 
     it('should take you to application-details page from facility-guarantee page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}`));
-      applicationDetails.facilitySummaryListRowAction(0, 8).click();
+      applicationDetails.facilitySummaryListRowAction(0, facilityEndDateEnabled ? 10 : 8).click();
       facilityGuarantee.doneButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
     });
