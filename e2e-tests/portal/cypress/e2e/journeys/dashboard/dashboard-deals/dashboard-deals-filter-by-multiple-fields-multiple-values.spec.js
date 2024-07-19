@@ -164,7 +164,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
         (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN),
     );
 
-    dashboardDeals.rows().should('have.length', EXPECTED_DEALS);
+    dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
