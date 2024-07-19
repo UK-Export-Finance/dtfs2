@@ -2,6 +2,7 @@ import { Currency, CurrencyAndAmountString, FeeRecordStatus, KeyingSheetAdjustme
 import { ErrorSummaryViewModel } from './error-summary-view-model';
 import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
 import { BaseViewModel } from './base-view-model';
+import { KeyingSheetCheckboxId } from '../keying-sheet-checkbox-id';
 
 export type SortedAndFormattedCurrencyAndAmount = {
   formattedCurrencyAndAmount: CurrencyAndAmountString | undefined;
@@ -43,7 +44,7 @@ export type KeyingSheetViewModel = {
   fixedFeeAdjustment: KeyingSheetAdjustmentViewModel;
   premiumAccrualBalanceAdjustment: KeyingSheetAdjustmentViewModel;
   principalBalanceAdjustment: KeyingSheetAdjustmentViewModel;
-  checkboxId: `feeRecordId-${number}`;
+  checkboxId: KeyingSheetCheckboxId;
   isChecked: boolean;
 }[];
 

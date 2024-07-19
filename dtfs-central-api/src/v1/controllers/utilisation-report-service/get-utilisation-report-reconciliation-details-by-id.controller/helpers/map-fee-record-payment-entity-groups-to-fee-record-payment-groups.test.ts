@@ -1,6 +1,6 @@
 import {
   Currency,
-  FeeRecordEntity,
+  FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
   PaymentEntityMockBuilder,
@@ -96,44 +96,12 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     });
 
     describe('when a group has a multiple fee records and payments', () => {
-      const paymentCurrency: Currency = 'GBP';
-      const paymentAmount = 100;
-
-      const payments = [
-        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(1).withAmount(paymentAmount).build(),
-        PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(2).withAmount(paymentAmount).build(),
-      ];
-      const totalPaymentsReceivedAmount = paymentAmount * payments.length;
-
-      const feeRecordStatus: FeeRecordStatus = 'DOES_NOT_MATCH';
-
-      const createFeeRecordEntity = (id: number, facilityId: string, exporter: string): FeeRecordEntity =>
-        FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
-          .withId(id)
-          .withStatus(feeRecordStatus)
-          .withFacilityId(facilityId)
-          .withExporter(exporter)
-          .withFeesPaidToUkefForThePeriod(paymentAmount)
-          .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
-          .withPaymentCurrency(paymentCurrency)
-          .withPayments(payments)
-          .build();
-
-      const feeRecordEntities = [
-        createFeeRecordEntity(1, '12345678', 'Test exporter 1'),
-        createFeeRecordEntity(2, '87654321', 'Test exporter 2'),
-        createFeeRecordEntity(3, '10203040', 'Test exporter 3'),
-      ];
-      const totalReportedPaymentsAmount = paymentAmount * feeRecordEntities.length;
-
-      const createFeeRecordEntityPaymentGroup = (): FeeRecordPaymentEntityGroup => ({
-        feeRecords: feeRecordEntities,
-        payments,
-      });
-
       it('returns only one fee record payment group', () => {
         // Arrange
-        const group = createFeeRecordEntityPaymentGroup();
+        const group: FeeRecordPaymentEntityGroup = {
+          feeRecords: [FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).build()],
+          payments: [PaymentEntityMockBuilder.forCurrency('GBP').withAmount(200).build(), PaymentEntityMockBuilder.forCurrency('GBP').withAmount(300).build()],
+        };
 
         // Act
         const result = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
@@ -142,59 +110,107 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         expect(result).toHaveLength(1);
       });
 
-      it('sets the status to the status of the fee record', () => {
+      it('sets the status to ready to key if any of the fee records have status ready to key', () => {
         // Arrange
-        const group = createFeeRecordEntityPaymentGroup();
+        const feeRecordOne = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('RECONCILED').build();
+        const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('READY_TO_KEY').build();
+        const group: FeeRecordPaymentEntityGroup = {
+          feeRecords: [feeRecordOne, feeRecordTwo],
+          payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+        };
 
         // Act
         const result = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
 
         // Assert
-        expect(result[0].status).toBe(feeRecordStatus);
+        expect(result[0].status).toBe<FeeRecordStatus>('READY_TO_KEY');
+      });
+
+      it.each(Object.values(FEE_RECORD_STATUS))('sets the status to the status of the fee records when they all have status %s', (status: FeeRecordStatus) => {
+        // Arrange
+        const feeRecordOne = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build();
+        const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build();
+        const group: FeeRecordPaymentEntityGroup = {
+          feeRecords: [feeRecordOne, feeRecordTwo],
+          payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+        };
+
+        // Act
+        const result = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+
+        // Assert
+        expect(result[0].status).toBe(status);
       });
 
       it('returns the group with as many fee records as there are fee records in the supplied group', () => {
         // Arrange
-        const group = createFeeRecordEntityPaymentGroup();
+        const feeRecordOne = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).build();
+        const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).build();
+        const group: FeeRecordPaymentEntityGroup = {
+          feeRecords: [feeRecordOne, feeRecordTwo],
+          payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+        };
 
         // Act
         const result = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
 
         // Assert
-        expect(result[0].feeRecords).toHaveLength(feeRecordEntities.length);
+        expect(result[0].feeRecords).toHaveLength(2);
       });
 
       it('sets the totalReportedPayments to the total of the fee record reported payments', () => {
         // Arrange
-        const group = createFeeRecordEntityPaymentGroup();
+        const feeRecordOne = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+          .withFeesPaidToUkefForThePeriod(100)
+          .withFeesPaidToUkefForThePeriodCurrency('GBP')
+          .withPaymentCurrency('GBP')
+          .build();
+        const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
+          .withFeesPaidToUkefForThePeriod(400)
+          .withFeesPaidToUkefForThePeriodCurrency('JPY')
+          .withPaymentCurrency('GBP')
+          .withPaymentExchangeRate(2)
+          .build();
+        const group: FeeRecordPaymentEntityGroup = {
+          feeRecords: [feeRecordOne, feeRecordTwo],
+          payments: [PaymentEntityMockBuilder.forCurrency('GBP').withAmount(5000000).build()],
+        };
 
         // Act
         const result = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
 
         // Assert
-        expect(result[0].totalReportedPayments).toEqual({ currency: paymentCurrency, amount: totalReportedPaymentsAmount });
+        // 100 + 400 / 2 = 100 + 200 = 300
+        const expectedTotalReportedPaymentAmount = 300;
+        expect(result[0].totalReportedPayments).toEqual({ currency: 'GBP', amount: expectedTotalReportedPaymentAmount });
       });
 
       it('returns the group with as many paymentsReceived as there are payments in the supplied group', () => {
         // Arrange
-        const group = createFeeRecordEntityPaymentGroup();
+        const group: FeeRecordPaymentEntityGroup = {
+          feeRecords: [FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).build()],
+          payments: [PaymentEntityMockBuilder.forCurrency('GBP').build(), PaymentEntityMockBuilder.forCurrency('GBP').build()],
+        };
 
         // Act
         const result = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
 
         // Assert
-        expect(result[0].paymentsReceived).toHaveLength(group.payments.length);
+        expect(result[0].paymentsReceived).toHaveLength(2);
       });
 
       it('sets the totalPaymentsReceived to the total of the payment amounts', () => {
         // Arrange
-        const group = createFeeRecordEntityPaymentGroup();
+        const group: FeeRecordPaymentEntityGroup = {
+          feeRecords: [FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).build()],
+          payments: [PaymentEntityMockBuilder.forCurrency('GBP').withAmount(200).build(), PaymentEntityMockBuilder.forCurrency('GBP').withAmount(300).build()],
+        };
 
         // Act
         const result = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
 
         // Assert
-        expect(result[0].totalPaymentsReceived).toEqual({ currency: paymentCurrency, amount: totalPaymentsReceivedAmount });
+        expect(result[0].totalPaymentsReceived).toEqual({ currency: 'GBP', amount: 500 });
       });
     });
 

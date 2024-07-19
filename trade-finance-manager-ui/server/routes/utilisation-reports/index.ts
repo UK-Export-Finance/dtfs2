@@ -15,7 +15,7 @@ import { getReportDownload } from '../../controllers/utilisation-reports/report-
 import { getUtilisationReportReconciliationByReportId } from '../../controllers/utilisation-reports/utilisation-report-reconciliation-for-report';
 import { getFindReportsByYear } from '../../controllers/utilisation-reports/find-reports-by-year';
 import { addPayment } from '../../controllers/utilisation-reports/add-payment';
-import { postKeyingData } from '../../controllers/utilisation-reports/keying-data';
+import { postKeyingData, postKeyingDataMarkAsDone, postKeyingDataMarkAsToDo } from '../../controllers/utilisation-reports/keying-data';
 import { postCheckKeyingData } from '../../controllers/utilisation-reports/check-keying-data';
 import { getEditPayment, postEditPayment } from '../../controllers/utilisation-reports/edit-payment';
 import { getConfirmDeletePayment, postConfirmDeletePayment } from '../../controllers/utilisation-reports/confirm-delete-payment';
@@ -65,6 +65,22 @@ utilisationReportsRoutes.post(
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   postCheckKeyingData,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/keying-data/mark-as-done',
+  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  postKeyingDataMarkAsDone,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/keying-data/mark-as-to-do',
+  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  postKeyingDataMarkAsToDo,
 );
 
 utilisationReportsRoutes.post(

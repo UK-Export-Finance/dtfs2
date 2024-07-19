@@ -38,7 +38,7 @@ describe(component, () => {
           amount: '100',
           change: 'INCREASE',
         },
-        checkboxId: 'feeRecordId-1',
+        checkboxId: 'feeRecordId-1-status-TO_DO',
         isChecked: false,
       },
     ],
@@ -110,7 +110,7 @@ describe(component, () => {
       const wrapper = getWrapper({ ...aKeyingSheetTableViewModel(), userCanEdit });
 
       wrapper.expectElement('thead input#select-all-checkbox').toExist();
-      wrapper.expectElement('thead th:has(input#select-all-checkbox)').toHaveAttribute('rowspan', '2');
+      wrapper.expectElement('thead td:has(input#select-all-checkbox)').toHaveAttribute('rowspan', '2');
     });
   });
 

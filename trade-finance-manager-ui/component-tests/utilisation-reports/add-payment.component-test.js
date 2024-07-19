@@ -348,4 +348,64 @@ describe(page, () => {
 
     wrapper.expectElement(`[data-cy="remove-selected-fees-button"]`).notToExist();
   });
+
+  it('should display singular "Add reported fee to an existing payment" button when canAddToExistingPayment is true and only one payment exists', () => {
+    // Arrange
+    const addPaymentViewModel = {
+      ...anAddPaymentViewModel(),
+      canAddToExistingPayment: true,
+      reportId: 123,
+    };
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    const addFeesToExistingPaymentButtonSelector = '[data-cy="add-fees-to-an-existing-payment-button"]';
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toExist();
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('value', 'Add reported fee to an existing payment');
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).hasClass('govuk-button--secondary');
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/123/add-to-an-existing-payment`);
+  });
+
+  it('should display plural "Add reported fees to an existing payment" button when canAddToExistingPayment is true and multiple payments exist', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.reportId = 123;
+    addPaymentViewModel.canAddToExistingPayment = true;
+    addPaymentViewModel.reportedFeeDetails.feeRecords = [
+      {
+        feeRecordId: 7,
+        facilityId: '000123',
+        exporter: 'abcde',
+        reportedFees: { formattedCurrencyAndAmount: 'EUR 0.01', dataSortValue: 0 },
+        reportedPayments: { formattedCurrencyAndAmount: 'GBP 7', dataSortValue: 0 },
+      },
+      {
+        feeRecordId: 8,
+        facilityId: '000123',
+        exporter: 'abcdef',
+        reportedFees: { formattedCurrencyAndAmount: 'EUR 0.01', dataSortValue: 0 },
+        reportedPayments: { formattedCurrencyAndAmount: 'GBP 8', dataSortValue: 0 },
+      },
+    ];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    const addFeesToExistingPaymentButtonSelector = '[data-cy="add-fees-to-an-existing-payment-button"]';
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toExist();
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('value', 'Add reported fees to an existing payment');
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).hasClass('govuk-button--secondary');
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/123/add-to-an-existing-payment`);
+  });
+
+  it('should not display "Add reported fee to an existing payment" button when canAddToExistingPayment is false', () => {
+    // Arrange
+    const addPaymentViewModel = {
+      ...anAddPaymentViewModel(),
+      canAddToExistingPayment: false,
+    };
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectElement(`[data-cy="add-fees-to-an-existing-payment-button"]`).notToExist();
+  });
 });

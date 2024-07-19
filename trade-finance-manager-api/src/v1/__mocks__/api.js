@@ -241,6 +241,8 @@ module.exports = {
   getUtilisationReportReconciliationDetailsById: jest.fn(),
   addPaymentToFeeRecords: jest.fn(),
   generateKeyingData: jest.fn(),
+  markKeyingDataAsDone: jest.fn(),
+  markKeyingDataAsToDo: jest.fn(),
   getUtilisationReportWithFeeRecordsToKey: jest.fn(),
   getPaymentDetails: jest.fn(),
   deletePaymentById: jest.fn(),

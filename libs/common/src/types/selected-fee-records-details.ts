@@ -22,4 +22,5 @@ export type SelectedFeeRecordsDetails = {
   reportPeriod: ReportPeriod;
   feeRecords: SelectedFeeRecordDetails[];
   payments: SelectedFeeRecordsPaymentDetails[];
+  canAddToExistingPayment: boolean;
 };
