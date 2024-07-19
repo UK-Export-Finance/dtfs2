@@ -45,11 +45,11 @@ context('Dashboard Deals filters - Created by you', () => {
       ALL_DEALS.push(deal);
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       ALL_DEALS.push(deal);
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER2).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       ALL_DEALS.push(deal);
     });
   });

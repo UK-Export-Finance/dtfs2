@@ -19,7 +19,7 @@ context('Dashboard facilities - sort', () => {
     // insert and update deals with random company names
     const manyBssDeals = Array.from(Array(15), () => BSS_DEAL_DRAFT);
     manyBssDeals.map((deal, index) => {
-      cy.insertOneDeal(deal, ADMIN).then(({ _id }) => {
+      cy.insertOneDeal(deal, BANK1_MAKER1).then(({ _id }) => {
         let companyName = '';
         // sets one company to lowercase
         if (index === 3) {
@@ -35,12 +35,12 @@ context('Dashboard facilities - sort', () => {
             },
             // adds company name to array
           },
-          ADMIN,
+          BANK1_MAKER1,
         ).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
 
         const facilities = [BSS_FACILITY_LOAN];
 
-        cy.createFacilities(_id, facilities, ADMIN).then((insertedFacilities) => {
+        cy.createFacilities(_id, facilities, BANK1_MAKER1).then((insertedFacilities) => {
           insertedFacilities.forEach((facility) => {
             ALL_FACILITIES.push(facility);
           });

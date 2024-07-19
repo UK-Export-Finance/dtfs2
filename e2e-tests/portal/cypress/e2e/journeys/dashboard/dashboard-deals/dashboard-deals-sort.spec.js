@@ -42,7 +42,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
 
     const manyGefDeals = Array.from(Array(13), () => GEF_DEAL);
     manyGefDeals.map((deal) => {
-      cy.insertOneGefApplication(deal, BANK1_MAKER1).then(({ _id }) => {
+      cy.insertOneGefApplication(deal, ADMIN).then(({ _id }) => {
         cy.updateGefApplication(
           _id,
           {
@@ -51,7 +51,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
             },
             // adds company name to array
           },
-          BANK1_MAKER1,
+          ADMIN,
         ).then((insertedDeal) => ALL_DEALS.unshift(insertedDeal.exporter.companyName));
       });
       return deal;

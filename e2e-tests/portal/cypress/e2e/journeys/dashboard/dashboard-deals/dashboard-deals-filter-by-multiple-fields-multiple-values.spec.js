@@ -49,7 +49,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
       ALL_DEALS.push(deal);
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       ALL_DEALS.push(deal);
     });
   });
@@ -164,7 +164,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
         (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA || submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN),
     );
 
-    dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);
+    dashboardDeals.rows().should('have.length', EXPECTED_DEALS);
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });

@@ -3,7 +3,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 
-const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1, BANK1_MAKER2 } = MOCK_USERS;
 
 const regexDateTime = /\d?\d \w\w\w \d\d\d\d/;
 
@@ -52,21 +52,21 @@ context('View dashboard deals as a checker', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, ADMIN).then((createdDeal) => {
+    cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, BANK1_MAKER1).then((createdDeal) => {
       BANK1_DEALS.push(createdDeal);
     });
 
-    cy.insertOneDeal(BSS_DEALS.DRAFT, ADMIN).then((createdDeal) => {
+    cy.insertOneDeal(BSS_DEALS.DRAFT, BANK1_MAKER1).then((createdDeal) => {
       BANK1_DEALS.push(createdDeal);
     });
 
-    cy.insertOneGefApplication(GEF_DEALS.READY_FOR_CHECK, ADMIN).then((gefDeal) => {
+    cy.insertOneGefApplication(GEF_DEALS.READY_FOR_CHECK, BANK1_MAKER1).then((gefDeal) => {
       cy.setGefApplicationStatus(gefDeal._id, GEF_DEALS.READY_FOR_CHECK.status, ADMIN).then((updatedGefDeal) => {
         BANK1_DEALS.push(updatedGefDeal.body);
       });
     });
 
-    cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, ADMIN);
+    cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, BANK1_MAKER2);
   });
 
   it("Only deals with checker status that belong to the checker's bank appear on the dashboard. Each deal goes to correct deal URL", () => {

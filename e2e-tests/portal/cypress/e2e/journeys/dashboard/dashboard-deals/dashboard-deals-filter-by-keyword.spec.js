@@ -28,7 +28,7 @@ context('Dashboard Deals filters - filter by keyword', () => {
       ALL_DEALS.push(deal);
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       ALL_DEALS.push(deal);
     });
   });
@@ -43,7 +43,7 @@ context('Dashboard Deals filters - filter by keyword', () => {
 
   describe('Keyword', () => {
     before(() => {
-      cy.login(BANK1_MAKER1);
+      cy.login(ADMIN);
 
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });

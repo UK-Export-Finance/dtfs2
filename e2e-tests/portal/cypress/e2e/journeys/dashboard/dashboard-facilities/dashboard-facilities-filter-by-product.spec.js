@@ -35,7 +35,7 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
       });
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       const { _id: dealId } = deal;
 
       const facilities = [
@@ -43,7 +43,7 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
         { ...GEF_FACILITY_CONTINGENT, dealId },
       ];
 
-      cy.insertManyGefFacilities(facilities, BANK1_MAKER1).then((insertedFacilities) => {
+      cy.insertManyGefFacilities(facilities, ADMIN).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {
           ALL_FACILITIES.push(facility.details);
         });
