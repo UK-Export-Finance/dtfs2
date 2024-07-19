@@ -65,6 +65,9 @@ const postAmendmentIsUsingFacilityEndDate = async (req, res) => {
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
+      if (isUsingFacilityEndDate) {
+        return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-end-date`);
+      }
       if (amendment.changeFacilityValue) {
         return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
       }
