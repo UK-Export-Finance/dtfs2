@@ -4,6 +4,7 @@ const api = require('../../services/api');
 const { FACILITY_TYPE, DATE_FORMAT, DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 const { validateAboutFacility } = require('./validation');
+const { getNextPage } = require('./get-next-page-helper');
 
 const aboutFacility = async (req, res) => {
   const {
@@ -181,15 +182,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    if (isUsingFacilityEndDate) {
-      // TODO: DTFS2-7161 - Implement page to submit facilityEndDate
-    }
-
-    if (isUsingFacilityEndDate === false) {
-      return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/bank-review-date`);
-    }
-
-    return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);
+    return res.redirect(getNextPage({ dealId, facilityId, dealVersion: deal.version, isUsingFacilityEndDate }));
   } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }

@@ -1,18 +1,7 @@
-const { isFacilityEndDateEnabledOnGefVersion, parseDealVersion } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { FACILITY_TYPE, FACILITY_PROVIDED_DETAILS } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
-
-const getPreviousPage = (facility, deal) => {
-  if (!isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || facility.isUsingFacilityEndDate === null) {
-    return `/gef/application-details/${deal._id}/facilities/${facility._id}/about-facility`;
-  }
-  if (facility.isUsingFacilityEndDate) {
-    // TODO: DTFS2-7161 - update this link
-    return `/gef/application-details/${deal._id}/facilities/${facility._id}/about-facility`;
-  }
-  return `/gef/application-details/${deal._id}/facilities/${facility._id}/bank-review-date`;
-};
+const { getPreviousPage } = require('./get-previous-page-helper');
 
 const providedFacility = async (req, res) => {
   const {
@@ -29,7 +18,12 @@ const providedFacility = async (req, res) => {
     const facilityTypeConst = FACILITY_TYPE[details.type.toUpperCase()];
     const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
 
-    const previousPage = getPreviousPage(details, deal);
+    const previousPage = getPreviousPage({
+      dealId,
+      facilityId,
+      dealVersion: deal.version,
+      isUsingFacilityEndDate: facilityId.isUsingFacilityEndDate,
+    });
 
     return res.render('partials/provided-facility.njk', {
       facilityType: FACILITY_TYPE[details.type.toUpperCase()],
