@@ -106,9 +106,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     pages.utilisationReportPage.bankReportsNavLink().click();
     pages.utilisationReportsSummaryPage.tableRowSelector(BANK_ID, SUBMISSION_MONTH).should('contain', 'Report completed');
 
-    pages.utilisationReportsSummaryPage.tableRowSelector(BANK_ID, SUBMISSION_MONTH).within(() => {
-      cy.get('a').click();
-    });
+    pages.utilisationReportsSummaryPage.reportLink(BANK_ID, SUBMISSION_MONTH).click();
     pages.utilisationReportPage.keyingSheetTabLink().click();
     pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_TWO).within(() => cy.get('input[type="checkbox"]').click());
     pages.utilisationReportPage.keyingSheetTab.markAsToDoButton().click();

@@ -6,7 +6,7 @@ import { utilisationReportConfirmDeletePaymentPage } from './utilisationReportCo
 import { utilisationReportEditPaymentPage } from './utilisationReportEditPaymentPage';
 import { checkKeyingDataPage } from './checkKeyingDataPage';
 
-export default {
+export const utilisationReportPages = {
   utilisationReportsSummaryPage,
   utilisationReportPage,
   searchUtilisationReportsFormPage,
