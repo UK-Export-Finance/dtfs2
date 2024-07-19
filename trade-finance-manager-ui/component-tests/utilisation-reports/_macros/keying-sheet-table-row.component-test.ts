@@ -39,7 +39,7 @@ describe(component, () => {
   const getWrapper = ({ keyingSheetRow, userCanEdit }: { keyingSheetRow?: KeyingSheetTableRow; userCanEdit?: boolean } = {}) =>
     render({ keyingSheetRow: keyingSheetRow ?? aKeyingSheetTableRow(), userCanEdit: userCanEdit ?? true });
 
-  it('renders the keying sheet status, facility id, exporter, base currency and fee payment in the table row', () => {
+  it('renders the keying sheet status, facility id, exporter, base currency and fee payment in the table row when keying sheet row has fee payments', () => {
     const keyingSheetRow: KeyingSheetTableRow = {
       ...aKeyingSheetTableRow(),
       status: 'TO_DO',
@@ -47,6 +47,12 @@ describe(component, () => {
       facilityId: 'some facility id',
       exporter: 'some exporter',
       baseCurrency: 'EUR',
+      feePayments: [
+        {
+          formattedCurrencyAndAmount: 'GBP 100.00',
+          formattedDateReceived: 'Some date',
+        },
+      ],
     };
     const wrapper = getWrapper({ keyingSheetRow });
 
@@ -54,6 +60,35 @@ describe(component, () => {
     wrapper.expectElement(`tr td:contains("some facility id")`).toExist();
     wrapper.expectElement(`tr td:contains("some exporter")`).toExist();
     wrapper.expectElement(`tr td:contains("EUR")`).toExist();
+  });
+
+  it('renders the keying sheet status, facility id, exporter, base currency and fee payment in the table row when keying sheet row does not have fee payments', () => {
+    const keyingSheetRow: KeyingSheetTableRow = {
+      ...aKeyingSheetTableRow(),
+      status: 'TO_DO',
+      displayStatus: 'TO DO',
+      facilityId: 'some facility id',
+      exporter: 'some exporter',
+      baseCurrency: 'EUR',
+      feePayments: [],
+    };
+    const wrapper = getWrapper({ keyingSheetRow });
+
+    wrapper.expectElement(`tr td:contains("TO DO")`).toExist();
+    wrapper.expectElement(`tr td:contains("some facility id")`).toExist();
+    wrapper.expectElement(`tr td:contains("some exporter")`).toExist();
+    wrapper.expectElement(`tr td:contains("EUR")`).toExist();
+  });
+
+  it('renders dashes in the payment column when keying sheet row has no fee payments', () => {
+    const keyingSheetRow: KeyingSheetTableRow = {
+      ...aKeyingSheetTableRow(),
+      feePayments: [],
+    };
+    const wrapper = getWrapper({ keyingSheetRow });
+
+    wrapper.expectText('tr td[data-cy="keying-sheet-fee-payment-currency-and-amount"]').toRead('-');
+    wrapper.expectText('tr td[data-cy="keying-sheet-fee-payment-date-received"]').toRead('-');
   });
 
   it('renders the fee payment column with the numeric cell class and date received column', () => {

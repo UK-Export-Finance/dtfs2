@@ -158,6 +158,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     describe('when there is one fee record with zero payments in the group', () => {
       it('meps the group to a keying sheet row with no fee payments', () => {
         // Arrange
+        // QQ check this is what gets generated
         const feeRecordPaymentGroup: FeeRecordPaymentEntityGroup = {
           feeRecords: [FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('READY_TO_KEY').withFeesPaidToUkefForThePeriod(0).build()],
           payments: [],
@@ -167,6 +168,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = mapFeeRecordPaymentEntityGroupsToKeyingSheet([feeRecordPaymentGroup]);
 
         // Assert
+        // QQ check this is what we want
         expect(result).toHaveLength(1);
         expect(result[0].feePayments).toHaveLength(0);
       });
