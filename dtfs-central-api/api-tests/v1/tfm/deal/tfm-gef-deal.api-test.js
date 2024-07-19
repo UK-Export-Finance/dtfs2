@@ -3,12 +3,12 @@ const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/d
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 
 const newDeal = {
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+  dealType: DEALS.DEAL_TYPE.GEF,
   status: 'Draft',
   submissionCount: 0,
 };
@@ -25,7 +25,7 @@ describe('/v1/tfm/deal/:id', () => {
 
       await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealType: DEALS.DEAL_TYPE.GEF,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
@@ -74,7 +74,7 @@ describe('/v1/tfm/deal/:id', () => {
       const auditDetails = generatePortalAuditDetails(MOCK_PORTAL_USER._id);
       await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealType: DEALS.DEAL_TYPE.GEF,
           dealId,
           auditDetails,
         })

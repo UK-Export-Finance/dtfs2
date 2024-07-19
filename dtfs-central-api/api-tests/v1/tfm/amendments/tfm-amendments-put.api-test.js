@@ -4,7 +4,7 @@ const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-co
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
@@ -21,7 +21,7 @@ describe('PUT TFM amendments', () => {
   };
 
   const newDeal = aDeal({
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+    dealType: DEALS.DEAL_TYPE.BSS_EWCS,
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
     editedBy: [],
@@ -53,7 +53,7 @@ describe('PUT TFM amendments', () => {
 
         await testApi
           .put({
-            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealType: DEALS.DEAL_TYPE.BSS_EWCS,
             dealId,
             auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
           })
@@ -108,7 +108,7 @@ describe('PUT TFM amendments', () => {
 
       await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
@@ -128,7 +128,7 @@ describe('PUT TFM amendments', () => {
       await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })

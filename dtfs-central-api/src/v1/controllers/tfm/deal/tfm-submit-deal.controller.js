@@ -12,7 +12,7 @@ const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilit
 const { findAllGefFacilitiesByDealId } = require('../../portal/gef-facility/get-facilities.controller');
 
 const DEFAULTS = require('../../../defaults');
-const CONSTANTS = require('../../../../constants');
+const { DEALS } = require('../../../../constants');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -22,11 +22,11 @@ const withoutId = (obj) => {
 const getSubmissionCount = (deal) => {
   const { dealType } = deal;
 
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+  if (dealType === DEALS.DEAL_TYPE.GEF) {
     return deal.submissionCount;
   }
 
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+  if (dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
     return deal.details.submissionCount;
   }
 
@@ -47,7 +47,7 @@ const createDealSnapshot = async (deal, auditDetails) => {
       auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
     };
 
-    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    if (dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
       const dealFacilities = await findAllFacilitiesByDealId(dealId);
       dealObj.dealSnapshot.facilities = dealFacilities;
     }
@@ -68,11 +68,11 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
     const { dealType, _id: dealId } = deal;
 
     let dealFacilities = [];
-    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    if (dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
       dealFacilities = await findAllFacilitiesByDealId(dealId);
     }
 
-    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    if (dealType === DEALS.DEAL_TYPE.GEF) {
       dealFacilities = await findAllGefFacilitiesByDealId(dealId);
     }
 
@@ -132,16 +132,16 @@ exports.submitDealPut = async (req, res) => {
     return res.status(500).send({ status: 500, error });
   }
 
-  if (dealType !== CONSTANTS.DEALS.DEAL_TYPE.GEF && dealType !== CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+  if (dealType !== DEALS.DEAL_TYPE.GEF && dealType !== DEALS.DEAL_TYPE.BSS_EWCS) {
     return res.status(400).send({ status: 400, message: 'Invalid deal type' });
   }
 
   let deal;
 
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+  if (dealType === DEALS.DEAL_TYPE.GEF) {
     deal = await findOneGefDeal(dealId);
   }
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+  if (dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
     deal = await findOneDeal(dealId);
   }
 

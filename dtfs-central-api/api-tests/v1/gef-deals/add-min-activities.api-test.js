@@ -15,8 +15,8 @@ const { mongoDbClient: db } = require('../../../src/drivers/db-client');
 
 const { APPLICATION } = require('../../mocks/gef/gef-applications');
 const { mockFacilities } = require('../../mocks/gef/gef-facilities');
-const CONSTANTS = require('../../../src/constants');
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/constants/activityConstants');
+const { DEALS, FACILITIES } = require('../../../src/constants');
+const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/constants');
 
 const MOCK_APPLICATION = APPLICATION[0];
 const MOCK_APPLICATION_FACILITIES = APPLICATION[1];
@@ -52,7 +52,7 @@ describe('submissionPortalActivity()', () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS]);
 
     MOCK_APPLICATION.checkerId = checker._id;
-    MOCK_APPLICATION.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
+    MOCK_APPLICATION.submissionType = DEALS.SUBMISSION_TYPE.MIN;
     MOCK_APPLICATION.portalActivities = [];
 
     const result = await ukefSubmissionPortalActivity(MOCK_APPLICATION);
@@ -82,7 +82,7 @@ describe('submissionPortalActivity()', () => {
 });
 
 describe('facilityChangePortalActivity()', () => {
-  MOCK_APPLICATION_FACILITIES.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIA;
+  MOCK_APPLICATION_FACILITIES.submissionType = DEALS.SUBMISSION_TYPE.MIA;
   MOCK_APPLICATION_FACILITIES.portalActivities = [];
   MOCK_APPLICATION_FACILITIES._id = '61e54dd5b578247e14575882';
 
@@ -222,7 +222,7 @@ describe('portalActivityGenerator()', () => {
   const activityType = 'NOTICE';
   const activityText = 'test123';
   const facility = {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+    type: FACILITIES.FACILITY_TYPE.CASH,
     ukefFacilityId: 123456,
     _id: 123,
   };
@@ -378,7 +378,7 @@ describe('updateChangedToIssued()', () => {
     await testApi
       .post({
         dealId: mockApplication.body._id,
-        type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+        type: FACILITIES.FACILITY_TYPE.CASH,
         hasBeenIssued: true,
         canResubmitIssuedFacilities: true,
       })

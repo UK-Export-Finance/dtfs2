@@ -6,7 +6,7 @@ const $ = require('mongo-dot-notation');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
-const CONSTANTS = require('../../../../constants');
+const { DEALS } = require('../../../../constants');
 const { isNumber } = require('../../../../helpers');
 
 const withoutId = (obj) => {
@@ -166,7 +166,7 @@ exports.updateDealSnapshotPut = async (req, res) => {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
 
-  if (snapshotUpdate.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+  if (snapshotUpdate.dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
     const dealFacilities = await findAllFacilitiesByDealId(dealId);
     snapshotUpdate.facilities = dealFacilities;
   }

@@ -5,7 +5,7 @@ const $ = require('mongo-dot-notation');
 const { findOneFacility } = require('./get-facility.controller');
 const { updateDealEditedByPortal } = require('../deal/update-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { PORTAL_ROUTE } = require('../../../../constants/routes');
+const { ROUTES } = require('../../../../constants');
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -31,7 +31,7 @@ const updateFacility = async ({ facilityId, facilityUpdate, dealId, user, routeP
 
   const { value: updatedFacility } = findAndUpdateResponse;
 
-  if (routePath === PORTAL_ROUTE && user) {
+  if (routePath === ROUTES.PORTAL_ROUTE && user) {
     // update the deal so that the user that has edited this facility,
     // is also marked as editing the associated deal
 

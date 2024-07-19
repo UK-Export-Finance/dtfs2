@@ -3,17 +3,17 @@ const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS, FACILITIES } = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 const newDeal = {
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+  dealType: DEALS.DEAL_TYPE.GEF,
   status: 'Draft',
 };
 
 const newFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  type: FACILITIES.FACILITY_TYPE.CASH,
   dealId: MOCK_DEAL.DEAL_ID,
 };
 
@@ -44,7 +44,7 @@ describe('/v1/tfm/deals/:id/facilities', () => {
       // submit deal/facilities
       await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealType: DEALS.DEAL_TYPE.GEF,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })

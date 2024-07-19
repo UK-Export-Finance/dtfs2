@@ -4,7 +4,7 @@ const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { findOneDeal } = require('./get-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { PORTAL_ROUTE } = require('../../../../constants/routes');
+const { ROUTES } = require('../../../../constants');
 const { isNumber } = require('../../../../helpers');
 
 const handleEditedByPortal = async (dealId, dealUpdate, user) => {
@@ -136,7 +136,7 @@ const updateDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal
       };
     }
 
-    if (routePath === PORTAL_ROUTE) {
+    if (routePath === ROUTES.PORTAL_ROUTE) {
       dealUpdateForDatabase.editedBy = await handleEditedByPortal(dealId, dealUpdateForDatabase, user);
     }
     const { _id, ...dealUpdateForDatabaseWithoutId } = dealUpdateForDatabase;

@@ -1,6 +1,7 @@
 import { ObjectId, Document } from 'mongodb';
+import { AmendmentStatus } from '../../../types/amendment-status';
 
-export const amendmentsByDealIdAndStatus = (dealId: string | ObjectId, status: string): Document[] => [
+export const amendmentsByDealIdAndStatus = (dealId: string | ObjectId, status: AmendmentStatus): Document[] => [
   { $match: { 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } } },
   {
     $addFields: {

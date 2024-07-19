@@ -2,6 +2,10 @@ const express = require('express');
 
 const tfmRouter = express.Router();
 
+const { validatePutFacilityAmendmentPayload } = require('./middleware/payload-validation');
+const validation = require('../validation/route-validators/route-validators');
+const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
+
 const tfmGetDealController = require('../controllers/tfm/deal/tfm-get-deal.controller');
 const tfmGetDealsController = require('../controllers/tfm/deal/tfm-get-deals.controller');
 const tfmUpdateDealController = require('../controllers/tfm/deal/tfm-update-deal.controller');
@@ -17,10 +21,10 @@ const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-po
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
 
-const { TFM_ROUTE } = require('../../constants/routes');
+const { ROUTES } = require('../../constants');
 
 tfmRouter.use((req, res, next) => {
-  req.routePath = TFM_ROUTE;
+  req.routePath = ROUTES.TFM_ROUTE;
   next();
 });
 
@@ -450,8 +454,12 @@ tfmRouter.route('/facilities/:id').put(tfmUpdateFacilityController.updateFacilit
  *         description: Not found
  */
 tfmRouter.route('/amendments').get(tfmGetAmendmentController.getAllAmendmentsInProgress);
-tfmRouter.route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?').get(tfmGetAmendmentController.getAmendmentsByFacilityId);
-tfmRouter.route('/deals/:dealId/amendments/:status?/:type?').get(tfmGetAmendmentController.getAmendmentsByDealId);
+tfmRouter
+  .route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?')
+  .get(validation.mongoIdValidation('facilityId'), handleExpressValidatorResult, tfmGetAmendmentController.getAmendmentsByFacilityId);
+tfmRouter
+  .route('/deals/:dealId/amendments/:status?/:type?')
+  .get(validation.mongoIdValidation('dealId'), handleExpressValidatorResult, tfmGetAmendmentController.getAmendmentsByDealId);
 
 /**
  * @openapi
@@ -505,7 +513,15 @@ tfmRouter.route('/facilities/:facilityId/amendments').post(tfmPostAmendmentContr
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/facilities/:facilityId/amendments/:amendmentId').put(tfmPutAmendmentController.updateTfmAmendment);
+tfmRouter
+  .route('/facilities/:facilityId/amendments/:amendmentId')
+  .put(
+    validation.mongoIdValidation('facilityId'),
+    validation.mongoIdValidation('amendmentId'),
+    handleExpressValidatorResult,
+    validatePutFacilityAmendmentPayload,
+    tfmPutAmendmentController.updateTfmAmendment,
+  );
 
 /**
  * @openapi

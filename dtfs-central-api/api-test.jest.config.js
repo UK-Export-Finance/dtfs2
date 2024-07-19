@@ -4,7 +4,7 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.{js,ts}'],
   coverageReporters: ['text', 'text-summary'],
   testMatch: ['**/*.api-test.{js,ts}'],
-  testTimeout: 80000,
+  testTimeout: 5000,
   workerIdleMemoryLimit: '512MB',
   ...commonSettings,
 };

@@ -2,8 +2,7 @@ const { InvalidAuditDetailsError, AUDIT_USER_TYPES } = require('@ukef/dtfs2-comm
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const { getUnixTime } = require('date-fns');
-const CONSTANTS = require('../../../../constants');
-const { findAmendmentByStatusAndFacilityId, findLatestCompletedAmendmentByFacilityIdVersion } = require('./tfm-get-amendments.controller');
+const { AMENDMENT_STATUS } = require('../../../../constants');
 const { findOneFacility } = require('../facility/tfm-get-facility.controller');
 const { TfmFacilitiesRepo } = require('../../../../repositories/tfm-facilities-repo');
 
@@ -33,14 +32,15 @@ exports.postTfmAmendment = async (req, res) => {
     return res.status(404).send({ status: 404, message: 'The current facility does not exist' });
   }
 
-  const amendmentInProgress = await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS);
-  if (amendmentInProgress) {
+  const inProgressAmendments = await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndStatus(facilityId, AMENDMENT_STATUS.IN_PROGRESS);
+  if (inProgressAmendments.length !== 0) {
     return res.status(400).send({ status: 400, message: 'The current facility already has an amendment in progress' });
   }
 
   const { dealId } = facility.facilitySnapshot;
   // the version of latest completed amendment (proceed or withdraw or auto) or null
-  const latestCompletedAmendmentVersion = await findLatestCompletedAmendmentByFacilityIdVersion(facilityId);
+  const latestCompletedAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
+  const latestCompletedAmendmentVersion = (latestCompletedAmendment && latestCompletedAmendment.version) ?? undefined;
 
   const amendment = {
     amendmentId: new ObjectId(),
@@ -48,7 +48,7 @@ exports.postTfmAmendment = async (req, res) => {
     dealId,
     createdAt: getUnixTime(new Date()),
     updatedAt: getUnixTime(new Date()),
-    status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED,
+    status: AMENDMENT_STATUS.NOT_STARTED,
     version: latestCompletedAmendmentVersion ? latestCompletedAmendmentVersion + 1 : 1,
   };
   await TfmFacilitiesRepo.updateOneById(facilityId, {

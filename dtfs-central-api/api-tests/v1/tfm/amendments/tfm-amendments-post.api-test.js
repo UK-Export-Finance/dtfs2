@@ -3,7 +3,7 @@ const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/d
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS, AMENDMENT_STATUS } = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
@@ -20,7 +20,7 @@ describe('POST TFM amendments', () => {
   };
 
   const newDeal = aDeal({
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+    dealType: DEALS.DEAL_TYPE.BSS_EWCS,
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
     editedBy: [],
@@ -50,7 +50,7 @@ describe('POST TFM amendments', () => {
 
         await testApi
           .put({
-            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealType: DEALS.DEAL_TYPE.BSS_EWCS,
             dealId,
             auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
           })
@@ -86,7 +86,7 @@ describe('POST TFM amendments', () => {
           .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments`);
 
-        const updatePayload1 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
+        const updatePayload1 = { status: AMENDMENT_STATUS.IN_PROGRESS };
         await testApi
           .put({ payload: updatePayload1, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments/${bodyPostResponse1.amendmentId}`);
@@ -107,7 +107,7 @@ describe('POST TFM amendments', () => {
     it('should return 400 if the facility Id is not valid', async () => {
       await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })

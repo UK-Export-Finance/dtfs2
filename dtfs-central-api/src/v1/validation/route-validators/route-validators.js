@@ -5,9 +5,14 @@ const bankIdValidation = param('bankId').isString().matches(/^\d+$/).withMessage
 
 exports.bankIdValidation = [bankIdValidation];
 
-const mongoIdValidation = param('_id').isMongoId().withMessage("Invalid MongoDB '_id' path param provided");
+/**
+ * Validator for a path parameter which is a mongo id
+ * @param {string} paramName
+ * @returns {import('express-validator').ValidationChain}
+ */
+const mongoIdValidation = (paramName) => param(paramName).isMongoId().withMessage("Invalid MongoDB '_id' path param provided");
 
-exports.mongoIdValidation = [mongoIdValidation];
+exports.mongoIdValidation = mongoIdValidation;
 
 /**
  * Validator for a path parameter which is an sql integer id
