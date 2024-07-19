@@ -3,6 +3,7 @@ const baseParserOptions = {
 };
 
 const baseRules = {
+  'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^draft', 'req', 'res'] }],
   'no-console': ['error', { allow: ['info', 'error'] }],
   'prettier/prettier': 'error',
   'class-methods-use-this': 'off',

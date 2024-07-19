@@ -3,19 +3,37 @@
   "amount"                    Maximum liability when making an amendment, maps to targetAmount
   */
 
+const { produce } = require('immer');
+const { z } = require('zod');
 const { to2Decimals } = require('../../helpers/currency');
 
+const AmountSchema = z.number().transform((amount) => to2Decimals(amount));
+
+const FacilityGuaranteeDatesSchema = z.object({
+  guaranteeExpiryDate: z.string(),
+});
+
+const transformFacilityCovenantAmend = ({ amount, facilityGuaranteeDates }) =>
+  produce({}, (draft) => {
+    if (amount) {
+      draft.targetAmount = to2Decimals(amount);
+    }
+    if (facilityGuaranteeDates?.guaranteeExpiryDate) {
+      draft.expirationDate = facilityGuaranteeDates?.guaranteeExpiryDate;
+    }
+  });
+
+const FacilityCovenantAmendMappingSchema = z
+  .object({
+    amount: AmountSchema,
+    facilityGuaranteeDates: FacilityGuaranteeDatesSchema,
+  })
+  .partial()
+  .refine(({ amount, facilityGuaranteeDates }) => amount || facilityGuaranteeDates, 'Either amount or facilityGuaranteeDates.guaranteeExpiryDate is required.')
+  .transform(transformFacilityCovenantAmend);
+
 const facilityCovenantAmend = (amendment) => {
-  try {
-    const { facilityGuaranteeDates: { guaranteeExpiryDate } = {}, amount } = amendment; // (guaranteeExpiryDate is actually facility.tfm.facilityGuaranteeDates.guaranteeExpiryDate, but assume this is different for amendments)
-    return {
-      targetAmount: amount ? to2Decimals(amount) : undefined,
-      expirationDate: guaranteeExpiryDate,
-    };
-  } catch (error) {
-    console.error('Unable to map facility covenant amendment. %o', error);
-    return {};
-  }
+  return FacilityCovenantAmendMappingSchema.parse(amendment);
 };
 
 module.exports = facilityCovenantAmend;
