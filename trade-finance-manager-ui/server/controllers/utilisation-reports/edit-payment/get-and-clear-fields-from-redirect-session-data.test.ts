@@ -31,17 +31,30 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     });
 
     // Act
-    const { errors: { errorSummary } = {}, formValues } = getAndClearFieldsFromRedirectSessionData(req);
+    const { errors: { errorSummary } = {}, formValues, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
 
     // Assert
     assertSessionHasBeenCleared(req);
     expect(errorSummary).toBeUndefined();
     expect(formValues).toEqual(editPaymentFormValues);
+    expect(allCheckboxesChecked).toEqual(undefined);
   });
 
-  it.each<RemoveFeesFromPaymentErrorKey>(['no-fee-records-selected', 'all-fee-records-selected'])(
+  it.each<{
+    removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey;
+    expectedAllCheckboxesChecked: boolean;
+  }>([
+    {
+      removeFeesFromPaymentErrorKey: 'no-fee-records-selected',
+      expectedAllCheckboxesChecked: false,
+    },
+    {
+      removeFeesFromPaymentErrorKey: 'all-fee-records-selected',
+      expectedAllCheckboxesChecked: true,
+    },
+  ])(
     "clears the session and returns an array with a single error summary for the errorSummary when the removeFeesFromPaymentErrorKey is '%s'",
-    (removeFeesFromPaymentErrorKey) => {
+    ({ removeFeesFromPaymentErrorKey, expectedAllCheckboxesChecked }) => {
       // Arrange
       const editPaymentFormValues = aSetOfEditPaymentFormValues();
       const req = getMockRequest({
@@ -50,7 +63,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
       });
 
       // Act
-      const { errors: { errorSummary } = {}, formValues } = getAndClearFieldsFromRedirectSessionData(req);
+      const { errors: { errorSummary } = {}, formValues, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
 
       // Assert
       assertSessionHasBeenCleared(req);
@@ -58,6 +71,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
       expect(errorSummary![0].text).toBeDefined();
       expect(errorSummary![0].href).toBeDefined();
       expect(formValues).toEqual(editPaymentFormValues);
+      expect(allCheckboxesChecked).toEqual(expectedAllCheckboxesChecked);
     },
   );
 

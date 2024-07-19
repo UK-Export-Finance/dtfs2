@@ -84,26 +84,74 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       expect(viewModel.paymentId).toBe(paymentId);
     });
 
-    it('sets remove fees from payment error summary based on passed in session data', async () => {
-      // Arrange
-      const sessionData: Partial<SessionData> = {
-        removeFeesFromPaymentErrorKey: 'no-fee-records-selected',
-      };
-      const { req, res } = getHttpMocksWithSessionData(sessionData);
+    describe('when the remove fees from payment error key is set in the session data', () => {
+      it('sets remove fees from payment error summary based on passed in session data', async () => {
+        // Arrange
+        const sessionData: Partial<SessionData> = {
+          removeFeesFromPaymentErrorKey: 'no-fee-records-selected',
+        };
+        const { req, res } = getHttpMocksWithSessionData(sessionData);
 
-      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
-        ...aPaymentDetailsWithFeeRecordsResponseBody(),
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
+        });
+
+        // Act
+        await getEditPayment(req, res);
+
+        // Assert
+        expect(res._getRenderView()).toEqual('utilisation-reports/edit-payment.njk');
+        const viewModel = res._getRenderData() as EditPaymentViewModel;
+        expect(viewModel.errors.errorSummary).toBeDefined();
+        expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].href).toBe('#added-reported-fees-details-header');
+        expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].text).toBe('Select fee or fees to remove from the payment');
       });
 
-      // Act
-      await getEditPayment(req, res);
+      it("sets the render view model feeRecords isChecked to false for every fee record when the key is 'no-fee-records-selected'", async () => {
+        // Arrange
+        const sessionData: Partial<SessionData> = {
+          removeFeesFromPaymentErrorKey: 'no-fee-records-selected',
+        };
+        const { req, res } = getHttpMocksWithSessionData(sessionData);
 
-      // Assert
-      expect(res._getRenderView()).toEqual('utilisation-reports/edit-payment.njk');
-      const viewModel = res._getRenderData() as EditPaymentViewModel;
-      expect(viewModel.errors.errorSummary).toBeDefined();
-      expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].href).toBe('#added-reported-fees-details-header');
-      expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].text).toBe('Select fee or fees to remove from the payment');
+        const feeRecords = [aFeeRecord(), aFeeRecord(), aFeeRecord(), aFeeRecord()];
+
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
+          feeRecords,
+        });
+
+        // Act
+        await getEditPayment(req, res);
+
+        // Assert
+        const viewModel = res._getRenderData() as EditPaymentViewModel;
+        expect(viewModel.feeRecords).toHaveLength(feeRecords.length);
+        viewModel.feeRecords.forEach(({ isChecked }) => expect(isChecked).toBe(false));
+      });
+
+      it("sets the render view model feeRecords isChecked to false for every fee record when the key is 'all-fee-records-selected'", async () => {
+        // Arrange
+        const sessionData: Partial<SessionData> = {
+          removeFeesFromPaymentErrorKey: 'all-fee-records-selected',
+        };
+        const { req, res } = getHttpMocksWithSessionData(sessionData);
+
+        const feeRecords = [aFeeRecord(), aFeeRecord(), aFeeRecord(), aFeeRecord()];
+
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
+          feeRecords,
+        });
+
+        // Act
+        await getEditPayment(req, res);
+
+        // Assert
+        const viewModel = res._getRenderData() as EditPaymentViewModel;
+        expect(viewModel.feeRecords).toHaveLength(feeRecords.length);
+        viewModel.feeRecords.forEach(({ isChecked }) => expect(isChecked).toBe(true));
+      });
     });
 
     it('sets the render view model formValues based on passed in session data', async () => {
@@ -816,11 +864,19 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         viewModel.feeRecords.forEach(({ checkboxId }, index) => expect(checkboxId).toBe(`feeRecordId-${feeRecordIds[index]}`));
       });
 
-      it('sets the render view model feeRecords isChecked to false for every fee record', async () => {
+      it('sets the render view model feeRecords isChecked based on whether the fee record was selected or not', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
+        req.body = {
+          'feeRecordId-1': 'on',
+          'feeRecordId-3': 'on',
+        };
 
-        const feeRecords = [aFeeRecord(), aFeeRecord(), aFeeRecord(), aFeeRecord()];
+        const feeRecords = [
+          { ...aFeeRecord(), id: 1 },
+          { ...aFeeRecord(), id: 2 },
+          { ...aFeeRecord(), id: 3 },
+        ];
 
         jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
           ...aPaymentDetailsWithFeeRecordsResponseBody(),
@@ -833,7 +889,9 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         // Assert
         const viewModel = res._getRenderData() as EditPaymentViewModel;
         expect(viewModel.feeRecords).toHaveLength(feeRecords.length);
-        viewModel.feeRecords.forEach(({ isChecked }) => expect(isChecked).toBe(false));
+        expect(viewModel.feeRecords[0].isChecked).toBe(true);
+        expect(viewModel.feeRecords[1].isChecked).toBe(false);
+        expect(viewModel.feeRecords[2].isChecked).toBe(true);
       });
 
       it('sets the render view model totalReportedPayments to the edit payment details response formatted totalReportedPayments', async () => {

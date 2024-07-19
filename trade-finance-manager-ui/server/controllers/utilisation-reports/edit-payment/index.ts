@@ -13,6 +13,9 @@ import {
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { ValidatedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
+import { getEditPaymentsCheckboxIdsFromObjectKeys } from '../../../helpers/edit-payments-table-checkbox-id-helper';
+import { mapCheckedCheckboxesToRecord } from '../../../helpers/checkbox-id-helper';
+import { EditPaymentsTableCheckboxId } from '../../../types/edit-payments-table-checkbox-id';
 
 const renderEditPaymentPage = (res: Response, viewModel: EditPaymentViewModel) => res.render('utilisation-reports/edit-payment.njk', viewModel);
 
@@ -20,18 +23,19 @@ export const getEditPayment = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId, paymentId } = req.params;
 
-  const { errors, allCheckboxesChecked, formValues } = getAndClearFieldsFromRedirectSessionData(req);
+  const { errors, formValues, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
 
   try {
+    const isCheckboxChecked = () => allCheckboxesChecked ?? false;
+
     const paymentDetails = await api.getPaymentDetailsWithFeeRecords(reportId, paymentId, userToken);
 
     if (formValues) {
-      // TODO - 3196: Want to pass through selected checkboxes to the view model.
-      const editPaymentViewModel = getEditPaymentViewModelWithFormValuesAndErrors(paymentDetails, reportId, paymentId, formValues, errors);
+      const editPaymentViewModel = getEditPaymentViewModelWithFormValuesAndErrors(paymentDetails, reportId, paymentId, isCheckboxChecked, formValues, errors);
       return renderEditPaymentPage(res, editPaymentViewModel);
     }
 
-    const editPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId, allCheckboxesChecked, errors);
+    const editPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId, isCheckboxChecked, errors);
     return renderEditPaymentPage(res, editPaymentViewModel);
   } catch (error) {
     console.error('Error updating utilisation report status:', error);
@@ -40,7 +44,7 @@ export const getEditPayment = async (req: Request, res: Response) => {
 };
 
 export type PostEditPaymentRequest = CustomExpressRequest<{
-  reqBody: EditPaymentFormRequestBody;
+  reqBody: EditPaymentFormRequestBody & Partial<Record<EditPaymentsTableCheckboxId, 'on'>>;
 }>;
 
 export const postEditPayment = async (req: PostEditPaymentRequest, res: Response) => {
@@ -59,9 +63,19 @@ export const postEditPayment = async (req: PostEditPaymentRequest, res: Response
       return res.redirect(`/utilisation-reports/${reportId}`);
     }
 
+    const checkedCheckboxIds = getEditPaymentsCheckboxIdsFromObjectKeys(req.body);
+    const checkedCheckboxIdsRecord = mapCheckedCheckboxesToRecord(checkedCheckboxIds);
+    const isCheckboxChecked = (checkboxId: string): boolean => Boolean(checkedCheckboxIdsRecord[checkboxId]);
+
     const paymentDetails = await api.getPaymentDetailsWithFeeRecords(reportId, paymentId, userToken);
-    // TODO - 3196: Want to pass through selected checkboxes to the view model.
-    const editPaymentViewModel = getEditPaymentViewModelWithFormValuesAndErrors(paymentDetails, reportId, paymentId, formValues, editPaymentErrors);
+    const editPaymentViewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      paymentDetails,
+      reportId,
+      paymentId,
+      isCheckboxChecked,
+      formValues,
+      editPaymentErrors,
+    );
     return renderEditPaymentPage(res, editPaymentViewModel);
   } catch (error) {
     console.error('Error updating utilisation report status:', error);
