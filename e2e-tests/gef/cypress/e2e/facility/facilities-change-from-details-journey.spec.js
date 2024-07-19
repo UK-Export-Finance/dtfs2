@@ -29,7 +29,6 @@ context('Changing facility details from application-details page should take you
             applications.push({
               id: item._id,
               facilities: res.body.items.filter((it) => it.details.dealId === item._id),
-              version: item.version,
             });
           });
         });
@@ -64,7 +63,7 @@ context('Changing facility details from application-details page should take you
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));
       });
     } else {
-      it('if not using facility end date should take you to bank-review-date page from about-facility page', () => {
+      it('should take you to bank-review-date page from about-facility page if not using facility end date ', () => {
         cy.visit(relative(`/gef/application-details/${application.id}`));
         applicationDetails.facilitySummaryListRowAction(0, 0).click();
         aboutFacility.isUsingFacilityEndDateNo().click();

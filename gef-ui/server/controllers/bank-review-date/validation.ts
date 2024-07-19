@@ -3,10 +3,10 @@ import { uniq } from 'lodash';
 import { validateAndParseDayMonthYear } from '../../utils/day-month-year-validation';
 import { DayMonthYear } from '../../types/date';
 
-export const validateAndParseBankReviewDate = (dayMonthYear: DayMonthYear, coverStartDate: Date) => {
+export const validateAndParseBankReviewDate = (bankReviewDayMonthYear: DayMonthYear, coverStartDate: Date) => {
   const errRef = 'bankReviewDate';
 
-  const formattingErrorsOrDate = validateAndParseDayMonthYear(dayMonthYear, {
+  const formattingErrorsOrDate = validateAndParseDayMonthYear(bankReviewDayMonthYear, {
     errRef,
     variableDisplayName: 'bank review date',
   });

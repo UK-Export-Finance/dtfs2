@@ -1,6 +1,7 @@
 import { BankReportPeriodSchedule } from '@ukef/dtfs2-common';
 
 export type Bank = {
+  _id: string;
   id: string;
   name: string;
   mga: string[];
@@ -14,5 +15,4 @@ export type Bank = {
   };
   utilisationReportPeriodSchedule: BankReportPeriodSchedule;
   isVisibleInTfmUtilisationReports: boolean;
-  _id: string;
 };

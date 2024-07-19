@@ -29,25 +29,25 @@ const generateMockRequest = () => {
   return req;
 };
 
-const generateMockProvidedFacilityResponse = () => ({ details: {} });
-const generateMockApplicationResponse = () => ({ version: 1 });
+const generateMockProvidedFacilityResponse = () => ({ details: { _id: 'xyz', type: CONSTANTS.FACILITY_TYPE.CASH } });
+const generateMockApplicationResponse = () => ({ version: 1, _id: '123' });
 
 describe('controllers/provided-facility', () => {
   let mockResponse;
   let mockRequest;
-  let mockProvidedFacilityResponse;
-  let mockApplicationResponse;
+  let mockGetFacilityResponse;
+  let mockGetApplicationResponse;
   const updateApplicationSpy = jest.fn();
 
   beforeEach(() => {
     mockResponse = MockResponse();
     mockRequest = generateMockRequest();
-    mockProvidedFacilityResponse = generateMockProvidedFacilityResponse();
-    mockApplicationResponse = generateMockApplicationResponse();
+    mockGetFacilityResponse = generateMockProvidedFacilityResponse();
+    mockGetApplicationResponse = generateMockApplicationResponse();
 
-    api.getFacility.mockResolvedValue(mockProvidedFacilityResponse);
-    api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-    api.updateFacility.mockResolvedValue(mockProvidedFacilityResponse);
+    api.getFacility.mockResolvedValue(mockGetFacilityResponse);
+    api.getApplication.mockResolvedValueOnce(mockGetApplicationResponse);
+    api.updateFacility.mockResolvedValue(mockGetFacilityResponse);
     api.updateApplication = updateApplicationSpy;
   });
 
@@ -58,11 +58,9 @@ describe('controllers/provided-facility', () => {
   describe('GET Provided Facility', () => {
     it('renders the `Provided Facility` template', async () => {
       mockRequest.query.status = 'change';
-      mockProvidedFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
+      mockGetFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
 
-      mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
-
-      api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
+      api.getFacility.mockResolvedValueOnce(mockGetFacilityResponse);
 
       await providedFacility(mockRequest, mockResponse);
 
@@ -78,18 +76,17 @@ describe('controllers/provided-facility', () => {
       );
     });
 
-    it('back link goes to the about facility page if on a v0 deal', async () => {
+    it('should return to the about facility page when clicking back on a v0 deal', async () => {
+      // Arrange
       mockRequest.query.status = 'change';
-      mockProvidedFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
-      mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
+      mockGetApplicationResponse.version = 0;
+      api.getFacility.mockResolvedValueOnce(mockGetFacilityResponse);
+      api.getApplication.mockResolvedValueOnce(mockGetApplicationResponse);
 
-      mockApplicationResponse.version = 0;
-
-      api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
-      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
+      // Act
       await providedFacility(mockRequest, mockResponse);
 
+      // Assert
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/provided-facility.njk',
         expect.objectContaining({
@@ -98,19 +95,18 @@ describe('controllers/provided-facility', () => {
       );
     });
 
-    it('back link goes to the about facility page if on a v1 deal and isUsingFacilityEndDate null', async () => {
+    it('should return to the about facility page when clicking back on a v1 deal when isUsingFacilityEndDate null', async () => {
+      // Arrange
       mockRequest.query.status = 'change';
-      mockProvidedFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
-      mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
-      mockProvidedFacilityResponse.details.isUsingFacilityEndDate = null;
+      mockGetFacilityResponse.details.isUsingFacilityEndDate = null;
+      mockGetApplicationResponse.version = 1;
+      api.getFacility.mockResolvedValueOnce(mockGetFacilityResponse);
+      api.getApplication.mockResolvedValueOnce(mockGetApplicationResponse);
 
-      mockApplicationResponse.version = 1;
-
-      api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
-      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
+      // Act
       await providedFacility(mockRequest, mockResponse);
 
+      // Assert
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/provided-facility.njk',
         expect.objectContaining({
@@ -119,19 +115,18 @@ describe('controllers/provided-facility', () => {
       );
     });
 
-    it('back link goes to the bank review date page if on a v1 deal & not using facility end date', async () => {
+    it('should return to the about facility page when clicking back on a v1 deal when isUsingFacilityEndDate false', async () => {
+      // Arrange
       mockRequest.query.status = 'change';
-      mockProvidedFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
-      mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
-      mockProvidedFacilityResponse.details.isUsingFacilityEndDate = false;
+      mockGetFacilityResponse.details.isUsingFacilityEndDate = false;
+      mockGetApplicationResponse.version = 1;
+      api.getFacility.mockResolvedValueOnce(mockGetFacilityResponse);
+      api.getApplication.mockResolvedValueOnce(mockGetApplicationResponse);
 
-      mockApplicationResponse.version = 1;
-
-      api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
-      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
-
+      // Act
       await providedFacility(mockRequest, mockResponse);
 
+      // Assert
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/provided-facility.njk',
         expect.objectContaining({
@@ -208,7 +203,6 @@ describe('controllers/provided-facility', () => {
 
     it('calls the updateFacility api with the correct data', async () => {
       mockRequest.body.details = ['Term basis', 'Revolving or renewing basis'];
-      mockRequest.body.type = CONSTANTS.FACILITY_TYPE.CASH;
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
@@ -224,7 +218,6 @@ describe('controllers/provided-facility', () => {
 
     it('calls api.updateApplication with editorId if successfully updates facility', async () => {
       mockRequest.body.details = ['TERMS', 'RESOLVING'];
-      mockRequest.body.type = CONSTANTS.FACILITY_TYPE.CASH;
 
       await validateProvidedFacility(mockRequest, mockResponse);
 
