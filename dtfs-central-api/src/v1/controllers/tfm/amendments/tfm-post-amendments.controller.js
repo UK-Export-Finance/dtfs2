@@ -49,11 +49,8 @@ exports.postTfmAmendment = async (req, res) => {
     createdAt: getUnixTime(new Date()),
     updatedAt: getUnixTime(new Date()),
     status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.NOT_STARTED,
-    version: 1,
+    version: latestCompletedAmendmentVersion ? latestCompletedAmendmentVersion + 1 : 1,
   };
-  if (latestCompletedAmendmentVersion) {
-    amendment.version = latestCompletedAmendmentVersion + 1;
-  }
   await TfmFacilitiesRepo.updateOneById(facilityId, {
     $push: { amendments: amendment },
     $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
