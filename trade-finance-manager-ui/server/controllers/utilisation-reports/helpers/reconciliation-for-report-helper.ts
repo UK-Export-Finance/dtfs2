@@ -13,6 +13,7 @@ import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and
 import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 import { getKeyingSheetDisplayStatus } from './get-keying-sheet-display-status';
+import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
 
 const sortFeeRecordsByReportedPayments = (feeRecords: FeeRecord[]): FeeRecord[] =>
   orderBy(feeRecords, [({ reportedPayments }) => reportedPayments.currency, ({ reportedPayments }) => reportedPayments.amount], ['asc']);
@@ -126,6 +127,9 @@ const mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel = (feePayments:
     formattedDateReceived: format(new Date(dateReceived), 'd MMM yyyy'),
   }));
 
+const getKeyingSheetRowCheckboxId = (keyingSheetRow: KeyingSheetRow): KeyingSheetCheckboxId =>
+  `feeRecordId-${keyingSheetRow.feeRecordId}-status-${keyingSheetRow.status}`;
+
 /**
  * Maps the keying sheet to the keying sheet view model
  * @param keyingSheet - The keying sheet
@@ -142,6 +146,6 @@ export const mapKeyingSheetToKeyingSheetViewModel = (keyingSheet: KeyingSheet): 
     fixedFeeAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.fixedFeeAdjustment),
     premiumAccrualBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.premiumAccrualBalanceAdjustment),
     principalBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.principalBalanceAdjustment),
-    checkboxId: `feeRecordId-${keyingSheetRow.feeRecordId}`,
+    checkboxId: getKeyingSheetRowCheckboxId(keyingSheetRow),
     isChecked: false,
   }));

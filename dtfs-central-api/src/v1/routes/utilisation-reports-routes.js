@@ -6,6 +6,7 @@ const {
   validateDeletePaymentPayload,
   validatePatchPaymentPayload,
   validatePostKeyingDataPayload,
+  validatePutKeyingDataMarkAsPayload,
   validatePostRemoveFeesFromPaymentGroupPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
@@ -27,6 +28,8 @@ const { postKeyingData } = require('../controllers/utilisation-report-service/po
 const { getFeeRecordsToKey } = require('../controllers/utilisation-report-service/get-fee-records-to-key.controller');
 const { getPaymentDetailsById } = require('../controllers/utilisation-report-service/get-payment-details-by-id.controller');
 const { patchPayment } = require('../controllers/utilisation-report-service/patch-payment.controller');
+const { putKeyingDataMarkAsDone } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-done.controller');
+const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-to-do.controller');
 const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
 
 const utilisationReportsRouter = express.Router();
@@ -348,6 +351,68 @@ utilisationReportsRouter
  *         description: Internal Server Error
  */
 utilisationReportsRouter.route('/:reportId/fee-records-to-key').get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, getFeeRecordsToKey);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/keying-data/mark-as-done:
+ *   put:
+ *     summary: Put keying sheet data status to DONE for multiple fee records
+ *     tags: [Utilisation Report]
+ *     description: Mark multiple fee records within a keying sheet as keying sheet row status DONE
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feeRecordIds:
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/keying-data/mark-as-done')
+  .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePutKeyingDataMarkAsPayload, putKeyingDataMarkAsDone);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/keying-data/mark-as-to-do:
+ *   put:
+ *     summary: Put keying sheet data status to TO DO for multiple fee records
+ *     tags: [Utilisation Report]
+ *     description: Mark multiple fee records within a keying sheet as keying sheet row status TO DO
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feeRecordIds:
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/keying-data/mark-as-to-do')
+  .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePutKeyingDataMarkAsPayload, putKeyingDataMarkAsToDo);
 
 /**
  * @openapi

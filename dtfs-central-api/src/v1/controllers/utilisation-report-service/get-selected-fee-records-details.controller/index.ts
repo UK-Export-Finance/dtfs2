@@ -5,7 +5,7 @@ import { UtilisationReportRepo } from '../../../../repositories/utilisation-repo
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { NotFoundError, ApiError, InvalidPayloadError } from '../../../../errors';
 import { validateSelectedFeeRecordsAllHaveSamePaymentCurrency } from '../../../validation/utilisation-report-service/selected-fee-record-validator';
-import { mapToSelectedFeeRecordDetails } from './helpers';
+import { canFeeRecordsBeAddedToExistingPayment, mapToSelectedFeeRecordDetails } from './helpers';
 
 type GetSelectedFeeRecordDetailsRequestBody = {
   feeRecordIds: number[];
@@ -42,7 +42,14 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
     }
 
     validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords);
-    const selectedFeeRecordsDetails = await mapToSelectedFeeRecordDetails(utilisationReport.bankId, utilisationReport.reportPeriod, selectedFeeRecords);
+
+    const canAddToExistingPayment = await canFeeRecordsBeAddedToExistingPayment(reportId, selectedFeeRecords);
+    const selectedFeeRecordsDetails = await mapToSelectedFeeRecordDetails(
+      utilisationReport.bankId,
+      utilisationReport.reportPeriod,
+      selectedFeeRecords,
+      canAddToExistingPayment,
+    );
 
     return res.status(HttpStatusCode.Ok).send(selectedFeeRecordsDetails);
   } catch (error) {

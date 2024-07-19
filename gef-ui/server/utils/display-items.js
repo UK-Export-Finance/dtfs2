@@ -1,4 +1,5 @@
 const { format, parseISO } = require('date-fns');
+const { isFacilityEndDateEnabledOnGefVersion } = require('@ukef/dtfs2-common');
 const { isTrueSet } = require('./helpers');
 const { BOOLEAN, STAGE, FACILITY_TYPE } = require('../constants');
 
@@ -55,7 +56,11 @@ const eligibilityCriteriaItems = (coverUrl) => [
   },
 ];
 
-const facilityItems = (facilityUrl, { type, hasBeenIssued, shouldCoverStartOnSubmission, ukefFacilityId, feeType, issueDate }) => {
+const facilityItems = (
+  facilityUrl,
+  { type, hasBeenIssued, shouldCoverStartOnSubmission, ukefFacilityId, feeType, issueDate, isUsingFacilityEndDate },
+  dealVersion,
+) => {
   const AT_MATURITY = 'At maturity';
   return [
     {
@@ -108,6 +113,35 @@ const facilityItems = (facilityUrl, { type, hasBeenIssued, shouldCoverStartOnSub
         return format(date, 'd MMMM yyyy');
       },
       isHidden: !hasBeenIssued,
+    },
+    {
+      label: 'Has a facility end date',
+      id: 'isUsingFacilityEndDate',
+      href: `${facilityUrl}/about-facility?status=change`,
+      method: (value) => (isTrueSet(value) ? BOOLEAN.YES : BOOLEAN.NO),
+      isHidden: !isFacilityEndDateEnabledOnGefVersion(dealVersion),
+    },
+    {
+      label: 'Facility end date',
+      id: 'facilityEndDate',
+      href: `${facilityUrl}/about-facility?status=change`, // TODO DTFS2-7162: Update URL
+      method: (value) => {
+        // facilityEndDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+        const date = parseISO(value);
+        return format(date, 'd MMMM yyyy');
+      },
+      isHidden: !isUsingFacilityEndDate || !isFacilityEndDateEnabledOnGefVersion(dealVersion),
+    },
+    {
+      label: 'Bank review date',
+      id: 'bankReviewDate',
+      href: `${facilityUrl}/about-facility?status=change`, // TODO DTFS2-7161: Update URL
+      method: (value) => {
+        // bankReviewDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
+        const date = parseISO(value);
+        return format(date, 'd MMMM yyyy');
+      },
+      isHidden: !(isUsingFacilityEndDate === false) || !isFacilityEndDateEnabledOnGefVersion(dealVersion),
     },
     {
       label: 'Months the UKEF guarantee will be in place for',

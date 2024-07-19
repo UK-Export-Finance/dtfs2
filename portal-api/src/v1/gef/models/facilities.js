@@ -82,7 +82,6 @@ class Facility {
           throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
         }
         this.isUsingFacilityEndDate = req.isUsingFacilityEndDate ?? null;
-
         if ('bankReviewDate' in req) {
           const bankReviewDate = parseISO(req.bankReviewDate);
           if (!isValid(bankReviewDate)) {
@@ -92,6 +91,8 @@ class Facility {
         } else {
           this.bankReviewDate = null;
         }
+
+        this.facilityEndDate = null;
       }
     } else {
       // update facility
@@ -223,6 +224,19 @@ class Facility {
           throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
         }
         this.isUsingFacilityEndDate = req.isUsingFacilityEndDate;
+      }
+
+      if (req.facilityEndDate != null) {
+        const timestamp = convertToTimestamp(req.facilityEndDate);
+        this.facilityEndDate = new Date(timestamp);
+      }
+
+      if ('bankReviewDate' in req) {
+        const bankReviewDate = parseISO(req.bankReviewDate);
+        if (!isValid(bankReviewDate)) {
+          throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
+        }
+        this.bankReviewDate = bankReviewDate;
       }
 
       if ('bankReviewDate' in req) {
