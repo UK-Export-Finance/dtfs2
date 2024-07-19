@@ -175,7 +175,7 @@ describe('POST postAmendIsUsingFacilityEndDate', () => {
     });
   });
 
-  it('should redirect to the check answers page when only the cover end date is being amended and there are no errors', async () => {
+  it('should redirect to the facility end date page when true is selected there are no errors', async () => {
     api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
     api.updateAmendment.mockResolvedValueOnce({ status: 200 });
 
@@ -194,11 +194,11 @@ describe('POST postAmendIsUsingFacilityEndDate', () => {
     await postAmendmentIsUsingFacilityEndDate(req, res);
 
     expect(res.redirect).toHaveBeenCalledWith(
-      `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId}/check-answers`,
+      `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId}/facility-end-date`,
     );
   });
 
-  it('should redirect to the update facility value page when the facility value also needs amending and there are no errors', async () => {
+  it('should redirect to the update facility value page when false is selected, the facility value also needs updating and there are no errors', async () => {
     api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE });
     api.updateAmendment.mockResolvedValueOnce({ status: 200 });
 
@@ -209,7 +209,7 @@ describe('POST postAmendIsUsingFacilityEndDate', () => {
         facilityId: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.facilityId,
       },
       body: {
-        isUsingFacilityEndDate: true,
+        isUsingFacilityEndDate: false,
       },
       session,
     };
@@ -218,6 +218,29 @@ describe('POST postAmendIsUsingFacilityEndDate', () => {
 
     expect(res.redirect).toHaveBeenCalledWith(
       `/case/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.amendmentId}/facility-value`,
+    );
+  });
+
+  it('should redirect to the check answers page when false is selected, only the cover date is to be updated and there are no errors', async () => {
+    api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
+    api.updateAmendment.mockResolvedValueOnce({ status: 200 });
+
+    const req = {
+      params: {
+        _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
+        amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
+        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+      },
+      body: {
+        isUsingFacilityEndDate: false,
+      },
+      session,
+    };
+
+    await postAmendmentIsUsingFacilityEndDate(req, res);
+
+    expect(res.redirect).toHaveBeenCalledWith(
+      `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId}/check-answers`,
     );
   });
 
