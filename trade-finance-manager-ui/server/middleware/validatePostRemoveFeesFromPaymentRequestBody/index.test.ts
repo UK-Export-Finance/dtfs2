@@ -3,6 +3,7 @@ import { validatePostRemoveFeesFromPaymentRequestBody } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
 import { RemoveFeesFromPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
 import { EditPaymentsTableCheckboxId } from '../../types/edit-payments-table-checkbox-id';
+import { EditPaymentFormValues } from '../../types/edit-payment-form-values';
 
 console.error = jest.fn();
 
@@ -29,8 +30,13 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
   const getRequestBodyFromCheckboxIds = (checkboxIds: EditPaymentsTableCheckboxId[], totalSelectableFeeRecords: number) =>
     checkboxIds.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: 'on' }), { totalSelectableFeeRecords });
 
-  const assertRequestSessionHasBeenPopulated = (req: ReturnType<typeof getHttpMocks>['req'], removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey) => {
+  const assertRequestSessionHasBeenPopulated = (
+    req: ReturnType<typeof getHttpMocks>['req'],
+    removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey,
+    editPaymentFormValues: EditPaymentFormValues,
+  ) => {
     expect(req.session.removeFeesFromPaymentErrorKey).toBe(removeFeesFromPaymentErrorKey);
+    expect(req.session.editPaymentFormValues).toEqual(editPaymentFormValues);
   };
 
   afterEach(() => {
@@ -78,6 +84,8 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
     const { req, res } = getHttpMocks();
     req.body = {
       totalSelectableFeeRecords: 7,
+      paymentAmount: '1000',
+      'paymentDate-day': '7',
     };
 
     const next = jest.fn();
@@ -95,7 +103,13 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
       validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
-      assertRequestSessionHasBeenPopulated(req, 'no-fee-records-selected');
+      const expectedEditPaymentFormValues: EditPaymentFormValues = {
+        paymentAmount: '1000',
+        paymentDate: {
+          day: '7',
+        },
+      };
+      assertRequestSessionHasBeenPopulated(req, 'no-fee-records-selected', expectedEditPaymentFormValues);
     });
 
     it("does not call the 'next' function", () => {
@@ -129,7 +143,11 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const checkedCheckboxIds = [getCheckboxId(7), getCheckboxId(77)];
-    req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds, checkedCheckboxIds.length);
+    req.body = {
+      ...getRequestBodyFromCheckboxIds(checkedCheckboxIds, checkedCheckboxIds.length),
+      paymentAmount: '1000',
+      'paymentDate-day': '7',
+    };
 
     const next = jest.fn();
 
@@ -146,7 +164,16 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
       validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
       // Assert
-      assertRequestSessionHasBeenPopulated(req, 'all-fee-records-selected');
+      const expectedEditPaymentFormValues: EditPaymentFormValues = {
+        paymentAmount: '1000',
+        paymentDate: {
+          day: '7',
+          month: undefined,
+          year: undefined,
+        },
+        paymentReference: undefined,
+      };
+      assertRequestSessionHasBeenPopulated(req, 'all-fee-records-selected', expectedEditPaymentFormValues);
     });
 
     it("does not call the 'next' function", () => {

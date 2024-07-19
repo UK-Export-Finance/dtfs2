@@ -20,10 +20,17 @@ export const getEditPayment = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId, paymentId } = req.params;
 
-  const { errors, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
+  const { errors, allCheckboxesChecked, formValues } = getAndClearFieldsFromRedirectSessionData(req);
 
   try {
     const paymentDetails = await api.getPaymentDetailsWithFeeRecords(reportId, paymentId, userToken);
+
+    if (formValues) {
+      // TODO - 3196: Want to pass through selected checkboxes to the view model.
+      const editPaymentViewModel = getEditPaymentViewModelWithFormValuesAndErrors(paymentDetails, reportId, paymentId, formValues, errors);
+      return renderEditPaymentPage(res, editPaymentViewModel);
+    }
+
     const editPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId, allCheckboxesChecked, errors);
     return renderEditPaymentPage(res, editPaymentViewModel);
   } catch (error) {
@@ -53,6 +60,7 @@ export const postEditPayment = async (req: PostEditPaymentRequest, res: Response
     }
 
     const paymentDetails = await api.getPaymentDetailsWithFeeRecords(reportId, paymentId, userToken);
+    // TODO - 3196: Want to pass through selected checkboxes to the view model.
     const editPaymentViewModel = getEditPaymentViewModelWithFormValuesAndErrors(paymentDetails, reportId, paymentId, formValues, editPaymentErrors);
     return renderEditPaymentPage(res, editPaymentViewModel);
   } catch (error) {

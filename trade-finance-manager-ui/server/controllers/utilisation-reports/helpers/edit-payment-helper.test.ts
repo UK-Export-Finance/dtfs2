@@ -713,6 +713,19 @@ describe('edit-payment-helper', () => {
       expect(viewModel.errors).toEqual(paymentErrors);
     });
 
+    it('sets the render view model errors to the empty errors if no errors are supplied', () => {
+      // Act
+      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+        aPaymentDetailsWithFeeRecordsResponseBody(),
+        reportId,
+        paymentId,
+        aValidEditPaymentFormValuesObject(),
+      );
+
+      // Assert
+      expect(viewModel.errors).toEqual(EMPTY_PAYMENT_ERRORS_VIEW_MODEL);
+    });
+
     it('sets the render view model formValues paymentAmount to the supplied formValues paymentAmount', () => {
       // Arrange
       const formValues: EditPaymentFormValues = {

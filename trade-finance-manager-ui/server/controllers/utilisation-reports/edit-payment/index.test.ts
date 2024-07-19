@@ -8,7 +8,7 @@ import { aPaymentDetailsWithFeeRecordsResponseBody, aTfmSessionUser, aPayment, a
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL, EditPaymentFormRequestBody } from '../helpers';
 import { EditPaymentViewModel } from '../../../types/view-models/edit-payment-view-model';
 import { ErrorSummaryViewModel, SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
-import { ParsedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
+import { EditPaymentFormValues, ParsedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 jest.mock('../../../api');
 
@@ -104,6 +104,35 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       expect(viewModel.errors.errorSummary).toBeDefined();
       expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].href).toBe('#added-reported-fees-details-header');
       expect((viewModel.errors.errorSummary as [ErrorSummaryViewModel])[0].text).toBe('Select fee or fees to remove from the payment');
+    });
+
+    it('sets the render view model formValues based on passed in session data', async () => {
+      // Arrange
+      const editPaymentFormValues: EditPaymentFormValues = {
+        paymentAmount: '7',
+        paymentDate: {
+          day: '1',
+          month: '2',
+          year: '2023',
+        },
+        paymentReference: 'A payment reference',
+      };
+      const sessionData: Partial<SessionData> = {
+        editPaymentFormValues,
+      };
+      const { req, res } = getHttpMocksWithSessionData(sessionData);
+
+      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+        ...aPaymentDetailsWithFeeRecordsResponseBody(),
+      });
+
+      // Act
+      await getEditPayment(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/edit-payment.njk');
+      const viewModel = res._getRenderData() as EditPaymentViewModel;
+      expect(viewModel.formValues).toEqual(editPaymentFormValues);
     });
 
     it('sets the render view model paymentCurrency to the edit payment details response payment currency', async () => {

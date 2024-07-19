@@ -3,6 +3,7 @@ import { postRemoveFeesFromPayment } from '.';
 import api from '../../../api';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
 import { RemoveFeesFromPaymentFormRequestBody } from '../../../helpers/remove-fees-from-payment-helper';
+import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 jest.mock('../../../api');
 
@@ -23,12 +24,14 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
       jest.resetAllMocks();
     });
 
-    it('removes the selected fee records from the payment', async () => {
+    it('sets the request session editPaymentFormValues field', async () => {
       // Arrange
       const selectedFeeRecordIds = [1, 2];
-      const requestBodyForPostRemoveFeesFromPayment: RemoveFeesFromPaymentFormRequestBody = {
-        ...selectedFeeRecordIds.map((id) => ({ [`feeRecordId-${id}`]: 'on' })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
-        totalSelectableFeeRecords: selectedFeeRecordIds.length.toString(),
+      const requestBody: RemoveFeesFromPaymentFormRequestBody = {
+        ...aRemoveFeesFromPaymentFormRequestBody(selectedFeeRecordIds),
+        paymentAmount: '1000',
+        'paymentDate-day': '7',
+        'paymentDate-month': '8',
       };
 
       const reportId = '1';
@@ -36,7 +39,34 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
         params: { reportId, paymentId },
-        body: requestBodyForPostRemoveFeesFromPayment,
+        body: requestBody,
+      });
+
+      // Act
+      await postRemoveFeesFromPayment(req, res);
+
+      // Assert
+      const expectedEditPaymentFormValues: EditPaymentFormValues = {
+        paymentAmount: '1000',
+        paymentDate: {
+          day: '7',
+          month: '8',
+        },
+      };
+      expect(req.session.editPaymentFormValues).toEqual(expectedEditPaymentFormValues);
+    });
+
+    it('removes the selected fee records from the payment', async () => {
+      // Arrange
+      const selectedFeeRecordIds = [1, 2];
+      const requestBody = aRemoveFeesFromPaymentFormRequestBody(selectedFeeRecordIds);
+
+      const reportId = '1';
+      const paymentId = '2';
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId, paymentId },
+        body: requestBody,
       });
 
       // Act
@@ -79,5 +109,12 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
       expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user: requestSession.user });
     });
+
+    function aRemoveFeesFromPaymentFormRequestBody(feeRecordIds: number[]): RemoveFeesFromPaymentFormRequestBody {
+      return {
+        ...feeRecordIds.map((id) => ({ [`feeRecordId-${id}`]: 'on' })).reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+        totalSelectableFeeRecords: feeRecordIds.length.toString(),
+      };
+    }
   });
 });

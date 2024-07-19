@@ -82,7 +82,7 @@ export const getEditPaymentViewModelWithFormValuesAndErrors = (
   reportId: string,
   paymentId: string,
   formValues: EditPaymentFormValues,
-  errors: PaymentErrorsViewModel,
+  errors: PaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
 ): EditPaymentViewModel => ({
   reportId,
   paymentId,
