@@ -77,12 +77,18 @@ describe(baseUrl, () => {
 
     if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
       newFacility.details.isUsingFacilityEndDate = null;
+      newFacility.details.facilityEndDate = null;
       newFacility.details.bankReviewDate = null;
+      newFacility.validation.required.unshift('isUsingFacilityEndDate');
     }
   });
 
   describe(`GET ${baseUrl}?dealId=`, () => {
-    const facilitiesUrl = `${baseUrl}?dealId=620a1aa095a618b12da38c7b`;
+    let facilitiesUrl;
+
+    beforeEach(async () => {
+      facilitiesUrl = `${baseUrl}?dealId=${mockApplication.body._id}`;
+    });
 
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(facilitiesUrl),

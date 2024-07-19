@@ -108,7 +108,9 @@ describe(baseUrl, () => {
       beforeEach(() => {
         if (dealVersion === '1') {
           newFacility.details.bankReviewDate = null;
+          newFacility.details.facilityEndDate = null;
           newFacility.details.isUsingFacilityEndDate = null;
+          newFacility.validation.required.splice(1, 0, 'isUsingFacilityEndDate');
         }
       });
 
@@ -143,7 +145,10 @@ describe(baseUrl, () => {
             updatedAt: expect.any(Number),
           },
           validation: {
-            required: ['monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
+            required: addFacilityEndDateToValidation(
+              ['monthsOfCover', 'details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
+              dealVersion,
+            ),
           },
         };
 
@@ -215,7 +220,7 @@ describe(baseUrl, () => {
             ukefFacilityId: 1234,
           },
           validation: {
-            required: [],
+            required: addFacilityEndDateToValidation([], dealVersion),
           },
         };
 
@@ -259,7 +264,7 @@ describe(baseUrl, () => {
             guaranteeFee: calculateGuaranteeFee(update, {}),
           },
           validation: {
-            required: ['name'],
+            required: addFacilityEndDateToValidation(['name'], dealVersion),
           },
         };
 
@@ -284,17 +289,10 @@ describe(baseUrl, () => {
             updatedAt: expect.any(Number),
           },
           validation: {
-            required: [
-              'monthsOfCover',
-              'detailsOther',
-              'currency',
-              'value',
-              'coverPercentage',
-              'interestPercentage',
-              'feeType',
-              'feeFrequency',
-              'dayCountBasis',
-            ],
+            required: addFacilityEndDateToValidation(
+              ['monthsOfCover', 'detailsOther', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
+              dealVersion,
+            ),
           },
         };
 
@@ -318,7 +316,7 @@ describe(baseUrl, () => {
             guaranteeFee: calculateGuaranteeFee(completeUpdate, {}),
           },
           validation: {
-            required: [],
+            required: addFacilityEndDateToValidation([], dealVersion),
           },
         };
 
@@ -373,7 +371,10 @@ describe(baseUrl, () => {
             coverEndDate: '2050-07-19T00:00:00.000Z',
           },
           validation: {
-            required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
+            required: addFacilityEndDateToValidation(
+              ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
+              dealVersion,
+            ),
           },
         };
 
@@ -406,7 +407,10 @@ describe(baseUrl, () => {
             coverEndDate: '2040-02-29T00:00:00.000Z',
           },
           validation: {
-            required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
+            required: addFacilityEndDateToValidation(
+              ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
+              dealVersion,
+            ),
           },
         };
 
@@ -439,7 +443,10 @@ describe(baseUrl, () => {
             coverEndDate: '+010000-02-01T00:00:00.000Z',
           },
           validation: {
-            required: ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
+            required: addFacilityEndDateToValidation(
+              ['details', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
+              dealVersion,
+            ),
           },
         };
 
@@ -570,3 +577,27 @@ describe(baseUrl, () => {
     });
   });
 });
+
+function addFacilityEndDateToValidation(validation, dealVersion) {
+  if (dealVersion === '0') {
+    return validation;
+  }
+
+  const allValidationErrors = [
+    'name',
+    'isUsingFacilityEndDate',
+    'monthsOfCover',
+    'detailsOther',
+    'details',
+    'currency',
+    'value',
+    'coverPercentage',
+    'interestPercentage',
+    'feeType',
+    'feeFrequency',
+    'dayCountBasis',
+  ];
+
+  // retain order of allValidationErrors, but only return those in validation
+  return allValidationErrors.filter((value) => validation.includes(value) || value === 'isUsingFacilityEndDate');
+}

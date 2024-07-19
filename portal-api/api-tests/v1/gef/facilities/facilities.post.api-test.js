@@ -84,7 +84,9 @@ describe(baseUrl, () => {
       beforeEach(() => {
         if (dealVersion === '1') {
           newFacility.details.bankReviewDate = null;
+          newFacility.details.facilityEndDate = null;
           newFacility.details.isUsingFacilityEndDate = null;
+          newFacility.validation.required.unshift('isUsingFacilityEndDate');
         }
       });
 
