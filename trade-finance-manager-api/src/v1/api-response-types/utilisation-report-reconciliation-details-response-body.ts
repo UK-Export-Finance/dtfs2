@@ -28,7 +28,7 @@ type KeyingSheet = {
   feePayments: {
     currency: Currency;
     amount: number;
-    dateReceived: IsoDateTimeStamp;
+    dateReceived: IsoDateTimeStamp | undefined;
   }[];
   baseCurrency: Currency;
   fixedFeeAdjustment: KeyingSheetAdjustment | null;

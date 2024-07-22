@@ -156,11 +156,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     );
 
     describe('when there is one fee record with zero payments in the group', () => {
-      it('meps the group to a keying sheet row with no fee payments', () => {
+      it('maps the group to a keying sheet row with a fee payment with no date received and amount zero', () => {
         // Arrange
-        // QQ check this is what gets generated
         const feeRecordPaymentGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('READY_TO_KEY').withFeesPaidToUkefForThePeriod(0).build()],
+          feeRecords: [FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('READY_TO_KEY').withPaymentCurrency('GBP').build()],
           payments: [],
         };
 
@@ -168,9 +167,11 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = mapFeeRecordPaymentEntityGroupsToKeyingSheet([feeRecordPaymentGroup]);
 
         // Assert
-        // QQ check this is what we want
         expect(result).toHaveLength(1);
-        expect(result[0].feePayments).toHaveLength(0);
+        expect(result[0].feePayments).toHaveLength(1);
+        expect(result[0].feePayments[0].currency).toBe<Currency>('GBP');
+        expect(result[0].feePayments[0].amount).toBe(0);
+        expect(result[0].feePayments[0].dateReceived).toBe(undefined);
       });
     });
 

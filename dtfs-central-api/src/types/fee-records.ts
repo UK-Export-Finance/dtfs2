@@ -34,7 +34,7 @@ export type KeyingSheetRow = {
   facilityId: string;
   exporter: string;
   feePayments: {
-    dateReceived: Date;
+    dateReceived: Date | undefined;
     currency: Currency;
     amount: number;
   }[];

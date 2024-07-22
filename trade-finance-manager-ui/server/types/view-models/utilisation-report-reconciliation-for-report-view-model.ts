@@ -39,7 +39,7 @@ export type KeyingSheetViewModel = {
   baseCurrency: Currency;
   feePayments: {
     formattedCurrencyAndAmount: CurrencyAndAmountString;
-    formattedDateReceived: string;
+    formattedDateReceived: string | undefined;
   }[];
   fixedFeeAdjustment: KeyingSheetAdjustmentViewModel;
   premiumAccrualBalanceAdjustment: KeyingSheetAdjustmentViewModel;

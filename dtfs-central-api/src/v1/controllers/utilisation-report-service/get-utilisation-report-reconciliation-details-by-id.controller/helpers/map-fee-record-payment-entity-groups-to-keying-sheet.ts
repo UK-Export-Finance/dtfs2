@@ -36,9 +36,18 @@ const mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments = (feeRecordEntity: F
 
 const STATUSES_OF_FEE_RECORDS_TO_DISPLAY_ON_KEYING_SHEET: FeeRecordStatus[] = ['READY_TO_KEY', 'RECONCILED'];
 
+const getZeroAmountKeyingSheetFeePayment = ({ paymentCurrency }: FeeRecordEntity) => ({
+  currency: paymentCurrency,
+  amount: 0,
+  dateReceived: undefined,
+});
+
 const mapFeeRecordPaymentEntityGroupToKeyingSheetRows = ({ feeRecords, payments }: FeeRecordPaymentEntityGroup): KeyingSheetRow[] => {
   if (feeRecords.length === 1) {
-    const feePayments = payments.map(({ currency, amount, dateReceived }) => ({ currency, amount, dateReceived }));
+    const feePayments =
+      payments.length > 0
+        ? payments.map(({ currency, amount, dateReceived }) => ({ currency, amount, dateReceived }))
+        : [getZeroAmountKeyingSheetFeePayment(feeRecords[0])];
     return [{ ...mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecords[0]), feePayments }];
   }
 
