@@ -119,7 +119,7 @@ describe('controllers/provided-facility', () => {
       // Arrange
       mockRequest.query.status = 'change';
       mockGetFacilityResponse.details.isUsingFacilityEndDate = false;
-      mockGetApplicationResponse.version = 1;
+      mockGetFacilityResponse.version = 1;
       api.getFacility.mockResolvedValueOnce(mockGetFacilityResponse);
       api.getApplication.mockResolvedValueOnce(mockGetApplicationResponse);
 
@@ -137,14 +137,14 @@ describe('controllers/provided-facility', () => {
 
     it('back link goes to the facility end date page if on a v1 deal & using facility end date', async () => {
       mockRequest.query.status = 'change';
-      mockProvidedFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
-      mockProvidedFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
-      mockProvidedFacilityResponse.details.isUsingFacilityEndDate = true;
+      mockGetFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
+      mockGetFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
+      mockGetFacilityResponse.details.isUsingFacilityEndDate = true;
 
-      mockApplicationResponse.version = 1;
+      mockGetApplicationResponse.version = 1;
 
-      api.getFacility.mockResolvedValueOnce(mockProvidedFacilityResponse);
-      api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+      api.getFacility.mockResolvedValueOnce(mockGetFacilityResponse);
+      api.getApplication.mockResolvedValueOnce(mockGetApplicationResponse);
 
       await providedFacility(mockRequest, mockResponse);
 

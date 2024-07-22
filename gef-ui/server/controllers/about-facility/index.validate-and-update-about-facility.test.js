@@ -776,26 +776,6 @@ describe('validateAndUpdateAboutFacility', () => {
       );
     });
 
-    it('redirects user to provided facility page if all of method passes', async () => {
-      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-      mockRequest.body.hasBeenIssued = 'true';
-      mockRequest.body.facilityName = 'Name';
-      mockRequest.body.shouldCoverStartOnSubmission = 'true';
-      mockRequest.body.hasBeenIssued = 'true';
-      mockRequest.body.monthsOfCover = '10';
-      mockRequest.body['cover-end-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
-      mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
-      mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
-
-      if (dealVersion === 1) {
-        mockRequest.body.isUsingFacilityEndDate = 'true';
-      }
-
-      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
-
-      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/provided-facility');
-    });
-
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
       mockRequest.query.saveAndReturn = 'true';
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
@@ -825,6 +805,64 @@ describe('validateAndUpdateAboutFacility', () => {
           }),
         }),
       );
+    });
+
+    it('redirects user to facility end date page if using facility end date', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.facilityName = 'Name';
+      mockRequest.body.shouldCoverStartOnSubmission = 'true';
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.monthsOfCover = '10';
+      mockRequest.body['cover-end-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
+
+      mockRequest.body.isUsingFacilityEndDate = 'true';
+
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-end-date');
+    });
+
+    it('redirects user to bank review date page if not using facility end date', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.facilityName = 'Name';
+      mockRequest.body.shouldCoverStartOnSubmission = 'true';
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.monthsOfCover = '10';
+      mockRequest.body['cover-end-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
+
+      mockRequest.body.isUsingFacilityEndDate = 'false';
+
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/bank-review-date');
+    });
+  });
+
+  describe('with deal version 0', () => {
+    beforeEach(() => {
+      api.getApplication.mockResolvedValue({ version: 0 });
+    });
+
+    it('redirects user to provided facility page if all inputs are valid', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.facilityName = 'Name';
+      mockRequest.body.shouldCoverStartOnSubmission = 'true';
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.monthsOfCover = '10';
+      mockRequest.body['cover-end-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
+
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/provided-facility');
     });
   });
 });
