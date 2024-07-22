@@ -20,15 +20,15 @@ type ReportUploadedEventPayload = {
   transactionEntityManager: EntityManager;
 };
 
-const findOrCreateFacilityUtilisationDataEntity = async (
+const createFacilityUtilisationDataEntityIfNotExists = async (
   facilityId: string,
   reportPeriod: ReportPeriod,
   requestSource: DbRequestSource,
   entityManager: EntityManager,
-): Promise<FacilityUtilisationDataEntity> => {
-  const existingEntity = await entityManager.findOneBy(FacilityUtilisationDataEntity, { id: facilityId });
-  if (existingEntity) {
-    return existingEntity;
+): Promise<FacilityUtilisationDataEntity | null> => {
+  const entityExists = await entityManager.existsBy(FacilityUtilisationDataEntity, { id: facilityId });
+  if (entityExists) {
+    return null;
   }
   return FacilityUtilisationDataEntity.createWithoutUtilisation({ id: facilityId, reportPeriod, requestSource });
 };
@@ -60,10 +60,13 @@ export const handleUtilisationReportReportUploadedEvent = async (
   );
   const facilityUtilisationDataEntities = await Promise.all(
     uniqueReportCsvDataFacilityIds.map((facilityId) =>
-      findOrCreateFacilityUtilisationDataEntity(facilityId, report.reportPeriod, requestSource, transactionEntityManager),
+      createFacilityUtilisationDataEntityIfNotExists(facilityId, report.reportPeriod, requestSource, transactionEntityManager),
     ),
   );
-  await transactionEntityManager.save(FacilityUtilisationDataEntity, facilityUtilisationDataEntities);
+  await transactionEntityManager.save(
+    FacilityUtilisationDataEntity,
+    facilityUtilisationDataEntities.filter((entity): entity is FacilityUtilisationDataEntity => entity !== null),
+  );
 
   const feeRecordEntities: FeeRecordEntity[] = reportCsvData.map((dataEntry) =>
     feeRecordCsvRowToSqlEntity({

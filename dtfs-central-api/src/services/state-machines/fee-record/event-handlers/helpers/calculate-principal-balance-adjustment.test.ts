@@ -8,41 +8,35 @@ describe('calculatePrincipalBalanceAdjustment', () => {
   const aFacilityUtilisationDataEntityWithUtilisation = (utilisation: number) =>
     FacilityUtilisationDataEntityMockBuilder.forId('11111111').withUtilisation(utilisation).build();
 
-  it('returns zero when the fee record facilityUtilisation is equal to the facilityUtilisationData utilisation', () => {
-    // Arrange
-    const feeRecord = aFeeRecordEntityWithFacilityUtilisation(100);
-    const facilityUtilisationData = aFacilityUtilisationDataEntityWithUtilisation(100);
+  it.each([
+    {
+      condition: 'the amounts are equal',
+      feeRecord: aFeeRecordEntityWithFacilityUtilisation(100),
+      facilityUtilisationData: aFacilityUtilisationDataEntityWithUtilisation(100),
+      expectedDifference: 0,
+    },
+    {
+      condition: 'the fee record facilityUtilisation is greater',
+      feeRecord: aFeeRecordEntityWithFacilityUtilisation(150),
+      facilityUtilisationData: aFacilityUtilisationDataEntityWithUtilisation(100),
+      expectedDifference: -50,
+    },
+    {
+      condition: 'the facility utilisation is greater',
+      feeRecord: aFeeRecordEntityWithFacilityUtilisation(100),
+      facilityUtilisationData: aFacilityUtilisationDataEntityWithUtilisation(150),
+      expectedDifference: 50,
+    },
+  ])(
+    'returns the difference between then facility utilisation and the fee record facilityUtilisation when $condition',
+    ({ feeRecord, facilityUtilisationData, expectedDifference }) => {
+      // Act
+      const result = calculatePrincipalBalanceAdjustment(feeRecord, facilityUtilisationData);
 
-    // Act
-    const result = calculatePrincipalBalanceAdjustment(feeRecord, facilityUtilisationData);
-
-    // Assert
-    expect(result).toBe(0);
-  });
-
-  it('returns a positive number when the fee record facilityUtilisation is greater than the facility utilisation data utilisation', () => {
-    // Arrange
-    const feeRecord = aFeeRecordEntityWithFacilityUtilisation(100);
-    const facilityUtilisationData = aFacilityUtilisationDataEntityWithUtilisation(50);
-
-    // Act
-    const result = calculatePrincipalBalanceAdjustment(feeRecord, facilityUtilisationData);
-
-    // Assert
-    expect(result).toBeGreaterThan(0);
-  });
-
-  it('returns a negative number when the fee record facilityUtilisation is less than the facility utilisation data utilisation', () => {
-    // Arrange
-    const feeRecord = aFeeRecordEntityWithFacilityUtilisation(50);
-    const facilityUtilisationData = aFacilityUtilisationDataEntityWithUtilisation(100);
-
-    // Act
-    const result = calculatePrincipalBalanceAdjustment(feeRecord, facilityUtilisationData);
-
-    // Assert
-    expect(result).toBeLessThan(0);
-  });
+      // Assert
+      expect(result).toBe(expectedDifference);
+    },
+  );
 
   function aUtilisationReport() {
     return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();

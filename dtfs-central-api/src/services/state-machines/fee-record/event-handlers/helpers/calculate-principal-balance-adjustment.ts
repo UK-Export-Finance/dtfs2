@@ -9,4 +9,4 @@ import { FacilityUtilisationDataEntity, FeeRecordEntity } from '@ukef/dtfs2-comm
  * @returns The principal balance adjustment
  */
 export const calculatePrincipalBalanceAdjustment = (feeRecord: FeeRecordEntity, facilityUtilisationData: FacilityUtilisationDataEntity): number =>
-  new Big(feeRecord.facilityUtilisation).sub(facilityUtilisationData.utilisation).toNumber();
+  new Big(facilityUtilisationData.utilisation).sub(feeRecord.facilityUtilisation).toNumber();

@@ -8,7 +8,6 @@ import {
   AzureFileInfoEntity,
   FacilityUtilisationDataEntity,
   ReportPeriod,
-  FacilityUtilisationDataEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportReportUploadedEvent } from './report-uploaded.event-handler';
 import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
@@ -16,11 +15,11 @@ import { aUtilisationReportRawCsvData } from '../../../../../../test-helpers/tes
 
 describe('handleUtilisationReportReportUploadedEvent', () => {
   const mockSave = jest.fn();
-  const mockFindOneBy = jest.fn();
+  const mockExistsBy = jest.fn();
 
   const mockEntityManager = {
     save: mockSave,
-    findOneBy: mockFindOneBy,
+    existsBy: mockExistsBy,
   } as unknown as EntityManager;
 
   it('calls the repo method to update the report', async () => {
@@ -59,7 +58,7 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
     expect(mockSave).toHaveBeenCalledWith(FeeRecordEntity, [], { chunk: 100 });
   });
 
-  it('creates and saves new FacilityUtilisationData entities using the report reportPeriod when the supplied facility ids do not have existing entries', async () => {
+  it('creates and saves new FacilityUtilisationData entities using the report reportPeriod for the supplied facility ids which do not have existing entries', async () => {
     // Arrange
     const reportReportPeriod: ReportPeriod = {
       start: { month: 5, year: 2024 },
@@ -67,61 +66,6 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
     };
     const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withReportPeriod(reportReportPeriod).build();
 
-    const azureFileInfo = MOCK_AZURE_FILE_INFO;
-    const reportCsvData: UtilisationReportRawCsvData[] = [
-      { ...aUtilisationReportRawCsvData(), 'ukef facility id': '11111111' },
-      { ...aUtilisationReportRawCsvData(), 'ukef facility id': '22222222' },
-      { ...aUtilisationReportRawCsvData(), 'ukef facility id': '33333333' },
-    ];
-    const uploadedByUserId = 'abc123';
-    const requestSource: DbRequestSource = {
-      platform: 'PORTAL',
-      userId: uploadedByUserId,
-    };
-
-    mockFindOneBy.mockResolvedValue(null);
-
-    // Act
-    await handleUtilisationReportReportUploadedEvent(report, {
-      azureFileInfo,
-      reportCsvData,
-      uploadedByUserId,
-      requestSource,
-      transactionEntityManager: mockEntityManager,
-    });
-
-    const azureFileInfoEntity = AzureFileInfoEntity.create({
-      ...azureFileInfo,
-      requestSource,
-    });
-    report.updateWithUploadDetails({
-      azureFileInfo: azureFileInfoEntity,
-      uploadedByUserId,
-      requestSource,
-    });
-
-    // Assert
-    const facilityUtilisationDataEntities = reportCsvData.map(({ 'ukef facility id': facilityId }) => {
-      expect(mockFindOneBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: facilityId });
-
-      return FacilityUtilisationDataEntity.createWithoutUtilisation({
-        id: facilityId,
-        reportPeriod: reportReportPeriod,
-        requestSource,
-      });
-    });
-    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, facilityUtilisationDataEntities);
-  });
-
-  it('does not create new FacilityUtilisationData entities using the report reportPeriod when the supplied facility id has an existing entry', async () => {
-    // Arrange
-    const reportReportPeriod: ReportPeriod = {
-      start: { month: 5, year: 2024 },
-      end: { month: 6, year: 2024 },
-    };
-    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withReportPeriod(reportReportPeriod).build();
-
-    const azureFileInfo = MOCK_AZURE_FILE_INFO;
     const reportCsvDataWithExistingFacilityUtilisationData: UtilisationReportRawCsvData = { ...aUtilisationReportRawCsvData(), 'ukef facility id': '11111111' };
     const reportCsvDataWithoutExistingFacilityUtilisationData: UtilisationReportRawCsvData[] = [
       { ...aUtilisationReportRawCsvData(), 'ukef facility id': '22222222' },
@@ -133,46 +77,29 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
       userId: uploadedByUserId,
     };
 
-    const facilityUtilisationDataReportPeriod: ReportPeriod = {
-      start: { month: 1, year: 9999 },
-      end: { month: 4, year: 9999 },
-    };
-    const existingFacilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('11111111')
-      .withReportPeriod(facilityUtilisationDataReportPeriod)
-      .build();
-    mockFindOneBy.mockImplementation((_entity: unknown, { id }: { id: string }) => {
+    mockExistsBy.mockImplementation((_entity: unknown, { id }: { id: string }) => {
       switch (id) {
         case '11111111':
-          return Promise.resolve(existingFacilityUtilisationData);
+          return Promise.resolve(true);
         default:
-          return Promise.resolve(null);
+          return Promise.resolve(false);
       }
     });
 
     // Act
     await handleUtilisationReportReportUploadedEvent(report, {
-      azureFileInfo,
+      azureFileInfo: MOCK_AZURE_FILE_INFO,
       reportCsvData: [reportCsvDataWithExistingFacilityUtilisationData, ...reportCsvDataWithoutExistingFacilityUtilisationData],
       uploadedByUserId,
       requestSource,
       transactionEntityManager: mockEntityManager,
     });
 
-    const azureFileInfoEntity = AzureFileInfoEntity.create({
-      ...azureFileInfo,
-      requestSource,
-    });
-    report.updateWithUploadDetails({
-      azureFileInfo: azureFileInfoEntity,
-      uploadedByUserId,
-      requestSource,
-    });
-
     // Assert
-    expect(mockFindOneBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: reportCsvDataWithExistingFacilityUtilisationData['ukef facility id'] });
+    expect(mockExistsBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: reportCsvDataWithExistingFacilityUtilisationData['ukef facility id'] });
 
     const createdFacilityUtilisationDataEntities = reportCsvDataWithoutExistingFacilityUtilisationData.map(({ 'ukef facility id': facilityId }) => {
-      expect(mockFindOneBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: facilityId });
+      expect(mockExistsBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: facilityId });
 
       return FacilityUtilisationDataEntity.createWithoutUtilisation({
         id: facilityId,
@@ -180,6 +107,6 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
         requestSource,
       });
     });
-    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, [existingFacilityUtilisationData, ...createdFacilityUtilisationDataEntities]);
+    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, createdFacilityUtilisationDataEntities);
   });
 });
