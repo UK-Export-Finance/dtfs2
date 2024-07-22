@@ -2,7 +2,8 @@ name: Notify
 on:
   push:
     branches:
-      - main
+      - release-2.3
+      - feat/DTFS2-NONE/setup-notifications-for-release-2.3
 
 env:
   environment: dev
