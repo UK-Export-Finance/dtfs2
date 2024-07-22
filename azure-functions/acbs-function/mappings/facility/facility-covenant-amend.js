@@ -3,7 +3,6 @@
   "amount"                    Maximum liability when making an amendment, maps to targetAmount
   */
 
-const { produce } = require('immer');
 const { z } = require('zod');
 const { to2Decimals } = require('../../helpers/currency');
 
@@ -13,15 +12,12 @@ const FacilityGuaranteeDatesSchema = z.object({
   guaranteeExpiryDate: z.string(),
 });
 
-const transformFacilityCovenantAmend = ({ amount, facilityGuaranteeDates }) =>
-  produce({}, (draft) => {
-    if (amount) {
-      draft.targetAmount = to2Decimals(amount);
-    }
-    if (facilityGuaranteeDates?.guaranteeExpiryDate) {
-      draft.expirationDate = facilityGuaranteeDates?.guaranteeExpiryDate;
-    }
-  });
+const transformFacilityCovenantAmend = ({ amount, facilityGuaranteeDates }) => {
+  return {
+    ...(amount && { targetAmount: to2Decimals(amount) }),
+    ...(facilityGuaranteeDates && { expirationDate: facilityGuaranteeDates.guaranteeExpiryDate }),
+  };
+};
 
 const FacilityCovenantAmendMappingSchema = z
   .object({
