@@ -22,6 +22,23 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     expect(req.session.editPaymentFormValues).toBeUndefined();
   };
 
+  it('clears the session and returns undefined form values and an undefined errorSummary when the session error keys and form values are undefined', () => {
+    // Arrange
+    const req = getMockRequest({
+      removeFeesFromPaymentErrorKey: undefined,
+      editPaymentFormValues: undefined,
+    });
+
+    // Act
+    const { errors, formValues, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
+
+    // Assert
+    assertSessionHasBeenCleared(req);
+    expect(errors).toBeUndefined();
+    expect(formValues).toBeUndefined();
+    expect(allCheckboxesChecked).toBeUndefined();
+  });
+
   it('clears the session and returns provided form values and an undefined errorSummary when the session error keys are undefined', () => {
     // Arrange
     const editPaymentFormValues = anEditPaymentFormValues();
