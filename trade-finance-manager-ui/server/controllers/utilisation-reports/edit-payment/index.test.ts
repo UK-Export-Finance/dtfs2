@@ -85,7 +85,7 @@ describe('controllers/utilisation-reports/edit-payment', () => {
     });
 
     describe('when the remove fees from payment error key is set in the session data', () => {
-      it('sets remove fees from payment error summary based on passed in session data', async () => {
+      it('sets remove fees from payment error summary based on the payment error key', async () => {
         // Arrange
         const sessionData: Partial<SessionData> = {
           removeFeesFromPaymentErrorKey: 'no-fee-records-selected',

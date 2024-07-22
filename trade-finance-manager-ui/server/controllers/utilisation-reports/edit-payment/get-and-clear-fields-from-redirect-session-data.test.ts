@@ -24,20 +24,20 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
 
   it('clears the session and returns provided form values and an undefined errorSummary when the session error keys are undefined', () => {
     // Arrange
-    const editPaymentFormValues = aSetOfEditPaymentFormValues();
+    const editPaymentFormValues = anEditPaymentFormValues();
     const req = getMockRequest({
       removeFeesFromPaymentErrorKey: undefined,
       editPaymentFormValues,
     });
 
     // Act
-    const { errors: { errorSummary } = {}, formValues, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
+    const { errors, formValues, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
 
     // Assert
     assertSessionHasBeenCleared(req);
-    expect(errorSummary).toBeUndefined();
+    expect(errors).toBeUndefined();
     expect(formValues).toEqual(editPaymentFormValues);
-    expect(allCheckboxesChecked).toEqual(undefined);
+    expect(allCheckboxesChecked).toBeUndefined();
   });
 
   it.each<{
@@ -56,20 +56,21 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     "clears the session and returns an array with a single error summary for the errorSummary when the removeFeesFromPaymentErrorKey is '%s'",
     ({ removeFeesFromPaymentErrorKey, expectedAllCheckboxesChecked }) => {
       // Arrange
-      const editPaymentFormValues = aSetOfEditPaymentFormValues();
+      const editPaymentFormValues = anEditPaymentFormValues();
       const req = getMockRequest({
         removeFeesFromPaymentErrorKey,
         editPaymentFormValues,
       });
 
       // Act
-      const { errors: { errorSummary } = {}, formValues, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
+      const { errors, formValues, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
 
       // Assert
       assertSessionHasBeenCleared(req);
-      expect(errorSummary).toHaveLength(1);
-      expect(errorSummary![0].text).toBeDefined();
-      expect(errorSummary![0].href).toBeDefined();
+      expect(errors).toBeDefined();
+      expect(errors!.errorSummary).toHaveLength(1);
+      expect(errors!.errorSummary[0].text).toBeDefined();
+      expect(errors!.errorSummary[0].href).toBeDefined();
       expect(formValues).toEqual(editPaymentFormValues);
       expect(allCheckboxesChecked).toEqual(expectedAllCheckboxesChecked);
     },
@@ -88,7 +89,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     assertSessionHasBeenCleared(req);
   });
 
-  function aSetOfEditPaymentFormValues(): EditPaymentFormValues {
+  function anEditPaymentFormValues(): EditPaymentFormValues {
     return {
       paymentAmount: '7',
       paymentDate: {
