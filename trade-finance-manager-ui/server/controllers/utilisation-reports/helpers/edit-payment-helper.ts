@@ -5,8 +5,12 @@ import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { PaymentErrorsViewModel, EditPaymentViewModel, FeeRecordDetailsCheckboxId } from '../../../types/view-models';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL } from './payment-form-helpers';
+import { EditPaymentsTableCheckboxId } from '../../../types/edit-payments-table-checkbox-id';
 
-const mapToEditPaymentFeeRecords = (feeRecords: FeeRecord[], isCheckboxChecked: (checkboxId: string) => boolean): EditPaymentViewModel['feeRecords'] => {
+const mapToEditPaymentFeeRecords = (
+  feeRecords: FeeRecord[],
+  isCheckboxChecked: (checkboxId: EditPaymentsTableCheckboxId) => boolean,
+): EditPaymentViewModel['feeRecords'] => {
   const reportedFeesDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(feeRecords.map(({ reportedFees }, index) => ({ ...reportedFees, key: index })));
   const reportedPaymentsDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
     feeRecords.map(({ reportedPayments }, index) => ({ ...reportedPayments, key: index })),
@@ -81,11 +85,11 @@ export const getEditPaymentViewModel = (
  * @param reportId - The report id
  * @returns The edit payment view model
  */
-export const getEditPaymentViewModelWithFormValuesAndErrors = (
+export const getEditPaymentViewModelWithFormValues = (
   editPaymentResponse: GetPaymentDetailsWithFeeRecordsResponseBody,
   reportId: string,
   paymentId: string,
-  isCheckboxChecked: (checkboxId: string) => boolean,
+  isCheckboxChecked: (checkboxId: EditPaymentsTableCheckboxId) => boolean,
   formValues: EditPaymentFormValues,
   errors: PaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
 ): EditPaymentViewModel => ({

@@ -368,7 +368,7 @@ describe('edit-payment-helper', () => {
     });
   });
 
-  describe('getEditPaymentViewModelWithFormValuesAndErrors', () => {
+  describe('getEditPaymentViewModelWithFormValues', () => {
     const reportId = '12';
     const paymentId = '34';
     const isCheckboxChecked = () => false;
@@ -378,7 +378,7 @@ describe('edit-payment-helper', () => {
       const editPaymentResponseBody = aPaymentDetailsWithFeeRecordsResponseBody();
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -396,7 +396,7 @@ describe('edit-payment-helper', () => {
       const editPaymentResponseBody = aPaymentDetailsWithFeeRecordsResponseBody();
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -420,7 +420,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -444,7 +444,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -468,7 +468,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -494,7 +494,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -518,7 +518,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -543,7 +543,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -568,7 +568,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -600,7 +600,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -632,7 +632,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -657,7 +657,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -688,7 +688,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -713,7 +713,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
@@ -734,7 +734,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
@@ -749,7 +749,7 @@ describe('edit-payment-helper', () => {
 
     it('sets the render view model errors to the empty errors if no errors are supplied', () => {
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
@@ -769,7 +769,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
@@ -794,7 +794,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
@@ -819,7 +819,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
