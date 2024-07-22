@@ -154,35 +154,6 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       });
     });
 
-    it('sets the render view model formValues based on passed in session data', async () => {
-      // Arrange
-      const editPaymentFormValues: EditPaymentFormValues = {
-        paymentAmount: '7',
-        paymentDate: {
-          day: '1',
-          month: '2',
-          year: '2023',
-        },
-        paymentReference: 'A payment reference',
-      };
-      const sessionData: Partial<SessionData> = {
-        editPaymentFormValues,
-      };
-      const { req, res } = getHttpMocksWithSessionData(sessionData);
-
-      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
-        ...aPaymentDetailsWithFeeRecordsResponseBody(),
-      });
-
-      // Act
-      await getEditPayment(req, res);
-
-      // Assert
-      expect(res._getRenderView()).toEqual('utilisation-reports/edit-payment.njk');
-      const viewModel = res._getRenderData() as EditPaymentViewModel;
-      expect(viewModel.formValues).toEqual(editPaymentFormValues);
-    });
-
     it('sets the render view model paymentCurrency to the edit payment details response payment currency', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
@@ -437,112 +408,145 @@ describe('controllers/utilisation-reports/edit-payment', () => {
       expect(viewModel.errors).toEqual(EMPTY_PAYMENT_ERRORS_VIEW_MODEL);
     });
 
-    it('sets the render view model formValues paymentAmount to the edit payment details response payment amount', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
+    describe('when the edit payment form values are set in the session data', () => {
+      it('sets the render view model formValues based on the edit payment form values in the session data', async () => {
+        // Arrange
+        const editPaymentFormValues: EditPaymentFormValues = {
+          paymentAmount: '7',
+          paymentDate: {
+            day: '1',
+            month: '2',
+            year: '2023',
+          },
+          paymentReference: 'A payment reference',
+        };
+        const sessionData: Partial<SessionData> = {
+          editPaymentFormValues,
+        };
+        const { req, res } = getHttpMocksWithSessionData(sessionData);
 
-      const paymentAmount = 100;
-      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
-        ...aPaymentDetailsWithFeeRecordsResponseBody(),
-        payment: {
-          ...aPayment(),
-          amount: paymentAmount,
-        },
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
+        });
+
+        // Act
+        await getEditPayment(req, res);
+
+        // Assert
+        expect(res._getRenderView()).toEqual('utilisation-reports/edit-payment.njk');
+        const viewModel = res._getRenderData() as EditPaymentViewModel;
+        expect(viewModel.formValues).toEqual(editPaymentFormValues);
       });
-
-      // Act
-      await getEditPayment(req, res);
-
-      // Assert
-      const viewModel = res._getRenderData() as EditPaymentViewModel;
-      expect(viewModel.formValues.paymentAmount).toBe(paymentAmount.toString());
     });
 
-    it('sets the render view model formValues paymentDate day to the edit payment details response payment dateReceived day', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
+    describe('when the edit payment form values are undefined in the session data', () => {
+      it('sets the render view model formValues paymentAmount to the edit payment details response payment amount', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
 
-      const day = '10';
-      const dateReceived = new Date(`2024-05-${day}`).toISOString();
-      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
-        ...aPaymentDetailsWithFeeRecordsResponseBody(),
-        payment: {
-          ...aPayment(),
-          dateReceived,
-        },
+        const paymentAmount = 100;
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
+          payment: {
+            ...aPayment(),
+            amount: paymentAmount,
+          },
+        });
+
+        // Act
+        await getEditPayment(req, res);
+
+        // Assert
+        const viewModel = res._getRenderData() as EditPaymentViewModel;
+        expect(viewModel.formValues.paymentAmount).toBe(paymentAmount.toString());
       });
 
-      // Act
-      await getEditPayment(req, res);
+      it('sets the render view model formValues paymentDate day to the edit payment details response payment dateReceived day', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
 
-      // Assert
-      const viewModel = res._getRenderData() as EditPaymentViewModel;
-      expect(viewModel.formValues.paymentDate.day).toBe(day);
-    });
+        const day = '10';
+        const dateReceived = new Date(`2024-05-${day}`).toISOString();
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
+          payment: {
+            ...aPayment(),
+            dateReceived,
+          },
+        });
 
-    it('sets the render view model formValues paymentDate month to the edit payment details response payment dateReceived month', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
+        // Act
+        await getEditPayment(req, res);
 
-      const month = '5';
-      const dateReceived = new Date(`2024-${month}-1`).toISOString();
-      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
-        ...aPaymentDetailsWithFeeRecordsResponseBody(),
-        payment: {
-          ...aPayment(),
-          dateReceived,
-        },
+        // Assert
+        const viewModel = res._getRenderData() as EditPaymentViewModel;
+        expect(viewModel.formValues.paymentDate.day).toBe(day);
       });
 
-      // Act
-      await getEditPayment(req, res);
+      it('sets the render view model formValues paymentDate month to the edit payment details response payment dateReceived month', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
 
-      // Assert
-      const viewModel = res._getRenderData() as EditPaymentViewModel;
-      expect(viewModel.formValues.paymentDate.month).toBe(month);
-    });
+        const month = '5';
+        const dateReceived = new Date(`2024-${month}-1`).toISOString();
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
+          payment: {
+            ...aPayment(),
+            dateReceived,
+          },
+        });
 
-    it('sets the render view model formValues paymentDate year to the edit payment details response payment dateReceived year', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
+        // Act
+        await getEditPayment(req, res);
 
-      const year = '2024';
-      const dateReceived = new Date(`${year}-5-1`).toISOString();
-      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
-        ...aPaymentDetailsWithFeeRecordsResponseBody(),
-        payment: {
-          ...aPayment(),
-          dateReceived,
-        },
+        // Assert
+        const viewModel = res._getRenderData() as EditPaymentViewModel;
+        expect(viewModel.formValues.paymentDate.month).toBe(month);
       });
 
-      // Act
-      await getEditPayment(req, res);
+      it('sets the render view model formValues paymentDate year to the edit payment details response payment dateReceived year', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
 
-      // Assert
-      const viewModel = res._getRenderData() as EditPaymentViewModel;
-      expect(viewModel.formValues.paymentDate.year).toBe(year);
-    });
+        const year = '2024';
+        const dateReceived = new Date(`${year}-5-1`).toISOString();
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
+          payment: {
+            ...aPayment(),
+            dateReceived,
+          },
+        });
 
-    it('sets the render view model formValues paymentReference to the edit payment details response payment reference', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
+        // Act
+        await getEditPayment(req, res);
 
-      const reference = 'A payment reference';
-      jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
-        ...aPaymentDetailsWithFeeRecordsResponseBody(),
-        payment: {
-          ...aPayment(),
-          reference,
-        },
+        // Assert
+        const viewModel = res._getRenderData() as EditPaymentViewModel;
+        expect(viewModel.formValues.paymentDate.year).toBe(year);
       });
 
-      // Act
-      await getEditPayment(req, res);
+      it('sets the render view model formValues paymentReference to the edit payment details response payment reference', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
 
-      // Assert
-      const viewModel = res._getRenderData() as EditPaymentViewModel;
-      expect(viewModel.formValues.paymentReference).toBe(reference);
+        const reference = 'A payment reference';
+        jest.mocked(api.getPaymentDetailsWithFeeRecords).mockResolvedValue({
+          ...aPaymentDetailsWithFeeRecordsResponseBody(),
+          payment: {
+            ...aPayment(),
+            reference,
+          },
+        });
+
+        // Act
+        await getEditPayment(req, res);
+
+        // Assert
+        const viewModel = res._getRenderData() as EditPaymentViewModel;
+        expect(viewModel.formValues.paymentReference).toBe(reference);
+      });
     });
   });
 
