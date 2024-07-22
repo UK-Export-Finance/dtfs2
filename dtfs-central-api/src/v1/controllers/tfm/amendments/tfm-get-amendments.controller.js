@@ -281,8 +281,7 @@ exports.getAmendmentsByFacilityId = async (req, res) => {
   let amendment;
   switch (amendmentIdOrStatus) {
     case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.IN_PROGRESS: {
-      const amendmentsInProgress = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
-      amendment = amendmentsInProgress[0] ?? {};
+      amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? {};
       break;
     }
     case CONSTANTS.AMENDMENT.AMENDMENT_QUERY_STATUSES.COMPLETED:
@@ -291,7 +290,7 @@ exports.getAmendmentsByFacilityId = async (req, res) => {
       } else if (type === CONSTANTS.AMENDMENT.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
         amendment = (await findLatestCompletedDateAmendmentByFacilityId(facilityId)) ?? {};
       } else {
-        amendment = (await findAmendmentByStatusAndFacilityId(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED)) ?? [];
+        amendment = await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndStatus(facilityId, CONSTANTS.AMENDMENT.AMENDMENT_STATUS.COMPLETED);
       }
       break;
     default:
@@ -325,7 +324,7 @@ exports.getAmendmentsByDealId = async (req, res) => {
       }
       break;
     default:
-      amendment = (await findAmendmentsByDealId(dealId)) ?? [];
+      amendment = await findAmendmentsByDealId(dealId);
   }
   return res.status(200).send(amendment);
 };

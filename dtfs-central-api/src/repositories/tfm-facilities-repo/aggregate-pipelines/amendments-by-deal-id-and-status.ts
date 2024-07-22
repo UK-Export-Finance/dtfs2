@@ -9,6 +9,5 @@ export const amendmentsByDealIdAndStatus = (dealId: string | ObjectId, status: s
   },
   { $unwind: '$amendments' },
   { $match: { 'amendments.status': { $eq: status } } },
-  { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
   { $project: { _id: false, amendments: true } },
 ];
