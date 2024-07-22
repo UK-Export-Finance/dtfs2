@@ -218,6 +218,7 @@ const updateFacility = (facilityIdentifier, updateType, payload, etag) => put(`f
 // PATCH
 const updateFacilityLoan = (facilityIdentifier, loanId, payload) => patch(`facilities/${facilityIdentifier}/loans/${loanId}`, payload);
 const updateFacilityCovenant = (facilityIdentifier, payload) => patch(`facilities/${facilityIdentifier}/covenants`, payload);
+const updateFacilityFee = (facilityIdentifier, payload) => patch(`facilities/${facilityIdentifier}/fixed-fees`, payload);
 
 module.exports = {
   getFacility,
@@ -238,4 +239,5 @@ module.exports = {
   updateFacilityLoan,
   updateFacilityLoanAmount,
   updateFacilityCovenant,
+  updateFacilityFee,
 };
