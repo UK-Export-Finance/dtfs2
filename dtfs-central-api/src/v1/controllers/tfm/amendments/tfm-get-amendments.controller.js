@@ -14,8 +14,8 @@ const findAllAmendmentsByStatus = async (status) => {
   try {
     const amendmentsWithStatus = await TfmFacilitiesRepo.findAmendmentsByStatus(status);
 
-    // returns the amendment object for the given status
-    return amendmentsWithStatus.at(0) ?? null;
+    // returns the amendments for the given status
+    return amendmentsWithStatus;
   } catch (error) {
     console.error('Unable to find amendments object %o', error);
     return null;
@@ -23,9 +23,9 @@ const findAllAmendmentsByStatus = async (status) => {
 };
 
 exports.getAllAmendmentsInProgress = async (req, res) => {
-  const amendment = (await findAllAmendmentsByStatus(CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS)) ?? [];
+  const amendments = await findAllAmendmentsByStatus(CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS);
 
-  return res.status(200).send(amendment);
+  return res.status(200).send(amendments);
 };
 
 /* returns an array of object containing all properties for a given facilityId:
@@ -44,7 +44,7 @@ const findAllAmendmentsByFacilityId = async (facilityId) => {
     const amendmentsForFacility = await TfmFacilitiesRepo.findAmendmentsByFacilityId(facilityId);
 
     // returns the amendment object for the given facilityId
-    return amendmentsForFacility.at(0) ?? null;
+    return amendmentsForFacility;
   } catch (error) {
     console.error('Unable to find amendments object %o', error);
     return null;
@@ -101,7 +101,7 @@ const findAmendmentsByDealId = async (dealId) => {
     const amendments = await TfmFacilitiesRepo.findAmendmentsByDealId(dealId);
 
     // returns the amendment object for the given dealId
-    return amendments.at(0) ?? null;
+    return amendments;
   } catch (error) {
     console.error('Unable to find the amendments object by Deal Id %o', error);
     return null;
