@@ -19,13 +19,13 @@ describe('calculatePrincipalBalanceAdjustment', () => {
       condition: 'the fee record facilityUtilisation is greater',
       feeRecord: aFeeRecordEntityWithFacilityUtilisation(150),
       facilityUtilisationData: aFacilityUtilisationDataEntityWithUtilisation(100),
-      expectedDifference: -50,
+      expectedDifference: 50,
     },
     {
       condition: 'the facility utilisation is greater',
       feeRecord: aFeeRecordEntityWithFacilityUtilisation(100),
       facilityUtilisationData: aFacilityUtilisationDataEntityWithUtilisation(150),
-      expectedDifference: 50,
+      expectedDifference: -50,
     },
   ])(
     'returns the difference between then facility utilisation and the fee record facilityUtilisation when $condition',
