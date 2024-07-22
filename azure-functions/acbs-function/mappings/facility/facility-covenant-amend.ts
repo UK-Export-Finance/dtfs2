@@ -21,5 +21,10 @@ const FacilityCovenantAmendSchema = z
   });
 
 export const facilityCovenantAmend = (amendment: unknown) => {
-  return FacilityCovenantAmendSchema.parse(amendment);
+  try {
+    return FacilityCovenantAmendSchema.parse(amendment);
+  } catch (error) {
+    console.error('Unable to map facility covenant record. %o', error);
+    return {};
+  }
 };
