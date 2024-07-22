@@ -4,7 +4,5 @@ export const amendmentsByFacilityIdAndStatus = (facilityId: string | ObjectId, s
   { $match: { _id: { $eq: new ObjectId(facilityId) } } },
   { $unwind: '$amendments' },
   { $match: { 'amendments.status': { $eq: status } } },
-  { $project: { _id: false, amendments: true } },
-  { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-  { $project: { _id: false, amendments: true } },
+  { $group: { _id: false, amendments: { $push: '$amendments' } } },
 ];

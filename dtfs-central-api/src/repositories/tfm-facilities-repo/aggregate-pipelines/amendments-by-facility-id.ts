@@ -7,6 +7,4 @@ export const amendmentsByFacilityId = (facilityId: string | ObjectId): Document[
   { $unwind: '$amendments' },
   { $sort: { 'amendments.version': -1 } },
   { $match: { 'amendments.status': { $ne: AMENDMENT.AMENDMENT_STATUS.NOT_STARTED } } },
-  { $group: { _id: '$_id', amendments: { $push: '$amendments' } } },
-  { $project: { _id: false, amendments: true } },
 ];
