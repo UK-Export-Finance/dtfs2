@@ -61,6 +61,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
     const { facility, deal } = amendment;
     const { facilitySnapshot } = facility;
     let facilityLoanRecord;
+    let facilityGuaranteeRecord;
 
     if (facilityId.includes(DEAL.UKEF_ID.PENDING) || facilityId.includes(DEAL.UKEF_ID.TEST)) {
       throw new Error(`Invalid facility ID ${facilityId}`);
@@ -142,11 +143,27 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
 
     yield context.df.Task.all([facilityCovenantRecord]);
 
+    // 4. SOF: Facility Guarantee Record (FCR)
+    const isAmendmentContainingGuaranteeAmendment = Boolean(amount || amendment.facilityGuaranteeDates.guaranteeExpiryDate);
+    if (isAmendmentContainingGuaranteeAmendment) {
+      facilityGuaranteeRecord = context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
+        facilityId,
+        amendments,
+      });
+
+      yield context.df.Task.all([facilityLoanRecord]);
+    } else {
+      facilityGuaranteeRecord = {
+        result: `Facility guarantee will not be amended.`,
+      };
+    }
+
     return {
       facilityId,
       facilityLoanRecord: facilityLoanRecord.result,
       facilityMasterRecord: facilityMasterRecord.result,
       facilityCovenantRecord: facilityCovenantRecord.result,
+      facilityGuaranteeRecord: facilityGuaranteeRecord.result,
     };
   } catch (error) {
     console.error('Error amending facility records %o', error);
