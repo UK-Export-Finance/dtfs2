@@ -1,5 +1,5 @@
-const CONSTANTS = require('../../src/constants');
-const { escapeOperators } = require('../../src/v1/helpers/escapeOperators');
+const CONSTANTS = require('../../constants');
+const { escapeOperators } = require('./escapeOperators');
 
 describe('escapeOperators function', () => {
   // Tests that the function returns null when the input is null

@@ -1,4 +1,4 @@
-const convertToTimestamp = require('../../src/v1/helpers/convertToTimestamp');
+const convertToTimestamp = require('./convertToTimestamp');
 
 describe('convertToTimestamp()', () => {
   it('should return a timestamp in the normal time format for date passed as a string', () => {

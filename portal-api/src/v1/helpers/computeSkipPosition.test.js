@@ -1,4 +1,4 @@
-const computeSkipPosition = require('../../src/v1/helpers/computeSkipPosition');
+const computeSkipPosition = require('./computeSkipPosition');
 
 describe('hasAdditionalFiltersStart', () => {
   it('should return provided start page when additional filters is empty', () => {

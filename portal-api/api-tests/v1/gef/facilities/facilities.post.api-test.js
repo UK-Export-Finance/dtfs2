@@ -1,4 +1,3 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../../database-helper');
 const CONSTANTS = require('../../../../src/constants');
 const { FACILITY_TYPE, ERROR } = require('../../../../src/v1/gef/enums');
@@ -16,6 +15,7 @@ const applicationBaseUrl = '/v1/gef/application';
 const mockApplications = require('../../../fixtures/gef/application');
 
 const { DB_COLLECTIONS } = require('../../../fixtures/constants');
+const { generateANewFacility } = require('./helpers/generate-a-new-facility.tests');
 
 describe(baseUrl, () => {
   const originalEnv = process.env;
@@ -33,46 +33,6 @@ describe(baseUrl, () => {
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
 
     mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
-
-    newFacility = {
-      status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
-      details: {
-        _id: expect.any(String),
-        dealId: mockApplication.body._id,
-        type: expect.any(String),
-        hasBeenIssued: false,
-        name: null,
-        shouldCoverStartOnSubmission: null,
-        coverStartDate: null,
-        coverEndDate: null,
-        monthsOfCover: null,
-        details: null,
-        detailsOther: null,
-        currency: null,
-        value: null,
-        coverPercentage: null,
-        interestPercentage: null,
-        paymentType: null,
-        createdAt: expect.any(Number),
-        updatedAt: expect.any(Number),
-        ukefExposure: 0,
-        guaranteeFee: 0,
-        submittedAsIssuedDate: null,
-        ukefFacilityId: null,
-        dayCountBasis: null,
-        feeType: null,
-        feeFrequency: null,
-        coverDateConfirmed: null,
-        canResubmitIssuedFacilities: null,
-        issueDate: null,
-        unissuedToIssuedByMaker: expect.any(Object),
-        hasBeenIssuedAndAcknowledged: null,
-        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id),
-      },
-      validation: {
-        required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
-      },
-    };
   });
 
   describe(`POST ${baseUrl}`, () => {
@@ -82,12 +42,7 @@ describe(baseUrl, () => {
       });
 
       beforeEach(() => {
-        if (dealVersion === '1') {
-          newFacility.details.bankReviewDate = null;
-          newFacility.details.facilityEndDate = null;
-          newFacility.details.isUsingFacilityEndDate = null;
-          newFacility.validation.required.unshift('isUsingFacilityEndDate');
-        }
+        newFacility = generateANewFacility({ dealId: mockApplication.body._id, makerId: aMaker._id, dealVersion });
       });
 
       afterAll(() => {

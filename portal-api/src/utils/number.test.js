@@ -1,4 +1,4 @@
-const { isNumeric, isInteger, decimalsCount, stripDecimals, roundNumber, formattedNumber, sanitizeCurrency } = require('../../src/utils/number');
+const { isNumeric, isInteger, decimalsCount, stripDecimals, roundNumber, formattedNumber, sanitizeCurrency } = require('./number');
 
 describe('utils - number', () => {
   describe('isNumeric', () => {
