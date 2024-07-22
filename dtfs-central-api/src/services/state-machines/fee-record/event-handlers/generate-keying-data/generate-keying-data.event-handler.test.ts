@@ -131,11 +131,11 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       expect(feeRecord.premiumAccrualBalanceAdjustment).toBe(10);
     });
 
-    it('sets the fee record principalBalanceAdjustment to the difference between the fee record utilisation and the facility utilisation data utilisation', async () => {
+    it('sets the fee record principalBalanceAdjustment to the difference between the facility utilisation and the fee record facilityUtilisation', async () => {
       // Arrange
       const feeRecord = aMatchingFeeRecord();
-      feeRecord.facilityUtilisation = 3000;
-      feeRecord.facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(feeRecord.facilityId).withUtilisation(2000).build();
+      feeRecord.facilityUtilisation = 2000;
+      feeRecord.facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(feeRecord.facilityId).withUtilisation(3000).build();
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
