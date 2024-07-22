@@ -105,7 +105,7 @@ describe('tfm-facilities-repo', () => {
       },
     );
 
-    it('does not throw an error when the input contains an extra field and does not return than field in the result', () => {
+    it('does not throw an error when the input contains an extra field and does not return the extra field in the result', () => {
       // Arrange
       const input = {
         ...aValidTfmFacilityDocument(),
@@ -117,7 +117,7 @@ describe('tfm-facilities-repo', () => {
       expect(result).not.toHaveProperty('someOtherField');
     });
 
-    it("does not throw an error when the 'facilitySnapshot' object contains an extra field and does not return than field in the result", () => {
+    it("does not throw an error when the 'facilitySnapshot' object contains an extra field and does not return the extra field in the result", () => {
       // Arrange
       const input = {
         ...aValidTfmFacilityDocument(),
