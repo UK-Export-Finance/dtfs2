@@ -62,6 +62,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
     const { facilitySnapshot } = facility;
     let facilityLoanRecord;
     let facilityCovenantRecord;
+    let facilityInvestorRecord;
 
     if (facilityId.includes(DEAL.UKEF_ID.PENDING) || facilityId.includes(DEAL.UKEF_ID.TEST)) {
       throw new Error(`Invalid facility ID ${facilityId}`);
@@ -145,11 +146,26 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
       };
     }
 
+    // 5. SOF: Facility Investor Record (FCR)
+    const isAmendmentContainingInvestorAmendment = Boolean(amount || amendment.facilityGuaranteeDates.guaranteeExpiryDate);
+    if (isAmendmentContainingInvestorAmendment) {
+      facilityInvestorRecord = context.df.callSubOrchestrator('acbs-amend-facility-investor-record', {
+        facilityId,
+        amendments,
+      });
+
+      yield context.df.Task.all([facilityLoanRecord]);
+    } else {
+      facilityInvestorRecord = {
+        result: `Facility investor will not be amended.`,
+      };
+    }
     return {
       facilityId,
       facilityLoanRecord: facilityLoanRecord.result,
       facilityMasterRecord: facilityMasterRecord.result,
       facilityCovenantRecord: facilityCovenantRecord.result,
+      facilityInvestorRecord: facilityInvestorRecord.result,
     };
   } catch (error) {
     console.error('Error amending facility records %o', error);
