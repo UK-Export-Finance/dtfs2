@@ -1,31 +1,24 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { asUserSession } from '../../helpers/express-session';
-import { extractEditPaymentFormValues, RemoveFeesFromPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
-import { RemoveFeesFromPaymentRequest } from '../../controllers/utilisation-reports/remove-fees-from-payment';
+import { EditPaymentFormRequestBody, extractEditPaymentFormValues, RemoveFeesFromPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
 import { getEditPaymentsCheckboxIdsFromObjectKeys } from '../../helpers/edit-payments-table-checkbox-id-helper';
 import { extractTotalSelectableFeeRecordsFromRequestBody } from '../../helpers/remove-fees-from-payment-helper';
 
 const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof body === 'object';
 
-const redirectWithError = (
-  req: RemoveFeesFromPaymentRequest,
-  res: Response,
-  reportId: string,
-  paymentId: string,
-  removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey,
-) => {
+const redirectWithError = (req: Request, res: Response, reportId: string, paymentId: string, removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey) => {
   req.session.removeFeesFromPaymentErrorKey = removeFeesFromPaymentErrorKey;
-  req.session.editPaymentFormValues = extractEditPaymentFormValues(req.body);
+  req.session.editPaymentFormValues = extractEditPaymentFormValues(req.body as EditPaymentFormRequestBody);
 
   return res.redirect(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
 };
 
-const renderProblemWithServiceView = (req: RemoveFeesFromPaymentRequest, res: Response) => {
+const renderProblemWithServiceView = (req: Request, res: Response) => {
   const { user } = asUserSession(req.session);
   return res.render('_partials/problem-with-service.njk', { user });
 };
 
-export const validatePostRemoveFeesFromPaymentRequestBody = (req: RemoveFeesFromPaymentRequest, res: Response, next: NextFunction) => {
+export const validatePostRemoveFeesFromPaymentRequestBody = (req: Request, res: Response, next: NextFunction) => {
   const { reportId, paymentId } = req.params;
 
   const body = req.body as unknown;

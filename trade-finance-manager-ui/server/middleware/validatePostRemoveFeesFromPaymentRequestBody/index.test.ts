@@ -79,6 +79,27 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
+  describe('when the body contains no edit payment form values and the page is redirected with an error', () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    req.body = {
+      totalSelectableFeeRecords: 7,
+    };
+
+    const next = jest.fn();
+
+    it(`populates the session with an undefined set of edit payment form values`, () => {
+      // Act
+      validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
+
+      // Assert
+      const expectedEditPaymentFormValues: EditPaymentFormValues = {
+        paymentDate: {},
+      };
+      assertRequestSessionHasBeenPopulated(req, 'no-fee-records-selected', expectedEditPaymentFormValues);
+    });
+  });
+
   describe('when the body contains no checkbox ids', () => {
     // Arrange
     const { req, res } = getHttpMocks();
@@ -98,7 +119,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
       expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
     });
 
-    it(`populates the session with the 'no-fee-records-selected' error`, () => {
+    it(`populates the session with the 'no-fee-records-selected' error and the extracted edit payment form values`, () => {
       // Act
       validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
@@ -159,7 +180,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
       expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
     });
 
-    it(`populates the session with the 'all-fee-records-selected' error and no checked checkbox ids`, () => {
+    it(`populates the session with the 'all-fee-records-selected' error and the extracted edit payment form values`, () => {
       // Act
       validatePostRemoveFeesFromPaymentRequestBody(req, res, next);
 
@@ -168,10 +189,7 @@ describe('validatePostRemoveFeesFromPaymentRequestBody', () => {
         paymentAmount: '1000',
         paymentDate: {
           day: '7',
-          month: undefined,
-          year: undefined,
         },
-        paymentReference: undefined,
       };
       assertRequestSessionHasBeenPopulated(req, 'all-fee-records-selected', expectedEditPaymentFormValues);
     });
