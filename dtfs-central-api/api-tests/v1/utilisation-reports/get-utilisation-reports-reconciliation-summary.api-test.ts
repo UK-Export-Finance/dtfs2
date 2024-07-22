@@ -1,6 +1,5 @@
 import { Response } from 'supertest';
 import {
-  FacilityUtilisationDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   MONGO_DB_COLLECTIONS,
   PortalUser,
@@ -22,22 +21,12 @@ interface CustomResponse extends Response {
   body: UtilisationReportReconciliationSummary[];
 }
 
-console.error = jest.fn();
-
 describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () => {
-  const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678').build();
-
   beforeAll(async () => {
     await wipe([MONGO_DB_COLLECTIONS.BANKS]);
     await testApi.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
 
     await SqlDbHelper.initialize();
-    await SqlDbHelper.deleteAll();
-    await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
-  });
-
-  afterAll(async () => {
-    await SqlDbHelper.deleteAll();
   });
 
   describe('GET /v1/utilisation-reports/reconciliation-summary/:submissionMonth', () => {
@@ -80,8 +69,8 @@ describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () =
       await SqlDbHelper.saveNewEntry('UtilisationReport', utilisationReport);
 
       const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityUtilisationData(facilityUtilisationData).build(),
-        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityUtilisationData(facilityUtilisationData).build(),
+        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build(),
+        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build(),
       ];
       await SqlDbHelper.saveNewEntries('FeeRecord', feeRecords);
 

@@ -2,7 +2,6 @@ import { Response } from 'supertest';
 import {
   Bank,
   Currency,
-  FacilityUtilisationDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   SelectedFeeRecordDetails,
@@ -22,46 +21,16 @@ interface CustomResponse extends Response {
   body: SelectedFeeRecordDetails;
 }
 
-console.error = jest.fn();
-
 describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
   const bankId = '123';
   const bank: Bank = { ...aBank(), id: bankId, name: 'Test bank' };
 
   const reportId = 1;
-
-  const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('000123').build();
-
   const reportPeriod = aReportPeriod();
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
-    .withId(reportId)
-    .withReportPeriod(reportPeriod)
-    .withBankId(bankId)
-    .build();
-  const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-    .withId(45)
-    .withFacilityUtilisationData(facilityUtilisationData)
-    .withExporter('Test company')
-    .withFeesPaidToUkefForThePeriod(100)
-    .withFeesPaidToUkefForThePeriodCurrency('GBP')
-    .withPaymentCurrency('GBP')
-    .build();
-  const anotherFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-    .withId(46)
-    .withFacilityUtilisationData(facilityUtilisationData)
-    .withExporter('Test company')
-    .withFeesPaidToUkefForThePeriod(100)
-    .withFeesPaidToUkefForThePeriodCurrency('GBP')
-    .withPaymentCurrency('GBP')
-    .build();
-  utilisationReport.feeRecords = [feeRecord, anotherFeeRecord];
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
-    await SqlDbHelper.deleteAll();
-
-    await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
-    await SqlDbHelper.saveNewEntry('UtilisationReport', utilisationReport);
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
     await wipe(['banks']);
 
@@ -74,7 +43,7 @@ describe('GET /v1/utilisation-reports/:id/selected-fee-records-details', () => {
   });
 
   afterAll(async () => {
-    await SqlDbHelper.deleteAll();
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
     await wipe(['banks']);
   });
 

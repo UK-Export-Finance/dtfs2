@@ -1,5 +1,4 @@
 import {
-  FacilityUtilisationDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
@@ -22,7 +21,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     .build();
 
   beforeEach(() => {
-    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
 
@@ -33,20 +32,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
   });
 
   it('should display all the fee records attached to the utilisation report', () => {
-    const facilityUtilisationDataEntities = [
-      FacilityUtilisationDataEntityMockBuilder.forId('11111111').build(),
-      FacilityUtilisationDataEntityMockBuilder.forId('22222222').build(),
-      FacilityUtilisationDataEntityMockBuilder.forId('33333333').build(),
-      FacilityUtilisationDataEntityMockBuilder.forId('44444444').build(),
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withFacilityId('33333333').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withFacilityId('44444444').build(),
     ];
-    cy.task(NODE_TASKS.INSERT_FACILITY_UTILISATION_DATA_INTO_DB, facilityUtilisationDataEntities);
-
-    const feeRecords = facilityUtilisationDataEntities.map(({ id }, index) =>
-      FeeRecordEntityMockBuilder.forReport(utilisationReport)
-        .withId(index + 1)
-        .withFacilityId(id)
-        .build(),
-    );
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
 
     cy.reload();
@@ -58,20 +49,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
   });
 
   it('should only display the fee record with the facility id inputted in the filter', () => {
-    const facilityUtilisationDataEntities = [
-      FacilityUtilisationDataEntityMockBuilder.forId('11111111').build(),
-      FacilityUtilisationDataEntityMockBuilder.forId('22222222').build(),
-      FacilityUtilisationDataEntityMockBuilder.forId('33333333').build(),
-      FacilityUtilisationDataEntityMockBuilder.forId('44444444').build(),
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withFacilityId('33333333').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withFacilityId('44444444').build(),
     ];
-    cy.task(NODE_TASKS.INSERT_FACILITY_UTILISATION_DATA_INTO_DB, facilityUtilisationDataEntities);
-
-    const feeRecords = facilityUtilisationDataEntities.map(({ id }, index) =>
-      FeeRecordEntityMockBuilder.forReport(utilisationReport)
-        .withId(index + 1)
-        .withFacilityId(id)
-        .build(),
-    );
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
 
     cy.reload();
@@ -92,20 +75,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
   });
 
   it('should display the fee records which partially match the supplied facility id query', () => {
-    const facilityUtilisationDataEntities = [
-      FacilityUtilisationDataEntityMockBuilder.forId('11111111').build(),
-      FacilityUtilisationDataEntityMockBuilder.forId('11112222').build(),
-      FacilityUtilisationDataEntityMockBuilder.forId('33333333').build(),
-      FacilityUtilisationDataEntityMockBuilder.forId('44444444').build(),
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('11112222').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withFacilityId('33333333').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withFacilityId('44444444').build(),
     ];
-    cy.task(NODE_TASKS.INSERT_FACILITY_UTILISATION_DATA_INTO_DB, facilityUtilisationDataEntities);
-
-    const feeRecords = facilityUtilisationDataEntities.map(({ id }, index) =>
-      FeeRecordEntityMockBuilder.forReport(utilisationReport)
-        .withId(index + 1)
-        .withFacilityId(id)
-        .build(),
-    );
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
 
     cy.reload();
@@ -150,21 +125,15 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
   });
 
   it('should display the entire fee record payment group when only one of the fee records in the group has a matching facility id', () => {
-    const facilityIds = ['11111111', '22222222', '33333333', '44444444', '55555555'];
-    cy.task(
-      NODE_TASKS.INSERT_FACILITY_UTILISATION_DATA_INTO_DB,
-      facilityIds.map((id) => FacilityUtilisationDataEntityMockBuilder.forId(id).build()),
-    );
-
     const groupedFeeRecords = [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withStatus('DOES_NOT_MATCH').withFacilityId(facilityIds[0]).build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withStatus('DOES_NOT_MATCH').withFacilityId(facilityIds[1]).build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withStatus('DOES_NOT_MATCH').withFacilityId(facilityIds[2]).build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withStatus('DOES_NOT_MATCH').withFacilityId('11111111').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withStatus('DOES_NOT_MATCH').withFacilityId('22222222').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withStatus('DOES_NOT_MATCH').withFacilityId('33333333').build(),
     ];
 
     const toDoFeeRecords = [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withStatus('TO_DO').withFacilityId(facilityIds[3]).build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(5).withStatus('TO_DO').withFacilityId(facilityIds[4]).build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(4).withStatus('TO_DO').withFacilityId('44444444').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(5).withStatus('TO_DO').withFacilityId('55555555').build(),
     ];
 
     const allFeeRecords = [...groupedFeeRecords, ...toDoFeeRecords];
@@ -200,18 +169,10 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
   });
 
   it('displays a message when the supplied facility id matches no fee records', () => {
-    const facilityUtilisationDataEntities = [
-      FacilityUtilisationDataEntityMockBuilder.forId('11111111').build(),
-      FacilityUtilisationDataEntityMockBuilder.forId('22222222').build(),
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build(),
     ];
-    cy.task(NODE_TASKS.INSERT_FACILITY_UTILISATION_DATA_INTO_DB, facilityUtilisationDataEntities);
-
-    const feeRecords = facilityUtilisationDataEntities.map(({ id }, index) =>
-      FeeRecordEntityMockBuilder.forReport(utilisationReport)
-        .withId(index + 1)
-        .withFacilityId(id)
-        .build(),
-    );
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
 
     cy.reload();

@@ -17,8 +17,6 @@ interface CustomResponse extends Response {
   body: UtilisationReportReconciliationDetailsResponseBody;
 }
 
-console.error = jest.fn();
-
 describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
   const portalUser: PortalUser = aPortalUser();
   const portalUserId = portalUser._id.toString();

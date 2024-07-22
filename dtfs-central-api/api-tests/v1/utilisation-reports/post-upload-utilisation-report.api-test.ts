@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import {
   AzureFileInfoEntity,
-  FacilityUtilisationDataEntityMockBuilder,
+  FacilityUtilisationDataEntity,
   FeeRecordEntity,
   MOCK_AZURE_FILE_INFO,
   UtilisationReportEntity,
@@ -23,21 +23,13 @@ const getUrl = () => '/v1/utilisation-reports';
 describe(`POST ${getUrl()}`, () => {
   const reportId = 12;
 
-  const reportDataForFacilityIds = (...facilityIds: string[]): UtilisationReportRawCsvData[] =>
-    facilityIds.map((facilityId) => ({
-      ...aUtilisationReportRawCsvData(),
-      'ukef facility id': facilityId,
-    }));
-
-  const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678').build();
-
   const portalUser = aPortalUser();
   const portalUserId = portalUser._id.toString();
 
   const aValidPayload = (): PostUploadUtilisationReportRequestBody => ({
     reportId,
     fileInfo: MOCK_AZURE_FILE_INFO,
-    reportData: reportDataForFacilityIds(facilityUtilisationData.id),
+    reportData: [aUtilisationReportRawCsvData()],
     user: { _id: portalUserId },
   });
 
@@ -51,7 +43,6 @@ describe(`POST ${getUrl()}`, () => {
 
   beforeEach(async () => {
     await SqlDbHelper.deleteAll();
-    await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
     await SqlDbHelper.saveNewEntry('UtilisationReport', aNotReceivedReport());
   });
 
@@ -70,37 +61,9 @@ describe(`POST ${getUrl()}`, () => {
     expect(response.status).toBe(HttpStatusCode.NotFound);
   });
 
-  it('responds with a 404 (Not Found) when the report data has at least one facility id which does not exist in the FacilityUtilisationData table', async () => {
-    // Arrange
-    await SqlDbHelper.deleteAllEntries('FacilityUtilisationData');
-
-    const validFacilityIds = ['11111111', '22222222', '33333333'];
-    await SqlDbHelper.saveNewEntries(
-      'FacilityUtilisationData',
-      validFacilityIds.map((facilityId) => FacilityUtilisationDataEntityMockBuilder.forId(facilityId).build()),
-    );
-
-    const invalidFacilityId = '44444444';
-
-    const reportData = reportDataForFacilityIds(...validFacilityIds, invalidFacilityId);
-
-    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
-
-    // Act
-    const response = await testApi.post(payload).to(getUrl());
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
-  });
-
   it("responds with a 201 (Created) with a valid payload and sets the report status to 'PENDING_RECONCILIATION'", async () => {
-    // Arrange
-    const reportData = reportDataForFacilityIds(facilityUtilisationData.id);
-
-    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
-
     // Act
-    const response = await testApi.post(payload).to(getUrl());
+    const response = await testApi.post(aValidPayload()).to(getUrl());
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Created);
@@ -111,11 +74,10 @@ describe(`POST ${getUrl()}`, () => {
 
   it('creates as many fee records as there are rows in the reportData field', async () => {
     // Arrange
-    const facilityId = facilityUtilisationData.id;
     const reportData: UtilisationReportRawCsvData[] = [
-      { ...aUtilisationReportRawCsvData(), 'ukef facility id': facilityId },
-      { ...aUtilisationReportRawCsvData(), 'ukef facility id': facilityId },
-      { ...aUtilisationReportRawCsvData(), 'ukef facility id': facilityId },
+      { ...aUtilisationReportRawCsvData() },
+      { ...aUtilisationReportRawCsvData() },
+      { ...aUtilisationReportRawCsvData() },
     ];
 
     const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
@@ -126,8 +88,30 @@ describe(`POST ${getUrl()}`, () => {
     // Assert
     expect(response.status).toBe(HttpStatusCode.Created);
 
-    const feeRecords = await SqlDbHelper.manager.find(FeeRecordEntity, {});
-    expect(feeRecords).toHaveLength(3);
+    const feeRecordCount = await SqlDbHelper.manager.count(FeeRecordEntity, {});
+    expect(feeRecordCount).toBe(3);
+  });
+
+  it('creates an entry in the FacilityUtilisationData table for each facility id in the report csv data', async () => {
+    // Arrange
+    const facilityIds = ['11111111', '22222222', '33333333'];
+    const reportData: UtilisationReportRawCsvData[] = facilityIds.map((facilityId) => ({
+      ...aUtilisationReportRawCsvData(),
+      'ukef facility id': facilityId,
+    }));
+
+    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
+
+    // Act
+    const response = await testApi.post(payload).to(getUrl());
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.Created);
+
+    const facilityIdExists = await Promise.all(
+      facilityIds.map((facilityId) => SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityId })),
+    );
+    expect(facilityIdExists).toEqual([true, true, true]);
   });
 
   it('creates an entry in the AzureFileInfo table', async () => {

@@ -2,12 +2,10 @@ const { utilisationReportUpload, confirmAndSend, confirmation, problemWithServic
 const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
 const { february2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
-const { FACILITY_UTILISATION_DATA_FOR_REPORT } = require('../../../../fixtures/facilityUtilisationDataForReport');
 
 context('Confirmation', () => {
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
-    cy.task(NODE_TASKS.INSERT_FACILITY_UTILISATION_DATA_INTO_DB, [FACILITY_UTILISATION_DATA_FOR_REPORT]);
   });
 
   after(() => {

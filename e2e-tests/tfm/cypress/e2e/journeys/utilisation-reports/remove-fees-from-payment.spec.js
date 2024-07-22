@@ -1,6 +1,5 @@
 import {
   CURRENCY,
-  FacilityUtilisationDataEntityMockBuilder,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
@@ -41,12 +40,9 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
       .withReference(paymentReference)
       .build();
 
-  const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678').build();
-
   const aFeeRecordWithAmountStatusAndPayments = (id, amount, status, payments) =>
     FeeRecordEntityMockBuilder.forReport(utilisationReport)
       .withId(id)
-      .withFacilityUtilisationData(facilityUtilisationData)
       .withStatus(status)
       .withFeesPaidToUkefForThePeriod(amount)
       .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -55,11 +51,6 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
       .build();
 
   const getFeeRecordCheckbox = (feeRecordId) => cy.get(`[type="checkbox"][id="feeRecordId-${feeRecordId}"]`);
-
-  before(() => {
-    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
-    cy.task(NODE_TASKS.INSERT_FACILITY_UTILISATION_DATA_INTO_DB, [facilityUtilisationData]);
-  });
 
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);

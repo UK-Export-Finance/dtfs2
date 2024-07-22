@@ -1,14 +1,6 @@
 import { Response } from 'supertest';
 import { HttpStatusCode, getUri } from 'axios';
-import {
-  Bank,
-  Currency,
-  FacilityUtilisationDataEntityMockBuilder,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
-  ReportPeriod,
-  UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+import { Bank, Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
@@ -53,18 +45,14 @@ describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
     .withReportPeriod(reportPeriod)
     .build();
 
-  const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678').build();
-
   const feeRecords = [
     FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
       .withId(1)
-      .withFacilityUtilisationData(facilityUtilisationData)
       .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
       .withPaymentCurrency(paymentCurrency)
       .build(),
     FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
       .withId(2)
-      .withFacilityUtilisationData(facilityUtilisationData)
       .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
       .withPaymentCurrency(paymentCurrency)
       .build(),
@@ -74,9 +62,7 @@ describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
-    await SqlDbHelper.deleteAll();
-
-    await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
     await wipe(['banks']);
 
@@ -95,7 +81,7 @@ describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
   });
 
   afterAll(async () => {
-    await SqlDbHelper.deleteAll();
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
   it('returns a 400 when the report id is not a valid id', async () => {

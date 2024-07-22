@@ -25,6 +25,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   @ManyToOne(() => FacilityUtilisationDataEntity, (facilityUtilisationData) => facilityUtilisationData.feeRecords, {
     nullable: false,
     eager: true,
+    cascade: ['insert'],
   })
   @JoinColumn({ name: 'facilityId' })
   facilityUtilisationData!: FacilityUtilisationDataEntity;

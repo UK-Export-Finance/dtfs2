@@ -2,7 +2,6 @@ import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { In } from 'typeorm';
 import {
-  FacilityUtilisationDataEntityMockBuilder,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
@@ -17,8 +16,6 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { PatchPaymentPayload } from '../../../src/v1/routes/middleware/payload-validation';
 import { aTfmSessionUser } from '../../../test-helpers/test-data';
-
-console.error = jest.fn();
 
 describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
   const getUrl = (reportId: string | number, paymentId: string | number) => `/v1/utilisation-reports/${reportId}/payment/${paymentId}`;
@@ -37,19 +34,15 @@ describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
 
   const aReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
 
-  const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678').build();
-
   const feeRecordsForReportWithPayments = (report: UtilisationReportEntity, payments: PaymentEntity[]) => [
     FeeRecordEntityMockBuilder.forReport(report)
       .withId(1)
-      .withFacilityUtilisationData(facilityUtilisationData)
       .withStatus('DOES_NOT_MATCH')
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPayments(payments)
       .build(),
     FeeRecordEntityMockBuilder.forReport(report)
       .withId(2)
-      .withFacilityUtilisationData(facilityUtilisationData)
       .withStatus('DOES_NOT_MATCH')
       .withFeesPaidToUkefForThePeriodCurrency('GBP')
       .withPayments(payments)
@@ -58,8 +51,6 @@ describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
-    await SqlDbHelper.deleteAll();
-    await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
   });
 
   beforeEach(async () => {
@@ -68,10 +59,6 @@ describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
     const report = aReport();
     report.feeRecords = feeRecordsForReportWithPayments(report, [payment]);
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
-  });
-
-  afterAll(async () => {
-    await SqlDbHelper.deleteAll();
   });
 
   it('returns a 400 when the report id is not a valid id', async () => {
@@ -195,7 +182,6 @@ describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
-        .withFacilityUtilisationData(facilityUtilisationData)
         .withStatus('DOES_NOT_MATCH')
         .withFeesPaidToUkefForThePeriod(100)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
@@ -204,7 +190,6 @@ describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
         .build(),
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(2)
-        .withFacilityUtilisationData(facilityUtilisationData)
         .withStatus('DOES_NOT_MATCH')
         .withFeesPaidToUkefForThePeriod(200)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
@@ -248,7 +233,6 @@ describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
-        .withFacilityUtilisationData(facilityUtilisationData)
         .withStatus('MATCH')
         .withFeesPaidToUkefForThePeriod(100)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')
@@ -257,7 +241,6 @@ describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
         .build(),
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(2)
-        .withFacilityUtilisationData(facilityUtilisationData)
         .withStatus('MATCH')
         .withFeesPaidToUkefForThePeriod(200)
         .withFeesPaidToUkefForThePeriodCurrency('GBP')

@@ -1,17 +1,10 @@
 import { HttpStatusCode } from 'axios';
-import {
-  Currency,
-  FacilityUtilisationDataEntityMockBuilder,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
-  UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+import { Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aTfmUser } from '../../../test-helpers/test-data/tfm-user';
-import { aTfmSessionUser } from '../../../test-helpers/test-data/tfm-session-user';
+import { aTfmUser, aTfmSessionUser } from '../../../test-helpers/test-data';
 
 console.error = jest.fn();
 
@@ -29,17 +22,9 @@ describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selec
   const paymentId = 2;
   const payment = PaymentEntityMockBuilder.forCurrency(paymentCurrency).withId(paymentId).build();
 
-  const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678').build();
-
   const feeRecordIds = [1, 2];
   const feeRecords = feeRecordIds.map((id) =>
-    FeeRecordEntityMockBuilder.forReport(report)
-      .withId(id)
-      .withFacilityUtilisationData(facilityUtilisationData)
-      .withStatus('MATCH')
-      .withPaymentCurrency(paymentCurrency)
-      .withPayments([payment])
-      .build(),
+    FeeRecordEntityMockBuilder.forReport(report).withId(id).withStatus('MATCH').withPaymentCurrency(paymentCurrency).withPayments([payment]).build(),
   );
   report.feeRecords = feeRecords;
 
@@ -53,9 +38,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selec
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
-    await SqlDbHelper.deleteAll();
-
-    await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
     await wipe(['tfm-users']);
 
@@ -64,12 +47,15 @@ describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selec
   });
 
   beforeEach(async () => {
-    await SqlDbHelper.deleteAllEntries('UtilisationReport');
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
   });
 
+  afterEach(async () => {
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+  });
+
   afterAll(async () => {
-    await SqlDbHelper.deleteAll();
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
     await wipe(['tfm-users']);
   });
 

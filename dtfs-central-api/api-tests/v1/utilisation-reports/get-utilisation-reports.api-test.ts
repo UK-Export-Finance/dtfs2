@@ -23,8 +23,6 @@ interface CustomSuccessResponse extends Response {
   body: UtilisationReportResponse[];
 }
 
-console.error = jest.fn();
-
 describe('GET /v1/bank/:bankId/utilisation-reports', () => {
   const getUrl = (bankId: string) => `/v1/bank/${bankId}/utilisation-reports`;
 
@@ -40,7 +38,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports', () => {
     await usersCollection.insertOne(portalUser);
   });
 
-  beforeEach(async () => {
+  afterEach(async () => {
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 

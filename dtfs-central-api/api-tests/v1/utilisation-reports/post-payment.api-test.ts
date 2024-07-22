@@ -2,7 +2,6 @@ import { HttpStatusCode } from 'axios';
 import {
   CURRENCY,
   Currency,
-  FacilityUtilisationDataEntityMockBuilder,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
@@ -36,15 +35,9 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
 
   const paymentCurrency: Currency = 'GBP';
 
-  const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678').build();
-
   const feeRecordIds = [1, 2];
   const feeRecords = feeRecordIds.map((id) =>
-    FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)
-      .withId(id)
-      .withFacilityUtilisationData(facilityUtilisationData)
-      .withPaymentCurrency(paymentCurrency)
-      .build(),
+    FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport).withId(id).withPaymentCurrency(paymentCurrency).build(),
   );
   uploadedUtilisationReport.feeRecords = feeRecords;
 
@@ -62,9 +55,8 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
-    await SqlDbHelper.deleteAll();
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
-    await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
     await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedUtilisationReport);
 
     await wipe(['users', 'tfm-users']);
@@ -85,7 +77,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
   });
 
   afterAll(async () => {
-    await SqlDbHelper.deleteAll();
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
     await wipe(['users', 'tfm-users']);
   });
 

@@ -113,14 +113,6 @@ module.exports = {
     const insertPaymentsIntoDb = async (payments) => await SqlDbDataSource.manager.save(PaymentEntity, payments);
 
     /**
-     * Inserts facility utilisation data to the SQL database
-     * @param {FacilityUtilisationDataEntity[]} facilityUtilisationDataEntities
-     * @returns The inserted facility utilisation data
-     */
-    const insertFacilityUtilisationDataIntoDb = async (facilityUtilisationDataEntities) =>
-      await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationDataEntities);
-
-    /**
      * Deletes all the rows from the payment table
      */
     const removeAllPaymentsFromDb = async () => await SqlDbDataSource.manager.delete(PaymentEntity, {});
@@ -254,7 +246,6 @@ module.exports = {
       insertVersion0Facility,
       insertFeeRecordsIntoDb,
       insertPaymentsIntoDb,
-      insertFacilityUtilisationDataIntoDb,
       removeAllPaymentsFromDb,
       removeAllFeeRecordsFromDb,
       deleteAllFromSqlDb,

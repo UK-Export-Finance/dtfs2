@@ -1,11 +1,5 @@
 import { HttpStatusCode } from 'axios';
-import {
-  Currency,
-  FacilityUtilisationDataEntityMockBuilder,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
-  UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+import { Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
@@ -25,9 +19,6 @@ describe('DELETE /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
   const tfmUser = aTfmUser();
   const tfmUserId = tfmUser._id.toString();
 
-  const facilityId = '11111111';
-  const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).build();
-
   const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).withUploadedByUserId(portalUserId).build();
 
   const paymentCurrency: Currency = 'GBP';
@@ -36,13 +27,7 @@ describe('DELETE /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
 
   const feeRecordIds = [1, 2];
   const feeRecords = feeRecordIds.map((id) =>
-    FeeRecordEntityMockBuilder.forReport(report)
-      .withId(id)
-      .withFacilityId(facilityId)
-      .withStatus('MATCH')
-      .withPaymentCurrency(paymentCurrency)
-      .withPayments([payment])
-      .build(),
+    FeeRecordEntityMockBuilder.forReport(report).withId(id).withStatus('MATCH').withPaymentCurrency(paymentCurrency).withPayments([payment]).build(),
   );
   report.feeRecords = feeRecords;
 
@@ -55,9 +40,7 @@ describe('DELETE /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
-    await SqlDbHelper.deleteAll();
-
-    await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
     await wipe(['users', 'tfm-users']);
 
@@ -77,7 +60,7 @@ describe('DELETE /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
   });
 
   afterAll(async () => {
-    await SqlDbHelper.deleteAll();
+    await SqlDbHelper.deleteAllEntries('UtilisationReport');
     await wipe(['users', 'tfm-users']);
   });
 
