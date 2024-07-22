@@ -24,7 +24,27 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
       jest.resetAllMocks();
     });
 
-    it('sets the request session editPaymentFormValues field', async () => {
+    it('removes the selected fee records from the payment', async () => {
+      // Arrange
+      const selectedFeeRecordIds = [1, 2];
+      const requestBody = aRemoveFeesFromPaymentFormRequestBody(selectedFeeRecordIds);
+
+      const reportId = '1';
+      const paymentId = '2';
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId, paymentId },
+        body: requestBody,
+      });
+
+      // Act
+      await postRemoveFeesFromPayment(req, res);
+
+      // Assert
+      expect(api.removeFeesFromPayment).toHaveBeenCalledWith(reportId, paymentId, selectedFeeRecordIds, requestSession.user, requestSession.userToken);
+    });
+
+    it("redirects to '/utilisation-reports/:reportId/edit-payment/:paymentId' with the edit payment form values when removing fee records is successful", async () => {
       // Arrange
       const selectedFeeRecordIds = [1, 2];
       const requestBody: RemoveFeesFromPaymentFormRequestBody = {
@@ -53,44 +73,9 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
           month: '8',
         },
       };
-      expect(req.session.editPaymentFormValues).toEqual(expectedEditPaymentFormValues);
-    });
-
-    it('removes the selected fee records from the payment', async () => {
-      // Arrange
-      const selectedFeeRecordIds = [1, 2];
-      const requestBody = aRemoveFeesFromPaymentFormRequestBody(selectedFeeRecordIds);
-
-      const reportId = '1';
-      const paymentId = '2';
-      const { req, res } = httpMocks.createMocks({
-        session: requestSession,
-        params: { reportId, paymentId },
-        body: requestBody,
-      });
-
-      // Act
-      await postRemoveFeesFromPayment(req, res);
-
-      // Assert
-      expect(api.removeFeesFromPayment).toHaveBeenCalledWith(reportId, paymentId, selectedFeeRecordIds, requestSession.user, requestSession.userToken);
-    });
-
-    it("redirects to '/utilisation-reports/:reportId/edit-payment/:paymentId'", async () => {
-      // Arrange
-      const reportId = '1';
-      const paymentId = '2';
-      const { req, res } = httpMocks.createMocks({
-        session: requestSession,
-        params: { reportId, paymentId },
-      });
-
-      // Act
-      await postRemoveFeesFromPayment(req, res);
-
-      // Assert
       expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
       expect(res._isEndCalled()).toBe(true);
+      expect(req.session.editPaymentFormValues).toEqual(expectedEditPaymentFormValues);
     });
 
     it('renders the problem-with-service page when an error occurs', async () => {
