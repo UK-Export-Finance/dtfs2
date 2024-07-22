@@ -1,7 +1,3 @@
-/*
-  "guaranteeExpiryDate"       Facility cover end date, maps to expirationDate
-  */
-
 import { z } from 'zod';
 import { mappingSchemas } from '../schemas';
 import { mappingTransformations } from '../transformations';
