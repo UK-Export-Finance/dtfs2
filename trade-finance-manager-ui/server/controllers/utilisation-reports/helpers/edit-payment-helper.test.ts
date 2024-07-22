@@ -1,5 +1,6 @@
+import { when } from 'jest-when';
 import { Currency, CurrencyAndAmount } from '@ukef/dtfs2-common';
-import { getEditPaymentViewModel, getEditPaymentViewModelWithFormValuesAndErrors } from './edit-payment-helper';
+import { getEditPaymentViewModel, getEditPaymentViewModelWithFormValues } from './edit-payment-helper';
 import { aPaymentDetailsWithFeeRecordsResponseBody, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { GetPaymentDetailsWithFeeRecordsResponseBody } from '../../../api-response-types';
 import { PaymentErrorsViewModel, SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
@@ -232,9 +233,9 @@ describe('edit-payment-helper', () => {
         { ...aFeeRecord(), id: 1 },
         { ...aFeeRecord(), id: 2 },
       ];
-      const checkedFeeRecordIds = ['feeRecordId-1'];
 
-      const mockIsCheckboxChecked = jest.fn().mockImplementation((id: string) => checkedFeeRecordIds.includes(id));
+      const mockIsCheckboxChecked = jest.fn();
+      when(mockIsCheckboxChecked).calledWith('feeRecordId-1').mockReturnValue(true).calledWith('feeRecordId-2').mockReturnValue(false);
 
       const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
         ...aPaymentDetailsWithFeeRecordsResponseBody(),
