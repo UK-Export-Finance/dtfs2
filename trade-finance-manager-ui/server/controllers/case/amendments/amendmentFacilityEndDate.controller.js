@@ -1,5 +1,5 @@
 const { isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
-const { format, fromUnixTime, getUnixTime } = require('date-fns');
+const { format, fromUnixTime, getUnixTime, parseISO } = require('date-fns');
 const api = require('../../../api');
 const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const { facilityEndDateValidation } = require('./validation/amendmentFacilityEndDate.validate');
@@ -17,9 +17,9 @@ const getAmendmentFacilityEndDate = async (req, res) => {
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
   }
 
-  // if (!amendment.isUsingFacilityEndDate) {
-  //   return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
-  // }
+  if (!amendment.coverEndDate) {
+    return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/cover-end-date`);
+  }
 
   const isEditable =
     amendment.status === AMENDMENT_STATUS.IN_PROGRESS &&
@@ -38,15 +38,6 @@ const getAmendmentFacilityEndDate = async (req, res) => {
     facilityEndDateYear = format(fromUnixTime(facilityEndDate), 'yyyy');
   }
 
-  // const facility = await api.getFacility(facilityId, userToken);
-  // const { data: latestAmendmentFacilityEndDate } = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId, userToken);
-  //
-  // let currentFacilityEndDate = format(new Date(facility.facilitySnapshot.dates?.facilityEndDate), 'dd MMMM yyyy');
-  //
-  // if (latestAmendmentFacilityEndDate?.facilityEndDate) {
-  //   currentFacilityEndDate = format(fromUnixTime(latestAmendmentFacilityEndDate.facilityEndDate), 'dd MMMM yyyy');
-  // }
-
   return res.render('case/amendments/amendment-facility-end-date.njk', {
     dealId,
     facilityId,
@@ -54,7 +45,6 @@ const getAmendmentFacilityEndDate = async (req, res) => {
     facilityEndDateDay,
     facilityEndDateMonth,
     facilityEndDateYear,
-    // currentFacilityEndDate,
     user: req.session.user,
   });
 };
@@ -64,26 +54,17 @@ const postAmendmentFacilityEndDate = async (req, res) => {
   const { userToken } = req.session;
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;
-  const facility = await api.getFacility(facilityId, userToken);
-  const { isUsingFacilityEndDate } = req.body;
+  const { facilityEndDate, errorsObject } = facilityEndDateValidation(req.body, amendment.coverEndDate);
 
-  // let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.facilityEndDate), 'dd MMMM yyyy');
-
-  // if (latestAmendmentCoverEndDate?.coverEndDate) {
-  //   currentCoverEndDate = format(fromUnixTime(latestAmendmentCoverEndDate.coverEndDate), 'dd MMMM yyyy');
-  // }
-
-  const { facilityEndDate, errorsObject, facilityEndDateErrors } = facilityEndDateValidation(req.body);
-
-  if (facilityEndDateErrors.length) {
+  if (errorsObject?.errors?.fields) {
     const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isTfmFacilityEndDateFeatureFlagEnabled();
     return res.render('case/amendments/amendment-facility-end-date.njk', {
       dealId,
       facilityId,
       isEditable,
-      facilityEndDateDay: errorsObject.coverEndDay,
-      facilityEndDateMonth: errorsObject.coverEndMonth,
-      facilityEndDateYear: errorsObject.coverEndYear,
+      facilityEndDateDay: errorsObject.facilityEndDay,
+      facilityEndDateMonth: errorsObject.facilityEndMonth,
+      facilityEndDateYear: errorsObject.facilityEndYear,
       errors: errorsObject.errors,
       user: req.session.user,
     });
@@ -99,10 +80,10 @@ const postAmendmentFacilityEndDate = async (req, res) => {
       }
       return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
     }
-    console.error('Unable to update is using facility end date');
+    console.error('Unable to update facility end date');
     return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
   } catch (error) {
-    console.error('There was a problem adding if the bank is using the facility end date', error);
+    console.error('There was a problem adding the facility end date', error);
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}#amendments`);
   }
 };

@@ -2,6 +2,8 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
+{% import './_macros/amendment-what-is-a-facility-end-date.njk' as whatIsAFacilityEndDate %}
+
 {% extends "index.njk" %}
 
 {% block pageTitle -%}
@@ -13,7 +15,7 @@
 {% if errors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: errors.errorSummary,
+      errorList: errors.summary,
       attributes: {
         'data-cy': 'amendment--error-summary'
       },
@@ -39,8 +41,8 @@
             "data-cy": "facility-end-date-hint"
           }
         },
-        errorMessage: errors and errors.fieldErrors.facilityEndDate and {
-          text: errors.fieldErrors.facilityEndDate.text,
+        errorMessage: errors and {
+          text: errors.summary[0].text,
           attributes: {
             'data-cy': 'amendment--inline-error'
           }
@@ -48,7 +50,7 @@
         items: [
           {
             label: "Day",
-            classes: errors.fieldErrors.facilityEndDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+            classes: (errors and ('facilityEndDate' in errors.fields or 'facilityEndDateDay' in errors.fields)) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
             name: "day",
             value: facilityEndDateDay,
             attributes: {
@@ -57,7 +59,7 @@
           },
           {
             label: "Month",
-            classes: errors.fieldErrors.facilityEndDate and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+            classes: (errors and ('facilityEndDate' in errors.fields or 'facilityEndDateMonth' in errors.fields)) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
             name: "month",
             value: facilityEndDateMonth,
             attributes: {
@@ -66,7 +68,7 @@
           },
           {
             label: "Year",
-            classes: errors.fieldErrors.facilityEndDate and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+            classes: (errors and ('facilityEndDate' in errors.fields or 'facilityEndDateYear' in errors.fields)) and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
             name: "year",
             value: facilityEndDateYear,
             attributes: {
@@ -89,6 +91,8 @@
       {% endif %}
       <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
     </div>
+
+    {{ whatIsAFacilityEndDate.render() }}
 
   </form>
 
