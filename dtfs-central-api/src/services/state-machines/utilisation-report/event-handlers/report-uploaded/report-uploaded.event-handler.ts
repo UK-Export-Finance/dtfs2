@@ -1,16 +1,8 @@
 import { EntityManager } from 'typeorm';
-import {
-  DbRequestSource,
-  UtilisationReportEntity,
-  AzureFileInfo,
-  AzureFileInfoEntity,
-  FeeRecordEntity,
-  FacilityUtilisationDataEntity,
-} from '@ukef/dtfs2-common';
+import { DbRequestSource, UtilisationReportEntity, AzureFileInfo, AzureFileInfoEntity, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
 import { feeRecordCsvRowToSqlEntity } from '../../../../../helpers';
-import { NotFoundError } from '../../../../../errors';
 
 type ReportUploadedEventPayload = {
   azureFileInfo: AzureFileInfo;
@@ -41,14 +33,6 @@ export const handleUtilisationReportReportUploadedEvent = async (
     requestSource,
   });
   await transactionEntityManager.save(UtilisationReportEntity, report);
-
-  const reportCsvDataFacilityIds = reportCsvData.map(({ 'ukef facility id': facilityId }) => facilityId);
-  const allReportCsvDataFacilityIdsExist = (
-    await Promise.all(reportCsvDataFacilityIds.map((facilityId) => transactionEntityManager.existsBy(FacilityUtilisationDataEntity, { id: facilityId })))
-  ).every((facilityIdExists) => facilityIdExists);
-  if (!allReportCsvDataFacilityIdsExist) {
-    throw new NotFoundError('Failed to find a facility utilisation data row for the facility ids listed in the report');
-  }
 
   const feeRecordEntities: FeeRecordEntity[] = reportCsvData.map((dataEntry) =>
     feeRecordCsvRowToSqlEntity({
