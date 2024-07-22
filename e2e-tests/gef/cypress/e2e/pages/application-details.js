@@ -53,13 +53,7 @@ const applicationDetails = {
   facilitySummaryListRowValue: (tableNum, rowNum) =>
     cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__value'),
   facilitySummaryListRowAction: (tableNum, rowNum) =>
-    cy
-      .get('[data-cy="facility-summary-list"]')
-      .eq(tableNum)
-      .find('.govuk-summary-list__row')
-      .eq(rowNum)
-      .find('.govuk-summary-list__actions')
-      .find('.govuk-link'),
+    cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__actions'),
 
   supportingInfoHeading: () => cy.get('[data-cy="supportingInfo-heading"]'),
   supportingInfoStatus: () => cy.get('[data-cy="supportingInfo-status"]'),

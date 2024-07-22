@@ -74,7 +74,7 @@ context('Changing facility details from application-details page should take you
       it('should take you to provided-facility page from bank-review-date page', () => {
         cy.visit(relative(`/gef/application-details/${application.id}`));
 
-        applicationDetails.facilitySummaryListRowAction(0, 4).click();
+        applicationDetails.facilitySummaryListRowAction(0, 4).find('.govuk-link').click();
 
         bankReviewDate.bankReviewDateDay().type(todayDay);
         bankReviewDate.bankReviewDateMonth().type(todayMonth);

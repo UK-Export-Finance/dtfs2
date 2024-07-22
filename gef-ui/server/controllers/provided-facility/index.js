@@ -22,7 +22,7 @@ const providedFacility = async (req, res) => {
       dealId,
       facilityId,
       dealVersion: deal.version,
-      isUsingFacilityEndDate: facilityId.isUsingFacilityEndDate,
+      isUsingFacilityEndDate: details.isUsingFacilityEndDate,
     });
 
     return res.render('partials/provided-facility.njk', {
