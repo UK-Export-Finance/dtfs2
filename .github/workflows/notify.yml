@@ -8,8 +8,6 @@ on:
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
-  test: ${{ vars.UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE }}
-  MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK }} 
 
 jobs:
   # 1. Setup test infrastructure
@@ -79,4 +77,4 @@ jobs:
                   }
                 }
             ]
-          }' "${{ env.MICROSOFT_TEAMS_WEBHOOK }}"
+          }' "${{ secrets.MICROSOFT_TEAMS_WEBHOOK }}"
