@@ -17,6 +17,8 @@ import { withoutMongoId } from '../../../src/helpers/mongodb';
 import { aPortalUser } from '../../../test-helpers/test-data';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 
+console.error = jest.fn();
+
 interface CustomResponse extends Response {
   body: UtilisationReportReconciliationSummary[];
 }

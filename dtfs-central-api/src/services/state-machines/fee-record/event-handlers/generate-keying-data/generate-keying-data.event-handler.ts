@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
-import Big from 'big.js';
 import { DbRequestSource, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
+import { calculatePrincipalBalanceAdjustment } from '../helpers';
 
 type GenerateKeyingDataEventPayload = {
   transactionEntityManager: EntityManager;
@@ -20,7 +20,7 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
-  const principalBalanceAdjustment = new Big(feeRecord.facilityUtilisation).sub(feeRecord.facilityUtilisationData.utilisation).toNumber();
+  const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(feeRecord, feeRecord.facilityUtilisationData);
   feeRecord.updateWithKeyingData({
     fixedFeeAdjustment: 10,
     premiumAccrualBalanceAdjustment: 10,

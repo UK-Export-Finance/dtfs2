@@ -2,8 +2,10 @@ import { HttpStatusCode } from 'axios';
 import {
   AzureFileInfoEntity,
   FacilityUtilisationDataEntity,
+  FacilityUtilisationDataEntityMockBuilder,
   FeeRecordEntity,
   MOCK_AZURE_FILE_INFO,
+  ReportPeriod,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   UtilisationReportRawCsvData,
@@ -123,5 +125,86 @@ describe(`POST ${getUrl()}`, () => {
 
     const azureFileInfo = await SqlDbHelper.manager.find(AzureFileInfoEntity, {});
     expect(azureFileInfo).toHaveLength(1);
+  });
+
+  it('saves the report when there is a large number of fee records', async () => {
+    // Arrange
+    const numberOfReportDataEntriesToCreate = 500;
+
+    const reportData: UtilisationReportRawCsvData[] = [];
+    while (reportData.length < numberOfReportDataEntriesToCreate) {
+      reportData.push(aUtilisationReportRawCsvData());
+    }
+
+    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
+
+    // Act
+    const response = await testApi.post(payload).to(getUrl());
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.Created);
+
+    const numberOfInsertedFeeRecords = await SqlDbHelper.manager.count(FeeRecordEntity, {});
+    expect(numberOfInsertedFeeRecords).toBe(numberOfReportDataEntriesToCreate);
+  });
+
+  it('creates a new FacilityUtilisationData row using the report reportPeriod if the report data has a facility id which does not already exist', async () => {
+    // Arrange
+    await SqlDbHelper.deleteAll();
+
+    const reportPeriod: ReportPeriod = {
+      start: { month: 4, year: 2023 },
+      end: { month: 6, year: 2023 },
+    };
+    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withReportPeriod(reportPeriod).build();
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    const facilityId = '12345678';
+    const reportData: UtilisationReportRawCsvData[] = [{ ...aUtilisationReportRawCsvData(), 'ukef facility id': facilityId }];
+
+    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
+
+    // Act
+    const response = await testApi.post(payload).to(getUrl());
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.Created);
+
+    const facilityUtilisationDataEntityExists = await SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityId, reportPeriod });
+    expect(facilityUtilisationDataEntityExists).toBe(true);
+  });
+
+  it('does not update the existing FacilityUtilisationData row if the report data has a facility id which already exists', async () => {
+    // Arrange
+    await SqlDbHelper.deleteAll();
+
+    const reportReportPeriod: ReportPeriod = {
+      start: { month: 4, year: 2023 },
+      end: { month: 6, year: 2023 },
+    };
+    const report = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withReportPeriod(reportReportPeriod).build();
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    const facilityId = '12345678';
+    const facilityUtilisationDataReportPeriod: ReportPeriod = {
+      start: { month: 1, year: 2021 },
+      end: { month: 2, year: 2022 },
+    };
+    const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withReportPeriod(facilityUtilisationDataReportPeriod).build();
+    await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
+
+    const reportData: UtilisationReportRawCsvData[] = [{ ...aUtilisationReportRawCsvData(), 'ukef facility id': facilityId }];
+
+    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
+
+    // Act
+    const response = await testApi.post(payload).to(getUrl());
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.Created);
+
+    const facilityUtilisationDataEntity = await SqlDbHelper.manager.findOneByOrFail(FacilityUtilisationDataEntity, { id: facilityId });
+    expect(facilityUtilisationDataEntity.reportPeriod).not.toEqual(reportReportPeriod);
+    expect(facilityUtilisationDataEntity.reportPeriod).toEqual(facilityUtilisationDataReportPeriod);
   });
 });

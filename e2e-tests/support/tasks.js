@@ -103,7 +103,17 @@ module.exports = {
      * @param {FeeRecordEntity[]} feeRecords
      * @returns {FeeRecordEntity[]} The inserted fee records
      */
-    const insertFeeRecordsIntoDb = async (feeRecords) => await SqlDbDataSource.manager.save(FeeRecordEntity, feeRecords);
+    const insertFeeRecordsIntoDb = async (feeRecords) => {
+      await Promise.all(
+        feeRecords.map(async ({ facilityUtilisationData }) => {
+          const entityExists = await SqlDbDataSource.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityUtilisationData.id });
+          if (entityExists) {
+            await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
+          }
+        }),
+      );
+      return await SqlDbDataSource.manager.save(FeeRecordEntity, feeRecords);
+    };
 
     /**
      * Inserts payments to the SQL database

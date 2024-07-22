@@ -8,6 +8,8 @@ import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aPortalUser } from '../../../test-helpers/test-data';
 
+console.error = jest.fn();
+
 const saveReportsToDatabase = async (...reports: UtilisationReportEntity[]): Promise<UtilisationReportEntity[]> =>
   await SqlDbHelper.saveNewEntries('UtilisationReport', reports);
 

@@ -6,11 +6,11 @@ import {
   AzureFileInfoEntity,
   FeeRecordEntity,
   FacilityUtilisationDataEntity,
+  ReportPeriod,
 } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
 import { feeRecordCsvRowToSqlEntity } from '../../../../../helpers';
-import { NotFoundError } from '../../../../../errors';
 
 type ReportUploadedEventPayload = {
   azureFileInfo: AzureFileInfo;
@@ -18,6 +18,19 @@ type ReportUploadedEventPayload = {
   uploadedByUserId: string;
   requestSource: DbRequestSource;
   transactionEntityManager: EntityManager;
+};
+
+const findOrCreateFacilityUtilisationDataEntity = async (
+  facilityId: string,
+  reportPeriod: ReportPeriod,
+  requestSource: DbRequestSource,
+  entityManager: EntityManager,
+): Promise<FacilityUtilisationDataEntity> => {
+  const existingEntity = await entityManager.findOneBy(FacilityUtilisationDataEntity, { id: facilityId });
+  if (existingEntity) {
+    return existingEntity;
+  }
+  return FacilityUtilisationDataEntity.createWithoutUtilisation({ id: facilityId, reportPeriod, requestSource });
 };
 
 export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<'REPORT_UPLOADED', ReportUploadedEventPayload>;
@@ -42,13 +55,15 @@ export const handleUtilisationReportReportUploadedEvent = async (
   });
   await transactionEntityManager.save(UtilisationReportEntity, report);
 
-  const reportCsvDataFacilityIds = reportCsvData.map(({ 'ukef facility id': facilityId }) => facilityId);
-  const allReportCsvDataFacilityIdsExist = (
-    await Promise.all(reportCsvDataFacilityIds.map((facilityId) => transactionEntityManager.existsBy(FacilityUtilisationDataEntity, { id: facilityId })))
-  ).every((facilityIdExists) => facilityIdExists);
-  if (!allReportCsvDataFacilityIdsExist) {
-    throw new NotFoundError('Failed to find a facility utilisation data row for the facility ids listed in the report');
-  }
+  const uniqueReportCsvDataFacilityIds: string[] = Array.from(
+    reportCsvData.reduce((uniqueFacilityIds, { 'ukef facility id': facilityId }) => uniqueFacilityIds.add(facilityId), new Set<string>()),
+  );
+  const facilityUtilisationDataEntities = await Promise.all(
+    uniqueReportCsvDataFacilityIds.map((facilityId) =>
+      findOrCreateFacilityUtilisationDataEntity(facilityId, report.reportPeriod, requestSource, transactionEntityManager),
+    ),
+  );
+  await transactionEntityManager.save(FacilityUtilisationDataEntity, facilityUtilisationDataEntities);
 
   const feeRecordEntities: FeeRecordEntity[] = reportCsvData.map((dataEntry) =>
     feeRecordCsvRowToSqlEntity({

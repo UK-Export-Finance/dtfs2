@@ -52,11 +52,20 @@ type Entity<TableName extends SqlTableName> = TableName extends 'UtilisationRepo
   ? FacilityUtilisationDataEntity
   : never;
 
+const saveFacilityUtilisationDataIfNotExists = async (facilityUtilisationData: FacilityUtilisationDataEntity): Promise<void> => {
+  const entityExists = await SqlDbDataSource.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityUtilisationData.id });
+  if (entityExists) {
+    return;
+  }
+  await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
+};
+
 const saveNewEntry = async <TableName extends SqlTableName>(tableName: TableName, entityToInsert: Entity<TableName>): Promise<Entity<TableName>> => {
   switch (tableName) {
     case 'UtilisationReport':
       return (await SqlDbDataSource.manager.save(UtilisationReportEntity, entityToInsert as UtilisationReportEntity)) as Entity<TableName>;
     case 'FeeRecord':
+      await saveFacilityUtilisationDataIfNotExists((entityToInsert as FeeRecordEntity).facilityUtilisationData);
       return (await SqlDbDataSource.manager.save(FeeRecordEntity, entityToInsert as FeeRecordEntity)) as Entity<TableName>;
     case 'AzureFileInfo':
       return (await SqlDbDataSource.manager.save(AzureFileInfoEntity, entityToInsert as AzureFileInfoEntity)) as Entity<TableName>;
@@ -74,6 +83,9 @@ const saveNewEntries = async <TableName extends SqlTableName>(tableName: TableNa
     case 'UtilisationReport':
       return (await SqlDbDataSource.manager.save(UtilisationReportEntity, entityToInsert as UtilisationReportEntity[])) as Entity<TableName>[];
     case 'FeeRecord':
+      await Promise.all(
+        (entityToInsert as FeeRecordEntity[]).map(({ facilityUtilisationData }) => saveFacilityUtilisationDataIfNotExists(facilityUtilisationData)),
+      );
       return (await SqlDbDataSource.manager.save(FeeRecordEntity, entityToInsert as FeeRecordEntity[])) as Entity<TableName>[];
     case 'AzureFileInfo':
       return (await SqlDbDataSource.manager.save(AzureFileInfoEntity, entityToInsert as AzureFileInfoEntity[])) as Entity<TableName>[];

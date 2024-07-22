@@ -15,6 +15,8 @@ import { wipe } from '../../wipeDB';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { aBank, aReportPeriod } from '../../../test-helpers/test-data';
 
+console.error = jest.fn();
+
 const getUrl = (reportId: number | string) => `/v1/utilisation-reports/${reportId}/selected-fee-records-details`;
 
 interface CustomResponse extends Response {
