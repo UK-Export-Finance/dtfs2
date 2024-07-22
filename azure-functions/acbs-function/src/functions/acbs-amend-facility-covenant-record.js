@@ -27,7 +27,7 @@ const df = require('durable-functions');
 const retryOptions = require('../../helpers/retryOptions');
 const mappings = require('../../mappings');
 
-df.app.orchestration('acbs-amend-facility-covenant-record', function* amendFAcilityCovenant(context) {
+df.app.orchestration('acbs-amend-facility-covenant-record', function* amendFacilityCovenant(context) {
   const payload = context.df.input;
 
   try {

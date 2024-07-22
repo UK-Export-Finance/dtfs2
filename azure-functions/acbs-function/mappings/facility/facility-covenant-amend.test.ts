@@ -1,5 +1,4 @@
-const { produce } = require('immer');
-const facilityCovenantAmend = require('./facility-covenant-amend');
+import { facilityCovenantAmend } from './facility-covenant-amend';
 
 describe('facilityCovenantAmend', () => {
   const aValidAmount = 123.456;
@@ -45,10 +44,11 @@ describe('facilityCovenantAmend', () => {
   });
 
   describe('when there are extra fields', () => {
-    const amendment = produce(aValidAmountAndGuaranteeExpiryDateRequest, (draft) => {
-      draft.extraField = 'extra field';
-      draft.facilityGuaranteeDates.extraField = 'extra field';
-    });
+    const amendment = {
+      ...aValidAmountAndGuaranteeExpiryDateRequest,
+      extraField: 'extra field',
+      facilityGuaranteeDates: { ...aValidAmountAndGuaranteeExpiryDateRequest.facilityGuaranteeDates, extraField: 'extra field' },
+    };
     it('returns the target amount rounded to 2 decimal places and the guarantee expiry date', () => {
       const result = facilityCovenantAmend(amendment);
       expect(result).toEqual({ targetAmount: 123.46, expirationDate: '2022-01-01' });
