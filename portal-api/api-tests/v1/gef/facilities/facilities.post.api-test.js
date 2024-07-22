@@ -127,7 +127,7 @@ describe(baseUrl, () => {
       });
     });
 
-    describe(`with GEF_DEAL_VERSION set to 0`, () => {
+    describe(`with GEF_DEAL_VERSION = 0`, () => {
       beforeAll(() => {
         process.env.GEF_DEAL_VERSION = '0';
       });
@@ -155,7 +155,7 @@ describe(baseUrl, () => {
       });
     });
 
-    describe(`with GEF_DEAL_VERSION set to 1`, () => {
+    describe(`with GEF_DEAL_VERSION = 1`, () => {
       beforeAll(() => {
         process.env.GEF_DEAL_VERSION = '1';
       });

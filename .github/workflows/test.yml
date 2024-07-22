@@ -503,6 +503,8 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
+    env:	
+      GEF_DEAL_VERSION: 0
     runs-on: ubuntu-latest
 
     strategy:
