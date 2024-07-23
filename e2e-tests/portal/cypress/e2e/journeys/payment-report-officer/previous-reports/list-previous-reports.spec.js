@@ -1,13 +1,11 @@
 const { previousReports } = require('../../../pages');
-const MOCK_USERS = require('../../../../../../e2e-fixtures');
+const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
 const { previousReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
 
-const { BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
-
 context('List previous utilisation reports', () => {
   before(() => {
-    cy.removeAllUtilisationReports();
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
 
     cy.task('getUserFromDbByEmail', BANK1_PAYMENT_REPORT_OFFICER1.email).then((user) => {
       const { _id } = user;
@@ -15,12 +13,12 @@ context('List previous utilisation reports', () => {
         ...reportWithoutId,
         uploadedByUserId: _id.toString(),
       }));
-      cy.insertUtilisationReports(previousReportsWithUploadedByUserId);
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [previousReportsWithUploadedByUserId]);
     });
   });
 
   after(() => {
-    cy.removeAllUtilisationReports();
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
   });
 
   describe('On initial page load ', () => {

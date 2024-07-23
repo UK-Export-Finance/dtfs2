@@ -80,8 +80,6 @@ Cypress.Commands.add('overridePortalUserSignInTokenWithValidTokenByUsername', re
 Cypress.Commands.add('overridePortalUserSignInTokensByUsername', require('./portal/overridePortalUserSignInTokensByUsername'));
 Cypress.Commands.add('passRedLine', require('./portal/passRedLine'));
 Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
-Cypress.Commands.add('insertUtilisationReports', require('./portal/insertUtilisationReports'));
-Cypress.Commands.add('removeAllUtilisationReports', require('./portal/removeAllUtilisationReports'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
