@@ -69,7 +69,7 @@ on:
       - release-*
 
     paths:
-      - ".github/workflows/deployment.yml"
+      - ".github/**"
       - "portal/**"
       - "gef-ui/**"
       - "trade-finance-manager-ui/**"
