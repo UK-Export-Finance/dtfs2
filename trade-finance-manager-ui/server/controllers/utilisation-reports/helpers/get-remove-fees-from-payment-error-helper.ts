@@ -1,21 +1,16 @@
-import { ErrorSummaryViewModel } from '../../../types/view-models';
+import { EditPaymentErrorsViewModel } from '../../../types/view-models';
 
 export type RemoveFeesFromPaymentErrorKey = 'no-fee-records-selected' | 'all-fee-records-selected';
 
-const removeFeesFromPaymentErrorMap: Record<RemoveFeesFromPaymentErrorKey, [ErrorSummaryViewModel]> = {
-  'no-fee-records-selected': [
-    {
-      text: 'Select fee or fees to remove from the payment',
-      href: '#added-reported-fees-details-header',
-    },
-  ],
-  'all-fee-records-selected': [
-    {
-      text: 'You cannot remove all the fees. Delete the payment instead.',
-      href: '#added-reported-fees-details-header',
-    },
-  ],
+const removeFeesFromPaymentErrorMessageMap: Record<RemoveFeesFromPaymentErrorKey, string> = {
+  'no-fee-records-selected': 'Select fee or fees to remove from the payment',
+  'all-fee-records-selected': 'You cannot remove all the fees. Delete the payment instead.',
 };
 
-export const getRemoveFeesFromPaymentError = (removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey): [ErrorSummaryViewModel] =>
-  removeFeesFromPaymentErrorMap[removeFeesFromPaymentErrorKey];
+export const getRemoveFeesFromPaymentError = (removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey): EditPaymentErrorsViewModel => {
+  const message = removeFeesFromPaymentErrorMessageMap[removeFeesFromPaymentErrorKey];
+  return {
+    removeSelectedFeesErrorMessage: message,
+    errorSummary: [{ text: message, href: '#added-reported-fees-details-header' }],
+  };
+};

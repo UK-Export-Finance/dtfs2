@@ -22,9 +22,8 @@ export const getEditPayment = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId, paymentId } = req.params;
 
-  const { errors, formValues, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
-
   try {
+    const { errors, formValues, allCheckboxesChecked } = getAndClearFieldsFromRedirectSessionData(req);
     const isCheckboxChecked = () => allCheckboxesChecked ?? false;
 
     const paymentDetails = await api.getPaymentDetailsWithFeeRecords(reportId, paymentId, userToken);
