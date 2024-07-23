@@ -8,7 +8,6 @@ on:
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
-  accept_eula: ${{ vars.ACCEPT_EULA }}
   microsoft_teams_webhook: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK }}
 
 jobs:
@@ -27,6 +26,7 @@ jobs:
         run: echo "Timezone set to ${{ env.timezone }}"
 
   notify-teams:
+    needs: setup
     runs-on: ubuntu-latest
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -46,7 +46,6 @@ jobs:
           echo "COMMIT_SHA=$COMMIT_SHA" >> $GITHUB_ENV
           echo "COMMIT_AUTHOR=$COMMIT_AUTHOR" >> $GITHUB_ENV
           echo "COMMIT_TIMESTAMP=$COMMIT_TIMESTAMP" >> $GITHUB_ENV
-          echo "${{ needs.setup.outputs.environment }}"
 
       - name: Notify
         run: |
@@ -80,4 +79,4 @@ jobs:
                   }
                 }
             ]
-          }' "${{ secrets.MICROSOFT_TEAMS_WEBHOOK }}"
+          }' "${{ env.microsoft_teams_webhook }}"
