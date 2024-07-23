@@ -8,6 +8,8 @@ on:
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
+  accept_eula: ${{ vars.ACCEPT_EULA }}
+  microsoft_teams_webhook: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK }}
 
 jobs:
   # 1. Setup test infrastructure
