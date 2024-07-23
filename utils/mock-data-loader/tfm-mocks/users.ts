@@ -1,6 +1,16 @@
-const TEAMS = require('./teams');
+import { TEAMS } from './teams';
 
-module.exports = {
+export type MockTfmUser = {
+  username: string;
+  email: string;
+  password: string;
+  teams: string[];
+  timezone: string;
+  firstName: string;
+  lastName: string;
+};
+
+export const USERS: Record<string, MockTfmUser> = {
   T1_USER_1: {
     username: 'T1_USER_1',
     email: 'test@testing.com',

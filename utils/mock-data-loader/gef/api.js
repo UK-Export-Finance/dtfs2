@@ -1,10 +1,9 @@
 const axios = require('axios');
 const { HEADERS } = require('@ukef/dtfs2-common');
 const ApiError = require('../errors/api.error');
-const { mockDataLoaderPortalAuditDetails } = require('../constants/mockDataLoaderAuditDetails');
 require('dotenv').config();
 
-const { PORTAL_API_URL, DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
+const { PORTAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
 
 const headers = {
   portal: {
@@ -18,6 +17,11 @@ const headers = {
   },
 };
 
+/**
+ * @param {object} data
+ * @param {string} token
+ * @returns {Promise<{ _id: string }>}
+ */
 const createApplication = async (data, token) => {
   const response = await axios({
     method: 'post',
@@ -50,6 +54,10 @@ const updateApplication = async (id, data, token) => {
   return response.data;
 };
 
+/**
+ * @param {string} token
+ * @returns {Promise<{ _id: string }[]>}
+ */
 const listDeals = async (token) => {
   const response = await axios({
     method: 'get',
@@ -64,21 +72,11 @@ const listDeals = async (token) => {
   return response.data.items;
 };
 
-const deleteDeal = async (dealId, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      ...headers.portal,
-      Authorization: token,
-    },
-    url: `${PORTAL_API_URL}/v1/gef/application/${dealId}`,
-  }).catch((error) => {
-    throw new ApiError({ cause: error });
-  });
-
-  return response.data;
-};
-
+/**
+ * @param {object} data
+ * @param {string} token
+ * @returns {Promise<{ details: unknown }>}
+ */
 const createFacilities = async (data, token) => {
   const response = await axios({
     method: 'post',
@@ -93,36 +91,6 @@ const createFacilities = async (data, token) => {
   });
 
   return response.data;
-};
-
-const listFacilities = async (token) => {
-  const response = await axios({
-    method: 'get',
-    headers: {
-      ...headers.central,
-      Authorization: token,
-    },
-    url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/facilities`,
-  }).catch((error) => {
-    throw new ApiError({ cause: error });
-  });
-  if (!response) return [];
-  return response.data;
-};
-
-const deleteFacilities = async (facility, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      ...headers.portal,
-      Authorization: token,
-    },
-    url: `${PORTAL_API_URL}/v1/gef/facilities/${facility._id}`,
-  }).catch((error) => {
-    throw new ApiError({ cause: error });
-  });
-
-  return response;
 };
 
 const updateFacilities = async (facility, data, token) => {
@@ -157,36 +125,10 @@ const createEligibilityCriteria = async (data, token) => {
   return response.data;
 };
 
-const deleteEligibilityCriteria = async (eligibilityCriteria, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      ...headers.portal,
-      Authorization: token,
-    },
-    url: `${PORTAL_API_URL}/v1/gef/eligibility-criteria/${eligibilityCriteria.version}`,
-  }).catch((error) => {
-    throw new ApiError({ cause: error });
-  });
-
-  return response.data;
-};
-
-const listEligibilityCriteria = async (token) => {
-  const response = await axios({
-    method: 'get',
-    headers: {
-      ...headers.portal,
-      Authorization: token,
-    },
-    url: `${PORTAL_API_URL}/v1/gef/eligibility-criteria`,
-  }).catch((error) => {
-    throw new ApiError({ cause: error });
-  });
-
-  return response.data.items;
-};
-
+/**
+ * @param {string} token
+ * @returns {Promise<unknown>}
+ */
 const latestEligibilityCriteria = async (token) => {
   const response = await axios({
     method: 'get',
@@ -201,8 +143,6 @@ const latestEligibilityCriteria = async (token) => {
   return response.data;
 };
 
-// Mandatory Criteria
-
 const createMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
   const response = await axios({
     method: 'post',
@@ -212,21 +152,6 @@ const createMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
     },
     url: `${PORTAL_API_URL}/v1/gef/mandatory-criteria-versioned`,
     data: mandatoryCriteria,
-  }).catch((error) => {
-    throw new ApiError({ cause: error });
-  });
-
-  return response.data;
-};
-
-const deleteMandatoryCriteriaVersioned = async (mandatoryCriteria, token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      ...headers.portal,
-      Authorization: token,
-    },
-    url: `${PORTAL_API_URL}/v1/gef/mandatory-criteria-versioned/${mandatoryCriteria._id}`,
   }).catch((error) => {
     throw new ApiError({ cause: error });
   });
@@ -249,57 +174,14 @@ const listMandatoryCriteriaVersioned = async (token) => {
   return response.data.items;
 };
 
-const deleteDurableFunctions = async (token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      ...headers.central,
-      Authorization: token,
-    },
-    url: `${DTFS_CENTRAL_API_URL}/v1/portal/durable-functions`,
-    data: {
-      auditDetails: mockDataLoaderPortalAuditDetails,
-    },
-  }).catch((error) => {
-    throw new ApiError({ cause: error });
-  });
-  return response;
-};
-
-const deleteCronJobs = async (token) => {
-  const response = await axios({
-    method: 'delete',
-    headers: {
-      ...headers.central,
-      Authorization: token,
-    },
-    url: `${DTFS_CENTRAL_API_URL}/v1/portal/cron-jobs`,
-
-    data: {
-      auditDetails: mockDataLoaderPortalAuditDetails,
-    },
-  }).catch((error) => {
-    throw new ApiError({ cause: error });
-  });
-  return response;
-};
-
 module.exports = {
   createApplication,
   updateApplication,
   listDeals,
-  deleteDeal,
   createFacilities,
-  listFacilities,
-  deleteFacilities,
   updateFacilities,
   createEligibilityCriteria,
-  deleteEligibilityCriteria,
-  listEligibilityCriteria,
   latestEligibilityCriteria,
   createMandatoryCriteriaVersioned,
-  deleteMandatoryCriteriaVersioned,
   listMandatoryCriteriaVersioned,
-  deleteDurableFunctions,
-  deleteCronJobs,
 };

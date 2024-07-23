@@ -5,6 +5,22 @@ const UKEF_TEST_BANK_1 = MOCK_BANKS.find((bank) => bank.name === 'UKEF test bank
 const UKEF_TEST_BANK_2 = MOCK_BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated) 2');
 const UKEF_GEF_ONLY_BANK = MOCK_BANKS.find((bank) => bank.name === 'GEF Only Bank');
 
+/**
+ * @typedef {object} MockUser
+ * @property {string} username
+ * @property {string} password
+ * @property {string} firstname
+ * @property {string} surname
+ * @property {string} email
+ * @property {string} timezone
+ * @property {import('@ukef/dtfs2-common').PortalRole[]} roles
+ * @property {object} bank
+ * @property {boolean} isTrusted
+ */
+
+/**
+ * @type {Record<string, MockUser>}
+ */
 const MOCK_USERS = {
   BANK1_MAKER1: {
     username: 'maker1@ukexportfinance.gov.uk',

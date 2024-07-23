@@ -58,8 +58,6 @@ openRouter.route('/users/reset-password/:resetPwdToken').post(checkApiKey, users
 
 // API Key Routes
 openRouter.route('/feedback').post(checkApiKey, feedback.create);
-// This endpoint is only used by mock-data-loader, for setting up an initial user
-openRouter.route('/user').post(checkApiKey, users.create);
 
 openRouter
   .route('/users/:userId/sign-in-link/:signInToken/login')
