@@ -1,4 +1,5 @@
 const { format } = require('date-fns');
+const { isFacilityEndDateEnabledOnGefVersion, parseDealVersion } = require('@ukef/dtfs2-common');
 const { isValidMongoId } = require('../../utils/validateIds');
 const api = require('../../services/api');
 const { FACILITY_TYPE } = require('../../constants');
@@ -20,6 +21,7 @@ const renderChangeFacilityPartial = async ({ params, query, change, userToken })
   const { status } = query;
 
   const { details } = await api.getFacility({ facilityId, userToken });
+  const deal = await api.getApplication({ dealId, userToken });
   const facilityTypeString = FACILITY_TYPE[details.type.toUpperCase()].toLowerCase();
   const shouldCoverStartOnSubmission = JSON.stringify(details.shouldCoverStartOnSubmission);
   const issueDate = details.issueDate ? new Date(details.issueDate) : null;
@@ -47,33 +49,11 @@ const renderChangeFacilityPartial = async ({ params, query, change, userToken })
     facilityId,
     status,
     change,
+    isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
   };
 
   return body;
 };
-
-// returns body to render for template
-const renderBody = (body) => ({
-  facilityType: body.facilityType,
-  facilityName: body.facilityName,
-  hasBeenIssued: body.hasBeenIssued,
-  monthsOfCover: body.monthsOfCover,
-  shouldCoverStartOnSubmission: body.shouldCoverStartOnSubmission,
-  issueDateDay: body.issueDateDay,
-  issueDateMonth: body.issueDateMonth,
-  issueDateYear: body.issueDateYear,
-  coverStartDateDay: body.coverStartDateDay,
-  coverStartDateMonth: body.coverStartDateMonth,
-  coverStartDateYear: body.coverStartDateYear,
-  coverEndDateDay: body.coverEndDateDay,
-  coverEndDateMonth: body.coverEndDateMonth,
-  coverEndDateYear: body.coverEndDateYear,
-  facilityTypeString: body.facilityTypeString,
-  dealId: body.dealId,
-  facilityId: body.facilityId,
-  status: body.status,
-  change: body.change,
-});
 
 // when changing unissued facility from unissued facility list
 // renders about-facility change page for unissued facilities
@@ -92,7 +72,7 @@ const changeUnissuedFacility = async (req, res) => {
       userToken,
     });
 
-    return res.render('partials/unissued-change-about-facility.njk', renderBody(body));
+    return res.render('partials/unissued-change-about-facility.njk', body);
   } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
@@ -115,7 +95,7 @@ const changeUnissuedFacilityPreview = async (req, res) => {
       userToken,
     });
 
-    return res.render('partials/unissued-change-about-facility.njk', renderBody(body));
+    return res.render('partials/unissued-change-about-facility.njk', body);
   } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }
@@ -158,14 +138,15 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
  */
 const postChangeUnissuedFacility = async (req, res) => {
   const { body, query, params } = req;
-  const { facilityId } = params;
+  const { facilityId, dealId } = params;
   const { user, userToken } = req.session;
   const { _id: editorId } = user;
 
   try {
     const { details } = await api.getFacility({ facilityId, userToken });
+    const deal = await api.getApplication({ dealId, userToken });
 
-    const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, dealId, errorsObject } = await facilityValidation({
+    const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, errorsObject, isUsingFacilityEndDate } = await facilityValidation({
       body,
       query,
       params,
@@ -194,6 +175,8 @@ const postChangeUnissuedFacility = async (req, res) => {
         dealId: errorsObject.dealId,
         facilityId: errorsObject.facilityId,
         status: errorsObject.status,
+        isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
+        isUsingFacilityEndDate: body.isUsingFacilityEndDate,
       });
     }
 
@@ -220,6 +203,7 @@ const postChangeUnissuedFacility = async (req, res) => {
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: userObj,
+        isUsingFacilityEndDate,
       },
       userToken,
     });
@@ -253,14 +237,15 @@ const postChangeUnissuedFacility = async (req, res) => {
  */
 const postChangeUnissuedFacilityPreview = async (req, res) => {
   const { body, query, params } = req;
-  const { facilityId } = params;
+  const { facilityId, dealId } = params;
   const { user, userToken } = req.session;
   const { _id: editorId } = user;
 
   try {
     const { details } = await api.getFacility({ facilityId, userToken });
+    const deal = await api.getApplication({ dealId, userToken });
 
-    const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, dealId, errorsObject } = await facilityValidation({
+    const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, errorsObject, isUsingFacilityEndDate } = await facilityValidation({
       body,
       query,
       params,
@@ -289,6 +274,8 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
         dealId: errorsObject.dealId,
         facilityId: errorsObject.facilityId,
         status: errorsObject.status,
+        isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
+        isUsingFacilityEndDate: body.isUsingFacilityEndDate,
       });
     }
 
@@ -311,6 +298,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
         canResubmitIssuedFacilities: true,
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: userObj,
+        isUsingFacilityEndDate,
       },
       userToken,
     });
