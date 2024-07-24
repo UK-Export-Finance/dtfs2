@@ -6,15 +6,6 @@
 {% set backLink = {"href": '/utilisation-reports/' + reportId} %}
 {% block pageTitle %}Add to an existing payment{% endblock %}
 {% block content %}
-  {% if errors.errorSummary | length %}
-    {{ govukErrorSummary({
-        titleText: "There is a problem",
-        errorList: errors.errorSummary,
-        attributes: {
-        'data-cy': 'error-summary'
-        }
-    }) }}
-  {% endif %}
   <div class="govuk-grid-row govuk-!-padding-top-7">
     <div class="govuk-grid-column-one-half">
       <span class="govuk-caption-l" data-cy="add-to-an-existing-payment-heading-caption">{{ bank.name }},
