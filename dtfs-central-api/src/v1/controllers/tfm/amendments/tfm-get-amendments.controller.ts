@@ -1,11 +1,11 @@
 import { ObjectId, Document } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { Currency } from '@ukef/dtfs2-common';
-import { TfmFacilitiesRepo, TfmFacilityAmendment } from '../../../../repositories/tfm-facilities-repo';
+import { Currency, TfmFacilityAmendment } from '@ukef/dtfs2-common';
+import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 import { AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES, AMENDMENT_STATUS } from '../../../../constants';
 
-export const getAllAmendmentsInProgress = async (req: Request, res: Response) => {
+export const getAllAmendmentsInProgress = async (_req: Request, res: Response) => {
   try {
     const inProgressAmendments = await TfmFacilitiesRepo.findAmendmentsByStatus(AMENDMENT_STATUS.IN_PROGRESS);
     return res.status(HttpStatusCode.Ok).send(inProgressAmendments);
@@ -22,9 +22,6 @@ const mapAmendmentToLatestValue = (
   currency: Currency;
 } => {
   const { amendmentId, value, currency } = amendment;
-  if (!amendmentId) {
-    throw new Error('Found amendment does not have a defined amendmentId');
-  }
   if (!value) {
     throw new Error('Found amendment does not have a defined value');
   }
@@ -41,9 +38,6 @@ const mapAmendmentToLatestCompletedDate = (
   coverEndDate: number;
 } => {
   const { amendmentId, coverEndDate } = amendment;
-  if (!amendmentId) {
-    throw new Error('Found amendment does not have a defined amendmentId');
-  }
   if (!coverEndDate) {
     throw new Error('Found amendment does not have a defined coverEndDate');
   }
@@ -83,7 +77,7 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
         amendment = await TfmFacilitiesRepo.findAmendmentsByFacilityId(facilityId);
       }
   }
-  return res.status(200).send(amendment);
+  return res.status(HttpStatusCode.Ok).send(amendment);
 };
 
 export const getAmendmentsByDealId = async (req: Request, res: Response) => {
@@ -105,5 +99,5 @@ export const getAmendmentsByDealId = async (req: Request, res: Response) => {
     default:
       amendment = await TfmFacilitiesRepo.findAmendmentsByDealId(dealId);
   }
-  return res.status(200).send(amendment);
+  return res.status(HttpStatusCode.Ok).send(amendment);
 };

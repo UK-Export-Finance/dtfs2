@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { ZodError } from 'zod';
-import { ParsedTfmFacility, RawTfmFacility, TfmFacilitiesRepo } from './tfm-facilities.repo';
+import { TfmFacility } from '@ukef/dtfs2-common';
+import { ParsedTfmFacility, TfmFacilitiesRepo } from './tfm-facilities.repo';
 
 describe('tfm-facilities-repo', () => {
   describe('TfmFacilitiesRepo.validateAndParseFindOneResult', () => {
@@ -31,7 +32,7 @@ describe('tfm-facilities-repo', () => {
 
     it('throws an error when the input is an empty object', () => {
       // Arrange
-      const input = {} as unknown as RawTfmFacility;
+      const input = {} as unknown as TfmFacility;
 
       // Act / Assert
       expect(() => TfmFacilitiesRepo.validateAndParseFindOneResult(input)).toThrow(ZodError);
@@ -39,7 +40,7 @@ describe('tfm-facilities-repo', () => {
 
     it("throws an error when the '_id' field is not a valid object id", () => {
       // Arrange
-      const input = { ...aValidTfmFacilityDocument(), _id: 123 } as unknown as RawTfmFacility;
+      const input = { ...aValidTfmFacilityDocument(), _id: 123 } as unknown as TfmFacility;
 
       // Act / Assert
       expect(() => TfmFacilitiesRepo.validateAndParseFindOneResult(input)).toThrow(ZodError);
@@ -47,7 +48,7 @@ describe('tfm-facilities-repo', () => {
 
     it("throws an error when the 'facilitySnapshot' field is undefined", () => {
       // Arrange
-      const input = { ...aValidTfmFacilityDocument(), facilitySnapshot: undefined } as unknown as RawTfmFacility;
+      const input = { ...aValidTfmFacilityDocument(), facilitySnapshot: undefined } as unknown as TfmFacility;
 
       // Act / Assert
       expect(() => TfmFacilitiesRepo.validateAndParseFindOneResult(input)).toThrow(ZodError);
@@ -80,7 +81,7 @@ describe('tfm-facilities-repo', () => {
           ...aValidTfmFacilityDocumentFacilitySnapshotResult(),
           [field]: undefined,
         },
-      };
+      } as unknown as TfmFacility;
 
       // Act / Assert
       expect(() => TfmFacilitiesRepo.validateAndParseFindOneResult(input)).toThrow(ZodError);
@@ -97,7 +98,7 @@ describe('tfm-facilities-repo', () => {
             ...aValidTfmFacilityDocumentFacilitySnapshotResult(),
             [field]: null,
           },
-        };
+        } as unknown as TfmFacility;
 
         // Act / Assert
         const result = TfmFacilitiesRepo.validateAndParseFindOneResult(input);
@@ -110,7 +111,7 @@ describe('tfm-facilities-repo', () => {
       const input = {
         ...aValidTfmFacilityDocument(),
         someOtherField: 'Some other value',
-      };
+      } as unknown as TfmFacility;
 
       // Act / Assert
       const result = TfmFacilitiesRepo.validateAndParseFindOneResult(input);
@@ -125,7 +126,7 @@ describe('tfm-facilities-repo', () => {
           ...aValidTfmFacilityDocumentFacilitySnapshotResult(),
           someOtherField: 'Some other value',
         },
-      };
+      } as unknown as TfmFacility;
 
       // Act / Assert
       const result = TfmFacilitiesRepo.validateAndParseFindOneResult(input);
@@ -142,7 +143,7 @@ describe('tfm-facilities-repo', () => {
           ...aValidTfmFacilityDocumentFacilitySnapshotResult(),
           [field]: date.getTime() / 1000, // date times are stored in seconds
         },
-      };
+      } as unknown as TfmFacility;
 
       // Act / Assert
       const result = TfmFacilitiesRepo.validateAndParseFindOneResult(input);

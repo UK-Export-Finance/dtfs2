@@ -1,29 +1,16 @@
 import z from 'zod';
-import { ObjectId, UpdateFilter, WithoutId, WithId, FindOneAndUpdateOptions, Collection, Document, UpdateResult, Filter } from 'mongodb';
-import { AuditDetails, Currency } from '@ukef/dtfs2-common';
+import { ObjectId, UpdateFilter, WithoutId, FindOneAndUpdateOptions, Collection, Document, UpdateResult, Filter } from 'mongodb';
+import { AuditDetails, TfmFacility, TfmFacilityAmendment } from '@ukef/dtfs2-common';
 import { deleteMany } from '@ukef/dtfs2-common/change-stream';
 import { TfmFacilitySchema } from './tfm-facility.schema';
 import { mongoDbClient } from '../../drivers/db-client';
 import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
 import { AmendmentStatus } from '../../types/amendment-status';
 
-export type TfmFacilityAmendment = {
-  amendmentId?: string | ObjectId;
-  dealId?: string | ObjectId;
-  value?: number;
-  currency?: Currency;
-  coverEndDate?: number | null;
-  version?: number;
-};
-
-export type RawTfmFacility = WithId<{
-  amendments?: TfmFacilityAmendment[];
-}>;
-
 export type ParsedTfmFacility = z.infer<typeof TfmFacilitySchema>;
 
 export class TfmFacilitiesRepo {
-  private static async getCollection(): Promise<Collection<WithoutId<RawTfmFacility>>> {
+  private static async getCollection(): Promise<Collection<WithoutId<TfmFacility>>> {
     return await mongoDbClient.getCollection('tfm-facilities');
   }
 
@@ -33,7 +20,7 @@ export class TfmFacilitiesRepo {
    * @returns The parsed result
    * @throws {z.ZodError} If the result does not match the TFM facilities schema
    */
-  public static validateAndParseFindOneResult(result: RawTfmFacility): ParsedTfmFacility {
+  public static validateAndParseFindOneResult(result: TfmFacility): ParsedTfmFacility {
     return TfmFacilitySchema.parse(result);
   }
 
@@ -43,7 +30,7 @@ export class TfmFacilitiesRepo {
    * @returns The parsed results
    * @throws {z.ZodError} If any item in the results array does not match the TFM facilities schema
    */
-  public static validateAndParseFindResult(results: RawTfmFacility[]): ParsedTfmFacility[] {
+  public static validateAndParseFindResult(results: TfmFacility[]): ParsedTfmFacility[] {
     return results.map((result) => this.validateAndParseFindOneResult(result));
   }
 
@@ -52,7 +39,7 @@ export class TfmFacilitiesRepo {
    * @param dealId - The deal id
    * @returns The found tfm facilities
    */
-  public static async findByDealId(dealId: string | ObjectId): Promise<RawTfmFacility[]> {
+  public static async findByDealId(dealId: string | ObjectId): Promise<TfmFacility[]> {
     const collection = await this.getCollection();
     return await collection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
   }
@@ -62,7 +49,7 @@ export class TfmFacilitiesRepo {
    * @param id - The id of the facility
    * @returns The found tfm facility
    */
-  public static async findOneById(id: string | ObjectId): Promise<RawTfmFacility | null> {
+  public static async findOneById(id: string | ObjectId): Promise<TfmFacility | null> {
     const collection = await this.getCollection();
     return await collection.findOne({ _id: { $eq: new ObjectId(id) } });
   }
@@ -76,9 +63,9 @@ export class TfmFacilitiesRepo {
    */
   public static async findOneByIdAndUpdate(
     id: string | ObjectId,
-    update: UpdateFilter<WithoutId<RawTfmFacility>>,
+    update: UpdateFilter<WithoutId<TfmFacility>>,
     options: FindOneAndUpdateOptions = { returnDocument: 'after' },
-  ): Promise<RawTfmFacility | null> {
+  ): Promise<TfmFacility | null> {
     const collection = await this.getCollection();
     const { value } = await collection.findOneAndUpdate({ _id: { $eq: new ObjectId(id) } }, update, options);
     return value;
@@ -95,7 +82,7 @@ export class TfmFacilitiesRepo {
   public static async updateOneByIdAndAmendmentId(
     id: string | ObjectId,
     amendmentId: string | ObjectId,
-    update: UpdateFilter<WithoutId<RawTfmFacility>>,
+    update: UpdateFilter<WithoutId<TfmFacility>>,
   ): Promise<UpdateResult> {
     const collection = await this.getCollection();
     return await collection.updateOne(
@@ -113,7 +100,7 @@ export class TfmFacilitiesRepo {
    * @param update - The update to apply
    * @returns The update result
    */
-  public static async updateOneById(id: string | ObjectId, update: UpdateFilter<WithoutId<RawTfmFacility>>): Promise<UpdateResult> {
+  public static async updateOneById(id: string | ObjectId, update: UpdateFilter<WithoutId<TfmFacility>>): Promise<UpdateResult> {
     const collection = await this.getCollection();
     return await collection.updateOne(
       {
@@ -128,7 +115,7 @@ export class TfmFacilitiesRepo {
    * @param ids - The facility ids
    * @returns The found TFM facilities
    */
-  public static async findByIds(ids: (string | ObjectId)[]): Promise<RawTfmFacility[]> {
+  public static async findByIds(ids: (string | ObjectId)[]): Promise<TfmFacility[]> {
     const collection = await this.getCollection();
     return await collection.find({ _id: { $in: ids.map((id) => new ObjectId(id)) } }).toArray();
   }
@@ -140,7 +127,7 @@ export class TfmFacilitiesRepo {
    * @returns The delete result
    */
   public static async deleteManyByDealId(dealId: string | ObjectId, auditDetails: AuditDetails): Promise<{ acknowledged: boolean }> {
-    const filter: Filter<RawTfmFacility> = {
+    const filter: Filter<TfmFacility> = {
       'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) },
     };
     return await deleteMany({
@@ -257,7 +244,7 @@ export class TfmFacilitiesRepo {
     const collection = await this.getCollection();
     const amendments = await collection
       .aggregate(aggregatePipelines.latestCompletedAmendmentByFacilityId(facilityId))
-      .map<Document>((doc) => doc.amendments as Document)
+      .map<TfmFacilityAmendment>((doc) => doc.amendments as TfmFacilityAmendment)
       .toArray();
     return amendments.at(0) ?? null;
   }
@@ -271,7 +258,7 @@ export class TfmFacilitiesRepo {
     const collection = await this.getCollection();
     const amendments = await collection
       .aggregate(aggregatePipelines.latestCompletedAmendmentByDealId(dealId))
-      .map<Document>((doc) => doc.amendments as Document)
+      .map<TfmFacilityAmendment>((doc) => doc.amendments as TfmFacilityAmendment)
       .toArray();
     return amendments.at(0) ?? null;
   }

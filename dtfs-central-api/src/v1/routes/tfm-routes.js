@@ -2,7 +2,7 @@ const express = require('express');
 
 const tfmRouter = express.Router();
 
-const { validatePutFacilityAmendmentPayload } = require('./middleware/payload-validation');
+const { validatePutFacilityAmendmentPayload, validatePostFacilityAmendmentPayload } = require('./middleware/payload-validation');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 
@@ -504,7 +504,14 @@ tfmRouter
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/facilities/:facilityId/amendments').post(tfmPostAmendmentController.postTfmAmendment);
+tfmRouter
+  .route('/facilities/:facilityId/amendments')
+  .post(
+    validation.mongoIdValidation('facilityId'),
+    handleExpressValidatorResult,
+    validatePostFacilityAmendmentPayload,
+    tfmPostAmendmentController.postTfmAmendment,
+  );
 
 /**
  * @openapi
