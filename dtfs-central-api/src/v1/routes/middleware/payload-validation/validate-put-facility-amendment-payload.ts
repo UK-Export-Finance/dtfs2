@@ -34,8 +34,8 @@ const PutFacilityAmendmentSchema = z.object({
         .object({
           coverEndDate: z.string(),
           value: z.string(),
-          conditions: z.null(),
-          declined: z.null(),
+          conditions: z.string().nullable(),
+          declined: z.string().nullable(),
           comments: z.string(),
           submitted: z.boolean(),
           submittedAt: z.number(),
@@ -83,6 +83,11 @@ const PutFacilityAmendmentSchema = z.object({
           groupTasks: z.array(z.any()),
         }),
       ),
+      leadUnderwriter: z.object({
+        _id: z.union([MongoObjectIdSchema, z.literal('Unassigned')]),
+        firstName: z.string().nullable(),
+        lastName: z.string().nullable(),
+      }),
     })
     .partial(),
   auditDetails: AuditDetailsSchema,

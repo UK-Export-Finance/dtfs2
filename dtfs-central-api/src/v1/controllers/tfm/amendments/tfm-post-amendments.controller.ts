@@ -50,6 +50,7 @@ export const postTfmAmendment = async (req: PostTfmAmendmentRequest, res: Respon
 
     return res.status(HttpStatusCode.Ok).json({ amendmentId: amendment.amendmentId.toHexString() });
   } catch (error) {
+    console.error('Error posting amendment:', error);
     if (error instanceof ApiError) {
       const { status, message } = error;
       const errorMessage = error instanceof InvalidAuditDetailsError ? `Invalid auditDetails, ${message}` : message;

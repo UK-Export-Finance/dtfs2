@@ -305,7 +305,9 @@ tfmRouter.route('/deals').get(tfmGetDealsController.findDealsGet);
  *           application/json:
  *             example: [ { _id: '123456abc', allFields: true }, { _id: '123456abc', allFields: true } ]
  */
-tfmRouter.route('/deals/:id/facilities').get(tfmGetFacilitiesController.getFacilitiesByDealId);
+tfmRouter
+  .route('/deals/:id/facilities')
+  .get(validation.mongoIdValidation('id'), handleExpressValidatorResult, tfmGetFacilitiesController.getFacilitiesByDealId);
 
 /**
  * @openapi
@@ -377,12 +379,6 @@ tfmRouter.route('/facilities').get(tfmGetFacilitiesController.getAllFacilities);
  *               $ref: '#/definitions/TFMFacilityGEF'
  *       404:
  *         description: Not found
- */
-tfmRouter.route('/facilities/:id').get(tfmGetFacilityController.findOneFacilityGet);
-
-/**
- * @openapi
- * /tfm/facilities/:id:
  *   put:
  *     summary: Update a TFM facility
  *     tags: [TFM]
@@ -420,7 +416,11 @@ tfmRouter.route('/facilities/:id').get(tfmGetFacilityController.findOneFacilityG
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/facilities/:id').put(tfmUpdateFacilityController.updateFacilityPut);
+tfmRouter
+  .route('/facilities/:id')
+  .all(validation.mongoIdValidation('id'), handleExpressValidatorResult)
+  .get(tfmGetFacilityController.findOneFacilityGet)
+  .put(tfmUpdateFacilityController.updateFacilityPut);
 
 /**
  * @openapi

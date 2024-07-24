@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import escapeStringRegexp from 'escape-string-regexp';
 import { Request, Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
@@ -7,10 +6,6 @@ import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo'
 
 export const getFacilitiesByDealId = async (req: Request, res: Response) => {
   const { id: dealId } = req.params;
-
-  if (!ObjectId.isValid(dealId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
-  }
 
   // NOTE: only GEF facilities have dealId.
   // this could be adapted so that we get the deal, check dealType,

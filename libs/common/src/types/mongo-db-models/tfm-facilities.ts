@@ -87,6 +87,11 @@ export type TfmFacilityAmendment = {
     id: number;
     groupTasks: Record<string, unknown>[];
   }[];
+  leadUnderwriter?: {
+    _id: ObjectId | 'Unassigned';
+    firstName: string;
+    lastName: string;
+  };
 };
 
 /**
