@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { AzureFileInfoEntity, FeeRecordEntity, PaymentEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { AzureFileInfoEntity, FacilityUtilisationDataEntity, FeeRecordEntity, PaymentEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { seedUtilisationReports } from './utilisation-report';
 import { seedFeeRecordPaymentGroups } from './fee-record-payment-group';
 import { mongoDbClient } from './mongo-db-client';
@@ -10,6 +10,7 @@ const clearDatabase = async (dataSource: DataSource): Promise<void> => {
   await dataSource.manager.delete(FeeRecordEntity, {});
   await dataSource.manager.delete(UtilisationReportEntity, {});
   await dataSource.manager.delete(AzureFileInfoEntity, {});
+  await dataSource.manager.delete(FacilityUtilisationDataEntity, {});
 };
 
 const seedData = async (dataSource: DataSource): Promise<void> => {

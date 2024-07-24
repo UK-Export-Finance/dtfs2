@@ -1,7 +1,7 @@
 import { FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { testApi } from '../../test-api';
-import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
+import { aTfmSessionUser } from '../../../test-helpers/test-data';
 import { SqlDbHelper } from '../../sql-db-helper';
 
 console.error = jest.fn();
@@ -22,7 +22,7 @@ describe('/v1/utilisation-reports/:reportId/keying-data/mark-as-to-do', () => {
   it('returns a 400 when the report id is not a valid id', async () => {
     // Arrange
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: [1],
     };
 
@@ -36,7 +36,7 @@ describe('/v1/utilisation-reports/:reportId/keying-data/mark-as-to-do', () => {
   it('returns a 400 when the fee record ids are not a valid ids', async () => {
     // Arrange
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: ['invalid-id'],
     };
 
@@ -63,7 +63,7 @@ describe('/v1/utilisation-reports/:reportId/keying-data/mark-as-to-do', () => {
   it('returns a 404 when no report with the supplied id can be found', async () => {
     // Arrange
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: [1],
     };
 
@@ -81,7 +81,7 @@ describe('/v1/utilisation-reports/:reportId/keying-data/mark-as-to-do', () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: [1],
     };
 
@@ -101,7 +101,7 @@ describe('/v1/utilisation-reports/:reportId/keying-data/mark-as-to-do', () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: [1],
     };
 
@@ -121,7 +121,7 @@ describe('/v1/utilisation-reports/:reportId/keying-data/mark-as-to-do', () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: [1],
     };
 
@@ -142,7 +142,7 @@ describe('/v1/utilisation-reports/:reportId/keying-data/mark-as-to-do', () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       feeRecordIds: [1],
     };
 

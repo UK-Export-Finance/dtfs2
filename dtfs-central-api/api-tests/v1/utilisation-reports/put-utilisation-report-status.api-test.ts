@@ -1,6 +1,6 @@
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
-import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
+import { aTfmSessionUser } from '../../../test-helpers/test-data';
 import { SqlDbHelper } from '../../sql-db-helper';
 
 console.error = jest.fn();
@@ -22,7 +22,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     // Arrange
     const invalidReportId = reportId + 1;
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       reportsWithStatus: [
         {
           reportId: invalidReportId,
@@ -41,7 +41,7 @@ describe('/v1/utilisation-reports/set-status', () => {
   it("returns a 400 error if a request body item is missing the 'reportId' property", async () => {
     // Arrange
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       reportsWithStatus: [
         {
           // reportId: missing
@@ -60,7 +60,7 @@ describe('/v1/utilisation-reports/set-status', () => {
   it("returns a 400 error if a request body item is missing the 'status' property", async () => {
     // Arrange
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       reportsWithStatus: [
         {
           reportId: 1,
@@ -79,7 +79,7 @@ describe('/v1/utilisation-reports/set-status', () => {
   it('returns a 200 if the request body is valid', async () => {
     // Arrange
     const requestBody = {
-      user: MOCK_TFM_USER,
+      user: aTfmSessionUser(),
       reportsWithStatus: [
         {
           reportId,
