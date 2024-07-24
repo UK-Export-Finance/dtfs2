@@ -6,7 +6,9 @@ describe('selected-reported-fees-details-view-model-mapper', () => {
     it('should correctly map fee records to the selected reported fees details view model', () => {
       // Arrange
       const multipleFeeRecordData: SelectedFeeRecordsDetailsResponseBody = {
-        ...aSelectedFeeRecordsDetailsResponseBody(),
+        bank: { name: 'Test' },
+        reportPeriod: { start: { month: 2, year: 2024 }, end: { month: 4, year: 2024 } },
+        totalReportedPayments: { amount: 1000, currency: 'JPY' },
         feeRecords: [
           {
             id: 456,
@@ -23,6 +25,15 @@ describe('selected-reported-fees-details-view-model-mapper', () => {
             reportedPayments: { amount: 6000, currency: 'EUR' },
           },
         ],
+        payments: [
+          {
+            dateReceived: '2020-02-01T00:00:00.000Z',
+            currency: 'USD',
+            amount: 2000,
+            reference: 'A payment',
+          },
+        ],
+        canAddToExistingPayment: true,
       };
 
       // Act
@@ -49,31 +60,5 @@ describe('selected-reported-fees-details-view-model-mapper', () => {
         totalReportedPayments: 'JPY 1,000.00',
       });
     });
-
-    function aSelectedFeeRecordsDetailsResponseBody(): SelectedFeeRecordsDetailsResponseBody {
-      return {
-        bank: { name: 'Test' },
-        reportPeriod: { start: { month: 2, year: 2024 }, end: { month: 4, year: 2024 } },
-        totalReportedPayments: { amount: 1000, currency: 'JPY' },
-        feeRecords: [
-          {
-            id: 456,
-            facilityId: '000123',
-            exporter: 'Export Company',
-            reportedFee: { amount: 2000, currency: 'EUR' },
-            reportedPayments: { amount: 3000, currency: 'USD' },
-          },
-        ],
-        payments: [
-          {
-            dateReceived: '2020-02-01T00:00:00.000Z',
-            currency: 'USD',
-            amount: 2000,
-            reference: 'A payment',
-          },
-        ],
-        canAddToExistingPayment: true,
-      };
-    }
   });
 });
