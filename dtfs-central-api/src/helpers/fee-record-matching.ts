@@ -1,19 +1,32 @@
 import { FeeRecordEntity, PaymentEntity } from '@ukef/dtfs2-common';
 import Big from 'big.js';
-import { PaymentMatchingTolerances } from '../types/payment-matching-tolerances';
+import { EntityManager } from 'typeorm';
+import { getActivePaymentMatchingTolerances } from '../repositories/payment-matching-tolerance-repo/payment-matching-tolerance-repo';
 
-export const feeRecordsAndPaymentsMatch = (feeRecords: FeeRecordEntity[], payments: PaymentEntity[], tolerances: PaymentMatchingTolerances): boolean => {
+const calculateTotal = (values: number[]): Big => {
+  return values.reduce((total, value) => total.add(value), new Big(0));
+};
+
+export const feeRecordsAndPaymentsMatch = async (
+  feeRecords: FeeRecordEntity[],
+  payments: PaymentEntity[],
+  transactionEntityManager: EntityManager,
+): Promise<boolean> => {
   if (feeRecords.length === 0) {
     throw new Error('Cannot determine match status for empty array of fee records');
   }
-  const totalReportedPayments = feeRecords
-    .map((feeRecord) => feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency())
-    .reduce((total, reportedFeesPaid) => total.add(reportedFeesPaid), new Big(0));
 
-  const totalPaymentsReceived = payments.map((payment) => payment.amount).reduce((total, amount) => total.add(amount), new Big(0));
+  const reportedPayments = feeRecords.map((feeRecord) => feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency());
+  const totalReportedPayments = calculateTotal(reportedPayments);
+
+  const paymentsReceived = payments.map((payment) => payment.amount);
+  const totalPaymentsReceived = calculateTotal(paymentsReceived);
 
   const difference = totalReportedPayments.minus(totalPaymentsReceived).abs();
+
+  const tolerances = await getActivePaymentMatchingTolerances(transactionEntityManager);
   const tolerance = tolerances[feeRecords[0].paymentCurrency];
+
   if (difference.gt(tolerance)) {
     return false;
   }

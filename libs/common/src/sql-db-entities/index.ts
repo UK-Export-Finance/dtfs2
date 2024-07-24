@@ -4,4 +4,5 @@ export { UtilisationReportEntity } from './utilisation-report';
 export { PaymentEntity } from './payment';
 export { MonthAndYearPartialEntity, ReportPeriodPartialEntity } from './partial-entities';
 export { FacilityUtilisationDataEntity } from './facility-utilisation-data';
+export { PaymentMatchingToleranceEntity } from './payment-matching-tolerance';
 export * from './helpers';
