@@ -34,10 +34,11 @@ describe('createValidationMiddleware', () => {
     const { req, res } = httpMocks.createMocks();
     const next = jest.fn();
 
-    req.body = {
+    const requestBody = {
       field1: 'Something',
       field2: 0,
     };
+    req.body = { ...requestBody };
 
     mockSafeParse.mockReturnValue(aSuccessResponse({}));
 
@@ -45,18 +46,16 @@ describe('createValidationMiddleware', () => {
     runValidator(req, res, next);
 
     // Assert
-    expect(mockSafeParse).toHaveBeenCalledWith(req.body);
+    expect(mockSafeParse).toHaveBeenCalledWith(requestBody);
   });
 
   describe('when there are validation errors', () => {
-    beforeEach(() => {
-      mockSafeParse.mockReturnValue(anErrorResponse([]));
-    });
-
     it('responds with a 400 and does not call the next function', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks();
       const next = jest.fn();
+
+      mockSafeParse.mockReturnValue(anErrorResponse([]));
 
       // Act
       runValidator(req, res, next);
@@ -90,10 +89,6 @@ describe('createValidationMiddleware', () => {
   });
 
   describe('when there are no validation errors', () => {
-    beforeEach(() => {
-      mockSafeParse.mockReturnValue(aSuccessResponse({}));
-    });
-
     it('overwrites the request body with the parse result and calls the next method', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks();
