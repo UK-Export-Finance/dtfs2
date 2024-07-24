@@ -73,6 +73,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
     });
   }
 
+  // TODO: could look at using helper once 7162 is merged into main
   if (issueDateIsBlank) {
     if (!saveAndReturn) {
       aboutFacilityErrors.push({
@@ -402,13 +403,13 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
     try {
       isUsingFacilityEndDate = zBooleanStrictCoerce.parse(isUsingFacilityEndDateString);
     } catch {
-      aboutFacilityErrors.push({
-        errRef: 'isUsingFacilityEndDate',
-        errMsg: 'Select if there is an end date for this facility',
-      });
+      if (!saveAndReturn) {
+        aboutFacilityErrors.push({
+          errRef: 'isUsingFacilityEndDate',
+          errMsg: 'Select if there is an end date for this facility',
+        });
+      }
     }
-  } else {
-    isUsingFacilityEndDate = undefined;
   }
 
   const errorsObject = {
