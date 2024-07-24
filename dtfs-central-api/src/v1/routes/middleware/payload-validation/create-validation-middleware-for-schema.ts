@@ -2,7 +2,7 @@ import { AnyZodObject, ZodError } from 'zod';
 import { RequestHandler } from 'express';
 import { HttpStatusCode } from 'axios';
 
-const getFormattedZodErrors = (error: ZodError): string[] => error.issues.map(({ path, message }) => `${path.join('.')}: ${message}`);
+const getFormattedZodErrors = (error: ZodError): string[] => error.issues.map(({ path, message, code }) => `${path.join('.')}: ${message} (${code})`);
 
 export const createValidationMiddlewareForSchema =
   <TSchema extends AnyZodObject>(schema: TSchema): RequestHandler =>
