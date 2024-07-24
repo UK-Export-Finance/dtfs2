@@ -12,10 +12,10 @@ const mapUkefExposure = (facilityTfm, facility) => {
     let ukefExposureCalculationTimestampValue = ukefExposureCalculationTimestamp;
     // if amendment in facility
     if (facility?.amendments?.length) {
-      const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
+      const { exposure: amendmentExposure } = findLatestCompletedAmendment(facility.amendments);
       // if exposure part of latest tfm object
-      if (latestAmendmentTFM?.exposure) {
-        const { exposure, timestamp } = latestAmendmentTFM.exposure;
+      if (amendmentExposure) {
+        const { exposure, timestamp } = amendmentExposure;
         // sets new exposure value based on amendment value
         formattedUkefExposure = exposure;
         // sets timestamp from amendment exposure timestamp
