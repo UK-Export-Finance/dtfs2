@@ -25,7 +25,7 @@ const getAmendCoverEndDate = async (req, res) => {
   }
 
   const facility = await api.getFacility(facilityId, userToken);
-  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, amendmentId, userToken);
+  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, userToken);
 
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
@@ -51,7 +51,7 @@ const postAmendCoverEndDate = async (req, res) => {
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
-  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, amendmentId, userToken);
+  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, userToken);
 
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
