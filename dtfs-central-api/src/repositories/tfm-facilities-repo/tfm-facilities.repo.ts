@@ -12,9 +12,7 @@ export type TfmFacilityAmendment = {
   dealId?: string | ObjectId;
   value?: number;
   currency?: Currency;
-  coverEndDate?: {
-    $date: number;
-  } | null;
+  coverEndDate?: number | null;
   version?: number;
 };
 

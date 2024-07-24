@@ -1,7 +1,6 @@
 import { ObjectId, Document } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { fromUnixTime } from 'date-fns';
 import { Currency } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo, TfmFacilityAmendment } from '../../../../repositories/tfm-facilities-repo';
 import { AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES, AMENDMENT_STATUS } from '../../../../constants';
@@ -39,7 +38,7 @@ const mapAmendmentToLatestCompletedDate = (
   amendment: TfmFacilityAmendment,
 ): {
   amendmentId: string;
-  coverEndDate: Date;
+  coverEndDate: number;
 } => {
   const { amendmentId, coverEndDate } = amendment;
   if (!amendmentId) {
@@ -50,7 +49,7 @@ const mapAmendmentToLatestCompletedDate = (
   }
   return {
     amendmentId: amendmentId.toString(),
-    coverEndDate: fromUnixTime(coverEndDate.$date),
+    coverEndDate,
   };
 };
 

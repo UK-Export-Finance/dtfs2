@@ -2,9 +2,8 @@ import z from 'zod';
 import { MongoObjectIdSchema } from '../../v1/routes/middleware/payload-validation/schemas';
 
 const TfmFacilityDateFieldSchema = z
-  .object({
-    $date: z.coerce.date(),
-  })
+  .number()
+  .transform((timestampInSeconds) => new Date(timestampInSeconds * 1000))
   .nullable();
 
 /**

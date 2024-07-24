@@ -133,20 +133,20 @@ describe('tfm-facilities-repo', () => {
     });
 
     const FACILITY_SNAPSHOT_DATE_FIELDS: (keyof ParsedTfmFacility['facilitySnapshot'])[] = ['coverStartDate', 'coverEndDate', 'issueDate'];
-    it.each(FACILITY_SNAPSHOT_DATE_FIELDS)("coerces the 'facilitySnapshot.%s.$date' field to a Date object when the value is a timestamp", (field) => {
+    it.each(FACILITY_SNAPSHOT_DATE_FIELDS)("coerces the 'facilitySnapshot.%s' field to a Date object when the value is a timestamp", (field) => {
       // Arrange
       const date = new Date();
       const input = {
         ...aValidTfmFacilityDocument(),
         facilitySnapshot: {
           ...aValidTfmFacilityDocumentFacilitySnapshotResult(),
-          [field]: { $date: date.getTime() },
+          [field]: date.getTime() / 1000, // date times are stored in seconds
         },
       };
 
       // Act / Assert
       const result = TfmFacilitiesRepo.validateAndParseFindOneResult(input);
-      expect(result.facilitySnapshot[field]).toEqual({ $date: date });
+      expect(result.facilitySnapshot[field]).toEqual(date);
     });
   });
 });

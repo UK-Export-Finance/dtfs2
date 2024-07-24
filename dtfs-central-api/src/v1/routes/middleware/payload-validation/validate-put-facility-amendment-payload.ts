@@ -1,25 +1,93 @@
-import { HttpStatusCode } from 'axios';
-import { RequestHandler } from 'express';
 import z from 'zod';
-import { AmendmentStatusSchema, AuditDetailsSchema } from './schemas';
+import { AmendmentStatusSchema, AuditDetailsSchema, CurrencySchema, MongoObjectIdSchema } from './schemas';
+import { createValidationMiddlewareForSchema } from './create-validation-middleware-for-schema';
+
+const SubmittedBySchema = z.object({
+  _id: MongoObjectIdSchema,
+  username: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+});
 
 const PutFacilityAmendmentSchema = z.object({
-  payload: z.object({
-    changeFacilityValue: z.boolean().optional(),
-    changeCoverEndDate: z.boolean().optional(),
-    ukefExposure: z.number().optional(),
-    status: AmendmentStatusSchema.optional(),
-  }),
+  payload: z
+    .object({
+      requestDate: z.number(),
+      changeFacilityValue: z.boolean(),
+      value: z.number(),
+      currentValue: z.number(),
+      changeCoverEndDate: z.boolean(),
+      currentCoverEndDate: z.number(),
+      ukefExposure: z.number(),
+      coveredPercentage: z.number(),
+      currency: CurrencySchema,
+      status: AmendmentStatusSchema,
+      coverEndDate: z.number(),
+      version: z.number(),
+      requireUkefApproval: z.boolean(),
+      submissionType: z.string(),
+      submittedByPim: z.boolean(),
+      submittedAt: z.number(),
+      sendFirstTaskEmail: z.boolean(),
+      firstTaskEmailSent: z.boolean(),
+      ukefDecision: z
+        .object({
+          coverEndDate: z.string(),
+          value: z.string(),
+          conditions: z.null(),
+          declined: z.null(),
+          comments: z.string(),
+          submitted: z.boolean(),
+          submittedAt: z.number(),
+          submittedBy: SubmittedBySchema,
+          managersDecisionEmail: z.boolean(),
+          managersDecisionEmailSent: z.boolean(),
+        })
+        .partial(),
+      bankDecision: z
+        .object({
+          decision: z.string(),
+          receivedDate: z.number(),
+          effectiveDate: z.number(),
+          submitted: z.boolean(),
+          banksDecisionEmail: z.boolean(),
+          banksDecisionEmailSent: z.boolean(),
+          submittedAt: z.number(),
+          submittedBy: SubmittedBySchema,
+        })
+        .partial(),
+      createdBy: z.object({
+        username: z.string(),
+        name: z.string(),
+        email: z.string().email(),
+      }),
+      tfm: z
+        .object({
+          value: z.object({
+            value: z.number(),
+            currency: CurrencySchema,
+          }),
+          amendmentExposurePeriodInMonths: z.number(),
+          exposure: z.object({
+            exposure: z.union([z.number(), z.string()]),
+            timestamp: z.number().nullable(),
+            ukefExposureValue: z.number(),
+          }),
+          coverEndDate: z.number(),
+        })
+        .partial(),
+      tasks: z.array(
+        z.object({
+          groupTitle: z.string(),
+          id: z.number(),
+          groupTasks: z.array(z.any()),
+        }),
+      ),
+    })
+    .partial(),
   auditDetails: AuditDetailsSchema,
 });
 
 export type PutFacilityAmendmentPayload = z.infer<typeof PutFacilityAmendmentSchema>;
 
-export const validatePutFacilityAmendmentPayload: RequestHandler = (req, res, next) => {
-  const { success, error, data } = PutFacilityAmendmentSchema.safeParse(req.body);
-  if (success) {
-    req.body = data;
-    return next();
-  }
-  return res.status(HttpStatusCode.BadRequest).send(error);
-};
+export const validatePutFacilityAmendmentPayload = createValidationMiddlewareForSchema(PutFacilityAmendmentSchema);
