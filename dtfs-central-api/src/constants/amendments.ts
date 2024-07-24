@@ -1,9 +1,3 @@
-export const AMENDMENT_STATUS = {
-  NOT_STARTED: 'Not started',
-  IN_PROGRESS: 'In progress',
-  COMPLETED: 'Completed',
-} as const;
-
 export const AMENDMENT_BANK_DECISION = {
   PROCEED: 'Proceed',
   WITHDRAW: 'Withdrawn',

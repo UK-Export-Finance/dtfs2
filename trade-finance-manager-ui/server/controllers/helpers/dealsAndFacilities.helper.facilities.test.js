@@ -1,9 +1,8 @@
+import { AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import api from '../../api';
 import PageOutOfBoundsError from '../../errors/page-out-of-bounds.error';
 import { mockRes as generateMockRes } from '../../test-mocks';
 import { queryDealsOrFacilities, renderDealsOrFacilitiesPage } from './dealsAndFacilities.helper';
-
-const CONSTANTS = require('../../constants');
 
 describe('controllers - facilities', () => {
   let mockRes;
@@ -36,11 +35,11 @@ describe('controllers - facilities', () => {
   };
   const mockAmendments = [
     {
-      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+      status: AMENDMENT_STATUS.IN_PROGRESS,
       facilityId: '0',
     },
     {
-      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.NOT_STARTED,
+      status: AMENDMENT_STATUS.NOT_STARTED,
       facilityId: '1',
     },
   ];

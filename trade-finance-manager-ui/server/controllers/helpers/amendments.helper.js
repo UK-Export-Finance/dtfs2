@@ -1,8 +1,6 @@
-const { TEAM_IDS } = require('@ukef/dtfs2-common');
-const CONSTANTS = require('../../constants');
+const { TEAM_IDS, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
-
-const { AMENDMENTS, DECISIONS } = CONSTANTS;
 
 /**
  * @param {Object} deal
@@ -12,9 +10,9 @@ const { AMENDMENTS, DECISIONS } = CONSTANTS;
  * checks submissionType, tfm status and if PIM user
  */
 const showAmendmentButton = (deal, userTeams) => {
-  const acceptableSubmissionType = [CONSTANTS.DEAL.SUBMISSION_TYPE.AIN, CONSTANTS.DEAL.SUBMISSION_TYPE.MIN];
+  const acceptableSubmissionType = [DEAL.SUBMISSION_TYPE.AIN, DEAL.SUBMISSION_TYPE.MIN];
   const acceptableUserTeamId = TEAM_IDS.PIM;
-  const acceptableStatus = [CONSTANTS.DEAL.DEAL_STAGE.CONFIRMED, CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS];
+  const acceptableStatus = [DEAL.DEAL_STAGE.CONFIRMED, DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS];
 
   return (
     acceptableSubmissionType.includes(deal.dealSnapshot.submissionType) &&
@@ -66,7 +64,7 @@ const validateUkefDecision = (ukefDecision, decisionType) => ukefDecision?.cover
 
 const hasAmendmentInProgressDealStage = (amendments) => {
   if (Array.isArray(amendments) && amendments.length) {
-    const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
+    const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => status === AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
     if (hasAmendmentInProgress) {
       return true;
@@ -77,7 +75,7 @@ const hasAmendmentInProgressDealStage = (amendments) => {
 
 const amendmentsInProgressByDeal = (amendments) => {
   if (Array.isArray(amendments) && amendments.length) {
-    return amendments.filter(({ status, submittedByPim }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
+    return amendments.filter(({ status, submittedByPim }) => status === AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
   }
   return [];
 };

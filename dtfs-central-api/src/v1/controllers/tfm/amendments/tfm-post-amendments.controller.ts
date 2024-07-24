@@ -2,10 +2,9 @@ import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
-import { CustomExpressRequest, InvalidAuditDetailsError, ApiError, TfmFacilityAmendment, AUDIT_USER_TYPES } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, InvalidAuditDetailsError, ApiError, TfmFacilityAmendment, AUDIT_USER_TYPES, AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { PostFacilityAmendmentPayload } from '../../../routes/middleware/payload-validation';
-import { AMENDMENT_STATUS } from '../../../../constants';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 import { NotFoundError, ResourceAlreadyExistsError } from '../../../../errors';
 

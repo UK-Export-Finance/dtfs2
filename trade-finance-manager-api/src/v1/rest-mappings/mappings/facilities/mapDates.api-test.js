@@ -1,9 +1,9 @@
 const { format, fromUnixTime } = require('date-fns');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const mapDates = require('./mapDates');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapTenorDate = require('./mapTenorDate');
 const { FACILITIES } = require('../../../../constants');
-const { AMENDMENT_STATUS } = require('../../../../constants/deals');
 
 describe('mapDates', () => {
   const mockCoverEndDate = {

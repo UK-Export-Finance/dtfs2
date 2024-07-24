@@ -1,5 +1,5 @@
 import { Document } from 'mongodb';
-import { AmendmentStatus } from '../../../types/amendment-status';
+import { AmendmentStatus } from '@ukef/dtfs2-common';
 
 export const amendmentsByStatus = (status: AmendmentStatus): Document[] => [
   { $unwind: '$amendments' },

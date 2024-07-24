@@ -1,11 +1,10 @@
 import z from 'zod';
 import { ObjectId, UpdateFilter, WithoutId, FindOneAndUpdateOptions, Collection, Document, UpdateResult, Filter } from 'mongodb';
-import { AuditDetails, TfmFacility, TfmFacilityAmendment } from '@ukef/dtfs2-common';
+import { AuditDetails, TfmFacility, TfmFacilityAmendment, AmendmentStatus } from '@ukef/dtfs2-common';
 import { deleteMany } from '@ukef/dtfs2-common/change-stream';
 import { TfmFacilitySchema } from './tfm-facility.schema';
 import { mongoDbClient } from '../../drivers/db-client';
 import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
-import { AmendmentStatus } from '../../types/amendment-status';
 
 export type ParsedTfmFacility = z.infer<typeof TfmFacilitySchema>;
 
