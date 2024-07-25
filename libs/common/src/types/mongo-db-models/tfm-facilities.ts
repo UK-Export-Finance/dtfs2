@@ -45,8 +45,8 @@ export type TfmFacilityAmendment = {
   ukefDecision?: {
     coverEndDate?: string;
     value?: string;
-    conditions?: string;
-    declined?: null;
+    conditions?: string | null;
+    declined?: string | null;
     comments?: string;
     submitted?: boolean;
     submittedAt?: UnixTimestamp;

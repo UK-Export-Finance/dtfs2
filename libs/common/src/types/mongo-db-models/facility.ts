@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { UnixTimestamp } from '../date';
+import { UnixTimestamp, UnixTimestampString } from '../date';
 import { Currency } from '../currency';
 
 /**
@@ -15,9 +15,9 @@ export type Facility = {
   hasBeenIssued: boolean;
   name: string;
   shouldCoverStartOnSubmission: boolean;
-  coverStartDate: UnixTimestamp | null;
-  coverEndDate: UnixTimestamp | null;
-  issueDate: UnixTimestamp | null;
+  coverStartDate: UnixTimestampString | Date | null;
+  coverEndDate: UnixTimestampString | Date | null;
+  issueDate: UnixTimestampString | Date | null;
   monthsOfCover: number | null;
   details: string[];
   detailsOther: string;
@@ -32,8 +32,8 @@ export type Facility = {
   updatedAt: UnixTimestamp;
   ukefExposure: number;
   guaranteeFee: number;
-  submittedAsIssuedDate: null;
-  ukefFacilityId: null;
+  submittedAsIssuedDate: UnixTimestampString | null;
+  ukefFacilityId: string | null;
   feeType: string;
   feeFrequency: string;
   dayCountBasis: number;
