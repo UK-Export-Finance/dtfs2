@@ -182,6 +182,12 @@ describe('date-validation helpers', () => {
         inputtedYear: '2050',
       },
       {
+        description: 'Correct date leading 0s',
+        inputtedDay: '05',
+        inputtedMonth: '07',
+        inputtedYear: '2050',
+      },
+      {
         description: 'Correct date in past',
         inputtedDay: '1',
         inputtedMonth: '1',

@@ -6,13 +6,12 @@ const { set, getUnixTime, add, isAfter, isBefore, fromUnixTime } = require('date
 /**
  *
  * @param {Object} body
- * @param coverEndDate
+ * @param coverStartDate
  * @returns {Object} containing errors and amendment facility end date
  */
 
-const facilityEndDateValidation = (body, coverEndDate) => {
+const facilityEndDateValidation = (body, coverStartDate) => {
   const { 'facility-end-date-day': facilityEndDay, 'facility-end-date-month': facilityEndMonth, 'facility-end-date-year': facilityEndYear } = body;
-
   const standardDateError = getHighestPriorityStandardDateErrorMessage(
     'Facility end date',
     'facilityEndDate',
@@ -36,7 +35,7 @@ const facilityEndDateValidation = (body, coverEndDate) => {
   const inputtedDate = set(new Date(), { year: facilityEndYear, month: facilityEndMonth - 1, date: facilityEndDay });
   const now = new Date();
   const sixYearsFromNow = add(now, { years: 6 });
-  const coverEndDateCompare = new Date(fromUnixTime(coverEndDate));
+  const coverStartDateToCompare = new Date(fromUnixTime(coverStartDate / 1000));
 
   // checks if the current cover end date the same as the new cover end date
   if (isAfter(inputtedDate, sixYearsFromNow)) {
@@ -44,7 +43,7 @@ const facilityEndDateValidation = (body, coverEndDate) => {
       errRefs: ['facilityEndDate'],
       errMsg: 'Facility end date cannot be greater than 6 years in the future',
     };
-  } else if (isBefore(inputtedDate, coverEndDateCompare)) {
+  } else if (isBefore(inputtedDate, coverStartDateToCompare)) {
     otherError = {
       errRefs: ['facilityEndDate'],
       errMsg: 'The facility end date cannot be before the cover start date',
@@ -66,6 +65,9 @@ const facilityEndDateValidation = (body, coverEndDate) => {
     year: facilityEndYear,
     month: facilityEndMonth - 1,
     date: facilityEndDay,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
   });
 
   const facilityEndDate = getUnixTime(facilityEndFormatted);
@@ -76,4 +78,4 @@ const facilityEndDateValidation = (body, coverEndDate) => {
   };
 };
 
-module.exports = { facilityEndDateValidation };
+module.exports = facilityEndDateValidation;
