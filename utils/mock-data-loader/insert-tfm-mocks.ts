@@ -4,7 +4,7 @@ import { mongoDbClient } from './database/database-client';
 import { MockTfmUser, TEAMS, USERS } from './tfm-mocks';
 import { generateSaltAndHash, logger } from './helpers';
 
-const mapMockTfmUserToTfmUser = (mockUser: MockTfmUser): WithoutId<TfmUser> => ({
+export const mapMockTfmUserToTfmUser = (mockUser: MockTfmUser): WithoutId<TfmUser> => ({
   username: mockUser.username,
   email: mockUser.email,
   teams: mockUser.teams as TeamId[],

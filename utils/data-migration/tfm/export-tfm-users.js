@@ -4,7 +4,9 @@ const {
   Parser,
   transforms: { unwind },
 } = require('json2csv');
-const TFM_USERS = require('../../mock-data-loader/tfm/mocks/users');
+const { USERS } = require('../../mock-data-loader/tfm-mocks');
+
+const TFM_USERS = Object.values(USERS);
 
 // iterate over users array and override the password property
 TFM_USERS.forEach((u) => {
