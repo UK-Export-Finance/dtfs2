@@ -2,7 +2,7 @@ const { isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common')
 const { format, fromUnixTime, getUnixTime, parseISO } = require('date-fns');
 const api = require('../../../api');
 const { AMENDMENT_STATUS } = require('../../../constants/amendments');
-const { facilityEndDateValidation } = require('./validation/amendmentFacilityEndDate.validate');
+const facilityEndDateValidation = require('./validation/amendmentFacilityEndDate.validate');
 
 const getAmendmentFacilityEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
@@ -17,18 +17,13 @@ const getAmendmentFacilityEndDate = async (req, res) => {
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
   }
 
-  if (!amendment.coverEndDate) {
-    return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/cover-end-date`);
+  if (!amendment.isUsingFacilityEndDate) {
+    return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
   }
 
-  const isEditable =
-    amendment.status === AMENDMENT_STATUS.IN_PROGRESS &&
-    amendment.changeCoverEndDate &&
-    isTfmFacilityEndDateFeatureFlagEnabled() &&
-    amendment.isUsingFacilityEndDate;
+  const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
   const { dealId, facilityEndDate } = amendment;
-
   let facilityEndDateDay = '';
   let facilityEndDateMonth = '';
   let facilityEndDateYear = '';
@@ -54,7 +49,11 @@ const postAmendmentFacilityEndDate = async (req, res) => {
   const { userToken } = req.session;
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;
-  const { facilityEndDate, errorsObject } = facilityEndDateValidation(req.body, amendment.coverEndDate);
+  const facility = await api.getFacility(facilityId, userToken);
+
+  const coverStartDate = new Date(fromUnixTime(facility.facilitySnapshot.dates.coverStartDate / 1000));
+
+  const { facilityEndDate, errorsObject } = facilityEndDateValidation(req.body, coverStartDate);
 
   if (errorsObject?.errors?.fields) {
     const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isTfmFacilityEndDateFeatureFlagEnabled();
@@ -73,7 +72,6 @@ const postAmendmentFacilityEndDate = async (req, res) => {
   try {
     const payload = { facilityEndDate };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
-
     if (status === 200) {
       if (amendment.changeFacilityValue) {
         return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
