@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-import-module-exports
 import { getHighestPriorityStandardDateErrorMessage } from '@ukef/dtfs2-common';
 
-const { set, getUnixTime, add, isAfter, isBefore, fromUnixTime } = require('date-fns');
+const { set, add, isAfter, isBefore, fromUnixTime } = require('date-fns');
 
 /**
  *
@@ -35,15 +35,17 @@ const facilityEndDateValidation = (body, coverStartDate) => {
   const inputtedDate = set(new Date(), { year: facilityEndYear, month: facilityEndMonth - 1, date: facilityEndDay });
   const now = new Date();
   const sixYearsFromNow = add(now, { years: 6 });
-  const coverStartDateToCompare = new Date(fromUnixTime(coverStartDate / 1000));
+  const coverStartDateToCompare = new Date(Number(coverStartDate));
 
-  // checks if the current cover end date the same as the new cover end date
+  // checks if the entered facility end date is greater than 6 years in the future
   if (isAfter(inputtedDate, sixYearsFromNow)) {
     otherError = {
       errRefs: ['facilityEndDate'],
       errMsg: 'Facility end date cannot be greater than 6 years in the future',
     };
-  } else if (isBefore(inputtedDate, coverStartDateToCompare)) {
+  }
+  // checks if the entered facility end date is before the cover start date
+  else if (isBefore(inputtedDate, coverStartDateToCompare)) {
     otherError = {
       errRefs: ['facilityEndDate'],
       errMsg: 'The facility end date cannot be before the cover start date',
@@ -61,16 +63,15 @@ const facilityEndDateValidation = (body, coverStartDate) => {
     return { facilityEndDate: undefined, errorsObject };
   }
 
-  const facilityEndFormatted = set(new Date(), {
+  const facilityEndDate = set(new Date(), {
     year: facilityEndYear,
     month: facilityEndMonth - 1,
     date: facilityEndDay,
     hours: 0,
     minutes: 0,
     seconds: 0,
-  });
-
-  const facilityEndDate = getUnixTime(facilityEndFormatted);
+    milliseconds: 0,
+  }).toISOString();
 
   return {
     facilityEndDate,

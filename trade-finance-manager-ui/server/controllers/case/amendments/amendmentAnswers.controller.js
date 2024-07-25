@@ -19,7 +19,7 @@ const getAmendmentAnswers = async (req, res) => {
   const requestDate = format(fromUnixTime(amendment.requestDate), 'dd MMM yyyy');
   const coverEndDate = amendment?.coverEndDate ? format(fromUnixTime(amendment.coverEndDate), 'dd MMM yyyy') : '';
   const isUsingFacilityEndDate = amendment?.isUsingFacilityEndDate;
-  const facilityEndDate = amendment?.facilityEndDate ? format(fromUnixTime(amendment.facilityEndDate), 'dd MMM yyyy') : '';
+  const facilityEndDate = amendment?.facilityEndDate ? format(new Date(amendment.facilityEndDate), 'dd MMM yyyy') : '';
   const effectiveDate = amendment?.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), 'dd MMM yyyy') : '';
   const value = amendment.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : '';
 

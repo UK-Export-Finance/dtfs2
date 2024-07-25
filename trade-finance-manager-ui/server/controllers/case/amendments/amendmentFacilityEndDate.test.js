@@ -178,7 +178,7 @@ describe('GET getAmendmentFacilityEndDate', () => {
     });
 
     it('should render template prepopulated with the previously entered field values if the facility end date has already been added to the amendment', async () => {
-      const previouslyEnteredFacilityEndDate = getUnixTime(new Date(2025, 11, 11));
+      const previouslyEnteredFacilityEndDate = new Date(2025, 11, 11).toISOString();
       api.getAmendmentById.mockResolvedValueOnce({
         status: 200,
         data: {
@@ -217,7 +217,7 @@ describe('POST postAmendmentFacilityEndDate', () => {
   });
 
   it('should render the template with errors if the entered facility end date is before the cover start date', async () => {
-    const mockFacility = { facilitySnapshot: { dates: { coverStartDate: getUnixTime(new Date(2025, 11, 11)) * 1000 } } };
+    const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2024, 11, 11).valueOf().toString() } } };
 
     api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE });
     api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -258,7 +258,7 @@ describe('POST postAmendmentFacilityEndDate', () => {
   });
 
   it('should render the template with errors if the entered facility end date is greater than 6 years in the future', async () => {
-    const mockFacility = { facilitySnapshot: { dates: { coverStartDate: getUnixTime(new Date(2025, 11, 11)) * 1000 } } };
+    const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2021, 11, 11).valueOf().toString() } } };
 
     api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE });
     api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -302,7 +302,7 @@ describe('POST postAmendmentFacilityEndDate', () => {
   });
 
   it('should redirect to the check answers page when only the cover end date is being amended and there are no errors', async () => {
-    const mockFacility = { facilitySnapshot: { dates: { coverStartDate: getUnixTime(new Date(2021, 11, 11)) * 1000 } } };
+    const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
 
     api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE });
     api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -330,7 +330,7 @@ describe('POST postAmendmentFacilityEndDate', () => {
   });
 
   it('should redirect to the update facility value page when the facility value also needs amending and there are no errors', async () => {
-    const mockFacility = { facilitySnapshot: { dates: { coverStartDate: getUnixTime(new Date(2021, 11, 11)) * 1000 } } };
+    const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
 
     api.getAmendmentById.mockResolvedValueOnce({
       status: 200,
@@ -361,7 +361,7 @@ describe('POST postAmendmentFacilityEndDate', () => {
   });
 
   it("should redirect to the amendments summary page if there's an error updating the amendment", async () => {
-    const mockFacility = { facilitySnapshot: { dates: { coverStartDate: getUnixTime(new Date(12, 11, 2021)) } } };
+    const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
 
     api.getAmendmentById.mockResolvedValueOnce({
       status: 200,
