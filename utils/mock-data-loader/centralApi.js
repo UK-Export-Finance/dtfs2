@@ -62,7 +62,6 @@ const updateFacility = async (facilityId, facilityUpdate, user) => {
 };
 
 const listFacilities = async () => {
-  console.error(`attempting to list facilities`);
   const response = await axios({
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities`,
     method: 'get',

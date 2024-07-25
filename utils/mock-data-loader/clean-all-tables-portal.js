@@ -19,16 +19,13 @@ const cleanFacilities = async (token) => {
   logger.info('cleaning all facilities', { depth: 1 });
 
   const facilities = await centralApi.listFacilities();
-  console.error({ facilities });
   for (const facility of facilities) {
     if (facility.type === 'Bond' || facility.type === 'Loan') {
       await centralApi.deleteFacility(facility._id, token);
-      console.error('deleted bond or loan facility');
     }
 
     if (facility.type === 'Cash' || facility.type === 'Contingent') {
       await gefApi.deleteFacilities(facility, token);
-      console.error('deleted cash or contingent facility');
     }
   }
 };
