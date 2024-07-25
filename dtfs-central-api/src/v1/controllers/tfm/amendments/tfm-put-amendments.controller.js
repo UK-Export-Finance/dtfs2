@@ -1,11 +1,11 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
+const { AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { getUnixTime } = require('date-fns');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findAmendmentById } = require('./tfm-get-amendments.controller');
+const { TfmFacilitiesRepo } = require('../../../../repositories/tfm-facilities-repo');
 
 exports.updateTfmAmendment = async (req, res) => {
   const { payload, auditDetails } = req.body;
@@ -32,7 +32,6 @@ exports.updateTfmAmendment = async (req, res) => {
     return res.status(404).send({ status: 404, message: 'The amendment does not exist' });
   }
 
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
   const protectedProperties = ['_id', 'amendmentId', 'facilityId', 'dealId', 'createdAt', 'updatedAt', 'version'];
 
   for (const property of protectedProperties) {
@@ -41,9 +40,13 @@ exports.updateTfmAmendment = async (req, res) => {
 
   const update = { ...payload, updatedAt: getUnixTime(new Date()) };
 
-  await collection.updateOne(
-    { _id: { $eq: ObjectId(facilityId) }, 'amendments.amendmentId': { $eq: ObjectId(amendmentId) } },
-    $.flatten({ 'amendments.$': update, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) }),
+  await TfmFacilitiesRepo.updateOneByIdAndAmendmentId(
+    facilityId,
+    amendmentId,
+    $.flatten({
+      'amendments.$': update,
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+    }),
   );
 
   const updatedAmendment = await findAmendmentById(facilityId, amendmentId);

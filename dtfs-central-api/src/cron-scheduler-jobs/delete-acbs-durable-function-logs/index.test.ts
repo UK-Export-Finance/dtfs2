@@ -25,7 +25,7 @@ describe('scheduler/jobs/delete-acbs-durable-function-logs', () => {
 
     it('calls deleteAllCompleteAcbsDurableFunctionLogs from the durable functions repo', async () => {
       // Arrange
-      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: true });
+      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: true, deletedCount: 1 });
 
       // Act
       await deleteCompleteAcbsDurableFunctionLogsJob.task(new Date());
@@ -46,7 +46,7 @@ describe('scheduler/jobs/delete-acbs-durable-function-logs', () => {
 
     it('throws an error if deleteAllCompleteAcbsDurableFunctionLogs fails to write', async () => {
       // Arrange
-      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: false });
+      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: false, deletedCount: 1 });
 
       // Act
       await expect(deleteCompleteAcbsDurableFunctionLogsJob.task(new Date())).rejects.toThrow(WriteConcernError);
@@ -54,7 +54,7 @@ describe('scheduler/jobs/delete-acbs-durable-function-logs', () => {
 
     it('does not throw if deleteAllCompleteAcbsDurableFunctionLogs is acknowledged', async () => {
       // Arrange
-      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: true });
+      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: true, deletedCount: 1 });
 
       // Act
       const result = await deleteCompleteAcbsDurableFunctionLogsJob.task(new Date());

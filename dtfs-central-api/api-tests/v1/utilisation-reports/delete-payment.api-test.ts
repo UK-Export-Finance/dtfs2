@@ -4,9 +4,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
-import { aTfmUser } from '../../../test-helpers/test-data/tfm-user';
-import { aTfmSessionUser } from '../../../test-helpers/test-data/tfm-session-user';
+import { aPortalUser, aTfmUser, aTfmSessionUser } from '../../../test-helpers/test-data';
 
 console.error = jest.fn();
 
