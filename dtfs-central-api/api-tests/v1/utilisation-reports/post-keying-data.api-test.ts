@@ -32,7 +32,7 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
   const anUploadedReconciliationInProgressUtilisationReport = () =>
     UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).withUploadedByUserId(portalUserId).build();
   const anUploadedPendingReconciliationUtilisationReport = () =>
-    UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).withUploadedByUserId(portalUserId).build();
+    UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withUploadedByUserId(portalUserId).build();
 
   const aValidRequestBody = () => ({
     user: {

@@ -39,7 +39,7 @@ const STATUSES_OF_FEE_RECORDS_TO_DISPLAY_ON_KEYING_SHEET: FeeRecordStatus[] = ['
 const getZeroAmountKeyingSheetFeePayment = ({ paymentCurrency }: FeeRecordEntity) => ({
   currency: paymentCurrency,
   amount: 0,
-  dateReceived: undefined,
+  dateReceived: null,
 });
 
 const mapFeeRecordPaymentEntityGroupToKeyingSheetRows = ({ feeRecords, payments }: FeeRecordPaymentEntityGroup): KeyingSheetRow[] => {
