@@ -24,6 +24,13 @@ describe('nunjuck filters - formatDateString', () => {
       expected: '05/01/2021 3:01pm',
     },
     {
+      description: 'should return correct date when formatting from `ISO` to `d MMMM yyyy`',
+      mockDate: '2023-01-14T23:00:00.000Z',
+      fromFormat: 'ISO',
+      toFormat: 'd MMMM yyyy',
+      expected: '14 January 2023',
+    },
+    {
       description: 'formats to `d MMM yyyy` when toFormat is not given',
       mockDate: '03-01-2023',
       fromFormat: 'dd-MM-yyyy',

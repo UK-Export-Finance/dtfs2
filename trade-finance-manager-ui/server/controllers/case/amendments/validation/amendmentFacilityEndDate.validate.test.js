@@ -135,7 +135,7 @@ describe('facilityEndDateValidation()', () => {
     );
     const expected = {
       errorsObject: {},
-      facilityEndDate: getUnixTime(new Date(2025, 11, 12, 0, 0, 0)),
+      facilityEndDate: new Date(2025, 11, 12, 0, 0, 0).toISOString(),
     };
 
     expect(result).toEqual(expected);
