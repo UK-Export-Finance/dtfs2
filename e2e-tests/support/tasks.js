@@ -1,10 +1,16 @@
 const crypto = require('node:crypto');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
-const { UtilisationReportEntity, FeeRecordEntity, PaymentEntity, AzureFileInfoEntity, FacilityUtilisationDataEntity } = require('@ukef/dtfs2-common');
+const {
+  UtilisationReportEntity,
+  FeeRecordEntity,
+  PaymentEntity,
+  AzureFileInfoEntity,
+  FacilityUtilisationDataEntity,
+  MONGO_DB_COLLECTIONS,
+} = require('@ukef/dtfs2-common');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
-const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
 const { generateVersion0GefDealDatabaseDocument, generateVersion0GefFacilityDatabaseDocument } = require('../e2e-fixtures/deal-versioning.fixture');
 
 SqlDbDataSource.initialize()
@@ -145,7 +151,7 @@ module.exports = {
       ]);
 
     const getAllBanks = async () => {
-      const banks = await db.getCollection(DB_COLLECTIONS.BANKS);
+      const banks = await db.getCollection(MONGO_DB_COLLECTIONS.BANKS);
       return banks.find().toArray();
     };
 
@@ -223,7 +229,7 @@ module.exports = {
     };
 
     const insertVersion0Deal = async (makerUserName) => {
-      const dealsCollection = await db.getCollection(DB_COLLECTIONS.DEALS);
+      const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
       const usersCollection = await getUsersCollection();
 
       const maker = await usersCollection.findOne({ username: makerUserName });
@@ -232,9 +238,19 @@ module.exports = {
     };
 
     const insertVersion0Facility = async (dealId) => {
-      const facilitiesCollection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+      const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
       return facilitiesCollection.insertOne(generateVersion0GefFacilityDatabaseDocument(dealId));
+    };
+
+    /**
+     * Deletes a portal user with the given username
+     * @param {string} username - The username of the user to delete
+     * @returns {Promise<void>}
+     */
+    const deleteUserByUsername = async (username) => {
+      const usersCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
+      await usersCollection.deleteOne({ username: { $eq: username } });
     };
 
     return {
@@ -259,6 +275,7 @@ module.exports = {
       removeAllPaymentsFromDb,
       removeAllFeeRecordsFromDb,
       deleteAllFromSqlDb,
+      deleteUserByUsername,
     };
   },
 };

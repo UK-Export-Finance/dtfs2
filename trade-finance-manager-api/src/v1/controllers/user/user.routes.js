@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const utils = require('../../../utils/crypto.util');
 const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
-const { create, update, removeTfmUserById, findOne, findByUsername } = require('./user.controller');
+const { create, update, findOne, findByUsername } = require('./user.controller');
 
 const { mapUserData } = require('./helpers/mapUserData.helper');
 const { loginCallback } = require('./helpers/loginCallback.helper');
@@ -111,16 +111,6 @@ module.exports.updateTfmUserById = (req, res, next) => {
     } else {
       res.status(404).json({});
     }
-  });
-};
-
-module.exports.removeTfmUserById = (req, res) => {
-  const auditDetails = generateTfmAuditDetails(req.user._id);
-  removeTfmUserById(req.params.user, auditDetails, (error, status) => {
-    if (error) {
-      return res.status(status).send({ status, error });
-    }
-    return res.sendStatus(status);
   });
 };
 

@@ -1,8 +1,6 @@
 const { header, users, createUser, editUser } = require('../../../pages');
 const relative = require('../../../relativeURL');
-const MOCK_USERS = require('../../../../../../e2e-fixtures');
-
-const { ADMIN } = MOCK_USERS;
+const { ADMIN, NODE_TASKS } = require('../../../../../../e2e-fixtures');
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
@@ -16,7 +14,7 @@ context('Admin user updates an existing user', () => {
   };
 
   beforeEach(() => {
-    cy.removeUserIfPresent(userToUpdate, ADMIN);
+    cy.task(NODE_TASKS.DELETE_USER_BY_USERNAME, userToUpdate.username);
   });
 
   it('Create a user, then edit the user and change their role(s)', () => {

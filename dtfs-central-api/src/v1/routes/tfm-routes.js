@@ -581,31 +581,6 @@ tfmRouter.route('/teams/:id').get(tfmTeamsController.findOneTfmTeam);
 
 /**
  * @openapi
- * /tfm/teams/:id:
- *   delete:
- *     summary: Delete a team
- *     tags: [TFM]
- *     description: Delete a team by ID. Not MongoDB _id, but the team ID provided when created.
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: Team ID to delete
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             example:
- *               acknowledged: true
- *               deletedCount: 1
- */
-tfmRouter.route('/teams/:id').delete(tfmTeamsController.deleteTfmTeam);
-
-/**
- * @openapi
  * /tfm/users:
  *   get:
  *     summary: Get all TFM users

@@ -4,6 +4,7 @@ const {
   USER_ROLES: { MAKER, READ_ONLY, CHECKER, PAYMENT_REPORT_OFFICER },
 } = require('../../../../fixtures/constants');
 const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = require('../../../../../../e2e-fixtures/portal-users.fixture');
+const { NODE_TASKS } = require('../../../../../../e2e-fixtures');
 
 context('Admin user creates a new user', () => {
   const validUser = {
@@ -27,8 +28,8 @@ context('Admin user creates a new user', () => {
   };
 
   beforeEach(() => {
-    cy.removeUserIfPresent(validUser, AN_ADMIN);
-    cy.removeUserIfPresent(userWithInvalidPassword, AN_ADMIN);
+    cy.task(NODE_TASKS.DELETE_USER_BY_USERNAME, validUser.username);
+    cy.task(NODE_TASKS.DELETE_USER_BY_USERNAME, userWithInvalidPassword.username);
   });
 
   it('Go to add user page and back', () => {

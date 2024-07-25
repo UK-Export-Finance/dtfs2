@@ -104,7 +104,7 @@ authRouter
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.delete);
 
 authRouter.route('/users').get(users.list).post(users.create);
-authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
+authRouter.route('/users/:_id').get(users.findById).put(users.updateById);
 authRouter.route('/users/:_id/disable').delete(users.disable);
 
 authRouter.use('/gef', gef);

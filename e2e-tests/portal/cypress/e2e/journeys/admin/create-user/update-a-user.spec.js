@@ -1,5 +1,5 @@
 const { header, users, createUser, editUser } = require('../../../pages');
-const { ADMIN: AN_ADMIN } = require('../../../../../../e2e-fixtures');
+const { ADMIN: AN_ADMIN, NODE_TASKS } = require('../../../../../../e2e-fixtures');
 const {
   USER_ROLES: { MAKER, CHECKER },
 } = require('../../../../fixtures/constants');
@@ -16,7 +16,7 @@ context('Admin user updates an existing user', () => {
   };
 
   beforeEach(() => {
-    cy.removeUserIfPresent(userToUpdate, AN_ADMIN);
+    cy.task(NODE_TASKS.DELETE_USER_BY_USERNAME, userToUpdate.username);
     cy.login(AN_ADMIN);
     header.users().click();
   });

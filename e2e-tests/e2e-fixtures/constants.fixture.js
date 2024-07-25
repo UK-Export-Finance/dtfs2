@@ -131,4 +131,5 @@ export const NODE_TASKS = {
   REMOVE_ALL_PAYMENTS_FROM_DB: 'removeAllPaymentsFromDb',
   REMOVE_ALL_FEE_RECORDS_FROM_DB: 'removeAllFeeRecordsFromDb',
   DELETE_ALL_FROM_SQL_DB: 'deleteAllFromSqlDb',
+  DELETE_USER_BY_USERNAME: 'deleteUserByUsername',
 };

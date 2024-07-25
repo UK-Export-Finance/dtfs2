@@ -93,18 +93,6 @@ module.exports.listAllUsers = (token) =>
       return resp.body.users;
     });
 
-module.exports.deleteUser = (token, user) =>
-  cy
-    .request({
-      url: `${api()}/v1/users/${user._id}`,
-      method: 'DELETE',
-      headers: {
-        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
-        Authorization: token,
-      },
-    })
-    .then((resp) => expect(resp.status).to.equal(200));
-
 module.exports.insertDeal = (deal, token) =>
   cy
     .request({

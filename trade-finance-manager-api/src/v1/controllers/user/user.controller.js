@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
-const { generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
-const { PAYLOAD_VERIFICATION, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
+const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { PAYLOAD_VERIFICATION } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const { mapUserData } = require('./helpers/mapUserData.helper');
@@ -140,25 +140,4 @@ exports.incrementFailedLoginCount = async (user, auditDetails) => {
   };
 
   await collection.updateOne({ _id: { $eq: ObjectId(user._id) } }, { $set: update }, {});
-};
-
-exports.removeTfmUserById = async (_id, auditDetails, callback) => {
-  if (!ObjectId.isValid(_id)) {
-    return callback('Invalid TFM user id', 400);
-  }
-
-  try {
-    await deleteOne({
-      documentId: new ObjectId(_id),
-      collectionName: 'tfm-users',
-      db,
-      auditDetails,
-    });
-    return callback(null, 200);
-  } catch (error) {
-    if (error instanceof DocumentNotDeletedError) {
-      return callback(error, 404);
-    }
-    return callback(error, 500);
-  }
 };

@@ -74,8 +74,7 @@ authRouter.route('/users').post(users.createTfmUser);
 authRouter
   .route('/users/:user')
   .get(validation.userIdEscapingSanitization, handleExpressValidatorResult, users.findTfmUser)
-  .put(validation.userIdValidation, handleExpressValidatorResult, users.updateTfmUserById)
-  .delete(validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
+  .put(validation.userIdValidation, handleExpressValidatorResult, users.updateTfmUserById);
 
 authRouter.route('/facilities').get(facilityController.getFacilities);
 
