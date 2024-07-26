@@ -25,8 +25,6 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
     const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
     const feeRecordIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds(checkedCheckboxIds);
 
-    // TODO FN-1749: Handle form submission.
-
     const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetails(reportId, feeRecordIds, userToken);
 
     const addToAnExistingPaymentViewModel: AddToAnExistingPaymentViewModel = {
