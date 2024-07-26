@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
-import { getBankReviewDate, postBankReviewDate } from '../controllers/bank-review-date';
-import { validateRole, validateToken, validateBank } from '../middleware';
-import { MAKER } from '../constants/roles';
+import { getBankReviewDate, postBankReviewDate } from '../../controllers/bank-review-date';
+import { validateRole, validateToken, validateBank } from '../../middleware';
+import { MAKER } from '../../constants/roles';
 
 const router = express.Router();
 

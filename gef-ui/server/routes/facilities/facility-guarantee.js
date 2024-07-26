@@ -1,7 +1,7 @@
 const express = require('express');
-const { facilityGuarantee, updateFacilityGuarantee } = require('../controllers/facility-guarantee');
-const { validateRole, validateToken, validateBank } = require('../middleware');
-const { MAKER } = require('../constants/roles');
+const { facilityGuarantee, updateFacilityGuarantee } = require('../../controllers/facility-guarantee');
+const { validateRole, validateToken, validateBank } = require('../../middleware');
+const { MAKER } = require('../../constants/roles');
 
 const router = express.Router();
 

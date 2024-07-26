@@ -1,7 +1,7 @@
 const express = require('express');
-const { facilityConfirmDeletion, deleteFacility } = require('../controllers/facility-confirm-deletion');
-const { validateRole, validateToken, validateBank } = require('../middleware');
-const { MAKER } = require('../constants/roles');
+const { facilityConfirmDeletion, deleteFacility } = require('../../controllers/facility-confirm-deletion');
+const { validateRole, validateToken, validateBank } = require('../../middleware');
+const { MAKER } = require('../../constants/roles');
 
 const router = express.Router();
 

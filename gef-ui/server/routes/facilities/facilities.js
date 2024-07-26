@@ -1,7 +1,7 @@
 const express = require('express');
-const { facilities, createFacility } = require('../controllers/facilities');
-const { validateRole, validateToken, validateBank } = require('../middleware');
-const { MAKER } = require('../constants/roles');
+const { facilities, createFacility } = require('../../controllers/facilities');
+const { validateRole, validateToken, validateBank } = require('../../middleware');
+const { MAKER } = require('../../constants/roles');
 
 const router = express.Router();
 
