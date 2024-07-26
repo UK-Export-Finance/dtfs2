@@ -130,4 +130,5 @@ export const NODE_TASKS = {
   INSERT_PAYMENTS_INTO_DB: 'insertPaymentsIntoDb',
   REMOVE_ALL_PAYMENTS_FROM_DB: 'removeAllPaymentsFromDb',
   REMOVE_ALL_FEE_RECORDS_FROM_DB: 'removeAllFeeRecordsFromDb',
+  DELETE_ALL_FROM_SQL_DB: 'deleteAllFromSqlDb',
 };

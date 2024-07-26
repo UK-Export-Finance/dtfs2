@@ -1,6 +1,5 @@
-import { AzureFileInfoEntity, DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '../../sql-db-entities';
+import { AzureFileInfoEntity, DbRequestSource, FeeRecordEntity, UtilisationReportEntity, ReportPeriodPartialEntity } from '../../sql-db-entities';
 import { UtilisationReportReconciliationStatus } from '../../types';
-import { ReportPeriodPartialEntity } from '../../sql-db-entities/partial-entities';
 import { MOCK_AZURE_FILE_INFO } from './azure-file-info.mock';
 
 export class UtilisationReportEntityMockBuilder<ReportStatus extends UtilisationReportReconciliationStatus> {

@@ -946,7 +946,7 @@ const amendACBSfacility = async (amendments, facility, deal) => {
       return null;
     });
 
-    if (response.data) {
+    if (response?.data) {
       return response.data;
     }
   }

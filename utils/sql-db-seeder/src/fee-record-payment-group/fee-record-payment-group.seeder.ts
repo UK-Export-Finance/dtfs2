@@ -1,4 +1,4 @@
-import { FeeRecordStatus, UtilisationReportEntity, Currency, FeeRecordEntity, PaymentEntity } from '@ukef/dtfs2-common';
+import { FeeRecordStatus, UtilisationReportEntity, Currency, FeeRecordEntity, PaymentEntity, FacilityUtilisationDataEntity } from '@ukef/dtfs2-common';
 import { DataSource } from 'typeorm';
 import Big from 'big.js';
 import { faker } from '@faker-js/faker';
@@ -64,7 +64,25 @@ export class FeeRecordPaymentGroupSeeder {
     return this;
   }
 
+  private async saveFacilityUtilisationData(dataSource: DataSource): Promise<void> {
+    for (const { facilityId, facilityUtilisation, report } of this.feeRecords) {
+      const facilityUtilisationDataExists = await dataSource.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityId });
+      if (facilityUtilisationDataExists) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+      const facilityUtilisationData = new FacilityUtilisationDataEntity();
+      facilityUtilisationData.id = facilityId;
+      facilityUtilisationData.reportPeriod = report.reportPeriod;
+      facilityUtilisationData.utilisation = facilityUtilisation * faker.number.float({ min: 0.8, max: 1.2 });
+      facilityUtilisationData.updateLastUpdatedBy({ platform: 'SYSTEM' });
+      await dataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
+    }
+  }
+
   public async save(dataSource: DataSource): Promise<void> {
+    await this.saveFacilityUtilisationData(dataSource);
+
     if (this.status !== 'TO_DO') {
       throw new Error(`Cannot save fee records with status '${this.status}' when there are no payments`);
     }
@@ -75,6 +93,8 @@ export class FeeRecordPaymentGroupSeeder {
   }
 
   public async addPaymentsAndSave(numberOfPayments: number, dataSource: DataSource): Promise<void> {
+    await this.saveFacilityUtilisationData(dataSource);
+
     if (this.status === 'TO_DO') {
       throw new Error("Cannot add payments to fee records with 'TO_DO' status");
     }
