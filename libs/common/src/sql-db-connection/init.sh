@@ -12,18 +12,19 @@ query() {
 
 # Initial DB setup
 initialise() {
+  readonly DB="USE [$SQL_DB_NAME];"
+
   # 1. Database
   query "CREATE DATABASE [$SQL_DB_NAME];"
-  query "USE [$SQL_DB_NAME];"
 
   # 2. User
   query "CREATE LOGIN $SQL_DB_USERNAME WITH PASSWORD = '$SQL_DB_PASSWORD';"
-  query "CREATE USER $SQL_DB_USERNAME FOR LOGIN $SQL_DB_USERNAME;"
+  query "$DB CREATE USER $SQL_DB_USERNAME FOR LOGIN $SQL_DB_USERNAME;"
 
   # 3. Permissions
-  query "ALTER ROLE db_datareader ADD MEMBER $SQL_DB_USERNAME;"
-  query "ALTER ROLE db_datawriter ADD MEMBER $SQL_DB_USERNAME;"
-  query "ALTER ROLE db_ddladmin ADD MEMBER $SQL_DB_USERNAME;"
+  query "$DB ALTER ROLE db_datareader ADD MEMBER $SQL_DB_USERNAME;"
+  query "$DB ALTER ROLE db_datawriter ADD MEMBER $SQL_DB_USERNAME;"
+  query "$DB ALTER ROLE db_ddladmin ADD MEMBER $SQL_DB_USERNAME;"
 }
 
 # Boot check
