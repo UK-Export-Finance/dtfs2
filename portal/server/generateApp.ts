@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 import flash from 'connect-flash';
 import connectRedis from 'connect-redis';
-import { badResponseLogging, InvalidEnvironmentVariableError, errorLogging, csrfErrorHandling } from '@ukef/dtfs2-common';
+import { InvalidEnvironmentVariableError, csrfErrorHandling } from '@ukef/dtfs2-common';
 import routes from './routes';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
@@ -36,7 +36,6 @@ export const generateApp = () => {
     maxAge: 604800000, // 7 days
   };
 
-  app.use(badResponseLogging);
   app.use(seo);
   app.use(security);
 
@@ -131,8 +130,6 @@ export const generateApp = () => {
     return res.render('page-not-found.njk', { user });
   });
 
-  // Error logging and handling
-  app.use(errorLogging);
   app.use(csrfErrorHandling);
 
   return app;

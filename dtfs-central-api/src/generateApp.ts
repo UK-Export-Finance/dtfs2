@@ -1,7 +1,7 @@
 import express, { Express } from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
-import { badResponseLogging, apiErrorHandling, errorLogging } from '@ukef/dtfs2-common';
+import { apiErrorHandling } from '@ukef/dtfs2-common';
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
 
 import { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } from './constants/routes';
@@ -14,7 +14,6 @@ import removeCsrfToken from './v1/routes/middleware/remove-csrf-token';
 export const generateApp = (): Express => {
   const app = express();
 
-  app.use(badResponseLogging);
   app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
   app.use(seo);
   app.use(security);
@@ -47,8 +46,6 @@ export const generateApp = (): Express => {
 
   app.use('/', rootRouter);
 
-  // Error logging and handling
-  app.use(errorLogging);
   app.use(apiErrorHandling);
 
   return app;

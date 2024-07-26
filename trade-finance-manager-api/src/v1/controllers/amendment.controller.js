@@ -181,24 +181,24 @@ const getAllAmendments = async (req, res) => {
   return res.status(422).send({ data: 'Unable to fetch amendments' });
 };
 
-const createFacilityAmendment = async (req, res) => {
-  const { facilityId } = req.body;
-  let amendmentId;
-
+const createFacilityAmendment = async (req, res, next) => {
   try {
-    ({ amendmentId } = await api.createFacilityAmendment(facilityId, generateTfmAuditDetails(req.user._id)));
+    const { facilityId } = req.body;
+
+    const { amendmentId } = await api.createFacilityAmendment(facilityId, generateTfmAuditDetails(req.user._id));
+
+    if (!amendmentId) {
+      throw new AmendmentNotCreatedError(facilityId);
+    }
+
+    return res.status(200).send({ amendmentId });
   } catch (error) {
     if (isAxiosError(error)) {
-      return { status: error?.response?.status || 500, data: 'Failed to create facility amendment' };
+      return res.status(error?.response?.status || 500).json({ data: 'Failed to create facility amendment' });
     }
-    throw error;
-  }
 
-  if (!amendmentId) {
-    throw new AmendmentNotCreatedError(facilityId);
+    return next(error);
   }
-
-  return res.status(200).send({ amendmentId });
 };
 
 const updateFacilityAmendment = async (req, res) => {

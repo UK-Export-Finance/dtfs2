@@ -9,7 +9,7 @@ const RedisStore = require('connect-redis')(session);
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
-const { badResponseLogging, errorLogging, csrfErrorHandling } = require('@ukef/dtfs2-common');
+const { csrfErrorHandling } = require('@ukef/dtfs2-common');
 const routes = require('./routes');
 const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
@@ -35,7 +35,6 @@ const generateApp = () => {
     maxAge: 604800000, // 7 days
   };
 
-  app.use(badResponseLogging);
   app.use(seo);
   app.use(security);
   app.use(compression());
@@ -114,18 +113,7 @@ const generateApp = () => {
 
   app.use('/', routes);
 
-  // Error logging and handling
-  app.use(errorLogging);
   app.use(csrfErrorHandling);
-  // app.use((error, req, res, next) => {
-  //   if (error.code === 'EBADCSRFTOKEN') {
-  //     // handle CSRF token errors here
-  //     res.status(error.statusCode || 500);
-  //     res.redirect('/');
-  //   } else {
-  //     res.render('partials/problem-with-service.njk', { user: req.session.user, error });
-  //   }
-  // });
 
   app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
   return app;

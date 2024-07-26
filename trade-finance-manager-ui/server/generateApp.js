@@ -5,7 +5,7 @@ const session = require('express-session');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
-const { badResponseLogging, errorLogging, csrfErrorHandling } = require('@ukef/dtfs2-common');
+const { csrfErrorHandling } = require('@ukef/dtfs2-common');
 const routes = require('./routes');
 const feedbackRoutes = require('./routes/feedback');
 const configureNunjucks = require('./nunjucks-configuration');
@@ -34,7 +34,6 @@ const generateApp = () => {
     maxAge: 604800000, // 7 days
   };
 
-  app.use(badResponseLogging);
   app.use(seo);
   app.use(security);
 
@@ -81,8 +80,6 @@ const generateApp = () => {
   app.use('/', routes);
 
   app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
-  // Error logging and handling
-  app.use(errorLogging);
   app.use(csrfErrorHandling);
 
   return app;

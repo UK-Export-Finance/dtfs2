@@ -3,7 +3,7 @@ const passport = require('passport');
 const compression = require('compression');
 const swaggerUi = require('swagger-ui-express');
 const mongoSanitise = require('express-mongo-sanitize');
-const { badResponseLogging, initialiseCronJobScheduler, apiErrorHandling, errorLogging } = require('@ukef/dtfs2-common');
+const { initialiseCronJobScheduler, apiErrorHandling } = require('@ukef/dtfs2-common');
 const healthcheck = require('./healthcheck');
 const { authRouter, openRouter } = require('./v1/routes');
 const loginController = require('./v1/controllers/user/user.routes');
@@ -21,7 +21,6 @@ configurePassport(passport);
 const generateApp = () => {
   const app = express();
 
-  app.use(badResponseLogging);
   app.use(createRateLimit());
   app.use(seo);
   app.use(security);
@@ -52,8 +51,6 @@ const generateApp = () => {
 
   app.use('/', rootRouter);
 
-  // Error logging and handling
-  app.use(errorLogging);
   app.use(apiErrorHandling);
 
   return app;
