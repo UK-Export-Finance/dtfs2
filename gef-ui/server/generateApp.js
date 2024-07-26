@@ -9,7 +9,7 @@ const RedisStore = require('connect-redis')(session);
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
-const { csrfErrorHandling } = require('@ukef/dtfs2-common');
+const { csrfErrorHandling, problemWithService } = require('@ukef/dtfs2-common');
 const routes = require('./routes');
 const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
@@ -113,9 +113,12 @@ const generateApp = () => {
 
   app.use('/', routes);
 
+  app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
+
   app.use(csrfErrorHandling);
 
-  app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
+  app.use(problemWithService);
+
   return app;
 };
 
