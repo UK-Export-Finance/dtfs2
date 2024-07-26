@@ -1,12 +1,12 @@
+import { PartiallyLoggedInPortalSessionData, LoggedInPortalSessionData } from '@ukef/dtfs2-common';
 import { Request } from 'express';
 import { LOGIN_STATUS } from '../constants';
-import { PartiallyLoggedInSessionData, LoggedInSessionData, UserSessionData } from '../types/express-session';
 
 type Session = Request['session'];
 
-export type LoggedInUserSession = Session & LoggedInSessionData;
-type PartiallyLoggedInUserSession = Session & PartiallyLoggedInSessionData;
-type UnknownLogInStatusUserSession = Session & Pick<UserSessionData, 'userToken' | 'loginStatus'>;
+export type LoggedInUserSession = Session & LoggedInPortalSessionData;
+type PartiallyLoggedInUserSession = Session & PartiallyLoggedInPortalSessionData;
+type UnknownLogInStatusUserSession = Session & Pick<LoggedInPortalSessionData | PartiallyLoggedInPortalSessionData, 'userToken' | 'loginStatus'>;
 
 /**
  * By default, all session data will be optional

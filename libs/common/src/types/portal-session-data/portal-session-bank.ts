@@ -1,6 +1,6 @@
-import { BankReportPeriodSchedule } from '@ukef/dtfs2-common';
+import { BankReportPeriodSchedule } from '../bank-report-period-schedule';
 
-export type Bank = {
+export type PortalSessionBank = {
   _id: string;
   id: string;
   name: string;

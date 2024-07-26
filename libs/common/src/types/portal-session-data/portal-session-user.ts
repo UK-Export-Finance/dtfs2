@@ -1,5 +1,5 @@
-import { Role } from '@ukef/dtfs2-common';
-import { Bank } from './bank';
+import { Role } from '../portal/roles';
+import { PortalSessionBank } from './portal-session-bank';
 
 /**
  * This type is based on the return of `sanitizeUser` in
@@ -12,7 +12,7 @@ export type PortalSessionUser = {
   surname: string;
   email: string;
   roles: Role[];
-  bank: Bank;
+  bank: PortalSessionBank;
   timezone: string;
   'user-status': string;
   isTrusted: boolean;
