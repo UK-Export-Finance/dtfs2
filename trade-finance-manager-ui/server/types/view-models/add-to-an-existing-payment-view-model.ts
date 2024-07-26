@@ -1,4 +1,4 @@
-import { SelectedReportedFeesDetailsViewModel } from './add-payment-view-model';
+import { SelectedReportedFeesDetailsViewModel } from './selected-reported-fees-details-view-model';
 import { BaseViewModel } from './base-view-model';
 
 export type AddToAnExistingPaymentViewModel = BaseViewModel & {

@@ -1,13 +1,8 @@
 import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
 import { BaseViewModel } from './base-view-model';
 import { PaymentErrorsViewModel } from './payment-errors-view-model';
-import { FeeRecordDetailsWithoutCheckboxesViewModel } from './fee-record-details-view-model';
+import { SelectedReportedFeesDetailsViewModel } from './selected-reported-fees-details-view-model';
 import { AddPaymentFormValues } from '../add-payment-form-values';
-
-export type SelectedReportedFeesDetailsViewModel = {
-  feeRecords: FeeRecordDetailsWithoutCheckboxesViewModel;
-  totalReportedPayments: CurrencyAndAmountString;
-};
 
 export type RecordedPaymentDetailsViewModel = {
   formattedCurrencyAndAmount: CurrencyAndAmountString;

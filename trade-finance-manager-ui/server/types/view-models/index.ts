@@ -10,3 +10,4 @@ export * from './payment-errors-view-model';
 export * from './edit-payment-view-model';
 export * from './confirm-delete-payment-view-model';
 export * from './utilisation-reports-view-model';
+export * from './selected-reported-fees-details-view-model';
