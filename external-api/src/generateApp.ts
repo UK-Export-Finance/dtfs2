@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
+import { badResponseLogging, apiErrorHandling, errorLogging } from '@ukef/dtfs2-common';
 import { apiRoutes, swaggerRoutes, healthcheck } from './v1/routes';
 import { seo } from './middleware/headers/seo';
 import { security } from './middleware/headers/security';
@@ -16,6 +17,7 @@ const { CORS_ORIGIN } = process.env;
 export const generateApp = () => {
   const app = express();
 
+  app.use(badResponseLogging);
   app.use(createRateLimit());
   app.use(seo);
   app.use(security);
@@ -43,6 +45,10 @@ export const generateApp = () => {
 
   // all other API routes
   app.use(apiRoutes);
+
+  // Error logging and handling
+  app.use(errorLogging);
+  app.use(apiErrorHandling);
 
   return app;
 };
