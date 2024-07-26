@@ -10,9 +10,9 @@ import {
 import { EntityManager } from 'typeorm';
 import { feeRecordsAndPaymentsMatch } from './fee-record-matching';
 import { PaymentMatchingTolerances } from '../types/payment-matching-tolerances';
-import { getActivePaymentMatchingTolerances } from '../repositories/payment-matching-tolerance-repo/payment-matching-tolerance-repo';
+import { getActivePaymentMatchingTolerances } from '../services/utilisation-reports/payment-matching-tolerance.service';
 
-jest.mock('../repositories/payment-matching-tolerance-repo/payment-matching-tolerance-repo');
+jest.mock('../services/utilisation-reports/payment-matching-tolerance.service');
 
 describe('fee-record-matching', () => {
   const mockEntityManager = {} as unknown as EntityManager;

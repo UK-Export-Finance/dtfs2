@@ -1,7 +1,7 @@
 import { CURRENCY, PaymentMatchingToleranceEntity } from '@ukef/dtfs2-common';
 import { EntityManager } from 'typeorm';
-import { PaymentMatchingTolerances } from '../../types/payment-matching-tolerances';
-import { NotFoundError } from '../../errors';
+import { PaymentMatchingTolerances } from '../../../types/payment-matching-tolerances';
+import { NotFoundError } from '../../../errors';
 
 const mapActivePaymentMatchingToleranceEntitiesToPaymentMatchingTolerances = (
   activeToleranceEntities: PaymentMatchingToleranceEntity[],

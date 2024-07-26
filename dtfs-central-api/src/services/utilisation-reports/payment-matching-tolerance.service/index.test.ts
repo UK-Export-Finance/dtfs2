@@ -2,8 +2,8 @@ import { CURRENCY, Currency, PaymentMatchingToleranceEntity, PaymentMatchingTole
 import { EntityManager } from 'typeorm';
 import { when } from 'jest-when';
 import { difference } from 'lodash';
-import { getActivePaymentMatchingTolerances } from './payment-matching-tolerance-repo';
-import { NotFoundError } from '../../errors';
+import { getActivePaymentMatchingTolerances } from '.';
+import { NotFoundError } from '../../../errors';
 
 describe('payment-matching-tolerance-repo', () => {
   const mockFindBy = jest.fn();

@@ -1,7 +1,7 @@
 import { FeeRecordEntity, PaymentEntity } from '@ukef/dtfs2-common';
 import Big from 'big.js';
 import { EntityManager } from 'typeorm';
-import { getActivePaymentMatchingTolerances } from '../repositories/payment-matching-tolerance-repo/payment-matching-tolerance-repo';
+import { getActivePaymentMatchingTolerances } from '../services/utilisation-reports/payment-matching-tolerance.service';
 
 const calculateTotal = (values: number[]): Big => {
   return values.reduce((total, value) => total.add(value), new Big(0));
