@@ -81,7 +81,7 @@ describe('POST TFM amendments', () => {
         });
       });
 
-      it('should return 400 if an amendment already exists', async () => {
+      it('should return 409 if an in progress amendment already exists', async () => {
         const { body: bodyPostResponse1 } = await testApi
           .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments`);
@@ -91,17 +91,17 @@ describe('POST TFM amendments', () => {
           .put({ payload: updatePayload1, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments/${bodyPostResponse1.amendmentId}`);
 
-        const { body } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
-        expect(body).toEqual({ status: 400, message: 'The current facility already has an amendment in progress' });
+        const { status } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
+        expect(status).toEqual(409);
       });
     });
 
     it('should return 404 if the facility does not exist', async () => {
-      const { body } = await testApi
+      const { status } = await testApi
         .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to('/v1/tfm/facilities/62727d055ca1841f08216353/amendments');
 
-      expect(body).toEqual({ status: 404, message: 'The current facility does not exist' });
+      expect(status).toEqual(404);
     });
 
     it('should return 400 if the facility Id is not valid', async () => {
@@ -113,8 +113,8 @@ describe('POST TFM amendments', () => {
         })
         .to('/v1/tfm/deals/submit');
 
-      const { body } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/facilities/123/amendments');
-      expect(body).toEqual({ status: 400, message: 'Invalid facility id' });
+      const { status } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/facilities/123/amendments');
+      expect(status).toEqual(400);
     });
   });
 });

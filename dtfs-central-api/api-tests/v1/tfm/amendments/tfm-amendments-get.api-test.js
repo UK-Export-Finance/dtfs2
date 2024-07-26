@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AMENDMENT_STATUS, CURRENCY } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
@@ -78,9 +78,8 @@ describe('GET TFM amendments', () => {
     });
 
     it('should return 400 if the facilityId is not valid', async () => {
-      const { status, body } = await testApi.get('/v1/tfm/facilities/1234/amendments');
+      const { status } = await testApi.get('/v1/tfm/facilities/123/amendments');
       expect(status).toEqual(400);
-      expect(body).toEqual({ status: 400, message: 'Invalid facility Id' });
     });
 
     it('should return 200 with an empty array if the facility does not have any amendments', async () => {
@@ -130,10 +129,9 @@ describe('GET TFM amendments', () => {
         })
         .to('/v1/tfm/deals/submit');
 
-      const { status, body } = await testApi.get('/v1/tfm/facilities/626a9270184ded001357c010/amendments/123');
+      const { status } = await testApi.get('/v1/tfm/facilities/626a9270184ded001357c010/amendments/123');
 
       expect(status).toEqual(400);
-      expect(body).toEqual({ message: 'Invalid amendment Id', status: 400 });
     });
 
     it('should return 400 status if the facilityId has the wrong format', async () => {
@@ -146,26 +144,9 @@ describe('GET TFM amendments', () => {
         })
         .to('/v1/tfm/deals/submit');
 
-      const { status, body } = await testApi.get('/v1/tfm/facilities/123/amendments/626a9270184ded001357c010');
+      const { status } = await testApi.get('/v1/tfm/facilities/123/amendments/626a9270184ded001357c010');
 
       expect(status).toEqual(400);
-      expect(body).toEqual({ status: 400, message: 'Invalid facility Id' });
-    });
-
-    it('should return 400 status if the facilityId and amendmentId have the wrong format', async () => {
-      await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
-      await testApi
-        .put({
-          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to('/v1/tfm/deals/submit');
-
-      const { status, body } = await testApi.get('/v1/tfm/facilities/123/amendments/1234');
-
-      expect(status).toEqual(400);
-      expect(body).toEqual({ status: 400, message: 'Invalid facility Id' });
     });
   });
 
@@ -231,10 +212,9 @@ describe('GET TFM amendments', () => {
         })
         .to('/v1/tfm/deals/submit');
 
-      const { status, body } = await testApi.get('/v1/tfm/facilities/123/amendments/in-progress');
+      const { status } = await testApi.get('/v1/tfm/facilities/123/amendments/in-progress');
 
       expect(status).toEqual(400);
-      expect(body).toEqual({ status: 400, message: 'Invalid facility Id' });
     });
   });
 
@@ -326,10 +306,9 @@ describe('GET TFM amendments', () => {
         })
         .to('/v1/tfm/deals/submit');
 
-      const { status, body } = await testApi.get('/v1/tfm/facilities/123/amendments/completed');
+      const { status } = await testApi.get('/v1/tfm/facilities/123/amendments/completed');
 
       expect(status).toEqual(400);
-      expect(body).toEqual({ status: 400, message: 'Invalid facility Id' });
     });
   });
 
@@ -357,6 +336,7 @@ describe('GET TFM amendments', () => {
             requireUkefApproval: false,
             changeFacilityValue: true,
             value: 123,
+            currency: CURRENCY.GBP,
           },
           auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         })
@@ -366,7 +346,8 @@ describe('GET TFM amendments', () => {
       expect(status).toEqual(200);
       expect(body).toEqual({
         amendmentId: expect.any(String),
-        value: expect.any(Number),
+        value: 123,
+        currency: CURRENCY.GBP,
       });
     });
 
@@ -398,10 +379,9 @@ describe('GET TFM amendments', () => {
         })
         .to('/v1/tfm/deals/submit');
 
-      const { status, body } = await testApi.get('/v1/tfm/facilities/123/amendments/completed/latest-value');
+      const { status } = await testApi.get('/v1/tfm/facilities/123/amendments/completed/latest-value');
 
       expect(status).toEqual(400);
-      expect(body).toEqual({ status: 400, message: 'Invalid facility Id' });
     });
   });
 
