@@ -1,36 +1,12 @@
-import z from 'zod';
 import { ObjectId, UpdateFilter, WithoutId, FindOneAndUpdateOptions, Collection, Document, UpdateResult, Filter } from 'mongodb';
 import { AuditDetails, TfmFacility, TfmFacilityAmendment, AmendmentStatus } from '@ukef/dtfs2-common';
 import { deleteMany } from '@ukef/dtfs2-common/change-stream';
-import { TfmFacilitySchema } from './tfm-facility.schema';
 import { mongoDbClient } from '../../drivers/db-client';
 import { aggregatePipelines, AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './aggregate-pipelines';
-
-export type ParsedTfmFacility = z.infer<typeof TfmFacilitySchema>;
 
 export class TfmFacilitiesRepo {
   private static async getCollection(): Promise<Collection<WithoutId<TfmFacility>>> {
     return await mongoDbClient.getCollection('tfm-facilities');
-  }
-
-  /**
-   * Validates and parses the result of a mongo `findOne` operation
-   * @param result - The result of any `findOne` operation
-   * @returns The parsed result
-   * @throws {z.ZodError} If the result does not match the TFM facilities schema
-   */
-  public static validateAndParseFindOneResult(result: TfmFacility): ParsedTfmFacility {
-    return TfmFacilitySchema.parse(result);
-  }
-
-  /**
-   * Validates and parses the result of a mongo `find` operation
-   * @param result - The result of any `find` operation
-   * @returns The parsed results
-   * @throws {z.ZodError} If any item in the results array does not match the TFM facilities schema
-   */
-  public static validateAndParseFindResult(results: TfmFacility[]): ParsedTfmFacility[] {
-    return results.map((result) => this.validateAndParseFindOneResult(result));
   }
 
   /**
