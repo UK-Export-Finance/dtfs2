@@ -20,7 +20,7 @@ services:
     volumes:
       - ./dtfs-sql-volume-dtfs-submissions:/data/db
 
-  dtfs-submissions-data:
+  dtfs-mongo:
     image: mongo:5.0.5
     restart: always
     environment:
@@ -30,7 +30,7 @@ services:
     ports:
       - '27017-27019:27017-27019'
     volumes:
-      - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
+      - ./dtfs-mongo-volume-dtfs-submissions:/data/db
 
   dtfs-central-api:
     build:
@@ -40,7 +40,7 @@ services:
     restart: always
     depends_on:
       - dtfs-sql
-      - dtfs-submissions-data
+      - dtfs-mongo
       - external-api
     ports:
       - '5005:5005' # http
@@ -248,7 +248,7 @@ services:
     image: dtfs/external-api
     restart: always
     depends_on:
-      - dtfs-submissions-data
+      - dtfs-mongo
     ports:
       - '5002:5002' # http
       - '9228:9228' # debug
