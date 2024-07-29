@@ -9,7 +9,7 @@ describe('AmendmentNotCreatedError', () => {
     const exception = new AmendmentNotCreatedError(facilityId);
 
     // Assert
-    expect(exception.message).toEqual('Amendment not created: Example facility id');
+    expect(exception.message).toEqual('Amendment not created for facility: Example facility id');
   });
 
   it('has the message "Amendment not created" if no facilityId is provided', () => {
