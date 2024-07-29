@@ -19,6 +19,7 @@ const PutFacilityAmendmentSchema = z.object({
       changeCoverEndDate: z.boolean(),
       currentCoverEndDate: z.number().nullable(),
       isUsingFacilityEndDate: z.boolean().nullable(),
+      facilityEndDate: z.string().nullable(),
       ukefExposure: z.number().nullable(),
       coveredPercentage: z.number(),
       currency: CurrencySchema.nullable(),

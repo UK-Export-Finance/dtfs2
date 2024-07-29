@@ -1,81 +1,52 @@
-// eslint-disable-next-line import/no-import-module-exports
-import { getHighestPriorityStandardDateErrorMessage } from '@ukef/dtfs2-common';
-
-const { set, add, isAfter, isBefore, fromUnixTime } = require('date-fns');
+const { applyStandardValidationAndParseDateInput } = require('@ukef/dtfs2-common');
+const { add, isAfter, isBefore, startOfDay } = require('date-fns');
 
 /**
- *
- * @param {Object} body
+ * @param {{day: string, month: string, year: string}}
  * @param coverStartDate
  * @returns {Object} containing errors and amendment facility end date
  */
 
-const facilityEndDateValidation = (body, coverStartDate) => {
-  const { 'facility-end-date-day': facilityEndDay, 'facility-end-date-month': facilityEndMonth, 'facility-end-date-year': facilityEndYear } = body;
-  const standardDateError = getHighestPriorityStandardDateErrorMessage(
-    'Facility end date',
-    'facilityEndDate',
-    facilityEndDay,
-    facilityEndMonth,
-    facilityEndYear,
-  );
+const facilityEndDateValidation = ({ day, month, year }, coverStartDate) => {
+  const { error: standardError, parsedDate } = applyStandardValidationAndParseDateInput({ day, month, year }, 'facility end date', 'facility-end-date');
 
-  if (standardDateError) {
-    const errorsObject = {
-      errors: { summary: [{ text: standardDateError.errMsg }], fields: standardDateError.errRefs },
-      facilityEndDay,
-      facilityEndMonth,
-      facilityEndYear,
+  if (standardError) {
+    return {
+      error: {
+        summary: [{ text: standardError.message }],
+        fields: standardError.fieldRefs,
+      },
     };
-
-    return { facilityEndDate: undefined, errorsObject };
   }
 
-  let otherError;
-  const inputtedDate = set(new Date(), { year: facilityEndYear, month: facilityEndMonth - 1, date: facilityEndDay });
-  const now = new Date();
-  const sixYearsFromNow = add(now, { years: 6 });
-  const coverStartDateToCompare = new Date(Number(coverStartDate));
+  const inputtedDate = parsedDate;
+  const today = startOfDay(new Date());
+  const sixYearsFromToday = add(today, { years: 6 });
+  const coverStartDateToCompare = startOfDay(new Date(Number(coverStartDate)));
 
   // checks if the entered facility end date is greater than 6 years in the future
-  if (isAfter(inputtedDate, sixYearsFromNow)) {
-    otherError = {
-      errRefs: ['facilityEndDate'],
-      errMsg: 'Facility end date cannot be greater than 6 years in the future',
+  if (isAfter(inputtedDate, sixYearsFromToday)) {
+    return {
+      error: {
+        summary: [{ text: 'Facility end date cannot be greater than 6 years in the future' }],
+        fields: ['facility-end-date-day', 'facility-end-date-month', 'facility-end-date-year'],
+      },
     };
   }
+
   // checks if the entered facility end date is before the cover start date
-  else if (isBefore(inputtedDate, coverStartDateToCompare)) {
-    otherError = {
-      errRefs: ['facilityEndDate'],
-      errMsg: 'The facility end date cannot be before the cover start date',
+  if (isBefore(inputtedDate, coverStartDateToCompare)) {
+    return {
+      error: {
+        summary: [{ text: 'The facility end date cannot be before the cover start date' }],
+        fields: ['facility-end-date-day', 'facility-end-date-month', 'facility-end-date-year'],
+      },
     };
   }
-
-  if (otherError) {
-    const errorsObject = {
-      errors: { summary: [{ text: otherError.errMsg }], fields: otherError.errRefs },
-      facilityEndDay,
-      facilityEndMonth,
-      facilityEndYear,
-    };
-
-    return { facilityEndDate: undefined, errorsObject };
-  }
-
-  const facilityEndDate = set(new Date(), {
-    year: facilityEndYear,
-    month: facilityEndMonth - 1,
-    date: facilityEndDay,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-    milliseconds: 0,
-  }).toISOString();
 
   return {
-    facilityEndDate,
-    errorsObject: {},
+    facilityEndDate: parsedDate,
+    error: {},
   };
 };
 

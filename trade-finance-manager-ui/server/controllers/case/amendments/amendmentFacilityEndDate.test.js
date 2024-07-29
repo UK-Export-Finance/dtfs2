@@ -7,7 +7,6 @@ import {
   MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE,
   MOCK_AMENDMENT_FACILITYVALUE_CHANGE,
 } from '../../../test-mocks/amendment-test-mocks';
-import CONSTANTS from '../../../constants';
 import { getAmendmentFacilityEndDate, postAmendmentFacilityEndDate } from './amendmentFacilityEndDate.controller';
 
 const res = mockRes();
@@ -27,7 +26,8 @@ const user = {
 
 const session = { user, userToken: 'mockToken' };
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+const { dealId, facilityId, amendmentId } = MOCK_AMENDMENT_COVERENDDATE_CHANGE;
+
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
@@ -48,18 +48,16 @@ describe('GET getAmendmentFacilityEndDate', () => {
 
       const req = {
         params: {
-          _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-          amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
-          facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+          _id: dealId,
+          amendmentId,
+          facilityId,
         },
         session,
       };
 
       await getAmendmentFacilityEndDate(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(
-        `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId}/amendment-options`,
-      );
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
     });
   });
 
@@ -73,18 +71,16 @@ describe('GET getAmendmentFacilityEndDate', () => {
 
       const req = {
         params: {
-          _id: MOCK_AMENDMENT_FACILITYVALUE_CHANGE.dealId,
-          amendmentId: MOCK_AMENDMENT_FACILITYVALUE_CHANGE.amendmentId,
-          facilityId: MOCK_AMENDMENT_FACILITYVALUE_CHANGE.facilityId,
+          _id: dealId,
+          amendmentId,
+          facilityId,
         },
         session,
       };
 
       await getAmendmentFacilityEndDate(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(
-        `/case/${MOCK_AMENDMENT_FACILITYVALUE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_FACILITYVALUE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_FACILITYVALUE_CHANGE.amendmentId}/amendment-options`,
-      );
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
     });
 
     it('should redirect to the is using facility end date question page when the user has not yet selected if the facility end date is being used', async () => {
@@ -92,18 +88,16 @@ describe('GET getAmendmentFacilityEndDate', () => {
 
       const req = {
         params: {
-          _id: MOCK_AMENDMENT_FACILITYVALUE_CHANGE.dealId,
-          amendmentId: MOCK_AMENDMENT_FACILITYVALUE_CHANGE.amendmentId,
-          facilityId: MOCK_AMENDMENT_FACILITYVALUE_CHANGE.facilityId,
+          _id: dealId,
+          amendmentId,
+          facilityId,
         },
         session,
       };
 
       await getAmendmentFacilityEndDate(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(
-        `/case/${MOCK_AMENDMENT_FACILITYVALUE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_FACILITYVALUE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_FACILITYVALUE_CHANGE.amendmentId}/is-using-facility-end-date`,
-      );
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
     });
 
     it('should redirect to the is using facility end date question if the facility end date is not to be changed', async () => {
@@ -111,18 +105,16 @@ describe('GET getAmendmentFacilityEndDate', () => {
 
       const req = {
         params: {
-          _id: MOCK_AMENDMENT_FACILITYVALUE_CHANGE.dealId,
-          amendmentId: MOCK_AMENDMENT_FACILITYVALUE_CHANGE.amendmentId,
-          facilityId: MOCK_AMENDMENT_FACILITYVALUE_CHANGE.facilityId,
+          _id: dealId,
+          amendmentId,
+          facilityId,
         },
         session,
       };
 
       await getAmendmentFacilityEndDate(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(
-        `/case/${MOCK_AMENDMENT_FACILITYVALUE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_FACILITYVALUE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_FACILITYVALUE_CHANGE.amendmentId}/is-using-facility-end-date`,
-      );
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
     });
 
     it('should render template with isEditable true when amendment is found and the amendment is in progress', async () => {
@@ -130,17 +122,17 @@ describe('GET getAmendmentFacilityEndDate', () => {
 
       const req = {
         params: {
-          _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-          amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
-          facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+          _id: dealId,
+          amendmentId,
+          facilityId,
         },
         session,
       };
       await getAmendmentFacilityEndDate(req, res);
 
       expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
-        dealId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+        dealId,
+        facilityId,
         facilityEndDateDay: '',
         facilityEndDateMonth: '',
         facilityEndDateYear: '',
@@ -157,17 +149,17 @@ describe('GET getAmendmentFacilityEndDate', () => {
 
       const req = {
         params: {
-          _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-          amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
-          facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+          _id: dealId,
+          amendmentId,
+          facilityId,
         },
         session,
       };
       await getAmendmentFacilityEndDate(req, res);
 
       expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
-        dealId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+        dealId,
+        facilityId,
         facilityEndDateDay: '',
         facilityEndDateMonth: '',
         facilityEndDateYear: '',
@@ -189,17 +181,17 @@ describe('GET getAmendmentFacilityEndDate', () => {
 
       const req = {
         params: {
-          _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-          amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
-          facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+          _id: dealId,
+          amendmentId,
+          facilityId,
         },
         session,
       };
       await getAmendmentFacilityEndDate(req, res);
 
       expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
-        dealId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+        dealId,
+        facilityId,
         facilityEndDateDay: '11',
         facilityEndDateMonth: '12',
         facilityEndDateYear: '2025',
@@ -225,33 +217,33 @@ describe('POST postAmendmentFacilityEndDate', () => {
 
     const req = {
       params: {
-        _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.dealId,
-        amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.amendmentId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.facilityId,
+        _id: dealId,
+        amendmentId,
+        facilityId,
       },
       body: {
-        'facility-end-date-day': 12,
-        'facility-end-date-month': 11,
-        'facility-end-date-year': 2024,
+        'facility-end-date-day': '12',
+        'facility-end-date-month': '11',
+        'facility-end-date-year': '2024',
       },
       session,
     };
 
     await postAmendmentFacilityEndDate(req, res);
     expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
-      dealId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
+      dealId,
       isEditable: true,
-      facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
-      facilityEndDateDay: 12,
-      facilityEndDateMonth: 11,
-      facilityEndDateYear: 2024,
-      errors: {
+      facilityId,
+      facilityEndDateDay: '12',
+      facilityEndDateMonth: '11',
+      facilityEndDateYear: '2024',
+      error: {
         summary: [
           {
             text: 'The facility end date cannot be before the cover start date',
           },
         ],
-        fields: ['facilityEndDate'],
+        fields: ['facility-end-date-day', 'facility-end-date-month', 'facility-end-date-year'],
       },
       user: req.session.user,
     });
@@ -269,33 +261,33 @@ describe('POST postAmendmentFacilityEndDate', () => {
 
     const req = {
       params: {
-        _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.dealId,
-        amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.amendmentId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.facilityId,
+        _id: dealId,
+        amendmentId,
+        facilityId,
       },
       body: {
-        'facility-end-date-day': sixYearsFromNowPlusDay.getDate(),
-        'facility-end-date-month': sixYearsFromNowPlusDay.getMonth() + 1,
-        'facility-end-date-year': sixYearsFromNowPlusDay.getFullYear(),
+        'facility-end-date-day': sixYearsFromNowPlusDay.getDate().toString(),
+        'facility-end-date-month': (sixYearsFromNowPlusDay.getMonth() + 1).toString(),
+        'facility-end-date-year': sixYearsFromNowPlusDay.getFullYear().toString(),
       },
       session,
     };
 
     await postAmendmentFacilityEndDate(req, res);
     expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
-      dealId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
+      dealId,
       isEditable: true,
-      facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
-      facilityEndDateDay: sixYearsFromNowPlusDay.getDate(),
-      facilityEndDateMonth: sixYearsFromNowPlusDay.getMonth() + 1,
-      facilityEndDateYear: sixYearsFromNowPlusDay.getFullYear(),
-      errors: {
+      facilityId,
+      facilityEndDateDay: sixYearsFromNowPlusDay.getDate().toString(),
+      facilityEndDateMonth: (sixYearsFromNowPlusDay.getMonth() + 1).toString(),
+      facilityEndDateYear: sixYearsFromNowPlusDay.getFullYear().toString(),
+      error: {
         summary: [
           {
             text: 'Facility end date cannot be greater than 6 years in the future',
           },
         ],
-        fields: ['facilityEndDate'],
+        fields: ['facility-end-date-day', 'facility-end-date-month', 'facility-end-date-year'],
       },
       user: req.session.user,
     });
@@ -310,23 +302,21 @@ describe('POST postAmendmentFacilityEndDate', () => {
 
     const req = {
       params: {
-        _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.dealId,
-        amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.amendmentId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.facilityId,
+        _id: dealId,
+        amendmentId,
+        facilityId,
       },
       body: {
-        'facility-end-date-day': 12,
-        'facility-end-date-month': 11,
-        'facility-end-date-year': 2025,
+        'facility-end-date-day': '12',
+        'facility-end-date-month': '11',
+        'facility-end-date-year': '2025',
       },
       session,
     };
 
     await postAmendmentFacilityEndDate(req, res);
 
-    expect(res.redirect).toHaveBeenCalledWith(
-      `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.facilityId}/amendment/${MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.amendmentId}/check-answers`,
-    );
+    expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
   });
 
   it('should redirect to the update facility value page when the facility value also needs amending and there are no errors', async () => {
@@ -341,23 +331,21 @@ describe('POST postAmendmentFacilityEndDate', () => {
 
     const req = {
       params: {
-        _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.dealId,
-        amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.amendmentId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.facilityId,
+        _id: dealId,
+        amendmentId,
+        facilityId,
       },
       body: {
-        'facility-end-date-day': 12,
-        'facility-end-date-month': 11,
-        'facility-end-date-year': 2025,
+        'facility-end-date-day': '12',
+        'facility-end-date-month': '11',
+        'facility-end-date-year': '2025',
       },
       session,
     };
 
     await postAmendmentFacilityEndDate(req, res);
 
-    expect(res.redirect).toHaveBeenCalledWith(
-      `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.facilityId}/amendment/${MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.amendmentId}/facility-value`,
-    );
+    expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
   });
 
   it("should redirect to the amendments summary page if there's an error updating the amendment", async () => {
@@ -372,22 +360,20 @@ describe('POST postAmendmentFacilityEndDate', () => {
 
     const req = {
       params: {
-        _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.dealId,
-        amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.amendmentId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE.facilityId,
+        _id: dealId,
+        amendmentId,
+        facilityId,
       },
       body: {
-        'facility-end-date-day': 12,
-        'facility-end-date-month': 11,
-        'facility-end-date-year': 2025,
+        'facility-end-date-day': '12',
+        'facility-end-date-month': '11',
+        'facility-end-date-year': '2025',
       },
       session,
     };
 
     await postAmendmentFacilityEndDate(req, res);
 
-    expect(res.redirect).toHaveBeenCalledWith(
-      `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId}#amendments`,
-    );
+    expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}#amendments`);
   });
 });
