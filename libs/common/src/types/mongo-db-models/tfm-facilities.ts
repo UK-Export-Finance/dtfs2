@@ -27,21 +27,24 @@ export type TfmFacilityAmendment = {
   status: AmendmentStatus;
   version: number;
   changeCoverEndDate?: boolean;
-  coverEndDate?: UnixTimestamp;
-  currentCoverEndDate?: UnixTimestamp;
+  coverEndDate?: UnixTimestamp | null;
+  currentCoverEndDate?: UnixTimestamp | null;
   changeFacilityValue?: boolean;
-  value?: number;
-  currentValue?: number;
-  currency?: Currency;
+  value?: number | null;
+  currentValue?: number | null;
+  currency?: Currency | null;
   requestDate?: number;
-  ukefExposure?: number;
+  ukefExposure?: number | null;
   coveredPercentage?: number;
   requireUkefApproval?: boolean;
   submissionType?: string;
   submittedByPim?: boolean;
   submittedAt?: UnixTimestamp;
+  submissionDate?: UnixTimestamp;
   sendFirstTaskEmail?: boolean;
   firstTaskEmailSent?: boolean;
+  effectiveDate?: number;
+  automaticApprovalEmail?: boolean;
   ukefDecision?: {
     coverEndDate?: string;
     value?: string;
@@ -74,7 +77,7 @@ export type TfmFacilityAmendment = {
       value: number;
       currency: Currency;
     };
-    amendmentExposurePeriodInMonths?: number;
+    exposurePeriodInMonths?: number;
     exposure?: {
       exposure: number | string;
       timestamp: UnixTimestamp | null;
