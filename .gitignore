@@ -44,7 +44,7 @@ coverage
 .idea
 
 # DB
-dtfs-submissions-data-volume*
+dtfs-mongo-volume*
 dtfs-sql-volume*
 **/temp/*
 utils/**/actionsheets/*
