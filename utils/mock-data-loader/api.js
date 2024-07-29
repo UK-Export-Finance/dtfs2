@@ -26,6 +26,11 @@ const createBank = async (bank, token) => {
   return response.data;
 };
 
+/**
+ * @param {object} deal
+ * @param {string} token
+ * @returns {Promise<{ _id: string }>}
+ */
 const createDeal = async (deal, token) => {
   const response = await axios({
     method: 'post',
@@ -43,6 +48,11 @@ const createDeal = async (deal, token) => {
   return response.data;
 };
 
+/**
+ * @param {string} dealId
+ * @param {string} token
+ * @returns {Promise<{ deal: { _id: ObjectId; mockId: number } }>}
+ */
 const getDeal = async (dealId, token) => {
   const response = await axios({
     method: 'get',

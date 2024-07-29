@@ -48,8 +48,8 @@ export const insertMocks = async (mockDataLoaderToken: string): Promise<void> =>
   logger.info('inserting BSS deals', { depth: 1 });
   const insertedDeals: { _id: ObjectId; mockId: number }[] = [];
   for (const deal of MOCKS.DEALS) {
-    const { _id } = (await api.createDeal(deal, makerToken)) as { _id: string };
-    const { deal: createdDeal } = (await api.getDeal(_id, makerToken)) as { deal: { _id: ObjectId; mockId: number } };
+    const { _id } = await api.createDeal(deal, makerToken);
+    const { deal: createdDeal } = await api.getDeal(_id, makerToken);
 
     insertedDeals.push(createdDeal);
   }
