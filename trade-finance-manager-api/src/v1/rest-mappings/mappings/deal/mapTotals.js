@@ -16,10 +16,10 @@ const mapTotals = (facilities) => {
           // if latest amendment then returns value of new amendment
           if (facility?.amendments?.length) {
             const { exchangeRate } = tfm;
-            const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
+            const { value: latestAmendmentValue } = findLatestCompletedAmendment(facility.amendments);
 
-            if (latestAmendmentTFM?.value) {
-              const valueInGBP = calculateNewFacilityValue(exchangeRate, latestAmendmentTFM.value);
+            if (latestAmendmentValue) {
+              const valueInGBP = calculateNewFacilityValue(exchangeRate, latestAmendmentValue);
               return Number(valueInGBP);
             }
           }

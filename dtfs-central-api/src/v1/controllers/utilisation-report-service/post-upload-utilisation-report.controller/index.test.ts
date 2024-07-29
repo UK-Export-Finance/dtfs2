@@ -4,10 +4,10 @@ import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
 import { ApiError, MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { postUploadUtilisationReport, postUploadUtilisationReportPayloadValidator, PostUploadUtilisationReportRequestBody } from '.';
-import { MOCK_UTILISATION_REPORT_RAW_CSV_DATA } from '../../../../../api-tests/mocks/utilisation-reports/utilisation-report-raw-csv-data';
-import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { TransactionFailedError } from '../../../../errors';
+import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
+import { aUtilisationReportRawCsvData } from '../../../../../test-helpers/test-data';
 
 jest.mock('../../../../helpers');
 
@@ -21,7 +21,7 @@ class TestApiError extends ApiError {
 
 describe('post-upload-utilisation-report controller', () => {
   const userId = new ObjectId().toString();
-  const reportData = [MOCK_UTILISATION_REPORT_RAW_CSV_DATA];
+  const reportData = [aUtilisationReportRawCsvData()];
 
   const validPostUploadUtilisationReportRequestBody: PostUploadUtilisationReportRequestBody = {
     reportId: 1,
@@ -96,30 +96,19 @@ describe('post-upload-utilisation-report controller', () => {
   });
 
   describe('postUploadUtilisationReport', () => {
-    const mockDate = new Date('2024-01');
-
-    const utilisationReportRepoFindOneBySpy = jest.spyOn(UtilisationReportRepo, 'findOneBy');
-
-    const getNotReceivedReport = () => UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').build();
-
-    const mockSave = jest.fn();
-
     const mockEntityManager = {
-      save: mockSave,
+      save: jest.fn(),
     } as unknown as EntityManager;
 
-    beforeAll(() => {
-      jest.useFakeTimers();
-      jest.setSystemTime(mockDate);
-    });
+    const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReportId');
 
-    afterAll(() => {
-      jest.useRealTimers();
-    });
+    const mockEventHandler = jest.fn();
+    const mockUtilisationReportStateMachine = {
+      handleEvent: mockEventHandler,
+    } as unknown as UtilisationReportStateMachine;
 
     beforeEach(() => {
-      jest.resetAllMocks();
-
+      utilisationReportStateMachineConstructorSpy.mockResolvedValue(mockUtilisationReportStateMachine);
       jest.mocked(executeWithSqlTransaction).mockImplementation(async (functionToExecute) => await functionToExecute(mockEntityManager));
     });
 
@@ -130,9 +119,6 @@ describe('post-upload-utilisation-report controller', () => {
     it('responds with an specific status code if the transaction throws a specific error', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
-
-      const invalidStatusReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
-      utilisationReportRepoFindOneBySpy.mockResolvedValue(invalidStatusReport);
 
       const errorMessage = 'An error message';
       const errorStatus = HttpStatusCode.BadRequest;
@@ -147,9 +133,6 @@ describe('post-upload-utilisation-report controller', () => {
       await postUploadUtilisationReport(req, res);
 
       // Assert
-      expect(utilisationReportRepoFindOneBySpy).toHaveBeenCalledWith({
-        id: validPostUploadUtilisationReportRequestBody.reportId,
-      });
       expect(res._getStatusCode()).toBe(errorStatus);
       expect(res._getData()).toEqual(`Failed to save utilisation report: ${errorMessage}`);
     });
@@ -159,20 +142,15 @@ describe('post-upload-utilisation-report controller', () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
-        const notReceivedReport = getNotReceivedReport();
-
-        utilisationReportRepoFindOneBySpy.mockResolvedValue(notReceivedReport);
-
-        jest.mocked(mockSave).mockResolvedValue(notReceivedReport);
+        const mockDate = new Date('2024-01-01');
+        const updatedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withDateUploaded(mockDate).build();
+        jest.mocked(mockEventHandler).mockResolvedValue(updatedReport);
 
         // Act
         await postUploadUtilisationReport(req, res);
 
         // Assert
-        expect(utilisationReportRepoFindOneBySpy).toHaveBeenCalledWith({
-          id: validPostUploadUtilisationReportRequestBody.reportId,
-        });
-        expect(mockSave).toHaveBeenCalled();
+        expect(mockEventHandler).toHaveBeenCalled();
 
         expect(res._getStatusCode()).toBe(HttpStatusCode.Created);
         expect(res._getData()).toEqual({ dateUploaded: mockDate });
@@ -182,9 +160,6 @@ describe('post-upload-utilisation-report controller', () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
-        const notReceivedReport = getNotReceivedReport();
-        utilisationReportRepoFindOneBySpy.mockResolvedValue(notReceivedReport);
-
         jest.mocked(executeWithSqlTransaction).mockRejectedValue(new TransactionFailedError());
 
         // Act
@@ -192,9 +167,6 @@ describe('post-upload-utilisation-report controller', () => {
 
         // Assert
         expect(res._getData()).toEqual(expect.stringContaining('Failed to save utilisation report'));
-        expect(utilisationReportRepoFindOneBySpy).toHaveBeenCalledWith({
-          id: validPostUploadUtilisationReportRequestBody.reportId,
-        });
         expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
       });
     });

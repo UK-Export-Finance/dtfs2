@@ -13,8 +13,9 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
 import { mongoDbClient } from '../../../src/drivers/db-client';
-import { aBank } from '../../../test-helpers/test-data/bank';
-import { aReportPeriod } from '../../../test-helpers/test-data/report-period';
+import { aBank, aReportPeriod } from '../../../test-helpers/test-data';
+
+console.error = jest.fn();
 
 const getUrl = (reportId: number | string) => `/v1/utilisation-reports/${reportId}/selected-fee-records-details`;
 

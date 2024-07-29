@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency, FeeRecordStatus } from '../../types';
@@ -6,6 +6,7 @@ import { AuditableBaseEntity } from '../base-entities';
 import { CreateFeeRecordParams, RemoveAllPaymentsParams, UpdateWithKeyingDataParams, UpdateWithStatusParams } from './fee-record.types';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
 import { PaymentEntity } from '../payment';
+import { FacilityUtilisationDataEntity } from '../facility-utilisation-data';
 
 @Entity('FeeRecord')
 export class FeeRecordEntity extends AuditableBaseEntity {
@@ -15,8 +16,19 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * The `_id` of the associated facility in the 'facilities' MongoDB collection
    */
-  @Column()
+  @Column({ type: 'nvarchar', length: '10' })
   facilityId!: string;
+
+  /**
+   * The linked facility utilisation data
+   */
+  @ManyToOne(() => FacilityUtilisationDataEntity, (facilityUtilisationData) => facilityUtilisationData.feeRecords, {
+    nullable: false,
+    eager: true,
+    cascade: ['insert'],
+  })
+  @JoinColumn({ name: 'facilityId' })
+  facilityUtilisationData!: FacilityUtilisationDataEntity;
 
   /**
    * The associated report from the UtilisationReport table
