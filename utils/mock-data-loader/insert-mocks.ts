@@ -3,7 +3,7 @@ import { Bank, PortalUser } from '@ukef/dtfs2-common';
 import api from './api';
 import centralApi from './centralApi';
 import MOCK_PORTAL_USERS, { MockUser } from './portal-users';
-import MOCK_BANKS from './banks';
+import { MOCK_BANKS } from './banks';
 import MOCKS from './bss';
 import { mongoDbClient } from './database/database-client';
 import { logger, generateSaltAndHash } from './helpers';
@@ -28,9 +28,8 @@ export const insertMocks = async (mockDataLoaderToken: string): Promise<void> =>
   await userCollection.insertMany(Object.values(MOCK_PORTAL_USERS).map(mapUserToMongoUser));
 
   logger.info('inserting banks', { depth: 1 });
-  for (const bank of MOCK_BANKS) {
-    await api.createBank(bank, mockDataLoaderToken);
-  }
+  const banksCollection = await mongoDbClient.getCollection('banks');
+  await banksCollection.insertMany(MOCK_BANKS);
 
   logger.info('inserting BSS mandatory-criteria', { depth: 1 });
   for (const mandatoryCriteria of MOCKS.MANDATORY_CRITERIA) {

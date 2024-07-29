@@ -526,35 +526,6 @@ tfmRouter.route('/teams').get(tfmTeamsController.listTfmTeam);
 
 /**
  * @openapi
- * /tfm/teams:
- *   post:
- *     summary: Create a team in tfm-teams collection
- *     tags: [TFM]
- *     description: Create a team in tfm-teams collection
- *     requestBody:
- *       description: Fields required to create a team. No validation in place.
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             team:
- *               type: object
- *               $ref: '#/definitions/TFMTeam'
- *             auditDetails:
- *               type: object
- *               $ref: '#/definitions/tfmAuditDetails'
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             example:
- *               _id: '123456abc'
- */
-tfmRouter.route('/teams').post(tfmTeamsController.createTfmTeam);
-
-/**
- * @openapi
  * /tfm/teams/:id:
  *   get:
  *     summary: Get a team by ID
