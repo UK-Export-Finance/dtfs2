@@ -5,17 +5,20 @@ const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
 
 const MOCK_GEF_DEAL = require('../__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('../__mocks__/mock-cash-contingent-facilities');
+const { AMENDMENT_STATUS } = require('../../constants/deals');
 
 describe('gef deal with amendments', () => {
   const coverEndDateUnix = 1658403289;
 
   const mockAmendmentValueResponse = {
+    status: AMENDMENT_STATUS.COMPLETED,
     value: 5000,
     currency: CURRENCY.GBP,
     amendmentId: '1234',
   };
 
   const mockAmendmentDateResponse = {
+    status: AMENDMENT_STATUS.COMPLETED,
     coverEndDate: coverEndDateUnix,
     amendmentId: '1234',
   };
