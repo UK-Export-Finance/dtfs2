@@ -1,7 +1,7 @@
-import { WithoutId } from 'mongodb';
-import { Bank, BankReportPeriodSchedule } from '@ukef/dtfs2-common';
-
-const MONTHLY_REPORT_PERIOD_SCHEDULE: BankReportPeriodSchedule = [
+/**
+ * @type {import('@ukef/dtfs2-common').BankReportPeriodSchedule}
+ */
+const MONTHLY_REPORT_PERIOD_SCHEDULE = [
   { startMonth: 1, endMonth: 1 },
   { startMonth: 2, endMonth: 2 },
   { startMonth: 3, endMonth: 3 },
@@ -16,7 +16,10 @@ const MONTHLY_REPORT_PERIOD_SCHEDULE: BankReportPeriodSchedule = [
   { startMonth: 12, endMonth: 12 },
 ];
 
-export const MOCK_BANKS: WithoutId<Bank>[] = [
+/**
+ * @type {import('mongodb').WithoutId<import('@ukef/dtfs2-common').Bank>[]}
+ */
+export const MOCK_BANKS = [
   {
     id: '956',
     name: 'Barclays Bank',

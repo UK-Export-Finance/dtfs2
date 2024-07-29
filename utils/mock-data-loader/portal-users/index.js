@@ -1,5 +1,12 @@
-const { ROLES } = require('@ukef/dtfs2-common');
 const { MOCK_BANKS } = require('../banks');
+
+const ROLES = {
+  MAKER: 'maker',
+  CHECKER: 'checker',
+  ADMIN: 'admin',
+  READ_ONLY: 'read-only',
+  PAYMENT_REPORT_OFFICER: 'payment-report-officer',
+};
 
 const UKEF_TEST_BANK_1 = MOCK_BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated)');
 const UKEF_TEST_BANK_2 = MOCK_BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated) 2');
