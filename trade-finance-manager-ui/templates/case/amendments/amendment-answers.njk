@@ -98,7 +98,7 @@
             {% set defaultFacilityEndDate =
               {
                 key:{ text: 'Facility end date' },
-                value: { html: '<span data-cy="amendment--is-using-facility-end-date-response">' + facilityEndDate + '</span>' },
+                value: { html: '<span data-cy="amendment--facility-end-date-response">' + facilityEndDate + '</span>' },
                 actions: { items: [ {
                   html: '<span data-cy="amendment--is-using-facility-end-date-link">Change</span>',
                   href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/facility-end-date',

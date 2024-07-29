@@ -24,7 +24,8 @@ const user = {
 
 const session = { user, userToken: 'mockToken' };
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+const { dealId, facilityId, amendmentId } = MOCK_AMENDMENT_COVERENDDATE_CHANGE;
+
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
@@ -45,18 +46,16 @@ describe('GET getAmendIsUsingFacilityEndDate', () => {
 
       const req = {
         params: {
-          _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-          amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
-          facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+          _id: dealId,
+          amendmentId,
+          facilityId,
         },
         session,
       };
 
       await getAmendmentIsUsingFacilityEndDate(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(
-        `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId}/amendment-options`,
-      );
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
     });
   });
 
@@ -70,18 +69,16 @@ describe('GET getAmendIsUsingFacilityEndDate', () => {
 
       const req = {
         params: {
-          _id: MOCK_AMENDMENT_FACILITYVALUE_CHANGE.dealId,
-          amendmentId: MOCK_AMENDMENT_FACILITYVALUE_CHANGE.amendmentId,
-          facilityId: MOCK_AMENDMENT_FACILITYVALUE_CHANGE.facilityId,
+          _id: dealId,
+          amendmentId,
+          facilityId,
         },
         session,
       };
 
       await getAmendmentIsUsingFacilityEndDate(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(
-        `/case/${MOCK_AMENDMENT_FACILITYVALUE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_FACILITYVALUE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_FACILITYVALUE_CHANGE.amendmentId}/amendment-options`,
-      );
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
     });
 
     it('should render template with isEditable true when amendment is found, the amendment is in progress, and the cover end date is to be changed', async () => {
@@ -89,17 +86,17 @@ describe('GET getAmendIsUsingFacilityEndDate', () => {
 
       const req = {
         params: {
-          _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-          amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
-          facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+          _id: dealId,
+          amendmentId,
+          facilityId,
         },
         session,
       };
       await getAmendmentIsUsingFacilityEndDate(req, res);
 
       expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-is-using-facility-end-date.njk', {
-        dealId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+        dealId,
+        facilityId,
         isEditable: true,
         isUsingFacilityEndDate: undefined,
         user,
@@ -113,17 +110,17 @@ describe('GET getAmendIsUsingFacilityEndDate', () => {
 
       const req = {
         params: {
-          _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-          amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
-          facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+          _id: dealId,
+          amendmentId,
+          facilityId,
         },
         session,
       };
       await getAmendmentIsUsingFacilityEndDate(req, res);
 
       expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-is-using-facility-end-date.njk', {
-        dealId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+        dealId,
+        facilityId,
         isEditable: false,
         isUsingFacilityEndDate: undefined,
         user,
@@ -144,9 +141,9 @@ describe('POST postAmendIsUsingFacilityEndDate', () => {
 
     const req = {
       params: {
-        _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
-        amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
+        _id: dealId,
+        amendmentId,
+        facilityId,
       },
       session,
       body: {
@@ -156,9 +153,9 @@ describe('POST postAmendIsUsingFacilityEndDate', () => {
 
     await postAmendmentIsUsingFacilityEndDate(req, res);
     expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-is-using-facility-end-date.njk', {
-      dealId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
+      dealId,
       isEditable: true,
-      facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+      facilityId,
       isUsingFacilityEndDate: undefined,
       errors: {
         errorSummary: [
@@ -181,67 +178,63 @@ describe('POST postAmendIsUsingFacilityEndDate', () => {
 
     const req = {
       params: {
-        _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-        amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+        _id: dealId,
+        amendmentId,
+        facilityId,
       },
       body: {
-        isUsingFacilityEndDate: true,
+        isUsingFacilityEndDate: 'Yes',
       },
       session,
     };
 
     await postAmendmentIsUsingFacilityEndDate(req, res);
 
-    expect(res.redirect).toHaveBeenCalledWith(
-      `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId}/facility-end-date`,
-    );
+    expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-end-date`);
   });
 
   it('should redirect to the update facility value page when false is selected, the facility value also needs updating and there are no errors', async () => {
+    // TODO DTFS2-7222: This will instead redirect to the bank review page
     api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE });
     api.updateAmendment.mockResolvedValueOnce({ status: 200 });
 
     const req = {
       params: {
-        _id: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.dealId,
-        amendmentId: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.amendmentId,
-        facilityId: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.facilityId,
+        _id: dealId,
+        amendmentId,
+        facilityId,
       },
       body: {
-        isUsingFacilityEndDate: false,
+        isUsingFacilityEndDate: 'No',
       },
       session,
     };
 
     await postAmendmentIsUsingFacilityEndDate(req, res);
 
-    expect(res.redirect).toHaveBeenCalledWith(
-      `/case/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.amendmentId}/facility-value`,
-    );
+    expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
   });
 
   it('should redirect to the check answers page when false is selected, only the cover date is to be updated and there are no errors', async () => {
+    // TODO DTFS2-7222: This will instead redirect to the bank review page
     api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
     api.updateAmendment.mockResolvedValueOnce({ status: 200 });
 
     const req = {
       params: {
-        _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-        amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
-        facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+        _id: dealId,
+        amendmentId,
+        facilityId,
       },
       body: {
-        isUsingFacilityEndDate: false,
+        isUsingFacilityEndDate: 'No',
       },
       session,
     };
 
     await postAmendmentIsUsingFacilityEndDate(req, res);
 
-    expect(res.redirect).toHaveBeenCalledWith(
-      `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId}/check-answers`,
-    );
+    expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
   });
 
   it("should redirect to the amendments summary page if there's an error updating the amendment", async () => {
@@ -250,20 +243,18 @@ describe('POST postAmendIsUsingFacilityEndDate', () => {
 
     const req = {
       params: {
-        _id: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.dealId,
-        amendmentId: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.amendmentId,
-        facilityId: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.facilityId,
+        _id: dealId,
+        amendmentId,
+        facilityId,
       },
       body: {
-        isUsingFacilityEndDate: true,
+        isUsingFacilityEndDate: 'Yes',
       },
       session,
     };
 
     await postAmendmentIsUsingFacilityEndDate(req, res);
 
-    expect(res.redirect).toHaveBeenCalledWith(
-      `/case/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.facilityId}#amendments`,
-    );
+    expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}#amendments`);
   });
 });

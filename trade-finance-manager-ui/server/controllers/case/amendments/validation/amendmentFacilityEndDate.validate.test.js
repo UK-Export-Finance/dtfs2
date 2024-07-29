@@ -8,134 +8,134 @@ describe('facilityEndDateValidation()', () => {
     const testFacilityEndDate = add(new Date(), { years: 6, days: 1 });
     const result = facilityEndDateValidation(
       {
-        'facility-end-date-day': testFacilityEndDate.getDate(),
-        'facility-end-date-month': testFacilityEndDate.getMonth() + 1,
-        'facility-end-date-year': testFacilityEndDate.getFullYear(),
+        day: testFacilityEndDate.getDate().toString(),
+        month: (testFacilityEndDate.getMonth() + 1).toString(),
+        year: testFacilityEndDate.getFullYear().toString(),
       },
       testCoverStartDate,
     );
-    const expected = {
+    const expectedError = {
       summary: [
         {
           text: 'Facility end date cannot be greater than 6 years in the future',
         },
       ],
-      fields: ['facilityEndDate'],
+      fields: ['facility-end-date-day', 'facility-end-date-month', 'facility-end-date-year'],
     };
 
-    expect(result.errorsObject.errors).toEqual(expected);
+    expect(result.error).toEqual(expectedError);
   });
 
   it('should not return an error if the facility end date is less than 6 years in the future', () => {
     const testFacilityEndDate = add(new Date(), { years: 6, days: -1 });
     const result = facilityEndDateValidation(
       {
-        'facility-end-date-day': testFacilityEndDate.getDate(),
-        'facility-end-date-month': testFacilityEndDate.getMonth() + 1,
-        'facility-end-date-year': testFacilityEndDate.getFullYear(),
+        day: testFacilityEndDate.getDate().toString(),
+        month: (testFacilityEndDate.getMonth() + 1).toString(),
+        year: testFacilityEndDate.getFullYear().toString(),
       },
       testCoverStartDate,
     );
 
-    expect(result.errorsObject).toEqual({});
+    expect(result.error).toEqual({});
   });
 
   it('should return an error if the facility end date is before the cover start date', () => {
     const result = facilityEndDateValidation(
       {
-        'facility-end-date-day': 2,
-        'facility-end-date-month': 8,
-        'facility-end-date-year': 2025,
+        day: '2',
+        month: '8',
+        year: '2025',
       },
       testCoverStartDate,
     );
-    const expected = {
+    const expectedError = {
       summary: [
         {
           text: 'The facility end date cannot be before the cover start date',
         },
       ],
-      fields: ['facilityEndDate'],
+      fields: ['facility-end-date-day', 'facility-end-date-month', 'facility-end-date-year'],
     };
 
-    expect(result.errorsObject.errors).toEqual(expected);
+    expect(result.error).toEqual(expectedError);
   });
 
   it('should return an error if a field is left blank', () => {
     const result = facilityEndDateValidation(
       {
-        'facility-end-date-day': null,
-        'facility-end-date-month': 8,
-        'facility-end-date-year': 2025,
+        day: '',
+        month: '8',
+        year: '2025',
       },
       testCoverStartDate,
     );
-    const expected = {
+    const expectedError = {
       summary: [
         {
           text: 'Facility end date must include a day',
         },
       ],
-      fields: ['facilityEndDateDay'],
+      fields: ['facility-end-date-day'],
     };
 
-    expect(result.errorsObject.errors).toEqual(expected);
+    expect(result.error).toEqual(expectedError);
   });
 
   it('should return an error if nothing is entered', () => {
     const result = facilityEndDateValidation(
       {
-        'facility-end-date-day': null,
-        'facility-end-date-month': null,
-        'facility-end-date-year': null,
+        day: '',
+        month: '',
+        year: '',
       },
       testCoverStartDate,
     );
-    const expected = {
+    const expectedError = {
       summary: [
         {
-          text: 'Enter the Facility end date',
+          text: 'Enter the facility end date',
         },
       ],
-      fields: ['facilityEndDate'],
+      fields: ['facility-end-date-day', 'facility-end-date-month', 'facility-end-date-year'],
     };
 
-    expect(result.errorsObject.errors).toEqual(expected);
+    expect(result.error).toEqual(expectedError);
   });
 
-  it('should return an error if a field in the correct format is entered', () => {
+  it('should return an error if a field in the incorrect format is entered', () => {
     const result = facilityEndDateValidation(
       {
-        'facility-end-date-day': 12,
-        'facility-end-date-month': 12,
-        'facility-end-date-year': 20255,
+        day: '12',
+        month: '12',
+        year: '20255',
       },
       testCoverStartDate,
     );
-    const expected = {
+    const expectedError = {
       summary: [
         {
           text: 'Facility end date must be a real date',
         },
       ],
-      fields: ['facilityEndDateYear'],
+      fields: ['facility-end-date-year'],
     };
 
-    expect(result.errorsObject.errors).toEqual(expected);
+    expect(result.error).toEqual(expectedError);
   });
 
   it('should return no errors and a correctly formatted facility date if all fields are entered correctly', () => {
     const result = facilityEndDateValidation(
       {
-        'facility-end-date-day': 12,
-        'facility-end-date-month': 12,
-        'facility-end-date-year': 2025,
+        day: '12',
+        month: '12',
+        year: '2025',
       },
       testCoverStartDate,
     );
     const expected = {
-      errorsObject: {},
-      facilityEndDate: new Date(2025, 11, 12, 0, 0, 0).toISOString(),
+      error: {},
+      facilityEndDate: new Date(2025, 11, 12, 0, 0, 0),
     };
 
     expect(result).toEqual(expected);
