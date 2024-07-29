@@ -41,13 +41,13 @@ const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYear, { errRe
   }
 
   if (!dateIsFullyComplete) {
-    const fieldsToValidate = [
+    const fieldToValidate = [
       { field: day, name: 'day' },
       { field: month, name: 'month' },
       { field: year, name: 'year' },
     ];
 
-    const { missingFields, subFieldErrorRefs } = fieldsToValidate.reduce(
+    const { missingFields, subFieldErrorRefs } = fieldToValidate.reduce(
       (acc: { missingFields: string[]; subFieldErrorRefs: string[] }, { field, name }) => {
         if (!field) {
           acc.missingFields.push(name);
@@ -76,13 +76,13 @@ const validateAllFieldsAreNumbers = ({ day, month, year }: DayMonthYear, { errRe
   const oneOrTwoDigitSchema = Joi.string().min(1).max(2).pattern(/^\d+$/);
   const fourDigitSchema = Joi.string().length(4).pattern(/^\d+$/).required();
 
-  const fieldsToValidate: { field: string; schema: Joi.StringSchema; fieldName: 'day' | 'month' | 'year' }[] = [
+  const fieldToValidate: { field: string; schema: Joi.StringSchema; fieldName: 'day' | 'month' | 'year' }[] = [
     { field: day, schema: oneOrTwoDigitSchema, fieldName: 'day' },
     { field: month, schema: oneOrTwoDigitSchema, fieldName: 'month' },
     { field: year, schema: fourDigitSchema, fieldName: 'year' },
   ];
 
-  const errors: ValidationError[] = fieldsToValidate.reduce((acc: ValidationError[], { field, schema, fieldName }) => {
+  const errors: ValidationError[] = fieldToValidate.reduce((acc: ValidationError[], { field, schema, fieldName }) => {
     const validation = schema.validate(field);
     if (validation.error) {
       acc.push({

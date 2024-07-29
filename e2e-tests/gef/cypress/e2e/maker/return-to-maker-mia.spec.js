@@ -11,6 +11,8 @@ import statusBanner from '../pages/application-status-banner';
 
 let dealId;
 
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
 context('Return to Maker as MIA', () => {
   before(() => {
     cy.loadData();
@@ -105,8 +107,11 @@ context('Return to Maker as MIA', () => {
       applicationDetails.facilitySummaryListRowAction(0, 0).contains('Change');
       applicationDetails.facilitySummaryListRowAction(0, 1).contains('Change');
       applicationDetails.facilitySummaryListRowAction(0, 2).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(0, 4).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(0, 5).contains('Change');
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListRowAction(0, 3).contains('Add');
+      }
+      applicationDetails.facilitySummaryListRowAction(0, facilityEndDateEnabled ? 4 : 3).contains('Change');
+      applicationDetails.facilitySummaryListRowAction(0, facilityEndDateEnabled ? 5 : 4).contains('Change');
 
       // should be able to edit company house reg number
       applicationDetails.exporterSummaryListRowAction(0, 0).contains('Change');

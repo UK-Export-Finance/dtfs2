@@ -77,22 +77,12 @@ class Facility {
       }
       // used to store the user details of maker who changed unissued facility to issued
       this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker) || null;
-      if (isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
-        if ('isUsingFacilityEndDate' in req && typeof req.isUsingFacilityEndDate !== 'boolean') {
-          throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
-        }
-        this.isUsingFacilityEndDate = req.isUsingFacilityEndDate ?? null;
-        if ('bankReviewDate' in req) {
-          const bankReviewDate = parseISO(req.bankReviewDate);
-          if (!isValid(bankReviewDate)) {
-            throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
-          }
-          this.bankReviewDate = bankReviewDate;
-        } else {
-          this.bankReviewDate = null;
-        }
 
-        this.facilityEndDate = null;
+      if (isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
+        this.#validateAndSetFacilityEndDateValues(req);
+        this.isUsingFacilityEndDate = this.isUsingFacilityEndDate ?? null;
+        this.bankReviewDate = this.bankReviewDate ?? null;
+        this.facilityEndDate = this.facilityEndDate ?? null;
       }
     } else {
       // update facility
@@ -219,37 +209,38 @@ class Facility {
         this.specialIssuePermission = Object(req.specialIssuePermission);
       }
 
-      if ('isUsingFacilityEndDate' in req) {
-        if (typeof req.isUsingFacilityEndDate !== 'boolean') {
-          throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
-        }
-        this.isUsingFacilityEndDate = req.isUsingFacilityEndDate;
-      }
-
-      if (req.facilityEndDate != null) {
-        const timestamp = convertToTimestamp(req.facilityEndDate);
-        this.facilityEndDate = new Date(timestamp);
-      }
-
-      if ('bankReviewDate' in req) {
-        const bankReviewDate = parseISO(req.bankReviewDate);
-        if (!isValid(bankReviewDate)) {
-          throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
-        }
-        this.bankReviewDate = bankReviewDate;
-      }
-
-      if ('bankReviewDate' in req) {
-        const bankReviewDate = parseISO(req.bankReviewDate);
-        if (!isValid(bankReviewDate)) {
-          throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
-        }
-        this.bankReviewDate = bankReviewDate;
+      if (isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
+        this.#validateAndSetFacilityEndDateValues(req);
       }
 
       this.updatedAt = Date.now();
     }
     this.auditRecord = req.auditRecord;
+  }
+
+  #validateAndSetFacilityEndDateValues(req) {
+    if ('isUsingFacilityEndDate' in req) {
+      if (typeof req.isUsingFacilityEndDate !== 'boolean') {
+        throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
+      }
+      this.isUsingFacilityEndDate = req.isUsingFacilityEndDate;
+    }
+
+    if ('facilityEndDate' in req) {
+      const facilityEndDate = parseISO(req.facilityEndDate);
+      if (!isValid(facilityEndDate)) {
+        throw new InvalidParameterError('facilityEndDate', req.facilityEndDate);
+      }
+      this.bankReviewDate = facilityEndDate;
+    }
+
+    if ('bankReviewDate' in req) {
+      const bankReviewDate = parseISO(req.bankReviewDate);
+      if (!isValid(bankReviewDate)) {
+        throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
+      }
+      this.bankReviewDate = bankReviewDate;
+    }
   }
 }
 

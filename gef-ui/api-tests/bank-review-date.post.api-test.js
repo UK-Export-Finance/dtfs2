@@ -180,9 +180,7 @@ describe('bank-review-date routes', () => {
 });
 
 function postBankReviewDateWithHeaders({ body, headers, saveAndReturn = false }) {
-  return post(body, { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' }).to(
-    `/application-details/${dealId}/facilities/${facilityId}/bank-review-date${saveAndReturn ? '?saveAndReturn=true' : ''}`,
-  );
+  return post(body, headers).to(`/application-details/${dealId}/facilities/${facilityId}/bank-review-date${saveAndReturn ? '?saveAndReturn=true' : ''}`);
 }
 
 function postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn = false }) {
