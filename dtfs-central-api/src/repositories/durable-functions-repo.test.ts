@@ -1,4 +1,5 @@
 import { when } from 'jest-when';
+import { DeleteResult } from 'mongodb';
 import { AuditDetails, DURABLE_FUNCTIONS_LOG, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { deleteMany } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient as db } from '../drivers/db-client';
@@ -41,7 +42,7 @@ describe('durable-functions-repo', () => {
     });
 
     it('returns the response from deleteMany', async () => {
-      const mockDeleteManyResponse = { acknowledged: true };
+      const mockDeleteManyResponse: DeleteResult = { acknowledged: true, deletedCount: 1 };
       when(deleteMany)
         .calledWith({
           filter: expectedDeleteManyCalledWith,

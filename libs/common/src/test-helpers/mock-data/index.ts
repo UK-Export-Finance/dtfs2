@@ -4,3 +4,4 @@ export * from './fee-record.entity.mock-builder';
 export * from './fee-record.entity.mock';
 export * from './payment.entity.mock-builder';
 export * from './company-registration-numbers.mock';
+export * from './facility-utilisation-data.entity.mock-builder';

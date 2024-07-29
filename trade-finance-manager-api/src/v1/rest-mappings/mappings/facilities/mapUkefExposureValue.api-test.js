@@ -1,7 +1,7 @@
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const mapUkefExposureValue = require('./mapUkefExposureValue');
 const { formattedNumber } = require('../../../../utils/number');
-const { AMENDMENT_UW_DECISION } = require('../../../../constants/deals');
+const { AMENDMENT_UW_DECISION, AMENDMENT_STATUS } = require('../../../../constants/deals');
 
 describe('mapUkefExposureValue()', () => {
   const mockAmendmentValueResponse = {
@@ -46,8 +46,11 @@ describe('mapUkefExposureValue()', () => {
   });
 
   it('should return exposure from amendment if amendment completed', () => {
-    mockFacility.amendments[0].tfm = {
-      exposure: { ...mockAmendmentValueResponse },
+    mockFacility.amendments[0] = {
+      status: AMENDMENT_STATUS.COMPLETED,
+      tfm: {
+        exposure: { ...mockAmendmentValueResponse },
+      },
     };
     const result = mapUkefExposureValue(mockFacilityTfm, mockFacility);
 
