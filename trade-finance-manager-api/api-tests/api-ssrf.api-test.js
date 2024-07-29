@@ -2,6 +2,7 @@ const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
+const { InvalidFacilityIdError } = require('@ukef/dtfs2-common');
 const { MOCK_TFM_SESSION_USER } = require('../src/v1/__mocks__/mock-tfm-session-user');
 const { MOCK_PORTAL_USERS } = require('../src/v1/__mocks__/mock-portal-users');
 
@@ -405,25 +406,19 @@ describe('API is protected against SSRF attacks', () => {
       mockAxios.onPost(url).reply(200, mockResponse);
     });
 
-    it('Returns an error when a url traversal is supplied', async () => {
+    it('throws an api error to be handled by middleware when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.createFacilityAmendment(urlTraversal, generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id));
-
-      expect(response).toMatchObject(expectedResponse);
+      await expect(api.createFacilityAmendment(urlTraversal, generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id))).rejects.toThrow(InvalidFacilityIdError);
     });
 
-    it('Returns an error when a local IP is supplied', async () => {
+    it('throws an api error to be handled by middleware  when a local IP is supplied', async () => {
       const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.createFacilityAmendment(localIp, generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id));
-
-      expect(response).toMatchObject(expectedResponse);
+      await expect(api.createFacilityAmendment(localIp, generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id))).rejects.toThrow(InvalidFacilityIdError);
     });
 
-    it('Makes an axios request when the facility id is valid', async () => {
+    it('makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
       const response = await api.createFacilityAmendment(validFacilityId, generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id));
