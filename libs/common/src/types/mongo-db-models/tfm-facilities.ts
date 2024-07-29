@@ -60,7 +60,7 @@ export type TfmFacilityAmendment = {
   bankDecision?: {
     decision?: string;
     receivedDate: UnixTimestamp;
-    effectiveDate?: UnixTimestamp;
+    effectiveDate?: UnixTimestamp | null;
     submitted?: boolean;
     banksDecisionEmail?: boolean;
     banksDecisionEmailSent?: boolean;

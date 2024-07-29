@@ -51,7 +51,7 @@ const PutFacilityAmendmentSchema = z.object({
         .object({
           decision: z.string(),
           receivedDate: z.number(),
-          effectiveDate: z.number(),
+          effectiveDate: z.number().nullable(),
           submitted: z.boolean(),
           banksDecisionEmail: z.boolean(),
           banksDecisionEmailSent: z.boolean(),
