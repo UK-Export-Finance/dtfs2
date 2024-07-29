@@ -3,6 +3,9 @@ import { UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentGroupSeeder } from './fee-record-payment-group.seeder';
 
 export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
+  const manuallyCompletedReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, { status: 'RECONCILIATION_COMPLETED' });
+  await FeeRecordPaymentGroupSeeder.forManuallyCompletedReport(manuallyCompletedReport).addManyRandomFeeRecords(50).save(dataSource);
+
   const pendingReconciliationReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, { status: 'PENDING_RECONCILIATION' });
   await FeeRecordPaymentGroupSeeder.forReport(pendingReconciliationReport).addManyRandomFeeRecords(50).save(dataSource);
 
