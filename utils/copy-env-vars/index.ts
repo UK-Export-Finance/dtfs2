@@ -25,8 +25,8 @@ const baseEnvFilePath = path.join(basePath, '.env');
  * This function updates the .env file to apply these rules
  */
 const updateEnvVars = (fileData: string): string => {
-  const MONGODB_URI_REGEX = /(MONGODB_URI=.*)(dtfs-submissions-data)/g;
-  const MONGODB_URI_QA_REGEX = /(MONGODB_URI_QA=.*)(dtfs-submissions-data)/g;
+  const MONGODB_URI_REGEX = /(MONGODB_URI=.*)(dtfs-mongo)/g;
+  const MONGODB_URI_QA_REGEX = /(MONGODB_URI_QA=.*)(dtfs-mongo)/g;
   const SQL_DB_HOST_REGEX = /(SQL_DB_HOST=.*)(dtfs-sql)/g;
 
   const replacePattern = '$1localhost';
