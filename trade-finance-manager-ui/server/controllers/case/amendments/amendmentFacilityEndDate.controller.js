@@ -1,7 +1,6 @@
-const { isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { format } = require('date-fns');
 const api = require('../../../api');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const facilityEndDateValidation = require('./validation/amendmentFacilityEndDate.validate');
 
 const getNextPage = (status, changeFacilityValue, dealId, facilityId, amendmentId) => {

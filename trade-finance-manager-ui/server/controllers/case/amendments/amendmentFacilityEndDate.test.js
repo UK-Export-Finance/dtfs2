@@ -1,4 +1,4 @@
-import { isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS } from '@ukef/dtfs2-common';
+import { isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS, AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { add } from 'date-fns';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
@@ -143,7 +143,7 @@ describe('GET getAmendmentFacilityEndDate', () => {
     });
 
     it('should render template with isEditable false when amendment is found but the amendment has been completed', async () => {
-      const COMPLETED_AMENDMENT = { ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE, status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.COMPLETED };
+      const COMPLETED_AMENDMENT = { ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE, status: AMENDMENT_STATUS.COMPLETED };
 
       api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: COMPLETED_AMENDMENT });
 
