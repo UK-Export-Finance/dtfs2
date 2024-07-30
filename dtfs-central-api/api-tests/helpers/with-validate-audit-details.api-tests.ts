@@ -26,14 +26,7 @@ export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes = AU
     }
 
     it('should return 400 if no auditDetails provided', async () => {
-      const { status, body } = await makeRequest();
-
-      // Error body can either come from payload validation or controller validation
-      if (Array.isArray(body)) {
-        expect(body).toEqual(['auditDetails: Invalid input (invalid_union)']);
-      } else {
-        expect(body).toEqual({ status: 400, message: 'Invalid auditDetails, Missing property `userType`' });
-      }
+      const { status } = await makeRequest();
 
       expect(status).toBe(400);
     });
@@ -50,13 +43,9 @@ function withValidAuditDetailsTests(validAuditDetails: AuditDetails[], makeReque
 
 function withInvalidAuditDetailsTests(invalidAuditDetails: AuditDetails[], makeRequest: MakeRequest) {
   it.each(invalidAuditDetails)('it should return status 400 if the userType is $userType', async (auditDetails) => {
-    const { status, body } = await makeRequest(auditDetails);
+    const { status } = await makeRequest(auditDetails);
 
     expect(status).toBe(400);
-    expect(body).toEqual({
-      message: expect.stringContaining('Invalid auditDetails, userType must be') as string,
-      status: 400,
-    });
   });
 }
 

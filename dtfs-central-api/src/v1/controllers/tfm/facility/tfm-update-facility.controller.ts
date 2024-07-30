@@ -53,7 +53,7 @@ export const updateFacilityPut = async (req: UpdateFacilityPutRequest, res: Resp
     console.error('Error updating facility:', error);
     if (error instanceof ApiError) {
       const { status, message } = error;
-      const errorMessage = error instanceof InvalidAuditDetailsError ? `Invalid auditDetails, ${message}` : message;
+      const errorMessage = error instanceof InvalidAuditDetailsError ? `Invalid auditDetails: ${message}` : message;
       return res.status(status).send({ status, message: errorMessage });
     }
     return res.status(HttpStatusCode.InternalServerError).send({

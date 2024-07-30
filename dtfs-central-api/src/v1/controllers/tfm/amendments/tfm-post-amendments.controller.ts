@@ -53,7 +53,7 @@ export const postTfmAmendment = async (req: PostTfmAmendmentRequest, res: Respon
     console.error('Error posting amendment:', error);
     if (error instanceof ApiError) {
       const { status, message } = error;
-      const errorMessage = error instanceof InvalidAuditDetailsError ? `Invalid auditDetails, ${message}` : message;
+      const errorMessage = error instanceof InvalidAuditDetailsError ? `Invalid auditDetails: ${message}` : message;
       return res.status(status).send({ status, message: errorMessage });
     }
     return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'An unknown error occurred' });

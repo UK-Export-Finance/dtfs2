@@ -42,7 +42,7 @@ export const updateTfmAmendment = async (req: UpdateTfmAmendmentRequest, res: Re
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails, ${error.message}`,
+        message: `Invalid auditDetails: ${error.message}`,
       });
     }
     if (error instanceof ApiError) {

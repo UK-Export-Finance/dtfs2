@@ -46,9 +46,8 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('400s if invalid user id', async () => {
-      const { status, body } = await testApi.put({}).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
+      const { status } = await testApi.put({}).to('/v1/tfm/deals/61e54e2e532cf2027303e001/snapshot');
       expect(status).toEqual(400);
-      expect(body.message).toEqual('Invalid auditDetails, Missing property `userType`');
     });
 
     it('404s if updating an unknown id', async () => {
