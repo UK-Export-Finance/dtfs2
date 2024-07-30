@@ -1,4 +1,5 @@
 import {
+  Currency,
   CurrencyAndAmount,
   FeeRecordEntity,
   PaymentEntity,
@@ -6,11 +7,35 @@ import {
   SelectedFeeRecordDetails,
   SelectedFeeRecordsDetails,
   SelectedFeeRecordsPaymentDetails,
+  SelectedFeeRecordsCompatiblePaymentGroups,
 } from '@ukef/dtfs2-common';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
+import { FeeRecordPaymentGroup } from '../../../../types/utilisation-reports';
+import { getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../helpers';
+import { mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups } from '../get-utilisation-report-reconciliation-details-by-id.controller/helpers/map-fee-record-payment-entity-groups-to-fee-record-payment-groups';
+import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
+
+const mapFeeRecordPaymentGroupsToSelectedFeeRecordsCompatiblePaymentGroups = (
+  feeRecordPaymentGroups: FeeRecordPaymentGroup[] | undefined,
+): SelectedFeeRecordsCompatiblePaymentGroups | undefined => {
+  if (!feeRecordPaymentGroups) {
+    return undefined;
+  }
+
+  return feeRecordPaymentGroups
+    .filter((group) => group.paymentsReceived !== null && group.paymentsReceived.length > 0)
+    .map((group) =>
+      group.paymentsReceived!.map((groupPayment) => ({
+        id: groupPayment.id,
+        amount: groupPayment.amount,
+        currency: groupPayment.currency,
+        reference: groupPayment.reference,
+      })),
+    );
+};
 
 const mapPaymentEntityToSelectedFeeRecordsPaymentDetails = (paymentEntity: PaymentEntity): SelectedFeeRecordsPaymentDetails => ({
   amount: paymentEntity.amount,
@@ -46,11 +71,19 @@ export const canFeeRecordsBeAddedToExistingPayment = async (reportId: string, fe
   return await PaymentRepo.existsUnmatchedPaymentOfCurrencyForReportWithId(Number(reportId), reportedPaymentCurrency);
 };
 
+export const getExistingCompatibleFeeRecordPaymentGroups = async (reportId: string, paymentCurrency: Currency): Promise<FeeRecordPaymentGroup[]> => {
+  const feeRecords = await FeeRecordRepo.findByReportIdAndPaymentCurrencyAndStatusDoesNotMatchWithPayments(Number(reportId), paymentCurrency);
+
+  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecords);
+  return mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
+};
+
 export const mapToSelectedFeeRecordDetails = async (
   bankId: string,
   reportPeriod: ReportPeriod,
   selectedFeeRecordEntities: FeeRecordEntity[],
   canAddToExistingPayment: boolean,
+  existingCompatibleFeeRecordPaymentGroups?: FeeRecordPaymentGroup[],
 ): Promise<SelectedFeeRecordsDetails> => {
   const bankName = await getBankNameById(bankId);
   if (!bankName) {
@@ -62,6 +95,8 @@ export const mapToSelectedFeeRecordDetails = async (
   const recordedPaymentDetails = distinctPaymentsForFeeRecords.map((paymentEntity) => mapPaymentEntityToSelectedFeeRecordsPaymentDetails(paymentEntity));
   const selectedFeeRecordDetails = selectedFeeRecordEntities.map((feeRecordEntity) => mapFeeRecordEntityToSelectedFeeRecordDetails(feeRecordEntity));
 
+  const mappedExistingCompatiblePaymentGroups = mapFeeRecordPaymentGroupsToSelectedFeeRecordsCompatiblePaymentGroups(existingCompatibleFeeRecordPaymentGroups);
+
   return {
     bank: { name: bankName },
     reportPeriod,
@@ -69,5 +104,6 @@ export const mapToSelectedFeeRecordDetails = async (
     feeRecords: selectedFeeRecordDetails,
     payments: recordedPaymentDetails,
     canAddToExistingPayment,
+    existingCompatiblePaymentGroups: mappedExistingCompatiblePaymentGroups,
   };
 };

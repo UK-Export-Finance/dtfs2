@@ -1,6 +1,6 @@
 import { In } from 'typeorm';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
 
 export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).extend({
   /**
@@ -44,6 +44,24 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
         report: { id: reportId },
       },
       relations: { report: true },
+    });
+  },
+
+  /**
+   * Finds fee record entities with status 'DOES_NOT_MATCH' for a given report 
+   * and payment currency, with the payments attached.
+   * @param reportId - The report id of the report attached to the fee records
+   * @param paymentCurrency - The payment currency to search by
+   * @returns The found fee record entities with their associated payments
+   */
+  async findByReportIdAndPaymentCurrencyAndStatusDoesNotMatchWithPayments(reportId: number, paymentCurrency: Currency): Promise<FeeRecordEntity[]> {
+    return await this.find({
+      where: {
+        report: { id: reportId },
+        status: In([FEE_RECORD_STATUS.DOES_NOT_MATCH]),
+        paymentCurrency,
+      },
+      relations: { payments: true },
     });
   },
 });

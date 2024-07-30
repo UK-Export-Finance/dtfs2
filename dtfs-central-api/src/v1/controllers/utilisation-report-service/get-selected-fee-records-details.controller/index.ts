@@ -5,7 +5,7 @@ import { UtilisationReportRepo } from '../../../../repositories/utilisation-repo
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { NotFoundError, ApiError, InvalidPayloadError } from '../../../../errors';
 import { validateSelectedFeeRecordsAllHaveSamePaymentCurrency } from '../../../validation/utilisation-report-service/selected-fee-record-validator';
-import { canFeeRecordsBeAddedToExistingPayment, mapToSelectedFeeRecordDetails } from './helpers';
+import { canFeeRecordsBeAddedToExistingPayment, getExistingCompatibleFeeRecordPaymentGroups, mapToSelectedFeeRecordDetails } from './helpers';
 
 type GetSelectedFeeRecordDetailsRequestBody = {
   feeRecordIds: number[];
@@ -15,6 +15,9 @@ export type GetSelectedFeeRecordDetailsRequest = CustomExpressRequest<{
   params: {
     id: string;
   };
+  query: {
+    includeExistingCompatiblePaymentGroups?: 'true' | 'false';
+  };
   reqBody: GetSelectedFeeRecordDetailsRequestBody;
 }>;
 
@@ -22,6 +25,7 @@ type ResponseBody = SelectedFeeRecordsDetails | string;
 
 export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetailsRequest, res: Response<ResponseBody>) => {
   const { id: reportId } = req.params;
+  const { includeExistingCompatiblePaymentGroups } = req.query;
   const selectedFeeRecordIds = req.body.feeRecordIds;
 
   try {
@@ -43,12 +47,18 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
 
     validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords);
 
+    const existingCompatibleFeeRecordPaymentGroups =
+      includeExistingCompatiblePaymentGroups === 'true'
+        ? await getExistingCompatibleFeeRecordPaymentGroups(reportId, selectedFeeRecords[0].paymentCurrency)
+        : undefined;
+
     const canAddToExistingPayment = await canFeeRecordsBeAddedToExistingPayment(reportId, selectedFeeRecords);
     const selectedFeeRecordsDetails = await mapToSelectedFeeRecordDetails(
       utilisationReport.bankId,
       utilisationReport.reportPeriod,
       selectedFeeRecords,
       canAddToExistingPayment,
+      existingCompatibleFeeRecordPaymentGroups,
     );
 
     return res.status(HttpStatusCode.Ok).send(selectedFeeRecordsDetails);
