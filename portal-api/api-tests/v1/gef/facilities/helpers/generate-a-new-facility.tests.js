@@ -42,7 +42,7 @@ const generateANewFacility = ({ dealId, makerId, dealVersion }) => {
     },
   };
 
-  if (Number(dealVersion) === 1) {
+  if (dealVersion >= 1) {
     facility.details.bankReviewDate = null;
     facility.details.facilityEndDate = null;
     facility.details.isUsingFacilityEndDate = null;

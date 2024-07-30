@@ -24,6 +24,7 @@ describe('bank-review-date routes', () => {
   beforeEach(async () => {
     resetAllWhenMocks();
     await storage.flush();
+    jest.clearAllMocks();
   });
 
   afterAll(async () => {
@@ -79,7 +80,7 @@ describe('bank-review-date routes', () => {
         ({ sessionCookie } = await storage.saveUserSession([MAKER]));
       });
 
-      it('returns 200 if the request body fails validation', async () => {
+      it('returns 200 & does not update the database if the request body fails validation', async () => {
         // Arrange
         const body = { 'bank-review-date-year': '2023', 'bank-review-date-month': '8', 'bank-review-date-day': '12' };
 
@@ -88,9 +89,10 @@ describe('bank-review-date routes', () => {
 
         // Assert
         expect(response.status).toBe(200);
+        expect(api.updateFacility).toHaveBeenCalledTimes(0);
       });
 
-      it('returns 200 if the request body fails validation & saveAndReturn = true', async () => {
+      it('returns 200 & does not update the database if the request body fails validation & saveAndReturn = true', async () => {
         // Arrange
         const body = { 'bank-review-date-year': '2023', 'bank-review-date-month': '8', 'bank-review-date-day': '12' };
 
@@ -99,6 +101,7 @@ describe('bank-review-date routes', () => {
 
         // Assert
         expect(response.status).toBe(200);
+        expect(api.updateFacility).toHaveBeenCalledTimes(0);
       });
 
       it('redirects to application details page if the bank review date is blank & saveAndReturn = true', async () => {
@@ -142,7 +145,7 @@ describe('bank-review-date routes', () => {
         const bankReviewDate = new Date(1723417200000);
         const body = {
           'bank-review-date-year': bankReviewDate.getFullYear().toString(),
-          'bank-review-date-month': (bankReviewDate.getMonth() + 1).toString,
+          'bank-review-date-month': (bankReviewDate.getMonth() + 1).toString(),
           'bank-review-date-day': bankReviewDate.getDate().toString(),
         };
 

@@ -1,4 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { CURRENCY, getCurrentGefDealVersion } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../../database-helper');
 const CONSTANTS = require('../../../../src/constants');
 const { FACILITY_TYPE, FACILITY_PAYMENT_TYPE, ERROR } = require('../../../../src/v1/gef/enums');
@@ -18,8 +18,12 @@ const { calculateUkefExposure, calculateGuaranteeFee } = require('../../../../sr
 const { DB_COLLECTIONS } = require('../../../fixtures/constants');
 const { generateANewFacility } = require('./helpers/generate-a-new-facility.tests');
 
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  getCurrentGefDealVersion: jest.fn(),
+}));
+
 describe(baseUrl, () => {
-  const originalEnv = process.env;
   let aMaker;
   let mockApplication;
   let newFacility;
@@ -33,8 +37,6 @@ describe(baseUrl, () => {
 
   beforeEach(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
-
-    mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
 
     completeUpdate = {
       hasBeenIssued: false,
@@ -61,17 +63,15 @@ describe(baseUrl, () => {
   });
 
   describe(`PUT ${baseUrl}/:id`, () => {
-    describe.each(['0', '1'])('with GEF_DEAL_VERSION = %s', (dealVersion) => {
-      beforeAll(() => {
-        process.env.GEF_DEAL_VERSION = dealVersion;
-      });
-
-      beforeEach(() => {
+    describe.each([0, 1])('with GEF_DEAL_VERSION = %s', (dealVersion) => {
+      beforeEach(async () => {
+        jest.mocked(getCurrentGefDealVersion).mockReturnValue(dealVersion);
+        mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
         newFacility = generateANewFacility({ dealId: mockApplication.body._id, makerId: aMaker._id, dealVersion });
       });
 
-      afterAll(() => {
-        process.env = originalEnv;
+      afterEach(() => {
+        jest.resetAllMocks();
       });
 
       it('rejects requests that do not present a valid Authorization token', async () => {
@@ -457,12 +457,13 @@ describe(baseUrl, () => {
     });
 
     describe('with GEF_DEAL_VERSION = 0', () => {
-      beforeAll(() => {
-        process.env.GEF_DEAL_VERSION = '0';
+      beforeEach(async () => {
+        jest.mocked(getCurrentGefDealVersion).mockReturnValue(0);
+        mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
       });
 
-      afterAll(() => {
-        process.env = originalEnv;
+      afterEach(() => {
+        jest.resetAllMocks();
       });
 
       it('returns 400 when payload contains isUsingFacilityEndDate', async () => {
@@ -483,12 +484,13 @@ describe(baseUrl, () => {
     });
 
     describe('with GEF_DEAL_VERSION = 1', () => {
-      beforeAll(() => {
-        process.env.GEF_DEAL_VERSION = '1';
+      beforeEach(async () => {
+        jest.mocked(getCurrentGefDealVersion).mockReturnValue(1);
+        mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
       });
 
-      afterAll(() => {
-        process.env = originalEnv;
+      afterEach(() => {
+        jest.resetAllMocks();
       });
 
       it('returns 200 when payload is valid & contains isUsingFacilityEndDate', async () => {
@@ -535,7 +537,7 @@ describe(baseUrl, () => {
 });
 
 function addFacilityEndDateToValidation(validation, dealVersion) {
-  if (dealVersion === '0') {
+  if (dealVersion === 0) {
     return validation;
   }
 
