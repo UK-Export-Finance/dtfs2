@@ -522,7 +522,7 @@ tfmRouter.route('/facilities/:facilityId/amendments/:amendmentId').put(tfmPutAme
  *             schema:
  *               $ref: '#/definitions/TFMTeams'
  */
-tfmRouter.route('/teams').get(tfmTeamsController.listTfmTeam);
+tfmRouter.route('/teams').get(tfmTeamsController.getTfmTeams);
 
 /**
  * @openapi
@@ -533,7 +533,7 @@ tfmRouter.route('/teams').get(tfmTeamsController.listTfmTeam);
  *     description: Get a team by ID. Not MongoDB _id, but the team ID provided when created.
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: teamId
  *         schema:
  *           type: string
  *         required: true
@@ -548,7 +548,7 @@ tfmRouter.route('/teams').get(tfmTeamsController.listTfmTeam);
  *       404:
  *         description: Not found
  */
-tfmRouter.route('/teams/:id').get(tfmTeamsController.findOneTfmTeam);
+tfmRouter.route('/teams/:teamId').get(tfmTeamsController.getTfmTeamByTeamId);
 
 /**
  * @openapi
