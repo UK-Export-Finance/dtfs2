@@ -48,6 +48,22 @@ const mapAmendmentToLatestCompletedDate = (
   };
 };
 
+const mapAmendmentToLatestCompletedFacilityEndDate = (
+  amendment: TfmFacilityAmendment,
+): {
+  amendmentId: string;
+  facilityEndDate: string;
+} => {
+  const { amendmentId, facilityEndDate } = amendment;
+  if (!facilityEndDate) {
+    throw new Error('Found amendment does not have a defined facilityEndDate');
+  }
+  return {
+    amendmentId: amendmentId.toString(),
+    facilityEndDate,
+  };
+};
+
 export const getAmendmentsByFacilityId = async (req: Request, res: Response) => {
   const { facilityId, amendmentIdOrStatus, type } = req.params;
 
@@ -65,6 +81,9 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
         } else if (type === AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
           const latestAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
           amendment = latestAmendment ? mapAmendmentToLatestCompletedDate(latestAmendment) : {};
+        } else if (type === AMENDMENT_QUERIES.LATEST_FACILITY_END_DATE) {
+          const latestAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
+          amendment = latestAmendment ? mapAmendmentToLatestCompletedFacilityEndDate(latestAmendment) : {};
         } else {
           amendment = await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndStatus(facilityId, AMENDMENT_STATUS.COMPLETED);
         }

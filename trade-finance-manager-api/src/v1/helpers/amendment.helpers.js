@@ -498,26 +498,41 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
   }
 };
 
-// populates tfmObject with date values
-const addLatestAmendmentDates = async (tfmObject, latestDate, facilityId) => {
-  // if there is a latest coverEndDate
-  if (latestDate?.coverEndDate) {
-    const { coverEndDate } = latestDate;
-    const existingFacility = await api.findOneFacility(facilityId);
+/**
+ * Populates the tfmObject with date values
+ * @param {}tfmObject
+ * @param latestCoverEndDateResponse
+ * @param latestFacilityEndDateDataResponse
+ * @param facilityId
+ * @returns {Object}
+ */
+const addLatestAmendmentDates = async (tfmObject, latestCoverEndDateResponse, latestFacilityEndDateDataResponse, facilityId) => {
+  const existingFacility = await api.findOneFacility(facilityId);
 
-    if (!existingFacility) {
-      return tfmObject;
-    }
-    // populates with coverEndDate and exposurePeriod
-    const newTfmObject = {
-      ...tfmObject,
-      coverEndDate: latestDate.coverEndDate,
+  if (!existingFacility) {
+    return tfmObject;
+  }
+
+  let newTfmObject = tfmObject;
+
+  if (latestCoverEndDateResponse?.coverEndDate) {
+    const { coverEndDate } = latestCoverEndDateResponse;
+    newTfmObject = {
+      ...newTfmObject,
+      coverEndDate,
       amendmentExposurePeriodInMonths: await calculateAmendmentDateTenor(coverEndDate, existingFacility),
     };
-
-    return newTfmObject;
   }
-  return tfmObject;
+
+  if (latestFacilityEndDateDataResponse?.facilityEndDate) {
+    const { facilityEndDate } = latestFacilityEndDateDataResponse;
+    newTfmObject = {
+      ...newTfmObject,
+      facilityEndDate,
+    };
+  }
+
+  return newTfmObject;
 };
 
 /**

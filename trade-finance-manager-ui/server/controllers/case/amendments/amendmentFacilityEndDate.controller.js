@@ -1,5 +1,5 @@
 const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
-const { format } = require('date-fns');
+const { format, parseISO } = require('date-fns');
 const api = require('../../../api');
 const facilityEndDateValidation = require('./validation/amendmentFacilityEndDate.validate');
 
@@ -35,6 +35,20 @@ const getAmendmentFacilityEndDate = async (req, res) => {
   const facilityEndDateMonth = facilityEndDate ? format(new Date(facilityEndDate), 'M') : '';
   const facilityEndDateYear = facilityEndDate ? format(new Date(facilityEndDate), 'yyyy') : '';
 
+  const facility = await api.getFacility(facilityId, userToken);
+
+  let currentFacilityEndDate;
+
+  if (facility?.facilitySnapshot?.dates?.facilityEndDate) {
+    currentFacilityEndDate = format(parseISO(facility.facilitySnapshot.dates.facilityEndDate), 'dd MMMM yyyy');
+  }
+
+  const { data: latestAmendmentFacilityEndDate } = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId, userToken);
+
+  if (latestAmendmentFacilityEndDate?.facilityEndDate) {
+    currentFacilityEndDate = format(parseISO(latestAmendmentFacilityEndDate.facilityEndDate), 'dd MMMM yyyy');
+  }
+
   return res.render('case/amendments/amendment-facility-end-date.njk', {
     dealId,
     facilityId,
@@ -42,6 +56,7 @@ const getAmendmentFacilityEndDate = async (req, res) => {
     facilityEndDateDay,
     facilityEndDateMonth,
     facilityEndDateYear,
+    currentFacilityEndDate,
     user: req.session.user,
   });
 };
@@ -53,6 +68,18 @@ const postAmendmentFacilityEndDate = async (req, res) => {
   const { dealId, changeFacilityValue } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
   const { 'facility-end-date-day': day, 'facility-end-date-month': month, 'facility-end-date-year': year } = req.body;
+
+  let currentFacilityEndDate;
+
+  if (facility?.facilitySnapshot?.dates?.facilityEndDate) {
+    currentFacilityEndDate = format(parseISO(facility.facilitySnapshot.dates.facilityEndDate), 'dd MMMM yyyy');
+  }
+
+  const { data: latestAmendmentFacilityEndDate } = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId, userToken);
+
+  if (latestAmendmentFacilityEndDate?.facilityEndDate) {
+    currentFacilityEndDate = format(parseISO(latestAmendmentFacilityEndDate.facilityEndDate), 'dd MMMM yyyy');
+  }
 
   const { error, facilityEndDate } = facilityEndDateValidation({ day, month, year }, facility.facilitySnapshot.dates.coverStartDate);
 
@@ -66,6 +93,7 @@ const postAmendmentFacilityEndDate = async (req, res) => {
       facilityEndDateMonth: month,
       facilityEndDateYear: year,
       error,
+      currentFacilityEndDate,
       user: req.session.user,
     });
   }

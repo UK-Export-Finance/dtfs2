@@ -15,6 +15,7 @@ const AMENDMENT_QUERY_STATUSES = {
 const AMENDMENT_QUERIES = {
   LATEST_VALUE: 'latest-value',
   LATEST_COVER_END_DATE: 'latest-cover-end-date',
+  LATEST_FACILITY_END_DATE: 'latest-facility-end-date',
   LATEST: 'latest',
 };
 
