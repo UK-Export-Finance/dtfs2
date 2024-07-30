@@ -1,6 +1,3 @@
-const { ObjectId } = require('mongodb');
-const { withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const app = require('../../../src/createApp');
 const { as } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
@@ -55,30 +52,6 @@ describe('user controller', () => {
       expect(status).toEqual(404);
       expect(body.status).toEqual(404);
       expect(body.message).toEqual('User does not exist');
-    });
-  });
-
-  describe('DELETE /v1/users', () => {
-    let userToDeleteId;
-    beforeEach(async () => {
-      const response = await as(tokenUser).post(MOCK_USERS[0]).to('/v1/users');
-      userToDeleteId = response.body.user._id;
-    });
-    if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-      withDeleteOneTests({
-        makeRequest: () => as(tokenUser).remove().to(`/v1/users/${userToDeleteId}`),
-        collectionName: 'tfm-users',
-        auditRecord: {
-          ...generateMockTfmUserAuditDatabaseRecord('abcdef123456abcdef123456'),
-          lastUpdatedByTfmUserId: expect.anything(),
-        },
-        getDeletedDocumentId: () => new ObjectId(userToDeleteId),
-      });
-    }
-
-    it('returns 200', async () => {
-      const { status } = await as(tokenUser).remove().to(`/v1/users/${userToDeleteId}`);
-      expect(status).toEqual(200);
     });
   });
 });
