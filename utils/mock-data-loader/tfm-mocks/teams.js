@@ -1,10 +1,11 @@
-import { WithoutId } from 'mongodb';
-import { TfmTeam } from '@ukef/dtfs2-common';
 import MOCK_USERS from '../portal-users';
 
 const { BANK1_MAKER1, BANK1_CHECKER1, BANK1_MAKER_CHECKER1, BANK1_MAKER_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
-export const TEAMS: Record<string, WithoutId<TfmTeam>> = {
+/**
+ * @type {Record<string, import('mongodb').WithoutId<import('@ukef/dtfs2-common').TfmTeam>>}
+ */
+export const TEAMS = {
   UNDERWRITING_SUPPORT: {
     id: 'UNDERWRITING_SUPPORT',
     name: 'Underwriting support',

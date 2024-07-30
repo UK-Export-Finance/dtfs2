@@ -1,16 +1,17 @@
 import { TEAMS } from './teams';
 
-export type MockTfmUser = {
-  username: string;
-  email: string;
-  password: string;
-  teams: string[];
-  timezone: string;
-  firstName: string;
-  lastName: string;
-};
+/**
+ * @typedef {object} MockTfmUser
+ * @property {string} username
+ * @property {string} email
+ * @property {string} password
+ * @property {string[]} teams
+ * @property {string} timezone
+ * @property {string} firstName
+ * @property {string} lastName
+ */
 
-export const USERS: Record<string, MockTfmUser> = {
+export const USERS = {
   T1_USER_1: {
     username: 'T1_USER_1',
     email: 'test@testing.com',
