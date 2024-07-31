@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, mongoIdPathParamaterValidationTests } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
@@ -40,6 +40,11 @@ describe('/v1/tfm/facilities', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id', () => {
+    mongoIdPathParamaterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:id',
+      makeRequest: (url) => testApi.get(url),
+    });
+
     it('returns the requested resource', async () => {
       const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       const newId = postResult.body._id;

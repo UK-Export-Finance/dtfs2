@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, mongoIdPathParamaterValidationTests } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
@@ -51,7 +51,12 @@ describe('PUT TFM amendments', () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS]);
   });
 
-  describe('PUT /v1/tfm/facilities/:id/amendments/:amendmentId', () => {
+  describe('PUT /v1/tfm/facilities/:facilityId/amendments/:amendmentId', () => {
+    mongoIdPathParamaterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:facilityId/amendments/:amendmentId',
+      makeRequest: (url) => testApi.put({}).to(url),
+    });
+
     describe('with a valid facility and amendment', () => {
       let facilityId;
       let amendmentId;
