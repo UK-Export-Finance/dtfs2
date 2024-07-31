@@ -25,6 +25,8 @@ let facilityOneId;
 
 const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR];
 
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
 context('Unissued Facilities MIN - change all to issued from unissued table', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
@@ -81,6 +83,11 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+      }
+
       aboutFacilityUnissued.continueButton().click();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[1].name} is updated`);
@@ -101,6 +108,11 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+      }
+
       aboutFacilityUnissued.continueButton().click();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[2].name} is updated`);
@@ -148,57 +160,56 @@ context('Return to maker for unissued to issued facilities', () => {
 
     it('should not be able to edit any facilities', () => {
       // 1st facility table - makes sure no action buttons exist (change or add)
-      applicationPreview.facilitySummaryListRowAction(0, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 9).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 10).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 11).should('not.exist');
-
+      applicationPreview.facilitySummaryListTable(0).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).issueDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).coverStartDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).coverEndDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).facilityProvidedOnAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).valueAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).coverPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).interestPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.value', '');
       // second facility
-      applicationPreview.facilitySummaryListRowAction(1, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 9).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 10).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 11).should('not.exist');
+      applicationPreview.facilitySummaryListTable(1).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).issueDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).coverStartDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).coverEndDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).facilityProvidedOnAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).valueAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).coverPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).interestPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).feeFrequencyAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).dayCountBasisAction().should('have.value', '');
 
       // third facility
-      applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 9).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 10).should('not.exist');
+      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).coverEndDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).facilityProvidedOnAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).valueAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).coverPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.value', '');
 
       // forth facility table - shorter as not yet issued
-      applicationPreview.facilitySummaryListRowAction(3, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 9).should('not.exist');
+      applicationPreview.facilitySummaryListTable(3).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).monthsOfCoverAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).valueAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).coverPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).interestPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.value', '');
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
@@ -238,57 +249,57 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.deleteFacilityLink().should('not.exist');
 
       // the already issued so cannot change anything
-      applicationDetails.facilitySummaryListRowAction(2, 0).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 1).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 2).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 3).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 4).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 5).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 6).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 7).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 8).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 9).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 10).should('not.exist');
+      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).coverEndDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).facilityProvidedOnAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).valueAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).coverPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.value', '');
 
       // 1st facility table - makes sure no action buttons exist (change or add)
-      applicationDetails.facilitySummaryListRowAction(0, 0).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(0, 1).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(0, 2).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(0, 3).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(0, 4).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(0, 5).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(0, 6).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(0, 7).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(0, 8).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(0, 9).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(0, 10).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(0, 11).should('have.value', '');
+      applicationDetails.facilitySummaryListTable(0).nameAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(0).hasBeenIssuedAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(0).issueDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(0).coverStartDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(0).coverEndDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(0).facilityProvidedOnAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(0).valueAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(0).coverPercentageAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(0).interestPercentageAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(0).feeFrequencyAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(0).dayCountBasisAction().should('have.value', '');
 
       // second facility
-      applicationDetails.facilitySummaryListRowAction(1, 0).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(1, 1).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(1, 2).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(1, 3).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(1, 4).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(1, 5).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(1, 6).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(1, 7).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(1, 8).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(1, 9).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(1, 10).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(1, 11).should('have.value', '');
+      applicationDetails.facilitySummaryListTable(1).nameAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(1).hasBeenIssuedAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(1).issueDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(1).coverStartDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(1).coverEndDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(1).facilityProvidedOnAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(1).valueAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(1).coverPercentageAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(1).interestPercentageAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(1).feeFrequencyAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(1).dayCountBasisAction().should('have.value', '');
 
       // forth facility table only has change as not yet issued
-      applicationDetails.facilitySummaryListRowAction(3, 0).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 1).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 2).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(3, 3).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 4).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 5).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 6).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 7).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 8).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 9).should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).nameAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(3).monthsOfCoverAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).valueAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).coverPercentageAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).interestPercentageAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).dayCountBasisAction().should('have.value', '');
 
       // should not be able to edit exporter table
       applicationDetails.exporterSummaryListRowAction(0, 0).should('have.value', '');
@@ -318,7 +329,7 @@ context('Return to maker for unissued to issued facilities', () => {
       const coverStart = format(dateConstants.today, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
-      applicationDetails.facilitySummaryListRowAction(3, 2).click();
+      applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
 
       aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
@@ -333,24 +344,28 @@ context('Return to maker for unissued to issued facilities', () => {
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+      }
       aboutFacilityUnissued.continueButton().click();
 
       // forth facility table has correct name and dates
-      applicationDetails.facilitySummaryListRowValue(3, 0).contains(MOCK_FACILITY_ONE.name);
-      applicationDetails.facilitySummaryListRowAction(3, 0).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(3, 1).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 2).contains('Change');
-      applicationDetails.facilitySummaryListRowValue(3, 3).contains(issuedDate);
-      applicationDetails.facilitySummaryListRowAction(3, 3).contains('Change');
-      applicationDetails.facilitySummaryListRowValue(3, 4).contains(coverStart);
-      applicationDetails.facilitySummaryListRowAction(3, 4).contains('Change');
-      applicationDetails.facilitySummaryListRowValue(3, 5).contains(coverEnd);
-      applicationDetails.facilitySummaryListRowAction(3, 5).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(3, 7).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 8).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(3, 9).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(0, 10).should('have.value', '');
-      applicationDetails.facilitySummaryListRowAction(0, 11).should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).nameValue().contains(MOCK_FACILITY_ONE.name);
+      applicationDetails.facilitySummaryListTable(3).nameAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(3).issueDateValue().contains(issuedDate);
+      applicationDetails.facilitySummaryListTable(3).issueDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(3).coverStartDateValue().contains(coverStart);
+      applicationDetails.facilitySummaryListTable(3).coverStartDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(3).coverEndDateValue().contains(coverEnd);
+      applicationDetails.facilitySummaryListTable(3).coverEndDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).valueAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).coverPercentageAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).interestPercentageAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
 
       // check that header updated to include this facility
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
@@ -395,59 +410,59 @@ context('Submit to UKEF with unissued to issued facilities', () => {
 
     it('should not be able to edit any facilities', () => {
       // 1st facility table - makes sure no action buttons exist (change or add)
-      applicationPreview.facilitySummaryListRowAction(0, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 9).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 10).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 11).should('not.exist');
+      applicationPreview.facilitySummaryListTable(0).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).issueDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).coverStartDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).coverEndDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).facilityProvidedOnAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).valueAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).coverPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).interestPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.value', '');
 
       // second facility
-      applicationPreview.facilitySummaryListRowAction(1, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 9).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 10).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 11).should('not.exist');
+      applicationPreview.facilitySummaryListTable(1).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).issueDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).coverStartDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).coverEndDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).facilityProvidedOnAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).valueAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).coverPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).interestPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).feeFrequencyAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).dayCountBasisAction().should('have.value', '');
 
       // third facility
-      applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 9).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 10).should('not.exist');
+      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).coverEndDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).facilityProvidedOnAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).valueAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).coverPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.value', '');
 
       // forth facility table
-      applicationPreview.facilitySummaryListRowAction(3, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 9).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 10).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 11).should('not.exist');
+      applicationPreview.facilitySummaryListTable(3).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).issueDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).coverStartDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).coverEndDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).valueAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).coverPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).interestPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.value', '');
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
