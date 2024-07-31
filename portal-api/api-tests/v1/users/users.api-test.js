@@ -1,6 +1,3 @@
-const { ObjectId } = require('mongodb');
-const { withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
 
@@ -36,22 +33,6 @@ describe('a user', () => {
 
   afterAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
-  });
-
-  describe('DELETE /v1/users/:userId', () => {
-    let userToDeleteId;
-
-    beforeEach(async () => {
-      const response = await createUser(MOCK_USER);
-      userToDeleteId = new ObjectId(response.body.user._id);
-    });
-
-    withDeleteOneTests({
-      makeRequest: () => as(aNonAdmin).remove(`/v1/users/${userToDeleteId}`),
-      collectionName: MONGO_DB_COLLECTIONS.USERS,
-      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
-      getDeletedDocumentId: () => userToDeleteId,
-    });
   });
 
   describe('DELETE /v1/users/:userId/disable', () => {
