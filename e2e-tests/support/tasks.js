@@ -246,11 +246,11 @@ module.exports = {
     /**
      * Deletes a portal user with the given username
      * @param {string} username - The username of the user to delete
-     * @returns {Promise<void>}
+     * @returns {Promise<import('mongodb').DeleteResult>}
      */
     const deleteUserByUsername = async (username) => {
       const usersCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
-      await usersCollection.deleteOne({ username: { $eq: username } });
+      return usersCollection.deleteOne({ username: { $eq: username } });
     };
 
     return {
