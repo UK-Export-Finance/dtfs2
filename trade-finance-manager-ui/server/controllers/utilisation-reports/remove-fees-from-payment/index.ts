@@ -4,6 +4,7 @@ import { getEditPaymentsCheckboxIdsFromObjectKeys, getFeeRecordIdsFromEditPaymen
 import { RemoveFeesFromPaymentFormRequestBody } from '../../../helpers/remove-fees-from-payment-helper';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
+import { extractEditPaymentFormValues } from '../helpers';
 
 export type RemoveFeesFromPaymentRequest = CustomExpressRequest<{
   reqBody: RemoveFeesFromPaymentFormRequestBody;
@@ -13,6 +14,8 @@ export const postRemoveFeesFromPayment = async (req: RemoveFeesFromPaymentReques
   try {
     const { user, userToken } = asUserSession(req.session);
     const { reportId, paymentId } = req.params;
+
+    req.session.editPaymentFormValues = extractEditPaymentFormValues(req.body);
 
     const checkedCheckboxIds = getEditPaymentsCheckboxIdsFromObjectKeys(req.body);
     const selectedFeeRecordIds = getFeeRecordIdsFromEditPaymentsCheckboxIds(checkedCheckboxIds);

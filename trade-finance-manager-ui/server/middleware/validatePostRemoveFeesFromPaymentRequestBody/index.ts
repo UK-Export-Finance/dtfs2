@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { asUserSession } from '../../helpers/express-session';
-import { RemoveFeesFromPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
+import { EditPaymentFormRequestBody, extractEditPaymentFormValues, RemoveFeesFromPaymentErrorKey } from '../../controllers/utilisation-reports/helpers';
 import { getEditPaymentsCheckboxIdsFromObjectKeys } from '../../helpers/edit-payments-table-checkbox-id-helper';
 import { extractTotalSelectableFeeRecordsFromRequestBody } from '../../helpers/remove-fees-from-payment-helper';
 
@@ -8,6 +8,8 @@ const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof
 
 const redirectWithError = (req: Request, res: Response, reportId: string, paymentId: string, removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey) => {
   req.session.removeFeesFromPaymentErrorKey = removeFeesFromPaymentErrorKey;
+  req.session.editPaymentFormValues = extractEditPaymentFormValues(req.body as EditPaymentFormRequestBody);
+
   return res.redirect(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
 };
 
