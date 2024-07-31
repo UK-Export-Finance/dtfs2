@@ -5,6 +5,7 @@ import { utilisationReportAddPaymentPage } from './utilisationReportAddPaymentPa
 import { utilisationReportConfirmDeletePaymentPage } from './utilisationReportConfirmDeletePaymentPage';
 import { utilisationReportEditPaymentPage } from './utilisationReportEditPaymentPage';
 import { checkKeyingDataPage } from './checkKeyingDataPage';
+import { utilisationReportAddToAnExistingPaymentPage } from './utilisationReportAddToAnExistingPaymentPage';
 
 export const utilisationReportPages = {
   utilisationReportsSummaryPage,
@@ -15,4 +16,5 @@ export const utilisationReportPages = {
   utilisationReportConfirmDeletePaymentPage,
   utilisationReportEditPaymentPage,
   checkKeyingDataPage,
+  utilisationReportAddToAnExistingPaymentPage,
 };
