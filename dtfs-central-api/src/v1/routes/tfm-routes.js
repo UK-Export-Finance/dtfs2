@@ -509,23 +509,6 @@ tfmRouter.route('/facilities/:facilityId/amendments/:amendmentId').put(tfmPutAme
 
 /**
  * @openapi
- * /tfm/teams:
- *   get:
- *     summary: Get all teams
- *     tags: [TFM]
- *     description: Get all teams
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/definitions/TFMTeams'
- */
-tfmRouter.route('/teams').get(tfmTeamsController.getTfmTeams);
-
-/**
- * @openapi
  * /tfm/teams/:id:
  *   get:
  *     summary: Get a team by ID

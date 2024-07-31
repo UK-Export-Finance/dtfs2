@@ -8,15 +8,6 @@ export class TfmTeamsRepo {
   }
 
   /**
-   * Finds all the documents in the tfm teams collection
-   * @returns All the tfm teams
-   */
-  public static async findAll(): Promise<TfmTeam[]> {
-    const collection = await this.getCollection();
-    return await collection.find({}).toArray();
-  }
-
-  /**
    * Finds a tfm team by the team id
    * @param teamId - The team id to search for
    * @returns The found team or null if not found
