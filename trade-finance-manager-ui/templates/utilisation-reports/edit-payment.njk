@@ -25,20 +25,21 @@
       <h1 class="govuk-heading-l" data-cy="edit-payment-heading">Edit payment</h1>
     </div>
   </div>
-  {{ feeRecordDetailsTable.render({
-    captionText: "Added reported fees details",
-    feeRecords: feeRecords,
-    totalReportedPayments: totalReportedPayments,
-    enableSelectingFeeRecords: true,
-    reportId: reportId,
-    paymentId: paymentId,
-    csrfToken: csrfToken
-  }) }}
-  <h2 class="govuk-heading-m">
-    Payment details
-  </h2>
   <form method="post">
-    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> {{ govukInput({
+    {{ feeRecordDetailsTable.render({
+      captionText: "Added reported fees details",
+      feeRecords: feeRecords,
+      totalReportedPayments: totalReportedPayments,
+      enableSelectingFeeRecords: true,
+      reportId: reportId,
+      paymentId: paymentId,
+      csrfToken: csrfToken
+    }) }}
+    <h2 class="govuk-heading-m">
+      Payment details
+    </h2>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    {{ govukInput({
         label: {
           text: "Amount received",
           classes: "govuk-label--s"
