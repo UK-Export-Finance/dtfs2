@@ -13,12 +13,12 @@ describe('formatDate', () => {
   const testData = [
     ...validStringTestCases,
     {
-      description: 'should parse null as legacy implimentation',
+      description: 'should parse null as legacy implementation',
       mockValue: null,
       expected: '1970-01-01',
     },
     {
-      description: 'should parse undefined as legacy implimentation',
+      description: 'should parse undefined as legacy implementation',
       mockValue: undefined,
       expected: 'Invalid date',
     },

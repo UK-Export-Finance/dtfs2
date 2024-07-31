@@ -582,7 +582,7 @@ describe(baseUrl, () => {
       expectedSuccessResponseBody: { acknowledged: true },
     });
 
-    // This behaviour matches existing implimentation
+    // This behaviour matches existing implementation
     // As this endpoint is called when deleting by deal id, there is a chance that there are
     // no facilities to delete, but we can just handle this as a success
     it('returns 200 if there are no facilities to delete', async () => {
