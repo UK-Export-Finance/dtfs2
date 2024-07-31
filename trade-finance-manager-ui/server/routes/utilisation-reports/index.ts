@@ -20,6 +20,7 @@ import { postCheckKeyingData } from '../../controllers/utilisation-reports/check
 import { getEditPayment, postEditPayment } from '../../controllers/utilisation-reports/edit-payment';
 import { getConfirmDeletePayment, postConfirmDeletePayment } from '../../controllers/utilisation-reports/confirm-delete-payment';
 import { postRemoveFeesFromPayment } from '../../controllers/utilisation-reports/remove-fees-from-payment';
+import { addToAnExistingPayment } from '../../controllers/utilisation-reports/add-to-an-existing-payment';
 
 export const utilisationReportsRoutes = express.Router();
 
@@ -57,6 +58,14 @@ utilisationReportsRoutes.post(
   validateSqlId('reportId'),
   validatePostAddPaymentRequestBody,
   addPayment,
+);
+
+utilisationReportsRoutes.post(
+  '/:reportId/add-to-an-existing-payment',
+  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
+  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
+  validateSqlId('reportId'),
+  addToAnExistingPayment,
 );
 
 utilisationReportsRoutes.post(

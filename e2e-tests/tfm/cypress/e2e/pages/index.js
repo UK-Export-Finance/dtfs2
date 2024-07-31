@@ -29,6 +29,7 @@ import { utilisationReportsSummaryPage } from './utilisationReportsSummaryPage';
 import { utilisationReportPage } from './utilisationReportPage';
 import { searchUtilisationReportsFormPage, searchUtilisationReportsResultsPage } from './searchUtilisationReportsPage';
 import { utilisationReportAddPaymentPage } from './utilisationReportAddPaymentPage';
+import { utilisationReportAddToAnExistingPaymentPage } from './utilisationReportAddToAnExistingPaymentPage';
 import { utilisationReportConfirmDeletePaymentPage } from './utilisationReportConfirmDeletePaymentPage';
 import { utilisationReportEditPaymentPage } from './utilisationReportEditPaymentPage';
 
@@ -65,6 +66,7 @@ export default {
   searchUtilisationReportsFormPage,
   searchUtilisationReportsResultsPage,
   utilisationReportAddPaymentPage,
+  utilisationReportAddToAnExistingPaymentPage,
   utilisationReportConfirmDeletePaymentPage,
   utilisationReportEditPaymentPage,
 };
