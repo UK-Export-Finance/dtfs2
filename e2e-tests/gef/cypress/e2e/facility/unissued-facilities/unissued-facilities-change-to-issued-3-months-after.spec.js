@@ -20,6 +20,8 @@ let facilityOneId;
 const FACILITY_THREE_SPECIAL = { ...MOCK_FACILITY_THREE };
 FACILITY_THREE_SPECIAL.specialIssuePermission = true;
 
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
 context('Unissued Facilities MIN - change to issued more than 3 months after MIN submission date', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
@@ -134,6 +136,10 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeYearsDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeYearsMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeYearsYear);
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+      }
       aboutFacilityUnissued.continueButton().click();
       // to go back to application preview page
       unissuedFacilityTable.updateFacilitiesLater().click();

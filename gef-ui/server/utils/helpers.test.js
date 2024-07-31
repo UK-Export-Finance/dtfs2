@@ -255,6 +255,7 @@ describe('mapSummaryList()', () => {
     {
       label: 'Id',
       id: 'id',
+      href: 'href',
     },
   ];
 
@@ -277,7 +278,22 @@ describe('mapSummaryList()', () => {
     };
 
     expect(mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)).toEqual([
-      { actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } },
+      {
+        actions: {
+          items: [
+            {
+              href: 'href',
+              text: 'Change',
+              visuallyHiddenText: 'Id',
+              attributes: {
+                'data-cy': 'id-action',
+              },
+            },
+          ],
+        },
+        key: { text: 'Id' },
+        value: { text: '123456' },
+      },
     ]);
   });
 
@@ -607,9 +623,16 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items[0];
+      const actionItems = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items;
       // should be blank so cannot change
-      expect(text).toEqual('');
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `value-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
     it('can change issued back to unissued', () => {
       // 'key' for value row
@@ -719,9 +742,16 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const actionItems = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       // should be allowed to change so should display change
-      expect(text).toEqual('');
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `name-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
     it('coverStartDate', () => {
       const MockedDisplayItemsStartDate = () => [
@@ -737,9 +767,16 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items[0];
+      const actionItems = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items;
       // should be allowed to change so should display change
-      expect(text).toEqual('');
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverStartDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('coverEndDate', () => {
@@ -756,9 +793,16 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
+      const actionItems = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
       // should be allowed to change so should display change
-      expect(text).toEqual('');
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
   });
 
@@ -784,7 +828,14 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      const response = [];
+      const response = [
+        {
+          attributes: {
+            'data-cy': 'name-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ];
       expect(result).toEqual(response);
     });
 
@@ -803,7 +854,14 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items;
-      const response = [];
+      const response = [
+        {
+          attributes: {
+            'data-cy': 'coverStartDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ];
       expect(result).toEqual(response);
     });
 
@@ -822,7 +880,14 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
-      const response = [];
+      const response = [
+        {
+          attributes: {
+            'data-cy': 'coverEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ];
       expect(result).toEqual(response);
     });
 
@@ -841,7 +906,14 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsIssued, mapSummaryParams, true)[0].actions.items;
-      const response = [];
+      const response = [
+        {
+          attributes: {
+            'data-cy': 'hasBeenIssued-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ];
       expect(result).toEqual(response);
     });
   });
@@ -884,7 +956,14 @@ describe('mapSummaryList()', () => {
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       // should be [] as unable to change on checker
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'hasBeenIssued-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should return a blank array when with checker with coverStartDate', () => {
@@ -904,7 +983,14 @@ describe('mapSummaryList()', () => {
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       // should be [] as unable to change on checker
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'coverStartDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should return a blank array when with checker with coverEndDate', () => {
@@ -924,7 +1010,14 @@ describe('mapSummaryList()', () => {
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       // should be [] as unable to change on checker
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'coverEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
   });
 
@@ -1025,8 +1118,15 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
-      expect(text).toEqual('');
+      const actionItems = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverStartDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should show not change for coverEndDate when unissued facility', () => {
@@ -1044,8 +1144,15 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
-      expect(text).toEqual('');
+      const actionItems = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should not show change for stage when already issued facility', () => {
@@ -1064,7 +1171,14 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'hasBeenIssued-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should not see the `Change` link for coverStartDate when already issued facility for AIN and Makers input required', () => {
@@ -1083,7 +1197,14 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverStartDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should show `Change` for coverStartDate when already issued facility', () => {
@@ -1103,6 +1224,9 @@ describe('mapSummaryList()', () => {
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParamsDraft, true)[0].actions.items;
       expect(result).toEqual([
         {
+          attributes: {
+            'data-cy': `coverStartDate-action`,
+          },
           href: '/gef/application-details/61a7710b2ae62b0013dae687/61a771cc2ae62b0013dae68a/confirm-cover-start-date',
           text: 'Change',
           visuallyHiddenText: 'Cover start date',
@@ -1126,7 +1250,14 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'coverEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
   });
 });
@@ -1194,7 +1325,14 @@ describe('summaryItemsConditions()', () => {
     };
     const result = summaryItemsConditions(summaryItemsObj);
 
-    const expected = [];
+    const expected = [
+      {
+        attributes: {
+          'data-cy': 'name-action',
+        },
+        classes: 'govuk-!-display-none',
+      },
+    ];
 
     expect(result).toEqual(expected);
   });
@@ -1302,8 +1440,15 @@ describe('summaryItemsConditions()', () => {
         data: MOCK_AIN_APPLICATION.facilities.items[0],
       };
 
-      const { text } = summaryItemsConditions(summaryItemsObj)[0];
-      expect(text).toEqual('');
+      const result = summaryItemsConditions(summaryItemsObj);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `name-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should not be able to change coverStartDate', () => {
@@ -1321,8 +1466,15 @@ describe('summaryItemsConditions()', () => {
         data: MOCK_AIN_APPLICATION.facilities.items[0],
       };
 
-      const { text } = summaryItemsConditions(summaryItemsObj)[0];
-      expect(text).toEqual('');
+      const result = summaryItemsConditions(summaryItemsObj);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverStartDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should be able to change coverStartDate', () => {
@@ -1362,8 +1514,15 @@ describe('summaryItemsConditions()', () => {
         data: MOCK_AIN_APPLICATION.facilities.items[0],
       };
 
-      const { text } = summaryItemsConditions(summaryItemsObj)[0];
-      expect(text).toEqual('');
+      const result = summaryItemsConditions(summaryItemsObj);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should not be able to change issued', () => {

@@ -71,7 +71,6 @@ const facilityItems = (
     {
       label: 'UKEF facility ID',
       id: 'ukefFacilityId',
-      href: '#',
       isHidden: !ukefFacilityId,
     },
     {

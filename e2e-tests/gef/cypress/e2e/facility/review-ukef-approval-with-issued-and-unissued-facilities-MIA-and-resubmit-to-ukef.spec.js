@@ -31,6 +31,8 @@ const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE, MOCK_FA
 
 const issuedFacilities = [MOCK_FACILITY_TWO_NULL_MIA];
 
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
 context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued facility', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
@@ -81,50 +83,50 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       applicationPreview.facilityGuidance().contains('How many you can add');
 
       //  makes sure no action buttons exist (change or add)
-      applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 9).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 10).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 0).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 1).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 2).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 3).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 4).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 5).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 6).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 7).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 8).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 9).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 10).should('have.value', '');
 
-      applicationPreview.facilitySummaryListRowAction(0, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 9).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(0, 0).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 1).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 2).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 3).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 4).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 5).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 6).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 7).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 8).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 9).should('have.value', '');
 
-      applicationPreview.facilitySummaryListRowAction(1, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 9).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(1, 0).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 1).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 2).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 3).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 4).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 5).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 6).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 7).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 8).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 9).should('have.value', '');
 
-      applicationPreview.facilitySummaryListRowAction(3, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 9).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(3, 0).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 1).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 2).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 3).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 4).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 5).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 6).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 7).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 8).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 9).should('have.value', '');
     });
 
     it('checks correct status and review UKEF decision link exist', () => {
@@ -248,6 +250,11 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+      }
+
       aboutFacilityUnissued.continueButton().click();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
@@ -299,53 +306,53 @@ context('Return to maker', () => {
       applicationPreview.facilityGuidance().contains('How many you can add');
 
       // 1st facility table - makes sure no action buttons exist (change or add)
-      applicationPreview.facilitySummaryListRowAction(0, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 9).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(0, 0).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 1).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 2).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 3).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 4).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 5).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 6).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 7).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 8).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(0, 9).should('have.value', '');
 
       // second facility
-      applicationPreview.facilitySummaryListRowAction(1, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 9).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(1, 0).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 1).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 2).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 3).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 4).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 5).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 6).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 7).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 8).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 9).should('have.value', '');
 
       // third facility
-      applicationPreview.facilitySummaryListRowAction(2, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 9).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 10).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(2, 0).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 1).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 2).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 4).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 5).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 6).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 7).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 8).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 9).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 10).should('have.value', '');
 
       // forth facility
-      applicationPreview.facilitySummaryListRowAction(3, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 9).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 10).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(3, 11).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(3, 0).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 1).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 2).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 4).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 5).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 6).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 7).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 8).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 9).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 10).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(3, 11).should('have.value', '');
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
@@ -382,17 +389,17 @@ context('Return to maker', () => {
       applicationDetails.deleteFacilityLink().should('not.exist');
 
       // facility which confirmed cover
-      applicationDetails.facilitySummaryListRowAction(2, 0).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 1).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 2).should('not.exist');
+      applicationDetails.facilitySummaryListRowAction(2, 0).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 1).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 2).should('have.value', '');
       applicationDetails.facilitySummaryListRowAction(2, 3).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(2, 4).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 5).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 6).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 7).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 8).should('not.exist');
-      applicationDetails.facilitySummaryListRowAction(2, 9).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(2, 10).should('not.exist');
+      applicationDetails.facilitySummaryListRowAction(2, 4).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 5).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 6).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 7).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 8).should('have.value', '');
+      applicationDetails.facilitySummaryListRowAction(2, 9).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(2, 10).should('have.value', '');
 
       // 1st facility table - make sure change exists on issue action
       applicationDetails.facilitySummaryListRowAction(0, 0).should('have.value', '');

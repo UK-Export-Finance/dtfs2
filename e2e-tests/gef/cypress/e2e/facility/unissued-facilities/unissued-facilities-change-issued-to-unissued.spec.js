@@ -23,6 +23,8 @@ let facilityOneId;
 
 const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE];
 
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
 context('Change issued facilities back to unissued (changed to issued facilities post submission)', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
@@ -71,16 +73,12 @@ context('Change issued facilities back to unissued (changed to issued facilities
          at least 1 changed from unissued table
       */
     it('facilities table does not contain any add or change links as have not changed any facilities to issued yet', () => {
-      applicationPreview.facilitySummaryListRowValue(0, 0).contains(MOCK_FACILITY_THREE.name);
-      applicationPreview.facilitySummaryListRowAction(0, 0).should('not.exist');
-
-      applicationPreview.facilitySummaryListRowAction(0, 1).should('not.exist');
-
-      applicationPreview.facilitySummaryListRowAction(0, 2).should('not.exist');
-
-      applicationPreview.facilitySummaryListRowKey(0, 3).should('not.have.value', 'Date issued to exporter');
-
-      applicationPreview.facilitySummaryListRowAction(0, 3).should('not.exist');
+      applicationPreview.facilitySummaryListTable(0).nameValue().contains(MOCK_FACILITY_THREE.name);
+      applicationPreview.facilitySummaryListTable(0).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).issueDateAction().should('not.exist');
+      applicationPreview.facilitySummaryListTable(0).monthsOfCoverAction().should('have.value', '');
     });
 
     it('clicking unissued facilities link takes you to unissued facility list page', () => {
@@ -115,6 +113,11 @@ context('Change issued facilities back to unissued (changed to issued facilities
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+      }
+
       aboutFacilityUnissued.continueButton().click();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
@@ -135,6 +138,11 @@ context('Change issued facilities back to unissued (changed to issued facilities
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
+      }
+
       aboutFacilityUnissued.continueButton().click();
 
       unissuedFacilityTable.rows().should('have.length', 0);
@@ -176,13 +184,13 @@ context('Change issued facilities back to unissued (changed to issued facilities
 
       // should not be able to change facility two has previously issued (not changed from unissued to issued)
       applicationPreview.facilitySummaryListRowValue(1, 0).contains(MOCK_FACILITY_TWO.name);
-      applicationPreview.facilitySummaryListRowAction(1, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(1, 1).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(1, 0).should('have.value', '');
+      applicationPreview.facilitySummaryListRowAction(1, 1).should('have.value', '');
       applicationPreview.facilitySummaryListRowValue(1, 2).contains('Issued');
-      applicationPreview.facilitySummaryListRowAction(1, 2).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(1, 2).should('have.value', '');
       applicationPreview.facilitySummaryListRowKey(1, 3).should('not.have.value', 'Date issued to exporter');
       applicationPreview.facilitySummaryListRowValue(1, 3).contains('Date you submit the notice');
-      applicationPreview.facilitySummaryListRowAction(1, 3).should('not.exist');
+      applicationPreview.facilitySummaryListRowAction(1, 3).should('have.value', '');
     });
 
     // checks that can unissue a changed to issued facility
@@ -280,23 +288,24 @@ context('Change issued facilities back to unissued (changed to issued facilities
       facilities.hasBeenIssuedRadioNoRadioButton().click();
       facilities.continueButton().click();
 
-      applicationPreview.facilitySummaryListRowValue(2, 0).contains(MOCK_FACILITY_ONE.name);
-      applicationPreview.facilitySummaryListRowAction(2, 0).should('have.value', '');
-      applicationPreview.facilitySummaryListRowAction(2, 1).should('have.value', '');
-      applicationPreview.facilitySummaryListRowValue(2, 2).contains('Unissued');
-      applicationPreview.facilitySummaryListRowAction(2, 2).contains('Change');
-      applicationPreview.facilitySummaryListRowValue(2, 3).contains(MOCK_FACILITY_ONE.monthsOfCover);
-      applicationPreview.facilitySummaryListRowAction(2, 3).should('have.value', '');
-      applicationPreview.facilitySummaryListRowAction(2, 4).should('have.value', '');
-      applicationPreview.facilitySummaryListRowAction(2, 5).should('have.value', '');
-      applicationPreview.facilitySummaryListRowAction(2, 6).should('have.value', '');
-      applicationPreview.facilitySummaryListRowAction(2, 7).should('have.value', '');
-      applicationPreview.facilitySummaryListRowAction(2, 8).should('have.value', '');
-      applicationPreview.facilitySummaryListRowAction(2, 9).should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).nameValue().contains(MOCK_FACILITY_ONE.name);
+      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedValue().contains('Unissued');
+      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().contains('Change');
+      // TODO: add if statement for FED enabled & check those rows
+      applicationPreview.facilitySummaryListTable(2).monthsOfCoverValue().contains(MOCK_FACILITY_ONE.monthsOfCover);
+      applicationPreview.facilitySummaryListTable(2).monthsOfCoverAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).facilityProvidedOnAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).valueAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).coverPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.value', '');
       // check that these should not exist as should be removed
-      applicationPreview.facilitySummaryListRowKey(2, 3).should('not.contain', 'Date issued to exporter');
-      applicationPreview.facilitySummaryListRowKey(2, 4).should('not.contain', 'Cover start date');
-      applicationPreview.facilitySummaryListRowKey(2, 5).should('not.contain', 'Cover end date');
+      applicationPreview.facilitySummaryListTable(2).issueDateAction().should('not.exist');
+      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('not.exist');
+      applicationPreview.facilitySummaryListTable(2).coverEndDateAction().should('not.exist');
 
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().should('not.contain', unissuedFacilitiesArray[0].name);
@@ -305,25 +314,25 @@ context('Change issued facilities back to unissued (changed to issued facilities
     });
 
     it('changing all facilities to unissued takes you back to initial view unissued facilities page', () => {
-      applicationPreview.facilitySummaryListRowValue(0, 0).contains(MOCK_FACILITY_THREE.name);
-      applicationPreview.facilitySummaryListRowAction(0, 2).click();
+      applicationPreview.facilitySummaryListTable(0).nameValue().contains(MOCK_FACILITY_THREE.name);
+      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().click();
 
       facilities.hasBeenIssuedRadioNoRadioButton().click();
       facilities.continueButton().click();
-
-      applicationPreview.facilitySummaryListRowValue(0, 0).contains(MOCK_FACILITY_THREE.name);
-      applicationPreview.facilitySummaryListRowAction(0, 0).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 1).should('not.exist');
-      applicationPreview.facilitySummaryListRowValue(0, 2).contains('Unissued');
-      applicationPreview.facilitySummaryListRowAction(0, 2).should('not.exist');
-      applicationPreview.facilitySummaryListRowValue(0, 3).contains(MOCK_FACILITY_THREE.monthsOfCover);
-      applicationPreview.facilitySummaryListRowAction(0, 3).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 4).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 5).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 6).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 7).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 8).should('not.exist');
-      applicationPreview.facilitySummaryListRowAction(0, 9).should('not.exist');
+      applicationPreview.facilitySummaryListTable(0).nameValue().contains(MOCK_FACILITY_THREE.name);
+      applicationPreview.facilitySummaryListTable(0).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedValue().contains('Unissued');
+      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().should('have.value', '');
+      // TODO: add if statement for FED enabled & check those rows
+      applicationPreview.facilitySummaryListTable(0).monthsOfCoverValue().contains(MOCK_FACILITY_THREE.monthsOfCover);
+      applicationPreview.facilitySummaryListTable(0).monthsOfCoverAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).facilityProvidedOnAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).valueAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).coverPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).interestPercentageAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.value', '');
 
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
@@ -347,6 +356,11 @@ context('Change issued facilities back to unissued (changed to issued facilities
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+      }
+
       aboutFacilityUnissued.continueButton().click();
       unissuedFacilityTable.updateFacilitiesLater().click();
 
