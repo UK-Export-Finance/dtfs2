@@ -58,7 +58,7 @@ exports.addDealCommentPost = async (req, res) => {
         message: `Invalid auditDetails: ${error.message}`,
       });
     }
-    return res.status(400).send({ status: 400, error });
+    return res.status(500).send({ status: 500, error });
   }
 
   return findOneDeal(dealId, async (deal) => {

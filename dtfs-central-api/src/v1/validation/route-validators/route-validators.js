@@ -10,7 +10,7 @@ exports.bankIdValidation = [bankIdValidation];
  * @param {string} paramName
  * @returns {import('express-validator').ValidationChain}
  */
-const mongoIdValidation = (paramName) => param(paramName).isMongoId().withMessage("Invalid MongoDB '_id' path param provided");
+const mongoIdValidation = (paramName) => param(paramName).isMongoId().withMessage(`Invalid MongoDB '${paramName}' path param provided`);
 
 exports.mongoIdValidation = mongoIdValidation;
 
