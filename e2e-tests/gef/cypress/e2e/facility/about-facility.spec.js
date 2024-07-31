@@ -199,7 +199,10 @@ context('About Facility Page', () => {
           .type(now.getMonth() + 1);
         aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
         aboutFacility.coverEndDateDay().clear().type(now.getDate());
-        aboutFacility.coverEndDateMonth().clear().type(now.getMonth());
+        aboutFacility
+          .coverEndDateMonth()
+          .clear()
+          .type(now.getMonth() + 1);
         aboutFacility
           .coverEndDateYear()
           .clear()
@@ -222,7 +225,10 @@ context('About Facility Page', () => {
           .type(now.getMonth() + 1);
         aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
         aboutFacility.coverEndDateDay().clear().type(now.getDate());
-        aboutFacility.coverEndDateMonth().clear().type(now.getMonth());
+        aboutFacility
+          .coverEndDateMonth()
+          .clear()
+          .type(now.getMonth() + 1);
         aboutFacility
           .coverEndDateYear()
           .clear()
@@ -245,7 +251,10 @@ context('About Facility Page', () => {
         .type(now.getMonth() + 1);
       aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
       aboutFacility.coverEndDateDay().clear().type(now.getDate());
-      aboutFacility.coverEndDateMonth().clear().type(now.getMonth());
+      aboutFacility
+        .coverEndDateMonth()
+        .clear()
+        .type(now.getMonth() + 1);
       aboutFacility
         .coverEndDateYear()
         .clear()
@@ -263,7 +272,7 @@ context('About Facility Page', () => {
       aboutFacility.coverStartDateMonth().should('have.value', now.getMonth() + 1);
       aboutFacility.coverStartDateYear().should('have.value', now.getFullYear());
       aboutFacility.coverEndDateDay().should('have.value', now.getDate());
-      aboutFacility.coverEndDateMonth().should('have.value', now.getMonth());
+      aboutFacility.coverEndDateMonth().should('have.value', now.getMonth() + 1);
       aboutFacility.coverEndDateYear().should('have.value', now.getFullYear() + 1);
 
       if (facilityEndDateEnabled) {

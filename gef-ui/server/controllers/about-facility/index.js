@@ -153,7 +153,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       facilityId,
       status,
       isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
-      isUsingFacilityEndDateString,
+      isUsingFacilityEndDate: isUsingFacilityEndDateString,
     });
   }
 
