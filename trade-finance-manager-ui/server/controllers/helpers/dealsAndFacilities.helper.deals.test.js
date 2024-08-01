@@ -1,9 +1,9 @@
+import { AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import api from '../../api';
 import PageOutOfBoundsError from '../../errors/page-out-of-bounds.error';
 import { mockRes as generateMockRes } from '../../test-mocks';
 import { queryDealsOrFacilities, renderDealsOrFacilitiesPage } from './dealsAndFacilities.helper';
-
-const CONSTANTS = require('../../constants');
+import { DEAL } from '../../constants';
 
 describe('controllers - deals', () => {
   let mockRes;
@@ -20,13 +20,13 @@ describe('controllers - deals', () => {
     {
       _id: '0',
       tfm: {
-        stage: CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS,
+        stage: DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS,
       },
     },
     {
       _id: '1',
       tfm: {
-        stage: CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS,
+        stage: DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS,
       },
     },
   ];
@@ -40,11 +40,11 @@ describe('controllers - deals', () => {
   };
   const mockAmendments = [
     {
-      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+      status: AMENDMENT_STATUS.IN_PROGRESS,
       dealId: '0',
     },
     {
-      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.NOT_STARTED,
+      status: AMENDMENT_STATUS.NOT_STARTED,
       dealId: '1',
     },
   ];
@@ -422,13 +422,13 @@ describe('controllers - deals', () => {
           {
             _id: '0',
             tfm: {
-              stage: overrideDealStage ? CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS : CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS,
+              stage: overrideDealStage ? DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS : DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS,
             },
           },
           {
             _id: '1',
             tfm: {
-              stage: CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS,
+              stage: DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS,
             },
           },
         ],

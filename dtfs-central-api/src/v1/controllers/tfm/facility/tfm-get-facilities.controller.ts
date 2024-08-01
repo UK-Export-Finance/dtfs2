@@ -1,16 +1,11 @@
-import { ObjectId } from 'mongodb';
 import escapeStringRegexp from 'escape-string-regexp';
 import { Request, Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import CONSTANTS from '../../../../constants';
+import { FACILITIES } from '../../../../constants';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
 export const getFacilitiesByDealId = async (req: Request, res: Response) => {
   const { id: dealId } = req.params;
-
-  if (!ObjectId.isValid(dealId)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
-  }
 
   // NOTE: only GEF facilities have dealId.
   // this could be adapted so that we get the deal, check dealType,
@@ -40,7 +35,7 @@ export const getAllFacilities = async (req: GetAllFacilitiesRequest, res: Respon
 
   const fieldsToSortOn: Record<string, number> = {};
   if (sortBy) {
-    fieldsToSortOn[sortBy.field] = sortBy.order === CONSTANTS.FACILITIES.SORT_BY.ASCENDING ? 1 : -1;
+    fieldsToSortOn[sortBy.field] = sortBy.order === FACILITIES.SORT_BY.ASCENDING ? 1 : -1;
   }
   if (sortBy?.field !== 'ukefFacilityId') {
     fieldsToSortOn.ukefFacilityId = 1;
