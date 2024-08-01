@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { UnixTimestamp, UnixTimestampString } from '../date';
 import { Currency } from '../currency';
+import { FacilityType } from '../facility-type';
 
 /**
  * Type of the mongo db "facilities" collection
@@ -11,7 +12,7 @@ import { Currency } from '../currency';
 export type Facility = {
   _id: ObjectId;
   dealId: ObjectId;
-  type: string;
+  type: FacilityType;
   hasBeenIssued: boolean;
   name: string;
   shouldCoverStartOnSubmission: boolean;

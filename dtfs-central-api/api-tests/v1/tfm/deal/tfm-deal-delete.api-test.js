@@ -1,9 +1,9 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { withDeleteOneTests, generateMockTfmUserAuditDatabaseRecord, withDeleteManyTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { testApi } = require('../../../test-api');
-const { DEALS, FACILITIES } = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const aDeal = require('../../deal-builder');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
@@ -25,14 +25,14 @@ const newDeal = aDeal({
 
 const newFacilities = [
   {
-    type: FACILITIES.FACILITY_TYPE.BOND,
+    type: FACILITY_TYPE.BOND,
     ukefFacilityId: '223344',
     value: '2000',
     coverEndDate: '2021-08-12T00:00:00.000Z',
     currency: { id: 'GBP' },
   },
   {
-    type: FACILITIES.FACILITY_TYPE.LOAN,
+    type: FACILITY_TYPE.LOAN,
     ukefFacilityId: '223345',
     value: '2000',
     coverEndDate: '2021-08-12T00:00:00.000Z',

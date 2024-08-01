@@ -1,7 +1,7 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const { testApi } = require('../../test-api');
-const { DEALS, FACILITIES } = require('../../../src/constants');
+const { DEALS } = require('../../../src/constants');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 
 const newDeal = {
@@ -11,7 +11,7 @@ const newDeal = {
 
 const newFacility = {
   dealId: MOCK_DEAL.DEAL_ID,
-  type: FACILITIES.FACILITY_TYPE.CASH,
+  type: FACILITY_TYPE.CASH,
 };
 
 const createDeal = async () => {
