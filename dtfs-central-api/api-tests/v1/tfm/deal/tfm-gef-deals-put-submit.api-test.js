@@ -3,20 +3,20 @@ const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS, FACILITIES } = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 
 const newDeal = {
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+  dealType: DEALS.DEAL_TYPE.GEF,
   status: 'Draft',
   submissionCount: 1,
   exporter: {},
 };
 
 const newFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  type: FACILITIES.FACILITY_TYPE.CASH,
 };
 
 describe('/v1/tfm/deals/submit - GEF deal', () => {
@@ -27,7 +27,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
   it('400s for an invalid id', async () => {
     const { status } = await testApi
       .put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+        dealType: DEALS.DEAL_TYPE.GEF,
         dealId: 'invalid',
         auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
@@ -40,7 +40,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
 
     const { status } = await testApi
       .put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+        dealType: DEALS.DEAL_TYPE.GEF,
         dealId: invalidDealId,
         auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
@@ -57,14 +57,14 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
     });
 
     withValidateAuditDetailsTests({
-      makeRequest: (auditDetails) => testApi.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF, dealId }).to('/v1/tfm/deals/submit'),
+      makeRequest: (auditDetails) => testApi.put({ auditDetails, dealType: DEALS.DEAL_TYPE.GEF, dealId }).to('/v1/tfm/deals/submit'),
       validUserTypes: [AUDIT_USER_TYPES.PORTAL],
     });
 
     it('returns dealSnapshot with tfm object', async () => {
       const { status, body } = await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealType: DEALS.DEAL_TYPE.GEF,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
@@ -99,7 +99,7 @@ describe('/v1/tfm/deals/submit - GEF deal', () => {
       // submit deal
       const { status } = await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealType: DEALS.DEAL_TYPE.GEF,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })

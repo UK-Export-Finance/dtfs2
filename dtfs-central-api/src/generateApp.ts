@@ -3,12 +3,14 @@ import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
 
-import { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } from './constants/routes';
+import { ROUTES } from './constants';
 
 import healthcheck from './healthcheck';
 
 import { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRoutes, swaggerRoutes } from './v1/routes';
 import removeCsrfToken from './v1/routes/middleware/remove-csrf-token';
+
+const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } = ROUTES;
 
 export const generateApp = (): Express => {
   const app = express();

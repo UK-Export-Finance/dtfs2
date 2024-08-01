@@ -1,9 +1,8 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { orderBy } = require('lodash');
 const { formattedNumber } = require('../../../utils/number');
 const { decimalsCount, roundNumber } = require('../../helpers/number');
 const isValidFacility = require('./isValidFacility.helper');
-const { AMENDMENT_STATUS } = require('../../../constants/deals');
 
 // returns the formatted amendment value and currency (without conversion)
 const amendmentChangeValueExportCurrency = (amendment) => {

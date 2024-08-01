@@ -1,4 +1,4 @@
-const CONSTANTS = require('../../../src/constants');
+const { FACILITIES } = require('../../../src/constants');
 
 const baseFacilities = {
   name: null,
@@ -16,32 +16,32 @@ const baseFacilities = {
 
 const mockFacilities = [
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+    type: FACILITIES.FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     shouldCoverStartOnSubmission: null,
     ...baseFacilities,
   },
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+    type: FACILITIES.FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     shouldCoverStartOnSubmission: true,
     canResubmitIssuedFacilities: null,
     ...baseFacilities,
   },
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+    type: FACILITIES.FACILITY_TYPE.CASH,
     hasBeenIssued: false,
     shouldCoverStartOnSubmission: null,
     ...baseFacilities,
   },
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+    type: FACILITIES.FACILITY_TYPE.CONTINGENT,
     hasBeenIssued: true,
     shouldCoverStartOnSubmission: null,
     ...baseFacilities,
   },
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+    type: FACILITIES.FACILITY_TYPE.CONTINGENT,
     hasBeenIssued: true,
     shouldCoverStartOnSubmission: true,
     canResubmitIssuedFacilities: true,
@@ -55,7 +55,7 @@ const mockFacilities = [
     ...baseFacilities,
   },
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+    type: FACILITIES.FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     shouldCoverStartOnSubmission: true,
     canResubmitIssuedFacilities: true,
@@ -77,7 +77,7 @@ const facilityWithDealId = (dealId) => ({
       status: 'In progress',
       details: {
         dealId,
-        type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+        type: FACILITIES.FACILITY_TYPE.CONTINGENT,
         hasBeenIssued: true,
         shouldCoverStartOnSubmission: true,
         canResubmitIssuedFacilities: true,

@@ -4,14 +4,14 @@ const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/ch
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS, FACILITIES } = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
 const { createFacility } = require('../../../helpers/create-facility');
 
 const newDeal = {
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+  dealType: DEALS.DEAL_TYPE.BSS_EWCS,
   bankInternalRefName: 'Test',
   additionalRefName: 'Test',
   details: {
@@ -20,7 +20,7 @@ const newDeal = {
 };
 
 const newFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+  type: FACILITIES.FACILITY_TYPE.BOND,
 };
 
 describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
@@ -31,7 +31,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
   it('400s for an invalid id', async () => {
     const { status } = await testApi
       .put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealType: DEALS.DEAL_TYPE.BSS_EWCS,
         dealId: 'invalid',
         auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
@@ -44,7 +44,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
 
     const { status } = await testApi
       .put({
-        dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+        dealType: DEALS.DEAL_TYPE.BSS_EWCS,
         dealId: invalidDealId,
         auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
@@ -62,7 +62,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
     });
 
     withValidateAuditDetailsTests({
-      makeRequest: (auditDetails) => testApi.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit'),
+      makeRequest: (auditDetails) => testApi.put({ auditDetails, dealType: DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to('/v1/tfm/deals/submit'),
       validUserTypes: [AUDIT_USER_TYPES.PORTAL],
     });
 
@@ -70,7 +70,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       const auditDetails = generatePortalAuditDetails(MOCK_PORTAL_USER._id);
       const { status, body } = await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails,
         })
@@ -109,7 +109,7 @@ describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {
       const auditDetails = generatePortalAuditDetails(MOCK_PORTAL_USER._id);
       const { status } = await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails,
         })

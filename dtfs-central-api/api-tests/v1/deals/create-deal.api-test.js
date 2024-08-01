@@ -4,7 +4,7 @@ const aDeal = require('../deal-builder');
 
 const { testApi } = require('../../test-api');
 const { expectAddedFields } = require('./expectAddedFields');
-const CONSTANTS = require('../../../src/constants');
+const { DEALS } = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
@@ -17,18 +17,18 @@ const mockUserNoBank = {
 };
 
 const newDeal = aDeal({
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+  dealType: DEALS.DEAL_TYPE.BSS_EWCS,
   editedBy: [],
   eligibility: {
     status: 'Not started',
     criteria: [{}],
   },
-  status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
+  status: DEALS.DEAL_STATUS.DRAFT,
   exporter: {
     companyName: 'mock company',
   },
   bankInternalRefName: 'test',
-  submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
+  submissionType: DEALS.SUBMISSION_TYPE.AIN,
   updatedAt: 123456789,
 });
 
