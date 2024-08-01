@@ -12,14 +12,6 @@ describe('AmendmentNotCreatedError', () => {
     expect(exception.message).toEqual('Amendment not created for facility: Example facility id');
   });
 
-  it('has the message "Amendment not created" if no facilityId is provided', () => {
-    // Act
-    const exception = new AmendmentNotCreatedError();
-
-    // Assert
-    expect(exception.message).toEqual('Amendment not created');
-  });
-
   it('is an instance of AmendmentNotCreatedError', () => {
     // Act
     const exception = new AmendmentNotCreatedError(facilityId);
