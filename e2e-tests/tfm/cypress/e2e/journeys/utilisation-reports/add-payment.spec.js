@@ -134,7 +134,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     cy.contains('button', 'Continue').click();
 
     cy.contains('Premium payments').should('exist');
-    pages.utilisationReportPage.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
+    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
   });
 
   it('submits form and reloads the page with no values when user submits form with valid values and user selects yes to adding another payment', () => {
