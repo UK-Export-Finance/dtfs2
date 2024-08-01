@@ -32,6 +32,7 @@ export type KeyingSheetAdjustmentViewModel = {
 };
 
 export type KeyingSheetViewModel = {
+  feeRecordId: number;
   status: KeyingSheetRowStatus;
   displayStatus: KeyingSheetDisplayStatus;
   facilityId: string;

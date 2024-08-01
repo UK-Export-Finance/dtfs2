@@ -139,6 +139,7 @@ export const mapKeyingSheetToKeyingSheetViewModel = (keyingSheet: KeyingSheet): 
   keyingSheet.map((keyingSheetRow) => ({
     status: keyingSheetRow.status,
     displayStatus: getKeyingSheetDisplayStatus(keyingSheetRow.status),
+    feeRecordId: keyingSheetRow.feeRecordId,
     facilityId: keyingSheetRow.facilityId,
     exporter: keyingSheetRow.exporter,
     baseCurrency: keyingSheetRow.baseCurrency,
