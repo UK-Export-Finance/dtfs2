@@ -1,5 +1,6 @@
 import { add, isAfter, isBefore, startOfDay } from 'date-fns';
 import { uniq } from 'lodash';
+import { FACILITY_END_DATE_MAXIMUM_YEARS } from '@ukef/dtfs2-common';
 import { validateAndParseDayMonthYear } from '../../utils/day-month-year-validation';
 import { DayMonthYear } from '../../types/date';
 
@@ -26,7 +27,7 @@ export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYear, cove
   const facilityEndDate = formattingErrorsOrDate.date;
 
   const now = startOfDay(new Date());
-  const nowPlusSixYears = add(now, { years: 6 });
+  const maximumFacilityEndDate = add(now, { years: FACILITY_END_DATE_MAXIMUM_YEARS });
 
   if (isBefore(facilityEndDate, coverStartDate)) {
     return {
@@ -40,12 +41,12 @@ export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYear, cove
     };
   }
 
-  if (isAfter(facilityEndDate, nowPlusSixYears)) {
+  if (isAfter(facilityEndDate, maximumFacilityEndDate)) {
     return {
       errors: [
         {
           errRef,
-          errMsg: 'Facility end date cannot be greater than 6 years in the future',
+          errMsg: `Facility end date cannot be greater than ${FACILITY_END_DATE_MAXIMUM_YEARS} years in the future`,
           subFieldErrorRefs: ['facilityEndDate-day', 'facilityEndDate-month', 'facilityEndDate-year'],
         },
       ],
