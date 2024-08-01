@@ -1,7 +1,8 @@
-const { AmendmentNotCreatedError } = require('@ukef/dtfs2-common');
+const { AmendmentNotCreatedError, InvalidFacilityIdError } = require('@ukef/dtfs2-common');
 const { isAxiosError, HttpStatusCode } = require('axios');
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { isValidMongoId } = require('../validation/validateIds');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
@@ -184,6 +185,9 @@ const getAllAmendments = async (req, res) => {
 const createFacilityAmendment = async (req, res, next) => {
   try {
     const { facilityId } = req.body;
+    if (!isValidMongoId(facilityId)) {
+      throw new InvalidFacilityIdError(facilityId);
+    }
 
     const { amendmentId } = await api.createFacilityAmendment(facilityId, generateTfmAuditDetails(req.user._id));
 
