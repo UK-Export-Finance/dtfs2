@@ -1,7 +1,8 @@
 import { FeeRecordEntity, PaymentEntity } from '@ukef/dtfs2-common';
 import Big from 'big.js';
 import { EntityManager } from 'typeorm';
-import { getActivePaymentMatchingTolerances } from '../services/utilisation-reports/payment-matching-tolerance.service';
+import { NotFoundError } from '../errors';
+import { PaymentMatchingToleranceRepo } from '../repositories/payment-matching-tolerance-repo';
 
 const calculateTotal = (values: number[]): Big => {
   return values.reduce((total, value) => total.add(value), new Big(0));
@@ -24,10 +25,15 @@ export const feeRecordsAndPaymentsMatch = async (
 
   const difference = totalReportedPayments.minus(totalPaymentsReceived).abs();
 
-  const tolerances = await getActivePaymentMatchingTolerances(transactionEntityManager);
-  const tolerance = tolerances[feeRecords[0].paymentCurrency];
+  const tolerance = await PaymentMatchingToleranceRepo.withTransaction(transactionEntityManager).findOneByCurrencyAndIsActiveTrue(
+    feeRecords[0].paymentCurrency,
+  );
 
-  if (difference.gt(tolerance)) {
+  if (tolerance === null) {
+    throw new NotFoundError(`No active payment matching tolerance found for currency ${feeRecords[0].paymentCurrency}`);
+  }
+
+  if (difference.gt(tolerance.threshold)) {
     return false;
   }
   return true;
