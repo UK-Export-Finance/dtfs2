@@ -5,7 +5,9 @@ import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { PaymentErrorsViewModel } from '../../../types/view-models';
 import { validateAddPaymentRequestFormValues } from './validate-payment-form-values';
 
-export type AddPaymentFormRequestBody = Record<PremiumPaymentsTableCheckboxId, 'on'> & {
+export type PremiumPaymentsTableCheckboxSelectionsRequestBody = Record<PremiumPaymentsTableCheckboxId, 'on'>;
+
+export type AddPaymentFormRequestBody = PremiumPaymentsTableCheckboxSelectionsRequestBody & {
   paymentCurrency?: string;
   paymentAmount?: string;
   'paymentDate-day'?: string;

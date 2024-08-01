@@ -1,6 +1,5 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency');
-const { AMENDMENT_STATUS } = require('../../../../constants/deals');
 
 describe('mapFacilityValueExportCurrency()', () => {
   const mockFacility = {

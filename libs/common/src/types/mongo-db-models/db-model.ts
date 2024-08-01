@@ -5,6 +5,8 @@ import { PortalUser } from './users';
 import { TfmUser } from './tfm-users';
 import { TfmTeam } from './tfm-teams';
 import { DeletionAuditLog } from './deletion-audit-logs';
+import { TfmFacility } from './tfm-facilities';
+import { Facility } from './facility';
 
 /**
  * This type gets the type of the MongoDB model
@@ -37,4 +39,8 @@ export type DbModel<TCollectionName extends MongoDbCollectionName> = TCollection
   ? TfmTeam
   : TCollectionName extends 'deletion-audit-logs'
   ? DeletionAuditLog
+  : TCollectionName extends 'tfm-facilities'
+  ? TfmFacility
+  : TCollectionName extends 'facilities'
+  ? Facility
   : WithId<any>;
