@@ -74,12 +74,6 @@ const AMENDMENT_BANK_DECISION = {
   WITHDRAW: 'Withdrawn',
 };
 
-const AMENDMENT_STATUS = {
-  COMPLETED: 'Completed',
-  IN_PROGRESS: 'In progress',
-  NOT_STARTED: 'Not started',
-};
-
 const DEFAULT_COUNTRY = 'United Kingdom';
 
 const UKEF_ID = {
@@ -101,7 +95,6 @@ module.exports = {
   AMENDMENT_UW_DECISION,
   AMENDMENT_TYPE,
   AMENDMENT_BANK_DECISION,
-  AMENDMENT_STATUS,
   DEFAULT_COUNTRY,
   UKEF_ID,
 };

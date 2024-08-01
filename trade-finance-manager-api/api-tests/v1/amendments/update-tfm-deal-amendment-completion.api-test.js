@@ -1,8 +1,7 @@
 const { format } = require('date-fns');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
+const { AUDIT_USER_TYPES, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const amendmentController = require('../../../src/v1/controllers/amendment.controller');
-const { AMENDMENT_STATUS } = require('../../../src/constants/deals');
 const api = require('../../../src/v1/api');
 const updateFacilityAmendment = require('../utils/updateFacilityAmendment.util');
 const MOCK_GEF_AIN_DEAL = require('../../../src/v1/__mocks__/mock-TFM-deal-AIN-submitted');

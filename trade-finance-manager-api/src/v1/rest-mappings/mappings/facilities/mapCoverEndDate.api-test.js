@@ -1,7 +1,7 @@
 const { format, fromUnixTime, set } = require('date-fns');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const { formatYear } = require('../../../../utils/date');
-const { AMENDMENT_STATUS } = require('../../../../constants/deals');
 
 describe('mapCoverEndDate', () => {
   it('should return formatted cover end date', () => {

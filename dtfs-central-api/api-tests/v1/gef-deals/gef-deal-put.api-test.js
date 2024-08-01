@@ -5,14 +5,14 @@ const { ObjectId } = require('mongodb');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../wipeDB');
 const { testApi } = require('../../test-api');
-const CONSTANTS = require('../../../src/constants');
+const { DEALS } = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
 describe('/v1/portal/gef/deals/:id', () => {
   // Update GEF deal
   describe('PUT /v1/portal/gef/deals/:id', () => {
     const newDeal = {
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+      dealType: DEALS.DEAL_TYPE.GEF,
       status: 'Draft',
     };
 
