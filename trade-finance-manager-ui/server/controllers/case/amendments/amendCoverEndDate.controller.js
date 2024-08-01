@@ -1,7 +1,7 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 
 const getAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;

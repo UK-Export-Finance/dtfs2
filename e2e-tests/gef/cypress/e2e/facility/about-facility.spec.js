@@ -192,21 +192,12 @@ context('About Facility Page', () => {
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
         aboutFacility.facilityName().clear().type('Name');
         aboutFacility.shouldCoverStartOnSubmissionNo().click();
-        aboutFacility.coverStartDateDay().clear().type(now.getDate());
-        aboutFacility
-          .coverStartDateMonth()
-          .clear()
-          .type(now.getMonth() + 1);
-        aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
-        aboutFacility.coverEndDateDay().clear().type(now.getDate());
-        aboutFacility
-          .coverEndDateMonth()
-          .clear()
-          .type(now.getMonth() + 1);
-        aboutFacility
-          .coverEndDateYear()
-          .clear()
-          .type(now.getFullYear() + 1);
+        aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
+        aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
+        aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
+        aboutFacility.coverEndDateDay().clear().type(dateConstants.tomorrowDay);
+        aboutFacility.coverEndDateMonth().clear().type(dateConstants.tomorrowMonth);
+        aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
         aboutFacility.isUsingFacilityEndDateNo().click();
 
         aboutFacility.continueButton().click();
@@ -218,21 +209,12 @@ context('About Facility Page', () => {
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
         aboutFacility.facilityName().clear().type('Name');
         aboutFacility.shouldCoverStartOnSubmissionNo().click();
-        aboutFacility.coverStartDateDay().clear().type(now.getDate());
-        aboutFacility
-          .coverStartDateMonth()
-          .clear()
-          .type(now.getMonth() + 1);
-        aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
-        aboutFacility.coverEndDateDay().clear().type(now.getDate());
-        aboutFacility
-          .coverEndDateMonth()
-          .clear()
-          .type(now.getMonth() + 1);
-        aboutFacility
-          .coverEndDateYear()
-          .clear()
-          .type(now.getFullYear() + 1);
+        aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
+        aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
+        aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
+        aboutFacility.coverEndDateDay().clear().type(dateConstants.tomorrowDay);
+        aboutFacility.coverEndDateMonth().clear().type(dateConstants.tomorrowMonth);
+        aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
 
         aboutFacility.continueButton().click();
 
@@ -244,21 +226,12 @@ context('About Facility Page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.facilityName().clear().type('Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
-      aboutFacility.coverStartDateDay().clear().type(now.getDate());
-      aboutFacility
-        .coverStartDateMonth()
-        .clear()
-        .type(now.getMonth() + 1);
-      aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
-      aboutFacility.coverEndDateDay().clear().type(now.getDate());
-      aboutFacility
-        .coverEndDateMonth()
-        .clear()
-        .type(now.getMonth() + 1);
-      aboutFacility
-        .coverEndDateYear()
-        .clear()
-        .type(now.getFullYear() + 1);
+      aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
+      aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
+      aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
+      aboutFacility.coverEndDateDay().clear().type(dateConstants.tomorrowDay);
+      aboutFacility.coverEndDateMonth().clear().type(dateConstants.tomorrowMonth);
+      aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
       if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes().click();
       }
@@ -268,14 +241,13 @@ context('About Facility Page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.facilityName().should('have.value', 'Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().should('be.checked');
-      aboutFacility.coverStartDateDay().should('have.value', now.getDate());
-      aboutFacility.coverStartDateMonth().should('have.value', now.getMonth() + 1);
-      aboutFacility.coverStartDateYear().should('have.value', now.getFullYear());
-      aboutFacility.coverEndDateDay().should('have.value', now.getDate());
-      aboutFacility.coverEndDateMonth().should('have.value', now.getMonth() + 1);
-      aboutFacility.coverEndDateYear().should('have.value', now.getFullYear() + 1);
-
-      if (facilityEndDateEnabled) {
+      aboutFacility.coverStartDateDay().should('have.value', dateConstants.today.getDate().toString()); // pre-populated date uses the 'd' format (not 'dd' like 'todayDay')
+      aboutFacility.coverStartDateMonth().should('have.value', dateConstants.today.getMonth() + 1); // pre-populated month uses the 'M' format (not 'MM' like 'todayMonth')
+      aboutFacility.coverStartDateYear().should('have.value', dateConstants.todayYear);
+      aboutFacility.coverEndDateDay().should('have.value', dateConstants.tomorrow.getDate().toString()); // pre-populated date uses the 'd' format (not 'dd' like 'tomorrowDay')
+      aboutFacility.coverEndDateMonth().should('have.value', dateConstants.tomorrow.getMonth() + 1); // pre-populated month uses the 'M' format (not 'MM' like 'tomorrowMonth')
+      aboutFacility.coverEndDateYear().should('have.value', dateConstants.tomorrowYear);
+      if (application.version >= 1) {
         aboutFacility.isUsingFacilityEndDateYes().should('be.checked');
         aboutFacility.isUsingFacilityEndDateNo().should('be.not.checked');
         aboutFacility.isUsingFacilityEndDateNo().click();
