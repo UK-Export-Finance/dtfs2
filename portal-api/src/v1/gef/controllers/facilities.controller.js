@@ -304,8 +304,8 @@ exports.deleteByDealId = async (req, res) => {
     });
     return res.status(200).send(response);
   } catch (error) {
-    // This implimentation of returning 200 if the document is not found
-    // is to preserve existing implimentation
+    // This implementation of returning 200 if the document is not found
+    // is to preserve existing implementation
     if (error instanceof DocumentNotFoundError) {
       return res.sendStatus(200);
     }

@@ -3,7 +3,7 @@ const passport = require('passport');
 const compression = require('compression');
 const swaggerUi = require('swagger-ui-express');
 const mongoSanitise = require('express-mongo-sanitize');
-const { initialiseCronJobScheduler } = require('@ukef/dtfs2-common');
+const { initialiseCronJobScheduler, apiErrorHandling } = require('@ukef/dtfs2-common');
 const healthcheck = require('./healthcheck');
 const { authRouter, openRouter } = require('./v1/routes');
 const loginController = require('./v1/controllers/user/user.routes');
@@ -50,6 +50,8 @@ const generateApp = () => {
   rootRouter.use('/v1/api-docs', swaggerUi.serve);
 
   app.use('/', rootRouter);
+
+  app.use(apiErrorHandling);
 
   return app;
 };

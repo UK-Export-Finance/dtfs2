@@ -4,6 +4,7 @@ const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
 const mongoSanitise = require('express-mongo-sanitize');
+const { apiErrorHandling } = require('@ukef/dtfs2-common');
 const healthcheck = require('./healthcheck');
 
 dotenv.config();
@@ -63,9 +64,8 @@ const generateApp = () => {
 
   app.use('/', rootRouter);
 
-  app.use((error) => {
-    console.error(error);
-  });
+  app.use(apiErrorHandling);
+
   return app;
 };
 

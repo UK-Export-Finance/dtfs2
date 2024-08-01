@@ -9,6 +9,7 @@ const RedisStore = require('connect-redis')(session);
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
+const { csrfErrorHandling, problemWithService } = require('@ukef/dtfs2-common');
 const routes = require('./routes');
 const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
@@ -112,18 +113,12 @@ const generateApp = () => {
 
   app.use('/', routes);
 
-  // eslint-disable-next-line no-unused-vars
-  app.use((error, req, res, next) => {
-    if (error.code === 'EBADCSRFTOKEN') {
-      // handle CSRF token errors here
-      res.status(error.statusCode || 500);
-      res.redirect('/');
-    } else {
-      res.render('partials/problem-with-service.njk', { user: req.session.user, error });
-    }
-  });
-
   app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
+
+  app.use(csrfErrorHandling);
+
+  app.use(problemWithService);
+
   return app;
 };
 

@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { HEADERS } = require('@ukef/dtfs2-common');
+const { HEADERS, InvalidFacilityIdError, InvalidEnvironmentVariableError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
@@ -340,25 +340,22 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
 };
 
 const createFacilityAmendment = async (facilityId, auditDetails) => {
-  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
-  if (isValid) {
-    try {
-      const response = await axios({
-        method: 'post',
-        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments`,
-        headers: headers.central,
-        data: { auditDetails },
-      });
-
-      return response.data;
-    } catch (error) {
-      console.error('Error creating facility amendment %o', error);
-      return { status: error?.response?.status || 500, data: 'Failed to create facility amendment' };
-    }
-  } else {
-    console.error('Invalid facilityId provided');
-    return { status: 400, data: 'Invalid facility id' };
+  if (!isValidMongoId(facilityId)) {
+    throw new InvalidFacilityIdError(facilityId);
   }
+
+  if (!hasValidUri(DTFS_CENTRAL_API_URL)) {
+    throw new InvalidEnvironmentVariableError('Invalid DTFS_CENTRAL_API_URL');
+  }
+
+  const response = await axios({
+    method: 'post',
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments`,
+    headers: headers.central,
+    data: { auditDetails },
+  });
+
+  return response.data;
 };
 
 const updateFacilityAmendment = async (facilityId, amendmentId, payload, auditDetails) => {

@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
+import { apiErrorHandling } from '@ukef/dtfs2-common';
 import { apiRoutes, swaggerRoutes, healthcheck } from './v1/routes';
 import { seo } from './middleware/headers/seo';
 import { security } from './middleware/headers/security';
@@ -43,6 +44,8 @@ export const generateApp = () => {
 
   // all other API routes
   app.use(apiRoutes);
+
+  app.use(apiErrorHandling);
 
   return app;
 };

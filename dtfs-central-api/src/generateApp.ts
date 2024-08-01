@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
+import { apiErrorHandling } from '@ukef/dtfs2-common';
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
 
 import { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROUTE, SWAGGER_ROUTE } from './constants/routes';
@@ -14,7 +15,6 @@ export const generateApp = (): Express => {
   const app = express();
 
   app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
-
   app.use(seo);
   app.use(security);
   app.use(healthcheck);
@@ -45,6 +45,8 @@ export const generateApp = (): Express => {
   });
 
   app.use('/', rootRouter);
+
+  app.use(apiErrorHandling);
 
   return app;
 };
