@@ -27,7 +27,7 @@ export type KeyingSheetRow = {
   feePayments: {
     currency: Currency;
     amount: number;
-    dateReceived: IsoDateTimeStamp;
+    dateReceived: IsoDateTimeStamp | null;
   }[];
   baseCurrency: Currency;
   fixedFeeAdjustment: KeyingSheetAdjustment | null;

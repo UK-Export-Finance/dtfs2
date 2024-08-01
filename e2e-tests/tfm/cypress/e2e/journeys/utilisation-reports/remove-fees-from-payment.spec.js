@@ -56,6 +56,18 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
   });
 
+  const clearFormValues = () => {
+    feeRecordIds.forEach((feeRecordId) => {
+      getFeeRecordCheckbox(feeRecordId).uncheck();
+    });
+
+    cy.getInputByLabelText('Amount received').clear();
+    cy.getInputByLabelText('Day').clear();
+    cy.getInputByLabelText('Month').clear();
+    cy.getInputByLabelText('Year').clear();
+    cy.getInputByLabelText('Payment reference (optional)').clear();
+  };
+
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
@@ -73,25 +85,50 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     cy.visit(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
   });
 
-  it('should display errors when form submitted with invalid fee selections and persist the selected fees', () => {
+  it('should display errors when form submitted with invalid fee selections and persist the selected fees and inputted values', () => {
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
     pages.utilisationReportEditPaymentPage.errorSummary().contains('Select fee or fees to remove from the payment');
+
+    clearFormValues();
 
     feeRecordIds.forEach((feeRecordId) => {
       getFeeRecordCheckbox(feeRecordId).check();
     });
+
+    cy.getInputByLabelText('Amount received').type('1234');
+    cy.getInputByLabelText('Day').type('nonsense');
+    cy.getInputByLabelText('Month').type('nonsense');
+    cy.getInputByLabelText('Year').type('nonsense');
+    cy.getInputByLabelText('Payment reference (optional)').type('Some payment reference');
+
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
+
     pages.utilisationReportEditPaymentPage.errorSummary().contains('You cannot remove all the fees. Delete the payment instead.');
     feeRecordIds.forEach((feeRecordId) => {
       getFeeRecordCheckbox(feeRecordId).should('be.checked');
     });
+
+    cy.getInputByLabelText('Amount received').should('have.value', '1234');
+    cy.getInputByLabelText('Day').should('have.value', 'nonsense');
+    cy.getInputByLabelText('Month').should('have.value', 'nonsense');
+    cy.getInputByLabelText('Year').should('have.value', 'nonsense');
+    cy.getInputByLabelText('Payment reference (optional)').should('have.value', 'Some payment reference');
   });
 
-  it('should remove the selected fees from the payment after clicking the remove selected fees button', () => {
+  it('should remove the selected fees from the payment and persist any inputted values after clicking the remove selected fees button', () => {
     const getFeeRecordRow = (feeRecordId) => cy.get(`tbody tr[data-cy="fee-record-details-table-row--feeRecordId-${feeRecordId}"]`);
     const [feeRecordIdToRemove, ...otherFeeRecordIds] = feeRecordIds;
 
+    clearFormValues();
+
     getFeeRecordCheckbox(feeRecordIdToRemove).check();
+
+    cy.getInputByLabelText('Amount received').type('1234');
+    cy.getInputByLabelText('Day').type('nonsense');
+    cy.getInputByLabelText('Month').type('nonsense');
+    cy.getInputByLabelText('Year').type('nonsense');
+    cy.getInputByLabelText('Payment reference (optional)').type('Some payment reference');
+
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
@@ -100,6 +137,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     otherFeeRecordIds.forEach((feeRecordId) => {
       getFeeRecordRow(feeRecordId).should('exist');
     });
+
+    cy.getInputByLabelText('Amount received').should('have.value', '1234');
+    cy.getInputByLabelText('Day').should('have.value', 'nonsense');
+    cy.getInputByLabelText('Month').should('have.value', 'nonsense');
+    cy.getInputByLabelText('Year').should('have.value', 'nonsense');
+    cy.getInputByLabelText('Payment reference (optional)').should('have.value', 'Some payment reference');
   });
 
   it(`should update the fee record status if another fee has been removed from the payment group`, () => {
@@ -116,7 +159,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     cy.visit(`/utilisation-reports/${reportId}`);
 
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 

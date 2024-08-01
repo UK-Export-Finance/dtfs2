@@ -1,9 +1,9 @@
 const { mapDataModel } = require('./mapDataModel');
-const CONSTANTS = require('../constants');
+const { DEALS } = require('../constants');
 
 const deal = {
   dealSnapshot: {
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+    dealType: DEALS.DEAL_TYPE.BSS_EWCS,
   },
 };
 

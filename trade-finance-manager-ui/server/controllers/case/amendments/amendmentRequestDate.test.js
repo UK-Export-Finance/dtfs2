@@ -1,12 +1,10 @@
 import { add, format } from 'date-fns';
-import { TEAM_IDS } from '@ukef/dtfs2-common';
+import { TEAM_IDS, AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 
 import amendmentsController from './amendmentRequestDate.controller';
-
-const CONSTANTS = require('../../../constants');
 
 const res = mockRes();
 
@@ -37,7 +35,7 @@ describe('controllers - case - amendments', () => {
         api.getAmendmentById = () =>
           Promise.resolve({
             status: 200,
-            data: { status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' },
+            data: { status: AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' },
           });
       });
 
@@ -99,7 +97,7 @@ describe('controllers - case - amendments', () => {
         api.getAmendmentById = () =>
           Promise.resolve({
             status: 200,
-            data: { status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' },
+            data: { status: AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' },
           });
       });
 
@@ -232,7 +230,7 @@ describe('controllers - case - amendments', () => {
           createdAmendment: {
             amendments: {
               _id: '11111',
-              status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+              status: AMENDMENT_STATUS.IN_PROGRESS,
             },
           },
           status: 200,
@@ -242,7 +240,7 @@ describe('controllers - case - amendments', () => {
         api.getAmendmentById = () =>
           Promise.resolve({
             status: 200,
-            data: { status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' },
+            data: { status: AMENDMENT_STATUS.IN_PROGRESS, dealId: '4567' },
           });
 
         const today = new Date();

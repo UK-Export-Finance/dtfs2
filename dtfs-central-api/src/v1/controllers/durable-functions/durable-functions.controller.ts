@@ -9,20 +9,17 @@ export const deleteAllDurableFunctions = async (req: CustomExpressRequest<{ reqB
 
   try {
     validateAuditDetails(auditDetails);
+
+    await deleteAllDurableFunctionLogs(auditDetails);
+    return res.status(200).send();
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails, ${error.message}`,
+        message: `Invalid auditDetails: ${error.message}`,
       });
     }
-    return res.status(500).send({ status: 500, error });
-  }
 
-  try {
-    await deleteAllDurableFunctionLogs(auditDetails);
-    return res.status(200).send();
-  } catch (error) {
     if (error instanceof DocumentNotFoundError) {
       return res.sendStatus(200);
     }

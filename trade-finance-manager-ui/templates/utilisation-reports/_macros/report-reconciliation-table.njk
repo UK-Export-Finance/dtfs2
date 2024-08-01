@@ -33,7 +33,7 @@
             {% if summaryItem.status === "REPORT_NOT_RECEIVED" %}
               {{ summaryItem.bank.name }}
             {% else %}
-              <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/{{ summaryItem.reportId }}">{{ summaryItem.bank.name }}</a>
+              <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/{{ summaryItem.reportId }}" data-cy="utilisation-report-link-{{ summaryItem.bank.id }}-submission-month-{{ submissionMonth }}">{{ summaryItem.bank.name }}</a>
             {% endif %}
           </p>
         </th>

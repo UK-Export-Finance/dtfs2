@@ -155,6 +155,26 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       },
     );
 
+    describe('when there is one fee record with zero payments in the group', () => {
+      it('maps the group to a keying sheet row with a fee payment with no date received and amount zero', () => {
+        // Arrange
+        const feeRecordPaymentGroup: FeeRecordPaymentEntityGroup = {
+          feeRecords: [FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('READY_TO_KEY').withPaymentCurrency('GBP').build()],
+          payments: [],
+        };
+
+        // Act
+        const result = mapFeeRecordPaymentEntityGroupsToKeyingSheet([feeRecordPaymentGroup]);
+
+        // Assert
+        expect(result).toHaveLength(1);
+        expect(result[0].feePayments).toHaveLength(1);
+        expect(result[0].feePayments[0].currency).toBe<Currency>('GBP');
+        expect(result[0].feePayments[0].amount).toBe(0);
+        expect(result[0].feePayments[0].dateReceived).toBe(null);
+      });
+    });
+
     describe('when there is one fee record with many payments in the group', () => {
       const aFeeRecordPaymentGroupForPayments = (paymentEntities: PaymentEntity[]): FeeRecordPaymentEntityGroup => ({
         feeRecords: [FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('READY_TO_KEY').build()],

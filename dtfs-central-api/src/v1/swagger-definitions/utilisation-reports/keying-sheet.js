@@ -31,6 +31,7 @@
  *       datePaymentReceived:
  *         type: string
  *         format: date
+ *         nullable: true
  *       feePayments:
  *         type: array
  *         items:

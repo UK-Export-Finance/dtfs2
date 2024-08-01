@@ -77,6 +77,10 @@ context('Amendments underwriting page', () => {
       amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
       amendmentsPage.continueAmendment().click();
 
+      cy.url().should('contain', 'is-using-facility-end-date');
+      amendmentsPage.isUsingFacilityEndDateYes().click();
+      amendmentsPage.continueAmendment().click();
+
       cy.url().should('contain', 'facility-value');
       amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
       amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');

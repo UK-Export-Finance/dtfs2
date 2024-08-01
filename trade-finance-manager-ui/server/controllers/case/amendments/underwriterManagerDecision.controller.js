@@ -1,8 +1,8 @@
 const { format, fromUnixTime } = require('date-fns');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 
 const { userCanEditManagersDecision } = require('../../helpers');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const { amendmentUnderwriterManagerDecisionValidation } = require('./validation/amendmentUnderwriterManagerDecision.validate');
 const { formattedNumber } = require('../../../helpers/number');
 

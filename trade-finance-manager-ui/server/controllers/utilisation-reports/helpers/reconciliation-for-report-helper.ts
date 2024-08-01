@@ -124,7 +124,7 @@ const getKeyingSheetAdjustmentViewModel = (adjustment: KeyingSheetAdjustment | n
 const mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel = (feePayments: KeyingSheetRow['feePayments']) =>
   feePayments.map(({ currency, amount, dateReceived }) => ({
     formattedCurrencyAndAmount: getFormattedCurrencyAndAmount({ currency, amount }),
-    formattedDateReceived: format(new Date(dateReceived), 'd MMM yyyy'),
+    formattedDateReceived: dateReceived ? format(new Date(dateReceived), 'd MMM yyyy') : undefined,
   }));
 
 const getKeyingSheetRowCheckboxId = (keyingSheetRow: KeyingSheetRow): KeyingSheetCheckboxId =>
@@ -139,6 +139,7 @@ export const mapKeyingSheetToKeyingSheetViewModel = (keyingSheet: KeyingSheet): 
   keyingSheet.map((keyingSheetRow) => ({
     status: keyingSheetRow.status,
     displayStatus: getKeyingSheetDisplayStatus(keyingSheetRow.status),
+    feeRecordId: keyingSheetRow.feeRecordId,
     facilityId: keyingSheetRow.facilityId,
     exporter: keyingSheetRow.exporter,
     baseCurrency: keyingSheetRow.baseCurrency,

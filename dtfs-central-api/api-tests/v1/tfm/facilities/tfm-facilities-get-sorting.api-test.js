@@ -3,7 +3,7 @@ const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
 const setObjectPropertyValueFromStringPath = require('../../../helpers/set-object-property-value-from-string-path');
-const CONSTANTS = require('../../../../src/constants');
+const { FACILITIES, DEALS } = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 describe('/v1/tfm/facilities', () => {
@@ -26,10 +26,10 @@ describe('/v1/tfm/facilities', () => {
         {
           sortByField: 'tfmFacilities.type',
           fieldValuesInAscendingOrder: [
-            CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-            CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
-            CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
-            CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+            FACILITIES.FACILITY_TYPE.BOND,
+            FACILITIES.FACILITY_TYPE.CASH,
+            FACILITIES.FACILITY_TYPE.CONTINGENT,
+            FACILITIES.FACILITY_TYPE.LOAN,
           ],
           generateFacilities: generateFacilitiesFromValues,
           getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField,
@@ -128,7 +128,7 @@ describe('/v1/tfm/facilities', () => {
 
   function newDeal(overrides) {
     return {
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+      dealType: DEALS.DEAL_TYPE.GEF,
       exporter: { companyName: 'Mock Company name' },
       ...overrides,
     };
@@ -137,7 +137,7 @@ describe('/v1/tfm/facilities', () => {
   function newFacility(overrides) {
     return {
       ukefFacilityId: '10000001',
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+      type: FACILITIES.FACILITY_TYPE.CASH,
       value: '1000',
       currency: { id: 'GBP' },
       coverEndDate: '2021-08-12T00:00:00.000Z',

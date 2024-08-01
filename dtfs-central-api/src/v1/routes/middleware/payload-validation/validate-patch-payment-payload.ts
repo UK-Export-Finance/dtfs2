@@ -1,7 +1,6 @@
 import z from 'zod';
-import { NextFunction, Request, Response } from 'express';
-import { HttpStatusCode } from 'axios';
 import { TfmSessionUserSchema } from './schemas';
+import { createValidationMiddlewareForSchema } from './create-validation-middleware-for-schema';
 
 const PatchPaymentSchema = z.object({
   paymentAmount: z.number().gte(0),
@@ -12,11 +11,4 @@ const PatchPaymentSchema = z.object({
 
 export type PatchPaymentPayload = z.infer<typeof PatchPaymentSchema>;
 
-export const validatePatchPaymentPayload = (req: Request, res: Response, next: NextFunction) => {
-  const { success, error, data } = PatchPaymentSchema.safeParse(req.body);
-  if (success) {
-    req.body = data;
-    return next();
-  }
-  return res.status(HttpStatusCode.BadRequest).send(error);
-};
+export const validatePatchPaymentPayload = createValidationMiddlewareForSchema(PatchPaymentSchema);

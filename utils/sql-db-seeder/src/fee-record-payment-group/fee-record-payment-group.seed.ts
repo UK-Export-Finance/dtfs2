@@ -4,10 +4,13 @@ import { FeeRecordPaymentGroupSeeder } from './fee-record-payment-group.seeder';
 
 export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
   const pendingReconciliationReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, { status: 'PENDING_RECONCILIATION' });
-  await FeeRecordPaymentGroupSeeder.forReport(pendingReconciliationReport).addManyRandomFeeRecords(50).save(dataSource);
+  await FeeRecordPaymentGroupSeeder.forReport(pendingReconciliationReport).addManyRandomFeeRecords(50).addAnAutoMatchedZeroPaymentFeeRecord().save(dataSource);
 
   const reconciliationInProgressReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, { status: 'RECONCILIATION_IN_PROGRESS' });
-  await FeeRecordPaymentGroupSeeder.forReport(reconciliationInProgressReport).addManyRandomFeeRecords(10).save(dataSource);
+  await FeeRecordPaymentGroupSeeder.forReport(reconciliationInProgressReport)
+    .addManyRandomFeeRecords(10)
+    .addAnAutoMatchedZeroPaymentFeeRecord()
+    .save(dataSource);
 
   // Group of fee records with same facility id
   await FeeRecordPaymentGroupSeeder.forReport(reconciliationInProgressReport).addManyRandomFeeRecords(3, { facilityId: '11111111' }).save(dataSource);
