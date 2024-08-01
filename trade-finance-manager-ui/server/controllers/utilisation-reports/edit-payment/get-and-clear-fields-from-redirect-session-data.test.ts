@@ -70,7 +70,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
       expectedAllCheckboxesChecked: true,
     },
   ])(
-    "clears the session and returns an array with a single error summary for the errorSummary when the removeFeesFromPaymentErrorKey is '%s'",
+    "clears the session and returns initialised error view model when the removeFeesFromPaymentErrorKey is '%s'",
     ({ removeFeesFromPaymentErrorKey, expectedAllCheckboxesChecked }) => {
       // Arrange
       const editPaymentFormValues = anEditPaymentFormValues();
@@ -88,6 +88,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
       expect(errors!.errorSummary).toHaveLength(1);
       expect(errors!.errorSummary[0].text).toBeDefined();
       expect(errors!.errorSummary[0].href).toBeDefined();
+      expect(errors!.removeSelectedFeesErrorMessage).toBeDefined();
       expect(formValues).toEqual(editPaymentFormValues);
       expect(allCheckboxesChecked).toEqual(expectedAllCheckboxesChecked);
     },

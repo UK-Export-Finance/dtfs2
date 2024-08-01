@@ -487,7 +487,7 @@ describe('reconciliation-for-report-helper', () => {
       principalBalanceAdjustment: null,
     });
 
-    it('maps the keying sheet status, facility id, exporter and base currency', () => {
+    it('maps the keying sheet status, facility id, feeRecordId, exporter and base currency', () => {
       // Arrange
       const keyingSheet: KeyingSheet = [
         {
@@ -496,6 +496,7 @@ describe('reconciliation-for-report-helper', () => {
           facilityId: '11111111',
           exporter: 'Some exporter',
           baseCurrency: 'JPY',
+          feeRecordId: 11,
         },
       ];
 
@@ -508,6 +509,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].facilityId).toBe('11111111');
       expect(result[0].exporter).toBe('Some exporter');
       expect(result[0].baseCurrency).toBe('JPY');
+      expect(result[0].feeRecordId).toBe(11);
     });
 
     it.each([

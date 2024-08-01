@@ -11,6 +11,7 @@ const getErrorCode = (error: ZodError): ApiErrorCode => {
       if (errorCode) {
         return errorCode;
       }
+
       switch (message) {
         case API_ERROR_CODE.INVALID_AUDIT_DETAILS:
           return API_ERROR_CODE.INVALID_AUDIT_DETAILS;
