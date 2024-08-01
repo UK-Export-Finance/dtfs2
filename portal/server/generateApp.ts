@@ -131,7 +131,7 @@ export const generateApp = () => {
     return res.render('page-not-found.njk', { user });
   });
 
-  const errorHandler: ErrorRequestHandler = (error: unknown, _req, res, next) => {
+  const errorHandler: ErrorRequestHandler = (error: unknown, req, res, next) => {
     if (isHttpError(error) && error.code === 'EBADCSRFTOKEN') {
       console.error("The user's CSRF token is incorrect, redirecting the user to /.");
       // handle CSRF token errors here
