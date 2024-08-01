@@ -1,12 +1,12 @@
 import { CurrencyAndAmount } from './currency';
 import { ReportPeriod } from './utilisation-reports';
 
-export type SelectedFeeRecordsCompatiblePaymentDetails = CurrencyAndAmount & {
+export type SelectedFeeRecordsAvailablePaymentDetails = CurrencyAndAmount & {
   id: number;
   reference?: string;
 };
-export type SelectedFeeRecordsCompatiblePaymentsGroup = SelectedFeeRecordsCompatiblePaymentDetails[];
-export type SelectedFeeRecordsCompatiblePaymentGroups = SelectedFeeRecordsCompatiblePaymentsGroup[];
+export type SelectedFeeRecordsAvailablePaymentsGroup = SelectedFeeRecordsAvailablePaymentDetails[];
+export type SelectedFeeRecordsAvailablePaymentGroups = SelectedFeeRecordsAvailablePaymentsGroup[] | undefined;
 
 export type SelectedFeeRecordsPaymentDetails = CurrencyAndAmount & {
   dateReceived: Date;
@@ -30,5 +30,5 @@ export type SelectedFeeRecordsDetails = {
   feeRecords: SelectedFeeRecordDetails[];
   payments: SelectedFeeRecordsPaymentDetails[];
   canAddToExistingPayment: boolean;
-  existingCompatiblePaymentGroups?: SelectedFeeRecordsCompatiblePaymentGroups;
+  availablePaymentGroups?: SelectedFeeRecordsAvailablePaymentGroups;
 };

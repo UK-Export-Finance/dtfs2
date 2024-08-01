@@ -10,6 +10,7 @@ import {
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { mapToSelectedReportedFeesDetailsViewModel, PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../helpers';
+import { mapToAvailablePaymentGroupViewModel } from '../helpers/available-payment-group-view-model-mapper';
 
 type AddToAnExistingPaymentRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;
@@ -25,7 +26,8 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
     const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
     const feeRecordIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds(checkedCheckboxIds);
 
-    const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetails(reportId, feeRecordIds, userToken);
+    const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups(reportId, feeRecordIds, userToken);
+    const { availablePaymentGroups } = selectedFeeRecordDetails;
 
     const addToAnExistingPaymentViewModel: AddToAnExistingPaymentViewModel = {
       user,
@@ -34,6 +36,7 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
       bank: selectedFeeRecordDetails.bank,
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(selectedFeeRecordDetails.reportPeriod),
       reportedFeeDetails: mapToSelectedReportedFeesDetailsViewModel(selectedFeeRecordDetails),
+      availablePaymentGroups: mapToAvailablePaymentGroupViewModel(availablePaymentGroups),
     };
     return renderAddToAnExistingPaymentPage(res, addToAnExistingPaymentViewModel);
   } catch (error) {

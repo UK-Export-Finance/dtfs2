@@ -16,7 +16,7 @@ export type GetSelectedFeeRecordDetailsRequest = CustomExpressRequest<{
     id: string;
   };
   query: {
-    includeExistingCompatiblePaymentGroups?: 'true' | 'false';
+    includeAvailablePaymentGroups?: 'true' | 'false';
   };
   reqBody: GetSelectedFeeRecordDetailsRequestBody;
 }>;
@@ -25,7 +25,7 @@ type ResponseBody = SelectedFeeRecordsDetails | string;
 
 export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetailsRequest, res: Response<ResponseBody>) => {
   const { id: reportId } = req.params;
-  const { includeExistingCompatiblePaymentGroups } = req.query;
+  const { includeAvailablePaymentGroups } = req.query;
   const selectedFeeRecordIds = req.body.feeRecordIds;
 
   try {
@@ -48,9 +48,7 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
     validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords);
 
     const existingCompatibleFeeRecordPaymentGroups =
-      includeExistingCompatiblePaymentGroups === 'true'
-        ? await getExistingCompatibleFeeRecordPaymentGroups(reportId, selectedFeeRecords[0].paymentCurrency)
-        : undefined;
+      includeAvailablePaymentGroups === 'true' ? await getExistingCompatibleFeeRecordPaymentGroups(reportId, selectedFeeRecords[0].paymentCurrency) : undefined;
 
     const canAddToExistingPayment = await canFeeRecordsBeAddedToExistingPayment(reportId, selectedFeeRecords);
     const selectedFeeRecordsDetails = await mapToSelectedFeeRecordDetails(

@@ -201,8 +201,8 @@ utilisationReportsRouter
  *           type: string
  *         required: true
  *         description: the id for the report the fees belong to
- *      - in: query
- *         name: includeExistingCompatiblePaymentGroups
+ *       - in: query
+ *         name: includeAvailablePaymentGroups
  *         schema:
  *           type: string
  *           enum: [true, false]

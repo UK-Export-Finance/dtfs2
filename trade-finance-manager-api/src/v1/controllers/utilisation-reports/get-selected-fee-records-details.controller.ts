@@ -8,7 +8,7 @@ type GetSelectedFeeRecordsDetailsRequest = CustomExpressRequest<{
     id: string;
   };
   query: {
-    includeExistingCompatiblePaymentGroups?: 'true' | 'false';
+    includeAvailablePaymentGroups?: 'true' | 'false';
   };
   reqBody: {
     feeRecordIds: number[];
@@ -18,11 +18,11 @@ type GetSelectedFeeRecordsDetailsRequest = CustomExpressRequest<{
 export const getSelectedFeeRecordsDetails = async (req: GetSelectedFeeRecordsDetailsRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { includeExistingCompatiblePaymentGroups } = req.query;
+    const { includeAvailablePaymentGroups } = req.query;
     const { feeRecordIds } = req.body;
 
-    const includeExistingCompatiblePaymentGroupsQuery = includeExistingCompatiblePaymentGroups === 'true';
-    const selectedFeeRecordsDetails = await api.getSelectedFeeRecordsDetails(id, feeRecordIds, includeExistingCompatiblePaymentGroupsQuery);
+    const includeAvailablePaymentGroupsQuery = includeAvailablePaymentGroups === 'true';
+    const selectedFeeRecordsDetails = await api.getSelectedFeeRecordsDetails(id, feeRecordIds, includeAvailablePaymentGroupsQuery);
 
     res.status(200).send(selectedFeeRecordsDetails);
   } catch (error) {

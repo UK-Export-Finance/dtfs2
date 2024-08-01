@@ -7,7 +7,7 @@ import {
   SelectedFeeRecordDetails,
   SelectedFeeRecordsDetails,
   SelectedFeeRecordsPaymentDetails,
-  SelectedFeeRecordsCompatiblePaymentGroups,
+  SelectedFeeRecordsAvailablePaymentGroups,
 } from '@ukef/dtfs2-common';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
@@ -18,9 +18,9 @@ import { getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../.
 import { mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups } from '../get-utilisation-report-reconciliation-details-by-id.controller/helpers/map-fee-record-payment-entity-groups-to-fee-record-payment-groups';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
-const mapFeeRecordPaymentGroupsToSelectedFeeRecordsCompatiblePaymentGroups = (
+const mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups = (
   feeRecordPaymentGroups: FeeRecordPaymentGroup[] | undefined,
-): SelectedFeeRecordsCompatiblePaymentGroups | undefined => {
+): SelectedFeeRecordsAvailablePaymentGroups | undefined => {
   if (!feeRecordPaymentGroups) {
     return undefined;
   }
@@ -95,7 +95,7 @@ export const mapToSelectedFeeRecordDetails = async (
   const recordedPaymentDetails = distinctPaymentsForFeeRecords.map((paymentEntity) => mapPaymentEntityToSelectedFeeRecordsPaymentDetails(paymentEntity));
   const selectedFeeRecordDetails = selectedFeeRecordEntities.map((feeRecordEntity) => mapFeeRecordEntityToSelectedFeeRecordDetails(feeRecordEntity));
 
-  const mappedExistingCompatiblePaymentGroups = mapFeeRecordPaymentGroupsToSelectedFeeRecordsCompatiblePaymentGroups(existingCompatibleFeeRecordPaymentGroups);
+  const mappedAvailablePaymentGroups = mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups(existingCompatibleFeeRecordPaymentGroups);
 
   return {
     bank: { name: bankName },
@@ -104,6 +104,6 @@ export const mapToSelectedFeeRecordDetails = async (
     feeRecords: selectedFeeRecordDetails,
     payments: recordedPaymentDetails,
     canAddToExistingPayment,
-    existingCompatiblePaymentGroups: mappedExistingCompatiblePaymentGroups,
+    availablePaymentGroups: mappedAvailablePaymentGroups,
   };
 };

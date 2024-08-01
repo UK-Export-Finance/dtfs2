@@ -882,18 +882,18 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, facilityI
 };
 
 /**
- * Gets the selected fee records details with the attached existing compatible
- * payment groups.
+ * Gets the selected fee records details with the attached available payment
+ * groups.
  * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The ids of the selected fee records
  * @param {string} userToken - The user token
  * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
  */
-const getSelectedFeeRecordsDetailsWithExistingCompatiblePaymentGroups = async (reportId, feeRecordIds, userToken) => {
+const getSelectedFeeRecordsDetailsWithAvailablePaymentGroups = async (reportId, feeRecordIds, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
     headers: generateHeaders(userToken),
     params: {
-      includeExistingCompatiblePaymentGroups: true,
+      includeAvailablePaymentGroups: true,
     },
     data: {
       feeRecordIds,
@@ -904,18 +904,18 @@ const getSelectedFeeRecordsDetailsWithExistingCompatiblePaymentGroups = async (r
 };
 
 /**
- * Gets the selected fee records details without the attached existing
- * compatible payment groups.
+ * Gets the selected fee records details without the attached available payment
+ * groups.
  * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The ids of the selected fee records
  * @param {string} userToken - The user token
  * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
  */
-const getSelectedFeeRecordsDetailsWithoutExistingCompatiblePaymentGroups = async (reportId, feeRecordIds, userToken) => {
+const getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups = async (reportId, feeRecordIds, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
     headers: generateHeaders(userToken),
     params: {
-      includeExistingCompatiblePaymentGroups: false,
+      includeAvailablePaymentGroups: false,
     },
     data: {
       feeRecordIds,
@@ -1203,7 +1203,8 @@ module.exports = {
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
   getAllBanks,
-  getSelectedFeeRecordsDetailsWithoutExistingCompatiblePaymentGroups,
+  getSelectedFeeRecordsDetailsWithAvailablePaymentGroups,
+  getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups,
   getReportSummariesByBankAndYear,
   addPaymentToFeeRecords,
   generateKeyingData,
