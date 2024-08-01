@@ -30,7 +30,7 @@ describe(component, () => {
   const reportId = '7';
   const paymentId = '77';
 
-  const getWrapper = ({ captionText, feeRecords, totalReportedPayments, enableSelectingFeeRecords, overrides } = {}) =>
+  const getWrapper = ({ captionText, feeRecords, totalReportedPayments, enableSelectingFeeRecords, errorMessage, overrides } = {}) =>
     render({
       reportId,
       paymentId,
@@ -38,6 +38,7 @@ describe(component, () => {
       feeRecords: feeRecords ?? aFeeRecordDetailsViewModel(),
       totalReportedPayments: totalReportedPayments ?? 'GBP 100.00',
       enableSelectingFeeRecords: enableSelectingFeeRecords ?? true,
+      errorMessage,
       overrides: overrides ?? {},
     });
 
@@ -268,5 +269,30 @@ describe(component, () => {
     const wrapper = getWrapper({ enableSelectingFeeRecords: false });
 
     wrapper.expectElement(`[data-cy="remove-selected-fees-button"]`).notToExist();
+  });
+
+  it('does not render an error message if not provided', async () => {
+    const wrapper = getWrapper({ errorMessage: undefined });
+
+    wrapper.expectText('caption').notToContain('Error');
+  });
+
+  it('renders the provided error message', async () => {
+    const wrapper = getWrapper({ errorMessage: 'Whoops' });
+
+    wrapper.expectText('caption').toContain('Error: Whoops');
+  });
+
+  it('does not apply error styling wrapper if no error message is provided', async () => {
+    const wrapper = getWrapper({ errorMessage: undefined });
+
+    wrapper.expectElement('div[data-cy="fee-record-details-error-wrapper"]').notToExist();
+  });
+
+  it('applies error styling wrapper if error message is provided', async () => {
+    const wrapper = getWrapper({ errorMessage: 'Whoops' });
+
+    wrapper.expectElement('div[data-cy="fee-record-details-error-wrapper"]').toExist();
+    wrapper.expectElement('div[data-cy="fee-record-details-error-wrapper"]').hasClass('govuk-form-group--error');
   });
 });
