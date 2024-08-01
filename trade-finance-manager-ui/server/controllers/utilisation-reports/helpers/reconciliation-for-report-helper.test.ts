@@ -537,7 +537,7 @@ describe('reconciliation-for-report-helper', () => {
             { currency: 'GBP', amount: 100.123, dateReceived: '2024-01-01T12:00:00.000' },
             { currency: 'EUR', amount: 90.91, dateReceived: '2023-12-05T12:00:00.000' },
             { currency: 'GBP', amount: 0.0123123, dateReceived: '2024-05-01T12:00:00.000' },
-            { currency: 'JPY', amount: 0, dateReceived: undefined },
+            { currency: 'JPY', amount: 0, dateReceived: null },
           ],
         },
       ];

@@ -171,7 +171,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         expect(result[0].feePayments).toHaveLength(1);
         expect(result[0].feePayments[0].currency).toBe<Currency>('GBP');
         expect(result[0].feePayments[0].amount).toBe(0);
-        expect(result[0].feePayments[0].dateReceived).toBe(undefined);
+        expect(result[0].feePayments[0].dateReceived).toBe(null);
       });
     });
 
