@@ -146,6 +146,24 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportAddAPaymentEvent).toHaveBeenCalledTimes(1);
     });
 
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA}' event`, async () => {
+      // Arrange
+      const stateMachine = UtilisationReportStateMachine.forReport(PENDING_RECONCILIATION_REPORT);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'GENERATE_KEYING_DATA',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAtMatchStatus: [],
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleUtilisationReportGenerateKeyingDataEvent).toHaveBeenCalledTimes(1);
+    });
+
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED}' event`, async () => {
       // Arrange
       const requestSource: DbRequestSource = {
@@ -168,7 +186,11 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportManuallySetCompletedEvent).toHaveBeenCalledTimes(1);
     });
 
-    const VALID_PENDING_RECONCILIATION_EVENT_TYPES = [UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT, UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED];
+    const VALID_PENDING_RECONCILIATION_EVENT_TYPES = [
+      UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
+      UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED,
+      UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
+    ];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_PENDING_RECONCILIATION_EVENT_TYPES))(
       "throws an 'InvalidStateMachineTransitionError' for event type %p",

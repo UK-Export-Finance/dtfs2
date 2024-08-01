@@ -19,7 +19,7 @@
   {% set facilityId = params.keyingSheetRow.facilityId %}
   {% set feeRecordId = params.keyingSheetRow.feeRecordId %}
   {% set exporter = params.keyingSheetRow.exporter %}
-  {% set feePayments = params.keyingSheetRow.feePayments %}
+  {% set feePayments = params.keyingSheetRow.feePayments if params.keyingSheetRow.feePayments.length > 0 else [{}] %}
   {% set baseCurrency = params.keyingSheetRow.baseCurrency %}
   {% set fixedFeeAdjustment = params.keyingSheetRow.fixedFeeAdjustment %}
   {% set premiumAccrualBalanceAdjustment = params.keyingSheetRow.premiumAccrualBalanceAdjustment %}
@@ -38,9 +38,9 @@
       </td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ facilityId }}">{{ facilityId if isFirstLineOfRow }}</td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ exporter }}">{{ exporter if isFirstLineOfRow }}</td>
-      <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}">{{ feePayment.formattedDateReceived }}</td>
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastLineOfRow }}">
-        {{ feePayment.formattedCurrencyAndAmount }}
+      <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-cy="keying-sheet-fee-payment-date-received">{{ feePayment.formattedDateReceived or "-" }}</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastLineOfRow }}" data-cy="keying-sheet-fee-payment-currency-and-amount">
+        {{ feePayment.formattedCurrencyAndAmount or "-" }}
       </td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}">{{ baseCurrency if isFirstLineOfRow }}</td>
       {{ adjustmentColumns(fixedFeeAdjustment, { showBottomBorder: isLastLineOfRow, showValues: isFirstLineOfRow }) }}

@@ -83,6 +83,8 @@ export class UtilisationReportStateMachine {
             return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
           case 'MANUALLY_SET_COMPLETED':
             return handleUtilisationReportManuallySetCompletedEvent(this.report, event.payload);
+          case 'GENERATE_KEYING_DATA':
+            return handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

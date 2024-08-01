@@ -2,7 +2,11 @@ import { FeeRecordStatus, UtilisationReportEntity, Currency, FeeRecordEntity, Pa
 import { DataSource } from 'typeorm';
 import Big from 'big.js';
 import { faker } from '@faker-js/faker';
-import { createRandomFeeRecordForReport, splitAmountIntoRandomAmounts } from './fee-record-payment-group.helpers';
+import {
+  createAutoMatchedZeroPaymentFeeRecordForReport,
+  createRandomFeeRecordForReport,
+  splitAmountIntoRandomAmounts,
+} from './fee-record-payment-group.helpers';
 
 type AddRandomFeeRecordOverrides = {
   facilityId?: string;
@@ -57,10 +61,17 @@ export class FeeRecordPaymentGroupSeeder {
 
   public addManyRandomFeeRecords(numberOfFeeRecords: number, overrides: AddRandomFeeRecordOverrides = {}): FeeRecordPaymentGroupSeeder {
     let counter = 0;
+
     while (counter < numberOfFeeRecords) {
       this.addOneRandomFeeRecord(overrides);
       counter += 1;
     }
+    return this;
+  }
+
+  public addAnAutoMatchedZeroPaymentFeeRecord(): FeeRecordPaymentGroupSeeder {
+    const autoMatchedZeroPaymentFeeRecord = createAutoMatchedZeroPaymentFeeRecordForReport(this.report);
+    this.feeRecords.push(autoMatchedZeroPaymentFeeRecord);
     return this;
   }
 
