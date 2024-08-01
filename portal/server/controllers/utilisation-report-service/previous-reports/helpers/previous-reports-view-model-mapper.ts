@@ -3,10 +3,10 @@ import {
   getFormattedReportPeriodWithLongMonth,
   getFormattedReportPeriodWithShortMonth,
   isEqualMonthAndYear,
+  PortalSessionUser,
 } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '../../../../api-response-types';
-import { PortalSessionUser } from '../../../../types/portal-session-user';
 import { PreviousReportNavItemViewModel, PreviousReportViewModel, PreviousReportsViewModel } from '../../../../types/view-models/previous-reports';
 import { getMonthName } from '../../../../helpers/getMonthName';
 

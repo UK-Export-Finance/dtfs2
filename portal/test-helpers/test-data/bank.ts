@@ -1,7 +1,7 @@
-import { Bank } from '../../server/types/bank';
+import { PortalSessionBank } from '@ukef/dtfs2-common';
 import { aMonthlyBankReportPeriodSchedule } from './bank-report-period-schedule';
 
-export const aBank = (): Bank => ({
+export const aBank = (): PortalSessionBank => ({
   _id: '6597dffeb5ef5ff4267e5044',
   id: '956',
   name: 'Barclays Bank',

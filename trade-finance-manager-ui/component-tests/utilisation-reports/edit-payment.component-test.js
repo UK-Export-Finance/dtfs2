@@ -153,4 +153,12 @@ describe(page, () => {
 
     wrapper.expectElement(`[data-cy="remove-selected-fees-button"]`).toExist();
   });
+
+  it('should render the remove selected fee records error', () => {
+    const viewModel = anEditPaymentViewModel();
+    viewModel.errors.removeSelectedFeesErrorMessage = "No you can't remove that one!";
+    const wrapper = render(viewModel);
+
+    wrapper.expectText(`[data-cy="fee-record-details-table"]`).toContain("Error: No you can't remove that one!");
+  });
 });
