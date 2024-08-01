@@ -15,4 +15,5 @@ export * from './selected-fee-records-details';
 export * from './express-custom-request';
 export * from './keying-sheet-row-status';
 export * from './keying-sheet-adjustment';
+export * from './portal-session-data';
 export * from './amendment-status';

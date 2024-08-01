@@ -80,6 +80,7 @@ const generateApp = () => {
   app.set('trustproxy', true);
   app.use(session(sessionOptions));
   app.use(cookieParser());
+  app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
   // These routes cannot use the csrf check below so must come before it
