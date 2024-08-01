@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, AMENDMENT_STATUS, mongoIdPathParamaterValidationTests } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, AMENDMENT_STATUS, withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
@@ -42,7 +42,7 @@ describe('POST TFM amendments', () => {
   });
 
   describe('POST /v1/tfm/facilities/:id/amendments', () => {
-    mongoIdPathParamaterValidationTests({
+    withMongoIdPathParameterValidationTests({
       baseUrl: '/v1/tfm/facilities/:id/amendments',
       makeRequest: (url) => testApi.post({}).to(url),
     });

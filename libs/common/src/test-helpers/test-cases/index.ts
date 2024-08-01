@@ -1,1 +1,1 @@
-export * from './mongo-id-path-paramater-validation-tests';
+export * from './with-mongo-id-path-parameter-validation-tests';

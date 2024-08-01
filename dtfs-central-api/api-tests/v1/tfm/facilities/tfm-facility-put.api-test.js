@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, mongoIdPathParamaterValidationTests } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
@@ -48,7 +48,7 @@ describe('/v1/tfm/facilities', () => {
   });
 
   describe('PUT /v1/tfm/facilities/:id', () => {
-    mongoIdPathParamaterValidationTests({
+    withMongoIdPathParameterValidationTests({
       baseUrl: '/v1/tfm/facilities/:id',
       makeRequest: (url) => testApi.put({}).to(url),
     });

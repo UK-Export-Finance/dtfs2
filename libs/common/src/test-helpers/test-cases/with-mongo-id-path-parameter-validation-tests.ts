@@ -8,7 +8,7 @@ interface ErrorResponse extends Response {
   body: ApiErrorResponseBody;
 }
 
-type MongoIdPathParamaterValidationTestsParams = {
+type WithMongoIdPathParameterValidationTestsParams = {
   baseUrl: string;
   makeRequest: <TResponse extends ErrorResponse>(url: string) => Promise<TResponse>;
 };
@@ -19,7 +19,7 @@ const extractParameters = (url: string): string[] =>
     .filter((pathStr) => pathStr.startsWith(':'))
     .map((pathParam) => pathParam.replace(':', ''));
 
-export const mongoIdPathParamaterValidationTests = ({ baseUrl, makeRequest }: MongoIdPathParamaterValidationTestsParams): void => {
+export const withMongoIdPathParameterValidationTests = ({ baseUrl, makeRequest }: WithMongoIdPathParameterValidationTestsParams): void => {
   const parameters = extractParameters(baseUrl);
 
   describe.each(parameters)("when the ':%s' path parameter is not a valid mongo id", (parameter) => {

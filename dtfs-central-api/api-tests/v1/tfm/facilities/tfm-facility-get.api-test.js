@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, mongoIdPathParamaterValidationTests } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
@@ -40,7 +40,7 @@ describe('/v1/tfm/facilities', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id', () => {
-    mongoIdPathParamaterValidationTests({
+    withMongoIdPathParameterValidationTests({
       baseUrl: '/v1/tfm/facilities/:id',
       makeRequest: (url) => testApi.get(url),
     });

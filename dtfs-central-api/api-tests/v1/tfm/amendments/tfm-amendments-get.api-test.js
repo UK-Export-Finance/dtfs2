@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, AMENDMENT_STATUS, CURRENCY, mongoIdPathParamaterValidationTests } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AMENDMENT_STATUS, CURRENCY, withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
@@ -38,7 +38,7 @@ describe('GET TFM amendments', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments', () => {
-    mongoIdPathParamaterValidationTests({
+    withMongoIdPathParameterValidationTests({
       baseUrl: '/v1/tfm/facilities/:id/amendments',
       makeRequest: (url) => testApi.get(url),
     });
@@ -90,7 +90,7 @@ describe('GET TFM amendments', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments/:amendmentId', () => {
-    mongoIdPathParamaterValidationTests({
+    withMongoIdPathParameterValidationTests({
       baseUrl: '/v1/tfm/facilities/:id/amendments/:amendmentId',
       makeRequest: (url) => testApi.get(url),
     });
@@ -126,7 +126,7 @@ describe('GET TFM amendments', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments/in-progress', () => {
-    mongoIdPathParamaterValidationTests({
+    withMongoIdPathParameterValidationTests({
       baseUrl: '/v1/tfm/facilities/:id/amendments/in-progress',
       makeRequest: (url) => testApi.get(url),
     });
@@ -184,7 +184,7 @@ describe('GET TFM amendments', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments/completed', () => {
-    mongoIdPathParamaterValidationTests({
+    withMongoIdPathParameterValidationTests({
       baseUrl: '/v1/tfm/facilities/:id/amendments/completed',
       makeRequest: (url) => testApi.get(url),
     });
@@ -268,7 +268,7 @@ describe('GET TFM amendments', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments/completed/latest', () => {
-    mongoIdPathParamaterValidationTests({
+    withMongoIdPathParameterValidationTests({
       baseUrl: '/v1/tfm/facilities/:id/amendments/completed/latest',
       makeRequest: (url) => testApi.get(url),
     });
