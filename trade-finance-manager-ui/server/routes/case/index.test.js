@@ -16,7 +16,7 @@ describe('routes - case', () => {
     require('./index'); // eslint-disable-line global-require
 
     // GET routes
-    expect(get).toHaveBeenCalledTimes(44);
+    expect(get).toHaveBeenCalledTimes(45);
 
     expect(get).toHaveBeenCalledWith('/:_id/deal', caseController.getCaseDeal);
 
@@ -82,6 +82,14 @@ describe('routes - case', () => {
       '/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date',
       amendmentsController.getAmendmentEffectiveDate,
     );
+
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.getAmendCoverEndDate);
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date',
+      amendmentsController.getAmendmentIsUsingFacilityEndDate,
+    );
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.getAmendFacilityValue);
+
     expect(get).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter',
       amendmentsController.getAssignAmendmentLeadUnderwriter,
@@ -110,7 +118,7 @@ describe('routes - case', () => {
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.getAmendmentTask);
 
     // POST routes
-    expect(post).toHaveBeenCalledTimes(40);
+    expect(post).toHaveBeenCalledTimes(41);
 
     expect(post).toHaveBeenCalledWith('/:_id/tasks', caseController.filterCaseTasks);
 
@@ -181,6 +189,14 @@ describe('routes - case', () => {
       '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision',
       amendmentsController.postAmendmentAddUnderwriterManagersFacilityValue,
     );
+
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.postAmendCoverEndDate);
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date',
+      amendmentsController.postAmendmentIsUsingFacilityEndDate,
+    );
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.postAmendFacilityValue);
+
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.postAmendmentBankDecisionChoice);
     expect(post).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date',

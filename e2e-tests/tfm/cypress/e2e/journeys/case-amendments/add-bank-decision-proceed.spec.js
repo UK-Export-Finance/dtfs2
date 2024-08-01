@@ -10,6 +10,8 @@ import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1
 import pages from '../../pages';
 import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
 
+const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED');
+
 context('Amendments underwriting - add banks decision - proceed', () => {
   // If the expiry & commencement date are the same day of the month then we add one to the month
   // difference for BS (but not for EWCS)
@@ -104,6 +106,12 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.tomorrowMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.tomorrowYear);
     amendmentsPage.continueAmendment().click();
+
+    if (tfmFacilityEndDateEnabled) {
+      cy.url().should('contain', 'is-using-facility-end-date');
+      amendmentsPage.isUsingFacilityEndDateYes().click();
+      amendmentsPage.continueAmendment().click();
+    }
 
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
