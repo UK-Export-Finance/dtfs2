@@ -7,3 +7,5 @@ export * from './tfm-session-user';
 export * from './tfm-user';
 export * from './utilisation-report-raw-csv-data';
 export * from './facility';
+export * from './tfm-facility-amendment';
+export * from './tfm-facility';

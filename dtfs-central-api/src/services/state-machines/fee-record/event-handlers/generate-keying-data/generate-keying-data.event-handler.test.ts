@@ -12,7 +12,10 @@ import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.e
 import { aReportPeriod } from '../../../../../../test-helpers/test-data';
 import { calculateFixedFeeAdjustment } from '../helpers';
 
-jest.mock('../helpers');
+jest.mock<unknown>('../helpers', () => ({
+  ...jest.requireActual('../helpers'),
+  calculateFixedFeeAdjustment: jest.fn(),
+}));
 
 describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   const mockSave = jest.fn();
@@ -136,7 +139,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
       // Assert
       expect(feeRecord.fixedFeeAdjustment).toBe(999.99);
-      expect(calculateFixedFeeAdjustment).toHaveBeenCalledWith(feeRecord, reportPeriod);
+      expect(calculateFixedFeeAdjustment).toHaveBeenCalledWith(feeRecord, feeRecord.facilityUtilisationData, reportPeriod);
     });
 
     it('sets the fee record premiumAccrualBalanceAdjustment to 10', async () => {

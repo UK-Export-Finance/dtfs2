@@ -21,7 +21,7 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
-  const fixedFeeAdjustment = await calculateFixedFeeAdjustment(feeRecord, reportPeriod);
+  const fixedFeeAdjustment = await calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod);
   const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(feeRecord, feeRecord.facilityUtilisationData);
   feeRecord.updateWithKeyingData({
     fixedFeeAdjustment,

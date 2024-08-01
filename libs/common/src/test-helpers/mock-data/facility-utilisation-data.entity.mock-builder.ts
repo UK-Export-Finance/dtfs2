@@ -12,6 +12,7 @@ export class FacilityUtilisationDataEntityMockBuilder {
     const facility = new FacilityUtilisationDataEntity();
     facility.id = id;
     facility.utilisation = 0;
+    facility.fixedFee = 0;
     facility.reportPeriod = {
       start: { month: 1, year: 2024 },
       end: { month: 1, year: 2024 },
@@ -32,6 +33,11 @@ export class FacilityUtilisationDataEntityMockBuilder {
 
   public withReportPeriod(reportPeriod: ReportPeriod): FacilityUtilisationDataEntityMockBuilder {
     this.data.reportPeriod = reportPeriod;
+    return this;
+  }
+
+  public withFixedFee(fixedFee: number): FacilityUtilisationDataEntityMockBuilder {
+    this.data.fixedFee = fixedFee;
     return this;
   }
 

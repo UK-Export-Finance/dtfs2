@@ -1,34 +1,23 @@
 import Big from 'big.js';
-import { differenceInDays, isBefore } from 'date-fns';
-import { FeeRecordEntity, getStartOfReportPeriod, ReportPeriod } from '@ukef/dtfs2-common';
-import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
+import { FacilityUtilisationDataEntity, FeeRecordEntity, ReportPeriod } from '@ukef/dtfs2-common';
+import { calculateFixedFee } from './calculate-fixed-fee';
 
-const getUkefMarginLessTenPercent = async (facilityId: string): Promise<number> => {
-  const coverPercentage = await TfmFacilitiesRepo.getCoverPercentageByUkefFacilityId(facilityId); // this information shouldn't be needed
-  const interestPercentage = await TfmFacilitiesRepo.getInterestPercentageByUkefFacilityId(facilityId);
-  return new Big(coverPercentage).mul(interestPercentage).mul(0.9).toNumber();
-};
-
-const getNumberOfDaysRemainingInCoverPeriod = async (facilityId: string, reportPeriod: ReportPeriod): Promise<number> => {
-  const coverEndDate = await TfmFacilitiesRepo.getCoverEndDateByUkefFacilityId(facilityId);
-  const coverStartDate = await TfmFacilitiesRepo.getCoverStartDateByUkefFacilityId(facilityId);
-  const currentReportPeriodStartDate = getStartOfReportPeriod(reportPeriod);
-
-  if (isBefore(currentReportPeriodStartDate, coverStartDate)) {
-    return differenceInDays(coverEndDate, coverStartDate);
+/**
+ * Calculates the fixed fee adjustment
+ * @param feeRecord - The fee record entity
+ * @param facilityUtilisationData - The facility utilisation data entity
+ * @param reportPeriod - The report period
+ * @returns The fixed fee adjustment
+ * @throws {Error} If the supplied fee record facility id does not match the facility utilisation data id
+ */
+export const calculateFixedFeeAdjustment = async (
+  feeRecord: FeeRecordEntity,
+  facilityUtilisationData: FacilityUtilisationDataEntity,
+  reportPeriod: ReportPeriod,
+): Promise<number> => {
+  if (feeRecord.facilityId !== facilityUtilisationData.id) {
+    throw new Error('Fee record facility id does not match the facility utilisation id');
   }
-  return differenceInDays(coverEndDate, currentReportPeriodStartDate);
-};
-
-export const calculateFixedFeeAdjustment = async (feeRecord: FeeRecordEntity, reportPeriod: ReportPeriod): Promise<number> => {
-  const ukefMarginLessTenPercent = await getUkefMarginLessTenPercent(feeRecord.facilityId);
-  const numberOfDaysRemainingInCoverPeriod = await getNumberOfDaysRemainingInCoverPeriod(feeRecord.facilityId, reportPeriod);
-  const dayCountBasis = await TfmFacilitiesRepo.getDayCountBasisByUkefFacilityId(feeRecord.facilityId);
-  return new Big(feeRecord.facilityUtilisationData.utilisation)
-    .mul(ukefMarginLessTenPercent)
-    .mul(numberOfDaysRemainingInCoverPeriod)
-    .div(dayCountBasis)
-    .sub(feeRecord.getTotalFeesAccruedForThePeriodInTheBaseCurrency())
-    .round(2)
-    .toNumber();
+  const currentFixedFee = await calculateFixedFee(feeRecord.facilityUtilisation, feeRecord.facilityId, reportPeriod);
+  return new Big(currentFixedFee).sub(facilityUtilisationData.fixedFee).round(2).toNumber();
 };

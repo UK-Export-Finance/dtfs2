@@ -43,6 +43,7 @@
     "express-rate-limit": "^6.11.2",
     "express-validator": "^7.1.0",
     "lodash": "^4.17.21",
+    "lodash.orderby": "^4.6.0",
     "mongo-dot-notation": "3.1.0",
     "mongodb": "4.17.2",
     "node-cron": "^3.0.3",
