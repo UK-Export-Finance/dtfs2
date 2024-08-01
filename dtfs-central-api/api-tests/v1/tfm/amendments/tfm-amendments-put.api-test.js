@@ -11,6 +11,8 @@ const { createDeal } = require('../../../helpers/create-deal');
 const { createFacility } = require('../../../helpers/create-facility');
 const { aPortalUser, aTfmUser } = require('../../../../test-helpers/test-data');
 
+console.error = jest.fn();
+
 describe('PUT TFM amendments', () => {
   let dealId;
 

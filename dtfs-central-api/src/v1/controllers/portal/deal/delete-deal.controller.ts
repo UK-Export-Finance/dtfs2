@@ -1,12 +1,15 @@
 import { deleteOne, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
-import { InvalidAuditDetailsError, AuditDetails, MONGO_DB_COLLECTIONS, DocumentNotDeletedError } from '@ukef/dtfs2-common';
+import { InvalidAuditDetailsError, AuditDetails, MONGO_DB_COLLECTIONS, DocumentNotDeletedError, ApiErrorResponseBody } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { findOneDeal } from './get-deal.controller';
 import { mongoDbClient as db } from '../../../../drivers/db-client';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 
-export const deleteDeal = async (req: CustomExpressRequest<{ params: { id: string }; reqBody: { auditDetails: AuditDetails } }>, res: Response) => {
+export const deleteDeal = async (
+  req: CustomExpressRequest<{ params: { id: string }; reqBody: { auditDetails: AuditDetails } }>,
+  res: Response<ApiErrorResponseBody>,
+) => {
   const { id } = req.params;
   const { auditDetails } = req.body;
 
@@ -20,10 +23,11 @@ export const deleteDeal = async (req: CustomExpressRequest<{ params: { id: strin
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails: ${error.message}`,
+        message: error.message,
+        code: error.code,
       });
     }
-    return res.status(500).send({ status: 500, error });
+    return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
   }
 
   const deal = (await findOneDeal(id)) as object;
@@ -40,11 +44,11 @@ export const deleteDeal = async (req: CustomExpressRequest<{ params: { id: strin
       auditDetails,
     });
 
-    return res.status(200).send();
+    return res.sendStatus(200);
   } catch (error) {
     if (error instanceof DocumentNotDeletedError) {
       return res.sendStatus(404);
     }
-    return res.status(500).send({ status: 500, error });
+    return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
   }
 };
