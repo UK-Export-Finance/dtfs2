@@ -1,5 +1,5 @@
 const { AmendmentNotCreatedError } = require('@ukef/dtfs2-common');
-const { isAxiosError } = require('axios');
+const { isAxiosError, HttpStatusCode } = require('axios');
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
@@ -110,9 +110,9 @@ const getAmendmentById = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const amendment = await api.getAmendmentById(facilityId, amendmentId);
   if (amendment) {
-    return res.status(200).send(amendment);
+    return res.status(HttpStatusCode.Ok).send(amendment);
   }
-  return res.status(422).send({ data: 'Unable to get the amendment by Id' });
+  return res.status(HttpStatusCode.UnprocessableEntity).send({ data: 'Unable to get the amendment by Id' });
 };
 
 const getAmendmentByFacilityId = async (req, res) => {
@@ -139,9 +139,9 @@ const getAmendmentByFacilityId = async (req, res) => {
       }
   }
   if (amendment) {
-    return res.status(200).send(amendment);
+    return res.status(HttpStatusCode.Ok).send(amendment);
   }
-  return res.status(422).send({ data: 'Unable to get the amendment by facilityId' });
+  return res.status(HttpStatusCode.UnprocessableEntity).send({ data: 'Unable to get the amendment by facilityId' });
 };
 
 const getAmendmentsByDealId = async (req, res) => {
@@ -164,9 +164,9 @@ const getAmendmentsByDealId = async (req, res) => {
       }
   }
   if (amendment) {
-    return res.status(200).send(amendment);
+    return res.status(HttpStatusCode.Ok).send(amendment);
   }
-  return res.status(422).send({ data: 'Unable to get the amendments by deal Id' });
+  return res.status(HttpStatusCode.UnprocessableEntity).send({ data: 'Unable to get the amendments by deal Id' });
 };
 
 const getAllAmendments = async (req, res) => {
@@ -176,9 +176,9 @@ const getAllAmendments = async (req, res) => {
     amendment = await api.getAllAmendmentsInProgress();
   }
   if (amendment) {
-    return res.status(200).send(amendment);
+    return res.status(HttpStatusCode.Ok).send(amendment);
   }
-  return res.status(422).send({ data: 'Unable to fetch amendments' });
+  return res.status(HttpStatusCode.UnprocessableEntity).send({ data: 'Unable to fetch amendments' });
 };
 
 const createFacilityAmendment = async (req, res, next) => {
@@ -191,10 +191,10 @@ const createFacilityAmendment = async (req, res, next) => {
       throw new AmendmentNotCreatedError(facilityId);
     }
 
-    return res.status(200).send({ amendmentId });
+    return res.status(HttpStatusCode.Ok).send({ amendmentId });
   } catch (error) {
     if (isAxiosError(error)) {
-      return res.status(error?.response?.status || 500).json({ data: 'Failed to create facility amendment' });
+      return res.status(error?.response?.status || HttpStatusCode.InternalServerError).json({ data: 'Failed to create facility amendment' });
     }
 
     return next(error);
@@ -285,15 +285,15 @@ const updateFacilityAmendment = async (req, res) => {
       }
 
       if (createdAmendment) {
-        return res.status(200).send(createdAmendment);
+        return res.status(HttpStatusCode.Ok).send(createdAmendment);
       }
     }
   } catch (error) {
     console.error('Unable to update amendment %o', error);
-    return res.status(400).send({ data: 'Unable to update amendment' });
+    return res.status(HttpStatusCode.BadRequest).send({ data: 'Unable to update amendment' });
   }
 
-  return res.status(422).send({ data: 'Unable to update amendment' });
+  return res.status(HttpStatusCode.UnprocessableEntity).send({ data: 'Unable to update amendment' });
 };
 
 module.exports = {
