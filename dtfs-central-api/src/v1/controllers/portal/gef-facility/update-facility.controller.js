@@ -72,7 +72,7 @@ exports.updateFacilityPut = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails, ${error.message}`,
+        message: `Invalid auditDetails: ${error.message}`,
       });
     }
 

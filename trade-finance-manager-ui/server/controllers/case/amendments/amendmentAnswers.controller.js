@@ -1,6 +1,6 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const { formattedNumber } = require('../../../helpers/number');
 
 const getAmendmentAnswers = async (req, res) => {

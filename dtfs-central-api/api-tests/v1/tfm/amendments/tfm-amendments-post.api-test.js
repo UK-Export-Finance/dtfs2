@@ -1,9 +1,9 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
@@ -20,7 +20,7 @@ describe('POST TFM amendments', () => {
   };
 
   const newDeal = aDeal({
-    dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+    dealType: DEALS.DEAL_TYPE.BSS_EWCS,
     additionalRefName: 'mock name',
     bankInternalRefName: 'mock id',
     editedBy: [],
@@ -50,7 +50,7 @@ describe('POST TFM amendments', () => {
 
         await testApi
           .put({
-            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealType: DEALS.DEAL_TYPE.BSS_EWCS,
             dealId,
             auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
           })
@@ -81,40 +81,40 @@ describe('POST TFM amendments', () => {
         });
       });
 
-      it('should return 400 if an amendment already exists', async () => {
+      it('should return 409 if an in progress amendment already exists', async () => {
         const { body: bodyPostResponse1 } = await testApi
           .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments`);
 
-        const updatePayload1 = { status: CONSTANTS.AMENDMENT.AMENDMENT_STATUS.IN_PROGRESS };
+        const updatePayload1 = { status: AMENDMENT_STATUS.IN_PROGRESS };
         await testApi
           .put({ payload: updatePayload1, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments/${bodyPostResponse1.amendmentId}`);
 
-        const { body } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
-        expect(body).toEqual({ status: 400, message: 'The current facility already has an amendment in progress' });
+        const { status } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
+        expect(status).toEqual(409);
       });
     });
 
     it('should return 404 if the facility does not exist', async () => {
-      const { body } = await testApi
+      const { status } = await testApi
         .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to('/v1/tfm/facilities/62727d055ca1841f08216353/amendments');
 
-      expect(body).toEqual({ status: 404, message: 'The current facility does not exist' });
+      expect(status).toEqual(404);
     });
 
     it('should return 400 if the facility Id is not valid', async () => {
       await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
-      const { body } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/facilities/123/amendments');
-      expect(body).toEqual({ status: 400, message: 'Invalid facility id' });
+      const { status } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/facilities/123/amendments');
+      expect(status).toEqual(400);
     });
   });
 });

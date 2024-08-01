@@ -11,6 +11,7 @@ describe(component, () => {
   const aKeyingSheetTableRow = (): KeyingSheetTableRow => ({
     status: 'TO_DO',
     displayStatus: 'TO DO',
+    feeRecordId: 12,
     facilityId: '12345678',
     exporter: 'Test exporter',
     baseCurrency: 'GBP',

@@ -9,7 +9,7 @@ const { updateDeal } = require('./update-deal.controller');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 const { updateFacility } = require('../gef-facility/update-facility.controller');
 const { isNumber } = require('../../../../helpers');
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants/activityConstants');
+const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants');
 
 /**
  * canResubmitIssuedFacilities - changes flags to false
@@ -170,7 +170,7 @@ const generateMINActivities = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails, ${error.message}`,
+        message: `Invalid auditDetails: ${error.message}`,
       });
     }
     return res.status(500).send({ status: 500, error });

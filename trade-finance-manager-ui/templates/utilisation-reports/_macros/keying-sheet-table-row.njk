@@ -17,6 +17,7 @@
   {% set status = params.keyingSheetRow.status %}
   {% set displayStatus = params.keyingSheetRow.displayStatus %}
   {% set facilityId = params.keyingSheetRow.facilityId %}
+  {% set feeRecordId = params.keyingSheetRow.feeRecordId %}
   {% set exporter = params.keyingSheetRow.exporter %}
   {% set feePayments = params.keyingSheetRow.feePayments %}
   {% set baseCurrency = params.keyingSheetRow.baseCurrency %}
@@ -28,7 +29,7 @@
   {% for feePayment in feePayments %}
     {% set isFirstLineOfRow = loop.index === 1 %}
     {% set isLastLineOfRow = loop.index === feePayments.length %}
-    <tr class="govuk-table__row">
+    <tr class="govuk-table__row" data-cy="keying-sheet-row-{{ feeRecordId }}">
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ status }}">
         {{ KeyingSheetRowStatus.render({
           status: status,

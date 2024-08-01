@@ -1,11 +1,10 @@
 const { fromUnixTime, format } = require('date-fns');
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const dealReducer = require('./deal');
 const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
 
 const MOCK_GEF_DEAL = require('../__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('../__mocks__/mock-cash-contingent-facilities');
-const { AMENDMENT_STATUS } = require('../../constants/deals');
 
 describe('gef deal with amendments', () => {
   const coverEndDateUnix = 1658403289;

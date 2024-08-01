@@ -1,1 +1,1 @@
-export { TfmFacilitiesRepo } from './tfm-facilities.repo';
+export * from './tfm-facilities.repo';

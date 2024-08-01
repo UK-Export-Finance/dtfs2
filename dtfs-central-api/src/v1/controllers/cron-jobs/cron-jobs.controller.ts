@@ -9,17 +9,7 @@ export const deleteAllEstoreLogs = async (req: CustomExpressRequest<{ reqBody: {
 
   try {
     validateAuditDetails(auditDetails);
-  } catch (error) {
-    if (error instanceof InvalidAuditDetailsError) {
-      return res.status(error.status).send({
-        status: error.status,
-        message: `Invalid auditDetails, ${error.message}`,
-      });
-    }
-    return res.status(500).send({ status: 500, error });
-  }
 
-  try {
     await deleteMany({
       filter: {},
       collectionName: MONGO_DB_COLLECTIONS.CRON_JOB_LOGS,
@@ -29,6 +19,13 @@ export const deleteAllEstoreLogs = async (req: CustomExpressRequest<{ reqBody: {
 
     return res.status(200).send();
   } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: `Invalid auditDetails: ${error.message}`,
+      });
+    }
+
     if (error instanceof DocumentNotFoundError) {
       return res.sendStatus(200);
     }

@@ -25,12 +25,7 @@ import amendmentsPage from './amendments/amendmentsPage';
 import feedbackPage from './feedbackPage';
 import footer from './footer';
 import activitiesPage from './activities/activitiesPage';
-import { utilisationReportsSummaryPage } from './utilisationReportsSummaryPage';
-import { utilisationReportPage } from './utilisationReportPage';
-import { searchUtilisationReportsFormPage, searchUtilisationReportsResultsPage } from './searchUtilisationReportsPage';
-import { utilisationReportAddPaymentPage } from './utilisationReportAddPaymentPage';
-import { utilisationReportConfirmDeletePaymentPage } from './utilisationReportConfirmDeletePaymentPage';
-import { utilisationReportEditPaymentPage } from './utilisationReportEditPaymentPage';
+import { utilisationReportPages } from './utilisation-reports';
 
 export default {
   landingPage,
@@ -60,11 +55,5 @@ export default {
   amendmentsPage,
   footer,
   activitiesPage,
-  utilisationReportsSummaryPage,
-  utilisationReportPage,
-  searchUtilisationReportsFormPage,
-  searchUtilisationReportsResultsPage,
-  utilisationReportAddPaymentPage,
-  utilisationReportConfirmDeletePaymentPage,
-  utilisationReportEditPaymentPage,
+  ...utilisationReportPages,
 };

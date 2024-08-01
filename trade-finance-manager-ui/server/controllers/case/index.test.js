@@ -1,9 +1,9 @@
+import { AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
 import { getTask } from '../helpers';
 import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
-import CONSTANTS from '../../constants';
 
 const res = mockRes();
 
@@ -40,7 +40,7 @@ describe('controllers - case', () => {
           ukefFacilityId: '1234',
           facilityId: '12345',
           submittedByPim: false,
-          status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+          status: AMENDMENT_STATUS.IN_PROGRESS,
         },
       ];
 
@@ -614,7 +614,7 @@ describe('controllers - case', () => {
         dealId: '625e99cb88eeeb001e33bf47',
         createdAt: 1652866533,
         updatedAt: 1652876975,
-        status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+        status: AMENDMENT_STATUS.IN_PROGRESS,
         version: 1,
         createdBy: {},
         requestDate: 1652876967,
