@@ -1,5 +1,6 @@
+import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { typeFilters, hasBeenIssuedFilters, facilitiesTemplateFilters, createdByYouFilter } from './template-filters';
-import { FIELD_NAMES, FACILITY_HAS_BEEN_ISSUED, FACILITY_TYPE } from '../../../constants';
+import { FIELD_NAMES, FACILITY_HAS_BEEN_ISSUED } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import { generateFiltersArray, submissionTypeFilters } from '../filters/generate-template-filters';
 

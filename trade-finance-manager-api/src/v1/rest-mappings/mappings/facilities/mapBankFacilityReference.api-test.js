@@ -1,16 +1,16 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const mapBankFacilityReference = require('./mapBankFacilityReference');
-const CONSTANTS = require('../../../../constants');
 
 describe('mapBankFacilityReference', () => {
   const mockBond = {
     _id: '1234',
-    ukefFacilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+    ukefFacilityType: FACILITY_TYPE.BOND,
     name: 'abc123',
   };
 
   const mockLoan = {
     _id: '1234',
-    ukefFacilityType: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+    ukefFacilityType: FACILITY_TYPE.LOAN,
     name: '700',
   };
 

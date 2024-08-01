@@ -1,4 +1,4 @@
-const ROLES = require('./roles');
+const { ROLES, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const ALL_BANKS_ID = require('./all-banks-id');
 
 const DEAL_SUBMISSION_TYPE = {
@@ -32,11 +32,6 @@ const DEAL_STATUS = {
 const DEAL_TYPE = {
   GEF: 'GEF',
   BSS_EWCS: 'BSS/EWCS',
-};
-
-const FACILITY_TYPE = {
-  CASH: 'Cash',
-  CONTINGENT: 'Contingent',
 };
 
 const BOOLEAN = {

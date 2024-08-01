@@ -1,10 +1,5 @@
 const DEAL_TYPE = 'GEF';
 
-const FACILITY_TYPE = {
-  CASH: 'Cash',
-  CONTINGENT: 'Contingent',
-};
-
 const DEAL_STATUS = {
   DRAFT: 'Draft',
   NOT_STARTED: 'Not started',
@@ -50,7 +45,6 @@ const FACILITY_PAYMENT_TYPE = {
 
 module.exports = {
   DEAL_TYPE,
-  FACILITY_TYPE,
   DEAL_STATUS,
   ERROR,
   FACILITY_PROVIDED_DETAILS,

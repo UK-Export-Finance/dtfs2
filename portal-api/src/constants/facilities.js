@@ -1,10 +1,3 @@
-const FACILITY_TYPE = {
-  BOND: 'Bond',
-  LOAN: 'Loan',
-  CASH: 'Cash',
-  CONTINGENT: 'Contingent',
-};
-
 const FEE_TYPE = {
   ADVANCE: 'In advance',
   ARREAR: 'In arrear',
@@ -65,7 +58,6 @@ const TYPE = {
 };
 
 module.exports = {
-  FACILITY_TYPE,
   FEE_TYPE,
   FEE_FREQUENCY,
   GEF_FACILITY_PROVIDED_DETAILS,
