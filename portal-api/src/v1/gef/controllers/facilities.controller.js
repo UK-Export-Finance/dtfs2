@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const { ObjectId } = require('mongodb');
 const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, DocumentNotFoundError, ApiError, DealNotFoundError, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne, deleteMany } = require('@ukef/dtfs2-common/change-stream');
@@ -13,11 +14,13 @@ exports.create = async (req, res) => {
   try {
     const enumValidationErr = facilitiesCheckEnums(req.body);
     if (!req.body.type || !req.body.dealId) {
-      return res.status(422).send([{ status: 422, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
+      return res
+        .status(HttpStatusCode.UnprocessableEntity)
+        .send([{ status: HttpStatusCode.UnprocessableEntity, errCode: 'MANDATORY_FIELD', errMsg: 'No Application ID and/or facility type sent with request' }]);
     }
 
     if (enumValidationErr) {
-      return res.status(422).send(enumValidationErr);
+      return res.status(HttpStatusCode.UnprocessableEntity).send(enumValidationErr);
     }
 
     if (!ObjectId.isValid(req.body.dealId)) {
@@ -51,7 +54,7 @@ exports.create = async (req, res) => {
       details: facility,
       validation: facilitiesValidation(facility, existingDeal.version),
     };
-    return res.status(201).json(response);
+    return res.status(HttpStatusCode.Created).json(response);
   } catch (error) {
     if (error instanceof ApiError) {
       return res.status(error.status).send({ status: error.status, message: error.message });
@@ -86,7 +89,7 @@ exports.getAllGET = async (req, res) => {
       } catch (error) {
         if (error instanceof InvalidDatabaseQueryError) {
           console.error(error);
-          return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+          return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid Deal Id' });
         }
 
         throw error;
@@ -112,7 +115,7 @@ exports.getAllGET = async (req, res) => {
       });
     }
 
-    return res.status(200).send({
+    return res.status(HttpStatusCode.Ok).send({
       status: facilitiesOverallStatus(facilities),
       items: facilities,
     });
@@ -127,7 +130,7 @@ exports.getAllGET = async (req, res) => {
 exports.getById = async (req, res) => {
   try {
     if (!ObjectId.isValid(String(req.params.id))) {
-      return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid Facility Id' });
     }
 
     const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
@@ -140,14 +143,14 @@ exports.getById = async (req, res) => {
         throw new DealNotFoundError(facility.dealId);
       }
 
-      return res.status(200).send({
+      return res.status(HttpStatusCode.Ok).send({
         status: facilitiesStatus(facility),
         details: facility,
         validation: facilitiesValidation(facility, existingDeal.version),
       });
     }
 
-    return res.status(204).send();
+    return res.status(HttpStatusCode.NoContent).send();
   } catch (error) {
     if (error instanceof ApiError) {
       return res.status(error.status).send({ status: error.status, message: error.message });
@@ -232,7 +235,7 @@ exports.updatePUT = async (req, res) => {
   try {
     const enumValidationErr = facilitiesCheckEnums(req.body);
     if (enumValidationErr) {
-      return res.status(422).send(enumValidationErr);
+      return res.status(HttpStatusCode.UnprocessableEntity).send(enumValidationErr);
     }
 
     let response;
@@ -267,7 +270,7 @@ exports.delete = async (req, res) => {
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   if (!ObjectId.isValid(req.params.id)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Facility Id' });
+    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid Facility Id' });
   }
 
   try {
@@ -278,12 +281,12 @@ exports.delete = async (req, res) => {
       auditDetails,
     });
 
-    return res.status(200).send(deleteOneResponse);
+    return res.status(HttpStatusCode.Ok).send(deleteOneResponse);
   } catch (error) {
     if (error instanceof DocumentNotDeletedError) {
-      return res.sendStatus(404);
+      return res.sendStatus(HttpStatusCode.NotFound);
     }
-    return res.status(500).send({ status: 500, error });
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, error });
   }
 };
 
@@ -292,7 +295,7 @@ exports.deleteByDealId = async (req, res) => {
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   if (typeof dealId !== 'string') {
-    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid Deal Id' });
   }
 
   try {
@@ -302,14 +305,14 @@ exports.deleteByDealId = async (req, res) => {
       db,
       auditDetails,
     });
-    return res.status(200).send(response);
+    return res.status(HttpStatusCode.OK).send(response);
   } catch (error) {
     // This implementation of returning 200 if the document is not found
     // is to preserve existing implementation
     if (error instanceof DocumentNotFoundError) {
-      return res.sendStatus(200);
+      return res.sendStatus(HttpStatusCode.OK);
     }
     console.error(error);
-    return res.status(500).send({ status: 500, error });
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, error });
   }
 };
