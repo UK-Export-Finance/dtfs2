@@ -1,4 +1,5 @@
-const CONSTANTS = require('../../constants');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { DEAL } = require('../../constants');
 
 const overrideDealsIfAmendmentsInProgress = (deals, amendments) => {
   // override the deal stage if there is an amendment in progress
@@ -7,9 +8,9 @@ const overrideDealsIfAmendmentsInProgress = (deals, amendments) => {
       const modifiedDeal = deal;
       // eslint-disable-next-line no-restricted-syntax
       for (const amendment of amendments) {
-        const amendmentIsInProgress = amendment.status === CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+        const amendmentIsInProgress = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
         if (amendmentIsInProgress && amendment.dealId === deal._id) {
-          modifiedDeal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+          modifiedDeal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
           break;
         }
       }

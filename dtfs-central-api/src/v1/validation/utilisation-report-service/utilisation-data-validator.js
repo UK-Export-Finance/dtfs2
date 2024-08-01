@@ -1,5 +1,5 @@
 const validator = require('validator');
-const REGEXES = require('../../../constants/regex');
+const { REGEX } = require('../../../constants');
 
 /**
  * @typedef {import('./utilisation-data-validator.types').UtilisationDataValidatorError} UtilisationDataValidatorError
@@ -13,7 +13,7 @@ const REGEXES = require('../../../constants/regex');
  */
 const validateUkefId = (ukefId, index) => {
   if (ukefId) {
-    if (!ukefId.toString().match(REGEXES.UKEF_FACILITY_ID_REGEX)) {
+    if (!ukefId.toString().match(REGEX.UKEF_FACILITY_ID_REGEX)) {
       return { index, error: 'UKEF ID must be a string of 8-10 digits' };
     }
   }
@@ -44,7 +44,7 @@ const validateExporter = (exporter, index) => {
  */
 const validateMonetaryValue = (monetaryValue, index, fieldName) => {
   if (monetaryValue) {
-    if (!monetaryValue.toString().match(REGEXES.CURRENCY_NUMBER_REGEX)) {
+    if (!monetaryValue.toString().match(REGEX.CURRENCY_NUMBER_REGEX)) {
       return { index, error: `${fieldName} must be a monetary value` };
     }
   }
@@ -76,7 +76,7 @@ const validateCurrencyValue = (currencyValue, index, fieldName) => {
  */
 const validateExchangeRate = (exchangeRate, index, fieldName) => {
   if (exchangeRate) {
-    if (!exchangeRate.toString().match(REGEXES.EXCHANGE_RATE_REGEX)) {
+    if (!exchangeRate.toString().match(REGEX.EXCHANGE_RATE_REGEX)) {
       return { index, error: `${fieldName} must be a number representing an exchange rate` };
     }
   }

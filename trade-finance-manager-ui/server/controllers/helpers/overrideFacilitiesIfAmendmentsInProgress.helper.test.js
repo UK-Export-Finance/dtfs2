@@ -1,4 +1,4 @@
-const CONSTANTS = require('../../constants');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { overrideFacilitiesIfAmendmentsInProgress } = require('./overrideFacilitiesIfAmendmentsInProgress.helper');
 
 describe('overrideFacilitiesIfAmendmentsInProgress', () => {
@@ -15,22 +15,22 @@ describe('overrideFacilitiesIfAmendmentsInProgress', () => {
 
   const amendmentsOneCorresponding = [
     {
-      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+      status: AMENDMENT_STATUS.IN_PROGRESS,
       facilityId: '0',
     },
     {
-      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.NOT_STARTED,
+      status: AMENDMENT_STATUS.NOT_STARTED,
       facilityId: '1',
     },
   ];
 
   const amendmentsNoneCorresponding = [
     {
-      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+      status: AMENDMENT_STATUS.IN_PROGRESS,
       facilityId: '2',
     },
     {
-      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.NOT_STARTED,
+      status: AMENDMENT_STATUS.NOT_STARTED,
       facilityId: '1',
     },
   ];
