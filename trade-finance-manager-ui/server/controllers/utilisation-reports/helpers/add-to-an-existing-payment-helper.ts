@@ -1,10 +1,6 @@
 import { SelectedFeeRecordsAvailablePaymentGroups } from '@ukef/dtfs2-common';
 
 export const getAvailablePaymentsHeading = (paymentGroups: SelectedFeeRecordsAvailablePaymentGroups) => {
-  if (!paymentGroups || paymentGroups.length === 0) {
-    throw new Error('No payment groups to select from.');
-  }
-
   const totalNumberOfPaymentGroups = paymentGroups.length;
   const numberOfSinglePayments = paymentGroups.filter((group) => group.length === 1).length;
   const numberOfGroupPayments = totalNumberOfPaymentGroups - numberOfSinglePayments;

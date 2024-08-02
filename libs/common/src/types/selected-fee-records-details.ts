@@ -6,7 +6,7 @@ export type SelectedFeeRecordsAvailablePaymentDetails = CurrencyAndAmount & {
   reference?: string;
 };
 export type SelectedFeeRecordsAvailablePaymentsGroup = SelectedFeeRecordsAvailablePaymentDetails[];
-export type SelectedFeeRecordsAvailablePaymentGroups = SelectedFeeRecordsAvailablePaymentsGroup[] | undefined;
+export type SelectedFeeRecordsAvailablePaymentGroups = SelectedFeeRecordsAvailablePaymentsGroup[];
 
 export type SelectedFeeRecordsPaymentDetails = CurrencyAndAmount & {
   dateReceived: Date;

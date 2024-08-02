@@ -3,14 +3,6 @@ import { getAvailablePaymentsHeading } from './add-to-an-existing-payment-helper
 
 describe('add-to-an-existing-payment-helper', () => {
   describe('getAvailablePaymentsHeading', () => {
-    it('should throw an error when no payment groups are provided', () => {
-      // Arrange
-      const paymentGroups: SelectedFeeRecordsAvailablePaymentGroups = [];
-
-      // Act & Assert
-      expect(() => getAvailablePaymentsHeading(paymentGroups)).toThrow('No payment groups to select from.');
-    });
-
     it('should return correct heading for a single payment', () => {
       // Arrange
       const paymentGroups: SelectedFeeRecordsAvailablePaymentGroups = [[aSelectedFeeRecordsAvailablePaymentDetails()]];

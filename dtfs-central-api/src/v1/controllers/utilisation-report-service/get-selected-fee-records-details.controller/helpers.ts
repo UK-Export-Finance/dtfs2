@@ -19,12 +19,8 @@ import { mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups } from '../get-
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
 const mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups = (
-  feeRecordPaymentGroups: FeeRecordPaymentGroup[] | undefined,
-): SelectedFeeRecordsAvailablePaymentGroups | undefined => {
-  if (!feeRecordPaymentGroups) {
-    return undefined;
-  }
-
+  feeRecordPaymentGroups: FeeRecordPaymentGroup[],
+): SelectedFeeRecordsAvailablePaymentGroups => {
   return feeRecordPaymentGroups
     .filter((group) => group.paymentsReceived !== null)
     .map((group) =>
@@ -95,15 +91,23 @@ export const mapToSelectedFeeRecordDetails = async (
   const recordedPaymentDetails = distinctPaymentsForFeeRecords.map((paymentEntity) => mapPaymentEntityToSelectedFeeRecordsPaymentDetails(paymentEntity));
   const selectedFeeRecordDetails = selectedFeeRecordEntities.map((feeRecordEntity) => mapFeeRecordEntityToSelectedFeeRecordDetails(feeRecordEntity));
 
-  const mappedAvailablePaymentGroups = mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups(availablePaymentGroups);
-
-  return {
+  const mappedSelectedFeeRecordDetailsWithoutAvailablePaymentGroups: SelectedFeeRecordsDetails = {
     bank: { name: bankName },
     reportPeriod,
     totalReportedPayments: getTotalReportedPayments(selectedFeeRecordDetails),
     feeRecords: selectedFeeRecordDetails,
     payments: recordedPaymentDetails,
     canAddToExistingPayment,
+  };
+
+  if (!availablePaymentGroups) {
+    return mappedSelectedFeeRecordDetailsWithoutAvailablePaymentGroups;
+  }
+
+  const mappedAvailablePaymentGroups = mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups(availablePaymentGroups);
+
+  return {
+    ...mappedSelectedFeeRecordDetailsWithoutAvailablePaymentGroups,
     availablePaymentGroups: mappedAvailablePaymentGroups,
   };
 };

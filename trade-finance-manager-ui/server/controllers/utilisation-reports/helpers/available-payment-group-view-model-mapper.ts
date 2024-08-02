@@ -9,10 +9,6 @@ const mapToExistingPaymentViewModelItem = (payment: SelectedFeeRecordsAvailableP
 });
 
 export const mapToAvailablePaymentGroupViewModel = (availablePaymentGroupsData: SelectedFeeRecordsAvailablePaymentGroups): AvailablePaymentGroupsViewModel => {
-  if (!availablePaymentGroupsData) {
-    return [];
-  }
-
   return availablePaymentGroupsData.map((paymentGroup) => ({
     radioId: getRadioIdForPaymentGroup(paymentGroup),
     payments: paymentGroup.map((payment) => mapToExistingPaymentViewModelItem(payment)),
