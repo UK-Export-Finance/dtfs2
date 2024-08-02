@@ -18,7 +18,7 @@ describe(component, () => {
     wrapper.expectText('h2[data-cy="payment-group-radio-input-heading"]').toContain('Select a payment group');
   });
 
-  it('should render radio buttons for each payment group with group ID', () => {
+  it('should render radio buttons for each payment group with the group ID', () => {
     const viewModel = {
       legendText: 'Select a payment group',
       paymentGroups: anAvailablePaymentGroupsViewModel(),
@@ -35,7 +35,56 @@ describe(component, () => {
     wrapper.expectElement(`${radioInputSelector}:eq(1)`).toHaveAttribute('value', 'paymentIds-3');
   });
 
+  it('should render a single payments details within a group', () => {
+    const paymentGroups: AvailablePaymentGroupsViewModel = [
+      {
+        radioId: 'paymentIds-1',
+        payments: [{ id: '1', formattedCurrencyAndAmount: 'GBP 1,000', reference: 'REF001' }],
+      },
+    ];
+    const viewModel = {
+      legendText: 'Select a payment group',
+      paymentGroups,
+    };
+    const wrapper = getWrapper(viewModel);
+
+    const radioSelector = 'div.govuk-radios__item';
+    wrapper.expectElement(radioSelector).toHaveCount(1);
+
+    wrapper.expectElement(`${radioSelector}:eq(0) input`).toExist();
+    wrapper.expectElement(`${radioSelector}:eq(0) label`).toHaveCount(1);
+    wrapper.expectText(`${radioSelector}:eq(0) label`).toContain('GBP 1,000');
+    wrapper.expectText(`${radioSelector}:eq(0) div[id='payment-1-item-hint']`).toContain('Payment reference: REF001');
+  });
+
   it('should render multiple payment details within a group', () => {
+    const paymentGroups: AvailablePaymentGroupsViewModel = [
+      {
+        radioId: 'paymentIds-1,2',
+        payments: [
+          { id: '1', formattedCurrencyAndAmount: 'GBP 1,000', reference: 'REF001' },
+          { id: '2', formattedCurrencyAndAmount: 'GBP 2,000', reference: 'REF002' },
+        ],
+      },
+    ];
+    const viewModel = {
+      legendText: 'Select a payment group',
+      paymentGroups,
+    };
+    const wrapper = getWrapper(viewModel);
+
+    const radioSelector = 'div.govuk-radios__item';
+    wrapper.expectElement(radioSelector).toHaveCount(1);
+
+    wrapper.expectElement(`${radioSelector}:eq(0) input`).toExist();
+    wrapper.expectElement(`${radioSelector}:eq(0) label`).toHaveCount(2);
+    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0)`).toContain('GBP 1,000');
+    wrapper.expectText(`${radioSelector}:eq(0) div[id='payment-1-item-hint']`).toContain('Payment reference: REF001');
+    wrapper.expectText(`${radioSelector}:eq(0) label:eq(1)`).toContain('GBP 2,000');
+    wrapper.expectText(`${radioSelector}:eq(0) div[id='payment-2-item-hint']`).toContain('Payment reference: REF002');
+  });
+
+  it('should render both multiple and single payment details in different groups', () => {
     const viewModel = {
       legendText: 'Select a payment group',
       paymentGroups: anAvailablePaymentGroupsViewModel(),
