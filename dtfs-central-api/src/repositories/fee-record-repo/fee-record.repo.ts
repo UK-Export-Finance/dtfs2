@@ -58,7 +58,7 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
     return await this.find({
       where: {
         report: { id: reportId },
-        status: In([FEE_RECORD_STATUS.DOES_NOT_MATCH]),
+        status: FEE_RECORD_STATUS.DOES_NOT_MATCH,
         paymentCurrency,
       },
       relations: { payments: true },
