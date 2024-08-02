@@ -1,14 +1,12 @@
 import { facilityCovenantAmend } from './facility-covenant-amend';
 
 describe('facilityCovenantAmend', () => {
-  const aValidAmount = 123.456;
-  const aValidAmountExpected = 123.46;
-  const aValidGuaranteeExpiryDate = '2022-01-01';
-  const aValidGuaranteeExpiryDateExpected = '2022-01-01';
-  const aValidAmountRequest = { amount: aValidAmount };
-  const aValidAmountExpectedResult = { targetAmount: aValidAmountExpected };
-  const aValidGuaranteeExpiryDateRequest = { facilityGuaranteeDates: { guaranteeExpiryDate: aValidGuaranteeExpiryDate } };
-  const aValidGuaranteeExpiryDateExpectedResult = { expirationDate: aValidGuaranteeExpiryDateExpected };
+  const aValidAmountRequest = { amount: 123.456 };
+  const aValidAmountExpectedResult = { targetAmount: 123.46 };
+
+  const aValidGuaranteeExpiryDateRequest = { facilityGuaranteeDates: { guaranteeExpiryDate: '2022-01-01' } };
+  const aValidGuaranteeExpiryDateExpectedResult = { expirationDate: '2022-01-01' };
+
   const aValidAmountAndGuaranteeExpiryDateRequest = { ...aValidAmountRequest, ...aValidGuaranteeExpiryDateRequest };
   const aValidAmountAndGuaranteeExpiryDateExpectedResult = { ...aValidAmountExpectedResult, ...aValidGuaranteeExpiryDateExpectedResult };
   describe('when there is an amendment amount', () => {
