@@ -10,7 +10,7 @@ import {
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { mapToSelectedReportedFeesDetailsViewModel, PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../helpers';
-import { mapToAvailablePaymentGroupViewModel } from '../helpers/available-payment-group-view-model-mapper';
+import { mapToAvailablePaymentGroupsViewModel } from '../helpers/available-payment-group-view-model-mapper';
 import { getAvailablePaymentsHeading } from '../helpers/add-to-an-existing-payment-helper';
 
 type AddToAnExistingPaymentRequest = CustomExpressRequest<{
@@ -42,7 +42,7 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(selectedFeeRecordDetails.reportPeriod),
       reportedFeeDetails: mapToSelectedReportedFeesDetailsViewModel(selectedFeeRecordDetails),
       availablePaymentsHeading: getAvailablePaymentsHeading(availablePaymentGroups),
-      availablePaymentGroups: mapToAvailablePaymentGroupViewModel(availablePaymentGroups),
+      availablePaymentGroups: mapToAvailablePaymentGroupsViewModel(availablePaymentGroups),
     };
     return renderAddToAnExistingPaymentPage(res, addToAnExistingPaymentViewModel);
   } catch (error) {
