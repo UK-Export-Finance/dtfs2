@@ -107,7 +107,7 @@ module.exports = {
       await Promise.all(
         feeRecords.map(async ({ facilityUtilisationData }) => {
           const entityExists = await SqlDbDataSource.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityUtilisationData.id });
-          if (entityExists) {
+          if (!entityExists) {
             await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
           }
         }),
@@ -193,6 +193,16 @@ module.exports = {
     };
 
     /**
+     * Inserts many tfm facilities
+     * @param {import('@ukef/dtfs2-common').TfmFacility[]} tfmFacilities
+     * @returns {import('mongodb').InsertManyResult<import('mongodb').WithoutId<import('@ukef/dtfs2-common').TfmFacility>>[]} The inserted tfm facilities
+     */
+    const insertManyTfmFacilities = async (tfmFacilities) => {
+      const tfmFacilitiesCollection = await getTfmFacilitiesCollection();
+      return await tfmFacilitiesCollection.insertMany(tfmFacilities);
+    };
+
+    /**
      * Generates the specified number of TFM facilities and inserts them directly
      * into the db. It also inserts two deals (to link the facilities to).
      * The UKEF facility ID of the first generated facility is 10000001;
@@ -247,6 +257,7 @@ module.exports = {
       disablePortalUserByUsername,
       insertManyTfmDeals,
       deleteAllTfmDeals,
+      insertManyTfmFacilities,
       insertManyTfmFacilitiesAndTwoLinkedDeals,
       deleteAllTfmFacilities,
       getAllBanks,
