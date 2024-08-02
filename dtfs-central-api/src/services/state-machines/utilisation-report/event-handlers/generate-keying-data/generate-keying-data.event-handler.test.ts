@@ -82,6 +82,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
         payload: {
           transactionEntityManager: mockEntityManager,
           isFinalFeeRecordForFacility: true,
+          reportPeriod: utilisationReport.reportPeriod,
           requestSource,
         },
       });
@@ -130,6 +131,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
         payload: {
           transactionEntityManager: mockEntityManager,
           isFinalFeeRecordForFacility: true,
+          reportPeriod: utilisationReport.reportPeriod,
           requestSource,
         },
       });
@@ -141,6 +143,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
           payload: {
             transactionEntityManager: mockEntityManager,
             isFinalFeeRecordForFacility: false,
+            reportPeriod: utilisationReport.reportPeriod,
             requestSource,
           },
         });
@@ -188,6 +191,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
           payload: {
             transactionEntityManager: mockEntityManager,
             isFinalFeeRecordForFacility: false,
+            reportPeriod: utilisationReport.reportPeriod,
             requestSource,
           },
         });
