@@ -1,4 +1,4 @@
-import { isValid, parseISO, set, startOfDay } from 'date-fns';
+import { isValid, parseISO } from 'date-fns';
 import z from 'zod';
 
 type DayMonthYearInput = {
@@ -198,9 +198,9 @@ export const applyStandardValidationAndParseDateInput = (inputtedDate: DayMonthY
     return { error: eachFieldValidError };
   }
 
-  const date = parseDate(inputtedDate);
+  const parsedDate = parseDate(inputtedDate);
   const capitalisedValueName = capitalizeFirstLetter(valueName);
-  if (!isValid(date)) {
+  if (!isValid(parsedDate)) {
     return {
       error: {
         message: `${capitalisedValueName} must be a real date`,
@@ -212,12 +212,6 @@ export const applyStandardValidationAndParseDateInput = (inputtedDate: DayMonthY
 
   return {
     error: null,
-    parsedDate: startOfDay(
-      set(new Date(), {
-        year: Number(inputtedDate.year),
-        month: Number(inputtedDate.month) - 1,
-        date: Number(inputtedDate.day),
-      }),
-    ),
+    parsedDate,
   };
 };

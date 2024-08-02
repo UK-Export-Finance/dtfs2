@@ -2,21 +2,18 @@ const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@u
 const api = require('../../../api');
 const { isUsingFacilityEndDateValidation } = require('./validation/amendmentIsUsingFacilityEndDate.validate');
 
-const getNextPage = (status, changeFacilityValue, isUsingFacilityEndDate, dealId, facilityId, amendmentId) => {
-  const baseUrl = `/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}`;
-  const fallbackUrl = `/case/${dealId}/facility/${facilityId}#amendments`;
-
-  if (status === 200) {
-    if (isUsingFacilityEndDate) {
-      return `${baseUrl}/facility-end-date`;
-    }
-    if (changeFacilityValue) {
-      return `${baseUrl}/facility-value`;
-    }
-    return `${baseUrl}/check-answers`;
+const getNextPage = (status, changeFacilityValue, isUsingFacilityEndDate, baseUrl, fallbackUrl) => {
+  if (status !== 200) {
+    console.error('Unable to update is using facility end date');
+    return fallbackUrl;
   }
-  console.error('Unable to update is using facility end date');
-  return fallbackUrl;
+  if (isUsingFacilityEndDate) {
+    return `${baseUrl}/facility-end-date`;
+  }
+  if (changeFacilityValue) {
+    return `${baseUrl}/facility-value`;
+  }
+  return `${baseUrl}/check-answers`;
 };
 
 const getAmendmentIsUsingFacilityEndDate = async (req, res) => {
@@ -77,13 +74,16 @@ const postAmendmentIsUsingFacilityEndDate = async (req, res) => {
     });
   }
 
+  const baseUrl = `/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}`;
+  const fallbackUrl = `/case/${dealId}/facility/${facilityId}#amendments`;
+
   try {
     const payload = { isUsingFacilityEndDate: isUsingFacilityEndDateValue };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
-    return res.redirect(getNextPage(status, changeFacilityValue, isUsingFacilityEndDateValue, dealId, facilityId, amendmentId));
+    return res.redirect(getNextPage(status, changeFacilityValue, isUsingFacilityEndDateValue, baseUrl, fallbackUrl));
   } catch (error) {
     console.error('There was a problem adding if the bank is using the facility end date', error);
-    return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
+    return res.redirect(fallbackUrl);
   }
 };
 

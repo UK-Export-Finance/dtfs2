@@ -5,8 +5,7 @@ import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../pages/caseDealPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
-import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
+import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN, CURRENCY } from '../../../../../e2e-fixtures';
 
 const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 
@@ -209,7 +208,9 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'No');
       amendmentsPage.amendmentAnswerEffectiveDate().should('contain', dateConstants.fourDaysAgoDay);
       amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.twoMonthsFormatted);
-      amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('contain', 'Yes');
+      if (tfmFacilityEndDateEnabled) {
+        amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('contain', 'Yes');
+      }
       amendmentsPage.amendmentAnswerFacilityValue().should('contain', 'GBP 123.00');
 
       amendmentsPage.continueAmendment().click();

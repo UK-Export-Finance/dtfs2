@@ -43,9 +43,9 @@ const amendmentsPage = {
     amendmentsPage.isUsingFacilityEndDateYes().click();
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'facility-end-date');
-    amendmentsPage.amendmentFacilityEndDateDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentFacilityEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentFacilityEndDateYearInput().clear().focused().type(dateConstants.todayYear);
+    amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(dateConstants.todayDay);
+    amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
   },
 

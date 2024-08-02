@@ -3,15 +3,12 @@ const { format } = require('date-fns');
 const api = require('../../../api');
 const facilityEndDateValidation = require('./validation/amendmentFacilityEndDate.validate');
 
-const getNextPage = (status, changeFacilityValue, dealId, facilityId, amendmentId) => {
-  const baseUrl = `/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}`;
-  const fallbackUrl = `/case/${dealId}/facility/${facilityId}#amendments`;
-
-  if (status === 200) {
-    return changeFacilityValue ? `${baseUrl}/facility-value` : `${baseUrl}/check-answers`;
+const getNextPage = (status, changeFacilityValue, baseUrl, fallbackUrl) => {
+  if (status !== 200) {
+    console.error('Unable to update facility end date');
+    return fallbackUrl;
   }
-  console.error('Unable to update facility end date');
-  return fallbackUrl;
+  return changeFacilityValue ? `${baseUrl}/facility-value` : `${baseUrl}/check-answers`;
 };
 
 const getAmendmentFacilityEndDate = async (req, res) => {
@@ -73,13 +70,16 @@ const postAmendmentFacilityEndDate = async (req, res) => {
     });
   }
 
+  const baseUrl = `/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}`;
+  const fallbackUrl = `/case/${dealId}/facility/${facilityId}#amendments`;
+
   try {
     const payload = { facilityEndDate };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
-    return res.redirect(getNextPage(status, changeFacilityValue, dealId, facilityId, amendmentId));
+    return res.redirect(getNextPage(status, changeFacilityValue, baseUrl, fallbackUrl));
   } catch (err) {
     console.error('There was a problem adding the facility end date', err);
-    return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
+    return res.redirect(fallbackUrl);
   }
 };
 

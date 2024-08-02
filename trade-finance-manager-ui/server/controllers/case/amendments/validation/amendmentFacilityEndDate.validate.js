@@ -19,13 +19,12 @@ const facilityEndDateValidation = ({ day, month, year }, coverStartDate) => {
     };
   }
 
-  const inputtedDate = parsedDate;
   const today = startOfDay(new Date());
   const sixYearsFromToday = add(today, { years: 6 });
   const coverStartDateToCompare = startOfDay(new Date(Number(coverStartDate)));
 
   // checks if the entered facility end date is greater than 6 years in the future
-  if (isAfter(inputtedDate, sixYearsFromToday)) {
+  if (isAfter(parsedDate, sixYearsFromToday)) {
     return {
       error: {
         summary: [{ text: 'Facility end date cannot be greater than 6 years in the future' }],
@@ -35,7 +34,7 @@ const facilityEndDateValidation = ({ day, month, year }, coverStartDate) => {
   }
 
   // checks if the entered facility end date is before the cover start date
-  if (isBefore(inputtedDate, coverStartDateToCompare)) {
+  if (isBefore(parsedDate, coverStartDateToCompare)) {
     return {
       error: {
         summary: [{ text: 'The facility end date cannot be before the cover start date' }],

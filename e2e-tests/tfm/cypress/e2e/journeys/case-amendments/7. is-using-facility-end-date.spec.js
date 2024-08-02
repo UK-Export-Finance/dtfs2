@@ -31,39 +31,6 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       });
     });
 
-    it('should take you to `Has the bank provided a facility end date` page with initially unchecked values', () => {
-      cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
-
-      cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
-      facilityPage.facilityTabAmendments().click();
-      amendmentsPage.addAmendmentButton().should('exist');
-      amendmentsPage.addAmendmentButton().contains('Add an amendment request');
-      amendmentsPage.addAmendmentButton().click();
-      cy.url().should('contain', 'request-date');
-
-      amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-      amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
-
-      cy.url().should('contain', 'request-approval');
-      amendmentsPage.amendmentRequestApprovalYes().click();
-      amendmentsPage.continueAmendment().click();
-      cy.url().should('contain', 'amendment-options');
-      amendmentsPage.amendmentCoverEndDateCheckbox().click();
-      amendmentsPage.continueAmendment().click();
-      cy.url().should('contain', 'cover-end-date');
-      amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.todayDay);
-      amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
-
-      amendmentsPage.isUsingFacilityEndDateYes().should('be.not.checked');
-      amendmentsPage.isUsingFacilityEndDateNo().should('be.not.checked');
-    });
-
     const navigateToIsUsingFacilityEndDatePageGivenPrefilled = () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
@@ -81,6 +48,39 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       amendmentsPage.continueAmendment().click();
       cy.url().should('contain', 'is-using-facility-end-date');
     };
+
+    it('should take you to `Has the bank provided a facility end date` page with initially unchecked values', () => {
+      cy.login(PIM_USER_1);
+      const facilityId = dealFacilities[0]._id;
+
+      cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+      facilityPage.facilityTabAmendments().click();
+      amendmentsPage.addAmendmentButton().should('exist');
+      amendmentsPage.addAmendmentButton().contains('Add an amendment request');
+      amendmentsPage.addAmendmentButton().click();
+      cy.url().should('contain', 'request-date');
+
+      amendmentsPage.amendmentRequestDayInput().clear().type(dateConstants.todayDay);
+      amendmentsPage.amendmentRequestMonthInput().clear().type(dateConstants.todayMonth);
+      amendmentsPage.amendmentRequestYearInput().clear().type(dateConstants.todayYear);
+      amendmentsPage.continueAmendment().click();
+
+      cy.url().should('contain', 'request-approval');
+      amendmentsPage.amendmentRequestApprovalYes().click();
+      amendmentsPage.continueAmendment().click();
+      cy.url().should('contain', 'amendment-options');
+      amendmentsPage.amendmentCoverEndDateCheckbox().click();
+      amendmentsPage.continueAmendment().click();
+      cy.url().should('contain', 'cover-end-date');
+      amendmentsPage.amendmentCoverEndDateDayInput().clear().type(dateConstants.todayDay);
+      amendmentsPage.amendmentCoverEndDateMonthInput().clear().type(dateConstants.todayMonth);
+      amendmentsPage.amendmentCoverEndDateYearInput().clear().type(dateConstants.todayYear);
+      amendmentsPage.continueAmendment().click();
+
+      amendmentsPage.isUsingFacilityEndDateYes().should('be.not.checked');
+      amendmentsPage.isUsingFacilityEndDateNo().should('be.not.checked');
+    });
 
     it('should return errors when no options are selected', () => {
       navigateToIsUsingFacilityEndDatePageGivenPrefilled();

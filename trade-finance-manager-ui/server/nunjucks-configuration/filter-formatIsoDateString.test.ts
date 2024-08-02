@@ -3,13 +3,13 @@ import { formatIsoDateString } from './filter-formatIsoDateString';
 describe('nunjuck filters - formatIsoDateString', () => {
   const testCases = [
     {
-      description: 'should return correct date when formatting from `dd-MM-yyyy` to `dd/MM/yyyy`',
+      description: 'should return correct date when formatting to `dd/MM/yyyy`',
       mockDate: new Date('2024-07-3').toISOString(),
       toFormat: 'dd/MM/yyyy',
       expected: '03/07/2024',
     },
     {
-      description: 'should return correct date when formatting from `d M yy` to `dd MMMM yyyy`',
+      description: 'should return correct date when formatting to `dd MMMM yyyy`',
       mockDate: new Date('2025-01-1').toISOString(),
       toFormat: 'dd MMMM yyyy',
       expected: '01 January 2025',

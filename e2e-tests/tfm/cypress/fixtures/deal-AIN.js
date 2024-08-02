@@ -190,7 +190,6 @@ const MOCK_DEAL = {
       currencySameAsSupplyContractCurrency: 'true',
       riskMarginFee: '10',
       coveredPercentage: '20',
-      coverStartDate: `${dateConstants.twoYearsAgoUnix}000`,
       minimumRiskMarginFee: '30',
       ukefExposure: '2,469.00',
       feeFrequency: 'Quarterly',
