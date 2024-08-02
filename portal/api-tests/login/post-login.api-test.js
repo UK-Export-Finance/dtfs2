@@ -11,12 +11,11 @@ jest.mock('../../server/api', () => ({
 }));
 const { AxiosError } = require('axios');
 const { when } = require('jest-when');
-const { ROLES } = require('@ukef/dtfs2-common');
+const { ROLES, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../server/api');
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
 const app = require('../../server/createApp');
 const { post } = require('../create-api').createApi(app);
-const { LOGIN_STATUS } = require('../../server/constants');
 
 const allRoles = Object.values(ROLES);
 describe('POST /login', () => {
@@ -95,7 +94,7 @@ describe('POST /login', () => {
         .calledWith(anEmail, aPassword)
         .mockResolvedValueOnce({
           token,
-          loginStatus: LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD,
+          loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD,
           user: { email: anEmail },
         });
     });
