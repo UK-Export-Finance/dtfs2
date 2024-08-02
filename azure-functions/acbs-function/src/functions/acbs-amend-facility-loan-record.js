@@ -33,7 +33,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
 
   try {
     if (!payload) {
-      throw new Error('Invalid payload provided');
+      throw new Error('Facility Loan Record amendment SOF - Invalid payload provided');
     }
 
     const { facilityId, facility, amendments, fmr } = payload;
