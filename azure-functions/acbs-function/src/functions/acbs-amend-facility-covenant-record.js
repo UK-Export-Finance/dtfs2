@@ -39,7 +39,7 @@ df.app.orchestration('acbs-amend-facility-covenant-record', function* amendFacil
 
     const facilityCovenantRecord = yield context.df.callActivityWithRetry('update-facility-covenant', retryOptions, {
       facilityId,
-      acbsFacilityLoanInput: mappings.facility.facilityCovenantAmend(amendment),
+      acbsFacilityCovenantInput: mappings.facility.facilityCovenantAmend(amendment),
     });
     return facilityCovenantRecord;
   } catch (error) {
