@@ -12,7 +12,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser, aTfmUser, aTfmSessionUser } from '../../../test-helpers/test-data';
+import { aPortalUser, aTfmUser, aTfmSessionUser, aTfmFacility, aFacility } from '../../../test-helpers/test-data';
 
 console.error = jest.fn();
 
@@ -39,11 +39,24 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     },
   });
 
+  const insertTfmFacilityWithUkefFacilityId = async (...ukefFacilityIds: string[]): Promise<void> => {
+    const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
+    await tfmFacilitiesCollection.insertMany(
+      ukefFacilityIds.map((ukefFacilityId) => ({
+        ...aTfmFacility(),
+        facilitySnapshot: {
+          ...aFacility(),
+          ukefFacilityId,
+        },
+      })),
+    );
+  };
+
   beforeAll(async () => {
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
-    await wipe(['users', 'tfm-users']);
+    await wipe(['users', 'tfm-users', 'tfm-facilities']);
 
     const usersCollection = await mongoDbClient.getCollection('users');
     await usersCollection.insertOne(portalUser);
@@ -54,6 +67,7 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
 
   afterEach(async () => {
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await wipe(['tfm-facilities']);
   });
 
   afterAll(async () => {
@@ -112,6 +126,8 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
+    await insertTfmFacilityWithUkefFacilityId('11111111', '22222222');
+
     const requestBody = aValidRequestBody();
 
     // Act
@@ -124,8 +140,11 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
   it('returns a 200 when request has a valid body and the report is in state PENDING_RECONCILIATION with zero payment fee records at the MATCH status', async () => {
     // Arrange
     const report = anUploadedPendingReconciliationUtilisationReport();
-    report.feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('11111111').withPayments([]).withStatus('MATCH').build()];
+    const facilityId = '11111111';
+    report.feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withPayments([]).withStatus('MATCH').build()];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    await insertTfmFacilityWithUkefFacilityId(facilityId);
 
     const requestBody = aValidRequestBody();
 
@@ -139,8 +158,11 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
   it('updates report status to RECONCILIATION_IN_PROGRESS when request has a valid body and the report is in state PENDING_RECONCILIATION with zero payment fee records at the MATCH status', async () => {
     // Arrange
     const report = anUploadedPendingReconciliationUtilisationReport();
-    report.feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('11111111').withPayments([]).withStatus('MATCH').build()];
+    const facilityId = '11111111';
+    report.feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withPayments([]).withStatus('MATCH').build()];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    await insertTfmFacilityWithUkefFacilityId(facilityId);
 
     const requestBody = aValidRequestBody();
 
@@ -155,12 +177,15 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
   it('updates the utilisation report audit fields', async () => {
     // Arrange
     const report = anUploadedReconciliationInProgressUtilisationReport();
+    const facilityId = '11111111';
     const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    await insertTfmFacilityWithUkefFacilityId(facilityId);
 
     const requestBody = aValidRequestBody();
 
@@ -179,19 +204,23 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
   it('updates each of the MATCH fee record audit fields and does not update the non MATCH fee record audit fields', async () => {
     // Arrange
     const report = anUploadedReconciliationInProgressUtilisationReport();
+    const facilityId = '11111111';
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
+        .withFacilityId(facilityId)
         .withStatus('TO_DO')
         .withLastUpdatedByPortalUserId(portalUserId)
         .withLastUpdatedByTfmUserId(null)
         .withLastUpdatedByIsSystemUser(false)
         .build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(3).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    await insertTfmFacilityWithUkefFacilityId(facilityId);
 
     const requestBody = aValidRequestBody();
 
@@ -221,16 +250,20 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
   it('updates the status of all MATCH fee records to READY_TO_KEY', async () => {
     // Arrange
     const report = anUploadedReconciliationInProgressUtilisationReport();
+    const firstFacilityId = '11111111';
+    const secondFacilityId = '22222222';
     const feeRecords = [
       // Fee records for same facility where only one has MATCH status
-      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('111111111').withStatus('TO_DO').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId('111111111').withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(firstFacilityId).withStatus('TO_DO').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(firstFacilityId).withStatus('MATCH').build(),
       // Fee records for same facility where both have MATCH status
-      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId('222222222').withStatus('MATCH').build(),
-      FeeRecordEntityMockBuilder.forReport(report).withId(4).withFacilityId('222222222').withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(secondFacilityId).withStatus('MATCH').build(),
+      FeeRecordEntityMockBuilder.forReport(report).withId(4).withFacilityId(secondFacilityId).withStatus('MATCH').build(),
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    await insertTfmFacilityWithUkefFacilityId(firstFacilityId, secondFacilityId);
 
     const requestBody = aValidRequestBody();
 
@@ -250,6 +283,10 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
 
   describe('when there are multiple fee records with the same facility id', () => {
     const facilityId = '12345678';
+
+    beforeEach(async () => {
+      await insertTfmFacilityWithUkefFacilityId(facilityId);
+    });
 
     const getReadyToKeyFeeRecordsWithNonNullKeyingData = async (): Promise<FeeRecordEntity[]> =>
       await SqlDbHelper.manager.find(FeeRecordEntity, {
