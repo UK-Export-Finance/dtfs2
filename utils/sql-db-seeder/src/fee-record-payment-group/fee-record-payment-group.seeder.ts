@@ -22,10 +22,13 @@ export class FeeRecordPaymentGroupSeeder {
 
   private readonly feeRecords: FeeRecordEntity[] = [];
 
-  private constructor(report: UtilisationReportEntity, status: FeeRecordStatus, paymentCurrency: Currency | null) {
+  private readonly reportIsManuallyReconciled: boolean = false;
+
+  private constructor(report: UtilisationReportEntity, status: FeeRecordStatus, paymentCurrency: Currency | null, reportIsManuallyReconciled: boolean | null) {
     this.status = status;
     this.report = report;
     this.paymentCurrency = paymentCurrency;
+    this.reportIsManuallyReconciled = reportIsManuallyReconciled ?? false;
   }
 
   public static forReportStatusAndPaymentCurrency(
@@ -33,11 +36,15 @@ export class FeeRecordPaymentGroupSeeder {
     status: Exclude<FeeRecordStatus, 'TO_DO'>,
     paymentCurrency: Currency,
   ): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, status, paymentCurrency);
+    return new FeeRecordPaymentGroupSeeder(report, status, paymentCurrency, null);
   }
 
   public static forReport(report: UtilisationReportEntity): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, 'TO_DO', null);
+    return new FeeRecordPaymentGroupSeeder(report, 'TO_DO', null, null);
+  }
+
+  public static forManuallyCompletedReport(report: UtilisationReportEntity): FeeRecordPaymentGroupSeeder {
+    return new FeeRecordPaymentGroupSeeder(report, 'RECONCILED', null, true);
   }
 
   public addOneRandomFeeRecord(overrides: AddRandomFeeRecordOverrides = {}): FeeRecordPaymentGroupSeeder {
@@ -94,8 +101,11 @@ export class FeeRecordPaymentGroupSeeder {
   public async save(dataSource: DataSource): Promise<void> {
     await this.saveFacilityUtilisationData(dataSource);
 
-    if (this.status !== 'TO_DO') {
+    if (!this.reportIsManuallyReconciled && this.status !== 'TO_DO') {
       throw new Error(`Cannot save fee records with status '${this.status}' when there are no payments`);
+    }
+    if (this.reportIsManuallyReconciled && this.status !== 'RECONCILED') {
+      throw new Error(`Cannot save fee records with status '${this.status}' when report is manually reconciled`);
     }
     if (this.feeRecords.length === 0) {
       throw new Error('No fee records to save');

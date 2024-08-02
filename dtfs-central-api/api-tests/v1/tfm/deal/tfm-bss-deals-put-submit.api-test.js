@@ -1,10 +1,10 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
-const { DEALS, FACILITIES } = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const DEFAULTS = require('../../../../src/v1/defaults');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
@@ -20,7 +20,7 @@ const newDeal = {
 };
 
 const newFacility = {
-  type: FACILITIES.FACILITY_TYPE.BOND,
+  type: FACILITY_TYPE.BOND,
 };
 
 describe('/v1/tfm/deals/submit - BSS/EWCS deal', () => {

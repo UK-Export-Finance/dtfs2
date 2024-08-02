@@ -1,7 +1,6 @@
 const { format, fromUnixTime } = require('date-fns');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { FACILITY_TYPE } = require('../../../src/v1/gef/enums');
 
 const {
   submissionPortalActivity,
