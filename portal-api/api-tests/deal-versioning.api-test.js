@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('./database-helper');
 
@@ -10,7 +10,6 @@ const { as } = require('./api')(app);
 const { expectMongoId } = require('./expectMongoIds');
 
 const CONSTANTS = require('../src/constants');
-const { FACILITY_TYPE } = require('../src/v1/gef/enums');
 
 const mockEligibilityCriteria = require('./fixtures/gef/eligibilityCriteria');
 

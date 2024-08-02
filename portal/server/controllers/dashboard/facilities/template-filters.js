@@ -1,4 +1,5 @@
-const { FIELD_NAMES, FACILITY_HAS_BEEN_ISSUED, FACILITY_TYPE } = require('../../../constants');
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { FIELD_NAMES, FACILITY_HAS_BEEN_ISSUED } = require('../../../constants');
 const {
   DASHBOARD_FILTERS: { BESPOKE_FILTER_VALUES },
 } = require('../../../content-strings');

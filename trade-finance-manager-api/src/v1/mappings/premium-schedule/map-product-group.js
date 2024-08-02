@@ -1,11 +1,12 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../constants');
 
 const mapProductGroup = (type) => {
   switch (type) {
-    case CONSTANTS.FACILITIES.FACILITY_TYPE.BOND:
+    case FACILITY_TYPE.BOND:
       return CONSTANTS.FACILITIES.FACILITY_PRODUCT_GROUP.BOND;
 
-    case CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN:
+    case FACILITY_TYPE.LOAN:
       return CONSTANTS.FACILITIES.FACILITY_PRODUCT_GROUP.LOAN;
 
     default:

@@ -6,3 +6,4 @@ export * from './report-period';
 export * from './tfm-session-user';
 export * from './tfm-user';
 export * from './utilisation-report-raw-csv-data';
+export * from './facility';
