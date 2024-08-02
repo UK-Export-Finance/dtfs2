@@ -119,7 +119,7 @@ describe('controllers/provided-facility', () => {
       // Arrange
       mockRequest.query.status = 'change';
       mockGetFacilityResponse.details.isUsingFacilityEndDate = false;
-      mockGetFacilityResponse.version = 1;
+      mockGetApplicationResponse.version = 1;
       api.getFacility.mockResolvedValueOnce(mockGetFacilityResponse);
       api.getApplication.mockResolvedValueOnce(mockGetApplicationResponse);
 

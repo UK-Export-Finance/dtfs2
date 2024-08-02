@@ -1,21 +1,14 @@
 const { isValid, parseISO } = require('date-fns');
-const { isFacilityEndDateEnabledOnGefVersion, InvalidParameterError } = require('@ukef/dtfs2-common');
+const { isFacilityEndDateEnabledOnGefVersion, DealVersionError, InvalidParameterError, InvalidPayloadError } = require('@ukef/dtfs2-common');
+
 const { ObjectId } = require('mongodb');
-const { validateFacilityEndDateParameters } = require('../../validation/facility-end-date-validation');
 const convertToTimestamp = require('../../helpers/convertToTimestamp');
 
 const checkType = (type) => {
-  if (type) {
-    switch (type) {
-      case 'Cash':
-      case 'Contingent':
-        return type;
-      default:
-        return null;
-    }
-  } else {
-    return null;
+  if (type === 'Cash' || type === 'Contingent') {
+    return type;
   }
+  return null;
 };
 
 class Facility {
@@ -27,8 +20,6 @@ class Facility {
    * @throws {InvalidParameterError} - if `bankReviewDate` is defined & is not a ISO-8601 date string
    */
   constructor(req, dealVersion) {
-    validateFacilityEndDateParameters(req, dealVersion);
-
     if (req.dealId) {
       // new facility
       this.dealId = ObjectId(req.dealId);
@@ -76,8 +67,8 @@ class Facility {
       // used to store the user details of maker who changed unissued facility to issued
       this.unissuedToIssuedByMaker = Object(req.unissuedToIssuedByMaker) || null;
 
+      this.#validateAndSetFacilityEndDateValues(req, dealVersion);
       if (isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
-        this.#validateAndSetFacilityEndDateValues(req);
         this.isUsingFacilityEndDate = this.isUsingFacilityEndDate ?? null;
         this.bankReviewDate = this.bankReviewDate ?? null;
         this.facilityEndDate = this.facilityEndDate ?? null;
@@ -207,16 +198,40 @@ class Facility {
         this.specialIssuePermission = Object(req.specialIssuePermission);
       }
 
-      if (isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
-        this.#validateAndSetFacilityEndDateValues(req);
-      }
+      this.#validateAndSetFacilityEndDateValues(req, dealVersion);
 
       this.updatedAt = Date.now();
     }
     this.auditRecord = req.auditRecord;
   }
 
-  #validateAndSetFacilityEndDateValues(req) {
+  #validateAndSetFacilityEndDateValues(req, dealVersion) {
+    const reqContainsFacilityEndDateFields = 'isUsingFacilityEndDate' in req || 'facilityEndDate' in req || 'bankReviewDate' in req;
+
+    if (!isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
+      if (reqContainsFacilityEndDateFields) {
+        throw new DealVersionError(`Cannot add facility end date to deal version ${dealVersion}`);
+      }
+
+      return;
+    }
+
+    if ('isUsingFacilityEndDate' in req && typeof req.isUsingFacilityEndDate !== 'boolean') {
+      throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
+    }
+
+    if ('facilityEndDate' in req && 'bankReviewDate' in req) {
+      throw new InvalidPayloadError('A facility cannot have both a facilityEndDate and bankReviewDate');
+    }
+
+    if ('isUsingFacilityEndDate' in req && req.isUsingFacilityEndDate === true && 'bankReviewDate' in req) {
+      throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
+    }
+
+    if ('isUsingFacilityEndDate' in req && req.isUsingFacilityEndDate === false && 'facilityEndDate' in req) {
+      throw new InvalidParameterError('facilityEndDate', req.facilityEndDate);
+    }
+
     if ('isUsingFacilityEndDate' in req) {
       this.isUsingFacilityEndDate = req.isUsingFacilityEndDate;
       if (req.isUsingFacilityEndDate) {
