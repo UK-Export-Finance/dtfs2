@@ -226,8 +226,9 @@ utilisationReportsRouter
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               $ref: '#/definitions/SelectedFeeRecordsDetails'
+ *               oneOf:
+ *                 - $ref: '#/definitions/SelectedFeeRecordsDetailsWithAvailablePaymentGroupsResponseBody'
+ *                 - $ref: '#/definitions/SelectedFeeRecordsDetailsWithoutAvailablePaymentGroupsResponseBody'
  *       400:
  *         description: Bad request
  *       404:
