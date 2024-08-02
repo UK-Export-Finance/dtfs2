@@ -2,7 +2,7 @@ import { AvailablePaymentGroupsViewModel } from '../../../server/types/view-mode
 import { componentRenderer } from '../../componentRenderer';
 import { anAvailablePaymentGroupsViewModel } from '../../../test-helpers/test-data/available-payment-groups-view-model';
 
-const component = '../templates/utilisation-reports/_macros/payment-group-radio-input.njk';
+const component = '../templates/utilisation-reports/_macros/payment-group-radio-input-group.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {

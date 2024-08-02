@@ -3,7 +3,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
-{% import "./_macros/payment-group-radio-input.njk" as paymentGroupRadioInput %}
+{% import "./_macros/payment-group-radio-input-group.njk" as paymentGroupRadioInputGroup %}
 {% extends "index.njk" %}
 {% set backLink = {"href": '/utilisation-reports/' + reportId} %}
 {% block pageTitle %}Add to an existing payment{% endblock %}
@@ -25,7 +25,7 @@
     }
   }) }}
 
-  {{ paymentGroupRadioInput.render({
+  {{ paymentGroupRadioInputGroup.render({
     legendText: availablePaymentsHeading,
     paymentGroups: availablePaymentGroups
   }) }}
