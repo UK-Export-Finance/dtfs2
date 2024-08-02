@@ -1,6 +1,6 @@
 import { add, isAfter, isBefore, startOfDay } from 'date-fns';
 import { uniq } from 'lodash';
-import { FACILITY_END_DATE_MAXIMUM_YEARS } from '@ukef/dtfs2-common';
+import { FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
 import { validateAndParseDayMonthYear } from '../../utils/day-month-year-validation';
 import { DayMonthYear } from '../../types/date';
 
@@ -27,7 +27,7 @@ export const validateAndParseBankReviewDate = (bankReviewDayMonthYear: DayMonthY
   const bankReviewDate = formattingErrorsOrDate.date;
 
   const now = startOfDay(new Date());
-  const maximumBankReviewDate = add(now, { years: FACILITY_END_DATE_MAXIMUM_YEARS });
+  const maximumBankReviewDate = add(now, { years: FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE });
 
   if (isBefore(bankReviewDate, coverStartDate)) {
     return {
@@ -46,7 +46,7 @@ export const validateAndParseBankReviewDate = (bankReviewDayMonthYear: DayMonthY
       errors: [
         {
           errRef,
-          errMsg: `Bank review date cannot be greater than ${FACILITY_END_DATE_MAXIMUM_YEARS} years in the future`,
+          errMsg: `Bank review date cannot be greater than ${FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE} years in the future`,
           subFieldErrorRefs: ['bankReviewDate-day', 'bankReviewDate-month', 'bankReviewDate-year'],
         },
       ],

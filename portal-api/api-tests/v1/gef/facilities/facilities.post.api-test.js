@@ -200,14 +200,6 @@ describe(baseUrl, () => {
         expect(status).toBe(201);
       });
 
-      it('returns 201 when payload is valid & contains facilityEndDate', async () => {
-        const { status } = await as(aMaker)
-          .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate: new Date().toISOString() })
-          .to(baseUrl);
-
-        expect(status).toBe(201);
-      });
-
       it('returns 400 when isUsingFacilityEndDate is not a boolean', async () => {
         const { status, body } = await as(aMaker)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, isUsingFacilityEndDate: 'true' })

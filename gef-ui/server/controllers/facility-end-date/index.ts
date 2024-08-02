@@ -1,9 +1,10 @@
 import { Response } from 'express';
-import { getDate, getMonth, getYear, parseISO, startOfDay } from 'date-fns';
+import { getDate, getMonth, getYear, isSameDay, parseISO, startOfDay } from 'date-fns';
 import { CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
 import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
 import * as api from '../../services/api';
 import { validateAndParseFacilityEndDate } from './validation';
+import { asLoggedInUserSession } from '../../utils/express-session';
 
 type FacilityEndDateParams = { dealId: string; facilityId: string };
 type FacilityEndDatePostBody = { 'facility-end-date-day': string; 'facility-end-date-month': string; 'facility-end-date-year': string };
@@ -27,7 +28,7 @@ export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Re
     const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
     const deal = (await api.getApplication({ dealId, userToken })) as Record<string, unknown> & { version?: number };
 
-    if (!isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || facility.isUsingFacilityEndDate !== true) {
+    if (!isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || !facility.isUsingFacilityEndDate) {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
@@ -53,7 +54,7 @@ export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Re
   }
 };
 
-const getCoverStartDate = (facility: Record<string, unknown>) => {
+const getCoverStartDateOrStartOfToday = (facility: Record<string, unknown>): Date => {
   if (typeof facility.coverStartDate === 'string') {
     return startOfDay(parseISO(facility.coverStartDate));
   }
@@ -66,20 +67,21 @@ const getCoverStartDate = (facility: Record<string, unknown>) => {
 };
 
 export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: Response) => {
-  const {
-    params: { dealId, facilityId },
-    body: { 'facility-end-date-year': facilityEndDateYear, 'facility-end-date-month': facilityEndDateMonth, 'facility-end-date-day': facilityEndDateDay },
-    session: { userToken, user },
-    query: { saveAndReturn, status },
-  } = req;
-
-  const facilityEndDateIsBlank = !facilityEndDateYear && !facilityEndDateMonth && !facilityEndDateDay;
-
-  if (isTrueSet(saveAndReturn) && facilityEndDateIsBlank) {
-    return res.redirect(`/gef/application-details/${dealId}`);
-  }
-
   try {
+    const {
+      params: { dealId, facilityId },
+      body: { 'facility-end-date-year': facilityEndDateYear, 'facility-end-date-month': facilityEndDateMonth, 'facility-end-date-day': facilityEndDateDay },
+      query: { saveAndReturn, status },
+    } = req;
+
+    const { userToken, user } = asLoggedInUserSession(req.session);
+
+    const facilityEndDateIsBlank = !facilityEndDateYear && !facilityEndDateMonth && !facilityEndDateDay;
+
+    if (isTrueSet(saveAndReturn) && facilityEndDateIsBlank) {
+      return res.redirect(`/gef/application-details/${dealId}`);
+    }
+
     const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
 
     const facilityEndDateErrorsAndDate = validateAndParseFacilityEndDate(
@@ -88,7 +90,7 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
         month: facilityEndDateMonth,
         year: facilityEndDateYear,
       },
-      getCoverStartDate(facility),
+      getCoverStartDateOrStartOfToday(facility),
     );
 
     if (facilityEndDateErrorsAndDate.errors) {
@@ -107,18 +109,22 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
 
     const facilityEndDate = facilityEndDateErrorsAndDate.date;
 
-    await api.updateFacility({
-      facilityId,
-      payload: {
-        facilityEndDate,
-      },
-      userToken,
-    });
+    const facilityEndDateValueIsUnchanged = typeof facility.facilityEndDate === 'string' && isSameDay(parseISO(facility.facilityEndDate), facilityEndDate);
 
-    const applicationUpdate = {
-      editorId: user?._id,
-    };
-    await api.updateApplication({ dealId, application: applicationUpdate, userToken });
+    if (!facilityEndDateValueIsUnchanged) {
+      await api.updateFacility({
+        facilityId,
+        payload: {
+          facilityEndDate,
+        },
+        userToken,
+      });
+
+      const applicationUpdate = {
+        editorId: user._id,
+      };
+      await api.updateApplication({ dealId, application: applicationUpdate, userToken });
+    }
 
     if (isTrueSet(saveAndReturn)) {
       return res.redirect(`/gef/application-details/${dealId}`);
