@@ -1,6 +1,5 @@
-const { MONGO_DB_COLLECTIONS, AMENDMENT_STATUS, CURRENCY } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AMENDMENT_STATUS, CURRENCY, withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const { DEALS } = require('../../../../src/constants');

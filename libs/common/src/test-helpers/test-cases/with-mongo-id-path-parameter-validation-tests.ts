@@ -1,6 +1,5 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'supertest';
-import { ObjectId } from 'mongodb';
 import { ApiErrorResponseBody } from '../../types';
 import { API_ERROR_CODE } from '../../constants';
 
@@ -12,6 +11,8 @@ type WithMongoIdPathParameterValidationTestsParams = {
   baseUrl: string;
   makeRequest: <TResponse extends ErrorResponse>(url: string) => Promise<TResponse>;
 };
+
+const VALID_OBJECT_ID = '5c0a7922c9d89830f4911426';
 
 const extractParameters = (url: string): string[] =>
   url
@@ -25,7 +26,7 @@ export const withMongoIdPathParameterValidationTests = ({ baseUrl, makeRequest }
   describe.each(parameters)("when the ':%s' path parameter is not a valid mongo id", (parameter) => {
     const baseUrlWithTestParamater = baseUrl.replace(`:${parameter}`, 'invalid-id');
 
-    const testUrl = parameters.reduce((url, validParameter) => url.replace(`:${validParameter}`, new ObjectId().toString()), baseUrlWithTestParamater);
+    const testUrl = parameters.reduce((url, validParameter) => url.replace(`:${validParameter}`, VALID_OBJECT_ID), baseUrlWithTestParamater);
 
     it('returns a 400 (Bad request)', async () => {
       // Act

@@ -17,19 +17,6 @@ export const deleteDeal = async (
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
   }
 
-  try {
-    validateAuditDetailsAndUserType(auditDetails, 'portal');
-  } catch (error) {
-    if (error instanceof InvalidAuditDetailsError) {
-      return res.status(error.status).send({
-        status: error.status,
-        message: error.message,
-        code: error.code,
-      });
-    }
-    return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
-  }
-
   const deal = (await findOneDeal(id)) as object;
 
   if (!deal) {
@@ -37,6 +24,8 @@ export const deleteDeal = async (
   }
 
   try {
+    validateAuditDetailsAndUserType(auditDetails, 'portal');
+
     await deleteOne({
       documentId: new ObjectId(id),
       collectionName: MONGO_DB_COLLECTIONS.DEALS,
@@ -46,6 +35,13 @@ export const deleteDeal = async (
 
     return res.sendStatus(200);
   } catch (error) {
+    if (error instanceof InvalidAuditDetailsError) {
+      return res.status(error.status).send({
+        status: error.status,
+        message: error.message,
+        code: error.code,
+      });
+    }
     if (error instanceof DocumentNotDeletedError) {
       return res.sendStatus(404);
     }

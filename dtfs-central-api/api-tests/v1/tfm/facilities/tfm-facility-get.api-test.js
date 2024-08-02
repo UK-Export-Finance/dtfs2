@@ -1,6 +1,5 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const aDeal = require('../../deal-builder');
