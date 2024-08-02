@@ -7,9 +7,13 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { getBankNameById } from '../../../../repositories/banks-repo';
-import { canFeeRecordsBeAddedToExistingPayment, mapToSelectedFeeRecordDetails } from './helpers';
+import { canFeeRecordsBeAddedToExistingPayment, getAvailablePaymentGroups, mapToSelectedFeeRecordDetails } from './helpers';
 import { aReportPeriod } from '../../../../../test-helpers/test-data/report-period';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
+import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
+import { FeeRecordPaymentGroup } from '../../../../types/utilisation-reports';
+import { Payment } from '../../../../types/payments';
+import { FeeRecord } from '../../../../types/fee-records';
 
 jest.mock('../../../../repositories/banks-repo');
 
@@ -186,6 +190,187 @@ describe('get selected fee record details controller helpers', () => {
 
       // Assert
       expect(result.canAddToExistingPayment).toEqual(canAddToExistingPayment);
+    });
+
+    describe('when availablePaymentGroups is defined', () => {
+      it('returns an object containing the mapped available fee record payment groups', async () => {
+        // Arrange
+        const bankId = '123';
+        const canAddToExistingPayment = true;
+
+        const firstPaymentsReceived: Payment[] = [
+          { ...aPayment(), id: 1, amount: 100 },
+          { ...aPayment(), id: 2, amount: 25 },
+        ];
+        const secondPaymentsReceived: Payment[] = [{ ...aPayment(), id: 3, amount: 25 }];
+
+        const firstFeeRecords: FeeRecord[] = [
+          { ...aFeeRecordWithReportedPaymentAmount(100), id: 1 },
+          { ...aFeeRecordWithReportedPaymentAmount(25), id: 2 },
+        ];
+        const secondFeeRecords: FeeRecord[] = [{ ...aFeeRecordWithReportedPaymentAmount(25), id: 3 }];
+
+        const availablePaymentGroups: FeeRecordPaymentGroup[] = [
+          {
+            feeRecords: firstFeeRecords,
+            totalReportedPayments: { amount: 100, currency: 'GBP' },
+            paymentsReceived: firstPaymentsReceived,
+            totalPaymentsReceived: { amount: 125, currency: 'GBP' },
+            status: 'DOES_NOT_MATCH',
+          },
+          {
+            feeRecords: secondFeeRecords,
+            totalReportedPayments: { amount: 50, currency: 'GBP' },
+            paymentsReceived: secondPaymentsReceived,
+            totalPaymentsReceived: { amount: 25, currency: 'GBP' },
+            status: 'DOES_NOT_MATCH',
+          },
+        ];
+
+        // Act
+        const result = await mapToSelectedFeeRecordDetails(
+          bankId,
+          aReportPeriod(),
+          [aFeeRecordWithStatusToDo()],
+          canAddToExistingPayment,
+          availablePaymentGroups,
+        );
+
+        // Assert
+        expect(result.availablePaymentGroups).toEqual([
+          [
+            { amount: 100, currency: 'GBP', id: 1, reference: 'A payment reference' },
+            { amount: 25, currency: 'GBP', id: 2, reference: 'A payment reference' },
+          ],
+          [{ amount: 25, currency: 'GBP', id: 3, reference: 'A payment reference' }],
+        ]);
+      });
+
+      function aPayment(): Payment {
+        return {
+          amount: 100,
+          currency: 'GBP',
+          dateReceived: new Date(),
+          id: 1,
+          reference: 'A payment reference',
+        };
+      }
+
+      function aFeeRecordWithReportedPaymentAmount(reportedPaymentAmount: number): FeeRecord {
+        return {
+          exporter: 'An exporter',
+          facilityId: '12345678',
+          id: 1,
+          reportedFees: {
+            amount: 50,
+            currency: 'GBP',
+          },
+          reportedPayments: {
+            amount: reportedPaymentAmount,
+            currency: 'GBP',
+          },
+        };
+      }
+    });
+
+    describe('when availablePaymentGroups is undefined', () => {
+      it('returns an object which does not contain the available fee record payment groups', async () => {
+        // Arrange
+        const bankId = '123';
+        const canAddToExistingPayment = false;
+
+        // Act
+        const result = await mapToSelectedFeeRecordDetails(bankId, aReportPeriod(), [aFeeRecordWithStatusToDo()], canAddToExistingPayment);
+
+        // Assert
+        expect(result.availablePaymentGroups).toBeUndefined();
+      });
+    });
+  });
+
+  describe('getAvailablePaymentGroups', () => {
+    it('should return mapped fee record payment groups', async () => {
+      // Arrange
+      const reportId = '123';
+      const paymentCurrency = 'GBP';
+
+      const aPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
+        .withDateReceived(new Date('2022-01-01'))
+        .withAmount(55)
+        .withReference('First payment')
+        .build();
+
+      const aFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build())
+        .withExporter('Test company')
+        .withFacilityId('00012345')
+        .withId(1)
+        .withPayments([aPaymentEntity])
+        .withStatus('DOES_NOT_MATCH')
+        .build();
+
+      const mockFeeRecordEntities: FeeRecordEntity[] = [aFeeRecordEntity];
+
+      const findAvailableFeeRecordsSpy = jest
+        .spyOn(FeeRecordRepo, 'findByReportIdAndPaymentCurrencyAndStatusDoesNotMatchWithPayments')
+        .mockResolvedValue(mockFeeRecordEntities);
+
+      // Act
+      const result = await getAvailablePaymentGroups(reportId, paymentCurrency);
+
+      // Assert
+      expect(findAvailableFeeRecordsSpy).toHaveBeenCalledWith(123, 'GBP');
+      expect(result).toEqual([
+        {
+          feeRecords: [
+            {
+              id: 1,
+              facilityId: '00012345',
+              exporter: 'Test company',
+              reportedFees: {
+                amount: 100,
+                currency: 'GBP',
+              },
+              reportedPayments: {
+                amount: 100,
+                currency: 'GBP',
+              },
+            },
+          ],
+          totalReportedPayments: {
+            amount: 100,
+            currency: 'GBP',
+          },
+          paymentsReceived: [
+            {
+              amount: 55,
+              currency: 'GBP',
+              dateReceived: new Date('2022-01-01'),
+              id: 1,
+              reference: 'First payment',
+            },
+          ],
+          totalPaymentsReceived: {
+            amount: 55,
+            currency: 'GBP',
+          },
+          status: 'DOES_NOT_MATCH',
+        },
+      ]);
+    });
+
+    it('should return an empty array when no fee records are found', async () => {
+      // Arrange
+      const reportId = '123';
+      const paymentCurrency = 'GBP';
+
+      const findAvailableFeeRecordsSpy = jest.spyOn(FeeRecordRepo, 'findByReportIdAndPaymentCurrencyAndStatusDoesNotMatchWithPayments').mockResolvedValue([]);
+
+      // Act
+      const result = await getAvailablePaymentGroups(reportId, paymentCurrency);
+
+      // Assert
+      expect(findAvailableFeeRecordsSpy).toHaveBeenCalledWith(123, 'GBP');
+      expect(result).toEqual([]);
     });
   });
 

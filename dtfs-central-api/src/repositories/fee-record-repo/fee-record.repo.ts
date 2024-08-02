@@ -48,7 +48,7 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
   },
 
   /**
-   * Finds fee record entities with status 'DOES_NOT_MATCH' for a given report 
+   * Finds fee record entities with status 'DOES_NOT_MATCH' for a given report
    * and payment currency, with the payments attached.
    * @param reportId - The report id of the report attached to the fee records
    * @param paymentCurrency - The payment currency to search by
