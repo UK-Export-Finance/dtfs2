@@ -1,47 +1,36 @@
-const { FACILITIES } = require('../../../src/constants');
+import { ObjectId } from 'mongodb';
+import { Facility, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { aFacility } from '../../../test-helpers/test-data';
 
-const baseFacilities = {
-  name: null,
-  coverStartDate: null,
-  coverEndDate: null,
-  monthsOfCover: null,
-  details: null,
-  detailsOther: null,
-  currency: null,
-  value: null,
-  coverPercentage: null,
-  interestPercentage: null,
-  paymentType: null,
-};
-
-const mockFacilities = [
+export const mockFacilities: Facility[] = [
   {
-    type: FACILITIES.FACILITY_TYPE.CASH,
+    ...aFacility(),
+    type: FACILITY_TYPE.CASH,
     hasBeenIssued: true,
-    shouldCoverStartOnSubmission: null,
-    ...baseFacilities,
+    shouldCoverStartOnSubmission: false,
   },
   {
-    type: FACILITIES.FACILITY_TYPE.CASH,
+    ...aFacility(),
+    type: FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     shouldCoverStartOnSubmission: true,
     canResubmitIssuedFacilities: null,
-    ...baseFacilities,
   },
   {
-    type: FACILITIES.FACILITY_TYPE.CASH,
+    ...aFacility(),
+    type: FACILITY_TYPE.CASH,
     hasBeenIssued: false,
-    shouldCoverStartOnSubmission: null,
-    ...baseFacilities,
+    shouldCoverStartOnSubmission: false,
   },
   {
-    type: FACILITIES.FACILITY_TYPE.CONTINGENT,
+    ...aFacility(),
+    type: FACILITY_TYPE.CONTINGENT,
     hasBeenIssued: true,
-    shouldCoverStartOnSubmission: null,
-    ...baseFacilities,
+    shouldCoverStartOnSubmission: false,
   },
   {
-    type: FACILITIES.FACILITY_TYPE.CONTINGENT,
+    ...aFacility(),
+    type: FACILITY_TYPE.CONTINGENT,
     hasBeenIssued: true,
     shouldCoverStartOnSubmission: true,
     canResubmitIssuedFacilities: true,
@@ -52,10 +41,10 @@ const mockFacilities = [
       surname: 'One',
       _id: '61e567d7db41bd65b00bd47a',
     },
-    ...baseFacilities,
   },
   {
-    type: FACILITIES.FACILITY_TYPE.CASH,
+    ...aFacility(),
+    type: FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     shouldCoverStartOnSubmission: true,
     canResubmitIssuedFacilities: true,
@@ -66,18 +55,18 @@ const mockFacilities = [
       surname: 'Two',
       _id: '61e567d7db41bd65b00bd47b',
     },
-    ...baseFacilities,
   },
 ];
 
-const facilityWithDealId = (dealId) => ({
+export const facilityWithDealId = (dealId: string | ObjectId) => ({
   status: 'In progress',
   items: [
     {
       status: 'In progress',
       details: {
+        ...aFacility(),
         dealId,
-        type: FACILITIES.FACILITY_TYPE.CONTINGENT,
+        type: FACILITY_TYPE.CONTINGENT,
         hasBeenIssued: true,
         shouldCoverStartOnSubmission: true,
         canResubmitIssuedFacilities: true,
@@ -88,10 +77,7 @@ const facilityWithDealId = (dealId) => ({
           surname: 'One',
           _id: '61e567d7db41bd65b00bd47a',
         },
-        ...baseFacilities,
       },
     },
   ],
 });
-
-module.exports = { mockFacilities, facilityWithDealId };

@@ -1,3 +1,4 @@
+const { FACILITY_PROVIDED_DETAILS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const V2_CONSTANTS = require('../../../portal-api/src/constants');
 
 const DEAL_STATUS = {
@@ -73,17 +74,17 @@ const DEAL = {
 };
 
 const TYPE = {
-  CONTINGENT: V2_CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
-  CASH: V2_CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  CONTINGENT: FACILITY_TYPE.CONTINGENT,
+  CASH: FACILITY_TYPE.CASH,
 };
 
 const BASIS_DETAILS = {
-  'a facility provided on a term basis': V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.TERM,
-  'a facility provided on a revolving or renewing basis': V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.RESOLVING,
-  'a facility provided on a committed basis': V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.COMMITTED,
-  'a facility provided on an uncommitted basis': V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.UNCOMMITTED,
-  'a facility provided on an on-demand or overdraft basis': V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.ON_DEMAND,
-  'a factoring facility provided on a with-recourse basis': V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.FACTORING,
+  'a facility provided on a term basis': FACILITY_PROVIDED_DETAILS.TERM,
+  'a facility provided on a revolving or renewing basis': FACILITY_PROVIDED_DETAILS.RESOLVING,
+  'a facility provided on a committed basis': FACILITY_PROVIDED_DETAILS.COMMITTED,
+  'a facility provided on an uncommitted basis': FACILITY_PROVIDED_DETAILS.UNCOMMITTED,
+  'a facility provided on an on-demand or overdraft basis': FACILITY_PROVIDED_DETAILS.ON_DEMAND,
+  'a factoring facility provided on a with-recourse basis': FACILITY_PROVIDED_DETAILS.FACTORING,
 };
 
 const FACILITIES = {

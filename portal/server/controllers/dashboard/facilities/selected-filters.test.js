@@ -1,3 +1,4 @@
+import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import {
   generateSelectedFiltersObject,
   generateSelectedFiltersObjectWithMappedValues,
@@ -51,7 +52,7 @@ describe('controllers/dashboard/facilities - selected-filters', () => {
     it('should return an array of objects for all selected/submitted filters', () => {
       const mockSubmittedFilters = {
         keyword: ['Testing'],
-        type: [CONSTANTS.FACILITY_TYPE.BOND, CONSTANTS.FACILITY_TYPE.LOAN],
+        type: [FACILITY_TYPE.BOND, FACILITY_TYPE.LOAN],
         'deal.submissionType': [CONSTANTS.SUBMISSION_TYPE.AIN],
         hasBeenIssued: ['true'],
       };
