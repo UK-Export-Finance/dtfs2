@@ -4,6 +4,7 @@ jest.mock('../server/middleware/csrf', () => ({
   csrfToken: () => (req, res, next) => next(),
 }));
 
+const { HttpStatusCode } = require('axios');
 const { when, resetAllWhenMocks } = require('jest-when');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
@@ -52,10 +53,81 @@ describe('facility-end-date routes', () => {
             headers,
           }),
         whitelistedRoles: [MAKER],
-        successCode: 302,
+        successCode: HttpStatusCode.Found,
         successHeaders: {
           location: `/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`,
         },
+      });
+
+      describe('when the user is a maker', () => {
+        let sessionCookie;
+
+        beforeEach(async () => {
+          ({ sessionCookie } = await storage.saveUserSession([MAKER]));
+        });
+
+        it('returns 200 & does not update the database if the request body fails validation', async () => {
+          // Arrange
+          const body = { 'facility-end-date-year': '2023', 'facility-end-date-month': '8', 'facility-end-date-day': '12' };
+
+          // Act
+          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
+
+          // Assert
+          expect(response.status).toBe(HttpStatusCode.Ok);
+          expect(api.updateFacility).toHaveBeenCalledTimes(0);
+        });
+
+        it('redirects to provided facility page if the request body is valid', async () => {
+          // Arrange
+          const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
+
+          // Act
+          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
+
+          // Assert
+          expect(response.status).toBe(HttpStatusCode.Found);
+          expect(response.headers.location).toBe(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);
+        });
+
+        it('updates the facility if request body is valid', async () => {
+          // Arrange
+          const facilityEndDate = new Date(1723417200000);
+          const body = {
+            'facility-end-date-year': facilityEndDate.getFullYear().toString(),
+            'facility-end-date-month': (facilityEndDate.getMonth() + 1).toString(),
+            'facility-end-date-day': facilityEndDate.getDate().toString(),
+          };
+
+          // Act
+          await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
+
+          // Assert
+          expect(api.updateFacility).toHaveBeenCalledWith({
+            facilityId,
+            payload: {
+              facilityEndDate,
+            },
+            userToken: expect.anything(),
+          });
+        });
+
+        it('updates the application if request body is valid', async () => {
+          // Arrange
+          const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
+
+          // Act
+          await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
+
+          // Assert
+          expect(api.updateApplication).toHaveBeenCalledWith({
+            dealId,
+            application: {
+              editorId: expect.anything(),
+            },
+            userToken: expect.anything(),
+          });
+        });
       });
     });
 
@@ -68,116 +140,92 @@ describe('facility-end-date routes', () => {
             saveAndReturn: true,
           }),
         whitelistedRoles: [MAKER],
-        successCode: 302,
+        successCode: HttpStatusCode.Found,
         successHeaders: {
           location: `/gef/application-details/${dealId}`,
         },
       });
-    });
 
-    describe('when the user is a maker', () => {
-      let sessionCookie;
+      describe('when the user is a maker', () => {
+        let sessionCookie;
 
-      beforeEach(async () => {
-        ({ sessionCookie } = await storage.saveUserSession([MAKER]));
-      });
-
-      it('returns 200 & does not update the database if the request body fails validation', async () => {
-        // Arrange
-        const body = { 'facility-end-date-year': '2023', 'facility-end-date-month': '8', 'facility-end-date-day': '12' };
-
-        // Act
-        const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
-
-        // Assert
-        expect(response.status).toBe(200);
-        expect(api.updateFacility).toHaveBeenCalledTimes(0);
-      });
-
-      it('returns 200 & does not update the database if the request body fails validation & saveAndReturn = true', async () => {
-        // Arrange
-        const body = { 'facility-end-date-year': '2023', 'facility-end-date-month': '8', 'facility-end-date-day': '12' };
-
-        // Act
-        const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
-
-        // Assert
-        expect(response.status).toBe(200);
-        expect(api.updateFacility).toHaveBeenCalledTimes(0);
-      });
-
-      it('redirects to application details page if the facility end date is blank & saveAndReturn = true', async () => {
-        // Arrange
-        const body = { 'facility-end-date-year': '', 'facility-end-date-month': '', 'facility-end-date-day': '' };
-
-        // Act
-        const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
-
-        // Assert
-        expect(response.status).toBe(302);
-        expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
-      });
-
-      it('redirects to application details page if the request body is valid & saveAndReturn = true', async () => {
-        // Arrange
-        const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
-
-        // Act
-        const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
-
-        // Assert
-        expect(response.status).toBe(302);
-        expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
-      });
-
-      it('redirects to provided facility page if the request body is valid & saveAndReturn = false', async () => {
-        // Arrange
-        const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
-
-        // Act
-        const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
-
-        // Assert
-        expect(response.status).toBe(302);
-        expect(response.headers.location).toBe(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);
-      });
-
-      it('updates the facility if request body is valid', async () => {
-        // Arrange
-        const facilityEndDate = new Date(1723417200000);
-        const body = {
-          'facility-end-date-year': facilityEndDate.getFullYear().toString(),
-          'facility-end-date-month': (facilityEndDate.getMonth() + 1).toString(),
-          'facility-end-date-day': facilityEndDate.getDate().toString(),
-        };
-
-        // Act
-        await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
-
-        // Assert
-        expect(api.updateFacility).toHaveBeenCalledWith({
-          facilityId,
-          payload: {
-            facilityEndDate,
-          },
-          userToken: expect.anything(),
+        beforeEach(async () => {
+          ({ sessionCookie } = await storage.saveUserSession([MAKER]));
         });
-      });
 
-      it('updates the application if request body is valid', async () => {
-        // Arrange
-        const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
+        it('returns 200 & does not update the database if the request body fails validation', async () => {
+          // Arrange
+          const body = { 'facility-end-date-year': '2023', 'facility-end-date-month': '8', 'facility-end-date-day': '12' };
 
-        // Act
-        await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
+          // Act
+          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
 
-        // Assert
-        expect(api.updateApplication).toHaveBeenCalledWith({
-          dealId,
-          application: {
-            editorId: expect.anything(),
-          },
-          userToken: expect.anything(),
+          // Assert
+          expect(response.status).toBe(HttpStatusCode.Ok);
+          expect(api.updateFacility).toHaveBeenCalledTimes(0);
+        });
+
+        it('redirects to application details page if the facility end date is blank', async () => {
+          // Arrange
+          const body = { 'facility-end-date-year': '', 'facility-end-date-month': '', 'facility-end-date-day': '' };
+
+          // Act
+          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+
+          // Assert
+          expect(response.status).toBe(HttpStatusCode.Found);
+          expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
+        });
+
+        it('redirects to application details page if the request body is valid', async () => {
+          // Arrange
+          const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
+
+          // Act
+          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+
+          // Assert
+          expect(response.status).toBe(HttpStatusCode.Found);
+          expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
+        });
+
+        it('updates the facility if request body is valid', async () => {
+          // Arrange
+          const facilityEndDate = new Date(1723417200000);
+          const body = {
+            'facility-end-date-year': facilityEndDate.getFullYear().toString(),
+            'facility-end-date-month': (facilityEndDate.getMonth() + 1).toString(),
+            'facility-end-date-day': facilityEndDate.getDate().toString(),
+          };
+
+          // Act
+          await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+
+          // Assert
+          expect(api.updateFacility).toHaveBeenCalledWith({
+            facilityId,
+            payload: {
+              facilityEndDate,
+            },
+            userToken: expect.anything(),
+          });
+        });
+
+        it('updates the application if request body is valid', async () => {
+          // Arrange
+          const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
+
+          // Act
+          await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+
+          // Assert
+          expect(api.updateApplication).toHaveBeenCalledWith({
+            dealId,
+            application: {
+              editorId: expect.anything(),
+            },
+            userToken: expect.anything(),
+          });
         });
       });
     });

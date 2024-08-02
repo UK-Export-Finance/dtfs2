@@ -37,15 +37,17 @@ describe(page, () => {
     wrapper = render(params);
   });
 
-  it(`only renders the 'Back to previous page' link if the status does not equal 'change'`, () => {
-    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(`/gef/application-details/${dealId}/facilities/${facilityId}/about-facility`, 'Back');
-
+  it(`does not render the 'Back to previous page' link when the status is 'change'`, () => {
     wrapper = render({
       ...params,
       status: 'change',
     });
 
     wrapper.expectLink('[data-cy="back-link"]').notToExist();
+  });
+
+  it(`renders the 'Back to previous page' link if the status is not 'change'`, () => {
+    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(`/gef/application-details/${dealId}/facilities/${facilityId}/about-facility`, 'Back');
   });
 
   it(`only renders the error summary if there are errors`, () => {
@@ -70,13 +72,13 @@ describe(page, () => {
     wrapper.expectText('[data-cy="facility-end-date-inline-error"]').toRead('Error: a validation error');
   });
 
-  it(`renders the date input without values when undefined`, () => {
+  it(`renders the date input without values when a date is not provided`, () => {
     wrapper.expectInput('[data-cy="facility-end-date-day"]').toHaveValue(undefined);
     wrapper.expectInput('[data-cy="facility-end-date-month"]').toHaveValue(undefined);
     wrapper.expectInput('[data-cy="facility-end-date-year"]').toHaveValue(undefined);
   });
 
-  it(`renders the date input with values when given`, () => {
+  it(`renders the date input with values when a date is provided`, () => {
     const facilityEndDate = new Date();
     const facilityEndDateDay = String(facilityEndDate.getDate());
     const facilityEndDateMonth = String(facilityEndDate.getMonth() + 1);

@@ -80,7 +80,7 @@ context('Facility End Date Page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
     });
 
-    it('validates form when clicking on Continue', () => {
+    it('validates the form when clicking on Continue', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
       facilityEndDate.continueButton().click();
@@ -94,7 +94,7 @@ context('Facility End Date Page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
     });
 
-    it('validates form if not blank when clicking on `save and return` button', () => {
+    it('validates the form if not blank when clicking on `save and return` button', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
       facilityEndDate.facilityEndDateDay().clear().type(todayDay);
