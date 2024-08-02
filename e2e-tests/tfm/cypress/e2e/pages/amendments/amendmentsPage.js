@@ -29,6 +29,9 @@ const amendmentsPage = {
   amendmentRequestApprovalYes: () => cy.get('[data-cy="amendment--request-approval-yes"]'),
   amendmentRequestApprovalNo: () => cy.get('[data-cy="amendment--request-approval-no"]'),
 
+  isUsingFacilityEndDateYes: () => cy.get('[data-cy="amendment--is-using-facility-end-date-yes"]'),
+  isUsingFacilityEndDateNo: () => cy.get('[data-cy="amendment--is-using-facility-end-date-no"]'),
+
   addAmendmentButton: () => cy.get('[data-cy="amendment--add-amendment-button"]'),
   continueAmendmentButton: () => cy.get('[data-cy="amendment--continue-amendment-button"]'),
   continueAmendment: () => cy.get('[data-cy="amendment--continue-button"]'),
@@ -58,6 +61,7 @@ const amendmentsPage = {
   amendmentAnswerRequireApproval: () => cy.get('[data-cy="amendment--require-approval-response"]'),
   amendmentAnswerEffectiveDate: () => cy.get('[data-cy="amendment--effective-date-response"]'),
   amendmentAnswerCoverEndDate: () => cy.get('[data-cy="amendment--cover-end-date-response"]'),
+  amendmentAnswerIsUsingFacilityEndDate: () => cy.get('[data-cy="amendment--is-using-facility-end-date-response"]'),
   amendmentAnswerFacilityValue: () => cy.get('[data-cy="amendment--facility-value-response"]'),
 
   amendmentDetails: {

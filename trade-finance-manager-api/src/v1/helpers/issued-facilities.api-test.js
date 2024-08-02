@@ -1,43 +1,43 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { issuedFacilities } = require('./issued-facilities');
-const CONSTANTS = require('../../constants');
 
 const issuedBondFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+  type: FACILITY_TYPE.BOND,
   hasBeenIssued: true,
 };
 
 const issuedLoanFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+  type: FACILITY_TYPE.LOAN,
   hasBeenIssued: true,
 };
 
 const unissuedBondFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+  type: FACILITY_TYPE.BOND,
   hasBeenIssued: false,
 };
 
 const unissuedLoanFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+  type: FACILITY_TYPE.LOAN,
   hasBeenIssued: false,
 };
 
 const issuedCashFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  type: FACILITY_TYPE.CASH,
   hasBeenIssued: true,
 };
 
 const unissuedCashFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  type: FACILITY_TYPE.CASH,
   hasBeenIssued: false,
 };
 
 const issuedContingentFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+  type: FACILITY_TYPE.CONTINGENT,
   hasBeenIssued: true,
 };
 
 const unissuedContingentFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+  type: FACILITY_TYPE.CONTINGENT,
   hasBeenIssued: false,
 };
 

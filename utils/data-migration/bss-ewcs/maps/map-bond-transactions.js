@@ -1,3 +1,4 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { getCurrencyById } = require('../helpers/currencies');
 const { convertV1Date } = require('../helpers/date-helpers');
 const { getBssUserByEmail } = require('../../helpers/users');
@@ -25,7 +26,7 @@ const mapBondTransactions = (portalDealId, v1Deal) => {
     const hasBeenIssued = facilityStage === 'Issued';
 
     const v2bond = {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       ukefFacilityId: formatUkefId(bond.UKEF_BSS_facility_id),
       name: bond.BSS_Guarantee_details.BSS_bank_id,
       bondIssuer: bond.BSS_Guarantee_details.BSS_issuer,

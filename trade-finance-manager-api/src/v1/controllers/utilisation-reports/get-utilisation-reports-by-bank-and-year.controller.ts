@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import axios from 'axios';
+import { HttpStatusCode, isAxiosError } from 'axios';
 import api from '../../api';
 
 /**
@@ -13,7 +13,7 @@ export const getUtilisationReportSummariesByBankAndYear = async (req: Request<{ 
   } catch (error) {
     const errorMessage = `Failed to get previous utilisation reports by bank id ${bankId} and year ${year}`;
     console.error(errorMessage, error);
-    const statusCode = (axios.isAxiosError(error) && error.response?.status) || 500;
+    const statusCode = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
     res.status(statusCode).send(errorMessage);
   }
 };

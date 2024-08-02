@@ -1,5 +1,12 @@
 import { EntityManager, In } from 'typeorm';
-import { UtilisationReportEntityMockBuilder, DbRequestSource, FeeRecordEntityMockBuilder, UtilisationReportEntity, FeeRecordEntity } from '@ukef/dtfs2-common';
+import {
+  UtilisationReportEntityMockBuilder,
+  DbRequestSource,
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntity,
+  FeeRecordEntity,
+  UtilisationReportReconciliationStatus,
+} from '@ukef/dtfs2-common';
 import { handleUtilisationReportGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 
@@ -190,6 +197,26 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
   it('updates and saves the updated report', async () => {
     // Arrange
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+
+    mockFind.mockResolvedValue([]);
+
+    // Act
+    await handleUtilisationReportGenerateKeyingDataEvent(utilisationReport, {
+      transactionEntityManager: mockEntityManager,
+      feeRecordsAtMatchStatus: [],
+      requestSource,
+    });
+
+    // Assert
+    expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
+    expect(utilisationReport.lastUpdatedByIsSystemUser).toBe(false);
+    expect(utilisationReport.lastUpdatedByPortalUserId).toBeNull();
+    expect(utilisationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
+  });
+
+  it('updates and saves the report setting status to RECONCILIATION_IN_PROGRESS when the status is PENDING_RECONCILIATION', async () => {
+    // Arrange
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
     mockFind.mockResolvedValue([]);
@@ -203,6 +230,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
     // Assert
     expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
+    expect(utilisationReport.status).toBe<UtilisationReportReconciliationStatus>('RECONCILIATION_IN_PROGRESS');
     expect(utilisationReport.lastUpdatedByIsSystemUser).toBe(false);
     expect(utilisationReport.lastUpdatedByPortalUserId).toBeNull();
     expect(utilisationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);

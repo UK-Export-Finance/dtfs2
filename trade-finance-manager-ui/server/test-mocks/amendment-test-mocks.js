@@ -1,5 +1,5 @@
-const { TEAM_IDS, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
-const { AMENDMENTS, DEAL, FACILITY, DECISIONS } = require('../constants');
+const { TEAM_IDS, AMENDMENT_STATUS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { AMENDMENTS, DEAL, DECISIONS } = require('../constants');
 
 const MOCK_DEAL = {
   _id: '61f6ac5b02fade01b1e8efef',
@@ -48,7 +48,7 @@ const MOCK_AMENDMENT = {
   facilityId: '45678',
   dealId: '999',
   ukefFacilityId: '1234567890',
-  type: FACILITY.FACILITY_TYPE.CASH,
+  type: FACILITY_TYPE.CASH,
   status: AMENDMENT_STATUS.IN_PROGRESS,
   submittedByPim: true,
   requireUkefApproval: true,
@@ -168,6 +168,24 @@ const MOCK_AMENDMENT_FACILITYVALUE = {
   },
 };
 
+const MOCK_AMENDMENT_FACILITYVALUE_CHANGE = {
+  ...MOCK_AMENDMENT,
+  changeCoverEndDate: false,
+  changeFacilityValue: true,
+};
+
+const MOCK_AMENDMENT_COVERENDDATE_CHANGE = {
+  ...MOCK_AMENDMENT,
+  changeCoverEndDate: true,
+  changeFacilityValue: false,
+};
+
+const MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE = {
+  ...MOCK_AMENDMENT,
+  changeCoverEndDate: true,
+  changeFacilityValue: true,
+};
+
 const MOCK_AMENDMENT_BANK_DECISION = {
   ...MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED,
   bankDecision: {
@@ -265,6 +283,9 @@ module.exports = {
   MOCK_AMENDMENT_TWO_AMENDMENTS_ONE_DECLINED_NOT_SUBMITTED,
   MOCK_AMENDMENT_COVERENDDATE,
   MOCK_AMENDMENT_FACILITYVALUE,
+  MOCK_AMENDMENT_FACILITYVALUE_CHANGE,
+  MOCK_AMENDMENT_COVERENDDATE_CHANGE,
+  MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE,
   MOCK_AMENDMENT_BANK_DECISION,
   MOCK_AMENDMENT_BANK_DECISION_WITHDRAW,
   MOCK_AMENDMENT_BANK_DECISION_WITHDRAW_EFFECTIVE_DATE,

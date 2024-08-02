@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { getCurrentReportPeriodForBankSchedule } from '@ukef/dtfs2-common';
+import { getCurrentReportPeriodForBankSchedule, getPreviousReportPeriodForBankScheduleByMonth } from '@ukef/dtfs2-common';
 import { getAllBanksFromMongoDb, getPaymentReportOfficerOrFail } from '../helpers';
 import { UtilisationReportSeeder } from './utilisation-report.seeder';
 
@@ -9,12 +9,20 @@ export const seedUtilisationReports = async (dataSource: DataSource): Promise<vo
     bankId: id,
     reportPeriod: getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule),
   }));
+  const bankIdAndReportPeriodForPastManuallyCompletedReport = {
+    bankId: banks[0].id,
+    reportPeriod: getPreviousReportPeriodForBankScheduleByMonth(banks[0].utilisationReportPeriodSchedule, '2024-04'),
+  };
 
   const paymentReportOfficer = await getPaymentReportOfficerOrFail('payment-officer1@ukexportfinance.gov.uk');
   const uploadedByUserId = paymentReportOfficer._id.toString();
 
   const [pendingReconciliationBankIdWithReportPeriod, reconciliationInProgressBankIdWithReportPeriod, ...notReceivedBankIdsWithReportPeriod] =
     bankIdsWithReportPeriod;
+
+  await UtilisationReportSeeder.forBankIdAndReportPeriod(bankIdAndReportPeriodForPastManuallyCompletedReport)
+    .withUploadedByUserId(uploadedByUserId)
+    .saveWithStatus('RECONCILIATION_COMPLETED', dataSource);
 
   await UtilisationReportSeeder.forBankIdAndReportPeriod(pendingReconciliationBankIdWithReportPeriod)
     .withUploadedByUserId(uploadedByUserId)

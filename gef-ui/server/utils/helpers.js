@@ -1,3 +1,4 @@
+const { FACILITY_PROVIDED_DETAILS } = require('@ukef/dtfs2-common');
 const httpError = require('http-errors');
 const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
@@ -321,7 +322,7 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) =>
       Object.values(val).forEach((value) => {
         if (value) {
           if (options.isDetails) {
-            if (value === CONSTANTS.FACILITY_PROVIDED_DETAILS.OTHER) {
+            if (value === FACILITY_PROVIDED_DETAILS.OTHER) {
               list.push(`<li>${value} ${detailsOther ? `- ${detailsOther}` : '-'}</li>`);
             } else {
               list.push(`<li>${value}</li>`);

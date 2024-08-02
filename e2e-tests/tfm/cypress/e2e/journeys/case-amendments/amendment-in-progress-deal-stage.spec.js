@@ -8,6 +8,8 @@ import pages from '../../pages';
 import partials from '../../partials';
 import { DEAL_STAGE_TFM } from '../../../fixtures/constants';
 
+const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED');
+
 context('Amendments deal stage - amendment in progress and in progress amendment bar', () => {
   let dealId;
   const dealFacilities = [];
@@ -127,6 +129,12 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
+
+    if (tfmFacilityEndDateEnabled) {
+      cy.url().should('contain', 'is-using-facility-end-date');
+      amendmentsPage.isUsingFacilityEndDateYes().click();
+      amendmentsPage.continueAmendment().click();
+    }
 
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');

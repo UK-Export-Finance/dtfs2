@@ -39,6 +39,12 @@ context('About Facility Page', () => {
       aboutFacility.isUsingFacilityEndDateYes().should('not.exist');
       aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
     });
+
+    it('redirects to application details page when visiting bank review date page', () => {
+      cy.visit(relative(`/gef/application-details/${version0DealId}/facilities/${version0FacilityId}/bank-review-date`));
+
+      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}`));
+    });
   });
 
   describe('creating a issued contingent facility on a version 0 deal', () => {

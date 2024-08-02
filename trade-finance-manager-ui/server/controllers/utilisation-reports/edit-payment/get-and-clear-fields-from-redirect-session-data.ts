@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { PaymentErrorsViewModel } from '../../../types/view-models';
+import { EditPaymentErrorsViewModel } from '../../../types/view-models';
 import { getRemoveFeesFromPaymentError } from '../helpers/get-remove-fees-from-payment-error-helper';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
@@ -11,7 +11,7 @@ const clearRedirectSessionData = (req: Request): void => {
 export const getAndClearFieldsFromRedirectSessionData = (
   req: Request,
 ): {
-  errors: PaymentErrorsViewModel | undefined;
+  errors: EditPaymentErrorsViewModel | undefined;
   formValues: EditPaymentFormValues | undefined;
   allCheckboxesChecked?: boolean;
 } => {
@@ -31,9 +31,7 @@ export const getAndClearFieldsFromRedirectSessionData = (
     case 'no-fee-records-selected':
     case 'all-fee-records-selected':
       return {
-        errors: {
-          errorSummary: getRemoveFeesFromPaymentError(removeFeesFromPaymentErrorKey),
-        },
+        errors: getRemoveFeesFromPaymentError(removeFeesFromPaymentErrorKey),
         allCheckboxesChecked,
         formValues: editPaymentFormValues,
       };

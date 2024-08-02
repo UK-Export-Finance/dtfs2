@@ -3,7 +3,7 @@ import { IsoDateTimeStamp, getFormattedCurrencyAndAmount, getFormattedReportPeri
 import { GetPaymentDetailsWithFeeRecordsResponseBody, FeeRecord, Payment } from '../../../api-response-types';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
-import { PaymentErrorsViewModel, EditPaymentViewModel, FeeRecordDetailsCheckboxId } from '../../../types/view-models';
+import { EditPaymentViewModel, FeeRecordDetailsCheckboxId, EditPaymentErrorsViewModel } from '../../../types/view-models';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL } from './payment-form-helpers';
 import { EditPaymentsTableCheckboxId } from '../../../types/edit-payments-table-checkbox-id';
 
@@ -66,7 +66,7 @@ export const getEditPaymentViewModel = (
   reportId: string,
   paymentId: string,
   isCheckboxChecked: (checkboxId: string) => boolean,
-  errors: PaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
+  errors: EditPaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
 ): EditPaymentViewModel => ({
   reportId,
   paymentId,
@@ -91,7 +91,7 @@ export const getEditPaymentViewModelWithFormValues = (
   paymentId: string,
   isCheckboxChecked: (checkboxId: EditPaymentsTableCheckboxId) => boolean,
   formValues: EditPaymentFormValues,
-  errors: PaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
+  errors: EditPaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
 ): EditPaymentViewModel => ({
   reportId,
   paymentId,

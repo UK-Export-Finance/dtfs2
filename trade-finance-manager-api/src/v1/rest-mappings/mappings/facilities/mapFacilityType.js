@@ -1,3 +1,4 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../../constants');
 
 const mapFacilityType = (facility) => {
@@ -8,14 +9,14 @@ const mapFacilityType = (facility) => {
   }
 
   if (facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN) {
-    return CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN;
+    return FACILITY_TYPE.LOAN;
   }
 
-  if (ukefFacilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CASH) {
+  if (ukefFacilityType === FACILITY_TYPE.CASH) {
     return `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CASH} facility`;
   }
 
-  if (ukefFacilityType === CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT) {
+  if (ukefFacilityType === FACILITY_TYPE.CONTINGENT) {
     return `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT} facility`;
   }
 

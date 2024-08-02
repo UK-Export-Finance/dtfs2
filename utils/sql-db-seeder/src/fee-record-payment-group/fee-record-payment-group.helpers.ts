@@ -50,6 +50,44 @@ export const createRandomFeeRecordForReport = (report: UtilisationReportEntity, 
   return feeRecord;
 };
 
+export const createAutoMatchedZeroPaymentFeeRecordForReport = (report: UtilisationReportEntity): FeeRecordEntity => {
+  const feeRecord = new FeeRecordEntity();
+
+  feeRecord.report = report;
+
+  feeRecord.status = 'MATCH';
+  feeRecord.facilityId = faker.string.numeric({ length: { min: 8, max: 10 } });
+  feeRecord.exporter = faker.company.name();
+
+  feeRecord.baseCurrency = getRandomCurrency();
+
+  feeRecord.facilityUtilisation = 0;
+
+  feeRecord.totalFeesAccruedForThePeriod = 0;
+  feeRecord.totalFeesAccruedForThePeriodCurrency = getRandomCurrency();
+  feeRecord.totalFeesAccruedForThePeriodExchangeRate = getExchangeRate({
+    from: feeRecord.baseCurrency,
+    to: feeRecord.totalFeesAccruedForThePeriodCurrency,
+  });
+
+  feeRecord.feesPaidToUkefForThePeriod = 0;
+  feeRecord.feesPaidToUkefForThePeriodCurrency = feeRecord.totalFeesAccruedForThePeriodCurrency;
+
+  feeRecord.paymentCurrency = getRandomCurrency();
+  feeRecord.paymentExchangeRate = getExchangeRate({
+    from: feeRecord.paymentCurrency,
+    to: feeRecord.feesPaidToUkefForThePeriodCurrency,
+  });
+
+  feeRecord.fixedFeeAdjustment = null;
+  feeRecord.premiumAccrualBalanceAdjustment = null;
+  feeRecord.principalBalanceAdjustment = null;
+
+  feeRecord.updateLastUpdatedBy({ platform: 'SYSTEM' });
+
+  return feeRecord;
+};
+
 /**
  * Splits a larger number into random amounts that sum up to the supplied larger amount
  * @param totalAmount - The total amount

@@ -1,8 +1,5 @@
-const { isNonEmptyString } = require('@ukef/dtfs2-common');
+const { isNonEmptyString, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { orderNumber } = require('../../../utils/error-list-order-number');
-const { FACILITIES } = require('../../../constants');
-
-const { FACILITY_TYPE } = FACILITIES;
 
 module.exports = (facility, errorList) => {
   const newErrorList = { ...errorList };
