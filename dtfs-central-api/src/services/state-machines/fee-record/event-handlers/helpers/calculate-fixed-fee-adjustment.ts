@@ -18,6 +18,7 @@ export const calculateFixedFeeAdjustment = async (
   if (feeRecord.facilityId !== facilityUtilisationData.id) {
     throw new Error('Fee record facility id does not match the facility utilisation id');
   }
-  const currentFixedFee = await calculateFixedFee(feeRecord.facilityUtilisation, feeRecord.facilityId, reportPeriod);
-  return new Big(currentFixedFee).sub(facilityUtilisationData.fixedFee).round(2).toNumber();
+  const previousPeriodFixedFee = await calculateFixedFee(facilityUtilisationData.utilisation, facilityUtilisationData.id, facilityUtilisationData.reportPeriod);
+  const currentPeriodFixedFee = await calculateFixedFee(feeRecord.facilityUtilisation, feeRecord.facilityId, reportPeriod);
+  return new Big(currentPeriodFixedFee).sub(previousPeriodFixedFee).round(2).toNumber();
 };

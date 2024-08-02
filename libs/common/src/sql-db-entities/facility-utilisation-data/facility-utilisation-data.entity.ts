@@ -31,12 +31,6 @@ export class FacilityUtilisationDataEntity extends AuditableBaseEntity {
   @MonetaryColumn({ defaultValue: 0 })
   utilisation!: number;
 
-  /**
-   * The fixed fee
-   */
-  @MonetaryColumn({ defaultValue: 0 })
-  fixedFee!: number;
-
   public static createWithoutUtilisation({
     id,
     reportPeriod,

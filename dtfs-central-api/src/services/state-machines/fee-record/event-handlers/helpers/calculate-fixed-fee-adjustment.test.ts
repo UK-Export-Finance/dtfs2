@@ -33,9 +33,15 @@ describe('calculateFixedFeeAdjustment', () => {
       .withFacilityId(facilityId)
       .withFacilityUtilisation(feeRecordFacilityUtilisation)
       .build();
+    const feeRecordFixedFee = 123.456;
+    when(calculateFixedFee).calledWith(feeRecordFacilityUtilisation, facilityId, reportPeriod).mockResolvedValue(feeRecordFixedFee);
 
-    const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withFixedFee(23.123).build();
-    when(calculateFixedFee).calledWith(feeRecordFacilityUtilisation, facilityId, reportPeriod).mockResolvedValue(facilityUtilisationData.fixedFee);
+    const facilityUtilisationDataUtilisation = 654.321;
+    const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withUtilisation(facilityUtilisationDataUtilisation).build();
+    const facilityUtilisationDataFixedFee = 23.332;
+    when(calculateFixedFee)
+      .calledWith(facilityUtilisationDataUtilisation, facilityId, facilityUtilisationData.reportPeriod)
+      .mockResolvedValue(facilityUtilisationDataFixedFee);
 
     // Act
     const result = await calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod);
