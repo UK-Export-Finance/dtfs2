@@ -13,6 +13,7 @@ const CONSTANTS = require('../../constants');
 const { formatCoverEndDate } = require('../helpers/amendment.helpers');
 const { getIsoStringWithOffset } = require('../../utils/date');
 const isUnissuedInACBS = require('../helpers/is-facility-unissued-acbs');
+const { findOneTfmDeal } = require('./deal.controller');
 
 /**
  * Adds a log entry to the ACBS log collection in the database.
@@ -56,10 +57,17 @@ const addToACBSLog = async (payload) => {
 
 /**
  * Creates an ACBS task and adds it to the ACBS log.
- * @param {object} deal - The deal object containing the dealSnapshot property with the bank details.
+ * @param {String} deal - TFM deal object ID
  * @returns {Promise<Boolean>} - True if the ACBS task is successfully created and added to the log, false otherwise.
  */
-const createACBS = async (deal) => {
+const createACBS = async (dealId) => {
+  if (!ObjectId.isValid(dealId)) {
+    console.error('Invalid deal Id %s', dealId);
+    return false;
+  }
+
+  const deal = await findOneTfmDeal(dealId);
+
   // Check if the dealSnapshot has a bank property
   if (!deal?.dealSnapshot?.bank) {
     return false;

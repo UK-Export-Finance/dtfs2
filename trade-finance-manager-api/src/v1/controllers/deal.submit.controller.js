@@ -113,7 +113,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
 
     if (canSubmitDealToACBS) {
-      await createACBS(tfmDeal);
+      await createACBS(dealId);
     }
 
     return tfmDeal;
@@ -185,7 +185,7 @@ const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) =
     const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
 
     if (canSubmitDealToACBS) {
-      await createACBS(tfmDeal);
+      await createACBS(dealId);
     }
 
     const canIssueFacilityInACBS = await canSubmitToACBS(tfmDeal, false);
