@@ -30,6 +30,10 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
     const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups(reportId, feeRecordIds, userToken);
     const { availablePaymentGroups } = selectedFeeRecordDetails;
 
+    if (!availablePaymentGroups || availablePaymentGroups.length === 0) {
+      throw new Error('No available payment groups attached to fee record details response.');
+    }
+
     const addToAnExistingPaymentViewModel: AddToAnExistingPaymentViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,

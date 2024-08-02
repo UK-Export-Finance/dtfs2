@@ -30,7 +30,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
         params: { reportId: '123' },
         body: requestBodyForPostFromAddPaymentPage,
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
       // Act
       await addToAnExistingPayment(req, res);
@@ -61,14 +61,38 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
         ],
         payments: [],
         canAddToExistingPayment: true,
+        availablePaymentGroups: [
+          [
+            {
+              amount: 1000,
+              currency: 'JPY',
+              id: 1,
+              reference: 'REF001',
+            },
+            {
+              amount: 2000,
+              currency: 'JPY',
+              id: 2,
+              reference: 'REF002',
+            },
+          ],
+          [
+            {
+              amount: 3000,
+              currency: 'JPY',
+              id: 3,
+              reference: 'REF003',
+            },
+          ],
+        ],
       };
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(selectedFeeRecordDetailsResponse);
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue(selectedFeeRecordDetailsResponse);
 
       // Act
       await addToAnExistingPayment(req, res);
 
       // Assert
-      expect(api.getSelectedFeeRecordsDetails).toHaveBeenCalledWith('123', [456], requestSession.userToken);
+      expect(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).toHaveBeenCalledWith('123', [456], requestSession.userToken);
       expect(res._getRenderView()).toEqual('utilisation-reports/add-to-an-existing-payment.njk');
       expect((res._getRenderData() as AddToAnExistingPaymentViewModel).bank).toEqual({ name: 'Test' });
       expect((res._getRenderData() as AddToAnExistingPaymentViewModel).formattedReportPeriod).toEqual('February to April 2024');
@@ -84,6 +108,19 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
           },
         ],
       });
+      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).availablePaymentsHeading).toEqual(
+        'Which payment or group of payments do you want to add the reported fees to?',
+      );
+      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).availablePaymentGroups).toEqual([
+        {
+          radioId: 'paymentIds-1,2',
+          payments: [
+            { formattedCurrencyAndAmount: 'JPY 1,000.00', id: '1', reference: 'REF001' },
+            { formattedCurrencyAndAmount: 'JPY 2,000.00', id: '2', reference: 'REF002' },
+          ],
+        },
+        { radioId: 'paymentIds-3', payments: [{ formattedCurrencyAndAmount: 'JPY 3,000.00', id: '3', reference: 'REF003' }] },
+      ]);
     });
 
     it('should set the report id', async () => {
@@ -93,7 +130,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
         params: { reportId: '123' },
         body: requestBodyForPostFromAddPaymentPage,
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
       // Act
       await addToAnExistingPayment(req, res);
@@ -109,7 +146,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
         params: { reportId: '123' },
         body: requestBodyForPostFromAddPaymentPage,
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue({
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue({
         ...aSelectedFeeRecordsDetails(),
         feeRecords: [
           {
@@ -165,7 +202,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
         params: { reportId: '123' },
         body: requestBodyForPostFromAddPaymentPage,
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue({
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue({
         ...aSelectedFeeRecordsDetails(),
         feeRecords: [
           {
@@ -222,7 +259,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
         body: requestBodyForPostFromAddPaymentPage,
       });
 
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockRejectedValue({
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockRejectedValue({
         response: { status: 404 },
       });
 
@@ -241,7 +278,25 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       totalReportedPayments: { amount: 1000, currency: 'JPY' },
       feeRecords: [aSelectedFeeRecordDetails()],
       payments: [],
-      canAddToExistingPayment: false,
+      canAddToExistingPayment: true,
+      availablePaymentGroups: [
+        [
+          {
+            amount: 1000,
+            currency: 'JPY',
+            id: 1,
+            reference: 'REF001',
+          },
+        ],
+        [
+          {
+            amount: 2000,
+            currency: 'GBP',
+            id: 2,
+            reference: 'REF002',
+          },
+        ],
+      ],
     };
   }
 

@@ -47,8 +47,9 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
 
     validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords);
 
+    const reportedPaymentCurrency = selectedFeeRecords[0].paymentCurrency;
     const existingCompatibleFeeRecordPaymentGroups =
-      includeAvailablePaymentGroups === 'true' ? await getExistingCompatibleFeeRecordPaymentGroups(reportId, selectedFeeRecords[0].paymentCurrency) : undefined;
+      includeAvailablePaymentGroups === 'true' ? await getExistingCompatibleFeeRecordPaymentGroups(reportId, reportedPaymentCurrency) : undefined;
 
     const canAddToExistingPayment = await canFeeRecordsBeAddedToExistingPayment(reportId, selectedFeeRecords);
     const selectedFeeRecordsDetails = await mapToSelectedFeeRecordDetails(

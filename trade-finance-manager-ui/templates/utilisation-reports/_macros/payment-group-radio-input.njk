@@ -2,16 +2,16 @@
   {% set legendText = params.legendText %}
   {% set paymentGroups = params.paymentGroups %}
 
-  <div class="govuk-form-group">
+  <div class="govuk-form-group" data-cy="payment-group-radio-input">
     <fieldset class="govuk-fieldset">
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-        <h2 class="govuk-fieldset__legend--m">
+        <h2 class="govuk-fieldset__legend--m" data-cy="payment-group-radio-input-heading">
           {{ legendText }}
         </h2>
       </legend>
       <div class="govuk-radios" data-module="govuk-radios">
         {% for paymentGroup in paymentGroups %}
-          <div class="govuk-radios__item">
+          <div class="govuk-radios__item" data-cy="payment-group--{{ paymentGroup.radioId }}">
             <input class="govuk-radios__input" id="{{ paymentGroup.radioId }}" name="payment" type="radio" value="{{ paymentGroup.radioId }}">
             {% for payment in paymentGroup.payments %}
               <label class="govuk-label govuk-radios__label" for="{{ paymentGroup.radioId }}">
