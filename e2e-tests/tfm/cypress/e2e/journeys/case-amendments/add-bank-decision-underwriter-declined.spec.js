@@ -9,6 +9,8 @@ import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1
 import pages from '../../pages';
 import { NOT_ADDED } from '../../../fixtures/constants';
 
+const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED');
+
 context('Amendments underwriting - add banks decision - declined by underwriter', () => {
   let dealId;
   const dealFacilities = [];
@@ -71,6 +73,12 @@ context('Amendments underwriting - add banks decision - declined by underwriter'
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
+
+    if (tfmFacilityEndDateEnabled) {
+      cy.url().should('contain', 'is-using-facility-end-date');
+      amendmentsPage.isUsingFacilityEndDateYes().click();
+      amendmentsPage.continueAmendment().click();
+    }
 
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');

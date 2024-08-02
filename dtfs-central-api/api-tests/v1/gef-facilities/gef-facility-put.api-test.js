@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const { FACILITIES } = require('../../../src/constants');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
@@ -36,7 +36,7 @@ describe('PUT updateGefFacilities', () => {
 
     ({
       body: { _id: aValidFacilityId },
-    } = await testApi.post({ dealId: aDeal._id, type: FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl));
+    } = await testApi.post({ dealId: aDeal._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl));
 
     auditDetails = generatePortalAuditDetails(new ObjectId());
   });

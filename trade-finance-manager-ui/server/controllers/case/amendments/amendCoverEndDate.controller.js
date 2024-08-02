@@ -1,5 +1,6 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
 
@@ -84,6 +85,9 @@ const postAmendCoverEndDate = async (req, res) => {
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
+      if (isTfmFacilityEndDateFeatureFlagEnabled()) {
+        return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
+      }
       if (amendment.changeFacilityValue) {
         return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
       }

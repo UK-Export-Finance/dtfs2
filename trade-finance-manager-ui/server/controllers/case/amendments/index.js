@@ -4,6 +4,7 @@ const { getAmendmentOptions, postAmendmentOptions } = require('./amendmentOption
 const { getAmendmentEffectiveDate, postAmendmentEffectiveDate } = require('./amendmentEffectiveDate.controller');
 const { getAmendFacilityValue, postAmendFacilityValue } = require('./amendFacilityValue.controller');
 const { getAmendCoverEndDate, postAmendCoverEndDate } = require('./amendCoverEndDate.controller');
+const { getAmendmentIsUsingFacilityEndDate, postAmendmentIsUsingFacilityEndDate } = require('./amendmentIsUsingFacilityEndDate.controller');
 const { getAmendmentAnswers, postAmendmentAnswers } = require('./amendmentAnswers.controller');
 const { getAmendmentTask, postAmendmentTask } = require('./amendmentTasks.controller');
 const { getAmendmentLeadUnderwriter, getAssignAmendmentLeadUnderwriter, postAssignAmendmentLeadUnderwriter } = require('./leadUnderwriter.controller');
@@ -43,6 +44,8 @@ module.exports = {
   postAmendFacilityValue,
   getAmendCoverEndDate,
   postAmendCoverEndDate,
+  getAmendmentIsUsingFacilityEndDate,
+  postAmendmentIsUsingFacilityEndDate,
   getAmendmentAnswers,
   postAmendmentAnswers,
   getAmendmentLeadUnderwriter,

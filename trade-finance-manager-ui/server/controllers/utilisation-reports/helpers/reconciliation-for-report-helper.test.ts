@@ -539,6 +539,7 @@ describe('reconciliation-for-report-helper', () => {
             { currency: 'GBP', amount: 100.123, dateReceived: '2024-01-01T12:00:00.000' },
             { currency: 'EUR', amount: 90.91, dateReceived: '2023-12-05T12:00:00.000' },
             { currency: 'GBP', amount: 0.0123123, dateReceived: '2024-05-01T12:00:00.000' },
+            { currency: 'JPY', amount: 0, dateReceived: null },
           ],
         },
       ];
@@ -548,13 +549,15 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].feePayments).toHaveLength(3);
+      expect(result[0].feePayments).toHaveLength(4);
       expect(result[0].feePayments[0].formattedCurrencyAndAmount).toBe('GBP 100.12');
       expect(result[0].feePayments[0].formattedDateReceived).toBe('1 Jan 2024');
       expect(result[0].feePayments[1].formattedCurrencyAndAmount).toBe('EUR 90.91');
       expect(result[0].feePayments[1].formattedDateReceived).toBe('5 Dec 2023');
       expect(result[0].feePayments[2].formattedCurrencyAndAmount).toBe('GBP 0.01');
       expect(result[0].feePayments[2].formattedDateReceived).toBe('1 May 2024');
+      expect(result[0].feePayments[3].formattedCurrencyAndAmount).toBe('JPY 0.00');
+      expect(result[0].feePayments[3].formattedDateReceived).toBe(undefined);
     });
 
     it.each([

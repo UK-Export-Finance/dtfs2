@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 const { fromUnixTime, getUnixTime, add } = require('date-fns');
+const { FACILITY_PROVIDED_DETAILS } = require('@ukef/dtfs2-common');
 const MIGRATION_MAP = require('./migration-map');
-const V2_CONSTANTS = require('../../../portal-api/src/constants');
 const { convertDateToTimestamp } = require('./helpers');
 
 const mapFeeFrequency = (v1Frequency) => {
@@ -31,7 +31,7 @@ const mapBasisDetails = (v1Basis) => {
       if (MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value]) {
         mapped.details.push(MIGRATION_MAP.FACILITIES.BASIS_DETAILS[v1.readable_value]);
       } else {
-        mapped.details.push(V2_CONSTANTS.FACILITIES.GEF_FACILITY_PROVIDED_DETAILS.OTHER);
+        mapped.details.push(FACILITY_PROVIDED_DETAILS.OTHER);
         mapped.detailsOther = v1.system_value;
       }
     });

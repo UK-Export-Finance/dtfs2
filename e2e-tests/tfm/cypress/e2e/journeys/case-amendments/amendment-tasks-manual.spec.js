@@ -8,6 +8,8 @@ import { PIM_USER_1, UNDERWRITING_SUPPORT_1, UNDERWRITER_MANAGER_1, UNDERWRITER_
 import pages from '../../pages';
 import { DISPLAY_USER_TEAMS } from '../../../fixtures/constants';
 
+const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED');
+
 const completeTask = (completeTaskParams) => {
   const { userId, groupId, taskId } = completeTaskParams;
 
@@ -102,6 +104,12 @@ context('Amendments tasks - manual amendment tasks', () => {
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
+
+    if (tfmFacilityEndDateEnabled) {
+      cy.url().should('contain', 'is-using-facility-end-date');
+      amendmentsPage.isUsingFacilityEndDateYes().click();
+      amendmentsPage.continueAmendment().click();
+    }
 
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');

@@ -12,7 +12,7 @@ export const getFeeRecordsToKey = async (req: Request, res: Response) => {
   } catch (error) {
     const errorMessage = 'Failed to get fee records to key';
     console.error(errorMessage, error);
-    const statusCode = (isAxiosError(error) && error.response?.status) || 500;
+    const statusCode = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
     return res.status(statusCode).send(errorMessage);
   }
 };

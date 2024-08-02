@@ -6,6 +6,8 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 
+const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED');
+
 context('Amendments underwriting - amendments should be in correct order of versions (including when withdrawn)', () => {
   let dealId;
   const dealFacilities = [];
@@ -68,6 +70,12 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
+
+    if (tfmFacilityEndDateEnabled) {
+      cy.url().should('contain', 'is-using-facility-end-date');
+      amendmentsPage.isUsingFacilityEndDateYes().click();
+      amendmentsPage.continueAmendment().click();
+    }
 
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
@@ -184,6 +192,12 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeMonthsYear);
     amendmentsPage.continueAmendment().click();
 
+    if (tfmFacilityEndDateEnabled) {
+      cy.url().should('contain', 'is-using-facility-end-date');
+      amendmentsPage.isUsingFacilityEndDateYes().click();
+      amendmentsPage.continueAmendment().click();
+    }
+
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('1234');
 
@@ -290,6 +304,12 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.threeYearsMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeYearsYear);
     amendmentsPage.continueAmendment().click();
+
+    if (tfmFacilityEndDateEnabled) {
+      cy.url().should('contain', 'is-using-facility-end-date');
+      amendmentsPage.isUsingFacilityEndDateYes().click();
+      amendmentsPage.continueAmendment().click();
+    }
 
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('12345');

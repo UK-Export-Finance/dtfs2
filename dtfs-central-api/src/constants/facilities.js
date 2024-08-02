@@ -1,10 +1,3 @@
-const FACILITY_TYPE = {
-  BOND: 'Bond',
-  LOAN: 'Loan',
-  CASH: 'Cash',
-  CONTINGENT: 'Contingent',
-};
-
 const FACILITY_PAYMENT_TYPE = {
   IN_ADVANCE: 'In advance',
   IN_ARREARS: 'In arrears',
@@ -17,7 +10,6 @@ const SORT_BY = {
 };
 
 module.exports = {
-  FACILITY_TYPE,
   FACILITY_PAYMENT_TYPE,
   SORT_BY,
 };

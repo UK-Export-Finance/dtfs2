@@ -1,3 +1,4 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { isEveryFacilityComplete } = require('./dealFormsCompleted');
 const CONSTANTS = require('../constants');
 
@@ -107,10 +108,10 @@ describe('isEveryFacilityComplete', () => {
         requestedCoverStartDate: '2022-01-01',
         coverDateConfirmed: true,
       },
-      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE, type: CONSTANTS.FACILITY_TYPE.BOND },
-      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE, type: CONSTANTS.FACILITY_TYPE.LOAN },
-      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE, type: CONSTANTS.FACILITY_TYPE.CASH },
-      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE, type: CONSTANTS.FACILITY_TYPE.CONTINGENT },
+      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE, type: FACILITY_TYPE.BOND },
+      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE, type: FACILITY_TYPE.LOAN },
+      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE, type: FACILITY_TYPE.CASH },
+      { status: CONSTANTS.STATUS.FACILITY.INCOMPLETE, type: FACILITY_TYPE.CONTINGENT },
     ];
 
     const result = isEveryFacilityComplete(facilities);

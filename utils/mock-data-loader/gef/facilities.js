@@ -1,6 +1,5 @@
 const { add } = require('date-fns');
-const { CURRENCY } = require('@ukef/dtfs2-common');
-const { FACILITY_PROVIDED_DETAILS, FACILITY_TYPE } = require('../../../portal-api/src/v1/gef/enums');
+const { CURRENCY, FACILITY_PROVIDED_DETAILS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 
 const FACILITIES = [
   [],
