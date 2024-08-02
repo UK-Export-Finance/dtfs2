@@ -26,7 +26,7 @@ const mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups = (
   }
 
   return feeRecordPaymentGroups
-    .filter((group) => group.paymentsReceived !== null && group.paymentsReceived.length > 0)
+    .filter((group) => group.paymentsReceived !== null)
     .map((group) =>
       group.paymentsReceived!.map((groupPayment) => ({
         id: groupPayment.id,
@@ -71,10 +71,10 @@ export const canFeeRecordsBeAddedToExistingPayment = async (reportId: string, fe
   return await PaymentRepo.existsUnmatchedPaymentOfCurrencyForReportWithId(Number(reportId), reportedPaymentCurrency);
 };
 
-export const getExistingCompatibleFeeRecordPaymentGroups = async (reportId: string, paymentCurrency: Currency): Promise<FeeRecordPaymentGroup[]> => {
-  const feeRecords = await FeeRecordRepo.findByReportIdAndPaymentCurrencyAndStatusDoesNotMatchWithPayments(Number(reportId), paymentCurrency);
+export const getAvailablePaymentGroups = async (reportId: string, paymentCurrency: Currency): Promise<FeeRecordPaymentGroup[]> => {
+  const feeRecordEntities = await FeeRecordRepo.findByReportIdAndPaymentCurrencyAndStatusDoesNotMatchWithPayments(Number(reportId), paymentCurrency);
 
-  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecords);
+  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecordEntities);
   return mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
 };
 
@@ -83,7 +83,7 @@ export const mapToSelectedFeeRecordDetails = async (
   reportPeriod: ReportPeriod,
   selectedFeeRecordEntities: FeeRecordEntity[],
   canAddToExistingPayment: boolean,
-  existingCompatibleFeeRecordPaymentGroups?: FeeRecordPaymentGroup[],
+  availablePaymentGroups?: FeeRecordPaymentGroup[],
 ): Promise<SelectedFeeRecordsDetails> => {
   const bankName = await getBankNameById(bankId);
   if (!bankName) {
@@ -95,7 +95,7 @@ export const mapToSelectedFeeRecordDetails = async (
   const recordedPaymentDetails = distinctPaymentsForFeeRecords.map((paymentEntity) => mapPaymentEntityToSelectedFeeRecordsPaymentDetails(paymentEntity));
   const selectedFeeRecordDetails = selectedFeeRecordEntities.map((feeRecordEntity) => mapFeeRecordEntityToSelectedFeeRecordDetails(feeRecordEntity));
 
-  const mappedAvailablePaymentGroups = mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups(existingCompatibleFeeRecordPaymentGroups);
+  const mappedAvailablePaymentGroups = mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups(availablePaymentGroups);
 
   return {
     bank: { name: bankName },

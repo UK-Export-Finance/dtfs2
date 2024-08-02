@@ -5,7 +5,7 @@ import { UtilisationReportRepo } from '../../../../repositories/utilisation-repo
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { NotFoundError, ApiError, InvalidPayloadError } from '../../../../errors';
 import { validateSelectedFeeRecordsAllHaveSamePaymentCurrency } from '../../../validation/utilisation-report-service/selected-fee-record-validator';
-import { canFeeRecordsBeAddedToExistingPayment, getExistingCompatibleFeeRecordPaymentGroups, mapToSelectedFeeRecordDetails } from './helpers';
+import { canFeeRecordsBeAddedToExistingPayment, getAvailablePaymentGroups, mapToSelectedFeeRecordDetails } from './helpers';
 
 type GetSelectedFeeRecordDetailsRequestBody = {
   feeRecordIds: number[];
@@ -48,8 +48,7 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
     validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords);
 
     const reportedPaymentCurrency = selectedFeeRecords[0].paymentCurrency;
-    const existingCompatibleFeeRecordPaymentGroups =
-      includeAvailablePaymentGroups === 'true' ? await getExistingCompatibleFeeRecordPaymentGroups(reportId, reportedPaymentCurrency) : undefined;
+    const availablePaymentGroups = includeAvailablePaymentGroups === 'true' ? await getAvailablePaymentGroups(reportId, reportedPaymentCurrency) : undefined;
 
     const canAddToExistingPayment = await canFeeRecordsBeAddedToExistingPayment(reportId, selectedFeeRecords);
     const selectedFeeRecordsDetails = await mapToSelectedFeeRecordDetails(
@@ -57,7 +56,7 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
       utilisationReport.reportPeriod,
       selectedFeeRecords,
       canAddToExistingPayment,
-      existingCompatibleFeeRecordPaymentGroups,
+      availablePaymentGroups,
     );
 
     return res.status(HttpStatusCode.Ok).send(selectedFeeRecordsDetails);
