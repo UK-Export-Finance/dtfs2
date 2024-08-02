@@ -35,7 +35,7 @@ df.app.orchestration('acbs', function* HDeal(context) {
       }
 
       /**
-       * If no country is specified default it to `GBP`
+       * If no country is specified default it to `GBR`
        */
       if (!country) {
         country = CONSTANTS.DEAL.COUNTRY.DEFAULT;
