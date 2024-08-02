@@ -24,7 +24,7 @@ const insertMocks = async (token) => {
 
   const makerToken = await portalApi.loginViaPortal(BANK1_MAKER1);
 
-  for (const [_index, item] of MOCKS.APPLICATION.entries()) {
+  for (const [item] of MOCKS.APPLICATION.entries()) {
     item.userId = makerUserId;
     const application = await api.createApplication(item, makerToken);
 

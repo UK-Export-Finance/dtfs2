@@ -2,6 +2,10 @@ const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
 const { generateSystemAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
+const {
+  PAYLOAD_VERIFICATION: { ACBS },
+} = require('@ukef/dtfs2-common');
 const api = require('../api');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
@@ -64,7 +68,32 @@ const createACBS = async (deal) => {
   const { bank } = deal.dealSnapshot;
   const { id, name, partyUrn } = bank;
 
-  const acbsTaskLinks = await api.createACBS(deal, { id, name, partyUrn });
+  // ACBS deal payload objects
+  const acbsBank = {
+    id,
+    name,
+    partyUrn,
+  };
+
+  /**
+   * 1. Property `auditRecord` does not need to be send to ACBS DOF
+   * 2. Ensure `acbsDeal` object has required properties before expensive
+   * API execution
+   */
+  const { auditRecord, ...acbsDeal } = deal;
+
+  // Imperative properties check
+  if (!isVerifiedPayload({ payload: acbsBank, template: ACBS.BANK })) {
+    console.error('Invalid ACBS bank payload, terminating API call for deal %s', acbsDeal._id);
+    return false;
+  }
+
+  if (!isVerifiedPayload({ payload: acbsDeal, template: ACBS.DEAL })) {
+    console.error('Invalid ACBS deal payload, terminating API call for deal %s', acbsDeal._id);
+    return false;
+  }
+
+  const acbsTaskLinks = await api.createACBS(acbsDeal, acbsBank);
 
   // Check if the ACBS task is successfully created
   if (acbsTaskLinks) {
@@ -72,6 +101,7 @@ const createACBS = async (deal) => {
     return await addToACBSLog({ deal, bank, acbsTaskLinks });
   }
 
+  console.error('Unable to add ACBS call to the log for deal %s', acbsDeal._id);
   return false;
 };
 
