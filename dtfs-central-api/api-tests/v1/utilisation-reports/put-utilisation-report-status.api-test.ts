@@ -5,7 +5,7 @@ import { SqlDbHelper } from '../../sql-db-helper';
 
 console.error = jest.fn();
 
-describe('/v1/utilisation-reports/set-status', () => {
+describe('PUT /v1/utilisation-reports/set-status', () => {
   const setStatusUrl = '/v1/utilisation-reports/set-status';
 
   const reportId = 1;

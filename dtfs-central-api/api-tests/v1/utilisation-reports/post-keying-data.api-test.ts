@@ -8,6 +8,7 @@ import {
   UtilisationReportEntityMockBuilder,
   UtilisationReportReconciliationStatus,
 } from '@ukef/dtfs2-common';
+import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
@@ -16,8 +17,10 @@ import { aPortalUser, aTfmUser, aTfmSessionUser } from '../../../test-helpers/te
 
 console.error = jest.fn();
 
-describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
-  const getUrl = (reportId: number | string) => `/v1/utilisation-reports/${reportId}/keying-data`;
+const BASE_URL = '/v1/utilisation-reports/:reportId/keying-data';
+
+describe(`POST ${BASE_URL}`, () => {
+  const getUrl = (reportId: number | string) => BASE_URL.replace(':reportId', reportId.toString());
 
   const reportId = 1;
 
@@ -58,6 +61,11 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
 
   afterAll(async () => {
     await wipe(['users', 'tfm-users']);
+  });
+
+  withSqlIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
+    makeRequest: (url) => testApi.post(aValidRequestBody()).to(url),
   });
 
   it('returns a 400 when the report id is not a valid id', async () => {
