@@ -29,6 +29,11 @@ describe('GET /v1/utilisation-reports/reconciliation-summary/:submissionMonth', 
     await testApi.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
 
     await SqlDbHelper.initialize();
+    await SqlDbHelper.deleteAll();
+  });
+
+  afterEach(async () => {
+    await SqlDbHelper.deleteAll();
   });
 
   it('returns a 200 response when the submissionMonth is a valid ISO month', async () => {
@@ -60,8 +65,6 @@ describe('GET /v1/utilisation-reports/reconciliation-summary/:submissionMonth', 
     // Arrange
     const reportPeriod = getCurrentReportPeriodForBankSchedule(MOCK_BANKS.BARCLAYS.utilisationReportPeriodSchedule);
     const submissionMonth = getSubmissionMonthForReportPeriod(reportPeriod);
-
-    await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
       .withBankId(MOCK_BANKS.BARCLAYS.id)
