@@ -2,13 +2,13 @@ import { when } from 'jest-when';
 import { FacilityUtilisationDataEntityMockBuilder, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { calculateFixedFeeAdjustment } from './calculate-fixed-fee-adjustment';
 import { aReportPeriod } from '../../../../../../test-helpers/test-data';
-import { calculateFixedFee } from './calculate-fixed-fee';
+import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
 
-jest.mock('./calculate-fixed-fee');
+jest.mock('./get-fixed-fee-for-facility');
 
 describe('calculateFixedFeeAdjustment', () => {
   beforeEach(() => {
-    jest.mocked(calculateFixedFee).mockRejectedValue(new Error('Some error'));
+    jest.mocked(getFixedFeeForFacility).mockRejectedValue(new Error('Some error'));
   });
 
   it('throws an error if the fee record facility id does not match the facility utilisation data id', async () => {
@@ -39,11 +39,13 @@ describe('calculateFixedFeeAdjustment', () => {
         .withFacilityId(facilityId)
         .withFacilityUtilisation(currentFacilityUtilisation)
         .build();
-      when(calculateFixedFee).calledWith(currentFacilityUtilisation, facilityId, reportPeriod).mockResolvedValue(currentFixedFee);
+      when(getFixedFeeForFacility).calledWith(facilityId, currentFacilityUtilisation, reportPeriod).mockResolvedValue(currentFixedFee);
 
       const previousFacilityUtilisation = 654.321;
       const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withUtilisation(previousFacilityUtilisation).build();
-      when(calculateFixedFee).calledWith(previousFacilityUtilisation, facilityId, facilityUtilisationData.reportPeriod).mockResolvedValue(previousFixedFee);
+      when(getFixedFeeForFacility)
+        .calledWith(facilityId, previousFacilityUtilisation, facilityUtilisationData.reportPeriod)
+        .mockResolvedValue(previousFixedFee);
 
       // Act
       const result = await calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod);

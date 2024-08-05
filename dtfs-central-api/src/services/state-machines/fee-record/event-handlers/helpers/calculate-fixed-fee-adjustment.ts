@@ -1,6 +1,6 @@
 import Big from 'big.js';
 import { FacilityUtilisationDataEntity, FeeRecordEntity, ReportPeriod } from '@ukef/dtfs2-common';
-import { calculateFixedFee } from './calculate-fixed-fee';
+import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
 
 /**
  * Calculates the fixed fee adjustment
@@ -18,7 +18,11 @@ export const calculateFixedFeeAdjustment = async (
   if (feeRecord.facilityId !== facilityUtilisationData.id) {
     throw new Error('Fee record facility id does not match the facility utilisation id');
   }
-  const previousPeriodFixedFee = await calculateFixedFee(facilityUtilisationData.utilisation, facilityUtilisationData.id, facilityUtilisationData.reportPeriod);
-  const currentPeriodFixedFee = await calculateFixedFee(feeRecord.facilityUtilisation, feeRecord.facilityId, reportPeriod);
+  const previousPeriodFixedFee = await getFixedFeeForFacility(
+    facilityUtilisationData.id,
+    facilityUtilisationData.utilisation,
+    facilityUtilisationData.reportPeriod,
+  );
+  const currentPeriodFixedFee = await getFixedFeeForFacility(feeRecord.facilityId, feeRecord.facilityUtilisation, reportPeriod);
   return new Big(currentPeriodFixedFee).sub(previousPeriodFixedFee).round(2).toNumber();
 };

@@ -70,7 +70,7 @@ describe('tfm-facilities.helper', () => {
       expect(result).toBeUndefined();
     });
 
-    it('returns the latest completed tfm facility amendment with a defined cover end date', () => {
+    it('returns the cover end date of the latest completed amendment with a defined cover end date', () => {
       // Arrange
       const latestCompletedAmendmentCoverEndDate = new Date('2024-01-01');
       const anotherCoverEndDate = new Date('2024-02-02');
