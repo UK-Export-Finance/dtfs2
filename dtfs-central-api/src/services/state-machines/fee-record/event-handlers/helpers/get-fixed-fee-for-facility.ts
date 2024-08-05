@@ -1,4 +1,3 @@
-import Big from 'big.js';
 import { ReportPeriod } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
@@ -34,7 +33,7 @@ const getLatestTfmFacilityValues = async (
     coverEndDate: convertTimestampToDate(coverEndDate),
     coverStartDate: convertTimestampToDate(coverStartDate),
     dayCountBasis,
-    interestPercentage: new Big(interestPercentage).div(100).toNumber(),
+    interestPercentage,
   };
 };
 

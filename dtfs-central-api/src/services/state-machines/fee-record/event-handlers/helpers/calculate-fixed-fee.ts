@@ -46,8 +46,9 @@ export const calculateFixedFee = ({
   dayCountBasis,
 }: CalculateFixedFeeParams): number => {
   const numberOfDaysRemainingInCoverPeriod = getNumberOfDaysRemainingInCoverPeriod(reportPeriod.start, coverStartDate, coverEndDate);
+  const interestPercentageAsDecimal = new Big(interestPercentage).div(100);
   return new Big(utilisation)
-    .mul(interestPercentage)
+    .mul(interestPercentageAsDecimal)
     .mul(BANK_ADMIN_FEE_ADJUSTMENT)
     .mul(numberOfDaysRemainingInCoverPeriod)
     .div(dayCountBasis)

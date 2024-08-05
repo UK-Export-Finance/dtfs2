@@ -125,7 +125,7 @@ describe('getFixedFeeForFacility', () => {
       reportPeriod,
       coverStartDate: coverStartDateAfterReportPeriod,
       coverEndDate,
-      interestPercentage: 0.05,
+      interestPercentage,
       dayCountBasis,
     });
   });
@@ -166,7 +166,7 @@ describe('getFixedFeeForFacility', () => {
       reportPeriod,
       coverStartDate,
       coverEndDate,
-      interestPercentage: 0.05,
+      interestPercentage,
       dayCountBasis,
     });
   });
@@ -211,7 +211,7 @@ describe('getFixedFeeForFacility', () => {
       reportPeriod,
       coverStartDate,
       coverEndDate: amendedCoverEndDate,
-      interestPercentage: 0.05,
+      interestPercentage,
       dayCountBasis,
     });
   });
