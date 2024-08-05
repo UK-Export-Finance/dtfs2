@@ -95,7 +95,24 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
       aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.be.checked');
+        aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
+      }
     });
+
+    if (facilityEndDateEnabled) {
+      it('should display an error if not selected if there is a facility end date ', () => {
+        applicationPreview.unissuedFacilitiesReviewLink().click();
+        unissuedFacilityTable.updateIndividualFacilityButton(0).click();
+
+        aboutFacilityUnissued.continueButton().click();
+
+        aboutFacilityUnissued.errorSummary().contains('Select if there is an end date for this facility');
+        aboutFacilityUnissued.isUsingFacilityEndDateError();
+      });
+    }
 
     it('should be able to update facility and then go back to application preview page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
@@ -177,6 +194,11 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.value', '');
 
+      if (facilityEndDateEnabled) {
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().contains('Change');
+      }
+
       // not be able to change facility four name, but can change to issued
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(MOCK_FACILITY_FOUR.name);
       applicationPreview.facilitySummaryListTable(0).nameAction().should('have.value', '');
@@ -188,6 +210,10 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(0).issueDateAction().should('not.exist');
       applicationPreview.facilitySummaryListTable(0).coverStartDateAction().should('not.exist');
       applicationPreview.facilitySummaryListTable(0).coverEndDateAction().should('not.exist');
+
+      if (facilityEndDateEnabled) {
+        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.value', '');
+      }
 
       // should not be able to change facility two has previously issued
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(MOCK_FACILITY_TWO.name);
@@ -204,7 +230,7 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
 
     it('change unissued to issued from application preview page', () => {
       // to change to issued from preview page by clicking change on issued row
-      applicationPreview.facilitySummaryListRowAction(0, 2).click();
+      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().click();
       aboutFacilityUnissued.facilityName().clear();
       aboutFacilityUnissued.facilityName().type(`${MOCK_FACILITY_FOUR.name}name`);
 
@@ -268,6 +294,11 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(0).coverStartDateAction().contains('Change');
       applicationPreview.facilitySummaryListTable(0).coverEndDateValue().contains(coverEnd);
       applicationPreview.facilitySummaryListTable(0).coverEndDateAction().contains('Change');
+
+      if (facilityEndDateEnabled) {
+        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Change');
+        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateValue().contains('Yes');
+      }
 
       // facility three still unissued
       applicationPreview.facilitySummaryListTable(1).nameValue().contains(MOCK_FACILITY_THREE.name);

@@ -94,6 +94,11 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
       aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.be.checked');
+        aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
+      }
     });
 
     it('should be able to update facility and then go back to application preview page', () => {
@@ -159,6 +164,11 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.value', '');
 
+      if (facilityEndDateEnabled) {
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().contains('Change');
+      }
+
       // not be able to change facility four name, but can change to issued
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(MOCK_FACILITY_FOUR.name);
       applicationPreview.facilitySummaryListTable(0).nameAction().should('have.value', '');
@@ -182,6 +192,14 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(2).issueDateAction().should('not.exist');
       applicationPreview.facilitySummaryListTable(2).coverStartDateValue().contains('Date you submit the notice');
       applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.value', '');
+
+      if (facilityEndDateEnabled) {
+        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.value', '');
+      }
+
+      if (facilityEndDateEnabled) {
+        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.value', '');
+      }
     });
 
     it('change unissued to issued from application preview page', () => {
@@ -233,6 +251,11 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(0).coverStartDateAction().contains('Change');
       applicationPreview.facilitySummaryListTable(0).coverEndDateValue().contains(coverEnd);
       applicationPreview.facilitySummaryListTable(0).coverEndDateAction().contains('Change');
+
+      if (facilityEndDateEnabled) {
+        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Change');
+        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateValue().contains('Yes');
+      }
 
       // facility three still unissued
       applicationPreview.facilitySummaryListTable(1).nameValue().contains(MOCK_FACILITY_THREE.name);

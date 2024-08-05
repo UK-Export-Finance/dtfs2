@@ -171,6 +171,11 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(0).interestPercentageAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.value', '');
+
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.value', '');
+      }
+
       // second facility
       applicationPreview.facilitySummaryListTable(1).nameAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.value', '');
@@ -184,6 +189,11 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(1).interestPercentageAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(1).feeFrequencyAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(1).dayCountBasisAction().should('have.value', '');
+
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListTable(1).isUsingFacilityEndDateAction().should('have.value', '');
+      }
+
       // third facility
       applicationPreview.facilitySummaryListTable(2).nameAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.value', '');
@@ -196,6 +206,10 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.value', '');
+
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.value', '');
+      }
 
       // forth facility table - shorter as not yet issued
       applicationPreview.facilitySummaryListTable(3).nameAction().should('have.value', '');
@@ -259,6 +273,10 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.value', '');
 
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.value', '');
+      }
+
       // 1st facility table - makes sure no action buttons exist (change or add)
       applicationDetails.facilitySummaryListTable(0).nameAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
@@ -273,6 +291,10 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListTable(0).feeFrequencyAction().should('have.value', '');
       applicationDetails.facilitySummaryListTable(0).dayCountBasisAction().should('have.value', '');
 
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListTable(1).isUsingFacilityEndDateAction().contains('Change');
+      }
+
       // second facility
       applicationDetails.facilitySummaryListTable(1).nameAction().contains('Change');
       applicationDetails.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.value', '');
@@ -286,6 +308,10 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListTable(1).interestPercentageAction().should('have.value', '');
       applicationDetails.facilitySummaryListTable(1).feeFrequencyAction().should('have.value', '');
       applicationDetails.facilitySummaryListTable(1).dayCountBasisAction().should('have.value', '');
+
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.value', '');
+      }
 
       // forth facility table only has change as not yet issued
       applicationDetails.facilitySummaryListTable(3).nameAction().should('have.value', '');
@@ -363,6 +389,11 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListTable(3).interestPercentageAction().should('have.value', '');
       applicationDetails.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
 
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
+        applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateAction().contains('Change');
+      }
+
       // check that header updated to include this facility
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
@@ -419,6 +450,10 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.value', '');
 
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.value', '');
+      }
+
       // second facility
       applicationPreview.facilitySummaryListTable(1).nameAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.value', '');
@@ -433,6 +468,10 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(1).feeFrequencyAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(1).dayCountBasisAction().should('have.value', '');
 
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListTable(1).isUsingFacilityEndDateAction().should('have.value', '');
+      }
+
       // third facility
       applicationPreview.facilitySummaryListTable(2).nameAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.value', '');
@@ -445,6 +484,10 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.value', '');
+
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.value', '');
+      }
 
       // forth facility table
       applicationPreview.facilitySummaryListTable(3).nameAction().should('have.value', '');
@@ -459,6 +502,10 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(3).interestPercentageAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
       applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.value', '');
+
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateAction().should('have.value', '');
+      }
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {

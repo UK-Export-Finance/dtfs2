@@ -104,8 +104,19 @@ const validationErrorHandler = (errs, href = '') => {
 const isEmpty = (value) => lodashIsEmpty(cleanDeep(value));
 
 // for which rows in the facility tables should show change when facilities changed to issued post submission
-const calculateShouldDisplayChangeLinkOnceIssued = (id) =>
-  id === 'name' || id === 'coverStartDate' || id === 'coverEndDate' || id === 'issueDate' || id === 'hasBeenIssued';
+const calculateShouldDisplayChangeLinkOnceIssued = (id) => {
+  const fieldsThatAllowChangeLink = [
+    'name',
+    'coverStartDate',
+    'coverEndDate',
+    'issueDate',
+    'hasBeenIssued',
+    'isUsingFacilityEndDate',
+    'facilityEndDate',
+    'bankReviewDate',
+  ];
+  return fieldsThatAllowChangeLink.includes(id);
+};
 
 const returnToMakerNoFacilitiesChanged = (app, hasChangedFacilities) => {
   const acceptableStatus = [CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED];
