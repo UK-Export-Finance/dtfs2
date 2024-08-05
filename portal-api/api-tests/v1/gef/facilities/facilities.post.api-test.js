@@ -1,7 +1,7 @@
-const { getCurrentGefDealVersion } = require('@ukef/dtfs2-common');
+const { getCurrentGefDealVersion, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../../database-helper');
 const CONSTANTS = require('../../../../src/constants');
-const { FACILITY_TYPE, ERROR } = require('../../../../src/v1/gef/enums');
+const { ERROR } = require('../../../../src/v1/gef/enums');
 
 const app = require('../../../../src/createApp');
 const testUserCache = require('../../../api-test-users');

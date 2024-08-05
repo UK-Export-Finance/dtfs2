@@ -1,7 +1,6 @@
 const DASHBOARD = require('./dashboard');
 const DATE = require('./date');
 const FACILITY_HAS_BEEN_ISSUED = require('./facility-has-been-issued');
-const FACILITY_TYPE = require('./facility-type');
 const FACILITY_STAGE = require('./facility-stage');
 const FIELD_NAMES = require('./field-names');
 const PRODUCT = require('./product');
@@ -22,7 +21,6 @@ module.exports = {
   DASHBOARD,
   DATE,
   FACILITY_HAS_BEEN_ISSUED,
-  FACILITY_TYPE,
   FACILITY_STAGE,
   FIELD_NAMES,
   PRODUCT,

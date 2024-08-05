@@ -1,4 +1,4 @@
-const ROLES = require('./roles');
+const { ROLES, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const ALL_BANKS_ID = require('./all-banks-id');
 
 const DEAL_SUBMISSION_TYPE = {
@@ -34,11 +34,6 @@ const DEAL_TYPE = {
   BSS_EWCS: 'BSS/EWCS',
 };
 
-const FACILITY_TYPE = {
-  CASH: 'Cash',
-  CONTINGENT: 'Contingent',
-};
-
 const BOOLEAN = {
   YES: 'Yes',
   NO: 'No',
@@ -47,16 +42,6 @@ const BOOLEAN = {
 const STAGE = {
   ISSUED: 'Issued',
   UNISSUED: 'Unissued',
-};
-
-const FACILITY_PROVIDED_DETAILS = {
-  TERM: 'Term basis',
-  RESOLVING: 'Revolving or renewing basis',
-  COMMITTED: 'Committed basis',
-  UNCOMMITTED: 'Uncommitted basis',
-  ON_DEMAND: 'On demand or overdraft basis',
-  FACTORING: 'Factoring on a  with-recourse basis',
-  OTHER: 'Other',
 };
 
 const FACILITY_PAYMENT_TYPE = {
@@ -88,7 +73,6 @@ module.exports = {
   FACILITY_TYPE,
   BOOLEAN,
   STAGE,
-  FACILITY_PROVIDED_DETAILS,
   FACILITY_PAYMENT_TYPE,
   AUTHORISATION_LEVEL,
   DEFAULT_COUNTRY,

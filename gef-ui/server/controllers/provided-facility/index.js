@@ -1,5 +1,6 @@
+const { FACILITY_PROVIDED_DETAILS } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
-const { FACILITY_TYPE, FACILITY_PROVIDED_DETAILS } = require('../../constants');
+const { FACILITY_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 const { getPreviousPage } = require('./get-previous-page-helper');
 

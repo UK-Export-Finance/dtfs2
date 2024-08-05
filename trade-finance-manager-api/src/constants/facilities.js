@@ -1,10 +1,3 @@
-const FACILITY_TYPE = {
-  BOND: 'Bond',
-  LOAN: 'Loan',
-  CASH: 'Cash',
-  CONTINGENT: 'Contingent',
-};
-
 const FACILITY_PRODUCT_GROUP = {
   LOAN: 'EW',
   BOND: 'BS',
@@ -97,7 +90,6 @@ const FACILITY_STATUS_PORTAL = {
 };
 
 module.exports = {
-  FACILITY_TYPE,
   FACILITY_PRODUCT_GROUP,
   FACILITY_PRODUCT_CODE,
   FACILITY_PRODUCT_NAME,

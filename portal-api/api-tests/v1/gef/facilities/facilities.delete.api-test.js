@@ -1,8 +1,7 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { withDeleteManyTests, withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../../database-helper');
-const { FACILITY_TYPE } = require('../../../../src/v1/gef/enums');
 
 const app = require('../../../../src/createApp');
 const testUserCache = require('../../../api-test-users');

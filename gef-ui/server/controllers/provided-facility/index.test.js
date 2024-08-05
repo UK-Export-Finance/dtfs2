@@ -1,3 +1,4 @@
+import { FACILITY_PROVIDED_DETAILS } from '@ukef/dtfs2-common';
 import { providedFacility, validateProvidedFacility } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
@@ -58,7 +59,7 @@ describe('controllers/provided-facility', () => {
   describe('GET Provided Facility', () => {
     it('renders the `Provided Facility` template', async () => {
       mockRequest.query.status = 'change';
-      mockGetFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
+      mockGetFacilityResponse.details.details = [FACILITY_PROVIDED_DETAILS.TERM, FACILITY_PROVIDED_DETAILS.RESOLVING];
 
       api.getFacility.mockResolvedValueOnce(mockGetFacilityResponse);
 
