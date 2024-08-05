@@ -13,14 +13,18 @@
         {% for paymentGroup in paymentGroups %}
           <div class="govuk-radios__item" data-cy="payment-group--{{ paymentGroup.radioId }}">
             <input class="govuk-radios__input" id="{{ paymentGroup.radioId }}" name="payment" type="radio" value="{{ paymentGroup.radioId }}">
-            {% for payment in paymentGroup.payments %}
-              <label class="govuk-label govuk-radios__label" for="{{ paymentGroup.radioId }}">
-                {{ payment.formattedCurrencyAndAmount }}
-              </label>
-              <div id="payment-{{ payment.id }}-item-hint" class="govuk-hint govuk-radios__hint">
-                Payment reference: {{ payment.reference }}
-              </div>
-            {% endfor %}
+            <label class="govuk-label govuk-radios__label" for="{{ paymentGroup.radioId }}">
+              {% for payment in paymentGroup.payments %}
+                <div class="govuk-label {{ 'govuk-!-margin-bottom-2' if not payment.reference }}">
+                  {{ payment.formattedCurrencyAndAmount }}
+                </div>
+                {% if payment.reference %}
+                  <div class="govuk-hint">
+                    Payment reference: {{ payment.reference }}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </label>
           </div>
         {% endfor %}
       </div>
