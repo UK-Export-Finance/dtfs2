@@ -1,1 +1,1 @@
-export * from './tolerance.entity';
+export * from './payment-matching-tolerance.entity';
