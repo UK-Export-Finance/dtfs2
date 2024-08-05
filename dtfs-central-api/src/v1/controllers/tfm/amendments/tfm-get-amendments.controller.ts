@@ -1,9 +1,9 @@
 import { ObjectId, Document } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { Currency, TfmFacilityAmendment, AMENDMENT_STATUS, ApiError, API_ERROR_CODE } from '@ukef/dtfs2-common';
+import { Currency, TfmFacilityAmendment, AMENDMENT_STATUS, AMENDMENT_QUERIES, ApiError, API_ERROR_CODE } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
-import { AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES } from '../../../../constants';
+import { AMENDMENT_QUERY_STATUSES } from '../../../../constants';
 
 export const getAllAmendmentsInProgress = async (_req: Request, res: Response) => {
   try {

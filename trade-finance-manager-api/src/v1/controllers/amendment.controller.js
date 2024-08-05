@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_QUERIES } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
@@ -127,11 +127,11 @@ const getAmendmentByFacilityId = async (req, res) => {
       amendment = (await api.getAmendmentInProgress(facilityId)).data;
       break;
     case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED:
-      if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
+      if (type === AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
         amendment = await api.getLatestCompletedAmendmentDate(facilityId);
-      } else if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_VALUE) {
+      } else if (type === AMENDMENT_QUERIES.LATEST_VALUE) {
         amendment = await api.getLatestCompletedAmendmentValue(facilityId);
-      } else if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_FACILITY_END_DATE) {
+      } else if (type === AMENDMENT_QUERIES.LATEST_FACILITY_END_DATE) {
         amendment = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId);
       } else {
         amendment = await api.getCompletedAmendment(facilityId);
@@ -158,7 +158,7 @@ const getAmendmentsByDealId = async (req, res) => {
       amendment = await api.getAmendmentInProgressByDealId(dealId);
       break;
     case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED:
-      if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST) {
+      if (type === AMENDMENT_QUERIES.LATEST) {
         amendment = await api.getLatestCompletedAmendmentByDealId(dealId);
       } else {
         amendment = await api.getCompletedAmendmentByDealId(dealId);
