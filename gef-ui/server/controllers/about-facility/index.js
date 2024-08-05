@@ -1,9 +1,10 @@
 const { format, set } = require('date-fns');
-const { isFacilityEndDateEnabledOnGefVersion, parseDealVersion } = require('@ukef/dtfs2-common');
+const { isFacilityEndDateEnabledOnGefVersion, parseDealVersion, zBooleanStrictCoerce } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { FACILITY_TYPE, DATE_FORMAT, DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 const { validateAboutFacility } = require('./validation');
+const { getNextPage } = require('./get-next-page-helper');
 
 const aboutFacility = async (req, res) => {
   const {
@@ -91,7 +92,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       monthsOfCover,
       facilityName,
       shouldCoverStartOnSubmission,
-      isUsingFacilityEndDate,
+      isUsingFacilityEndDate: isUsingFacilityEndDateString,
     },
     query: { saveAndReturn, status },
     params: { dealId, facilityId },
@@ -101,6 +102,8 @@ const validateAndUpdateAboutFacility = async (req, res) => {
     },
   } = req;
   const facilityTypeString = facilityType.toLowerCase();
+
+  const isUsingFacilityEndDate = zBooleanStrictCoerce.optional().parse(isUsingFacilityEndDateString);
 
   const deal = await api.getApplication({ dealId, userToken });
 
@@ -150,7 +153,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       facilityId,
       status,
       isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
-      isUsingFacilityEndDate,
+      isUsingFacilityEndDate: isUsingFacilityEndDateString,
     });
   }
 
@@ -164,7 +167,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
         coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
         coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
         coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN ? true : null,
-        isUsingFacilityEndDate: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) ? isTrueSet(isUsingFacilityEndDate) : undefined,
+        isUsingFacilityEndDate: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) ? isUsingFacilityEndDate : undefined,
       },
       userToken,
     });
@@ -179,11 +182,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    if (isTrueSet(isUsingFacilityEndDate)) {
-      // TODO: DTFS2-7161 - Implement page to submit facilityEndDate
-    }
-
-    return res.redirect(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);
+    return res.redirect(getNextPage({ dealId, facilityId, dealVersion: deal.version, isUsingFacilityEndDate }));
   } catch (error) {
     return res.render('partials/problem-with-service.njk');
   }

@@ -1,5 +1,5 @@
 import { ObjectId, Document } from 'mongodb';
-import { AMENDMENT_STATUS } from '../../../constants/amendments';
+import { AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 
 export const latestCompletedAmendmentByFacilityId = (facilityId: string | ObjectId): Document[] => [
   { $match: { _id: { $eq: new ObjectId(facilityId) } } },

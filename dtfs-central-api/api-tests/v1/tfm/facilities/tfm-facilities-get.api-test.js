@@ -1,19 +1,19 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 const newDeal = {
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+  dealType: DEALS.DEAL_TYPE.GEF,
   status: 'Draft',
   exporter: { companyName: 'Mock Company name' },
   hasBeenIssued: true,
 };
 
 const newFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  type: FACILITY_TYPE.CASH,
   dealId: 123,
   ukefFacilityId: '223344',
   value: '2000',
@@ -38,7 +38,7 @@ describe('/v1/tfm/facilities', () => {
       // submit deal/facilities
       await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealType: DEALS.DEAL_TYPE.GEF,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })

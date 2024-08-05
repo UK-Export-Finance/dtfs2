@@ -1,6 +1,13 @@
 import { HttpStatusCode } from 'axios';
 import { IsNull, Not } from 'typeorm';
-import { FeeRecordEntity, FeeRecordEntityMockBuilder, FeeRecordStatus, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  FeeRecordStatus,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+  UtilisationReportReconciliationStatus,
+} from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
@@ -20,8 +27,10 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
   const tfmUser = aTfmUser();
   const tfmUserId = tfmUser._id.toString();
 
-  const anUploadedUtilisationReport = () =>
+  const anUploadedReconciliationInProgressUtilisationReport = () =>
     UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).withUploadedByUserId(portalUserId).build();
+  const anUploadedPendingReconciliationUtilisationReport = () =>
+    UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withUploadedByUserId(portalUserId).build();
 
   const aValidRequestBody = () => ({
     user: {
@@ -78,7 +87,7 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
 
   it('returns a 404 when there are no fee records at the MATCH state attached to the report with the supplied id', async () => {
     // Arrange
-    const report = anUploadedUtilisationReport();
+    const report = anUploadedReconciliationInProgressUtilisationReport();
     const toDoFeeRecords = [
       FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('TO_DO').build(),
       FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('TO_DO').build(),
@@ -93,9 +102,9 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     expect(response.status).toBe(HttpStatusCode.NotFound);
   });
 
-  it('returns a 200 with a valid request body when there are fee records at the MATCH status', async () => {
+  it('returns a 200 when request has a valid body and there are fee records at the MATCH status', async () => {
     // Arrange
-    const report = anUploadedUtilisationReport();
+    const report = anUploadedReconciliationInProgressUtilisationReport();
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('11111111').withStatus('MATCH').build(),
       FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId('22222222').withStatus('MATCH').build(),
@@ -112,9 +121,40 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
     expect(response.status).toBe(HttpStatusCode.Ok);
   });
 
+  it('returns a 200 when request has a valid body and the report is in state PENDING_RECONCILIATION with zero payment fee records at the MATCH status', async () => {
+    // Arrange
+    const report = anUploadedPendingReconciliationUtilisationReport();
+    report.feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('11111111').withPayments([]).withStatus('MATCH').build()];
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    const requestBody = aValidRequestBody();
+
+    // Act
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.Ok);
+  });
+
+  it('updates report status to RECONCILIATION_IN_PROGRESS when request has a valid body and the report is in state PENDING_RECONCILIATION with zero payment fee records at the MATCH status', async () => {
+    // Arrange
+    const report = anUploadedPendingReconciliationUtilisationReport();
+    report.feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('11111111').withPayments([]).withStatus('MATCH').build()];
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    const requestBody = aValidRequestBody();
+
+    // Act
+    await testApi.post(requestBody).to(getUrl(reportId));
+
+    // Assert
+    const updatedReport = await SqlDbHelper.manager.findOneByOrFail(UtilisationReportEntity, { id: reportId });
+    expect(updatedReport.status).toBe<UtilisationReportReconciliationStatus>('RECONCILIATION_IN_PROGRESS');
+  });
+
   it('updates the utilisation report audit fields', async () => {
     // Arrange
-    const report = anUploadedUtilisationReport();
+    const report = anUploadedReconciliationInProgressUtilisationReport();
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('MATCH').build(),
       FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('MATCH').build(),
@@ -138,7 +178,7 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
 
   it('updates each of the MATCH fee record audit fields and does not update the non MATCH fee record audit fields', async () => {
     // Arrange
-    const report = anUploadedUtilisationReport();
+    const report = anUploadedReconciliationInProgressUtilisationReport();
     const feeRecords = [
       FeeRecordEntityMockBuilder.forReport(report)
         .withId(1)
@@ -180,7 +220,7 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
 
   it('updates the status of all MATCH fee records to READY_TO_KEY', async () => {
     // Arrange
-    const report = anUploadedUtilisationReport();
+    const report = anUploadedReconciliationInProgressUtilisationReport();
     const feeRecords = [
       // Fee records for same facility where only one has MATCH status
       FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId('111111111').withStatus('TO_DO').build(),
@@ -233,7 +273,7 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
 
     it('generates keying data only for one of the fee records at MATCH status', async () => {
       // Arrange
-      const report = anUploadedUtilisationReport();
+      const report = anUploadedReconciliationInProgressUtilisationReport();
 
       const feeRecordsAtMatchStatus = [
         FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('MATCH').build(),
@@ -255,7 +295,7 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
 
     it('only generates keying data once all the fee records are at the MATCH status', async () => {
       // Arrange 1
-      const report = anUploadedUtilisationReport();
+      const report = anUploadedReconciliationInProgressUtilisationReport();
 
       const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('TO_DO').build();
 

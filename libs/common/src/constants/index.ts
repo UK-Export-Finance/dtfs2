@@ -12,3 +12,6 @@ export * from './audit-user-types';
 export * as PAYLOAD_VERIFICATION from './payload-verification';
 export * from './company-registration-number';
 export * from './keying-sheet-row-status';
+export * from './amendment-status';
+export * from './facility-type';
+export * from './facility-provided-details';

@@ -54,6 +54,10 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
     }),
   );
 
-  report.updateLastUpdatedBy(requestSource);
+  if (report.status === 'PENDING_RECONCILIATION') {
+    report.updateWithStatus({ status: 'RECONCILIATION_IN_PROGRESS', requestSource });
+  } else {
+    report.updateLastUpdatedBy(requestSource);
+  }
   return await transactionEntityManager.save(UtilisationReportEntity, report);
 };

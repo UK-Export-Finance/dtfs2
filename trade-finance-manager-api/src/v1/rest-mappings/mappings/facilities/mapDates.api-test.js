@@ -1,9 +1,8 @@
 const { format, fromUnixTime } = require('date-fns');
+const { AMENDMENT_STATUS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const mapDates = require('./mapDates');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapTenorDate = require('./mapTenorDate');
-const { FACILITIES } = require('../../../../constants');
-const { AMENDMENT_STATUS } = require('../../../../constants/deals');
 
 describe('mapDates', () => {
   const mockCoverEndDate = {
@@ -23,7 +22,7 @@ describe('mapDates', () => {
     facilitySnapshot: {
       submittedAsIssuedDate: 160690061100,
       requestedCoverStartDate: '2021-12-08T00:00:00.000Z',
-      ukefFacilityType: FACILITIES.FACILITY_TYPE.BOND,
+      ukefFacilityType: FACILITY_TYPE.BOND,
       ukefGuaranteeInMonths: '12',
       ...mockCoverEndDate,
       ...mockCoverStartDate,

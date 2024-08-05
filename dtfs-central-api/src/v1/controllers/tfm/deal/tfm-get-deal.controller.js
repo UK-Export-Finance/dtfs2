@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const CONSTANTS = require('../../../../constants');
+const { DEALS } = require('../../../../constants');
 const { TfmFacilitiesRepo } = require('../../../../repositories/tfm-facilities-repo');
 
 const findOneDeal = async (_id, callback) => {
@@ -15,7 +15,7 @@ const findOneDeal = async (_id, callback) => {
   let returnDeal = deal;
 
   if (deal) {
-    if (deal.dealSnapshot.dealType && deal.dealSnapshot.dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    if (deal.dealSnapshot.dealType && deal.dealSnapshot.dealType === DEALS.DEAL_TYPE.GEF) {
       returnDeal = {
         ...deal,
         dealSnapshot: deal.dealSnapshot,
@@ -35,11 +35,11 @@ const findOneDeal = async (_id, callback) => {
           if (facilitySnapshot) {
             const { type } = facilitySnapshot;
 
-            if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+            if (type === FACILITY_TYPE.BOND) {
               mappedBonds.push(facilitySnapshot);
             }
 
-            if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+            if (type === FACILITY_TYPE.LOAN) {
               mappedLoans.push(facilitySnapshot);
             }
           }

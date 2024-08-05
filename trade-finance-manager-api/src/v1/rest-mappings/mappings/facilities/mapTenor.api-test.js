@@ -1,6 +1,5 @@
+const { AMENDMENT_STATUS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const mapTenor = require('./mapTenor');
-const { FACILITY_TYPE } = require('../../../../constants/facilities');
-const { AMENDMENT_STATUS } = require('../../../../constants/deals');
 
 describe('mapTenor()', () => {
   const coverEndDateUnix = 1658403289;

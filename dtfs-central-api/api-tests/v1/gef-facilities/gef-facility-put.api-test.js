@@ -1,9 +1,9 @@
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
-const CONSTANTS = require('../../../src/constants');
+const { FACILITIES } = require('../../../src/constants');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 
 const { testApi } = require('../../test-api');
@@ -36,7 +36,7 @@ describe('PUT updateGefFacilities', () => {
 
     ({
       body: { _id: aValidFacilityId },
-    } = await testApi.post({ dealId: aDeal._id, type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl));
+    } = await testApi.post({ dealId: aDeal._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl));
 
     auditDetails = generatePortalAuditDetails(new ObjectId());
   });
@@ -96,7 +96,7 @@ describe('PUT updateGefFacilities', () => {
       coverPercentage: 80,
       interestPercentage: 40,
       paymentType: 'Monthly',
-      feeType: CONSTANTS.FACILITIES.FACILITY_PAYMENT_TYPE.IN_ADVANCE,
+      feeType: FACILITIES.FACILITY_PAYMENT_TYPE.IN_ADVANCE,
       feeFrequency: 'Monthly',
       dayCountBasis: 365,
       coverDateConfirmed: true,
@@ -122,7 +122,7 @@ describe('PUT updateGefFacilities', () => {
       coverPercentage: 80,
       interestPercentage: 40,
       paymentType: 'Monthly',
-      feeType: CONSTANTS.FACILITIES.FACILITY_PAYMENT_TYPE.IN_ADVANCE,
+      feeType: FACILITIES.FACILITY_PAYMENT_TYPE.IN_ADVANCE,
       feeFrequency: 'Monthly',
       dayCountBasis: 365,
       coverDateConfirmed: true,

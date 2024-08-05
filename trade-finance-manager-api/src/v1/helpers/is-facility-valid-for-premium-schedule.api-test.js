@@ -1,8 +1,8 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const isFacilityValidForPremiumSchedule = require('./is-facility-valid-for-premium-schedule');
-const CONSTANTS = require('../../constants');
 
 const facility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+  type: FACILITY_TYPE.LOAN,
   feeType: 'At maturity',
   ukefFacilityId: 1234,
   guaranteeFee: 10,

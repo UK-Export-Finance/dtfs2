@@ -1,6 +1,6 @@
 const { isMongoId } = require('validator');
 const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
-const REGEXES = require('../../../constants/regex');
+const { REGEX } = require('../../../constants');
 const {
   validateUkefId,
   validateExporter,
@@ -38,7 +38,7 @@ const validateMonth = (month, propertyName = 'Month') => {
   if (!month && month !== 0) {
     return `${propertyName} is required`;
   }
-  if (!REGEXES.INTEGER_REGEX.test(month) || month < 1 || month > 12) {
+  if (!REGEX.INTEGER_REGEX.test(month) || month < 1 || month > 12) {
     return `${propertyName} must be between 1 and 12`;
   }
   return null;
@@ -54,7 +54,7 @@ const validateYear = (year, propertyName = 'Year') => {
   if (!year && year !== 0) {
     return `${propertyName} is required`;
   }
-  if (!REGEXES.INTEGER_REGEX.test(year) || year < 2020 || year > 2100) {
+  if (!REGEX.INTEGER_REGEX.test(year) || year < 2020 || year > 2100) {
     return `${propertyName} must be between 2020 and 2100`;
   }
   return null;

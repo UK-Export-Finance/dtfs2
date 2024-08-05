@@ -15,7 +15,6 @@ import relative from '../../relativeURL';
 context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   const reportId = 12;
   const paymentId = 15;
-  const feeRecordId = 7;
   const paymentCurrency = CURRENCY.GBP;
   const paymentAmount = 100;
 
@@ -48,7 +47,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
       .withReference(paymentReference)
       .build();
 
-  const aFeeRecordWithAmountStatusAndPayments = (amount, status, payments) =>
+  const aFeeRecordWithIdAmountStatusAndPayments = (feeRecordId, amount, status, payments) =>
     FeeRecordEntityMockBuilder.forReport(utilisationReport)
       .withId(feeRecordId)
       .withStatus(status)
@@ -65,7 +64,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
 
     const payment = aPaymentWithAmount(paymentAmount);
-    const feeRecord = aFeeRecordWithAmountStatusAndPayments(paymentAmount, FEE_RECORD_STATUS.MATCH, [payment]);
+    const feeRecord = aFeeRecordWithIdAmountStatusAndPayments(123, paymentAmount, FEE_RECORD_STATUS.MATCH, [payment]);
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
 
     pages.landingPage.visit();
@@ -75,13 +74,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   });
 
   it('should allow the user to navigate to the edit payment page', () => {
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
   });
 
   it('should display the payment currency as a fixed value next to the payment amount', () => {
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -89,7 +88,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   });
 
   it('should populate the edit payment form values with the current payment values', () => {
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -100,12 +99,26 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     cy.getInputByLabelText('Payment reference (optional)').should('have.value', paymentReference);
   });
 
-  it('should display errors when form submitted with invalid values and persist the inputted values', () => {
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+  it('should display errors when form submitted with invalid values and persist the selected fees and inputted values', () => {
+    cy.task(NODE_TASKS.REMOVE_ALL_FEE_RECORDS_FROM_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+
+    const payment = aPaymentWithAmount(200);
+    const feeRecord = aFeeRecordWithIdAmountStatusAndPayments(123, 70, FEE_RECORD_STATUS.DOES_NOT_MATCH, [payment]);
+    const anotherFeeRecord = aFeeRecordWithIdAmountStatusAndPayments(124, 7, FEE_RECORD_STATUS.DOES_NOT_MATCH, [payment]);
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord, anotherFeeRecord]);
+
+    const getFeeRecordCheckbox = (feeRecordId) => cy.get(`[type="checkbox"][id="feeRecordId-${feeRecordId}"]`);
+
+    cy.reload();
+
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
     clearFormValues();
+
+    getFeeRecordCheckbox(feeRecord.id).check();
 
     cy.getInputByLabelText('Amount received').type('nonsense');
     cy.getInputByLabelText('Day').type('nonsense');
@@ -114,6 +127,9 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     cy.getInputByLabelText('Payment reference (optional)').type('This is valid');
 
     pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+
+    getFeeRecordCheckbox(feeRecord.id).should('be.checked');
+    getFeeRecordCheckbox(anotherFeeRecord.id).should('not.be.checked');
 
     cy.get('a').should('contain', 'Enter a valid amount received');
     cy.get('a').should('contain', 'The date payment received must be a real date');
@@ -129,7 +145,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   });
 
   it('should return to the premium payments table after the user clicks the save changes button', () => {
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -145,7 +161,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     const newPaymentDateYear = '2021';
     const newPaymentReference = 'New payment reference';
 
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -167,7 +183,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
 
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -183,13 +199,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
 
     const payment = aPaymentWithAmount(200);
-    const feeRecord = aFeeRecordWithAmountStatusAndPayments(200, FEE_RECORD_STATUS.MATCH, [payment]);
+    const feeRecord = aFeeRecordWithIdAmountStatusAndPayments(123, 200, FEE_RECORD_STATUS.MATCH, [payment]);
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
 
     cy.reload();
 
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 
@@ -208,14 +224,14 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
 
     const payment = aPaymentWithAmount(100);
-    const feeRecord = aFeeRecordWithAmountStatusAndPayments(200, FEE_RECORD_STATUS.DOES_NOT_MATCH, [payment]);
+    const feeRecord = aFeeRecordWithIdAmountStatusAndPayments(123, 200, FEE_RECORD_STATUS.DOES_NOT_MATCH, [payment]);
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
 
     cy.reload();
 
     cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
 
-    pages.utilisationReportPage.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
 

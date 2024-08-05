@@ -1,5 +1,13 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, DocumentNotFoundError, ApiError, DealNotFoundError, InvalidDealIdError } = require('@ukef/dtfs2-common');
+const {
+  MONGO_DB_COLLECTIONS,
+  DocumentNotDeletedError,
+  DocumentNotFoundError,
+  ApiError,
+  DealNotFoundError,
+  InvalidDealIdError,
+  parseDealVersion,
+} = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne, deleteMany } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const utils = require('../utils.service');
@@ -37,7 +45,7 @@ exports.create = async (req, res) => {
 
     const facilityParameters = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
 
-    const facilityToInsert = new Facility(facilityParameters, existingDeal.version);
+    const facilityToInsert = new Facility(facilityParameters, parseDealVersion(existingDeal.version));
     const createdFacility = await facilitiesCollection.insertOne(facilityToInsert);
 
     const { insertedId } = createdFacility;
@@ -194,7 +202,7 @@ const update = async (id, updateBody, auditDetails) => {
         guaranteeFee: calculateGuaranteeFee(updateBody, existingFacility),
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       },
-      existingDeal.version,
+      parseDealVersion(existingDeal.version),
     );
 
     const updatedFacility = await facilitiesCollection.findOneAndUpdate(

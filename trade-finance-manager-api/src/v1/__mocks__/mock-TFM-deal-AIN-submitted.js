@@ -1,3 +1,4 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../constants');
 
 const MOCK_TFM_DEAL_AIN_SUBMITTED = {
@@ -58,7 +59,7 @@ const MOCK_TFM_DEAL_AIN_SUBMITTED = {
       {
         _id: { $oid: '61f94a4327c1a7009cde1b9e' },
         dealId: { $oid: '61f94a2427c1a7009cde1b9d' },
-        type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+        type: FACILITY_TYPE.CASH,
         hasBeenIssued: true,
         name: 'abc',
         shouldCoverStartOnSubmission: true,

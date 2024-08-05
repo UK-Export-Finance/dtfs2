@@ -24,7 +24,7 @@ export const deleteFacility = async (
     if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
       return res.status(400).send({
         status: 400,
-        message: `Invalid auditDetails, ${error.message.toString()}`,
+        message: `Invalid auditDetails: ${error.message.toString()}`,
       });
     }
     return res.status(500).send({ status: 500, error });

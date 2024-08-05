@@ -3,6 +3,10 @@ import { PaymentErrorsViewModel } from './payment-errors-view-model';
 import { EditPaymentFormValues } from '../edit-payment-form-values';
 import { FeeRecordDetailsWithCheckboxesViewModel } from './fee-record-details-view-model';
 
+export type EditPaymentErrorsViewModel = PaymentErrorsViewModel & {
+  removeSelectedFeesErrorMessage?: string;
+};
+
 export type EditPaymentViewModel = {
   reportId: string;
   paymentId: string;
@@ -11,6 +15,6 @@ export type EditPaymentViewModel = {
   formattedReportPeriod: string;
   feeRecords: FeeRecordDetailsWithCheckboxesViewModel;
   totalReportedPayments: CurrencyAndAmountString;
-  errors: PaymentErrorsViewModel;
+  errors: EditPaymentErrorsViewModel;
   formValues: EditPaymentFormValues;
 };

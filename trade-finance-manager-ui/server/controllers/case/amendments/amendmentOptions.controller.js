@@ -1,6 +1,6 @@
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { amendmentOptionsValidation } = require('./validation/amendmentOptions.validate');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 
 const getAmendmentOptions = async (req, res) => {
   const { facilityId, amendmentId } = req.params;

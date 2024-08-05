@@ -1,5 +1,4 @@
 const DEAL = require('./deal');
-const FACILITY = require('./facility');
 const TABLE = require('./table');
 const TASKS = require('./tasks');
 const ACTIVITIES = require('./activities');
@@ -12,7 +11,6 @@ const { REGEX } = require('./regex');
 
 module.exports = {
   DEAL,
-  FACILITY,
   TABLE,
   TASKS,
   ACTIVITIES,

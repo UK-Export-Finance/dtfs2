@@ -10,3 +10,4 @@ export * from './edit-payment-helper';
 export * from './validate-payment-form-values';
 export * from './parse-payment-form-values';
 export * from './payment-form-helpers';
+export * from './selected-reported-fees-details-view-model-mapper';

@@ -18,6 +18,7 @@ describe(component, () => {
         status: 'TO_DO',
         displayStatus: 'TO DO',
         facilityId: '12345678',
+        feeRecordId: 12,
         exporter: 'Test exporter',
         baseCurrency: 'GBP',
         feePayments: [
