@@ -138,7 +138,7 @@ describe('controllers/provided-facility', () => {
 
     it('back link goes to the facility end date page if on a v1 deal & using facility end date', async () => {
       mockRequest.query.status = 'change';
-      mockGetFacilityResponse.details.details = [CONSTANTS.FACILITY_PROVIDED_DETAILS.TERM, CONSTANTS.FACILITY_PROVIDED_DETAILS.RESOLVING];
+      mockGetFacilityResponse.details.details = [FACILITY_PROVIDED_DETAILS.TERM, FACILITY_PROVIDED_DETAILS.RESOLVING];
       mockGetFacilityResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
       mockGetFacilityResponse.details.isUsingFacilityEndDate = true;
 
