@@ -109,20 +109,6 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
               id: 1,
               reference: 'REF001',
             },
-            {
-              amount: 2000,
-              currency: 'JPY',
-              id: 2,
-              reference: 'REF002',
-            },
-          ],
-          [
-            {
-              amount: 3000,
-              currency: 'JPY',
-              id: 3,
-              reference: 'REF003',
-            },
           ],
         ],
       };
@@ -148,6 +134,53 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
           },
         ],
       });
+    });
+
+    it('should fetch and map selected fee record payment groups', async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId: '123' },
+        body: requestBodyForPostFromAddPaymentPage,
+      });
+      const selectedFeeRecordDetailsResponse: SelectedFeeRecordsDetailsResponseBody = {
+        bank: { name: 'Test' },
+        reportPeriod: { start: { month: 2, year: 2024 }, end: { month: 4, year: 2024 } },
+        totalReportedPayments: { amount: 1000, currency: 'JPY' },
+        feeRecords: [],
+        payments: [],
+        canAddToExistingPayment: true,
+        availablePaymentGroups: [
+          [
+            {
+              amount: 1000,
+              currency: 'JPY',
+              id: 1,
+              reference: 'REF001',
+            },
+            {
+              amount: 2000,
+              currency: 'JPY',
+              id: 2,
+              reference: 'REF002',
+            },
+          ],
+          [
+            {
+              amount: 3000,
+              currency: 'JPY',
+              id: 3,
+              reference: 'REF003',
+            },
+          ],
+        ],
+      };
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue(selectedFeeRecordDetailsResponse);
+
+      // Act
+      await addToAnExistingPayment(req, res);
+
+      // Assert
       expect((res._getRenderData() as AddToAnExistingPaymentViewModel).availablePaymentsHeading).toEqual(
         'Which payment or group of payments do you want to add the reported fees to?',
       );
