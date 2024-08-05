@@ -224,40 +224,21 @@ describe('get selected fee record details controller helpers', () => {
   });
 
   describe('getSelectedFeeRecordsAvailablePaymentGroups', () => {
-    it('should return mapped fee record payment groups', async () => {
+    it('should return mapped available payments', async () => {
       // Arrange
       const reportId = '123';
       const paymentCurrency = 'GBP';
 
-      const firstPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
-        .withDateReceived(new Date('2022-01-01'))
-        .withAmount(55)
-        .withId(1)
-        .withReference('First payment')
-        .build();
-      const secondPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
-        .withDateReceived(new Date('2022-01-01'))
-        .withAmount(65)
-        .withId(2)
-        .withReference('Second payment')
-        .build();
-      const thirdPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP')
-        .withDateReceived(new Date('2022-01-01'))
-        .withAmount(75)
-        .withId(3)
-        .withReference('Third payment')
-        .build();
+      const firstPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(55).withId(1).withReference('First payment').build();
+      const secondPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(65).withId(2).withReference('Second payment').build();
+      const thirdPaymentEntity = PaymentEntityMockBuilder.forCurrency('GBP').withAmount(75).withId(3).withReference('Third payment').build();
 
       const firstFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build())
-        .withExporter('Test company')
-        .withFacilityId('00012345')
         .withId(1)
         .withPayments([firstPaymentEntity, secondPaymentEntity])
         .withStatus('DOES_NOT_MATCH')
         .build();
       const secondFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build())
-        .withExporter('Test company')
-        .withFacilityId('00012345')
         .withId(2)
         .withPayments([thirdPaymentEntity])
         .withStatus('DOES_NOT_MATCH')

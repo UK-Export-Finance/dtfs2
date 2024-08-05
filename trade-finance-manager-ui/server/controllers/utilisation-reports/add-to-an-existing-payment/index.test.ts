@@ -136,7 +136,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       });
     });
 
-    it('should fetch and map selected fee record payment groups', async () => {
+    it('should fetch and map available payment groups', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
