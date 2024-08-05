@@ -571,7 +571,7 @@ describe(baseUrl, () => {
         const { body: facilityBody } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
         const { status, body } = await as(aMaker).put({ bankReviewDate, facilityEndDate }).to(`${baseUrl}/${facilityBody.details._id}`);
 
-        expect(body).toEqual({ status: 400, message: `Invalid bankReviewDate: ${JSON.stringify(bankReviewDate)}` });
+        expect(body).toEqual({ status: 400, message: 'A facility cannot have both a facilityEndDate and bankReviewDate' });
         expect(status).toEqual(400);
       });
 

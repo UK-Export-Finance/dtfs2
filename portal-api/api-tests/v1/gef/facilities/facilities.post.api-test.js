@@ -253,7 +253,7 @@ describe(baseUrl, () => {
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate, bankReviewDate })
           .to(baseUrl);
 
-        expect(body).toEqual({ status: 400, message: `Invalid bankReviewDate: ${JSON.stringify(bankReviewDate)}` });
+        expect(body).toEqual({ status: 400, message: 'A facility cannot have both a facilityEndDate and bankReviewDate' });
         expect(status).toEqual(400);
       });
 
