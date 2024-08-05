@@ -67,19 +67,23 @@ export const canFeeRecordsBeAddedToExistingPayment = async (reportId: string, fe
   return await PaymentRepo.existsUnmatchedPaymentOfCurrencyForReportWithId(Number(reportId), reportedPaymentCurrency);
 };
 
-export const getAvailablePaymentGroups = async (reportId: string, paymentCurrency: Currency): Promise<FeeRecordPaymentGroup[]> => {
+export const getSelectedFeeRecordsAvailablePaymentGroups = async (
+  reportId: string,
+  paymentCurrency: Currency,
+): Promise<SelectedFeeRecordsAvailablePaymentGroups> => {
   const feeRecordEntities = await FeeRecordRepo.findByReportIdAndPaymentCurrencyAndStatusDoesNotMatchWithPayments(Number(reportId), paymentCurrency);
 
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecordEntities);
-  return mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
+  const feeRecordPaymentGroups = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
+
+  return mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups(feeRecordPaymentGroups);
 };
 
-export const mapToSelectedFeeRecordDetails = async (
+export const mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups = async (
   bankId: string,
   reportPeriod: ReportPeriod,
   selectedFeeRecordEntities: FeeRecordEntity[],
   canAddToExistingPayment: boolean,
-  availablePaymentGroups?: FeeRecordPaymentGroup[],
 ): Promise<SelectedFeeRecordsDetails> => {
   const bankName = await getBankNameById(bankId);
   if (!bankName) {
@@ -91,23 +95,12 @@ export const mapToSelectedFeeRecordDetails = async (
   const recordedPaymentDetails = distinctPaymentsForFeeRecords.map((paymentEntity) => mapPaymentEntityToSelectedFeeRecordsPaymentDetails(paymentEntity));
   const selectedFeeRecordDetails = selectedFeeRecordEntities.map((feeRecordEntity) => mapFeeRecordEntityToSelectedFeeRecordDetails(feeRecordEntity));
 
-  const mappedSelectedFeeRecordDetailsWithoutAvailablePaymentGroups: SelectedFeeRecordsDetails = {
+  return {
     bank: { name: bankName },
     reportPeriod,
     totalReportedPayments: getTotalReportedPayments(selectedFeeRecordDetails),
     feeRecords: selectedFeeRecordDetails,
     payments: recordedPaymentDetails,
     canAddToExistingPayment,
-  };
-
-  if (!availablePaymentGroups) {
-    return mappedSelectedFeeRecordDetailsWithoutAvailablePaymentGroups;
-  }
-
-  const mappedAvailablePaymentGroups = mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups(availablePaymentGroups);
-
-  return {
-    ...mappedSelectedFeeRecordDetailsWithoutAvailablePaymentGroups,
-    availablePaymentGroups: mappedAvailablePaymentGroups,
   };
 };
