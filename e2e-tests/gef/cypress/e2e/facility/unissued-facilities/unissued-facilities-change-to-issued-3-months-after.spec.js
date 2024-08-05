@@ -90,7 +90,24 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
       aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.be.checked');
+        aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
+      }
     });
+
+    if (facilityEndDateEnabled) {
+      it('should display an error if not selected if there is a facility end date ', () => {
+        applicationPreview.unissuedFacilitiesReviewLink().click();
+        unissuedFacilityTable.updateIndividualFacilityButton(0).click();
+
+        aboutFacilityUnissued.continueButton().click();
+
+        aboutFacilityUnissued.errorSummary().contains('Select if there is an end date for this facility');
+        aboutFacilityUnissued.isUsingFacilityEndDateError();
+      });
+    }
 
     it('should not be able to update facility and then go back to application preview page with coverStartDate more than 3 months in the future', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
@@ -140,6 +157,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       if (facilityEndDateEnabled) {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
+
       aboutFacilityUnissued.continueButton().click();
       // to go back to application preview page
       unissuedFacilityTable.updateFacilitiesLater().click();
@@ -147,7 +165,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
 
     it('should not be able to update facility from application preview with coverStartDate more than 3 months in the future if specialIssuePermission', () => {
       // to change to issued from preview page by clicking change on issued row
-      applicationPreview.facilitySummaryListRowAction(0, 2).click();
+      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().click();
       aboutFacilityUnissued.facilityName().clear();
       aboutFacilityUnissued.facilityName().type(`${MOCK_FACILITY_FOUR.name}name`);
 
