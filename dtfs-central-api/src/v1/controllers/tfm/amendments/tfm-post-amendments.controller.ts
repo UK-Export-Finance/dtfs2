@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
-import { CustomExpressRequest, InvalidAuditDetailsError, ApiError, TfmFacilityAmendment, AUDIT_USER_TYPES, AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, ApiError, TfmFacilityAmendment, AUDIT_USER_TYPES, AMENDMENT_STATUS, ApiErrorResponseBody } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { PostFacilityAmendmentPayload } from '../../../routes/middleware/payload-validation';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
@@ -12,7 +12,9 @@ type PostTfmAmendmentRequest = CustomExpressRequest<{
   reqBody: PostFacilityAmendmentPayload;
 }>;
 
-export const postTfmAmendment = async (req: PostTfmAmendmentRequest, res: Response) => {
+type PostTfmAmendmentResponse = Response<ApiErrorResponseBody | { amendmentId: string }>;
+
+export const postTfmAmendment = async (req: PostTfmAmendmentRequest, res: PostTfmAmendmentResponse) => {
   const { facilityId } = req.params;
   const { auditDetails } = req.body;
 
@@ -52,9 +54,8 @@ export const postTfmAmendment = async (req: PostTfmAmendmentRequest, res: Respon
   } catch (error) {
     console.error('Error posting amendment:', error);
     if (error instanceof ApiError) {
-      const { status, message } = error;
-      const errorMessage = error instanceof InvalidAuditDetailsError ? `Invalid auditDetails: ${message}` : message;
-      return res.status(status).send({ status, message: errorMessage });
+      const { status, message, code } = error;
+      return res.status(status).send({ status, message, code });
     }
     return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'An unknown error occurred' });
   }

@@ -1,6 +1,7 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
@@ -48,6 +49,11 @@ describe('/v1/tfm/facilities', () => {
   });
 
   describe('PUT /v1/tfm/facilities/:id', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:id',
+      makeRequest: (url) => testApi.put({}).to(url),
+    });
+
     it('returns 404 when adding facility to non-existent deal', async () => {
       await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       await testApi

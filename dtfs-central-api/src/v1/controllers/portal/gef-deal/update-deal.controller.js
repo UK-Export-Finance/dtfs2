@@ -52,7 +52,8 @@ exports.updateDealPut = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails: ${error.message}`,
+        message: error.message,
+        code: error.code,
       });
     }
     return res.status(500).send({ status: 500, error });
