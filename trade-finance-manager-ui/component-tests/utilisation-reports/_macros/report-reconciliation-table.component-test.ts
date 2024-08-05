@@ -43,9 +43,10 @@ describe(component, () => {
 
   it('should render the table headings', async () => {
     const wrapper = await getWrapper();
-    wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(6);
+    wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(7);
     wrapper.expectElement(`${tableSelector} thead th:contains("Bank")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
+    wrapper.expectElement(`${tableSelector} thead th:contains("Frequency")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Date report received")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Total facilities reported")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Total fees reported")`).toExist();
@@ -68,8 +69,9 @@ describe(component, () => {
         wrapper.expectLink(`${rowSelector} th > p > a`).toLinkTo(`/utilisation-reports/${summaryItem.reportId}`, summaryItem.bank.name);
       }
 
-      wrapper.expectElement(`${rowSelector} td`).toHaveCount(5);
+      wrapper.expectElement(`${rowSelector} td`).toHaveCount(6);
       wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.displayStatus}")`).toExist();
+      wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.frequency}")`).toExist();
       if (summaryItem.formattedDateUploaded) {
         wrapper.expectElement(`${rowSelector} td:contains("${summaryItem.formattedDateUploaded}")`).toExist();
       }
