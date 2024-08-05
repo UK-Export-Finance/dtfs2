@@ -53,8 +53,8 @@ describe(component, () => {
 
     wrapper.expectElement(`${radioSelector}:eq(0) input`).toExist();
     wrapper.expectElement(`${radioSelector}:eq(0) label`).toHaveCount(1);
-    wrapper.expectText(`${radioSelector}:eq(0) label`).toContain('GBP 1,000');
-    wrapper.expectText(`${radioSelector}:eq(0) div[id='payment-1-item-hint']`).toContain('Payment reference: REF001');
+    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-1-currency-and-amount']`).toContain('GBP 1,000');
+    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-1-item-hint']`).toContain('Payment reference: REF001');
   });
 
   it('should render multiple payment details within a group', () => {
@@ -77,11 +77,11 @@ describe(component, () => {
     wrapper.expectElement(radioSelector).toHaveCount(1);
 
     wrapper.expectElement(`${radioSelector}:eq(0) input`).toExist();
-    wrapper.expectElement(`${radioSelector}:eq(0) label`).toHaveCount(2);
-    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0)`).toContain('GBP 1,000');
-    wrapper.expectText(`${radioSelector}:eq(0) div[id='payment-1-item-hint']`).toContain('Payment reference: REF001');
-    wrapper.expectText(`${radioSelector}:eq(0) label:eq(1)`).toContain('GBP 2,000');
-    wrapper.expectText(`${radioSelector}:eq(0) div[id='payment-2-item-hint']`).toContain('Payment reference: REF002');
+    wrapper.expectElement(`${radioSelector}:eq(0) label`).toHaveCount(1);
+    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-1-currency-and-amount']`).toContain('GBP 1,000');
+    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-1-item-hint']`).toContain('Payment reference: REF001');
+    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-2-currency-and-amount']`).toContain('GBP 2,000');
+    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-2-item-hint']`).toContain('Payment reference: REF002');
   });
 
   it('should render both multiple and single payment details in different groups', () => {
@@ -95,15 +95,15 @@ describe(component, () => {
     wrapper.expectElement(radioSelector).toHaveCount(2);
 
     wrapper.expectElement(`${radioSelector}:eq(0) input`).toExist();
-    wrapper.expectElement(`${radioSelector}:eq(0) label`).toHaveCount(2);
-    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0)`).toContain('GBP 1,000');
-    wrapper.expectText(`${radioSelector}:eq(0) div[id='payment-1-item-hint']`).toContain('Payment reference: REF001');
-    wrapper.expectText(`${radioSelector}:eq(0) label:eq(1)`).toContain('GBP 2,000');
-    wrapper.expectText(`${radioSelector}:eq(0) div[id='payment-2-item-hint']`).toContain('Payment reference: REF002');
+    wrapper.expectElement(`${radioSelector}:eq(0) label`).toHaveCount(1);
+    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-1-currency-and-amount']`).toContain('GBP 1,000');
+    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-1-item-hint']`).toContain('Payment reference: REF001');
+    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-2-currency-and-amount']`).toContain('GBP 2,000');
+    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-2-item-hint']`).toContain('Payment reference: REF002');
 
     wrapper.expectElement(`${radioSelector}:eq(1) input`).toExist();
     wrapper.expectElement(`${radioSelector}:eq(1) label`).toHaveCount(1);
-    wrapper.expectText(`${radioSelector}:eq(1) label`).toContain('GBP 3,000');
-    wrapper.expectText(`${radioSelector}:eq(1) div[id='payment-3-item-hint']`).toContain('Payment reference: REF003');
+    wrapper.expectText(`${radioSelector}:eq(1) label:eq(0) div[id='payment-3-currency-and-amount']`).toContain('GBP 3,000');
+    wrapper.expectText(`${radioSelector}:eq(1) label:eq(0) div[id='payment-3-item-hint']`).toContain('Payment reference: REF003');
   });
 });
