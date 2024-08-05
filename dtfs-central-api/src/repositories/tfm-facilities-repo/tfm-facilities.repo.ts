@@ -253,7 +253,7 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Finds a facility which matches the supplied facility id
+   * Finds a facility which matches the supplied ukef facility id
    * @param ukefFacilityId - The ukef facility id
    * @returns The found document (or null if not found)
    */

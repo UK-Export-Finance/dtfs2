@@ -1,16 +1,15 @@
 import Big from 'big.js';
 import { differenceInDays, isBefore, startOfMonth } from 'date-fns';
-import orderBy from 'lodash.orderby';
-import { MonthAndYear, ReportPeriod, TfmFacilityAmendment } from '@ukef/dtfs2-common';
+import { getDateFromMonthAndYear, MonthAndYear, ReportPeriod } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
-import { convertTimestampToDate } from '../../../../../helpers';
+import { convertTimestampToDate, getLatestCompletedAmendmentCoverEndDate } from '../../../../../helpers';
 
-const getLatestCompletedAmendmentCoverEndDate = (amendments: TfmFacilityAmendment[]): number | undefined => {
-  const completedAmendments = amendments.filter(({ status }) => status === 'Completed');
-  const latestAmendmentWithDefinedCoverEndDate = orderBy(completedAmendments, ['updatedAt'], ['desc']).find(({ coverEndDate }) => coverEndDate);
-  return latestAmendmentWithDefinedCoverEndDate?.coverEndDate ?? undefined;
-};
+/**
+ * An admin fee (fixed at 10%) is applied to the fixed fee, meaning
+ * we subtract this amount when calculating it
+ */
+const BANK_ADMIN_FEE_ADJUSTMENT = 0.9;
 
 const getLatestTfmFacilityValues = async (
   facilityId: string,
@@ -26,7 +25,7 @@ const getLatestTfmFacilityValues = async (
   }
 
   const { coverEndDate: snapshotCoverEndDate, coverStartDate, dayCountBasis, interestPercentage } = tfmFacility.facilitySnapshot;
-  const latestAmendedCoverEndDate = tfmFacility.amendments ? getLatestCompletedAmendmentCoverEndDate(tfmFacility.amendments) : undefined;
+  const latestAmendedCoverEndDate = getLatestCompletedAmendmentCoverEndDate(tfmFacility);
 
   const coverEndDate = latestAmendedCoverEndDate ?? snapshotCoverEndDate;
   if (!coverEndDate) {
@@ -46,7 +45,7 @@ const getLatestTfmFacilityValues = async (
 };
 
 const getNumberOfDaysRemainingInCoverPeriod = (reportPeriodStart: MonthAndYear, coverStartDate: Date, coverEndDate: Date): number => {
-  const currentReportPeriodStartMonthStart = startOfMonth(new Date(`${reportPeriodStart.year}-${reportPeriodStart.month}`));
+  const currentReportPeriodStartMonthStart = startOfMonth(getDateFromMonthAndYear(reportPeriodStart));
 
   if (isBefore(currentReportPeriodStartMonthStart, coverStartDate)) {
     return differenceInDays(coverEndDate, coverStartDate);
@@ -55,7 +54,7 @@ const getNumberOfDaysRemainingInCoverPeriod = (reportPeriodStart: MonthAndYear, 
 };
 
 /**
- * Calculates the fixed fee for the current report period
+ * Calculates the fixed fee for the given report period
  * @param utilisation - The facility utilisation
  * @param facilityId - The ukef facility id
  * @param reportPeriod - The report period
@@ -68,7 +67,7 @@ export const calculateFixedFee = async (utilisation: number, facilityId: string,
 
   return new Big(utilisation)
     .mul(interestPercentage)
-    .mul(0.9) // use 90% of bank margin
+    .mul(BANK_ADMIN_FEE_ADJUSTMENT)
     .mul(numberOfDaysRemainingInCoverPeriod)
     .div(dayCountBasis)
     .round(2)

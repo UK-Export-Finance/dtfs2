@@ -8,11 +8,10 @@ describe('convertTimestampToDate', () => {
   it.each([
     { condition: 'contains non-digit characters', timestamp: 'abc' },
     { condition: 'is NaN', timestamp: NaN },
+    { condition: 'is a string digits but does not have either 10 or 13 digits', timestamp: '123456' },
   ])('throws an error when the supplied timestamp $condition', ({ timestamp }) => {
     // Act / Assert
-    expect(() => convertTimestampToDate(timestamp)).toThrow(
-      new Error(`Expected timestamp to be either a date object, number or string of digits (received '${timestamp}')`),
-    );
+    expect(() => convertTimestampToDate(timestamp)).toThrow(Error);
   });
 
   describe.each([

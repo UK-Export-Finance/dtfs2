@@ -188,14 +188,6 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     return feesPaidToUkefForThePeriodAsBig.div(paymentExchangeRateAsBig).round(precision).toNumber();
   }
 
-  public getTotalFeesAccruedForThePeriodInTheBaseCurrency(): number {
-    if (this.baseCurrency === this.totalFeesAccruedForThePeriodCurrency) {
-      return this.totalFeesAccruedForThePeriod;
-    }
-    // TODO FN-1725 Need to check this exchange rate direction
-    return new Big(this.totalFeesAccruedForThePeriod).div(this.totalFeesAccruedForThePeriodExchangeRate).round(2).toNumber();
-  }
-
   public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
     this.status = status;
     this.updateLastUpdatedBy(requestSource);

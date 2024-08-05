@@ -22,33 +22,36 @@ describe('calculateFixedFeeAdjustment', () => {
     );
   });
 
-  it('returns the difference between the current fixed fee and the facility utilisation data fixed fee rounded to 2 decimal places', async () => {
-    // Arrange
-    const reportPeriod = aReportPeriod();
-    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withReportPeriod(reportPeriod).build();
+  it.each([
+    { condition: 'the previous fixed fee is greater', previousFixedFee: 123.456, currentFixedFee: 23.332, expectedResult: -100.12 },
+    { condition: 'the current fixed fee is greater', previousFixedFee: 23.332, currentFixedFee: 123.456, expectedResult: 100.12 },
+    { condition: 'both fixed fees are equal', previousFixedFee: 100, currentFixedFee: 100, expectedResult: 0 },
+  ])(
+    'returns the difference between the current and previous fixed fee rounded to 2 decimal places when $condition',
+    async ({ previousFixedFee, currentFixedFee, expectedResult }) => {
+      // Arrange
+      const reportPeriod = aReportPeriod();
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withReportPeriod(reportPeriod).build();
 
-    const facilityId = '123456789';
-    const feeRecordFacilityUtilisation = 123.456;
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-      .withFacilityId(facilityId)
-      .withFacilityUtilisation(feeRecordFacilityUtilisation)
-      .build();
-    const feeRecordFixedFee = 123.456;
-    when(calculateFixedFee).calledWith(feeRecordFacilityUtilisation, facilityId, reportPeriod).mockResolvedValue(feeRecordFixedFee);
+      const currentFacilityUtilisation = 123.456;
+      const facilityId = '123456789';
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withFacilityId(facilityId)
+        .withFacilityUtilisation(currentFacilityUtilisation)
+        .build();
+      when(calculateFixedFee).calledWith(currentFacilityUtilisation, facilityId, reportPeriod).mockResolvedValue(currentFixedFee);
 
-    const facilityUtilisationDataUtilisation = 654.321;
-    const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withUtilisation(facilityUtilisationDataUtilisation).build();
-    const facilityUtilisationDataFixedFee = 23.332;
-    when(calculateFixedFee)
-      .calledWith(facilityUtilisationDataUtilisation, facilityId, facilityUtilisationData.reportPeriod)
-      .mockResolvedValue(facilityUtilisationDataFixedFee);
+      const previousFacilityUtilisation = 654.321;
+      const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withUtilisation(previousFacilityUtilisation).build();
+      when(calculateFixedFee).calledWith(previousFacilityUtilisation, facilityId, facilityUtilisationData.reportPeriod).mockResolvedValue(previousFixedFee);
 
-    // Act
-    const result = await calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod);
+      // Act
+      const result = await calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod);
 
-    // Assert
-    expect(result).toBe(100.12);
-  });
+      // Assert
+      expect(result).toBe(expectedResult);
+    },
+  );
 
   function aUtilisationReport() {
     return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
