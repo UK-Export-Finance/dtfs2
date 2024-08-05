@@ -31,10 +31,6 @@ describe(component, () => {
           amount: '100',
           change: 'INCREASE',
         },
-        premiumAccrualBalanceAdjustment: {
-          amount: '100',
-          change: 'INCREASE',
-        },
         principalBalanceAdjustment: {
           amount: '100',
           change: 'INCREASE',
@@ -84,24 +80,21 @@ describe(component, () => {
     wrapper.expectElement(tableHeaderSelector('Fee payment')).hasClass('govuk-table__header--numeric');
   });
 
-  it('renders the fixed fee adjustment, premium accrual balance adjustment and principal balance adjustment headers with a colspan of 2', () => {
+  it('renders the fixed fee adjustment and principal balance adjustment headers with a colspan of 2', () => {
     const wrapper = getWrapper(aKeyingSheetTableViewModel());
 
     wrapper.expectElement(tableHeaderSelector('Fixed fee adjustment')).toExist();
     wrapper.expectElement(tableHeaderSelector('Fixed fee adjustment')).toHaveAttribute('colspan', '2');
 
-    wrapper.expectElement(tableHeaderSelector('Premium accrual balance adjustment')).toExist();
-    wrapper.expectElement(tableHeaderSelector('Premium accrual balance adjustment')).toHaveAttribute('colspan', '2');
-
     wrapper.expectElement(tableHeaderSelector('Principal balance adjustment')).toExist();
     wrapper.expectElement(tableHeaderSelector('Principal balance adjustment')).toHaveAttribute('colspan', '2');
   });
 
-  it('renders 3 increase and 3 decrease columns in the table headers', () => {
+  it('renders 2 increase and 2 decrease columns in the table headers', () => {
     const wrapper = getWrapper(aKeyingSheetTableViewModel());
 
-    wrapper.expectElement(tableHeaderSelector('Increase')).toHaveCount(3);
-    wrapper.expectElement(tableHeaderSelector('Decrease')).toHaveCount(3);
+    wrapper.expectElement(tableHeaderSelector('Increase')).toHaveCount(2);
+    wrapper.expectElement(tableHeaderSelector('Decrease')).toHaveCount(2);
   });
 
   describe('when userCanEdit is set to true', () => {
