@@ -12,6 +12,7 @@ export * from './audit-user-types';
 export * from './company-registration-number';
 export * from './keying-sheet-row-status';
 export * from './amendment-status';
+export * from './api-error-code';
 export * from './facility-type';
 export * from './facility-provided-details';
 
