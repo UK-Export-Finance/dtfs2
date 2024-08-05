@@ -853,8 +853,13 @@ describe('addLatestAmendmentDates', () => {
   };
 
   describe('when TFM Facility end date feature flag disabled', () => {
+    const FACILITY_END_DATE = undefined;
+    const EMPTY_TFM_OBJECT = {};
+
     it('should return an empty object when the amendment contains no cover end date data', async () => {
-      const response = await addLatestAmendmentDates({}, {}, undefined, '123');
+      const latestCoverEndDateResponseWithoutCoverEndDate = {};
+
+      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, latestCoverEndDateResponseWithoutCoverEndDate, FACILITY_END_DATE, '123');
 
       expect(response).toEqual({});
     });
@@ -863,16 +868,16 @@ describe('addLatestAmendmentDates', () => {
       api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
       api.findOneFacility = () => Promise.resolve(null);
 
-      const response = await addLatestAmendmentDates({}, latestCoverEndDateResponse, undefined, '123');
+      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, latestCoverEndDateResponse, FACILITY_END_DATE, '123');
 
       expect(response).toEqual({});
     });
 
-    it('should return an object containing coverEndDate and amendmentExposurePeriodInMonths when the amendment contains cover end date data and the api calls are succesfully made', async () => {
+    it('should return an object containing coverEndDate and amendmentExposurePeriodInMonths when the amendment contains cover end date data and the api calls are successfully made', async () => {
       api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
       api.findOneFacility = () => Promise.resolve(mockFacility);
 
-      const response = await addLatestAmendmentDates({}, latestCoverEndDateResponse, undefined, '123');
+      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, latestCoverEndDateResponse, FACILITY_END_DATE, '123');
 
       const expected = {
         coverEndDate: latestCoverEndDateResponse.coverEndDate,
@@ -884,8 +889,18 @@ describe('addLatestAmendmentDates', () => {
   });
 
   describe('when TFM Facility end date feature flag enabled', () => {
+    const EMPTY_TFM_OBJECT = {};
+
     it('should return empty object when no coverEndDate and no facilityEndDate', async () => {
-      const response = await addLatestAmendmentDates({}, {}, {}, '123');
+      const latestCoverEndDateResponseWithoutCoverEndDate = {};
+      const latestFacilityEndDateResponseWithoutFacilityEndDate = {};
+
+      const response = await addLatestAmendmentDates(
+        EMPTY_TFM_OBJECT,
+        latestCoverEndDateResponseWithoutCoverEndDate,
+        latestFacilityEndDateResponseWithoutFacilityEndDate,
+        '123',
+      );
 
       expect(response).toEqual({});
     });
@@ -894,7 +909,7 @@ describe('addLatestAmendmentDates', () => {
       api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
       api.findOneFacility = () => Promise.resolve(null);
 
-      const response = await addLatestAmendmentDates({}, latestCoverEndDateResponse, latestFacilityEndDateResponse, '123');
+      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, latestCoverEndDateResponse, latestFacilityEndDateResponse, '123');
 
       expect(response).toEqual({});
     });
@@ -903,7 +918,7 @@ describe('addLatestAmendmentDates', () => {
       api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
       api.findOneFacility = () => Promise.resolve(mockFacility);
 
-      const response = await addLatestAmendmentDates({}, latestCoverEndDateResponse, {}, '123');
+      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, latestCoverEndDateResponse, {}, '123');
 
       const expected = {
         coverEndDate: latestCoverEndDateResponse.coverEndDate,
@@ -917,7 +932,7 @@ describe('addLatestAmendmentDates', () => {
       api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
       api.findOneFacility = () => Promise.resolve(mockFacility);
 
-      const response = await addLatestAmendmentDates({}, {}, latestFacilityEndDateResponse, '123');
+      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, {}, latestFacilityEndDateResponse, '123');
 
       const expected = {
         facilityEndDate: latestFacilityEndDateResponse.facilityEndDate,
@@ -930,7 +945,7 @@ describe('addLatestAmendmentDates', () => {
       api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
       api.findOneFacility = () => Promise.resolve(mockFacility);
 
-      const response = await addLatestAmendmentDates({}, latestCoverEndDateResponse, latestFacilityEndDateResponse, '123');
+      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, latestCoverEndDateResponse, latestFacilityEndDateResponse, '123');
 
       const expected = {
         coverEndDate: latestCoverEndDateResponse.coverEndDate,

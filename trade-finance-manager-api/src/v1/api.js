@@ -474,9 +474,10 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
 };
 
 const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
-  if (!isValidMongoId(facilityId)) {
+  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+  if (!isValid) {
     console.error('Invalid facility Id %s', facilityId);
-    return {  status: 400, message: 'Invalid facility id provided' };
+    return { status: 400, data: 'Invalid facility Id provided' };
   }
   try {
     const response = await axios({
@@ -490,7 +491,7 @@ const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
     console.error('Unable to get the latest completed facilityEndDate amendment %o', error);
     return {
       status: error?.response?.status || 500,
-      data: 'Failed to get the latest completed facilityEndDate amendment',
+      data: 'Failed to get the latest completed coverEndDate amendment',
     };
   }
 };

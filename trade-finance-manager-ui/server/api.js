@@ -629,7 +629,7 @@ const getLatestCompletedAmendmentDate = async (facilityId, token) => {
 /**
  * @param {string} facilityId - The facility ID
  * @param {string} token - The user token
- * @returns {Promise<{ status: number, data: string | {facilityEndDate: string} }>}
+ * @returns {Promise<import('./api-response-types').GetLatestCompletedAmendmentFacilityEndDateResponse>}
  */
 const getLatestCompletedAmendmentFacilityEndDate = async (facilityId, token) => {
   try {

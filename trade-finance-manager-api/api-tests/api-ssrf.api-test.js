@@ -567,7 +567,6 @@ describe('API is protected against SSRF attacks', () => {
     });
   });
 
-
   describe('getAmendmentById', () => {
     const mockResponse = 'Mock amendment';
     beforeAll(() => {
