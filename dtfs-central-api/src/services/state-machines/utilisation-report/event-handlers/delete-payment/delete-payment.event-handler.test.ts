@@ -146,7 +146,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
       .spyOn(FeeRecordStateMachine, 'forFeeRecord')
       .mockImplementation((feeRecord) => (feeRecord.id === linkedFeeRecordEntityOne.id ? feeRecordStateMachineOne : feeRecordStateMachineTwo));
 
-    jest.mocked(feeRecordsAndPaymentsMatch).mockReturnValue(false);
+    jest.mocked(feeRecordsAndPaymentsMatch).mockResolvedValue(false);
 
     // Act
     await handleUtilisationReportDeletePaymentEvent(report, {
@@ -184,7 +184,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     const feeRecordStateMachine = aMockFeeRecordStateMachine(mockEventHandler);
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(feeRecordStateMachine);
 
-    jest.mocked(feeRecordsAndPaymentsMatch).mockReturnValue(true);
+    jest.mocked(feeRecordsAndPaymentsMatch).mockResolvedValue(true);
 
     // Act
     await handleUtilisationReportDeletePaymentEvent(report, {
@@ -195,7 +195,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
 
     // Assert
     expect(feeRecordsAndPaymentsMatch).toHaveBeenCalledTimes(1);
-    expect(feeRecordsAndPaymentsMatch).toHaveBeenCalledWith([linkedFeeRecordEntity], linkedFeeRecordEntity.payments);
+    expect(feeRecordsAndPaymentsMatch).toHaveBeenCalledWith([linkedFeeRecordEntity], linkedFeeRecordEntity.payments, mockEntityManager);
     expect(mockEventHandler).toHaveBeenCalledTimes(1);
     expect(mockEventHandler).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -220,7 +220,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     const feeRecordStateMachine = aMockFeeRecordStateMachine(mockEventHandler);
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(feeRecordStateMachine);
 
-    jest.mocked(feeRecordsAndPaymentsMatch).mockReturnValue(false);
+    jest.mocked(feeRecordsAndPaymentsMatch).mockResolvedValue(false);
 
     // Act
     await handleUtilisationReportDeletePaymentEvent(report, {
@@ -231,7 +231,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
 
     // Assert
     expect(feeRecordsAndPaymentsMatch).toHaveBeenCalledTimes(1);
-    expect(feeRecordsAndPaymentsMatch).toHaveBeenCalledWith([linkedFeeRecordEntity], linkedFeeRecordEntity.payments);
+    expect(feeRecordsAndPaymentsMatch).toHaveBeenCalledWith([linkedFeeRecordEntity], linkedFeeRecordEntity.payments, mockEntityManager);
     expect(mockEventHandler).toHaveBeenCalledTimes(1);
     expect(mockEventHandler).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -262,7 +262,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     const feeRecordStateMachine = aMockFeeRecordStateMachine(mockEventHandler);
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(feeRecordStateMachine);
 
-    jest.mocked(feeRecordsAndPaymentsMatch).mockReturnValue(false);
+    jest.mocked(feeRecordsAndPaymentsMatch).mockResolvedValue(false);
 
     // Act
     await handleUtilisationReportDeletePaymentEvent(report, {
@@ -299,7 +299,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     const feeRecordStateMachine = aMockFeeRecordStateMachine(mockEventHandler);
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(feeRecordStateMachine);
 
-    jest.mocked(feeRecordsAndPaymentsMatch).mockReturnValue(false);
+    jest.mocked(feeRecordsAndPaymentsMatch).mockResolvedValue(false);
 
     // Act
     await handleUtilisationReportDeletePaymentEvent(report, {
