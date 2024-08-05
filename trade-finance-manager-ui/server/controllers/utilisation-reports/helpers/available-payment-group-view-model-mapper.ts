@@ -13,6 +13,11 @@ const mapToAvailablePaymentViewModelItem = (payment: SelectedFeeRecordsAvailable
   reference: payment.reference,
 });
 
+/**
+ * Maps the available payment groups data to the view model format.
+ * @param availablePaymentGroupsData - The data containing available payment groups.
+ * @returns An array of available payment groups in the view model format.
+ */
 export const mapToAvailablePaymentGroupsViewModel = (availablePaymentGroupsData: SelectedFeeRecordsAvailablePaymentGroups): AvailablePaymentGroupsViewModel => {
   return availablePaymentGroupsData.map((paymentGroup) => ({
     radioId: getRadioIdForPaymentGroup(paymentGroup),

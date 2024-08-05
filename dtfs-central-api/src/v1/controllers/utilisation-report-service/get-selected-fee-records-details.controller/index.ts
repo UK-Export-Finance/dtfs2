@@ -27,6 +27,11 @@ export type GetSelectedFeeRecordDetailsRequest = CustomExpressRequest<{
 
 type ResponseBody = SelectedFeeRecordsDetails | string;
 
+/**
+ * Controller for the GET selected fee record route
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetailsRequest, res: Response<ResponseBody>) => {
   const { id: reportId } = req.params;
   const { includeAvailablePaymentGroups } = req.query;

@@ -67,6 +67,12 @@ export const canFeeRecordsBeAddedToExistingPayment = async (reportId: string, fe
   return await PaymentRepo.existsUnmatchedPaymentOfCurrencyForReportWithId(Number(reportId), reportedPaymentCurrency);
 };
 
+/**
+ * Gets the available payment groups for the selected fee records
+ * @param reportId - The report id
+ * @param paymentCurrency - The payment currency
+ * @returns The selected fee records available payment groups
+ */
 export const getSelectedFeeRecordsAvailablePaymentGroups = async (
   reportId: string,
   paymentCurrency: Currency,
@@ -79,6 +85,14 @@ export const getSelectedFeeRecordsAvailablePaymentGroups = async (
   return mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups(feeRecordPaymentGroups);
 };
 
+/**
+ * Maps selected fee record entities to SelectedFeeRecordsDetails without available payment groups
+ * @param bankId - The bank id
+ * @param reportPeriod - The report period
+ * @param selectedFeeRecordEntities - The selected fee record entities
+ * @param canAddToExistingPayment - Whether fee records can be added to existing payment
+ * @returns The mapped selected fee records details
+ */
 export const mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups = async (
   bankId: string,
   reportPeriod: ReportPeriod,
