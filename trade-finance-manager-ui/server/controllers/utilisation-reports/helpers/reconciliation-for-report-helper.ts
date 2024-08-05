@@ -145,7 +145,6 @@ export const mapKeyingSheetToKeyingSheetViewModel = (keyingSheet: KeyingSheet): 
     baseCurrency: keyingSheetRow.baseCurrency,
     feePayments: mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel(keyingSheetRow.feePayments),
     fixedFeeAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.fixedFeeAdjustment),
-    premiumAccrualBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.premiumAccrualBalanceAdjustment),
     principalBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.principalBalanceAdjustment),
     checkboxId: getKeyingSheetRowCheckboxId(keyingSheetRow),
     isChecked: false,

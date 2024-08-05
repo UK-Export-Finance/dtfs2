@@ -43,7 +43,6 @@ export type KeyingSheetViewModel = {
     formattedDateReceived: string | undefined;
   }[];
   fixedFeeAdjustment: KeyingSheetAdjustmentViewModel;
-  premiumAccrualBalanceAdjustment: KeyingSheetAdjustmentViewModel;
   principalBalanceAdjustment: KeyingSheetAdjustmentViewModel;
   checkboxId: KeyingSheetCheckboxId;
   isChecked: boolean;
