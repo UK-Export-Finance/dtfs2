@@ -1281,13 +1281,17 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, facilityI
 
 /**
  * Gets the utilisation report reconciliation details by report id
- * @param {number} reportId - The report id
+ * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The selected fee record ids
+ * @param {boolean} includeAvailablePaymentGroups - Whether or not to include the available payment groups in the response
  * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
  */
-const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds) => {
+const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds, includeAvailablePaymentGroups) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
     headers: headers.central,
+    params: {
+      includeAvailablePaymentGroups,
+    },
     data: {
       feeRecordIds,
     },

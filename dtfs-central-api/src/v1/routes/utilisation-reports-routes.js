@@ -201,6 +201,13 @@ utilisationReportsRouter
  *           type: string
  *         required: true
  *         description: the id for the report the fees belong to
+ *       - in: query
+ *         name: includeAvailablePaymentGroups
+ *         schema:
+ *           type: string
+ *           enum: [true, false]
+ *           required: false
+ *         description: Whether or not to include the available payment groups in the response body
  *     requestBody:
  *       required: true
  *       content:
@@ -219,8 +226,9 @@ utilisationReportsRouter
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               $ref: '#/definitions/SelectedFeeRecordsDetails'
+ *               oneOf:
+ *                 - $ref: '#/definitions/SelectedFeeRecordsDetailsWithAvailablePaymentGroupsResponseBody'
+ *                 - $ref: '#/definitions/SelectedFeeRecordsDetailsWithoutAvailablePaymentGroupsResponseBody'
  *       400:
  *         description: Bad request
  *       404:

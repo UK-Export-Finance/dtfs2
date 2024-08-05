@@ -25,7 +25,6 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
   const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(feeRecord, feeRecord.facilityUtilisationData);
   feeRecord.updateWithKeyingData({
     fixedFeeAdjustment,
-    premiumAccrualBalanceAdjustment: 10,
     principalBalanceAdjustment,
     requestSource,
   });

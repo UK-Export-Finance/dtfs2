@@ -293,7 +293,6 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
         where: {
           status: 'READY_TO_KEY',
           fixedFeeAdjustment: Not(IsNull()),
-          premiumAccrualBalanceAdjustment: Not(IsNull()),
           principalBalanceAdjustment: Not(IsNull()),
         },
       });
@@ -303,7 +302,6 @@ describe('POST /v1/utilisation-reports/:reportId/keying-data', () => {
         where: {
           status: 'READY_TO_KEY',
           fixedFeeAdjustment: IsNull(),
-          premiumAccrualBalanceAdjustment: IsNull(),
           principalBalanceAdjustment: IsNull(),
         },
       });
