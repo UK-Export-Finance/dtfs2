@@ -2,6 +2,7 @@ const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = re
 const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
+const { HttpStatusCode } = require('axios');
 const { findOneDeal } = require('./get-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { ROUTES } = require('../../../../constants');
@@ -156,6 +157,13 @@ exports.updateDeal = updateDeal;
 
 const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath, auditDetails) => {
   await findOneDeal(dealId, async (deal) => {
+    if (!deal) {
+      throw new Error({
+        status: HttpStatusCode.NotFound,
+        error: 'Invalid deal',
+      });
+    }
+
     const { facilities } = deal;
 
     const updatedFacilities = [...facilities, newFacilityId.toHexString()];

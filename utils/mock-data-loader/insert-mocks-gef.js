@@ -24,12 +24,14 @@ const insertMocks = async (token) => {
 
   const makerToken = await portalApi.loginViaPortal(BANK1_MAKER1);
 
-  for (const [item] of MOCKS.APPLICATION.entries()) {
-    item.userId = makerUserId;
-    const application = await api.createApplication(item, makerToken);
+  for (const item of MOCKS.APPLICATION.entries()) {
+    const deal = item[1];
+
+    deal.userId = makerUserId;
+    const application = await api.createApplication(deal, makerToken);
 
     const applicationUpdate = {
-      submissionType: item.submissionType,
+      submissionType: deal.submissionType,
     };
 
     applicationUpdate.eligibility = latestEligibilityCriteria;

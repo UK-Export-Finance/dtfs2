@@ -62,7 +62,7 @@ describe('acbs controller', () => {
       jest.clearAllMocks();
     });
 
-    it.each(invalidIds)('should return false if an invalid Mongo Object deal id has been supplied', async (dealId) => {
+    it.each(invalidIds)('should return false if the Mongo deal object identifier specified is %s', async (dealId) => {
       // Act
       const result = await acbsController.createACBS(dealId);
 

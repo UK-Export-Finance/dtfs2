@@ -57,8 +57,8 @@ const addToACBSLog = async (payload) => {
 
 /**
  * Creates an ACBS task and adds it to the ACBS log.
- * @param {String} deal - TFM deal object ID
- * @returns {Promise<Boolean>} - True if the ACBS task is successfully created and added to the log, false otherwise.
+ * @param {string} dealId - TFM Mongo deal object ID
+ * @returns {Promise<boolean>} - True if the ACBS task is successfully created and added to the log, false otherwise.
  */
 const createACBS = async (dealId) => {
   if (!ObjectId.isValid(dealId)) {
