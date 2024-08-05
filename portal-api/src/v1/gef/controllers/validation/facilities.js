@@ -1,6 +1,6 @@
-const { isFacilityEndDateEnabledOnGefVersion } = require('@ukef/dtfs2-common');
+const { isFacilityEndDateEnabledOnGefVersion, FACILITY_TYPE, FACILITY_PROVIDED_DETAILS } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../../constants');
-const { FACILITY_TYPE, FACILITY_PAYMENT_TYPE, FACILITY_PROVIDED_DETAILS } = require('../../enums');
+const { FACILITY_PAYMENT_TYPE } = require('../../enums');
 
 /* eslint-disable consistent-return */
 const hasRequiredItems = (doc, dealVersion) => {

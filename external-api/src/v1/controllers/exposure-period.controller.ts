@@ -2,8 +2,8 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
-import { HEADERS } from '@ukef/dtfs2-common';
-import { FACILITY_TYPE, PRODUCT_GROUP } from '../../constants';
+import { HEADERS, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { PRODUCT_GROUP } from '../../constants';
 import { isValidDate } from '../../helpers';
 
 dotenv.config();

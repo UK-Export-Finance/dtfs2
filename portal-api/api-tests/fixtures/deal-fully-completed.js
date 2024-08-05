@@ -1,4 +1,5 @@
 const { format, add, sub } = require('date-fns');
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../src/constants');
 
 const nowDate = new Date();
@@ -39,7 +40,7 @@ const deal = {
   ],
   mockFacilities: [
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       bondIssuer: 'my issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -73,7 +74,7 @@ const deal = {
       ukefExposure: '1,234.56',
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       bondIssuer: 'my issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -103,7 +104,7 @@ const deal = {
       ukefExposure: '1,234.56',
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Unissued',
@@ -130,7 +131,7 @@ const deal = {
       status: 'Ready for check',
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Unissued',
@@ -155,7 +156,7 @@ const deal = {
       status: 'Ready for check',
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -181,7 +182,7 @@ const deal = {
       status: 'Ready for check',
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       bondIssuer: 'issuer',
       bondType: 'Retention bond',
       facilityStage: 'Issued',
@@ -208,7 +209,7 @@ const deal = {
       status: 'Ready for check',
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+      type: FACILITY_TYPE.LOAN,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -236,7 +237,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+      type: FACILITY_TYPE.LOAN,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -270,7 +271,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+      type: FACILITY_TYPE.LOAN,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
       ukefGuaranteeInMonths: '12',
@@ -297,7 +298,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+      type: FACILITY_TYPE.LOAN,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
       coverDateConfirmed: true,
@@ -328,7 +329,7 @@ const deal = {
       status: 'Completed',
     },
     {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+      type: FACILITY_TYPE.LOAN,
       facilityStage: 'Unconditional',
       hasBeenIssued: true,
       previousFacilityStage: 'Conditional',
