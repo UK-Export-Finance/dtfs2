@@ -8,6 +8,10 @@ context('PDC_RECONCILE users can search for reports by bank and year', () => {
   const BANK_WITH_REPORTS_ID = '956';
   const BANK_WITHOUT_REPORTS_ID = '953';
 
+  before(() => {
+    cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
+  });
+
   beforeEach(() => {
     const visibleBanks = [];
     cy.task(NODE_TASKS.GET_ALL_BANKS).then((getAllBanksResult) => {

@@ -1,5 +1,6 @@
 const { MONGO_DB_COLLECTIONS, AMENDMENT_STATUS, CURRENCY } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const { DEALS } = require('../../../../src/constants');
@@ -38,6 +39,11 @@ describe('GET TFM amendments', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:id/amendments',
+      makeRequest: (url) => testApi.get(url),
+    });
+
     it('should return all amendments based on facilityId', async () => {
       const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       const facilityId = postResult.body._id;
@@ -77,11 +83,6 @@ describe('GET TFM amendments', () => {
       expect(body).toEqual(exp);
     });
 
-    it('should return 400 if the facilityId is not valid', async () => {
-      const { status } = await testApi.get('/v1/tfm/facilities/123/amendments');
-      expect(status).toEqual(400);
-    });
-
     it('should return 200 with an empty array if the facility does not have any amendments', async () => {
       const { status, body } = await testApi.get('/v1/tfm/facilities/626a9270184ded001357c010/amendments');
       expect(status).toEqual(200);
@@ -90,6 +91,11 @@ describe('GET TFM amendments', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments/:amendmentId', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:id/amendments/:amendmentId',
+      makeRequest: (url) => testApi.get(url),
+    });
+
     it('should return 200 status if the facility has amendments', async () => {
       const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       const facilityId = postResult.body._id;
@@ -118,39 +124,14 @@ describe('GET TFM amendments', () => {
         version: 1,
       });
     });
-
-    it('should return 400 status if the  amendmentId has the wrong format', async () => {
-      await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
-      await testApi
-        .put({
-          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to('/v1/tfm/deals/submit');
-
-      const { status } = await testApi.get('/v1/tfm/facilities/626a9270184ded001357c010/amendments/123');
-
-      expect(status).toEqual(400);
-    });
-
-    it('should return 400 status if the facilityId has the wrong format', async () => {
-      await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
-      await testApi
-        .put({
-          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to('/v1/tfm/deals/submit');
-
-      const { status } = await testApi.get('/v1/tfm/facilities/123/amendments/626a9270184ded001357c010');
-
-      expect(status).toEqual(400);
-    });
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments/in-progress', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:id/amendments/in-progress',
+      makeRequest: (url) => testApi.get(url),
+    });
+
     it("should return 200 status if the facility has an amendment that's in progress", async () => {
       const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       const facilityId = postResult.body._id;
@@ -201,24 +182,14 @@ describe('GET TFM amendments', () => {
       expect(status).toEqual(200);
       expect(body).toEqual({});
     });
-
-    it('should return 400 status if the facilityId has the wrong format', async () => {
-      await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
-      await testApi
-        .put({
-          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to('/v1/tfm/deals/submit');
-
-      const { status } = await testApi.get('/v1/tfm/facilities/123/amendments/in-progress');
-
-      expect(status).toEqual(400);
-    });
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments/completed', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:id/amendments/completed',
+      makeRequest: (url) => testApi.get(url),
+    });
+
     it("should return 200 status if the facility has an amendment that's COMPLETED", async () => {
       const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       const facilityId = postResult.body._id;
@@ -295,24 +266,14 @@ describe('GET TFM amendments', () => {
       expect(status).toEqual(200);
       expect(body).toEqual([]);
     });
-
-    it('should return 400 status if the facilityId has the wrong format', async () => {
-      await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
-      await testApi
-        .put({
-          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to('/v1/tfm/deals/submit');
-
-      const { status } = await testApi.get('/v1/tfm/facilities/123/amendments/completed');
-
-      expect(status).toEqual(400);
-    });
   });
 
   describe('GET /v1/tfm/facilities/:id/amendments/completed/latest', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:id/amendments/completed/latest',
+      makeRequest: (url) => testApi.get(url),
+    });
+
     it("should return 200 status if the facility has an amendment that's COMPLETED", async () => {
       const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       const facilityId = postResult.body._id;
@@ -367,21 +328,6 @@ describe('GET TFM amendments', () => {
 
       expect(status).toEqual(200);
       expect(body).toEqual({});
-    });
-
-    it('should return 400 status if the facilityId has the wrong format', async () => {
-      await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
-      await testApi
-        .put({
-          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to('/v1/tfm/deals/submit');
-
-      const { status } = await testApi.get('/v1/tfm/facilities/123/amendments/completed/latest-value');
-
-      expect(status).toEqual(400);
     });
   });
 
