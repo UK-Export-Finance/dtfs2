@@ -39,6 +39,46 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       expect(res._getRenderView()).toEqual('utilisation-reports/add-to-an-existing-payment.njk');
     });
 
+    it("should render the 'problem-with-service' page when available payment groups is undefined", async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId: '123' },
+        body: requestBodyForPostFromAddPaymentPage,
+      });
+
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue({
+        ...aSelectedFeeRecordsDetails(),
+        availablePaymentGroups: undefined,
+      });
+
+      // Act
+      await addToAnExistingPayment(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+    });
+
+    it("should render the 'problem-with-service' page when there are no available payment groups", async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId: '123' },
+        body: requestBodyForPostFromAddPaymentPage,
+      });
+
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue({
+        ...aSelectedFeeRecordsDetails(),
+        availablePaymentGroups: [],
+      });
+
+      // Act
+      await addToAnExistingPayment(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
+    });
+
     it('should fetch and map selected fee record details', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
