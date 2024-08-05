@@ -4,7 +4,7 @@ const isTimestampStoredInSeconds = (timestamp: UnixTimestampString): boolean => 
 
 const isTimestampStoredInMilliseconds = (timestamp: UnixTimestampString): boolean => timestamp.length === 13;
 
-const convertToMilliseconds = (timestamp: UnixTimestamp): number => timestamp * 1000;
+const convertToMilliseconds = (timestampInSeconds: UnixTimestamp): number => timestampInSeconds * 1000;
 
 /**
  * Converts the supplied timestamp to a date object
