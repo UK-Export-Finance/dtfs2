@@ -9,9 +9,12 @@ import {
   handleFeeRecordPaymentAddedEvent,
   handleFeeRecordPaymentDeletedEvent,
   handleFeeRecordPaymentEditedEvent,
+  handleFeeRecordMarkAsReconciledEvent,
+  handleFeeRecordMarkAsReadyToKeyEvent,
   handleFeeRecordRemoveFromPaymentGroupEvent,
   handleFeeRecordOtherFeeRemovedFromGroupEvent,
 } from './event-handlers';
+import { aReportPeriod } from '../../../../test-helpers/test-data';
 
 jest.mock('./event-handlers');
 
@@ -117,6 +120,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           isFinalFeeRecordForFacility: false,
+          reportPeriod: aReportPeriod(),
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });
@@ -284,6 +288,7 @@ describe('FeeRecordStateMachine', () => {
       'REMOVE_FROM_PAYMENT_GROUP',
       'OTHER_FEE_REMOVED_FROM_GROUP',
     ];
+
     const INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES.length !== 0) {
@@ -304,7 +309,24 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const READY_TO_KEY_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('READY_TO_KEY').build();
 
-    const VALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [];
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.MARK_AS_RECONCILED}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(READY_TO_KEY_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'MARK_AS_RECONCILED',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordMarkAsReconciledEvent).toHaveBeenCalledTimes(1);
+    });
+
+    const VALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['MARK_AS_RECONCILED'];
     const INVALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES.length !== 0) {
@@ -325,7 +347,24 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const RECONCILED_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('RECONCILED').build();
 
-    const VALID_RECONCILED_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [];
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.MARK_AS_READY_TO_KEY}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(RECONCILED_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'MARK_AS_READY_TO_KEY',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordMarkAsReadyToKeyEvent).toHaveBeenCalledTimes(1);
+    });
+
+    const VALID_RECONCILED_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['MARK_AS_READY_TO_KEY'];
     const INVALID_RECONCILED_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_RECONCILED_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_RECONCILED_FEE_RECORD_EVENT_TYPES.length !== 0) {

@@ -1,33 +1,32 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 const newDeal = {
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+  dealType: DEALS.DEAL_TYPE.GEF,
   status: 'Draft',
 };
 
 const newFacility = {
-  type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+  type: FACILITY_TYPE.CASH,
   dealId: MOCK_DEAL.DEAL_ID,
 };
 
-describe('/v1/tfm/deals/:id/facilities', () => {
+describe('/v1/tfm/deals/:dealId/facilities', () => {
   beforeAll(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
-  describe('GET /v1/tfm/deal/:id/facilities', () => {
-    it('returns a 400 error if the id is not a valid mongo id', async () => {
-      const invalidMongoId = 'abc';
-      const { status, body } = await testApi.get(`/v1/tfm/deals/${invalidMongoId}/facilities`);
-      expect(status).toBe(400);
-      expect(body).toStrictEqual({ status: 400, message: 'Invalid Deal Id' });
+  describe('GET /v1/tfm/deals/:dealId/facilities', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/deals/:dealId/facilities',
+      makeRequest: (url) => testApi.get(url),
     });
 
     it('returns the requested resource', async () => {
@@ -44,7 +43,7 @@ describe('/v1/tfm/deals/:id/facilities', () => {
       // submit deal/facilities
       await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+          dealType: DEALS.DEAL_TYPE.GEF,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })

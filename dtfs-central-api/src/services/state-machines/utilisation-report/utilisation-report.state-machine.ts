@@ -10,6 +10,8 @@ import {
   handleUtilisationReportReportUploadedEvent,
   handleUtilisationReportDeletePaymentEvent,
   handleUtilisationReportEditPaymentEvent,
+  handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent,
+  handleUtilisationReportMarkFeeRecordsAsReconciledEvent,
   handleUtilisationReportRemoveFeesFromPaymentGroupEvent,
 } from './event-handlers';
 import { UtilisationReportEvent } from './event/utilisation-report.event';
@@ -81,6 +83,8 @@ export class UtilisationReportStateMachine {
             return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
           case 'MANUALLY_SET_COMPLETED':
             return handleUtilisationReportManuallySetCompletedEvent(this.report, event.payload);
+          case 'GENERATE_KEYING_DATA':
+            return handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
@@ -94,6 +98,10 @@ export class UtilisationReportStateMachine {
             return handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
           case 'EDIT_PAYMENT':
             return handleUtilisationReportEditPaymentEvent(this.report, event.payload);
+          case 'MARK_FEE_RECORDS_AS_READY_TO_KEY':
+            return handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(this.report, event.payload);
+          case 'MARK_FEE_RECORDS_AS_RECONCILED':
+            return handleUtilisationReportMarkFeeRecordsAsReconciledEvent(this.report, event.payload);
           case 'REMOVE_FEES_FROM_PAYMENT_GROUP':
             return handleUtilisationReportRemoveFeesFromPaymentGroupEvent(this.report, event.payload);
           default:
@@ -103,6 +111,8 @@ export class UtilisationReportStateMachine {
         switch (event.type) {
           case 'MANUALLY_SET_INCOMPLETE':
             return handleUtilisationReportManuallySetIncompleteEvent(this.report, event.payload);
+          case 'MARK_FEE_RECORDS_AS_READY_TO_KEY':
+            return handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

@@ -1,10 +1,18 @@
 const crypto = require('node:crypto');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
-const { UtilisationReportEntity, FeeRecordEntity, PaymentEntity } = require('@ukef/dtfs2-common');
+const {
+  UtilisationReportEntity,
+  FeeRecordEntity,
+  PaymentEntity,
+  AzureFileInfoEntity,
+  FacilityUtilisationDataEntity,
+  PaymentMatchingToleranceEntity,
+} = require('@ukef/dtfs2-common');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
+const { ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES } = require('../e2e-fixtures');
 const { generateVersion0GefDealDatabaseDocument, generateVersion0GefFacilityDatabaseDocument } = require('../e2e-fixtures/deal-versioning.fixture');
 
 SqlDbDataSource.initialize()
@@ -94,7 +102,7 @@ module.exports = {
     };
 
     /**
-     * Deletes all the rows from the utilisation report and azure file info tables
+     * Deletes all the rows from the utilisation report table
      */
     const removeAllUtilisationReportsFromDb = async () => await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
 
@@ -103,7 +111,37 @@ module.exports = {
      * @param {FeeRecordEntity[]} feeRecords
      * @returns {FeeRecordEntity[]} The inserted fee records
      */
-    const insertFeeRecordsIntoDb = async (feeRecords) => await SqlDbDataSource.manager.save(FeeRecordEntity, feeRecords);
+    const insertFeeRecordsIntoDb = async (feeRecords) => {
+      await Promise.all(
+        feeRecords.map(async ({ facilityUtilisationData }) => {
+          const entityExists = await SqlDbDataSource.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityUtilisationData.id });
+          if (!entityExists) {
+            await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
+          }
+        }),
+      );
+      return await SqlDbDataSource.manager.save(FeeRecordEntity, feeRecords);
+    };
+
+    /**
+     * Deletes all the rows from the payment matching tolerance table
+     */
+    const removeAllPaymentMatchingTolerancesFromDb = async () => await SqlDbDataSource.manager.getRepository(PaymentMatchingToleranceEntity).delete({});
+
+    /**
+     * Deletes and inserts payment matching tolerances for each currency to the SQL database
+     */
+    const reinsertZeroThresholdPaymentMatchingTolerances = async () => {
+      await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {});
+      return await SqlDbDataSource.manager.save(PaymentMatchingToleranceEntity, ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
+    };
+
+    /**
+     * Inserts payment matching tolerances to the SQL database
+     * @param {PaymentMatchingToleranceEntity[]} tolerances
+     * @returns {PaymentMatchingToleranceEntity[]} The inserted tolerance
+     */
+    const insertPaymentMatchingTolerancesIntoDb = async (tolerances) => await SqlDbDataSource.manager.save(PaymentMatchingToleranceEntity, tolerances);
 
     /**
      * Inserts payments to the SQL database
@@ -121,6 +159,19 @@ module.exports = {
      * Deletes all the rows from the payment table
      */
     const removeAllFeeRecordsFromDb = async () => await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
+
+    /**
+     * Deletes all data from the SQL database
+     */
+    const deleteAllFromSqlDb = async () =>
+      await Promise.all([
+        await SqlDbDataSource.manager.delete(PaymentEntity, {}),
+        await SqlDbDataSource.manager.delete(FeeRecordEntity, {}),
+        await SqlDbDataSource.manager.delete(UtilisationReportEntity, {}),
+        await SqlDbDataSource.manager.delete(AzureFileInfoEntity, {}),
+        await SqlDbDataSource.manager.delete(FacilityUtilisationDataEntity, {}),
+        await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {}),
+      ]);
 
     const getAllBanks = async () => {
       const banks = await db.getCollection(DB_COLLECTIONS.BANKS);
@@ -168,6 +219,16 @@ module.exports = {
     const deleteAllTfmDeals = async () => {
       const deals = await getTfmDealsCollection();
       return deals.deleteMany({});
+    };
+
+    /**
+     * Inserts many tfm facilities
+     * @param {import('@ukef/dtfs2-common').TfmFacility[]} tfmFacilities
+     * @returns {import('mongodb').InsertManyResult<import('mongodb').WithoutId<import('@ukef/dtfs2-common').TfmFacility>>[]} The inserted tfm facilities
+     */
+    const insertManyTfmFacilities = async (tfmFacilities) => {
+      const tfmFacilitiesCollection = await getTfmFacilitiesCollection();
+      return await tfmFacilitiesCollection.insertMany(tfmFacilities);
     };
 
     /**
@@ -225,6 +286,7 @@ module.exports = {
       disablePortalUserByUsername,
       insertManyTfmDeals,
       deleteAllTfmDeals,
+      insertManyTfmFacilities,
       insertManyTfmFacilitiesAndTwoLinkedDeals,
       deleteAllTfmFacilities,
       getAllBanks,
@@ -233,9 +295,13 @@ module.exports = {
       insertVersion0Deal,
       insertVersion0Facility,
       insertFeeRecordsIntoDb,
+      removeAllPaymentMatchingTolerancesFromDb,
+      reinsertZeroThresholdPaymentMatchingTolerances,
+      insertPaymentMatchingTolerancesIntoDb,
       insertPaymentsIntoDb,
       removeAllPaymentsFromDb,
       removeAllFeeRecordsFromDb,
+      deleteAllFromSqlDb,
     };
   },
 };

@@ -27,20 +27,21 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
 ): Promise<UtilisationReportEntity> => {
   const finalFeeRecordFacilityIds = await getFacilityIdsAtToDoOrDoesNotMatchStatus(transactionEntityManager, report.id);
 
+  const { reportPeriod } = report;
   const feeRecordsWithPayloads = feeRecordsAtMatchStatus.map((feeRecord) => {
     const { facilityId } = feeRecord;
 
     if (finalFeeRecordFacilityIds.has(facilityId)) {
       return {
         feeRecord,
-        payload: { transactionEntityManager, isFinalFeeRecordForFacility: false, requestSource },
+        payload: { transactionEntityManager, isFinalFeeRecordForFacility: false, reportPeriod, requestSource },
       };
     }
 
     finalFeeRecordFacilityIds.add(facilityId);
     return {
       feeRecord,
-      payload: { transactionEntityManager, isFinalFeeRecordForFacility: true, requestSource },
+      payload: { transactionEntityManager, isFinalFeeRecordForFacility: true, reportPeriod, requestSource },
     };
   });
 
@@ -54,6 +55,10 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
     }),
   );
 
-  report.updateLastUpdatedBy(requestSource);
+  if (report.status === 'PENDING_RECONCILIATION') {
+    report.updateWithStatus({ status: 'RECONCILIATION_IN_PROGRESS', requestSource });
+  } else {
+    report.updateLastUpdatedBy(requestSource);
+  }
   return await transactionEntityManager.save(UtilisationReportEntity, report);
 };

@@ -882,14 +882,41 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, facilityI
 };
 
 /**
+ * Gets the selected fee records details with the attached available payment
+ * groups.
  * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The ids of the selected fee records
  * @param {string} userToken - The user token
  * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
  */
-const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds, userToken) => {
+const getSelectedFeeRecordsDetailsWithAvailablePaymentGroups = async (reportId, feeRecordIds, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
     headers: generateHeaders(userToken),
+    params: {
+      includeAvailablePaymentGroups: true,
+    },
+    data: {
+      feeRecordIds,
+    },
+  });
+
+  return response.data;
+};
+
+/**
+ * Gets the selected fee records details without the attached available payment
+ * groups.
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the selected fee records
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
+ */
+const getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups = async (reportId, feeRecordIds, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
+    headers: generateHeaders(userToken),
+    params: {
+      includeAvailablePaymentGroups: false,
+    },
     data: {
       feeRecordIds,
     },
@@ -981,6 +1008,48 @@ const generateKeyingData = async (reportId, user, userToken) => {
     headers: generateHeaders(userToken),
     data: {
       user,
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Updates keying sheet fee records with supplied ids to DONE
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the fee records to mark as DONE
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {string} userToken - The user token
+ * @returns {Promise<{}>}
+ */
+const markKeyingDataAsDone = async (reportId, feeRecordIds, user, userToken) => {
+  const response = await axios({
+    method: 'put',
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/keying-data/mark-as-done`,
+    headers: generateHeaders(userToken),
+    data: {
+      user,
+      feeRecordIds,
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Updates keying sheet fee records with supplied ids to TO_DO
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the fee records to mark as TO_DO
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {string} userToken - The user token
+ * @returns {Promise<{}>}
+ */
+const markKeyingDataAsToDo = async (reportId, feeRecordIds, user, userToken) => {
+  const response = await axios({
+    method: 'put',
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/keying-data/mark-as-to-do`,
+    headers: generateHeaders(userToken),
+    data: {
+      user,
+      feeRecordIds,
     },
   });
   return response.data;
@@ -1134,10 +1203,13 @@ module.exports = {
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
   getAllBanks,
-  getSelectedFeeRecordsDetails,
+  getSelectedFeeRecordsDetailsWithAvailablePaymentGroups,
+  getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups,
   getReportSummariesByBankAndYear,
   addPaymentToFeeRecords,
   generateKeyingData,
+  markKeyingDataAsDone,
+  markKeyingDataAsToDo,
   getUtilisationReportWithFeeRecordsToKey,
   getPaymentDetailsWithFeeRecords,
   getPaymentDetailsWithoutFeeRecords,

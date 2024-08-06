@@ -13,6 +13,7 @@ import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and
 import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 import { getKeyingSheetDisplayStatus } from './get-keying-sheet-display-status';
+import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
 
 const sortFeeRecordsByReportedPayments = (feeRecords: FeeRecord[]): FeeRecord[] =>
   orderBy(feeRecords, [({ reportedPayments }) => reportedPayments.currency, ({ reportedPayments }) => reportedPayments.amount], ['asc']);
@@ -123,8 +124,11 @@ const getKeyingSheetAdjustmentViewModel = (adjustment: KeyingSheetAdjustment | n
 const mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel = (feePayments: KeyingSheetRow['feePayments']) =>
   feePayments.map(({ currency, amount, dateReceived }) => ({
     formattedCurrencyAndAmount: getFormattedCurrencyAndAmount({ currency, amount }),
-    formattedDateReceived: format(new Date(dateReceived), 'd MMM yyyy'),
+    formattedDateReceived: dateReceived ? format(new Date(dateReceived), 'd MMM yyyy') : undefined,
   }));
+
+const getKeyingSheetRowCheckboxId = (keyingSheetRow: KeyingSheetRow): KeyingSheetCheckboxId =>
+  `feeRecordId-${keyingSheetRow.feeRecordId}-status-${keyingSheetRow.status}`;
 
 /**
  * Maps the keying sheet to the keying sheet view model
@@ -135,13 +139,13 @@ export const mapKeyingSheetToKeyingSheetViewModel = (keyingSheet: KeyingSheet): 
   keyingSheet.map((keyingSheetRow) => ({
     status: keyingSheetRow.status,
     displayStatus: getKeyingSheetDisplayStatus(keyingSheetRow.status),
+    feeRecordId: keyingSheetRow.feeRecordId,
     facilityId: keyingSheetRow.facilityId,
     exporter: keyingSheetRow.exporter,
     baseCurrency: keyingSheetRow.baseCurrency,
     feePayments: mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel(keyingSheetRow.feePayments),
     fixedFeeAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.fixedFeeAdjustment),
-    premiumAccrualBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.premiumAccrualBalanceAdjustment),
     principalBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.principalBalanceAdjustment),
-    checkboxId: `feeRecordId-${keyingSheetRow.feeRecordId}`,
+    checkboxId: getKeyingSheetRowCheckboxId(keyingSheetRow),
     isChecked: false,
   }));

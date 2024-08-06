@@ -2,9 +2,10 @@ const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = re
 const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
+const { DealNotFoundError } = require('@ukef/dtfs2-common');
 const { findOneDeal } = require('./get-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { PORTAL_ROUTE } = require('../../../../constants/routes');
+const { ROUTES } = require('../../../../constants');
 const { isNumber } = require('../../../../helpers');
 
 const handleEditedByPortal = async (dealId, dealUpdate, user) => {
@@ -136,7 +137,7 @@ const updateDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal
       };
     }
 
-    if (routePath === PORTAL_ROUTE) {
+    if (routePath === ROUTES.PORTAL_ROUTE) {
       dealUpdateForDatabase.editedBy = await handleEditedByPortal(dealId, dealUpdateForDatabase, user);
     }
     const { _id, ...dealUpdateForDatabaseWithoutId } = dealUpdateForDatabase;
@@ -156,6 +157,10 @@ exports.updateDeal = updateDeal;
 
 const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath, auditDetails) => {
   await findOneDeal(dealId, async (deal) => {
+    if (!deal) {
+      throw new DealNotFoundError(dealId);
+    }
+
     const { facilities } = deal;
 
     const updatedFacilities = [...facilities, newFacilityId.toHexString()];
@@ -226,7 +231,8 @@ exports.updateDealPut = async (req, res) => {
       if (error instanceof InvalidAuditDetailsError) {
         return res.status(error.status).send({
           status: error.status,
-          message: `Invalid auditDetails, ${error.message}`,
+          message: error.message,
+          code: error.code,
         });
       }
       return res.status(500).send({ status: 500, error });
@@ -246,7 +252,8 @@ exports.updateDealPut = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails, ${error.message}`,
+        message: error.message,
+        code: error.code,
       });
     }
 

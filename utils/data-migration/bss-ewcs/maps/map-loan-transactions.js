@@ -1,3 +1,4 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { getCurrencyById, formatCurrency } = require('../helpers/currencies');
 const { convertV1Date } = require('../helpers/date-helpers');
 const { getBssUserByEmail } = require('../../helpers/users');
@@ -24,7 +25,7 @@ const mapLoanTransactions = (portalDealId, v1Deal) => {
     const facilityStage = findPortalValue(loan.EWCS_Guarantee_details.EWCS_stage, 'EWCS_stage', 'FACILITIES', 'STAGE_LOAN', logError);
     const hasBeenIssued = facilityStage === 'Issued';
     const v2loan = {
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
+      type: FACILITY_TYPE.LOAN,
       ukefFacilityId: formatUkefId(loan.UKEF_EWCS_facility_id),
       name: loan.EWCS_Guarantee_details.EWCS_bank_id,
       facilityStage,

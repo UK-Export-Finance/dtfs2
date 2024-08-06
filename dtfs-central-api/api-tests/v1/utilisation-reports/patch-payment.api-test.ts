@@ -17,6 +17,8 @@ import { SqlDbHelper } from '../../sql-db-helper';
 import { PatchPaymentPayload } from '../../../src/v1/routes/middleware/payload-validation';
 import { aTfmSessionUser } from '../../../test-helpers/test-data';
 
+console.error = jest.fn();
+
 describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
   const getUrl = (reportId: string | number, paymentId: string | number) => `/v1/utilisation-reports/${reportId}/payment/${paymentId}`;
 

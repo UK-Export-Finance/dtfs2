@@ -2,6 +2,7 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
+  PaymentMatchingToleranceEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -10,12 +11,24 @@ import USERS from '../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 
 context('PDC_RECONCILE users can add a payment to a report', () => {
+  const GBP_TOLERANCE = 2;
+  const BANK_ID = '961';
+  const REPORT_ID = 1;
+  const FEE_RECORD_ID_ONE = '11';
+  const FEE_RECORD_ID_TWO = '22';
+  const PAYMENT_CURRENCY = 'GBP';
+
+  before(() => {
+    cy.task(NODE_TASKS.REMOVE_ALL_PAYMENT_MATCHING_TOLERANCES_FROM_DB);
+    cy.task(NODE_TASKS.INSERT_PAYMENT_MATCHING_TOLERANCES_INTO_DB, [
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency('GBP').withThreshold(GBP_TOLERANCE).withIsActive(true).withId(1).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency('EUR').withThreshold(0).withIsActive(true).withId(2).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency('JPY').withThreshold(0).withIsActive(true).withId(3).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency('USD').withThreshold(0).withIsActive(true).withId(4).build(),
+    ]);
+  });
+
   beforeEach(() => {
-    const BANK_ID = '961';
-    const REPORT_ID = 1;
-    const FEE_RECORD_ID_ONE = '11';
-    const FEE_RECORD_ID_TWO = '22';
-    const PAYMENT_CURRENCY = 'GBP';
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 
     const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
@@ -111,7 +124,8 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
   it('submits form and redirects to premium payments page when user submits form with valid values and user selects no to adding another payment', () => {
     cy.getInputByLabelText('GBP').click();
-    cy.getInputByLabelText('Amount received').type('100');
+    // 391 = (100 / 2) + (200 / 0.5) - 60 + a little extra under the tolerance
+    cy.getInputByLabelText('Amount received').type('391');
     cy.getInputByLabelText('Day').type('12');
     cy.getInputByLabelText('Month').type('12');
     cy.getInputByLabelText('Year').type('2023');
@@ -120,6 +134,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     cy.contains('button', 'Continue').click();
 
     cy.contains('Premium payments').should('exist');
+    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
   });
 
   it('submits form and reloads the page with no values when user submits form with valid values and user selects yes to adding another payment', () => {

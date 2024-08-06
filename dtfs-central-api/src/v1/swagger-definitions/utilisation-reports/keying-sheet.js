@@ -31,6 +31,7 @@
  *       datePaymentReceived:
  *         type: string
  *         format: date
+ *         nullable: true
  *       feePayments:
  *         type: array
  *         items:
@@ -38,9 +39,6 @@
  *       baseCurrency:
  *         $ref: '#/definitions/Currency'
  *       fixedFeeAdjustment:
- *         $ref: '#/definitions/KeyingSheetAdjustment'
- *         nullable: true
- *       premiumAccrualBalanceAdjustment:
  *         $ref: '#/definitions/KeyingSheetAdjustment'
  *         nullable: true
  *       principalBalanceAdjustment:

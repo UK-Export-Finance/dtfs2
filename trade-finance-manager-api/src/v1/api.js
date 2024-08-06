@@ -949,7 +949,7 @@ const amendACBSfacility = async (amendments, facility, deal) => {
       return null;
     });
 
-    if (response.data) {
+    if (response?.data) {
       return response.data;
     }
   }
@@ -1281,13 +1281,17 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, facilityI
 
 /**
  * Gets the utilisation report reconciliation details by report id
- * @param {number} reportId - The report id
+ * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The selected fee record ids
+ * @param {boolean} includeAvailablePaymentGroups - Whether or not to include the available payment groups in the response
  * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
  */
-const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds) => {
+const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds, includeAvailablePaymentGroups) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
     headers: headers.central,
+    params: {
+      includeAvailablePaymentGroups,
+    },
     data: {
       feeRecordIds,
     },
@@ -1352,6 +1356,44 @@ const generateKeyingData = async (reportId, user) => {
     headers: headers.central,
     data: {
       user,
+    },
+  });
+};
+
+/**
+ * Updates keying sheet fee records with supplied ids to DONE
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the fee records to mark as DONE
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @returns {Promise<{}>}
+ */
+const markKeyingDataAsDone = async (reportId, feeRecordIds, user) => {
+  await axios({
+    method: 'put',
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/keying-data/mark-as-done`,
+    headers: headers.central,
+    data: {
+      user,
+      feeRecordIds,
+    },
+  });
+};
+
+/**
+ * Updates keying sheet fee records with supplied ids to TO_DO
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the fee records to mark as TO_DO
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @returns {Promise<{}>}
+ */
+const markKeyingDataAsToDo = async (reportId, feeRecordIds, user) => {
+  await axios({
+    method: 'put',
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/keying-data/mark-as-to-do`,
+    headers: headers.central,
+    data: {
+      user,
+      feeRecordIds,
     },
   });
 };
@@ -1508,6 +1550,8 @@ module.exports = {
   getUtilisationReportSummariesByBankIdAndYear,
   addPaymentToFeeRecords,
   generateKeyingData,
+  markKeyingDataAsDone,
+  markKeyingDataAsToDo,
   getUtilisationReportWithFeeRecordsToKey,
   getPaymentDetails,
   deletePaymentById,

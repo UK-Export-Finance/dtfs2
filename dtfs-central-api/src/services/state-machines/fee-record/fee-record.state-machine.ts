@@ -6,6 +6,8 @@ import {
   handleFeeRecordPaymentAddedEvent,
   handleFeeRecordPaymentDeletedEvent,
   handleFeeRecordPaymentEditedEvent,
+  handleFeeRecordMarkAsReconciledEvent,
+  handleFeeRecordMarkAsReadyToKeyEvent,
   handleFeeRecordGenerateKeyingDataEvent,
   handleFeeRecordRemoveFromPaymentGroupEvent,
   handleFeeRecordOtherFeeRemovedFromGroupEvent,
@@ -79,11 +81,15 @@ export class FeeRecordStateMachine {
         }
       case 'READY_TO_KEY':
         switch (event.type) {
+          case 'MARK_AS_RECONCILED':
+            return handleFeeRecordMarkAsReconciledEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
       case 'RECONCILED':
         switch (event.type) {
+          case 'MARK_AS_READY_TO_KEY':
+            return handleFeeRecordMarkAsReadyToKeyEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

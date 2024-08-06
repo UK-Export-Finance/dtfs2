@@ -32,10 +32,10 @@ const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controlle
 
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
-const { PORTAL_ROUTE } = require('../../constants/routes');
+const { ROUTES } = require('../../constants');
 
 portalRouter.use((req, res, next) => {
-  req.routePath = PORTAL_ROUTE;
+  req.routePath = ROUTES.PORTAL_ROUTE;
   next();
 });
 

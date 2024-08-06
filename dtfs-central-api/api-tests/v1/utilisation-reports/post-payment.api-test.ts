@@ -7,15 +7,14 @@ import {
   FeeRecordStatus,
   PaymentEntity,
   PaymentEntityMockBuilder,
+  PaymentMatchingToleranceEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
-import { aTfmUser } from '../../../test-helpers/test-data/tfm-user';
-import { aTfmSessionUser } from '../../../test-helpers/test-data/tfm-session-user';
+import { aPortalUser, aTfmUser, aTfmSessionUser } from '../../../test-helpers/test-data';
 
 console.error = jest.fn();
 
@@ -58,6 +57,15 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
   beforeAll(async () => {
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.deleteAllEntries('PaymentMatchingTolerance');
+
+    const tolerances = [
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency('GBP').withId(1).withThreshold(1).withIsActive(true).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency('EUR').withId(2).withThreshold(2).withIsActive(true).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency('JPY').withId(3).withThreshold(3).withIsActive(true).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency('USD').withId(4).withThreshold(4).withIsActive(true).build(),
+    ];
+    await SqlDbHelper.saveNewEntries('PaymentMatchingTolerance', tolerances);
 
     await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedUtilisationReport);
 
@@ -315,9 +323,10 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
 
+    // (100 + 52) - (100 + 50) = 2 > 1 the tolerance for GBP, the payment currency
     const firstFeeRecordAmount = 100;
     const secondFeeRecordAmount = 50;
-    const firstPaymentAmount = 30;
+    const firstPaymentAmount = 52;
     const secondPaymentAmount = 100;
 
     const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)
@@ -365,9 +374,10 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
 
+    // (120 + 30.5) - (100 + 50) = 0.5 < 1 the tolerance for GBP, the payment currency
     const firstFeeRecordAmount = 100;
     const secondFeeRecordAmount = 50;
-    const firstPaymentAmount = 30;
+    const firstPaymentAmount = 30.5;
     const secondPaymentAmount = 120;
 
     const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)

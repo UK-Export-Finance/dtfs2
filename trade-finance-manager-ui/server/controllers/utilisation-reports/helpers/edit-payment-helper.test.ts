@@ -1,5 +1,6 @@
+import { when } from 'jest-when';
 import { Currency, CurrencyAndAmount } from '@ukef/dtfs2-common';
-import { getEditPaymentViewModel, getEditPaymentViewModelWithFormValuesAndErrors } from './edit-payment-helper';
+import { getEditPaymentViewModel, getEditPaymentViewModelWithFormValues } from './edit-payment-helper';
 import { aPaymentDetailsWithFeeRecordsResponseBody, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { GetPaymentDetailsWithFeeRecordsResponseBody } from '../../../api-response-types';
 import { PaymentErrorsViewModel, SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
@@ -10,13 +11,14 @@ describe('edit-payment-helper', () => {
   describe('getEditPaymentViewModel', () => {
     const reportId = '12';
     const paymentId = '34';
+    const isCheckboxChecked = () => false;
 
     it('sets the view model reportId the supplied reportId', () => {
       // Arrange
       const editPaymentResponseBody = aPaymentDetailsWithFeeRecordsResponseBody();
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.reportId).toBe(reportId);
@@ -27,7 +29,7 @@ describe('edit-payment-helper', () => {
       const editPaymentResponseBody = aPaymentDetailsWithFeeRecordsResponseBody();
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.paymentId).toBe(paymentId);
@@ -44,7 +46,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.paymentCurrency).toBe('USD');
@@ -61,7 +63,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.bank).toEqual({ id: '123', name: 'Test bank' });
@@ -78,7 +80,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.formattedReportPeriod).toBe('January 2024');
@@ -97,7 +99,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.paymentCurrency).toBe(paymentCurrency);
@@ -114,7 +116,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.feeRecords).toHaveLength(feeRecordIds.length);
@@ -132,7 +134,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.feeRecords).toHaveLength(feeRecordFacilityIds.length);
@@ -150,7 +152,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.feeRecords).toHaveLength(feeRecordExporters.length);
@@ -175,7 +177,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.feeRecords).toHaveLength(feeRecordReportedFees.length);
@@ -200,7 +202,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.feeRecords).toHaveLength(feeRecordReportedPayments.length);
@@ -218,16 +220,22 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.feeRecords).toHaveLength(feeRecordIds.length);
       viewModel.feeRecords.forEach(({ checkboxId }, index) => expect(checkboxId).toBe(`feeRecordId-${feeRecordIds[index]}`));
     });
 
-    it('sets the render view model feeRecords isChecked to false for every fee record', () => {
+    it('sets the render view model feeRecords isChecked value using the provided isCheckboxChecked function for every fee record', () => {
       // Arrange
-      const feeRecords = [aFeeRecord(), aFeeRecord(), aFeeRecord(), aFeeRecord()];
+      const feeRecords = [
+        { ...aFeeRecord(), id: 1 },
+        { ...aFeeRecord(), id: 2 },
+      ];
+
+      const mockIsCheckboxChecked = jest.fn();
+      when(mockIsCheckboxChecked).calledWith('feeRecordId-1').mockReturnValue(true).calledWith('feeRecordId-2').mockReturnValue(false);
 
       const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
         ...aPaymentDetailsWithFeeRecordsResponseBody(),
@@ -235,11 +243,13 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, mockIsCheckboxChecked);
 
       // Assert
       expect(viewModel.feeRecords).toHaveLength(feeRecords.length);
-      viewModel.feeRecords.forEach(({ isChecked }) => expect(isChecked).toBe(false));
+      expect(mockIsCheckboxChecked).toHaveBeenCalledTimes(feeRecords.length);
+      expect(viewModel.feeRecords[0].isChecked).toBe(true);
+      expect(viewModel.feeRecords[1].isChecked).toBe(false);
     });
 
     it('sets the render view model totalReportedPayments to the edit payment details response formatted totalReportedPayments', () => {
@@ -251,7 +261,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.totalReportedPayments).toBe('USD 314.59');
@@ -259,7 +269,7 @@ describe('edit-payment-helper', () => {
 
     it('sets the render view model errors to the empty errors', () => {
       // Act
-      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.errors).toEqual(EMPTY_PAYMENT_ERRORS_VIEW_MODEL);
@@ -277,7 +287,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.formValues.paymentAmount).toBe(paymentAmount.toString());
@@ -296,7 +306,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.formValues.paymentDate.day).toBe(day);
@@ -315,7 +325,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.formValues.paymentDate.month).toBe(month);
@@ -334,7 +344,7 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.formValues.paymentDate.year).toBe(year);
@@ -352,26 +362,28 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId);
+      const viewModel = getEditPaymentViewModel(editPaymentResponseBody, reportId, paymentId, isCheckboxChecked);
 
       // Assert
       expect(viewModel.formValues.paymentReference).toBe(reference);
     });
   });
 
-  describe('getEditPaymentViewModelWithFormValuesAndErrors', () => {
+  describe('getEditPaymentViewModelWithFormValues', () => {
     const reportId = '12';
     const paymentId = '34';
+    const isCheckboxChecked = () => false;
 
     it('sets the view model reportId the supplied reportId', () => {
       // Arrange
       const editPaymentResponseBody = aPaymentDetailsWithFeeRecordsResponseBody();
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -385,10 +397,11 @@ describe('edit-payment-helper', () => {
       const editPaymentResponseBody = aPaymentDetailsWithFeeRecordsResponseBody();
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -408,10 +421,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -431,10 +445,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -454,10 +469,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -479,10 +495,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -502,10 +519,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -526,10 +544,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -550,10 +569,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -581,10 +601,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -612,10 +633,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -636,10 +658,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -649,9 +672,16 @@ describe('edit-payment-helper', () => {
       viewModel.feeRecords.forEach(({ checkboxId }, index) => expect(checkboxId).toBe(`feeRecordId-${feeRecordIds[index]}`));
     });
 
-    it('sets the render view model feeRecords isChecked to false for every fee record', () => {
+    it('sets the render view model feeRecords isChecked value using the provided isCheckboxChecked function for every fee record', () => {
       // Arrange
-      const feeRecords = [aFeeRecord(), aFeeRecord(), aFeeRecord(), aFeeRecord()];
+      const feeRecords = [
+        { ...aFeeRecord(), id: 1 },
+        { ...aFeeRecord(), id: 2 },
+        { ...aFeeRecord(), id: 3 },
+      ];
+      const checkedFeeRecordIds = ['feeRecordId-1'];
+
+      const mockIsCheckboxChecked = jest.fn().mockImplementation((id: string) => checkedFeeRecordIds.includes(id));
 
       const editPaymentResponseBody: GetPaymentDetailsWithFeeRecordsResponseBody = {
         ...aPaymentDetailsWithFeeRecordsResponseBody(),
@@ -659,17 +689,20 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        mockIsCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
 
       // Assert
       expect(viewModel.feeRecords).toHaveLength(feeRecords.length);
-      viewModel.feeRecords.forEach(({ isChecked }) => expect(isChecked).toBe(false));
+      expect(mockIsCheckboxChecked).toHaveBeenCalledTimes(feeRecords.length);
+      expect(viewModel.feeRecords[0].isChecked).toBe(true);
+      expect(viewModel.feeRecords[1].isChecked).toBe(false);
     });
 
     it('sets the render view model totalReportedPayments to the edit payment details response formatted totalReportedPayments', () => {
@@ -681,10 +714,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         editPaymentResponseBody,
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         aPaymentErrorsViewModel(),
       );
@@ -701,16 +735,31 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
+        isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
         paymentErrors,
       );
 
       // Assert
       expect(viewModel.errors).toEqual(paymentErrors);
+    });
+
+    it('sets the render view model errors to the empty errors if no errors are supplied', () => {
+      // Act
+      const viewModel = getEditPaymentViewModelWithFormValues(
+        aPaymentDetailsWithFeeRecordsResponseBody(),
+        reportId,
+        paymentId,
+        isCheckboxChecked,
+        aValidEditPaymentFormValuesObject(),
+      );
+
+      // Assert
+      expect(viewModel.errors).toEqual(EMPTY_PAYMENT_ERRORS_VIEW_MODEL);
     });
 
     it('sets the render view model formValues paymentAmount to the supplied formValues paymentAmount', () => {
@@ -721,10 +770,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
+        isCheckboxChecked,
         formValues,
         aPaymentErrorsViewModel(),
       );
@@ -745,10 +795,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
+        isCheckboxChecked,
         formValues,
         aPaymentErrorsViewModel(),
       );
@@ -769,10 +820,11 @@ describe('edit-payment-helper', () => {
       };
 
       // Act
-      const viewModel = getEditPaymentViewModelWithFormValuesAndErrors(
+      const viewModel = getEditPaymentViewModelWithFormValues(
         aPaymentDetailsWithFeeRecordsResponseBody(),
         reportId,
         paymentId,
+        isCheckboxChecked,
         formValues,
         aPaymentErrorsViewModel(),
       );

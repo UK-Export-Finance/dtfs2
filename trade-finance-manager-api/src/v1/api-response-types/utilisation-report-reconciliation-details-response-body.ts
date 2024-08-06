@@ -28,11 +28,10 @@ type KeyingSheet = {
   feePayments: {
     currency: Currency;
     amount: number;
-    dateReceived: IsoDateTimeStamp;
+    dateReceived: IsoDateTimeStamp | null;
   }[];
   baseCurrency: Currency;
   fixedFeeAdjustment: KeyingSheetAdjustment | null;
-  premiumAccrualBalanceAdjustment: KeyingSheetAdjustment | null;
   principalBalanceAdjustment: KeyingSheetAdjustment | null;
 }[];
 

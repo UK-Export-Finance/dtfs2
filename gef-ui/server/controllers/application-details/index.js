@@ -77,7 +77,7 @@ function buildBody(app, previewMode, user) {
     exporter: {
       status: app.exporterStatus,
       rows: mapSummaryList(
-        { details: app.exporter }, // wrap in details because mapSummaryList relies this.
+        { details: app.exporter }, // wrap in details because mapSummaryList relies on this.
         exporterItems(exporterUrl, {
           showIndustryChangeLink: app.exporter?.industries?.length > 1,
           correspondenceAddressLink: !app.exporter.correspondenceAddress,
@@ -94,7 +94,7 @@ function buildBody(app, previewMode, user) {
       data: app.facilities.items
         .map((item) => ({
           heading: startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
-          rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details), mapSummaryParams, previewMode),
+          rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details, app.version), mapSummaryParams, previewMode),
           createdAt: item.details.createdAt,
           facilityId: item.details._id,
           // facilityName added for aria-label for accessibility

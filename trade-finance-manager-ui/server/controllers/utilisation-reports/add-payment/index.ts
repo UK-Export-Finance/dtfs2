@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
-import { AddPaymentViewModel, RecordedPaymentDetailsViewModel, SelectedReportedFeesDetailsViewModel } from '../../../types/view-models';
+import { AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../types/view-models';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import {
@@ -13,13 +13,13 @@ import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { ValidatedAddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import {
-  getKeyToCurrencyAndAmountSortValueMap,
   parseValidatedAddPaymentFormValues,
   AddPaymentFormRequestBody,
   extractAddPaymentFormValuesAndValidateIfPresent,
   EMPTY_ADD_PAYMENT_FORM_VALUES,
+  mapToSelectedReportedFeesDetailsViewModel,
 } from '../helpers';
-import { SelectedFeeRecordsDetailsResponseBody, SelectedFeeRecordsPaymentDetailsResponse } from '../../../api-response-types';
+import { SelectedFeeRecordsPaymentDetailsResponse } from '../../../api-response-types';
 
 export type AddPaymentRequest = CustomExpressRequest<{
   reqBody: AddPaymentFormRequestBody;
@@ -32,28 +32,6 @@ const mapToRecordedPaymentDetailsViewModel = (payment: SelectedFeeRecordsPayment
     reference: payment.reference,
     formattedCurrencyAndAmount: getFormattedCurrencyAndAmount({ currency: payment.currency, amount: payment.amount }),
     formattedDateReceived: format(parseISO(payment.dateReceived), 'd MMM yyyy'),
-  };
-};
-
-const mapToSelectedReportedFeesDetailsViewModel = (selectedFeeRecordData: SelectedFeeRecordsDetailsResponseBody): SelectedReportedFeesDetailsViewModel => {
-  const reportedFeeDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
-    selectedFeeRecordData.feeRecords.map((record) => ({ ...record.reportedFee, key: record.id })),
-  );
-  const reportedPaymentsDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
-    selectedFeeRecordData.feeRecords.map((record) => ({ ...record.reportedPayments, key: record.id })),
-  );
-  return {
-    totalReportedPayments: getFormattedCurrencyAndAmount(selectedFeeRecordData.totalReportedPayments),
-    feeRecords: selectedFeeRecordData.feeRecords.map((record) => ({
-      id: record.id,
-      facilityId: record.facilityId,
-      exporter: record.exporter,
-      reportedFees: { formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(record.reportedFee), dataSortValue: reportedFeeDataSortValueMap[record.id] },
-      reportedPayments: {
-        formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(record.reportedPayments),
-        dataSortValue: reportedPaymentsDataSortValueMap[record.id],
-      },
-    })),
   };
 };
 
@@ -77,8 +55,9 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       }
     }
 
-    const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetails(reportId, feeRecordIds, userToken);
+    const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups(reportId, feeRecordIds, userToken);
     const paymentNumber = selectedFeeRecordDetails.payments.length + 1;
+
     return renderAddPaymentPage(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -92,6 +71,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       reportedFeeDetails: mapToSelectedReportedFeesDetailsViewModel(selectedFeeRecordDetails),
       recordedPaymentsDetails: selectedFeeRecordDetails.payments.map((payment) => mapToRecordedPaymentDetailsViewModel(payment)),
       multipleFeeRecordsSelected: selectedFeeRecordDetails.feeRecords.length > 1,
+      canAddToExistingPayment: selectedFeeRecordDetails.canAddToExistingPayment,
     });
   } catch (error) {
     console.error('Failed to add payment', error);

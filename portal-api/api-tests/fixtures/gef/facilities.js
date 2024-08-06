@@ -1,8 +1,8 @@
-const CONSTANTS = require('../../../src/constants');
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 
 const FACILITIES = [
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+    type: FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: null,
@@ -18,7 +18,7 @@ const FACILITIES = [
     paymentType: null,
   },
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+    type: FACILITY_TYPE.CASH,
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: true,
@@ -35,7 +35,7 @@ const FACILITIES = [
     canResubmitIssuedFacilities: null,
   },
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+    type: FACILITY_TYPE.CASH,
     hasBeenIssued: false,
     name: null,
     shouldCoverStartOnSubmission: null,
@@ -51,7 +51,7 @@ const FACILITIES = [
     paymentType: null,
   },
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+    type: FACILITY_TYPE.CONTINGENT,
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: null,
@@ -67,7 +67,7 @@ const FACILITIES = [
     paymentType: null,
   },
   {
-    type: CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
+    type: FACILITY_TYPE.CONTINGENT,
     hasBeenIssued: true,
     name: null,
     shouldCoverStartOnSubmission: true,

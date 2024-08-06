@@ -2,7 +2,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
 
@@ -40,7 +40,7 @@ const createAndSubmitDeals = async (deals) => {
       // submit deal
       const submitResponse = await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId: createResponse.body._id,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })

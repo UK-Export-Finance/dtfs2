@@ -23,7 +23,7 @@ const withRoleValidationApiTests = ({
   whitelistedRoles,
   successCode,
   successHeaders,
-  disableHappyPath, // TODO DTFS2-6697: remove and test happy paths.
+  disableHappyPath = false, // TODO DTFS2-6697: remove and test happy paths.
   redirectUrlForInvalidRoles,
 }) => {
   const nonWhitelistedRoles = allRoles.filter((role) => !whitelistedRoles.includes(role));

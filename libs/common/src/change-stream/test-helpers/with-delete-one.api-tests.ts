@@ -1,13 +1,18 @@
 import { ClientSession, Collection, ObjectId, WithoutId } from 'mongodb';
+import { Response } from 'supertest';
 import { when } from 'jest-when';
 import { MongoDbClient } from '../../mongo-db-client';
-import { AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '../../types';
+import { ApiErrorResponseBody, AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '../../types';
 import { changeStreamConfig } from '../config';
 
 const { CHANGE_STREAM_ENABLED } = changeStreamConfig;
 
+interface ApiErrorResponse extends Response {
+  body: ApiErrorResponseBody;
+}
+
 type Params = {
-  makeRequest: () => Promise<{ status: number }>;
+  makeRequest: () => Promise<ApiErrorResponse>;
   collectionName: MongoDbCollectionName;
   auditRecord: AuditDatabaseRecord;
   getDeletedDocumentId: () => ObjectId;

@@ -34,13 +34,12 @@ export type KeyingSheetRow = {
   facilityId: string;
   exporter: string;
   feePayments: {
-    dateReceived: Date;
+    dateReceived: Date | null;
     currency: Currency;
     amount: number;
   }[];
   baseCurrency: Currency;
   fixedFeeAdjustment: KeyingSheetAdjustment | null;
-  premiumAccrualBalanceAdjustment: KeyingSheetAdjustment | null;
   principalBalanceAdjustment: KeyingSheetAdjustment | null;
 };
 

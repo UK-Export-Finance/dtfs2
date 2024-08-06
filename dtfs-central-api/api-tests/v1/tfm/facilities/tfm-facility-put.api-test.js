@@ -1,11 +1,12 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const aDeal = require('../../deal-builder');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
@@ -17,7 +18,7 @@ const newFacility = {
 };
 
 const newDeal = aDeal({
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+  dealType: DEALS.DEAL_TYPE.BSS_EWCS,
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   details: {
@@ -48,11 +49,16 @@ describe('/v1/tfm/facilities', () => {
   });
 
   describe('PUT /v1/tfm/facilities/:id', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:id',
+      makeRequest: (url) => testApi.put({}).to(url),
+    });
+
     it('returns 404 when adding facility to non-existent deal', async () => {
       await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId: '61e54e2e532cf2027303e001',
           auditDetails: portalAuditDetails,
         })
@@ -73,7 +79,7 @@ describe('/v1/tfm/facilities', () => {
 
         await testApi
           .put({
-            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealType: DEALS.DEAL_TYPE.BSS_EWCS,
             dealId,
             auditDetails: portalAuditDetails,
           })
@@ -84,7 +90,7 @@ describe('/v1/tfm/facilities', () => {
 
       withValidateAuditDetailsTests({
         makeRequest: (auditDetails) =>
-          testApi.put({ auditDetails, dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to(`/v1/tfm/facilities/${createdFacility._id}`),
+          testApi.put({ auditDetails, dealType: DEALS.DEAL_TYPE.BSS_EWCS, dealId }).to(`/v1/tfm/facilities/${createdFacility._id}`),
       });
 
       it('returns the updated facility', async () => {

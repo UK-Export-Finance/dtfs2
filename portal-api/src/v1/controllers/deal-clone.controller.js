@@ -1,4 +1,5 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const DEFAULTS = require('../defaults');
 const { findLatestMandatoryCriteria } = require('./mandatoryCriteria.controller');
 const { findOneDeal, createDeal, createDealEligibility } = require('./deal.controller');
@@ -126,11 +127,11 @@ exports.clone = async (req, res) => {
         const facilities = [...existingDeal.bondTransactions.items, ...existingDeal.loanTransactions.items];
 
         const strippedFacilities = facilities.map((facility) => {
-          if (facility.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+          if (facility.type === FACILITY_TYPE.BOND) {
             return stripTransaction(facility, CLONE_BOND_FIELDS);
           }
 
-          if (facility.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+          if (facility.type === FACILITY_TYPE.LOAN) {
             return stripTransaction(facility, CLONE_LOAN_FIELDS);
           }
           return facility;

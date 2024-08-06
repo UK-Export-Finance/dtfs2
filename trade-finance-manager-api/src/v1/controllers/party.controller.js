@@ -25,7 +25,7 @@ const updateParty = async (req, res) => {
     const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
 
     if (canSubmitDealToACBS) {
-      await createACBS(tfmDeal);
+      await createACBS(dealId);
     }
 
     const response = res.status(HttpStatusCode.Ok).send({

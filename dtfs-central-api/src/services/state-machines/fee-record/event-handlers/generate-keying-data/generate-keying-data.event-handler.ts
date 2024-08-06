@@ -1,10 +1,12 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, ReportPeriod } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
+import { calculatePrincipalBalanceAdjustment, calculateFixedFeeAdjustment } from '../helpers';
 
 type GenerateKeyingDataEventPayload = {
   transactionEntityManager: EntityManager;
   isFinalFeeRecordForFacility: boolean;
+  reportPeriod: ReportPeriod;
   requestSource: DbRequestSource;
 };
 
@@ -12,16 +14,18 @@ export type FeeRecordGenerateKeyingDataEvent = BaseFeeRecordEvent<'GENERATE_KEYI
 
 export const handleFeeRecordGenerateKeyingDataEvent = async (
   feeRecord: FeeRecordEntity,
-  { transactionEntityManager, isFinalFeeRecordForFacility, requestSource }: GenerateKeyingDataEventPayload,
+  { transactionEntityManager, isFinalFeeRecordForFacility, reportPeriod, requestSource }: GenerateKeyingDataEventPayload,
 ): Promise<FeeRecordEntity> => {
   if (!isFinalFeeRecordForFacility) {
     feeRecord.updateWithStatus({ status: 'READY_TO_KEY', requestSource });
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
+
+  const fixedFeeAdjustment = await calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod);
+  const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(feeRecord, feeRecord.facilityUtilisationData);
   feeRecord.updateWithKeyingData({
-    fixedFeeAdjustment: 10,
-    premiumAccrualBalanceAdjustment: 10,
-    principalBalanceAdjustment: 10,
+    fixedFeeAdjustment,
+    principalBalanceAdjustment,
     requestSource,
   });
   return await transactionEntityManager.save(FeeRecordEntity, feeRecord);

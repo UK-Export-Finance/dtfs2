@@ -1,9 +1,10 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const aDeal = require('../../deal-builder');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const { MOCK_DEAL } = require('../../mocks/mock-data');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
@@ -15,7 +16,7 @@ const newFacility = {
 };
 
 const newDeal = aDeal({
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+  dealType: DEALS.DEAL_TYPE.BSS_EWCS,
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   editedBy: [],
@@ -40,13 +41,18 @@ describe('/v1/tfm/facilities', () => {
   });
 
   describe('GET /v1/tfm/facilities/:id', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:id',
+      makeRequest: (url) => testApi.get(url),
+    });
+
     it('returns the requested resource', async () => {
       const postResult = await createFacility({ facility: newFacility, user: MOCK_PORTAL_USER });
       const newId = postResult.body._id;
 
       await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })

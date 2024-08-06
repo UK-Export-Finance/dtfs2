@@ -483,11 +483,10 @@ describe('reconciliation-for-report-helper', () => {
       feePayments: [],
       baseCurrency: 'GBP',
       fixedFeeAdjustment: null,
-      premiumAccrualBalanceAdjustment: null,
       principalBalanceAdjustment: null,
     });
 
-    it('maps the keying sheet status, facility id, exporter and base currency', () => {
+    it('maps the keying sheet status, facility id, feeRecordId, exporter and base currency', () => {
       // Arrange
       const keyingSheet: KeyingSheet = [
         {
@@ -496,6 +495,7 @@ describe('reconciliation-for-report-helper', () => {
           facilityId: '11111111',
           exporter: 'Some exporter',
           baseCurrency: 'JPY',
+          feeRecordId: 11,
         },
       ];
 
@@ -508,6 +508,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].facilityId).toBe('11111111');
       expect(result[0].exporter).toBe('Some exporter');
       expect(result[0].baseCurrency).toBe('JPY');
+      expect(result[0].feeRecordId).toBe(11);
     });
 
     it.each([
@@ -537,6 +538,7 @@ describe('reconciliation-for-report-helper', () => {
             { currency: 'GBP', amount: 100.123, dateReceived: '2024-01-01T12:00:00.000' },
             { currency: 'EUR', amount: 90.91, dateReceived: '2023-12-05T12:00:00.000' },
             { currency: 'GBP', amount: 0.0123123, dateReceived: '2024-05-01T12:00:00.000' },
+            { currency: 'JPY', amount: 0, dateReceived: null },
           ],
         },
       ];
@@ -546,13 +548,15 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].feePayments).toHaveLength(3);
+      expect(result[0].feePayments).toHaveLength(4);
       expect(result[0].feePayments[0].formattedCurrencyAndAmount).toBe('GBP 100.12');
       expect(result[0].feePayments[0].formattedDateReceived).toBe('1 Jan 2024');
       expect(result[0].feePayments[1].formattedCurrencyAndAmount).toBe('EUR 90.91');
       expect(result[0].feePayments[1].formattedDateReceived).toBe('5 Dec 2023');
       expect(result[0].feePayments[2].formattedCurrencyAndAmount).toBe('GBP 0.01');
       expect(result[0].feePayments[2].formattedDateReceived).toBe('1 May 2024');
+      expect(result[0].feePayments[3].formattedCurrencyAndAmount).toBe('JPY 0.00');
+      expect(result[0].feePayments[3].formattedDateReceived).toBe(undefined);
     });
 
     it.each([
@@ -602,39 +606,6 @@ describe('reconciliation-for-report-helper', () => {
         expectedMappedValue: { amount: '100.00', change: 'DECREASE' },
       },
     ] as const)(
-      'sets the view model premiumAccrualBalanceAdjustment to $expectedMappedValue when the fee record entity premiumAccrualBalanceAdjustment $condition',
-      ({ value, expectedMappedValue }) => {
-        // Arrange
-        const keyingSheet: KeyingSheet = [
-          {
-            ...aKeyingSheetRow(),
-            premiumAccrualBalanceAdjustment: value,
-          },
-        ];
-
-        // Act
-        const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
-
-        // Assert
-        expect(result).toHaveLength(1);
-        expect(result[0].premiumAccrualBalanceAdjustment).toEqual(expectedMappedValue);
-      },
-    );
-
-    it.each([
-      { condition: 'is null', value: null, expectedMappedValue: { amount: undefined, change: 'NONE' } },
-      { condition: 'has zero amount (no change)', value: { amount: 0, change: 'NONE' }, expectedMappedValue: { amount: '0.00', change: 'NONE' } },
-      {
-        condition: 'has a positive amount (increase)',
-        value: { amount: 100, change: 'INCREASE' },
-        expectedMappedValue: { amount: '100.00', change: 'INCREASE' },
-      },
-      {
-        condition: 'has a negative amount (decrease)',
-        value: { amount: 100, change: 'DECREASE' },
-        expectedMappedValue: { amount: '100.00', change: 'DECREASE' },
-      },
-    ] as const)(
       'sets the view model principalBalanceAdjustment to $expectedMappedValue when the keying sheet principalBalanceAdjustment $condition',
       ({ value, expectedMappedValue }) => {
         // Arrange
@@ -654,16 +625,16 @@ describe('reconciliation-for-report-helper', () => {
       },
     );
 
-    it('sets the keying sheet view model checkbox id using the keying sheet fee record id', () => {
+    it('sets the keying sheet view model checkbox id using the keying sheet fee record id and status', () => {
       // Arrange
-      const keyingSheet: KeyingSheet = [{ ...aKeyingSheetRow(), feeRecordId: 123 }];
+      const keyingSheet: KeyingSheet = [{ ...aKeyingSheetRow(), feeRecordId: 123, status: 'TO_DO' }];
 
       // Act
       const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].checkboxId).toBe('feeRecordId-123');
+      expect(result[0].checkboxId).toBe('feeRecordId-123-status-TO_DO');
     });
   });
 });

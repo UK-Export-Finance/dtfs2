@@ -6,12 +6,13 @@ const $ = require('mongo-dot-notation');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findOneDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
 const tfmController = require('./tfm-get-deal.controller');
+const { TfmFacilitiesRepo } = require('../../../../repositories/tfm-facilities-repo');
 
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 const { findAllGefFacilitiesByDealId } = require('../../portal/gef-facility/get-facilities.controller');
 
 const DEFAULTS = require('../../../defaults');
-const CONSTANTS = require('../../../../constants');
+const { DEALS } = require('../../../../constants');
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -21,11 +22,11 @@ const withoutId = (obj) => {
 const getSubmissionCount = (deal) => {
   const { dealType } = deal;
 
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+  if (dealType === DEALS.DEAL_TYPE.GEF) {
     return deal.submissionCount;
   }
 
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+  if (dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
     return deal.details.submissionCount;
   }
 
@@ -46,7 +47,7 @@ const createDealSnapshot = async (deal, auditDetails) => {
       auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
     };
 
-    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    if (dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
       const dealFacilities = await findAllFacilitiesByDealId(dealId);
       dealObj.dealSnapshot.facilities = dealFacilities;
     }
@@ -67,15 +68,13 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
     const { dealType, _id: dealId } = deal;
 
     let dealFacilities = [];
-    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+    if (dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
       dealFacilities = await findAllFacilitiesByDealId(dealId);
     }
 
-    if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+    if (dealType === DEALS.DEAL_TYPE.GEF) {
       dealFacilities = await findAllGefFacilitiesByDealId(dealId);
     }
-
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
 
     const submissionCount = getSubmissionCount(deal);
 
@@ -83,23 +82,17 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
 
     if (dealFacilities) {
       const updatedFacilities = Promise.all(
-        dealFacilities.map(async (facility) =>
-          collection.findOneAndUpdate(
-            {
-              _id: { $eq: ObjectId(facility._id) },
-            },
-            $.flatten({
-              facilitySnapshot: facility,
-              ...tfmInit,
-              auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-            }),
-            {
-              returnNewDocument: true,
-              returnDocument: 'after',
-              upsert: true,
-            },
-          ),
-        ),
+        dealFacilities.map(async (facility) => {
+          const update = $.flatten({
+            facilitySnapshot: facility,
+            ...tfmInit,
+            auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+          });
+          return await TfmFacilitiesRepo.findOneByIdAndUpdate(facility._id, update, {
+            returnDocument: 'after',
+            upsert: true,
+          });
+        }),
       );
 
       return updatedFacilities;
@@ -133,22 +126,23 @@ exports.submitDealPut = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails, ${error.message}`,
+        message: error.message,
+        code: error.code,
       });
     }
     return res.status(500).send({ status: 500, error });
   }
 
-  if (dealType !== CONSTANTS.DEALS.DEAL_TYPE.GEF && dealType !== CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+  if (dealType !== DEALS.DEAL_TYPE.GEF && dealType !== DEALS.DEAL_TYPE.BSS_EWCS) {
     return res.status(400).send({ status: 400, message: 'Invalid deal type' });
   }
 
   let deal;
 
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+  if (dealType === DEALS.DEAL_TYPE.GEF) {
     deal = await findOneGefDeal(dealId);
   }
-  if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+  if (dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
     deal = await findOneDeal(dealId);
   }
 

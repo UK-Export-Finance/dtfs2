@@ -30,6 +30,7 @@ export const anAddPaymentViewModel = (): AddPaymentViewModel => ({
   paymentNumber: 1,
   recordedPaymentsDetails: [],
   multipleFeeRecordsSelected: false,
+  canAddToExistingPayment: false,
 });
 
 export const aRecordedPaymentDetailsViewModel = (): RecordedPaymentDetailsViewModel => ({

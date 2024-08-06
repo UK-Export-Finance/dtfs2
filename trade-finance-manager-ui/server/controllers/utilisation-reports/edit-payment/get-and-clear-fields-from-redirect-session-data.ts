@@ -1,22 +1,27 @@
 import { Request } from 'express';
-import { PaymentErrorsViewModel } from '../../../types/view-models';
+import { EditPaymentErrorsViewModel } from '../../../types/view-models';
 import { getRemoveFeesFromPaymentError } from '../helpers/get-remove-fees-from-payment-error-helper';
+import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
 const clearRedirectSessionData = (req: Request): void => {
   delete req.session.removeFeesFromPaymentErrorKey;
+  delete req.session.editPaymentFormValues;
 };
 
 export const getAndClearFieldsFromRedirectSessionData = (
   req: Request,
 ): {
-  errors: PaymentErrorsViewModel | undefined;
+  errors: EditPaymentErrorsViewModel | undefined;
+  formValues: EditPaymentFormValues | undefined;
   allCheckboxesChecked?: boolean;
 } => {
-  const { removeFeesFromPaymentErrorKey } = req.session;
+  const { removeFeesFromPaymentErrorKey, editPaymentFormValues } = req.session;
+  clearRedirectSessionData(req);
 
   if (!removeFeesFromPaymentErrorKey) {
     return {
       errors: undefined,
+      formValues: editPaymentFormValues,
     };
   }
 
@@ -25,15 +30,12 @@ export const getAndClearFieldsFromRedirectSessionData = (
   switch (removeFeesFromPaymentErrorKey) {
     case 'no-fee-records-selected':
     case 'all-fee-records-selected':
-      clearRedirectSessionData(req);
       return {
-        errors: {
-          errorSummary: getRemoveFeesFromPaymentError(removeFeesFromPaymentErrorKey),
-        },
+        errors: getRemoveFeesFromPaymentError(removeFeesFromPaymentErrorKey),
         allCheckboxesChecked,
+        formValues: editPaymentFormValues,
       };
     default:
-      clearRedirectSessionData(req);
       throw new Error(`Unrecognised remove fees from payment error key '${removeFeesFromPaymentErrorKey}'`);
   }
 };

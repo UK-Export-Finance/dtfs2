@@ -5,7 +5,7 @@ const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
 
 const { testApi } = require('../../../test-api');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const { createDeal } = require('../../../helpers/create-deal');
@@ -13,7 +13,7 @@ const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 const { createFacility } = require('../../../helpers/create-facility');
 
 const newDeal = aDeal({
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+  dealType: DEALS.DEAL_TYPE.BSS_EWCS,
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   editedBy: [],
@@ -23,19 +23,19 @@ const newDeal = aDeal({
   },
 });
 
-describe('/v1/tfm/deal/:id', () => {
+describe('/v1/tfm/deals/:id', () => {
   beforeEach(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
-  describe('GET /v1/tfm/deal/:id', () => {
+  describe('GET /v1/tfm/deals/:id', () => {
     it('returns the requested resource', async () => {
       const postResult = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = postResult.body._id;
 
       await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
@@ -81,7 +81,7 @@ describe('/v1/tfm/deal/:id', () => {
 
         await testApi
           .put({
-            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealType: DEALS.DEAL_TYPE.BSS_EWCS,
             dealId,
             auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
           })
@@ -129,7 +129,7 @@ describe('/v1/tfm/deal/:id', () => {
 
         await testApi
           .put({
-            dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+            dealType: DEALS.DEAL_TYPE.BSS_EWCS,
             dealId,
             auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
           })

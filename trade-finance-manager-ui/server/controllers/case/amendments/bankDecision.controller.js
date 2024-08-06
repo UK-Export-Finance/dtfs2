@@ -1,7 +1,8 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 
 const api = require('../../../api');
-const { AMENDMENT_STATUS, AMENDMENT_BANK_DECISION } = require('../../../constants/amendments');
+const { AMENDMENT_BANK_DECISION } = require('../../../constants/amendments');
 
 const { userCanEditBankDecision } = require('../../helpers');
 const { amendmentBankDecisionValidation } = require('./validation/amendmentBanksDecisionChoice.validate');

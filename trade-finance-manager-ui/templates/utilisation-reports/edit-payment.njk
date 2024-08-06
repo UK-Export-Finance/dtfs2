@@ -7,7 +7,10 @@
 {% import "./_macros/payment-date-input.njk" as paymentDateInput %}
 {% extends "index.njk" %}
 {% set backLink = {"href": '/utilisation-reports/' + reportId} %}
-{% block pageTitle %}Edit payment{% endblock %}
+{% block pageTitle %}
+  {% if errors.errorSummary | length %}Error - {% endif %}
+  Edit payment
+{% endblock %}
 {% block content %}
   {% if errors.errorSummary | length %}
     {{ govukErrorSummary({
@@ -25,20 +28,22 @@
       <h1 class="govuk-heading-l" data-cy="edit-payment-heading">Edit payment</h1>
     </div>
   </div>
-  {{ feeRecordDetailsTable.render({
-    captionText: "Added reported fees details",
-    feeRecords: feeRecords,
-    totalReportedPayments: totalReportedPayments,
-    enableSelectingFeeRecords: true,
-    reportId: reportId,
-    paymentId: paymentId,
-    csrfToken: csrfToken
-  }) }}
-  <h2 class="govuk-heading-m">
-    Payment details
-  </h2>
   <form method="post">
-    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> {{ govukInput({
+    {{ feeRecordDetailsTable.render({
+      captionText: "Added reported fees details",
+      feeRecords: feeRecords,
+      totalReportedPayments: totalReportedPayments,
+      enableSelectingFeeRecords: true,
+      reportId: reportId,
+      paymentId: paymentId,
+      csrfToken: csrfToken,
+      errorMessage: errors.removeSelectedFeesErrorMessage
+    }) }}
+    <h2 class="govuk-heading-m govuk-!-margin-top-6">
+      Payment details
+    </h2>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    {{ govukInput({
         label: {
           text: "Amount received",
           classes: "govuk-label--s"
