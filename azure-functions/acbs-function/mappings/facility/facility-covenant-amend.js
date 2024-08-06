@@ -16,7 +16,7 @@ const FacilityCovenantAmendSchema = z
     };
   });
 
-export const facilityCovenantAmend = (amendment: unknown) => {
+export const facilityCovenantAmend = (amendment) => {
   try {
     return FacilityCovenantAmendSchema.parse(amendment);
   } catch (error) {
