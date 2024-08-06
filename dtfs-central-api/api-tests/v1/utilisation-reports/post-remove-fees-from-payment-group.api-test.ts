@@ -1,5 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import { Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
@@ -8,8 +9,11 @@ import { aTfmUser, aTfmSessionUser } from '../../../test-helpers/test-data';
 
 console.error = jest.fn();
 
-describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selected-fees', () => {
-  const getUrl = (reportId: number | string, paymentId: number | string) => `/v1/utilisation-reports/${reportId}/payment/${paymentId}/remove-selected-fees`;
+const BASE_URL = '/v1/utilisation-reports/:reportId/payment/:paymentId/remove-selected-fees';
+
+describe(`POST ${BASE_URL}`, () => {
+  const getUrl = (reportId: number | string, paymentId: number | string) =>
+    BASE_URL.replace(':reportId', reportId.toString()).replace(':paymentId', paymentId.toString());
 
   const reportId = 1;
 
@@ -59,6 +63,11 @@ describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selec
     await wipe(['tfm-users']);
   });
 
+  withSqlIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
+    makeRequest: (url) => testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(url),
+  });
+
   it('returns a 200 when fees can be removed from the payment', async () => {
     // Act
     const response = await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl(reportId, paymentId));
@@ -74,22 +83,6 @@ describe('POST /v1/utilisation-reports/:reportId/payment/:paymentId/remove-selec
       selectedFeeRecordIds: feeRecordIds,
     };
     const response = await testApi.post(paymentRequestBody).to(getUrl(reportId, paymentId));
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
-  });
-
-  it('returns a 400 when the report id is not a valid id', async () => {
-    // Act
-    const response = await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl('invalid-id', paymentId));
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
-  });
-
-  it('returns a 400 when the payment id is not a valid id', async () => {
-    // Act
-    const response = await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl(reportId, 'invalid-id'));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
