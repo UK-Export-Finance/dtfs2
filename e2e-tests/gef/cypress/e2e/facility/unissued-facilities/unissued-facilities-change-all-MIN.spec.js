@@ -76,15 +76,15 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
     */
     it('facilities table does not contain any add or change links as have not changed any facilities to issued yet', () => {
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(MOCK_FACILITY_FOUR.name);
-      applicationPreview.facilitySummaryListTable(0).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).nameAction().should('have.class', 'govuk-!-display-none');
 
-      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
 
-      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
 
       applicationPreview.facilitySummaryListTable(0).issueDateAction().should('not.exist');
 
-      applicationPreview.facilitySummaryListTable(0).monthsOfCoverAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).monthsOfCoverAction().should('have.class', 'govuk-!-display-none');
     });
 
     it('clicking unissued facilities link takes you to unissued facility list page', () => {
@@ -311,7 +311,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       // should be able to change facility four as changed to issued
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(MOCK_FACILITY_FOUR.name);
       applicationPreview.facilitySummaryListTable(0).nameAction().contains('Change');
-      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedValue().contains('Issued');
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().contains('Change');
       applicationPreview.facilitySummaryListTable(0).issueDateValue().contains(issuedDate);
@@ -328,16 +328,16 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
 
       // should not be able to change facility two has previously issued (not changed from unissued to issued)
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(MOCK_FACILITY_TWO.name);
-      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedValue().contains('Issued');
-      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).issueDateAction().should('not.exist');
       applicationPreview.facilitySummaryListTable(2).coverStartDateValue().contains('Date you submit the notice');
-      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.class', 'govuk-!-display-none');
 
       if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.value', '');
+        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
     });
 

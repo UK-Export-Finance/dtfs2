@@ -180,7 +180,7 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       // can change facility one name and issue dates etc since changed to issued
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(MOCK_FACILITY_ONE.name);
       applicationPreview.facilitySummaryListTable(3).nameAction().contains('Change');
-      applicationPreview.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).hasBeenIssuedAction().contains('Change');
       applicationPreview.facilitySummaryListTable(3).issueDateValue().contains(issuedDate);
       applicationPreview.facilitySummaryListTable(3).issueDateAction().contains('Change');
@@ -188,11 +188,11 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(3).coverStartDateAction().contains('Change');
       applicationPreview.facilitySummaryListTable(3).coverEndDateValue().contains(coverEnd);
       applicationPreview.facilitySummaryListTable(3).coverEndDateAction().contains('Change');
-      applicationPreview.facilitySummaryListTable(3).valueAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).coverPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).interestPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
       if (facilityEndDateEnabled) {
         applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
@@ -201,9 +201,9 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
 
       // not be able to change facility four name, but can change to issued
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(MOCK_FACILITY_FOUR.name);
-      applicationPreview.facilitySummaryListTable(0).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).nameAction().should('have.class', 'govuk-!-display-none');
 
-      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedValue().contains('Unissued');
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().contains('Change');
 
@@ -212,20 +212,20 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(0).coverEndDateAction().should('not.exist');
 
       if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.value', '');
+        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
 
       // should not be able to change facility two has previously issued
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(MOCK_FACILITY_TWO.name);
-      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.class', 'govuk-!-display-none');
 
-      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedValue().contains('Issued');
-      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
 
       applicationPreview.facilitySummaryListTable(2).issueDateAction().should('not.exist');
       applicationPreview.facilitySummaryListTable(2).coverStartDateValue().contains('Date you submit the notice');
-      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.class', 'govuk-!-display-none');
     });
 
     it('change unissued to issued from application preview page', () => {
@@ -285,7 +285,7 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       // check correct change links are shown for rows of issued facility
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(`${unissuedFacilitiesArray[2].name}name`);
       applicationPreview.facilitySummaryListTable(0).nameAction().contains('Change');
-      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedValue().contains('Issued');
       applicationPreview.facilitySummaryListTable(0).nameAction().contains('Change');
       applicationPreview.facilitySummaryListTable(0).issueDateValue().contains(issuedDate);
@@ -302,8 +302,8 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
 
       // facility three still unissued
       applicationPreview.facilitySummaryListTable(1).nameValue().contains(MOCK_FACILITY_THREE.name);
-      applicationPreview.facilitySummaryListTable(1).nameAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(1).hasBeenIssuedValue().contains('Unissued');
       applicationPreview.facilitySummaryListTable(1).hasBeenIssuedAction().contains('Change');
       applicationPreview.facilitySummaryListTable(1).issueDateAction().should('not.exist');
