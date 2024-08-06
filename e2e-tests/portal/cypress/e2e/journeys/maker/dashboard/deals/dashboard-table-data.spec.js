@@ -5,7 +5,7 @@ const CONSTANTS = require('../../../../../fixtures/constants');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const { MOCK_DEALS } = require('../fixtures');
 
-const { BANK1_MAKER1, BANK2_MAKER2, ADMIN } = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_MAKER2, BANK2_MAKER2, ADMIN } = MOCK_USERS;
 
 const { BSS_DEAL, GEF_DEAL, GEF_DEAL_MAKER_2, GEF_DEAL_BANK_2_MAKER_2 } = MOCK_DEALS;
 
@@ -25,11 +25,11 @@ context('View dashboard deals as a maker', () => {
     cy.deleteDeals(ADMIN);
 
     cy.listAllUsers(ADMIN).then((usersInDb) => {
-      const maker = usersInDb.find((user) => user.username === ADMIN.username);
+      const maker = usersInDb.find((user) => user.username === BANK1_MAKER1.username);
       BSS_DEAL.maker = maker;
       GEF_DEAL.maker = maker;
 
-      const maker2 = usersInDb.find((user) => user.username === ADMIN.username);
+      const maker2 = usersInDb.find((user) => user.username === BANK1_MAKER2.username);
       GEF_DEAL_MAKER_2.maker = maker2;
     });
 
@@ -160,7 +160,7 @@ context('View dashboard deals as a maker', () => {
   });
 
   it('deal links go to correct deal page/URL depending on dealType', () => {
-    cy.login(ADMIN);
+    cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
 
     // GEF link

@@ -15,7 +15,7 @@ context('Dashboard Deals filters', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_DRAFT, ADMIN);
+    cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1);
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       const { _id: dealId } = deal;
@@ -25,7 +25,7 @@ context('Dashboard Deals filters', () => {
         { ...GEF_FACILITY_CONTINGENT, dealId, name: 'Contingent Facility name' },
       ];
 
-      cy.insertManyGefFacilities(facilities, ADMIN).then((insertedFacilities) => {
+      cy.insertManyGefFacilities(facilities, BANK1_MAKER1).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {
           ALL_FACILITIES.push(facility.details);
         });

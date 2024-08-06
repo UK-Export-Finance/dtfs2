@@ -43,7 +43,7 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
         { ...GEF_FACILITY_CONTINGENT, dealId },
       ];
 
-      cy.insertManyGefFacilities(facilities, ADMIN).then((insertedFacilities) => {
+      cy.insertManyGefFacilities(facilities, BANK1_MAKER1).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {
           ALL_FACILITIES.push(facility.details);
         });

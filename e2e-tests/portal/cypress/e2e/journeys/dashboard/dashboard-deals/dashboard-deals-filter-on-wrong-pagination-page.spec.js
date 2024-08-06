@@ -49,7 +49,7 @@ context('Dashboard Deals filters - filtering deal on wrong pagination page from 
             },
             // adds company name to array
           },
-          ADMIN,
+          BANK1_MAKER1,
         ).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
       });
       return deal;

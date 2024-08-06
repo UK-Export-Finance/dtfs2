@@ -8,7 +8,7 @@ const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-b
 const { bankIdValidation, sqlIdValidation } = require('./validation/route-validators/route-validators');
 const { handleExpressValidatorResult } = require('./validation/route-validators/express-validator-result-handler');
 const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
-const { validateUserIsActingOnSelfToChangePasswordOrIsAdmin } = require('./roles/validate-user-is-acting-on-self-to-change-password-or-is-admin');
+const { validateUserPermission } = require('./roles/validate-user-is-acting-on-self-to-change-password-or-is-admin');
 const dealsController = require('./controllers/deal.controller');
 const dealName = require('./controllers/deal-name.controller');
 const dealStatus = require('./controllers/deal-status.controller');
@@ -113,7 +113,7 @@ authRouter
 authRouter
   .route('/users/:_id')
   .get(users.findById)
-  .put(validateUserIsActingOnSelfToChangePasswordOrIsAdmin, users.updateById)
+  .put(validateUserPermission, users.updateById)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), users.remove);
 
 authRouter.use('/gef', gef);

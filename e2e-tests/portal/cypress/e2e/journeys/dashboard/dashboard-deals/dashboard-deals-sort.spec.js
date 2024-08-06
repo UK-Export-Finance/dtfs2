@@ -51,7 +51,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
             },
             // adds company name to array
           },
-          ADMIN,
+          BANK1_MAKER1,
         ).then((insertedDeal) => ALL_DEALS.unshift(insertedDeal.exporter.companyName));
       });
       return deal;

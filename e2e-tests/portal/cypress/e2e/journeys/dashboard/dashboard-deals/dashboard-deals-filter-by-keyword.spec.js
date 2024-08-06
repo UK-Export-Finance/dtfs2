@@ -43,7 +43,7 @@ context('Dashboard Deals filters - filter by keyword', () => {
 
   describe('Keyword', () => {
     before(() => {
-      cy.login(ADMIN);
+      cy.login(BANK1_MAKER1);
 
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });

@@ -12,7 +12,7 @@ const validateUserHasAtLeastOneAllowedRole =
     const { user } = req;
 
     if (!userHasAtLeastOneAllowedRole({ user, allowedRoles })) {
-      console.error(`Unauthorised access for ${user}.`);
+      console.error(`User with ID ${req.user._id} does not have any of the allowed roles: ${allowedRoles.join(', ')}`);
 
       res.status(401).json({ success: false, msg: "You don't have access to this page" });
       return;

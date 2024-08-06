@@ -53,7 +53,7 @@ context('Dashboard facilities - filtering facility on wrong pagination page from
             },
             // adds company name to array
           },
-          ADMIN,
+          BANK1_MAKER1,
         ).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
         GEF_FACILITY_CASH.dealId = _id;
         cy.insertOneGefFacility(GEF_FACILITY_CASH, ADMIN);

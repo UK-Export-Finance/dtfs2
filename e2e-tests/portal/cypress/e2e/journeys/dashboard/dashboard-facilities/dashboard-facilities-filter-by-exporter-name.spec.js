@@ -51,7 +51,7 @@ context('Dashboard facilities - sort', () => {
           },
           // adds company name to array
         },
-        ADMIN,
+        BANK1_MAKER1,
       ).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
       GEF_FACILITY_CASH.dealId = _id;
       cy.insertOneGefFacility(GEF_FACILITY_CASH, ADMIN).then((insertedFacility) => {

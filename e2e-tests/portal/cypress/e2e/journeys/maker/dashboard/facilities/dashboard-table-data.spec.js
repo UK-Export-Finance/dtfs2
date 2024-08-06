@@ -40,7 +40,7 @@ context('View dashboard facilities as a maker', () => {
     cy.deleteDeals(ADMIN);
 
     cy.listAllUsers(ADMIN).then((usersInDb) => {
-      const maker = usersInDb.find((user) => user.username === ADMIN.username);
+      const maker = usersInDb.find((user) => user.username === BANK1_MAKER1.username);
       BSS_DEAL.maker = maker;
     });
 
@@ -58,10 +58,10 @@ context('View dashboard facilities as a maker', () => {
     /*
      * insert BSS deal and facility by bank 2, maker 2
      */
-    cy.insertOneDeal(BSS_DEAL_BANK_2_MAKER_2, ADMIN).then((createdBssDeal) => {
+    cy.insertOneDeal(BSS_DEAL_BANK_2_MAKER_2, BANK2_MAKER2).then((createdBssDeal) => {
       ALL_DEALS.push(createdBssDeal);
 
-      cy.createFacilities(createdBssDeal._id, [BOND_FACILITY], ADMIN).then((createdFacilities) => {
+      cy.createFacilities(createdBssDeal._id, [BOND_FACILITY], BANK2_MAKER2).then((createdFacilities) => {
         ALL_FACILITIES = [...ALL_FACILITIES, ...createdFacilities];
       });
     });
@@ -70,7 +70,7 @@ context('View dashboard facilities as a maker', () => {
      * insert GEF deal and facility by bank 1, maker 1
      */
     cy.insertOneGefApplication(GEF_DEAL, ADMIN).then((createdGefDeal) => {
-      cy.updateGefApplication(createdGefDeal._id, GEF_DEAL, ADMIN).then((updatedGefDeal) => {
+      cy.updateGefApplication(createdGefDeal._id, GEF_DEAL, BANK1_MAKER1).then((updatedGefDeal) => {
         ALL_DEALS.push(updatedGefDeal);
       });
 
@@ -79,7 +79,7 @@ context('View dashboard facilities as a maker', () => {
       cy.insertOneGefFacility(CASH_FACILITY, ADMIN).then((facility) => {
         const { _id } = facility.details;
 
-        cy.updateGefFacility(_id, CASH_FACILITY, ADMIN).then((updatedGefFacility) => {
+        cy.updateGefFacility(_id, CASH_FACILITY, BANK1_MAKER1).then((updatedGefFacility) => {
           ALL_FACILITIES.push(updatedGefFacility.details);
         });
       });
@@ -108,7 +108,7 @@ context('View dashboard facilities as a maker', () => {
   });
 
   it('BSS and GEF facilities render on the dashboard with correct values', () => {
-    cy.login(ADMIN);
+    cy.login(BANK1_MAKER1);
     dashboardFacilities.visit();
 
     const { nameLink, ukefFacilityId, type, noticeType, value, bankStage, issuedDate } = dashboardFacilities.row;
@@ -161,7 +161,7 @@ context('View dashboard facilities as a maker', () => {
   });
 
   it('facility links go to correct deal page/URL depending on facility/deal type', () => {
-    cy.login(ADMIN);
+    cy.login(BANK1_MAKER1);
     dashboardFacilities.visit();
 
     const { nameLink } = dashboardFacilities.row;

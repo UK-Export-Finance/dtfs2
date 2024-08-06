@@ -290,7 +290,7 @@ const newAdminTestUser = {
   bank: banks.any,
 };
 
-const setUpNewAdminTestUser = async (as) => {
+const setUpAdminTestUser = async (as) => {
   const { salt, hash } = genPassword(newAdminTestUser.password);
 
   const userToCreate = {
@@ -306,7 +306,7 @@ const setUpNewAdminTestUser = async (as) => {
   const collection = await db.getCollection(DB_COLLECTIONS.USERS);
   await collection.insertOne(userToCreate);
 
-  const { token } = await loginTestUser(as, setUpNewAdminTestUser);
+  const { token } = await loginTestUser(as, setUpAdminTestUser);
   return { token, ...userToCreate };
 };
 
@@ -339,5 +339,5 @@ const initialise = async (app) => {
 module.exports = {
   initialise,
   setUpApiTestUser,
-  setUpNewAdminTestUser,
+  setUpAdminTestUser,
 };

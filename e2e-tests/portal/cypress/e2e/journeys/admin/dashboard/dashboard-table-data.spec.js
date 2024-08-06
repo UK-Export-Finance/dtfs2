@@ -5,7 +5,7 @@ const relative = require('../../../relativeURL');
 
 const { GEF_DEAL_DRAFT, GEF_FACILITY_CASH, GEF_FACILITY_CONTINGENT } = require('../fixtures');
 
-const { ADMIN } = MOCK_USERS;
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Admin dashboard', () => {
   let deal;
@@ -23,7 +23,7 @@ context('Admin dashboard', () => {
     // resets all facilities array
     ALL_FACILITIES.length = 0;
 
-    cy.insertOneDeal(dummyDeal, ADMIN).then((insertedDeal) => {
+    cy.insertOneDeal(dummyDeal, BANK1_MAKER1).then((insertedDeal) => {
       deal = insertedDeal;
     });
 
@@ -37,7 +37,7 @@ context('Admin dashboard', () => {
         { ...GEF_FACILITY_CONTINGENT, dealId, name: 'Contingent Facility name' },
       ];
 
-      cy.insertManyGefFacilities(facilities, ADMIN).then((insertedFacilities) => {
+      cy.insertManyGefFacilities(facilities, BANK1_MAKER1).then((insertedFacilities) => {
         insertedFacilities.forEach((facility) => {
           ALL_FACILITIES.push(facility.details);
         });

@@ -27,7 +27,7 @@ context('Dashboard: Unissued facilities report', () => {
           value: 123,
           currency: { id: 'GBP' },
         },
-        ADMIN,
+        BANK1_MAKER1,
       );
       cy.updateGefApplication(
         deal._id,
@@ -35,7 +35,7 @@ context('Dashboard: Unissued facilities report', () => {
           submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
           submissionDate: date,
         },
-        ADMIN,
+        BANK1_MAKER1,
       );
     });
 
@@ -55,7 +55,7 @@ context('Dashboard: Unissued facilities report', () => {
           value: 1234567890.1,
           currency: { id: 'EUR' },
         },
-        ADMIN,
+        BANK1_MAKER1,
       );
       cy.updateGefApplication(
         deal._id,
@@ -64,7 +64,7 @@ context('Dashboard: Unissued facilities report', () => {
           submissionDate: daysInThePast,
           manualInclusionNoticeSubmissionDate: daysInThePast,
         },
-        ADMIN,
+        BANK1_MAKER1,
       );
     });
 
@@ -84,7 +84,7 @@ context('Dashboard: Unissued facilities report', () => {
           value: 223344,
           currency: { id: 'EUR' },
         },
-        ADMIN,
+        BANK1_MAKER1,
       );
       cy.updateGefApplication(
         deal._id,
@@ -93,7 +93,7 @@ context('Dashboard: Unissued facilities report', () => {
           submissionDate: daysInThePast,
           manualInclusionNoticeSubmissionDate: daysInThePast,
         },
-        ADMIN,
+        BANK1_MAKER1,
       );
     });
   });

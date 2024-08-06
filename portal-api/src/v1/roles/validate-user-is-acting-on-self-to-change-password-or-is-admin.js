@@ -5,12 +5,16 @@ const CONSTANT = require('../../constants');
  * @param {{ allowedRoles: string[] }}
  * @returns {(req, res, next) => void}
  */
-const validateUserIsActingOnSelfToChangePasswordOrIsAdmin = (req, res, next) => {
+const validateUserPermission = (req, res, next) => {
   if (!req.user) {
     return res.status(HttpStatusCode.Unauthorized).send('Unauthorized');
   }
 
-  if (req?.user?._id !== req?.params?._id && !req?.user?.roles?.includes(CONSTANT.ADMIN) && !req?.user?.roles?.includes(CONSTANT.MAKER)) {
+  const isActingOnSelf = req?.user?._id === req?.params?._id;
+  const isAdmin = req?.user?.roles?.includes(CONSTANT.ADMIN);
+  const isMaker = req?.user?.roles?.includes(CONSTANT.MAKER);
+
+  if (!isActingOnSelf && !isAdmin && !isMaker) {
     return res.status(HttpStatusCode.Forbidden).send('Forbidden');
   }
 
@@ -18,5 +22,5 @@ const validateUserIsActingOnSelfToChangePasswordOrIsAdmin = (req, res, next) => 
 };
 
 module.exports = {
-  validateUserIsActingOnSelfToChangePasswordOrIsAdmin,
+  validateUserPermission,
 };
