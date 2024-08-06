@@ -44,7 +44,8 @@ describe('facilityCovenantAmend', () => {
   describe('when there is no amendment amount or guarantee expiry date', () => {
     const amendment = {};
     it('returns an empty object', () => {
-      expect(() => facilityCovenantAmend(amendment)).toThrowError('Either amount or facilityGuaranteeDates.guaranteeExpiryDate is required.');
+      const result = facilityCovenantAmend(amendment);
+      expect(result).toEqual({});
     });
   });
 
