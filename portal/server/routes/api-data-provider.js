@@ -84,11 +84,7 @@ const provide = (listOfDataTypes) => async (req, res, next) => {
     req.apiData = {};
   }
 
-  Promise.all(
-    listOfDataTypes.map(async (dataType) => {
-      return get(dataType, req);
-    }),
-  );
+  await Promise.all(listOfDataTypes.map(async (dataType) => await get(dataType, req)));
 
   return next();
 };

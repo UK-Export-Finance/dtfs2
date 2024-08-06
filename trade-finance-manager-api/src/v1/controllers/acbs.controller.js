@@ -182,39 +182,41 @@ const checkAzureAcbsFunction = async () => {
 
     const auditDetails = generateSystemAuditDetails();
 
-    taskList.map(async (task) => {
-      if (!task.runtimeStatus) {
-        return;
-      }
-      // Update
-      if (task.runtimeStatus !== 'Running') {
-        await collection.findOneAndUpdate(
-          { instanceId: { $eq: task.instanceId } },
-          $.flatten({
-            status: task.runtimeStatus,
-            acbsTaskResult: task,
-            auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-          }),
-        );
-      }
-      const shouldUpdateAcbsObjectInTfm = task.runtimeStatus === 'Completed';
-      if (!shouldUpdateAcbsObjectInTfm) {
-        return;
-      }
-      // ADD `acbs` object to tfm-deals and tfm-facilities
-      switch (task.name) {
-        case 'acbs-issue-facility':
-          await updateIssuedFacilityAcbs(task.output);
-          break;
+    Promise.all(
+      taskList.map(async (task) => {
+        if (!task.runtimeStatus) {
+          return;
+        }
+        // Update
+        if (task.runtimeStatus !== 'Running') {
+          await collection.findOneAndUpdate(
+            { instanceId: { $eq: task.instanceId } },
+            $.flatten({
+              status: task.runtimeStatus,
+              acbsTaskResult: task,
+              auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+            }),
+          );
+        }
+        const shouldUpdateAcbsObjectInTfm = task.runtimeStatus === 'Completed';
+        if (!shouldUpdateAcbsObjectInTfm) {
+          return;
+        }
+        // ADD `acbs` object to tfm-deals and tfm-facilities
+        switch (task.name) {
+          case 'acbs-issue-facility':
+            await updateIssuedFacilityAcbs(task.output);
+            break;
 
-        case 'acbs-amend-facility':
-          await updateAmendedFacilityAcbs(task);
-          break;
+          case 'acbs-amend-facility':
+            await updateAmendedFacilityAcbs(task);
+            break;
 
-        default:
-          await updateDealAcbs(task.output);
-      }
-    });
+          default:
+            await updateDealAcbs(task.output);
+        }
+      }),
+    );
   } catch (error) {
     console.error('Error processing durable functions log %o', error);
   }

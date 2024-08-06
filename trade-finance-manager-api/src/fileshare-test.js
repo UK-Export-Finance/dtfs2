@@ -2,7 +2,7 @@ const isPortReachable = require('is-port-reachable');
 
 const urlList = ['rrstagingmedia.file.core.windows.net', 'google.com'];
 
-const fetchTest = () =>
+const fetchTest = async () =>
   Promise.all(
     urlList.map(async (url) => {
       const port443 = await isPortReachable(443, { host: url });
