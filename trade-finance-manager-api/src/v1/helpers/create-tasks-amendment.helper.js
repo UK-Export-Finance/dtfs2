@@ -323,7 +323,7 @@ const updateAmendmentTasks = async (facilityId, amendmentId, taskUpdate) => {
  *                        a 'groupTasks' key with a list of tasks.
  * @param {string} groupName - The name of the team/group which tasks should be assigned.
  * @param {string} newUserId - The ID of the user to whom tasks should be assigned.
- * @returns {Promise<Array>} A modified list of task groups.
+ * @returns {Promise<object[]>} A modified list of task groups.
  */
 const getTasksAssignedToUserByGroup = async (tasks, groupName, newUserId) => {
   const updatedAt = getUnixTime(new Date());

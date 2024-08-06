@@ -92,8 +92,8 @@ module.exports = {
 
     /**
      * Inserts utilisation report details to the SQL database
-     * @param {Partial<import('@ukef/dtfs2-common').UtilisationReportEntity[]>} utilisationReports
-     * @returns {Promise<import('@ukef/dtfs2-common').UtilisationReportEntity[]>} The inserted reports
+     * @param {Partial<UtilisationReportEntity[]>} utilisationReports
+     * @returns {Promise<UtilisationReportEntity[]>} The inserted reports
      */
     const insertUtilisationReportsIntoDb = async (utilisationReports) => {
       const utilisationReportRepo = SqlDbDataSource.getRepository(UtilisationReportEntity);

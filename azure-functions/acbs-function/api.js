@@ -42,7 +42,7 @@ const badRequest = {
 /**
  * Invokes TFS GET endpoint
  * @param {String} endpoint TFS endpoint
- * @returns {Promise<Object>} API response object
+ * @returns {Promise<object>} API response object
  */
 const get = async (endpoint) => {
   if (endpoint) {
