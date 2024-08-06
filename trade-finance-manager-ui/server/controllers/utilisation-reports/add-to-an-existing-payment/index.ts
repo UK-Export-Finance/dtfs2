@@ -10,6 +10,8 @@ import {
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { mapToSelectedReportedFeesDetailsViewModel, PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../helpers';
+import { mapToAvailablePaymentGroupsViewModel } from '../helpers/available-payment-group-view-model-mapper';
+import { getAvailablePaymentsHeading } from '../helpers/add-to-an-existing-payment-helper';
 
 type AddToAnExistingPaymentRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;
@@ -25,7 +27,12 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
     const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(req.body);
     const feeRecordIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds(checkedCheckboxIds);
 
-    const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetails(reportId, feeRecordIds, userToken);
+    const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups(reportId, feeRecordIds, userToken);
+    const { availablePaymentGroups } = selectedFeeRecordDetails;
+
+    if (!availablePaymentGroups || availablePaymentGroups.length === 0) {
+      throw new Error('No available payment groups attached to fee record details response.');
+    }
 
     const addToAnExistingPaymentViewModel: AddToAnExistingPaymentViewModel = {
       user,
@@ -34,6 +41,8 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
       bank: selectedFeeRecordDetails.bank,
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(selectedFeeRecordDetails.reportPeriod),
       reportedFeeDetails: mapToSelectedReportedFeesDetailsViewModel(selectedFeeRecordDetails),
+      availablePaymentsHeading: getAvailablePaymentsHeading(availablePaymentGroups),
+      availablePaymentGroups: mapToAvailablePaymentGroupsViewModel(availablePaymentGroups),
     };
     return renderAddToAnExistingPaymentPage(res, addToAnExistingPaymentViewModel);
   } catch (error) {

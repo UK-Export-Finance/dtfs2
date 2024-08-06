@@ -116,21 +116,6 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       expect(feeRecord.fixedFeeAdjustment).toBe(10);
     });
 
-    it('sets the fee record premiumAccrualBalanceAdjustment to 10', async () => {
-      // Arrange
-      const feeRecord = aMatchingFeeRecord();
-
-      // Act
-      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
-        transactionEntityManager: mockEntityManager,
-        isFinalFeeRecordForFacility,
-        requestSource,
-      });
-
-      // Assert
-      expect(feeRecord.premiumAccrualBalanceAdjustment).toBe(10);
-    });
-
     it('sets the fee record principalBalanceAdjustment to the difference between the fee record utilisation and the facility utilisation data utilisation', async () => {
       // Arrange
       const feeRecord = aMatchingFeeRecord();
@@ -165,21 +150,6 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
       // Assert
       expect(feeRecord.fixedFeeAdjustment).toBeNull();
-    });
-
-    it('does not set the fee record premiumAccrualBalanceAdjustment', async () => {
-      // Arrange
-      const feeRecord = aMatchingFeeRecord();
-
-      // Act
-      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
-        transactionEntityManager: mockEntityManager,
-        isFinalFeeRecordForFacility,
-        requestSource,
-      });
-
-      // Assert
-      expect(feeRecord.premiumAccrualBalanceAdjustment).toBeNull();
     });
 
     it('does not set the fee record principalBalanceAdjustment', async () => {

@@ -41,4 +41,15 @@ describe(page, () => {
     wrapper.expectText(tableSelector).toContain('JPY 3');
     wrapper.expectText(tableSelector).toContain('JPY 1');
   });
+
+  it('should render available payment groups radio input', () => {
+    // Arrange
+    const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
+    const wrapper = render(addToAnExistingPaymentViewModel);
+
+    // Assert
+    wrapper.expectElement('div[data-cy="payment-group-radio-input"]').toExist();
+    wrapper.expectElement('[data-cy="payment-group--paymentIds-1,2"]').toExist();
+    wrapper.expectElement('[data-cy="payment-group--paymentIds-3"]').toExist();
+  });
 });

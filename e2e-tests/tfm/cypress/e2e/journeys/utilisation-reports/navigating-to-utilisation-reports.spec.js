@@ -16,6 +16,10 @@ context('PDC_RECONCILE users can route to the payments page for a bank', () => {
   const latestQuarterlySubmissionMonth = getLatestQuarterlySubmissionMonth();
   const status = UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
 
+  before(() => {
+    cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
+  });
+
   beforeEach(() => {
     const visibleBanks = [];
     cy.task(NODE_TASKS.GET_ALL_BANKS).then((getAllBanksResult) => {
