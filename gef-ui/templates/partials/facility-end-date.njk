@@ -1,0 +1,116 @@
+{% extends "index.njk" %}
+{% extends "index.njk" %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% import '../_macros/what-is-a-facility-end-date.njk' as whatIsAFacilityEndDate %}
+
+{% block pageTitle -%}
+  What is the facility end date?
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  {% if status !== 'change' %}
+    {{ govukBackLink({
+      text: "Back",
+      href: "/gef/application-details/" + dealId + "/facilities/" + facilityId + "/about-facility",
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+  {% endif %}
+
+  <header>
+    <span class="govuk-caption-xl" data-cy="heading-caption">
+      Add a facility
+    </span>
+  </header>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukDateInput({
+          id: "facilityEndDate",
+          namePrefix: "facility-end-date",
+          fieldset: {
+            legend: {
+              text: "What is the facility end date?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            }
+          },
+          hint: {
+            text: "For example, 13 09 2024"
+          },
+          errorMessage: errors and errors.fieldErrors.facilityEndDate and {
+            text: errors.fieldErrors.facilityEndDate.text,
+            attributes: {
+              'data-cy': 'facility-end-date-inline-error'
+            }
+          },
+          items: [
+            {
+              classes: (errors.fieldErrors['facilityEndDate-day'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+              name: "day",
+              value: facilityEndDate.day,
+              attributes: {
+                'data-cy': 'facility-end-date-day'
+              }            
+            },
+            {
+              classes: (errors.fieldErrors['facilityEndDate-month'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+              name: "month",
+              value: facilityEndDate.month,
+              attributes: {
+                'data-cy': 'facility-end-date-month'
+              }   
+            },
+            {
+              classes: (errors.fieldErrors['facilityEndDate-year'] and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
+              name: "year",
+              value: facilityEndDate.year,
+              attributes: {
+                'data-cy': 'facility-end-date-year'
+              }   
+            }
+          ]
+        }) }}
+
+        {{ whatIsAFacilityEndDate.render() }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+
+          {{ govukButton({
+            text: "Save and return",
+            classes: "govuk-button--secondary",
+            attributes: {
+              formaction: "facility-end-date?saveAndReturn=true",
+              'data-cy': 'save-and-return-button'
+            }
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

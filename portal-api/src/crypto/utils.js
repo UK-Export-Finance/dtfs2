@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
-const { LOGIN_STATUSES } = require('../constants');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 
 dotenv.config();
 
@@ -92,7 +92,7 @@ function issueValidUsernameAndPasswordJWT(user) {
     user,
     // Expiry time is 105 minutes to allow for 3 login emails to be sent (each with a 30 minute expiry, and 5 minute leeway) without need to re-login
     expiresIn: '105m',
-    additionalPayload: { username: user.username, loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD },
+    additionalPayload: { username: user.username, loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD },
   });
 }
 
@@ -113,7 +113,7 @@ function issueValid2faJWT(user) {
       username: user.username,
       roles: user.roles,
       bank: user.bank,
-      loginStatus: LOGIN_STATUSES.VALID_2FA,
+      loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
     },
   });
 }

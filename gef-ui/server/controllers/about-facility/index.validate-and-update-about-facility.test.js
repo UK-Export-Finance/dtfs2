@@ -45,9 +45,6 @@ const MockFacilityResponse = () => {
 
 describe('validateAndUpdateAboutFacility', () => {
   let mockResponse;
-  let mockRequest;
-  let mockFacilityResponse;
-
   const now = new Date();
   const tomorrow = add(now, { days: 1 });
   const yesterday = sub(now, { days: 1 });
@@ -62,8 +59,7 @@ describe('validateAndUpdateAboutFacility', () => {
 
   beforeEach(() => {
     mockResponse = MockResponse();
-    mockRequest = MockRequest();
-    mockFacilityResponse = MockFacilityResponse();
+    const mockFacilityResponse = MockFacilityResponse();
 
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.updateFacility.mockResolvedValue({});
@@ -76,6 +72,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('redirects user to application page if save and return is set to true', async () => {
+      const mockRequest = MockRequest();
       mockRequest.query.saveAndReturn = 'true';
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
 
@@ -85,6 +82,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('sets the correct date format using single day, month and year values', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.query.saveAndReturn = 'true';
       mockRequest.body['cover-start-date-day'] = format(now, 'd');
@@ -120,6 +118,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('calls api.updateApplication with editorId if successfully updates facility when `saveAndReturn` true', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.query.saveAndReturn = 'true';
       mockRequest.body['cover-start-date-day'] = format(now, 'd');
@@ -144,6 +143,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('calls api.updateApplication with editorId if successfully updates facility when `saveAndReturn` false', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.query.saveAndReturn = 'false';
       mockRequest.body['cover-start-date-day'] = format(now, 'd');
@@ -169,6 +169,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if month of cover is not a number', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.monthsOfCover = 'ab';
 
@@ -185,6 +186,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if no facility name has been provided', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.facilityName = 'name';
       mockRequest.body.hasBeenIssued = 'true';
@@ -215,6 +217,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if facility name is more than 30 characters', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.facilityName = 'name';
       mockRequest.body.hasBeenIssued = 'true';
@@ -245,6 +248,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if facility name has disallowed characters', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.facilityName = 'name .,;-';
       mockRequest.body.hasBeenIssued = 'true';
@@ -275,6 +279,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if no shouldCoverStartOnSubmission radio button has been selected', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'true';
@@ -305,6 +310,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if no coverStartDateDay or coverStartDateMonth or coverStartDateYear has been provided', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -352,6 +358,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if coverStartDate is more than 3 months away', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -372,6 +379,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('does not show error message if coverStartDate is less than 3 months away', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -392,6 +400,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if coverStartDate is in the past', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -412,6 +421,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if coverStartDate day has character or is more than 3 numbers long', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -450,6 +460,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if coverStartDate month has character or is more than 3 numbers long', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -488,6 +499,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if coverStartDate year is less than 4 numbers long or has symbols', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -526,6 +538,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if coverEndDate day has character or is more than 3 numbers long', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -564,6 +577,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if coverStartDate month has character or is more than 3 numbers long', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -602,6 +616,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if coverStartDate year is less than 4 numbers long or has symbols', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -640,6 +655,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if coverStartDate is after coverEndDate is in the past', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -663,6 +679,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('should show error message if coverStartDate is the same as coverEndDate', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'false';
@@ -686,6 +703,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('should show error message if cover starts on submission which is the same as the coverEndDate', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'true';
@@ -706,6 +724,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('should show error message if cover starts on submission which is before the coverEndDate', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
       mockRequest.body.shouldCoverStartOnSubmission = 'true';
@@ -726,6 +745,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if no monthsOfCover has been provided', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '';
@@ -743,6 +763,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if monthsOfCover is not a number', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '1ab';
@@ -760,6 +781,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if monthsOfCover is greater than 999 months', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'false';
       mockRequest.body.monthsOfCover = '1000';
@@ -776,27 +798,8 @@ describe('validateAndUpdateAboutFacility', () => {
       );
     });
 
-    it('redirects user to provided facility page if all of method passes', async () => {
-      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-      mockRequest.body.hasBeenIssued = 'true';
-      mockRequest.body.facilityName = 'Name';
-      mockRequest.body.shouldCoverStartOnSubmission = 'true';
-      mockRequest.body.hasBeenIssued = 'true';
-      mockRequest.body.monthsOfCover = '10';
-      mockRequest.body['cover-end-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
-      mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
-      mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
-
-      if (dealVersion === 1) {
-        mockRequest.body.isUsingFacilityEndDate = 'true';
-      }
-
-      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
-
-      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/provided-facility');
-    });
-
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      const mockRequest = MockRequest();
       mockRequest.query.saveAndReturn = 'true';
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
 
@@ -812,6 +815,7 @@ describe('validateAndUpdateAboutFacility', () => {
     });
 
     it('shows error message if isUsingFacilityEndDate is not a boolean', async () => {
+      const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
 
@@ -825,6 +829,67 @@ describe('validateAndUpdateAboutFacility', () => {
           }),
         }),
       );
+    });
+
+    it('redirects user to facility end date page if using facility end date', async () => {
+      const mockRequest = MockRequest();
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.facilityName = 'Name';
+      mockRequest.body.shouldCoverStartOnSubmission = 'true';
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.monthsOfCover = '10';
+      mockRequest.body['cover-end-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
+
+      mockRequest.body.isUsingFacilityEndDate = 'true';
+
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-end-date');
+    });
+
+    it('redirects user to bank review date page if not using facility end date', async () => {
+      const mockRequest = MockRequest();
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.facilityName = 'Name';
+      mockRequest.body.shouldCoverStartOnSubmission = 'true';
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.monthsOfCover = '10';
+      mockRequest.body['cover-end-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
+
+      mockRequest.body.isUsingFacilityEndDate = 'false';
+
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/bank-review-date');
+    });
+  });
+
+  describe('with deal version 0', () => {
+    beforeEach(() => {
+      api.getApplication.mockResolvedValue({ version: 0 });
+    });
+
+    it('redirects user to provided facility page if all inputs are valid', async () => {
+      const mockRequest = MockRequest();
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.facilityName = 'Name';
+      mockRequest.body.shouldCoverStartOnSubmission = 'true';
+      mockRequest.body.hasBeenIssued = 'true';
+      mockRequest.body.monthsOfCover = '10';
+      mockRequest.body['cover-end-date-day'] = format(threeMonthsAndOneDayFromNow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(threeMonthsAndOneDayFromNow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(threeMonthsAndOneDayFromNow, 'yyyy');
+
+      await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/provided-facility');
     });
   });
 });
