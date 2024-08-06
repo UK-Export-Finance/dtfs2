@@ -14,6 +14,17 @@ describe('convertTimestampToDate', () => {
     expect(() => convertTimestampToDate(timestamp)).toThrow(Error);
   });
 
+  it('returns the supplied date when it is already a date object', () => {
+    // Arrange
+    const validDate = new Date();
+
+    // Act
+    const result = convertTimestampToDate(validDate);
+
+    // Assert
+    expect(result).toEqual(validDate);
+  });
+
   describe.each([
     { unit: 'seconds', timestamp: timestampInSeconds },
     { unit: 'milliseconds', timestamp: timestampInMilliseconds },
@@ -21,7 +32,6 @@ describe('convertTimestampToDate', () => {
     it.each([
       { dataType: 'string', value: String(timestamp) },
       { dataType: 'number', value: Number(timestamp) },
-      { dataType: 'Date', value: new Date(timestamp) },
     ])('returns the parsed date object when the timestamp is stored as a $dataType', ({ value }) => {
       // Act
       const result = convertTimestampToDate(value);
