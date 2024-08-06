@@ -20,7 +20,7 @@ api.updateApplication = jest.fn();
 const dealId = '123';
 const facilityId = '111';
 
-describe('facility-end-date routes', () => {
+describe('facility end date routes', () => {
   beforeEach(async () => {
     resetAllWhenMocks();
     await storage.flush();
