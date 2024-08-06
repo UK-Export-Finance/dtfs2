@@ -3,7 +3,7 @@ const { FACILITIES } = require('../../constants');
 
 /**
  * Determines the supply contract status based on the submission details.
- * @param {Object} submissionDetails - An object containing details of a submission.
+ * @param {object} submissionDetails - An object containing details of a submission.
  * @returns {string} - The supply contract status.
  */
 const aboutSupplyContractStatus = async (submissionDetails) => {

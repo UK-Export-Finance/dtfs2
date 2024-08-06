@@ -7,7 +7,7 @@ const { FACILITY } = CONSTANTS;
 
 /**
  * Return facility next due date.
- * @param {Object} facility Facility object
+ * @param {object} facility Facility object
  * @returns {Date} Facility due date in YYYY-MM-DD format
  */
 

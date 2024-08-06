@@ -5,8 +5,8 @@
 /**
  * Strips commas and return UKEF exposure
  * as number.
- * @param {String} string Raw string with commas
- * @param {Boolean} Number Whether output should be a `Number`
+ * @param {string} string Raw string with commas
+ * @param {boolean} Number Whether output should be a `Number`
  * @returns {Integer} Formatted value
  */
 const stripCommas = (string, number = false) => {
@@ -31,8 +31,8 @@ const getMaximumLiability = (facilities) => {
 
 /**
  * Returns filtered task as per `taskName`
- * @param {Object} tfm Deal TFM Object
- * @param {String} taskName Interested task name from `Approvals` task group
+ * @param {object} tfm Deal TFM Object
+ * @param {string} taskName Interested task name from `Approvals` task group
  * @returns {Array} Filtered task
  */
 const filterTask = (tfm, taskName) => {

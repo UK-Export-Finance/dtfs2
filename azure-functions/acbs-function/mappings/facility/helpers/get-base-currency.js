@@ -1,6 +1,6 @@
 /**
  * Returns the base currency amongst all the deal's facilities
- * @param {Object} facilities Facility object
+ * @param {object} facilities Facility object
  * @returns {String | Boolean} Currency ID `GBP`, `USD` else `false` as Boolean.
  */
 const getBaseCurrency = (facilities) =>

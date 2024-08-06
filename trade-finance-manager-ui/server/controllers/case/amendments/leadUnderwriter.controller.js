@@ -7,9 +7,9 @@ const { userIsInTeam } = require('../../../helpers/user');
 const { sortArrayOfObjectsAlphabetically } = require('../../../helpers/array');
 
 /**
- * @param {Object} amendment
- * @param {Object} user
- * @returns {Object}
+ * @param {object} amendment
+ * @param {object} user
+ * @returns {object}
  * checks if leadUnderwriter already set and returns an object with currentLeadUnderwriter if set
  */
 const getAmendmentLeadUnderwriter = async (amendment, user, token) => {

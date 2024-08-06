@@ -5,7 +5,7 @@ const mapCreateEstore = require('../mappings/map-create-estore');
  * This function creates eStore directories and files on Sharepoint.
  * Response is relayed using CRON jobs.
  * Function will return deal object with a blank `siteName`.
- * @param {Object} deal Deal object
+ * @param {object} deal Deal object
  * @returns {Promise<Object>} `tfm-deal` object with empty `siteName`
  */
 const createEstoreSite = async (deal) => {
