@@ -25,7 +25,9 @@ interface CustomSuccessResponse extends Response {
   body: UtilisationReportResponse[];
 }
 
-describe('GET /v1/bank/:bankId/utilisation-reports', () => {
+const BASE_URL = '/v1/bank/:bankId/utilisation-reports';
+
+describe(`GET ${BASE_URL}`, () => {
   const getUrl = (bankId: string) => `/v1/bank/${bankId}/utilisation-reports`;
 
   const portalUser: PortalUser = aPortalUser();
