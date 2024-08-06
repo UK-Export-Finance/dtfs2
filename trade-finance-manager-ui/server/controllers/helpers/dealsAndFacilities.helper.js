@@ -113,7 +113,7 @@ const getSingularCollectionName = (collectionName) => {
  * @param {String} collectionName The name of the collection, either 'deals' or 'facilities'
  * @param {Object} req The request object
  * @param {Object} res The response object
- * @returns {Object} The result from rendering the page
+ * @returns {Promise<object>} The result from rendering the page
  */
 const renderDealsOrFacilitiesPage = async (collectionName, req, res) => {
   try {

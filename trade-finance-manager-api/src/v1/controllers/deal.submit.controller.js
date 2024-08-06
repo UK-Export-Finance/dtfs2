@@ -271,7 +271,7 @@ exports.submitDealAfterUkefIdsPUT = submitDealAfterUkefIdsPUT;
  * Handles the submission of a deal to TFM (Trade Finance Manager).
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @returns {Object} - The response object.
+ * @returns {Promise<object>} - The response object.
  */
 const submitDealPUT = async (req, res) => {
   try {

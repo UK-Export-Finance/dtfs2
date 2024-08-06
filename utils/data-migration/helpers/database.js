@@ -15,7 +15,7 @@ const url = process.env.MONGODB_URI;
 
 /**
  * Initiates MongoDB connection
- * @returns {Object} Connection
+ * @returns {Promise<object>} Connection
  */
 const connect = async () => {
   client = await MongoClient.connect(url);
@@ -31,7 +31,7 @@ const disconnect = async () => {
  * Retrieves complete collection
  * @param {String} name Collection name
  * @param {Object} filter Search filter, default to `null`
- * @returns {Object} Collection rows
+ * @returns {Promise<object>} Collection rows
  */
 const getCollection = async (name, filter = null, raw = null) => {
   if (!connection) await connect();

@@ -74,7 +74,7 @@ const constructRows = (deals) => {
 /**
  * Generates bespoke report as CSV
  * @param {Array} rows Array of processed deals
- * @returns {Null} Null is returned
+ * @returns {Promise<boolean>} Report generation status, true if successful
  */
 const generateReport = async (rows) => {
   const path = `${__dirname}/report/csv/RAD_${new Date().valueOf()}.csv`;

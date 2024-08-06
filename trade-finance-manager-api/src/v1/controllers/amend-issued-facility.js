@@ -14,7 +14,7 @@ const { mapBssEwcsFacility } = require('../mappings/map-submitted-deal/map-bss-e
  * @param {Object} facility Facility object
  * @param {Object} deal TFM deal object
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - details of the user making the request
- * @returns {Boolean} Boolean upon execution
+ * @returns {Promise<boolean>} Boolean upon execution
  */
 const amendIssuedFacility = async (amendment, facility, deal, auditDetails) => {
   try {
