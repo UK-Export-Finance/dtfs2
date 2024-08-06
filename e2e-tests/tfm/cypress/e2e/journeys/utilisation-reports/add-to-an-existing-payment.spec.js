@@ -19,6 +19,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     const FEE_RECORD_ID_TWO = '22';
     const PAYMENT_CURRENCY = 'GBP';
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
 
     const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withId(REPORT_ID)
@@ -77,5 +78,14 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     pages.utilisationReportAddToAnExistingPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'GBP 50');
 
     pages.utilisationReportAddToAnExistingPaymentPage.selectedReportedFeesDetailsTable().contains('Total reported payments GBP 50').should('exist');
+  });
+
+  it('should render the available payments', () => {
+    pages.utilisationReportAddToAnExistingPaymentPage.availablePaymentGroups().should('exist');
+    pages.utilisationReportAddToAnExistingPaymentPage
+      .availablePaymentGroups()
+      .should('contain', 'There is one existing payment that the reported fees will be added to');
+    pages.utilisationReportAddToAnExistingPaymentPage.availablePaymentGroups().should('contain', 'GBP 60.00');
+    pages.utilisationReportAddToAnExistingPaymentPage.availablePaymentGroups().should('contain', 'Payment reference: REF01234');
   });
 });

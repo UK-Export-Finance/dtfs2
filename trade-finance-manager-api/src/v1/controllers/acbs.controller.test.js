@@ -3,6 +3,9 @@ const { issueAcbsFacilities, addToACBSLog } = require('./acbs.controller');
 const api = require('../api');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const CONSTANTS = require('../../constants');
+const { createACBS } = require('./acbs.controller');
+const MOCK_DEAL_ACBS = require('../__mocks__/mock-deal-acbs');
+const { findOneTfmDeal } = require('./deal.controller');
 
 const consoleErrorMock = jest.spyOn(console, 'error');
 consoleErrorMock.mockImplementation();
@@ -14,6 +17,19 @@ const insertOneMock = jest.fn().mockResolvedValue(true);
 const getCollectionMock = jest.spyOn(db, 'getCollection');
 getCollectionMock.mockResolvedValue({ insertOne: insertOneMock });
 
+const createACBSAPIMock = jest.fn().mockResolvedValue(123);
+const createACBSMock = jest.spyOn(api, 'createACBS');
+createACBSMock.mockResolvedValue(createACBSAPIMock);
+
+/**
+ * Mock `deal.controller` imperative functions to
+ * expedite unit test execution and keep it in function
+ * scope.
+ */
+jest.mock('./deal.controller', () => ({
+  findOneTfmDeal: jest.fn(),
+}));
+
 const mockACBSTaskLink = {
   id: '5ce819935e539c343f141ece',
   statusQueryGetUri: 'acbs',
@@ -22,8 +38,11 @@ const mockACBSTaskLink = {
   rewindPostUri: 'acbs',
   purgeHistoryDeleteUri: 'acbs',
 };
-const updateACBSfacilityMock = jest.spyOn(api, 'updateACBSfacility');
-updateACBSfacilityMock.mockResolvedValue(mockACBSTaskLink);
+
+const updateACBSFacilityMock = jest.spyOn(api, 'updateACBSfacility');
+updateACBSFacilityMock.mockResolvedValue(mockACBSTaskLink);
+
+const invalidDealIds = ['invalid', '', '0000000000', '123', 'ABC', '!"£', [], {}];
 
 describe('addToACBSLog', () => {
   beforeEach(() => {
@@ -163,8 +182,8 @@ describe('issueAcbsFacilities', () => {
     expect(consoleInfoMock).toHaveBeenCalledWith('✅ Submitting deal %s facility to ACBS.', mockDeal._id);
     expect(consoleInfoMock).toHaveBeenCalledTimes(1);
 
-    expect(updateACBSfacilityMock).toHaveBeenCalledTimes(1);
-    expect(updateACBSfacilityMock).toHaveBeenCalledWith(mockDeal.facilities[0], { dealSnapshot: {}, exporter: {} });
+    expect(updateACBSFacilityMock).toHaveBeenCalledTimes(1);
+    expect(updateACBSFacilityMock).toHaveBeenCalledWith(mockDeal.facilities[0], { dealSnapshot: {}, exporter: {} });
 
     expect(insertOneMock).toHaveBeenCalledTimes(1);
     expect(insertOneMock).toHaveBeenCalledWith({
@@ -195,7 +214,7 @@ describe('issueAcbsFacilities', () => {
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(1);
-    expect(updateACBSfacilityMock).toHaveBeenCalledTimes(0);
+    expect(updateACBSFacilityMock).toHaveBeenCalledTimes(0);
     expect(consoleInfoMock).toHaveBeenCalledTimes(0);
     expect(insertOneMock).toHaveBeenCalledTimes(0);
 
@@ -222,7 +241,7 @@ describe('issueAcbsFacilities', () => {
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
-    expect(updateACBSfacilityMock).toHaveBeenCalledTimes(0);
+    expect(updateACBSFacilityMock).toHaveBeenCalledTimes(0);
     expect(consoleInfoMock).toHaveBeenCalledWith('✅ Submitting deal %s facility to ACBS.', mockAcbsDeal._id);
     expect(consoleInfoMock).toHaveBeenCalledTimes(1);
     expect(insertOneMock).toHaveBeenCalledTimes(0);
@@ -250,7 +269,7 @@ describe('issueAcbsFacilities', () => {
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
-    expect(updateACBSfacilityMock).toHaveBeenCalledTimes(0);
+    expect(updateACBSFacilityMock).toHaveBeenCalledTimes(0);
     expect(consoleInfoMock).toHaveBeenCalledWith('✅ Submitting deal %s facility to ACBS.', mockAcbsDeal._id);
     expect(consoleInfoMock).toHaveBeenCalledTimes(1);
     expect(insertOneMock).toHaveBeenCalledTimes(0);
@@ -279,7 +298,7 @@ describe('issueAcbsFacilities', () => {
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
-    expect(updateACBSfacilityMock).toHaveBeenCalledTimes(0);
+    expect(updateACBSFacilityMock).toHaveBeenCalledTimes(0);
     expect(consoleInfoMock).toHaveBeenCalledWith('✅ Submitting deal %s facility to ACBS.', mockAcbsDeal._id);
     expect(consoleInfoMock).toHaveBeenCalledTimes(1);
     expect(insertOneMock).toHaveBeenCalledTimes(0);
@@ -308,11 +327,128 @@ describe('issueAcbsFacilities', () => {
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
-    expect(updateACBSfacilityMock).toHaveBeenCalledTimes(0);
+    expect(updateACBSFacilityMock).toHaveBeenCalledTimes(0);
     expect(consoleInfoMock).toHaveBeenCalledWith('✅ Submitting deal %s facility to ACBS.', mockAcbsDeal._id);
     expect(consoleInfoMock).toHaveBeenCalledTimes(1);
     expect(insertOneMock).toHaveBeenCalledTimes(0);
 
     expect(result).toEqual(false);
+  });
+});
+
+describe('createACBS', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it.each(invalidDealIds)('should return false for deal with an invalid Mongo Object deal id %s', async (dealId) => {
+    // Act
+    const result = await createACBS(dealId);
+
+    // Assert
+    expect(result).toBe(false);
+  });
+
+  it('should return false if the deal is not found', async () => {
+    // Arrange
+    findOneTfmDeal.mockResolvedValue(null);
+
+    // Act
+    const result = await createACBS(MOCK_DEAL_ACBS._id);
+
+    // Assert
+    expect(result).toBe(false);
+  });
+
+  it('should return false if the deal does not have `dealSnapshot` property', async () => {
+    // Arrange
+    findOneTfmDeal.mockResolvedValue({
+      tfm: {},
+    });
+
+    // Act
+    const result = await createACBS(MOCK_DEAL_ACBS._id);
+
+    // Assert
+    expect(result).toBe(false);
+  });
+
+  it('should return false if the deal does not have `dealSnapshot.bank` property', async () => {
+    // Arrange
+    findOneTfmDeal.mockResolvedValue({
+      dealSnapshot: {},
+      tfm: {},
+    });
+
+    // Act
+    const result = await createACBS(MOCK_DEAL_ACBS._id);
+
+    // Assert
+    expect(result).toBe(false);
+  });
+
+  it('should return false if the deal does not have `tfm` property', async () => {
+    // Arrange
+    findOneTfmDeal.mockResolvedValue({
+      _id: MOCK_DEAL_ACBS._id,
+      dealSnapshot: {
+        bank: {
+          id: '1',
+          name: '2',
+          partyUrn: '3',
+        },
+      },
+    });
+
+    // Act
+    const result = await createACBS(MOCK_DEAL_ACBS._id);
+
+    // Assert
+    expect(result).toBe(false);
+    expect(consoleErrorMock).toHaveBeenCalledTimes(1);
+    expect(consoleErrorMock).toHaveBeenCalledWith('Invalid ACBS deal payload, terminating API call for deal %s', MOCK_DEAL_ACBS._id);
+  });
+
+  it('should return false if the bank does not have `partyUrn` property', async () => {
+    // Arrange
+    findOneTfmDeal.mockResolvedValue({
+      _id: MOCK_DEAL_ACBS._id,
+      dealSnapshot: {
+        bank: {
+          id: '1',
+          name: '2',
+        },
+      },
+      tfm: {},
+    });
+
+    // Act
+    const result = await createACBS(MOCK_DEAL_ACBS._id);
+
+    // Assert
+    expect(result).toBe(false);
+    expect(consoleErrorMock).toHaveBeenCalledTimes(1);
+    expect(consoleErrorMock).toHaveBeenCalledWith('Invalid ACBS bank payload, terminating API call for deal %s', MOCK_DEAL_ACBS._id);
+  });
+
+  it('should call createACBS API function with correct payload', async () => {
+    // Arrange
+    findOneTfmDeal.mockResolvedValue(MOCK_DEAL_ACBS);
+
+    const bank = {
+      id: MOCK_DEAL_ACBS.dealSnapshot.bank.id,
+      name: MOCK_DEAL_ACBS.dealSnapshot.bank.name,
+      partyUrn: MOCK_DEAL_ACBS.dealSnapshot.bank.partyUrn,
+    };
+
+    // Act
+    await createACBS(MOCK_DEAL_ACBS._id);
+
+    // Assert
+    expect(MOCK_DEAL_ACBS.dealSnapshot).toBeDefined();
+    expect(MOCK_DEAL_ACBS.dealSnapshot.facilities[0].facilitySnapshot).toBeDefined();
+
+    expect(createACBSMock).toHaveBeenCalledTimes(1);
+    expect(createACBSMock).toHaveBeenCalledWith(MOCK_DEAL_ACBS, bank);
   });
 });
