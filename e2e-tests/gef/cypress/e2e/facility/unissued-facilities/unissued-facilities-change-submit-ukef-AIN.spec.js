@@ -159,69 +159,69 @@ context('Return to maker for unissued to issued facilities', () => {
 
     it('should not be able to edit any facilities', () => {
       // 1st facility table - makes sure no action buttons exist (change or add)
-      applicationPreview.facilitySummaryListTable(0).nameAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).issueDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).coverStartDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).coverEndDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).facilityProvidedOnAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).valueAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).coverPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).interestPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).issueDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).coverStartDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).coverEndDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
       if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.value', '');
+        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
 
       // second facility
-      applicationPreview.facilitySummaryListTable(1).nameAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).hasBeenIssuedAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).issueDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).coverStartDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).coverEndDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).facilityProvidedOnAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).valueAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).coverPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).interestPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).feeFrequencyAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).dayCountBasisAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).issueDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).coverStartDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).coverEndDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
       if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(1).isUsingFacilityEndDateAction().should('have.value', '');
+        applicationDetails.facilitySummaryListTable(1).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
 
       // third facility
-      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).coverEndDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).facilityProvidedOnAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).valueAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).coverPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).coverEndDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
       if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.value', '');
+        applicationDetails.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
 
       // forth facility table - shorter as not yet issued
-      applicationPreview.facilitySummaryListTable(3).nameAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).hasBeenIssuedAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).monthsOfCoverAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).valueAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).coverPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).interestPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).monthsOfCoverAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
@@ -261,69 +261,69 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.deleteFacilityLink().should('not.exist');
 
       // the already issued so cannot change anything
-      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).coverEndDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).facilityProvidedOnAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).valueAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).coverPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).coverEndDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
       if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.value', '');
+        applicationDetails.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
 
       // 1st facility table - makes sure no action buttons exist (change or add)
       applicationDetails.facilitySummaryListTable(0).nameAction().contains('Change');
-      applicationDetails.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(0).hasBeenIssuedAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).issueDateAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).coverStartDateAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).coverEndDateAction().contains('Change');
-      applicationDetails.facilitySummaryListTable(0).facilityProvidedOnAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(0).valueAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(0).coverPercentageAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(0).interestPercentageAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(0).feeFrequencyAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(0).dayCountBasisAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(0).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(0).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(0).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(0).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(0).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(0).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
+
+      if (facilityEndDateEnabled) {
+        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Change');
+      }
+
+      // second facility
+      applicationDetails.facilitySummaryListTable(1).nameAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(1).hasBeenIssuedAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(1).issueDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(1).coverStartDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(1).coverEndDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(1).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(1).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(1).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(1).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(1).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(1).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
       if (facilityEndDateEnabled) {
         applicationDetails.facilitySummaryListTable(1).isUsingFacilityEndDateAction().contains('Change');
       }
 
-      // second facility
-      applicationDetails.facilitySummaryListTable(1).nameAction().contains('Change');
-      applicationDetails.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(1).hasBeenIssuedAction().contains('Change');
-      applicationDetails.facilitySummaryListTable(1).issueDateAction().contains('Change');
-      applicationDetails.facilitySummaryListTable(1).coverStartDateAction().contains('Change');
-      applicationDetails.facilitySummaryListTable(1).coverEndDateAction().contains('Change');
-      applicationDetails.facilitySummaryListTable(1).facilityProvidedOnAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(1).valueAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(1).coverPercentageAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(1).interestPercentageAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(1).feeFrequencyAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(1).dayCountBasisAction().should('have.value', '');
-
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.value', '');
-      }
-
       // forth facility table only has change as not yet issued
-      applicationDetails.facilitySummaryListTable(3).nameAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().contains('Change');
-      applicationDetails.facilitySummaryListTable(3).monthsOfCoverAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(3).valueAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(3).coverPercentageAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(3).interestPercentageAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(3).dayCountBasisAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).monthsOfCoverAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
       // should not be able to edit exporter table
       applicationDetails.exporterSummaryListRowAction(0, 0).should('have.value', '');
@@ -375,7 +375,7 @@ context('Return to maker for unissued to issued facilities', () => {
       // forth facility table has correct name and dates
       applicationDetails.facilitySummaryListTable(3).nameValue().contains(MOCK_FACILITY_ONE.name);
       applicationDetails.facilitySummaryListTable(3).nameAction().contains('Change');
-      applicationDetails.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().contains('Change');
       applicationDetails.facilitySummaryListTable(3).issueDateValue().contains(issuedDate);
       applicationDetails.facilitySummaryListTable(3).issueDateAction().contains('Change');
@@ -383,11 +383,11 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListTable(3).coverStartDateAction().contains('Change');
       applicationDetails.facilitySummaryListTable(3).coverEndDateValue().contains(coverEnd);
       applicationDetails.facilitySummaryListTable(3).coverEndDateAction().contains('Change');
-      applicationDetails.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(3).valueAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(3).coverPercentageAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(3).interestPercentageAction().should('have.value', '');
-      applicationDetails.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
+      applicationDetails.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
 
       if (facilityEndDateEnabled) {
         applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
@@ -437,74 +437,74 @@ context('Submit to UKEF with unissued to issued facilities', () => {
 
     it('should not be able to edit any facilities', () => {
       // 1st facility table - makes sure no action buttons exist (change or add)
-      applicationPreview.facilitySummaryListTable(0).nameAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).issueDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).coverStartDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).coverEndDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).facilityProvidedOnAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).valueAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).coverPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).interestPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(0).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).issueDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).coverStartDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).coverEndDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
       if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.value', '');
+        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
 
       // second facility
-      applicationPreview.facilitySummaryListTable(1).nameAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).hasBeenIssuedAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).issueDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).coverStartDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).coverEndDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).facilityProvidedOnAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).valueAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).coverPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).interestPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).feeFrequencyAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(1).dayCountBasisAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(1).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).issueDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).coverStartDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).coverEndDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(1).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
       if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(1).isUsingFacilityEndDateAction().should('have.value', '');
+        applicationDetails.facilitySummaryListTable(1).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
 
       // third facility
-      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).coverEndDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).facilityProvidedOnAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).valueAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).coverPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(2).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).coverEndDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
       if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.value', '');
+        applicationDetails.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
 
       // forth facility table
-      applicationPreview.facilitySummaryListTable(3).nameAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).hasBeenIssuedAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).issueDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).coverStartDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).coverEndDateAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).valueAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).coverPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).interestPercentageAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.value', '');
-      applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.value', '');
+      applicationPreview.facilitySummaryListTable(3).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).issueDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).coverStartDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).coverEndDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).valueAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).coverPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).interestPercentageAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
       if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateAction().should('have.value', '');
+        applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
     });
 
