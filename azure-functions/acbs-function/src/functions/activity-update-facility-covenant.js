@@ -41,7 +41,7 @@ const handler = async (payload) => {
 
     const { facilityIdentifier, acbsFacilityCovenantInput } = payload;
 
-    // Call create covenant API
+    // Call update covenant API
     const submittedToACBS = getNowAsIsoString();
     const { status, data } = await api.updateFacilityCovenant(facilityIdentifier, acbsFacilityCovenantInput);
 
@@ -71,8 +71,8 @@ const handler = async (payload) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility convenant record %o', error);
-    throw new Error(`Unable to create facility convenant record ${error}`);
+    console.error('Unable to update facility convenant record %o', error);
+    throw new Error(`Unable to update facility convenant record ${error}`);
   }
 };
 

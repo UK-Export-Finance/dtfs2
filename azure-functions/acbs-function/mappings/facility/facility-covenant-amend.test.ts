@@ -7,8 +7,15 @@ describe('facilityCovenantAmend', () => {
   const aValidGuaranteeExpiryDateRequest = { facilityGuaranteeDates: { guaranteeExpiryDate: '2022-01-01' } };
   const aValidGuaranteeExpiryDateExpectedResult = { expirationDate: '2022-01-01' };
 
-  const aValidAmountAndGuaranteeExpiryDateRequest = { ...aValidAmountRequest, ...aValidGuaranteeExpiryDateRequest };
-  const aValidAmountAndGuaranteeExpiryDateExpectedResult = { ...aValidAmountExpectedResult, ...aValidGuaranteeExpiryDateExpectedResult };
+  const aValidAmountAndGuaranteeExpiryDateRequest = {
+    ...aValidAmountRequest,
+    ...aValidGuaranteeExpiryDateRequest,
+  };
+  const aValidAmountAndGuaranteeExpiryDateExpectedResult = {
+    ...aValidAmountExpectedResult,
+    ...aValidGuaranteeExpiryDateExpectedResult,
+  };
+
   describe('when there is an amendment amount', () => {
     const amendment = aValidAmountRequest;
 

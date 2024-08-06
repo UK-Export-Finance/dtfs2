@@ -39,7 +39,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
     const { amendment } = payload;
 
     if (!amendment) {
-      throw new Error('No amendment provided');
+      throw new Error('Invalid amendment payload');
     }
 
     const { facilityId, amount, coverEndDate } = amendment;
@@ -78,15 +78,20 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
 
     if (!acceptableFacilityStage.includes(facilityStageCode)) {
       // Error upon unacceptable facility stage
+      const incorrectFacilityStageErrorMessage = `Facility ${facilityId} stage is ${facilityStageCode}, amendment will not be processed`;
+
       console.error('Facility %s stage is %s, amendment will not be processed', facilityId, facilityStageCode);
 
       return {
         facilityId,
         facilityLoanRecord: {
-          error: `Facility ${facilityId} stage is ${facilityStageCode}, amendment will not be processed`,
+          error: incorrectFacilityStageErrorMessage,
         },
         facilityMasterRecord: {
-          error: `Facility ${facilityId} stage is ${facilityStageCode}, amendment will not be processed`,
+          error: incorrectFacilityStageErrorMessage,
+        },
+        facilityCovenantRecord: {
+          error: incorrectFacilityStageErrorMessage,
         },
       };
     }
