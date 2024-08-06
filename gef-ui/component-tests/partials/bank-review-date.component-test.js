@@ -130,10 +130,10 @@ describe(page, () => {
   });
 
   it('renders the bank review date details', () => {
-    wrapper.expectText('[data-cy="bank-review-date-details"]').toContain('What is a bank review date');
+    wrapper.expectText('[data-cy="bank-review-date-details"] span').toRead('What is a bank review date');
     wrapper
-      .expectText('[data-cy="bank-review-date-details"]')
-      .toContain(
+      .expectText('[data-cy="bank-review-date-details"] div')
+      .toRead(
         "The bank review date is when you decide in accordance with your usual policies and procedures for such facilities whether to continue or terminate the facility based on the borrower's needs and circumstances.",
       );
   });

@@ -11,3 +11,4 @@ export * from './invalid-deal-id.error';
 export * from './invalid-facility-id.error';
 export * from './deal-version.error';
 export * from './invalid-parameter-error';
+export * from './invalid-payload-error';

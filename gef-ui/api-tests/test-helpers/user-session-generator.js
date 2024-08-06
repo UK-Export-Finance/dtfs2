@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const signature = require('cookie-signature');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { getUserWithRoles } = require('./user-generator');
 
 const generateUserSession = (roles) => {
@@ -19,6 +20,7 @@ const generateUserSession = (roles) => {
     },
     userToken: 'mock token',
     user,
+    loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
     dashboardFilters: { keyword: null },
     flash: {},
     sortBy: { order: 'updatedAt' },

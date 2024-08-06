@@ -131,7 +131,7 @@ const facilityItems = (
     {
       label: 'Facility end date',
       id: 'facilityEndDate',
-      href: `${facilityUrl}/about-facility?status=change`, // TODO DTFS2-7161: Update URL
+      href: `${facilityUrl}/facility-end-date?status=change`,
       method: (value) => {
         // facilityEndDate is an ISO-8601 string with milliseconds (e.g '2024-02-14T00:00:00.000+00:00')
         const date = parseISO(value);
