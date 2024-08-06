@@ -41,9 +41,6 @@
  *       fixedFeeAdjustment:
  *         $ref: '#/definitions/KeyingSheetAdjustment'
  *         nullable: true
- *       premiumAccrualBalanceAdjustment:
- *         $ref: '#/definitions/KeyingSheetAdjustment'
- *         nullable: true
  *       principalBalanceAdjustment:
  *         $ref: '#/definitions/KeyingSheetAdjustment'
  *         nullable: true

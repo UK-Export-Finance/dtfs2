@@ -1,4 +1,4 @@
-import { CurrencyAndAmount, IsoDateTimeStamp, ReportPeriod, SelectedFeeRecordDetails } from '@ukef/dtfs2-common';
+import { CurrencyAndAmount, IsoDateTimeStamp, ReportPeriod, SelectedFeeRecordDetails, SelectedFeeRecordsAvailablePaymentGroups } from '@ukef/dtfs2-common';
 
 type SelectedFeeRecordsPaymentDetailsResponse = CurrencyAndAmount & {
   dateReceived: IsoDateTimeStamp;
@@ -14,4 +14,5 @@ export type SelectedFeeRecordsDetailsResponseBody = {
   feeRecords: SelectedFeeRecordDetails[];
   payments: SelectedFeeRecordsPaymentDetailsResponse[];
   canAddToExistingPayment: boolean;
+  availablePaymentGroups?: SelectedFeeRecordsAvailablePaymentGroups;
 };
