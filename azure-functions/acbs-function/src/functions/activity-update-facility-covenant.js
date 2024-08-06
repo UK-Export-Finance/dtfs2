@@ -65,9 +65,9 @@ const handler = async (payload) => {
 
     return {
       status,
-      dataSent: acbsFacilityCovenantInput,
       submittedToACBS,
       receivedFromACBS: getNowAsIsoString(),
+      dataSent: acbsFacilityCovenantInput,
       ...data,
     };
   } catch (error) {
