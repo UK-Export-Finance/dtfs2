@@ -39,8 +39,8 @@ const mockACBSTaskLink = {
   purgeHistoryDeleteUri: 'acbs',
 };
 
-const updateACBSfacilityMock = jest.spyOn(api, 'updateACBSfacility');
-updateACBSfacilityMock.mockResolvedValue(mockACBSTaskLink);
+const updateACBSFacilityMock = jest.spyOn(api, 'updateACBSfacility');
+updateACBSFacilityMock.mockResolvedValue(mockACBSTaskLink);
 
 const invalidDealIds = ['invalid', '', '0000000000', '123', 'ABC', '!"£', [], {}];
 
@@ -182,8 +182,8 @@ describe('issueAcbsFacilities', () => {
     expect(consoleInfoMock).toHaveBeenCalledWith('✅ Submitting deal %s facility to ACBS.', mockDeal._id);
     expect(consoleInfoMock).toHaveBeenCalledTimes(1);
 
-    expect(updateACBSfacilityMock).toHaveBeenCalledTimes(1);
-    expect(updateACBSfacilityMock).toHaveBeenCalledWith(mockDeal.facilities[0], { dealSnapshot: {}, exporter: {} });
+    expect(updateACBSFacilityMock).toHaveBeenCalledTimes(1);
+    expect(updateACBSFacilityMock).toHaveBeenCalledWith(mockDeal.facilities[0], { dealSnapshot: {}, exporter: {} });
 
     expect(insertOneMock).toHaveBeenCalledTimes(1);
     expect(insertOneMock).toHaveBeenCalledWith({
@@ -214,7 +214,7 @@ describe('issueAcbsFacilities', () => {
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(1);
-    expect(updateACBSfacilityMock).toHaveBeenCalledTimes(0);
+    expect(updateACBSFacilityMock).toHaveBeenCalledTimes(0);
     expect(consoleInfoMock).toHaveBeenCalledTimes(0);
     expect(insertOneMock).toHaveBeenCalledTimes(0);
 
@@ -241,7 +241,7 @@ describe('issueAcbsFacilities', () => {
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
-    expect(updateACBSfacilityMock).toHaveBeenCalledTimes(0);
+    expect(updateACBSFacilityMock).toHaveBeenCalledTimes(0);
     expect(consoleInfoMock).toHaveBeenCalledWith('✅ Submitting deal %s facility to ACBS.', mockAcbsDeal._id);
     expect(consoleInfoMock).toHaveBeenCalledTimes(1);
     expect(insertOneMock).toHaveBeenCalledTimes(0);
@@ -269,7 +269,7 @@ describe('issueAcbsFacilities', () => {
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
-    expect(updateACBSfacilityMock).toHaveBeenCalledTimes(0);
+    expect(updateACBSFacilityMock).toHaveBeenCalledTimes(0);
     expect(consoleInfoMock).toHaveBeenCalledWith('✅ Submitting deal %s facility to ACBS.', mockAcbsDeal._id);
     expect(consoleInfoMock).toHaveBeenCalledTimes(1);
     expect(insertOneMock).toHaveBeenCalledTimes(0);
@@ -298,7 +298,7 @@ describe('issueAcbsFacilities', () => {
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
-    expect(updateACBSfacilityMock).toHaveBeenCalledTimes(0);
+    expect(updateACBSFacilityMock).toHaveBeenCalledTimes(0);
     expect(consoleInfoMock).toHaveBeenCalledWith('✅ Submitting deal %s facility to ACBS.', mockAcbsDeal._id);
     expect(consoleInfoMock).toHaveBeenCalledTimes(1);
     expect(insertOneMock).toHaveBeenCalledTimes(0);
@@ -327,7 +327,7 @@ describe('issueAcbsFacilities', () => {
 
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
-    expect(updateACBSfacilityMock).toHaveBeenCalledTimes(0);
+    expect(updateACBSFacilityMock).toHaveBeenCalledTimes(0);
     expect(consoleInfoMock).toHaveBeenCalledWith('✅ Submitting deal %s facility to ACBS.', mockAcbsDeal._id);
     expect(consoleInfoMock).toHaveBeenCalledTimes(1);
     expect(insertOneMock).toHaveBeenCalledTimes(0);
