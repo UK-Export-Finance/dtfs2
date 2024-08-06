@@ -14,14 +14,13 @@ const api = require('../server/services/api');
 const storage = require('./test-helpers/storage/storage');
 
 api.getFacility = jest.fn();
-api.getApplication = jest.fn();
 api.updateFacility = jest.fn();
 api.updateApplication = jest.fn();
 
 const dealId = '123';
 const facilityId = '111';
 
-describe('bank review date routes', () => {
+describe('facility end date routes', () => {
   beforeEach(async () => {
     resetAllWhenMocks();
     await storage.flush();
@@ -34,7 +33,7 @@ describe('bank review date routes', () => {
     await storage.flush();
   });
 
-  describe('POST /application-details/:dealId/facilities/:facilityId/bank-review-date', () => {
+  describe('POST /application-details/:dealId/facilities/:facilityId/facility-end-date', () => {
     beforeEach(() => {
       when(api.getFacility)
         .calledWith({ facilityId, userToken: expect.anything() })
@@ -49,7 +48,10 @@ describe('bank review date routes', () => {
     describe('with saveAndReturn false', () => {
       withRoleValidationApiTests({
         makeRequestWithHeaders: (headers) =>
-          postBankReviewDateWithHeaders({ body: { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' }, headers }),
+          postFacilityEndDateWithHeaders({
+            body: { 'facility-end-date-year': '2024', 'facility-end-date-month': '8', 'facility-end-date-day': '12' },
+            headers,
+          }),
         whitelistedRoles: [MAKER],
         successCode: HttpStatusCode.Found,
         successHeaders: {
@@ -66,10 +68,10 @@ describe('bank review date routes', () => {
 
         it('returns 200 & does not update the database if the request body fails validation', async () => {
           // Arrange
-          const body = { 'bank-review-date-year': '2023', 'bank-review-date-month': '8', 'bank-review-date-day': '12' };
+          const body = { 'facility-end-date-year': '2023', 'facility-end-date-month': '8', 'facility-end-date-day': '12' };
 
           // Act
-          const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie });
+          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
 
           // Assert
           expect(response.status).toBe(HttpStatusCode.Ok);
@@ -78,10 +80,10 @@ describe('bank review date routes', () => {
 
         it('redirects to provided facility page if the request body is valid', async () => {
           // Arrange
-          const body = { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' };
+          const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
 
           // Act
-          const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie });
+          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
 
           // Assert
           expect(response.status).toBe(HttpStatusCode.Found);
@@ -90,21 +92,21 @@ describe('bank review date routes', () => {
 
         it('updates the facility if request body is valid', async () => {
           // Arrange
-          const bankReviewDate = new Date(1723417200000);
+          const facilityEndDate = new Date(1723417200000);
           const body = {
-            'bank-review-date-year': bankReviewDate.getFullYear().toString(),
-            'bank-review-date-month': (bankReviewDate.getMonth() + 1).toString(),
-            'bank-review-date-day': bankReviewDate.getDate().toString(),
+            'facility-end-date-year': facilityEndDate.getFullYear().toString(),
+            'facility-end-date-month': (facilityEndDate.getMonth() + 1).toString(),
+            'facility-end-date-day': facilityEndDate.getDate().toString(),
           };
 
           // Act
-          await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie });
+          await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
 
           // Assert
           expect(api.updateFacility).toHaveBeenCalledWith({
             facilityId,
             payload: {
-              bankReviewDate,
+              facilityEndDate,
             },
             userToken: expect.anything(),
           });
@@ -112,10 +114,10 @@ describe('bank review date routes', () => {
 
         it('updates the application if request body is valid', async () => {
           // Arrange
-          const body = { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' };
+          const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
 
           // Act
-          await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie });
+          await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
 
           // Assert
           expect(api.updateApplication).toHaveBeenCalledWith({
@@ -132,8 +134,8 @@ describe('bank review date routes', () => {
     describe('with saveAndReturn true', () => {
       withRoleValidationApiTests({
         makeRequestWithHeaders: (headers) =>
-          postBankReviewDateWithHeaders({
-            body: { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' },
+          postFacilityEndDateWithHeaders({
+            body: { 'facility-end-date-year': '2024', 'facility-end-date-month': '8', 'facility-end-date-day': '12' },
             headers,
             saveAndReturn: true,
           }),
@@ -153,22 +155,22 @@ describe('bank review date routes', () => {
 
         it('returns 200 & does not update the database if the request body fails validation', async () => {
           // Arrange
-          const body = { 'bank-review-date-year': '2023', 'bank-review-date-month': '8', 'bank-review-date-day': '12' };
+          const body = { 'facility-end-date-year': '2023', 'facility-end-date-month': '8', 'facility-end-date-day': '12' };
 
           // Act
-          const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
 
           // Assert
           expect(response.status).toBe(HttpStatusCode.Ok);
           expect(api.updateFacility).toHaveBeenCalledTimes(0);
         });
 
-        it('redirects to application details page if the bank review date is blank', async () => {
+        it('redirects to application details page if the facility end date is blank', async () => {
           // Arrange
-          const body = { 'bank-review-date-year': '', 'bank-review-date-month': '', 'bank-review-date-day': '' };
+          const body = { 'facility-end-date-year': '', 'facility-end-date-month': '', 'facility-end-date-day': '' };
 
           // Act
-          const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
 
           // Assert
           expect(response.status).toBe(HttpStatusCode.Found);
@@ -177,10 +179,10 @@ describe('bank review date routes', () => {
 
         it('redirects to application details page if the request body is valid', async () => {
           // Arrange
-          const body = { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' };
+          const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
 
           // Act
-          const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
 
           // Assert
           expect(response.status).toBe(HttpStatusCode.Found);
@@ -189,21 +191,21 @@ describe('bank review date routes', () => {
 
         it('updates the facility if request body is valid', async () => {
           // Arrange
-          const bankReviewDate = new Date(1723417200000);
+          const facilityEndDate = new Date(1723417200000);
           const body = {
-            'bank-review-date-year': bankReviewDate.getFullYear().toString(),
-            'bank-review-date-month': (bankReviewDate.getMonth() + 1).toString(),
-            'bank-review-date-day': bankReviewDate.getDate().toString(),
+            'facility-end-date-year': facilityEndDate.getFullYear().toString(),
+            'facility-end-date-month': (facilityEndDate.getMonth() + 1).toString(),
+            'facility-end-date-day': facilityEndDate.getDate().toString(),
           };
 
           // Act
-          await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+          await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
 
           // Assert
           expect(api.updateFacility).toHaveBeenCalledWith({
             facilityId,
             payload: {
-              bankReviewDate,
+              facilityEndDate,
             },
             userToken: expect.anything(),
           });
@@ -211,10 +213,10 @@ describe('bank review date routes', () => {
 
         it('updates the application if request body is valid', async () => {
           // Arrange
-          const body = { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' };
+          const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
 
           // Act
-          await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+          await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
 
           // Assert
           expect(api.updateApplication).toHaveBeenCalledWith({
@@ -230,12 +232,12 @@ describe('bank review date routes', () => {
   });
 });
 
-function postBankReviewDateWithHeaders({ body, headers, saveAndReturn = false }) {
-  return post(body, headers).to(`/application-details/${dealId}/facilities/${facilityId}/bank-review-date${saveAndReturn ? '?saveAndReturn=true' : ''}`);
+function postFacilityEndDateWithHeaders({ body, headers, saveAndReturn = false }) {
+  return post(body, headers).to(`/application-details/${dealId}/facilities/${facilityId}/facility-end-date${saveAndReturn ? '?saveAndReturn=true' : ''}`);
 }
 
-function postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn = false }) {
-  return postBankReviewDateWithHeaders({
+function postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn = false }) {
+  return postFacilityEndDateWithHeaders({
     body,
     headers: {
       Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],

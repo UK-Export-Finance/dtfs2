@@ -1,8 +1,7 @@
 const axios = require('axios');
 const { when } = require('jest-when');
-const { HEADERS } = require('@ukef/dtfs2-common');
+const { HEADERS, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const api = require('./api');
-const { LOGIN_STATUS } = require('./constants');
 
 jest.mock('axios');
 const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
@@ -16,7 +15,7 @@ describe('api.login', () => {
   const username = 'a username';
   const password = 'a password';
   const token = 'a token';
-  const loginStatus = LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
+  const loginStatus = PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const user = {
     email: 'an-email@example.com',
   };
@@ -56,7 +55,7 @@ describe('api.loginWithSignInLink', () => {
   const token2fa = 'a 2fa token';
   const tokenFromPortalApi = 'a token from portal api';
 
-  const loginStatus = LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
+  const loginStatus = PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD;
   const user = {
     email: 'an-email@example.com',
   };

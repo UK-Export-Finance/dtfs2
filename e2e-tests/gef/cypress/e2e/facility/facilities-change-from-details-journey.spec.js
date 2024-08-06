@@ -8,6 +8,7 @@ import facilityCurrency from '../pages/facility-currency';
 import facilityGuarantee from '../pages/facility-guarantee';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import bankReviewDate from '../pages/bank-review-date';
+import facilityEndDate from '../pages/facility-end-date';
 import { todayDay, todayMonth, todayYear } from '../../../../e2e-fixtures/dateConstants';
 
 const applications = [];
@@ -79,6 +80,26 @@ context('Changing facility details from application-details page should take you
         bankReviewDate.bankReviewDateDay().type(todayDay);
         bankReviewDate.bankReviewDateMonth().type(todayMonth);
         bankReviewDate.bankReviewDateYear().type(todayYear);
+        bankReviewDate.continueButton().click();
+        cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));
+      });
+
+      it('if using facility end date should take you to facility-end-date page from about-facility page', () => {
+        cy.visit(relative(`/gef/application-details/${application.id}`));
+        applicationDetails.facilitySummaryListRowAction(0, 0).click();
+        aboutFacility.isUsingFacilityEndDateYes().click();
+        aboutFacility.continueButton().click();
+        cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/facility-end-date`));
+      });
+
+      it('should take you to provided-facility page from facility-end-date page', () => {
+        cy.visit(relative(`/gef/application-details/${application.id}`));
+
+        applicationDetails.facilitySummaryListRowAction(0, 4).find('.govuk-link').click();
+
+        facilityEndDate.facilityEndDateDay().type(todayDay);
+        facilityEndDate.facilityEndDateMonth().type(todayMonth);
+        facilityEndDate.facilityEndDateYear().type(Number(todayYear) + 1);
         bankReviewDate.continueButton().click();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));
       });

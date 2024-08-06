@@ -20,7 +20,7 @@ api.updateApplication = jest.fn();
 const dealId = '123';
 const facilityId = '111';
 
-describe('bank review date routes', () => {
+describe('facility end date routes', () => {
   beforeEach(async () => {
     resetAllWhenMocks();
     await storage.flush();
@@ -32,15 +32,15 @@ describe('bank review date routes', () => {
     await storage.flush();
   });
 
-  describe('GET /application-details/:dealId/facilities/:facilityId/bank-review-date', () => {
+  describe('GET /application-details/:dealId/facilities/:facilityId/facility-end-date', () => {
     describe('with deal version 1 and not using facility end date', () => {
       beforeEach(() => {
-        mockIsUsingFacilityEndDate(false);
+        mockIsUsingFacilityEndDate(true);
         mockDealVersion(1);
       });
 
       withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/facilities/${facilityId}/bank-review-date`, {}, headers),
+        makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/facilities/${facilityId}/facility-end-date`, {}, headers),
         whitelistedRoles: [MAKER],
         successCode: 200,
       });
@@ -52,13 +52,13 @@ describe('bank review date routes', () => {
         ({ sessionCookie } = await storage.saveUserSession([MAKER]));
       });
 
-      it('returns 200 when the deal v1 and facility is not using facility end date', async () => {
+      it('returns 200 when the deal v1 and facility is using facility end date', async () => {
         // Arrange
-        mockIsUsingFacilityEndDate(false);
+        mockIsUsingFacilityEndDate(true);
         mockDealVersion(1);
 
         // Act
-        const response = await getBankReviewDateWithSessionCookie(sessionCookie);
+        const response = await getFacilityEndDateWithSessionCookie(sessionCookie);
 
         // Assert
         expect(response.status).toBe(200);
@@ -66,11 +66,11 @@ describe('bank review date routes', () => {
 
       it('redirects the user to the application details page if the deal is version 0', async () => {
         // Arrange
-        mockIsUsingFacilityEndDate(false);
+        mockIsUsingFacilityEndDate(true);
         mockDealVersion(0);
 
         // Act
-        const response = await getBankReviewDateWithSessionCookie(sessionCookie);
+        const response = await getFacilityEndDateWithSessionCookie(sessionCookie);
 
         // Assert
         expect(response.status).toBe(302);
@@ -80,24 +80,23 @@ describe('bank review date routes', () => {
       it('redirects the user to the application details page if version is 1 & isUsingFacilityEndDate is null ', async () => {
         // Arrange
         mockIsUsingFacilityEndDate(null);
-
         mockDealVersion(1);
 
         // Act
-        const response = await getBankReviewDateWithSessionCookie(sessionCookie);
+        const response = await getFacilityEndDateWithSessionCookie(sessionCookie);
 
         // Assert
         expect(response.status).toBe(302);
         expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
       });
 
-      it('redirects the user to the application details page if version is 1 & isUsingFacilityEndDate is true', async () => {
+      it('redirects the user to the application details page if version is 1 & isUsingFacilityEndDate is false', async () => {
         // Arrange
-        mockIsUsingFacilityEndDate(true);
+        mockIsUsingFacilityEndDate(false);
         mockDealVersion(1);
 
         // Act
-        const response = await getBankReviewDateWithSessionCookie(sessionCookie);
+        const response = await getFacilityEndDateWithSessionCookie(sessionCookie);
 
         // Assert
         expect(response.status).toBe(302);
@@ -115,9 +114,9 @@ function mockDealVersion(version) {
   when(api.getApplication).calledWith({ dealId, userToken: expect.anything() }).mockResolvedValueOnce({ version });
 }
 
-function getBankReviewDateWithSessionCookie(sessionCookie) {
+function getFacilityEndDateWithSessionCookie(sessionCookie) {
   return get(
-    `/application-details/${dealId}/facilities/${facilityId}/bank-review-date`,
+    `/application-details/${dealId}/facilities/${facilityId}/facility-end-date`,
     {},
     {
       Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],

@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const jsonwebtoken = require('jsonwebtoken');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { mongoDbClient: db } = require('./database-client');
-const { LOGIN_STATUSES } = require('../../../src/constants');
 
 const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('ascii');
 
@@ -28,7 +28,7 @@ function issueValidUsernameAndPasswordJWT(user, sessionIdentifier) {
     user,
     sessionIdentifier,
     expiresIn: '105m',
-    additionalPayload: { username: user.username, loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD },
+    additionalPayload: { username: user.username, loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD },
   });
 }
 
@@ -41,7 +41,7 @@ function issueValid2faJWT(user, sessionIdentifier) {
       username: user.username,
       roles: user.roles,
       bank: user.bank,
-      loginStatus: LOGIN_STATUSES.VALID_2FA,
+      loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
     },
   });
 }
@@ -63,7 +63,7 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
     const userFromDatabase = await userCollection.findOne({ username: { $eq: user.username } }, { collation: { locale: 'en', strength: 2 } });
 
     const sessionIdentifier = crypto.randomBytes(32).toString('hex');
-    if (loginStatus === LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD) {
+    if (loginStatus === PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD) {
       const { token } = issueValidUsernameAndPasswordJWT(userFromDatabase, sessionIdentifier);
       await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
 
@@ -75,7 +75,7 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
 
       return { userId: userFromDatabase._id.toString(), token, signInToken };
     }
-    if (loginStatus === LOGIN_STATUSES.VALID_2FA) {
+    if (loginStatus === PORTAL_LOGIN_STATUS.VALID_2FA) {
       const { token } = issueValid2faJWT(userFromDatabase, sessionIdentifier);
       const lastLogin = Date.now().toString();
       await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier, lastLogin } });
@@ -92,9 +92,9 @@ const createUserSessionWithLoggedInStatus = async ({ user, loginStatus }) => {
 const createPartiallyLoggedInUserSession = async (user) =>
   createUserSessionWithLoggedInStatus({
     user,
-    loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+    loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD,
   });
 
-const createLoggedInUserSession = async (user) => createUserSessionWithLoggedInStatus({ user, loginStatus: LOGIN_STATUSES.VALID_2FA });
+const createLoggedInUserSession = async (user) => createUserSessionWithLoggedInStatus({ user, loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA });
 
 module.exports = { createLoggedInUserSession, createPartiallyLoggedInUserSession };
