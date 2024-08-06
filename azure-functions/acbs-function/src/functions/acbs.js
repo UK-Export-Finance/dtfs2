@@ -34,6 +34,13 @@ df.app.orchestration('acbs', function* HDeal(context) {
         country = deal.dealSnapshot.exporter.registeredAddress.country;
       }
 
+      /**
+       * If no country is specified default it to `GBR`
+       */
+      if (!country) {
+        country = CONSTANTS.DEAL.COUNTRY.DEFAULT;
+      }
+
       const acbsReference = {
         supplierAcbsIndustryCode: yield context.df.callActivityWithRetry('get-acbs-industry-sector', retryOptions, industry),
       };
