@@ -8,8 +8,6 @@ console.error = jest.fn();
 const BASE_URL = '/v1/utilisation-reports/set-status';
 
 describe(`PUT ${BASE_URL}`, () => {
-  const setStatusUrl = '/v1/utilisation-reports/set-status';
-
   const reportId = 1;
   const mockReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).build();
 
@@ -34,7 +32,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(setStatusUrl);
+    const { status } = await testApi.put(requestBody).to(BASE_URL);
 
     // Assert
     expect(status).toBe(404);
@@ -53,7 +51,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(setStatusUrl);
+    const { status } = await testApi.put(requestBody).to(BASE_URL);
 
     // Assert
     expect(status).toBe(400);
@@ -72,7 +70,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(setStatusUrl);
+    const { status } = await testApi.put(requestBody).to(BASE_URL);
 
     // Assert
     expect(status).toBe(400);
@@ -91,7 +89,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(setStatusUrl);
+    const { status } = await testApi.put(requestBody).to(BASE_URL);
 
     // Assert
     expect(status).toBe(200);
