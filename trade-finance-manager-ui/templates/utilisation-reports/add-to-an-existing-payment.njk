@@ -1,7 +1,9 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
+{% import "./_macros/payment-group-radio-input-group.njk" as paymentGroupRadioInputGroup %}
 {% extends "index.njk" %}
 {% set backLink = {"href": '/utilisation-reports/' + reportId} %}
 {% block pageTitle %}Add to an existing payment{% endblock %}
@@ -22,7 +24,12 @@
       reportedFeesHeader: 'Reported fee'
     }
   }) }}
-  {# TODO FN-1727: Display available payments. #}
+
+  {{ paymentGroupRadioInputGroup.render({
+    legendText: availablePaymentsHeading,
+    paymentGroups: availablePaymentGroups
+  }) }}
+
   {# TODO FN-1749: Add 'Continue' and 'Cancel' buttons and associated submission logic. #}
 {% endblock %}
 {% block sub_content %}{% endblock %}

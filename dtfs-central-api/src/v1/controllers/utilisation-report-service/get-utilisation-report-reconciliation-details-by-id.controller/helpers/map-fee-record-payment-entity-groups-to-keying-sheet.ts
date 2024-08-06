@@ -30,7 +30,6 @@ const mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments = (feeRecordEntity: F
   exporter: feeRecordEntity.exporter,
   baseCurrency: feeRecordEntity.baseCurrency,
   fixedFeeAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.fixedFeeAdjustment),
-  premiumAccrualBalanceAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.premiumAccrualBalanceAdjustment),
   principalBalanceAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.principalBalanceAdjustment),
 });
 

@@ -94,10 +94,10 @@ describe('updateParty', () => {
     // Assert
     expect(consoleErrorMock).toHaveBeenCalledTimes(0);
 
-    expect(findOneDealMock).toHaveBeenCalledTimes(1);
+    expect(findOneDealMock).toHaveBeenCalledTimes(2);
     expect(findOneDealMock).toHaveBeenCalledWith(mockTfmDeal._id);
 
-    expect(findFacilitiesByDealIdMock).toHaveBeenCalledTimes(1);
+    expect(findFacilitiesByDealIdMock).toHaveBeenCalledTimes(2);
 
     expect(updateDealMock).toHaveBeenCalledTimes(1);
     expect(updateDealMock).toHaveBeenCalledWith({

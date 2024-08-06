@@ -145,11 +145,11 @@ export class TfmFacilitiesRepo {
    * @param status - The amendment status
    * @returns The found amendments
    */
-  public static async findAmendmentsByFacilityIdAndStatus(facilityId: string | ObjectId, status: AmendmentStatus): Promise<Document[]> {
+  public static async findAmendmentsByFacilityIdAndStatus(facilityId: string | ObjectId, status: AmendmentStatus): Promise<TfmFacilityAmendment[]> {
     const collection = await this.getCollection();
     return await collection
       .aggregate(aggregatePipelines.amendmentsByFacilityIdAndStatus(facilityId, status))
-      .map<Document>((doc) => doc.amendments as Document)
+      .map<TfmFacilityAmendment>((doc) => doc.amendments as TfmFacilityAmendment)
       .toArray();
   }
 
@@ -250,5 +250,17 @@ export class TfmFacilitiesRepo {
     const collection = await this.getCollection();
     const result = await collection.aggregate(aggregatePipelines.allFacilitiesAndFacilityCount(aggregateOptions)).toArray();
     return (result.at(0) as { count: number; facilities: Document[] }) ?? null;
+  }
+
+  /**
+   * Finds a facility which matches the supplied ukef facility id
+   * @param ukefFacilityId - The ukef facility id
+   * @returns The found document (or null if not found)
+   */
+  public static async findOneByUkefFacilityId(ukefFacilityId: string): Promise<TfmFacility | null> {
+    const collection = await this.getCollection();
+    return await collection.findOne({
+      'facilitySnapshot.ukefFacilityId': { $eq: ukefFacilityId },
+    });
   }
 }
