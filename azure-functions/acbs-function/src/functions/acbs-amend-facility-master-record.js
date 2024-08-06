@@ -33,7 +33,7 @@ df.app.orchestration('acbs-amend-facility-master-record', function* amendFacilit
 
   try {
     if (!payload) {
-      throw new Error('Invalid argument set provided');
+      throw new Error('Facility Master Record amendment SOF - Invalid payload provided');
     }
 
     const { deal, facilityId, fmr, etag, amendments } = payload;

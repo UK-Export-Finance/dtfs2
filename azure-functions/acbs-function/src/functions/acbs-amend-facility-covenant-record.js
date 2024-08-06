@@ -32,14 +32,18 @@ df.app.orchestration('acbs-amend-facility-covenant-record', function* amendFacil
 
   try {
     if (!payload) {
-      throw new Error('Invalid payload provided');
+      throw new Error('Facility Covenant Record amendment SOF - Invalid payload provided');
     }
     const { facilityId, amendments } = payload;
     const { amendment } = amendments;
 
+    // 2.1. Facility Covenant Amend mapping
+    const facilityCovenantAmendMapped = mappings.facility.facilityCovenantAmend(amendment);
+
+    // 2.2. Facility Covenant Record update
     const facilityCovenantRecord = yield context.df.callActivityWithRetry('update-facility-covenant', retryOptions, {
       facilityId,
-      acbsFacilityCovenantInput: mappings.facility.facilityCovenantAmend(amendment),
+      acbsFacilityCovenantInput: facilityCovenantAmendMapped,
     });
     return facilityCovenantRecord;
   } catch (error) {
