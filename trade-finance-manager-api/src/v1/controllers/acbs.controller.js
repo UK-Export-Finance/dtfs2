@@ -121,24 +121,24 @@ const updateDealAcbs = async (taskOutput) => {
    */
   await tfmController.updateAcbs(taskOutput);
 
-  const facilitiesUpdates = facilities
+  const facilitiesUpdatesPromises = facilities
     .filter((facility) => facility.facilityId)
     .map((facility) => {
       const { facilityId, ...acbsFacility } = facility;
       // Add `acbs` object to tfm-facilities
       return tfmController.updateFacilityAcbs(facilityId, acbsFacility);
     });
-  await Promise.all(facilitiesUpdates);
+  await Promise.all(facilitiesUpdatesPromises);
 };
 
 /**
  * Updated `tfm.acbs` property of a facility upon successful
  * facility issuance.
- * @param {String} ID UKEF Facility mongo ID
- * @param {Object} FMR Facility master record
- * @param {Object} FLR Facility loan record
- * @param {Object} FFR Facility fixed fee record
- * @returns {Object} ACBS returned response
+ * @param {string} ID UKEF Facility mongo ID
+ * @param {object} FMR Facility master record
+ * @param {object} FLR Facility loan record
+ * @param {object} FFR Facility fixed fee record
+ * @returns {Promise<object>} ACBS returned response
  */
 const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster, facilityLoan, facilityFee }) =>
   tfmController.updateFacilityAcbs(facilityId, {
@@ -148,21 +148,23 @@ const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster, facilityLo
     facilityFee,
   });
 
-const updateAmendedFacilityAcbs = (taskResult) => {
-  if (taskResult.instanceId && taskResult.output) {
-    const { instanceId } = taskResult;
-    const { facilityMasterRecord, facilityLoanRecord } = taskResult.output;
-    const { _id } = taskResult.input.amendment.facility;
-    const acbsUpdate = {
-      [instanceId]: {
-        facilityMasterRecord,
-        facilityLoanRecord,
-      },
-    };
-
-    // Update tfm-facilities `acbs` object with ACBS amendments response
-    tfmController.updateFacilityAcbs(_id, acbsUpdate);
+const updateAmendedFacilityAcbs = async (taskResult) => {
+  if (!taskResult.instanceId || taskResult.output) {
+    return;
   }
+
+  const { instanceId } = taskResult;
+  const { facilityMasterRecord, facilityLoanRecord } = taskResult.output;
+  const { _id } = taskResult.input.amendment.facility;
+  const acbsUpdate = {
+    [instanceId]: {
+      facilityMasterRecord,
+      facilityLoanRecord,
+    },
+  };
+
+  // Update tfm-facilities `acbs` object with ACBS amendments response
+  await tfmController.updateFacilityAcbs(_id, acbsUpdate);
 };
 
 const checkAzureAcbsFunction = async () => {
@@ -180,34 +182,37 @@ const checkAzureAcbsFunction = async () => {
 
     const auditDetails = generateSystemAuditDetails();
 
-    taskList.forEach(async (task) => {
-      if (task.runtimeStatus) {
-        // Update
-        if (task.runtimeStatus !== 'Running') {
-          await collection.findOneAndUpdate(
-            { instanceId: { $eq: task.instanceId } },
-            $.flatten({
-              status: task.runtimeStatus,
-              acbsTaskResult: task,
-              auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-            }),
-          );
-        }
-        // ADD `acbs` object to tfm-deals and tfm-facilities
-        if (task.runtimeStatus === 'Completed') {
-          switch (task.name) {
-            case 'acbs-issue-facility':
-              await updateIssuedFacilityAcbs(task.output);
-              break;
+    taskList.map(async (task) => {
+      if (!task.runtimeStatus) {
+        return;
+      }
+      // Update
+      if (task.runtimeStatus !== 'Running') {
+        await collection.findOneAndUpdate(
+          { instanceId: { $eq: task.instanceId } },
+          $.flatten({
+            status: task.runtimeStatus,
+            acbsTaskResult: task,
+            auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+          }),
+        );
+      }
+      const shouldUpdateAcbsObjectInTfm = task.runtimeStatus === 'Completed';
+      if (!shouldUpdateAcbsObjectInTfm) {
+        return;
+      }
+      // ADD `acbs` object to tfm-deals and tfm-facilities
+      switch (task.name) {
+        case 'acbs-issue-facility':
+          await updateIssuedFacilityAcbs(task.output);
+          break;
 
-            case 'acbs-amend-facility':
-              await updateAmendedFacilityAcbs(task);
-              break;
+        case 'acbs-amend-facility':
+          await updateAmendedFacilityAcbs(task);
+          break;
 
-            default:
-              await updateDealAcbs(task.output);
-          }
-        }
+        default:
+          await updateDealAcbs(task.output);
       }
     });
   } catch (error) {

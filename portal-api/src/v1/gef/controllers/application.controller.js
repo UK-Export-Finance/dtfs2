@@ -219,19 +219,22 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
   // get exporter name
   const { companyName = '' } = exporter;
 
-  user.bank.emails.forEach(async (email) => {
-    await sendEmail(EMAIL_TEMPLATE_IDS.UPDATE_STATUS, email, {
-      firstName,
-      surname,
-      submissionType: existingApplication.submissionType || '',
-      supplierName: companyName,
-      bankInternalRefName,
-      currentStatus: status,
-      previousStatus,
-      updatedByName: `${user.firstname} ${user.surname}`,
-      updatedByEmail: user.email,
-    });
-  });
+  const emailPromises = user.bank.emails.map(
+    async (email) =>
+      await sendEmail(EMAIL_TEMPLATE_IDS.UPDATE_STATUS, email, {
+        firstName,
+        surname,
+        submissionType: existingApplication.submissionType || '',
+        supplierName: companyName,
+        bankInternalRefName,
+        currentStatus: status,
+        previousStatus,
+        updatedByName: `${user.firstname} ${user.surname}`,
+        updatedByEmail: user.email,
+      }),
+  );
+
+  await Promise.all(emailPromises);
 };
 
 exports.changeStatus = async (req, res) => {
