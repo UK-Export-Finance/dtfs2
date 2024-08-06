@@ -23,7 +23,9 @@ interface CustomResponse extends Response {
   body: UtilisationReportReconciliationSummary[];
 }
 
-describe('GET /v1/utilisation-reports/reconciliation-summary/:submissionMonth', () => {
+const BASE_URL = '/v1/utilisation-reports/reconciliation-summary/:submissionMonth';
+
+describe(`GET ${BASE_URL}`, () => {
   beforeAll(async () => {
     await wipe([MONGO_DB_COLLECTIONS.BANKS]);
     await testApi.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
