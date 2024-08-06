@@ -2,37 +2,49 @@ const { to2Decimals } = require('./currency');
 
 describe('currency helper', () => {
   describe('to2Decimals', () => {
-    it('given a number with more than three decimal places returns a number to two decimal places', () => {
+    it('rounds down when the third decimal place is less than 5', () => {
+      const number = 123.454;
+      const result = to2Decimals(number);
+      expect(result).toEqual(123.45);
+    });
+
+    it('rounds down when the third decimal place is 5 or more', () => {
+      const number = 123.455;
+      const result = to2Decimals(number);
+      expect(result).toEqual(123.45);
+    });
+
+    it('returns a number to two decimal places when given a number with more than three decimal places ', () => {
       const number = 123.456;
       const result = to2Decimals(number);
       expect(result).toEqual(123.46);
     });
 
-    it('given a number with less than three decimal places returns a number to two decimal places', () => {
+    it('returns a number to two decimal places when given a number with less than three decimal places ', () => {
       const number = 123.4;
       const result = to2Decimals(number);
       expect(result).toEqual(123.4);
     });
 
-    it('given a number as a string it returns a number to two decimal places', () => {
+    it('returns a number to two decimal places when given a number as a string ', () => {
       const number = '123.456';
       const result = to2Decimals(number);
       expect(result).toEqual(123.46);
     });
 
-    it('given a string that is not a number it returns NaN', () => {
+    it('returns NaN when given a string that is not a number', () => {
       const number = 'not a number';
       const result = to2Decimals(number);
       expect(result).toEqual(NaN);
     });
 
-    it('given undefined it returns NaN', () => {
+    it('returns NaN when given undefined', () => {
       const number = undefined;
       const result = to2Decimals(number);
       expect(result).toEqual(NaN);
     });
 
-    it('given null it returns 0', () => {
+    it('returns 0 given null', () => {
       const number = null;
       const result = to2Decimals(number);
       expect(result).toEqual(0);
