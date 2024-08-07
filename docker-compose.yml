@@ -154,6 +154,7 @@ services:
       - RATE_LIMIT_THRESHOLD
       - CHANGE_STREAM_ENABLED
       - DELETION_AUDIT_LOGS_TTL_SECONDS
+      - FF_TFM_FACILITY_END_DATE_ENABLED
 
   portal:
     build:
