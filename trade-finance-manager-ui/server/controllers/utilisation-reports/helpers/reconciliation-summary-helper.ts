@@ -11,7 +11,7 @@ import {
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
 import { getReportDueDate } from '../../../services/utilisation-report-service';
 import api from '../../../api';
-import { UtilisationReportSummaryViewModel, ReportPeriodSummariesViewModel, UtilisationReportingFrequency } from '../../../types/view-models';
+import { UtilisationReportSummaryViewModel, ReportPeriodSummariesViewModel, UtilisationReportDisplayFrequency } from '../../../types/view-models';
 
 export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not received',
@@ -20,7 +20,7 @@ export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportRe
   RECONCILIATION_COMPLETED: 'Report completed',
 };
 
-const getUtilisationReportingFrequency = (reportPeriod: ReportPeriod): UtilisationReportingFrequency => {
+const getUtilisationReportDisplayFrequency = (reportPeriod: ReportPeriod): UtilisationReportDisplayFrequency => {
   return isEqualMonthAndYear(reportPeriod.start, reportPeriod.end) ? 'Monthly' : 'Quarterly';
 };
 
@@ -29,7 +29,7 @@ const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummary
 
   return {
     ...apiItem,
-    frequency: getUtilisationReportingFrequency(reportPeriod),
+    frequency: getUtilisationReportDisplayFrequency(reportPeriod),
     displayStatus: reconciliationStatusCodeToDisplayStatus[status],
     formattedDateUploaded: dateUploaded ? format(parseISO(dateUploaded), 'd MMM yyyy') : undefined,
     downloadPath: status !== 'REPORT_NOT_RECEIVED' ? `/utilisation-reports/${reportId}/download` : undefined,
