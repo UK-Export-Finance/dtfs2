@@ -131,31 +131,33 @@ const returnToMakerNoFacilitiesChanged = (app, hasChangedFacilities) => {
 /**
  * @param {object} params
  * @param {string} params.href - the URL to navigate to
- * @param {string} params.label - the visually hidden text
+ * @param {string} params.visuallyHiddenText - the visually hidden label to make it clear to a screen reader what the link is changing
  * @param {'Change' | 'Add' | undefined} params.actionType - the text to display, component has class display-none if falsy
  * @param {string} params.id - the row id, used in the data-cy
  * @returns an array containing the action button to render
  */
-const generateActionsArrayForItem = ({ href, label, actionType, id }) => {
-  return actionType
-    ? [
-        {
-          href,
-          text: actionType,
-          visuallyHiddenText: label,
-          attributes: {
-            'data-cy': `${id}-action`,
-          },
-        },
-      ]
-    : [
-        {
-          attributes: {
-            'data-cy': `${id}-action`,
-          },
-          classes: 'govuk-!-display-none',
-        },
-      ];
+const generateActionsArrayForItem = ({ href, visuallyHiddenText, actionType, id }) => {
+  const attributes = {
+    'data-cy': `${id}-action`,
+  };
+
+  if (!actionType) {
+    return [
+      {
+        attributes,
+        classes: 'govuk-!-display-none',
+      },
+    ];
+  }
+
+  return [
+    {
+      href,
+      text: actionType,
+      visuallyHiddenText,
+      attributes,
+    },
+  ];
 };
 
 /*
@@ -163,7 +165,7 @@ const generateActionsArrayForItem = ({ href, label, actionType, id }) => {
   returns array with rows with relevant change or add links
 */
 const previewItemConditions = (previewParams) => {
-  const { issuedHref, unissuedHref, issuedToUnissuedHref, shouldDisplayChangeLinkOnceIssued, shouldDisplayChangeLinkIfUnissued, item, app } = previewParams;
+  const { issuedHref, unissuedHref, issuedToUnissuedHref, shouldDisplayChangeLinkIfIssued, shouldDisplayChangeLinkIfUnissued, item, app } = previewParams;
   let summaryItems = [];
   const statusMIA = [CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF];
   const statusAIN = [...statusMIA, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF, CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED];
@@ -183,8 +185,8 @@ const previewItemConditions = (previewParams) => {
     if (item.id === 'hasBeenIssued') {
       summaryItems = generateActionsArrayForItem({
         href: issuedToUnissuedHref,
-        label: item.label,
-        actionType: shouldDisplayChangeLinkOnceIssued && 'Change',
+        visuallyHiddenText: item.label,
+        actionType: shouldDisplayChangeLinkIfIssued && 'Change',
         id: item.id,
       });
     } else {
@@ -195,8 +197,8 @@ const previewItemConditions = (previewParams) => {
        */
       summaryItems = generateActionsArrayForItem({
         href: unissuedHref,
-        label: item.label,
-        actionType: shouldDisplayChangeLinkOnceIssued && 'Change',
+        visuallyHiddenText: item.label,
+        actionType: shouldDisplayChangeLinkIfIssued && 'Change',
         id: item.id,
       });
     }
@@ -209,12 +211,12 @@ const previewItemConditions = (previewParams) => {
      */
     summaryItems = generateActionsArrayForItem({
       href: unissuedHref,
-      label: item.label,
+      visuallyHiddenText: item.label,
       actionType: shouldDisplayChangeLinkIfUnissued && 'Change',
       id: item.id,
     });
   } else if (ukefDecisionAccepted && item.id === 'coverStartDate' && validStatus) {
-    summaryItems = generateActionsArrayForItem({ href: issuedHref, label: item.label, actionType: ukefDecisionAccepted && 'Change', id: item.id });
+    summaryItems = generateActionsArrayForItem({ href: issuedHref, visuallyHiddenText: item.label, actionType: ukefDecisionAccepted && 'Change', id: item.id });
   }
 
   return summaryItems;
@@ -245,7 +247,7 @@ const detailItemConditions = (params) => {
   } else if (fieldsProvidedByCompaniesHouse.includes(item.id)) {
     summaryItems = generateActionsArrayForItem({
       href,
-      label: item.label,
+      visuallyHiddenText: item.label,
       id: item.id,
     });
   } else {
@@ -254,7 +256,7 @@ const detailItemConditions = (params) => {
 
     summaryItems = generateActionsArrayForItem({
       href,
-      label: item.label,
+      visuallyHiddenText: item.label,
       actionType: linkText,
       id: item.id,
     });
@@ -280,9 +282,9 @@ const summaryItemsConditions = (summaryItemsObj) => {
   const { id, href, shouldCoverStartOnSubmission } = item;
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
   const isCoverStartOnSubmission = id === 'coverStartDate' && shouldCoverStartOnSubmission;
-  // column keys to display change if facility has been changed to issued
-  const shouldDisplayChangeLinkOnceIssued = calculateShouldDisplayChangeLinkOnceIssued(id);
-  // column key to display add if facility not yet issued
+  // should display `change` action when facility has been changed to issued
+  const shouldDisplayChangeLinkIfIssued = calculateShouldDisplayChangeLinkOnceIssued(id);
+  // should display `change` action when facility is not yet issued
   const shouldDisplayChangeLinkIfUnissued = id === 'hasBeenIssued';
   // Issued facility change link (post confirmation)
   const issuedHref = `/gef/application-details/${app._id}/${data.details._id}/confirm-cover-start-date`;
@@ -304,7 +306,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
     unissuedHref,
     issuedToUnissuedHref,
     isCoverStartOnSubmission,
-    shouldDisplayChangeLinkOnceIssued,
+    shouldDisplayChangeLinkIfIssued,
     shouldDisplayChangeLinkIfUnissued,
     item,
     value,
