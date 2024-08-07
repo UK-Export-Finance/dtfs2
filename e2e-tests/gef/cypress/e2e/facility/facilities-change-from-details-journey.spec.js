@@ -86,7 +86,7 @@ context('Changing facility details from application-details page should take you
 
       it('if using facility end date should take you to facility-end-date page from about-facility page', () => {
         cy.visit(relative(`/gef/application-details/${application.id}`));
-        applicationDetails.facilitySummaryListRowAction(0, 0).click();
+        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().click();
         aboutFacility.isUsingFacilityEndDateYes().click();
         aboutFacility.continueButton().click();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/facility-end-date`));
@@ -95,7 +95,7 @@ context('Changing facility details from application-details page should take you
       it('should take you to provided-facility page from facility-end-date page', () => {
         cy.visit(relative(`/gef/application-details/${application.id}`));
 
-        applicationDetails.facilitySummaryListRowAction(0, 4).find('.govuk-link').click();
+        applicationDetails.facilitySummaryListTable(0).facilityEndDateAction().click();
 
         facilityEndDate.facilityEndDateDay().type(todayDay);
         facilityEndDate.facilityEndDateMonth().type(todayMonth);
