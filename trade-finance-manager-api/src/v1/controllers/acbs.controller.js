@@ -182,7 +182,7 @@ const checkAzureAcbsFunction = async () => {
 
     const auditDetails = generateSystemAuditDetails();
 
-    Promise.all(
+    await Promise.all(
       taskList.map(async (task) => {
         if (!task.runtimeStatus) {
           return;
