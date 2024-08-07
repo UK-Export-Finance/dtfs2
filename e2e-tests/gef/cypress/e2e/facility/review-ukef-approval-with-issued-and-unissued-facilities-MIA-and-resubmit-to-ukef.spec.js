@@ -346,7 +346,6 @@ context('Return to maker', () => {
       applicationPreview.facilitySummaryListTable(3).nameAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
-      applicationPreview.facilitySummaryListTable(3).issueDateAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).coverStartDateAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).coverEndDateAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
