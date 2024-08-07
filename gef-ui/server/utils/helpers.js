@@ -229,6 +229,8 @@ const detailItemConditions = (params) => {
 
   let summaryItems = [];
 
+  const fieldsProvidedByCompaniesHouse = ['companyName', 'registeredAddress', 'selectedIndustry'];
+
   // if facilities have been canResubmitIssuedFacilities (when returning to maker)
   if (hasChangedFacilities) {
     summaryItems = previewItemConditions(params);
@@ -240,6 +242,12 @@ const detailItemConditions = (params) => {
     summaryItems = previewItemConditions(params);
   } else if (returnToMakerNoFacilitiesChanged(app, hasChangedFacilities)) {
     summaryItems = previewItemConditions(params);
+  } else if (fieldsProvidedByCompaniesHouse.includes(item.id)) {
+    summaryItems = generateActionsArrayForItem({
+      href,
+      label: item.label,
+      id: item.id,
+    });
   } else {
     // for all other application details page
     const linkText = isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add';
