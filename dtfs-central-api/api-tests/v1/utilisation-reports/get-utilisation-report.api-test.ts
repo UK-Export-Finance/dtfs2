@@ -1,6 +1,7 @@
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { IsoDateTimeStamp, PortalUser, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -9,24 +10,19 @@ import { mongoDbClient } from '../../../src/drivers/db-client';
 
 console.error = jest.fn();
 
-const getUrl = (id: string) => `/v1/utilisation-reports/${id}`;
+const BASE_URL = '/v1/utilisation-reports/:id';
+
+const getUrl = (id: string) => BASE_URL.replace(':id', id);
 
 type UtilisationReportResponse = GetUtilisationReportResponse & {
   dateUploaded: IsoDateTimeStamp;
 };
 
-interface CustomErrorResponse extends Response {
-  body: {
-    errors: {
-      msg: string;
-    }[];
-  };
-}
-interface CustomSuccessResponse extends Response {
+interface CustomResponse extends Response {
   body: UtilisationReportResponse;
 }
 
-describe('/v1/utilisation-reports/:id', () => {
+describe(`GET ${BASE_URL}`, () => {
   const portalUser = {
     _id: new ObjectId(),
     firstname: 'Test',
@@ -48,27 +44,21 @@ describe('/v1/utilisation-reports/:id', () => {
     await wipe(['users']);
   });
 
-  describe('GET /v1/utilisation-reports/:id', () => {
-    it('returns 400 when an invalid report ID is provided', async () => {
-      // Act
-      const response: CustomErrorResponse = await testApi.get(getUrl('invalid-id'));
+  withSqlIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
+    makeRequest: (url) => testApi.get(url),
+  });
 
-      // Assert
-      expect(response.status).toEqual(400);
-      expect(response.body.errors[0]?.msg).toEqual("Invalid 'id' path param provided");
-    });
+  it('gets a utilisation report', async () => {
+    // Arrange
+    const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withUploadedByUserId(portalUserId).build();
+    const { id } = await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedReport);
 
-    it('gets a utilisation report', async () => {
-      // Arrange
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withUploadedByUserId(portalUserId).build();
-      const { id } = await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedReport);
+    // Act
+    const response: CustomResponse = await testApi.get(getUrl(id.toString()));
 
-      // Act
-      const response: CustomSuccessResponse = await testApi.get(getUrl(id.toString()));
-
-      // Assert
-      expect(response.status).toEqual(200);
-      expect(response.body.id).toEqual(id);
-    });
+    // Assert
+    expect(response.status).toEqual(200);
+    expect(response.body.id).toEqual(id);
   });
 });

@@ -5,9 +5,9 @@ import { SqlDbHelper } from '../../sql-db-helper';
 
 console.error = jest.fn();
 
-describe('/v1/utilisation-reports/set-status', () => {
-  const setStatusUrl = '/v1/utilisation-reports/set-status';
+const BASE_URL = '/v1/utilisation-reports/set-status';
 
+describe(`PUT ${BASE_URL}`, () => {
   const reportId = 1;
   const mockReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).build();
 
@@ -32,7 +32,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(setStatusUrl);
+    const { status } = await testApi.put(requestBody).to(BASE_URL);
 
     // Assert
     expect(status).toBe(404);
@@ -51,7 +51,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(setStatusUrl);
+    const { status } = await testApi.put(requestBody).to(BASE_URL);
 
     // Assert
     expect(status).toBe(400);
@@ -70,7 +70,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(setStatusUrl);
+    const { status } = await testApi.put(requestBody).to(BASE_URL);
 
     // Assert
     expect(status).toBe(400);
@@ -89,7 +89,7 @@ describe('/v1/utilisation-reports/set-status', () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(setStatusUrl);
+    const { status } = await testApi.put(requestBody).to(BASE_URL);
 
     // Assert
     expect(status).toBe(200);
