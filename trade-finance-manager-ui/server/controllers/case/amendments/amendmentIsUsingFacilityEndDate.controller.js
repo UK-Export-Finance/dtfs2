@@ -2,6 +2,20 @@ const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@u
 const api = require('../../../api');
 const { isUsingFacilityEndDateValidation } = require('./validation/amendmentIsUsingFacilityEndDate.validate');
 
+const getNextPage = (status, changeFacilityValue, isUsingFacilityEndDate, baseUrl, fallbackUrl) => {
+  if (status !== 200) {
+    console.error('Unable to update is using facility end date');
+    return fallbackUrl;
+  }
+  if (isUsingFacilityEndDate) {
+    return `${baseUrl}/facility-end-date`;
+  }
+  if (changeFacilityValue) {
+    return `${baseUrl}/facility-value`;
+  }
+  return `${baseUrl}/check-answers`;
+};
+
 const getAmendmentIsUsingFacilityEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
@@ -42,7 +56,7 @@ const postAmendmentIsUsingFacilityEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
-  const { dealId } = amendment;
+  const { dealId, changeFacilityValue } = amendment;
   const { isUsingFacilityEndDate } = req.body;
   const isUsingFacilityEndDateValue = getBooleanFromIsUsingFacilityEndDate(isUsingFacilityEndDate);
 
@@ -60,21 +74,16 @@ const postAmendmentIsUsingFacilityEndDate = async (req, res) => {
     });
   }
 
+  const baseUrl = `/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}`;
+  const fallbackUrl = `/case/${dealId}/facility/${facilityId}#amendments`;
+
   try {
     const payload = { isUsingFacilityEndDate: isUsingFacilityEndDateValue };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
-
-    if (status === 200) {
-      if (amendment.changeFacilityValue) {
-        return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
-      }
-      return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
-    }
-    console.error('Unable to update is using facility end date');
-    return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
+    return res.redirect(getNextPage(status, changeFacilityValue, isUsingFacilityEndDateValue, baseUrl, fallbackUrl));
   } catch (error) {
     console.error('There was a problem adding if the bank is using the facility end date', error);
-    return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}#amendments`);
+    return res.redirect(fallbackUrl);
   }
 };
 

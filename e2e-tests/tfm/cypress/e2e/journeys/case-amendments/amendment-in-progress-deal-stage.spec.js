@@ -8,7 +8,7 @@ import pages from '../../pages';
 import partials from '../../partials';
 import { DEAL_STAGE_TFM } from '../../../fixtures/constants';
 
-const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED');
+const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 
 context('Amendments deal stage - amendment in progress and in progress amendment bar', () => {
   let dealId;
@@ -131,9 +131,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     amendmentsPage.continueAmendment().click();
 
     if (tfmFacilityEndDateEnabled) {
-      cy.url().should('contain', 'is-using-facility-end-date');
-      amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
     }
 
     cy.url().should('contain', 'facility-value');
