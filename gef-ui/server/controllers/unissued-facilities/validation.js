@@ -73,7 +73,6 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
     });
   }
 
-  // TODO: could look at using helper once 7162 is merged into main
   if (issueDateIsBlank) {
     if (!saveAndReturn) {
       aboutFacilityErrors.push({

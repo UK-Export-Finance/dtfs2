@@ -131,31 +131,33 @@ const returnToMakerNoFacilitiesChanged = (app, hasChangedFacilities) => {
 /**
  * @param {object} params
  * @param {string} params.href - the URL to navigate to
- * @param {string} params.label - the visually hidden text
+ * @param {string} params.visuallyHiddenText - the visually hidden label to make it clear to a screen reader what the link is changing
  * @param {'Change' | 'Add' | undefined} params.actionType - the text to display, component has class display-none if falsy
  * @param {string} params.id - the row id, used in the data-cy
  * @returns an array containing the action button to render
  */
-const generateActionsArrayForItem = ({ href, label, actionType, id }) => {
-  return actionType
-    ? [
-        {
-          href,
-          text: actionType,
-          visuallyHiddenText: label,
-          attributes: {
-            'data-cy': `${id}-action`,
-          },
-        },
-      ]
-    : [
-        {
-          attributes: {
-            'data-cy': `${id}-action`,
-          },
-          classes: 'govuk-!-display-none',
-        },
-      ];
+const generateActionsArrayForItem = ({ href, visuallyHiddenText, actionType, id }) => {
+  const attributes = {
+    'data-cy': `${id}-action`,
+  };
+
+  if (!actionType) {
+    return [
+      {
+        attributes,
+        classes: 'govuk-!-display-none',
+      },
+    ];
+  }
+
+  return [
+    {
+      href,
+      text: actionType,
+      visuallyHiddenText,
+      attributes,
+    },
+  ];
 };
 
 /*
@@ -183,7 +185,7 @@ const previewItemConditions = (previewParams) => {
     if (item.id === 'hasBeenIssued') {
       summaryItems = generateActionsArrayForItem({
         href: issuedToUnissuedHref,
-        label: item.label,
+        visuallyHiddenText: item.label,
         actionType: shouldDisplayChangeLinkOnceIssued && 'Change',
         id: item.id,
       });
@@ -195,7 +197,7 @@ const previewItemConditions = (previewParams) => {
        */
       summaryItems = generateActionsArrayForItem({
         href: unissuedHref,
-        label: item.label,
+        visuallyHiddenText: item.label,
         actionType: shouldDisplayChangeLinkOnceIssued && 'Change',
         id: item.id,
       });
@@ -209,7 +211,7 @@ const previewItemConditions = (previewParams) => {
      */
     summaryItems = generateActionsArrayForItem({
       href: unissuedHref,
-      label: item.label,
+      visuallyHiddenText: item.label,
       actionType: shouldDisplayChangeLinkIfUnissued && 'Change',
       id: item.id,
     });
@@ -245,7 +247,7 @@ const detailItemConditions = (params) => {
   } else if (fieldsProvidedByCompaniesHouse.includes(item.id)) {
     summaryItems = generateActionsArrayForItem({
       href,
-      label: item.label,
+      visuallyHiddenText: item.label,
       id: item.id,
     });
   } else {
@@ -254,7 +256,7 @@ const detailItemConditions = (params) => {
 
     summaryItems = generateActionsArrayForItem({
       href,
-      label: item.label,
+      visuallyHiddenText: item.label,
       actionType: linkText,
       id: item.id,
     });

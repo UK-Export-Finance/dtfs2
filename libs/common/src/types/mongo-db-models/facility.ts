@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { UnixTimestamp, UnixTimestampString } from '../date';
+import { IsoDateTimeStamp, UnixTimestamp, UnixTimestampString } from '../date';
 import { Currency } from '../currency';
 import { FacilityType } from '../facility-type';
 
@@ -42,4 +42,7 @@ export type Facility = {
   hasBeenIssuedAndAcknowledged: boolean | null;
   canResubmitIssuedFacilities: boolean | null;
   unissuedToIssuedByMaker: object;
+  isUsingFacilityEndDate: boolean | null;
+  bankReviewDate: IsoDateTimeStamp | Date | null;
+  facilityEndDate: IsoDateTimeStamp | Date | null;
 };
