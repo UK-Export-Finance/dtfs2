@@ -301,7 +301,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
   // personalised href for facility to change to issued (once submitted to UKEF)
   let unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change`;
   if (id === 'facilityEndDate') {
-    unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/facility-end-date`;
+    unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/facility-end-date?change=1`;
   }
   // personalised href for facility to change to unissued from issued (once submitted to UKEF and changed to issued)
   const issuedToUnissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change-to-unissued`;

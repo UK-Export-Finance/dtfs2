@@ -48,7 +48,7 @@ const renderChangeFacilityPartial = async ({ params, query, change, userToken })
     coverEndDateDay: coverEndDate ? format(coverEndDate, 'd') : null,
     coverEndDateMonth: coverEndDate ? format(coverEndDate, 'M') : null,
     coverEndDateYear: coverEndDate ? format(coverEndDate, 'yyyy') : null,
-    isUsingFacilityEndDate: change && !overwrite ? details.isUsingFacilityEndDate.toString() : undefined,
+    isUsingFacilityEndDate: change && !overwrite ? details.isUsingFacilityEndDate?.toString() : undefined,
     facilityTypeString,
     dealId,
     facilityId,
@@ -150,6 +150,8 @@ const postChangeUnissuedFacility = async (req, res) => {
     const { details } = await api.getFacility({ facilityId, userToken });
     const deal = await api.getApplication({ dealId, userToken });
 
+    const isFacilityEndDateEnabled = isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version));
+
     const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, errorsObject, isUsingFacilityEndDate } = await facilityValidation({
       body,
       query,
@@ -179,7 +181,7 @@ const postChangeUnissuedFacility = async (req, res) => {
         dealId: errorsObject.dealId,
         facilityId: errorsObject.facilityId,
         status: errorsObject.status,
-        isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
+        isFacilityEndDateEnabled,
         isUsingFacilityEndDate: body.isUsingFacilityEndDate,
       });
     }
@@ -194,23 +196,28 @@ const postChangeUnissuedFacility = async (req, res) => {
       _id: user._id,
     };
 
+    const applicationUpdatePayload = {
+      name: body.facilityName,
+      shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
+      monthsOfCover: details.monthsOfCover || null,
+      issueDate: issueDate ? format(issueDate, CONSTANTS.DATE_FORMAT.COVER) : null,
+      coverStartDate: coverStartDate ? format(coverStartDate, CONSTANTS.DATE_FORMAT.COVER) : null,
+      coverEndDate: coverEndDate ? format(coverEndDate, CONSTANTS.DATE_FORMAT.COVER) : null,
+      hasBeenIssued: true,
+      canResubmitIssuedFacilities: true,
+      coverDateConfirmed: true,
+      unissuedToIssuedByMaker: userObj,
+    };
+
+    if (isFacilityEndDateEnabled) {
+      applicationUpdatePayload.isUsingFacilityEndDate = isUsingFacilityEndDate;
+      applicationUpdatePayload.facilityEndDate = null;
+      applicationUpdatePayload.bankReviewDate = null;
+    }
+
     await api.updateFacility({
       facilityId,
-      payload: {
-        name: body.facilityName,
-        shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
-        monthsOfCover: details.monthsOfCover || null,
-        issueDate: issueDate ? format(issueDate, CONSTANTS.DATE_FORMAT.COVER) : null,
-        coverStartDate: coverStartDate ? format(coverStartDate, CONSTANTS.DATE_FORMAT.COVER) : null,
-        coverEndDate: coverEndDate ? format(coverEndDate, CONSTANTS.DATE_FORMAT.COVER) : null,
-        hasBeenIssued: true,
-        canResubmitIssuedFacilities: true,
-        coverDateConfirmed: true,
-        unissuedToIssuedByMaker: userObj,
-        isUsingFacilityEndDate,
-        facilityEndDate: null,
-        bankReviewDate: null,
-      },
+      payload: applicationUpdatePayload,
       userToken,
     });
     req.success = {
