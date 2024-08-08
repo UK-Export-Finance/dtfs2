@@ -5,7 +5,7 @@ const CONSTANTS = require('../../../constants');
  * @param {object} facility Facility object
  * @param {string} dealType Deal type i.e. GEF, BSS, EWCS
  * @param {Integer} premiumScheduleIndex Premium schedule index
- * @returns {Integer} Fee record amount
+ * @returns {number} Fee record amount
  */
 
 const getFeeAmount = (facility, dealType, premiumScheduleIndex) => {
