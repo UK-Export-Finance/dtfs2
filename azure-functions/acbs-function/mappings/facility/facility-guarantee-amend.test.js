@@ -1,4 +1,4 @@
-import { facilityGuaranteeAmend } from './facility-guarantee-amend';
+const facilityGuaranteeAmend = require('./facility-guarantee-amend');
 
 describe('facilityGuaranteeAmend', () => {
   const aValidAmount = 123.456;
