@@ -1,3 +1,5 @@
+const dateConstants = require('../../../../../e2e-fixtures/dateConstants');
+
 const amendmentsPage = {
   amendmentInProgressBar: () => cy.get('[data-cy="amendment--in-progress-bar"]'),
   amendmentInProgressBarLink: () => cy.get('[data-cy="amendment--in-progress-bar-link"]'),
@@ -32,6 +34,21 @@ const amendmentsPage = {
   isUsingFacilityEndDateYes: () => cy.get('[data-cy="amendment--is-using-facility-end-date-yes"]'),
   isUsingFacilityEndDateNo: () => cy.get('[data-cy="amendment--is-using-facility-end-date-no"]'),
 
+  amendmentFacilityEndDateDayInput: () => cy.get('[data-cy="amendment--facility-end-date-day"]'),
+  amendmentFacilityEndDateMonthInput: () => cy.get('[data-cy="amendment--facility-end-date-month"]'),
+  amendmentFacilityEndDateYearInput: () => cy.get('[data-cy="amendment--facility-end-date-year"]'),
+
+  navigateThroughFacilityEndDateAmendmentPages: () => {
+    cy.url().should('contain', 'is-using-facility-end-date');
+    amendmentsPage.isUsingFacilityEndDateYes().click();
+    amendmentsPage.continueAmendment().click();
+    cy.url().should('contain', 'facility-end-date');
+    amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(dateConstants.todayDay);
+    amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.todayYear);
+    amendmentsPage.continueAmendment().click();
+  },
+
   addAmendmentButton: () => cy.get('[data-cy="amendment--add-amendment-button"]'),
   continueAmendmentButton: () => cy.get('[data-cy="amendment--continue-amendment-button"]'),
   continueAmendment: () => cy.get('[data-cy="amendment--continue-button"]'),
@@ -62,6 +79,7 @@ const amendmentsPage = {
   amendmentAnswerEffectiveDate: () => cy.get('[data-cy="amendment--effective-date-response"]'),
   amendmentAnswerCoverEndDate: () => cy.get('[data-cy="amendment--cover-end-date-response"]'),
   amendmentAnswerIsUsingFacilityEndDate: () => cy.get('[data-cy="amendment--is-using-facility-end-date-response"]'),
+  amendmentAnswerFacilityEndDate: () => cy.get('[data-cy="amendment--facility-end-date-response"]'),
   amendmentAnswerFacilityValue: () => cy.get('[data-cy="amendment--facility-value-response"]'),
 
   amendmentDetails: {
