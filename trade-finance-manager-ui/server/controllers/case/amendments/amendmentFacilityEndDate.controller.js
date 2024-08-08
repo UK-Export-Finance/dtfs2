@@ -11,6 +11,20 @@ const getNextPage = (status, changeFacilityValue, baseUrl, fallbackUrl) => {
   return changeFacilityValue ? `${baseUrl}/facility-value` : `${baseUrl}/check-answers`;
 };
 
+const getLatestSubmittedFacilityEndDate = async (facility, facilityId, userToken) => {
+  const { data: latestAmendmentFacilityEndDateResponse } = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId, userToken);
+
+  if (latestAmendmentFacilityEndDateResponse?.facilityEndDate) {
+    return format(parseISO(latestAmendmentFacilityEndDateResponse.facilityEndDate), 'dd MMMM yyyy');
+  }
+
+  if (facility?.facilitySnapshot?.dates?.facilityEndDate) {
+    return format(parseISO(facility.facilitySnapshot.dates.facilityEndDate), 'dd MMMM yyyy');
+  }
+
+  return undefined;
+};
+
 const getAmendmentFacilityEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
@@ -37,18 +51,6 @@ const getAmendmentFacilityEndDate = async (req, res) => {
 
   const facility = await api.getFacility(facilityId, userToken);
 
-  let currentFacilityEndDate;
-
-  if (facility?.facilitySnapshot?.dates?.facilityEndDate) {
-    currentFacilityEndDate = format(parseISO(facility.facilitySnapshot.dates.facilityEndDate), 'dd MMMM yyyy');
-  }
-
-  const { data: latestAmendmentFacilityEndDate } = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId, userToken);
-
-  if (latestAmendmentFacilityEndDate?.facilityEndDate) {
-    currentFacilityEndDate = format(parseISO(latestAmendmentFacilityEndDate.facilityEndDate), 'dd MMMM yyyy');
-  }
-
   return res.render('case/amendments/amendment-facility-end-date.njk', {
     dealId,
     facilityId,
@@ -56,7 +58,7 @@ const getAmendmentFacilityEndDate = async (req, res) => {
     facilityEndDateDay,
     facilityEndDateMonth,
     facilityEndDateYear,
-    currentFacilityEndDate,
+    currentFacilityEndDate: await getLatestSubmittedFacilityEndDate(facility, facilityId, userToken),
     user: req.session.user,
   });
 };
@@ -68,18 +70,6 @@ const postAmendmentFacilityEndDate = async (req, res) => {
   const { dealId, changeFacilityValue } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
   const { 'facility-end-date-day': day, 'facility-end-date-month': month, 'facility-end-date-year': year } = req.body;
-
-  let currentFacilityEndDate;
-
-  if (facility?.facilitySnapshot?.dates?.facilityEndDate) {
-    currentFacilityEndDate = format(parseISO(facility.facilitySnapshot.dates.facilityEndDate), 'dd MMMM yyyy');
-  }
-
-  const { data: latestAmendmentFacilityEndDate } = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId, userToken);
-
-  if (latestAmendmentFacilityEndDate?.facilityEndDate) {
-    currentFacilityEndDate = format(parseISO(latestAmendmentFacilityEndDate.facilityEndDate), 'dd MMMM yyyy');
-  }
 
   const { error, facilityEndDate } = facilityEndDateValidation({ day, month, year }, facility.facilitySnapshot.dates.coverStartDate);
 
@@ -93,7 +83,7 @@ const postAmendmentFacilityEndDate = async (req, res) => {
       facilityEndDateMonth: month,
       facilityEndDateYear: year,
       error,
-      currentFacilityEndDate,
+      currentFacilityEndDate: await getLatestSubmittedFacilityEndDate(facility, facilityId, userToken),
       user: req.session.user,
     });
   }
