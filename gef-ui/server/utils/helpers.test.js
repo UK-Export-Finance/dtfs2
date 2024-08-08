@@ -1543,6 +1543,90 @@ describe('mapSummaryList()', () => {
       ]);
     });
 
+    it('Should not show change for isUsingFacilityEndDate when unissued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Has a facility end date',
+          id: 'isUsingFacilityEndDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const facility = { ...MOCK_UNISSUED_FACILITY, details: { ...MOCK_UNISSUED_FACILITY.details, isUsingFacilityEndDate: true } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const actionItems = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `isUsingFacilityEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should not show change for facilityEndDate when unissued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Facility end date',
+          id: 'facilityEndDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const facility = { ...MOCK_UNISSUED_FACILITY, details: { ...MOCK_UNISSUED_FACILITY.details, facilityEndDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const actionItems = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `facilityEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should not show change for bankReviewDate when unissued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Bank review date',
+          id: 'bankReviewDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const facility = { ...MOCK_UNISSUED_FACILITY, details: { ...MOCK_UNISSUED_FACILITY.details, bankReviewDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const actionItems = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `bankReviewDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
     it('Should not show change for stage when already issued facility', () => {
       // 'key' for value row
       const MockedDisplayItemsStage = () => [
@@ -1642,6 +1726,90 @@ describe('mapSummaryList()', () => {
         {
           attributes: {
             'data-cy': 'coverEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should not show change for isUsingFacilityEndDate when already issued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Has a facility end date',
+          id: 'isUsingFacilityEndDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const facility = { ...MOCK_ISSUED_FACILITY_UNCHANGED, details: { ...MOCK_ISSUED_FACILITY_UNCHANGED.details, isUsingFacilityEndDate: true } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'isUsingFacilityEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should not show change for facilityEndDate when already issued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Facility end date',
+          id: 'facilityEndDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const facility = { ...MOCK_ISSUED_FACILITY_UNCHANGED, details: { ...MOCK_ISSUED_FACILITY_UNCHANGED.details, facilityEndDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'facilityEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should not show change for bankReviewDate when already issued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Bank review date',
+          id: 'bankReviewDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const facility = { ...MOCK_ISSUED_FACILITY_UNCHANGED, details: { ...MOCK_ISSUED_FACILITY_UNCHANGED.details, bankReviewDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'bankReviewDate-action',
           },
           classes: 'govuk-!-display-none',
         },
@@ -1813,6 +1981,72 @@ describe('summaryItemsConditions()', () => {
       expect(href).toContain('/change');
     });
 
+    it('Should be able to change facilityEndDate', () => {
+      const item = {
+        label: 'Cover end date',
+        id: 'facilityEndDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text, href } = summaryItemsConditions(summaryItemsObj)[0];
+
+      expect(text).toEqual('Change');
+      expect(href).toContain('/unissued-facilities/');
+      expect(href).toContain('/change');
+    });
+
+    it('Should be able to change bankReviewDate', () => {
+      const item = {
+        label: 'Cover end date',
+        id: 'bankReviewDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text, href } = summaryItemsConditions(summaryItemsObj)[0];
+
+      expect(text).toEqual('Change');
+      expect(href).toContain('/unissued-facilities/');
+      expect(href).toContain('/change');
+    });
+
+    it('Should be able to change isUsingFacilityEndDate', () => {
+      const item = {
+        label: 'Cover end date',
+        id: 'isUsingFacilityEndDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text, href } = summaryItemsConditions(summaryItemsObj)[0];
+
+      expect(text).toEqual('Change');
+      expect(href).toContain('/unissued-facilities/');
+      expect(href).toContain('/change');
+    });
+
     it('Should be able to change issued', () => {
       const item = {
         label: 'Stage',
@@ -1929,6 +2163,84 @@ describe('summaryItemsConditions()', () => {
         {
           attributes: {
             'data-cy': `coverEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should be able to change isUsingFacilityEndDate', () => {
+      const item = {
+        label: 'Has a facility end date',
+        id: 'isUsingFacilityEndDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_UNISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[0],
+      };
+
+      const result = summaryItemsConditions(summaryItemsObj);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `isUsingFacilityEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should be able to change facilityEndDate', () => {
+      const item = {
+        label: 'Facility end date',
+        id: 'facilityEndDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_UNISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[0],
+      };
+
+      const result = summaryItemsConditions(summaryItemsObj);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `facilityEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should be able to change bankReviewDate', () => {
+      const item = {
+        label: 'Bank review date',
+        id: 'bankReviewDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_UNISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[0],
+      };
+
+      const result = summaryItemsConditions(summaryItemsObj);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `bankReviewDate-action`,
           },
           classes: 'govuk-!-display-none',
         },

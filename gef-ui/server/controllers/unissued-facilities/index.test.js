@@ -234,6 +234,8 @@ describe('postChangeUnissuedFacility()', () => {
   };
 
   describe.each([0, 1])('with GEF_DEAL_VERSION = %s', (dealVersion) => {
+    const isFacilityEndDateEnabled = dealVersion >= 1;
+
     beforeEach(() => {
       mockApplicationResponse = { ...MOCKS.MockApplicationResponseSubmitted(), version: dealVersion };
 
@@ -258,7 +260,7 @@ describe('postChangeUnissuedFacility()', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -283,7 +285,7 @@ describe('postChangeUnissuedFacility()', () => {
         userToken,
       };
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         expected.payload.isUsingFacilityEndDate = true;
       }
 
@@ -308,7 +310,7 @@ describe('postChangeUnissuedFacility()', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -336,7 +338,7 @@ describe('postChangeUnissuedFacility()', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -363,7 +365,7 @@ describe('postChangeUnissuedFacility()', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -399,7 +401,7 @@ describe('postChangeUnissuedFacility()', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -444,7 +446,7 @@ describe('postChangeUnissuedFacility()', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -469,7 +471,7 @@ describe('postChangeUnissuedFacility()', () => {
         userToken,
       };
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         expected.payload.isUsingFacilityEndDate = true;
       }
 
@@ -480,7 +482,7 @@ describe('postChangeUnissuedFacility()', () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.facilityId = 'xyz';
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -658,6 +660,8 @@ describe('postChangeUnissuedFacilityPreview()', () => {
   };
 
   describe.each([0, 1])('with GEF_DEAL_VERSION = %s', (dealVersion) => {
+    const isFacilityEndDateEnabled = dealVersion >= 1;
+
     beforeEach(() => {
       const mockApplicationResponse = { ...MOCKS.MockApplicationResponseSubmitted(), version: dealVersion };
 
@@ -682,7 +686,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -707,7 +711,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
         userToken,
       };
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         expected.payload.isUsingFacilityEndDate = true;
       }
 
@@ -731,7 +735,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
       mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -753,7 +757,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
     it('should not update facility if no name or dates', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -811,7 +815,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
       mockRequest.body['cover-end-date-month'] = format(threeYearFromNow, 'M');
       mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         mockRequest.body.isUsingFacilityEndDate = 'true';
       }
 
@@ -840,7 +844,7 @@ describe('postChangeUnissuedFacilityPreview()', () => {
         userToken,
       };
 
-      if (dealVersion >= 1) {
+      if (isFacilityEndDateEnabled) {
         expected.payload.isUsingFacilityEndDate = true;
       }
 
