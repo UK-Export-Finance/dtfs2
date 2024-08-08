@@ -1,48 +1,12 @@
 import Big from 'big.js';
 import { orderBy } from 'lodash';
-import { FeeRecordEntity, FeeRecordStatus, KeyingSheetAdjustment, PaymentEntity } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentEntityGroup } from '../../../../../helpers';
-import { KeyingSheet, KeyingSheetRow } from '../../../../../types/fee-records';
-import { mapFeeRecordEntityToKeyingSheetRowStatus, mapFeeRecordEntityToReportedPayments } from '../../../../../mapping/fee-record-mapper';
-
-const getKeyingSheetAdjustmentForAmount = (amount: number | null): KeyingSheetAdjustment | null => {
-  if (amount === null) {
-    return null;
-  }
-
-  const amountAbsoluteValue = new Big(amount).abs().toNumber();
-  if (amountAbsoluteValue === 0) {
-    return {
-      amount: 0,
-      change: 'NONE',
-    };
-  }
-
-  return {
-    amount: amountAbsoluteValue,
-    change: amount > 0 ? 'INCREASE' : 'DECREASE',
-  };
-};
-
-const mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments = (feeRecordEntity: FeeRecordEntity): Omit<KeyingSheetRow, 'feePayments'> => ({
-  feeRecordId: feeRecordEntity.id,
-  status: mapFeeRecordEntityToKeyingSheetRowStatus(feeRecordEntity),
-  facilityId: feeRecordEntity.facilityId,
-  exporter: feeRecordEntity.exporter,
-  baseCurrency: feeRecordEntity.baseCurrency,
-  fixedFeeAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.fixedFeeAdjustment),
-  principalBalanceAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.principalBalanceAdjustment),
-});
-
-const mapPaymentEntityToFeePayment = ({ currency, amount, dateReceived }: PaymentEntity) => ({ currency, amount, dateReceived });
+import { KeyingSheet, KeyingSheetFeePayment, KeyingSheetRow } from '../../../../../types/fee-records';
+import { mapFeeRecordEntityToReportedPayments } from '../../../../../mapping/fee-record-mapper';
+import { mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments, mapPaymentEntityToKeyingSheetFeePayment } from '../../../../../mapping/keying-sheet-mapping';
 
 const STATUSES_OF_FEE_RECORDS_TO_DISPLAY_ON_KEYING_SHEET: FeeRecordStatus[] = ['READY_TO_KEY', 'RECONCILED'];
-
-const getZeroAmountKeyingSheetFeePayment = ({ paymentCurrency }: FeeRecordEntity) => ({
-  currency: paymentCurrency,
-  amount: 0,
-  dateReceived: null,
-});
 
 /**
  * Creates keying sheet rows for fee record payment groups
@@ -56,46 +20,52 @@ const getZeroAmountKeyingSheetFeePayment = ({ paymentCurrency }: FeeRecordEntity
  */
 const getKeyingSheetRowsWithPaymentsAcrossFeeRecords = ({ feeRecords, payments }: FeeRecordPaymentEntityGroup): KeyingSheetRow[] => {
   const feeRecordsSortedDescending = orderBy(feeRecords, [(feeRecord) => feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency()], ['desc']);
-  let paymentsSortedAscending = orderBy(payments, ['amount'], ['asc']);
+  let allFeePaymentsSortedAscending = orderBy(payments, ['amount'], ['asc']).map(mapPaymentEntityToKeyingSheetFeePayment);
 
-  return feeRecordsSortedDescending.reduce((keyingSheet, feeRecord) => {
-    const createKeyingSheetRow = (keyingSheetRowPayments: PaymentEntity[]): KeyingSheetRow => ({
-      ...mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecord),
-      feePayments: keyingSheetRowPayments.map(mapPaymentEntityToFeePayment),
-    });
-
+  return feeRecordsSortedDescending.map((feeRecord) => {
+    const feePaymentsForRow: KeyingSheetFeePayment[] = [];
     let remainingFeeRecordAmount = new Big(feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency());
-
-    const feePaymentsPayments: PaymentEntity[] = [];
     while (remainingFeeRecordAmount.gt(0)) {
-      const largestPayment = paymentsSortedAscending.pop()!;
-      feePaymentsPayments.push(largestPayment);
-      remainingFeeRecordAmount = remainingFeeRecordAmount.sub(largestPayment.amount);
+      const largestFeePayment = allFeePaymentsSortedAscending.pop()!;
+      feePaymentsForRow.push(largestFeePayment);
+      remainingFeeRecordAmount = remainingFeeRecordAmount.sub(largestFeePayment.amount);
     }
 
     if (remainingFeeRecordAmount.eq(0)) {
-      return [...keyingSheet, createKeyingSheetRow(feePaymentsPayments)];
+      return {
+        ...mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecord),
+        feePayments: feePaymentsForRow,
+      };
     }
 
-    // remainingFeeRecordAmount != 0 implies that the amount paid from the last payment is not the full payment amount
-    const lastPaymentAdded = feePaymentsPayments.at(-1)!;
-    const lastPaymentAddedAmount = lastPaymentAdded.amount;
-    lastPaymentAdded.amount = new Big(lastPaymentAddedAmount)
-      .add(remainingFeeRecordAmount) // remainingFeeRecordAmount is negative
-      .toNumber();
-    const newKeyingSheetRow = createKeyingSheetRow(feePaymentsPayments);
+    const lastFeePayment = feePaymentsForRow.at(-1)!;
+    const leftoverFeePaymentAmount = remainingFeeRecordAmount.mul(-1).toNumber();
+    const lastFeePaymentAmountUsed = new Big(lastFeePayment.amount).add(remainingFeeRecordAmount).toNumber();
 
-    // Add remaining amount of the last added payment to the sorted list of payments
-    lastPaymentAdded.amount = remainingFeeRecordAmount.mul(-1).toNumber();
-    paymentsSortedAscending = orderBy([...paymentsSortedAscending, lastPaymentAdded], ['amount'], ['asc']);
+    lastFeePayment.amount = lastFeePaymentAmountUsed;
 
-    return [...keyingSheet, newKeyingSheetRow];
-  }, [] as KeyingSheetRow[]);
+    const leftoverFeePayment: KeyingSheetFeePayment = {
+      ...lastFeePayment,
+      amount: leftoverFeePaymentAmount,
+    };
+    allFeePaymentsSortedAscending = orderBy([...allFeePaymentsSortedAscending, leftoverFeePayment], ['amount'], ['asc']);
+
+    return {
+      ...mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecord),
+      feePayments: feePaymentsForRow,
+    };
+  });
 };
+
+const getZeroAmountKeyingSheetFeePayment = ({ paymentCurrency }: FeeRecordEntity): KeyingSheetFeePayment => ({
+  currency: paymentCurrency,
+  amount: 0,
+  dateReceived: null,
+});
 
 const mapFeeRecordPaymentEntityGroupToKeyingSheetRows = ({ feeRecords, payments }: FeeRecordPaymentEntityGroup): KeyingSheetRow[] => {
   if (feeRecords.length === 1) {
-    const feePayments = payments.length > 0 ? payments.map(mapPaymentEntityToFeePayment) : [getZeroAmountKeyingSheetFeePayment(feeRecords[0])];
+    const feePayments = payments.length > 0 ? payments.map(mapPaymentEntityToKeyingSheetFeePayment) : [getZeroAmountKeyingSheetFeePayment(feeRecords[0])];
     return [{ ...mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecords[0]), feePayments }];
   }
 
