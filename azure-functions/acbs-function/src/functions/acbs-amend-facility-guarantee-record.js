@@ -32,14 +32,18 @@ df.app.orchestration('acbs-amend-facility-guarantee-record', function* amendFAci
 
   try {
     if (!payload) {
-      throw new Error('Invalid payload provided');
+      throw new Error('Facility Guarantee Record amendment SOF - Invalid payload provided');
     }
+
     const { facilityId, amendments } = payload;
     const { amendment } = amendments;
 
+    // 2.1. Facility Covenant Amend mapping
+    const facilityGuaranteeAmendMapped = mappings.facility.facilityGuaranteeAmend(amendment);
+
     const facilityGuaranteeRecord = yield context.df.callActivityWithRetry('update-facility-guarantee', retryOptions, {
       facilityId,
-      acbsFacilityLoanInput: mappings.facility.facilityGuaranteeAmend(amendment),
+      acbsFacilityGuaranteeInput: facilityGuaranteeAmendMapped,
     });
     return facilityGuaranteeRecord;
   } catch (error) {
