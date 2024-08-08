@@ -96,30 +96,7 @@ describe('amendmentIsUsingFacilityEndDate routes', () => {
       expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-end-date`);
     });
 
-    it('should redirect to the update facility value page when false is selected, the facility value also needs updating and there are no errors', async () => {
-      // TODO DTFS2-7222: This will instead redirect to the bank review page
-      api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE });
-      api.updateAmendment.mockResolvedValueOnce({ status: 200 });
-
-      const req = {
-        params: {
-          _id: dealId,
-          amendmentId,
-          facilityId,
-        },
-        body: {
-          isUsingFacilityEndDate: 'No',
-        },
-        session,
-      };
-
-      await postAmendmentIsUsingFacilityEndDate(req, res);
-
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
-    });
-
-    it('should redirect to the check answers page when false is selected, only the cover date is to be updated and there are no errors', async () => {
-      // TODO DTFS2-7222: This will instead redirect to the bank review page
+    it('should redirect to the bank review date page when false is selected and there are no errors', async () => {
       api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
       api.updateAmendment.mockResolvedValueOnce({ status: 200 });
 
@@ -137,7 +114,7 @@ describe('amendmentIsUsingFacilityEndDate routes', () => {
 
       await postAmendmentIsUsingFacilityEndDate(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/bank-review-date`);
     });
 
     it("should redirect to the amendments summary page if there's an error updating the amendment", async () => {

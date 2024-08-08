@@ -64,6 +64,22 @@ const mapAmendmentToLatestCompletedFacilityEndDate = (
   };
 };
 
+const mapAmendmentToLatestCompletedBankReviewDate = (
+  amendment: TfmFacilityAmendment,
+): {
+  amendmentId: string;
+  bankReviewDate: string;
+} => {
+  const { amendmentId, bankReviewDate } = amendment;
+  if (!bankReviewDate) {
+    throw new Error('Found amendment does not have a defined bankReviewDate');
+  }
+  return {
+    amendmentId: amendmentId.toString(),
+    bankReviewDate,
+  };
+};
+
 export const getAmendmentsByFacilityId = async (req: Request, res: Response) => {
   const { facilityId, amendmentIdOrStatus, type } = req.params;
 
@@ -84,6 +100,9 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
         } else if (type === AMENDMENT_QUERIES.LATEST_FACILITY_END_DATE) {
           const latestAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
           amendment = latestAmendment ? mapAmendmentToLatestCompletedFacilityEndDate(latestAmendment) : {};
+        } else if (type === AMENDMENT_QUERIES.LATEST_BANK_REVIEW_DATE) {
+          const latestAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
+          amendment = latestAmendment ? mapAmendmentToLatestCompletedBankReviewDate(latestAmendment) : {};
         } else {
           amendment = await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndStatus(facilityId, AMENDMENT_STATUS.COMPLETED);
         }

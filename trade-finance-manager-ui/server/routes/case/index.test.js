@@ -16,7 +16,7 @@ describe('routes - case', () => {
     require('./index'); // eslint-disable-line global-require
 
     // GET routes
-    expect(get).toHaveBeenCalledTimes(46);
+    expect(get).toHaveBeenCalledTimes(47);
 
     expect(get).toHaveBeenCalledWith('/:_id/deal', caseController.getCaseDeal);
 
@@ -89,6 +89,7 @@ describe('routes - case', () => {
       amendmentsController.getAmendmentIsUsingFacilityEndDate,
     );
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date', amendmentsController.getAmendmentFacilityEndDate);
+    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date', amendmentsController.getAmendmentBankReviewDate);
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.getAmendFacilityValue);
 
     expect(get).toHaveBeenCalledWith(
@@ -119,7 +120,7 @@ describe('routes - case', () => {
     expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.getAmendmentTask);
 
     // POST routes
-    expect(post).toHaveBeenCalledTimes(42);
+    expect(post).toHaveBeenCalledTimes(43);
 
     expect(post).toHaveBeenCalledWith('/:_id/tasks', caseController.filterCaseTasks);
 
@@ -197,6 +198,7 @@ describe('routes - case', () => {
       amendmentsController.postAmendmentIsUsingFacilityEndDate,
     );
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date', amendmentsController.postAmendmentFacilityEndDate);
+    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date', amendmentsController.postAmendmentBankReviewDate);
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.postAmendFacilityValue);
 
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.postAmendmentBankDecisionChoice);

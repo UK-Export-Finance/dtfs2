@@ -19,7 +19,9 @@ const getAmendmentAnswers = async (req, res) => {
   const requestDate = format(fromUnixTime(amendment.requestDate), 'dd MMM yyyy');
   const coverEndDate = amendment?.coverEndDate ? format(fromUnixTime(amendment.coverEndDate), 'dd MMM yyyy') : '';
   const isUsingFacilityEndDate = amendment?.isUsingFacilityEndDate;
-  const facilityEndDate = amendment?.facilityEndDate ? format(new Date(amendment.facilityEndDate), 'dd MMM yyyy') : '';
+  const facilityEndDate = amendment?.facilityEndDate && amendment?.isUsingFacilityEndDate ? format(new Date(amendment.facilityEndDate), 'dd MMM yyyy') : '';
+  const bankReviewDate =
+    amendment?.bankReviewDate && amendment?.isUsingFacilityEndDate === false ? format(new Date(amendment.bankReviewDate), 'dd MMM yyyy') : '';
   const effectiveDate = amendment?.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), 'dd MMM yyyy') : '';
   const value = amendment.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : '';
 
@@ -36,6 +38,7 @@ const getAmendmentAnswers = async (req, res) => {
     changeCoverEndDate,
     isUsingFacilityEndDate,
     facilityEndDate,
+    bankReviewDate,
     effectiveDate,
     isTfmFacilityEndDateFeatureFlagEnabled: isTfmFacilityEndDateFeatureFlagEnabled(),
     user: req.session.user,
@@ -65,6 +68,11 @@ const postAmendmentAnswers = async (req, res) => {
       payload.isUsingFacilityEndDate = amendment.isUsingFacilityEndDate;
       if (amendment.isUsingFacilityEndDate) {
         payload.facilityEndDate = amendment.facilityEndDate;
+        payload.bankReviewDate = null;
+      }
+      if (amendment.isUsingFacilityEndDate === false) {
+        payload.bankReviewDate = amendment.bankReviewDate;
+        payload.facilityEndDate = null;
       }
     }
 
@@ -90,6 +98,7 @@ const postAmendmentAnswers = async (req, res) => {
       payload.currentCoverEndDate = null;
       payload.isUsingFacilityEndDate = null;
       payload.facilityEndDate = null;
+      payload.bankReviewDate = null;
     }
 
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
