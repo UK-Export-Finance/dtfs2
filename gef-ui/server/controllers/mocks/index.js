@@ -350,28 +350,6 @@ const MockFacilityResponseSpecialIssue = () => {
   return res;
 };
 
-const MockExpectedFacilityRenderChange = (change) => ({
-  facilityType: CONSTANTS.FACILITY_TYPE.CASH,
-  facilityName: 'UKEF123',
-  hasBeenIssued: true,
-  monthsOfCover: '30',
-  shouldCoverStartOnSubmission: 'true',
-  issueDateDay: '5',
-  issueDateMonth: '1',
-  issueDateYear: '2022',
-  coverStartDateDay: '2',
-  coverStartDateMonth: '1',
-  coverStartDateYear: '2022',
-  coverEndDateDay: '2',
-  coverEndDateMonth: '1',
-  coverEndDateYear: '2030',
-  facilityTypeString: 'cash',
-  dealId: '1234567890abcdf123456789',
-  facilityId: 'xyz',
-  status: 'change',
-  change,
-});
-
 const MockFacilitiesResponse = () => ({
   items: [
     {
@@ -409,7 +387,6 @@ module.exports = {
   MockRequestUnissued,
   MockRequestIssuedToUnissued,
   MockFacilityResponseUnissued,
-  MockExpectedFacilityRenderChange,
   MockFacilitiesResponse,
   MockFacilityResponseSpecialIssue,
   MockFacilityResponseChangedIssued,

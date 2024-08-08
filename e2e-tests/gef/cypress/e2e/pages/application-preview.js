@@ -1,4 +1,7 @@
-/* eslint-disable no-undef */
+const cyGetFacilitySummaryListChild = (tableNum, selector) => cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find(selector);
+const cyGetFacilitySummaryListValue = (tableNum, actionSelector) =>
+  cyGetFacilitySummaryListChild(tableNum, actionSelector).parent().parent().find('.govuk-summary-list__value');
+
 const applicationPreview = {
   backLink: () => cy.get('[data-cy="back-link"]'),
   bankReference: () => cy.get('[data-cy="bank-reference"]'),
@@ -40,17 +43,48 @@ const applicationPreview = {
   facilityHeading: () => cy.get('[data-cy="facility-heading"]'),
   facilityGuidance: () => cy.get('[data-cy="facility-guidance"]'),
   facilitySummaryList: () => cy.get('[data-cy="facility-summary-list"]'),
-  facilitySummaryListRowKey: (tableNum, rowNum) =>
-    cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__key'),
-  facilitySummaryListRowValue: (tableNum, rowNum) =>
-    cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__value'),
-  facilitySummaryListRowAction: (tableNum, rowNum) =>
-    cy.get('[data-cy="facility-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__actions'),
 
-  supportingInfoListRowKey: (tableNum, rowNum) =>
-    cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__key'),
-  supportingInfoListRowValue: (tableNum, rowNum) =>
-    cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__value'),
+  facilitySummaryListTable: (tableNum) => ({
+    nameAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="name-action"]'),
+    nameValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="name-action"]'),
+    ukefFacilityIdAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="ukefFacilityId-action"]'),
+    ukefFacilityIdValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="ukefFacilityId-action"]'),
+    hasBeenIssuedAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="hasBeenIssued-action"]'),
+    hasBeenIssuedValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="hasBeenIssued-action"]'),
+    issueDateAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="issueDate-action"]'),
+    issueDateValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="issueDate-action"]'),
+    coverStartDateAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="coverStartDate-action"]'),
+    coverStartDateValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="coverStartDate-action"]'),
+    coverEndDateAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="coverEndDate-action"]'),
+    coverEndDateValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="coverEndDate-action"]'),
+    isUsingFacilityEndDateAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="isUsingFacilityEndDate-action"]'),
+    isUsingFacilityEndDateValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="isUsingFacilityEndDate-action"]'),
+    facilityEndDateAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="facilityEndDate-action"]'),
+    facilityEndDateValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="facilityEndDate-action"]'),
+    bankReviewDateAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="bankReviewDate-action"]'),
+    bankReviewDateValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="bankReviewDate-action"]'),
+    monthsOfCoverAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="monthsOfCover-action"]'),
+    monthsOfCoverValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="monthsOfCover-action"]'),
+    facilityProvidedOnAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="details-action"]'),
+    facilityProvidedOnValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="details-action"]'),
+    valueAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="value-action"]'),
+    valueValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="value-action"]'),
+    coverPercentageAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="coverPercentage-action"]'),
+    coverPercentageValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="coverPercentage-action"]'),
+    banksMaximumLiabilityAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="banksMaximumLiability-action"]'),
+    banksMaximumLiabilityValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="banksMaximumLiability-action"]'),
+    ukefMaximumLiabilityAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="ukefMaximumLiability-action"]'),
+    ukefMaximumLiabilityValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="ukefMaximumLiability-action"]'),
+    interestPercentageAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="interestPercentage-action"]'),
+    interestPercentageValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="interestPercentage-action"]'),
+    feeTypeAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="feeType-action"]'),
+    feeTypeValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="feeType-action"]'),
+    feeFrequencyAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="feeFrequency-action"]'),
+    feeFrequencyValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="feeFrequency-action"]'),
+    dayCountBasisAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="dayCountBasis-action"]'),
+    dayCountBasisValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="dayCountBasis-action"]'),
+  }),
+
   supportingInfoListRowAction: (tableNum, rowNum) =>
     cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__actions'),
 

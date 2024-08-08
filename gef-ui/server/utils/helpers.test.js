@@ -255,6 +255,7 @@ describe('mapSummaryList()', () => {
     {
       label: 'Id',
       id: 'id',
+      href: 'href',
     },
   ];
 
@@ -277,7 +278,22 @@ describe('mapSummaryList()', () => {
     };
 
     expect(mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)).toEqual([
-      { actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } },
+      {
+        actions: {
+          items: [
+            {
+              href: 'href',
+              text: 'Change',
+              visuallyHiddenText: 'Id',
+              attributes: {
+                'data-cy': 'id-action',
+              },
+            },
+          ],
+        },
+        key: { text: 'Id' },
+        value: { text: '123456' },
+      },
     ]);
   });
 
@@ -607,9 +623,16 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items[0];
+      const actionItems = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items;
       // should be blank so cannot change
-      expect(text).toEqual('');
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `value-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
     it('can change issued back to unissued', () => {
       // 'key' for value row
@@ -658,6 +681,7 @@ describe('mapSummaryList()', () => {
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
+
     it('coverStartDate', () => {
       const MockedDisplayItemsStartDate = () => [
         {
@@ -676,6 +700,7 @@ describe('mapSummaryList()', () => {
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
+
     it('coverEndDate', () => {
       const MockedDisplayItemsStartEnd = () => [
         {
@@ -691,6 +716,72 @@ describe('mapSummaryList()', () => {
       };
 
       const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+      expect(href).toContain('/unissued-facilities/');
+      expect(href).toContain('/change');
+    });
+
+    it('isUsingFacilityEndDate', () => {
+      const mockedDisplayItemsEnd = [
+        {
+          label: 'Is using facility end date',
+          id: 'isUsingFacilityEndDate',
+        },
+      ];
+
+      const facility = { ...MOCK_ISSUED_FACILITY, details: { ...MOCK_ISSUED_FACILITY.details, isUsingFacilityEndDate: true } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text, href } = mapSummaryList(facility, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+      expect(href).toContain('/unissued-facilities/');
+      expect(href).toContain('/change');
+    });
+
+    it('bankReviewDate', () => {
+      const mockedDisplayItemsEnd = [
+        {
+          label: 'Bank review date',
+          id: 'bankReviewDate',
+        },
+      ];
+
+      const facility = { ...MOCK_ISSUED_FACILITY, details: { ...MOCK_ISSUED_FACILITY.details, bankReviewDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text, href } = mapSummaryList(facility, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+      expect(href).toContain('/unissued-facilities/');
+      expect(href).toContain('/change');
+    });
+
+    it('facilityEndDate', () => {
+      const mockedDisplayItemsEnd = [
+        {
+          label: 'Facility end date',
+          id: 'facilityEndDate',
+        },
+      ];
+
+      const facility = { ...MOCK_ISSUED_FACILITY, details: { ...MOCK_ISSUED_FACILITY.details, facilityEndDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const { text, href } = mapSummaryList(facility, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
       expect(href).toContain('/unissued-facilities/');
@@ -719,9 +810,16 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const actionItems = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       // should be allowed to change so should display change
-      expect(text).toEqual('');
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `name-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
     it('coverStartDate', () => {
       const MockedDisplayItemsStartDate = () => [
@@ -737,9 +835,16 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items[0];
+      const actionItems = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items;
       // should be allowed to change so should display change
-      expect(text).toEqual('');
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverStartDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('coverEndDate', () => {
@@ -756,9 +861,97 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
+      const actionItems = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
       // should be allowed to change so should display change
-      expect(text).toEqual('');
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('isUsingFacilityEndDate', () => {
+      const mockedDisplayItemsEnd = [
+        {
+          label: 'Is using facility end date',
+          id: 'isUsingFacilityEndDate',
+        },
+      ];
+
+      const facility = { ...MOCK_UNISSUED_FACILITY, details: { ...MOCK_UNISSUED_FACILITY.details, isUsingFacilityEndDate: true } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const actionItems = mapSummaryList(facility, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
+      // should be allowed to change so should display change
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `isUsingFacilityEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('bankReviewDate', () => {
+      const mockedDisplayItemsEnd = [
+        {
+          label: 'Bank review date',
+          id: 'bankReviewDate',
+        },
+      ];
+
+      const facility = { ...MOCK_UNISSUED_FACILITY, details: { ...MOCK_UNISSUED_FACILITY.details, bankReviewDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const actionItems = mapSummaryList(facility, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
+      // should be allowed to change so should display change
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `bankReviewDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('facilityEndDate', () => {
+      const mockedDisplayItemsEnd = [
+        {
+          label: 'Facility end date',
+          id: 'facilityEndDate',
+        },
+      ];
+
+      const facility = { ...MOCK_UNISSUED_FACILITY, details: { ...MOCK_UNISSUED_FACILITY.details, facilityEndDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const actionItems = mapSummaryList(facility, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
+      // should be allowed to change so should display change
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `facilityEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
   });
 
@@ -784,7 +977,14 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      const response = [];
+      const response = [
+        {
+          attributes: {
+            'data-cy': 'name-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ];
       expect(result).toEqual(response);
     });
 
@@ -803,7 +1003,14 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items;
-      const response = [];
+      const response = [
+        {
+          attributes: {
+            'data-cy': 'coverStartDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ];
       expect(result).toEqual(response);
     });
 
@@ -822,7 +1029,106 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
-      const response = [];
+      const response = [
+        {
+          attributes: {
+            'data-cy': 'coverEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ];
+      expect(result).toEqual(response);
+    });
+
+    it('isUsingFacilityEndDate', () => {
+      const mockedDisplayItemsEnd = [
+        {
+          label: 'Is using facility end date',
+          id: 'isUsingFacilityEndDate',
+        },
+      ];
+
+      const facility = {
+        ...MOCK_ISSUED_FACILITY_UNCHANGED,
+        details: { ...MOCK_ISSUED_FACILITY_UNCHANGED.details, isUsingFacilityEndDate: true },
+      };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(facility, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
+      const response = [
+        {
+          attributes: {
+            'data-cy': 'isUsingFacilityEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ];
+      expect(result).toEqual(response);
+    });
+
+    it('bankReviewDate', () => {
+      const MockedDisplayItemsStartEnd = () => [
+        {
+          label: 'bank review date',
+          id: 'bankReviewDate',
+        },
+      ];
+      const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
+
+      const facility = {
+        ...MOCK_ISSUED_FACILITY_UNCHANGED,
+        details: { ...MOCK_ISSUED_FACILITY_UNCHANGED.details, bankReviewDate: new Date().toISOString() },
+      };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(facility, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
+      const response = [
+        {
+          attributes: {
+            'data-cy': 'bankReviewDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ];
+      expect(result).toEqual(response);
+    });
+
+    it('facilityEndDate', () => {
+      const MockedDisplayItemsStartEnd = () => [
+        {
+          label: 'facility en date',
+          id: 'facilityEndDate',
+        },
+      ];
+      const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
+
+      const facility = {
+        ...MOCK_ISSUED_FACILITY_UNCHANGED,
+        details: { ...MOCK_ISSUED_FACILITY_UNCHANGED.details, facilityEndDate: new Date().toISOString() },
+      };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(facility, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
+      const response = [
+        {
+          attributes: {
+            'data-cy': 'facilityEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ];
       expect(result).toEqual(response);
     });
 
@@ -841,7 +1147,14 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsIssued, mapSummaryParams, true)[0].actions.items;
-      const response = [];
+      const response = [
+        {
+          attributes: {
+            'data-cy': 'hasBeenIssued-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ];
       expect(result).toEqual(response);
     });
   });
@@ -867,7 +1180,7 @@ describe('mapSummaryList()', () => {
   });
 
   describe('when with checker when changedToIssuedFacilities', () => {
-    it('Should return a blank array with stage', () => {
+    it('stage action should have class display-none', () => {
       // 'key' for value row
       const MockedDisplayItemsStage = () => [
         {
@@ -884,10 +1197,17 @@ describe('mapSummaryList()', () => {
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       // should be [] as unable to change on checker
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'hasBeenIssued-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
-    it('Should return a blank array when with checker with coverStartDate', () => {
+    it('coverStartDate action should have class display-none', () => {
       // 'key' for value row
       const MockedDisplayItemsStage = () => [
         {
@@ -904,10 +1224,17 @@ describe('mapSummaryList()', () => {
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       // should be [] as unable to change on checker
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'coverStartDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
-    it('Should return a blank array when with checker with coverEndDate', () => {
+    it('coverEndDate action should have class display-none', () => {
       // 'key' for value row
       const MockedDisplayItemsStage = () => [
         {
@@ -924,7 +1251,98 @@ describe('mapSummaryList()', () => {
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
       // should be [] as unable to change on checker
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'coverEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('isUsingFacilityEndDate action should have class display-none', () => {
+      // 'key' for value row
+      const mockedDisplayItemsName = [
+        {
+          label: 'Is using facility date',
+          id: 'isUsingFacilityEndDate',
+        },
+      ];
+
+      const facility = { ...MOCK_ISSUED_FACILITY, details: { ...MOCK_ISSUED_FACILITY, isUsingFacilityEndDate: true } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_CHECKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      // should be [] as unable to change on checker
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'isUsingFacilityEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('bankReviewDate action should have class display-none', () => {
+      // 'key' for value row
+      const mockedDisplayItemsName = [
+        {
+          label: 'Bank review date',
+          id: 'bankReviewDate',
+        },
+      ];
+
+      const facility = { ...MOCK_ISSUED_FACILITY, details: { ...MOCK_ISSUED_FACILITY, bankReviewDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_CHECKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      // should be [] as unable to change on checker
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'bankReviewDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('facilityEndDate action should have class display-none', () => {
+      // 'key' for value row
+      const mockedDisplayItemsName = [
+        {
+          label: 'Facility end date',
+          id: 'facilityEndDate',
+        },
+      ];
+
+      const facility = { ...MOCK_ISSUED_FACILITY, details: { ...MOCK_ISSUED_FACILITY, facilityEndDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_CHECKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      // should be [] as unable to change on checker
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'facilityEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
   });
 
@@ -990,6 +1408,69 @@ describe('mapSummaryList()', () => {
       expect(text).toEqual('Change');
     });
 
+    it('Should show change for isUsingFacilityEndDate', () => {
+      // 'key' for value row
+      const mockedDisplayItemsName = [
+        {
+          label: 'is-using-facility-end-date',
+          id: 'isUsingFacilityEndDate',
+        },
+      ];
+
+      const facility = { ...MOCK_ISSUED_FACILITY, details: { ...MOCK_ISSUED_FACILITY.details, isUsingFacilityEndDate: true } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+    });
+
+    it('Should show change for bankReviewDate', () => {
+      // 'key' for value row
+      const mockedDisplayItemsName = [
+        {
+          label: 'bank-review-date',
+          id: 'bankReviewDate',
+        },
+      ];
+
+      const facility = { ...MOCK_ISSUED_FACILITY, details: { ...MOCK_ISSUED_FACILITY.details, bankReviewDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+    });
+
+    it('Should show change for facilityEndDate', () => {
+      // 'key' for value row
+      const mockedDisplayItemsName = [
+        {
+          label: 'facility-end-date',
+          id: 'facilityEndDate',
+        },
+      ];
+
+      const facility = { ...MOCK_ISSUED_FACILITY, details: { ...MOCK_ISSUED_FACILITY.details, facilityEndDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const { text } = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      // should be allowed to change so should display change
+      expect(text).toEqual('Change');
+    });
+
     it('Should show change for stage when unissued facility', () => {
       // 'key' for value row
       const MockedDisplayItemsStage = () => [
@@ -1010,7 +1491,7 @@ describe('mapSummaryList()', () => {
       expect(text).toEqual('Change');
     });
 
-    it('Should show not change for coverStartDate when unissued facility', () => {
+    it('Should not show change for coverStartDate when unissued facility', () => {
       // 'key' for value row
       const MockedDisplayItemsStage = () => [
         {
@@ -1025,11 +1506,18 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
-      expect(text).toEqual('');
+      const actionItems = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverStartDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
-    it('Should show not change for coverEndDate when unissued facility', () => {
+    it('Should not show change for coverEndDate when unissued facility', () => {
       // 'key' for value row
       const MockedDisplayItemsStage = () => [
         {
@@ -1044,8 +1532,99 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
-      expect(text).toEqual('');
+      const actionItems = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should not show change for isUsingFacilityEndDate when unissued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Has a facility end date',
+          id: 'isUsingFacilityEndDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const facility = { ...MOCK_UNISSUED_FACILITY, details: { ...MOCK_UNISSUED_FACILITY.details, isUsingFacilityEndDate: true } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const actionItems = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `isUsingFacilityEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should not show change for facilityEndDate when unissued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Facility end date',
+          id: 'facilityEndDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const facility = { ...MOCK_UNISSUED_FACILITY, details: { ...MOCK_UNISSUED_FACILITY.details, facilityEndDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const actionItems = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `facilityEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should not show change for bankReviewDate when unissued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Bank review date',
+          id: 'bankReviewDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const facility = { ...MOCK_UNISSUED_FACILITY, details: { ...MOCK_UNISSUED_FACILITY.details, bankReviewDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const actionItems = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `bankReviewDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should not show change for stage when already issued facility', () => {
@@ -1064,7 +1643,14 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'hasBeenIssued-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should not see the `Change` link for coverStartDate when already issued facility for AIN and Makers input required', () => {
@@ -1083,7 +1669,14 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverStartDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should show `Change` for coverStartDate when already issued facility', () => {
@@ -1103,6 +1696,9 @@ describe('mapSummaryList()', () => {
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParamsDraft, true)[0].actions.items;
       expect(result).toEqual([
         {
+          attributes: {
+            'data-cy': `coverStartDate-action`,
+          },
           href: '/gef/application-details/61a7710b2ae62b0013dae687/61a771cc2ae62b0013dae68a/confirm-cover-start-date',
           text: 'Change',
           visuallyHiddenText: 'Cover start date',
@@ -1110,7 +1706,7 @@ describe('mapSummaryList()', () => {
       ]);
     });
 
-    it('Should show not change for coverEndDate when already issued facility', () => {
+    it('Should not show change for coverEndDate when already issued facility', () => {
       // 'key' for value row
       const MockedDisplayItemsStage = () => [
         {
@@ -1126,7 +1722,98 @@ describe('mapSummaryList()', () => {
       };
 
       const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      expect(result).toEqual([]);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'coverEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should not show change for isUsingFacilityEndDate when already issued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Has a facility end date',
+          id: 'isUsingFacilityEndDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const facility = { ...MOCK_ISSUED_FACILITY_UNCHANGED, details: { ...MOCK_ISSUED_FACILITY_UNCHANGED.details, isUsingFacilityEndDate: true } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'isUsingFacilityEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should not show change for facilityEndDate when already issued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Facility end date',
+          id: 'facilityEndDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const facility = { ...MOCK_ISSUED_FACILITY_UNCHANGED, details: { ...MOCK_ISSUED_FACILITY_UNCHANGED.details, facilityEndDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'facilityEndDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should not show change for bankReviewDate when already issued facility', () => {
+      // 'key' for value row
+      const MockedDisplayItemsStage = () => [
+        {
+          label: 'Bank review date',
+          id: 'bankReviewDate',
+        },
+      ];
+      const mockedDisplayItemsName = MockedDisplayItemsStage();
+
+      const facility = { ...MOCK_ISSUED_FACILITY_UNCHANGED, details: { ...MOCK_ISSUED_FACILITY_UNCHANGED.details, bankReviewDate: new Date().toISOString() } };
+
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(facility, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': 'bankReviewDate-action',
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
   });
 });
@@ -1194,7 +1881,14 @@ describe('summaryItemsConditions()', () => {
     };
     const result = summaryItemsConditions(summaryItemsObj);
 
-    const expected = [];
+    const expected = [
+      {
+        attributes: {
+          'data-cy': 'name-action',
+        },
+        classes: 'govuk-!-display-none',
+      },
+    ];
 
     expect(result).toEqual(expected);
   });
@@ -1265,6 +1959,94 @@ describe('summaryItemsConditions()', () => {
       expect(href).toContain('/change');
     });
 
+    it('Should be able to change isUsingFacilityEndDate', () => {
+      const item = {
+        label: 'Cover end date',
+        id: 'isUsingFacilityEndDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text, href } = summaryItemsConditions(summaryItemsObj)[0];
+
+      expect(text).toEqual('Change');
+      expect(href).toContain('/unissued-facilities/');
+      expect(href).toContain('/change');
+    });
+
+    it('Should be able to change facilityEndDate', () => {
+      const item = {
+        label: 'Cover end date',
+        id: 'facilityEndDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text, href } = summaryItemsConditions(summaryItemsObj)[0];
+
+      expect(text).toEqual('Change');
+      expect(href).toContain('/unissued-facilities/');
+      expect(href).toContain('/change');
+    });
+
+    it('Should be able to change bankReviewDate', () => {
+      const item = {
+        label: 'Cover end date',
+        id: 'bankReviewDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text, href } = summaryItemsConditions(summaryItemsObj)[0];
+
+      expect(text).toEqual('Change');
+      expect(href).toContain('/unissued-facilities/');
+      expect(href).toContain('/change');
+    });
+
+    it('Should be able to change isUsingFacilityEndDate', () => {
+      const item = {
+        label: 'Cover end date',
+        id: 'isUsingFacilityEndDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text, href } = summaryItemsConditions(summaryItemsObj)[0];
+
+      expect(text).toEqual('Change');
+      expect(href).toContain('/unissued-facilities/');
+      expect(href).toContain('/change');
+    });
+
     it('Should be able to change issued', () => {
       const item = {
         label: 'Stage',
@@ -1302,8 +2084,15 @@ describe('summaryItemsConditions()', () => {
         data: MOCK_AIN_APPLICATION.facilities.items[0],
       };
 
-      const { text } = summaryItemsConditions(summaryItemsObj)[0];
-      expect(text).toEqual('');
+      const result = summaryItemsConditions(summaryItemsObj);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `name-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should not be able to change coverStartDate', () => {
@@ -1321,8 +2110,15 @@ describe('summaryItemsConditions()', () => {
         data: MOCK_AIN_APPLICATION.facilities.items[0],
       };
 
-      const { text } = summaryItemsConditions(summaryItemsObj)[0];
-      expect(text).toEqual('');
+      const result = summaryItemsConditions(summaryItemsObj);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverStartDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should be able to change coverStartDate', () => {
@@ -1362,8 +2158,93 @@ describe('summaryItemsConditions()', () => {
         data: MOCK_AIN_APPLICATION.facilities.items[0],
       };
 
-      const { text } = summaryItemsConditions(summaryItemsObj)[0];
-      expect(text).toEqual('');
+      const result = summaryItemsConditions(summaryItemsObj);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `coverEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should be able to change isUsingFacilityEndDate', () => {
+      const item = {
+        label: 'Has a facility end date',
+        id: 'isUsingFacilityEndDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_UNISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[0],
+      };
+
+      const result = summaryItemsConditions(summaryItemsObj);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `isUsingFacilityEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should be able to change facilityEndDate', () => {
+      const item = {
+        label: 'Facility end date',
+        id: 'facilityEndDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_UNISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[0],
+      };
+
+      const result = summaryItemsConditions(summaryItemsObj);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `facilityEndDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
+    });
+
+    it('Should be able to change bankReviewDate', () => {
+      const item = {
+        label: 'Bank review date',
+        id: 'bankReviewDate',
+      };
+
+      const summaryItemsObj = {
+        preview: true,
+        item,
+        details: MOCK_UNISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[0],
+      };
+
+      const result = summaryItemsConditions(summaryItemsObj);
+      expect(result).toEqual([
+        {
+          attributes: {
+            'data-cy': `bankReviewDate-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
 
     it('Should not be able to change issued', () => {

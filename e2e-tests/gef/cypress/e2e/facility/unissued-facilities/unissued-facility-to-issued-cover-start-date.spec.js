@@ -20,6 +20,8 @@ let facilityOneId;
 
 const unissuedFacilitiesArray = [MOCK_FACILITY_ONE];
 
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
 context('Unissued Facilities AIN - change all to issued from unissued table', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
@@ -105,6 +107,11 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
       aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.be.checked');
+        aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
+      }
     });
 
     it('Should not throw error upon user defined cover start date input when cover start date is set to issuance date', () => {
@@ -127,6 +134,10 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+      }
 
       // Changing cover start date to issuance date
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
