@@ -27,8 +27,6 @@
   ],
   "scripts": {
     "audit:fix:all": "npm audit --fix --if-present",
-    "db:seed": "(cd utils && npm run db:seed)",
-    "db:seed:reset": "(cd utils && npm run db:seed:reset)",
     "env:copy": "(cd utils && npm run env:copy)",
     "housekeeping": "npm update --save && npm i && npm run prettier:fix:all && npm run lint:fix:all && npm run validate:yml && npm run audit:fix:all && npm run spellcheck",
     "lint:all": "npm run lint --workspaces --if-present",

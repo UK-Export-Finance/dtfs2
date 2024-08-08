@@ -211,10 +211,10 @@ jobs:
         run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common
@@ -404,10 +404,10 @@ jobs:
         run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common
@@ -478,10 +478,10 @@ jobs:
         run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common
@@ -540,10 +540,10 @@ jobs:
         run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common
@@ -612,10 +612,10 @@ jobs:
         run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common
@@ -673,10 +673,10 @@ jobs:
         run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common
@@ -754,10 +754,10 @@ jobs:
         run: docker compose -f docker-compose.gha.yml up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common
