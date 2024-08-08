@@ -6,7 +6,7 @@
 
 const loadData = () => {
   // Load mock data
-  cy.exec('cd ../../ && npm run load');
+  cy.exec('cd ../../utils && npm run mock-data-loader');
 };
 
 export default loadData;
