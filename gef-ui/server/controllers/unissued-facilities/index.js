@@ -22,7 +22,7 @@ const { validationErrorHandler } = require('../../utils/helpers');
  */
 const renderChangeFacilityPartial = async ({ params, query, change, userToken }) => {
   const { dealId, facilityId } = params;
-  const { status } = query;
+  const { status, overwrite } = query;
 
   const { details } = await api.getFacility({ facilityId, userToken });
   const deal = await api.getApplication({ dealId, userToken });
@@ -33,7 +33,7 @@ const renderChangeFacilityPartial = async ({ params, query, change, userToken })
   const coverEndDate = details.coverEndDate ? new Date(details.coverEndDate) : null;
   const monthsOfCover = JSON.stringify(details.monthsOfCover);
 
-  const body = {
+  return {
     facilityType: FACILITY_TYPE[details.type.toUpperCase()],
     facilityName: details.name,
     hasBeenIssued: details.hasBeenIssued,
@@ -48,6 +48,7 @@ const renderChangeFacilityPartial = async ({ params, query, change, userToken })
     coverEndDateDay: coverEndDate ? format(coverEndDate, 'd') : null,
     coverEndDateMonth: coverEndDate ? format(coverEndDate, 'M') : null,
     coverEndDateYear: coverEndDate ? format(coverEndDate, 'yyyy') : null,
+    isUsingFacilityEndDate: change && !overwrite ? details.isUsingFacilityEndDate.toString() : undefined,
     facilityTypeString,
     dealId,
     facilityId,
@@ -55,8 +56,6 @@ const renderChangeFacilityPartial = async ({ params, query, change, userToken })
     change,
     isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
   };
-
-  return body;
 };
 
 // when changing unissued facility from unissued facility list
@@ -209,6 +208,8 @@ const postChangeUnissuedFacility = async (req, res) => {
         coverDateConfirmed: true,
         unissuedToIssuedByMaker: userObj,
         isUsingFacilityEndDate,
+        facilityEndDate: null,
+        bankReviewDate: null,
       },
       userToken,
     });
@@ -225,6 +226,11 @@ const postChangeUnissuedFacility = async (req, res) => {
     req.flash('success', {
       message: `${body.facilityName} is updated`,
     });
+
+    if (isUsingFacilityEndDate === true) {
+      return res.redirect(`/gef/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date`);
+    }
+
     const redirectUrl = `/gef/application-details/${dealId}/unissued-facilities`;
 
     return res.redirect(redirectUrl);
@@ -315,6 +321,11 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
     };
 
     await api.updateApplication({ dealId, application: applicationUpdate, userToken });
+
+    if (isUsingFacilityEndDate === true) {
+      return res.redirect(`/gef/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date?change=1`);
+    }
+
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
     console.error('Cannot update unissued facility from application preview %o', error);

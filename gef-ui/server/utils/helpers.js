@@ -212,10 +212,10 @@ const previewItemConditions = (previewParams) => {
      * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility still unissued
      * only shows if other facilities have been changed to issued
      * changes to issued
-     * add link displayed taking to unissued-facility-change change page
+     * add link displayed taking to unissued-facility-change change page, overwriting existing value for isFacilityEndDateProvided
      */
     summaryItems = generateActionsArrayForItem({
-      href: unissuedHref,
+      href: `${unissuedHref}?overwrite=1`,
       visuallyHiddenText: item.label,
       text: shouldDisplayChangeLinkIfUnissued && ACTION_TEXT.CHANGE,
       id: item.id,
@@ -299,7 +299,10 @@ const summaryItemsConditions = (summaryItemsObj) => {
   // Issued facility change link (post confirmation)
   const issuedHref = `/gef/application-details/${app._id}/${data.details._id}/confirm-cover-start-date`;
   // personalised href for facility to change to issued (once submitted to UKEF)
-  const unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change`;
+  let unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change`;
+  if (id === 'facilityEndDate') {
+    unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/facility-end-date`;
+  }
   // personalised href for facility to change to unissued from issued (once submitted to UKEF and changed to issued)
   const issuedToUnissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change-to-unissued`;
   // array of facilities which have been changed to issued
