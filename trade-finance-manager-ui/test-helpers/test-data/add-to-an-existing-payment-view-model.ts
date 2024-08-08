@@ -24,4 +24,7 @@ export const anAddToAnExistingPaymentViewModel = (): AddToAnExistingPaymentViewM
   },
   availablePaymentsHeading: 'Available payments',
   availablePaymentGroups: anAvailablePaymentGroupsViewModel(),
+  errors: {
+    errorSummary: [],
+  },
 });

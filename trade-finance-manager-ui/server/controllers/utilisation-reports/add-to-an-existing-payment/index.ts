@@ -10,7 +10,7 @@ import {
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import {
-  extractAddToAnExistingPaymentRadioIdsAndValidateIfPresent,
+  extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent,
   mapToSelectedReportedFeesDetailsViewModel,
   PremiumPaymentsTableCheckboxSelectionsRequestBody,
 } from '../helpers';
@@ -38,7 +38,7 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
       throw new Error('No available payment groups attached to fee record details response.');
     }
 
-    const { isAddingToAnExistingPayment, errors, paymentIds } = extractAddToAnExistingPaymentRadioIdsAndValidateIfPresent(req.body);
+    const { isAddingToAnExistingPayment, errors, paymentIds } = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(req.body);
     const formHasErrors = errors.errorSummary.length !== 0;
 
     if (isAddingToAnExistingPayment && !formHasErrors) {
@@ -46,7 +46,6 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
       return res.redirect(`/utilisation-reports/${reportId}`);
     }
 
-    // TODO FN-1749: Need to pass through array of error view models.
     const addToAnExistingPaymentViewModel: AddToAnExistingPaymentViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -57,6 +56,7 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
       selectedFeeRecordCheckboxIds: checkedCheckboxIds,
       availablePaymentsHeading: getAvailablePaymentsHeading(availablePaymentGroups),
       availablePaymentGroups: mapToAvailablePaymentGroupsViewModel(availablePaymentGroups),
+      errors,
     };
     return renderAddToAnExistingPaymentPage(res, addToAnExistingPaymentViewModel);
   } catch (error) {

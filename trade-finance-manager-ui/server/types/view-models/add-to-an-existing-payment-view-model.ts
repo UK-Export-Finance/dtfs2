@@ -3,6 +3,11 @@ import { SelectedReportedFeesDetailsViewModel } from './selected-reported-fees-d
 import { BaseViewModel } from './base-view-model';
 import { AddToAnExistingPaymentRadioId } from '../add-to-an-existing-payment-radio-id';
 import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
+import { PaymentErrorsViewModel } from './payment-errors-view-model';
+
+export type AddToAnExistingPaymentErrorsViewModel = PaymentErrorsViewModel & {
+  paymentGroupErrorMessage?: string;
+};
 
 export type AvailablePaymentViewModelItem = {
   id: string;
@@ -25,4 +30,5 @@ export type AddToAnExistingPaymentViewModel = BaseViewModel & {
   selectedFeeRecordCheckboxIds: PremiumPaymentsTableCheckboxId[];
   availablePaymentsHeading: string;
   availablePaymentGroups: AvailablePaymentGroupsViewModel;
+  errors: AddToAnExistingPaymentErrorsViewModel;
 };

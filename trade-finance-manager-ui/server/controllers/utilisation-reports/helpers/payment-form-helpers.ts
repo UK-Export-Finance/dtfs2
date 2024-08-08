@@ -2,7 +2,7 @@ import { Currency } from '@ukef/dtfs2-common';
 import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
-import { PaymentErrorsViewModel } from '../../../types/view-models';
+import { AddToAnExistingPaymentErrorsViewModel, PaymentErrorsViewModel } from '../../../types/view-models';
 import { validateAddPaymentRequestFormValues, validateAddToAnExistingPaymentRequestFormValues } from './validate-payment-form-values';
 import { AddToAnExistingPaymentRadioId } from '../../../types/add-to-an-existing-payment-radio-id';
 
@@ -81,13 +81,14 @@ export type AddToAnExistingPaymentFormRequestBody = {
   addToAnExistingPaymentFormSubmission?: string;
 };
 
+// TODO FN-1749: Simplify this function to exclude 'paymentIds' prefix.
 const getPaymentIdsFromPaymentGroupRadioId = (radioId: AddToAnExistingPaymentRadioId): number[] => {
-  const { commaSeparatedIds } = /paymentGroupIds-(?<commaSeparatedIds>(\d+,?)+)/.exec(radioId)!.groups!;
+  const { commaSeparatedIds } = /paymentIds-(?<commaSeparatedIds>(\d+,?)+)/.exec(radioId)!.groups!;
 
   return commaSeparatedIds.split(',').map((id) => parseInt(id, 10));
 };
 
-const extractAddToAnExistingPaymentRadioIdsFromRequestBody = (requestBody: AddToAnExistingPaymentFormRequestBody): number[] => {
+const extractAddToAnExistingPaymentRadioPaymentIdsFromRequestBody = (requestBody: AddToAnExistingPaymentFormRequestBody): number[] => {
   if (!requestBody.paymentGroup) {
     return [];
   }
@@ -95,9 +96,9 @@ const extractAddToAnExistingPaymentRadioIdsFromRequestBody = (requestBody: AddTo
   return getPaymentIdsFromPaymentGroupRadioId(requestBody.paymentGroup);
 };
 
-export const extractAddToAnExistingPaymentRadioIdsAndValidateIfPresent = (
+export const extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent = (
   requestBody: AddToAnExistingPaymentFormRequestBody,
-): { isAddingToAnExistingPayment: boolean; errors: PaymentErrorsViewModel; paymentIds: number[] } => {
+): { isAddingToAnExistingPayment: boolean; errors: AddToAnExistingPaymentErrorsViewModel; paymentIds: number[] } => {
   const isAddingToAnExistingPayment = 'addToAnExistingPaymentFormSubmission' in requestBody;
 
   if (!isAddingToAnExistingPayment) {
@@ -108,7 +109,7 @@ export const extractAddToAnExistingPaymentRadioIdsAndValidateIfPresent = (
     };
   }
 
-  const paymentIds = extractAddToAnExistingPaymentRadioIdsFromRequestBody(requestBody);
+  const paymentIds = extractAddToAnExistingPaymentRadioPaymentIdsFromRequestBody(requestBody);
   const errors = validateAddToAnExistingPaymentRequestFormValues(paymentIds);
 
   return {

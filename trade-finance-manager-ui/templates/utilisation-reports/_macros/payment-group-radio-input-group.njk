@@ -1,14 +1,24 @@
 {% macro render(params) %}
   {% set legendText = params.legendText %}
   {% set paymentGroups = params.paymentGroups %}
+  {% set errorMessage = params.errorMessage %}
 
-  <div class="govuk-form-group" data-cy="payment-group-radio-input">
+  {% if errorMessage %}
+    <div class="govuk-form-group--error" data-cy="fee-record-details-error-wrapper">
+  {% endif %}
+  <div class="govuk-form-group" id="paymentGroup" data-cy="payment-group-radio-input">
     <fieldset class="govuk-fieldset">
-      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-        <h2 class="govuk-fieldset__legend--m" data-cy="payment-group-radio-input-heading">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l govuk-!-margin-bottom-0">
+        <h2 class="govuk-fieldset__legend--m  govuk-!-margin-top-0" data-cy="payment-group-radio-input-heading">
           {{ legendText }}
         </h2>
       </legend>
+      {% if errorMessage %}
+        <p class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error: </span>{{ errorMessage}}
+        </p>
+      {% endif %}
+      {# TODO FN-1749: Do not render radio input if there is only one payment group available. See ACs. Hidden input in this case? #}
       <div class="govuk-radios" data-module="govuk-radios">
         {% for paymentGroup in paymentGroups %}
           <div class="govuk-radios__item" data-cy="payment-group--{{ paymentGroup.radioId }}">
@@ -30,4 +40,7 @@
       </div>
     </fieldset>
   </div>
+  {% if errorMessage %}
+    </div>
+  {% endif %}
 {% endmacro %}
