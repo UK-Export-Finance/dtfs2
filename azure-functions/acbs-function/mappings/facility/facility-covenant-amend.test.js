@@ -1,4 +1,4 @@
-import { facilityCovenantAmend } from './facility-covenant-amend';
+const facilityCovenantAmend = require('./facility-covenant-amend');
 
 describe('facilityCovenantAmend', () => {
   const aValidAmountRequest = { amount: 123.456 };

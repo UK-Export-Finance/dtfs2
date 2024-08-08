@@ -1,6 +1,6 @@
-import { to2Decimals } from '../../helpers/currency';
+const { to2Decimals } = require('../../helpers/currency');
 
-export const facilityCovenantAmend = (amendment) => {
+const facilityCovenantAmend = (amendment) => {
   try {
     const { amount, facilityGuaranteeDates } = amendment;
     const record = {};
@@ -24,3 +24,5 @@ export const facilityCovenantAmend = (amendment) => {
     return {};
   }
 };
+
+module.exports = facilityCovenantAmend;
