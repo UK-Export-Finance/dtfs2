@@ -11,6 +11,7 @@ import {
   handleFeeRecordGenerateKeyingDataEvent,
   handleFeeRecordRemoveFromPaymentGroupEvent,
   handleFeeRecordOtherFeeRemovedFromGroupEvent,
+  handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent,
 } from './event-handlers';
 
 export class FeeRecordStateMachine {
@@ -76,6 +77,8 @@ export class FeeRecordStateMachine {
             return handleFeeRecordRemoveFromPaymentGroupEvent(this.feeRecord, event.payload);
           case 'OTHER_FEE_REMOVED_FROM_GROUP':
             return handleFeeRecordOtherFeeRemovedFromGroupEvent(this.feeRecord, event.payload);
+          case 'OTHER_FEE_RECORD_ADDED_TO_PAYMENT_GROUP':
+            return handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }
