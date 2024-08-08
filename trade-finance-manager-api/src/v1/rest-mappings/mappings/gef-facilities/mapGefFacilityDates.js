@@ -30,11 +30,11 @@ const mapGefFacilityDates = (facility, facilityTfm, dealSnapshot) => {
     mapped.isUsingFacilityEndDate = isUsingFacilityEndDate;
 
     if (isUsingFacilityEndDate) {
-      mapped.facilityEndDate = convertDateToTimestamp(facilityEndDate);
+      mapped.facilityEndDate = facilityEndDate;
     }
 
     if (isUsingFacilityEndDate === false) {
-      mapped.bankReviewDate = convertDateToTimestamp(bankReviewDate);
+      mapped.bankReviewDate = bankReviewDate;
     }
   }
 
