@@ -503,10 +503,11 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
  * @param {import('@ukef/dtfs2-common').TfmFacility} tfmObject
  * @param {{ coverEndDate?: number } | undefined} latestCoverEndDateResponse
  * @param {{ facilityEndDate?: string } | undefined} latestFacilityEndDateDataResponse
+ * @param {{ bankReviewDate?: string } | undefined} latestBankReviewDateResponse
  * @param {string} facilityId
  * @returns {import('@ukef/dtfs2-common').TfmFacility & { coverEndDate?: string, amendmentExposurePeriodInMonths?: number, facilityEndDate?: string }}
  */
-const addLatestAmendmentDates = async (tfmObject, latestCoverEndDateResponse, latestFacilityEndDateDataResponse, facilityId) => {
+const addLatestAmendmentDates = async (tfmObject, latestCoverEndDateResponse, latestFacilityEndDateDataResponse, latestBankReviewDateResponse, facilityId) => {
   const existingFacility = await api.findOneFacility(facilityId);
 
   if (!existingFacility) {
@@ -516,12 +517,14 @@ const addLatestAmendmentDates = async (tfmObject, latestCoverEndDateResponse, la
   const coverEndDate = latestCoverEndDateResponse?.coverEndDate;
   const amendmentExposurePeriodInMonths = coverEndDate ? await calculateAmendmentDateTenor(coverEndDate, existingFacility) : undefined;
   const facilityEndDate = latestFacilityEndDateDataResponse?.facilityEndDate;
+  const bankReviewDate = latestBankReviewDateResponse?.bankReviewDate;
 
   return {
     ...tfmObject,
     coverEndDate,
     amendmentExposurePeriodInMonths,
     facilityEndDate,
+    bankReviewDate,
   };
 };
 

@@ -7,13 +7,7 @@ const getNextPage = (status, changeFacilityValue, isUsingFacilityEndDate, baseUr
     console.error('Unable to update is using facility end date');
     return fallbackUrl;
   }
-  if (isUsingFacilityEndDate) {
-    return `${baseUrl}/facility-end-date`;
-  }
-  if (changeFacilityValue) {
-    return `${baseUrl}/facility-value`;
-  }
-  return `${baseUrl}/check-answers`;
+  return isUsingFacilityEndDate ? `${baseUrl}/facility-end-date` : `${baseUrl}/bank-review-date`;
 };
 
 const getAmendmentIsUsingFacilityEndDate = async (req, res) => {
