@@ -11,11 +11,11 @@ const companiesHouseError = (error) => {
       case 'company-profile-not-found':
         status = 422;
         errMsg = 'Invalid Companies House registration number';
-        errCode = error.response?.data?.errors[0]?.error;
+        errCode = error.response?.data?.errors?.[0]?.error;
         break;
       default:
         errMsg = 'There was a problem getting the Companies House registration number';
-        errCode = error.response?.data?.errors[0]?.error;
+        errCode = error.response?.data?.errors?.[0]?.error;
         break;
     }
   }

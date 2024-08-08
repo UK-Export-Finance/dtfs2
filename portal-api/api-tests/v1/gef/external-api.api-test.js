@@ -43,13 +43,12 @@ describe(baseUrl, () => {
     });
 
     it('Returns a not found company profile', async () => {
-      const { status, body } = await as(aMaker).get(`${baseUrl}/company/1111111`);
-      expect(status).toEqual(422);
+      const { status, body } = await as(aMaker).get(`${baseUrl}/company/AB123123`);
+      expect(status).toEqual(404);
       expect(body).toEqual([{
-        status: 422,
-        errCode: 'company-profile-not-found',
+        status: 404,
         errRef: 'regNumber',
-        errMsg: 'Invalid Companies House registration number',
+        errMsg: 'There was a problem getting the Companies House registration number',
       }]);
     });
 
