@@ -34,6 +34,7 @@ df.app.orchestration('acbs-amend-facility-covenant-record', function* amendFacil
     if (!payload) {
       throw new Error('Facility Covenant Record amendment SOF - Invalid payload provided');
     }
+
     const { facilityId, amendments } = payload;
     const { amendment } = amendments;
 

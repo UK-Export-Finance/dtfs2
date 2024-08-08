@@ -36,7 +36,7 @@ const { isHttpErrorStatus } = require('../../helpers/http');
 const handler = async (payload) => {
   try {
     if (!payload) {
-      throw new Error('Invalid facility convenant update payload');
+      throw new Error('Invalid facility covenant amendment payload');
     }
 
     const { facilityIdentifier, acbsFacilityCovenantInput } = payload;
@@ -71,8 +71,8 @@ const handler = async (payload) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to update facility convenant record %o', error);
-    throw new Error(`Unable to update facility convenant record ${error}`);
+    console.error('Unable to amend facility convenant record %o', error);
+    throw new Error(`Unable to amend facility convenant record ${error}`);
   }
 };
 
