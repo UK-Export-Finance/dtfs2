@@ -131,7 +131,7 @@ exports.findOne = (req, res) => {
  * @param {object} params.dealUpdate - The update to be made to the deal.
  * @param {object} params.user - The user making the changes.
  * @param {object} params.auditDetails - The audit details for the update.
- * @returns {Promise<Object | false>} The updated deal object.
+ * @returns {Promise<object | false>} The updated deal object.
  */
 const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
   const updatedDeal = await api.updateDeal({ dealId, dealUpdate, user, auditDetails });

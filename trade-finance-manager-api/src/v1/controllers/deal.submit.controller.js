@@ -208,7 +208,7 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * @param {string} dealType - The type of the deal.
  * @param {object} checker - checker submitting the deal
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - checker information
- * @returns {Promise<Object> | Boolean} - A promise that resolves to an object, other false.
+ * @returns {Promise<object | false> } - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
  */
 const submitDealBeforeUkefIds = async (dealId, dealType, checker, auditDetails) => {

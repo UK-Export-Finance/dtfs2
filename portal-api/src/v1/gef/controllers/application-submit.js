@@ -31,7 +31,7 @@ const generateId = async (entityType, dealId) => number.getNumber(entityType, de
  * Generates a unique identifier for a given entity (either a 'deal' or a 'facility') based on the provided application data.
  * @param {string} entity - The type of entity for which the unique identifier needs to be generated ('deal' or 'facility').
  * @param {object} application - The application data containing the necessary information to generate the identifier.
- * @returns {Promise<Object>} - The generated unique identifier for the specified entity.
+ * @returns {Promise<object>} - The generated unique identifier for the specified entity.
  * @throws {Error} - If unable to generate the identifier.
  */
 const generateUkefId = async (entity, application) => {
