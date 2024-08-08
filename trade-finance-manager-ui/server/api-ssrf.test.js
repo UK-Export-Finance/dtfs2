@@ -175,6 +175,11 @@ describe('API is protected against SSRF attacks', () => {
       url: /^.*\/v1\/facilities\/.*\/amendments\/completed\/latest-facility-end-date$/,
     },
     {
+      description: 'getLatestCompletedAmendmentBankReviewDate',
+      apiFunction: api.getLatestCompletedAmendmentBankReviewDate,
+      url: /^.*\/v1\/facilities\/.*\/amendments\/completed\/latest-bank-review-date$/,
+    },
+    {
       description: 'getAmendmentsByFacilityId',
       apiFunction: api.getAmendmentsByFacilityId,
       url: /^.*\/v1\/facilities\/.*\/amendments$/,
