@@ -195,3 +195,13 @@ export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormVa
 
 export const validateEditPaymentRequestFormValues = (formValues: EditPaymentFormValues): PaymentErrorsViewModel =>
   validateCommonPaymentRequestFormValues(formValues);
+
+export const validateAddToAnExistingPaymentRequestFormValues = (paymentRadioIds: number[]): PaymentErrorsViewModel => {
+  const errorSummary: ErrorSummaryViewModel[] = [];
+
+  if (paymentRadioIds.length === 0) {
+    errorSummary.push({ text: 'Select a payment to add the fee or fees to', href: '#paymentIds' }); // TODO FN-1749: Change href to the payment ids input.
+  }
+
+  return { errorSummary };
+};

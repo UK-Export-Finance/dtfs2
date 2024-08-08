@@ -3,7 +3,8 @@ import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { PaymentErrorsViewModel } from '../../../types/view-models';
-import { validateAddPaymentRequestFormValues } from './validate-payment-form-values';
+import { validateAddPaymentRequestFormValues, validateAddToAnExistingPaymentRequestFormValues } from './validate-payment-form-values';
+import { AddToAnExistingPaymentRadioId } from '../../../types/add-to-an-existing-payment-radio-id';
 
 export type PremiumPaymentsTableCheckboxSelectionsRequestBody = Record<PremiumPaymentsTableCheckboxId, 'on'>;
 
@@ -74,3 +75,45 @@ export const extractEditPaymentFormValues = (requestBody: EditPaymentFormRequest
   },
   paymentReference: requestBody.paymentReference,
 });
+
+export type AddToAnExistingPaymentFormRequestBody = {
+  paymentGroup?: AddToAnExistingPaymentRadioId;
+  addToAnExistingPaymentFormSubmission?: string;
+};
+
+const getPaymentIdsFromPaymentGroupRadioId = (radioId: AddToAnExistingPaymentRadioId): number[] => {
+  const { commaSeparatedIds } = /paymentGroupIds-(?<commaSeparatedIds>(\d+,?)+)/.exec(radioId)!.groups!;
+
+  return commaSeparatedIds.split(',').map((id) => parseInt(id, 10));
+};
+
+const extractAddToAnExistingPaymentRadioIdsFromRequestBody = (requestBody: AddToAnExistingPaymentFormRequestBody): number[] => {
+  if (!requestBody.paymentGroup) {
+    return [];
+  }
+
+  return getPaymentIdsFromPaymentGroupRadioId(requestBody.paymentGroup);
+};
+
+export const extractAddToAnExistingPaymentRadioIdsAndValidateIfPresent = (
+  requestBody: AddToAnExistingPaymentFormRequestBody,
+): { isAddingToAnExistingPayment: boolean; errors: PaymentErrorsViewModel; paymentIds: number[] } => {
+  const isAddingToAnExistingPayment = 'addToAnExistingPaymentFormSubmission' in requestBody;
+
+  if (!isAddingToAnExistingPayment) {
+    return {
+      isAddingToAnExistingPayment,
+      errors: EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
+      paymentIds: [],
+    };
+  }
+
+  const paymentIds = extractAddToAnExistingPaymentRadioIdsFromRequestBody(requestBody);
+  const errors = validateAddToAnExistingPaymentRequestFormValues(paymentIds);
+
+  return {
+    isAddingToAnExistingPayment,
+    errors,
+    paymentIds,
+  };
+};

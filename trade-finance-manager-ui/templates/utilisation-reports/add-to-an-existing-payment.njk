@@ -15,6 +15,9 @@
       <h1 class="govuk-heading-l">Add to an existing payment</h1>
     </div>
   </div>
+
+  {# TODO FN-1749: Add hidden inputs for selected fee records - similar implementation to existing. #}
+
   {{ feeRecordDetailsTable.render({
     captionText: "Selected reported fees details",
     feeRecords: reportedFeeDetails.feeRecords,
@@ -25,11 +28,20 @@
     }
   }) }}
 
-  {{ paymentGroupRadioInputGroup.render({
-    legendText: availablePaymentsHeading,
-    paymentGroups: availablePaymentGroups
-  }) }}
+  <form method="post">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    <input type="hidden" name="addToAnExistingPaymentFormSubmission" value="true"/>
+    {% for id in selectedFeeRecordCheckboxIds %}<input type="hidden" name={{ id }} value="on"/>{% endfor %}
 
-  {# TODO FN-1749: Add 'Continue' and 'Cancel' buttons and associated submission logic. #}
+    {{ paymentGroupRadioInputGroup.render({
+      legendText: availablePaymentsHeading,
+      paymentGroups: availablePaymentGroups
+    }) }}
+
+    <div class="govuk-button-group">
+      {{ govukButton({"text": "Continue"}) }}
+      {# TODO FN-3293: Add 'Cancel' link and associated redirect logic to include selected fee record IDs. #}
+    </div>
+  </form>
 {% endblock %}
 {% block sub_content %}{% endblock %}

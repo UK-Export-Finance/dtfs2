@@ -9,6 +9,7 @@ export const anAddToAnExistingPaymentViewModel = (): AddToAnExistingPaymentViewM
   reportId: '12',
   bank: { name: 'Test bank ' },
   formattedReportPeriod: 'Some reporting period',
+  selectedFeeRecordCheckboxIds: ['feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO'],
   reportedFeeDetails: {
     totalReportedPayments: 'GBP 200',
     feeRecords: [
