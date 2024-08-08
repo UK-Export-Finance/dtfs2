@@ -34,7 +34,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
   beforeEach(() => {
     jest.mocked(calculateFixedFeeAdjustment).mockResolvedValue(10);
-    jest.mocked(calculateFixedFeeAdjustment).mockResolvedValue(20);
+    jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(20);
   });
 
   afterEach(() => {
