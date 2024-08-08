@@ -154,6 +154,7 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
  * displays success message and redirects to unissued facilities list
  * @param {req}
  * @param {res}
+ * @returns {Promise<void>}
  */
 const postChangeUnissuedFacility = async (req, res) => {
   const { body, query, params } = req;

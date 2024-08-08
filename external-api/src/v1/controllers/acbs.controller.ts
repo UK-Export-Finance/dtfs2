@@ -247,7 +247,7 @@ const amendAcbsFacility = async (amendment: Amendment) => {
  * Constructs acceptable payload by DOF.
  * @param req Request
  * @param res Response
- * @return Response object with HTTP code as `status` and response as `data`.
+ * @returns Response object with HTTP code as `status` and response as `data`.
  */
 export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
   try {
