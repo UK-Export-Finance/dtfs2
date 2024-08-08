@@ -84,12 +84,8 @@ const provide = (listOfDataTypes) => async (req, res, next) => {
     req.apiData = {};
   }
 
-  const promises = [];
-  listOfDataTypes.forEach(async (dataType) => {
-    promises.push(get(dataType, req));
-  });
+  await Promise.all(listOfDataTypes.map(async (dataType) => await get(dataType, req)));
 
-  await Promise.all(promises);
   return next();
 };
 

@@ -219,8 +219,8 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
   // get exporter name
   const { companyName = '' } = exporter;
 
-  user.bank.emails.forEach(async (email) => {
-    await sendEmail(EMAIL_TEMPLATE_IDS.UPDATE_STATUS, email, {
+  const emailPromises = user.bank.emails.map((email) =>
+    sendEmail(EMAIL_TEMPLATE_IDS.UPDATE_STATUS, email, {
       firstName,
       surname,
       submissionType: existingApplication.submissionType || '',
@@ -230,8 +230,10 @@ const sendStatusUpdateEmail = async (user, existingApplication, status) => {
       previousStatus,
       updatedByName: `${user.firstname} ${user.surname}`,
       updatedByEmail: user.email,
-    });
-  });
+    }),
+  );
+
+  await Promise.all(emailPromises);
 };
 
 exports.changeStatus = async (req, res) => {

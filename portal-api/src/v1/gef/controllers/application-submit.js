@@ -187,38 +187,41 @@ const submissionPortalActivity = async (application) => {
  * @returns {Promise<boolean>} Facility(ies) was(were) updated or not
  */
 const checkCoverDateConfirmed = async (app, auditDetails) => {
-  let hasUpdated = false;
-
-  if (app) {
-    try {
-      const facilities = await getAllFacilitiesByDealId(app._id);
-      const notYetSubmittedToUKEF = !app.submissionCount;
-      const haveFacilities = facilities?.length > 0;
-      const isAIN = app.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
-
-      if (notYetSubmittedToUKEF && haveFacilities) {
-        // Iterate through issued facilities
-        facilities
-          .filter((f) => f.hasBeenIssued && !f.coverDateConfirmed)
-          .map(async (f) => {
-            hasUpdated = true;
-            await updateFacility(f._id, { coverDateConfirmed: Boolean(isAIN) }, auditDetails);
-          });
-
-        // Iterate through unissued facilities
-        facilities
-          .filter((f) => !f.hasBeenIssued && f.coverDateConfirmed)
-          .map(async (f) => {
-            hasUpdated = true;
-            await updateFacility(f._id, { coverDateConfirmed: false }, auditDetails);
-          });
-        return hasUpdated;
-      }
-    } catch (error) {
-      console.error('Unable to set coverDateConfirmed for AIN facilities. %o', error);
-    }
+  if (!app) {
+    return false;
   }
-  return hasUpdated;
+
+  try {
+    const facilities = await getAllFacilitiesByDealId(app._id);
+    const isSubmittedToUkef = !!app.submissionCount;
+    const hasFacilities = facilities?.length > 0;
+    const isAIN = app.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
+
+    if (isSubmittedToUkef && !hasFacilities) {
+      return false;
+    }
+
+    const updatedFacilities = await Promise.all(
+      facilities.reduce((promises, facility) => {
+        const isIssuedFacility = facility.hasBeenIssued && !facility.coverDateConfirmed;
+        const isUnissuedFacility = !facility.hasBeenIssued && facility.coverDateConfirmed;
+
+        if (isIssuedFacility || isUnissuedFacility) {
+          const coverDateConfirmed = isIssuedFacility && Boolean(isAIN);
+          promises.push(updateFacility(facility._id, { coverDateConfirmed }, auditDetails));
+        }
+
+        return promises;
+      }, []),
+    );
+
+    const hasUpdatedAtLeaseOneFacility = updatedFacilities.length > 0;
+
+    return hasUpdatedAtLeaseOneFacility;
+  } catch (error) {
+    console.error('Unable to set coverDateConfirmed for AIN facilities. %o', error);
+    return false;
+  }
 };
 
 /**

@@ -84,25 +84,26 @@ const facilityChangePortalActivity = async (application, facilities) => {
     const { checkerId, portalActivities } = application;
     const checker = await getUserInfo(checkerId);
 
-    facilities.forEach(async (facility) => {
-      if (facility.canResubmitIssuedFacilities) {
-        // creates user object to add to array
-        const maker = facility.unissuedToIssuedByMaker;
-        const activityParams = {
-          type: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
-          user: '',
-          activityType: PORTAL_ACTIVITY_TYPE.FACILITY_STAGE,
-          activityText: '',
-          activityHTML: 'facility',
-          facility,
-          maker,
-          checker,
-        };
-        // generates an activities object
-        const activityObj = portalActivityGenerator(activityParams);
-        // adds to beginning of portalActivities array so most recent displayed first
-        portalActivities.unshift(activityObj);
+    facilities.forEach((facility) => {
+      if (!facility.canResubmitIssuedFacilities) {
+        return;
       }
+      // creates user object to add to array
+      const maker = facility.unissuedToIssuedByMaker;
+      const activityParams = {
+        type: PORTAL_ACTIVITY_LABEL.FACILITY_CHANGED_ISSUED,
+        user: '',
+        activityType: PORTAL_ACTIVITY_TYPE.FACILITY_STAGE,
+        activityText: '',
+        activityHTML: 'facility',
+        facility,
+        maker,
+        checker,
+      };
+      // generates an activities object
+      const activityObj = portalActivityGenerator(activityParams);
+      // adds to beginning of portalActivities array so most recent displayed first
+      portalActivities.unshift(activityObj);
     });
 
     return portalActivities;

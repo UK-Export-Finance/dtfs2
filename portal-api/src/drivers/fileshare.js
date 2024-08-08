@@ -165,9 +165,11 @@ const deleteMultipleFiles = async (fileshare, filePath, fileList) => {
   if (!fileList) return false;
 
   if (Array.isArray(fileList)) {
-    return fileList.map(async (filename) => {
-      await deleteFile(fileshare, `${filePath}/${filename}`);
-    });
+    return Promise.all(
+      fileList.map(async (filename) => {
+        await deleteFile(fileshare, `${filePath}/${filename}`);
+      }),
+    );
   }
 
   return deleteFile(fileshare, `${filePath}/${fileList}`);
