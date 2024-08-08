@@ -1,6 +1,4 @@
 const { pageRenderer } = require('../pageRenderer');
-const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
-const { getReportReconciliationSummariesViewModel } = require('../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
 const { getUkBankHolidays } = require('../../server/api');
 const { MOCK_BANK_HOLIDAYS } = require('../../server/test-mocks/mock-bank-holidays');
 const { MOCK_TFM_SESSION_USER } = require('../../server/test-mocks/mock-tfm-session-user');
@@ -24,7 +22,14 @@ describe(page, () => {
   });
 
   const getWrapper = async () => {
-    const reportPeriodSummaries = await getReportReconciliationSummariesViewModel(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY, 'user-token');
+    const reportPeriodSummaries = [
+      {
+        items: [],
+        submissionMonth: '2023-12',
+        reportPeriodHeading: 'A heading to display for the report period',
+        dueDateText: 'Some text to display explaining the due date',
+      },
+    ];
     const params = {
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportPeriodSummaries,
@@ -43,11 +48,11 @@ describe(page, () => {
   });
 
   it('should render the report period heading', async () => {
-    (await getWrapper()).expectText('[data-cy="2023-12-submission-month-report-period-heading"]').toRead(`Open reports: Nov 2023 (monthly)`);
+    (await getWrapper()).expectText('[data-cy="2023-12-submission-month-report-period-heading"]').toRead('A heading to display for the report period');
   });
 
   it('should render the report due date for the current period', async () => {
-    (await getWrapper()).expectText(`[data-cy="2023-12-submission-month-report-due-date-text"]`).toRead(`Reports were due to be received by 14 December 2023.`);
+    (await getWrapper()).expectText(`[data-cy="2023-12-submission-month-report-due-date-text"]`).toRead('Some text to display explaining the due date');
   });
 
   it('should render the report reconciliation table', async () => {

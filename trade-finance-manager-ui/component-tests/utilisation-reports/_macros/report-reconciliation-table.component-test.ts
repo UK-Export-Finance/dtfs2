@@ -1,11 +1,7 @@
 import { IsoMonthStamp, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import { componentRenderer } from '../../componentRenderer';
-import { getUkBankHolidays } from '../../../server/api';
-import { getReportReconciliationSummariesViewModel } from '../../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper';
-import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } from '../../../server/test-mocks/mock-utilisation-report-reconciliation-summary';
 import { MOCK_TFM_SESSION_USER } from '../../../server/test-mocks/mock-tfm-session-user';
-import { MOCK_BANK_HOLIDAYS } from '../../../server/test-mocks/mock-bank-holidays';
-import { UtilisationReportSummaryViewModel } from '../../../server/types/view-models';
+import { ReportPeriodSummariesViewModel, UtilisationReportSummaryViewModel } from '../../../server/types/view-models';
 
 jest.mock('../../../server/api');
 
@@ -14,25 +10,14 @@ const tableSelector = '[data-cy="utilisation-report-reconciliation-table"]';
 
 const render = componentRenderer(component);
 
-const originalProcessEnv = process.env;
-
 type ReportReconciliationTableParams = {
   summaryItems: UtilisationReportSummaryViewModel[];
   submissionMonth: IsoMonthStamp;
 };
 
 describe(component, () => {
-  beforeAll(() => {
-    jest.mocked(getUkBankHolidays).mockResolvedValue(MOCK_BANK_HOLIDAYS);
-    process.env.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH = '10';
-  });
-
-  afterAll(() => {
-    process.env = { ...originalProcessEnv };
-  });
-
-  const getWrapper = async () => {
-    const reportSummaries = await getReportReconciliationSummariesViewModel(MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY, 'user-token');
+  const getWrapper = () => {
+    const reportSummaries = aReportPeriodSummariesViewModelWithReportsInEachStatus();
     const params = {
       user: MOCK_TFM_SESSION_USER,
       summaryItems: reportSummaries[0].items,
@@ -41,8 +26,8 @@ describe(component, () => {
     return render(params);
   };
 
-  it('should render the table headings', async () => {
-    const wrapper = await getWrapper();
+  it('should render the table headings', () => {
+    const wrapper = getWrapper();
     wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(7);
     wrapper.expectElement(`${tableSelector} thead th:contains("Bank")`).toExist();
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toExist();
@@ -53,8 +38,8 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Reported fees left to reconcile")`).toExist();
   });
 
-  it('should render the table data', async () => {
-    const wrapper = await getWrapper();
+  it('should render the table data', () => {
+    const wrapper = getWrapper();
     const { summaryItems, submissionMonth } = wrapper.params as ReportReconciliationTableParams;
 
     summaryItems.forEach((summaryItem) => {
@@ -87,3 +72,81 @@ describe(component, () => {
     });
   });
 });
+
+function aReportPeriodSummariesViewModelWithReportsInEachStatus(): ReportPeriodSummariesViewModel {
+  return [
+    {
+      submissionMonth: '2023-12',
+      items: [
+        aReportNotReceivedReportForBank({ id: '1', name: 'Barclays' }),
+        aPendingReconciliationReportForBank({ id: '2', name: 'HSBC' }),
+        aReconciliationInProgressReportForBank({ id: '3', name: 'Newable' }),
+        aReconciliationCompletedReportForBank({ id: '4', name: 'Natwest' }),
+      ],
+      reportPeriodHeading: 'This is the page heading',
+      dueDateText: 'This is the due date text',
+    },
+  ];
+}
+
+function aReportNotReceivedReportForBank(bank: { id: string; name: string }): UtilisationReportSummaryViewModel {
+  return {
+    frequency: 'Monthly',
+    displayStatus: 'Report Not Yet Received',
+    reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
+    reportId: '65784d376fe2fe26168990e8',
+    bank,
+    status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+  };
+}
+
+function aPendingReconciliationReportForBank(bank: { id: string; name: string }): UtilisationReportSummaryViewModel {
+  return {
+    frequency: 'Monthly',
+    displayStatus: 'Report Received but Pending Reconciliation',
+    formattedDateUploaded: 'report received on this here date',
+    downloadPath: 'this is the download path',
+    dateUploaded: '2022-10-10T00:00:00',
+    totalFacilitiesReported: 500,
+    totalFeesReported: 600,
+    reportedFeesLeftToReconcile: 600,
+    reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
+    reportId: '65784d376fe2fe26168990e8',
+    bank,
+    status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION,
+  };
+}
+
+function aReconciliationInProgressReportForBank(bank: { id: string; name: string }): UtilisationReportSummaryViewModel {
+  return {
+    frequency: 'Monthly',
+    displayStatus: 'Report Reconciliation is in Progress',
+    formattedDateUploaded: 'report received on this here date',
+    downloadPath: 'this is the download path',
+    dateUploaded: '2022-10-10T01:00:00',
+    totalFacilitiesReported: 500,
+    totalFeesReported: 600,
+    reportedFeesLeftToReconcile: 500,
+    reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
+    reportId: '65784d376fe2fe26168990e8',
+    bank,
+    status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+  };
+}
+
+function aReconciliationCompletedReportForBank(bank: { id: string; name: string }): UtilisationReportSummaryViewModel {
+  return {
+    frequency: 'Monthly',
+    displayStatus: 'Reconciled',
+    formattedDateUploaded: 'report received on this here date',
+    downloadPath: 'this is the download path',
+    dateUploaded: '2022-10-10T02:00:00',
+    totalFacilitiesReported: 500,
+    totalFeesReported: 600,
+    reportedFeesLeftToReconcile: 0,
+    reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
+    reportId: '65784d376fe2fe26168990e8',
+    bank,
+    status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED,
+  };
+}
