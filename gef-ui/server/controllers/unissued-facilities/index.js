@@ -12,6 +12,11 @@ const { validationErrorHandler } = require('../../utils/helpers');
  * creates body/parameters for the template for unissued facilities
  * if change true, changes 'cancel' + 'back' button href back to application preview
  * else renders back to unissued facilities list
+ * @param {object} input - An object containing the below
+ * @param {object} input.params - An object containing the facility id and deal id
+ * @param {object} input.query - An object containing the query status
+ * @param {boolean} input.change - A boolean to determine if change is true or false
+ * @param {string} input.userToken - The user token
  * @returns {Promise<object>} body
  */
 const renderChangeFacilityPartial = async ({ params, query, change, userToken }) => {
