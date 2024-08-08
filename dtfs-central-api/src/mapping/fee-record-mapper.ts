@@ -1,4 +1,4 @@
-import { CurrencyAndAmount, FeeRecordEntity, KeyingSheetRowStatus } from '@ukef/dtfs2-common';
+import { CurrencyAndAmount, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { FeeRecord } from '../types/fee-records';
 
 /**
@@ -46,19 +46,3 @@ export const mapFeeRecordEntityToFeeRecord = (feeRecord: FeeRecordEntity): FeeRe
   reportedFees: mapFeeRecordEntityToReportedFees(feeRecord),
   reportedPayments: mapFeeRecordEntityToReportedPayments(feeRecord),
 });
-
-/**
- * Maps the fee record entity to the keying sheet status
- * @param feeRecord - The fee record entity
- * @returns The keying sheet status
- */
-export const mapFeeRecordEntityToKeyingSheetRowStatus = (feeRecord: FeeRecordEntity): KeyingSheetRowStatus => {
-  switch (feeRecord.status) {
-    case 'READY_TO_KEY':
-      return 'TO_DO';
-    case 'RECONCILED':
-      return 'DONE';
-    default:
-      throw new Error(`Cannot get keying sheet status for fee record with status '${feeRecord.status}'`);
-  }
-};
