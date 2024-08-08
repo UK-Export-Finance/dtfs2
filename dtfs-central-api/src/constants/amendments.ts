@@ -15,9 +15,3 @@ export const AMENDMENT_QUERY_STATUSES = {
   IN_PROGRESS: 'in-progress',
   COMPLETED: 'completed',
 } as const;
-
-export const AMENDMENT_QUERIES = {
-  LATEST_VALUE: 'latest-value',
-  LATEST_COVER_END_DATE: 'latest-cover-end-date',
-  LATEST: 'latest',
-} as const;

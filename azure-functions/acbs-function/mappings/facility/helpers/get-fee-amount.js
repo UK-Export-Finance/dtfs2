@@ -6,7 +6,7 @@ const { to2Decimals } = require('../../../helpers/currency');
  * @param {Object} facility Facility object
  * @param {String} dealType Deal type i.e. GEF, BSS, EWCS
  * @param {Integer} premiumScheduleIndex Premium schedule index
- * @returns {Integer} Fee record amount
+ * @returns {number} Fee record amount
  */
 
 const getFeeAmount = (facility, dealType, premiumScheduleIndex) => {

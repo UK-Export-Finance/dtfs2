@@ -51,6 +51,9 @@ router.post('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', 
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date', amendmentsController.getAmendmentIsUsingFacilityEndDate);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date', amendmentsController.postAmendmentIsUsingFacilityEndDate);
 
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date', amendmentsController.getAmendmentFacilityEndDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date', amendmentsController.postAmendmentFacilityEndDate);
+
 router.get(
   '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision',
   amendmentsController.getAmendmentAddUnderwriterManagersDecisionCoverEndDate,

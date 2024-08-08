@@ -1,15 +1,10 @@
 import { HttpStatusCode } from 'axios';
-import { Response } from 'supertest';
-import { ApiErrorResponseBody } from '../../types';
 import { API_ERROR_CODE } from '../../constants';
-
-interface ErrorResponse extends Response {
-  body: ApiErrorResponseBody;
-}
+import { ErrorResponse } from './types';
 
 type WithMongoIdPathParameterValidationTestsParams = {
   baseUrl: string;
-  makeRequest: <TResponse extends ErrorResponse>(url: string) => Promise<TResponse>;
+  makeRequest: (url: string) => Promise<ErrorResponse>;
 };
 
 const VALID_OBJECT_ID = '5c0a7922c9d89830f4911426';
@@ -20,6 +15,12 @@ const extractParameters = (url: string): string[] =>
     .filter((pathStr) => pathStr.startsWith(':'))
     .map((pathParam) => pathParam.replace(':', ''));
 
+/**
+ * Test helper to test the mongo id validation middleware being used for a specific route
+ * @param params - The test parameters
+ * @param params.baseUrl - The base url with format '/v1/path/:pathParamater'
+ * @param params.makeRequest - The function to make the request with
+ */
 export const withMongoIdPathParameterValidationTests = ({ baseUrl, makeRequest }: WithMongoIdPathParameterValidationTestsParams): void => {
   const parameters = extractParameters(baseUrl);
 

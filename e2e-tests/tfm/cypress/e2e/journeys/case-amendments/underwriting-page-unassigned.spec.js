@@ -6,6 +6,8 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 
+const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
+
 context('Amendments underwriting page', () => {
   describe('Amendments underwriting', () => {
     let dealId;
@@ -77,9 +79,9 @@ context('Amendments underwriting page', () => {
       amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
       amendmentsPage.continueAmendment().click();
 
-      cy.url().should('contain', 'is-using-facility-end-date');
-      amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      if (tfmFacilityEndDateEnabled) {
+        amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
+      }
 
       cy.url().should('contain', 'facility-value');
       amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
