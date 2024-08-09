@@ -31,6 +31,7 @@ export type TfmFacilityAmendment = {
   currentCoverEndDate?: UnixTimestamp | null;
   isUsingFacilityEndDate?: boolean;
   facilityEndDate?: string;
+  bankReviewDate?: string;
   changeFacilityValue?: boolean;
   value?: number | null;
   currentValue?: number | null;
