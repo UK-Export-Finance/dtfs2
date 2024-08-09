@@ -14,7 +14,7 @@ const df = require('durable-functions');
  *
  * @param {object} request - The HTTP request object, containing the URL, method, and body of the request.
  * @param {object} client - The durable client used to start a new orchestration instance and create a check status response.
- * @returns {object} - A check status response for the started orchestration instance.
+ * @returns {Promise<object>} - A check status response for the started orchestration instance.
  */
 
 const handler = async (request, client) => {

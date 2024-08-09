@@ -5,7 +5,7 @@ const generateTaskDates = require('./generate-task-dates');
  * Map user inputted task updated data into DB/schema format
  * @param {object} original task
  * @param {object} user inputted task update
- * @returns {object} DB/schema formatted task object with extra task dates and full user name
+ * @returns {Promise<object>} DB/schema formatted task object with extra task dates and full user name
  */
 const mapTaskObject = async (originalTask, updateInput) => {
   const statusFrom = originalTask.status;

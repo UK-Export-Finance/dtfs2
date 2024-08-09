@@ -216,7 +216,7 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
 /**
  * Invoked Azure DOF using HTTP `POST` method.
  * @param {object} amendment Amendment object comprising facility ID and amends. A amendment at a time is processed.
- * @returns {object} DOF Response
+ * @returns {Promise<object | null>} DOF Response
  */
 const amendAcbsFacility = async (amendment: Amendment) => {
   const hasAmendment = amendment.coverEndDate || amendment.amount;
@@ -247,7 +247,7 @@ const amendAcbsFacility = async (amendment: Amendment) => {
  * Constructs acceptable payload by DOF.
  * @param {object} req Request
  * @param {object} res Response
- * @return {object} Response object with HTTP code as `status` and response as `data`.
+ * @returns {Promise<object>} Response object with HTTP code as `status` and response as `data`.
  */
 export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
   try {
