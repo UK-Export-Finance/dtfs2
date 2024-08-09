@@ -1,1 +1,1 @@
-export * from './fee-record-payments-payment';
+export * from './fee-record-payment';
