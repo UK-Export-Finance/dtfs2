@@ -10,11 +10,12 @@ import {
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { aReportPeriod } from '../../../../../../test-helpers/test-data';
-import { calculateFixedFeeAdjustment } from '../helpers';
+import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment } from '../helpers';
 
 jest.mock<unknown>('../helpers', () => ({
   ...jest.requireActual('../helpers'),
   calculateFixedFeeAdjustment: jest.fn(),
+  calculatePrincipalBalanceAdjustment: jest.fn(),
 }));
 
 describe('handleFeeRecordGenerateKeyingDataEvent', () => {
@@ -32,88 +33,12 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   const aMatchingFeeRecord = () => FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').build();
 
   beforeEach(() => {
-    jest.resetAllMocks();
     jest.mocked(calculateFixedFeeAdjustment).mockResolvedValue(10);
+    jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(20);
   });
 
-  it('saves the updated fee record with the supplied entity manager', async () => {
-    // Arrange
-    const feeRecord = aMatchingFeeRecord();
-
-    // Act
-    await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
-      transactionEntityManager: mockEntityManager,
-      isFinalFeeRecordForFacility: true,
-      reportPeriod: aReportPeriod(),
-      requestSource,
-    });
-
-    // Assert
-    expect(mockSave).toHaveBeenCalledWith(FeeRecordEntity, feeRecord);
-  });
-
-  it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}'`, async () => {
-    // Arrange
-    const feeRecord = aMatchingFeeRecord();
-
-    // Act
-    await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
-      transactionEntityManager: mockEntityManager,
-      isFinalFeeRecordForFacility: true,
-      reportPeriod: aReportPeriod(),
-      requestSource,
-    });
-
-    // Assert
-    expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
-  });
-
-  it("sets the fee record 'lastUpdatedByIsSystemUser' field to false", async () => {
-    // Arrange
-    const feeRecord = aMatchingFeeRecord();
-
-    // Act
-    await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
-      transactionEntityManager: mockEntityManager,
-      isFinalFeeRecordForFacility: true,
-      reportPeriod: aReportPeriod(),
-      requestSource,
-    });
-
-    // Assert
-    expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
-  });
-
-  it("sets the fee record 'lastUpdatedByPortalUserId' to null", async () => {
-    // Arrange
-    const feeRecord = aMatchingFeeRecord();
-
-    // Act
-    await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
-      transactionEntityManager: mockEntityManager,
-      isFinalFeeRecordForFacility: true,
-      reportPeriod: aReportPeriod(),
-      requestSource,
-    });
-
-    // Assert
-    expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
-  });
-
-  it("sets the fee record 'lastUpdatedByTfmUserId' to the request source user id", async () => {
-    // Arrange
-    const feeRecord = aMatchingFeeRecord();
-
-    // Act
-    await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
-      transactionEntityManager: mockEntityManager,
-      isFinalFeeRecordForFacility: true,
-      reportPeriod: aReportPeriod(),
-      requestSource,
-    });
-
-    // Assert
-    expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   describe('when isFinalFeeRecordForFacility is set to true', () => {
@@ -142,11 +67,14 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       expect(calculateFixedFeeAdjustment).toHaveBeenCalledWith(feeRecord, feeRecord.facilityUtilisationData, reportPeriod);
     });
 
-    it('sets the fee record principalBalanceAdjustment to the difference between the fee record utilisation and the facility utilisation data utilisation', async () => {
+    it('sets the fee record principalBalanceAdjustment to principal balance adjustment', async () => {
       // Arrange
       const feeRecord = aMatchingFeeRecord();
       feeRecord.facilityUtilisation = 3000;
-      feeRecord.facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(feeRecord.facilityId).withUtilisation(2000).build();
+      const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(feeRecord.facilityId).withUtilisation(2000).build();
+      feeRecord.facilityUtilisationData = facilityUtilisationData;
+
+      jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(200);
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -157,7 +85,183 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.principalBalanceAdjustment).toBe(1000);
+      expect(feeRecord.principalBalanceAdjustment).toBe(200);
+      expect(calculatePrincipalBalanceAdjustment).toHaveBeenCalledWith(feeRecord, facilityUtilisationData);
+    });
+
+    it('saves the updated fee record with the supplied entity manager', async () => {
+      // Arrange
+      const feeRecord = aMatchingFeeRecord();
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(mockSave).toHaveBeenCalledWith(FeeRecordEntity, feeRecord);
+    });
+
+    it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fees paid to ukef is non zero`, async () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
+        .withStatus('MATCH')
+        .withFeesPaidToUkefForThePeriod(0.01)
+        .build();
+      jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
+      jest.mocked(calculateFixedFeeAdjustment).mockResolvedValue(0);
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+    });
+
+    it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is greater than zero`, async () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').withFeesPaidToUkefForThePeriod(0).build();
+      jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
+      jest.mocked(calculateFixedFeeAdjustment).mockResolvedValue(0.01);
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+    });
+
+    it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is less than zero`, async () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').withFeesPaidToUkefForThePeriod(0).build();
+      jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
+      jest.mocked(calculateFixedFeeAdjustment).mockResolvedValue(-0.01);
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+    });
+
+    it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the principal balance adjustment is greater than zero`, async () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').withFeesPaidToUkefForThePeriod(0).build();
+      jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0.01);
+      jest.mocked(calculateFixedFeeAdjustment).mockResolvedValue(0);
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+    });
+
+    it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the principal balance adjustment is less than zero`, async () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').withFeesPaidToUkefForThePeriod(0).build();
+      jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(-0.01);
+      jest.mocked(calculateFixedFeeAdjustment).mockResolvedValue(0);
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+    });
+
+    it(`updates the fee record status to '${FEE_RECORD_STATUS.RECONCILED}' if the principal balance adjustment, fixed fee adjustment and fees paid to ukef for the period are all zero`, async () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').withFeesPaidToUkefForThePeriod(0).build();
+      jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
+      jest.mocked(calculateFixedFeeAdjustment).mockResolvedValue(0);
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.RECONCILED);
+    });
+
+    it("sets the fee record 'lastUpdatedByIsSystemUser' field to false", async () => {
+      // Arrange
+      const feeRecord = aMatchingFeeRecord();
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+    });
+
+    it("sets the fee record 'lastUpdatedByPortalUserId' to null", async () => {
+      // Arrange
+      const feeRecord = aMatchingFeeRecord();
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
+    });
+
+    it("sets the fee record 'lastUpdatedByTfmUserId' to the request source user id", async () => {
+      // Arrange
+      const feeRecord = aMatchingFeeRecord();
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
     });
   });
 
@@ -194,6 +298,105 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
 
       // Assert
       expect(feeRecord.principalBalanceAdjustment).toBeNull();
+    });
+
+    it('saves the updated fee record with the supplied entity manager', async () => {
+      // Arrange
+      const feeRecord = aMatchingFeeRecord();
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(mockSave).toHaveBeenCalledWith(FeeRecordEntity, feeRecord);
+    });
+
+    it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if fees paid to ukef is greater than zero`, async () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
+        .withStatus('MATCH')
+        .withFeesPaidToUkefForThePeriod(0.01)
+        .build();
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+    });
+
+    it(`updates the fee record status to '${FEE_RECORD_STATUS.RECONCILED}' if fees paid to ukef is equal to zero`, async () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport()).withStatus('MATCH').withFeesPaidToUkefForThePeriod(0).build();
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.RECONCILED);
+    });
+
+    it("sets the fee record 'lastUpdatedByIsSystemUser' field to false", async () => {
+      // Arrange
+      const feeRecord = aMatchingFeeRecord();
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+    });
+
+    it("sets the fee record 'lastUpdatedByPortalUserId' to null", async () => {
+      // Arrange
+      const feeRecord = aMatchingFeeRecord();
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
+    });
+
+    it("sets the fee record 'lastUpdatedByTfmUserId' to the request source user id", async () => {
+      // Arrange
+      const feeRecord = aMatchingFeeRecord();
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
     });
   });
 

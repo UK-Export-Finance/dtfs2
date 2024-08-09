@@ -189,9 +189,9 @@ const findOneDeal = async (dealId) => {
 /**
  * @param {object} params
  * @param {string} params.dealId - deal to update
- * @param {Object} params.dealUpdate - update to make
+ * @param {object} params.dealUpdate - update to make
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
- * @typedef {Object} ErrorParam
+ * @typedef {object} ErrorParam
  * @property {string} message error message
  * @property {number} status HTTP status code
  * @param {(Error: ErrorParam) => any} params.onError
@@ -701,7 +701,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 /**
  * Get company information from Party URN
  * @param {Integer} partyUrn Party URN
- * @returns {Object} Company information
+ * @returns {object} Company information
  */
 const getCompanyInfo = async (partyUrn) => {
   try {
@@ -951,9 +951,9 @@ const updateACBSfacility = async (facility, deal) => {
 
 /**
  * ACBS facility amendment
- * @param {String} ukefFacilityId UKEF Facility ID
- * @param {Object} amendments Facility object comprising of amendments
- * @returns {Object} updated FMR upon success otherwise error
+ * @param {string} ukefFacilityId UKEF Facility ID
+ * @param {object} amendments Facility object comprising of amendments
+ * @returns {object} updated FMR upon success otherwise error
  */
 const amendACBSfacility = async (amendments, facility, deal) => {
   if (amendments && facility.facilitySnapshot) {
@@ -998,8 +998,8 @@ const getFunctionsAPI = async (url = '') => {
  * An external API call, responsible for creating
  * eStore site, directories and documents (if applicable).
  * Upon any exception an empty object is returned.
- * @param {Object} data eStore API object
- * @returns {Object} eStore API response object
+ * @param {object} data eStore API object
+ * @returns {object} eStore API response object
  */
 const createEstoreSite = async (data) => {
   try {

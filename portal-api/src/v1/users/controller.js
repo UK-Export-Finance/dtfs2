@@ -18,8 +18,8 @@ const { transformDatabaseUser } = require('./transform-database-user');
 
 /**
  * Send a password update confirmation email with update timestamp.
- * @param {String} emailAddress User email address
- * @param {String} timestamp Password update timestamp
+ * @param {string} emailAddress User email address
+ * @param {string} timestamp Password update timestamp
  */
 const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
   const formattedTimestamp = new Date(Number(timestamp)).toLocaleDateString('en-GB', {
