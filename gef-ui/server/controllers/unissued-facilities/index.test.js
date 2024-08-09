@@ -15,50 +15,75 @@ import CONSTANTS from '../../constants';
 jest.mock('../../services/api');
 const userToken = 'test-token';
 
+const mockExpectedFacilityRenderChange = (change, dealVersion) => ({
+  facilityType: CONSTANTS.FACILITY_TYPE.CASH,
+  facilityName: 'UKEF123',
+  hasBeenIssued: true,
+  monthsOfCover: '30',
+  shouldCoverStartOnSubmission: 'true',
+  issueDateDay: '5',
+  issueDateMonth: '1',
+  issueDateYear: '2022',
+  coverStartDateDay: '2',
+  coverStartDateMonth: '1',
+  coverStartDateYear: '2022',
+  coverEndDateDay: '2',
+  coverEndDateMonth: '1',
+  coverEndDateYear: '2030',
+  facilityTypeString: 'cash',
+  dealId: '1234567890abcdf123456789',
+  facilityId: 'xyz',
+  status: 'change',
+  change,
+  isFacilityEndDateEnabled: dealVersion >= 1,
+});
+
 describe('renderChangeFacilityPartial()', () => {
   let mockRequest;
   let mockFacilityResponse;
 
-  beforeEach(() => {
-    mockRequest = MOCKS.MockRequestUnissued();
-    mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
+  describe.each([0, 1])('with GEF_DEAL_VERSION = %s', (dealVersion) => {
+    beforeEach(() => {
+      mockRequest = MOCKS.MockRequestUnissued();
+      mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
 
-    api.getApplication.mockResolvedValue(MOCKS.MockApplicationResponseSubmitted());
-    api.getFacility.mockResolvedValue(mockFacilityResponse);
-    api.updateFacility.mockResolvedValue({});
-  });
-
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
-  it('returns an object with expected parameters for changeUnissuedFacility', async () => {
-    mockRequest.query.status = 'change';
-
-    const result = await renderChangeFacilityPartial({
-      params: mockRequest.params,
-      query: mockRequest.query,
-      change: true,
-      userToken,
+      api.getApplication.mockResolvedValue({ ...MOCKS.MockApplicationResponseSubmitted(), version: dealVersion });
+      api.getFacility.mockResolvedValue(mockFacilityResponse);
+      api.updateFacility.mockResolvedValue({});
     });
 
-    const expected = MOCKS.MockExpectedFacilityRenderChange(true);
-
-    expect(result).toEqual(expected);
-  });
-
-  it('returns an object with expected parameters for changeUnissuedFacilityPreview', async () => {
-    mockRequest.query.status = 'change';
-    const result = await renderChangeFacilityPartial({
-      params: mockRequest.params,
-      query: mockRequest.query,
-      change: false,
-      userToken,
+    afterEach(() => {
+      jest.resetAllMocks();
     });
 
-    const expected = MOCKS.MockExpectedFacilityRenderChange(false);
+    it('returns an object with expected parameters for changeUnissuedFacility', async () => {
+      mockRequest.query.status = 'change';
 
-    expect(result).toEqual(expected);
+      const result = await renderChangeFacilityPartial({
+        params: mockRequest.params,
+        query: mockRequest.query,
+        change: true,
+        userToken,
+      });
+
+      const expected = mockExpectedFacilityRenderChange(true, dealVersion);
+
+      expect(result).toEqual(expected);
+    });
+
+    it('returns an object with expected parameters for changeUnissuedFacilityPreview', async () => {
+      mockRequest.query.status = 'change';
+      const result = await renderChangeFacilityPartial({
+        params: mockRequest.params,
+        query: mockRequest.query,
+        change: false,
+        userToken,
+      });
+
+      const expected = mockExpectedFacilityRenderChange(false, dealVersion);
+
+      expect(result).toEqual(expected);
+    });
   });
 });
 
@@ -178,12 +203,10 @@ describe('postChangeUnissuedFacility()', () => {
   beforeEach(() => {
     mockResponse = MOCKS.MockResponseUnissued();
     mockRequest = MOCKS.MockRequestUnissued();
-    mockApplicationResponse = MOCKS.MockApplicationResponseSubmitted();
     mockUserResponse = MOCKS.MockUserResponse();
     mockFacilityResponse = MOCKS.MockFacilityResponseUnissued();
     mockFacilitiesResponse = MOCKS.MockFacilitiesResponse();
 
-    api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
@@ -210,298 +233,392 @@ describe('postChangeUnissuedFacility()', () => {
     surname: 'Test',
   };
 
-  it('posts and returns correct message and url', async () => {
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-    mockRequest.body.facilityName = 'UKEF123';
-    mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+  describe.each([0, 1])('with GEF_DEAL_VERSION = %s', (dealVersion) => {
+    const isFacilityEndDateEnabled = dealVersion >= 1;
 
-    mockRequest.body['issue-date-day'] = format(now, 'd');
-    mockRequest.body['issue-date-month'] = format(now, 'M');
-    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+    beforeEach(() => {
+      mockApplicationResponse = { ...MOCKS.MockApplicationResponseSubmitted(), version: dealVersion };
 
-    mockRequest.body['cover-start-date-day'] = format(now, 'd');
-    mockRequest.body['cover-start-date-month'] = format(now, 'M');
-    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
-
-    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
-
-    mockRequest.session.userToken = userToken;
-
-    await postChangeUnissuedFacility(mockRequest, mockResponse);
-    expect(api.updateFacility).toHaveBeenCalledWith({
-      facilityId: 'xyz',
-      payload: {
-        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-        coverStartDate: format(now, 'MMMM d, yyyy'),
-        issueDate: format(now, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: false,
-        monthsOfCover: 30,
-        name: 'UKEF123',
-        hasBeenIssued: true,
-        canResubmitIssuedFacilities: true,
-        coverDateConfirmed: true,
-        unissuedToIssuedByMaker: maker,
-      },
-      userToken,
+      api.getApplication.mockResolvedValue(mockApplicationResponse);
     });
-  });
 
-  it('adds a successMessage to flash storage', async () => {
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-    mockRequest.body.facilityName = 'UKEF123';
-    mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+    it('updates the facility when all values are valid', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.facilityName = 'UKEF123';
+      mockRequest.query.saveAndReturn = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
 
-    mockRequest.body['issue-date-day'] = format(now, 'd');
-    mockRequest.body['issue-date-month'] = format(now, 'M');
-    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+      mockRequest.body['issue-date-day'] = format(now, 'd');
+      mockRequest.body['issue-date-month'] = format(now, 'M');
+      mockRequest.body['issue-date-year'] = format(now, 'yyyy');
 
-    mockRequest.body['cover-start-date-day'] = format(now, 'd');
-    mockRequest.body['cover-start-date-month'] = format(now, 'M');
-    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+      mockRequest.body['cover-start-date-day'] = format(now, 'd');
+      mockRequest.body['cover-start-date-month'] = format(now, 'M');
+      mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
 
-    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-    mockRequest.session.userToken = userToken;
+      if (isFacilityEndDateEnabled) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
 
-    await postChangeUnissuedFacility(mockRequest, mockResponse);
-    expect(mockRequest.flash).toHaveBeenCalledWith('success', { message: 'UKEF123 is updated' });
-  });
+      mockRequest.session.userToken = userToken;
 
-  it('redirects the user to the unissued facilities page', async () => {
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-    mockRequest.body.facilityName = 'UKEF123';
-    mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      await postChangeUnissuedFacility(mockRequest, mockResponse);
 
-    mockRequest.body['issue-date-day'] = format(now, 'd');
-    mockRequest.body['issue-date-month'] = format(now, 'M');
-    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
-
-    mockRequest.body['cover-start-date-day'] = format(now, 'd');
-    mockRequest.body['cover-start-date-month'] = format(now, 'M');
-    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
-
-    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
-
-    mockRequest.session.userToken = userToken;
-    const { dealId } = mockRequest.params;
-
-    await postChangeUnissuedFacility(mockRequest, mockResponse);
-    expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${dealId}/unissued-facilities`);
-  });
-
-  it('calls api.updateApplication with editorId if successfully updates facility', async () => {
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-    mockRequest.body.facilityName = 'UKEF123';
-    mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body['issue-date-day'] = format(now, 'd');
-    mockRequest.body['issue-date-month'] = format(now, 'M');
-    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
-
-    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
-
-    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
-
-    mockRequest.session.userToken = userToken;
-
-    await postChangeUnissuedFacility(mockRequest, mockResponse);
-
-    const expectedUpdateObj = {
-      editorId: '12345',
-    };
-
-    expect(updateApplicationSpy).toHaveBeenCalledWith({
-      dealId: mockRequest.params.dealId,
-      application: expectedUpdateObj,
-      userToken,
-    });
-  });
-
-  it('should not update facility if issue date before submissionDate', async () => {
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-    mockRequest.body.facilityName = 'UKEF123';
-    mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body.shouldCoverStartOnSubmission = false;
-    mockRequest.body['issue-date-day'] = format(twoDaysAgoMidnight, 'd');
-    mockRequest.body['issue-date-month'] = format(twoDaysAgoMidnight, 'M');
-    mockRequest.body['issue-date-year'] = format(twoDaysAgoMidnight, 'yyyy');
-
-    mockRequest.body['cover-start-date-day'] = format(now, 'd');
-    mockRequest.body['cover-start-date-month'] = format(now, 'M');
-    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
-
-    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
-
-    await postChangeUnissuedFacility(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith(
-      'partials/unissued-change-about-facility.njk',
-      expect.objectContaining({
-        errors: {
-          errorSummary: [
-            {
-              text: 'The issue date must not be before the date of the inclusion notice submission date',
-              href: '#issueDate',
-            },
-          ],
-          fieldErrors: {
-            issueDate: { text: 'The issue date must not be before the date of the inclusion notice submission date' },
-          },
+      const expected = {
+        facilityId: 'xyz',
+        payload: {
+          coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+          coverStartDate: format(now, 'MMMM d, yyyy'),
+          issueDate: format(now, 'MMMM d, yyyy'),
+          shouldCoverStartOnSubmission: false,
+          monthsOfCover: 30,
+          name: 'UKEF123',
+          hasBeenIssued: true,
+          canResubmitIssuedFacilities: true,
+          coverDateConfirmed: true,
+          unissuedToIssuedByMaker: maker,
         },
-      }),
-    );
+        userToken,
+      };
 
-    // should not go ahead with call as errors
-    expect(api.updateFacility).not.toHaveBeenCalled();
-  });
+      if (isFacilityEndDateEnabled) {
+        expected.payload.isUsingFacilityEndDate = true;
+      }
 
-  it('posts and returns correct message and url if submission date in past and issue date on same day of submission', async () => {
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-    mockRequest.body.facilityName = 'UKEF123';
-    mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body.shouldCoverStartOnSubmission = 'false';
-
-    mockRequest.body['issue-date-day'] = format(yesterday, 'd');
-    mockRequest.body['issue-date-month'] = format(yesterday, 'M');
-    mockRequest.body['issue-date-year'] = format(yesterday, 'yyyy');
-
-    mockRequest.body['cover-start-date-day'] = format(yesterday, 'd');
-    mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
-    mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
-
-    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
-
-    mockRequest.session.userToken = userToken;
-
-    await postChangeUnissuedFacility(mockRequest, mockResponse);
-
-    expect(api.updateFacility).toHaveBeenCalledWith({
-      facilityId: 'xyz',
-      payload: {
-        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-        coverStartDate: format(yesterday, 'MMMM d, yyyy'),
-        issueDate: format(yesterday, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: false,
-        monthsOfCover: 30,
-        name: 'UKEF123',
-        hasBeenIssued: true,
-        canResubmitIssuedFacilities: true,
-        coverDateConfirmed: true,
-        unissuedToIssuedByMaker: maker,
-      },
-      userToken,
+      expect(api.updateFacility).toHaveBeenCalledWith(expected);
     });
-  });
 
-  it('should not update facility if no name or dates', async () => {
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-    mockRequest.body.facilityId = 'xyz';
+    it('adds a successMessage to flash storage', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.facilityName = 'UKEF123';
+      mockRequest.query.saveAndReturn = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
 
-    await postChangeUnissuedFacility(mockRequest, mockResponse);
+      mockRequest.body['issue-date-day'] = format(now, 'd');
+      mockRequest.body['issue-date-month'] = format(now, 'M');
+      mockRequest.body['issue-date-year'] = format(now, 'yyyy');
 
-    expect(mockResponse.render).toHaveBeenCalledWith(
-      'partials/unissued-change-about-facility.njk',
-      expect.objectContaining({
-        errors: {
-          errorSummary: [
-            {
-              text: 'Enter a name for this cash facility',
-              href: '#facilityName',
+      mockRequest.body['cover-start-date-day'] = format(now, 'd');
+      mockRequest.body['cover-start-date-month'] = format(now, 'M');
+      mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+      if (isFacilityEndDateEnabled) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
+
+      mockRequest.session.userToken = userToken;
+
+      await postChangeUnissuedFacility(mockRequest, mockResponse);
+      expect(mockRequest.flash).toHaveBeenCalledWith('success', { message: 'UKEF123 is updated' });
+    });
+
+    it('redirects the user to the unissued facilities page', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.facilityName = 'UKEF123';
+      mockRequest.query.saveAndReturn = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
+      mockRequest.body['issue-date-day'] = format(now, 'd');
+      mockRequest.body['issue-date-month'] = format(now, 'M');
+      mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+      mockRequest.body['cover-start-date-day'] = format(now, 'd');
+      mockRequest.body['cover-start-date-month'] = format(now, 'M');
+      mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+      if (isFacilityEndDateEnabled) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
+
+      mockRequest.session.userToken = userToken;
+      const { dealId } = mockRequest.params;
+
+      await postChangeUnissuedFacility(mockRequest, mockResponse);
+      expect(mockResponse.redirect).toHaveBeenCalledWith(`/gef/application-details/${dealId}/unissued-facilities`);
+    });
+
+    it('calls api.updateApplication with editorId if successfully updates facility', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.facilityName = 'UKEF123';
+      mockRequest.query.saveAndReturn = 'true';
+      mockRequest.body['issue-date-day'] = format(now, 'd');
+      mockRequest.body['issue-date-month'] = format(now, 'M');
+      mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+      mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+      if (isFacilityEndDateEnabled) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
+
+      mockRequest.session.userToken = userToken;
+
+      await postChangeUnissuedFacility(mockRequest, mockResponse);
+
+      const expectedUpdateObj = {
+        editorId: '12345',
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
+    });
+
+    it('should not update facility if issue date before submissionDate', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.facilityName = 'UKEF123';
+      mockRequest.query.saveAndReturn = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = false;
+      mockRequest.body['issue-date-day'] = format(twoDaysAgoMidnight, 'd');
+      mockRequest.body['issue-date-month'] = format(twoDaysAgoMidnight, 'M');
+      mockRequest.body['issue-date-year'] = format(twoDaysAgoMidnight, 'yyyy');
+
+      mockRequest.body['cover-start-date-day'] = format(now, 'd');
+      mockRequest.body['cover-start-date-month'] = format(now, 'M');
+      mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+      if (isFacilityEndDateEnabled) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
+
+      await postChangeUnissuedFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/unissued-change-about-facility.njk',
+        expect.objectContaining({
+          errors: {
+            errorSummary: [
+              {
+                text: 'The issue date must not be before the date of the inclusion notice submission date',
+                href: '#issueDate',
+              },
+            ],
+            fieldErrors: {
+              issueDate: { text: 'The issue date must not be before the date of the inclusion notice submission date' },
             },
-            {
-              text: 'Enter the date you issued the facility to the exporter',
-              href: '#issueDate',
-            },
-            {
-              text: 'Select if you want UKEF cover to start on the day you issue the facility',
-              href: '#shouldCoverStartOnSubmission',
-            },
-            { text: 'Enter a cover end date', href: '#coverEndDate' },
-          ],
-          fieldErrors: {
-            facilityName: { text: 'Enter a name for this cash facility' },
-            issueDate: { text: 'Enter the date you issued the facility to the exporter' },
-            shouldCoverStartOnSubmission: {
-              text: 'Select if you want UKEF cover to start on the day you issue the facility',
-            },
-            coverEndDate: { text: 'Enter a cover end date' },
           },
+        }),
+      );
+
+      // should not go ahead with call as errors
+      expect(api.updateFacility).not.toHaveBeenCalled();
+    });
+
+    it('posts and returns correct message and url if submission date in past and issue date on same day of submission', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.facilityName = 'UKEF123';
+      mockRequest.query.saveAndReturn = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
+      mockRequest.body['issue-date-day'] = format(yesterday, 'd');
+      mockRequest.body['issue-date-month'] = format(yesterday, 'M');
+      mockRequest.body['issue-date-year'] = format(yesterday, 'yyyy');
+
+      mockRequest.body['cover-start-date-day'] = format(yesterday, 'd');
+      mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
+      mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
+
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+      if (isFacilityEndDateEnabled) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
+
+      mockRequest.session.userToken = userToken;
+
+      await postChangeUnissuedFacility(mockRequest, mockResponse);
+
+      const expected = {
+        facilityId: 'xyz',
+        payload: {
+          coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+          coverStartDate: format(yesterday, 'MMMM d, yyyy'),
+          issueDate: format(yesterday, 'MMMM d, yyyy'),
+          shouldCoverStartOnSubmission: false,
+          monthsOfCover: 30,
+          name: 'UKEF123',
+          hasBeenIssued: true,
+          canResubmitIssuedFacilities: true,
+          coverDateConfirmed: true,
+          unissuedToIssuedByMaker: maker,
         },
-      }),
-    );
+        userToken,
+      };
 
-    // should not go ahead with call as errors
-    expect(api.updateFacility).not.toHaveBeenCalled();
-  });
+      if (isFacilityEndDateEnabled) {
+        expected.payload.isUsingFacilityEndDate = true;
+      }
 
-  it('should update facility if specialIssuePermission is true and coverStartDate is more than 3 months in the future', async () => {
-    api.getFacility.mockResolvedValue(MOCKS.MockFacilityResponseSpecialIssue());
+      expect(api.updateFacility).toHaveBeenCalledWith(expected);
+    });
 
-    mockRequest.body.facilityName = 'UKEF123';
-    mockRequest.query.saveAndReturn = 'true';
+    it('should not update facility if no name or dates', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.facilityId = 'xyz';
 
-    mockRequest.body['issue-date-day'] = format(now, 'd');
-    mockRequest.body['issue-date-month'] = format(now, 'M');
-    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+      if (isFacilityEndDateEnabled) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
 
-    mockRequest.body['cover-start-date-day'] = format(twoYearFromNow, 'd');
-    mockRequest.body['cover-start-date-month'] = format(twoYearFromNow, 'M');
-    mockRequest.body['cover-start-date-year'] = format(twoYearFromNow, 'yyyy');
+      await postChangeUnissuedFacility(mockRequest, mockResponse);
 
-    mockRequest.body['cover-end-date-day'] = format(threeYearFromNow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(threeYearFromNow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/unissued-change-about-facility.njk',
+        expect.objectContaining({
+          errors: {
+            errorSummary: [
+              {
+                text: 'Enter a name for this cash facility',
+                href: '#facilityName',
+              },
+              {
+                text: 'Enter the date you issued the facility to the exporter',
+                href: '#issueDate',
+              },
+              {
+                text: 'Select if you want UKEF cover to start on the day you issue the facility',
+                href: '#shouldCoverStartOnSubmission',
+              },
+              { text: 'Enter a cover end date', href: '#coverEndDate' },
+            ],
+            fieldErrors: {
+              facilityName: { text: 'Enter a name for this cash facility' },
+              issueDate: { text: 'Enter the date you issued the facility to the exporter' },
+              shouldCoverStartOnSubmission: {
+                text: 'Select if you want UKEF cover to start on the day you issue the facility',
+              },
+              coverEndDate: { text: 'Enter a cover end date' },
+            },
+          },
+        }),
+      );
 
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      // should not go ahead with call as errors
+      expect(api.updateFacility).not.toHaveBeenCalled();
+    });
 
-    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+    it('should update facility if specialIssuePermission is true and coverStartDate is more than 3 months in the future', async () => {
+      api.getFacility.mockResolvedValue(MOCKS.MockFacilityResponseSpecialIssue());
 
-    mockRequest.session.userToken = userToken;
+      mockRequest.body.facilityName = 'UKEF123';
+      mockRequest.query.saveAndReturn = 'true';
 
-    await postChangeUnissuedFacility(mockRequest, mockResponse);
+      mockRequest.body['issue-date-day'] = format(now, 'd');
+      mockRequest.body['issue-date-month'] = format(now, 'M');
+      mockRequest.body['issue-date-year'] = format(now, 'yyyy');
 
-    // should not go ahead with call as errors
-    expect(api.updateFacility).toHaveBeenCalledWith({
-      facilityId: 'xyz',
-      payload: {
-        coverEndDate: format(threeYearFromNow, 'MMMM d, yyyy'),
-        coverStartDate: format(twoYearFromNow, 'MMMM d, yyyy'),
-        issueDate: format(now, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: false,
-        monthsOfCover: null,
-        name: 'UKEF123',
-        hasBeenIssued: true,
-        canResubmitIssuedFacilities: true,
-        coverDateConfirmed: true,
-        unissuedToIssuedByMaker: maker,
-      },
-      userToken,
+      mockRequest.body['cover-start-date-day'] = format(twoYearFromNow, 'd');
+      mockRequest.body['cover-start-date-month'] = format(twoYearFromNow, 'M');
+      mockRequest.body['cover-start-date-year'] = format(twoYearFromNow, 'yyyy');
+
+      mockRequest.body['cover-end-date-day'] = format(threeYearFromNow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(threeYearFromNow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
+
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
+      mockRequest.session.userToken = userToken;
+
+      await postChangeUnissuedFacility(mockRequest, mockResponse);
+
+      // should not go ahead with call as errors
+      expect(api.updateFacility).toHaveBeenCalledWith({
+        facilityId: 'xyz',
+        payload: {
+          coverEndDate: format(threeYearFromNow, 'MMMM d, yyyy'),
+          coverStartDate: format(twoYearFromNow, 'MMMM d, yyyy'),
+          issueDate: format(now, 'MMMM d, yyyy'),
+          shouldCoverStartOnSubmission: false,
+          monthsOfCover: null,
+          name: 'UKEF123',
+          hasBeenIssued: true,
+          canResubmitIssuedFacilities: true,
+          coverDateConfirmed: true,
+          unissuedToIssuedByMaker: maker,
+        },
+        userToken,
+      });
+    });
+
+    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      mockRequest.query.saveAndReturn = 'true';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+
+      api.updateFacility.mockRejectedValueOnce();
+      await postChangeUnissuedFacility(mockRequest, mockResponse);
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 
-  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-    mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+  describe('with GEF_DEAL_VERSION = 1', () => {
+    beforeEach(() => {
+      mockApplicationResponse = { ...MOCKS.MockApplicationResponseSubmitted(), version: '1' };
 
-    api.updateFacility.mockRejectedValueOnce();
-    await postChangeUnissuedFacility(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      api.getApplication.mockResolvedValue(mockApplicationResponse);
+    });
+
+    it('should not update facility if isUsingFacilityEndDate is not provided', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.facilityName = 'UKEF123';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
+      mockRequest.body['issue-date-day'] = format(yesterday, 'd');
+      mockRequest.body['issue-date-month'] = format(yesterday, 'M');
+      mockRequest.body['issue-date-year'] = format(yesterday, 'yyyy');
+
+      mockRequest.body['cover-start-date-day'] = format(yesterday, 'd');
+      mockRequest.body['cover-start-date-month'] = format(yesterday, 'M');
+      mockRequest.body['cover-start-date-year'] = format(yesterday, 'yyyy');
+
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+      await postChangeUnissuedFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/unissued-change-about-facility.njk',
+        expect.objectContaining({
+          errors: {
+            errorSummary: [{ href: '#isUsingFacilityEndDate', text: 'Select if there is an end date for this facility' }],
+            fieldErrors: {
+              isUsingFacilityEndDate: { text: 'Select if there is an end date for this facility' },
+            },
+          },
+        }),
+      );
+
+      // should not go ahead with call as errors
+      expect(api.updateFacility).not.toHaveBeenCalled();
+    });
   });
 });
 
@@ -520,7 +637,6 @@ describe('postChangeUnissuedFacilityPreview()', () => {
     mockFacilitiesResponse = MOCKS.MockFacilitiesResponse();
     mockUserResponse = MOCKS.MockUserResponse();
 
-    api.getApplication.mockResolvedValue(MOCKS.MockApplicationResponseSubmitted());
     api.getUserDetails.mockResolvedValue(mockUserResponse);
     api.getFacility.mockResolvedValue(mockFacilityResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
@@ -543,169 +659,252 @@ describe('postChangeUnissuedFacilityPreview()', () => {
     surname: 'Test',
   };
 
-  it('posts and returns correct url', async () => {
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-    mockRequest.body.facilityName = 'UKEF123';
-    mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+  describe.each([0, 1])('with GEF_DEAL_VERSION = %s', (dealVersion) => {
+    const isFacilityEndDateEnabled = dealVersion >= 1;
 
-    mockRequest.body['issue-date-day'] = format(now, 'd');
-    mockRequest.body['issue-date-month'] = format(now, 'M');
-    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+    beforeEach(() => {
+      const mockApplicationResponse = { ...MOCKS.MockApplicationResponseSubmitted(), version: dealVersion };
 
-    mockRequest.body['cover-start-date-day'] = format(now, 'd');
-    mockRequest.body['cover-start-date-month'] = format(now, 'M');
-    mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
-
-    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
-
-    mockRequest.session.userToken = userToken;
-
-    await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
-
-    expect(api.updateFacility).toHaveBeenCalledWith({
-      facilityId: 'xyz',
-      payload: {
-        coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
-        coverStartDate: format(now, 'MMMM d, yyyy'),
-        issueDate: format(now, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: false,
-        monthsOfCover: 30,
-        name: 'UKEF123',
-        hasBeenIssued: true,
-        canResubmitIssuedFacilities: true,
-        coverDateConfirmed: true,
-        unissuedToIssuedByMaker: maker,
-      },
-      userToken,
+      api.getApplication.mockResolvedValue(mockApplicationResponse);
     });
-  });
 
-  it('calls api.updateApplication with editorId if successfully updates facility', async () => {
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-    mockRequest.body.facilityName = 'UKEF123';
-    mockRequest.query.saveAndReturn = 'true';
+    it('posts and returns correct url', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.facilityName = 'UKEF123';
+      mockRequest.query.saveAndReturn = 'true';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
 
-    mockRequest.body['issue-date-day'] = format(now, 'd');
-    mockRequest.body['issue-date-month'] = format(now, 'M');
-    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+      mockRequest.body['issue-date-day'] = format(now, 'd');
+      mockRequest.body['issue-date-month'] = format(now, 'M');
+      mockRequest.body['issue-date-year'] = format(now, 'yyyy');
 
-    mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+      mockRequest.body['cover-start-date-day'] = format(now, 'd');
+      mockRequest.body['cover-start-date-month'] = format(now, 'M');
+      mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
 
-    mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-    mockRequest.session.userToken = userToken;
+      if (isFacilityEndDateEnabled) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
 
-    await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
+      mockRequest.session.userToken = userToken;
 
-    const expectedUpdateObj = {
-      editorId: '12345',
-    };
+      await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
 
-    expect(updateApplicationSpy).toHaveBeenCalledWith({
-      dealId: mockRequest.params.dealId,
-      application: expectedUpdateObj,
-      userToken,
-    });
-  });
-
-  it('should not update facility if no name or dates', async () => {
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
-
-    await postChangeUnissuedFacility(mockRequest, mockResponse);
-
-    expect(mockResponse.render).toHaveBeenCalledWith(
-      'partials/unissued-change-about-facility.njk',
-      expect.objectContaining({
-        errors: {
-          errorSummary: [
-            {
-              text: 'Enter a name for this cash facility',
-              href: '#facilityName',
-            },
-            {
-              text: 'Enter the date you issued the facility to the exporter',
-              href: '#issueDate',
-            },
-            {
-              text: 'Select if you want UKEF cover to start on the day you issue the facility',
-              href: '#shouldCoverStartOnSubmission',
-            },
-            { text: 'Enter a cover end date', href: '#coverEndDate' },
-          ],
-          fieldErrors: {
-            facilityName: { text: 'Enter a name for this cash facility' },
-            issueDate: { text: 'Enter the date you issued the facility to the exporter' },
-            shouldCoverStartOnSubmission: {
-              text: 'Select if you want UKEF cover to start on the day you issue the facility',
-            },
-            coverEndDate: { text: 'Enter a cover end date' },
-          },
+      const expected = {
+        facilityId: 'xyz',
+        payload: {
+          coverEndDate: format(tomorrow, 'MMMM d, yyyy'),
+          coverStartDate: format(now, 'MMMM d, yyyy'),
+          issueDate: format(now, 'MMMM d, yyyy'),
+          shouldCoverStartOnSubmission: false,
+          monthsOfCover: 30,
+          name: 'UKEF123',
+          hasBeenIssued: true,
+          canResubmitIssuedFacilities: true,
+          coverDateConfirmed: true,
+          unissuedToIssuedByMaker: maker,
         },
-      }),
-    );
-    // should not go ahead with call as errors
-    expect(api.updateFacility).not.toHaveBeenCalled();
-  });
+        userToken,
+      };
 
-  it('should update facility if specialIssuePermission is true and coverStartDate is more than 3 months in the future', async () => {
-    api.getFacility.mockResolvedValue(MOCKS.MockFacilityResponseSpecialIssue());
+      if (isFacilityEndDateEnabled) {
+        expected.payload.isUsingFacilityEndDate = true;
+      }
 
-    mockRequest.body.facilityName = 'UKEF123';
-    mockRequest.query.saveAndReturn = 'true';
+      expect(api.updateFacility).toHaveBeenCalledWith(expected);
+    });
 
-    mockRequest.body['issue-date-day'] = format(now, 'd');
-    mockRequest.body['issue-date-month'] = format(now, 'M');
-    mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+    it('calls api.updateApplication with editorId if successfully updates facility', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.facilityName = 'UKEF123';
+      mockRequest.query.saveAndReturn = 'true';
 
-    mockRequest.body['cover-start-date-day'] = format(twoYearFromNow, 'd');
-    mockRequest.body['cover-start-date-month'] = format(twoYearFromNow, 'M');
-    mockRequest.body['cover-start-date-year'] = format(twoYearFromNow, 'yyyy');
+      mockRequest.body['issue-date-day'] = format(now, 'd');
+      mockRequest.body['issue-date-month'] = format(now, 'M');
+      mockRequest.body['issue-date-year'] = format(now, 'yyyy');
 
-    mockRequest.body['cover-end-date-day'] = format(threeYearFromNow, 'd');
-    mockRequest.body['cover-end-date-month'] = format(threeYearFromNow, 'M');
-    mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
+      mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
 
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
 
-    mockRequest.body.shouldCoverStartOnSubmission = 'false';
+      if (isFacilityEndDateEnabled) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
 
-    mockRequest.session.userToken = userToken;
+      mockRequest.session.userToken = userToken;
 
-    await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
+      await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
 
-    // should not go ahead with call as errors
-    expect(api.updateFacility).toHaveBeenCalledWith({
-      facilityId: 'xyz',
-      payload: {
-        coverEndDate: format(threeYearFromNow, 'MMMM d, yyyy'),
-        coverStartDate: format(twoYearFromNow, 'MMMM d, yyyy'),
-        issueDate: format(now, 'MMMM d, yyyy'),
-        shouldCoverStartOnSubmission: false,
-        monthsOfCover: null,
-        name: 'UKEF123',
-        hasBeenIssued: true,
-        canResubmitIssuedFacilities: true,
-        coverDateConfirmed: true,
-        unissuedToIssuedByMaker: maker,
-      },
-      userToken,
+      const expectedUpdateObj = {
+        editorId: '12345',
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
+    });
+
+    it('should not update facility if no name or dates', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+
+      if (isFacilityEndDateEnabled) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
+
+      await postChangeUnissuedFacility(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/unissued-change-about-facility.njk',
+        expect.objectContaining({
+          errors: {
+            errorSummary: [
+              {
+                text: 'Enter a name for this cash facility',
+                href: '#facilityName',
+              },
+              {
+                text: 'Enter the date you issued the facility to the exporter',
+                href: '#issueDate',
+              },
+              {
+                text: 'Select if you want UKEF cover to start on the day you issue the facility',
+                href: '#shouldCoverStartOnSubmission',
+              },
+              { text: 'Enter a cover end date', href: '#coverEndDate' },
+            ],
+            fieldErrors: {
+              facilityName: { text: 'Enter a name for this cash facility' },
+              issueDate: { text: 'Enter the date you issued the facility to the exporter' },
+              shouldCoverStartOnSubmission: {
+                text: 'Select if you want UKEF cover to start on the day you issue the facility',
+              },
+              coverEndDate: { text: 'Enter a cover end date' },
+            },
+          },
+        }),
+      );
+      // should not go ahead with call as errors
+      expect(api.updateFacility).not.toHaveBeenCalled();
+    });
+
+    it('should update facility if specialIssuePermission is true and coverStartDate is more than 3 months in the future', async () => {
+      api.getFacility.mockResolvedValue(MOCKS.MockFacilityResponseSpecialIssue());
+
+      mockRequest.body.facilityName = 'UKEF123';
+      mockRequest.query.saveAndReturn = 'true';
+
+      mockRequest.body['issue-date-day'] = format(now, 'd');
+      mockRequest.body['issue-date-month'] = format(now, 'M');
+      mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+      mockRequest.body['cover-start-date-day'] = format(twoYearFromNow, 'd');
+      mockRequest.body['cover-start-date-month'] = format(twoYearFromNow, 'M');
+      mockRequest.body['cover-start-date-year'] = format(twoYearFromNow, 'yyyy');
+
+      mockRequest.body['cover-end-date-day'] = format(threeYearFromNow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(threeYearFromNow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(threeYearFromNow, 'yyyy');
+
+      if (isFacilityEndDateEnabled) {
+        mockRequest.body.isUsingFacilityEndDate = 'true';
+      }
+
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
+      mockRequest.session.userToken = userToken;
+
+      await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
+
+      const expected = {
+        facilityId: 'xyz',
+        payload: {
+          coverEndDate: format(threeYearFromNow, 'MMMM d, yyyy'),
+          coverStartDate: format(twoYearFromNow, 'MMMM d, yyyy'),
+          issueDate: format(now, 'MMMM d, yyyy'),
+          shouldCoverStartOnSubmission: false,
+          monthsOfCover: null,
+          name: 'UKEF123',
+          hasBeenIssued: true,
+          canResubmitIssuedFacilities: true,
+          coverDateConfirmed: true,
+          unissuedToIssuedByMaker: maker,
+        },
+        userToken,
+      };
+
+      if (isFacilityEndDateEnabled) {
+        expected.payload.isUsingFacilityEndDate = true;
+      }
+
+      // should not go ahead with call as errors
+      expect(api.updateFacility).toHaveBeenCalledWith(expected);
+    });
+
+    it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      mockRequest.query.saveAndReturn = 'true';
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+
+      api.updateFacility.mockRejectedValueOnce();
+      await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
 
-  it('redirects user to `problem with service` page if there is an issue with the API', async () => {
-    mockRequest.query.saveAndReturn = 'true';
-    mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+  describe('with GEF_DEAL_VERSION = 1', () => {
+    beforeEach(() => {
+      const mockApplicationResponse = { ...MOCKS.MockApplicationResponseSubmitted(), version: '1' };
 
-    api.updateFacility.mockRejectedValueOnce();
-    await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
-    expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
+      api.getApplication.mockResolvedValue(mockApplicationResponse);
+    });
+
+    it('should not update facility if isUsingFacilityEndDate is not provided', async () => {
+      mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+      mockRequest.body.facilityName = 'UKEF123';
+      mockRequest.body.shouldCoverStartOnSubmission = 'false';
+
+      mockRequest.body['issue-date-day'] = format(now, 'd');
+      mockRequest.body['issue-date-month'] = format(now, 'M');
+      mockRequest.body['issue-date-year'] = format(now, 'yyyy');
+
+      mockRequest.body['cover-start-date-day'] = format(now, 'd');
+      mockRequest.body['cover-start-date-month'] = format(now, 'M');
+      mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+
+      mockRequest.body['cover-end-date-day'] = format(tomorrow, 'd');
+      mockRequest.body['cover-end-date-month'] = format(tomorrow, 'M');
+      mockRequest.body['cover-end-date-year'] = format(tomorrow, 'yyyy');
+
+      mockRequest.session.userToken = userToken;
+
+      await postChangeUnissuedFacilityPreview(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/unissued-change-about-facility.njk',
+        expect.objectContaining({
+          errors: {
+            errorSummary: [{ href: '#isUsingFacilityEndDate', text: 'Select if there is an end date for this facility' }],
+            fieldErrors: {
+              isUsingFacilityEndDate: { text: 'Select if there is an end date for this facility' },
+            },
+          },
+        }),
+      );
+
+      // should not go ahead with call as errors
+      expect(api.updateFacility).not.toHaveBeenCalled();
+    });
   });
 });
 

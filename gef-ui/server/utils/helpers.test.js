@@ -43,6 +43,45 @@ import { CHECKER } from '../constants/roles';
 
 const CONSTANTS = require('../constants');
 
+const mockDisplayItems = {
+  name: {
+    label: 'name',
+    id: 'name',
+  },
+  stage: {
+    label: 'Stage',
+    id: 'hasBeenIssued',
+  },
+  coverStartDate: {
+    label: 'Cover start date',
+    id: 'coverStartDate',
+  },
+  coverEndDate: {
+    label: 'Cover end date',
+    id: 'coverEndDate',
+  },
+  isUsingFacilityEndDate: {
+    label: 'Has a facility end date',
+    id: 'isUsingFacilityEndDate',
+  },
+  bankReviewDate: {
+    label: 'Bank review date',
+    id: 'bankReviewDate',
+  },
+  facilityEndDate: {
+    label: 'Facility end date',
+    id: 'facilityEndDate',
+  },
+  value: {
+    label: 'Facility value',
+    id: 'value',
+  },
+  hasBeenIssued: {
+    label: 'Stage',
+    id: 'hasBeenIssued',
+  },
+};
+
 describe('userToken()', () => {
   it('returns the correct user token', () => {
     const MOCK_REQ = {
@@ -255,6 +294,7 @@ describe('mapSummaryList()', () => {
     {
       label: 'Id',
       id: 'id',
+      href: 'href',
     },
   ];
 
@@ -277,7 +317,22 @@ describe('mapSummaryList()', () => {
     };
 
     expect(mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)).toEqual([
-      { actions: { items: [] }, key: { text: 'Id' }, value: { text: '123456' } },
+      {
+        actions: {
+          items: [
+            {
+              href: 'href',
+              text: 'Change',
+              visuallyHiddenText: 'Id',
+              attributes: {
+                'data-cy': 'id-action',
+              },
+            },
+          ],
+        },
+        key: { text: 'Id' },
+        value: { text: '123456' },
+      },
     ]);
   });
 
@@ -593,40 +648,29 @@ describe('mapSummaryList()', () => {
    */
   describe('should not be able to change certain fields on facility which has changed to issued', () => {
     it('cannot change value row', () => {
-      // 'key' for value row
-      const MockedDisplayItemsIssued = () => [
-        {
-          label: 'Facility value',
-          id: 'value',
-        },
-      ];
-      const mockedDisplayItems = MockedDisplayItemsIssued();
-
       const mapSummaryParams = {
         app: MOCK_AIN_APPLICATION,
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items[0];
-      // should be blank so cannot change
-      expect(text).toEqual('');
+      const actionItems = mapSummaryList(MOCK_ISSUED_FACILITY, [mockDisplayItems.value], mapSummaryParams, true)[0].actions.items;
+      // should have class govuk-!-display-none so cannot change
+      expect(actionItems).toEqual([
+        {
+          attributes: {
+            'data-cy': `value-action`,
+          },
+          classes: 'govuk-!-display-none',
+        },
+      ]);
     });
     it('can change issued back to unissued', () => {
-      // 'key' for value row
-      const MockedDisplayItemsIssued = () => [
-        {
-          label: 'Stage',
-          id: 'hasBeenIssued',
-        },
-      ];
-      const mockedDisplayItems = MockedDisplayItemsIssued();
-
       const mapSummaryParams = {
         app: MOCK_AIN_APPLICATION,
         user: MOCK_REQUEST,
       };
 
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItems, mapSummaryParams, true)[0].actions.items[0];
+      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, [mockDisplayItems.hasBeenIssued], mapSummaryParams, true)[0].actions.items[0];
 
       expect(text).toEqual('Change');
       expect(href).toContain('/change-to-unissued');
@@ -639,62 +683,25 @@ describe('mapSummaryList()', () => {
    * ensures that name, coverStartDate and coverEndDate fields can be editted on preview page
    */
   describe('maps and returns summary list with change button for relevant rows for facilities changed to issued on preview page', () => {
-    it('name', () => {
-      // 'key' for value row
-      const MockedDisplayItemsName = () => [
-        {
-          label: 'Name',
-          id: 'name',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsName();
-
+    it.each(['name', 'coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate'])('%s', (id) => {
       const mapSummaryParams = {
         app: MOCK_AIN_APPLICATION,
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
-      // should be allowed to change so should display change
-      expect(text).toEqual('Change');
-    });
-    it('coverStartDate', () => {
-      const MockedDisplayItemsStartDate = () => [
-        {
-          label: 'Cover start date',
-          id: 'coverStartDate',
+      const facility = {
+        ...MOCK_ISSUED_FACILITY,
+        details: {
+          ...MOCK_ISSUED_FACILITY.details,
+          isUsingFacilityEndDate: true,
+          bankReviewDate: new Date().toISOString(),
+          facilityEndDate: new Date().toISOString(),
         },
-      ];
-      const mockedDisplayItemsStartDate = MockedDisplayItemsStartDate();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION,
-        user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
-    });
-    it('coverEndDate', () => {
-      const MockedDisplayItemsStartEnd = () => [
-        {
-          label: 'Cover end date',
-          id: 'coverEndDate',
-        },
-      ];
-      const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION,
-        user: MOCK_REQUEST,
-      };
-
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
-      // should be allowed to change so should display change
-      expect(text).toEqual('Change');
-      expect(href).toContain('/unissued-facilities/');
-      expect(href).toContain('/change');
     });
   });
 
@@ -703,62 +710,33 @@ describe('mapSummaryList()', () => {
    * Testing when changing facility from unissued to issued with AIN
    * ensures that name, coverStartDate and coverEndDate fields cannot be editted yet on preview page
    */
-  describe('maps and returns summary list with change button for relevant rows for facilities changed to issued on preview page', () => {
-    it('name', () => {
-      // 'key' for value row
-      const MockedDisplayItemsName = () => [
-        {
-          label: 'Name',
-          id: 'name',
+  describe('maps and returns summary list with change button for relevant rows for facilities not changed to issued on preview page', () => {
+    it.each(['name', 'coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate'])('%s', (id) => {
+      const facility = {
+        ...MOCK_UNISSUED_FACILITY,
+        details: {
+          ...MOCK_UNISSUED_FACILITY.details,
+          isUsingFacilityEndDate: true,
+          bankReviewDate: new Date().toISOString(),
+          facilityEndDate: new Date().toISOString(),
         },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsName();
+      };
 
       const mapSummaryParams = {
         app: MOCK_AIN_APPLICATION,
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const actionItems = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items;
       // should be allowed to change so should display change
-      expect(text).toEqual('');
-    });
-    it('coverStartDate', () => {
-      const MockedDisplayItemsStartDate = () => [
+      expect(actionItems).toEqual([
         {
-          label: 'Cover start date',
-          id: 'coverStartDate',
+          attributes: {
+            'data-cy': `${id}-action`,
+          },
+          classes: 'govuk-!-display-none',
         },
-      ];
-      const mockedDisplayItemsStartDate = MockedDisplayItemsStartDate();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION,
-        user: MOCK_REQUEST,
-      };
-
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items[0];
-      // should be allowed to change so should display change
-      expect(text).toEqual('');
-    });
-
-    it('coverEndDate', () => {
-      const MockedDisplayItemsStartEnd = () => [
-        {
-          label: 'Cover end date',
-          id: 'coverEndDate',
-        },
-      ];
-      const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION,
-        user: MOCK_REQUEST,
-      };
-
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items[0];
-      // should be allowed to change so should display change
-      expect(text).toEqual('');
+      ]);
     });
   });
 
@@ -768,366 +746,233 @@ describe('mapSummaryList()', () => {
    * ensures that name, coverStartDate and coverEndDate hasBeenIssued fields cannot be editted on preview page
    */
   describe('facility has already been issued (and not changed)', () => {
-    it('name', () => {
-      // 'key' for value row
-      const MockedDisplayItemsName = () => [
-        {
-          label: 'Name',
-          id: 'name',
+    it.each(['name', 'coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate', 'hasBeenIssued'])('%s', (id) => {
+      const facility = {
+        ...MOCK_ISSUED_FACILITY_UNCHANGED,
+        details: {
+          ...MOCK_ISSUED_FACILITY_UNCHANGED.details,
+          isUsingFacilityEndDate: true,
+          bankReviewDate: new Date().toISOString(),
+          facilityEndDate: new Date().toISOString(),
         },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsName();
+      };
 
       const mapSummaryParams = {
         app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      const response = [];
-      expect(result).toEqual(response);
-    });
-
-    it('coverStartDate', () => {
-      const MockedDisplayItemsStartDate = () => [
+      const result = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items;
+      const response = [
         {
-          label: 'Cover start date',
-          id: 'coverStartDate',
+          attributes: {
+            'data-cy': `${id}-action`,
+          },
+          classes: 'govuk-!-display-none',
         },
       ];
-      const mockedDisplayItemsStartDate = MockedDisplayItemsStartDate();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
-        user: MOCK_REQUEST,
-      };
-
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsStartDate, mapSummaryParams, true)[0].actions.items;
-      const response = [];
-      expect(result).toEqual(response);
-    });
-
-    it('coverEndDate', () => {
-      const MockedDisplayItemsStartEnd = () => [
-        {
-          label: 'Cover end date',
-          id: 'coverEndDate',
-        },
-      ];
-      const mockedDisplayItemsEnd = MockedDisplayItemsStartEnd();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
-        user: MOCK_REQUEST,
-      };
-
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsEnd, mapSummaryParams, true)[0].actions.items;
-      const response = [];
-      expect(result).toEqual(response);
-    });
-
-    it('hasBeenIssued', () => {
-      const MockedDisplayItemsIssued = () => [
-        {
-          label: 'Stage',
-          id: 'hasBeenIssued',
-        },
-      ];
-      const mockedDisplayItemsIssued = MockedDisplayItemsIssued();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
-        user: MOCK_REQUEST,
-      };
-
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsIssued, mapSummaryParams, true)[0].actions.items;
-      const response = [];
       expect(result).toEqual(response);
     });
   });
 
-  it('Stage row should show Add', () => {
-    // 'key' for value row
-    const MockedDisplayItemsStage = () => [
-      {
-        label: 'Stage',
-        id: 'hasBeenIssued',
-      },
-    ];
-    const mockedDisplayItemsName = MockedDisplayItemsStage();
-
+  it('Stage row should show Change', () => {
     const mapSummaryParams = {
       app: MOCK_AIN_APPLICATION,
       user: MOCK_REQUEST,
     };
 
-    const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+    const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, [mockDisplayItems.hasBeenIssued], mapSummaryParams, true)[0].actions.items[0];
     // should be allowed to change so should display change
     expect(text).toEqual('Change');
   });
 
   describe('when with checker when changedToIssuedFacilities', () => {
-    it('Should return a blank array with stage', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Stage',
-          id: 'hasBeenIssued',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
+    it.each(['hasBeenIssued', 'coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate'])(
+      '%s action should have class display-none',
+      (id) => {
+        const facility = {
+          ...MOCK_ISSUED_FACILITY,
+          details: {
+            ...MOCK_ISSUED_FACILITY.details,
+            isUsingFacilityEndDate: true,
+            bankReviewDate: new Date().toISOString(),
+            facilityEndDate: new Date().toISOString(),
+          },
+        };
 
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION_CHECKER,
-        user: MOCK_REQUEST,
-      };
+        const mapSummaryParams = {
+          app: MOCK_AIN_APPLICATION_CHECKER,
+          user: MOCK_REQUEST,
+        };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      // should be [] as unable to change on checker
-      expect(result).toEqual([]);
-    });
-
-    it('Should return a blank array when with checker with coverStartDate', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Cover start date',
-          id: 'coverStartDate',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION_CHECKER,
-        user: MOCK_REQUEST,
-      };
-
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      // should be [] as unable to change on checker
-      expect(result).toEqual([]);
-    });
-
-    it('Should return a blank array when with checker with coverEndDate', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Cover end date',
-          id: 'coverEndDate',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION_CHECKER,
-        user: MOCK_REQUEST,
-      };
-
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      // should be [] as unable to change on checker
-      expect(result).toEqual([]);
-    });
+        const result = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items;
+        // should have class display-none as unable to change on checker
+        expect(result).toEqual([
+          {
+            attributes: {
+              'data-cy': `${id}-action`,
+            },
+            classes: 'govuk-!-display-none',
+          },
+        ]);
+      },
+    );
   });
 
   describe('when returning to maker with changed to issued facilities', () => {
     it('should be able to change stage', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Stage',
-          id: 'hasBeenIssued',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
-
       const mapSummaryParams = {
         app: MOCK_AIN_APPLICATION_RETURN_MAKER,
         user: MOCK_REQUEST,
       };
 
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, [mockDisplayItems.hasBeenIssued], mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
       expect(href).toContain('/change-to-unissued');
     });
 
-    it('Should show change for coverStartDate', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Cover start date',
-          id: 'coverStartDate',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
+    it.each(['coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate'])(
+      'should be able to change %s on an issued facility',
+      (id) => {
+        const facility = {
+          ...MOCK_ISSUED_FACILITY,
+          details: {
+            ...MOCK_ISSUED_FACILITY.details,
+            isUsingFacilityEndDate: true,
+            bankReviewDate: new Date().toISOString(),
+            facilityEndDate: new Date().toISOString(),
+          },
+        };
 
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
-        user: MOCK_REQUEST,
-      };
+        const mapSummaryParams = {
+          app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+          user: MOCK_REQUEST,
+        };
 
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
-      // should be allowed to change so should display change
-      expect(text).toEqual('Change');
-    });
-
-    it('Should show change for coverEndDate', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Cover end date',
-          id: 'coverEndDate',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
-        user: MOCK_REQUEST,
-      };
-
-      const { text } = mapSummaryList(MOCK_ISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
-      // should be allowed to change so should display change
-      expect(text).toEqual('Change');
-    });
+        const { text } = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items[0];
+        // should be allowed to change so should display change
+        expect(text).toEqual('Change');
+      },
+    );
 
     it('Should show change for stage when unissued facility', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Stage',
-          id: 'hasBeenIssued',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
-
       const mapSummaryParams = {
         app: MOCK_AIN_APPLICATION_RETURN_MAKER,
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, [mockDisplayItems.hasBeenIssued], mapSummaryParams, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
 
-    it('Should show not change for coverStartDate when unissued facility', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Cover start date',
-          id: 'coverStartDate',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
+    it.each(['coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate'])(
+      'should not show change for %s when unissued facility',
+      (id) => {
+        const facility = {
+          ...MOCK_UNISSUED_FACILITY,
+          details: {
+            ...MOCK_UNISSUED_FACILITY.details,
+            isUsingFacilityEndDate: true,
+            bankReviewDate: new Date().toISOString(),
+            facilityEndDate: new Date().toISOString(),
+          },
+        };
 
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
-        user: MOCK_REQUEST,
-      };
+        const mapSummaryParams = {
+          app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+          user: MOCK_REQUEST,
+        };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
-      expect(text).toEqual('');
-    });
-
-    it('Should show not change for coverEndDate when unissued facility', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Cover end date',
-          id: 'coverEndDate',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
-        user: MOCK_REQUEST,
-      };
-
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items[0];
-      expect(text).toEqual('');
-    });
+        const actionItems = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items;
+        expect(actionItems).toEqual([
+          {
+            attributes: {
+              'data-cy': `${id}-action`,
+            },
+            classes: 'govuk-!-display-none',
+          },
+        ]);
+      },
+    );
 
     it('Should not show change for stage when already issued facility', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Stage',
-          id: 'hasBeenIssued',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
-
       const mapSummaryParams = {
         app: MOCK_AIN_APPLICATION_RETURN_MAKER,
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      expect(result).toEqual([]);
-    });
-
-    it('Should not see the `Change` link for coverStartDate when already issued facility for AIN and Makers input required', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Cover start date',
-          id: 'coverStartDate',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
-
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
-        user: MOCK_REQUEST,
-      };
-
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      expect(result).toEqual([]);
-    });
-
-    it('Should show `Change` for coverStartDate when already issued facility', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Cover start date',
-          id: 'coverStartDate',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
-      const mapSummaryParamsDraft = {
-        app: MOCK_AIN_APPLICATION_FALSE_COMMENTS,
-        user: MOCK_REQUEST,
-      };
-
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParamsDraft, true)[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, [mockDisplayItems.hasBeenIssued], mapSummaryParams, true)[0].actions.items;
       expect(result).toEqual([
         {
-          href: '/gef/application-details/61a7710b2ae62b0013dae687/61a771cc2ae62b0013dae68a/confirm-cover-start-date',
-          text: 'Change',
-          visuallyHiddenText: 'Cover start date',
+          attributes: {
+            'data-cy': 'hasBeenIssued-action',
+          },
+          classes: 'govuk-!-display-none',
         },
       ]);
     });
 
-    it('Should show not change for coverEndDate when already issued facility', () => {
-      // 'key' for value row
-      const MockedDisplayItemsStage = () => [
-        {
-          label: 'Cover end date',
-          id: 'coverEndDate',
-        },
-      ];
-      const mockedDisplayItemsName = MockedDisplayItemsStage();
+    it.each(['coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate'])(
+      'Should not see the `Change` link for %s when already issued facility for AIN and Makers input required',
+      (id) => {
+        const mapSummaryParams = {
+          app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+          user: MOCK_REQUEST,
+        };
 
-      const mapSummaryParams = {
-        app: MOCK_AIN_APPLICATION_RETURN_MAKER,
-        user: MOCK_REQUEST,
-      };
+        const facility = {
+          ...MOCK_ISSUED_FACILITY_UNCHANGED,
+          details: {
+            ...MOCK_ISSUED_FACILITY_UNCHANGED.details,
+            isUsingFacilityEndDate: true,
+            bankReviewDate: new Date().toISOString(),
+            facilityEndDate: new Date().toISOString(),
+          },
+        };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, mockedDisplayItemsName, mapSummaryParams, true)[0].actions.items;
-      expect(result).toEqual([]);
-    });
+        const result = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items;
+        expect(result).toEqual([
+          {
+            attributes: {
+              'data-cy': `${id}-action`,
+            },
+            classes: 'govuk-!-display-none',
+          },
+        ]);
+      },
+    );
+
+    it.each(['coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate'])(
+      'should not show change for %s when already issued facility',
+      (id) => {
+        const facility = {
+          ...MOCK_ISSUED_FACILITY_UNCHANGED,
+          details: {
+            ...MOCK_ISSUED_FACILITY_UNCHANGED.details,
+            isUsingFacilityEndDate: true,
+            bankReviewDate: new Date().toISOString(),
+            facilityEndDate: new Date().toISOString(),
+          },
+        };
+
+        const mapSummaryParams = {
+          app: MOCK_AIN_APPLICATION_RETURN_MAKER,
+          user: MOCK_REQUEST,
+        };
+
+        const result = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items;
+        expect(result).toEqual([
+          {
+            attributes: {
+              'data-cy': `${id}-action`,
+            },
+            classes: 'govuk-!-display-none',
+          },
+        ]);
+      },
+    );
   });
 });
 
@@ -1179,14 +1024,9 @@ describe('getEpoch', () => {
 
 describe('summaryItemsConditions()', () => {
   it('should return an empty array for name', () => {
-    const item = {
-      label: 'Name',
-      id: 'name',
-    };
-
     const summaryItemsObj = {
       preview: true,
-      item,
+      item: mockDisplayItems.name,
       details: MOCK_ISSUED_FACILITY_UNCHANGED,
       app: MOCK_AIN_APPLICATION_ISSUED_ONLY,
       user: MOCK_REQUEST,
@@ -1194,42 +1034,23 @@ describe('summaryItemsConditions()', () => {
     };
     const result = summaryItemsConditions(summaryItemsObj);
 
-    const expected = [];
+    const expected = [
+      {
+        attributes: {
+          'data-cy': 'name-action',
+        },
+        classes: 'govuk-!-display-none',
+      },
+    ];
 
     expect(result).toEqual(expected);
   });
 
   describe('if changed to issued', () => {
-    it('Should be able to change name', () => {
-      const item = {
-        label: 'Name',
-        id: 'name',
-      };
-
+    it.each(['name', 'coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate'])('Should be able to change %s', (id) => {
       const summaryItemsObj = {
         preview: true,
-        item,
-        details: MOCK_ISSUED_FACILITY,
-        app: MOCK_AIN_APPLICATION,
-        user: MOCK_REQUEST,
-        data: MOCK_AIN_APPLICATION.facilities.items[1],
-      };
-
-      const { text, href } = summaryItemsConditions(summaryItemsObj)[0];
-      expect(text).toEqual('Change');
-      expect(href).toContain('/unissued-facilities/');
-      expect(href).toContain('/change');
-    });
-
-    it('Should be able to change coverStartDate', () => {
-      const item = {
-        label: 'Cover start date',
-        id: 'coverStartDate',
-      };
-
-      const summaryItemsObj = {
-        preview: true,
-        item,
+        item: mockDisplayItems[id],
         details: MOCK_ISSUED_FACILITY,
         app: MOCK_AIN_APPLICATION,
         user: MOCK_REQUEST,
@@ -1243,15 +1064,27 @@ describe('summaryItemsConditions()', () => {
       expect(href).toContain('/change');
     });
 
-    it('Should be able to change coverEndDate', () => {
-      const item = {
-        label: 'Cover end date',
-        id: 'coverEndDate',
-      };
-
+    it('Should be able to change facilityEndDate', () => {
       const summaryItemsObj = {
         preview: true,
-        item,
+        item: mockDisplayItems.facilityEndDate,
+        details: MOCK_ISSUED_FACILITY,
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+        data: MOCK_AIN_APPLICATION.facilities.items[1],
+      };
+
+      const { text, href } = summaryItemsConditions(summaryItemsObj)[0];
+
+      expect(text).toEqual('Change');
+      expect(href).toContain('/unissued-facilities/');
+      expect(href).toContain('/change');
+    });
+
+    it('Should be able to change bankReviewDate', () => {
+      const summaryItemsObj = {
+        preview: true,
+        item: mockDisplayItems.bankReviewDate,
         details: MOCK_ISSUED_FACILITY,
         app: MOCK_AIN_APPLICATION,
         user: MOCK_REQUEST,
@@ -1266,14 +1099,9 @@ describe('summaryItemsConditions()', () => {
     });
 
     it('Should be able to change issued', () => {
-      const item = {
-        label: 'Stage',
-        id: 'hasBeenIssued',
-      };
-
       const summaryItemsObj = {
         preview: true,
-        item,
+        item: mockDisplayItems.hasBeenIssued,
         details: MOCK_ISSUED_FACILITY,
         app: MOCK_AIN_APPLICATION,
         user: MOCK_REQUEST,
@@ -1287,94 +1115,34 @@ describe('summaryItemsConditions()', () => {
   });
 
   describe('if not changed and unissued', () => {
-    it('Should not be able to change name', () => {
-      const item = {
-        label: 'Name',
-        id: 'name',
-      };
+    it.each(['name', 'coverStartDate', 'coverEndDate', 'isUsingFacilityEndDate', 'bankReviewDate', 'facilityEndDate'])(
+      'Should not be able to change %s',
+      (id) => {
+        const summaryItemsObj = {
+          preview: true,
+          item: mockDisplayItems[id],
+          details: MOCK_UNISSUED_FACILITY,
+          app: MOCK_AIN_APPLICATION,
+          user: MOCK_REQUEST,
+          data: MOCK_AIN_APPLICATION.facilities.items[0],
+        };
 
+        const result = summaryItemsConditions(summaryItemsObj);
+        expect(result).toEqual([
+          {
+            attributes: {
+              'data-cy': `${id}-action`,
+            },
+            classes: 'govuk-!-display-none',
+          },
+        ]);
+      },
+    );
+
+    it('Should be able to change issued', () => {
       const summaryItemsObj = {
         preview: true,
-        item,
-        details: MOCK_UNISSUED_FACILITY,
-        app: MOCK_AIN_APPLICATION,
-        user: MOCK_REQUEST,
-        data: MOCK_AIN_APPLICATION.facilities.items[0],
-      };
-
-      const { text } = summaryItemsConditions(summaryItemsObj)[0];
-      expect(text).toEqual('');
-    });
-
-    it('Should not be able to change coverStartDate', () => {
-      const item = {
-        label: 'Cover start date',
-        id: 'coverStartDate',
-      };
-
-      const summaryItemsObj = {
-        preview: true,
-        item,
-        details: MOCK_UNISSUED_FACILITY,
-        app: MOCK_AIN_APPLICATION,
-        user: MOCK_REQUEST,
-        data: MOCK_AIN_APPLICATION.facilities.items[0],
-      };
-
-      const { text } = summaryItemsConditions(summaryItemsObj)[0];
-      expect(text).toEqual('');
-    });
-
-    it('Should be able to change coverStartDate', () => {
-      const item = {
-        label: 'Cover start date',
-        id: 'coverStartDate',
-      };
-
-      const summaryItemsObj = {
-        preview: true,
-        item,
-        details: MOCK_ISSUED_FACILITY,
-        app: MOCK_AIN_APPLICATION,
-        user: MOCK_REQUEST,
-        data: MOCK_AIN_APPLICATION.facilities.items[1],
-      };
-
-      const { text, href } = summaryItemsConditions(summaryItemsObj)[0];
-
-      expect(text).toEqual('Change');
-      expect(href).toContain('/unissued-facilities/');
-      expect(href).toContain('/change');
-    });
-
-    it('Should be able to change coverEndDate', () => {
-      const item = {
-        label: 'Cover end date',
-        id: 'coverEndDate',
-      };
-
-      const summaryItemsObj = {
-        preview: true,
-        item,
-        details: MOCK_UNISSUED_FACILITY,
-        app: MOCK_AIN_APPLICATION,
-        user: MOCK_REQUEST,
-        data: MOCK_AIN_APPLICATION.facilities.items[0],
-      };
-
-      const { text } = summaryItemsConditions(summaryItemsObj)[0];
-      expect(text).toEqual('');
-    });
-
-    it('Should not be able to change issued', () => {
-      const item = {
-        label: 'Stage',
-        id: 'hasBeenIssued',
-      };
-
-      const summaryItemsObj = {
-        preview: true,
-        item,
+        item: mockDisplayItems.hasBeenIssued,
         details: MOCK_UNISSUED_FACILITY,
         app: MOCK_AIN_APPLICATION,
         user: MOCK_REQUEST,
