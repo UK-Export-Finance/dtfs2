@@ -20,11 +20,14 @@
         }
     }) }}
   {% endif %}
+
+  {% set pageHeading = "Add reported fee" + ("s" if reportedFeeDetails.feeRecords | length > 1 else "") + " to an existing payment" %}
+
   <div class="govuk-grid-row govuk-!-padding-top-7">
-    <div class="govuk-grid-column-one-half">
-      <span class="govuk-caption-l" data-cy="add-to-an-existing-payment-heading-caption">{{ bank.name }},
+    <div class="govuk-grid-column-full">
+      <span class="govuk-caption-l"  data-cy="add-to-an-existing-payment-heading-caption">{{ bank.name }},
       {{ formattedReportPeriod }}</span>
-      <h1 class="govuk-heading-l">Add to an existing payment</h1>
+      <h1 class="govuk-heading-l">{{ pageHeading }}</h1>
     </div>
   </div>
 
