@@ -473,6 +473,29 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
   }
 };
 
+const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
+  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+  if (!isValid) {
+    console.error('Invalid facility Id %s', facilityId);
+    return { status: 400, data: 'Invalid facility Id provided' };
+  }
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-facility-end-date`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get the latest completed facilityEndDate amendment %o', error);
+    return {
+      status: error?.response?.status || 500,
+      data: 'Failed to get the latest completed coverEndDate amendment',
+    };
+  }
+};
+
 const getAmendmentById = async (facilityId, amendmentId) => {
   const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -1507,6 +1530,7 @@ module.exports = {
   getCompletedAmendment,
   getLatestCompletedAmendmentValue,
   getLatestCompletedAmendmentDate,
+  getLatestCompletedAmendmentFacilityEndDate,
   getAmendmentById,
   getAmendmentByFacilityId,
   getAmendmentsByDealId,

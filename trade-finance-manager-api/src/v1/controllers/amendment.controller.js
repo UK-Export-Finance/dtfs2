@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_QUERIES } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
@@ -84,13 +85,18 @@ const updateTFMDealLastUpdated = async (amendmentId, facilityId, auditDetails) =
 const createAmendmentTFMObject = async (amendmentId, facilityId, auditDetails) => {
   try {
     // gets latest amendment value and dates
-    const latestValue = await api.getLatestCompletedAmendmentValue(facilityId);
-    const latestCoverEndDate = await api.getLatestCompletedAmendmentDate(facilityId);
+    const latestValueResponse = await api.getLatestCompletedAmendmentValue(facilityId);
+    const latestCoverEndDateResponse = await api.getLatestCompletedAmendmentDate(facilityId);
+
+    let latestFacilityEndDateResponse;
+    if (isTfmFacilityEndDateFeatureFlagEnabled()) {
+      latestFacilityEndDateResponse = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId);
+    }
 
     let tfmToAdd = {};
     // populates array with latest value/exposure and date/tenor values
-    tfmToAdd = await addLatestAmendmentValue(tfmToAdd, latestValue, facilityId);
-    tfmToAdd = await addLatestAmendmentDates(tfmToAdd, latestCoverEndDate, facilityId);
+    tfmToAdd = await addLatestAmendmentValue(tfmToAdd, latestValueResponse, facilityId);
+    tfmToAdd = await addLatestAmendmentDates(tfmToAdd, latestCoverEndDateResponse, latestFacilityEndDateResponse, facilityId);
 
     const payload = {
       tfm: tfmToAdd,
@@ -121,10 +127,12 @@ const getAmendmentByFacilityId = async (req, res) => {
       amendment = (await api.getAmendmentInProgress(facilityId)).data;
       break;
     case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED:
-      if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
+      if (type === AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
         amendment = await api.getLatestCompletedAmendmentDate(facilityId);
-      } else if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST_VALUE) {
+      } else if (type === AMENDMENT_QUERIES.LATEST_VALUE) {
         amendment = await api.getLatestCompletedAmendmentValue(facilityId);
+      } else if (type === AMENDMENT_QUERIES.LATEST_FACILITY_END_DATE) {
+        amendment = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId);
       } else {
         amendment = await api.getCompletedAmendment(facilityId);
       }
@@ -150,7 +158,7 @@ const getAmendmentsByDealId = async (req, res) => {
       amendment = await api.getAmendmentInProgressByDealId(dealId);
       break;
     case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED:
-      if (type === CONSTANTS.AMENDMENTS.AMENDMENT_QUERIES.LATEST) {
+      if (type === AMENDMENT_QUERIES.LATEST) {
         amendment = await api.getLatestCompletedAmendmentByDealId(dealId);
       } else {
         amendment = await api.getCompletedAmendmentByDealId(dealId);
