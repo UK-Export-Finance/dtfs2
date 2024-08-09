@@ -19,24 +19,22 @@ export type UtilisationReportAddFeesToAnExistingPaymentGroupEvent = BaseUtilisat
 
 const addSelectedFeeRecordsToPaymentGroup = async (
   transactionEntityManager: EntityManager,
-  feeRecords: FeeRecordEntity[],
+  feeRecordsToAdd: FeeRecordEntity[],
+  feeRecordsAndPaymentsMatch: boolean,
   payments: PaymentEntity[],
   requestSource: DbRequestSource,
 ) => {
   await Promise.all(
     payments.map(async (payment) => {
       payment.addFeeRecords({
-        feeRecords,
+        feeRecords: feeRecordsToAdd,
         requestSource,
       });
       await transactionEntityManager.save(PaymentEntity, payment);
     }),
   );
 
-  const feeRecordsAndPaymentsMatch = await feeRecordsMatchAttachedPayments(feeRecords, transactionEntityManager);
-
-  const feeRecordStateMachines = feeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
-
+  const feeRecordStateMachines = feeRecordsToAdd.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
   await Promise.all(
     feeRecordStateMachines.map((stateMachine) =>
       stateMachine.handleEvent({
@@ -51,10 +49,13 @@ const addSelectedFeeRecordsToPaymentGroup = async (
   );
 };
 
-const updateOtherFeeRecordsInPaymentGroup = async (transactionEntityManager: EntityManager, feeRecords: FeeRecordEntity[], requestSource: DbRequestSource) => {
-  const feeRecordsAndPaymentsMatch = await feeRecordsMatchAttachedPayments(feeRecords, transactionEntityManager);
-
-  const feeRecordStateMachines = feeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
+const updateOtherFeeRecordsInPaymentGroup = async (
+  transactionEntityManager: EntityManager,
+  feeRecordsToUpdate: FeeRecordEntity[],
+  feeRecordsAndPaymentsMatch: boolean,
+  requestSource: DbRequestSource,
+) => {
+  const feeRecordStateMachines = feeRecordsToUpdate.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
   await Promise.all(
     feeRecordStateMachines.map((stateMachine) =>
       stateMachine.handleEvent({
@@ -73,8 +74,16 @@ export const handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent = async
   report: UtilisationReportEntity,
   { transactionEntityManager, feeRecordsToAdd, otherFeeRecordsInPaymentGroup, payments, requestSource }: AddFeesToAnExistingPaymentGroupEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  await addSelectedFeeRecordsToPaymentGroup(transactionEntityManager, feeRecordsToAdd, payments, requestSource);
-  await updateOtherFeeRecordsInPaymentGroup(transactionEntityManager, otherFeeRecordsInPaymentGroup, requestSource);
+  const allFeeRecords = [...otherFeeRecordsInPaymentGroup, ...feeRecordsToAdd];
+  const feeRecordsAndPaymentsMatchAfterFeeRecordsAdded = await feeRecordsMatchAttachedPayments(allFeeRecords, transactionEntityManager);
+
+  await addSelectedFeeRecordsToPaymentGroup(transactionEntityManager, feeRecordsToAdd, feeRecordsAndPaymentsMatchAfterFeeRecordsAdded, payments, requestSource);
+  await updateOtherFeeRecordsInPaymentGroup(
+    transactionEntityManager,
+    otherFeeRecordsInPaymentGroup,
+    feeRecordsAndPaymentsMatchAfterFeeRecordsAdded,
+    requestSource,
+  );
 
   report.updateLastUpdatedBy(requestSource);
   return await transactionEntityManager.save(UtilisationReportEntity, report);

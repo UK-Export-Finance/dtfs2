@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
-import { CreatePaymentParams, UpdatePaymentParams } from './payment.types';
+import { AddFeeRecordsToPaymentParams, CreatePaymentParams, UpdatePaymentParams } from './payment.types';
 import { FeeRecordEntity } from '../fee-record';
 import { MonetaryColumn } from '../custom-columns';
 
@@ -58,6 +58,17 @@ export class PaymentEntity extends AuditableBaseEntity {
     this.amount = amount;
     this.dateReceived = dateReceived;
     this.reference = reference;
+    this.updateLastUpdatedBy(requestSource);
+  }
+
+  public addFeeRecords({ feeRecords, requestSource }: AddFeeRecordsToPaymentParams): void {
+    const existingIds = new Set(this.feeRecords.map((record) => record.id));
+    const duplicateIds = feeRecords.filter((record) => existingIds.has(record.id));
+    if (duplicateIds.length > 0) {
+      throw new Error(`Fee record(s) with id(s) ${duplicateIds.map((record) => record.id).join(', ')} are already attached to this payment.`);
+    }
+
+    this.feeRecords = [...this.feeRecords, ...feeRecords];
     this.updateLastUpdatedBy(requestSource);
   }
 }
