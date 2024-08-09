@@ -27,7 +27,7 @@ context('Admin dashboard', () => {
       deal = insertedDeal;
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((dealGef) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((dealGef) => {
       const { _id: dealId } = dealGef;
 
       gefDeal = dealGef;
@@ -87,7 +87,7 @@ context('Admin dashboard', () => {
   });
 
   it('clicking on a bss facility takes you to application details focussing on the facility (Admin)', () => {
-    cy.login(BANK1_MAKER1);
+    cy.login(ADMIN);
     cy.visit(relative(`/contract/${deal._id}`));
     // adds bond
     cy.addBondToDeal();

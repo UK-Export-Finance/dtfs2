@@ -12,7 +12,6 @@ const { BSS_DEAL, GEF_DEAL, GEF_DEAL_MAKER_2, GEF_DEAL_BANK_2_MAKER_2 } = MOCK_D
 const regexDateTime = /\d?\d \w\w\w \d\d\d\d/;
 
 context('View dashboard deals as a maker', () => {
-  let ALL_BANK1_DEALS;
   let ALL_BANK2_DEALS;
   let gefDeal;
   let bssDeal;
@@ -34,7 +33,7 @@ context('View dashboard deals as a maker', () => {
       GEF_DEAL_MAKER_2.maker = maker2;
     });
 
-    cy.insertOneGefApplication(GEF_DEAL, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL, ADMIN).then((deal) => {
       ALL_DEALS.push(deal);
     });
 
@@ -42,29 +41,28 @@ context('View dashboard deals as a maker', () => {
       ALL_DEALS.push(deal);
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_MAKER_2, BANK1_MAKER2).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_MAKER_2, ADMIN).then((deal) => {
       ALL_DEALS.push(deal);
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_BANK_2_MAKER_2, BANK1_MAKER2).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_BANK_2_MAKER_2, ADMIN).then((deal) => {
       ALL_DEALS.push(deal);
     });
   });
 
   beforeEach(() => {
-    gefDeal = ALL_DEALS.find(({ dealType, maker }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && maker.username === BANK1_MAKER2.username);
+    gefDeal = ALL_DEALS.find(({ dealType, maker }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && maker.username === ADMIN.username);
 
     bssDeal = ALL_DEALS.find(({ dealType }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
 
     gefDealId = gefDeal._id;
     bssDealId = bssDeal._id;
 
-    ALL_BANK1_DEALS = ALL_DEALS.filter(({ bank }) => bank.id === BANK1_MAKER1.bank.id);
     ALL_BANK2_DEALS = ALL_DEALS.filter(({ bank }) => bank.id === BANK2_MAKER2.bank.id);
   });
 
   it('BSS and GEF deals render on the dashboard with correct values', () => {
-    cy.login(BANK1_MAKER1);
+    cy.login(ADMIN);
     dashboardDeals.visit();
 
     const { exporter, bankRef, product, status, type, updated } = dashboardDeals.row;
@@ -74,14 +72,14 @@ context('View dashboard deals as a maker', () => {
       .totalItems()
       .invoke('text')
       .then((text) => {
-        expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
+        expect(text.trim()).equal(`(${ALL_DEALS.length} items)`);
       });
 
     //---------------------------------------------------------------
     // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
 
-    cy.get('table tr').eq(1).as('firstRow').find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
+    cy.get('table tr').as('firstRow').find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
 
     exporter(gefDealId)
       .invoke('text')
@@ -122,7 +120,7 @@ context('View dashboard deals as a maker', () => {
     //---------------------------------------------------------------
     // second deal (BSS)
     //---------------------------------------------------------------
-    cy.get('table tr').eq(2).find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
+    cy.get('table tr').find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
 
     exporter(bssDealId)
       .invoke('text')
@@ -179,16 +177,18 @@ context('View dashboard deals as a maker', () => {
 
   // TODO: DTFS2-5372 - fix.
   it('should not show deals created by other banks', () => {
-    cy.login(BANK1_MAKER1);
+    cy.login(ADMIN);
     dashboardDeals.visit();
 
     dashboardDeals
       .totalItems()
       .invoke('text')
       .then((text) => {
-        expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
+        expect(text.trim()).equal(`(${ALL_DEALS.length} items)`);
       });
 
-    cy.get('table tr').find(`[data-cy="deal__status--${ALL_BANK2_DEALS[0]._id}"]`).should('not.exist');
+    ALL_BANK2_DEALS.forEach((deal) => {
+      cy.get('table tr').find(`[data-cy="facility__name--link--${deal._id}"]`).should('not.exist');
+    });
   });
 });

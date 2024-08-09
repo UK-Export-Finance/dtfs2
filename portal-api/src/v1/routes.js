@@ -8,7 +8,7 @@ const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-b
 const { bankIdValidation, sqlIdValidation } = require('./validation/route-validators/route-validators');
 const { handleExpressValidatorResult } = require('./validation/route-validators/express-validator-result-handler');
 const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
-
+const { validateUserPermission } = require('./roles/validate-user-is-acting-on-self-to-change-password-or-is-admin');
 const dealsController = require('./controllers/deal.controller');
 const dealName = require('./controllers/deal-name.controller');
 const dealStatus = require('./controllers/deal-status.controller');
@@ -105,9 +105,16 @@ authRouter
   .get(mandatoryCriteria.findOne)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.delete);
 
-authRouter.route('/users').get(users.list).post(users.create);
-authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
-authRouter.route('/users/:_id/disable').delete(users.disable);
+authRouter
+  .route('/users')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), users.list)
+  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), users.create);
+
+authRouter
+  .route('/users/:_id')
+  .get(users.findById)
+  .put(validateUserPermission, users.updateById)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), users.remove);
 
 authRouter.use('/gef', gef);
 

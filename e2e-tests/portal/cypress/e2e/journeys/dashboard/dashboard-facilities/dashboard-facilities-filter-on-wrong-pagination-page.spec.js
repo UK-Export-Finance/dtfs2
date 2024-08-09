@@ -44,7 +44,7 @@ context('Dashboard facilities - filtering facility on wrong pagination page from
 
     const manyGefDeals = Array.from(Array(15), () => GEF_DEAL_DRAFT);
     manyGefDeals.map((deal) => {
-      cy.insertOneGefApplication(deal, BANK1_MAKER1).then(({ _id }) => {
+      cy.insertOneGefApplication(deal, ADMIN).then(({ _id }) => {
         cy.updateGefApplication(
           _id,
           {
@@ -56,7 +56,7 @@ context('Dashboard facilities - filtering facility on wrong pagination page from
           BANK1_MAKER1,
         ).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
         GEF_FACILITY_CASH.dealId = _id;
-        cy.insertOneGefFacility(GEF_FACILITY_CASH, BANK1_MAKER1);
+        cy.insertOneGefFacility(GEF_FACILITY_CASH, ADMIN);
       });
       return deal;
     });

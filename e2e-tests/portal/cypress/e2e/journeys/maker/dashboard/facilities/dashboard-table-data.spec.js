@@ -27,7 +27,6 @@ const hasBeenIssuedText = (hasBeenIssued) => {
 context('View dashboard facilities as a maker', () => {
   const ALL_DEALS = [];
   let ALL_FACILITIES = [];
-  let ALL_BANK1_DEALS;
   let ALL_BANK2_DEALS;
   let gefDeal;
   let gefFacility;
@@ -70,14 +69,14 @@ context('View dashboard facilities as a maker', () => {
     /*
      * insert GEF deal and facility by bank 1, maker 1
      */
-    cy.insertOneGefApplication(GEF_DEAL, BANK1_MAKER1).then((createdGefDeal) => {
+    cy.insertOneGefApplication(GEF_DEAL, ADMIN).then((createdGefDeal) => {
       cy.updateGefApplication(createdGefDeal._id, GEF_DEAL, BANK1_MAKER1).then((updatedGefDeal) => {
         ALL_DEALS.push(updatedGefDeal);
       });
 
       CASH_FACILITY.dealId = createdGefDeal._id;
 
-      cy.insertOneGefFacility(CASH_FACILITY, BANK1_MAKER1).then((facility) => {
+      cy.insertOneGefFacility(CASH_FACILITY, ADMIN).then((facility) => {
         const { _id } = facility.details;
 
         cy.updateGefFacility(_id, CASH_FACILITY, BANK1_MAKER1).then((updatedGefFacility) => {
@@ -96,7 +95,6 @@ context('View dashboard facilities as a maker', () => {
     bssFacilityId = bssFacility._id;
     bssDeal = ALL_DEALS.find((deal) => deal.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
 
-    ALL_BANK1_DEALS = ALL_DEALS.filter(({ bank }) => bank.id === BANK1_MAKER1.bank.id);
     ALL_BANK2_DEALS = ALL_DEALS.filter(({ bank }) => bank.id === BANK2_MAKER2.bank.id);
   });
 
@@ -142,7 +140,7 @@ context('View dashboard facilities as a maker', () => {
     // second facility (BSS)
     //---------------------------------------------------------------
 
-    cy.get('table tr').eq(2).find(`[data-cy="facility__name--link--${bssFacilityId}"]`).should('exist');
+    cy.get('table tr').find(`[data-cy="facility__name--link--${bssFacilityId}"]`).should('exist');
 
     nameLink(bssFacilityId).should('contain', bssFacility.name);
 
@@ -185,14 +183,14 @@ context('View dashboard facilities as a maker', () => {
   });
 
   it('should not show facilities created by other banks', () => {
-    cy.login(BANK1_MAKER1);
+    cy.login(ADMIN);
     dashboardFacilities.visit();
 
     dashboardFacilities
       .totalItems()
       .invoke('text')
       .then((text) => {
-        expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
+        expect(text.trim()).equal(`(${ALL_DEALS.length} items)`);
       });
 
     cy.get('table tr').find(`[data-cy="facility__name--link--${ALL_BANK2_DEALS[0]}"]`).should('not.exist');

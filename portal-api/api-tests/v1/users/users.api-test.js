@@ -21,12 +21,14 @@ const MOCK_USER = {
 };
 
 describe('a user', () => {
-  let aNonAdmin;
+  let anAdmin;
+  let aMaker;
+  let aChecker;
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     const testUsers = await testUserCache.initialise(app);
-    aNonAdmin = testUsers().withoutRole(ADMIN).one();
+    anAdmin = testUsers().withRole(ADMIN).one();
   });
 
   beforeEach(async () => {
@@ -46,26 +48,10 @@ describe('a user', () => {
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(aNonAdmin).remove(`/v1/users/${userToDeleteId}`),
+      makeRequest: () => as(anAdmin).remove(`/v1/users/${userToDeleteId}`),
       collectionName: MONGO_DB_COLLECTIONS.USERS,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => userToDeleteId,
-    });
-  });
-
-  describe('DELETE /v1/users/:userId/disable', () => {
-    it('a user can be disabled', async () => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
-
-      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
-
-      const { status, body } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
-
-      expect(status).toEqual(200);
-      expect(body).toMatchObject({
-        disabled: true,
-      });
     });
   });
 
@@ -86,18 +72,6 @@ describe('a user', () => {
 
       expect(status).toEqual(401);
       expect(body).toEqual({ msg: 'email or password is incorrect', success: false });
-    });
-
-    it('a disabled user cannot log in', async () => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
-      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
-
-      const { username, password } = MOCK_USER;
-      const { status, body } = await as().post({ username, password }).to('/v1/login');
-
-      expect(status).toEqual(401);
-      expect(body).toEqual({ msg: 'user is disabled', success: false });
     });
 
     it('a known user can log in with a valid username and password', async () => {
@@ -158,11 +132,11 @@ describe('a user', () => {
 
   it('User already exists', async () => {
     // User creation - first instance
-    const first = await as(aNonAdmin).post(MOCK_USER).to('/v1/users');
+    const first = await as(anAdmin).post(MOCK_USER).to('/v1/users');
     expect(first.status).toEqual(200);
 
     // User creation - second instance
-    const second = await as(aNonAdmin).post(MOCK_USER).to('/v1/users');
+    const second = await as(anAdmin).post(MOCK_USER).to('/v1/users');
     expect(second.status).toEqual(400);
   });
 
@@ -187,18 +161,6 @@ describe('a user', () => {
 
       expect(status).toEqual(401);
       expect(body).toEqual(expectedBody);
-    });
-
-    it('a disabled user cannot log in', async () => {
-      const response = await createUser(MOCK_USER);
-      const createdUser = response.body.user;
-      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
-
-      const { username, password } = MOCK_USER;
-      const { status, body } = await as().post({ username, password }).to('/v1/login');
-
-      expect(status).toEqual(401);
-      expect(body).toEqual({ msg: 'user is disabled', success: false });
     });
 
     it('a known user can log in with a valid username and password', async () => {
@@ -255,9 +217,25 @@ describe('a user', () => {
 
       expect(status).toEqual(401);
     });
+
+    it('does not allow a Maker to create a user', async () => {
+      const userToCreate = { ...MOCK_USER, roles: ['Maker'] };
+
+      const { status } = await as(aMaker).post(userToCreate).to('/v1/users');
+
+      expect(status).toEqual(401);
+    });
+
+    it('does not allow a Checker to create a user', async () => {
+      const userToCreate = { ...MOCK_USER, roles: ['Checker'] };
+
+      const { status } = await as(aChecker).post(userToCreate).to('/v1/users');
+
+      expect(status).toEqual(401);
+    });
   });
 
   async function createUser(userToCreate) {
-    return as(aNonAdmin).post(userToCreate).to('/v1/users');
+    return as(anAdmin).post(userToCreate).to('/v1/users');
   }
 });

@@ -250,7 +250,7 @@ const apiTestUser = {
   surname: 'Test User',
   email: 'api-tester@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
-  roles: [MAKER],
+  roles: [ADMIN],
   bank: banks.any,
   isTrusted: false,
 };
@@ -276,6 +276,37 @@ const setUpApiTestUser = async (as) => {
   await collection.insertOne(userToCreate);
 
   const { token } = await loginTestUser(as, apiTestUser);
+  return { token, ...userToCreate };
+};
+
+const newAdminTestUser = {
+  username: 'new-admin-tester@ukexportfinance.gov.uk',
+  password: 'NewP@ssword1234',
+  firstname: 'NewAdmin',
+  surname: 'Test User',
+  email: 'new-admin-tester@ukexportfinance.gov.uk',
+  timezone: 'Europe/London',
+  roles: [ADMIN],
+  bank: banks.any,
+};
+
+const setUpAdminTestUser = async (as) => {
+  const { salt, hash } = genPassword(newAdminTestUser.password);
+
+  const userToCreate = {
+    'user-status': STATUS.ACTIVE,
+    salt,
+    hash,
+    ...newAdminTestUser,
+  };
+
+  userToCreate.password = '';
+  userToCreate.passwordConfirm = '';
+
+  const collection = await db.getCollection(DB_COLLECTIONS.USERS);
+  await collection.insertOne(userToCreate);
+
+  const { token } = await loginTestUser(as, setUpAdminTestUser);
   return { token, ...userToCreate };
 };
 
@@ -308,4 +339,5 @@ const initialise = async (app) => {
 module.exports = {
   initialise,
   setUpApiTestUser,
+  setUpAdminTestUser,
 };

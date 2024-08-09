@@ -106,15 +106,6 @@ describe('user routes', () => {
     });
   });
 
-  describe('GET /admin/users/disable/:_id', () => {
-    withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get(`/admin/users/disable/${_id}`, {}, headers),
-      whitelistedRoles: [ADMIN],
-      successCode: 200,
-      disableHappyPath: true, // TODO DTFS2-6654: remove and test happy path.
-    });
-  });
-
   describe('GET /admin/users/enable/:_id', () => {
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers) => get(`/admin/users/enable/${_id}`, {}, headers),

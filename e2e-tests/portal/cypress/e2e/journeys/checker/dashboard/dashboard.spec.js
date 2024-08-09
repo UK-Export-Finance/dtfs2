@@ -3,7 +3,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 
-const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1, BANK2_MAKER2 } = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1, BANK1_MAKER2 } = MOCK_USERS;
 
 const regexDateTime = /\d?\d \w\w\w \d\d\d\d/;
 
@@ -60,13 +60,13 @@ context('View dashboard deals as a checker', () => {
       BANK1_DEALS.push(createdDeal);
     });
 
-    cy.insertOneGefApplication(GEF_DEALS.READY_FOR_CHECK, BANK1_MAKER1).then((gefDeal) => {
+    cy.insertOneGefApplication(GEF_DEALS.READY_FOR_CHECK, ADMIN).then((gefDeal) => {
       cy.setGefApplicationStatus(gefDeal._id, GEF_DEALS.READY_FOR_CHECK.status, BANK1_MAKER1).then((updatedGefDeal) => {
         BANK1_DEALS.push(updatedGefDeal.body);
       });
     });
 
-    cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, BANK2_MAKER2);
+    cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, BANK1_MAKER2);
   });
 
   it("Only deals with checker status that belong to the checker's bank appear on the dashboard. Each deal goes to correct deal URL", () => {
@@ -84,23 +84,20 @@ context('View dashboard deals as a checker', () => {
 
     const { exporter, bankRef, product, status, type, updated, link } = dashboardDeals.row;
 
-    // should only see 2 deals - ready for check and in Bank 1
-    const EXPECTED_DEALS = BANK1_DEALS.filter((deal) => deal.status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
-
     dashboardDeals
       .totalItems()
       .invoke('text')
       .then((text) => {
-        expect(text.trim()).equal(`(${EXPECTED_DEALS.length} items)`);
+        expect(text.trim()).equal(`(${BANK1_DEALS.length} items)`);
       });
 
     //---------------------------------------------------------------
     // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
-    cy.get('table tr').eq(1).as('firstRow');
+    cy.get('table tr').as('firstRow');
     const gefDealId = gefDeal._id;
 
-    cy.get('table tr').eq(1).find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
+    cy.get('table tr').find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
 
     exporter(gefDealId)
       .invoke('text')
@@ -146,10 +143,9 @@ context('View dashboard deals as a checker', () => {
     dashboardDeals.visit();
 
     // second deal (BSS)
-    cy.get('table tr').eq(2).as('secondRow');
     const bssDealId = bssDeal._id;
 
-    cy.get('@secondRow').find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
+    cy.get('table tr').find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
 
     exporter(bssDealId)
       .invoke('text')

@@ -24,13 +24,11 @@ const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' w
 
 const BASE_URL = '/v1/users';
 describe('a user', () => {
-  let aNonAdmin;
   let anAdmin;
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     const testUsers = await testUserCache.initialise(app);
-    aNonAdmin = testUsers().withoutRole(ADMIN).one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 
@@ -90,28 +88,29 @@ describe('a user', () => {
     });
 
     describe('it creates the user', () => {
-      it('it creates the user if all provided data is valid', async () => {
-        await createUser(MOCK_USER);
-        const { status, body } = await as(aNonAdmin).get(BASE_URL);
+      it('it creates the user with Admin role if all provided data is valid', async () => {
+        const userWithRoles = {
+          ...MOCK_USER,
+          roles: ['Admin'],
+        };
+        const { status, body } = await createUser(userWithRoles);
 
         expect(status).toEqual(200);
         expect(body).toStrictEqual(
           expect.objectContaining({
             success: true,
-            users: expect.arrayContaining([
-              {
-                username: MOCK_USER.username,
-                email: MOCK_USER.email,
-                roles: MOCK_USER.roles,
-                bank: MOCK_USER.bank,
-                _id: expect.any(String),
-                firstname: MOCK_USER.firstname,
-                surname: MOCK_USER.surname,
-                timezone: 'Europe/London',
-                'user-status': STATUS.ACTIVE,
-                isTrusted: MOCK_USER.isTrusted,
-              },
-            ]),
+            user: expect.objectContaining({
+              username: MOCK_USER.username,
+              email: MOCK_USER.email,
+              roles: ['Admin'],
+              bank: MOCK_USER.bank,
+              _id: expect.any(String),
+              firstname: MOCK_USER.firstname,
+              surname: MOCK_USER.surname,
+              timezone: 'Europe/London',
+              'user-status': STATUS.ACTIVE,
+              isTrusted: MOCK_USER.isTrusted,
+            }),
           }),
         );
       });
@@ -123,7 +122,7 @@ describe('a user', () => {
         };
 
         await createUser(newUser);
-        const { status, body } = await as(aNonAdmin).get(BASE_URL);
+        const { status, body } = await as(anAdmin).get(BASE_URL);
 
         expect(status).toEqual(200);
         expect(body.users.find((user) => user.username === MOCK_USER.username).roles).toStrictEqual([READ_ONLY, READ_ONLY]);
@@ -136,7 +135,7 @@ describe('a user', () => {
         };
 
         await createUser(newUser);
-        const { status, body } = await as(aNonAdmin).get(BASE_URL);
+        const { status, body } = await as(anAdmin).get(BASE_URL);
 
         expect(status).toEqual(200);
         expect(body.users.find((user) => user.username === MOCK_USER.username).roles).toStrictEqual([READ_ONLY]);
@@ -145,6 +144,6 @@ describe('a user', () => {
   });
 
   async function createUser(userToCreate) {
-    return as(aNonAdmin).post(userToCreate).to(BASE_URL);
+    return as(anAdmin).post(userToCreate).to(BASE_URL);
   }
 });

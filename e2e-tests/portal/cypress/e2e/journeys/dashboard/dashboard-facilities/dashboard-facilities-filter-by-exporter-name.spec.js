@@ -42,7 +42,7 @@ context('Dashboard facilities - sort', () => {
       });
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then(({ _id }) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then(({ _id }) => {
       cy.updateGefApplication(
         _id,
         {
@@ -54,7 +54,7 @@ context('Dashboard facilities - sort', () => {
         BANK1_MAKER1,
       ).then((insertedDeal) => exporterNames.unshift(insertedDeal.exporter.companyName));
       GEF_FACILITY_CASH.dealId = _id;
-      cy.insertOneGefFacility(GEF_FACILITY_CASH, BANK1_MAKER1).then((insertedFacility) => {
+      cy.insertOneGefFacility(GEF_FACILITY_CASH, ADMIN).then((insertedFacility) => {
         ALL_FACILITIES.push(insertedFacility);
       });
     });

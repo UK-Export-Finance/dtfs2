@@ -35,7 +35,7 @@ context('Dashboard Facilities filters - filter by product/facility type', () => 
       });
     });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, ADMIN).then((deal) => {
       const { _id: dealId } = deal;
 
       const facilities = [

@@ -15,7 +15,7 @@ const mockEligibilityCriteria = require('./fixtures/gef/eligibilityCriteria');
 
 const expectedEligibilityCriteriaAuditRecord = {
   ...generateParsedMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
-  lastUpdatedByPortalUserId: expect.any(String),
+  lastUpdatedByPortalUserId: expect.toBeObjectId(),
 };
 
 const gefApplicationsUrl = '/v1/gef/application';
