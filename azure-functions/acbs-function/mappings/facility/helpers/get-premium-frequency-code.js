@@ -4,8 +4,8 @@ const CONSTANTS = require('../../../constants');
 
 /**
  * Fee frequency for the facility, if `At Maturity` then `Annually` else respective fee frequency code.
- * @param {Object} facilitySnapshot Facility snapshot object
- * @returns {String} Fee-frequency ACBS code
+ * @param {object} facilitySnapshot Facility snapshot object
+ * @returns {string} Fee-frequency ACBS code
  */
 const getPremiumFrequencyCode = (facilitySnapshot) => {
   const feeFrequency = mapFeeFrequency(facilitySnapshot);

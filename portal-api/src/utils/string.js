@@ -37,7 +37,7 @@ Additional aspects:
   The email must be at least 3 characters long and in a valid email format
   The function returns false if the input is not a non-empty string
 
- * @param {String} email Email address as string
+ * @param {string} email Email address as string
  * @returns Boolean
  */
 const isValidEmail = (email) => {

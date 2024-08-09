@@ -2,8 +2,8 @@ const { validationErrorHandler } = require('../../../../helpers/validationErrorH
 
 /**
  *
- * @param {String} decision
- * @returns {Object}
+ * @param {string} decision
+ * @returns {object}
  * Validation function to check if decision has been selected on amendment banks decision
  * if decision blank, then produces error and returns
  * if decision, then returns blank error object

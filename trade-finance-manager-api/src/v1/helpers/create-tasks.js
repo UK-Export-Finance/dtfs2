@@ -13,7 +13,7 @@ const NEW_TASK = {
 /**
  * Create tasks for a single group
  * @param {Array} tasks to add to a group
- * @param {Number} group ID
+ * @param {number} group ID
  * @param {Array} additional/special tasks to add to the group
  * @returns {Array} created tasks
  */
@@ -99,7 +99,7 @@ const createTasksMIA = (additionalTasks) => [
 
 /**
  * Create tasks/task groups depending on the deal type
- * @param {String} deal submission type
+ * @param {string} deal submission type
  * @param {Array} additional/special tasks to add to the group
  * @returns {Array} created task groups
  */

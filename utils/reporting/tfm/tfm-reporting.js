@@ -16,7 +16,7 @@ const { stripCommas, getMaximumLiability } = require('../../data-migration/helpe
  * @param {Integer} EPOCH Fetch records greater than.
  * Defaulted to `1648684800` (31-03-2022). This argument
  * accepts EPOCH with `ms`
- * @returns {Object} Collection object
+ * @returns {object} Collection object
  */
 const getTfmDeals = (epoch = 1648684800) =>
   getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, {
@@ -129,7 +129,7 @@ const generateReport = async (rows) => {
 /**
  * Entry point function.
  * Initiates report generation process
- * @returns {Boolean} Execution status
+ * @returns {boolean} Execution status
  */
 const generate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', '🚀 Initiating TFM reporting.', '\n\n');

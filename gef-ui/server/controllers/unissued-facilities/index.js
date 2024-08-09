@@ -155,7 +155,7 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
 
 /**
  * post function for changing unissued facilities to issued from unissued facilities list
- * validates first and gets parameters {Object} from validation function
+ * validates first and gets parameters {object} from validation function
  * displays success message and redirects to unissued facilities list
  * @param {req}
  * @param {res}

@@ -186,8 +186,8 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     this.updateLastUpdatedBy(requestSource);
   }
 
-  public updateWithKeyingData({ fixedFeeAdjustment, principalBalanceAdjustment, requestSource }: UpdateWithKeyingDataParams): void {
-    this.status = 'READY_TO_KEY';
+  public updateWithKeyingData({ fixedFeeAdjustment, principalBalanceAdjustment, status, requestSource }: UpdateWithKeyingDataParams): void {
+    this.status = status;
     this.fixedFeeAdjustment = fixedFeeAdjustment;
     this.principalBalanceAdjustment = principalBalanceAdjustment;
     this.updateLastUpdatedBy(requestSource);
