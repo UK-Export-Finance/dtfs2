@@ -1,4 +1,5 @@
 const CONSTANTS = require('../../../constants');
+const { to2Decimals } = require('../../../helpers/currency');
 
 /**
  * Formats an amount with trailing two decimal points integer
@@ -7,7 +8,7 @@ const CONSTANTS = require('../../../constants');
  */
 const decimalPoint = (amount) => {
   if (amount) {
-    return Number(Number(amount).toFixed(2));
+    return to2Decimals(amount);
   }
 
   return amount;

@@ -1,4 +1,5 @@
 const CONSTANTS = require('../../../constants');
+const { to2Decimals } = require('../../../helpers/currency');
 
 /**
  * `GEF` = 10% of amount
@@ -37,7 +38,7 @@ const getLoanMaximumLiability = (amount, facility, dealType) => {
         : amount; // BSS
   }
 
-  return Number(Number(ukefExposure).toFixed(2));
+  return to2Decimals(ukefExposure);
 };
 
 module.exports = getLoanMaximumLiability;
