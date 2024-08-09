@@ -44,8 +44,8 @@ const getArrayKeyOperatorName = (key) => {
 
 /**
  * This function escapes MongoDB operators from the filter object
- * @param {Object} filters Object comprising of filters
- * @returns {Object} Escaped filter object
+ * @param {object} filters Object comprising of filters
+ * @returns {object} Escaped filter object
  */
 
 const recursivelyReplaceEscapeOperators = (filters, result = {}) => {

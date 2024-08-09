@@ -25,10 +25,10 @@ const mandatoryFields = [
  * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
  * If any other error occurs, it logs the error and throws a new error.
  *
- * @param {Object} payload - The payload containing the facilityIdentifier and acbsFacilityFeeInput.
+ * @param {object} payload - The payload containing the facilityIdentifier and acbsFacilityFeeInput.
  * @param {string} payload.facilityIdentifier - The identifier of the facility.
- * @param {Object} payload.acbsFacilityFeeInput - The acbsFacilityFeeInput object containing the mandatory fields.
- * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
+ * @param {object} payload.acbsFacilityFeeInput - The acbsFacilityFeeInput object containing the mandatory fields.
+ * @returns {object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {

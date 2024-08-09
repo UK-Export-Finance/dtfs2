@@ -26,7 +26,7 @@ const wipeAll = async () => {
 };
 
 /**
- * @param {String[]} bankIds - the bank id.
+ * @param {string[]} bankIds - the bank id.
  *
  * Note this takes an `id` not the ObjectId `_id`
  */

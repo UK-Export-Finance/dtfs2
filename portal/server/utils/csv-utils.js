@@ -5,9 +5,9 @@ const { CELL_ADDRESS_REGEX } = require('../constants/regex');
 
 /**
  * @typedef {import('exceljs').Worksheet} Worksheet
- * @typedef {Object} ParsedXlsxDataResponse
- * @property {Object} csvData - array representing csv data from the worksheet
- * @property {Object} csvDataWithCellAddresses - array representing csv data from the worksheet with cell addresses included
+ * @typedef {object} ParsedXlsxDataResponse
+ * @property {object} csvData - array representing csv data from the worksheet
+ * @property {object} csvDataWithCellAddresses - array representing csv data from the worksheet with cell addresses included
  */
 
 /**
@@ -43,7 +43,7 @@ const excelColumnToColumnIndex = (column) => {
 
 /**
  * Extracts the value in the cell of an excel cell and removes any new lines or commas so that it doesn't affect parsing as a csv.
- * @param {Object} cell - excel cell.
+ * @param {object} cell - excel cell.
  * @returns {string | number} - cell value.
  */
 const extractCellValue = (cell) => {
