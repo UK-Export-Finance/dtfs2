@@ -4,7 +4,7 @@ import {
   FeeRecordPaymentEditedEvent,
   FeeRecordGenerateKeyingDataEvent,
   FeeRecordRemoveFromPaymentGroupEvent,
-  FeeRecordOtherFeeRemovedFromGroupEvent,
+  FeeRecordOtherFeeRemovedFromPaymentGroupEvent,
   FeeRecordMarkAsReadyToKeyEvent,
   FeeRecordMarkAsReconciledEvent,
   FeeRecordOtherFeeRecordAddedToGroupEvent,
@@ -18,5 +18,5 @@ export type FeeRecordEvent =
   | FeeRecordMarkAsReconciledEvent
   | FeeRecordMarkAsReadyToKeyEvent
   | FeeRecordRemoveFromPaymentGroupEvent
-  | FeeRecordOtherFeeRemovedFromGroupEvent
+  | FeeRecordOtherFeeRemovedFromPaymentGroupEvent
   | FeeRecordOtherFeeRecordAddedToGroupEvent;
