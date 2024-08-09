@@ -1,7 +1,27 @@
 import { ObjectId } from 'mongodb';
-import { IsoDateTimeStamp, UnixTimestamp, UnixTimestampString } from '../date';
+import { UnixTimestamp, UnixTimestampString } from '../date';
 import { Currency } from '../currency';
 import { FacilityType } from '../facility-type';
+
+/**
+ * These properties will not exist if on a BSS/EWCS deal or the deal version is less than 1
+ */
+type FacilityEndDateProperties =
+  | {
+      isUsingFacilityEndDate: true;
+      bankReviewDate: Date | null;
+      facilityEndDate?: null;
+    }
+  | {
+      isUsingFacilityEndDate: false;
+      bankReviewDate?: null;
+      facilityEndDate?: Date | null;
+    }
+  | {
+      isUsingFacilityEndDate?: null;
+      bankReviewDate?: null;
+      facilityEndDate?: null;
+    };
 
 /**
  * Type of the mongo db "facilities" collection
@@ -42,7 +62,4 @@ export type Facility = {
   hasBeenIssuedAndAcknowledged: boolean | null;
   canResubmitIssuedFacilities: boolean | null;
   unissuedToIssuedByMaker: object;
-  isUsingFacilityEndDate: boolean | null;
-  bankReviewDate: IsoDateTimeStamp | Date | null;
-  facilityEndDate: IsoDateTimeStamp | Date | null;
-};
+} & FacilityEndDateProperties;

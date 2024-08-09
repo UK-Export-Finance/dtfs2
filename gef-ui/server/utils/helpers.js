@@ -6,6 +6,11 @@ const cleanDeep = require('clean-deep');
 const { format } = require('date-fns');
 const CONSTANTS = require('../constants');
 
+const ACTION_TEXT = {
+  CHANGE: 'Change',
+  ADD: 'Add',
+};
+
 const {
   facilitiesChangedToIssuedAsArray,
   summaryIssuedChangedToIssued,
@@ -132,16 +137,16 @@ const returnToMakerNoFacilitiesChanged = (app, hasChangedFacilities) => {
  * @param {object} params
  * @param {string} params.href - the URL to navigate to
  * @param {string} params.visuallyHiddenText - the visually hidden label to make it clear to a screen reader what the link is changing
- * @param {'Change' | 'Add' | undefined} params.actionType - the text to display, component has class display-none if falsy
+ * @param {string | undefined} params.text - the text to display, component has class display-none if falsy
  * @param {string} params.id - the row id, used in the data-cy
  * @returns an array containing the action button to render
  */
-const generateActionsArrayForItem = ({ href, visuallyHiddenText, actionType, id }) => {
+const generateActionsArrayForItem = ({ href, visuallyHiddenText, text, id }) => {
   const attributes = {
     'data-cy': `${id}-action`,
   };
 
-  if (!actionType) {
+  if (!text) {
     return [
       {
         attributes,
@@ -153,7 +158,7 @@ const generateActionsArrayForItem = ({ href, visuallyHiddenText, actionType, id 
   return [
     {
       href,
-      text: actionType,
+      text,
       visuallyHiddenText,
       attributes,
     },
@@ -186,7 +191,7 @@ const previewItemConditions = (previewParams) => {
       summaryItems = generateActionsArrayForItem({
         href: issuedToUnissuedHref,
         visuallyHiddenText: item.label,
-        actionType: shouldDisplayChangeLinkIfIssued && 'Change',
+        text: shouldDisplayChangeLinkIfIssued && ACTION_TEXT.CHANGE,
         id: item.id,
       });
     } else {
@@ -198,7 +203,7 @@ const previewItemConditions = (previewParams) => {
       summaryItems = generateActionsArrayForItem({
         href: unissuedHref,
         visuallyHiddenText: item.label,
-        actionType: shouldDisplayChangeLinkIfIssued && 'Change',
+        text: shouldDisplayChangeLinkIfIssued && ACTION_TEXT.CHANGE,
         id: item.id,
       });
     }
@@ -212,11 +217,16 @@ const previewItemConditions = (previewParams) => {
     summaryItems = generateActionsArrayForItem({
       href: unissuedHref,
       visuallyHiddenText: item.label,
-      actionType: shouldDisplayChangeLinkIfUnissued && 'Change',
+      text: shouldDisplayChangeLinkIfUnissued && ACTION_TEXT.CHANGE,
       id: item.id,
     });
   } else if (ukefDecisionAccepted && item.id === 'coverStartDate' && validStatus) {
-    summaryItems = generateActionsArrayForItem({ href: issuedHref, visuallyHiddenText: item.label, actionType: ukefDecisionAccepted && 'Change', id: item.id });
+    summaryItems = generateActionsArrayForItem({
+      href: issuedHref,
+      visuallyHiddenText: item.label,
+      text: ukefDecisionAccepted && ACTION_TEXT.CHANGE,
+      id: item.id,
+    });
   }
 
   return summaryItems;
@@ -252,12 +262,12 @@ const detailItemConditions = (params) => {
     });
   } else {
     // for all other application details page
-    const linkText = isCoverStartOnSubmission || !isEmpty(value) ? 'Change' : 'Add';
+    const linkText = isCoverStartOnSubmission || !isEmpty(value) ? ACTION_TEXT.CHANGE : ACTION_TEXT.ADD;
 
     summaryItems = generateActionsArrayForItem({
       href,
       visuallyHiddenText: item.label,
-      actionType: linkText,
+      text: linkText,
       id: item.id,
     });
   }
