@@ -1,6 +1,7 @@
 import { Entity, ManyToOne, JoinColumn, PrimaryColumn, Index } from 'typeorm';
 import { FeeRecordEntity } from '../../fee-record';
 import { PaymentEntity } from '../../payment';
+import { MonetaryColumn } from '../../custom-columns';
 
 @Entity('fee_record_payments_payment')
 export class FeeRecordPaymentJoinTableEntity {
@@ -26,4 +27,7 @@ export class FeeRecordPaymentJoinTableEntity {
   })
   @JoinColumn({ name: 'paymentId', foreignKeyConstraintName: 'FK_23bbb10be5f2136a5a5086654e8' })
   payment!: PaymentEntity;
+
+  @MonetaryColumn({ nullable: true })
+  paymentAmountUsedForFeeRecord!: number;
 }
