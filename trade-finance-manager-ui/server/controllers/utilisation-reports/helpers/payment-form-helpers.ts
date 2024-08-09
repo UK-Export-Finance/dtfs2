@@ -81,7 +81,6 @@ export type AddToAnExistingPaymentFormRequestBody = {
   addToAnExistingPaymentFormSubmission?: string;
 };
 
-// TODO FN-1749: Simplify this function to exclude 'paymentIds' prefix.
 const getPaymentIdsFromPaymentGroupRadioId = (radioId: AddToAnExistingPaymentRadioId): number[] => {
   const { commaSeparatedIds } = /paymentIds-(?<commaSeparatedIds>(\d+,?)+)/.exec(radioId)!.groups!;
 
