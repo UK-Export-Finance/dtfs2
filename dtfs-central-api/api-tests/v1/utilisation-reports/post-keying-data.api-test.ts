@@ -84,18 +84,7 @@ describe(`POST ${BASE_URL}`, () => {
     makeRequest: (url) => testApi.post(aValidRequestBody()).to(url),
   });
 
-  it('returns a 400 when the report id is not a valid id', async () => {
-    // Arrange
-    const requestBody = aValidRequestBody();
-
-    // Act
-    const response = await testApi.post(requestBody).to(getUrl('invalid-id'));
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
-  });
-
-  it("returns a 400 when the payload 'user' is an empty object", async () => {
+  it("returns a 400 (Bad Request) when the payload 'user' is an empty object", async () => {
     // Arrange
     const requestBody = {
       ...aValidRequestBody(),
@@ -109,7 +98,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toBe(HttpStatusCode.BadRequest);
   });
 
-  it('returns a 404 when there are no fee records at the MATCH state attached to the report with the supplied id', async () => {
+  it('returns a 404 (Not Found) when there are no fee records at the MATCH state attached to the report with the supplied id', async () => {
     // Arrange
     const report = anUploadedReconciliationInProgressUtilisationReport();
     const toDoFeeRecords = [
@@ -126,7 +115,7 @@ describe(`POST ${BASE_URL}`, () => {
     expect(response.status).toBe(HttpStatusCode.NotFound);
   });
 
-  it('returns a 200 when request has a valid body and there are fee records at the MATCH status', async () => {
+  it('returns a 200 (Ok) when request has a valid body and there are fee records at the MATCH status', async () => {
     // Arrange
     const report = anUploadedReconciliationInProgressUtilisationReport();
     const feeRecords = [

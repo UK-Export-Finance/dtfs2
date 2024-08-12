@@ -22,13 +22,6 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
-  await updateFacilityUtilisationData(feeRecord.facilityUtilisationData, {
-    reportPeriod,
-    utilisation: feeRecord.facilityUtilisation,
-    requestSource,
-    entityManager: transactionEntityManager,
-  });
-
   const fixedFeeAdjustment = await calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod);
   const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(feeRecord, feeRecord.facilityUtilisationData);
   const statusToUpdateTo = getStatusToUpdateTo(feeRecord.feesPaidToUkefForThePeriod, fixedFeeAdjustment, principalBalanceAdjustment);
@@ -38,7 +31,16 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     principalBalanceAdjustment,
     requestSource,
   });
-  return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
+  await transactionEntityManager.save(FeeRecordEntity, feeRecord);
+
+  await updateFacilityUtilisationData(feeRecord.facilityUtilisationData, {
+    reportPeriod,
+    utilisation: feeRecord.facilityUtilisation,
+    requestSource,
+    entityManager: transactionEntityManager,
+  });
+
+  return feeRecord;
 };
 
 function getStatusToUpdateTo(feesPaidToUkefForThePeriod: number, fixedFeeAdjustment: number = 0, principalBalanceAdjustment: number = 0): FeeRecordStatus {
