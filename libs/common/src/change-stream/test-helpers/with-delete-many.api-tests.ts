@@ -2,6 +2,9 @@ import { Collection, ObjectId, WithoutId } from 'mongodb';
 import { when } from 'jest-when';
 import { MongoDbClient } from '../../mongo-db-client';
 import { AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '../../types';
+import { changeStreamConfig } from '../config';
+
+const { CHANGE_STREAM_ENABLED } = changeStreamConfig;
 
 type Params = {
   makeRequest: () => Promise<{ status: number; body: unknown }>;
@@ -37,23 +40,86 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
       insertManyMock.mockRestore();
     });
 
-    describe('when the service is working normally', () => {
-      it('should add deletion audit logs', async () => {
-        await makeRequest();
+    if (CHANGE_STREAM_ENABLED) {
+      describe('when the service is working normally', () => {
+        it('should add deletion audit logs', async () => {
+          await makeRequest();
 
-        const deletionAuditLogs = await deletionAuditLogsCollection.find({ collectionName, deletedDocumentId: { $in: getDeletedDocumentIds() } }).toArray();
+          const deletionAuditLogs = await deletionAuditLogsCollection.find({ collectionName, deletedDocumentId: { $in: getDeletedDocumentIds() } }).toArray();
 
-        expect(deletionAuditLogs).toEqual(
-          getDeletedDocumentIds().map((id) => ({
-            _id: expect.any(ObjectId) as ObjectId,
-            collectionName,
-            deletedDocumentId: new ObjectId(id),
-            auditRecord,
-            expireAt: expect.any(Date) as Date,
-          })),
-        );
+          expect(deletionAuditLogs).toEqual(
+            getDeletedDocumentIds().map((id) => ({
+              _id: expect.any(ObjectId) as ObjectId,
+              collectionName,
+              deletedDocumentId: new ObjectId(id),
+              auditRecord,
+              expireAt: expect.any(Date) as Date,
+            })),
+          );
+        });
+
+        it('should delete the documents', async () => {
+          await makeRequest();
+
+          const collection = await mongoDbClient.getCollection(collectionName);
+          const deletedDocuments = await collection.find({ _id: { $in: getDeletedDocumentIds() } }).toArray();
+
+          expect(deletedDocuments.length).toBe(0);
+        });
+
+        it('should return 200', async () => {
+          const { status, body } = await makeRequest();
+
+          expect(status).toBe(200);
+          expect(body).toEqual(expectedSuccessResponseBody);
+        });
       });
 
+      describe('when inserting the deletion log is not acknowledged', () => {
+        beforeEach(() => {
+          when(insertManyMock)
+            .calledWith(
+              // @ts-ignore
+              expect.arrayContaining(
+                getDeletedDocumentIds().map((id) => ({
+                  collectionName,
+                  deletedDocumentId: new ObjectId(id),
+                  auditRecord,
+                  expireAt: expect.any(Date) as Date,
+                })),
+              ) as WithoutId<DeletionAuditLog>[],
+            )
+            // @ts-ignore
+            .mockResolvedValueOnce({
+              acknowledged: false,
+            });
+        });
+
+        itDoesNotUpdateTheDatabase();
+      });
+
+      describe('when inserting the deletion log throws an error', () => {
+        beforeEach(() => {
+          when(insertManyMock)
+            .calledWith(
+              // @ts-ignore
+              expect.arrayContaining(
+                getDeletedDocumentIds().map((id) => ({
+                  collectionName,
+                  deletedDocumentId: new ObjectId(id),
+                  auditRecord,
+                  expireAt: expect.any(Date) as Date,
+                })),
+              ) as WithoutId<DeletionAuditLog>[],
+            )
+            .mockImplementationOnce(() => {
+              throw new Error();
+            });
+        });
+
+        itDoesNotUpdateTheDatabase();
+      });
+    } else {
       it('should delete the documents', async () => {
         await makeRequest();
 
@@ -62,59 +128,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
 
         expect(deletedDocuments.length).toBe(0);
       });
-
-      it('should return 200', async () => {
-        const { status, body } = await makeRequest();
-
-        expect(status).toBe(200);
-        expect(body).toEqual(expectedSuccessResponseBody);
-      });
-    });
-
-    describe('when inserting the deletion log is not acknowledged', () => {
-      beforeEach(() => {
-        when(insertManyMock)
-          .calledWith(
-            // @ts-ignore
-            expect.arrayContaining(
-              getDeletedDocumentIds().map((id) => ({
-                collectionName,
-                deletedDocumentId: new ObjectId(id),
-                auditRecord,
-                expireAt: expect.any(Date) as Date,
-              })),
-            ) as WithoutId<DeletionAuditLog>[],
-          )
-          // @ts-ignore
-          .mockResolvedValueOnce({
-            acknowledged: false,
-          });
-      });
-
-      itDoesNotUpdateTheDatabase();
-    });
-
-    describe('when inserting the deletion log throws an error', () => {
-      beforeEach(() => {
-        when(insertManyMock)
-          .calledWith(
-            // @ts-ignore
-            expect.arrayContaining(
-              getDeletedDocumentIds().map((id) => ({
-                collectionName,
-                deletedDocumentId: new ObjectId(id),
-                auditRecord,
-                expireAt: expect.any(Date) as Date,
-              })),
-            ) as WithoutId<DeletionAuditLog>[],
-          )
-          .mockImplementationOnce(() => {
-            throw new Error();
-          });
-      });
-
-      itDoesNotUpdateTheDatabase();
-    });
+    }
 
     function itDoesNotUpdateTheDatabase() {
       it('should not add deletion audit logs', async () => {

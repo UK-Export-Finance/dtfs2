@@ -51,15 +51,20 @@ const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, aud
 };
 
 /**
- * Adds deletion audit logs and calls Collection.deleteOne.
+ * When the `CHANGE_STREAM_ENABLED` feature flag is enabled adds deletions audit logs and calls Collection.deleteOne.
  * @throws {WriteConcernError} - if either the deletion-audit-log insertion or document deletion operations are not acknowledged
  * @throws {DocumentNotDeletedError} - if the deletion operation is acknowledged but nothing is deleted
  */
 export const deleteOne = async ({ documentId, collectionName, db, auditDetails }: DeleteOneParams): Promise<DeleteResult> => {
-  return await deleteDocumentWithAuditLogs({
-    documentId,
-    collectionName,
-    db,
-    auditDetails,
-  });
+  if (process.env.CHANGE_STREAM_ENABLED === 'true') {
+    return await deleteDocumentWithAuditLogs({
+      documentId,
+      collectionName,
+      db,
+      auditDetails,
+    });
+  }
+
+  const collection = await db.getCollection(collectionName);
+  return await collection.deleteOne({ _id: { $eq: documentId } });
 };

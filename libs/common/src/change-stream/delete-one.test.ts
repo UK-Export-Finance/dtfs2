@@ -32,37 +32,63 @@ describe('deleteOne', () => {
     process.env.DELETION_AUDIT_LOGS_TTL_SECONDS = originalDeletionAuditLogsDeleteAfterSeconds;
   });
 
-  beforeAll(() => {
-    process.env.DELETION_AUDIT_LOGS_TTL_SECONDS = '60';
-  });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-
-    when(mockGetCollection).calledWith('users').mockReturnValueOnce(mockUsersCollection);
-    when(mockGetCollection).calledWith(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS).mockReturnValueOnce(mockDeletionsCollection);
-  });
-
-  describe('when the insertion and deletion are successful', () => {
-    beforeEach(() => {
-      mockDeleteOneSuccess();
-      mockInsertOneSuccess();
+  describe('when change stream enabled', () => {
+    beforeAll(() => {
+      process.env.CHANGE_STREAM_ENABLED = 'true';
+      process.env.DELETION_AUDIT_LOGS_TTL_SECONDS = '60';
     });
 
-    it('adds a record to the deletion-audit-logs collection', async () => {
-      await deleteOne({
-        db: mockDb,
-        documentId,
-        collectionName: 'users',
-        auditDetails: generateNoUserLoggedInAuditDetails(),
+    beforeEach(() => {
+      jest.clearAllMocks();
+
+      when(mockGetCollection).calledWith('users').mockReturnValueOnce(mockUsersCollection);
+      when(mockGetCollection).calledWith(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS).mockReturnValueOnce(mockDeletionsCollection);
+    });
+
+    describe('when the insertion and deletion are successful', () => {
+      beforeEach(() => {
+        mockDeleteOneSuccess();
+        mockInsertOneSuccess();
       });
 
-      expect(mockDeletionsCollection.insertOne).toHaveBeenCalledWith({
-        collectionName: 'users',
-        deletedDocumentId: documentId,
-        auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
-        expireAt: expect.any(Date) as Date,
+      it('adds a record to the deletion-audit-logs collection', async () => {
+        await deleteOne({
+          db: mockDb,
+          documentId,
+          collectionName: 'users',
+          auditDetails: generateNoUserLoggedInAuditDetails(),
+        });
+
+        expect(mockDeletionsCollection.insertOne).toHaveBeenCalledWith({
+          collectionName: 'users',
+          deletedDocumentId: documentId,
+          auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
+          expireAt: expect.any(Date) as Date,
+        });
       });
+
+      it('deletes the requested document', async () => {
+        await deleteOne({
+          db: mockDb,
+          documentId,
+          collectionName: 'users',
+          auditDetails: generateNoUserLoggedInAuditDetails(),
+        });
+
+        expect(mockUsersCollection.deleteOne).toHaveBeenCalledWith({ _id: { $eq: documentId } });
+      });
+    });
+  });
+
+  describe('when change stream disabled', () => {
+    beforeAll(() => {
+      process.env.CHANGE_STREAM_ENABLED = 'false';
+    });
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+
+      when(mockGetCollection).calledWith('users').mockReturnValueOnce(mockUsersCollection);
     });
 
     it('deletes the requested document', async () => {

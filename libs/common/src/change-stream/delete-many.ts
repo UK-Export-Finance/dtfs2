@@ -7,7 +7,7 @@ import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-da
 import { changeStreamConfig } from './config';
 import { DocumentNotFoundError, WriteConcernError } from '../errors';
 
-const { DELETION_AUDIT_LOGS_TTL_SECONDS } = changeStreamConfig;
+const { DELETION_AUDIT_LOGS_TTL_SECONDS, CHANGE_STREAM_ENABLED } = changeStreamConfig;
 
 type DeleteManyParams<CollectionName extends MongoDbCollectionName> = {
   filter: Filter<WithoutId<DbModel<CollectionName>>>;
@@ -61,14 +61,16 @@ const deleteManyWithAuditLogs = async <CollectionName extends MongoDbCollectionN
     return deleteResult;
   } catch (error) {
     console.error(
-      `Failed to delete many using filter ${JSON.stringify(filter)} on collection ${collectionName}. Inconsistent deletion audit records may have been created`,
+      `Failed to delete many from collection ${collectionName} with filter ${JSON.stringify(
+        filter,
+      )}. Inconsistent deletion audit records may have been created`,
     );
     throw error;
   }
 };
 
 /**
- * Adds deletion audit logs and calls Collection.deleteMany.
+ * When the `CHANGE_STREAM_ENABLED` feature flag is enabled adds deletions audit logs and calls Collection.deleteMany.
  * @throws {DocumentNotFoundError} - if there are no documents matching the filter to delete
  * @throws {WriteConcernError} - if either the deletion-audit-log insertion or document deletion operations are not acknowledged
  */
@@ -78,10 +80,14 @@ export const deleteMany = async <CollectionName extends MongoDbCollectionName>({
   db,
   auditDetails,
 }: DeleteManyParams<CollectionName>): Promise<DeleteResult> => {
-  return await deleteManyWithAuditLogs({
-    filter,
-    collectionName,
-    db,
-    auditDetails,
-  });
+  if (CHANGE_STREAM_ENABLED) {
+    return await deleteManyWithAuditLogs({
+      filter,
+      collectionName,
+      db,
+      auditDetails,
+    });
+  }
+  const collection = await db.getCollection(collectionName);
+  return await collection.deleteMany(filter);
 };
