@@ -23,70 +23,73 @@ interface CustomResponse extends Response {
   body: UtilisationReportReconciliationSummary[];
 }
 
-describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () => {
+const BASE_URL = '/v1/utilisation-reports/reconciliation-summary/:submissionMonth';
+
+describe(`GET ${BASE_URL}`, () => {
   beforeAll(async () => {
     await wipe([MONGO_DB_COLLECTIONS.BANKS]);
     await testApi.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
 
     await SqlDbHelper.initialize();
+    await SqlDbHelper.deleteAll();
   });
 
-  describe('GET /v1/utilisation-reports/reconciliation-summary/:submissionMonth', () => {
-    it('returns a 200 response when the submissionMonth is a valid ISO month', async () => {
-      // Arrange
-      const submissionMonth = '2023-11';
+  afterEach(async () => {
+    await SqlDbHelper.deleteAll();
+  });
 
-      // Act
-      const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
+  it('returns a 200 response when the submissionMonth is a valid ISO month', async () => {
+    // Arrange
+    const submissionMonth = '2023-11';
 
-      // Assert
-      expect(response.status).toEqual(200);
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0].submissionMonth).toBe(submissionMonth);
-      expect(response.body[0].items).toHaveLength(0);
-    });
+    // Act
+    const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
-    it('returns a 400 response when the submissionMonth is not a valid ISO month', async () => {
-      // Arrange
-      const submissionMonth = 'invalid';
+    // Assert
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveLength(1);
+    expect(response.body[0].submissionMonth).toBe(submissionMonth);
+    expect(response.body[0].items).toHaveLength(0);
+  });
 
-      // Act
-      const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
+  it('returns a 400 response when the submissionMonth is not a valid ISO month', async () => {
+    // Arrange
+    const submissionMonth = 'invalid';
 
-      // Assert
-      expect(response.status).toEqual(400);
-    });
+    // Act
+    const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
-    it('returns a 200 response with the correct number of associated fee records', async () => {
-      // Arrange
-      const reportPeriod = getCurrentReportPeriodForBankSchedule(MOCK_BANKS.BARCLAYS.utilisationReportPeriodSchedule);
-      const submissionMonth = getSubmissionMonthForReportPeriod(reportPeriod);
+    // Assert
+    expect(response.status).toEqual(400);
+  });
 
-      await SqlDbHelper.deleteAllEntries('UtilisationReport');
+  it('returns a 200 response with the correct number of associated fee records', async () => {
+    // Arrange
+    const reportPeriod = getCurrentReportPeriodForBankSchedule(MOCK_BANKS.BARCLAYS.utilisationReportPeriodSchedule);
+    const submissionMonth = getSubmissionMonthForReportPeriod(reportPeriod);
 
-      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
-        .withBankId(MOCK_BANKS.BARCLAYS.id)
-        .withReportPeriod(reportPeriod)
-        .build();
-      await SqlDbHelper.saveNewEntry('UtilisationReport', utilisationReport);
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+      .withBankId(MOCK_BANKS.BARCLAYS.id)
+      .withReportPeriod(reportPeriod)
+      .build();
+    await SqlDbHelper.saveNewEntry('UtilisationReport', utilisationReport);
 
-      const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build(),
-        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build(),
-      ];
-      await SqlDbHelper.saveNewEntries('FeeRecord', feeRecords);
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build(),
+    ];
+    await SqlDbHelper.saveNewEntries('FeeRecord', feeRecords);
 
-      // Act
-      const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
+    // Act
+    const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
-      // Assert
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0].submissionMonth).toBe(submissionMonth);
-      expect(response.body[0].items).toHaveLength(1);
-      expect(response.body[0].items[0].totalFeesReported).toBe(feeRecords.length);
-      expect(response.body[0].items[0].reportedFeesLeftToReconcile).toBe(feeRecords.length);
-    });
+    // Assert
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveLength(1);
+    expect(response.body[0].submissionMonth).toBe(submissionMonth);
+    expect(response.body[0].items).toHaveLength(1);
+    expect(response.body[0].items[0].totalFeesReported).toBe(feeRecords.length);
+    expect(response.body[0].items[0].reportedFeesLeftToReconcile).toBe(feeRecords.length);
   });
 });
 

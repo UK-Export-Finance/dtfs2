@@ -485,9 +485,9 @@ const getCurrentTimePlusMinutes = (minutesToAdd = 0) => new Date(new Date().getT
  * used to display supporting info change or add links
  * should be hidden if checker/MIA/AIN and returning to maker
  * logic done in nunjucks template so needs this function
- * @param {Object} application
- * @param {Boolean} preview
- * @returns {Boolean}
+ * @param {object} application
+ * @param {boolean} preview
+ * @returns {boolean}
  */
 const displayChangeSupportingInfo = (application, preview) => {
   if (preview || application.submissionCount > 0) {

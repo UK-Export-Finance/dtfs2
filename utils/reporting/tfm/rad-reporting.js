@@ -13,8 +13,8 @@ const { stripCommas, getMaximumLiability, filterTask } = require('../../data-mig
 // ******************** DEALS *************************
 /**
  * Return all the TFM deals with `MIA/MIN` filter.
- * @param {Object} filter Mongo filter
- * @returns {Object} Collection object
+ * @param {object} filter Mongo filter
+ * @returns {object} Collection object
  */
 const getTfmDeals = () =>
   getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, {
@@ -74,7 +74,7 @@ const constructRows = (deals) => {
 /**
  * Generates bespoke report as CSV
  * @param {Array} rows Array of processed deals
- * @returns {Null} Null is returned
+ * @returns {Promise<boolean>} Report generation status, true if successful
  */
 const generateReport = async (rows) => {
   const path = `${__dirname}/report/csv/RAD_${new Date().valueOf()}.csv`;
@@ -120,7 +120,7 @@ const generateReport = async (rows) => {
 /**
  * Entry point function.
  * Initiates report generation process
- * @returns {Boolean} Execution status
+ * @returns {boolean} Execution status
  */
 const generate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', '🚀 Initiating RAD reporting.', '\n\n');

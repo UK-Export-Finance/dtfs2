@@ -189,9 +189,9 @@ const findOneDeal = async (dealId) => {
 /**
  * @param {object} params
  * @param {string} params.dealId - deal to update
- * @param {Object} params.dealUpdate - update to make
+ * @param {object} params.dealUpdate - update to make
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
- * @typedef {Object} ErrorParam
+ * @typedef {object} ErrorParam
  * @property {string} message error message
  * @property {number} status HTTP status code
  * @param {(Error: ErrorParam) => any} params.onError
@@ -473,6 +473,29 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
   }
 };
 
+const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
+  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+  if (!isValid) {
+    console.error('Invalid facility Id %s', facilityId);
+    return { status: 400, data: 'Invalid facility Id provided' };
+  }
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-facility-end-date`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get the latest completed facilityEndDate amendment %o', error);
+    return {
+      status: error?.response?.status || 500,
+      data: 'Failed to get the latest completed coverEndDate amendment',
+    };
+  }
+};
+
 const getAmendmentById = async (facilityId, amendmentId) => {
   const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -678,7 +701,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 /**
  * Get company information from Party URN
  * @param {Integer} partyUrn Party URN
- * @returns {Object} Company information
+ * @returns {Promise<object>} Company information
  */
 const getCompanyInfo = async (partyUrn) => {
   try {
@@ -928,9 +951,9 @@ const updateACBSfacility = async (facility, deal) => {
 
 /**
  * ACBS facility amendment
- * @param {String} ukefFacilityId UKEF Facility ID
- * @param {Object} amendments Facility object comprising of amendments
- * @returns {Object} updated FMR upon success otherwise error
+ * @param {string} ukefFacilityId UKEF Facility ID
+ * @param {object} amendments Facility object comprising of amendments
+ * @returns {Promise<object>} updated FMR upon success otherwise error
  */
 const amendACBSfacility = async (amendments, facility, deal) => {
   if (amendments && facility.facilitySnapshot) {
@@ -975,8 +998,8 @@ const getFunctionsAPI = async (url = '') => {
  * An external API call, responsible for creating
  * eStore site, directories and documents (if applicable).
  * Upon any exception an empty object is returned.
- * @param {Object} data eStore API object
- * @returns {Object} eStore API response object
+ * @param {object} data eStore API object
+ * @returns {Promise<object>} eStore API response object
  */
 const createEstoreSite = async (data) => {
   try {
@@ -1507,6 +1530,7 @@ module.exports = {
   getCompletedAmendment,
   getLatestCompletedAmendmentValue,
   getLatestCompletedAmendmentDate,
+  getLatestCompletedAmendmentFacilityEndDate,
   getAmendmentById,
   getAmendmentByFacilityId,
   getAmendmentsByDealId,

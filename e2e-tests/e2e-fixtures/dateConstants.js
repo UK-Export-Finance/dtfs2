@@ -103,6 +103,11 @@ const twoYearsAgoDay = format(twoYearsAgo, 'dd');
 const twoYearsAgoMonth = format(twoYearsAgo, 'MM');
 const twoYearsAgoYear = format(twoYearsAgo, 'yyyy');
 
+const threeYearsAgo = sub(today, { years: 3 });
+const threeYearsAgoDay = format(threeYearsAgo, 'dd');
+const threeYearsAgoMonth = format(threeYearsAgo, 'MM');
+const threeYearsAgoYear = format(threeYearsAgo, 'yyyy');
+
 const oneYearAgo = sub(today, { years: 1 });
 const oneYearUnix = getUnixTime(oneYearAgo).toString();
 const oneYearAgoDay = format(oneYearAgo, 'dd');
@@ -115,6 +120,11 @@ const threeYearsMonth = format(threeYears, 'MM');
 const threeYearsYear = format(threeYears, 'yyyy');
 
 const threeDaysAgoPlusMonth = add(threeDaysAgo, { months: 3 });
+
+const sixYearsOneDay = add(today, { years: 6, months: 0, days: 1 });
+const sixYearsOneDayDay = format(sixYearsOneDay, 'dd');
+const sixYearsOneDayMonth = format(sixYearsOneDay, 'MM');
+const sixYearsOneDayYear = format(sixYearsOneDay, 'yyyy');
 
 const todayUnix = getUnixTime(today).toString();
 const todayUnixDay = format(threeDaysAgo, 'dd');
@@ -185,6 +195,9 @@ module.exports = {
   threeMonthsOneDayDay,
   threeMonthsOneDayMonth,
   threeMonthsOneDayYear,
+  sixYearsOneDayDay,
+  sixYearsOneDayMonth,
+  sixYearsOneDayYear,
   twentyEight,
   twentyEightDay,
   twentyEightMonth,
@@ -226,6 +239,9 @@ module.exports = {
   twoYearsAgoDay,
   twoYearsAgoMonth,
   twoYearsAgoYear,
+  threeYearsAgoDay,
+  threeYearsAgoMonth,
+  threeYearsAgoYear,
   threeYears,
   threeYearsDay,
   threeYearsMonth,

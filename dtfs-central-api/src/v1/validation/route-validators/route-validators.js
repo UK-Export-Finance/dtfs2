@@ -28,9 +28,18 @@ exports.mongoIdValidation = mongoIdValidation;
 /**
  * Validator for a path parameter which is an sql integer id
  * @param {string} paramName - The parameter name
- * @returns {import('express-validator').ValidationChain}
+ * @returns {import('express').RequestHandler}
  */
-const sqlIdValidation = (paramName) => param(paramName).isInt({ min: 0 }).withMessage(`Invalid '${paramName}' path param provided`);
+const sqlIdValidation = (paramName) => (req, res, next) => {
+  const pathParam = req.params[paramName];
+  if (/^\d+$/.test(pathParam)) {
+    return next();
+  }
+  return res.status(HttpStatusCode.BadRequest).send({
+    message: `Expected path parameter '${paramName}' to be a valid sql id`,
+    code: API_ERROR_CODE.INVALID_SQL_ID_PATH_PARAMETER,
+  });
+};
 
 exports.sqlIdValidation = sqlIdValidation;
 

@@ -3,8 +3,8 @@ const { to2Decimals } = require('../../../helpers/currency');
 
 /**
  * Formats an amount with trailing two decimal points integer
- * @param {Integer} amount Amount with or without decimal points integers
- * @returns {Integer} Two decimal points formatted integer
+ * @param {number} amount Amount with or without decimal points integers
+ * @returns {number} Two decimal points formatted integer
  */
 const decimalPoint = (amount) => {
   if (amount) {

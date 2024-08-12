@@ -1,6 +1,7 @@
 import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
 import { Bank, Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
@@ -15,8 +16,10 @@ interface CustomResponse extends Response {
 
 console.error = jest.fn();
 
-describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
-  const getUrl = (reportId: number | string) => `/v1/utilisation-reports/${reportId}/fee-records-to-key`;
+const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records-to-key';
+
+describe(`GET ${BASE_URL}`, () => {
+  const getUrl = (reportId: number | string) => BASE_URL.replace(':reportId', reportId.toString());
 
   const bankId = '123';
   const bankName = 'Test bank';
@@ -94,12 +97,9 @@ describe('GET /v1/utilisation-reports/:reportId/fee-records-to-key', () => {
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
-  it('returns a 400 when the report id is not a valid id', async () => {
-    // Act
-    const response: CustomResponse = await testApi.get(getUrl('invalid-id'));
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+  withSqlIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
+    makeRequest: (url) => testApi.get(url),
   });
 
   it('returns a 404 when no report with the supplied id can be found', async () => {

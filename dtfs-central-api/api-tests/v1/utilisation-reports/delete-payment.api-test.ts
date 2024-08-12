@@ -1,5 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import { Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
@@ -8,8 +9,11 @@ import { aPortalUser, aTfmUser, aTfmSessionUser } from '../../../test-helpers/te
 
 console.error = jest.fn();
 
-describe('DELETE /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
-  const getUrl = (reportId: number | string, paymentId: number | string) => `/v1/utilisation-reports/${reportId}/payment/${paymentId}`;
+const BASE_URL = '/v1/utilisation-reports/:reportId/payment/:paymentId';
+
+describe(`DELETE ${BASE_URL}`, () => {
+  const getUrl = (reportId: number | string, paymentId: number | string) =>
+    BASE_URL.replace(':reportId', reportId.toString()).replace(':paymentId', paymentId.toString());
 
   const reportId = 1;
 
@@ -64,28 +68,17 @@ describe('DELETE /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
     await wipe(['users', 'tfm-users']);
   });
 
+  withSqlIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
+    makeRequest: (url) => testApi.remove(aDeletePaymentRequestBody()).to(url),
+  });
+
   it('returns a 200 when payment can be deleted', async () => {
     // Act
     const response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, paymentId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
-  });
-
-  it('returns a 400 when the report id is not a valid id', async () => {
-    // Act
-    const response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl('invalid-id', paymentId));
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
-  });
-
-  it('returns a 400 when the payment id is not a valid id', async () => {
-    // Act
-    const response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, 'invalid-id'));
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
   });
 
   it("returns a 400 when the 'user' object is an empty object", async () => {
