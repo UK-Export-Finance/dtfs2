@@ -10,8 +10,8 @@ type UpdateFacilityUtilisationDataUpdate = {
 };
 
 /**
- * Updates a facility utilisation data entity with the supplied report period
- * and the fixed fee calculated relative to the new report period
+ * Updates a facility utilisation data entity with the supplied update values and
+ * calculates the new fixed fee using the updated values
  * @param facilityUtilisationDataEntity - The facility utilisation data entity to update
  * @param update - The values to update the entity with
  * @param update.reportPeriod - The report period to update with
