@@ -12,7 +12,7 @@ const headers = {
 
 /**
  * Resolves to the response of `GET /bank-holidays` from external-api.
- * @returns {import('./types').BankHolidaysResponseBody}
+ * @returns {Promise<import('./types').BankHolidaysResponseBody>}
  */
 const getBankHolidays = async () => {
   const response = await axios.get(`${EXTERNAL_API_URL}/bank-holidays`, { headers });
