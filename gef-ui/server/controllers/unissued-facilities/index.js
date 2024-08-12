@@ -13,8 +13,12 @@ const { validationErrorHandler } = require('../../utils/helpers');
  * creates body/parameters for the template for unissued facilities
  * if change true, changes 'cancel' + 'back' button href back to application preview
  * else renders back to unissued facilities list
- * @param {req} params, @param {req} query, @param {boolean} change
- * @returns {object} body
+ * @param {object} input - An object containing the below
+ * @param {object} input.params - An object containing the facility id and deal id
+ * @param {object} input.query - An object containing the query status
+ * @param {boolean} input.change - A boolean to determine if change is true or false
+ * @param {string} input.userToken - The user token
+ * @returns {Promise<object>} body
  */
 const renderChangeFacilityPartial = async ({ params, query, change, userToken }) => {
   const { dealId, facilityId } = params;
@@ -134,7 +138,8 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
  * validates first and gets parameters {object} from validation function
  * displays success message and redirects to unissued facilities list
  * @param {req}
- * @returns {res}
+ * @param {res}
+ * @returns {Promise<void>}
  */
 const postChangeUnissuedFacility = async (req, res) => {
   const { body, query, params } = req;
@@ -233,7 +238,7 @@ const postChangeUnissuedFacility = async (req, res) => {
  * post for changing unissued facilities from application preview
  * redirects to application preview once changed
  * @param {req}
- * @returns {res}
+ * @param {res}
  */
 const postChangeUnissuedFacilityPreview = async (req, res) => {
   const { body, query, params } = req;
@@ -323,7 +328,6 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
  * works in collaboration with facilities model in portal-api
  * @param {req}
  * @param {res}
- * @returns {res}
  */
 const postChangeIssuedToUnissuedFacility = async (req, res) => {
   const { body, params, query, session } = req;
