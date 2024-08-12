@@ -16,7 +16,7 @@ export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) 
   const { user } = req.body;
 
   try {
-    const feeRecordsAtMatchStatus = await FeeRecordRepo.findByReportIdAndStatusesWithReport(Number(reportId), ['MATCH']);
+    const feeRecordsAtMatchStatus = await FeeRecordRepo.findByReportIdAndStatusesWithReportAndPayments(Number(reportId), ['MATCH']);
 
     if (feeRecordsAtMatchStatus.length === 0) {
       throw new NotFoundError(`Failed to find any fee records which can be keyed attached to report with id '${reportId}'`);

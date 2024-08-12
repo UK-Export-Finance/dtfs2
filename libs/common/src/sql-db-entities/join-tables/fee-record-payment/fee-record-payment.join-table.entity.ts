@@ -2,6 +2,7 @@ import { Entity, ManyToOne, JoinColumn, PrimaryColumn, Index } from 'typeorm';
 import { FeeRecordEntity } from '../../fee-record';
 import { PaymentEntity } from '../../payment';
 import { MonetaryColumn } from '../../custom-columns';
+import { CreateFeeRecordPaymentJoinTableEntityParams } from './fee-record-payment.join-table.types';
 
 @Entity('fee_record_payments_payment')
 export class FeeRecordPaymentJoinTableEntity {
@@ -29,5 +30,17 @@ export class FeeRecordPaymentJoinTableEntity {
   payment!: PaymentEntity;
 
   @MonetaryColumn({ nullable: true })
-  paymentAmountUsedForFeeRecord!: number;
+  paymentAmountUsedForFeeRecord!: number | null;
+
+  public static create({
+    feeRecordId,
+    paymentId,
+    paymentAmountUsedForFeeRecord,
+  }: CreateFeeRecordPaymentJoinTableEntityParams): FeeRecordPaymentJoinTableEntity {
+    const entity = new FeeRecordPaymentJoinTableEntity();
+    entity.feeRecordId = feeRecordId;
+    entity.paymentId = paymentId;
+    entity.paymentAmountUsedForFeeRecord = paymentAmountUsedForFeeRecord;
+    return entity;
+  }
 }

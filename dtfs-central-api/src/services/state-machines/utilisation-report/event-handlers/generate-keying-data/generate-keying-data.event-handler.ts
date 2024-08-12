@@ -2,6 +2,7 @@ import { EntityManager, In } from 'typeorm';
 import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
+import { updateFeeRecordPaymentJoinTablePaymentAmountsUsedForFeeRecord } from '../helpers';
 
 const getFacilityIdsAtToDoOrDoesNotMatchStatus = async (entityManager: EntityManager, reportId: number): Promise<Set<string>> => {
   const feeRecordsAtToDoOrDoesNotMatchStatus = await entityManager.find(FeeRecordEntity, {
@@ -54,6 +55,8 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
       });
     }),
   );
+
+  await updateFeeRecordPaymentJoinTablePaymentAmountsUsedForFeeRecord(feeRecordsAtMatchStatus, transactionEntityManager);
 
   if (report.status === 'PENDING_RECONCILIATION') {
     report.updateWithStatus({ status: 'RECONCILIATION_IN_PROGRESS', requestSource });

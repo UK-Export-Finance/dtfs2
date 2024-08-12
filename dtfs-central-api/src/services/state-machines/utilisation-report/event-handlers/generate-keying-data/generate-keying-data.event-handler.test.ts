@@ -9,6 +9,9 @@ import {
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
+import { updateFeeRecordPaymentJoinTablePaymentAmountsUsedForFeeRecord } from '../helpers';
+
+jest.mock('../helpers');
 
 describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
   const tfmUserId = 'abc123';
@@ -37,13 +40,14 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
   beforeEach(() => {
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(aMockFeeRecordStateMachine(aMockEventHandler()));
+    jest.mocked(updateFeeRecordPaymentJoinTablePaymentAmountsUsedForFeeRecord).mockResolvedValue();
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  it('updates each fee record in the payload and calculates the keying data columns when all the supplied fee records have a unique facility id', async () => {
+  it('updates each fee record in the payload, calculates the keying data columns when all the supplied fee records have a unique facility id and updates the fee record payment join table', async () => {
     // Arrange
     const utilisationReport = aReconciliationInProgressReport();
     const feeRecords = [
@@ -87,6 +91,8 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
         },
       });
     });
+
+    expect(updateFeeRecordPaymentJoinTablePaymentAmountsUsedForFeeRecord).toHaveBeenCalledWith(feeRecords, mockEntityManager);
   });
 
   describe('when there are multiple fee records with the same facility id', () => {

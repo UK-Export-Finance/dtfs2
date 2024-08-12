@@ -36,7 +36,7 @@ describe('post-keying-data.controller', () => {
       FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('MATCH').build(),
     ];
 
-    const feeRecordRepoFindSpy = jest.spyOn(FeeRecordRepo, 'findByReportIdAndStatusesWithReport');
+    const feeRecordRepoFindSpy = jest.spyOn(FeeRecordRepo, 'findByReportIdAndStatusesWithReportAndPayments');
 
     const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReport');
 
