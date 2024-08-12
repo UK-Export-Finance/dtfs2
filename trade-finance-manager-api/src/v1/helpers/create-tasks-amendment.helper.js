@@ -11,7 +11,7 @@ const getAssigneeFullName = require('./get-assignee-full-name');
 /**
  * Create tasks for a single group
  * @param {Array} tasks to add to a group
- * @param {Number} group ID
+ * @param {number} group ID
  * @param {Array} additional/special tasks to add to the group
  * @returns {Array} created tasks
  */
@@ -73,7 +73,7 @@ const createTasksAutomaticAmendment = () => [
 
 /**
  * Create MIA tasks/task groups
- * @param {Boolean} NDBDeal true/false for non delegated bank deal flag.  false by default
+ * @param {boolean} NDBDeal true/false for non delegated bank deal flag.  false by default
  * @returns {Array} created task groups
  */
 const createTasksManualAmendment = (NDBDeal = false) => {
@@ -128,8 +128,8 @@ const createTasksManualAmendment = (NDBDeal = false) => {
 
 /**
  * Create tasks/task groups depending on the amendment type (automatic or manual)
- * @param {String} requireUkefApproval - true/false
- * @param {Object} tfm - facility TFM object
+ * @param {string} requireUkefApproval - true/false
+ * @param {object} tfm - facility TFM object
  * @returns {Array} created task groups
  */
 const createAmendmentTasks = (requireUkefApproval, tfm) => {

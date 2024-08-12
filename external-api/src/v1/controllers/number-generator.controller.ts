@@ -41,7 +41,7 @@ export const getNumberTypeId = (entityType: string): number => {
  * Retrieves a number from a number generator API based on the provided `entityType` and `dealId`.
  * @param req - The HTTP request object containing the `entityType` and `dealId` in the `body` property.
  * @param res - The HTTP response object used to send the response back to the client.
- * @returns {Promise<Object>} The retrieved number in the response body.
+ * @returns {Promise<object>} The retrieved number in the response body.
  */
 export const getNumber = async (req: Request, res: Response): Promise<Response<NumberGeneratorResponse> | Response<NumberGeneratorErrorResponse>> => {
   try {
