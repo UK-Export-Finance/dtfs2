@@ -19,7 +19,7 @@ const facilityCovenantAmend = (amendment) => {
       record.targetAmount = to2Decimals(amount);
     }
 
-    if (facilityGuaranteeDates) {
+    if (facilityGuaranteeDates.guaranteeExpiryDate) {
       record.expirationDate = facilityGuaranteeDates.guaranteeExpiryDate;
     }
 
