@@ -49,6 +49,7 @@ const generateVersion0ApplicationToSubmit = () => ({
  */
 const generateVersion0ApplicationResponse = (makerId) => ({
   ...generateVersion0ApplicationToSubmit(),
+  mandatoryVersionId: expect.any(Number),
   version: 0,
   status: CONSTANTS.DEAL.DEAL_STATUS.DRAFT,
   editedBy: expect.any(Array),

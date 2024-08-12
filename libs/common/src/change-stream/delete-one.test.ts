@@ -6,17 +6,6 @@ import { MONGO_DB_COLLECTIONS } from '../constants';
 import { generateMockNoUserLoggedInAuditDatabaseRecord } from './test-helpers';
 import { deleteOne } from './delete-one';
 
-const mockSession = {
-  withTransaction: jest.fn((callback: () => void) => {
-    callback();
-  }),
-  endSession: jest.fn(),
-};
-
-const mockClient = {
-  startSession: jest.fn(() => mockSession),
-};
-
 const mockGetCollection = jest.fn();
 
 const mockDeleteOne = jest.fn();
@@ -30,7 +19,6 @@ const mockDeletionsCollection = {
 };
 
 const mockDb = {
-  getClient: jest.fn(() => mockClient),
   getCollection: mockGetCollection,
 } as unknown as MongoDbClient;
 
@@ -44,77 +32,37 @@ describe('deleteOne', () => {
     process.env.DELETION_AUDIT_LOGS_TTL_SECONDS = originalDeletionAuditLogsDeleteAfterSeconds;
   });
 
-  describe('when change stream enabled', () => {
-    beforeAll(() => {
-      process.env.CHANGE_STREAM_ENABLED = 'true';
-      process.env.DELETION_AUDIT_LOGS_TTL_SECONDS = '60';
-    });
-
-    beforeEach(() => {
-      jest.clearAllMocks();
-
-      when(mockGetCollection).calledWith('users').mockReturnValueOnce(mockUsersCollection);
-      when(mockGetCollection).calledWith(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS).mockReturnValueOnce(mockDeletionsCollection);
-    });
-
-    describe('when the insertion and deletion are successful', () => {
-      beforeEach(() => {
-        mockDeleteOneSuccess();
-        mockInsertOneSuccess();
-      });
-
-      it('adds a record to the deletion-audit-logs collection', async () => {
-        await deleteOne({
-          db: mockDb,
-          documentId,
-          collectionName: 'users',
-          auditDetails: generateNoUserLoggedInAuditDetails(),
-        });
-
-        expect(mockDeletionsCollection.insertOne).toHaveBeenCalledWith(
-          {
-            collectionName: 'users',
-            deletedDocumentId: documentId,
-            auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
-            expireAt: expect.any(Date) as Date,
-          },
-          { session: mockSession },
-        );
-      });
-
-      it('deletes the requested document', async () => {
-        await deleteOne({
-          db: mockDb,
-          documentId,
-          collectionName: 'users',
-          auditDetails: generateNoUserLoggedInAuditDetails(),
-        });
-
-        expect(mockUsersCollection.deleteOne).toHaveBeenCalledWith({ _id: { $eq: documentId } }, { session: mockSession });
-      });
-
-      it('ends the session', async () => {
-        await deleteOne({
-          db: mockDb,
-          documentId,
-          collectionName: 'users',
-          auditDetails: generateNoUserLoggedInAuditDetails(),
-        });
-
-        expect(mockSession.endSession).toHaveBeenCalledTimes(1);
-      });
-    });
+  beforeAll(() => {
+    process.env.DELETION_AUDIT_LOGS_TTL_SECONDS = '60';
   });
 
-  describe('when change stream disabled', () => {
-    beforeAll(() => {
-      process.env.CHANGE_STREAM_ENABLED = 'false';
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    when(mockGetCollection).calledWith('users').mockReturnValueOnce(mockUsersCollection);
+    when(mockGetCollection).calledWith(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS).mockReturnValueOnce(mockDeletionsCollection);
+  });
+
+  describe('when the insertion and deletion are successful', () => {
+    beforeEach(() => {
+      mockDeleteOneSuccess();
+      mockInsertOneSuccess();
     });
 
-    beforeEach(() => {
-      jest.clearAllMocks();
+    it('adds a record to the deletion-audit-logs collection', async () => {
+      await deleteOne({
+        db: mockDb,
+        documentId,
+        collectionName: 'users',
+        auditDetails: generateNoUserLoggedInAuditDetails(),
+      });
 
-      when(mockGetCollection).calledWith('users').mockReturnValueOnce(mockUsersCollection);
+      expect(mockDeletionsCollection.insertOne).toHaveBeenCalledWith({
+        collectionName: 'users',
+        deletedDocumentId: documentId,
+        auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
+        expireAt: expect.any(Date) as Date,
+      });
     });
 
     it('deletes the requested document', async () => {
