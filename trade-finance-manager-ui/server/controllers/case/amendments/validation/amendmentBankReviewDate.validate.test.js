@@ -1,7 +1,7 @@
-import { add, getUnixTime } from 'date-fns';
+import { add } from 'date-fns';
 import bankReviewDateValidation from './amendmentBankReviewDate.validate';
 
-const testCoverStartDate = getUnixTime(new Date(2025, 7, 4)) * 1000;
+const testCoverStartDate = new Date(2025, 7, 4).getTime();
 
 describe('bankReviewDateValidation()', () => {
   it('should return an error if the bank review date is greater than 6 years in the future', () => {
@@ -37,7 +37,7 @@ describe('bankReviewDateValidation()', () => {
       testCoverStartDate,
     );
 
-    expect(result.error).toEqual({});
+    expect(result.error).toEqual(null);
   });
 
   it('should return an error if the bank review date is before the cover start date', () => {
@@ -134,7 +134,7 @@ describe('bankReviewDateValidation()', () => {
       testCoverStartDate,
     );
     const expected = {
-      error: {},
+      error: null,
       bankReviewDate: new Date(2025, 11, 12, 0, 0, 0),
     };
 

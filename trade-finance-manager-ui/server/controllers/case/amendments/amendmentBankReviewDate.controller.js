@@ -1,10 +1,11 @@
+const { HttpStatusCode } = require('axios');
 const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { format, parseISO } = require('date-fns');
 const api = require('../../../api');
 const bankReviewDateValidation = require('./validation/amendmentBankReviewDate.validate');
 
 const getNextPage = (status, changeFacilityValue, baseUrl, fallbackUrl) => {
-  if (status !== 200) {
+  if (status !== HttpStatusCode.Ok) {
     console.error('Unable to update bank review date');
     return fallbackUrl;
   }
@@ -35,7 +36,7 @@ const getAmendmentBankReviewDate = async (req, res) => {
   const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId, bankReviewDate, changeCoverEndDate, isUsingFacilityEndDate } = amendment;
 
-  if (status !== 200) {
+  if (status !== HttpStatusCode.Ok) {
     return res.redirect('/not-found');
   }
 
@@ -43,13 +44,13 @@ const getAmendmentBankReviewDate = async (req, res) => {
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
   }
 
-  if (isUsingFacilityEndDate == null || isUsingFacilityEndDate) {
+  if (isUsingFacilityEndDate !== false) {
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
   }
 
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
-  const bankReviewDateDay = bankReviewDate ? format(new Date(bankReviewDate), 'dd') : '';
+  const bankReviewDateDay = bankReviewDate ? format(new Date(bankReviewDate), 'd') : '';
   const bankReviewDateMonth = bankReviewDate ? format(new Date(bankReviewDate), 'M') : '';
   const bankReviewDateYear = bankReviewDate ? format(new Date(bankReviewDate), 'yyyy') : '';
 
@@ -75,7 +76,9 @@ const postAmendmentBankReviewDate = async (req, res) => {
   const facility = await api.getFacility(facilityId, userToken);
   const { 'bank-review-date-day': day, 'bank-review-date-month': month, 'bank-review-date-year': year } = req.body;
 
-  const { error, bankReviewDate } = bankReviewDateValidation({ day, month, year }, facility.facilitySnapshot.dates.coverStartDate);
+  const coverStartDate = new Date(Number(facility.facilitySnapshot.dates.coverStartDate));
+
+  const { error, bankReviewDate } = bankReviewDateValidation({ day, month, year }, coverStartDate);
 
   if (error?.fields) {
     const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isTfmFacilityEndDateFeatureFlagEnabled();
@@ -98,9 +101,11 @@ const postAmendmentBankReviewDate = async (req, res) => {
   try {
     const payload = { bankReviewDate };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
+
     return res.redirect(getNextPage(status, changeFacilityValue, baseUrl, fallbackUrl));
   } catch (err) {
     console.error('There was a problem adding the bank review date', err);
+
     return res.redirect(fallbackUrl);
   }
 };

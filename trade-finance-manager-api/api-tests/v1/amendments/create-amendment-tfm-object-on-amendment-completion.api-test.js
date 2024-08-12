@@ -168,7 +168,7 @@ describe('update amendment-tfm on amendment completion', () => {
           coverEndDate: unixTime,
           isUsingFacilityEndDate: true,
           facilityEndDate: facilityEndDateIsoString,
-          bankReviewDate: null,
+          bankReviewDate: undefined,
           exposure: {
             exposure: '4,000.00',
             timestamp: expect.any(Number),
@@ -193,7 +193,7 @@ describe('update amendment-tfm on amendment completion', () => {
           amendmentExposurePeriodInMonths: 5,
           coverEndDate: unixTime,
           isUsingFacilityEndDate: false,
-          facilityEndDate: null,
+          facilityEndDate: undefined,
           bankReviewDate: bankReviewDateIsoString,
           exposure: {
             exposure: '4,000.00',
@@ -256,7 +256,7 @@ describe('update amendment-tfm on amendment completion', () => {
         const expected = {
           facilityEndDate: facilityEndDateIsoString,
           isUsingFacilityEndDate: true,
-          bankReviewDate: null,
+          bankReviewDate: undefined,
         };
 
         expect(result).toEqual(expected);
@@ -273,7 +273,7 @@ describe('update amendment-tfm on amendment completion', () => {
         const expected = {
           bankReviewDate: bankReviewDateIsoString,
           isUsingFacilityEndDate: false,
-          facilityEndDate: null,
+          facilityEndDate: undefined,
         };
 
         expect(result).toEqual(expected);
@@ -291,7 +291,7 @@ describe('update amendment-tfm on amendment completion', () => {
           coverEndDate: unixTime,
           isUsingFacilityEndDate: true,
           facilityEndDate: facilityEndDateIsoString,
-          bankReviewDate: null,
+          bankReviewDate: undefined,
         };
 
         expect(result).toEqual(expected);

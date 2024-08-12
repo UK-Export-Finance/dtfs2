@@ -137,7 +137,6 @@ describe('amendmentBankReviewDate routes', () => {
           bankReviewDateMonth: '',
           bankReviewDateYear: '',
           isEditable: true,
-          isUsingFacilityEndDate: undefined,
           user,
         });
       });
@@ -164,7 +163,6 @@ describe('amendmentBankReviewDate routes', () => {
           bankReviewDateMonth: '',
           bankReviewDateYear: '',
           isEditable: false,
-          isUsingFacilityEndDate: undefined,
           user,
         });
       });

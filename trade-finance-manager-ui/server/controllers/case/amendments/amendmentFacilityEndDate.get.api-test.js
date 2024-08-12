@@ -137,7 +137,6 @@ describe('amendmentFacilityEndDate routes', () => {
           facilityEndDateMonth: '',
           facilityEndDateYear: '',
           isEditable: true,
-          isUsingFacilityEndDate: undefined,
           user,
         });
       });
@@ -163,8 +162,8 @@ describe('amendmentFacilityEndDate routes', () => {
           facilityEndDateDay: '',
           facilityEndDateMonth: '',
           facilityEndDateYear: '',
+          currentFacilityEndDate: undefined,
           isEditable: false,
-          isUsingFacilityEndDate: undefined,
           user,
         });
       });
@@ -195,6 +194,7 @@ describe('amendmentFacilityEndDate routes', () => {
           facilityEndDateDay: '11',
           facilityEndDateMonth: '12',
           facilityEndDateYear: '2025',
+          currentFacilityEndDate: undefined,
           isEditable: true,
           user,
         });

@@ -1,10 +1,11 @@
 const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const { format, parseISO } = require('date-fns');
 const api = require('../../../api');
 const facilityEndDateValidation = require('./validation/amendmentFacilityEndDate.validate');
 
 const getNextPage = (status, changeFacilityValue, baseUrl, fallbackUrl) => {
-  if (status !== 200) {
+  if (status !== HttpStatusCode.Ok) {
     console.error('Unable to update facility end date');
     return fallbackUrl;
   }
@@ -49,7 +50,7 @@ const getAmendmentFacilityEndDate = async (req, res) => {
 
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
-  const facilityEndDateDay = facilityEndDate ? format(new Date(facilityEndDate), 'dd') : '';
+  const facilityEndDateDay = facilityEndDate ? format(new Date(facilityEndDate), 'd') : '';
   const facilityEndDateMonth = facilityEndDate ? format(new Date(facilityEndDate), 'M') : '';
   const facilityEndDateYear = facilityEndDate ? format(new Date(facilityEndDate), 'yyyy') : '';
 
@@ -75,7 +76,9 @@ const postAmendmentFacilityEndDate = async (req, res) => {
   const facility = await api.getFacility(facilityId, userToken);
   const { 'facility-end-date-day': day, 'facility-end-date-month': month, 'facility-end-date-year': year } = req.body;
 
-  const { error, facilityEndDate } = facilityEndDateValidation({ day, month, year }, facility.facilitySnapshot.dates.coverStartDate);
+  const coverStartDate = new Date(Number(facility.facilitySnapshot.dates.coverStartDate));
+
+  const { error, facilityEndDate } = facilityEndDateValidation({ day, month, year }, coverStartDate);
 
   if (error?.fields) {
     const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isTfmFacilityEndDateFeatureFlagEnabled();

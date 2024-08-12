@@ -3,8 +3,8 @@ const { add, isAfter, isBefore, startOfDay } = require('date-fns');
 
 /**
  * @param {{day: string, month: string, year: string}}
- * @param coverStartDate
- * @returns {Object} containing errors and amendment bank review date
+ * @param {Date} coverStartDate
+ * @returns {object} containing errors and amendment bank review date
  */
 
 const bankReviewDateValidation = ({ day, month, year }, coverStartDate) => {
@@ -21,7 +21,7 @@ const bankReviewDateValidation = ({ day, month, year }, coverStartDate) => {
 
   const today = startOfDay(new Date());
   const sixYearsFromToday = add(today, { years: 6 });
-  const coverStartDateToCompare = startOfDay(new Date(Number(coverStartDate)));
+  const coverStartDateToCompare = startOfDay(coverStartDate);
 
   // checks if the entered bank review date is greater than 6 years in the future
   if (isAfter(parsedDate, sixYearsFromToday)) {
@@ -45,7 +45,7 @@ const bankReviewDateValidation = ({ day, month, year }, coverStartDate) => {
 
   return {
     bankReviewDate: parsedDate,
-    error: {},
+    error: null,
   };
 };
 
