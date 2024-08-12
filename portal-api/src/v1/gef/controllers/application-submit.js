@@ -193,7 +193,7 @@ const checkCoverDateConfirmed = async (app, auditDetails) => {
 
   try {
     const facilities = await getAllFacilitiesByDealId(app._id);
-    const isSubmittedToUkef = !!app.submissionCount;
+    const isSubmittedToUkef = app.submissionCount >= 1;
     const hasFacilities = facilities?.length > 0;
     const isAIN = app.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;
 
@@ -203,21 +203,23 @@ const checkCoverDateConfirmed = async (app, auditDetails) => {
 
     const updatedFacilities = await Promise.all(
       facilities.reduce((promises, facility) => {
-        const isIssuedFacility = facility.hasBeenIssued && !facility.coverDateConfirmed;
-        const isUnissuedFacility = !facility.hasBeenIssued && facility.coverDateConfirmed;
+        const { hasBeenIssued, coverDateConfirmed } = facility;
+
+        const isIssuedFacility = hasBeenIssued && !coverDateConfirmed;
+        const isUnissuedFacility = !hasBeenIssued && coverDateConfirmed;
 
         if (isIssuedFacility || isUnissuedFacility) {
-          const coverDateConfirmed = isIssuedFacility && Boolean(isAIN);
-          promises.push(updateFacility(facility._id, { coverDateConfirmed }, auditDetails));
+          const newCoverDateConfirmed = isIssuedFacility && Boolean(isAIN);
+          promises.push(updateFacility(facility._id, { coverDateConfirmed: newCoverDateConfirmed }, auditDetails));
         }
 
         return promises;
       }, []),
     );
 
-    const hasUpdatedAtLeaseOneFacility = updatedFacilities.length > 0;
+    const hasUpdatedAtLeastOneFacility = updatedFacilities.length > 0;
 
-    return hasUpdatedAtLeaseOneFacility;
+    return hasUpdatedAtLeastOneFacility;
   } catch (error) {
     console.error('Unable to set coverDateConfirmed for AIN facilities. %o', error);
     return false;
