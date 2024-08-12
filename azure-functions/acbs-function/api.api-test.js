@@ -1,4 +1,4 @@
-const { getFacility, createParty, updateFacility, updateFacilityLoan, updateFacilityCovenant } = require('./api');
+const { getFacility, createParty, updateFacility, updateFacilityLoan, updateFacilityCovenant, updateFacilityGuarantee } = require('./api');
 
 describe('getFacility', () => {
   withStandardHappyAndUnhappyPathTests({
@@ -30,7 +30,14 @@ describe('updateFacilityLoan', () => {
 describe('updateFacilityCovenant', () => {
   withStandardHappyAndUnhappyPathTests({
     method: updateFacilityCovenant,
-    happyPathArgsAsArray: ['1', {}],
+    happyPathArgsAsArray: ['1', { amount: '100,000', facilityGuaranteeDates: new Date() }],
+  });
+});
+
+describe('updateFacilityGuarantee', () => {
+  withStandardHappyAndUnhappyPathTests({
+    method: updateFacilityGuarantee,
+    happyPathArgsAsArray: ['1', { amount: '100,000', facilityGuaranteeDates: new Date() }],
   });
 });
 
