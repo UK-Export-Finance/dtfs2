@@ -1,8 +1,8 @@
 const jsonwebtoken = require('jsonwebtoken');
 const crypto = require('crypto');
 const { when } = require('jest-when');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { issueValidUsernameAndPasswordJWT, issueValid2faJWT, validPassword } = require('./utils');
-const { LOGIN_STATUSES } = require('../constants');
 const { TEST_USER } = require('../../test-helpers/unit-test-mocks/mock-user');
 
 jest.mock('crypto', () => ({
@@ -106,7 +106,7 @@ describe('crypto utils', () => {
         expect(decodedToken.iat).toBe(DATE_NOW_IN_UNIX_TIME);
         expect(decodedToken.exp).toBe(DATE_NOW_IN_UNIX_TIME + SECONDS_IN_105_MINUTES);
         expect(decodedToken.username).toEqual(USER.username);
-        expect(decodedToken.loginStatus).toEqual(LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD);
+        expect(decodedToken.loginStatus).toEqual(PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD);
         expect(decodedToken.sessionIdentifier).toEqual(sessionIdentifier);
       });
 
@@ -133,7 +133,7 @@ describe('crypto utils', () => {
         expect(decodedToken.iat).toBe(DATE_NOW_IN_UNIX_TIME);
         expect(decodedToken.exp).toBe(DATE_NOW_IN_UNIX_TIME + SECONDS_IN_12_HOURS);
         expect(decodedToken.username).toEqual(USER.username);
-        expect(decodedToken.loginStatus).toEqual(LOGIN_STATUSES.VALID_2FA);
+        expect(decodedToken.loginStatus).toEqual(PORTAL_LOGIN_STATUS.VALID_2FA);
         expect(decodedToken.sessionIdentifier).toEqual(sessionIdentifier);
         expect(decodedToken.sessionIdentifier).toEqual(EXISTING_SESSION_IDENTIFIER);
         expect(decodedToken.roles).toEqual(USER.roles);

@@ -1,5 +1,4 @@
 import { isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
-import { formatISO } from 'date-fns';
 
 const { format } = require('date-fns');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
@@ -83,8 +82,8 @@ describe('mapGefFacilityDates', () => {
         facilitySnapshot: {
           ...mockFacility.facilitySnapshot,
           isUsingFacilityEndDate: true,
-          facilityEndDate: '2021-12-08T00:00:00.000Z',
-          bankReviewDate: '2023-12-08T00:00:00.000Z',
+          facilityEndDate: new Date('2025-08-12'),
+          bankReviewDate: new Date('2025-07-12'),
         },
       };
 
@@ -127,19 +126,19 @@ describe('mapGefFacilityDates', () => {
     });
 
     it('should return mapped facilityEndDate if isUsingFacilityEndDate is true', () => {
-      const facilityEndDate = new Date(1638921600000);
+      const facilityEndDate = new Date('2025-07-12');
 
       const facilityWithEndDate = {
         facilitySnapshot: {
           ...mockFacility.facilitySnapshot,
           isUsingFacilityEndDate: true,
-          facilityEndDate: formatISO(facilityEndDate),
+          facilityEndDate,
         },
       };
 
       const result = mapGefFacilityDates(facilityWithEndDate, mockFacilityTfm, MOCK_GEF_DEAL);
 
-      expect(result.facilityEndDate).toEqual('1638921600000');
+      expect(result.facilityEndDate).toEqual(facilityEndDate);
     });
 
     it('should not return bankReviewDate if isUsingFacilityEndDate is true', () => {
@@ -147,8 +146,8 @@ describe('mapGefFacilityDates', () => {
         facilitySnapshot: {
           ...mockFacility.facilitySnapshot,
           isUsingFacilityEndDate: true,
-          facilityEndDate: '2021-12-08T00:00:00.000Z',
-          bankReviewDate: '2023-12-08T00:00:00.000Z',
+          facilityEndDate: new Date('2025-08-12'),
+          bankReviewDate: new Date('2025-07-12'),
         },
       };
 
@@ -158,19 +157,19 @@ describe('mapGefFacilityDates', () => {
     });
 
     it('should return mapped bankReviewDate if isUsingFacilityEndDate is false', () => {
-      const bankReviewDate = new Date(1752274800000);
+      const bankReviewDate = new Date('2025-07-12');
 
       const facilityWithEndDate = {
         facilitySnapshot: {
           ...mockFacility.facilitySnapshot,
           isUsingFacilityEndDate: false,
-          bankReviewDate: formatISO(bankReviewDate),
+          bankReviewDate,
         },
       };
 
       const result = mapGefFacilityDates(facilityWithEndDate, mockFacilityTfm, MOCK_GEF_DEAL);
 
-      expect(result.bankReviewDate).toEqual('1752274800000');
+      expect(result.bankReviewDate).toEqual(bankReviewDate);
     });
 
     it('should not return facilityEndDate if isUsingFacilityEndDate is false', () => {
@@ -178,8 +177,8 @@ describe('mapGefFacilityDates', () => {
         facilitySnapshot: {
           ...mockFacility.facilitySnapshot,
           isUsingFacilityEndDate: false,
-          facilityEndDate: '2021-12-08T00:00:00.000Z',
-          bankReviewDate: '2023-12-08T00:00:00.000Z',
+          facilityEndDate: new Date('2025-08-12'),
+          bankReviewDate: new Date('2025-07-12'),
         },
       };
 

@@ -483,7 +483,6 @@ describe('reconciliation-for-report-helper', () => {
       feePayments: [],
       baseCurrency: 'GBP',
       fixedFeeAdjustment: null,
-      premiumAccrualBalanceAdjustment: null,
       principalBalanceAdjustment: null,
     });
 
@@ -590,39 +589,6 @@ describe('reconciliation-for-report-helper', () => {
         // Assert
         expect(result).toHaveLength(1);
         expect(result[0].fixedFeeAdjustment).toEqual(expectedMappedValue);
-      },
-    );
-
-    it.each([
-      { condition: 'is null', value: null, expectedMappedValue: { amount: undefined, change: 'NONE' } },
-      { condition: 'has zero amount (no change)', value: { amount: 0, change: 'NONE' }, expectedMappedValue: { amount: '0.00', change: 'NONE' } },
-      {
-        condition: 'has a positive amount (increase)',
-        value: { amount: 100, change: 'INCREASE' },
-        expectedMappedValue: { amount: '100.00', change: 'INCREASE' },
-      },
-      {
-        condition: 'has a negative amount (decrease)',
-        value: { amount: 100, change: 'DECREASE' },
-        expectedMappedValue: { amount: '100.00', change: 'DECREASE' },
-      },
-    ] as const)(
-      'sets the view model premiumAccrualBalanceAdjustment to $expectedMappedValue when the fee record entity premiumAccrualBalanceAdjustment $condition',
-      ({ value, expectedMappedValue }) => {
-        // Arrange
-        const keyingSheet: KeyingSheet = [
-          {
-            ...aKeyingSheetRow(),
-            premiumAccrualBalanceAdjustment: value,
-          },
-        ];
-
-        // Act
-        const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
-
-        // Assert
-        expect(result).toHaveLength(1);
-        expect(result[0].premiumAccrualBalanceAdjustment).toEqual(expectedMappedValue);
       },
     );
 

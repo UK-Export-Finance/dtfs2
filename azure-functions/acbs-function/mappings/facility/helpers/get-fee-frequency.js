@@ -3,8 +3,8 @@ const CONSTANTS = require('../../../constants');
 
 /**
  * Return ACBS field code for facility fee frequency.
- * @param {Object} facility Facility object
- * @returns {String} ACBS day basis code
+ * @param {object} facility Facility object
+ * @returns {string} ACBS day basis code
  */
 const getFeeFrequency = (facility) => {
   const feeFrequency = mapFeeFrequency(facility.facilitySnapshot);

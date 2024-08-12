@@ -10,10 +10,10 @@ const { FACILITY } = CONSTANTS;
  *
  * `GEF` facilities type will return 10% of the difference.
  * `Bond` facility type will return the full difference.
- * @param {Integer} ukefExposure UKEF Exposure
- * @param {String} type Facility Type
- * @param {Object} facilityMasterRecord Facility master record object
- * @returns {Integer} Loan amount difference, if null argument then returns `0`
+ * @param {number} ukefExposure UKEF Exposure
+ * @param {string} type Facility Type
+ * @param {object} facilityMasterRecord Facility master record object
+ * @returns {number} Loan amount difference, if null argument then returns `0`
  */
 const getLoanAmountDifference = (ukefExposure, type, facilityMasterRecord) => {
   if (ukefExposure && facilityMasterRecord) {

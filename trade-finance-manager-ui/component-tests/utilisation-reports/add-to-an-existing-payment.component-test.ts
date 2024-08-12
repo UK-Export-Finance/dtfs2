@@ -73,7 +73,7 @@ describe(page, () => {
     wrapper.expectText(tableSelector).toContain('JPY 1');
   });
 
-  it('should display a available payment groups radio input', () => {
+  it('should render available payment groups radio input', () => {
     // Arrange
     const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
     const wrapper = render(addToAnExistingPaymentViewModel);

@@ -2,6 +2,10 @@ const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
 const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
 const { generateSystemAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
+const {
+  PAYLOAD_VERIFICATION: { ACBS },
+} = require('@ukef/dtfs2-common');
 const api = require('../api');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
@@ -9,15 +13,16 @@ const CONSTANTS = require('../../constants');
 const { formatCoverEndDate } = require('../helpers/amendment.helpers');
 const { getIsoStringWithOffset } = require('../../utils/date');
 const isUnissuedInACBS = require('../helpers/is-facility-unissued-acbs');
+const { findOneTfmDeal } = require('./deal.controller');
 
 /**
  * Adds a log entry to the ACBS log collection in the database.
- * @param {Object} payload - The payload object.
- * @param {Object} payload.deal - The deal object.
- * @param {Object} payload.facility - The facility object.
- * @param {Object} payload.bank - The bank object.
- * @param {Object} payload.acbsTaskLinks - The ACBS task links object.
- * @returns {Promise<Object|boolean>} - A promise that resolves to the inserted log entry if successful, or false otherwise.
+ * @param {object} payload - The payload object.
+ * @param {object} payload.deal - The deal object.
+ * @param {object} payload.facility - The facility object.
+ * @param {object} payload.bank - The bank object.
+ * @param {object} payload.acbsTaskLinks - The ACBS task links object.
+ * @returns {Promise<object|boolean>} - A promise that resolves to the inserted log entry if successful, or false otherwise.
  */
 const addToACBSLog = async (payload) => {
   if (!payload?.deal || !payload?.acbsTaskLinks) {
@@ -52,10 +57,17 @@ const addToACBSLog = async (payload) => {
 
 /**
  * Creates an ACBS task and adds it to the ACBS log.
- * @param {object} deal - The deal object containing the dealSnapshot property with the bank details.
- * @returns {Promise<Boolean>} - True if the ACBS task is successfully created and added to the log, false otherwise.
+ * @param {string} dealId - TFM Mongo deal object ID
+ * @returns {Promise<boolean>} - True if the ACBS task is successfully created and added to the log, false otherwise.
  */
-const createACBS = async (deal) => {
+const createACBS = async (dealId) => {
+  if (!ObjectId.isValid(dealId)) {
+    console.error('Invalid deal Id %s', dealId);
+    return false;
+  }
+
+  const deal = await findOneTfmDeal(dealId);
+
   // Check if the dealSnapshot has a bank property
   if (!deal?.dealSnapshot?.bank) {
     return false;
@@ -64,7 +76,32 @@ const createACBS = async (deal) => {
   const { bank } = deal.dealSnapshot;
   const { id, name, partyUrn } = bank;
 
-  const acbsTaskLinks = await api.createACBS(deal, { id, name, partyUrn });
+  // ACBS deal payload objects
+  const acbsBank = {
+    id,
+    name,
+    partyUrn,
+  };
+
+  /**
+   * 1. Property `auditRecord` does not need to be send to ACBS DOF
+   * 2. Ensure `acbsDeal` object has required properties before expensive
+   * API execution
+   */
+  const { auditRecord, ...acbsDeal } = deal;
+
+  // Imperative properties check
+  if (!isVerifiedPayload({ payload: acbsBank, template: ACBS.BANK })) {
+    console.error('Invalid ACBS bank payload, terminating API call for deal %s', acbsDeal._id);
+    return false;
+  }
+
+  if (!isVerifiedPayload({ payload: acbsDeal, template: ACBS.DEAL })) {
+    console.error('Invalid ACBS deal payload, terminating API call for deal %s', acbsDeal._id);
+    return false;
+  }
+
+  const acbsTaskLinks = await api.createACBS(acbsDeal, acbsBank);
 
   // Check if the ACBS task is successfully created
   if (acbsTaskLinks) {
@@ -72,6 +109,7 @@ const createACBS = async (deal) => {
     return await addToACBSLog({ deal, bank, acbsTaskLinks });
   }
 
+  console.error('Unable to add ACBS call to the log for deal %s', acbsDeal._id);
   return false;
 };
 
@@ -96,11 +134,11 @@ const updateDealAcbs = async (taskOutput) => {
 /**
  * Updated `tfm.acbs` property of a facility upon successful
  * facility issuance.
- * @param {String} ID UKEF Facility mongo ID
- * @param {Object} FMR Facility master record
- * @param {Object} FLR Facility loan record
- * @param {Object} FFR Facility fixed fee record
- * @returns {Object} ACBS returned response
+ * @param {string} ID UKEF Facility mongo ID
+ * @param {object} FMR Facility master record
+ * @param {object} FLR Facility loan record
+ * @param {object} FFR Facility fixed fee record
+ * @returns {object} ACBS returned response
  */
 const updateIssuedFacilityAcbs = ({ facilityId, issuedFacilityMaster, facilityLoan, facilityFee }) =>
   tfmController.updateFacilityAcbs(facilityId, {
@@ -183,7 +221,7 @@ const checkAzureAcbsFunction = async () => {
  * 2. Facility has been created in ACBS.
  * 3. Facility in ACBS is `06` stage.
  * @param {object} deal - The deal object containing information about the deal, including facilities and ACBS details.
- * @returns {Promise<Object>} - A promise that resolves with the results of adding the facilities to ACBS log.
+ * @returns {Promise<object>} - A promise that resolves with the results of adding the facilities to ACBS log.
  */
 const issueAcbsFacilities = async (deal) => {
   if (!deal?.tfm?.acbs) {
@@ -230,9 +268,9 @@ const issueAcbsFacilities = async (deal) => {
 /**
  * Amend facility controller function responsible for invoking
  * respective API and writes ACBS task links to DB.
- * @param {Object} amendments Facility amendments object
- * @param {Object} facility Complete TFM facility object
- * @param {Object} deal Bespoke deal object
+ * @param {object} amendments Facility amendments object
+ * @param {object} facility Complete TFM facility object
+ * @param {object} deal Bespoke deal object
  */
 const amendAcbsFacility = (amendments, facility, deal) => {
   let payload = amendments;

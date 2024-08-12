@@ -126,12 +126,12 @@ exports.findOne = (req, res) => {
 
 /**
  * Sends a request to DTFS Central to update a deal
- * @param {Object} params - The parameters for updating the deal.
+ * @param {object} params - The parameters for updating the deal.
  * @param {string} params.dealId - The ID of the deal being updated.
- * @param {Object} params.dealUpdate - The update to be made to the deal.
- * @param {Object} params.user - The user making the changes.
- * @param {Object} params.auditDetails - The audit details for the update.
- * @returns {Promise<Object | false>} The updated deal object.
+ * @param {object} params.dealUpdate - The update to be made to the deal.
+ * @param {object} params.user - The user making the changes.
+ * @param {object} params.auditDetails - The audit details for the update.
+ * @returns {Promise<object | false>} The updated deal object.
  */
 const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
   const updatedDeal = await api.updateDeal({ dealId, dealUpdate, user, auditDetails });

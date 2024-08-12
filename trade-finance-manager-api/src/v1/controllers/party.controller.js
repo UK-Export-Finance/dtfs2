@@ -7,8 +7,8 @@ const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
 /**
  * Updates the parties in TFM associated with the deal.
  *
- * @param {Object} req - The request object containing the parameters, body, and user information.
- * @param {Object} res - The response object.
+ * @param {object} req - The request object containing the parameters, body, and user information.
+ * @param {object} res - The response object.
  * @returns {Promise} - A promise that resolves with the updated parties data.
  */
 const updateParty = async (req, res) => {
@@ -25,7 +25,7 @@ const updateParty = async (req, res) => {
     const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
 
     if (canSubmitDealToACBS) {
-      await createACBS(tfmDeal);
+      await createACBS(dealId);
     }
 
     const response = res.status(HttpStatusCode.Ok).send({

@@ -68,7 +68,7 @@ export const premiumScheduleCalls = {
   },
   /**
    * Get premium schedule segments from facility URN
-   * @param {String} facilityId Facility ID
+   * @param {string} facilityId Facility ID
    * @returns {Array} Array of premium schedule segments
    */
   getScheduleData: async (facilityId: any) => {
@@ -92,7 +92,7 @@ export const premiumScheduleCalls = {
  * Get premium schedule segments from facility URN
  * @param {Express.Request} req Facility ID
  * @param {Express.Response} res Facility ID
- * @returns {Object} Premium schedule data
+ * @returns {object} Premium schedule data
  */
 export const getPremiumSchedule = async (req: Request, res: Response) => {
   let premiumScheduleParameters = {} as PremiumSchedule;

@@ -2,7 +2,7 @@ const { MOCK_FACILITIES } = require('./mock-facilities');
 const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
 
 const MOCK_DEAL = {
-  _id: 'AIN_DEAL',
+  _id: '64da2f74de0f97235921b09b',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
   bankInternalRefName: 'Mock supply contract ID',

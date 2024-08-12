@@ -14,6 +14,7 @@ import {
   handleFeeRecordRemoveFromPaymentGroupEvent,
   handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent,
 } from './event-handlers';
+import { aReportPeriod } from '../../../../test-helpers/test-data';
 
 jest.mock('./event-handlers');
 
@@ -119,6 +120,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
           isFinalFeeRecordForFacility: false,
+          reportPeriod: aReportPeriod(),
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });

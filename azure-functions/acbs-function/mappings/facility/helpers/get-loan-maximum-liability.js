@@ -5,8 +5,8 @@ const CONSTANTS = require('../../../constants');
  * `Loan` (EWCS) = Disbursement amount * (UKEF cover percentage / 100)
  * `Bond` (BSS) = Amount
  * @param {Float} amount Facility UKEF exposure
- * @param {Object} facility Facility
- * @param {Object} dealType Deal type
+ * @param {object} facility Facility
+ * @param {object} dealType Deal type
  */
 const getLoanMaximumLiability = (amount, facility, dealType) => {
   let ukefExposure;

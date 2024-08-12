@@ -61,3 +61,16 @@ export const CRITERIA = {
     },
   },
 };
+
+export const ACBS = {
+  DEAL: {
+    _id: 'String',
+    dealSnapshot: 'Object',
+    tfm: 'Object',
+  },
+  BANK: {
+    id: 'String',
+    name: 'String',
+    partyUrn: 'String',
+  },
+};
