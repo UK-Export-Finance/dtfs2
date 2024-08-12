@@ -35,7 +35,7 @@ describe('calculateFixedFeeAdjustment', () => {
 
     // Act / Assert
     await expect(calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod)).rejects.toThrow(
-      new Error('Fee record report period cannot be the same as the facility utilisation data report period'),
+      new Error('Fixed fee adjustment must be calculated before the facility utilisation data has been updated'),
     );
   });
 

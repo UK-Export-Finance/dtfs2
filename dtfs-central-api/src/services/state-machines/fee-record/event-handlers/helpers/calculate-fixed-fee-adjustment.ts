@@ -2,6 +2,9 @@ import Big from 'big.js';
 import { FacilityUtilisationDataEntity, FeeRecordEntity, isEqualReportPeriod, ReportPeriod } from '@ukef/dtfs2-common';
 import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
 
+const hasFacilityUtilisationDataAlreadyBeenUpdated = (facilityUtilisationData: FacilityUtilisationDataEntity, reportPeriod: ReportPeriod): boolean =>
+  isEqualReportPeriod(facilityUtilisationData.reportPeriod, reportPeriod);
+
 /**
  * Calculates the fixed fee adjustment
  * @param feeRecord - The fee record entity
@@ -19,8 +22,8 @@ export const calculateFixedFeeAdjustment = async (
     throw new Error('Fee record facility id does not match the facility utilisation id');
   }
 
-  if (isEqualReportPeriod(reportPeriod, facilityUtilisationData.reportPeriod)) {
-    throw new Error('Fee record report period cannot be the same as the facility utilisation data report period');
+  if (hasFacilityUtilisationDataAlreadyBeenUpdated(facilityUtilisationData, reportPeriod)) {
+    throw new Error('Fixed fee adjustment must be calculated before the facility utilisation data has been updated');
   }
 
   const previousPeriodFixedFee = facilityUtilisationData.fixedFee;

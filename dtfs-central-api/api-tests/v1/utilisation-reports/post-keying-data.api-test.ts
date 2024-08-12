@@ -59,7 +59,7 @@ describe(`POST ${BASE_URL}`, () => {
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
-    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.deleteAll();
 
     await wipe(['users', 'tfm-users', 'tfm-facilities']);
 
@@ -71,7 +71,7 @@ describe(`POST ${BASE_URL}`, () => {
   });
 
   afterEach(async () => {
-    await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.deleteAll();
     await wipe(['tfm-facilities']);
   });
 
