@@ -19,7 +19,7 @@ const facilityGuaranteeAmend = (amendment) => {
       record.guaranteedLimit = amount;
     }
 
-    if (facilityGuaranteeDates) {
+    if (facilityGuaranteeDates.guaranteeExpiryDate) {
       record.expirationDate = facilityGuaranteeDates.guaranteeExpiryDate;
     }
 

@@ -45,7 +45,6 @@ const handler = async (payload) => {
     const submittedToACBS = getNowAsIsoString();
     const { status, data } = await api.updateFacilityGuarantee(facilityIdentifier, acbsFacilityGuaranteeInput);
 
-    // Throw error upon an unsuccessful response
     if (isHttpErrorStatus(status)) {
       throw new Error(
         JSON.stringify(

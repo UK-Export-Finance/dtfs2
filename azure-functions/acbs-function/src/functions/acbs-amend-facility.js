@@ -142,7 +142,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
 
     yield context.df.Task.all([facilityCovenantRecord]);
 
-    // 4. SOF: Facility Guarantee Record (FCR)
+    // 4. SOF: Facility Guarantee Record (FGR)
     const facilityGuaranteeRecord = context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
       facilityId,
       amendments,
