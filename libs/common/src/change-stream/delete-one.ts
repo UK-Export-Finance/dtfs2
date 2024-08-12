@@ -19,28 +19,35 @@ type DeleteOneParams = {
  * @throws {DocumentNotDeletedError} - if the deletion operation is acknowledged but nothing is deleted
  */
 const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, auditDetails }: DeleteOneParams): Promise<DeleteResult> => {
-  const deletionCollection = await db.getCollection('deletion-audit-logs');
-  const insertResult = await deletionCollection.insertOne({
-    collectionName,
-    deletedDocumentId: documentId,
-    auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-    expireAt: add(new Date(), { seconds: DELETION_AUDIT_LOGS_TTL_SECONDS }),
-  });
-  if (!insertResult.acknowledged) {
-    throw new WriteConcernError();
-  }
+  try {
+    const deletionCollection = await db.getCollection('deletion-audit-logs');
+    const insertResult = await deletionCollection.insertOne({
+      collectionName,
+      deletedDocumentId: documentId,
+      auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+      expireAt: add(new Date(), { seconds: DELETION_AUDIT_LOGS_TTL_SECONDS }),
+    });
+    if (!insertResult.acknowledged) {
+      throw new WriteConcernError();
+    }
 
-  const collection = await db.getCollection(collectionName);
-  const deleteResult = await collection.deleteOne({ _id: { $eq: documentId } });
-  if (!deleteResult.acknowledged) {
-    throw new WriteConcernError();
-  }
+    const collection = await db.getCollection(collectionName);
+    const deleteResult = await collection.deleteOne({ _id: { $eq: documentId } });
+    if (!deleteResult.acknowledged) {
+      throw new WriteConcernError();
+    }
 
-  if (deleteResult.deletedCount === 0) {
-    throw new DocumentNotDeletedError();
-  }
+    if (deleteResult.deletedCount === 0) {
+      throw new DocumentNotDeletedError();
+    }
 
-  return deleteResult;
+    return deleteResult;
+  } catch (error) {
+    console.error(
+      `Failed to delete document ${documentId.toString()} from collection ${collectionName}. An inconsistent deletion audit record may have been created`,
+    );
+    throw error;
+  }
 };
 
 /**
