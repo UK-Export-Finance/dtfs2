@@ -12,10 +12,14 @@ const getNextPage = (status, changeFacilityValue, baseUrl, fallbackUrl) => {
 };
 
 const getLatestSubmittedBankReviewDate = async (facility, facilityId, userToken) => {
-  const { data: latestAmendmentBankReviewDateResponse } = await api.getLatestCompletedAmendmentBankReviewDate(facilityId, userToken);
+  const { data: latestFacilityEndDateResponse } = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId, userToken);
 
-  if (latestAmendmentBankReviewDateResponse?.bankReviewDate) {
-    return format(parseISO(latestAmendmentBankReviewDateResponse.bankReviewDate), 'dd MMMM yyyy');
+  if (latestFacilityEndDateResponse?.bankReviewDate) {
+    return format(parseISO(latestFacilityEndDateResponse.bankReviewDate), 'dd MMMM yyyy');
+  }
+
+  if (latestFacilityEndDateResponse?.facilityEndDate) {
+    return undefined;
   }
 
   if (facility?.facilitySnapshot?.dates?.bankReviewDate) {

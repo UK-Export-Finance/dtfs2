@@ -227,7 +227,7 @@ describe('amendmentFacilityEndDate routes', () => {
         });
         api.getLatestCompletedAmendmentFacilityEndDate = jest
           .fn()
-          .mockResolvedValueOnce({ status: 200, data: { facilityEndDate: new Date(2028, 1, 1).toISOString() } });
+          .mockResolvedValueOnce({ status: 200, data: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2028, 1, 1).toISOString() } });
         api.getFacility = jest
           .fn()
           .mockResolvedValueOnce({ facilitySnapshot: { dates: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2025, 11, 11).toISOString() } } });
@@ -254,6 +254,57 @@ describe('amendmentFacilityEndDate routes', () => {
           facilityEndDateMonth: '',
           facilityEndDateYear: '',
           currentFacilityEndDate: '01 February 2028',
+          error: {
+            summary: [
+              {
+                text: 'Enter the facility end date',
+              },
+            ],
+            fields: ['facility-end-date-day', 'facility-end-date-month', 'facility-end-date-year'],
+          },
+
+          isEditable: true,
+          user,
+        });
+      });
+
+      it('should render the template with the current facility end date as not provided if facility end date was originally submitted as part of the facility snapshot but a bank review date has been added since', async () => {
+        api.getAmendmentById.mockResolvedValueOnce({
+          status: 200,
+          data: {
+            ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE,
+          },
+        });
+        api.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValueOnce({
+          status: 200,
+          data: { facilityEndDate: null, isUsingFacilityEndDate: false, bankReviewDate: new Date(2028, 1, 1).toISOString() },
+        });
+        api.getFacility = jest
+          .fn()
+          .mockResolvedValueOnce({ facilitySnapshot: { dates: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2025, 11, 11).toISOString() } } });
+
+        const req = {
+          params: {
+            _id: dealId,
+            amendmentId,
+            facilityId,
+          },
+          session,
+          body: {
+            'facility-end-date-day': '',
+            'facility-end-date-month': '',
+            'facility-end-date-year': '',
+          },
+        };
+        await postAmendmentFacilityEndDate(req, res);
+
+        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
+          dealId,
+          facilityId,
+          facilityEndDateDay: '',
+          facilityEndDateMonth: '',
+          facilityEndDateYear: '',
+          currentFacilityEndDate: undefined,
           error: {
             summary: [
               {

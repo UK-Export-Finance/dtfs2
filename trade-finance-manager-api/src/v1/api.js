@@ -488,33 +488,10 @@ const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to get the latest completed facilityEndDate amendment %o', error);
+    console.error('Unable to get the latest completed facility end date amendment %o', error);
     return {
       status: error?.response?.status || 500,
-      data: 'Failed to get the latest completed facilityEndDate amendment',
-    };
-  }
-};
-
-const getLatestCompletedAmendmentBankReviewDate = async (facilityId) => {
-  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
-  if (!isValid) {
-    console.error('Invalid facility Id %s', facilityId);
-    return { status: 400, data: 'Invalid facility Id provided' };
-  }
-  try {
-    const response = await axios({
-      method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-bank-review-date`,
-      headers: headers.central,
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('Unable to get the latest completed bankReviewDate amendment %o', error);
-    return {
-      status: error?.response?.status || 500,
-      data: 'Failed to get the latest completed bankReviewDate amendment',
+      data: 'Failed to get the latest completed facility end date amendment',
     };
   }
 };
@@ -1554,7 +1531,6 @@ module.exports = {
   getLatestCompletedAmendmentValue,
   getLatestCompletedAmendmentDate,
   getLatestCompletedAmendmentFacilityEndDate,
-  getLatestCompletedAmendmentBankReviewDate,
   getAmendmentById,
   getAmendmentByFacilityId,
   getAmendmentsByDealId,

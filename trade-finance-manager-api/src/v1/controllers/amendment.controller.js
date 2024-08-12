@@ -89,17 +89,14 @@ const createAmendmentTFMObject = async (amendmentId, facilityId, auditDetails) =
     const latestCoverEndDateResponse = await api.getLatestCompletedAmendmentDate(facilityId);
 
     let latestFacilityEndDateResponse;
-    let latestBankReviewDateResponse;
-
     if (isTfmFacilityEndDateFeatureFlagEnabled()) {
       latestFacilityEndDateResponse = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId);
-      latestBankReviewDateResponse = await api.getLatestCompletedAmendmentBankReviewDate(facilityId);
     }
 
     let tfmToAdd = {};
     // populates array with latest value/exposure and date/tenor values
     tfmToAdd = await addLatestAmendmentValue(tfmToAdd, latestValueResponse, facilityId);
-    tfmToAdd = await addLatestAmendmentDates(tfmToAdd, latestCoverEndDateResponse, latestFacilityEndDateResponse, latestBankReviewDateResponse, facilityId);
+    tfmToAdd = await addLatestAmendmentDates(tfmToAdd, latestCoverEndDateResponse, latestFacilityEndDateResponse, facilityId);
 
     const payload = {
       tfm: tfmToAdd,
@@ -136,8 +133,6 @@ const getAmendmentByFacilityId = async (req, res) => {
         amendment = await api.getLatestCompletedAmendmentValue(facilityId);
       } else if (type === AMENDMENT_QUERIES.LATEST_FACILITY_END_DATE) {
         amendment = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId);
-      } else if (type === AMENDMENT_QUERIES.LATEST_BANK_REVIEW_DATE) {
-        amendment = await api.getLatestCompletedAmendmentBankReviewDate(facilityId);
       } else {
         amendment = await api.getCompletedAmendment(facilityId);
       }

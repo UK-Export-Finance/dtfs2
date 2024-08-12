@@ -18,6 +18,10 @@ const getLatestSubmittedFacilityEndDate = async (facility, facilityId, userToken
     return format(parseISO(latestAmendmentFacilityEndDateResponse.facilityEndDate), 'dd MMMM yyyy');
   }
 
+  if (latestAmendmentFacilityEndDateResponse?.bankReviewDate) {
+    return undefined;
+  }
+
   if (facility?.facilitySnapshot?.dates?.facilityEndDate) {
     return format(parseISO(facility.facilitySnapshot.dates.facilityEndDate), 'dd MMMM yyyy');
   }

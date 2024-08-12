@@ -41,10 +41,14 @@ describe('update amendment-tfm on amendment completion', () => {
   };
 
   const facilityEndDateChange = {
+    isUsingFacilityEndDate: true,
     facilityEndDate: facilityEndDateIsoString,
+    bankReviewDate: null,
   };
 
   const bankReviewDateChange = {
+    isUsingFacilityEndDate: false,
+    facilityEndDate: null,
     bankReviewDate: bankReviewDateIsoString,
   };
 
@@ -57,8 +61,6 @@ describe('update amendment-tfm on amendment completion', () => {
     externalApis.getAmendmentById = jest.fn().mockResolvedValue(mockAmendment);
     externalApis.getLatestCompletedAmendmentValue = jest.fn().mockResolvedValue(valueChange);
     externalApis.getLatestCompletedAmendmentDate = jest.fn().mockResolvedValue(dateChange);
-    externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue(facilityEndDateChange);
-    externalApis.getLatestCompletedAmendmentBankReviewDate = jest.fn().mockResolvedValue(bankReviewDateChange);
 
     externalApis.updateFacilityAmendment = jest.fn().mockResolvedValue(mockAmendment);
     externalApis.findOneDeal = jest.fn().mockResolvedValue(MOCK_GEF_AIN_DEAL);
@@ -145,27 +147,28 @@ describe('update amendment-tfm on amendment completion', () => {
         jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
       });
 
-      it('should not create tfm object when no getLatestCompletedAmendmentValue, getLatestCompletedAmendmentDate, getLatestFacilityEndDate or getLatestBankReviewDate', async () => {
+      it('should not create tfm object when no getLatestCompletedAmendmentValue, getLatestCompletedAmendmentDate or getLatestFacilityEndDate', async () => {
         externalApis.getLatestCompletedAmendmentValue = jest.fn().mockResolvedValue({});
         externalApis.getLatestCompletedAmendmentDate = jest.fn().mockResolvedValue({});
         externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue({});
-        externalApis.getLatestCompletedAmendmentBankReviewDate = jest.fn().mockResolvedValue({});
 
         const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
 
         expect(result).toEqual({});
       });
 
-      it('should create tfm object when getLatestCompletedAmendmentValue, getLatestCompletedAmendmentDate and getLatestFacilityEndDate', async () => {
+      it('should create tfm object when getLatestCompletedAmendmentValue, getLatestCompletedAmendmentDate and getLatestFacilityEndDate with a facility end date change', async () => {
         externalApis.getFacilityExposurePeriod = jest.fn().mockResolvedValue({ exposurePeriodInMonths: 5 });
-        externalApis.getLatestCompletedAmendmentBankReviewDate = jest.fn().mockResolvedValue({});
+        externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue(facilityEndDateChange);
 
         const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
 
         const expected = {
           amendmentExposurePeriodInMonths: 5,
           coverEndDate: unixTime,
+          isUsingFacilityEndDate: true,
           facilityEndDate: facilityEndDateIsoString,
+          bankReviewDate: null,
           exposure: {
             exposure: '4,000.00',
             timestamp: expect.any(Number),
@@ -180,15 +183,17 @@ describe('update amendment-tfm on amendment completion', () => {
         expect(result).toEqual(expected);
       });
 
-      it('should create tfm object when getLatestCompletedAmendmentValue, getLatestCompletedAmendmentDate and getLatestBankReviewDate', async () => {
+      it('should create tfm object when getLatestCompletedAmendmentValue, getLatestCompletedAmendmentDate and getLatestFacilityEndDate with a bank review date change', async () => {
         externalApis.getFacilityExposurePeriod = jest.fn().mockResolvedValue({ exposurePeriodInMonths: 5 });
-        externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue({});
+        externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue(bankReviewDateChange);
 
         const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
 
         const expected = {
           amendmentExposurePeriodInMonths: 5,
           coverEndDate: unixTime,
+          isUsingFacilityEndDate: false,
+          facilityEndDate: null,
           bankReviewDate: bankReviewDateIsoString,
           exposure: {
             exposure: '4,000.00',
@@ -207,7 +212,6 @@ describe('update amendment-tfm on amendment completion', () => {
       it('should create tfm object when getLatestCompletedAmendmentValue only', async () => {
         externalApis.getLatestCompletedAmendmentDate = jest.fn().mockResolvedValue({});
         externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue({});
-        externalApis.getLatestCompletedAmendmentBankReviewDate = jest.fn().mockResolvedValue({});
 
         const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
 
@@ -230,7 +234,6 @@ describe('update amendment-tfm on amendment completion', () => {
         externalApis.getFacilityExposurePeriod = jest.fn().mockResolvedValue({ exposurePeriodInMonths: 5 });
         externalApis.getLatestCompletedAmendmentValue = jest.fn().mockResolvedValue({});
         externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue({});
-        externalApis.getLatestCompletedAmendmentBankReviewDate = jest.fn().mockResolvedValue({});
 
         const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
 
@@ -242,31 +245,35 @@ describe('update amendment-tfm on amendment completion', () => {
         expect(result).toEqual(expected);
       });
 
-      it('should create tfm object when only getLatestCompletedAmendmentFacilityEndDate', async () => {
+      it('should create tfm object when only getLatestCompletedAmendmentFacilityEndDate with a facility end date change', async () => {
         externalApis.getFacilityExposurePeriod = jest.fn().mockResolvedValue({ exposurePeriodInMonths: 5 });
         externalApis.getLatestCompletedAmendmentValue = jest.fn().mockResolvedValue({});
         externalApis.getLatestCompletedAmendmentDate = jest.fn().mockResolvedValue({});
-        externalApis.getLatestCompletedAmendmentBankReviewDate = jest.fn().mockResolvedValue({});
+        externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue(facilityEndDateChange);
 
         const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
 
         const expected = {
           facilityEndDate: facilityEndDateIsoString,
+          isUsingFacilityEndDate: true,
+          bankReviewDate: null,
         };
 
         expect(result).toEqual(expected);
       });
 
-      it('should create tfm object when only getLatestCompletedAmendmentBankReviewDate', async () => {
+      it('should create tfm object when only getLatestCompletedAmendmentFacilityEndDate with a bank review date change', async () => {
         externalApis.getFacilityExposurePeriod = jest.fn().mockResolvedValue({ exposurePeriodInMonths: 5 });
         externalApis.getLatestCompletedAmendmentValue = jest.fn().mockResolvedValue({});
         externalApis.getLatestCompletedAmendmentDate = jest.fn().mockResolvedValue({});
-        externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue({});
+        externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue(bankReviewDateChange);
 
         const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
 
         const expected = {
           bankReviewDate: bankReviewDateIsoString,
+          isUsingFacilityEndDate: false,
+          facilityEndDate: null,
         };
 
         expect(result).toEqual(expected);
@@ -275,30 +282,16 @@ describe('update amendment-tfm on amendment completion', () => {
       it('should create tfm object when getLatestCompletedAmendmentFacilityEndDate and getLatestCompletedAmendmentDate', async () => {
         externalApis.getFacilityExposurePeriod = jest.fn().mockResolvedValue({ exposurePeriodInMonths: 5 });
         externalApis.getLatestCompletedAmendmentValue = jest.fn().mockResolvedValue({});
-        externalApis.getLatestCompletedAmendmentBankReviewDate = jest.fn().mockResolvedValue({});
+        externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue(facilityEndDateChange);
 
         const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
 
         const expected = {
           amendmentExposurePeriodInMonths: 5,
           coverEndDate: unixTime,
+          isUsingFacilityEndDate: true,
           facilityEndDate: facilityEndDateIsoString,
-        };
-
-        expect(result).toEqual(expected);
-      });
-
-      it('should create tfm object when getLatestCompletedAmendmentBankReviewDate and getLatestCompletedAmendmentDate', async () => {
-        externalApis.getFacilityExposurePeriod = jest.fn().mockResolvedValue({ exposurePeriodInMonths: 5 });
-        externalApis.getLatestCompletedAmendmentValue = jest.fn().mockResolvedValue({});
-        externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue({});
-
-        const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
-
-        const expected = {
-          amendmentExposurePeriodInMonths: 5,
-          coverEndDate: unixTime,
-          bankReviewDate: bankReviewDateIsoString,
+          bankReviewDate: null,
         };
 
         expect(result).toEqual(expected);

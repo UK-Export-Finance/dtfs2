@@ -4,13 +4,9 @@ type ErrorResponse = {
 };
 
 type FacilityEndDateResponse = {
-  facilityEndDate: string;
-};
-
-type BankReviewDateResponse = {
-  facilityEndDate: string;
+  facilityEndDate?: string;
+  bankReviewDate?: string;
+  isUsingFacilityEndDate?: boolean;
 };
 
 export type GetLatestCompletedAmendmentFacilityEndDateResponse = ErrorResponse | FacilityEndDateResponse;
-
-export type GetLatestCompletedAmendmentBankReviewDateResponse = ErrorResponse | BankReviewDateResponse;

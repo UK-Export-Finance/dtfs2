@@ -52,31 +52,26 @@ const mapAmendmentToLatestCompletedFacilityEndDate = (
   amendment: TfmFacilityAmendment,
 ): {
   amendmentId: string;
-  facilityEndDate: string;
+  isUsingFacilityEndDate: boolean | undefined;
+  facilityEndDate: string | undefined;
+  bankReviewDate: string | undefined;
 } => {
-  const { amendmentId, facilityEndDate } = amendment;
-  if (!facilityEndDate) {
-    throw new Error('Found amendment does not have a defined facilityEndDate');
+  const { amendmentId, isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = amendment;
+  if (isUsingFacilityEndDate) {
+    if (!facilityEndDate) {
+      throw new Error('Found amendment does not have a defined facility end date');
+    }
+  }
+  if (isUsingFacilityEndDate === false) {
+    if (!bankReviewDate) {
+      throw new Error('Found amendment does not have a defined bank review date');
+    }
   }
   return {
     amendmentId: amendmentId.toString(),
-    facilityEndDate,
-  };
-};
-
-const mapAmendmentToLatestCompletedBankReviewDate = (
-  amendment: TfmFacilityAmendment,
-): {
-  amendmentId: string;
-  bankReviewDate: string;
-} => {
-  const { amendmentId, bankReviewDate } = amendment;
-  if (!bankReviewDate) {
-    throw new Error('Found amendment does not have a defined bankReviewDate');
-  }
-  return {
-    amendmentId: amendmentId.toString(),
-    bankReviewDate,
+    isUsingFacilityEndDate,
+    facilityEndDate: isUsingFacilityEndDate ? facilityEndDate : undefined,
+    bankReviewDate: isUsingFacilityEndDate === false ? bankReviewDate : undefined,
   };
 };
 
@@ -100,9 +95,6 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
         } else if (type === AMENDMENT_QUERIES.LATEST_FACILITY_END_DATE) {
           const latestAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
           amendment = latestAmendment ? mapAmendmentToLatestCompletedFacilityEndDate(latestAmendment) : {};
-        } else if (type === AMENDMENT_QUERIES.LATEST_BANK_REVIEW_DATE) {
-          const latestAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
-          amendment = latestAmendment ? mapAmendmentToLatestCompletedBankReviewDate(latestAmendment) : {};
         } else {
           amendment = await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndStatus(facilityId, AMENDMENT_STATUS.COMPLETED);
         }
