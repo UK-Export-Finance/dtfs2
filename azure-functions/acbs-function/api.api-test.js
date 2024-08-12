@@ -34,7 +34,7 @@ describe('updateFacilityCovenant', () => {
   });
 });
 
-describe('updateFacilityGuarantee', () => {
+describe.only('updateFacilityGuarantee', () => {
   withStandardHappyAndUnhappyPathTests({
     method: updateFacilityGuarantee,
     happyPathArgsAsArray: ['1', { amount: '100,000', facilityGuaranteeDates: '2022-10-10' }],

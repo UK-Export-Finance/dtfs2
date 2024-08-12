@@ -38,9 +38,10 @@ df.app.orchestration('acbs-amend-facility-guarantee-record', function* amendFAci
     const { facilityId, amendments } = payload;
     const { amendment } = amendments;
 
-    // 2.1. Facility Covenant Amend mapping
+    // 2.1. Facility Guarantee Amend mapping
     const facilityGuaranteeAmendMapped = mappings.facility.facilityGuaranteeAmend(amendment);
 
+    // 2.2. Facility Guarantee Record update
     const facilityGuaranteeRecord = yield context.df.callActivityWithRetry('update-facility-guarantee', retryOptions, {
       facilityId,
       acbsFacilityGuaranteeInput: facilityGuaranteeAmendMapped,
