@@ -8,10 +8,7 @@ type OtherFeeRecordAddedToPaymentGroupEventPayload = {
   requestSource: DbRequestSource;
 };
 
-export type FeeRecordOtherFeeRecordAddedToGroupEvent = BaseFeeRecordEvent<
-  'OTHER_FEE_RECORD_ADDED_TO_PAYMENT_GROUP',
-  OtherFeeRecordAddedToPaymentGroupEventPayload
->;
+export type FeeRecordOtherFeeRecordAddedToGroupEvent = BaseFeeRecordEvent<'OTHER_FEE_ADDED_TO_PAYMENT_GROUP', OtherFeeRecordAddedToPaymentGroupEventPayload>;
 
 export const handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent = async (
   feeRecord: FeeRecordEntity,

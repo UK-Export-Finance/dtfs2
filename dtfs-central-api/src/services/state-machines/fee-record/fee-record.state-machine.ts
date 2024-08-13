@@ -77,7 +77,7 @@ export class FeeRecordStateMachine {
             return handleFeeRecordRemoveFromPaymentGroupEvent(this.feeRecord, event.payload);
           case 'OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP':
             return handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent(this.feeRecord, event.payload);
-          case 'OTHER_FEE_RECORD_ADDED_TO_PAYMENT_GROUP':
+          case 'OTHER_FEE_ADDED_TO_PAYMENT_GROUP':
             return handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent(this.feeRecord, event.payload);
           default:
             return this.handleInvalidTransition(event);

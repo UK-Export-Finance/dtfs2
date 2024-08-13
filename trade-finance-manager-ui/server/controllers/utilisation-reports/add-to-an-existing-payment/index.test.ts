@@ -11,7 +11,6 @@ jest.mock('../../../api');
 
 console.error = jest.fn();
 
-// TODO FN-1749: Modify these tests to include the 'selectedFeeRecordCheckboxIds' attribute living on the view model.
 describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
   const userToken = 'user-token';
   const requestSession = {

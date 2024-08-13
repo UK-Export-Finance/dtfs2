@@ -59,7 +59,7 @@ const updateOtherFeeRecordsInPaymentGroup = async (
   await Promise.all(
     feeRecordStateMachines.map((stateMachine) =>
       stateMachine.handleEvent({
-        type: 'OTHER_FEE_RECORD_ADDED_TO_PAYMENT_GROUP',
+        type: 'OTHER_FEE_ADDED_TO_PAYMENT_GROUP',
         payload: {
           transactionEntityManager,
           feeRecordsAndPaymentsMatch,

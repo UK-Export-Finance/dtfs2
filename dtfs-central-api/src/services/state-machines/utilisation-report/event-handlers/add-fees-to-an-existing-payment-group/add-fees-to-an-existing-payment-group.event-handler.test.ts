@@ -169,7 +169,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
       expectedOtherFeeRecordsInPaymentGroup.forEach(({ id }) => {
         const eventHandler = eventHandlers[id];
         expect(eventHandler).toHaveBeenCalledWith({
-          type: 'OTHER_FEE_RECORD_ADDED_TO_PAYMENT_GROUP',
+          type: 'OTHER_FEE_ADDED_TO_PAYMENT_GROUP',
           payload: {
             transactionEntityManager: mockEntityManager,
             feeRecordsAndPaymentsMatch,
