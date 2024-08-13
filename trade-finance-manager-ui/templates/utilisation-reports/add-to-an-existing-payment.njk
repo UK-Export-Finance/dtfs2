@@ -53,7 +53,12 @@
     }) }}
 
     <div class="govuk-button-group">
-      {{ govukButton({"text": "Continue"}) }}
+      {{ govukButton({
+        "text": "Continue",
+        attributes: {
+          "data-cy": "continue-button"
+        }
+      }) }}
       {# TODO FN-3293: Add 'Cancel' link and associated redirect logic to include selected fee record IDs. #}
     </div>
   </form>

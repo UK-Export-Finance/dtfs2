@@ -83,4 +83,14 @@ describe(page, () => {
     wrapper.expectElement('[data-cy="payment-group--paymentIds-1,2"]').toExist();
     wrapper.expectElement('[data-cy="payment-group--paymentIds-3"]').toExist();
   });
+
+  it('should render the continue button', () => {
+    // Arrange
+    const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
+    const wrapper = render(addToAnExistingPaymentViewModel);
+
+    // Assert
+    wrapper.expectElement('[data-cy="continue-button"]').toExist();
+    wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
+  });
 });
