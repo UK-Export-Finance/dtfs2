@@ -13,6 +13,7 @@ import {
   handleFeeRecordMarkAsReadyToKeyEvent,
   handleFeeRecordRemoveFromPaymentGroupEvent,
   handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent,
+  handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent,
 } from './event-handlers';
 import { aReportPeriod } from '../../../../test-helpers/test-data';
 
@@ -281,12 +282,31 @@ describe('FeeRecordStateMachine', () => {
       expect(handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
     });
 
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.OTHER_FEE_RECORD_ADDED_TO_PAYMENT_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'OTHER_FEE_RECORD_ADDED_TO_PAYMENT_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
     const VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [
       'PAYMENT_ADDED',
       'PAYMENT_DELETED',
       'PAYMENT_EDITED',
       'REMOVE_FROM_PAYMENT_GROUP',
       'OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP',
+      'OTHER_FEE_RECORD_ADDED_TO_PAYMENT_GROUP',
     ];
 
     const INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES);

@@ -2,11 +2,15 @@ import { ApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
-import { InvalidPayloadError } from '../../../../errors';
+import { InvalidPayloadError, NotFoundError } from '../../../../errors';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
-import { addFeesToAnExistingPaymentGroup, ensureAllPaymentsHaveSameFeeRecords, ensurePaymentIdsMatchFirstFeeRecordPaymentIds } from './helpers';
+import { addFeesToAnExistingPaymentGroup } from './helpers';
 import { PostFeesToAnExistingPaymentGroupPayload } from '../../../routes/middleware/payload-validation';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
+import {
+  validatePaymentGroupPaymentsAllHaveSameFeeRecords,
+  validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds,
+} from '../../../validation/utilisation-report-service/payment-group-validator';
 
 export type PostFeesToAnExistingPaymentGroupRequest = CustomExpressRequest<{
   params: {
@@ -27,11 +31,11 @@ export const postFeesToAnExistingPaymentGroup = async (req: PostFeesToAnExisting
   try {
     const payments = await PaymentRepo.findByIdWithFeeRecordsAndReportAndPaymentsFilteredById(paymentIds, Number(reportId));
     if (payments.length === 0) {
-      throw new InvalidPayloadError('No payments found for the given payment IDs.');
+      throw new NotFoundError('No payments found for the given payment IDs.');
     }
 
-    ensureAllPaymentsHaveSameFeeRecords(payments);
-    ensurePaymentIdsMatchFirstFeeRecordPaymentIds(payments, paymentIds);
+    validatePaymentGroupPaymentsAllHaveSameFeeRecords(payments);
+    validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(payments, paymentIds);
 
     const existingFeeRecordsInPaymentGroup = payments.at(0)?.feeRecords;
     if (!existingFeeRecordsInPaymentGroup || existingFeeRecordsInPaymentGroup.length === 0) {
