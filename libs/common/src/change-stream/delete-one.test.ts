@@ -65,17 +65,18 @@ describe('deleteOne', () => {
           auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
           expireAt: expect.any(Date) as Date,
         });
+      });
 
-        it('deletes the requested document', async () => {
-          await deleteOne({
-            db: mockDb,
-            documentId,
-            collectionName: 'users',
-            auditDetails: generateNoUserLoggedInAuditDetails(),
-          });
-
-          expect(mockUsersCollection.deleteOne).toHaveBeenCalledWith({ _id: { $eq: documentId } });
+      it('deletes the requested document', async () => {
+        await deleteOne({
+          db: mockDb,
+          documentId,
+          collectionName: 'users',
+          auditDetails: generateNoUserLoggedInAuditDetails(),
         });
+
+        expect(mockUsersCollection.deleteOne).toHaveBeenCalledWith({ _id: { $eq: documentId } });
+        expect(mockUsersCollection.deleteOne).toHaveBeenCalledTimes(1);
       });
     });
   });
