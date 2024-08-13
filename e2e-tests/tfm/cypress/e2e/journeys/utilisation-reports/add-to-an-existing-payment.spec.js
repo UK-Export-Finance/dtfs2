@@ -12,22 +12,25 @@ import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import relative from '../../relativeURL';
 
 context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing payments`, () => {
+  const PAYMENT_ID_ONE = '1';
+  const FEE_RECORD_ID_ONE = '11';
+  const FEE_RECORD_ID_TWO = '22';
+  const PAYMENT_CURRENCY = 'GBP';
+
   beforeEach(() => {
     const BANK_ID = '961';
     const REPORT_ID = 1;
-    const FEE_RECORD_ID_ONE = '11';
-    const FEE_RECORD_ID_TWO = '22';
-    const PAYMENT_CURRENCY = 'GBP';
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
 
-    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+    const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
       .withId(REPORT_ID)
       .withBankId(BANK_ID)
       .build();
     const payment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
-      .withAmount(60)
+      .withAmount(450)
       .withDateReceived(new Date('2023-02-02'))
+      .withId(PAYMENT_ID_ONE)
       .withReference('REF01234')
       .build();
     const feeRecordOne = FeeRecordEntityMockBuilder.forReport(undefined)
@@ -68,7 +71,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
   });
 
   it('should render the add to an existing payment page', () => {
-    cy.get('h1').invoke('text').should('contain', 'Add to an existing payment');
+    cy.get('h1').invoke('text').should('contain', 'Add reported fee to an existing payment');
   });
 
   it('should render the selected fee record details', () => {
@@ -85,7 +88,14 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     pages.utilisationReportAddToAnExistingPaymentPage
       .availablePaymentGroups()
       .should('contain', 'There is one existing payment that the reported fees will be added to');
-    pages.utilisationReportAddToAnExistingPaymentPage.availablePaymentGroups().should('contain', 'GBP 60.00');
+    pages.utilisationReportAddToAnExistingPaymentPage.availablePaymentGroups().should('contain', 'GBP 450.00');
     pages.utilisationReportAddToAnExistingPaymentPage.availablePaymentGroups().should('contain', 'Payment reference: REF01234');
+  });
+
+  it('should add the selected fees to the payments and update the fee record status after clicking the continue button', () => {
+    pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
+
+    pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
+    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
   });
 });
