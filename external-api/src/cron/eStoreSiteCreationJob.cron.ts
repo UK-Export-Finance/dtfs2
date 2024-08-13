@@ -9,9 +9,31 @@ import { siteExists } from '../v1/controllers/estore/eStoreApi';
 import { getNowAsEpoch } from '../helpers/date';
 
 /**
- * Creates a new eStore site based on the provided eStoreData.
- * @param {Estore} eStoreData - An object containing the necessary data for creating the eStore site.
- * @returns {Promise<void>} - None
+ * Executes the eStore site creation cron job.
+ *
+ * This job performs the following tasks:
+ * 1. Initiates the CRON job for site creation.
+ * 2. Checks if the site already exists for the provided exporter name.
+ * 3. If the site has been created, updates the cron job logs and TFM deals collections, and stops the CRON job.
+ * 4. If the site is in provisioning status, it will handle accordingly (not shown in the excerpt).
+ * 5. Adds facility IDs to the term store and creates the buyer folder if the site creation is successful.
+ *
+ * @param {Estore} eStoreData - The eStore data containing information about the deal, exporter, and other relevant details.
+ *
+ * @returns {Promise<void>} - A promise that resolves when the cron job is complete.
+ *
+ * @throws {Error} - Throws an error if there is an issue with database operations or API calls.
+ *
+ * @example
+ * const eStoreData = {
+ *   dealIdentifier: '12345',
+ *   exporterName: 'Exporter Inc.',
+ *   dealId: '507f1f77bcf86cd799439011'
+ * };
+ *
+ * eStoreSiteCreationCron(eStoreData)
+ *   .then(() => console.log('Cron job completed successfully'))
+ *   .catch((error) => console.error('Cron job failed', error));
  */
 export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> => {
   const cronJobLogs = await getCollection('cron-job-logs');
@@ -79,6 +101,10 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     );
   } else {
     // Step 3: Site creation has failed
+
+    // Stop CRON job
+    cron(eStoreData, ENDPOINT.SITE, true);
+
     console.error(
       '❌ CRON: eStore site existence %s check has failed for deal %s %o %s',
       siteExistsResponse.data.siteId,

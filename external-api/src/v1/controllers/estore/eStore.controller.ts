@@ -10,7 +10,41 @@ import { eStoreTermStoreCreationJob, eStoreSiteCreationCron } from '../../../cro
 import { createExporterSite, siteExists } from './eStoreApi';
 import { getNowAsEpoch } from '../../../helpers/date';
 
-export const create = async (req: EstoreRequest, res: Response) => {
+/**
+ * Handles the creation of an eStore site.
+ *
+ * This function performs the following tasks:
+ * 1. Validates the request body to ensure it is not empty.
+ * 2. Retrieves the necessary collections from the database.
+ * 3. Extracts and structures the eStore data from the request body.
+ * 4. Validates the eStore payload to ensure all required fields are present and correctly formatted.
+ * 5. Invokes various APIM eStore endpoints
+ * 6. Returns appropriate HTTP status cod
+ *
+ * @param {EstoreRequest} req - The request object containing the eStore data.
+ * @param {Response} res - The response object used to send the HTTP response.
+ *
+ * @returns {Promise<Response>} - A promise that resolves to the HTTP response.
+ *
+ * @throws {Error} - Throws an error if there is an issue with database operations or if the request body is invalid.
+ *
+ * @example
+ * const req = {
+ *   body: {
+ *     dealId: '507f1f77bcf86cd799439011',
+ *     siteId: '507f1f77bcf86cd799439012',
+ *     facilityIdentifiers: [1, 2, 3],
+ *     supportingInformation: 'Some info',
+ *     exporterName: 'Exporter Inc.',
+ *     buyerName: 'Buyer Inc.',
+ *     dealIdentifier: '12345',
+ *     destinationMarket: 'UK',
+ *     riskMarket: 'High'
+ *   }
+ * };
+ *
+ */
+export const create = async (req: EstoreRequest, res: Response): Promise<Response> => {
   try {
     const { body } = req;
 
