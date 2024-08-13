@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
@@ -7,11 +8,11 @@ const { DTFS_CENTRAL_API_URL, EXTERNAL_API_URL, DTFS_CENTRAL_API_KEY, EXTERNAL_A
 
 const headers = {
   central: {
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     'x-api-key': DTFS_CENTRAL_API_KEY,
   },
   external: {
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     'x-api-key': String(EXTERNAL_API_KEY),
   },
 };
@@ -35,7 +36,7 @@ const findOnePortalDeal = async (dealId) => {
   }
 };
 
-const updatePortalDeal = async (dealId, update) => {
+const updatePortalDeal = async (dealId, update, auditDetails) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -50,6 +51,7 @@ const updatePortalDeal = async (dealId, update) => {
       headers: headers.central,
       data: {
         dealUpdate: update,
+        auditDetails,
       },
     });
 
@@ -61,7 +63,7 @@ const updatePortalDeal = async (dealId, update) => {
   }
 };
 
-const updatePortalBssDealStatus = async (dealId, status) => {
+const updatePortalBssDealStatus = async ({ dealId, status, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -76,6 +78,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
       headers: headers.central,
       data: {
         status,
+        auditDetails,
       },
     });
 
@@ -87,7 +90,7 @@ const updatePortalBssDealStatus = async (dealId, status) => {
   }
 };
 
-const addPortalDealComment = async (dealId, commentType, comment) => {
+const addPortalDealComment = async (dealId, commentType, comment, auditDetails) => {
   const isValidDealId = isValidMongoId(dealId);
 
   if (!isValidDealId) {
@@ -103,13 +106,14 @@ const addPortalDealComment = async (dealId, commentType, comment) => {
       dealId,
       commentType,
       comment,
+      auditDetails,
     },
   });
 
   return response.data;
 };
 
-const updatePortalFacilityStatus = async (facilityId, status) => {
+const updatePortalFacilityStatus = async (facilityId, status, auditDetails) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -124,6 +128,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
       headers: headers.central,
       data: {
         status,
+        auditDetails,
       },
     });
 
@@ -135,7 +140,7 @@ const updatePortalFacilityStatus = async (facilityId, status) => {
   }
 };
 
-const updatePortalFacility = async (facilityId, update) => {
+const updatePortalFacility = async (facilityId, update, auditDetails) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -148,7 +153,7 @@ const updatePortalFacility = async (facilityId, update) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
       headers: headers.central,
-      data: update,
+      data: { facilityUpdate: update, auditDetails },
     });
 
     return response.data;
@@ -184,9 +189,9 @@ const findOneDeal = async (dealId) => {
 /**
  * @param {object} params
  * @param {string} params.dealId - deal to update
- * @param {Object} params.dealUpdate - update to make
+ * @param {object} params.dealUpdate - update to make
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
- * @typedef {Object} ErrorParam
+ * @typedef {object} ErrorParam
  * @property {string} message error message
  * @property {number} status HTTP status code
  * @param {(Error: ErrorParam) => any} params.onError
@@ -468,6 +473,29 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
   }
 };
 
+const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
+  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+  if (!isValid) {
+    console.error('Invalid facility Id %s', facilityId);
+    return { status: 400, data: 'Invalid facility Id provided' };
+  }
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-facility-end-date`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get the latest completed facilityEndDate amendment %o', error);
+    return {
+      status: error?.response?.status || 500,
+      data: 'Failed to get the latest completed coverEndDate amendment',
+    };
+  }
+};
+
 const getAmendmentById = async (facilityId, amendmentId) => {
   const isValid = isValidMongoId(facilityId) && isValidMongoId(amendmentId) && hasValidUri(DTFS_CENTRAL_API_URL);
   if (isValid) {
@@ -615,7 +643,7 @@ const getAllAmendmentsInProgress = async () => {
   }
 };
 
-const updateGefFacility = async (facilityId, facilityUpdate) => {
+const updateGefFacility = async ({ facilityId, facilityUpdate, auditDetails }) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
 
@@ -628,7 +656,7 @@ const updateGefFacility = async (facilityId, facilityUpdate) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/facilities/${facilityId}`,
       headers: headers.central,
-      data: facilityUpdate,
+      data: { facilityUpdate, auditDetails },
     });
 
     return response.data;
@@ -673,7 +701,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 /**
  * Get company information from Party URN
  * @param {Integer} partyUrn Party URN
- * @returns {Promise<Object>} Company information
+ * @returns {Promise<object>} Company information
  */
 const getCompanyInfo = async (partyUrn) => {
   try {
@@ -923,9 +951,9 @@ const updateACBSfacility = async (facility, deal) => {
 
 /**
  * ACBS facility amendment
- * @param {String} ukefFacilityId UKEF Facility ID
- * @param {Object} amendments Facility object comprising of amendments
- * @returns {Object} updated FMR upon success otherwise error
+ * @param {string} ukefFacilityId UKEF Facility ID
+ * @param {object} amendments Facility object comprising of amendments
+ * @returns {Promise<object>} updated FMR upon success otherwise error
  */
 const amendACBSfacility = async (amendments, facility, deal) => {
   if (amendments && facility.facilitySnapshot) {
@@ -944,7 +972,7 @@ const amendACBSfacility = async (amendments, facility, deal) => {
       return null;
     });
 
-    if (response.data) {
+    if (response?.data) {
       return response.data;
     }
   }
@@ -970,8 +998,8 @@ const getFunctionsAPI = async (url = '') => {
  * An external API call, responsible for creating
  * eStore site, directories and documents (if applicable).
  * Upon any exception an empty object is returned.
- * @param {Object} data eStore API object
- * @returns {Object} eStore API response object
+ * @param {object} data eStore API object
+ * @returns {Promise<object>} eStore API response object
  */
 const createEstoreSite = async (data) => {
   try {
@@ -1031,7 +1059,7 @@ const findOneGefDeal = async (dealId) => {
   }
 };
 
-const updatePortalGefDealStatus = async (dealId, status) => {
+const updatePortalGefDealStatus = async ({ dealId, status, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -1046,6 +1074,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
       headers: headers.central,
       data: {
         status,
+        auditDetails,
       },
     });
 
@@ -1057,7 +1086,7 @@ const updatePortalGefDealStatus = async (dealId, status) => {
   }
 };
 
-const updatePortalGefDeal = async (dealId, update) => {
+const updatePortalGefDeal = async ({ dealId, dealUpdate, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -1071,7 +1100,8 @@ const updatePortalGefDeal = async (dealId, update) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}`,
       headers: headers.central,
       data: {
-        dealUpdate: update,
+        dealUpdate,
+        auditDetails,
       },
     });
 
@@ -1083,7 +1113,7 @@ const updatePortalGefDeal = async (dealId, update) => {
   }
 };
 
-const updateGefMINActivity = async (dealId) => {
+const updateGefMINActivity = async ({ dealId, auditDetails }) => {
   try {
     const isValidDealId = isValidMongoId(dealId);
 
@@ -1096,6 +1126,9 @@ const updateGefMINActivity = async (dealId) => {
       method: 'put',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/activity/${dealId}`,
       headers: headers.central,
+      data: {
+        auditDetails,
+      },
     });
 
     return response.data;
@@ -1106,7 +1139,7 @@ const updateGefMINActivity = async (dealId) => {
   }
 };
 
-const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
+const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment, auditDetails) => {
   const isValidDealId = isValidMongoId(dealId);
 
   if (!isValidDealId) {
@@ -1118,7 +1151,7 @@ const addUnderwriterCommentToGefDeal = async (dealId, commentType, comment) => {
     method: 'post',
     url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}/comment`,
     headers: headers.central,
-    data: { dealId, commentType, comment },
+    data: { dealId, commentType, comment, auditDetails },
   });
 
   return response.data;
@@ -1234,7 +1267,7 @@ const getUtilisationReportById = async (id) => {
 /**
  * Sends a payload to DTFS central API to update
  * the status of one or more utilisation reports
- * @param {import('../types/utilisation-reports').ReportWithStatus[]} reportsWithStatus
+ * @param {import('@ukef/dtfs2-common').ReportWithStatus[]} reportsWithStatus
  * @param {import('../types/tfm-session-user').TfmSessionUser} user - The current user stored in the session
  * @returns {Promise<{ status: number }>}
  */
@@ -1255,11 +1288,15 @@ const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
 /**
  * Gets the utilisation report reconciliation details by report id
  * @param {string} reportId - The report id
+ * @param { string | undefined } facilityIdQuery - query params object containing a facility ID query
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
-const getUtilisationReportReconciliationDetailsById = async (reportId) => {
+const getUtilisationReportReconciliationDetailsById = async (reportId, facilityIdQuery) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
     headers: headers.central,
+    params: {
+      facilityIdQuery,
+    },
   });
 
   return response.data;
@@ -1267,13 +1304,17 @@ const getUtilisationReportReconciliationDetailsById = async (reportId) => {
 
 /**
  * Gets the utilisation report reconciliation details by report id
- * @param {number} reportId - The report id
+ * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The selected fee record ids
- * @returns {Promise<import('@ukef/dtfs2-common').SelectedFeeRecordsDetails>}
+ * @param {boolean} includeAvailablePaymentGroups - Whether or not to include the available payment groups in the response
+ * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
  */
-const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds) => {
+const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds, includeAvailablePaymentGroups) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
     headers: headers.central,
+    params: {
+      includeAvailablePaymentGroups,
+    },
     data: {
       feeRecordIds,
     },
@@ -1285,7 +1326,7 @@ const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds) => {
 /**
  * Gets the utilisation report summaries by bank id and year
  * @param {string} bankId - The bank id
- * @param { string} year - The year which a report period ends in
+ * @param {string} year - The year which a report period ends in
  * @returns {Promise<import('./api-response-types').UtilisationReportSummariesByBankAndYearResponseBody>}
  */
 const getUtilisationReportSummariesByBankIdAndYear = async (bankId, year) => {
@@ -1295,6 +1336,177 @@ const getUtilisationReportSummariesByBankIdAndYear = async (bankId, year) => {
   });
 
   return response.data;
+};
+
+/**
+ * Adds a new payment to the supplied fee records
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The list of fee record ids to add the payment to
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user adding the payment
+ * @param {import('@ukef/dtfs2-common').Currency} paymentCurrency - The payment currency
+ * @param {number} paymentAmount - The payment amount
+ * @param {import('@ukef/dtfs2-common').IsoDateTimeStamp} datePaymentReceived - The date the payment was received
+ * @param {string | undefined} paymentReference - The payment reference
+ */
+const addPaymentToFeeRecords = async (reportId, feeRecordIds, user, paymentCurrency, paymentAmount, datePaymentReceived, paymentReference) => {
+  const response = await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment`,
+    method: 'post',
+    headers: headers.central,
+    data: {
+      feeRecordIds,
+      user,
+      paymentCurrency,
+      paymentAmount,
+      datePaymentReceived,
+      paymentReference,
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Generates keying data for the utilisation report
+ * with the supplied id
+ * @param {string} reportId - The report id
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The session user
+ * @returns {Promise<void>}
+ */
+const generateKeyingData = async (reportId, user) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/keying-data`,
+    method: 'post',
+    headers: headers.central,
+    data: {
+      user,
+    },
+  });
+};
+
+/**
+ * Updates keying sheet fee records with supplied ids to DONE
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the fee records to mark as DONE
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @returns {Promise<{}>}
+ */
+const markKeyingDataAsDone = async (reportId, feeRecordIds, user) => {
+  await axios({
+    method: 'put',
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/keying-data/mark-as-done`,
+    headers: headers.central,
+    data: {
+      user,
+      feeRecordIds,
+    },
+  });
+};
+
+/**
+ * Updates keying sheet fee records with supplied ids to TO_DO
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the fee records to mark as TO_DO
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @returns {Promise<{}>}
+ */
+const markKeyingDataAsToDo = async (reportId, feeRecordIds, user) => {
+  await axios({
+    method: 'put',
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/keying-data/mark-as-to-do`,
+    headers: headers.central,
+    data: {
+      user,
+      feeRecordIds,
+    },
+  });
+};
+
+/**
+ * Gets the utilisation report with the supplied id and the
+ * fee records to key
+ * @param {string} reportId - The report id
+ * @returns {Promise<import('./api-response-types').FeeRecordsToKeyResponseBody>} The utilisation report with fee records to key
+ */
+const getUtilisationReportWithFeeRecordsToKey = async (reportId) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records-to-key`, {
+    headers: headers.central,
+  });
+  return response.data;
+};
+
+/**
+ * Gets the payment details
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {boolean} includeFeeRecords - Whether or not to include the fee records in the response
+ * @returns {Promise<import('./api-response-types').PaymentDetailsResponseBody>} The payment details
+ */
+const getPaymentDetails = async (reportId, paymentId, includeFeeRecords) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`, {
+    headers: headers.central,
+    params: {
+      includeFeeRecords,
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Deletes the payment with the specified id
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The session user
+ * @returns {Promise<void>}
+ */
+const deletePaymentById = async (reportId, paymentId, user) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
+    method: 'delete',
+    headers: headers.central,
+    data: { user },
+  });
+};
+
+/**
+ * Edits the payment with the supplied payment information
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {number} paymentAmount - The payment amount
+ * @param {import('@ukef/dtfs2-common').IsoDateTimeStamp} datePaymentReceived - The date the payment was received
+ * @param {string | null} paymentReference - The payment reference
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user
+ */
+const editPayment = async (reportId, paymentId, paymentAmount, datePaymentReceived, paymentReference, user) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
+    method: 'patch',
+    headers: headers.central,
+    data: {
+      paymentAmount,
+      datePaymentReceived,
+      paymentReference,
+      user,
+    },
+  });
+};
+
+/**
+ * Removes the supplied fee records from a supplied payment
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {number[]} selectedFeeRecordIds - The list of fee record ids to remove from the payment
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user
+ */
+const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, user) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}/remove-selected-fees`,
+    method: 'post',
+    headers: headers.central,
+    data: {
+      selectedFeeRecordIds,
+      user,
+    },
+  });
 };
 
 module.exports = {
@@ -1318,6 +1530,7 @@ module.exports = {
   getCompletedAmendment,
   getLatestCompletedAmendmentValue,
   getLatestCompletedAmendmentDate,
+  getLatestCompletedAmendmentFacilityEndDate,
   getAmendmentById,
   getAmendmentByFacilityId,
   getAmendmentsByDealId,
@@ -1359,4 +1572,13 @@ module.exports = {
   getUtilisationReportReconciliationDetailsById,
   getSelectedFeeRecordsDetails,
   getUtilisationReportSummariesByBankIdAndYear,
+  addPaymentToFeeRecords,
+  generateKeyingData,
+  markKeyingDataAsDone,
+  markKeyingDataAsToDo,
+  getUtilisationReportWithFeeRecordsToKey,
+  getPaymentDetails,
+  deletePaymentById,
+  editPayment,
+  removeFeesFromPayment,
 };

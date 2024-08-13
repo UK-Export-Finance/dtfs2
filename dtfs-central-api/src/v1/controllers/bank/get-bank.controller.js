@@ -1,5 +1,5 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const db = require('../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../drivers/db-client');
 
 const findOneBank = async (id) => {
   if (typeof id !== 'string') {

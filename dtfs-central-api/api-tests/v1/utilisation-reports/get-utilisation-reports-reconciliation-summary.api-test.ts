@@ -9,85 +9,87 @@ import {
   getSubmissionMonthForReportPeriod,
 } from '@ukef/dtfs2-common';
 import { wipe } from '../../wipeDB';
-import app from '../../../src/createApp';
 import { MOCK_BANKS } from '../../mocks/banks';
-import createApi from '../../api';
+import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../src/types/utilisation-reports';
 import { withoutMongoId } from '../../../src/helpers/mongodb';
-import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
-import mongoDbClient from '../../../src/drivers/db-client';
+import { aPortalUser } from '../../../test-helpers/test-data';
+import { mongoDbClient } from '../../../src/drivers/db-client';
 
-const api = createApi(app);
+console.error = jest.fn();
 
 interface CustomResponse extends Response {
   body: UtilisationReportReconciliationSummary[];
 }
 
-describe('/v1/utilisation-reports/reconciliation-summary/:submissionMonth', () => {
+const BASE_URL = '/v1/utilisation-reports/reconciliation-summary/:submissionMonth';
+
+describe(`GET ${BASE_URL}`, () => {
   beforeAll(async () => {
     await wipe([MONGO_DB_COLLECTIONS.BANKS]);
-    await api.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
+    await testApi.post(withoutMongoId(MOCK_BANKS.BARCLAYS)).to('/v1/bank');
 
     await SqlDbHelper.initialize();
+    await SqlDbHelper.deleteAll();
   });
 
-  describe('GET /v1/utilisation-reports/reconciliation-summary/:submissionMonth', () => {
-    it('returns a 200 response when the submissionMonth is a valid ISO month', async () => {
-      // Arrange
-      const submissionMonth = '2023-11';
+  afterEach(async () => {
+    await SqlDbHelper.deleteAll();
+  });
 
-      // Act
-      const response: CustomResponse = await api.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
+  it('returns a 200 response when the submissionMonth is a valid ISO month', async () => {
+    // Arrange
+    const submissionMonth = '2023-11';
 
-      // Assert
-      expect(response.status).toEqual(200);
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0].submissionMonth).toBe(submissionMonth);
-      expect(response.body[0].items).toHaveLength(0);
-    });
+    // Act
+    const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
-    it('returns a 400 response when the submissionMonth is not a valid ISO month', async () => {
-      // Arrange
-      const submissionMonth = 'invalid';
+    // Assert
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveLength(1);
+    expect(response.body[0].submissionMonth).toBe(submissionMonth);
+    expect(response.body[0].items).toHaveLength(0);
+  });
 
-      // Act
-      const response: CustomResponse = await api.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
+  it('returns a 400 response when the submissionMonth is not a valid ISO month', async () => {
+    // Arrange
+    const submissionMonth = 'invalid';
 
-      // Assert
-      expect(response.status).toEqual(400);
-    });
+    // Act
+    const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
-    it('returns a 200 response with the correct number of associated fee records', async () => {
-      // Arrange
-      const reportPeriod = getCurrentReportPeriodForBankSchedule(MOCK_BANKS.BARCLAYS.utilisationReportPeriodSchedule);
-      const submissionMonth = getSubmissionMonthForReportPeriod(reportPeriod);
+    // Assert
+    expect(response.status).toEqual(400);
+  });
 
-      await SqlDbHelper.deleteAllEntries('UtilisationReport');
+  it('returns a 200 response with the correct number of associated fee records', async () => {
+    // Arrange
+    const reportPeriod = getCurrentReportPeriodForBankSchedule(MOCK_BANKS.BARCLAYS.utilisationReportPeriodSchedule);
+    const submissionMonth = getSubmissionMonthForReportPeriod(reportPeriod);
 
-      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
-        .withBankId(MOCK_BANKS.BARCLAYS.id)
-        .withReportPeriod(reportPeriod)
-        .build();
-      await SqlDbHelper.saveNewEntry('UtilisationReport', utilisationReport);
+    const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+      .withBankId(MOCK_BANKS.BARCLAYS.id)
+      .withReportPeriod(reportPeriod)
+      .build();
+    await SqlDbHelper.saveNewEntry('UtilisationReport', utilisationReport);
 
-      const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build(),
-        FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build(),
-      ];
-      await SqlDbHelper.saveNewEntries('FeeRecord', feeRecords);
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build(),
+      FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build(),
+    ];
+    await SqlDbHelper.saveNewEntries('FeeRecord', feeRecords);
 
-      // Act
-      const response: CustomResponse = await api.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
+    // Act
+    const response: CustomResponse = await testApi.get(`/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`);
 
-      // Assert
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0].submissionMonth).toBe(submissionMonth);
-      expect(response.body[0].items).toHaveLength(1);
-      expect(response.body[0].items[0].totalFeesReported).toBe(feeRecords.length);
-      expect(response.body[0].items[0].reportedFeesLeftToReconcile).toBe(feeRecords.length);
-    });
+    // Assert
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveLength(1);
+    expect(response.body[0].submissionMonth).toBe(submissionMonth);
+    expect(response.body[0].items).toHaveLength(1);
+    expect(response.body[0].items[0].totalFeesReported).toBe(feeRecords.length);
+    expect(response.body[0].items[0].reportedFeesLeftToReconcile).toBe(feeRecords.length);
   });
 });
 
@@ -131,7 +133,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
 
   it('returns 400 when an invalid bank id is provided', async () => {
     // Act
-    const response: CustomErrorResponse = await api.get(getUrl('invalid-id', '2024'));
+    const response: CustomErrorResponse = await testApi.get(getUrl('invalid-id', '2024'));
 
     // Assert
     expect(response.status).toEqual(400);
@@ -142,7 +144,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
   it('returns 400 when an invalid year is provided', async () => {
     // Act
     const bankId = '13';
-    const response: CustomErrorResponse = await api.get(getUrl(bankId, 'invalid-year'));
+    const response: CustomErrorResponse = await testApi.get(getUrl(bankId, 'invalid-year'));
 
     // Assert
     expect(response.status).toEqual(400);
@@ -166,7 +168,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
     await saveReportsToDatabase(uploadedReport, reconciliationCompletedReport);
 
     // Act
-    const response: CustomSuccessResponse = await api.get(getUrl(bankId, year));
+    const response: CustomSuccessResponse = await testApi.get(getUrl(bankId, year));
 
     // Assert
     expect(response.status).toEqual(200);
@@ -195,7 +197,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
     await saveReportsToDatabase(uploadedReport, notReceivedReport, reconciliationCompletedReport);
 
     // Act
-    const response: CustomSuccessResponse = await api.get(`${getUrl(bankId, year)}`);
+    const response: CustomSuccessResponse = await testApi.get(`${getUrl(bankId, year)}`);
 
     // Assert
     expect(response.status).toEqual(200);
@@ -231,7 +233,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
     await saveReportsToDatabase(uploadedReportForYear, uploadedReportForDifferentYear);
 
     // Act
-    const response: CustomSuccessResponse = await api.get(`${getUrl(bankId, year)}`);
+    const response: CustomSuccessResponse = await testApi.get(`${getUrl(bankId, year)}`);
 
     // Assert
     expect(response.status).toEqual(200);
@@ -264,7 +266,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
     await saveReportsToDatabase(notReceivedReportForReportPeriod, uploadedReportForDifferentReportPeriod);
 
     // Act
-    const response: CustomSuccessResponse = await api.get(`${getUrl(bankId, year)}`);
+    const response: CustomSuccessResponse = await testApi.get(`${getUrl(bankId, year)}`);
 
     // Assert
     expect(response.status).toEqual(200);

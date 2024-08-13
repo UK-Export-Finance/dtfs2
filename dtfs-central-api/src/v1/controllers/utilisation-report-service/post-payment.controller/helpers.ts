@@ -1,55 +1,10 @@
-import { QueryRunner, In } from 'typeorm';
-import { ApiError, FeeRecordEntity } from '@ukef/dtfs2-common';
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
+import { In } from 'typeorm';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
-import { InvalidPayloadError, NotFoundError, TransactionFailedError } from '../../../../errors';
+import { InvalidPayloadError, NotFoundError } from '../../../../errors';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
-
-/**
- * Adds a payment to a utilisation report within a transaction
- * @param utilisationReportStateMachine - The utilisation report state machine
- * @param feeRecords - The fee record entities to add a payment to
- * @param newPaymentDetails - The new payment to be added
- * @param userId - The id of the user who is adding the payment
- * @param queryRunner - The query runner
- * @throws {TransactionFailedError}
- */
-const addPaymentToUtilisationReportWithTransaction = async (
-  utilisationReportStateMachine: UtilisationReportStateMachine,
-  feeRecords: FeeRecordEntity[],
-  newPaymentDetails: NewPaymentDetails,
-  userId: string,
-  queryRunner: QueryRunner,
-) => {
-  try {
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    await utilisationReportStateMachine.handleEvent({
-      type: 'ADD_A_PAYMENT',
-      payload: {
-        transactionEntityManager: queryRunner.manager,
-        feeRecords,
-        paymentDetails: newPaymentDetails,
-        requestSource: {
-          platform: 'TFM',
-          userId,
-        },
-      },
-    });
-    await queryRunner.commitTransaction();
-  } catch (error) {
-    await queryRunner.rollbackTransaction();
-    if (error instanceof ApiError) {
-      throw new TransactionFailedError(error.message);
-    }
-    throw new TransactionFailedError('Unknown error');
-  } finally {
-    await queryRunner.release();
-  }
-};
+import { executeWithSqlTransaction } from '../../../../helpers';
 
 /**
  * Adds a payment to the utilisation report with the specified id
@@ -71,6 +26,18 @@ export const addPaymentToUtilisationReport = async (reportId: number, feeRecordI
     throw new InvalidPayloadError(`Payment currency '${payment.currency}' does not match fee record payment currency`);
   }
 
-  const queryRunner = SqlDbDataSource.createQueryRunner();
-  await addPaymentToUtilisationReportWithTransaction(utilisationReportStateMachine, feeRecords, payment, user._id.toString(), queryRunner);
+  await executeWithSqlTransaction(async (transactionEntityManager) => {
+    await utilisationReportStateMachine.handleEvent({
+      type: 'ADD_A_PAYMENT',
+      payload: {
+        transactionEntityManager,
+        feeRecords,
+        paymentDetails: payment,
+        requestSource: {
+          platform: 'TFM',
+          userId: user._id.toString(),
+        },
+      },
+    });
+  });
 };

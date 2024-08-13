@@ -1,3 +1,4 @@
+const { FACILITY_PROVIDED_DETAILS } = require('@ukef/dtfs2-common');
 const httpError = require('http-errors');
 const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
@@ -321,7 +322,7 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) =>
       Object.values(val).forEach((value) => {
         if (value) {
           if (options.isDetails) {
-            if (value === CONSTANTS.FACILITY_PROVIDED_DETAILS.OTHER) {
+            if (value === FACILITY_PROVIDED_DETAILS.OTHER) {
               list.push(`<li>${value} ${detailsOther ? `- ${detailsOther}` : '-'}</li>`);
             } else {
               list.push(`<li>${value}</li>`);
@@ -484,9 +485,9 @@ const getCurrentTimePlusMinutes = (minutesToAdd = 0) => new Date(new Date().getT
  * used to display supporting info change or add links
  * should be hidden if checker/MIA/AIN and returning to maker
  * logic done in nunjucks template so needs this function
- * @param {Object} application
- * @param {Boolean} preview
- * @returns {Boolean}
+ * @param {object} application
+ * @param {boolean} preview
+ * @returns {boolean}
  */
 const displayChangeSupportingInfo = (application, preview) => {
   if (preview || application.submissionCount > 0) {

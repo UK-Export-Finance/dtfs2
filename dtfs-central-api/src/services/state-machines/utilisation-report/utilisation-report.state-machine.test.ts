@@ -1,14 +1,24 @@
 import difference from 'lodash/difference';
 import { EntityManager } from 'typeorm';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO, DbRequestSource } from '@ukef/dtfs2-common';
+import {
+  UTILISATION_REPORT_RECONCILIATION_STATUS,
+  UtilisationReportEntityMockBuilder,
+  MOCK_AZURE_FILE_INFO,
+  DbRequestSource,
+  PaymentEntity,
+} from '@ukef/dtfs2-common';
 import {
   handleUtilisationReportDueReportInitialisedEvent,
-  handleUtilisationReportFeeRecordKeyedEvent,
+  handleUtilisationReportGenerateKeyingDataEvent,
   handleUtilisationReportManuallySetCompletedEvent,
   handleUtilisationReportManuallySetIncompleteEvent,
   handleUtilisationReportAddAPaymentEvent,
-  handleUtilisationReportPaymentRemovedFromFeeRecordEvent,
   handleUtilisationReportReportUploadedEvent,
+  handleUtilisationReportDeletePaymentEvent,
+  handleUtilisationReportEditPaymentEvent,
+  handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent,
+  handleUtilisationReportMarkFeeRecordsAsReconciledEvent,
+  handleUtilisationReportRemoveFeesFromPaymentGroupEvent,
 } from './event-handlers';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { UtilisationReportStateMachine } from './utilisation-report.state-machine';
@@ -136,6 +146,24 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportAddAPaymentEvent).toHaveBeenCalledTimes(1);
     });
 
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA}' event`, async () => {
+      // Arrange
+      const stateMachine = UtilisationReportStateMachine.forReport(PENDING_RECONCILIATION_REPORT);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'GENERATE_KEYING_DATA',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAtMatchStatus: [],
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleUtilisationReportGenerateKeyingDataEvent).toHaveBeenCalledTimes(1);
+    });
+
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED}' event`, async () => {
       // Arrange
       const requestSource: DbRequestSource = {
@@ -158,7 +186,11 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportManuallySetCompletedEvent).toHaveBeenCalledTimes(1);
     });
 
-    const VALID_PENDING_RECONCILIATION_EVENT_TYPES = [UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT, UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED];
+    const VALID_PENDING_RECONCILIATION_EVENT_TYPES = [
+      UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
+      UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED,
+      UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
+    ];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_PENDING_RECONCILIATION_EVENT_TYPES))(
       "throws an 'InvalidStateMachineTransitionError' for event type %p",
@@ -202,38 +234,131 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportAddAPaymentEvent).toHaveBeenCalledTimes(1);
     });
 
-    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.PAYMENT_REMOVED_FROM_FEE_RECORD}' event`, async () => {
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT}' event`, async () => {
       // Arrange
       const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
 
       // Act
       await stateMachine.handleEvent({
-        type: 'PAYMENT_REMOVED_FROM_FEE_RECORD',
-        payload: { feeRecordId: 1, paymentId: 2 },
+        type: 'DELETE_PAYMENT',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          paymentId: 1,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
       });
 
       // Assert
-      expect(handleUtilisationReportPaymentRemovedFromFeeRecordEvent).toHaveBeenCalledTimes(1);
+      expect(handleUtilisationReportDeletePaymentEvent).toHaveBeenCalledTimes(1);
     });
 
-    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.FEE_RECORD_KEYED}' event`, async () => {
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA}' event`, async () => {
       // Arrange
       const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
 
       // Act
       await stateMachine.handleEvent({
-        type: 'FEE_RECORD_KEYED',
-        payload: { feeRecordId: 1 },
+        type: 'GENERATE_KEYING_DATA',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAtMatchStatus: [],
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
       });
 
       // Assert
-      expect(handleUtilisationReportFeeRecordKeyedEvent).toHaveBeenCalledTimes(1);
+      expect(handleUtilisationReportGenerateKeyingDataEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT}' event`, async () => {
+      // Arrange
+      const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'EDIT_PAYMENT',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          payment: {} as PaymentEntity,
+          feeRecords: [],
+          paymentAmount: 100,
+          datePaymentReceived: new Date(),
+          paymentReference: undefined,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleUtilisationReportEditPaymentEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'REMOVE_FEES_FROM_PAYMENT_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsToRemove: [],
+          otherFeeRecordsInGroup: [],
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+      expect(handleUtilisationReportRemoveFeesFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY}' event`, async () => {
+      // Arrange
+      const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'MARK_FEE_RECORDS_AS_READY_TO_KEY',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          feeRecordsToMarkAsReadyToKey: [],
+          requestSource: {
+            platform: 'TFM',
+            userId: 'abc123',
+          },
+        },
+      });
+
+      // Assert
+      expect(handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_RECONCILED}' event`, async () => {
+      // Arrange
+      const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'MARK_FEE_RECORDS_AS_RECONCILED',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          feeRecordsToReconcile: [],
+          requestSource: {
+            platform: 'TFM',
+            userId: 'abc123',
+          },
+        },
+      });
+
+      // Assert
+      expect(handleUtilisationReportMarkFeeRecordsAsReconciledEvent).toHaveBeenCalledTimes(1);
     });
 
     const VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES = [
       UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
-      UTILISATION_REPORT_EVENT_TYPE.PAYMENT_REMOVED_FROM_FEE_RECORD,
-      UTILISATION_REPORT_EVENT_TYPE.FEE_RECORD_KEYED,
+      UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT,
+      UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
+      UTILISATION_REPORT_EVENT_TYPE.EDIT_PAYMENT,
+      UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY,
+      UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_RECONCILED,
+      UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP,
     ];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES))(
@@ -273,7 +398,31 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportManuallySetIncompleteEvent).toHaveBeenCalledTimes(1);
     });
 
-    const VALID_RECONCILIATION_COMPLETED_EVENT_TYPES = [UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE];
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY}' event`, async () => {
+      // Arrange
+      const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_COMPLETED_REPORT);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'MARK_FEE_RECORDS_AS_READY_TO_KEY',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          feeRecordsToMarkAsReadyToKey: [],
+          requestSource: {
+            platform: 'TFM',
+            userId: 'abc123',
+          },
+        },
+      });
+
+      // Assert
+      expect(handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent).toHaveBeenCalledTimes(1);
+    });
+
+    const VALID_RECONCILIATION_COMPLETED_EVENT_TYPES = [
+      UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE,
+      UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY,
+    ];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_RECONCILIATION_COMPLETED_EVENT_TYPES))(
       "throws an 'InvalidStateMachineTransitionError' for event type %p",

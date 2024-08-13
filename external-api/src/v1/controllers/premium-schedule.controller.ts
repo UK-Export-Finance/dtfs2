@@ -10,6 +10,7 @@
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
+import { HEADERS } from '@ukef/dtfs2-common';
 import { PremiumSchedule } from '../../interfaces';
 import { UKEF_ID } from '../../constants';
 import { validUkefId, objectIsEmpty } from '../../helpers';
@@ -18,7 +19,7 @@ dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
@@ -67,7 +68,7 @@ export const premiumScheduleCalls = {
   },
   /**
    * Get premium schedule segments from facility URN
-   * @param {String} facilityId Facility ID
+   * @param {string} facilityId Facility ID
    * @returns {Array} Array of premium schedule segments
    */
   getScheduleData: async (facilityId: any) => {
@@ -91,7 +92,7 @@ export const premiumScheduleCalls = {
  * Get premium schedule segments from facility URN
  * @param {Express.Request} req Facility ID
  * @param {Express.Response} res Facility ID
- * @returns {Object} Premium schedule data
+ * @returns {object} Premium schedule data
  */
 export const getPremiumSchedule = async (req: Request, res: Response) => {
   let premiumScheduleParameters = {} as PremiumSchedule;

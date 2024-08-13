@@ -9,6 +9,7 @@ export type UtilisationReportReconciliationSummaryItem = {
   };
   status: UtilisationReportReconciliationStatus;
   dateUploaded?: IsoDateTimeStamp;
+  totalFacilitiesReported?: number;
   totalFeesReported?: number;
   reportedFeesLeftToReconcile?: number;
 };

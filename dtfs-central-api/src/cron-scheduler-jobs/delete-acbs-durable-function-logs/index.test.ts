@@ -1,7 +1,6 @@
-import { asString } from '@ukef/dtfs2-common';
+import { asString, WriteConcernError } from '@ukef/dtfs2-common';
 import { deleteAllCompleteAcbsDurableFunctionLogs } from '../../repositories/durable-functions-repo';
 import { deleteCompleteAcbsDurableFunctionLogsJob } from '.';
-import { WriteConcernError } from '../../errors';
 
 console.info = jest.fn();
 
@@ -53,20 +52,9 @@ describe('scheduler/jobs/delete-acbs-durable-function-logs', () => {
       await expect(deleteCompleteAcbsDurableFunctionLogsJob.task(new Date())).rejects.toThrow(WriteConcernError);
     });
 
-    it('does not throw if deleteAllCompleteAcbsDurableFunctionLogs resolves with documents deleted', async () => {
+    it('does not throw if deleteAllCompleteAcbsDurableFunctionLogs is acknowledged', async () => {
       // Arrange
       jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: true, deletedCount: 1 });
-
-      // Act
-      const result = await deleteCompleteAcbsDurableFunctionLogsJob.task(new Date());
-
-      // Assert
-      expect(result).toEqual(undefined);
-    });
-
-    it('does not throw if deleteAllCompleteAcbsDurableFunctionLogs resolves with no documents deleted', async () => {
-      // Arrange
-      jest.mocked(deleteAllCompleteAcbsDurableFunctionLogs).mockResolvedValue({ acknowledged: true, deletedCount: 0 });
 
       // Act
       const result = await deleteCompleteAcbsDurableFunctionLogsJob.task(new Date());

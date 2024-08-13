@@ -1,3 +1,4 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../constants');
 const issuedDateValidationRules = require('../../validation/fields/issued-date');
 const facilitiesController = require('../facilities.controller');
@@ -18,9 +19,9 @@ const facilityHasValidIssuedDate = (facility, deal) => {
   return false;
 };
 
-const isLoanFacility = (type) => type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN;
+const isLoanFacility = (type) => type === FACILITY_TYPE.LOAN;
 
-const isBondFacility = (type) => type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND;
+const isBondFacility = (type) => type === FACILITY_TYPE.BOND;
 
 const loanHasBeenPreviouslyIssued = (facilityStage, previousFacilityStage) => {
   if (
@@ -63,7 +64,7 @@ const shouldUpdateFacility = (facility) => {
   return false;
 };
 
-const updateIssuedFacilities = async (user, fromStatus, deal, canUpdateIssuedFacilitiesCoverStartDates, newStatus) => {
+const updateIssuedFacilities = async (user, fromStatus, deal, canUpdateIssuedFacilitiesCoverStartDates, newStatus, auditDetails) => {
   const fromStatusIsApprovedStatus =
     fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS || fromStatus === CONSTANTS.DEAL.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
 
@@ -121,7 +122,7 @@ const updateIssuedFacilities = async (user, fromStatus, deal, canUpdateIssuedFac
             }
           }
 
-          await facilitiesController.update(deal._id, facilityId, facility, user);
+          await facilitiesController.update(deal._id, facilityId, facility, user, auditDetails);
 
           updatedCount += 1;
         }

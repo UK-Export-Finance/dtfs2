@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
-import { CreatePaymentParams } from './payment.types';
+import { CreatePaymentParams, UpdatePaymentParams } from './payment.types';
 import { FeeRecordEntity } from '../fee-record';
 import { MonetaryColumn } from '../custom-columns';
 
@@ -13,19 +13,19 @@ export class PaymentEntity extends AuditableBaseEntity {
   /**
    * The currency the payment was made in
    */
-  @Column({ type: 'nvarchar' })
+  @Column({ nullable: false, type: 'nvarchar' })
   currency!: Currency;
 
   /**
    * The amount received in the payment
    */
-  @MonetaryColumn({ nullable: true, defaultValue: 0 })
+  @MonetaryColumn({ nullable: false })
   amount!: number;
 
   /**
    * The date the payment was received
    */
-  @Column()
+  @Column({ nullable: false })
   dateReceived!: Date;
 
   /**
@@ -52,5 +52,12 @@ export class PaymentEntity extends AuditableBaseEntity {
     payment.feeRecords = feeRecords;
     payment.updateLastUpdatedBy(requestSource);
     return payment;
+  }
+
+  public update({ amount, dateReceived, reference, requestSource }: UpdatePaymentParams): void {
+    this.amount = amount;
+    this.dateReceived = dateReceived;
+    this.reference = reference;
+    this.updateLastUpdatedBy(requestSource);
   }
 }

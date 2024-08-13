@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { HEADERS } = require('@ukef/dtfs2-common');
 require('dotenv').config();
 
 const { gef } = require('./gef/api');
@@ -14,7 +15,7 @@ const createBank = async (bank, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -31,7 +32,7 @@ const createCurrency = async (currency, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -48,7 +49,7 @@ const createCountry = async (country, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -65,7 +66,7 @@ const createDeal = async (deal, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -82,7 +83,7 @@ const getDeal = async (dealId, token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -98,7 +99,7 @@ const createIndustrySector = async (industrySector, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -115,7 +116,7 @@ const createMandatoryCriteria = async (mandatoryCriteria, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -132,7 +133,7 @@ const createEligibilityCriteria = async (eligibilityCriteria, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -149,7 +150,7 @@ const createUser = async (user, token) => {
   const response = await axios({
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -166,7 +167,7 @@ const createInitialUser = async (user) => {
   const response = await axios({
     method: 'post',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       'x-api-key': PORTAL_API_KEY,
       Accepts: 'application/json',
     },
@@ -182,7 +183,7 @@ const createInitialTfmUser = async (user) => {
     method: 'post',
     url: `${TFM_API_URL}/v1/user`,
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       'x-api-key': TFM_API_KEY,
     },
     data: user,
@@ -195,7 +196,7 @@ const deleteBank = async (deal, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -211,7 +212,7 @@ const deleteCurrency = async (currency, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -227,7 +228,7 @@ const deleteCountry = async (country, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -243,7 +244,7 @@ const deleteDeal = async (dealId, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -259,7 +260,7 @@ const deleteIndustrySector = async (industrySector, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -275,7 +276,7 @@ const deleteMandatoryCriteria = async (version, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -291,7 +292,7 @@ const deleteEligibilityCriteria = async (version, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -307,7 +308,7 @@ const deleteUser = async (user, token) => {
   const response = await axios({
     method: 'delete',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -322,7 +323,7 @@ const listBanks = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -338,7 +339,7 @@ const listCurrencies = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -354,7 +355,7 @@ const listCountries = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -370,7 +371,7 @@ const listDeals = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -386,7 +387,7 @@ const listIndustrySectors = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -402,7 +403,7 @@ const listMandatoryCriteria = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -418,7 +419,7 @@ const listEligibilityCriteria = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -434,7 +435,7 @@ const listUsers = async (token) => {
   const response = await axios({
     method: 'get',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -461,7 +462,7 @@ const updateCurrency = async (currency, token) => {
   const response = await axios({
     method: 'put',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },
@@ -478,7 +479,7 @@ const updateCountry = async (country, token) => {
   const response = await axios({
     method: 'put',
     headers: {
-      'Content-Type': 'application/json',
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
       Accepts: 'application/json',
       Authorization: token,
     },

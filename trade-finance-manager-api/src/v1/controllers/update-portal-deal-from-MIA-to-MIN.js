@@ -2,7 +2,7 @@ const CONSTANTS = require('../../constants');
 const api = require('../api');
 const { getNowAsEpochMillisecondString } = require('../../utils/date');
 
-const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
+const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker, auditDetails) => {
   console.info('Updating Portal deal from MIA to MIN');
   let dealUpdate;
 
@@ -13,10 +13,10 @@ const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
       manualInclusionNoticeSubmissionDate: getNowAsEpochMillisecondString(),
     };
 
-    await api.updatePortalGefDeal(dealId, dealUpdate);
+    await api.updatePortalGefDeal({ dealId, dealUpdate, auditDetails });
 
     // adds portal activity object for min submission and facilities changed -> issued
-    await api.updateGefMINActivity(dealId);
+    await api.updateGefMINActivity({ dealId, auditDetails });
   } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
     dealUpdate = {
       submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
@@ -26,7 +26,7 @@ const updatePortalDealFromMIAtoMIN = async (dealId, dealType, checker) => {
       },
     };
 
-    await api.updatePortalDeal(dealId, dealUpdate);
+    await api.updatePortalDeal(dealId, dealUpdate, auditDetails);
   }
 
   return dealUpdate;

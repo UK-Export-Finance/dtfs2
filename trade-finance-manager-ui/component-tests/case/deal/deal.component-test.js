@@ -1,6 +1,6 @@
 const Chance = require('chance');
 
-const pageRenderer = require('../../pageRenderer');
+const { pageRenderer } = require('../../pageRenderer');
 
 const page = '../templates/case/deal/deal.njk';
 const render = pageRenderer(page);

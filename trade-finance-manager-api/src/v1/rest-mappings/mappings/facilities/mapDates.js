@@ -16,6 +16,15 @@ const mapDates = (facility, facilitySnapshot, facilityTfm, dealDetails) => {
     facility,
   );
 
+  dates.isUsingFacilityEndDate = facilitySnapshot?.isUsingFacilityEndDate;
+  if (facilitySnapshot?.isUsingFacilityEndDate) {
+    dates.facilityEndDate = facilitySnapshot?.facilityEndDate;
+  }
+
+  if (facilitySnapshot?.isUsingFacilityEndDate === false) {
+    dates.bankReviewDate = facilitySnapshot?.bankReviewDate;
+  }
+
   dates.tenor = mapTenor(facilitySnapshot, facilityTfm, facility);
 
   return dates;

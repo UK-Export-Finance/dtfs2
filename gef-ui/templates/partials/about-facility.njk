@@ -10,7 +10,9 @@
 {% import '../_macros/about-facility/issue-date.njk' as issueDateSection %}
 {% import '../_macros/about-facility/cover-start-date.njk' as coverStartDateSection %}
 {% import '../_macros/about-facility/cover-end-date.njk' as coverEndDateSection %}
+{% import '../_macros/about-facility/facility-end-date.njk' as facilityEndDateSection %}
 {% import '../_macros/about-facility/cover-start-submission.njk' as coverStartSubmissionSection %}
+{% import '../_macros/what-is-a-facility-end-date.njk' as whatIsAFacilityEndDate %}
 
 {% block pageTitle -%}
   About this {{ facilityTypeString }} facility
@@ -65,9 +67,10 @@
           value="{{hasBeenIssued}}">
 
         {% set facilityNameParams = {
-                facilityName: facilityName,
-                errors: errors,
-                text: "Enter a name for this " + facilityTypeString + " facility" if hasBeenIssued else "Enter a name for this " + facilityTypeString + " facility (optional)"
+          facilityName: facilityName,
+          errors: errors,
+          text: "Enter a name for this " + facilityTypeString + " facility" if hasBeenIssued else 
+            "Enter a name for this " + facilityTypeString + " facility (optional)"
         } %}
 
         {{ facilityNameSection.render(facilityNameParams)}}
@@ -76,7 +79,7 @@
           {# Elements to Show if Issued #}
           {% set coverStartHtml %}
 
-            {% set coverStartDateParams = {
+          {% set coverStartDateParams = {
                 coverStartDateDay: coverStartDateDay,
                 coverStartDateMonth: coverStartDateMonth,
                 coverStartDateYear: coverStartDateYear,
@@ -84,7 +87,7 @@
                 hint: "This must be within three calendar months after the date you submit the notice to UKEF. It cannot be earlier than the date it's submitted.</p><p class='govuk-!-margin-0 has-text'>If your cover start date expires by the time the notice is submitted, your cover will start on the date your notice is submitted to UKEF."
             } %}
 
-            {{coverStartDateSection.render(coverStartDateParams)}}
+          {{coverStartDateSection.render(coverStartDateParams)}}
 
           {% endset -%}
 
@@ -126,6 +129,11 @@
               }
             }
           }) }}
+        {% endif %}
+
+        {% if isFacilityEndDateEnabled %}
+          {{ facilityEndDateSection.render(isUsingFacilityEndDate, errors)}}
+          {{ whatIsAFacilityEndDate.render() }}
         {% endif %}
 
         <div class="govuk-button-group">

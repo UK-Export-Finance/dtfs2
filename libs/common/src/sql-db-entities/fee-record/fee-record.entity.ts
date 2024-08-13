@@ -1,11 +1,12 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency, FeeRecordStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
-import { CreateFeeRecordParams, UpdateWithStatusParams } from './fee-record.types';
+import { CreateFeeRecordParams, RemoveAllPaymentsParams, UpdateWithKeyingDataParams, UpdateWithStatusParams } from './fee-record.types';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
 import { PaymentEntity } from '../payment';
+import { FacilityUtilisationDataEntity } from '../facility-utilisation-data';
 
 @Entity('FeeRecord')
 export class FeeRecordEntity extends AuditableBaseEntity {
@@ -15,8 +16,19 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * The `_id` of the associated facility in the 'facilities' MongoDB collection
    */
-  @Column()
+  @Column({ type: 'nvarchar', length: '10' })
   facilityId!: string;
+
+  /**
+   * The linked facility utilisation data
+   */
+  @ManyToOne(() => FacilityUtilisationDataEntity, (facilityUtilisationData) => facilityUtilisationData.feeRecords, {
+    nullable: false,
+    eager: true,
+    cascade: ['insert'],
+  })
+  @JoinColumn({ name: 'facilityId' })
+  facilityUtilisationData!: FacilityUtilisationDataEntity;
 
   /**
    * The associated report from the UtilisationReport table
@@ -108,6 +120,18 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   @JoinTable()
   payments!: PaymentEntity[];
 
+  /**
+   * The keying sheet fixed fee adjustment
+   */
+  @MonetaryColumn({ nullable: true })
+  fixedFeeAdjustment!: number | null;
+
+  /**
+   * The keying sheet principal balance adjustment
+   */
+  @MonetaryColumn({ nullable: true })
+  principalBalanceAdjustment!: number | null;
+
   // TODO FN-1726 - when we have a status on this entity we should make this method name specific to the initial status
   static create({
     facilityId,
@@ -141,6 +165,8 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.report = report;
     feeRecord.updateLastUpdatedBy(requestSource);
     feeRecord.payments = [];
+    feeRecord.fixedFeeAdjustment = null;
+    feeRecord.principalBalanceAdjustment = null;
     return feeRecord;
   }
 
@@ -157,6 +183,19 @@ export class FeeRecordEntity extends AuditableBaseEntity {
 
   public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
     this.status = status;
+    this.updateLastUpdatedBy(requestSource);
+  }
+
+  public updateWithKeyingData({ fixedFeeAdjustment, principalBalanceAdjustment, status, requestSource }: UpdateWithKeyingDataParams): void {
+    this.status = status;
+    this.fixedFeeAdjustment = fixedFeeAdjustment;
+    this.principalBalanceAdjustment = principalBalanceAdjustment;
+    this.updateLastUpdatedBy(requestSource);
+  }
+
+  public removeAllPayments({ requestSource }: RemoveAllPaymentsParams): void {
+    this.payments = [];
+    this.status = 'TO_DO';
     this.updateLastUpdatedBy(requestSource);
   }
 }

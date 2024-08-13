@@ -1,5 +1,5 @@
-const pageRenderer = require('../pageRenderer');
-const { anAddPaymentViewModel } = require('../../test-helpers/test-data/add-payment-view-model');
+const { pageRenderer } = require('../pageRenderer');
+const { anAddPaymentViewModel, aRecordedPaymentDetailsViewModel } = require('../../test-helpers/test-data/add-payment-view-model');
 
 const page = '../templates/utilisation-reports/add-payment.njk';
 const render = pageRenderer(page);
@@ -14,10 +14,65 @@ describe(page, () => {
 
     // Assert
     wrapper.expectText('h1').toRead('Add a payment');
-    wrapper.expectText('main').toContain('My bank, December 1998');
+    wrapper.expectText('span[data-cy="add-payment-heading-caption"]').toMatch(/My bank,/);
+    wrapper.expectText('span[data-cy="add-payment-heading-caption"]').toMatch(/December 1998/);
   });
 
-  it('should display selected fee record details table', () => {
+  it('should display the recorded payments accordion when there are previously recorded payments', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.recordedPaymentsDetails = [
+      {
+        formattedDateReceived: '23 Dec 2024',
+        formattedCurrencyAndAmount: 'GBP 300',
+        reference: 'REF1234',
+      },
+    ];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectText('main').toContain('Recorded payments');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('Date received');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('Amount received');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('Payment reference');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('23 Dec 2024');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('GBP 300');
+    wrapper.expectText('[data-cy="recorded-payments-details-table"]').toContain('REF1234');
+  });
+
+  it('should not display the recorded payments accordion when there are no previously recorded payments', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.recordedPaymentsDetails = [];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectText('main').notToContain('Recorded payments');
+  });
+
+  it('should display the recorded payments accordion title as "Recorded payments for this fee" when "multipleFeeRecordsSelected" is false', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.multipleFeeRecordsSelected = false;
+    addPaymentViewModel.recordedPaymentsDetails = [aRecordedPaymentDetailsViewModel()];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectText('main').toContain('Recorded payments for this fee');
+  });
+
+  it('should display the recorded payments accordion title as "Recorded payments for these fees" when "multipleFeeRecordsSelected" is true', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.multipleFeeRecordsSelected = true;
+    addPaymentViewModel.recordedPaymentsDetails = [aRecordedPaymentDetailsViewModel()];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectText('main').toContain('Recorded payments for these fees');
+  });
+
+  it('should display fee record details table', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
     addPaymentViewModel.reportedFeeDetails.totalReportedPayments = 'JPY 1';
@@ -26,19 +81,20 @@ describe(page, () => {
         feeRecordId: 12,
         facilityId: '000123',
         exporter: 'abcde',
-        reportedFee: { value: 'EUR 0.01', dataSortValue: 0 },
-        reportedPayments: { value: 'JPY 3', dataSortValue: 0 },
+        reportedFees: { formattedCurrencyAndAmount: 'EUR 0.01', dataSortValue: 0 },
+        reportedPayments: { formattedCurrencyAndAmount: 'JPY 3', dataSortValue: 0 },
       },
     ];
     const wrapper = render(addPaymentViewModel);
 
     // Assert
-    wrapper.expectElement('[data-cy="selected-reported-fees-details-table"]').toExist();
-    wrapper.expectText('[data-cy="selected-reported-fees-details-table"]').toContain('000123');
-    wrapper.expectText('[data-cy="selected-reported-fees-details-table"]').toContain('abcde');
-    wrapper.expectText('[data-cy="selected-reported-fees-details-table"]').toContain('EUR 0.01');
-    wrapper.expectText('[data-cy="selected-reported-fees-details-table"]').toContain('JPY 3');
-    wrapper.expectText('[data-cy="selected-reported-fees-details-table"]').toContain('JPY 1');
+    const tableSelector = 'table[data-cy="fee-record-details-table"]';
+    wrapper.expectElement(tableSelector).toExist();
+    wrapper.expectText(tableSelector).toContain('000123');
+    wrapper.expectText(tableSelector).toContain('abcde');
+    wrapper.expectText(tableSelector).toContain('EUR 0.01');
+    wrapper.expectText(tableSelector).toContain('JPY 3');
+    wrapper.expectText(tableSelector).toContain('JPY 1');
   });
 
   it('should display a currency option for each currency', () => {
@@ -245,24 +301,24 @@ describe(page, () => {
     wrapper.expectLink('a:contains("Back")').toLinkTo('/utilisation-reports/123', 'Back');
   });
 
-  it('should display form heading as "New payment details" when payment number is undefined', () => {
+  it('should display form heading as "New payment details" when payment number is 1', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
-    addPaymentViewModel.paymentNumber = undefined;
+    addPaymentViewModel.paymentNumber = 1;
     const wrapper = render(addPaymentViewModel);
 
     // Assert
     wrapper.expectElement('h2:contains("New payment details")').toExist();
   });
 
-  it('should display number of the payment in the form heading when payment number is provided', () => {
+  it('should display number of the payment in the form heading when payment number is greater than 1', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
-    addPaymentViewModel.paymentNumber = 5;
+    addPaymentViewModel.paymentNumber = 2;
     const wrapper = render(addPaymentViewModel);
 
     // Assert
-    wrapper.expectElement('h2:contains("Payment 5 details")').toExist();
+    wrapper.expectElement('h2:contains("Payment 2 details")').toExist();
   });
 
   it('should set hidden inputs for each selected checkbox id', () => {
@@ -276,17 +332,6 @@ describe(page, () => {
     wrapper.expectElement('input[name="fee-record-20"]').toExist();
   });
 
-  it('should set a hidden input for the payment number', () => {
-    // Arrange
-    const addPaymentViewModel = anAddPaymentViewModel();
-    addPaymentViewModel.paymentNumber = 35;
-    const wrapper = render(addPaymentViewModel);
-
-    // Assert
-    wrapper.expectElement('input[name="paymentNumber"]').toExist();
-    wrapper.expectInput('input[name="paymentNumber"]').toHaveValue('35');
-  });
-
   it('should display error summary', () => {
     // Arrange
     const addPaymentViewModel = anAddPaymentViewModel();
@@ -295,5 +340,72 @@ describe(page, () => {
 
     // Assert
     wrapper.expectLink('a:contains("Uh oh")').toLinkTo('#uh-oh', 'Uh oh');
+  });
+
+  it('should not render selection actions within the fee record details table', () => {
+    const addPaymentViewModel = anAddPaymentViewModel();
+    const wrapper = render(addPaymentViewModel);
+
+    wrapper.expectElement(`[data-cy="remove-selected-fees-button"]`).notToExist();
+  });
+
+  it('should display singular "Add reported fee to an existing payment" button when canAddToExistingPayment is true and only one payment exists', () => {
+    // Arrange
+    const addPaymentViewModel = {
+      ...anAddPaymentViewModel(),
+      canAddToExistingPayment: true,
+      reportId: 123,
+    };
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    const addFeesToExistingPaymentButtonSelector = '[data-cy="add-fees-to-an-existing-payment-button"]';
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toExist();
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('value', 'Add reported fee to an existing payment');
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).hasClass('govuk-button--secondary');
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/123/add-to-an-existing-payment`);
+  });
+
+  it('should display plural "Add reported fees to an existing payment" button when canAddToExistingPayment is true and multiple payments exist', () => {
+    // Arrange
+    const addPaymentViewModel = anAddPaymentViewModel();
+    addPaymentViewModel.reportId = 123;
+    addPaymentViewModel.canAddToExistingPayment = true;
+    addPaymentViewModel.reportedFeeDetails.feeRecords = [
+      {
+        feeRecordId: 7,
+        facilityId: '000123',
+        exporter: 'abcde',
+        reportedFees: { formattedCurrencyAndAmount: 'EUR 0.01', dataSortValue: 0 },
+        reportedPayments: { formattedCurrencyAndAmount: 'GBP 7', dataSortValue: 0 },
+      },
+      {
+        feeRecordId: 8,
+        facilityId: '000123',
+        exporter: 'abcdef',
+        reportedFees: { formattedCurrencyAndAmount: 'EUR 0.01', dataSortValue: 0 },
+        reportedPayments: { formattedCurrencyAndAmount: 'GBP 8', dataSortValue: 0 },
+      },
+    ];
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    const addFeesToExistingPaymentButtonSelector = '[data-cy="add-fees-to-an-existing-payment-button"]';
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toExist();
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('value', 'Add reported fees to an existing payment');
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).hasClass('govuk-button--secondary');
+    wrapper.expectElement(addFeesToExistingPaymentButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/123/add-to-an-existing-payment`);
+  });
+
+  it('should not display "Add reported fee to an existing payment" button when canAddToExistingPayment is false', () => {
+    // Arrange
+    const addPaymentViewModel = {
+      ...anAddPaymentViewModel(),
+      canAddToExistingPayment: false,
+    };
+    const wrapper = render(addPaymentViewModel);
+
+    // Assert
+    wrapper.expectElement(`[data-cy="add-fees-to-an-existing-payment-button"]`).notToExist();
   });
 });

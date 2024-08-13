@@ -5,13 +5,14 @@
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
+import { HEADERS } from '@ukef/dtfs2-common';
 import { isValidPartyUrn } from '../../helpers';
 
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
@@ -19,7 +20,7 @@ const headers = {
  * Fetches company information from party URN
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Object} Express response with `status` and `data`.
+ * @returns {object} Express response with `status` and `data`.
  */
 export const lookup = async (req: Request, res: Response) => {
   try {

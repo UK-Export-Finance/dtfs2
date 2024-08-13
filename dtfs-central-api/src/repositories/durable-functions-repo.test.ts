@@ -1,6 +1,13 @@
-import { DURABLE_FUNCTIONS_LOG, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
-import db from '../drivers/db-client';
+import { when } from 'jest-when';
+import { DeleteResult } from 'mongodb';
+import { AuditDetails, DURABLE_FUNCTIONS_LOG, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { deleteMany } from '@ukef/dtfs2-common/change-stream';
+import { mongoDbClient as db } from '../drivers/db-client';
 import { deleteAllCompleteAcbsDurableFunctionLogs, deleteAllDurableFunctionLogs } from './durable-functions-repo';
+
+jest.mock('@ukef/dtfs2-common/change-stream');
+
+const { generateSystemAuditDetails } = jest.requireActual<{ generateSystemAuditDetails: () => AuditDetails }>('@ukef/dtfs2-common/change-stream');
 
 describe('durable-functions-repo', () => {
   afterEach(() => {
@@ -23,52 +30,31 @@ describe('durable-functions-repo', () => {
   ];
 
   describe.each(deleteTestCases)('$testCase', ({ expectedDeleteManyCalledWith, makeRequest }) => {
-    const successfulDeleteManyResponse = { acknowledged: true, deletedCount: 1 };
-    const successfulDeleteManyMock = async () => Promise.resolve(successfulDeleteManyResponse);
+    it('calls deleteMany with the correct parameters', async () => {
+      await makeRequest(generateSystemAuditDetails());
 
-    it('calls the DB with the correct collection name', async () => {
-      // Arrange
-      const deleteManyMock = jest.fn(() => successfulDeleteManyMock());
-      const getCollectionMock = jest.fn().mockResolvedValue({
-        deleteMany: deleteManyMock,
+      expect(deleteMany).toHaveBeenCalledWith({
+        filter: expectedDeleteManyCalledWith,
+        collectionName: MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG,
+        db,
+        auditDetails: generateSystemAuditDetails(),
       });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
-
-      // Act
-      await makeRequest();
-
-      // Assert
-      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
     });
 
-    it('calls the correct DB method with the expected parameters', async () => {
-      // Arrange
-      const deleteManyMock = jest.fn(() => successfulDeleteManyMock());
-      const getCollectionMock = jest.fn().mockResolvedValue({
-        deleteMany: deleteManyMock,
-      });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
+    it('returns the response from deleteMany', async () => {
+      const mockDeleteManyResponse: DeleteResult = { acknowledged: true, deletedCount: 1 };
+      when(deleteMany)
+        .calledWith({
+          filter: expectedDeleteManyCalledWith,
+          collectionName: MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG,
+          db,
+          auditDetails: generateSystemAuditDetails(),
+        })
+        .mockResolvedValueOnce(mockDeleteManyResponse);
 
-      // Act
-      await makeRequest();
+      const response = await makeRequest(generateSystemAuditDetails());
 
-      // Assert
-      expect(deleteManyMock).toHaveBeenCalledWith(expectedDeleteManyCalledWith);
-    });
-
-    it('returns the result', async () => {
-      // Arrange
-      const deleteManyMock = jest.fn(() => successfulDeleteManyMock());
-      const getCollectionMock = jest.fn().mockResolvedValue({
-        deleteMany: deleteManyMock,
-      });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
-
-      // Act
-      const result = await makeRequest();
-
-      // Assert
-      expect(result).toEqual(successfulDeleteManyResponse);
+      expect(response).toEqual(mockDeleteManyResponse);
     });
   });
 });

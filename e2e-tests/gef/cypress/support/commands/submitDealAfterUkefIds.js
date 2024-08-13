@@ -4,9 +4,9 @@ const { submitDealAfterUkefIds } = require('./api');
 /**
  * logs into tfm to get token
  * then submits deal with UKEF IDs
- * @param {String} dealId
- * @param {String} dealType
- * @param {Object} checker
+ * @param {string} dealId
+ * @param {string} dealType
+ * @param {object} checker
  */
 const submitDealAfterUkefIdsCall = (dealId, dealType, checker) => {
   const isSessionForAPICall = true;

@@ -25,8 +25,7 @@ import amendmentsPage from './amendments/amendmentsPage';
 import feedbackPage from './feedbackPage';
 import footer from './footer';
 import activitiesPage from './activities/activitiesPage';
-import utilisationReportsPage from './utilisationReportsPage';
-import { searchUtilisationReportsFormPage, searchUtilisationReportsResultsPage } from './searchUtilisationReportsPage';
+import { utilisationReportPages } from './utilisation-reports';
 
 export default {
   landingPage,
@@ -56,7 +55,5 @@ export default {
   amendmentsPage,
   footer,
   activitiesPage,
-  utilisationReportsPage,
-  searchUtilisationReportsFormPage,
-  searchUtilisationReportsResultsPage,
+  ...utilisationReportPages,
 };

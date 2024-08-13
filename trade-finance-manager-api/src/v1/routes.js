@@ -155,6 +155,10 @@ authRouter
   .route('/utilisation-reports/:id/selected-fee-records-details')
   .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, utilisationReportsController.getSelectedFeeRecordsDetails);
 
+authRouter
+  .route('/utilisation-reports/:reportId/payment')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postPayment);
+
 authRouter.route('/banks').get(banksController.getAllBanks);
 
 authRouter
@@ -164,6 +168,38 @@ authRouter
     validation.isoYearValidation('year'),
     handleExpressValidatorResult,
     utilisationReportsController.getUtilisationReportSummariesByBankAndYear,
+  );
+
+authRouter
+  .route('/utilisation-reports/:reportId/keying-data/mark-as-done')
+  .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.putKeyingDataMarkAsDone);
+
+authRouter
+  .route('/utilisation-reports/:reportId/keying-data/mark-as-to-do')
+  .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.putKeyingDataMarkAsToDo);
+
+authRouter
+  .route('/utilisation-reports/:reportId/keying-data')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postKeyingData);
+
+authRouter
+  .route('/utilisation-reports/:reportId/fee-records-to-key')
+  .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.getFeeRecordsToKey);
+
+authRouter
+  .route('/utilisation-reports/:reportId/payment/:paymentId')
+  .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('paymentId'), handleExpressValidatorResult)
+  .get(utilisationReportsController.getPaymentDetailsById)
+  .delete(utilisationReportsController.deletePayment)
+  .patch(utilisationReportsController.patchPayment);
+
+authRouter
+  .route('/utilisation-reports/:reportId/payment/:paymentId/remove-selected-fees')
+  .post(
+    validation.sqlIdValidation('reportId'),
+    validation.sqlIdValidation('paymentId'),
+    handleExpressValidatorResult,
+    utilisationReportsController.postRemoveFeesFromPayment,
   );
 
 module.exports = { authRouter, openRouter };

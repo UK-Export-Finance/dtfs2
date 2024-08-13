@@ -7,19 +7,20 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
+import { HEADERS } from '@ukef/dtfs2-common';
 import { INDUSTRY_SECTORS } from '../../external-api';
 import { isValidIndustryId, sortArrayAlphabetically } from '../../helpers';
 
 dotenv.config();
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 
 /**
  * Maps industry ID to ACBS compliant sector ID
- * @param {Number} industryId UKEF Industry ID
+ * @param {number} industryId UKEF Industry ID
  * @returns ACBS compliant industry ID
  */
 export const findACBSIndustrySector = async (industryId: number) => {

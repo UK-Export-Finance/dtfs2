@@ -1,3 +1,4 @@
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { UNDERWRITER_1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/tfm-users.fixture');
 
 const api = () => {
@@ -8,7 +9,7 @@ const api = () => {
 const apiKey = Cypress.config('apiKey');
 
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   'x-api-key': apiKey,
 };
 
@@ -41,7 +42,7 @@ module.exports.updateFacility = (facilityId, facilityUpdate, user) =>
         Accepts: 'application/json',
       },
       body: {
-        ...facilityUpdate,
+        facilityUpdate,
         user,
       },
     })

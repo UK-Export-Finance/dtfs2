@@ -1,5 +1,5 @@
+const { AMENDMENT_STATUS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const mapTenor = require('./mapTenor');
-const { FACILITY_TYPE } = require('../../../../constants/facilities');
 
 describe('mapTenor()', () => {
   const coverEndDateUnix = 1658403289;
@@ -91,6 +91,7 @@ describe('mapTenor()', () => {
 
   it('should return tenor from GEF amendment when completed amendment exists', () => {
     mockGefFacility.amendments[0] = {
+      status: AMENDMENT_STATUS.COMPLETED,
       tfm: {
         ...mockAmendmentDateResponse,
       },

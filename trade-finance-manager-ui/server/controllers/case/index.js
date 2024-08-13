@@ -1,4 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
+const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { getTask, showAmendmentButton, ukefDecisionRejected } = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
@@ -32,7 +33,7 @@ const getCaseDeal = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS);
+  const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENT_STATUS.IN_PROGRESS);
   const hasAmendmentInProgress = amendmentsInProgress.length > 0;
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
@@ -289,7 +290,7 @@ const getCaseFacility = async (req, res) => {
 
   const deal = await api.getDeal(dealId, userToken);
 
-  const hasAmendmentInProgressButton = amendment.status === AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS;
+  const hasAmendmentInProgressButton = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
 
   const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
@@ -317,6 +318,7 @@ const getCaseFacility = async (req, res) => {
     allAmendments,
     amendments,
     amendmentsInProgress,
+    isTfmFacilityEndDateFeatureFlagEnabled: isTfmFacilityEndDateFeatureFlagEnabled(),
   });
 };
 
@@ -366,7 +368,7 @@ const getCaseDocuments = async (req, res) => {
  * Post party URNs to bond summary page for confirmation
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Object} Express response as rendered confirm party URN page.
+ * @returns {Promise<object>} Express response as rendered confirm party URN page.
  */
 const confirmTfmFacility = async (req, res) => {
   try {
@@ -486,7 +488,7 @@ const confirmTfmFacility = async (req, res) => {
  * Post bond party URNs to the TFM
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Object} Express response as rendered confirm party URN page.
+ * @returns {Promise<object>} Express response as rendered confirm party URN page.
  */
 const postTfmFacility = async (req, res) => {
   try {

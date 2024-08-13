@@ -2,8 +2,8 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const escapeStringRegexp = require('escape-string-regexp');
 const { isValid, format } = require('date-fns');
 const { getDateFromSearchString } = require('../../../../helpers/getDateFromSearchString');
-const db = require('../../../../drivers/db-client').default;
-const CONSTANTS = require('../../../../constants');
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
+const { DEALS } = require('../../../../constants');
 const { isTimestampField, dayStartAndEndTimestamps } = require('./tfm-get-deals-date-helpers');
 const { getBSSProperty } = require('../../../../mapping/mapDataModel');
 
@@ -24,7 +24,7 @@ const findDeals = async (queryParameters) => {
     nonBssField = sortBy.field;
     bssField = getBSSProperty(nonBssField);
 
-    selectedField.sortId = sortBy.order === CONSTANTS.DEALS.SORT_BY.ASCENDING ? 1 : -1;
+    selectedField.sortId = sortBy.order === DEALS.SORT_BY.ASCENDING ? 1 : -1;
   }
 
   /*
@@ -113,7 +113,7 @@ const findDeals = async (queryParameters) => {
         $addFields: {
           sortId: {
             $cond: {
-              if: { $eq: ['$dealSnapshot.dealType', CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS] },
+              if: { $eq: ['$dealSnapshot.dealType', DEALS.DEAL_TYPE.BSS_EWCS] },
               then: sortBy ? `$${bssField}` : undefined,
               else: sortBy ? `$${nonBssField}` : undefined,
             },

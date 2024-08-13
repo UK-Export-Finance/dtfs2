@@ -1,4 +1,4 @@
-const componentRenderer = require('../componentRenderer');
+const { componentRenderer } = require('../componentRenderer');
 
 const component = '../templates/_macros/select-all-table-cell-checkbox.njk';
 
@@ -17,5 +17,11 @@ describe(component, () => {
     const wrapper = getWrapper();
 
     wrapper.expectElement('label').toHaveAttribute('id', 'select-all-checkbox-label');
+  });
+
+  it("sets the aria-label to 'Select all'", () => {
+    const wrapper = getWrapper();
+
+    wrapper.expectElement('input[type="checkbox"]').toHaveAttribute('aria-label', 'Select all');
   });
 });

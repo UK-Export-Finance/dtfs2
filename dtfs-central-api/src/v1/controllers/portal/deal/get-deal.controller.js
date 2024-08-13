@@ -1,7 +1,6 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client').default;
-const CONSTANTS = require('../../../../constants');
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 
 const extendDealWithFacilities = async (deal) => {
@@ -25,11 +24,11 @@ const extendDealWithFacilities = async (deal) => {
     if (facilityObj) {
       const { type } = facilityObj;
 
-      if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND) {
+      if (type === FACILITY_TYPE.BOND) {
         mappedBonds.push(facilityObj);
       }
 
-      if (type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN) {
+      if (type === FACILITY_TYPE.LOAN) {
         mappedLoans.push(facilityObj);
       }
     }

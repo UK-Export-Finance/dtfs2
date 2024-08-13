@@ -39,19 +39,19 @@ const updateFacilities = async (deal, auditDetails) => {
           // only changes flag if AIN or MIA
           if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
             // updates GEF facility collection
-            const updatedPortalFacility = await api.updateGefFacility(facilityId, portalFacilityUpdate);
+            const updatedPortalFacility = await api.updateGefFacility({ facilityId, facilityUpdate: portalFacilityUpdate, auditDetails });
 
             facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
           }
         } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
           const facilityStatusUpdate = CONSTANTS.FACILITIES.FACILITY_STATUS_PORTAL.ACKNOWLEDGED;
 
-          await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
+          await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate, auditDetails);
 
           portalFacilityUpdate.hasBeenAcknowledged = true;
 
           // updates BSS facility collection
-          const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
+          const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate, auditDetails);
 
           facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
           facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;

@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import { HEADERS } from '@ukef/dtfs2-common';
 import axios, { AxiosResponse, HttpStatusCode } from 'axios';
 
 dotenv.config();
@@ -6,7 +7,7 @@ dotenv.config();
 const { EXTERNAL_API_URL, EXTERNAL_API_KEY } = process.env;
 
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   'x-api-key': String(EXTERNAL_API_KEY),
 };
 

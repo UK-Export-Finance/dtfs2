@@ -1,4 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const mapTotals = require('./mapTotals');
 const { formattedNumber } = require('../../../../utils/number');
 
@@ -130,8 +130,11 @@ describe('mapTotals', () => {
       mockBondAndLoanFacilities.map((facility) => {
         const facilityMapped = { ...facility };
 
-        facilityMapped.amendments[0].tfm = {
-          value: { ...mockAmendmentValueResponse },
+        facilityMapped.amendments[0] = {
+          status: AMENDMENT_STATUS.COMPLETED,
+          tfm: {
+            value: { ...mockAmendmentValueResponse },
+          },
         };
         return facilityMapped;
       });
@@ -182,8 +185,11 @@ describe('mapTotals', () => {
       mockCashAndContingentFacilities.map((facility) => {
         const facilityMapped = { ...facility };
 
-        facilityMapped.amendments[0].tfm = {
-          value: { ...mockAmendmentValueResponse },
+        facilityMapped.amendments[0] = {
+          status: AMENDMENT_STATUS.COMPLETED,
+          tfm: {
+            value: { ...mockAmendmentValueResponse },
+          },
         };
         return facilityMapped;
       });

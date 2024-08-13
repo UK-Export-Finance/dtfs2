@@ -7,7 +7,7 @@ import { DATE_FORMATS } from '../../constants';
  *
  * e.g. A Unix timestamp of 1702900314 is equivalent to an ISO 8601 date time
  * stamp of '2023-12-18T11:51:54Z'
- * @returns {Number} The current date and time as a 13 digit Unix timestamp (EPOCH)
+ * @returns {number} The current date and time as a 13 digit Unix timestamp (EPOCH)
  */
 export const getNowAsEpoch = (): number => Date.now();
 

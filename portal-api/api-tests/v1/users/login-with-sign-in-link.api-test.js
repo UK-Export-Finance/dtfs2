@@ -1,10 +1,11 @@
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const app = require('../../../src/createApp');
-const { getCollection } = require('../../../src/drivers/db-client');
+const { mongoDbClient: db } = require('../../../src/drivers/db-client');
 const { Hasher } = require('../../../src/crypto/hasher');
 const { Pbkdf2Sha512HashStrategy } = require('../../../src/crypto/pbkdf2-sha512-hash-strategy');
 const { CryptographicallyStrongGenerator } = require('../../../src/crypto/cryptographically-strong-generator');
 const { as } = require('../../api')(app);
-const { LOGIN_STATUSES, SIGN_IN_LINK, USER, HTTP_ERROR_CAUSES } = require('../../../src/constants');
+const { SIGN_IN_LINK, USER, HTTP_ERROR_CAUSES } = require('../../../src/constants');
 const users = require('./test-data');
 const { setUpApiTestUser } = require('../../api-test-users');
 const databaseHelper = require('../../database-helper');
@@ -39,7 +40,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   const loginWithSignInLink = ({ userId, signInToken, userToken }) =>
     as({ token: userToken }).post().to(`/v1/users/${userId}/sign-in-link/${signInToken}/login`);
 
-  const usersCollection = () => getCollection('users');
+  const usersCollection = () => db.getCollection('users');
 
   beforeAll(async () => {
     // Not faking next tick is required for database interaction to work
@@ -460,7 +461,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
               success: true,
               token: expect.any(String),
               user: JSON.parse(JSON.stringify(expectedSanitisedUser)),
-              loginStatus: LOGIN_STATUSES.VALID_2FA,
+              loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
               expiresIn: '12h',
             });
           });

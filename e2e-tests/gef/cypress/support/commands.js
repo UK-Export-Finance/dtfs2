@@ -37,3 +37,6 @@ Cypress.Commands.add('getTfmUserByUsername', require('../../../support/trade-fin
 Cypress.Commands.add('overrideTfmUserSessionId', require('../../../support/trade-finance-manager/overrideTfmUserSessionId'));
 Cypress.Commands.add('overrideRedisUserSession', require('../../../support/trade-finance-manager/overrideRedisUserSession'));
 Cypress.Commands.add('setSessionCookie', require('../../../support/trade-finance-manager/setSessionCookie'));
+
+Cypress.Commands.add('insertVersion0Deal', require('./commands/insertVersion0Deal'));
+Cypress.Commands.add('insertVersion0Facility', require('./commands/insertVersion0Facility'));

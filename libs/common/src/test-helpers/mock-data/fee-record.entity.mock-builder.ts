@@ -1,6 +1,6 @@
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '../../sql-db-entities';
-import { PaymentEntity } from '../../sql-db-entities/payment';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, FacilityUtilisationDataEntity, PaymentEntity } from '../../sql-db-entities';
 import { Currency, FeeRecordStatus } from '../../types';
+import { FacilityUtilisationDataEntityMockBuilder } from './facility-utilisation-data.entity.mock-builder';
 
 export class FeeRecordEntityMockBuilder {
   private readonly feeRecord: FeeRecordEntity;
@@ -18,7 +18,8 @@ export class FeeRecordEntityMockBuilder {
     };
 
     data.id = 1;
-    data.facilityId = '123456789';
+    data.facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678').build();
+    data.facilityId = '12345678';
     data.report = report;
     data.exporter = 'test exporter';
     data.baseCurrency = 'GBP';
@@ -32,6 +33,8 @@ export class FeeRecordEntityMockBuilder {
     data.paymentExchangeRate = 1;
     data.status = 'TO_DO';
     data.payments = [];
+    data.fixedFeeAdjustment = null;
+    data.principalBalanceAdjustment = null;
     data.updateLastUpdatedBy(requestSource);
     return new FeeRecordEntityMockBuilder(data);
   }
@@ -43,6 +46,13 @@ export class FeeRecordEntityMockBuilder {
 
   public withFacilityId(facilityId: string): FeeRecordEntityMockBuilder {
     this.feeRecord.facilityId = facilityId;
+    this.feeRecord.facilityUtilisationData.id = facilityId;
+    return this;
+  }
+
+  public withFacilityUtilisationData(facilityUtilisationData: FacilityUtilisationDataEntity): FeeRecordEntityMockBuilder {
+    this.feeRecord.facilityUtilisationData = facilityUtilisationData;
+    this.feeRecord.facilityId = facilityUtilisationData.id;
     return this;
   }
 
@@ -103,6 +113,31 @@ export class FeeRecordEntityMockBuilder {
 
   public withPayments(payments: PaymentEntity[]): FeeRecordEntityMockBuilder {
     this.feeRecord.payments = payments;
+    return this;
+  }
+
+  public withFixedFeeAdjustment(fixedFeeAdjustment: number | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.fixedFeeAdjustment = fixedFeeAdjustment;
+    return this;
+  }
+
+  public withPrincipalBalanceAdjustment(principalBalanceAdjustment: number | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.principalBalanceAdjustment = principalBalanceAdjustment;
+    return this;
+  }
+
+  public withLastUpdatedByIsSystemUser(isSystemUser: boolean): FeeRecordEntityMockBuilder {
+    this.feeRecord.lastUpdatedByIsSystemUser = isSystemUser;
+    return this;
+  }
+
+  public withLastUpdatedByPortalUserId(userId: string | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.lastUpdatedByPortalUserId = userId;
+    return this;
+  }
+
+  public withLastUpdatedByTfmUserId(userId: string | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.lastUpdatedByTfmUserId = userId;
     return this;
   }
 

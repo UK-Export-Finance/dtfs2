@@ -1,7 +1,7 @@
 /**
  * @openapi
  * definitions:
- *   UtilisationReportReconciliationDetailsFeeRecordItem:
+ *   UtilisationReportReconciliationDetailsFeeRecord:
  *     type: object
  *     properties:
  *       id:
@@ -14,14 +14,34 @@
  *         $ref: '#/definitions/CurrencyAndAmount'
  *       reportedPayments:
  *         $ref: '#/definitions/CurrencyAndAmount'
+ *   UtilisationReportReconciliationDetailsPayment:
+ *     type: object
+ *     properties:
+ *       id:
+ *         type: number
+ *       currency:
+ *         $ref: '#/definitions/Currency'
+ *       amount:
+ *         type: number
+ *   UtilisationReportReconciliationDetailsFeeRecordPaymentGroup:
+ *     type: object
+ *     properties:
+ *       feeRecords:
+ *         type: array
+ *         items:
+ *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecord'
  *       totalReportedPayments:
  *         $ref: '#/definitions/CurrencyAndAmount'
  *       paymentsReceived:
+ *         type: array
  *         nullable: true
- *         $ref: '#/definitions/CurrencyAndAmount'
+ *         items:
+ *           $ref: '#/definitions/UtilisationReportReconciliationDetailsPayment'
  *       totalPaymentsReceived:
- *         nullable: true
  *         $ref: '#/definitions/CurrencyAndAmount'
+ *         nullable: true
+ *       status:
+ *         $ref: '#/definitions/FeeRecordStatus'
  *   UtilisationReportReconciliationDetails:
  *     type: object
  *     properties:
@@ -39,9 +59,12 @@
  *       reportPeriod:
  *         $ref: '#/definitions/ReportPeriod'
  *       dateUploaded:
- *         type: Date
- *       feeRecords:
+ *         type: string
+ *         format: date-time
+ *       feeRecordPaymentGroups:
  *         type: array
  *         items:
- *           $ref: '#/definitions/UtilisationReportReconciliationFeeRecordItem'
+ *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecordPaymentGroup'
+ *       keyingSheet:
+ *         $ref: '#/definitions/KeyingSheet'
  */

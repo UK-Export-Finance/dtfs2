@@ -1,6 +1,6 @@
 import { ChangeStreamUpdateDocument, ChangeStreamInsertDocument, ChangeStreamReplaceDocument } from 'mongodb';
 import { DeletionAuditLog, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
-import mongoDbClient from '../../drivers/db-client';
+import { mongoDbClient } from '../../drivers/db-client';
 import { postAuditDetails, postDeletionAuditDetails } from './changeStreamApi';
 
 /**

@@ -1,4 +1,4 @@
-const pageRenderer = require('../../../../pageRenderer');
+const { pageRenderer } = require('../../../../pageRenderer');
 
 const page = '../templates/case/underwriting/pricing-and-risk/edit-facility-risk-profile/edit-facility-risk-profile.njk';
 

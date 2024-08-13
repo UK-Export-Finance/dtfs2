@@ -4,15 +4,14 @@ const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-co
 const wipeDB = require('../../../wipeDB');
 const aDeal = require('../../deal-builder');
 
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
-const CONSTANTS = require('../../../../src/constants');
+const { testApi } = require('../../../test-api');
+const { DEALS } = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 const { createDeal } = require('../../../helpers/create-deal');
 
 const newDeal = aDeal({
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+  dealType: DEALS.DEAL_TYPE.BSS_EWCS,
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   editedBy: [],
@@ -40,27 +39,29 @@ describe('/v1/tfm/deal/:id', () => {
     };
 
     it('404s if updating an unknown id', async () => {
-      const { status } = await api.put({ dealUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/deals/61e54e2e532cf2027303e001');
+      const { status } = await testApi
+        .put({ dealUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
+        .to('/v1/tfm/deals/61e54e2e532cf2027303e001');
       expect(status).toEqual(404);
     });
 
     it('updates the created deal with correct fields, retaining original dealSnapshot', async () => {
-      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const { body: portalDeal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
-      await api
+      await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
-      const { status } = await api.put({ dealUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      const { status } = await testApi.put({ dealUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
       expect(status).toEqual(200);
 
-      const { body } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       const dealAfterUpdate = body.deal;
 
@@ -73,22 +74,22 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('does NOT add anything to the root if for example deal.dealSnapshot or deal.tfm is not passed', async () => {
-      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const { body: portalDeal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
-      await api
+      await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
         .to('/v1/tfm/deals/submit');
 
-      const { status } = await api.put({ dealUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      const { status } = await testApi.put({ dealUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
       expect(status).toEqual(200);
 
-      const { body } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       const dealAfterUpdate = body.deal;
 
@@ -97,12 +98,12 @@ describe('/v1/tfm/deal/:id', () => {
     });
 
     it('updates deal.tfm.lastUpdated on each update', async () => {
-      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const { body: portalDeal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
-      await api
+      await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
@@ -113,30 +114,30 @@ describe('/v1/tfm/deal/:id', () => {
       };
 
       // first update
-      await api.put({ dealUpdate: anUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: anUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
-      const { body: firstUpdateBody } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body: firstUpdateBody } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(typeof firstUpdateBody.deal.tfm.lastUpdated).toEqual('number');
 
       const lastUpdatedOriginalValue = firstUpdateBody.deal.tfm.lastUpdated;
 
       // second update
-      await api.put({ dealUpdate: anUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: anUpdate, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
-      const { body: secondUpdateBody } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body: secondUpdateBody } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(typeof secondUpdateBody.deal.tfm.lastUpdated).toEqual('number');
       expect(secondUpdateBody.deal.tfm.lastUpdated).not.toEqual(lastUpdatedOriginalValue);
     });
 
     it('should not add blank activity object to deal.tfm.activities', async () => {
-      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const { body: portalDeal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
-      await api
+      await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
@@ -148,7 +149,7 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: tfmObject, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: tfmObject, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
       const blankCommentObj = {};
 
@@ -158,20 +159,20 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: blankActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: blankActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
-      const { body: dealAfterUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body: dealAfterUpdate } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(dealAfterUpdate.deal.tfm.activities).toEqual([]);
     });
 
     it('should add correct activity object to tfm in reverse order', async () => {
-      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const { body: portalDeal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
-      await api
+      await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
@@ -183,7 +184,7 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: tfmObject, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: tfmObject, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
       const MOCK_AUTHOR = {
         firstName: 'tester',
@@ -205,9 +206,9 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: singleCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: singleCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
-      const { body: firstCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body: firstCommentUpdate } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(firstCommentUpdate.deal.tfm.activities).toEqual([commentObj]);
 
@@ -225,20 +226,20 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: secondCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: secondCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
-      const { body: secondCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body: secondCommentUpdate } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(secondCommentUpdate.deal.tfm.activities).toEqual([secondCommentObj, commentObj]);
     });
 
     it('should not add duplicated activity objects when adding duplicate single activity object', async () => {
-      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const { body: portalDeal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
-      await api
+      await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
@@ -250,7 +251,7 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: tfmObject, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: tfmObject, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
       const MOCK_AUTHOR = {
         firstName: 'tester',
@@ -272,9 +273,9 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: singleCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: singleCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
-      const { body: firstCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body: firstCommentUpdate } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(firstCommentUpdate.deal.tfm.activities).toEqual([commentObj]);
 
@@ -292,21 +293,21 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: secondCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: secondCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
-      const { body: secondCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body: secondCommentUpdate } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(secondCommentUpdate.deal.tfm.activities).toEqual([commentObj]);
       expect(secondCommentUpdate.deal.tfm.activities.length).toEqual(1);
     });
 
     it('should not add duplicated activity objects when adding duplicate activity array', async () => {
-      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const { body: portalDeal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
-      await api
+      await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
@@ -318,7 +319,7 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: tfmObject, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: tfmObject, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
       const MOCK_AUTHOR = {
         firstName: 'tester',
@@ -340,9 +341,9 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: singleCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: singleCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
-      const { body: firstCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body: firstCommentUpdate } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(firstCommentUpdate.deal.tfm.activities).toEqual([commentObj]);
 
@@ -360,21 +361,21 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: secondCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: secondCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
-      const { body: secondCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body: secondCommentUpdate } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(secondCommentUpdate.deal.tfm.activities).toEqual([commentObj]);
       expect(secondCommentUpdate.deal.tfm.activities.length).toEqual(1);
     });
 
     it('should not add duplicated activity objects when adding multiple duplicate activities with different labels', async () => {
-      const { body: portalDeal } = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const { body: portalDeal } = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = portalDeal._id;
 
-      await api
+      await testApi
         .put({
-          dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
           dealId,
           auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
         })
@@ -386,7 +387,7 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: tfmObject, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: tfmObject, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
       const MOCK_AUTHOR = {
         firstName: 'tester',
@@ -418,9 +419,9 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: singleCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: singleCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
-      const { body: firstCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body: firstCommentUpdate } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(firstCommentUpdate.deal.tfm.activities).toEqual([commentOne, commentTwo]);
 
@@ -456,9 +457,9 @@ describe('/v1/tfm/deal/:id', () => {
         },
       };
 
-      await api.put({ dealUpdate: secondCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
+      await testApi.put({ dealUpdate: secondCommentActivity, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/deals/${dealId}`);
 
-      const { body: secondCommentUpdate } = await api.get(`/v1/tfm/deals/${dealId}`);
+      const { body: secondCommentUpdate } = await testApi.get(`/v1/tfm/deals/${dealId}`);
 
       expect(secondCommentUpdate.deal.tfm.activities).toEqual([commentOne, commentTwo, commentFour, commentFive]);
       expect(secondCommentUpdate.deal.tfm.activities.length).toEqual(4);

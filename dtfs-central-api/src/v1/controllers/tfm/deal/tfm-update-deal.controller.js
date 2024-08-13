@@ -3,10 +3,10 @@ const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findOneDeal } = require('./tfm-get-deal.controller');
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
-const CONSTANTS = require('../../../../constants');
+const { DEALS } = require('../../../../constants');
 const { isNumber } = require('../../../../helpers');
 
 const withoutId = (obj) => {
@@ -95,7 +95,8 @@ exports.updateDealPut = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails, ${error.message}`,
+        message: error.message,
+        code: error.code,
       });
     }
     return res.status(500).send({ status: 500, error });
@@ -154,7 +155,8 @@ exports.updateDealSnapshotPut = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails, ${error.message}`,
+        message: error.message,
+        code: error.code,
       });
     }
     return res.status(500).send({ status: 500, error });
@@ -166,7 +168,7 @@ exports.updateDealSnapshotPut = async (req, res) => {
     return res.status(404).send({ status: 404, message: 'Deal not found' });
   }
 
-  if (snapshotUpdate.dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+  if (snapshotUpdate.dealType === DEALS.DEAL_TYPE.BSS_EWCS) {
     const dealFacilities = await findAllFacilitiesByDealId(dealId);
     snapshotUpdate.facilities = dealFacilities;
   }

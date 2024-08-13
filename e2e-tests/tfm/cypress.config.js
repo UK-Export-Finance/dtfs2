@@ -1,8 +1,12 @@
 const { defineConfig } = require('cypress');
+const dotenv = require('dotenv');
 const path = require('path');
 const { createTasks } = require('../support/tasks');
 
-require('dotenv').config({ path: `${path.resolve(__dirname, '../..')}/.env` });
+// Read from root `./.env` directory
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
+const { TFM_API_KEY, FF_TFM_FACILITY_END_DATE_ENABLED } = process.env;
 
 module.exports = defineConfig({
   dealApiProtocol: 'http://',
@@ -17,8 +21,7 @@ module.exports = defineConfig({
   referenceDataApiProtocol: 'http://',
   referenceDataApiHost: 'localhost',
   referenceDataApiPort: '5002',
-  // TODO: Read value from environment variable
-  apiKey: 'test',
+  apiKey: TFM_API_KEY,
   dbName: 'dtfs-submissions',
   redisHost: 'localhost',
   redisPort: '6379',
@@ -53,6 +56,9 @@ module.exports = defineConfig({
         }),
       );
     },
+  },
+  env: {
+    FF_TFM_FACILITY_END_DATE_ENABLED,
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
 });

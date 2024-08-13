@@ -1,3 +1,4 @@
+const { AUDIT_USER_TYPES, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { set } = require('date-fns');
 const { cloneDeep } = require('lodash');
 const api = require('../../../src/v1/api');
@@ -44,7 +45,7 @@ const updatePortalFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.
 
 const updateGefActivitySpy = jest.fn(() => Promise.resolve(MOCK_GEF_DEAL_MIN));
 
-const updateGefFacilitySpy = jest.fn((facilityId, facilityUpdate) => Promise.resolve(facilityUpdate));
+const updateGefFacilitySpy = jest.fn(({ facilityUpdate }) => Promise.resolve(facilityUpdate));
 
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
 const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
@@ -71,6 +72,8 @@ const mockChecker = {
   timezone: 'Europe/London',
   username: 'checker1@ukexportfinance.gov.uk',
 };
+
+const expectAnyPortalUserAuditDetails = { userType: AUDIT_USER_TYPES.PORTAL, id: expect.anything() };
 
 describe('/v1/deals', () => {
   beforeEach(() => {
@@ -122,7 +125,7 @@ describe('/v1/deals', () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
           expect(status).toEqual(200);
 
-          const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+          const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
           expect(updatedBond.status).toEqual('Acknowledged');
         });
 
@@ -130,7 +133,7 @@ describe('/v1/deals', () => {
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
           const bondId = body.dealSnapshot.bondTransactions.items[0]._id;
 
-          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(bondId, 'Acknowledged');
+          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(bondId, 'Acknowledged', expectAnyPortalUserAuditDetails);
         });
 
         it('should update bond.exposurePeriodInMonths', async () => {
@@ -138,7 +141,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+          const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
           const expected = 12; // value is declared in mock api response.
           expect(updatedBond.tfm.exposurePeriodInMonths).toEqual(expected);
@@ -156,7 +159,7 @@ describe('/v1/deals', () => {
           const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
           expect(status).toEqual(200);
 
-          const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+          const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
           const expected = getGuaranteeDates(initialBond, dealSubmissionDate);
           expect(updatedBond.tfm.facilityGuaranteeDates).toEqual(expected);
@@ -167,7 +170,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+          const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
           const expected = MOCK_PREMIUM_SCHEDULE_RESPONSE;
           expect(updatedBond.tfm.premiumSchedule).toEqual(expected);
@@ -176,18 +179,22 @@ describe('/v1/deals', () => {
         it('should call updatePortalFacility', async () => {
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
-          const bondId = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND)._id;
+          const bondId = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND)._id;
 
-          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(bondId, {
-            hasBeenAcknowledged: true,
-            hasBeenIssuedAndAcknowledged: true,
-          });
+          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(
+            bondId,
+            {
+              hasBeenAcknowledged: true,
+              hasBeenIssuedAndAcknowledged: true,
+            },
+            { userType: AUDIT_USER_TYPES.PORTAL, id: expect.anything() },
+          );
         });
 
         it('should add bond.hasBeenAcknowledged', async () => {
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
-          const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+          const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
           expect(updatedBond.hasBeenAcknowledged).toEqual(true);
         });
@@ -195,7 +202,7 @@ describe('/v1/deals', () => {
         it('should add bond.hasBeenIssuedAndAcknowledged', async () => {
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
-          const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+          const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
           expect(updatedBond.hasBeenIssuedAndAcknowledged).toEqual(true);
         });
@@ -211,7 +218,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+          const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
           expect(updatedLoan.status).toEqual('Acknowledged');
         });
@@ -219,9 +226,9 @@ describe('/v1/deals', () => {
         it('should call updatePortalFacilityStatus with `Acknowledged` status', async () => {
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
-          const loanId = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN)._id;
+          const loanId = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN)._id;
 
-          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(loanId, 'Acknowledged');
+          expect(updatePortalFacilityStatusSpy).toHaveBeenCalledWith(loanId, 'Acknowledged', expectAnyPortalUserAuditDetails);
         });
 
         it('should update loan.exposurePeriodInMonths', async () => {
@@ -229,7 +236,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+          const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
           const expected = 12; // value is declared in mock api response.
           expect(updatedLoan.tfm.exposurePeriodInMonths).toEqual(expected);
@@ -248,7 +255,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+          const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
           const expected = getGuaranteeDates(initialLoan, dealSubmissionDate);
           expect(updatedLoan.tfm.facilityGuaranteeDates).toEqual(expected);
@@ -259,7 +266,7 @@ describe('/v1/deals', () => {
 
           expect(status).toEqual(200);
 
-          const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+          const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
           const expected = MOCK_PREMIUM_SCHEDULE_RESPONSE;
           expect(updatedLoan.tfm.premiumSchedule).toEqual(expected);
@@ -268,18 +275,22 @@ describe('/v1/deals', () => {
         it('should call updatePortalFacility', async () => {
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
-          const loanId = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN)._id;
+          const loanId = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN)._id;
 
-          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(loanId, {
-            hasBeenAcknowledged: true,
-            hasBeenIssuedAndAcknowledged: true,
-          });
+          expect(updatePortalFacilitySpy).toHaveBeenCalledWith(
+            loanId,
+            {
+              hasBeenAcknowledged: true,
+              hasBeenIssuedAndAcknowledged: true,
+            },
+            { userType: AUDIT_USER_TYPES.PORTAL, id: expect.anything() },
+          );
         });
 
         it('should add loan.hasBeenAcknowledged', async () => {
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
-          const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+          const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
           expect(updatedLoan.hasBeenAcknowledged).toEqual(true);
         });
@@ -287,7 +298,7 @@ describe('/v1/deals', () => {
         it('should add loan.hasBeenAcknowledged', async () => {
           const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
 
-          const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+          const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
           expect(updatedLoan.hasBeenIssuedAndAcknowledged).toEqual(true);
         });
@@ -362,7 +373,7 @@ describe('/v1/deals', () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
         expect(status).toEqual(200);
 
-        const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+        const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
         expect(updatedBond.status).toEqual('Acknowledged');
       });
 
@@ -375,7 +386,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+        const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
         expect(updatedLoan.status).toEqual('Acknowledged');
       });
 
@@ -404,7 +415,7 @@ describe('/v1/deals', () => {
         const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED));
         expect(status).toEqual(200);
 
-        const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+        const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
         const expected = getGuaranteeDates(initialBond, dealSubmissionDate);
         expect(updatedBond.tfm.facilityGuaranteeDates).toEqual(expected);
@@ -415,7 +426,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+        const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
         const expected = MOCK_PREMIUM_SCHEDULE_RESPONSE;
         expect(updatedBond.tfm.premiumSchedule).toEqual(expected);
@@ -434,7 +445,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+        const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
         const expected = getGuaranteeDates(initialLoan, dealSubmissionDate);
         expect(updatedLoan.tfm.facilityGuaranteeDates).toEqual(expected);
@@ -445,7 +456,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+        const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
         const expected = MOCK_PREMIUM_SCHEDULE_RESPONSE;
         expect(updatedLoan.tfm.premiumSchedule).toEqual(expected);
@@ -473,7 +484,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+        const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
         const expected = getGuaranteeDates(initialBond, dealSubmissionDate);
         expect(updatedBond.tfm.facilityGuaranteeDates).toEqual(expected);
@@ -489,7 +500,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const updatedBond = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.BOND);
+        const updatedBond = body.facilities.find((f) => f.type === FACILITY_TYPE.BOND);
 
         const expected = MOCK_PREMIUM_SCHEDULE_RESPONSE;
         expect(updatedBond.tfm.premiumSchedule).toEqual(expected);
@@ -508,7 +519,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+        const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
         const expected = getGuaranteeDates(initialLoan, dealSubmissionDate);
         expect(updatedLoan.tfm.facilityGuaranteeDates).toEqual(expected);
@@ -519,7 +530,7 @@ describe('/v1/deals', () => {
 
         expect(status).toEqual(200);
 
-        const updatedLoan = body.facilities.find((f) => f.type === CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN);
+        const updatedLoan = body.facilities.find((f) => f.type === FACILITY_TYPE.LOAN);
 
         const expected = MOCK_PREMIUM_SCHEDULE_RESPONSE;
         expect(updatedLoan.tfm.premiumSchedule).toEqual(expected);
@@ -583,8 +594,12 @@ describe('/v1/deals', () => {
 
         const facilityId = body.facilities.find((f) => f.hasBeenIssued === true)._id;
 
-        expect(updateGefFacilitySpy).toHaveBeenCalledWith(facilityId, {
-          hasBeenIssuedAndAcknowledged: true,
+        expect(updateGefFacilitySpy).toHaveBeenCalledWith({
+          facilityId,
+          facilityUpdate: {
+            hasBeenIssuedAndAcknowledged: true,
+          },
+          auditDetails: expectAnyPortalUserAuditDetails,
         });
       });
 
@@ -634,7 +649,7 @@ describe('/v1/deals', () => {
 
       it('calls updateGefMINActivity when deal is MIA', async () => {
         await submitDeal(createSubmitBody(MOCK_GEF_DEAL_SECOND_SUBMIT_MIA));
-        expect(updateGefActivitySpy).toHaveBeenCalledWith('MOCK_GEF_DEAL_SECOND_SUBMIT_MIA');
+        expect(updateGefActivitySpy).toHaveBeenCalledWith({ auditDetails: expectAnyPortalUserAuditDetails, dealId: 'MOCK_GEF_DEAL_SECOND_SUBMIT_MIA' });
       });
 
       it('Should update the application from MIA to MIN', async () => {

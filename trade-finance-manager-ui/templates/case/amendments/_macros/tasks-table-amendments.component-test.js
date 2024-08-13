@@ -1,4 +1,4 @@
-const componentRenderer = require('../../../../component-tests/componentRenderer');
+const { componentRenderer } = require('../../../../component-tests/componentRenderer');
 
 const component = '../templates/case/amendments/_macros/tasks-table-amendments.njk';
 

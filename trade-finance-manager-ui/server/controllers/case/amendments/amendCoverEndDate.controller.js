@@ -1,7 +1,8 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 
 const getAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
@@ -25,7 +26,7 @@ const getAmendCoverEndDate = async (req, res) => {
   }
 
   const facility = await api.getFacility(facilityId, userToken);
-  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, amendmentId, userToken);
+  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, userToken);
 
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
@@ -51,7 +52,7 @@ const postAmendCoverEndDate = async (req, res) => {
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
-  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, amendmentId, userToken);
+  const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, userToken);
 
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
@@ -84,6 +85,9 @@ const postAmendCoverEndDate = async (req, res) => {
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
     if (status === 200) {
+      if (isTfmFacilityEndDateFeatureFlagEnabled()) {
+        return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
+      }
       if (amendment.changeFacilityValue) {
         return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
       }

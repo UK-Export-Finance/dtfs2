@@ -1,0 +1,38 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% macro render(params) %}
+  {% set paymentDate = params.paymentDate %}
+  {% set paymentDateError = params.paymentDateError %}
+  {{ govukDateInput({
+      id: "paymentDate",
+      namePrefix: "paymentDate",
+      fieldset: {
+        legend: {
+          text: "Date payment received",
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      hint: {
+        text: "For example, 27 03 2023"
+      },
+      errorMessage: paymentDateError and {
+        text: paymentDateError.message
+      },
+      items: [
+        {
+          classes: (paymentDateError.dayError and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+          name: "day",
+          value: paymentDate.day
+        },
+        {
+          classes: (paymentDateError.monthError and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+          name: "month",
+          value: paymentDate.month
+        },
+        {
+          classes: (paymentDateError.yearError and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
+          name: "year",
+          value: paymentDate.year
+        }
+      ]
+    }) }}
+{% endmacro %}

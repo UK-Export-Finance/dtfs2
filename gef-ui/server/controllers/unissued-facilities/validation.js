@@ -10,7 +10,7 @@ const coverDatesValidation = require('../../utils/coverDatesValidation.helper');
  * returns required parameters for post update facility
  * @param {req}
  * @returns {res} if validation errors
- * @returns {Object} if no validation errors
+ * @returns {Promise<object>} if no validation errors
  */
 const facilityValidation = async ({ body, query, params, facility, userToken }) => {
   const { facilityType } = body;

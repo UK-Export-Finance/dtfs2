@@ -1,4 +1,4 @@
-import { ROLES } from '@ukef/dtfs2-common';
+import { ROLES, FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
 import CONSTANTS, { ALL_BANKS_ID } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
@@ -35,7 +35,7 @@ describe('controllers/dashboard/facilities - filters query', () => {
     const mockKeyword = 'test';
     const mockFilters = [
       {
-        [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [CONSTANTS.FACILITY_TYPE.CASH, CONSTANTS.FACILITY_TYPE.BOND],
+        [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [FACILITY_TYPE.CASH, FACILITY_TYPE.BOND],
       },
       {
         [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: [true],
@@ -81,7 +81,7 @@ describe('controllers/dashboard/facilities - filters query', () => {
     const mockKeyword = 'test';
     const mockFilters = [
       {
-        [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [CONSTANTS.FACILITY_TYPE.CASH, CONSTANTS.FACILITY_TYPE.BOND],
+        [CONSTANTS.FIELD_NAMES.FACILITY.TYPE]: [FACILITY_TYPE.CASH, FACILITY_TYPE.BOND],
       },
       {
         [CONSTANTS.FIELD_NAMES.FACILITY.HAS_BEEN_ISSUED]: [true],

@@ -1,6 +1,6 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 const facilitiesCollection = MONGO_DB_COLLECTIONS.FACILITIES;
 const findAllGefFacilitiesByDealId = async (dealId) => {

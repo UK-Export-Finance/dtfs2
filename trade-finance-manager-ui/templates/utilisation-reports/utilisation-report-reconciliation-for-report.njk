@@ -1,39 +1,89 @@
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% import "./_macros/premium-payments-table.njk" as premiumPaymentsTable %}
+{% import "./_macros/keying-sheet-table.njk" as keyingSheetTable %}
 
 {% extends "index.njk" %}
+
+{% set userCanEdit = user | userIsInTeam(['PDC_RECONCILE']) %}
 
 {% block pageTitle %}
   {{ bank.name }}, {{ formattedReportPeriod }}
 {% endblock %}
 
 {% set premiumPaymentsHtml %}
-  {% if errorSummary %}
+  {% if premiumPaymentFormError or facilityIdQueryError %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: errorSummary,
+      errorList: [premiumPaymentFormError, facilityIdQueryError],
       attributes: {
         'data-cy': 'error-summary'
       }
     }) }}
   {% endif %}
 
-  {% if errorSummary %}
+  {% set clearButtonHref %}
+      /utilisation-reports/{{ reportId }}
+  {% endset %}
+    <h2 class="govuk-heading-l" data-cy="premium-payments-heading">Premium payments</h2>
+
+    <div class="govuk-grid-row premium-payments-description-filter-container">
+      <div class="govuk-grid-column-one-half premium-payments-description-container">
+        <p class="govuk-body">Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button.</p>
+
+        <p class="govuk-body">
+          When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when you select the 'Generate keying data' button.
+        </p>
+      </div>
+
+      <div class="govuk-grid-column-one-half govuk-!-text-align-right premium-payments-filter-container">
+        <form method="GET" data-cy="facility-filter-form">
+          <div class="govuk-!-text-align-left govuk-!-display-inline-block premium-payments-filter-control">
+            {{ govukInput({
+              label: {
+                text: "Filter by facility ID",
+                classes: "govuk-label govuk-!-font-weight-bold"
+              },
+              id: "facility-id-filter",
+              name: "facilityIdQuery",
+              value: facilityIdQuery,
+              errorMessage: facilityIdQueryError and {
+                text: facilityIdQueryError.text
+              },
+              attributes: {'data-cy': 'facility-filter-input'}
+            }) }}
+          </div>
+          <div class="govuk-!-display-inline-block">
+            <div class="govuk-!-display-inline-block">
+              {{ govukButton({
+                text: "Filter",
+                classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 premium-payments-filter-control",
+                id: "facility-id-filter-button",
+                attributes: {'data-cy': 'facility-filter-submit-button'}
+              }) }}
+            </div>
+            <div class="govuk-!-display-inline-block">
+              {{ govukButton({
+                text: "Clear filter",
+                classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2 premium-payments-filter-control",
+                id: "facility-id-clear-button",
+                href: clearButtonHref,
+                attributes: {'data-cy': 'facility-filter-clear-button'}
+              }) }}
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  {% if premiumPaymentFormError %}
     <div class="govuk-form-group--error">
   {% endif %}
+  {% if userCanEdit %}
     <form method="post" data-cy="premium-payments-form">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-
-      <h2 class="govuk-heading-l" data-cy="premium-payments-heading">Premium payments</h2>
-
-      <p class="govuk-body">Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button.</p>
-
-      <p class="govuk-body">
-        When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when you select the 'Generate keying data' button.
-      </p>
-
       <div class="govuk-button-group">
         <input
           class="govuk-button govuk-!-margin-right-3"
@@ -42,29 +92,63 @@
           data-module="govuk-button"
           type="submit"
           data-cy="add-a-payment-button"/>
-        {{ govukButton({
-          text: "Generate keying data",
-          name: "generate-keying-data",
-          value: "generate-keying-data",
-          href: "#",
-          classes: "govuk-button--secondary",
-          attributes: {
-            "data-cy": "generate-keying-data-button"
-          }
-        }) }}
+        <input
+          class="govuk-button govuk-button--secondary govuk-!-margin-right-3"
+          formaction="/utilisation-reports/{{ reportId }}/check-keying-data"
+          value="Generate keying data"
+          data-module="govuk-button"
+          type="submit"
+          data-cy="generate-keying-data-button"/>
       </div>
-
-      {{ premiumPaymentsTable.render({
-        feeRecords: feeRecords
-      }) }}
+  {% endif %}
+  {{ premiumPaymentsTable.render({
+    reportId: reportId,
+    feeRecordPaymentGroups: feeRecordPaymentGroups,
+    enablePaymentsReceivedSorting: enablePaymentsReceivedSorting,
+    userCanEdit: userCanEdit
+  }) }}
+  {% if userCanEdit %}
     </form>
-  {% if errorSummary %}
+  {% endif %}
+  {% if premiumPaymentFormError %}
     </div>
   {% endif %}
 {% endset %}
 
 {% set keyingSheetHtml %}
-  <div></div>
+  <h2 class="govuk-heading-l" data-cy="keying-sheet-heading">Keying sheet</h2>
+
+  <p class="govuk-body">Select payments and mark as done when the adjustments have been keyed into ACBS.</p>
+
+  <p class="govuk-body">Payments on the premium payments tab will show as reconciled when they have been marked as done here.</p>
+
+  <form method="post" data-cy="keying-sheet-form">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+    {% if userCanEdit %}
+      <div class="govuk-button-group">
+        <input
+          class="govuk-button govuk-!-margin-right-3"
+          formaction="/utilisation-reports/{{ reportId }}/keying-data/mark-as-done"
+          value="Mark as done"
+          data-module="govuk-button"
+          type="submit"
+          data-cy="keying-sheet-mark-as-done-button"/>
+        <input
+          class="govuk-button govuk-button--secondary"
+          formaction="/utilisation-reports/{{ reportId }}/keying-data/mark-as-to-do"
+          value="Mark as to do"
+          data-module="govuk-button"
+          type="submit"
+          data-cy="keying-sheet-mark-as-to-do-button"/>
+      </div>
+    {% endif %}
+
+    {{ keyingSheetTable.render({
+      keyingSheet: keyingSheet,
+      userCanEdit: userCanEdit
+    }) }}
+  </form>
 {% endset %}
 
 {% set paymentDetailsHtml %}

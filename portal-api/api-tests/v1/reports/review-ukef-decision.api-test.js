@@ -49,7 +49,6 @@ describe('GET /v1/reports/review-ukef-decision', () => {
   withRoleAuthorisationTests({
     allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
-    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(reviewDecisionReportUrl),
     successStatusCode: 200,
   });

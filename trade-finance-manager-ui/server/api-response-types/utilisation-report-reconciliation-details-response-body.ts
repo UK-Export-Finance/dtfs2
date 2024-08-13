@@ -1,16 +1,40 @@
-import { IsoDateTimeStamp, ReportPeriod, UtilisationReportReconciliationStatus, FeeRecordStatus, CurrencyAndAmount } from '@ukef/dtfs2-common';
+import {
+  IsoDateTimeStamp,
+  ReportPeriod,
+  UtilisationReportReconciliationStatus,
+  FeeRecordStatus,
+  CurrencyAndAmount,
+  KeyingSheetRowStatus,
+  Currency,
+  KeyingSheetAdjustment,
+} from '@ukef/dtfs2-common';
+import { FeeRecord } from './fee-record';
+import { Payment } from './payment';
 
-export type FeeRecordItem = {
-  id: number;
-  facilityId: string;
-  exporter: string;
-  reportedFees: CurrencyAndAmount;
-  reportedPayments: CurrencyAndAmount;
+export type FeeRecordPaymentGroup = {
+  feeRecords: FeeRecord[];
   totalReportedPayments: CurrencyAndAmount;
-  paymentsReceived: CurrencyAndAmount | null;
+  paymentsReceived: Payment[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
   status: FeeRecordStatus;
 };
+
+export type KeyingSheetRow = {
+  feeRecordId: number;
+  status: KeyingSheetRowStatus;
+  facilityId: string;
+  exporter: string;
+  feePayments: {
+    currency: Currency;
+    amount: number;
+    dateReceived: IsoDateTimeStamp | null;
+  }[];
+  baseCurrency: Currency;
+  fixedFeeAdjustment: KeyingSheetAdjustment | null;
+  principalBalanceAdjustment: KeyingSheetAdjustment | null;
+};
+
+export type KeyingSheet = KeyingSheetRow[];
 
 export type UtilisationReportReconciliationDetailsResponseBody = {
   reportId: number;
@@ -21,5 +45,6 @@ export type UtilisationReportReconciliationDetailsResponseBody = {
   status: UtilisationReportReconciliationStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: IsoDateTimeStamp;
-  feeRecords: FeeRecordItem[];
+  feeRecordPaymentGroups: FeeRecordPaymentGroup[];
+  keyingSheet: KeyingSheet;
 };

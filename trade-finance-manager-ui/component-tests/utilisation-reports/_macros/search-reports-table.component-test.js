@@ -1,5 +1,5 @@
 const { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder } = require('@ukef/dtfs2-common');
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 const { getFindReportSummaryItemViewModel } = require('../../../server/controllers/utilisation-reports/helpers/find-reports-by-year-helper');
 const { MOCK_TFM_SESSION_USER } = require('../../../server/test-mocks/mock-tfm-session-user');
 
@@ -8,7 +8,7 @@ const tableSelector = '[data-cy="utilisation-reports-by-bank-and-year-table"]';
 
 const render = componentRenderer(component);
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 const mapReportToSummaryItem = (bank, report) => {
   const totalFeesReported = report.feeRecords.length;
@@ -38,7 +38,7 @@ const BANK = {
 
 describe(component, () => {
   afterAll(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
   });
 
   const getWrapper = ({ isTfmPaymentReconciliationFeatureFlagEnabled } = {}) => {

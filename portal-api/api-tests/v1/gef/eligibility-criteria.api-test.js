@@ -1,4 +1,10 @@
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { ObjectId } = require('mongodb');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const {
+  generateParsedMockPortalUserAuditDatabaseRecord,
+  withDeleteOneTests,
+  expectAnyPortalUserAuditDatabaseRecord,
+} = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 
 const app = require('../../../src/createApp');
@@ -39,7 +45,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(baseUrl),
       successStatusCode: 200,
     });
@@ -60,7 +65,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(latestEligibilityCriteriaUrl),
       successStatusCode: 200,
     });
@@ -97,7 +101,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).get(eligibilityCriteria1Url),
       successStatusCode: 200,
     });
@@ -132,7 +135,6 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).post(mockEligibilityCriteria[0]).to(baseUrl),
       successStatusCode: 201,
     });
@@ -140,9 +142,11 @@ describe(baseUrl, () => {
 
   describe(`DELETE ${baseUrl}/:version`, () => {
     const eligibilityCriteria1Url = `${baseUrl}/${mockEligibilityCriteria[0].version}`;
+    let eligibilityCriteriaToDeleteId;
 
     beforeEach(async () => {
-      await as(anAdmin).post(mockEligibilityCriteria[0]).to(baseUrl);
+      const { body } = await as(anAdmin).post(mockEligibilityCriteria[0]).to(baseUrl);
+      eligibilityCriteriaToDeleteId = new ObjectId(body._id);
     });
 
     withClientAuthenticationTests({
@@ -153,18 +157,15 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
       makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),
       successStatusCode: 200,
     });
 
-    it('deletes the eligibility-criteria', async () => {
-      await as(anAdmin).post(mockEligibilityCriteria[0]).to(baseUrl);
-      const { body: item } = await as(anAdmin).get(`${baseUrl}/${mockEligibilityCriteria[0].version}`);
-
-      const { status, body } = await as(anAdmin).remove(`${baseUrl}/${mockEligibilityCriteria[0].version}`);
-      expect(status).toEqual(200);
-      expect(body).toEqual(item);
+    withDeleteOneTests({
+      makeRequest: () => as(anAdmin).remove(eligibilityCriteria1Url),
+      collectionName: MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA,
+      auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
+      getDeletedDocumentId: () => eligibilityCriteriaToDeleteId,
     });
   });
 });

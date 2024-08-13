@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION, AUDIT_USER_TYPES, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
 const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const {
@@ -8,7 +8,7 @@ const {
   deleteOne,
   validateAuditDetailsAndUserType,
 } = require('@ukef/dtfs2-common/change-stream');
-const db = require('../../../../drivers/db-client').default;
+const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 const createTeam = async (team, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
@@ -29,7 +29,8 @@ exports.createTfmTeam = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails, ${error.message}`,
+        message: error.message,
+        code: error.code,
       });
     }
     return res.status(500).send({ status: 500, error });
@@ -87,7 +88,7 @@ exports.deleteTfmTeam = async (req, res) => {
   const team = await teamsCollection.findOne({ id: { $eq: id } });
 
   if (!team) {
-    return res.status(404).send({ status: 400, message: 'Team not found' });
+    return res.status(404).send({ status: 404, message: 'Team not found' });
   }
 
   try {
@@ -95,8 +96,9 @@ exports.deleteTfmTeam = async (req, res) => {
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
-        status: 400,
-        message: `Invalid auditDetails, ${error.message}`,
+        status: error.status,
+        message: error.message,
+        code: error.code,
       });
     }
     return res.status(500).send({ status: 500, error });
@@ -112,6 +114,9 @@ exports.deleteTfmTeam = async (req, res) => {
 
     return res.status(200).send(deleteResult);
   } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return res.status(404).send({ status: 404, message: 'Team not found' });
+    }
     console.error('Error deleting TFM team %o', error);
     return res.status(500).send({ status: 500, error });
   }

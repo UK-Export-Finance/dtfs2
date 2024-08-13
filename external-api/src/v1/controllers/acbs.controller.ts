@@ -10,6 +10,7 @@
 
 import axios from 'axios';
 import * as dotenv from 'dotenv';
+import { HEADERS } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import { Amendment } from '../../interfaces';
 import { ENTITY_TYPE, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
@@ -21,7 +22,7 @@ const apimUrl = process.env.APIM_TFS_URL;
 const acbsUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 
 export const checkDealId = async (dealId: any) => {
@@ -214,8 +215,8 @@ export const issueAcbsFacilityPOST = async (req: Request, res: Response) => {
 
 /**
  * Invoked Azure DOF using HTTP `POST` method.
- * @param {Object} amendment Amendment object comprising facility ID and amends. A amendment at a time is processed.
- * @returns {Object} DOF Response
+ * @param {object} amendment Amendment object comprising facility ID and amends. A amendment at a time is processed.
+ * @returns {Promise<object | null>} DOF Response
  */
 const amendAcbsFacility = async (amendment: Amendment) => {
   const hasAmendment = amendment.coverEndDate || amendment.amount;
@@ -244,9 +245,9 @@ const amendAcbsFacility = async (amendment: Amendment) => {
 /**
  * ACBS facility amendment entry function.
  * Constructs acceptable payload by DOF.
- * @param {Object} req Request
- * @param {Object} res Response
- * @return {Object} Response object with HTTP code as `status` and response as `data`.
+ * @param {object} req Request
+ * @param {object} res Response
+ * @returns {Promise<object>} Response object with HTTP code as `status` and response as `data`.
  */
 export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
   try {

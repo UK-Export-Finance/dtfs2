@@ -1,3 +1,4 @@
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { BANK1_CHECKER1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/portal-users.fixture');
 
 const api = () => {
@@ -5,11 +6,9 @@ const api = () => {
   return url;
 };
 
-const apiKey = Cypress.config('apiKey');
-
 const headers = {
-  'Content-Type': 'application/json',
-  'x-api-key': apiKey,
+  'x-api-key': Cypress.config('apiKey'),
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
 };
 
 module.exports.submitDeal = (dealId, dealType, token) =>
@@ -66,9 +65,7 @@ module.exports.login = (username, password) =>
       url: `${api()}/v1/login`,
       method: 'POST',
       body: { username, password },
-      headers: {
-        ...headers,
-      },
+      headers,
     })
     .then((resp) => {
       expect(resp.status).to.equal(200);

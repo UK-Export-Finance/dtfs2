@@ -42,14 +42,14 @@ const updatedIssuedFacilities = async (deal, auditDetails) => {
 
           // Add `hasBeenAcknowledged` flag to BSS/EWCS facility
           if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-            await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate);
+            await api.updatePortalFacilityStatus(facilityId, facilityStatusUpdate, auditDetails);
 
             const portalFacilityUpdate = {
               hasBeenAcknowledged: true,
               hasBeenIssuedAndAcknowledged: true,
             };
 
-            const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate);
+            const updatedPortalFacility = await api.updatePortalFacility(facilityId, portalFacilityUpdate, auditDetails);
             facility.hasBeenAcknowledged = updatedPortalFacility.hasBeenAcknowledged;
             facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
             facility.status = facilityStatusUpdate;
@@ -77,7 +77,7 @@ const updatedIssuedFacilities = async (deal, auditDetails) => {
                 hasBeenIssuedAndAcknowledged: true,
               };
 
-              const updatedPortalFacility = await api.updateGefFacility(facilityId, facilityUpdatePortal);
+              const updatedPortalFacility = await api.updateGefFacility({ facilityId, facilityUpdate: facilityUpdatePortal, auditDetails });
               facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
 
               feeRecord = calculateGefFacilityFeeRecord(facility);

@@ -1,4 +1,5 @@
-const CONSTANTS = require('../../constants');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { DEAL } = require('../../constants');
 const { overrideDealsIfAmendmentsInProgress } = require('./overrideDealsIfAmendmentsInProgress.helper');
 
 describe('overrideDealsIfAmendmentsInProgress', () => {
@@ -6,35 +7,35 @@ describe('overrideDealsIfAmendmentsInProgress', () => {
     {
       _id: '0',
       tfm: {
-        stage: CONSTANTS.DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS,
+        stage: DEAL.DEAL_STAGE.UKEF_APPROVED_WITH_CONDITIONS,
       },
     },
     {
       _id: '1',
       tfm: {
-        stage: CONSTANTS.DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS,
+        stage: DEAL.DEAL_STAGE.APPROVED_WITHOUT_CONDITIONS,
       },
     },
   ];
 
   const amendmentsOneCorresponding = [
     {
-      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+      status: AMENDMENT_STATUS.IN_PROGRESS,
       dealId: '0',
     },
     {
-      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.NOT_STARTED,
+      status: AMENDMENT_STATUS.NOT_STARTED,
       dealId: '1',
     },
   ];
 
   const amendmentsNoneCorresponding = [
     {
-      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.IN_PROGRESS,
+      status: AMENDMENT_STATUS.IN_PROGRESS,
       dealId: '2',
     },
     {
-      status: CONSTANTS.AMENDMENTS.AMENDMENT_STATUS.NOT_STARTED,
+      status: AMENDMENT_STATUS.NOT_STARTED,
       dealId: '1',
     },
   ];
@@ -47,7 +48,7 @@ describe('overrideDealsIfAmendmentsInProgress', () => {
         {
           _id: '0',
           tfm: {
-            stage: CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS,
+            stage: DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS,
           },
         },
         deals[1],

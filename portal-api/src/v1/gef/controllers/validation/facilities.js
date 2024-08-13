@@ -1,8 +1,9 @@
+const { isFacilityEndDateEnabledOnGefVersion, FACILITY_TYPE, FACILITY_PROVIDED_DETAILS } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../../constants');
-const { FACILITY_TYPE, FACILITY_PAYMENT_TYPE, FACILITY_PROVIDED_DETAILS } = require('../../enums');
+const { FACILITY_PAYMENT_TYPE } = require('../../enums');
 
 /* eslint-disable consistent-return */
-const hasRequiredItems = (doc) => {
+const hasRequiredItems = (doc, dealVersion) => {
   const isMigratedFacility = doc.dataMigration;
 
   const required = [];
@@ -20,6 +21,17 @@ const hasRequiredItems = (doc) => {
   }
   if (doc.hasBeenIssued === true && !doc.coverEndDate) {
     required.push('coverEndDate');
+  }
+  if (isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
+    if (doc.isUsingFacilityEndDate === null) {
+      required.push('isUsingFacilityEndDate');
+    }
+    if (doc.isUsingFacilityEndDate === true && !doc.facilityEndDate) {
+      required.push('facilityEndDate');
+    }
+    if (doc.isUsingFacilityEndDate === false && !doc.bankReviewDate) {
+      required.push('bankReviewDate');
+    }
   }
   if (doc.hasBeenIssued === false && !doc.monthsOfCover) {
     required.push('monthsOfCover');
@@ -105,8 +117,8 @@ const facilitiesCheckEnums = (doc) => {
   return enumErrors.length === 0 ? null : enumErrors;
 };
 
-const facilitiesValidation = (doc) => ({
-  required: hasRequiredItems(doc),
+const facilitiesValidation = (facility, dealVersion) => ({
+  required: hasRequiredItems(facility, dealVersion),
 });
 
 module.exports = {

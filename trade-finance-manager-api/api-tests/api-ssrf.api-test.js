@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
@@ -9,6 +10,10 @@ const api = jest.requireActual('../src/v1/api');
 const mockAxios = new MockAdapter(axios);
 
 describe('API is protected against SSRF attacks', () => {
+  const MOCK_PORTAL_USER_AUDIT_DETAILS = generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id);
+  const validDealId = '5ce819935e539c343f141ece';
+  const portalAuditDetails = generatePortalAuditDetails(new ObjectId());
+
   describe('findOnePortalDeal', () => {
     const mockResponse = {
       deal: 'Mock deal',
@@ -37,8 +42,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
       const response = await api.findOnePortalDeal(validDealId);
 
       expect(response).toEqual(mockResponse.deal);
@@ -57,7 +60,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.updatePortalDeal(urlTraversal, { deal: 'Mock deal' });
+      const response = await api.updatePortalDeal(urlTraversal, { deal: 'Mock deal' }, MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -66,15 +69,13 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.updatePortalDeal(localIp, { deal: 'Mock deal' });
+      const response = await api.updatePortalDeal(localIp, { deal: 'Mock deal' }, MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       expect(response).toMatchObject(expectedResponse);
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
-      const response = await api.updatePortalDeal(validDealId, { deal: 'Mock deal' });
+      const response = await api.updatePortalDeal(validDealId, { deal: 'Mock deal' }, MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       expect(response).toEqual(mockResponse);
     });
@@ -82,6 +83,7 @@ describe('API is protected against SSRF attacks', () => {
 
   describe('updatePortalBssDealStatus', () => {
     const mockResponse = 'Mock status';
+
     beforeAll(() => {
       mockAxios.reset();
       const url = /^.*\/v1\/portal\/deals\/.*\/status$/;
@@ -92,7 +94,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.updatePortalBssDealStatus(urlTraversal, 'Mock status');
+      const response = await api.updatePortalBssDealStatus({ dealId: urlTraversal, status: 'Mock status', auditDetails: portalAuditDetails });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -101,15 +103,13 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.updatePortalBssDealStatus(localIp, 'Mock status');
+      const response = await api.updatePortalBssDealStatus({ dealId: localIp, status: 'Mock status', auditDetails: portalAuditDetails });
 
       expect(response).toMatchObject(expectedResponse);
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
-      const response = await api.updatePortalBssDealStatus(validDealId, 'Mock status');
+      const response = await api.updatePortalBssDealStatus({ dealId: validDealId, status: 'Mock status', auditDetails: portalAuditDetails });
 
       expect(response).toEqual(mockResponse);
     });
@@ -126,7 +126,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Returns an error when a url traversal is supplied', async () => {
       const urlTraversal = '../../../etc/stealpassword';
 
-      const addingAPortalDealComment = () => api.addPortalDealComment(urlTraversal, 'mock', 'mock');
+      const addingAPortalDealComment = () => api.addPortalDealComment(urlTraversal, 'mock', 'mock', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       await expect(addingAPortalDealComment).rejects.toThrow(`Invalid deal id: ${urlTraversal}`);
     });
@@ -134,15 +134,13 @@ describe('API is protected against SSRF attacks', () => {
     it('Returns an error when a local IP is supplied', async () => {
       const localIp = '127.0.0.1';
 
-      const addingAPortalDealComment = () => api.addPortalDealComment(localIp, 'mock', 'mock');
+      const addingAPortalDealComment = () => api.addPortalDealComment(localIp, 'mock', 'mock', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       await expect(addingAPortalDealComment).rejects.toThrow(`Invalid deal id: ${localIp}`);
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
-      const response = await api.addPortalDealComment(validDealId, 'mock', 'mock');
+      const response = await api.addPortalDealComment(validDealId, 'mock', 'mock', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       expect(response).toEqual(mockResponse);
     });
@@ -160,7 +158,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.updatePortalFacilityStatus(urlTraversal, 'Mock status');
+      const response = await api.updatePortalFacilityStatus(urlTraversal, 'Mock status', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -169,7 +167,7 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.updatePortalFacilityStatus(localIp, 'Mock status');
+      const response = await api.updatePortalFacilityStatus(localIp, 'Mock status', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -177,7 +175,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
-      const response = await api.updatePortalFacilityStatus(validFacilityId, 'Mock status');
+      const response = await api.updatePortalFacilityStatus(validFacilityId, 'Mock status', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       expect(response).toEqual(mockResponse);
     });
@@ -210,8 +208,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
       const response = await api.findOneDeal(validDealId);
 
       expect(response).toEqual(mockResponse.deal);
@@ -265,7 +261,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.updateDealSnapshot(urlTraversal, 'Mock update', generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
+      const response = await api.updateDealSnapshot(urlTraversal, 'Mock update', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -274,15 +270,13 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id' };
 
-      const response = await api.updateDealSnapshot(localIp, 'Mock update', generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
+      const response = await api.updateDealSnapshot(localIp, 'Mock update', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       expect(response).toMatchObject(expectedResponse);
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
-      const response = await api.updateDealSnapshot(validDealId, 'Mock update', generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
+      const response = await api.updateDealSnapshot(validDealId, 'Mock update', MOCK_PORTAL_USER_AUDIT_DETAILS);
 
       expect(response).toEqual(mockResponse);
     });
@@ -350,8 +344,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
       const response = await api.findFacilitiesByDealId(validDealId);
 
       expect(response).toEqual(mockResponse);
@@ -513,11 +505,38 @@ describe('API is protected against SSRF attacks', () => {
     });
   });
 
-  describe('getCompletedAmendment', () => {
+  const getAmendmentDetailsByFacilityIdFunctionsToTest = [
+    {
+      description: 'getCompletedAmendment',
+      apiFunction: api.getCompletedAmendment,
+      url: /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed$/,
+    },
+    {
+      description: 'getLatestCompletedAmendmentValue',
+      apiFunction: api.getLatestCompletedAmendmentValue,
+      url: /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed\/latest-value$/,
+    },
+    {
+      description: 'getLatestCompletedAmendmentDate',
+      apiFunction: api.getLatestCompletedAmendmentDate,
+      url: /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed\/latest-cover-end-date$/,
+    },
+    {
+      description: 'getLatestCompletedAmendmentFacilityEndDate',
+      apiFunction: api.getLatestCompletedAmendmentFacilityEndDate,
+      url: /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed\/latest-facility-end-date$/,
+    },
+    {
+      description: 'getAmendmentByFacilityId',
+      apiFunction: api.getAmendmentByFacilityId,
+      url: /^.*\/v1\/tfm\/facilities\/.*\/amendments$/,
+    },
+  ];
+
+  describe.each(getAmendmentDetailsByFacilityIdFunctionsToTest)('$description', ({ apiFunction, url }) => {
     const mockResponse = 'Mock amendment';
     beforeAll(() => {
       mockAxios.reset();
-      const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed$/;
       mockAxios.onGet(url).reply(200, mockResponse);
     });
 
@@ -525,7 +544,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
 
-      const response = await api.getCompletedAmendment(urlTraversal);
+      const response = await apiFunction(urlTraversal);
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -534,7 +553,7 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
 
-      const response = await api.getCompletedAmendment(localIp);
+      const response = await apiFunction(localIp);
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -542,77 +561,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
-      const response = await api.getCompletedAmendment(validFacilityId);
-
-      expect(response).toEqual(mockResponse);
-    });
-  });
-
-  describe('getLatestCompletedAmendmentValue', () => {
-    const mockResponse = 'Mock value';
-    beforeAll(() => {
-      mockAxios.reset();
-      const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed\/latest-value$/;
-      mockAxios.onGet(url).reply(200, mockResponse);
-    });
-
-    it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
-
-      const response = await api.getLatestCompletedAmendmentValue(urlTraversal);
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
-
-      const response = await api.getLatestCompletedAmendmentValue(localIp);
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Makes an axios request when the facility id is valid', async () => {
-      const validFacilityId = '5ce819935e539c343f141ece';
-
-      const response = await api.getLatestCompletedAmendmentValue(validFacilityId);
-
-      expect(response).toEqual(mockResponse);
-    });
-  });
-
-  describe('getLatestCompletedAmendmentDate', () => {
-    const mockResponse = 'Mock date';
-    beforeAll(() => {
-      mockAxios.reset();
-      const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments\/completed\/latest-cover-end-date$/;
-      mockAxios.onGet(url).reply(200, mockResponse);
-    });
-
-    it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
-
-      const response = await api.getLatestCompletedAmendmentDate(urlTraversal);
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
-
-      const response = await api.getLatestCompletedAmendmentDate(localIp);
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Makes an axios request when the facility id is valid', async () => {
-      const validFacilityId = '5ce819935e539c343f141ece';
-
-      const response = await api.getLatestCompletedAmendmentDate(validFacilityId);
+      const response = await apiFunction(validFacilityId);
 
       expect(response).toEqual(mockResponse);
     });
@@ -656,41 +605,6 @@ describe('API is protected against SSRF attacks', () => {
     });
   });
 
-  describe('getAmendmentByFacilityId', () => {
-    const mockResponse = 'Mock amendment';
-    beforeAll(() => {
-      mockAxios.reset();
-      const url = /^.*\/v1\/tfm\/facilities\/.*\/amendments$/;
-      mockAxios.onGet(url).reply(200, mockResponse);
-    });
-
-    it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
-
-      const response = await api.getAmendmentByFacilityId(urlTraversal);
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
-
-      const response = await api.getAmendmentByFacilityId(localIp);
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Makes an axios request when the facility id is valid', async () => {
-      const validFacilityId = '5ce819935e539c343f141ece';
-
-      const response = await api.getAmendmentByFacilityId(validFacilityId);
-
-      expect(response).toEqual(mockResponse);
-    });
-  });
-
   describe('getAmendmentsByDealId', () => {
     const mockResponse = 'Mock amendments';
     beforeAll(() => {
@@ -718,8 +632,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
       const response = await api.getAmendmentsByDealId(validDealId);
 
       expect(response).toEqual(mockResponse);
@@ -753,8 +665,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
       const response = await api.getAmendmentInProgressByDealId(validDealId);
 
       expect(response).toEqual(mockResponse);
@@ -788,8 +698,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
       const response = await api.getCompletedAmendmentByDealId(validDealId);
 
       expect(response).toEqual(mockResponse);
@@ -823,8 +731,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
       const response = await api.getLatestCompletedAmendmentByDealId(validDealId);
 
       expect(response).toEqual(mockResponse);
@@ -843,7 +749,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
 
-      const response = await api.updateGefFacility(urlTraversal);
+      const response = await api.updateGefFacility({ facilityId: urlTraversal, facilityUpdate: {}, auditDetails: MOCK_PORTAL_USER_AUDIT_DETAILS });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -852,7 +758,7 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility Id provided' };
 
-      const response = await api.updateGefFacility(localIp);
+      const response = await api.updateGefFacility({ facilityId: localIp, facilityUpdate: {}, auditDetails: MOCK_PORTAL_USER_AUDIT_DETAILS });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -860,7 +766,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the facility id is valid', async () => {
       const validFacility = '5ce819935e539c343f141ece';
 
-      const response = await api.updateGefFacility(validFacility);
+      const response = await api.updateGefFacility({ facilityId: validFacility, facilityUpdate: {}, auditDetails: MOCK_PORTAL_USER_AUDIT_DETAILS });
 
       expect(response).toEqual(mockResponse);
     });
@@ -1141,8 +1047,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
       const response = await api.findOneGefDeal(validDealId);
 
       expect(response).toEqual(mockResponse);
@@ -1150,6 +1054,7 @@ describe('API is protected against SSRF attacks', () => {
   });
 
   describe('updatePortalGefDealStatus', () => {
+    const auditDetails = generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id);
     const mockResponse = 'Mock deal';
     beforeAll(() => {
       mockAxios.reset();
@@ -1161,7 +1066,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
-      const response = await api.updatePortalGefDealStatus(urlTraversal, 'mock status');
+      const response = await api.updatePortalGefDealStatus({ dealId: urlTraversal, status: 'mock status', auditDetails });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -1170,21 +1075,20 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
-      const response = await api.updatePortalGefDealStatus(localIp, 'mock status');
+      const response = await api.updatePortalGefDealStatus({ dealId: localIp, status: 'mock status', auditDetails });
 
       expect(response).toMatchObject(expectedResponse);
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
-      const response = await api.updatePortalGefDealStatus(validDealId, 'mock status');
+      const response = await api.updatePortalGefDealStatus({ dealId: validDealId, status: 'mock status', auditDetails });
 
       expect(response).toEqual(mockResponse);
     });
   });
 
   describe('updatePortalGefDeal', () => {
+    const auditDetails = generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id);
     const mockResponse = 'Mock deal';
     beforeAll(() => {
       mockAxios.reset();
@@ -1196,7 +1100,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
-      const response = await api.updatePortalGefDealStatus(urlTraversal, 'mock update');
+      const response = await api.updatePortalGefDeal({ dealId: urlTraversal, status: 'mock update', auditDetails });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -1205,15 +1109,13 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
-      const response = await api.updatePortalGefDealStatus(localIp, 'mock update');
+      const response = await api.updatePortalGefDeal({ dealId: localIp, status: 'mock update', auditDetails });
 
       expect(response).toMatchObject(expectedResponse);
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
-      const response = await api.updatePortalGefDealStatus(validDealId, 'mock update');
+      const response = await api.updatePortalGefDeal({ dealId: validDealId, status: 'mock update', auditDetails });
 
       expect(response).toEqual(mockResponse);
     });
@@ -1221,6 +1123,7 @@ describe('API is protected against SSRF attacks', () => {
 
   describe('updateGefMINActivity', () => {
     const mockResponse = 'Mock deal';
+    const auditDetails = generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id);
     beforeAll(() => {
       mockAxios.reset();
       const url = /^.*\/v1\/portal\/gef\/deals\/activity\/.*$/;
@@ -1231,7 +1134,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
-      const response = await api.updateGefMINActivity(urlTraversal);
+      const response = await api.updateGefMINActivity({ dealId: urlTraversal, auditDetails });
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -1240,15 +1143,13 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid deal id provided' };
 
-      const response = await api.updateGefMINActivity(localIp);
+      const response = await api.updateGefMINActivity({ dealId: localIp, auditDetails });
 
       expect(response).toMatchObject(expectedResponse);
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
-      const response = await api.updateGefMINActivity(validDealId);
+      const response = await api.updateGefMINActivity({ dealId: validDealId, auditDetails });
 
       expect(response).toEqual(mockResponse);
     });
@@ -1279,8 +1180,6 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Makes an axios request when the deal id is valid', async () => {
-      const validDealId = '5ce819935e539c343f141ece';
-
       const response = await api.addUnderwriterCommentToGefDeal(validDealId, 'mock comment type', 'mock comment');
 
       expect(response).toEqual(mockResponse);

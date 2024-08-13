@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const express = require('express');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../roles/roles');
 const { validateUserHasAtLeastOneAllowedRole } = require('../roles/validate-user-has-at-least-one-allowed-role');
@@ -11,6 +12,7 @@ const mandatoryCriteriaVersioned = require('./controllers/mandatoryCriteriaVersi
 const eligibilityCriteria = require('./controllers/eligibilityCriteria.controller');
 const externalApi = require('./controllers/externalApi.controller');
 const files = require('./controllers/files.controller');
+const companies = require('../controllers/companies.controller');
 
 const router = express.Router();
 
@@ -90,7 +92,7 @@ router.route('/files').post(
         return next();
       }
       console.error('Unable to upload file %o', error);
-      return res.status(400).json({ status: 400, data: 'Failed to upload file' });
+      return res.status(HttpStatusCode.BadRequest).json({ status: HttpStatusCode.BadRequest, data: 'Failed to upload file' });
     });
   },
   files.create,
@@ -103,12 +105,10 @@ router
 
 router.route('/files/:id/download').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), files.downloadFile);
 
-router
-  .route('/company/:number') // Companies House
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), externalApi.getByRegistrationNumber);
+router.route('/companies/:registrationNumber').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), companies.getCompanyByRegistrationNumber);
 
 router
-  .route('/address/:postcode') // Ordnance Survey
+  .route('/address/:postcode') // Geospatial Addresses
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), externalApi.getAddressesByPostcode);
 
 module.exports = router;

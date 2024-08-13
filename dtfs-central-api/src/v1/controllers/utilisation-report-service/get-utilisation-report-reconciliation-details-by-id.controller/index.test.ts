@@ -1,206 +1,161 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { FeeRecordEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { when } from 'jest-when';
+import { ApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
+import { getUtilisationReportReconciliationDetails } from './helpers';
+import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+import { aReportPeriod } from '../../../../../test-helpers/test-data/report-period';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import * as banksRepo from '../../../../repositories/banks-repo';
-import { FeeRecordItem, UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
+
+jest.mock('./helpers');
 
 console.error = jest.fn();
+
+class TestApiError extends ApiError {
+  constructor(status?: number, message?: string) {
+    super({ status: status ?? 500, message: message ?? '' });
+  }
+}
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller', () => {
   describe('getUtilisationReportReconciliationDetailsById', () => {
     const reportId = 1;
-    const getHttpMocks = () =>
+    const getHttpMocks = (facilityIdQuery: string | undefined = undefined) =>
       httpMocks.createMocks<GetUtilisationReportReconciliationDetailsByIdRequest>({
         params: {
           reportId,
         },
+        query: {
+          facilityIdQuery,
+        },
       });
 
-    const findOneSpy = jest.spyOn(UtilisationReportRepo, 'findOne');
+    const utilisationReportRepoFindSpy = jest.spyOn(UtilisationReportRepo, 'findOneByIdWithFeeRecordsWithPayments');
 
-    const getBankNameByIdSpy = jest.spyOn(banksRepo, 'getBankNameById');
+    beforeEach(() => {
+      utilisationReportRepoFindSpy.mockRejectedValue(new Error('Some error'));
+    });
 
-    it('responds with a 404 when the report cannot be found', async () => {
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it("responds with the specific error message if getting the report throws an 'ApiError'", async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      findOneSpy.mockResolvedValue(null);
+      const errorMessage = 'Some error message';
+      when(utilisationReportRepoFindSpy).calledWith(reportId).mockRejectedValue(new TestApiError(undefined, errorMessage));
 
       // Act
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getData()).toBe(
-        `Failed to get utilisation report reconciliation for report with id '${reportId}': Failed to find a report with id '${reportId}'`,
-      );
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
-
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { id: reportId },
-        relations: { feeRecords: true },
-      });
-      expect(getBankNameByIdSpy).not.toHaveBeenCalled();
+      expect(res._getData()).toBe(`Failed to get utilisation report reconciliation for report with id '${reportId}': ${errorMessage}`);
     });
 
-    it('responds with a 500 when the report has not been uploaded', async () => {
+    it('responds with a 500 if an unknown error occurs', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const notReceivedReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED').withId(reportId).withDateUploaded(null).build();
-      findOneSpy.mockResolvedValue(notReceivedReport);
+      when(utilisationReportRepoFindSpy).calledWith(reportId).mockRejectedValue(new Error('Some error'));
 
       // Act
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._getData()).toBe(`Failed to get utilisation report reconciliation for report with id '${reportId}'`);
-
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { id: reportId },
-        relations: { feeRecords: true },
-      });
-      expect(getBankNameByIdSpy).not.toHaveBeenCalled();
     });
 
-    it('responds with a 404 when a bank with the matching id cannot be found', async () => {
+    it('responds with a generic error message if an unknown error occurs', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const bankId = '123';
-      const pendingReconciliationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
-      findOneSpy.mockResolvedValue(pendingReconciliationReport);
-
-      getBankNameByIdSpy.mockResolvedValue(undefined);
+      when(utilisationReportRepoFindSpy).calledWith(reportId).mockRejectedValue(new Error('Some error'));
 
       // Act
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
-      expect(res._getData()).toBe(
-        `Failed to get utilisation report reconciliation for report with id '${reportId}': Failed to find a bank with id '${bankId}'`,
-      );
-
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { id: reportId },
-        relations: { feeRecords: true },
-      });
-      expect(getBankNameByIdSpy).toHaveBeenCalledWith(bankId);
+      expect(res._getData()).toBe(`Failed to get utilisation report reconciliation for report with id '${reportId}'`);
     });
 
-    it('responds with a 200 and the mapped report', async () => {
+    it('fetches details and responds with 200 when there is no query provided', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const bankId = '123';
-      const dateUploaded = new Date();
-      const reportPeriod: ReportPeriod = {
-        start: { month: 1, year: 2024 },
-        end: { month: 3, year: 2024 },
-      };
-      const reconciliationInProgressReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
-        .withId(reportId)
-        .withBankId(bankId)
-        .withReportPeriod(reportPeriod)
-        .withDateUploaded(dateUploaded)
-        .build();
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+      when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);
 
-      const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
-          .withId(1)
-          .withFacilityId('12345678')
-          .withExporter('Test exporter 1')
-          .withFeesPaidToUkefForThePeriodCurrency('GBP')
-          .withFeesPaidToUkefForThePeriod(314.59)
-          .withPaymentCurrency('GBP')
-          .withStatus('TO_DO')
-          .build(),
-        FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport)
-          .withId(2)
-          .withFacilityId('87654321')
-          .withExporter('Test exporter 2')
-          .withFeesPaidToUkefForThePeriodCurrency('EUR')
-          .withFeesPaidToUkefForThePeriod(100.0)
-          .withPaymentCurrency('GBP')
-          .withPaymentExchangeRate(1.1)
-          .withStatus('TO_DO')
-          .build(),
-      ];
-      reconciliationInProgressReport.feeRecords = feeRecords;
-
-      findOneSpy.mockResolvedValue(reconciliationInProgressReport);
-
-      const feeRecordItems: FeeRecordItem[] = [
-        {
-          id: 1,
-          facilityId: '12345678',
-          exporter: 'Test exporter 1',
-          reportedFees: {
-            currency: 'GBP',
-            amount: 314.59,
-          },
-          reportedPayments: {
-            currency: 'GBP',
-            amount: 314.59,
-          },
-          totalReportedPayments: {
-            currency: 'GBP',
-            amount: 314.59,
-          },
-          paymentsReceived: null,
-          totalPaymentsReceived: null,
-          status: 'TO_DO',
-        },
-        {
-          id: 2,
-          facilityId: '87654321',
-          exporter: 'Test exporter 2',
-          reportedFees: {
-            currency: 'EUR',
-            amount: 100.0,
-          },
-          reportedPayments: {
-            currency: 'GBP',
-            amount: 90.91,
-          },
-          totalReportedPayments: {
-            currency: 'GBP',
-            amount: 90.91,
-          },
-          paymentsReceived: null,
-          totalPaymentsReceived: null,
-          status: 'TO_DO',
-        },
-      ];
-
-      const bankName = 'Test bank';
-      getBankNameByIdSpy.mockResolvedValue(bankName);
+      const reportDetails = aUtilisationReportReconciliationDetails();
+      jest.mocked(getUtilisationReportReconciliationDetails).mockResolvedValue(reportDetails);
 
       // Act
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._getData()).toEqual<UtilisationReportReconciliationDetails>({
+      expect(res._getData()).toBe(reportDetails);
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledTimes(1);
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, undefined);
+    });
+
+    it('fetches details filtering by facility id query and responds with 200 when there is a facility id query provided', async () => {
+      // Arrange
+      const query = '1234';
+      const { req, res } = getHttpMocks(query);
+
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+      when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);
+
+      const reportDetails = aUtilisationReportReconciliationDetails();
+      jest.mocked(getUtilisationReportReconciliationDetails).mockResolvedValue(reportDetails);
+
+      // Act
+      await getUtilisationReportReconciliationDetailsById(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getData()).toBe(reportDetails);
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledTimes(1);
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, '1234');
+    });
+
+    it('fetches details filtering without filtering and responds with 200 when there is an invalid facility id query', async () => {
+      // Arrange
+      const query = '123';
+      const { req, res } = getHttpMocks(query);
+
+      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
+      when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);
+
+      const reportDetails = aUtilisationReportReconciliationDetails();
+      jest.mocked(getUtilisationReportReconciliationDetails).mockResolvedValue(reportDetails);
+
+      // Act
+      await getUtilisationReportReconciliationDetailsById(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getData()).toBe(reportDetails);
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledTimes(1);
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, undefined);
+    });
+
+    function aUtilisationReportReconciliationDetails(): UtilisationReportReconciliationDetails {
+      return {
         reportId,
         bank: {
-          id: bankId,
-          name: bankName,
+          id: '123',
+          name: 'bank',
         },
-        status: 'RECONCILIATION_IN_PROGRESS',
-        reportPeriod,
-        dateUploaded,
-        feeRecords: feeRecordItems,
-      });
-
-      expect(findOneSpy).toHaveBeenCalledWith({
-        where: { id: reportId },
-        relations: { feeRecords: true },
-      });
-      expect(getBankNameByIdSpy).toHaveBeenCalledWith(bankId);
-    });
+        status: 'PENDING_RECONCILIATION',
+        reportPeriod: aReportPeriod(),
+        dateUploaded: new Date(),
+        feeRecordPaymentGroups: [],
+        keyingSheet: [],
+      };
+    }
   });
 });

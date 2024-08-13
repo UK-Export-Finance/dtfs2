@@ -1,4 +1,5 @@
-import { AUDIT_USER_TYPES_AS_ARRAY, AuditDetails, AuditUserTypes } from '@ukef/dtfs2-common';
+import { Response } from 'supertest';
+import { API_ERROR_CODE, ApiErrorResponseBody, AUDIT_USER_TYPES_AS_ARRAY, AuditDetails, AuditUserTypes } from '@ukef/dtfs2-common';
 import {
   generateNoUserLoggedInAuditDetails,
   generatePortalAuditDetails,
@@ -8,7 +9,11 @@ import {
 import { MOCK_TFM_USER } from '../mocks/test-users/mock-tfm-user';
 import { MOCK_PORTAL_USER } from '../mocks/test-users/mock-portal-user';
 
-type MakeRequest = (auditDetails?: AuditDetails) => Promise<{ status: number; body: object }>;
+interface ApiErrorResponse extends Response {
+  body: ApiErrorResponseBody;
+}
+
+type MakeRequest = (auditDetails?: AuditDetails) => Promise<ApiErrorResponse>;
 
 type Params = {
   makeRequest: MakeRequest;
@@ -25,11 +30,11 @@ export const withValidateAuditDetailsTests = ({ makeRequest, validUserTypes = AU
       withInvalidAuditDetailsTests(invalidAuditDetails, makeRequest);
     }
 
-    it('should return 400 if no auditDetails provided', async () => {
+    it(`should return 400 (Bad request) and set the body 'code' field to '${API_ERROR_CODE.INVALID_AUDIT_DETAILS}' if no auditDetails provided`, async () => {
       const { status, body } = await makeRequest();
 
-      expect(body).toEqual({ status: 400, message: 'Invalid auditDetails, Missing property `userType`' });
       expect(status).toBe(400);
+      expect(body.code).toBe(API_ERROR_CODE.INVALID_AUDIT_DETAILS);
     });
   });
 };
@@ -43,15 +48,15 @@ function withValidAuditDetailsTests(validAuditDetails: AuditDetails[], makeReque
 }
 
 function withInvalidAuditDetailsTests(invalidAuditDetails: AuditDetails[], makeRequest: MakeRequest) {
-  it.each(invalidAuditDetails)('it should return status 400 if the userType is $userType', async (auditDetails) => {
-    const { status, body } = await makeRequest(auditDetails);
+  it.each(invalidAuditDetails)(
+    `it should return status 400 (Bad request) and set the body 'code' field to '${API_ERROR_CODE.INVALID_AUDIT_DETAILS}' if the userType is '$userType'`,
+    async (auditDetails) => {
+      const { status, body } = await makeRequest(auditDetails);
 
-    expect(status).toBe(400);
-    expect(body).toEqual({
-      message: expect.stringContaining('Invalid auditDetails, userType must be') as string,
-      status: 400,
-    });
-  });
+      expect(status).toBe(400);
+      expect(body.code).toBe(API_ERROR_CODE.INVALID_AUDIT_DETAILS);
+    },
+  );
 }
 
 function getValidAndInvalidAuditDetails(validUserTypes: AuditUserTypes[]) {

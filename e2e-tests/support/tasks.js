@@ -1,11 +1,20 @@
 const crypto = require('node:crypto');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
-const { UtilisationReportEntity } = require('@ukef/dtfs2-common');
+const {
+  UtilisationReportEntity,
+  FeeRecordEntity,
+  PaymentEntity,
+  AzureFileInfoEntity,
+  FacilityUtilisationDataEntity,
+  PaymentMatchingToleranceEntity,
+} = require('@ukef/dtfs2-common');
 const RedisClient = require('./redis-client');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
 const { DB_COLLECTIONS } = require('../e2e-fixtures/dbCollections');
+const { ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES } = require('../e2e-fixtures');
+const { generateVersion0GefDealDatabaseDocument, generateVersion0GefFacilityDatabaseDocument } = require('../e2e-fixtures/deal-versioning.fixture');
 
 SqlDbDataSource.initialize()
   .then(() => console.info('✅ Successfully initialised connection to SQL database'))
@@ -189,8 +198,8 @@ module.exports = {
 
     /**
      * Inserts utilisation report details to the SQL database
-     * @param {Partial<import('@ukef/dtfs2-common').UtilisationReportEntity[]>} utilisationReports
-     * @returns {import('@ukef/dtfs2-common').UtilisationReportEntity[]} The inserted reports
+     * @param {Partial<UtilisationReportEntity[]>} utilisationReports
+     * @returns {Promise<UtilisationReportEntity[]>} The inserted reports
      */
     const insertUtilisationReportsIntoDb = async (utilisationReports) => {
       const utilisationReportRepo = SqlDbDataSource.getRepository(UtilisationReportEntity);
@@ -199,9 +208,76 @@ module.exports = {
     };
 
     /**
-     * Deletes all the rows from the utilisation report and azure file info tables
+     * Deletes all the rows from the utilisation report table
      */
     const removeAllUtilisationReportsFromDb = async () => await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
+
+    /**
+     * Inserts fee records to the SQL database
+     * @param {FeeRecordEntity[]} feeRecords
+     * @returns {Promise<FeeRecordEntity[]>} The inserted fee records
+     */
+    const insertFeeRecordsIntoDb = async (feeRecords) => {
+      await Promise.all(
+        feeRecords.map(async ({ facilityUtilisationData }) => {
+          const entityExists = await SqlDbDataSource.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityUtilisationData.id });
+          if (!entityExists) {
+            await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
+          }
+        }),
+      );
+      return await SqlDbDataSource.manager.save(FeeRecordEntity, feeRecords);
+    };
+
+    /**
+     * Deletes all the rows from the payment matching tolerance table
+     */
+    const removeAllPaymentMatchingTolerancesFromDb = async () => await SqlDbDataSource.manager.getRepository(PaymentMatchingToleranceEntity).delete({});
+
+    /**
+     * Deletes and inserts payment matching tolerances for each currency to the SQL database
+     */
+    const reinsertZeroThresholdPaymentMatchingTolerances = async () => {
+      await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {});
+      return await SqlDbDataSource.manager.save(PaymentMatchingToleranceEntity, ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
+    };
+
+    /**
+     * Inserts payment matching tolerances to the SQL database
+     * @param {PaymentMatchingToleranceEntity[]} tolerances
+     * @returns {Promise<PaymentMatchingToleranceEntity[]>} The inserted tolerance
+     */
+    const insertPaymentMatchingTolerancesIntoDb = async (tolerances) => await SqlDbDataSource.manager.save(PaymentMatchingToleranceEntity, tolerances);
+
+    /**
+     * Inserts payments to the SQL database
+     * @param {PaymentEntity[]} payments
+     * @returns The inserted payments
+     */
+    const insertPaymentsIntoDb = async (payments) => await SqlDbDataSource.manager.save(PaymentEntity, payments);
+
+    /**
+     * Deletes all the rows from the payment table
+     */
+    const removeAllPaymentsFromDb = async () => await SqlDbDataSource.manager.delete(PaymentEntity, {});
+
+    /**
+     * Deletes all the rows from the payment table
+     */
+    const removeAllFeeRecordsFromDb = async () => await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
+
+    /**
+     * Deletes all data from the SQL database
+     */
+    const deleteAllFromSqlDb = async () =>
+      await Promise.all([
+        await SqlDbDataSource.manager.delete(PaymentEntity, {}),
+        await SqlDbDataSource.manager.delete(FeeRecordEntity, {}),
+        await SqlDbDataSource.manager.delete(UtilisationReportEntity, {}),
+        await SqlDbDataSource.manager.delete(AzureFileInfoEntity, {}),
+        await SqlDbDataSource.manager.delete(FacilityUtilisationDataEntity, {}),
+        await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {}),
+      ]);
 
     const getAllBanks = async () => {
       const banks = await db.getCollection(DB_COLLECTIONS.BANKS);
@@ -227,27 +303,6 @@ module.exports = {
     };
 
     /**
-     * insertUtilisationReportDetailsIntoDb
-     * Add multiple utilisation report details to the DB.
-     * @param {Array} utilisationReportDetails: Utilisation report details
-     * @returns {Array} Created Utilisation report details
-     */
-    const insertUtilisationReportDetailsIntoDb = async (utilisationReportDetails) => {
-      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-      return utilisationReports.insertMany(utilisationReportDetails);
-    };
-
-    /**
-     * removeAllUtilisationReportDetailsFromDb
-     * Remove all utilisation report details from the DB.
-     * @returns {Array} Empty array.
-     */
-    const removeAllUtilisationReportDetailsFromDb = async () => {
-      const utilisationReports = await db.getCollection(DB_COLLECTIONS.UTILISATION_REPORTS);
-      return utilisationReports.deleteMany({});
-    };
-
-    /**
      * Generates the specified number of TFM deals and inserts them directly
      * into the db. The UKEF deal ID of the first generated deal is 10000001;
      * this is incremented for each subsequent deal. The deal exporter is
@@ -257,9 +312,9 @@ module.exports = {
      * to use can be passed as the second argument - if the number of deals to
      * insert exceeds the length of this array (by n, say), then the last n deals
      * will have their MongoDB Object IDs autogenerated
-     * @param {Object} numberOfDealsToInsert The number of deals to insert
+     * @param {object} numberOfDealsToInsert The number of deals to insert
      * @param {Array} dealObjectIds An array of MongoDB deal Object IDs to use
-     * @returns {Object} MongoDB document representing the result of the insertion
+     * @returns {Promise<object>} MongoDB document representing the result of the insertion
      */
     const insertManyTfmDeals = async (numberOfDealsToInsert, dealObjectIds = []) => {
       const deals = await getTfmDealsCollection();
@@ -279,14 +334,24 @@ module.exports = {
     };
 
     /**
+     * Inserts many tfm facilities
+     * @param {import('@ukef/dtfs2-common').TfmFacility[]} tfmFacilities
+     * @returns {Promise<import('mongodb').InsertManyResult<import('mongodb').WithoutId<import('@ukef/dtfs2-common').TfmFacility>>[]>} The inserted tfm facilities
+     */
+    const insertManyTfmFacilities = async (tfmFacilities) => {
+      const tfmFacilitiesCollection = await getTfmFacilitiesCollection();
+      return await tfmFacilitiesCollection.insertMany(tfmFacilities);
+    };
+
+    /**
      * Generates the specified number of TFM facilities and inserts them directly
      * into the db. It also inserts two deals (to link the facilities to).
      * The UKEF facility ID of the first generated facility is 10000001;
      * this is incremented for each subsequent facility. The inserted facilities
      * alternate with respect to which of the two deals they are linked to. This
      * is to allow easy testing of searching and sorting
-     * @param {Object} numberOfFacilitiesToInsert The number of facilities to insert
-     * @returns {Object} MongoDB document representing the result of the insertion
+     * @param {object} numberOfFacilitiesToInsert The number of facilities to insert
+     * @returns {Promise<object>} MongoDB document representing the result of the insertion
      */
     const insertManyTfmFacilitiesAndTwoLinkedDeals = async (numberOfFacilitiesToInsert) => {
       const dealObjectIds = ['65f18fd9cb063105fd4be63f', '65f18fd9cb063105fd4be645'];
@@ -308,6 +373,21 @@ module.exports = {
       return facilities.deleteMany({});
     };
 
+    const insertVersion0Deal = async (makerUserName) => {
+      const dealsCollection = await db.getCollection(DB_COLLECTIONS.DEALS);
+      const usersCollection = await getUsersCollection();
+
+      const maker = await usersCollection.findOne({ username: makerUserName });
+
+      return dealsCollection.insertOne(generateVersion0GefDealDatabaseDocument(maker));
+    };
+
+    const insertVersion0Facility = async (dealId) => {
+      const facilitiesCollection = await db.getCollection(DB_COLLECTIONS.FACILITIES);
+
+      return facilitiesCollection.insertOne(generateVersion0GefFacilityDatabaseDocument(dealId));
+    };
+
     return {
       log,
       getUserFromDbByEmail,
@@ -319,15 +399,24 @@ module.exports = {
       overrideRedisUserSession,
       resetPortalUserStatusAndNumberOfSignInLinks,
       disablePortalUserByUsername,
-      insertUtilisationReportDetailsIntoDb,
       insertManyTfmDeals,
       deleteAllTfmDeals,
+      insertManyTfmFacilities,
       insertManyTfmFacilitiesAndTwoLinkedDeals,
       deleteAllTfmFacilities,
-      removeAllUtilisationReportDetailsFromDb,
       getAllBanks,
       insertUtilisationReportsIntoDb,
       removeAllUtilisationReportsFromDb,
+      insertVersion0Deal,
+      insertVersion0Facility,
+      insertFeeRecordsIntoDb,
+      removeAllPaymentMatchingTolerancesFromDb,
+      reinsertZeroThresholdPaymentMatchingTolerances,
+      insertPaymentMatchingTolerancesIntoDb,
+      insertPaymentsIntoDb,
+      removeAllPaymentsFromDb,
+      removeAllFeeRecordsFromDb,
+      deleteAllFromSqlDb,
     };
   },
 };

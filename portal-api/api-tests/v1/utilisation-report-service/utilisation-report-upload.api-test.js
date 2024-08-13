@@ -22,7 +22,6 @@ jest.mock('../../../src/drivers/fileshare', () => ({
 uploadFile.mockImplementation(() => MOCK_FILE_INFO);
 
 describe('/v1/utilisation-reports', () => {
-  let noRoles;
   let testUsers;
 
   const uploadingUser = {
@@ -108,7 +107,6 @@ describe('/v1/utilisation-reports', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    noRoles = testUsers().withoutAnyRoles().one();
   });
 
   beforeEach(async () => {
@@ -135,7 +133,6 @@ describe('/v1/utilisation-reports', () => {
     withRoleAuthorisationTests({
       allowedRoles: [PAYMENT_REPORT_OFFICER],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      getUserWithoutAnyRoles: () => noRoles,
       makeRequestAsUser: (user) => as(user).postMultipartForm(testCsvData, testFiles).to(utilisationReportsUrl),
       successStatusCode: 201,
     });

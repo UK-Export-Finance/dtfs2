@@ -1,12 +1,11 @@
 import { Request } from 'express';
-import { LOGIN_STATUS } from '../constants';
-import { PartiallyLoggedInSessionData, LoggedInSessionData, UserSessionData } from '../types/express-session';
+import { PartiallyLoggedInPortalSessionData, LoggedInPortalSessionData, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 
 type Session = Request['session'];
 
-export type LoggedInUserSession = Session & LoggedInSessionData;
-type PartiallyLoggedInUserSession = Session & PartiallyLoggedInSessionData;
-type UnknownLogInStatusUserSession = Session & Pick<UserSessionData, 'userToken' | 'loginStatus'>;
+export type LoggedInUserSession = Session & LoggedInPortalSessionData;
+type PartiallyLoggedInUserSession = Session & PartiallyLoggedInPortalSessionData;
+type UnknownLogInStatusUserSession = Session & Pick<LoggedInPortalSessionData | PartiallyLoggedInPortalSessionData, 'userToken' | 'loginStatus'>;
 
 /**
  * By default, all session data will be optional
@@ -22,7 +21,7 @@ type UnknownLogInStatusUserSession = Session & Pick<UserSessionData, 'userToken'
 export const asLoggedInUserSession = (session: Session): LoggedInUserSession => {
   const { user, userToken, loginStatus } = session as LoggedInUserSession;
 
-  if (loginStatus !== LOGIN_STATUS.VALID_2FA) {
+  if (loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA) {
     throw Error('Expected session.loginStatus to be `Valid 2FA`', {
       cause: {
         code: 'InvalidLoginStatus',
@@ -67,7 +66,7 @@ export const asLoggedInUserSession = (session: Session): LoggedInUserSession => 
 export const asPartiallyLoggedInUserSession = (session: Session): PartiallyLoggedInUserSession => {
   const { userToken, loginStatus, userEmail, numberOfSignInLinkAttemptsRemaining } = session as PartiallyLoggedInUserSession;
 
-  if (loginStatus !== LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD) {
+  if (loginStatus !== PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD) {
     throw Error('Expected session.loginStatus to be `Valid username and password`', {
       cause: {
         code: 'InvalidLoginStatus',
@@ -121,7 +120,7 @@ export const asPartiallyLoggedInUserSession = (session: Session): PartiallyLogge
 export const withUnknownLoginStatusUserSession = (session: Session): UnknownLogInStatusUserSession => {
   const { userToken, loginStatus } = session as UnknownLogInStatusUserSession;
 
-  if (loginStatus !== LOGIN_STATUS.VALID_2FA && loginStatus !== LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD) {
+  if (loginStatus !== PORTAL_LOGIN_STATUS.VALID_2FA && loginStatus !== PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD) {
     throw Error('Expected session.loginStatus to be `Valid 2FA` or `Valid username and password`', {
       cause: {
         code: 'InvalidLoginStatus',

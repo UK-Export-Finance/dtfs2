@@ -1,17 +1,18 @@
 import { Response } from 'supertest';
 import { Bank, IsoDateTimeStamp, PortalUser, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import app from '../../../src/createApp';
-import apiModule from '../../api';
+import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
+import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
-import mongoDbClient from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../src/drivers/db-client';
 import { UtilisationReportReconciliationDetails } from '../../../src/types/utilisation-reports';
-import { aBank } from '../../../test-helpers/test-data/bank';
-import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
+import { aBank, aPortalUser } from '../../../test-helpers/test-data';
 
-const api = apiModule(app);
+console.error = jest.fn();
 
-const getUrl = (reportId: number | string) => `/v1/utilisation-reports/reconciliation-details/${reportId}`;
+const BASE_URL = '/v1/utilisation-reports/reconciliation-details/:reportId';
+
+const getUrl = (reportId: number | string) => BASE_URL.replace(':reportId', reportId.toString());
 
 type UtilisationReportReconciliationDetailsResponseBody = Omit<UtilisationReportReconciliationDetails, 'dateUploaded'> & {
   dateUploaded: IsoDateTimeStamp;
@@ -21,7 +22,7 @@ interface CustomResponse extends Response {
   body: UtilisationReportReconciliationDetailsResponseBody;
 }
 
-describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
+describe(`GET ${BASE_URL}`, () => {
   const portalUser: PortalUser = aPortalUser();
   const portalUserId = portalUser._id.toString();
 
@@ -56,61 +57,54 @@ describe('GET /v1/utilisation-reports/reconciliation-details/:reportId', () => {
     await wipe(['users', 'banks']);
   });
 
-  describe('GET /v1/utilisation-reports/:id', () => {
-    it('returns 400 when an invalid report ID is provided', async () => {
-      // Arrange
-      const invalidReportId = 'invalid-id';
+  withSqlIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
+    makeRequest: (url) => testApi.get(url),
+  });
 
-      // Act
-      const response: CustomResponse = await api.get(getUrl(invalidReportId));
+  it('returns a 404 when a report with the matching id does not exist', async () => {
+    // Act
+    const response: CustomResponse = await testApi.get(getUrl(99999));
 
-      // Assert
-      expect(response.status).toEqual(400);
-    });
+    // Assert
+    expect(response.status).toBe(404);
+  });
 
-    it('returns a 404 when a report with the matching id does not exist', async () => {
-      // Act
-      const response: CustomResponse = await api.get(getUrl(99999));
+  it('returns a 404 when a bank can not be found with the same id as the bankId in the report', async () => {
+    // Arrange
+    const reportIdWithNoMatchingBank = 2;
+    const reportWithNoMatchingBank = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
+      .withId(reportIdWithNoMatchingBank)
+      .withBankId(nonExistingBankId)
+      .withUploadedByUserId(portalUserId)
+      .build();
 
-      // Assert
-      expect(response.status).toBe(404);
-    });
+    await SqlDbHelper.saveNewEntry('UtilisationReport', reportWithNoMatchingBank);
 
-    it('returns a 404 when a bank can not be found with the same id as the bankId in the report', async () => {
-      // Arrange
-      const reportIdWithNoMatchingBank = 2;
-      const reportWithNoMatchingBank = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
-        .withId(reportIdWithNoMatchingBank)
-        .withBankId(nonExistingBankId)
-        .withUploadedByUserId(portalUserId)
-        .build();
+    // Act
+    const response: CustomResponse = await testApi.get(getUrl(reportIdWithNoMatchingBank));
 
-      await SqlDbHelper.saveNewEntry('UtilisationReport', reportWithNoMatchingBank);
+    // Assert
+    expect(response.status).toBe(404);
+  });
 
-      // Act
-      const response: CustomResponse = await api.get(getUrl(reportIdWithNoMatchingBank));
+  it('gets a utilisation report', async () => {
+    // Act
+    const response: CustomResponse = await testApi.get(getUrl(reportId));
 
-      // Assert
-      expect(response.status).toBe(404);
-    });
-
-    it('gets a utilisation report', async () => {
-      // Act
-      const response: CustomResponse = await api.get(getUrl(reportId));
-
-      // Assert
-      expect(response.status).toEqual(200);
-      expect(response.body).toEqual<UtilisationReportReconciliationDetailsResponseBody>({
-        reportId,
-        bank: {
-          id: bank.id,
-          name: bank.name,
-        },
-        status: 'RECONCILIATION_IN_PROGRESS',
-        reportPeriod: reconciliationInProgressReport.reportPeriod,
-        dateUploaded: reconciliationInProgressReport.dateUploaded!.toISOString(),
-        feeRecords: [],
-      });
+    // Assert
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual<UtilisationReportReconciliationDetailsResponseBody>({
+      reportId,
+      bank: {
+        id: bank.id,
+        name: bank.name,
+      },
+      status: 'RECONCILIATION_IN_PROGRESS',
+      reportPeriod: reconciliationInProgressReport.reportPeriod,
+      dateUploaded: reconciliationInProgressReport.dateUploaded!.toISOString(),
+      feeRecordPaymentGroups: [],
+      keyingSheet: [],
     });
   });
 });

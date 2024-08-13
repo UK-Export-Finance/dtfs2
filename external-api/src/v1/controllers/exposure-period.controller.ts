@@ -2,14 +2,15 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 import * as dotenv from 'dotenv';
-import { FACILITY_TYPE, PRODUCT_GROUP } from '../../constants';
+import { HEADERS, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { PRODUCT_GROUP } from '../../constants';
 import { isValidDate } from '../../helpers';
 
 dotenv.config();
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
 };
 

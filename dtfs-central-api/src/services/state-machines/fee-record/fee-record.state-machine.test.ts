@@ -4,7 +4,17 @@ import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FEE_REC
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FEE_RECORD_EVENT_TYPE, FEE_RECORD_EVENT_TYPES, FeeRecordEventType } from './event/fee-record.event-type';
 import { FeeRecordStateMachine } from './fee-record.state-machine';
-import { handleFeeRecordPaymentAddedEvent } from './event-handlers';
+import {
+  handleFeeRecordGenerateKeyingDataEvent,
+  handleFeeRecordPaymentAddedEvent,
+  handleFeeRecordPaymentDeletedEvent,
+  handleFeeRecordPaymentEditedEvent,
+  handleFeeRecordMarkAsReconciledEvent,
+  handleFeeRecordMarkAsReadyToKeyEvent,
+  handleFeeRecordRemoveFromPaymentGroupEvent,
+  handleFeeRecordOtherFeeRemovedFromGroupEvent,
+} from './event-handlers';
+import { aReportPeriod } from '../../../../test-helpers/test-data';
 
 jest.mock('./event-handlers');
 
@@ -63,7 +73,104 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const MATCH_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('MATCH').build();
 
-    const VALID_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [];
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_EDITED}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'PAYMENT_EDITED',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordPaymentEditedEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_DELETED}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'PAYMENT_DELETED',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          hasAttachedPayments: false,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordPaymentDeletedEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.GENERATE_KEYING_DATA}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'GENERATE_KEYING_DATA',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          isFinalFeeRecordForFacility: false,
+          reportPeriod: aReportPeriod(),
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordGenerateKeyingDataEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.REMOVE_FROM_PAYMENT_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'REMOVE_FROM_PAYMENT_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordRemoveFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.OTHER_FEE_REMOVED_FROM_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'OTHER_FEE_REMOVED_FROM_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordOtherFeeRemovedFromGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
+    const VALID_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [
+      'PAYMENT_DELETED',
+      'PAYMENT_EDITED',
+      'GENERATE_KEYING_DATA',
+      'REMOVE_FROM_PAYMENT_GROUP',
+      'OTHER_FEE_REMOVED_FROM_GROUP',
+    ];
     const INVALID_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_MATCH_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_MATCH_FEE_RECORD_EVENT_TYPES.length !== 0) {
@@ -84,21 +191,42 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const DOES_NOT_MATCH_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('DOES_NOT_MATCH').build();
 
-    const VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['PAYMENT_ADDED'];
-    const INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES);
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_EDITED}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
 
-    if (INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES.length !== 0) {
-      it.each(INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES)(
-        "throws an 'InvalidStateMachineTransitionError' for event type %p",
-        async (eventType: FeeRecordEventType) => {
-          // Arrange
-          const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
-
-          // Act / Assert
-          await expectInvalidStateMachineTransitionError(stateMachine, eventType);
+      // Act
+      await stateMachine.handleEvent({
+        type: 'PAYMENT_EDITED',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
         },
-      );
-    }
+      });
+
+      // Assert
+      expect(handleFeeRecordPaymentEditedEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_DELETED}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'PAYMENT_DELETED',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          hasAttachedPayments: false,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordPaymentDeletedEvent).toHaveBeenCalledTimes(1);
+    });
 
     it(`handles the '${FEE_RECORD_EVENT_TYPE.PAYMENT_ADDED}' event`, async () => {
       // Arrange
@@ -117,13 +245,88 @@ describe('FeeRecordStateMachine', () => {
       // Assert
       expect(handleFeeRecordPaymentAddedEvent).toHaveBeenCalledTimes(1);
     });
+
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.REMOVE_FROM_PAYMENT_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'REMOVE_FROM_PAYMENT_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordRemoveFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.OTHER_FEE_REMOVED_FROM_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'OTHER_FEE_REMOVED_FROM_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordOtherFeeRemovedFromGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
+    const VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [
+      'PAYMENT_ADDED',
+      'PAYMENT_DELETED',
+      'PAYMENT_EDITED',
+      'REMOVE_FROM_PAYMENT_GROUP',
+      'OTHER_FEE_REMOVED_FROM_GROUP',
+    ];
+
+    const INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES);
+
+    if (INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES.length !== 0) {
+      it.each(INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES)(
+        "throws an 'InvalidStateMachineTransitionError' for event type %p",
+        async (eventType: FeeRecordEventType) => {
+          // Arrange
+          const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
+
+          // Act / Assert
+          await expectInvalidStateMachineTransitionError(stateMachine, eventType);
+        },
+      );
+    }
   });
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.READY_TO_KEY}' status`, () => {
     // Arrange
     const READY_TO_KEY_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('READY_TO_KEY').build();
 
-    const VALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [];
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.MARK_AS_RECONCILED}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(READY_TO_KEY_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'MARK_AS_RECONCILED',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordMarkAsReconciledEvent).toHaveBeenCalledTimes(1);
+    });
+
+    const VALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['MARK_AS_RECONCILED'];
     const INVALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_READY_TO_KEY_FEE_RECORD_EVENT_TYPES.length !== 0) {
@@ -144,7 +347,24 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const RECONCILED_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus('RECONCILED').build();
 
-    const VALID_RECONCILED_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [];
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.MARK_AS_READY_TO_KEY}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(RECONCILED_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'MARK_AS_READY_TO_KEY',
+        payload: {
+          transactionEntityManager: {} as unknown as EntityManager,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordMarkAsReadyToKeyEvent).toHaveBeenCalledTimes(1);
+    });
+
+    const VALID_RECONCILED_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = ['MARK_AS_READY_TO_KEY'];
     const INVALID_RECONCILED_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_RECONCILED_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_RECONCILED_FEE_RECORD_EVENT_TYPES.length !== 0) {

@@ -1,4 +1,4 @@
-const pageRenderer = require('../pageRenderer');
+const { pageRenderer } = require('../pageRenderer');
 
 const page = '../templates/case/underwriting/managers-decision/edit-managers-decision.njk';
 

@@ -6,6 +6,7 @@ const { mapUserData } = require('./helpers/mapUserData.helper');
 // This route is used for mock data loader.
 module.exports.createTfmUser = async (req, res) => {
   const userToCreate = req.body;
+  // This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
   const auditDetails = req.user?._id ? generateTfmAuditDetails(req.user._id) : generateNoUserLoggedInAuditDetails();
 
   const user = await createUser(userToCreate, auditDetails);
@@ -43,7 +44,8 @@ module.exports.findTfmUser = (req, res, next) => {
 
 // This route is used for mock data loader.
 module.exports.removeTfmUserById = (req, res, next) => {
-  removeTfmUserById(req.params.user, generateTfmAuditDetails(req.user._id), (error, status) => {
+  const auditDetails = generateTfmAuditDetails(req.user._id);
+  removeTfmUserById(req.params.user, auditDetails, (error, status) => {
     if (error) {
       next(error);
     } else {

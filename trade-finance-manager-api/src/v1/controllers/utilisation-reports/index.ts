@@ -4,3 +4,12 @@ export { updateUtilisationReportStatus } from './update-utilisation-report-statu
 export { getUtilisationReportReconciliationDetailsById } from './get-utilisation-report-reconciliation-details-by-id.controller';
 export { getSelectedFeeRecordsDetails } from './get-selected-fee-records-details.controller';
 export { getUtilisationReportSummariesByBankAndYear } from './get-utilisation-reports-by-bank-and-year.controller';
+export { postPayment } from './post-payment.controller';
+export { postKeyingData } from './post-keying-data.controller';
+export { getFeeRecordsToKey } from './get-fee-records-to-key.controller';
+export { getPaymentDetailsById } from './get-payment-details-by-id.controller';
+export { deletePayment } from './delete-payment.controller';
+export { patchPayment } from './patch-payment.controller';
+export { postRemoveFeesFromPayment } from './post-remove-fees-from-payment.controller';
+export { putKeyingDataMarkAsDone } from './put-keying-data-mark-as-done.controller';
+export { putKeyingDataMarkAsToDo } from './put-keying-data-mark-as-to-do.controller';

@@ -1,6 +1,7 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
+const { isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const { formattedNumber } = require('../../../helpers/number');
 
 const getAmendmentAnswers = async (req, res) => {
@@ -17,6 +18,8 @@ const getAmendmentAnswers = async (req, res) => {
 
   const requestDate = format(fromUnixTime(amendment.requestDate), 'dd MMM yyyy');
   const coverEndDate = amendment?.coverEndDate ? format(fromUnixTime(amendment.coverEndDate), 'dd MMM yyyy') : '';
+  const isUsingFacilityEndDate = amendment?.isUsingFacilityEndDate;
+  const facilityEndDate = amendment?.facilityEndDate ? format(new Date(amendment.facilityEndDate), 'dd MMM yyyy') : '';
   const effectiveDate = amendment?.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), 'dd MMM yyyy') : '';
   const value = amendment.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : '';
 
@@ -31,7 +34,10 @@ const getAmendmentAnswers = async (req, res) => {
     requestDate,
     coverEndDate,
     changeCoverEndDate,
+    isUsingFacilityEndDate,
+    facilityEndDate,
     effectiveDate,
+    isTfmFacilityEndDateFeatureFlagEnabled: isTfmFacilityEndDateFeatureFlagEnabled(),
     user: req.session.user,
   });
 };
@@ -55,6 +61,13 @@ const postAmendmentAnswers = async (req, res) => {
       sendFirstTaskEmail: true,
     };
 
+    if (isTfmFacilityEndDateFeatureFlagEnabled()) {
+      payload.isUsingFacilityEndDate = amendment.isUsingFacilityEndDate;
+      if (amendment.isUsingFacilityEndDate) {
+        payload.facilityEndDate = amendment.facilityEndDate;
+      }
+    }
+
     if (!requireUkefApproval) {
       payload.status = AMENDMENT_STATUS.COMPLETED;
       payload.submissionDate = getUnixTime(new Date());
@@ -75,6 +88,8 @@ const postAmendmentAnswers = async (req, res) => {
     if (!amendment.changeCoverEndDate) {
       payload.coverEndDate = null;
       payload.currentCoverEndDate = null;
+      payload.isUsingFacilityEndDate = null;
+      payload.facilityEndDate = null;
     }
 
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);

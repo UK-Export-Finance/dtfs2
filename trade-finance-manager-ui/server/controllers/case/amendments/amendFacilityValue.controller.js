@@ -1,5 +1,5 @@
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
-const { AMENDMENT_STATUS } = require('../../../constants/amendments');
 const { amendFacilityValueValidation } = require('./validation/amendFacilityValue.validate');
 const { formattedNumber } = require('../../../helpers/number');
 

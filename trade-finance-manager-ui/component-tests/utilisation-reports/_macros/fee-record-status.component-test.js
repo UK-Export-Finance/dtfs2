@@ -1,5 +1,5 @@
 const { FEE_RECORD_STATUS } = require('@ukef/dtfs2-common');
-const componentRenderer = require('../../componentRenderer');
+const { componentRenderer } = require('../../componentRenderer');
 
 const component = '../templates/utilisation-reports/_macros/fee-record-status.njk';
 const statusTagSelector = '[data-cy="fee-record-status"]';
@@ -29,7 +29,7 @@ describe(component, () => {
     { status: FEE_RECORD_STATUS.RECONCILED, expectedColourClass: 'govuk-tag--grey' },
   ])("adds colour class '$expectedColourClass' when the status code is '$status'", ({ status, expectedColourClass }) => {
     // Arrange
-    const expectedClass = `govuk-tag fee-record-status-tag${expectedColourClass ? ` ${expectedColourClass}` : ''}`;
+    const expectedClass = `govuk-tag status-tag${expectedColourClass ? ` ${expectedColourClass}` : ''}`;
 
     // Act
     const wrapper = render({

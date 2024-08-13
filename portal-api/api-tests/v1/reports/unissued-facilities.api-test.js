@@ -1,3 +1,4 @@
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const CONSTANTS = require('../../../src/constants');
 
@@ -39,7 +40,7 @@ describe('GET /v1/reports/unissued-facilities', () => {
     await as(aMaker)
       .post({
         dealId: mockApplication.body._id,
-        type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+        type: FACILITY_TYPE.CASH,
         hasBeenIssued: false,
       })
       .to(gefFacilityUrl);
@@ -53,7 +54,6 @@ describe('GET /v1/reports/unissued-facilities', () => {
   withRoleAuthorisationTests({
     allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
-    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(unissuedFacilitiesReportUrl),
     successStatusCode: 200,
   });

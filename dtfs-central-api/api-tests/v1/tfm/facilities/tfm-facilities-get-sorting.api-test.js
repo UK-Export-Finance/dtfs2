@@ -1,10 +1,10 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
-const app = require('../../../../src/createApp');
-const api = require('../../../api')(app);
+const { testApi } = require('../../../test-api');
 const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
 const setObjectPropertyValueFromStringPath = require('../../../helpers/set-object-property-value-from-string-path');
-const CONSTANTS = require('../../../../src/constants');
+const { DEALS } = require('../../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 describe('/v1/tfm/facilities', () => {
@@ -26,12 +26,7 @@ describe('/v1/tfm/facilities', () => {
         },
         {
           sortByField: 'tfmFacilities.type',
-          fieldValuesInAscendingOrder: [
-            CONSTANTS.FACILITIES.FACILITY_TYPE.BOND,
-            CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
-            CONSTANTS.FACILITIES.FACILITY_TYPE.CONTINGENT,
-            CONSTANTS.FACILITIES.FACILITY_TYPE.LOAN,
-          ],
+          fieldValuesInAscendingOrder: [FACILITY_TYPE.BOND, FACILITY_TYPE.CASH, FACILITY_TYPE.CONTINGENT, FACILITY_TYPE.LOAN],
           generateFacilities: generateFacilitiesFromValues,
           getFieldPathAndExpectedFieldValues: getFieldPathAndExpectedFieldValuesForField,
         },
@@ -70,7 +65,7 @@ describe('/v1/tfm/facilities', () => {
           const urlWithoutPagination = `/v1/tfm/facilities?sortBy[order]=${sortByOrder}&sortBy[field]=${sortByField}`;
 
           it('without pagination', async () => {
-            const { status, body } = await api.get(urlWithoutPagination);
+            const { status, body } = await testApi.get(urlWithoutPagination);
 
             expect(status).toEqual(200);
             expect(body.facilities.length).toEqual(4);
@@ -92,9 +87,9 @@ describe('/v1/tfm/facilities', () => {
 
             const urlWithPagination = (page) => `${urlWithoutPagination}&pagesize=${pagesize}&page=${page}`;
 
-            const { status: page1Status, body: page1Body } = await api.get(urlWithPagination(0));
+            const { status: page1Status, body: page1Body } = await testApi.get(urlWithPagination(0));
 
-            const { status: page2Status, body: page2Body } = await api.get(urlWithPagination(1));
+            const { status: page2Status, body: page2Body } = await testApi.get(urlWithPagination(1));
 
             expect(page1Status).toEqual(200);
             expect(page1Body.facilities.length).toEqual(2);
@@ -129,7 +124,7 @@ describe('/v1/tfm/facilities', () => {
 
   function newDeal(overrides) {
     return {
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+      dealType: DEALS.DEAL_TYPE.GEF,
       exporter: { companyName: 'Mock Company name' },
       ...overrides,
     };
@@ -138,7 +133,7 @@ describe('/v1/tfm/facilities', () => {
   function newFacility(overrides) {
     return {
       ukefFacilityId: '10000001',
-      type: CONSTANTS.FACILITIES.FACILITY_TYPE.CASH,
+      type: FACILITY_TYPE.CASH,
       value: '1000',
       currency: { id: 'GBP' },
       coverEndDate: '2021-08-12T00:00:00.000Z',
@@ -189,14 +184,14 @@ describe('/v1/tfm/facilities', () => {
     for (const facilityAndAssociatedDeal of facilities) {
       const { facility, deal } = facilityAndAssociatedDeal;
 
-      const { body: createdDeal } = await api.post(deal).to('/v1/portal/gef/deals');
+      const { body: createdDeal } = await testApi.post(deal).to('/v1/portal/gef/deals');
 
       const dealId = createdDeal._id;
 
       facility.dealId = dealId;
-      await api.post(facility).to('/v1/portal/gef/facilities');
+      await testApi.post(facility).to('/v1/portal/gef/facilities');
 
-      await api.put({ dealType: deal.dealType, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) }).to('/v1/tfm/deals/submit');
+      await testApi.put({ dealType: deal.dealType, dealId, auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id) }).to('/v1/tfm/deals/submit');
     }
   }
 

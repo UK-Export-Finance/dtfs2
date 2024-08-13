@@ -1,4 +1,3 @@
-import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
 import {
   CURRENCY,
@@ -8,23 +7,22 @@ import {
   FeeRecordStatus,
   PaymentEntity,
   PaymentEntityMockBuilder,
+  PaymentMatchingToleranceEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import app from '../../../src/createApp';
-import createApi from '../../api';
+import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
+import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import mongoDbClient from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser } from '../../../test-helpers/test-data/portal-user';
-import { aTfmUser } from '../../../test-helpers/test-data/tfm-user';
-import { aTfmSessionUser } from '../../../test-helpers/test-data/tfm-session-user';
+import { aPortalUser, aTfmUser, aTfmSessionUser } from '../../../test-helpers/test-data';
 
 console.error = jest.fn();
 
-const api = createApi(app);
+const BASE_URL = '/v1/utilisation-reports/:reportId/payment';
 
-describe('POST /v1/utilisation-reports/:reportId/payment', () => {
-  const getUrl = (reportId: number | string) => `/v1/utilisation-reports/${reportId}/payment`;
+describe(`POST ${BASE_URL}`, () => {
+  const getUrl = (reportId: number | string) => BASE_URL.replace(':reportId', reportId.toString());
 
   const reportId = 1;
 
@@ -62,6 +60,15 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
   beforeAll(async () => {
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
+    await SqlDbHelper.deleteAllEntries('PaymentMatchingTolerance');
+
+    const tolerances = [
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency('GBP').withId(1).withThreshold(1).withIsActive(true).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency('EUR').withId(2).withThreshold(2).withIsActive(true).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency('JPY').withId(3).withThreshold(3).withIsActive(true).build(),
+      PaymentMatchingToleranceEntityMockBuilder.forCurrency('USD').withId(4).withThreshold(4).withIsActive(true).build(),
+    ];
+    await SqlDbHelper.saveNewEntries('PaymentMatchingTolerance', tolerances);
 
     await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedUtilisationReport);
 
@@ -87,26 +94,20 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     await wipe(['users', 'tfm-users']);
   });
 
+  withSqlIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
+    makeRequest: (url) => testApi.post(aValidRequestBody()).to(url),
+  });
+
   it('returns a 200 with a valid request body', async () => {
     // Arrange
     const requestBody = aValidRequestBody();
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
-  });
-
-  it('returns a 400 when the report id is not a valid id', async () => {
-    // Arrange
-    const requestBody = aValidRequestBody();
-
-    // Act
-    const response: Response = await api.post(requestBody).to(getUrl('invalid-id'));
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
   });
 
   it("returns a 400 when the 'feeRecordIds' array is empty", async () => {
@@ -117,7 +118,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -131,7 +132,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -153,7 +154,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -167,7 +168,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -181,7 +182,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -195,7 +196,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -209,7 +210,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -223,7 +224,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -237,7 +238,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBody).to(getUrl(reportId));
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -259,7 +260,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    const response: Response = await api.post(requestBodyWithEURPaymentCurrency).to(getUrl(reportId));
+    const response = await testApi.post(requestBodyWithEURPaymentCurrency).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -289,7 +290,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    await api.post(requestBody).to(getUrl(reportId));
+    await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     const feeRecordWithPayments = await SqlDbHelper.manager.findOne(FeeRecordEntity, {
@@ -319,9 +320,10 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
 
+    // (100 + 52) - (100 + 50) = 2 > 1 the tolerance for GBP, the payment currency
     const firstFeeRecordAmount = 100;
     const secondFeeRecordAmount = 50;
-    const firstPaymentAmount = 30;
+    const firstPaymentAmount = 52;
     const secondPaymentAmount = 100;
 
     const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)
@@ -351,7 +353,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    await api.post(requestBody).to(getUrl(reportId));
+    await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     const feeRecordsWithPayments = await SqlDbHelper.manager.find(FeeRecordEntity, {
@@ -369,9 +371,10 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     await SqlDbHelper.deleteAllEntries('Payment');
     await SqlDbHelper.deleteAllEntries('FeeRecord');
 
+    // (120 + 30.5) - (100 + 50) = 0.5 < 1 the tolerance for GBP, the payment currency
     const firstFeeRecordAmount = 100;
     const secondFeeRecordAmount = 50;
-    const firstPaymentAmount = 30;
+    const firstPaymentAmount = 30.5;
     const secondPaymentAmount = 120;
 
     const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(uploadedUtilisationReport)
@@ -401,7 +404,7 @@ describe('POST /v1/utilisation-reports/:reportId/payment', () => {
     };
 
     // Act
-    await api.post(requestBody).to(getUrl(reportId));
+    await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
     const feeRecordsWithPayments = await SqlDbHelper.manager.find(FeeRecordEntity, {

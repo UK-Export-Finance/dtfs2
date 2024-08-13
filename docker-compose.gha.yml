@@ -19,8 +19,14 @@ services:
       - '1433:1433'
     volumes:
       - ./dtfs-sql-volume-dtfs-submissions:/data/db
+    healthcheck:
+      test: ['CMD', '/opt/mssql-tools18/bin/sqlcmd', '-C -S', 'localhost', '-U', 'sa', '-P', MSSQL_SA_PASSWORD, '-Q', 'SELECT 1;']
+      retries: 3
+      interval: 60s
+      timeout: 10s
+      start_period: 60s
 
-  dtfs-submissions-data:
+  dtfs-mongo:
     build:
       context: ./mongodb
       dockerfile: Dockerfile
@@ -38,7 +44,7 @@ services:
       start_period: 30s
     command: "--bind_ip_all --keyFile /mongo-keyfile --replSet rs0"
     volumes:
-      - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
+      - ./dtfs-mongo-volume-dtfs-submissions:/data/db
 
   dtfs-central-api:
     build:
@@ -48,7 +54,7 @@ services:
     restart: always
     depends_on:
       - dtfs-sql
-      - dtfs-submissions-data
+      - dtfs-mongo
       - external-api
     ports:
       - '5005:5005'
@@ -118,6 +124,7 @@ services:
       - CONTACT_US_SELF_SERVICE_PORTAL_URL
       - CONTACT_US_EMAIL_ADDRESS
       - FF_TFM_PAYMENT_RECONCILIATION_ENABLED
+      - FF_TFM_FACILITY_END_DATE_ENABLED
 
   trade-finance-manager-api:
     build:
@@ -175,6 +182,7 @@ services:
       - AZURE_SSO_GROUP_PDC_RECONCILE
       - CHANGE_STREAM_ENABLED
       - DELETION_AUDIT_LOGS_TTL_SECONDS
+      - FF_TFM_FACILITY_END_DATE_ENABLED
     entrypoint: npx ts-node trade-finance-manager-api/src/index.ts
 
   portal:
@@ -196,8 +204,6 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - PORTAL_API_URL=http://portal-api:5001
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -266,6 +272,9 @@ services:
       - SQL_DB_PASSWORD
       - SQL_DB_NAME
       - SQL_DB_LOGGING_ENABLED
+      - CHANGE_STREAM_ENABLED
+      - DELETION_AUDIT_LOGS_TTL_SECONDS
+      - GEF_DEAL_VERSION
     entrypoint: npx ts-node portal-api/src/index.ts
 
   external-api:
@@ -275,7 +284,7 @@ services:
     image: dtfs/external-api
     restart: always
     depends_on:
-      - dtfs-submissions-data
+      - dtfs-mongo
     ports:
       - '5002:5002'
     volumes:
@@ -288,10 +297,6 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
-      - ORDNANCE_SURVEY_API_URL=https://api.os.co.uk
-      - ORDNANCE_SURVEY_API_KEY
       - APIM_TFS_URL
       - APIM_TFS_KEY
       - APIM_TFS_VALUE
@@ -330,8 +335,6 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - PORTAL_API_URL=http://portal-api:5001
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
       - EXTERNAL_API_URL=http://external-api:5002
       - SESSION_SECRET
       - TZ=Europe/London
@@ -342,6 +345,7 @@ services:
       - DTFS_CENTRAL_API_KEY
       - RATE_LIMIT_THRESHOLD
       - CONTACT_US_EMAIL_ADDRESS
+      - GEF_DEAL_VERSION
 
   redis:
     image: 'redis:alpine'

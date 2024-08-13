@@ -28,7 +28,6 @@ describe('GET /v1/banks/:bankId/next-report-period', () => {
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
-    getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
     makeRequestAsUser: (user) => as(user).get(nextReportPeriodUrl(matchingBankId)),
     successStatusCode: 200,
   });

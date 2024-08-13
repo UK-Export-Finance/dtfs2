@@ -1,6 +1,6 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const DEFAULTS = require('../defaults');
-const db = require('../../drivers/db-client');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const { isValidMongoId } = require('../validation/validateIds');
 const { userHasAccessTo } = require('../users/checks');
 const validate = require('../validation/completeDealValidation');
@@ -124,8 +124,17 @@ exports.findOne = (req, res) => {
   });
 };
 
-const updateDeal = async (dealId, dealUpdate, user) => {
-  const updatedDeal = await api.updateDeal(dealId, dealUpdate, user);
+/**
+ * Sends a request to DTFS Central to update a deal
+ * @param {object} params - The parameters for updating the deal.
+ * @param {string} params.dealId - The ID of the deal being updated.
+ * @param {object} params.dealUpdate - The update to be made to the deal.
+ * @param {object} params.user - The user making the changes.
+ * @param {object} params.auditDetails - The audit details for the update.
+ * @returns {Promise<object | false>} The updated deal object.
+ */
+const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
+  const updatedDeal = await api.updateDeal({ dealId, dealUpdate, user, auditDetails });
 
   return updatedDeal;
 };
@@ -135,16 +144,22 @@ exports.updateDeal = updateDeal;
  * Update a deal (BSS, EWCS only)
  */
 exports.update = async (req, res) => {
-  const dealId = req.params.id;
+  const {
+    user,
+    params: { id: dealId },
+    body: dealUpdate,
+  } = req;
 
   await findOneDeal(dealId, async (deal) => {
     if (!deal) res.status(404).send();
 
-    if (!userHasAccessTo(req.user, deal)) {
+    if (!userHasAccessTo(user, deal)) {
       return res.status(401).send();
     }
 
-    const updatedDeal = await updateDeal(dealId, req.body, req.user, deal);
+    const auditDetails = generatePortalAuditDetails(user._id);
+
+    const updatedDeal = await updateDeal({ dealId, dealUpdate, user, auditDetails });
 
     return res.status(200).json(updatedDeal);
   });

@@ -2,7 +2,7 @@ const { format, getUnixTime, fromUnixTime } = require('date-fns');
 const sanitizeHtml = require('sanitize-html');
 const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const db = require('../../drivers/db-client');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const validateFeedback = require('../validation/feedback');
 const sendTfmEmail = require('./send-tfm-email');
 
@@ -39,7 +39,7 @@ exports.create = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails, ${error.message}`,
+        message: `Invalid auditDetails: ${error.message}`,
       });
     }
     return res.status(500).send({ status: 500, error });

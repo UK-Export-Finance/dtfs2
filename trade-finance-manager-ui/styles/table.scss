@@ -130,15 +130,30 @@ table.sortable {
     vertical-align: middle;
   }
   
-  .fee-record-status-tag {
+  .status-tag {
     white-space: nowrap;
   }
-  
+
   div.select-all-table-cell-checkbox {
     visibility: hidden;
+  }
+
+  .no-border {
+    border-bottom: 0px;
   }
 }
 
 .js-enabled .govuk-table div.select-all-table-cell-checkbox {
   visibility: visible;
+}
+
+table.premium-payments-table {
+  .payments-list {
+    margin: 0;
+    padding: 0;
+  }
+
+  .payments-list-item {
+    list-style-type: none;
+  }
 }

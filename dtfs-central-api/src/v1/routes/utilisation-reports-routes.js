@@ -1,7 +1,14 @@
 const express = require('express');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
-const { validatePostPaymentPayload } = require('./middleware/payload-validation/validate-post-payment-payload');
+const {
+  validatePostPaymentPayload,
+  validateDeletePaymentPayload,
+  validatePatchPaymentPayload,
+  validatePostKeyingDataPayload,
+  validatePutKeyingDataMarkAsPayload,
+  validatePostRemoveFeesFromPaymentGroupPayload,
+} = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
   postUploadUtilisationReport,
@@ -16,6 +23,14 @@ const {
 } = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
 const { getSelectedFeeRecordDetails } = require('../controllers/utilisation-report-service/get-selected-fee-records-details.controller');
 const { postPayment } = require('../controllers/utilisation-report-service/post-payment.controller');
+const { deletePayment } = require('../controllers/utilisation-report-service/delete-payment.controller');
+const { postKeyingData } = require('../controllers/utilisation-report-service/post-keying-data.controller');
+const { getFeeRecordsToKey } = require('../controllers/utilisation-report-service/get-fee-records-to-key.controller');
+const { getPaymentDetailsById } = require('../controllers/utilisation-report-service/get-payment-details-by-id.controller');
+const { patchPayment } = require('../controllers/utilisation-report-service/patch-payment.controller');
+const { putKeyingDataMarkAsDone } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-done.controller');
+const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-to-do.controller');
+const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -186,6 +201,13 @@ utilisationReportsRouter
  *           type: string
  *         required: true
  *         description: the id for the report the fees belong to
+ *       - in: query
+ *         name: includeAvailablePaymentGroups
+ *         schema:
+ *           type: string
+ *           enum: [true, false]
+ *           required: false
+ *         description: Whether or not to include the available payment groups in the response body
  *     requestBody:
  *       required: true
  *       content:
@@ -204,8 +226,9 @@ utilisationReportsRouter
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               $ref: '#/definitions/SelectedFeeRecordsDetails'
+ *               oneOf:
+ *                 - $ref: '#/definitions/SelectedFeeRecordsDetailsWithAvailablePaymentGroupsResponseBody'
+ *                 - $ref: '#/definitions/SelectedFeeRecordsDetailsWithoutAvailablePaymentGroupsResponseBody'
  *       400:
  *         description: Bad request
  *       404:
@@ -254,7 +277,7 @@ utilisationReportsRouter
  *                 description: the date the payment was received as an ISO date string
  *               paymentReference:
  *                 type: string
- *                 required: false
+ *                 nullable: true
  *     responses:
  *       200:
  *         description: OK
@@ -268,5 +291,306 @@ utilisationReportsRouter
 utilisationReportsRouter
   .route('/:reportId/payment')
   .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePostPaymentPayload, postPayment);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/keying-data:
+ *   post:
+ *     summary: Generate keying data for a utilisation report
+ *     tags: [Utilisation Report]
+ *     description: Generates keying data for the utilisation report with the supplied report id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report to generate keying data for
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/keying-data')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePostKeyingDataPayload, postKeyingData);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/fee-records-to-key:
+ *   get:
+ *     summary: Get the fee records to key for a utilisation report
+ *     tags: [Utilisation Report]
+ *     description: Gets the fee record to key for the utilisation report with the supplied id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report to get the fee records for
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/FeeRecordsToKeyResponseBody'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter.route('/:reportId/fee-records-to-key').get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, getFeeRecordsToKey);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/keying-data/mark-as-done:
+ *   put:
+ *     summary: Put keying sheet data status to DONE for multiple fee records
+ *     tags: [Utilisation Report]
+ *     description: Mark multiple fee records within a keying sheet as keying sheet row status DONE
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feeRecordIds:
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/keying-data/mark-as-done')
+  .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePutKeyingDataMarkAsPayload, putKeyingDataMarkAsDone);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/keying-data/mark-as-to-do:
+ *   put:
+ *     summary: Put keying sheet data status to TO DO for multiple fee records
+ *     tags: [Utilisation Report]
+ *     description: Mark multiple fee records within a keying sheet as keying sheet row status TO DO
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feeRecordIds:
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/keying-data/mark-as-to-do')
+  .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, validatePutKeyingDataMarkAsPayload, putKeyingDataMarkAsToDo);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/payment/:paymentId:
+ *   get:
+ *     summary: Get the payment details
+ *     tags: [Utilisation Report]
+ *     description: Gets the payment details for the payment with the supplied id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: paymentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the payment
+ *       - in: query
+ *         name: includeFeeRecords
+ *         schema:
+ *           type: string
+ *           enum: [true, false]
+ *           required: false
+ *         description: Whether or not to include the fee records and total reported payments in the response body
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - $ref: '#/definitions/PaymentDetailsWithFeeRecordsResponseBody'
+ *                 - $ref: '#/definitions/PaymentDetailsWithoutFeeRecordsResponseBody'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ *   delete:
+ *     summary: Delete a payment
+ *     tags: [Utilisation Report]
+ *     description: Deletes a payment
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report the payment belongs to
+ *       - in: path
+ *         name: paymentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the payment to delete
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ *   patch:
+ *     summary: Edit the payment
+ *     tags: [Utilisation Report]
+ *     description: Edits the payment with the supplied id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: paymentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the payment
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               paymentAmount:
+ *                 type: number
+ *               datePaymentReceived:
+ *                 type: string
+ *                 format: date
+ *               paymentReference:
+ *                 type: string
+ *                 required: false
+ *               user:
+ *                 $ref: '#/definitions/TFMUser'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/payment/:paymentId')
+  .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('paymentId'), handleExpressValidatorResult)
+  .get(getPaymentDetailsById)
+  .delete(validateDeletePaymentPayload, deletePayment)
+  .patch(validatePatchPaymentPayload, patchPayment);
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/payment/:paymentId/remove-selected-fees:
+ *   post:
+ *     summary: Remove the selected fee record ids
+ *     tags: [Utilisation Report]
+ *     description: Remove the selected fee record ids from the specified payment id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *       - in: path
+ *         name: paymentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the payment
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feeRecordIds:
+ *                 description: The ids of the selected fee records
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/payment/:paymentId/remove-selected-fees')
+  .post(
+    validation.sqlIdValidation('reportId'),
+    validation.sqlIdValidation('paymentId'),
+    handleExpressValidatorResult,
+    validatePostRemoveFeesFromPaymentGroupPayload,
+    postRemoveFeesFromPaymentGroup,
+  );
 
 module.exports = utilisationReportsRouter;

@@ -2,26 +2,26 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const aDeal = require('../deal-builder');
 
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
+const { testApi } = require('../../test-api');
 const { expectAddedFields } = require('./expectAddedFields');
-const CONSTANTS = require('../../../src/constants');
+const { DEALS } = require('../../../src/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
+const { createFacility } = require('../../helpers/create-facility');
 
 const newDeal = aDeal({
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+  dealType: DEALS.DEAL_TYPE.BSS_EWCS,
   editedBy: [],
   eligibility: {
     status: 'Not started',
     criteria: [{}],
   },
-  status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
+  status: DEALS.DEAL_STATUS.DRAFT,
   exporter: {
     companyName: 'mock company',
   },
   bankInternalRefName: 'test',
-  submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.AIN,
+  submissionType: DEALS.SUBMISSION_TYPE.AIN,
   updatedAt: 123456789,
 });
 
@@ -32,12 +32,12 @@ describe('/v1/portal/deals', () => {
 
   describe('GET /v1/portal/deals/:id', () => {
     it('returns the requested resource', async () => {
-      const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+      const postResult = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const expectedResponse = expectAddedFields({ baseDeal: newDeal, auditDetails: postResult.auditDetails });
 
       const dealId = postResult.body._id;
 
-      const { status, body } = await api.get(`/v1/portal/deals/${dealId}`);
+      const { status, body } = await testApi.get(`/v1/portal/deals/${dealId}`);
 
       expect(status).toEqual(200);
       expect(body.deal).toEqual(expectedResponse);
@@ -45,7 +45,7 @@ describe('/v1/portal/deals', () => {
 
     describe('when a BSS deal has facilities', () => {
       it('returns facilities mapped to deal.bondTransactions and deal.loanTransactions', async () => {
-        const postResult = await createDeal({ api, deal: newDeal, user: MOCK_PORTAL_USER });
+        const postResult = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
         const dealId = postResult.body._id;
 
         // create some facilities
@@ -65,17 +65,17 @@ describe('/v1/portal/deals', () => {
           ...mockFacility,
         };
 
-        const { body: createdBond1 } = await api.post({ facility: mockBond, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-        const { body: createdBond2 } = await api.post({ facility: mockBond, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-        const { body: createdLoan1 } = await api.post({ facility: mockLoan, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
-        const { body: createdLoan2 } = await api.post({ facility: mockLoan, user: MOCK_PORTAL_USER }).to('/v1/portal/facilities');
+        const { body: createdBond1 } = await createFacility({ facility: mockBond, user: MOCK_PORTAL_USER });
+        const { body: createdBond2 } = await createFacility({ facility: mockBond, user: MOCK_PORTAL_USER });
+        const { body: createdLoan1 } = await createFacility({ facility: mockLoan, user: MOCK_PORTAL_USER });
+        const { body: createdLoan2 } = await createFacility({ facility: mockLoan, user: MOCK_PORTAL_USER });
 
-        const { body: bond1 } = await api.get(`/v1/portal/facilities/${createdBond1._id}`);
-        const { body: bond2 } = await api.get(`/v1/portal/facilities/${createdBond2._id}`);
-        const { body: loan1 } = await api.get(`/v1/portal/facilities/${createdLoan1._id}`);
-        const { body: loan2 } = await api.get(`/v1/portal/facilities/${createdLoan2._id}`);
+        const { body: bond1 } = await testApi.get(`/v1/portal/facilities/${createdBond1._id}`);
+        const { body: bond2 } = await testApi.get(`/v1/portal/facilities/${createdBond2._id}`);
+        const { body: loan1 } = await testApi.get(`/v1/portal/facilities/${createdLoan1._id}`);
+        const { body: loan2 } = await testApi.get(`/v1/portal/facilities/${createdLoan2._id}`);
 
-        const { status, body } = await api.get(`/v1/portal/deals/${dealId}`);
+        const { status, body } = await testApi.get(`/v1/portal/deals/${dealId}`);
 
         expect(status).toEqual(200);
         expect(body.deal.bondTransactions.items).toEqual([bond1, bond2]);

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId, isValidBankId } = require('./helpers/validateIds');
 const { assertValidIsoMonth, assertValidIsoYear } = require('./helpers/date');
 const PageOutOfBoundsError = require('./errors/page-out-of-bounds.error');
@@ -9,7 +10,7 @@ const { TFM_API_URL, TFM_API_KEY } = process.env;
 
 const generateHeaders = (token) => ({
   Authorization: token,
-  'Content-Type': 'application/json',
+  [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   'x-api-key': TFM_API_KEY,
 });
 
@@ -47,9 +48,9 @@ const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
 /**
  * Makes a request to the GET /facilities TFM API endpoint
  * and throws an error if the page number is out of bounds
- * @param {Object} queryParams Query parameters
+ * @param {object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {Promise<Object>} Facilities data and pagination metadata
+ * @returns {Promise<object>} Facilities data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getFacilities = async (queryParams, token) => {
@@ -74,9 +75,9 @@ const getFacilities = async (queryParams, token) => {
 /**
  * Makes a request to the GET /deals TFM API endpoint
  * and throws an error if the page number is out of bounds
- * @param {Object} queryParams Query parameters
+ * @param {object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {Promise<Object>} Deals data and pagination metadata
+ * @returns {Promise<object>} Deals data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getDeals = async (queryParams, token) => {
@@ -400,7 +401,7 @@ const getAuthLoginUrl = async () => {
       method: 'get',
       url: `${TFM_API_URL}/v1/auth/login-url`,
       headers: {
-        'Content-Type': 'application/json',
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
         'x-api-key': TFM_API_KEY,
       },
     });
@@ -653,6 +654,33 @@ const getLatestCompletedAmendmentDate = async (facilityId, token) => {
   }
 };
 
+/**
+ * @param {string} facilityId - The facility ID
+ * @param {string} token - The user token
+ * @returns {Promise<import('./api-response-types').GetLatestCompletedAmendmentFacilityEndDateResponse>}
+ */
+const getLatestCompletedAmendmentFacilityEndDate = async (facilityId, token) => {
+  try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('getLatestCompletedAmendmentFacilityEndDate: Invalid facility id provided %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed/latest-facility-end-date`,
+      headers: generateHeaders(token),
+    });
+
+    return { status: 200, data: response.data };
+  } catch (error) {
+    console.error('Unable to get the latest completed facilityEndDate amendment %o', error);
+    return { status: error?.response?.status || 500, data: 'Failed to get latest completed facility end date amendment' };
+  }
+};
+
 const getAmendmentById = async (facilityId, amendmentId, token) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -895,26 +923,55 @@ const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken)
 
 /**
  * @param {string} reportId - The report id
+ * @param {string | undefined} facilityIdQuery - A partial facility id to filter the report fee records by
  * @param {string} userToken - The user token
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
-const getUtilisationReportReconciliationDetailsById = async (reportId, userToken) => {
+const getUtilisationReportReconciliationDetailsById = async (reportId, facilityIdQuery, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
     headers: generateHeaders(userToken),
+    params: { facilityIdQuery },
   });
 
   return response.data;
 };
 
 /**
- * @param {number} reportId - The report id
+ * Gets the selected fee records details with the attached available payment
+ * groups.
+ * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The ids of the selected fee records
  * @param {string} userToken - The user token
- * @returns {Promise<import('@ukef/dtfs2-common').SelectedFeeRecordsDetails>}
+ * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
  */
-const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds, userToken) => {
+const getSelectedFeeRecordsDetailsWithAvailablePaymentGroups = async (reportId, feeRecordIds, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
     headers: generateHeaders(userToken),
+    params: {
+      includeAvailablePaymentGroups: true,
+    },
+    data: {
+      feeRecordIds,
+    },
+  });
+
+  return response.data;
+};
+
+/**
+ * Gets the selected fee records details without the attached available payment
+ * groups.
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the selected fee records
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
+ */
+const getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups = async (reportId, feeRecordIds, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
+    headers: generateHeaders(userToken),
+    params: {
+      includeAvailablePaymentGroups: false,
+    },
     data: {
       feeRecordIds,
     },
@@ -964,6 +1021,203 @@ const getReportSummariesByBankAndYear = async (userToken, bankId, year) => {
   }
 };
 
+/**
+ * Adds a payment to the supplied fee records
+ * @param {string} reportId - The report id
+ * @param {import('./types/add-payment-form-values').ParsedAddPaymentFormValues} parsedAddPaymentFormValues - The parsed submitted form values
+ * @param {number[]} feeRecordIds - The list of fee record ids to add the payment to
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user adding the payment
+ * @param {string} userToken - The user token
+ */
+const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeRecordIds, user, userToken) => {
+  const { paymentCurrency, paymentAmount, datePaymentReceived, paymentReference } = parsedAddPaymentFormValues;
+
+  const response = await axios({
+    method: 'post',
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment`,
+    headers: generateHeaders(userToken),
+    data: {
+      feeRecordIds,
+      paymentCurrency,
+      paymentAmount,
+      datePaymentReceived,
+      paymentReference,
+      user,
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Generates keying data for the utilisation report
+ * with the supplied id
+ * @param {string} reportId - The report id
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {string} userToken - The user token
+ * @returns {Promise<{}>}
+ */
+const generateKeyingData = async (reportId, user, userToken) => {
+  const response = await axios({
+    method: 'post',
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/keying-data`,
+    headers: generateHeaders(userToken),
+    data: {
+      user,
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Updates keying sheet fee records with supplied ids to DONE
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the fee records to mark as DONE
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {string} userToken - The user token
+ * @returns {Promise<{}>}
+ */
+const markKeyingDataAsDone = async (reportId, feeRecordIds, user, userToken) => {
+  const response = await axios({
+    method: 'put',
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/keying-data/mark-as-done`,
+    headers: generateHeaders(userToken),
+    data: {
+      user,
+      feeRecordIds,
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Updates keying sheet fee records with supplied ids to TO_DO
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the fee records to mark as TO_DO
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {string} userToken - The user token
+ * @returns {Promise<{}>}
+ */
+const markKeyingDataAsToDo = async (reportId, feeRecordIds, user, userToken) => {
+  const response = await axios({
+    method: 'put',
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/keying-data/mark-as-to-do`,
+    headers: generateHeaders(userToken),
+    data: {
+      user,
+      feeRecordIds,
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Gets the utilisation report with the fee
+ * records to key
+ * @param {string} reportId - The report id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').FeeRecordsToKeyResponseBody>}
+ */
+const getUtilisationReportWithFeeRecordsToKey = async (reportId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records-to-key`, {
+    headers: generateHeaders(userToken),
+  });
+  return response.data;
+};
+
+/**
+ * Gets the payment details with the attached fee records
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').GetPaymentDetailsWithFeeRecordsResponseBody>}
+ */
+const getPaymentDetailsWithFeeRecords = async (reportId, paymentId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`, {
+    headers: generateHeaders(userToken),
+    params: {
+      includeFeeRecords: true,
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Gets the payment details without the attached fee records
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').GetPaymentDetailsWithoutFeeRecordsResponseBody>}
+ */
+const getPaymentDetailsWithoutFeeRecords = async (reportId, paymentId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`, {
+    headers: generateHeaders(userToken),
+    params: {
+      includeFeeRecords: false,
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Deletes the payment with the specified id
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {string} userToken - The user token
+ * @returns {Promise<void>}
+ */
+const deletePaymentById = async (reportId, paymentId, user, userToken) => {
+  await axios({
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
+    method: 'delete',
+    headers: generateHeaders(userToken),
+    data: { user },
+  });
+};
+
+/**
+ * Updated the payment with the supplied edit payment form values
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {import('./types/edit-payment-form-values').ParsedEditPaymentFormValues} parsedEditPaymentFormValues - The parsed edit payment form values
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {string} userToken - The user token
+ */
+const editPayment = async (reportId, paymentId, parsedEditPaymentFormValues, user, userToken) => {
+  const { paymentAmount, datePaymentReceived, paymentReference } = parsedEditPaymentFormValues;
+  await axios({
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
+    method: 'patch',
+    headers: generateHeaders(userToken),
+    data: {
+      paymentAmount,
+      datePaymentReceived,
+      paymentReference,
+      user,
+    },
+  });
+};
+
+/**
+ * Removes the supplied fee records from a supplied payment
+ * @param {string} reportId - The report id
+ * @param {string} paymentId - The payment id
+ * @param {number[]} selectedFeeRecordIds - The list of fee record ids to remove from the payment
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {string} userToken - The user token
+ */
+const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, user, userToken) => {
+  await axios({
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}/remove-selected-fees`,
+    method: 'post',
+    headers: generateHeaders(userToken),
+    data: {
+      selectedFeeRecordIds,
+      user,
+    },
+  });
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -999,6 +1253,7 @@ module.exports = {
   getAllAmendmentsInProgress,
   getLatestCompletedAmendmentValue,
   getLatestCompletedAmendmentDate,
+  getLatestCompletedAmendmentFacilityEndDate,
   getParty,
   getUkBankHolidays,
   getUtilisationReportsReconciliationSummary,
@@ -1006,6 +1261,17 @@ module.exports = {
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
   getAllBanks,
-  getSelectedFeeRecordsDetails,
+  getSelectedFeeRecordsDetailsWithAvailablePaymentGroups,
+  getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups,
   getReportSummariesByBankAndYear,
+  addPaymentToFeeRecords,
+  generateKeyingData,
+  markKeyingDataAsDone,
+  markKeyingDataAsToDo,
+  getUtilisationReportWithFeeRecordsToKey,
+  getPaymentDetailsWithFeeRecords,
+  getPaymentDetailsWithoutFeeRecords,
+  deletePaymentById,
+  editPayment,
+  removeFeesFromPayment,
 };

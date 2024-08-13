@@ -1,9 +1,10 @@
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
 const { PORTAL_USER } = require('@ukef/dtfs2-common/schemas');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { ObjectId } = require('mongodb');
-const { generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { getNowAsEpochMillisecondString } = require('../helpers/date');
-const db = require('../../drivers/db-client');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const sendEmail = require('../email');
 const businessRules = require('../../config/businessRules');
 const { sanitizeUser } = require('./sanitizeUserData');
@@ -17,8 +18,8 @@ const { transformDatabaseUser } = require('./transform-database-user');
 
 /**
  * Send a password update confirmation email with update timestamp.
- * @param {String} emailAddress User email address
- * @param {String} timestamp Password update timestamp
+ * @param {string} emailAddress User email address
+ * @param {string} timestamp Password update timestamp
  */
 const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
   const formattedTimestamp = new Date(Number(timestamp)).toLocaleDateString('en-GB', {
@@ -43,7 +44,7 @@ const createPasswordToken = async (email, userService, auditDetails) => {
     throw new Error('Invalid Email');
   }
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
@@ -96,7 +97,7 @@ const sendNewAccountEmail = async (user, resetToken) => {
 };
 
 exports.list = async (callback) => {
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   collection.find().toArray(callback);
 };
@@ -109,7 +110,7 @@ exports.findOne = async (_id, callback) => {
     throw new InvalidUserIdError(_id);
   }
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
 };
@@ -122,7 +123,7 @@ exports.findByUsername = async (username, callback) => {
     throw new Error('Invalid Username');
   }
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   collection.findOne({ username: { $eq: username } }, { collation: { locale: 'en', strength: 2 } }, callback);
 };
 
@@ -130,7 +131,7 @@ exports.findByEmail = async (email) => {
   if (!isValidEmail(email)) {
     throw new InvalidEmailAddressError(email);
   }
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   const user = await collection.findOne({ email: { $eq: email } });
 
   if (!user) {
@@ -156,7 +157,7 @@ exports.create = async (user, userService, auditDetails, callback) => {
     return callback('Invalid user payload', user);
   }
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   const createUserResult = await collection.insertOne(insert);
 
   const { insertedId: userId } = createUserResult;
@@ -182,7 +183,7 @@ exports.update = async (_id, update, auditDetails, callback) => {
 
   const userSetUpdate = { ...update };
   let userUnsetUpdate;
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   collection.findOne({ _id: { $eq: ObjectId(_id) } }, async (error, existingUser) => {
     if (existingUser['user-status'] !== USER.STATUS.BLOCKED && userSetUpdate['user-status'] === USER.STATUS.BLOCKED) {
@@ -263,7 +264,7 @@ exports.updateSessionIdentifier = async (user, sessionIdentifier, auditDetails, 
     throw new InvalidSessionIdentifierError(sessionIdentifier);
   }
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   const update = {
     sessionIdentifier,
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
@@ -278,7 +279,7 @@ exports.incrementFailedLoginCount = async (user, auditDetails) => {
   if (!ObjectId.isValid(user._id)) {
     throw new InvalidUserIdError(user._id);
   }
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   const failureCount = user.loginFailureCount ? user.loginFailureCount + 1 : 1;
   const thresholdReached = failureCount >= businessRules.loginFailureCount_Limit;
@@ -307,7 +308,7 @@ exports.disable = async (_id, auditDetails, callback) => {
     throw new InvalidUserIdError(_id);
   }
 
-  const collection = await db.getCollection('users');
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   const userUpdate = {
     disabled: true,
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
@@ -318,13 +319,25 @@ exports.disable = async (_id, auditDetails, callback) => {
   callback(null, status);
 };
 
-exports.remove = async (_id, callback) => {
-  if (ObjectId.isValid(_id)) {
-    const collection = await db.getCollection('users');
-    const status = await collection.deleteOne({ _id: { $eq: ObjectId(_id) } });
-
-    return callback(null, status);
+exports.remove = async (_id, auditDetails, callback) => {
+  if (!ObjectId.isValid(_id)) {
+    return callback('Invalid portal user id', 400);
   }
 
-  return callback('Invalid portal user id', 400);
+  try {
+    await deleteOne({
+      documentId: new ObjectId(_id),
+      collectionName: MONGO_DB_COLLECTIONS.USERS,
+      db,
+      auditDetails,
+    });
+
+    return callback(null, 200);
+  } catch (error) {
+    if (error instanceof DocumentNotDeletedError) {
+      return callback(error, 404);
+    }
+    console.error('Deleting a user threw an error %o', error);
+    return callback(error, 500);
+  }
 };

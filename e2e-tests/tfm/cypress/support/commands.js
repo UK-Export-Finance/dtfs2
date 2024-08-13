@@ -1,6 +1,8 @@
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
+Cypress.Commands.add('getInputByLabelText', require('./utils/getInputByLabelText'));
+
 // commands used to interact directly with TFM UI
 Cypress.Commands.add('login', require('../../../support/trade-finance-manager/login'));
 Cypress.Commands.add('getTfmUserByUsername', require('../../../support/trade-finance-manager/getTfmUserByUsername'));

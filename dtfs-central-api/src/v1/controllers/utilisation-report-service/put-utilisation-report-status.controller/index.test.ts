@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import httpMocks from 'node-mocks-http';
-import { FindOptionsWhere } from 'typeorm';
+import { FindOptionsWhere, EntityManager } from 'typeorm';
 import {
   AzureFileInfoEntity,
   MOCK_AZURE_FILE_INFO,
@@ -9,10 +9,11 @@ import {
   UtilisationReportEntityMockBuilder,
   ReportWithStatus,
 } from '@ukef/dtfs2-common';
-import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { PutUtilisationReportStatusRequest, putUtilisationReportStatus } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { getQueryRunnerMocks } from '../../../../../test-helpers/mock-query-runner';
+import { executeWithSqlTransaction } from '../../../../helpers';
+
+jest.mock('../../../../helpers');
 
 console.error = jest.fn();
 
@@ -31,10 +32,6 @@ describe('put-utilisation-report-status.controller', () => {
       body: { ...validRequestBody },
     });
 
-  const { mockQueryRunner, mockConnect, mockStartTransaction, mockCommitTransaction, mockRollbackTransaction, mockRelease, mockSave } = getQueryRunnerMocks();
-
-  const createQueryRunnerSpy = jest.spyOn(SqlDbDataSource, 'createQueryRunner');
-
   const utilisationReportRepoFindOneBySpy = jest.spyOn(UtilisationReportRepo, 'findOneBy');
 
   const mockFindOneBy = (reports: UtilisationReportEntity[]) => (where: Parameters<typeof UtilisationReportRepo.findOneBy>[0]) => {
@@ -42,9 +39,15 @@ describe('put-utilisation-report-status.controller', () => {
     return Promise.resolve(reportWithMatchingId ?? null);
   };
 
+  const mockSave = jest.fn();
+  const mockEntityManager = {
+    save: mockSave,
+  } as unknown as EntityManager;
+
   beforeEach(() => {
     jest.resetAllMocks();
-    createQueryRunnerSpy.mockReturnValue(mockQueryRunner);
+
+    jest.mocked(executeWithSqlTransaction).mockImplementation(async (functionToExecute) => await functionToExecute(mockEntityManager));
   });
 
   it.each`
@@ -62,7 +65,7 @@ describe('put-utilisation-report-status.controller', () => {
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
     expect(res._getData()).toEqual("Failed to update utilisation report statuses: Request body item 'user' supplied does not match required format");
-    expect(createQueryRunnerSpy).not.toHaveBeenCalled();
+    expect(executeWithSqlTransaction).not.toHaveBeenCalled();
   });
 
   it.each`
@@ -83,7 +86,7 @@ describe('put-utilisation-report-status.controller', () => {
     expect(res._getData()).toEqual(
       "Failed to update utilisation report statuses: Request body item 'reportsWithStatus' supplied does not match required format",
     );
-    expect(createQueryRunnerSpy).not.toHaveBeenCalled();
+    expect(executeWithSqlTransaction).not.toHaveBeenCalled();
   });
 
   describe('when trying to only mark reports as completed', () => {
@@ -114,12 +117,6 @@ describe('put-utilisation-report-status.controller', () => {
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-      expect(mockCommitTransaction).toHaveBeenCalledTimes(1);
-      expect(mockRollbackTransaction).not.toHaveBeenCalled();
-      expect(mockRelease).toHaveBeenCalled();
       expect(mockSave).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsCompleted.length);
 
       existingReports.forEach((report) => {
@@ -151,14 +148,10 @@ describe('put-utilisation-report-status.controller', () => {
         await putUtilisationReportStatus(req, res);
 
         // Assert
-        expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-        expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
-        expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-        expect(mockConnect).toHaveBeenCalledTimes(1);
-        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-        expect(mockCommitTransaction).not.toHaveBeenCalled();
-        expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
-        expect(mockRelease).toHaveBeenCalled();
+        expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+        expect(res._getData()).toEqual(
+          `Failed to update utilisation report statuses: Event type 'MANUALLY_SET_COMPLETED' is invalid for 'UtilisationReportEntity' (ID: '${reportWithStatus.reportId}') in state '${reportStatus}'`,
+        );
         expect(mockSave).not.toHaveBeenCalled();
       },
     );
@@ -200,12 +193,6 @@ describe('put-utilisation-report-status.controller', () => {
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-      expect(mockConnect).toHaveBeenCalledTimes(1);
-      expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-      expect(mockCommitTransaction).toHaveBeenCalledTimes(1);
-      expect(mockRollbackTransaction).not.toHaveBeenCalled();
-      expect(mockRelease).toHaveBeenCalled();
       expect(mockSave).toHaveBeenCalledTimes(reportsWithStatusForMarkingAsNotCompleted.length);
 
       existingReports.forEach((report, index) => {
@@ -238,14 +225,10 @@ describe('put-utilisation-report-status.controller', () => {
         await putUtilisationReportStatus(req, res);
 
         // Assert
-        expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-        expect(res._getData()).toEqual('Failed to update utilisation report statuses: Transaction failed');
-        expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
-        expect(mockConnect).toHaveBeenCalledTimes(1);
-        expect(mockStartTransaction).toHaveBeenCalledTimes(1);
-        expect(mockCommitTransaction).not.toHaveBeenCalled();
-        expect(mockRollbackTransaction).toHaveBeenCalledTimes(1);
-        expect(mockRelease).toHaveBeenCalled();
+        expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+        expect(res._getData()).toEqual(
+          `Failed to update utilisation report statuses: Event type 'MANUALLY_SET_INCOMPLETE' is invalid for 'UtilisationReportEntity' (ID: '${reportWithStatus.reportId}') in state '${reportStatus}'`,
+        );
         expect(mockSave).not.toHaveBeenCalled();
       },
     );

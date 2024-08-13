@@ -4,6 +4,7 @@
 import * as dotenv from 'dotenv';
 import axios, { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
+import { HEADERS } from '@ukef/dtfs2-common';
 import { NumberGeneratorResponse, NumberGeneratorErrorResponse } from '../../interfaces';
 import { InvalidEntityTypeError } from '../errors';
 import { ENTITY_TYPE, NUMBER_TYPE, USER } from '../../constants';
@@ -15,7 +16,7 @@ const { APIM_MDM_URL, APIM_MDM_VALUE, APIM_MDM_KEY } = process.env;
 const headers = {
   headers: {
     [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
-    'Content-Type': 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   },
 };
 
@@ -40,7 +41,7 @@ export const getNumberTypeId = (entityType: string): number => {
  * Retrieves a number from a number generator API based on the provided `entityType` and `dealId`.
  * @param req - The HTTP request object containing the `entityType` and `dealId` in the `body` property.
  * @param res - The HTTP response object used to send the response back to the client.
- * @returns {Promise<Object>} The retrieved number in the response body.
+ * @returns {Promise<object>} The retrieved number in the response body.
  */
 export const getNumber = async (req: Request, res: Response): Promise<Response<NumberGeneratorResponse> | Response<NumberGeneratorErrorResponse>> => {
   try {

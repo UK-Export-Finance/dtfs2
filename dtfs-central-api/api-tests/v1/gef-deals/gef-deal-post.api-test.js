@@ -1,11 +1,10 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
-const app = require('../../../src/createApp');
-const api = require('../../api')(app);
-const CONSTANTS = require('../../../src/constants');
+const { testApi } = require('../../test-api');
+const { DEALS } = require('../../../src/constants');
 
 const newDeal = {
-  dealType: CONSTANTS.DEALS.DEAL_TYPE.GEF,
+  dealType: DEALS.DEAL_TYPE.GEF,
   status: 'Draft',
 };
 
@@ -16,13 +15,13 @@ describe('/v1/portal/gef/deals', () => {
 
   describe('POST /v1/portal/gef/deals', () => {
     it('creates a deal', async () => {
-      const { body, status } = await api.post(newDeal).to('/v1/portal/gef/deals');
+      const { body, status } = await testApi.post(newDeal).to('/v1/portal/gef/deals');
 
       expect(status).toEqual(200);
 
       expect(body).toEqual({ _id: expect.any(String) });
 
-      const { body: dealAfterCreation } = await api.get(`/v1/portal/gef/deals/${body._id}`);
+      const { body: dealAfterCreation } = await testApi.get(`/v1/portal/gef/deals/${body._id}`);
 
       expect(dealAfterCreation).toEqual({
         _id: body._id,

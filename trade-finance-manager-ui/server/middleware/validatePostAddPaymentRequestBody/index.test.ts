@@ -24,7 +24,7 @@ describe('validatePostAddPaymentRequestBody', () => {
     });
 
   const getCheckboxId = (feeRecordId: number, reportedPaymentsCurrency: Currency, status: FeeRecordStatus): PremiumPaymentsTableCheckboxId =>
-    `feeRecordId-${feeRecordId}-reportedPaymentsCurrency-${reportedPaymentsCurrency}-status-${status}`;
+    `feeRecordIds-${feeRecordId}-reportedPaymentsCurrency-${reportedPaymentsCurrency}-status-${status}`;
 
   const getRequestBodyFromCheckboxIds = (checkboxIds: PremiumPaymentsTableCheckboxId[]) =>
     checkboxIds.reduce((obj, checkboxId) => ({ ...obj, [checkboxId]: 'on' }), {});
@@ -95,15 +95,14 @@ describe('validatePostAddPaymentRequestBody', () => {
   });
 
   describe('when the body contains checkbox ids with different payment currencies', () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-
     const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'TO_DO'), getCheckboxId(2, 'EUR', 'TO_DO')];
-    req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
-
     const next = jest.fn();
 
     it(`redirects to '${REDIRECT_URL}'`, () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
+
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
@@ -111,7 +110,24 @@ describe('validatePostAddPaymentRequestBody', () => {
       expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
     });
 
+    it(`redirects to '${REDIRECT_URL}' with facility id filter if referer has one`, () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
+      req.headers.referer = 'some-url?facilityIdQuery=1234';
+
+      // Act
+      validatePostAddPaymentRequestBody(req, res, next);
+
+      // Assert
+      expect(res._getRedirectUrl()).toBe(`${REDIRECT_URL}?facilityIdQuery=1234`);
+    });
+
     it(`populates the session with the 'different-fee-record-payment-currencies' error and the checked checkbox ids`, () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
+
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
@@ -120,6 +136,10 @@ describe('validatePostAddPaymentRequestBody', () => {
     });
 
     it("does not call the 'next' function", () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
+
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
@@ -129,15 +149,14 @@ describe('validatePostAddPaymentRequestBody', () => {
   });
 
   describe('when the body contains checkbox ids with different statuses', () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-
     const checkedCheckboxIds = [getCheckboxId(1, 'GBP', 'TO_DO'), getCheckboxId(2, 'GBP', 'DOES_NOT_MATCH')];
-    req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
-
     const next = jest.fn();
 
     it(`redirects to '${REDIRECT_URL}'`, () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
+
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
@@ -145,7 +164,24 @@ describe('validatePostAddPaymentRequestBody', () => {
       expect(res._getRedirectUrl()).toBe(REDIRECT_URL);
     });
 
+    it(`redirects to '${REDIRECT_URL}' with facility id filter if referer has one`, () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
+      req.headers.referer = 'some-url?facilityIdQuery=1234';
+
+      // Act
+      validatePostAddPaymentRequestBody(req, res, next);
+
+      // Assert
+      expect(res._getRedirectUrl()).toBe(`${REDIRECT_URL}?facilityIdQuery=1234`);
+    });
+
     it(`populates the session with the 'different-fee-record-statuses' error and the checked checkbox ids`, () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
+
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
@@ -154,6 +190,10 @@ describe('validatePostAddPaymentRequestBody', () => {
     });
 
     it("does not call the 'next' function", () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
+
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 

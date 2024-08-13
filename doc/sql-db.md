@@ -6,16 +6,6 @@ The project uses the [Microsoft SQL Server](https://learn.microsoft.com/en-gb/sq
 
 As of January 2024 the project is in the process of migrating from a MongoDB (NoSQL) database to a SQL Server (SQL) database. MongoDB collections will gradually be replaced with SQL Server tables until MongoDB can be completely removed.
 
-## Ledger tables
-
-The SQL Server database tables all have ledger enabled which has some impacts on how we alter tables. For more details than those discussed below, refer to [the SQL Server docs](https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-limits?view=sql-server-ver16).
-
-### Adding a new column
-
-Nullable columns can be added to a ledger table with no issues. Non-nullable columns should not be added to tables after they have been created, and existing columns should not be converted to non-nullable. For more details, read [here](https://learn.microsoft.com/en-us/sql/relational-databases/security/ledger/ledger-limits?view=sql-server-ver16#adding-columns).
-
-NOTE: it can sometimes be possible to add a new, non-nullable column to a table if certain conditions are met, but it is usually more safe to assume that new columns need to be nullable.
-
 ## Running locally
 
 The SQL Server database will be spun up in Docker along with all the other services (see the docker-compose step in [Setup](../README.md#setup-gear) in the main README).
@@ -114,27 +104,23 @@ Note: this only reverts the latest executed migration. If you need to revert mul
 npm run db:reset
 ```
 
-Use to start the SQL Server database from scratch. This will restart the docker container, delete and recreate the database, recreate the database user which is used inside the other services and run all the migrations. In effect, this resets the database to a clean state, with all the data wiped and all the ledger history reset.
+Use to start the SQL Server database from scratch. This will restart the docker container, delete and recreate the database, recreate the database user which is used inside the other services and run all the migrations. In effect, this resets the database to a clean state.
+
+#### - Removing ledger tables
+
+```shell
+npm run db:remove-ledger
+```
+
+Use to remove the ledger tables if you have them enabled. This command will restart the SQL container and recreate the database user which is used inside the other services.
 
 #### - Seeding data
-
-The seeder can be run from either the project root or the `utils` directory via the
 
 ```shell
 npm run db:seed
 ```
 
-command. This command first runs the `predb:seed` script (see details below) and then runs the seeder to insert mock data into the SQL database. Seeds and factories are defined as files in the `utils/sql-db-seeder/src/<name-of-entity>` directory with `<name-of-entity>.seed.ts` and `<name-of-entity>.factory.ts` file extensions respectively (see the [utilisation reports seeder](../libs/common/src/sql-db-seeder/utilisation-report/) for an example). Seed tracking is set to `true` by default such that, once a seed successfully runs, it will not run again through the `npm run db:seed` command. If you want to run the seeder again, you will first need to run the `npm run db:reset` command from `libs/common`.
-
-As a result of not building the project, the `typeorm-extension` executable needs to be run directly from the `node_modules` via `ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run`. The `node_modules` directory where `typeorm-extension` is located needs to be at the same level as the root of the seeder which, in this case, is `utils/sql-db-seeder`. Due to conflicting versions of `mongodb`, the `typeorm-extension` package actually gets placed within the root level `node_modules` after running `npm i`. To overcome this issue, the `predb:seed` script copies the required node modules to `utils/sql-db-seeder` before executing the `db:seed` script.
-
-After running the seeder, a table called `"seeds"` is created. This table will prevent you from running the same seeder twice, stopping unexpected errors with respect to inserting data with duplicate `id`s, for example. To remove all the rows inserted by the seeder, the
-
-```shell
-npm run db:seed:reset
-```
-
-command can be used. This will delete all rows from the `"seeds"` table as well as all the rows in the `"UtilisationReport"`, `"AzureFileInfo"` and `"FeeRecord"` tables which were inserted by the seeder.
+Use to seed data for utilisation reports into the SQL database.
 
 ## Adding DB access to a package
 

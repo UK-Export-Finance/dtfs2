@@ -32,10 +32,10 @@ const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controlle
 
 const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
 
-const { PORTAL_ROUTE } = require('../../constants/routes');
+const { ROUTES } = require('../../constants');
 
 portalRouter.use((req, res, next) => {
-  req.routePath = PORTAL_ROUTE;
+  req.routePath = ROUTES.PORTAL_ROUTE;
   next();
 });
 
@@ -52,6 +52,7 @@ portalRouter.use((req, res, next) => {
  *       content:
  *         application/json:
  *           schema:
+ *             type: object
  *             properties:
  *               user:
  *                 type: object
@@ -61,7 +62,8 @@ portalRouter.use((req, res, next) => {
  *                   details:
  *                     type: object
  *               auditDetails:
- *                 $ref: '#/definitions/portalAuditDetails'
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
  *           example:
  *             bankInternalRefName: 'a1'
  *             additionalRefName: 'test'
@@ -149,9 +151,18 @@ portalRouter.route('/deals/:id').get(getDealController.findOneDealGet);
  *         application/json:
  *           schema:
  *             type: object
+ *             properties:
+ *               dealUpdate:
+ *                 type: object
+ *               user:
+ *                 type: object
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
  *             example:
  *               user: { _id: '123456abc' }
  *               dealUpdate: { aNewField: true }
+ *               auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
  *     responses:
  *       200:
  *         description: OK
@@ -267,8 +278,10 @@ portalRouter.route('/deals/:id/status').put(updateDealStatusController.updateDea
  *                 properties:
  *                   user:
  *                     type: object
- *                     schema:
- *                       $ref: '#/definitions/User'
+ *                     $ref: '#/definitions/User'
+ *                   auditDetails:
+ *                     type: object
+ *                     $ref: '#/definitions/PortalAuditDetails'
  *                   text:
  *                     type: string
  *                     example: Amazing comment
@@ -320,6 +333,9 @@ portalRouter.route('/facilities').get(getFacilitiesController.findAllGet);
  *                 type: string
  *               dealId:
  *                 type: string
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
  *           example:
  *             type: 'Bond'
  *             dealId: '123abc'
@@ -395,7 +411,14 @@ portalRouter.route('/facilities/:id').get(getFacilityController.findOneFacilityG
  *         application/json:
  *           schema:
  *             type: object
- *             example: { aNewField: true }
+ *             properties:
+ *               facilityUpdate:
+ *                 type: object
+ *               user:
+ *                 type: object
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
  *         description: OK
@@ -458,9 +481,12 @@ portalRouter.route('/facilities/:id').delete(deleteFacilityController.deleteFaci
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             example: { status: Ready for Checker's approval }
+ *           properties:
+ *             status:
+ *               type: string
+ *             auditDetails:
+ *               type: object
+ *               $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
  *         description: OK

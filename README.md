@@ -18,9 +18,9 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
 
 **CD** 🚀
 
-![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/development_deploy.yml/badge.svg?branch=dev)
-![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/staging_deploy.yml/badge.svg?branch=staging)
-![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/production_deploy.yml/badge.svg?branch=prod)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/deployment.yml/badge.svg?branch=dev)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/deployment.yml/badge.svg?branch=staging)
+![Release](https://github.com/UK-Export-Finance/dtfs2/actions/workflows/deployment.yml/badge.svg?branch=prod)
 
 ## Getting Started :rocket:
 
@@ -52,7 +52,7 @@ This documentation provides a comprehensive overview of the UKEF Digital TradeFi
    - `JWT_VALIDATING_KEY=your_public_key`
 6. Set UKEF TFM environment variables in your terminal: `UKEF_TFM_API_SYSTEM_KEY` and `UKEF_TFM_API_REPORTS_KEY`.
 7. Run `npm run env:copy` to copy your root .env file into all the individual projects that need it.
-8. Run `npm run ci:all` in the root folder of the repository. (note: this will install dependencies for the entire project, including those specified in sub-packages. More details on this in the [npm workspaces](./doc/npm-workspaces.md) docs)
+8. Run `npm ci` in the root folder of the repository. (note: this will install dependencies for the entire project, including those specified in sub-packages. More details on this in the [npm workspaces](./doc/npm-workspaces.md) docs)
 9. Start your local environment with `npm run start`.
 10. Create mock data in the MongoDB database by running `npm run load` from the root folder of the repository. This should generate mocks in your database.
 11. Run migrations on the SQL Server database (see [SQL DB docs](./doc/sql-db.md#--run-migrations) for details)
@@ -102,7 +102,7 @@ There are 3 different docker compose files right now.
 ## Login Credentials :key:
 
 - For Portal (BSS & GEF) mock users: [utils/mock-data-loader/portal-users/index.js](utils/mock-data-loader/portal-users/index.js)
-- For Trade Finance Manager (TFM) mock users: [utils/mock-data-loader/tfm/mocks/users.js](utils/mock-data-loader/tfm/mocks/users.js)
+- For Trade Finance Manager (TFM) mock users: [utils/mock-data-loader/tfm/mocks/users.js](utils/mock-data-loader/tfm/mocks/users.js) (use the `username` to log in as opposed to the `email`)
 
 ## Environment Variables :keycap_ten:
 
@@ -291,7 +291,7 @@ To address these issues, the plan is to move all these API calls into background
 
 ## Email Notifications :email:
 
-Email notifications are triggered using [GOV.UK Notify](https://notifications.service.gov.uk) at various stages, such as:
+Email notifications are sent through MDM APIM using [GOV.UK Notify](https://notifications.service.gov.uk) at various stages, such as:
 
 - When a deal status changes in Portal.
 - When TFM acknowledges a deal submission.

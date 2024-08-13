@@ -1,4 +1,4 @@
-const pageRenderer = require('../pageRenderer');
+const { pageRenderer } = require('../pageRenderer');
 const { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } = require('../../server/test-mocks/mock-utilisation-report-reconciliation-summary');
 const { getReportReconciliationSummariesViewModel } = require('../../server/controllers/utilisation-reports/helpers/reconciliation-summary-helper');
 const { getUkBankHolidays } = require('../../server/api');
@@ -11,7 +11,7 @@ jest.mock('../../server/api');
 const page = '../templates/utilisation-reports/utilisation-reports.njk';
 const render = pageRenderer(page);
 
-const originalProcessEnv = process.env;
+const originalProcessEnv = { ...process.env };
 
 describe(page, () => {
   beforeAll(() => {
@@ -20,7 +20,7 @@ describe(page, () => {
   });
 
   afterAll(() => {
-    process.env = { ...originalProcessEnv };
+    process.env = originalProcessEnv;
   });
 
   const getWrapper = async () => {

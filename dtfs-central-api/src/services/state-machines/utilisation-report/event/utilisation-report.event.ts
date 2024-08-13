@@ -1,18 +1,26 @@
 import {
   UtilisationReportDueReportInitialisedEvent,
-  UtilisationReportFeeRecordKeyedEvent,
+  UtilisationReportGenerateKeyingDataEvent,
   UtilisationReportManuallySetCompletedEvent,
   UtilisationReportManuallySetIncompleteEvent,
   UtilisationReportAddAPaymentEvent,
-  UtilisationReportPaymentRemovedFromFeeRecordEvent,
+  UtilisationReportDeletePaymentEvent,
   UtilisationReportReportUploadedEvent,
+  UtilisationReportEditPaymentEvent,
+  UtilisationReportMarkFeeRecordsAsReconciledEvent,
+  UtilisationReportMarkFeeRecordsAsReadyToKeyEvent,
+  UtilisationReportRemoveFeesFromPaymentGroupEvent,
 } from '../event-handlers';
 
 export type UtilisationReportEvent =
   | UtilisationReportDueReportInitialisedEvent
-  | UtilisationReportFeeRecordKeyedEvent
+  | UtilisationReportGenerateKeyingDataEvent
   | UtilisationReportManuallySetCompletedEvent
   | UtilisationReportManuallySetIncompleteEvent
   | UtilisationReportAddAPaymentEvent
-  | UtilisationReportPaymentRemovedFromFeeRecordEvent
-  | UtilisationReportReportUploadedEvent;
+  | UtilisationReportDeletePaymentEvent
+  | UtilisationReportReportUploadedEvent
+  | UtilisationReportEditPaymentEvent
+  | UtilisationReportMarkFeeRecordsAsReconciledEvent
+  | UtilisationReportMarkFeeRecordsAsReadyToKeyEvent
+  | UtilisationReportRemoveFeesFromPaymentGroupEvent;
