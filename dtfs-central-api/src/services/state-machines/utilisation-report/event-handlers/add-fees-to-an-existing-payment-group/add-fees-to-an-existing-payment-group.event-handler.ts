@@ -26,7 +26,7 @@ const addSelectedFeeRecordsToPaymentGroup = async (
 ) => {
   await Promise.all(
     payments.map(async (payment) => {
-      payment.addFeeRecords({
+      payment.updateWithAdditionalFeeRecords({
         feeRecords: feeRecordsToAdd,
         requestSource,
       });

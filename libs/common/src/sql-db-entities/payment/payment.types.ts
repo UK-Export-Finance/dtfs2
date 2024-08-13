@@ -18,7 +18,7 @@ export type UpdatePaymentParams = {
   requestSource: DbRequestSource;
 };
 
-export type AddFeeRecordsToPaymentParams = {
+export type UpdateWithAdditionalFeeRecordsParams = {
   feeRecords: FeeRecordEntity[];
   requestSource: DbRequestSource;
 };
