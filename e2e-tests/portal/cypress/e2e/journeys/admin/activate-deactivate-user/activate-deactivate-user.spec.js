@@ -12,7 +12,7 @@ context('Admin user updates an existing user', () => {
     firstname: 'first',
     surname: 'last',
     bank: 'Barclays Bank',
-    roles: ['admin', 'maker'],
+    roles: ['maker'],
   };
 
   beforeEach(() => {
