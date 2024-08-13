@@ -129,7 +129,7 @@ const getActivities = (deal) => {
  * Return array of activities object, comprising of
  * ACBS interaction records
  * @param {object} acbs Durable function output
- * @returns {Array} An array of activities object
+ * @returns {Promise<object[] | {}>} An array of activities object
  */
 const add = async (acbs) => {
   if (acbs.portalDealId) {
