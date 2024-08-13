@@ -1,33 +1,51 @@
+{% import "./payment-group-radio-input-group-details.njk" as paymentGroupRadioInputGroupDetails %}
+
 {% macro render(params) %}
   {% set legendText = params.legendText %}
   {% set paymentGroups = params.paymentGroups %}
+  {% set errorMessage = params.errorMessage %}
 
-  <div class="govuk-form-group" data-cy="payment-group-radio-input">
+  {% if errorMessage %}
+    <div class="govuk-form-group--error" data-cy="fee-record-details-error-wrapper">
+  {% endif %}
+  <div class="govuk-form-group" id="paymentGroup" data-cy="payment-group-radio-input">
     <fieldset class="govuk-fieldset">
-      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-        <h2 class="govuk-fieldset__legend--m" data-cy="payment-group-radio-input-heading">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l govuk-!-margin-bottom-0">
+        <h2 class="govuk-fieldset__legend--m  govuk-!-margin-top-0" data-cy="payment-group-radio-input-heading">
           {{ legendText }}
         </h2>
       </legend>
-      <div class="govuk-radios" data-module="govuk-radios">
-        {% for paymentGroup in paymentGroups %}
-          <div class="govuk-radios__item" data-cy="payment-group--{{ paymentGroup.radioId }}">
-            <input class="govuk-radios__input" id="{{ paymentGroup.radioId }}" name="payment" type="radio" value="{{ paymentGroup.radioId }}">
-            <label class="govuk-label govuk-radios__label" for="{{ paymentGroup.radioId }}">
-              {% for payment in paymentGroup.payments %}
-                <div class="govuk-label {{ 'govuk-!-margin-bottom-2' if not payment.reference }}" id="payment-{{ payment.id }}-currency-and-amount">
-                  {{ payment.formattedCurrencyAndAmount }}
-                </div>
-                {% if payment.reference %}
-                  <div class="govuk-hint" id="payment-{{ payment.id }}-item-hint">
-                    Payment reference: {{ payment.reference }}
-                  </div>
-                {% endif %}
-              {% endfor %}
-            </label>
-          </div>
+      {% if errorMessage %}
+        <p class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error: </span>{{ errorMessage }}
+        </p>
+      {% endif %}
+      {% if paymentGroups.length === 1 %}
+        <input id="{{ paymentGroups[0].radioId }}" name="paymentGroup" type="hidden" value="{{ paymentGroups[0].radioId }}">
+        {% for payment in paymentGroups[0].payments %}
+          {{ paymentGroupRadioInputGroupDetails.render({
+            payment: payment
+          }) }}
         {% endfor %}
-      </div>
+      {% else %}
+        <div class="govuk-radios" data-module="govuk-radios">
+          {% for paymentGroup in paymentGroups %}
+            <div class="govuk-radios__item" data-cy="payment-group--{{ paymentGroup.radioId }}">
+              <input class="govuk-radios__input" id="{{ paymentGroup.radioId }}" name="paymentGroup" type="radio" value="{{ paymentGroup.radioId }}">
+              <label class="govuk-label govuk-radios__label" for="{{ paymentGroup.radioId }}" data-cy="payment-group-label--{{ paymentGroup.radioId }}">
+                {% for payment in paymentGroup.payments %}
+                  {{ paymentGroupRadioInputGroupDetails.render({
+                    payment: payment
+                  }) }}
+                {% endfor %}
+              </label>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
     </fieldset>
   </div>
+  {% if errorMessage %}
+    </div>
+  {% endif %}
 {% endmacro %}

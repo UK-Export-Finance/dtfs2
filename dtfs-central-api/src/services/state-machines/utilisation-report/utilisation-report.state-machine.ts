@@ -13,6 +13,7 @@ import {
   handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent,
   handleUtilisationReportMarkFeeRecordsAsReconciledEvent,
   handleUtilisationReportRemoveFeesFromPaymentGroupEvent,
+  handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent,
 } from './event-handlers';
 import { UtilisationReportEvent } from './event/utilisation-report.event';
 
@@ -104,6 +105,8 @@ export class UtilisationReportStateMachine {
             return handleUtilisationReportMarkFeeRecordsAsReconciledEvent(this.report, event.payload);
           case 'REMOVE_FEES_FROM_PAYMENT_GROUP':
             return handleUtilisationReportRemoveFeesFromPaymentGroupEvent(this.report, event.payload);
+          case 'ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP':
+            return handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

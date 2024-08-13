@@ -1,3 +1,4 @@
+import { In } from 'typeorm';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { Currency, FEE_RECORD_STATUS, PaymentEntity } from '@ukef/dtfs2-common';
 
@@ -41,6 +42,26 @@ export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
         },
         currency,
       },
+    });
+  },
+
+  /**
+   * Finds payment entities with the supplied payment ids which has fee records
+   * attached to the utilisation report with the supplied id with the fee
+   * records, their payments, and report attached
+   * @param ids - The payment ids to search by
+   * @param reportId - The report id of the report attached to the fee records
+   * @returns The found payment entities
+   */
+  async findByIdWithFeeRecordsAndReportAndPaymentsFilteredById(ids: number[], reportId: number): Promise<PaymentEntity[]> {
+    return await this.find({
+      where: {
+        id: In(ids),
+        feeRecords: {
+          report: { id: reportId },
+        },
+      },
+      relations: { feeRecords: { report: true, payments: true } },
     });
   },
 });

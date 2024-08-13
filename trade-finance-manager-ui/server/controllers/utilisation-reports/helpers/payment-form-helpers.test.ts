@@ -1,10 +1,12 @@
 import { PaymentErrorsViewModel } from '../../../types/view-models';
 import {
   AddPaymentFormRequestBody,
+  AddToAnExistingPaymentFormRequestBody,
   EMPTY_ADD_PAYMENT_FORM_VALUES,
   EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
   EditPaymentFormRequestBody,
   extractAddPaymentFormValuesAndValidateIfPresent,
+  extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent,
   extractEditPaymentFormValues,
 } from './payment-form-helpers';
 import { validateAddPaymentRequestFormValues } from './validate-payment-form-values';
@@ -294,5 +296,74 @@ describe('payment-form-helpers', () => {
         paymentReference: 'Some reference',
       };
     }
+  });
+
+  describe('extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent', () => {
+    it('returns isAddingToAnExistingPayment as false when addToAnExistingPaymentFormSubmission is not in the request body', () => {
+      // Arrange
+      const requestBody = {};
+
+      // Act
+      const result = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
+
+      // Assert
+      expect(result.isAddingToAnExistingPayment).toBe(false);
+      expect(result.errors).toEqual(EMPTY_PAYMENT_ERRORS_VIEW_MODEL);
+      expect(result.paymentIds).toEqual([]);
+    });
+
+    it('returns isAddingToAnExistingPayment as true when addToAnExistingPaymentFormSubmission is in the request body', () => {
+      // Arrange
+      const requestBody: AddToAnExistingPaymentFormRequestBody = {
+        addToAnExistingPaymentFormSubmission: 'true',
+      };
+
+      // Act
+      const result = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
+
+      // Assert
+      expect(result.isAddingToAnExistingPayment).toBe(true);
+    });
+
+    it('extracts payment ids from the paymentGroup radio id', () => {
+      // Arrange
+      const requestBody: AddToAnExistingPaymentFormRequestBody = {
+        addToAnExistingPaymentFormSubmission: 'true',
+        paymentGroup: 'paymentIds-1,2,3',
+      };
+
+      // Act
+      const result = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
+
+      // Assert
+      expect(result.paymentIds).toEqual([1, 2, 3]);
+    });
+
+    it('returns empty array for paymentIds when paymentGroup is not provided', () => {
+      // Arrange
+      const requestBody: AddToAnExistingPaymentFormRequestBody = {
+        addToAnExistingPaymentFormSubmission: 'true',
+      };
+
+      // Act
+      const result = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
+
+      // Assert
+      expect(result.paymentIds).toEqual([]);
+    });
+
+    it('validates the extracted payment ids', () => {
+      // Arrange
+      const requestBody: AddToAnExistingPaymentFormRequestBody = {
+        addToAnExistingPaymentFormSubmission: 'true',
+        paymentGroup: 'paymentIds-1,2,3',
+      };
+
+      // Act
+      const result = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
+
+      // Assert
+      expect(result.errors).not.toEqual(EMPTY_PAYMENT_ERRORS_VIEW_MODEL);
+    });
   });
 });

@@ -3,6 +3,7 @@ import { BaseViewModel } from './base-view-model';
 import { PaymentErrorsViewModel } from './payment-errors-view-model';
 import { SelectedReportedFeesDetailsViewModel } from './selected-reported-fees-details-view-model';
 import { AddPaymentFormValues } from '../add-payment-form-values';
+import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
 
 export type RecordedPaymentDetailsViewModel = {
   formattedCurrencyAndAmount: CurrencyAndAmountString;
@@ -17,7 +18,7 @@ export type AddPaymentViewModel = BaseViewModel & {
   reportedFeeDetails: SelectedReportedFeesDetailsViewModel;
   recordedPaymentsDetails: RecordedPaymentDetailsViewModel[];
   paymentNumber: number;
-  selectedFeeRecordCheckboxIds: string[];
+  selectedFeeRecordCheckboxIds: PremiumPaymentsTableCheckboxId[];
   formValues: AddPaymentFormValues;
   errors: PaymentErrorsViewModel;
   multipleFeeRecordsSelected: boolean;

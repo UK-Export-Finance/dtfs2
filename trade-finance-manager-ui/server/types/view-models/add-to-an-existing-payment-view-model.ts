@@ -2,6 +2,12 @@ import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
 import { SelectedReportedFeesDetailsViewModel } from './selected-reported-fees-details-view-model';
 import { BaseViewModel } from './base-view-model';
 import { AddToAnExistingPaymentRadioId } from '../add-to-an-existing-payment-radio-id';
+import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
+import { PaymentErrorsViewModel } from './payment-errors-view-model';
+
+export type AddToAnExistingPaymentErrorsViewModel = PaymentErrorsViewModel & {
+  paymentGroupErrorMessage?: string;
+};
 
 export type AvailablePaymentViewModelItem = {
   id: string;
@@ -21,6 +27,8 @@ export type AddToAnExistingPaymentViewModel = BaseViewModel & {
   bank: { name: string };
   formattedReportPeriod: string;
   reportedFeeDetails: SelectedReportedFeesDetailsViewModel;
+  selectedFeeRecordCheckboxIds: PremiumPaymentsTableCheckboxId[];
   availablePaymentsHeading: string;
   availablePaymentGroups: AvailablePaymentGroupsViewModel;
+  errors: AddToAnExistingPaymentErrorsViewModel;
 };
