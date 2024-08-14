@@ -179,24 +179,4 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
       });
     },
   );
-
-  it('updates and saves the updated report', async () => {
-    // Arrange
-    const utilisationReport = aReconciliationInProgressReport();
-
-    // Act
-    await handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(utilisationReport, {
-      transactionEntityManager: mockEntityManager,
-      feeRecordsToAdd: [],
-      existingFeeRecordsInPaymentGroup: [],
-      payments: [],
-      requestSource,
-    });
-
-    // Assert
-    expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
-    expect(utilisationReport.lastUpdatedByIsSystemUser).toBe(false);
-    expect(utilisationReport.lastUpdatedByPortalUserId).toBeNull();
-    expect(utilisationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
-  });
 });

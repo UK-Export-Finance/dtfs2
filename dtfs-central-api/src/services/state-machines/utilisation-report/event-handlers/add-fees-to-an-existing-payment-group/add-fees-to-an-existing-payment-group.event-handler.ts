@@ -85,6 +85,5 @@ export const handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent = async
     requestSource,
   );
 
-  report.updateLastUpdatedBy(requestSource);
-  return await transactionEntityManager.save(UtilisationReportEntity, report);
+  return report;
 };
