@@ -184,8 +184,6 @@ describe('a user', () => {
         // Check if body is not empty before accessing roles
         if (Object.keys(body).length !== 0) {
           expect(body.roles).toEqual(MOCK_USER.roles);
-        } else {
-          console.error('No user data returned in body');
         }
       });
 
