@@ -1,5 +1,11 @@
 const { to2Decimals } = require('../../helpers/currency');
-
+/**
+ * @param {object} amendment
+ * @param {number | string} amendment.amount - Amount as number or string
+ * @param {object} amendment.facilityGuaranteeDates
+ * @param {string} amendment.facilityGuaranteeDates.guaranteeExpiryDate - Date only string in 'YYYY-MM-DD' format
+ * @returns {object} - Amended facility guarantee record or empty object if there is an error
+ */
 const facilityCovenantAmend = (amendment) => {
   try {
     const { amount, facilityGuaranteeDates } = amendment;

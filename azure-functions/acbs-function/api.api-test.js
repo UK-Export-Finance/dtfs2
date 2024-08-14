@@ -30,7 +30,7 @@ describe('updateFacilityLoan', () => {
 describe('updateFacilityCovenant', () => {
   withStandardHappyAndUnhappyPathTests({
     method: updateFacilityCovenant,
-    happyPathArgsAsArray: ['1', { amount: '100,000', facilityGuaranteeDates: new Date() }],
+    happyPathArgsAsArray: ['1', { amount: '100,000', facilityGuaranteeDates: '2022-10-10' }],
   });
 });
 
