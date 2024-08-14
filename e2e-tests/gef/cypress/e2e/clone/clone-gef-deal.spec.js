@@ -154,8 +154,8 @@ context('Clone GEF (AIN) deal', () => {
       cy.get('[data-cy="success-message-link"]').click();
 
       applicationDetails
-        .facilitySummaryListRowAction(0, 0)
-        .find('.govuk-link')
+        .facilitySummaryListTable(0)
+        .nameAction()
         .invoke('attr', 'href')
         .then((href) => {
           // get id from href for facility

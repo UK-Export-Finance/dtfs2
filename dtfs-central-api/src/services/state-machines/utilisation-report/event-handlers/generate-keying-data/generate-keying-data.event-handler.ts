@@ -46,7 +46,7 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
   });
 
   await Promise.all(
-    feeRecordsWithPayloads.map(({ feeRecord, payload }) => {
+    feeRecordsWithPayloads.map(async ({ feeRecord, payload }) => {
       const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
       return stateMachine.handleEvent({
         type: 'GENERATE_KEYING_DATA',

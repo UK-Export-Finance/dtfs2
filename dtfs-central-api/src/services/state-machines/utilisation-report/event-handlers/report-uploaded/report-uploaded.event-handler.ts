@@ -30,7 +30,7 @@ const createFacilityUtilisationDataEntityIfNotExists = async (
   if (entityExists) {
     return null;
   }
-  return FacilityUtilisationDataEntity.createWithoutUtilisation({ id: facilityId, reportPeriod, requestSource });
+  return FacilityUtilisationDataEntity.createWithoutUtilisationAndFixedFee({ id: facilityId, reportPeriod, requestSource });
 };
 
 export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<'REPORT_UPLOADED', ReportUploadedEventPayload>;
