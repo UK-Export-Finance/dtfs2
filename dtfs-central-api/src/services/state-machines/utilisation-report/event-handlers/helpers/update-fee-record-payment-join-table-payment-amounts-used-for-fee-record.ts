@@ -13,21 +13,6 @@ const sortPaymentsByAmountAscending = (payments: PaymentEntity[]): void => {
 };
 
 /**
- * Sets the last join table entity amount to the actual amount used for the fee record
- * @param joinTableEntities - The list of join table entities
- * @param remainingFeeRecordAmount - The remaining fee record amount (expected to be negative)
- */
-const setLastJoinTableEntityPaymentAmountUsedToActualAmountUsed = (
-  joinTableEntities: FeeRecordPaymentJoinTableEntity[],
-  remainingFeeRecordAmount: Big,
-): void => {
-  const lastJoinTableEntity = joinTableEntities.pop()!;
-  const actualAmountUsed = new Big(lastJoinTableEntity.paymentAmountUsedForFeeRecord!).add(remainingFeeRecordAmount).toNumber();
-  lastJoinTableEntity.paymentAmountUsedForFeeRecord = actualAmountUsed;
-  joinTableEntities.push(lastJoinTableEntity);
-};
-
-/**
  * Maps all remaining payments to a fee record payment join table
  * entity update. Does not attempt to split the payment amounts
  * across the fee records
@@ -77,6 +62,24 @@ const getFeeRecordPaymentJoinTableEntitiesForFeeRecordAndPayments = (
     const largestPayment = paymentsSortedAscending.pop()!;
 
     remainingFeeRecordAmount = remainingFeeRecordAmount.sub(largestPayment.amount);
+
+    if (remainingFeeRecordAmount.lt(0)) {
+      const paymentAmountUsedForFeeRecord = new Big(largestPayment.amount).add(remainingFeeRecordAmount).toNumber();
+      joinTableEntities.push(
+        FeeRecordPaymentJoinTableEntity.create({
+          feeRecordId,
+          paymentId: largestPayment.id,
+          paymentAmountUsedForFeeRecord,
+        }),
+      );
+
+      const remainingPaymentAmount = remainingFeeRecordAmount.mul(-1).toNumber();
+      largestPayment.amount = remainingPaymentAmount;
+      paymentsSortedAscending.push(largestPayment);
+      sortPaymentsByAmountAscending(paymentsSortedAscending);
+      break;
+    }
+
     joinTableEntities.push(
       FeeRecordPaymentJoinTableEntity.create({
         feeRecordId,
@@ -84,13 +87,6 @@ const getFeeRecordPaymentJoinTableEntitiesForFeeRecordAndPayments = (
         paymentAmountUsedForFeeRecord: largestPayment.amount,
       }),
     );
-
-    if (remainingFeeRecordAmount.lt(0)) {
-      setLastJoinTableEntityPaymentAmountUsedToActualAmountUsed(joinTableEntities, remainingFeeRecordAmount);
-      largestPayment.amount = remainingFeeRecordAmount.mul(-1).toNumber();
-      paymentsSortedAscending.push(largestPayment);
-      sortPaymentsByAmountAscending(paymentsSortedAscending);
-    }
   }
   return joinTableEntities;
 };
