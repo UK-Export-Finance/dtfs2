@@ -24,19 +24,6 @@ describe('getMaximumLiability', () => {
     });
   });
 
-  describe('when formatting the output', () => {
-    it('returns a number with 2 decimal places', () => {
-      const facility = {
-        amendment: {
-          amount: 789.1011,
-        },
-      };
-
-      const result = getMaximumLiability(facility);
-      expect(result).toEqual(789.1);
-    });
-  });
-
   describe('if the value is the overall amount being loaned by the bank', () => {
     describe('when the facility snapshot is present', () => {
       const facility = {

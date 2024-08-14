@@ -5,15 +5,15 @@ const facilityCovenantAmend = (amendment) => {
     const { amount, facilityGuaranteeDates } = amendment;
     const record = {};
 
-    if (!amount && !facilityGuaranteeDates) {
-      throw new Error('Either amount or facilityGuaranteeDates.guaranteeExpiryDate is required.');
+    if (!amount && !facilityGuaranteeDates?.guaranteeExpiryDate) {
+      throw new Error('Invalid argument set provided');
     }
 
     if (amount) {
       record.targetAmount = to2Decimals(amount);
     }
 
-    if (facilityGuaranteeDates) {
+    if (facilityGuaranteeDates?.guaranteeExpiryDate) {
       record.expirationDate = facilityGuaranteeDates.guaranteeExpiryDate;
     }
 
