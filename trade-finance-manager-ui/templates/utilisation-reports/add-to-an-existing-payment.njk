@@ -69,13 +69,5 @@
       <a class="govuk-link" href="{{ backLinkHref }}" id="cancel-button" data-cy="cancel-button">Cancel</a>
     </div>
   </form>
-  {# TODO FN-3293: Add integrity hash after script completed, run: shasum -b -a 512 trade-finance-manager-ui/public/js/redirectWithSelectedFeeRecords.js | awk '{ print $1 }' | xxd -r -p | base64 | awk '{print "sha512-" $1}' #}
-  {# TODO FN-3293: Don't want to be sending through the full checkbox IDs (selectedFeeRecordCheckboxIds) due to length limitations, just a comma-separated string of the fee record IDs. #}
-  <script
-    src="/assets/js/redirectWithSelectedFeeRecords.js"
-    type="text/javascript"
-    crossorigin="anonymous"
-    data-fee-records='{{ selectedFeeRecordCheckboxIds | dump | safe }}'
-    data-target-href='{{ backLinkHref }}'></script>
 {% endblock %}
 {% block sub_content %}{% endblock %}
