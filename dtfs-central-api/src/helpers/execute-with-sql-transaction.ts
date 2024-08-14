@@ -73,9 +73,12 @@ export const executeWithSqlTransaction = async <ReturnValue>(functionToExecute: 
   } catch (error) {
     await queryRunner.rollbackTransaction();
     if (error instanceof ApiError) {
-      throw new TransactionFailedError(error);
+      throw TransactionFailedError.forApiError(error);
     }
-    throw new TransactionFailedError();
+    if (error instanceof Error) {
+      throw TransactionFailedError.forError(error);
+    }
+    throw TransactionFailedError.forUnknownError();
   } finally {
     await queryRunner.release();
   }
