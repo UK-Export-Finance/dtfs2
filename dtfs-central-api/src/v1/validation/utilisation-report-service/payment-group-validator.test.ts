@@ -9,6 +9,7 @@ import {
 import {
   validateThatSelectedPaymentsFormACompletePaymentGroup,
   validateThatSelectedPaymentsBelongToSamePaymentGroup,
+  validateThatPaymentGroupHasFeeRecords,
 } from './payment-group-validator';
 
 describe('payment group validator', () => {
@@ -113,6 +114,32 @@ describe('payment group validator', () => {
       expect(() => validateThatSelectedPaymentsFormACompletePaymentGroup(payments, paymentIds)).toThrow(
         new InvalidPayloadError('Payment group payment count must equal the number of payments attached to the first fee record of the first payment.'),
       );
+    });
+  });
+
+  describe('validateThatPaymentGroupHasFeeRecords', () => {
+    it('should throw an InvalidPayloadError when payment group fee records are undefined', () => {
+      // Arrange
+      const paymentGroupFeeRecords = undefined;
+
+      // Act & Assert
+      expect(() => validateThatPaymentGroupHasFeeRecords(paymentGroupFeeRecords)).toThrow(new InvalidPayloadError('The payment group has no fee records.'));
+    });
+
+    it('should throw an InvalidPayloadError when payment group has no fee records', () => {
+      // Arrange
+      const paymentGroupFeeRecords: FeeRecordEntity[] = [];
+
+      // Act & Assert
+      expect(() => validateThatPaymentGroupHasFeeRecords(paymentGroupFeeRecords)).toThrow(new InvalidPayloadError('The payment group has no fee records.'));
+    });
+
+    it('should not throw an error when payment group has fee records', () => {
+      // Arrange
+      const paymentGroupFeeRecords = [aFeeRecordWithId(1), aFeeRecordWithId(2)];
+
+      // Act & Assert
+      expect(() => validateThatPaymentGroupHasFeeRecords(paymentGroupFeeRecords)).not.toThrow();
     });
   });
 

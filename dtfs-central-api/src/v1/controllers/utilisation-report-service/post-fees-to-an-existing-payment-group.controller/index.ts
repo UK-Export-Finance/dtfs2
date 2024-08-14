@@ -8,6 +8,7 @@ import { addFeesToAnExistingPaymentGroup } from './helpers';
 import { PostFeesToAnExistingPaymentGroupPayload } from '../../../routes/middleware/payload-validation';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import {
+  validateThatPaymentGroupHasFeeRecords,
   validateThatSelectedPaymentsBelongToSamePaymentGroup,
   validateThatSelectedPaymentsFormACompletePaymentGroup,
 } from '../../../validation/utilisation-report-service/payment-group-validator';
@@ -37,26 +38,24 @@ export const postFeesToAnExistingPaymentGroup = async (req: PostFeesToAnExisting
     validateThatSelectedPaymentsBelongToSamePaymentGroup(payments);
     validateThatSelectedPaymentsFormACompletePaymentGroup(payments, paymentIds);
 
-    const existingFeeRecordsInPaymentGroup = payments.at(0)?.feeRecords;
-    if (!existingFeeRecordsInPaymentGroup || existingFeeRecordsInPaymentGroup.length === 0) {
-      throw new InvalidPayloadError('No fee records belong to the payment group.');
-    }
+    const existingPaymentGroupFeeRecords = payments.at(0)?.feeRecords;
+    validateThatPaymentGroupHasFeeRecords(existingPaymentGroupFeeRecords);
 
     const selectedFeeRecords = await FeeRecordRepo.findByIdAndReportIdWithReport(feeRecordIds, Number(reportId));
     const feeRecordsToAdd = selectedFeeRecords.filter(
-      (record) => !existingFeeRecordsInPaymentGroup.some((paymentFeeRecord) => paymentFeeRecord.id === record.id),
+      (record) => !existingPaymentGroupFeeRecords.some((paymentFeeRecord) => paymentFeeRecord.id === record.id),
     );
 
     if (feeRecordsToAdd.length === 0) {
       throw new InvalidPayloadError("No fee records selected that don't belong to the payment group.");
     }
 
-    const utilisationReport = existingFeeRecordsInPaymentGroup.at(0)?.report;
+    const utilisationReport = existingPaymentGroupFeeRecords.at(0)?.report;
     if (!utilisationReport) {
       throw new Error('The found payment group does not have a defined report in the feeRecords.');
     }
 
-    await addFeesToAnExistingPaymentGroup(utilisationReport, feeRecordsToAdd, existingFeeRecordsInPaymentGroup, payments, user);
+    await addFeesToAnExistingPaymentGroup(utilisationReport, feeRecordsToAdd, existingPaymentGroupFeeRecords, payments, user);
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = `Failed to add fees to an existing payment group`;

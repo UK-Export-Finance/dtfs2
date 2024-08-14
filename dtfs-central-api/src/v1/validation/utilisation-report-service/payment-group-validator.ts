@@ -1,4 +1,4 @@
-import { PaymentEntity } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, PaymentEntity } from '@ukef/dtfs2-common';
 import { InvalidPayloadError } from '../../../errors';
 
 const getPaymentEntityFeeRecordIds = (payment: PaymentEntity) => {
@@ -37,3 +37,11 @@ export const validateThatSelectedPaymentsFormACompletePaymentGroup = (payments: 
     throw new InvalidPayloadError('Payment group payment IDs do not match the IDs of the payments attached to the first fee record of the first payment.');
   }
 };
+
+export function validateThatPaymentGroupHasFeeRecords(
+  paymentGroupFeeRecords: FeeRecordEntity[] | undefined,
+): asserts paymentGroupFeeRecords is FeeRecordEntity[] {
+  if (!paymentGroupFeeRecords || paymentGroupFeeRecords.length === 0) {
+    throw new InvalidPayloadError('The payment group has no fee records.');
+  }
+}
