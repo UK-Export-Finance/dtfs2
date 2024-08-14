@@ -8,19 +8,19 @@ import {
 } from '@ukef/dtfs2-common';
 import {
   validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds,
-  validatePaymentGroupPaymentsAllHaveSameFeeRecords,
+  validateThatSelectedPaymentsBelongToSamePaymentGroup,
 } from './payment-group-validator';
 
 describe('payment group validator', () => {
   const report = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
-  describe('validatePaymentGroupPaymentsAllHaveSameFeeRecords', () => {
+  describe('validateThatSelectedPaymentsBelongToSamePaymentGroup', () => {
     it('should not throw an error when there is only one payment', () => {
       // Arrange
       const aListOfOnePaymentWithFeeRecords = [aPaymentWithIdAndFeeRecords(1, [aFeeRecordWithId(1), aFeeRecordWithId(2)])];
 
       // Act & Assert
-      expect(() => validatePaymentGroupPaymentsAllHaveSameFeeRecords(aListOfOnePaymentWithFeeRecords)).not.toThrow();
+      expect(() => validateThatSelectedPaymentsBelongToSamePaymentGroup(aListOfOnePaymentWithFeeRecords)).not.toThrow();
     });
 
     it('should not throw an error when all payments have the same fee records', () => {
@@ -31,7 +31,7 @@ describe('payment group validator', () => {
       ];
 
       // Act & Assert
-      expect(() => validatePaymentGroupPaymentsAllHaveSameFeeRecords(aListOfPaymentsWithMatchingFeeRecords)).not.toThrow();
+      expect(() => validateThatSelectedPaymentsBelongToSamePaymentGroup(aListOfPaymentsWithMatchingFeeRecords)).not.toThrow();
     });
 
     it('should throw an InvalidPayloadError when payments have different fee record lengths', () => {
@@ -42,7 +42,7 @@ describe('payment group validator', () => {
       ];
 
       // Act & Assert
-      expect(() => validatePaymentGroupPaymentsAllHaveSameFeeRecords(aListOfPaymentsWithAnUnequalFeeRecordCount)).toThrow(
+      expect(() => validateThatSelectedPaymentsBelongToSamePaymentGroup(aListOfPaymentsWithAnUnequalFeeRecordCount)).toThrow(
         new InvalidPayloadError('Payment group payments must all have the same set of fee records attached.'),
       );
     });
@@ -55,7 +55,7 @@ describe('payment group validator', () => {
       ];
 
       // Act & Assert
-      expect(() => validatePaymentGroupPaymentsAllHaveSameFeeRecords(aListOfPaymentsWithFeeRecordsOfDifferingIds)).toThrow(
+      expect(() => validateThatSelectedPaymentsBelongToSamePaymentGroup(aListOfPaymentsWithFeeRecordsOfDifferingIds)).toThrow(
         new InvalidPayloadError('Payment group payments must all have the same set of fee records attached.'),
       );
     });

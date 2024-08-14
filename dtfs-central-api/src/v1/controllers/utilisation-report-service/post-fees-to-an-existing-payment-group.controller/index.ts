@@ -8,7 +8,7 @@ import { addFeesToAnExistingPaymentGroup } from './helpers';
 import { PostFeesToAnExistingPaymentGroupPayload } from '../../../routes/middleware/payload-validation';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import {
-  validatePaymentGroupPaymentsAllHaveSameFeeRecords,
+  validateThatSelectedPaymentsBelongToSamePaymentGroup,
   validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds,
 } from '../../../validation/utilisation-report-service/payment-group-validator';
 
@@ -34,7 +34,7 @@ export const postFeesToAnExistingPaymentGroup = async (req: PostFeesToAnExisting
       throw new NotFoundError('No payments found for the given payment IDs.');
     }
 
-    validatePaymentGroupPaymentsAllHaveSameFeeRecords(payments);
+    validateThatSelectedPaymentsBelongToSamePaymentGroup(payments);
     validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(payments, paymentIds);
 
     const existingFeeRecordsInPaymentGroup = payments.at(0)?.feeRecords;

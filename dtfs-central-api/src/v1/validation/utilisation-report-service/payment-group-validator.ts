@@ -5,7 +5,7 @@ const getPaymentEntityFeeRecordIds = (payment: PaymentEntity) => {
   return payment.feeRecords.map((record) => record.id);
 };
 
-export const validatePaymentGroupPaymentsAllHaveSameFeeRecords = (payments: PaymentEntity[]) => {
+export const validateThatSelectedPaymentsBelongToSamePaymentGroup = (payments: PaymentEntity[]) => {
   const [firstPayment, ...otherPayments] = payments;
   const firstPaymentFeeRecordIds = getPaymentEntityFeeRecordIds(firstPayment);
 
