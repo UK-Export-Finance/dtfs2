@@ -1,3 +1,4 @@
+const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const { testApi } = require('./api-tests/test-api');
 const { mongoDbClient: db } = require('./src/drivers/db-client');
 
@@ -16,4 +17,5 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await db.close();
+  await SqlDbDataSource.destroy();
 });

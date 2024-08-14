@@ -236,4 +236,24 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
       },
     });
   },
+
+  /**
+   * Finds the years where the bank with the supplied id submitted
+   * a utilisation report
+   * @param bankId - The bank id
+   * @returns A set of years where the bank submitted a report
+   */
+  async findReportingYearsByBankId(bankId: string): Promise<Set<number>> {
+    const utilisationReports = await this.find({
+      where: {
+        bankId,
+        status: Not('REPORT_NOT_RECEIVED'),
+      },
+      select: ['reportPeriod'],
+    });
+    return utilisationReports.reduce(
+      (uniqueReportPeriodYears, { reportPeriod }) => uniqueReportPeriodYears.add(reportPeriod.start.year).add(reportPeriod.end.year),
+      new Set<number>(),
+    );
+  },
 });

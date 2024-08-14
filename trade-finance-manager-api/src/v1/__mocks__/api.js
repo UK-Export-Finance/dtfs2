@@ -235,6 +235,7 @@ module.exports = {
   }),
   getBankHolidays: jest.fn(() => Promise.resolve(MOCK_BANK_HOLIDAYS)),
   getAllBanks: jest.fn(() => Promise.resolve([])),
+  getAllBanksWithReportingYears: jest.fn().mockResolvedValue([]),
   getUtilisationReportsReconciliationSummary: jest.fn(),
   getUtilisationReportById: jest.fn(() => Promise.resolve(MOCK_UTILISATION_REPORT)),
   updateUtilisationReportStatus: jest.fn(),

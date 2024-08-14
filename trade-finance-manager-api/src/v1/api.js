@@ -1211,6 +1211,22 @@ const getAllBanks = async () => {
   return response.data;
 };
 
+/**
+ * Get all banks with reporting years
+ * @returns {Promise<import('./api-response-types').BankWithReportingYearsResponseBody[]>}
+ */
+const getAllBanksWithReportingYears = async () => {
+  const url = `${DTFS_CENTRAL_API_URL}/v1/bank`;
+  const response = await axios.get(url, {
+    headers: headers.central,
+    params: {
+      includeReportingYears: true,
+    },
+  });
+
+  return response.data;
+};
+
 const getGefMandatoryCriteriaByVersion = async (version) => {
   try {
     const isValidVersion = isValidNumericId(version);
@@ -1588,6 +1604,7 @@ module.exports = {
   updateGefMINActivity,
   findBankById,
   getAllBanks,
+  getAllBanksWithReportingYears,
   getGefMandatoryCriteriaByVersion,
   getBankHolidays,
   getUtilisationReportsReconciliationSummary,
