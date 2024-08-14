@@ -1,10 +1,18 @@
+const { to2Decimals } = require('../../helpers/currency');
+
 /**
+ * Maps a facility guarantee amendment from DTFS to the acceptable TFS format.
  *
- * @param {object} amendment
- * @param {number | string} amendment.amount - Amount as number or string
- * @param {object} amendment.facilityGuaranteeDates
- * @param {string} amendment.facilityGuaranteeDates.guaranteeExpiryDate - Date only string in 'YYYY-MM-DD' format
- * @returns {object} - Amended facility guarantee record or empty object if there is an error
+ * @typedef {object} MappedFacilityGuaranteeAmendment - The mapped facility guarantee amendment.
+ * @property {number=} guaranteedLimit - The maximum amount the guarantor will guarantee.
+ * @property {string=} expirationDate - The date that the guarantee will expire on. In 'YYYY-MM-DD' format.
+ *
+ *
+ * @param {object} amendment - The amendment details.
+ * @param {number|string=} amendment.amount - The amount to be amended, can be a number or a string. It is required if guaranteeExpiryDate is not provided.
+ * @param {object=} amendment.facilityGuaranteeDates - The dates related to the facility guarantee.
+ * @param {string=} amendment.facilityGuaranteeDates.guaranteeExpiryDate - The expiry date of the guarantee in 'YYYY-MM-DD' format. It is required if amount is not provided.
+ * @returns {MappedFacilityGuaranteeAmendment | {} } - The amended facility guarantee record, or an empty object if there is an error.
  */
 const facilityGuaranteeAmend = (amendment) => {
   try {
@@ -16,7 +24,7 @@ const facilityGuaranteeAmend = (amendment) => {
     }
 
     if (amount) {
-      record.guaranteedLimit = amount;
+      record.guaranteedLimit = to2Decimals(amount);
     }
 
     if (facilityGuaranteeDates?.guaranteeExpiryDate) {
