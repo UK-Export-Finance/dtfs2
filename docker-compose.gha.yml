@@ -113,7 +113,7 @@ services:
       - EXTERNAL_API_KEY
       - TFM_API_URL=http://trade-finance-manager-api:5004
       - EXTERNAL_API_URL=http://external-api:5002
-      - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
+      - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL
       - REDIS_HOSTNAME=redis
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
