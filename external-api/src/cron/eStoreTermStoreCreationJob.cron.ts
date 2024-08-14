@@ -39,20 +39,22 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
 
   // 1. Facilities existence check for addition to term store
   if (eStoreData?.facilityIdentifiers?.length) {
-    console.info('Adding facilities to term store for deal %s', eStoreData.dealIdentifier);
+    const { dealId, facilityIdentifiers, dealIdentifier } = eStoreData;
+
+    console.info('Adding facilities to term store for deal %s', dealIdentifier);
 
     // Add to term store
     const response: TermStoreResponse[] | EstoreErrorResponse[] = await Promise.all(
-      eStoreData.facilityIdentifiers.map((id: number) => addFacilityToTermStore({ id: id.toString() })),
+      facilityIdentifiers.map((id: number) => addFacilityToTermStore({ id: id.toString() })),
     );
 
     // Validate each and every response status code
     if (response.every((term) => acceptableStatuses.includes(term?.status))) {
-      console.info('Facilities have been added to term store for deal %s', eStoreData.dealIdentifier);
+      console.info('Facilities have been added to term store for deal %s', dealIdentifier);
 
       // Update `cron-job-logs`
       await cronJobLogs.updateOne(
-        { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
+        { 'payload.dealId': { $eq: new ObjectId(dealId) } },
         {
           $set: {
             'cron.term': {
@@ -66,11 +68,11 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
       // Initiate buyer directory creation
       await eStoreBuyerDirectoryCreationJob(eStoreData);
     } else {
-      console.error('Facilities have not been added to term store for deal %s %o', eStoreData.dealIdentifier, response);
+      console.error('Facilities have not been added to term store for deal %s %o', dealIdentifier, response);
 
       // Update `cron-job-logs`
       await cronJobLogs.updateOne(
-        { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
+        { 'payload.dealId': { $eq: new ObjectId(dealId) } },
         {
           $set: {
             'cron.term': {

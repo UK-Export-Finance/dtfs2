@@ -59,18 +59,6 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
 
     const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = body;
 
-    const eStoreData: Estore = {
-      dealId,
-      dealIdentifier,
-      facilityIdentifiers,
-      siteId,
-      exporterName,
-      buyerName,
-      destinationMarket,
-      riskMarket,
-      supportingInformation,
-    };
-
     /**
      * eStore payload validations:
      * 1. Check if the provided IDs are valid
@@ -87,6 +75,18 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
      * 12. Check if the riskMarket is a string
      * 13. Check if the dealId is a valid ObjectId
      */
+    const eStoreData: Estore = {
+      dealId,
+      dealIdentifier,
+      facilityIdentifiers,
+      siteId,
+      exporterName,
+      buyerName,
+      destinationMarket,
+      riskMarket,
+      supportingInformation,
+    };
+
     if (!Object.keys(eStoreData).length) {
       console.error('❌ Invalid eStore payload %o', eStoreData);
 

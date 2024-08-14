@@ -41,21 +41,23 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
   const data = cloneDeep(eStoreData);
   const now = new Date().toISOString();
 
+  const { dealId, exporterName, dealIdentifier } = eStoreData;
+
   // Step 1: Initiate the CRON job
   cron(eStoreData, ENDPOINT.SITE);
 
   // Step 2: Site existence check
-  const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(eStoreData.exporterName);
+  const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(exporterName);
 
   // Step 3: Site has been created
   if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
-    console.info('⚡ CRON: eStore site %s has been created successfully for deal %s %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier, now);
+    console.info('⚡ CRON: eStore site %s has been created successfully for deal %s %s', siteExistsResponse.data.siteId, dealIdentifier, now);
 
     data.siteId = String(siteExistsResponse.data.siteId);
 
     // Update `cron-job-logs`
     await cronJobLogs.updateOne(
-      { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
+      { 'payload.dealId': { $eq: new ObjectId(dealId) } },
       {
         $set: {
           'cron.site.create': {
@@ -70,10 +72,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     );
 
     // Update `tfm-deals`
-    await tfmDeals.updateOne(
-      { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
-      { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } },
-    );
+    await tfmDeals.updateOne({ 'payload.dealId': { $eq: new ObjectId(dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
 
     // Stop CRON job
     cron(eStoreData, ENDPOINT.SITE, true);
@@ -82,11 +81,11 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     await eStoreTermStoreCreationJob(data);
   } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
     // Step 3: Site is still being provisioned
-    console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s %s', siteExistsResponse.data.siteId, eStoreData.dealIdentifier, now);
+    console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s %s', siteExistsResponse.data.siteId, dealIdentifier, now);
 
     // Update status
     await cronJobLogs.updateOne(
-      { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
+      { 'payload.dealId': { $eq: new ObjectId(dealId) } },
       {
         $set: {
           'cron.site.create': {
@@ -108,14 +107,14 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     console.error(
       '❌ CRON: eStore site existence %s check has failed for deal %s %o %s',
       siteExistsResponse.data.siteId,
-      eStoreData.dealIdentifier,
+      dealIdentifier,
       siteExistsResponse,
       now,
     );
 
     // CRON job log update
     await cronJobLogs.updateOne(
-      { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
+      { 'payload.dealId': { $eq: new ObjectId(dealId) } },
       {
         $set: {
           'cron.site.create': {
