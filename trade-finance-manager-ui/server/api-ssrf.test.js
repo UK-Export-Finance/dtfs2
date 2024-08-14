@@ -148,11 +148,48 @@ describe('API is protected against SSRF attacks', () => {
     });
   });
 
-  describe('getAmendmentInProgress', () => {
+  const getAmendmentDetailsByFacilityIdFunctionsToTest = [
+    {
+      description: 'getAmendmentInProgress',
+      apiFunction: api.getAmendmentInProgress,
+      url: /^.*\/v1\/facilities\/.*\/amendments\/in-progress$/,
+    },
+    {
+      description: 'getCompletedAmendment',
+      apiFunction: api.getCompletedAmendment,
+      url: /^.*\/v1\/facilities\/.*\/amendments\/completed$/,
+    },
+    {
+      description: 'getLatestCompletedAmendmentValue',
+      apiFunction: api.getLatestCompletedAmendmentValue,
+      url: /^.*\/v1\/facilities\/.*\/amendments\/completed\/latest-value$/,
+    },
+    {
+      description: 'getLatestCompletedAmendmentDate',
+      apiFunction: api.getLatestCompletedAmendmentDate,
+      url: /^.*\/v1\/facilities\/.*\/amendments\/completed\/latest-cover-end-date$/,
+    },
+    {
+      description: 'getLatestCompletedAmendmentFacilityEndDate',
+      apiFunction: api.getLatestCompletedAmendmentFacilityEndDate,
+      url: /^.*\/v1\/facilities\/.*\/amendments\/completed\/latest-facility-end-date$/,
+    },
+    {
+      description: 'getAmendmentsByFacilityId',
+      apiFunction: api.getAmendmentsByFacilityId,
+      url: /^.*\/v1\/facilities\/.*\/amendments$/,
+    },
+    {
+      description: 'getAmendmentsByFacilityId',
+      apiFunction: api.getAmendmentsByFacilityId,
+      url: /^.*\/v1\/facilities\/.*\/amendments$/,
+    },
+  ];
+
+  describe.each(getAmendmentDetailsByFacilityIdFunctionsToTest)('$description', ({ apiFunction, url }) => {
     const mockResponse = 'Mock amendment';
     beforeAll(() => {
       mockAxios.reset();
-      const url = /^.*\/v1\/facilities\/.*\/amendments\/in-progress$/;
       mockAxios.onGet(url).reply(200, mockResponse);
     });
 
@@ -160,7 +197,7 @@ describe('API is protected against SSRF attacks', () => {
       const urlTraversal = '../../../etc/stealpassword';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.getAmendmentInProgress(urlTraversal, 'mock token');
+      const response = await apiFunction(urlTraversal, 'mock token');
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -169,7 +206,7 @@ describe('API is protected against SSRF attacks', () => {
       const localIp = '127.0.0.1';
       const expectedResponse = { status: 400, data: 'Invalid facility id' };
 
-      const response = await api.getAmendmentInProgress(localIp, 'mock token');
+      const response = await apiFunction(localIp, 'mock token');
 
       expect(response).toMatchObject(expectedResponse);
     });
@@ -177,112 +214,7 @@ describe('API is protected against SSRF attacks', () => {
     it('Makes an axios request when the facility id is valid', async () => {
       const validFacilityId = '5ce819935e539c343f141ece';
 
-      const response = await api.getAmendmentInProgress(validFacilityId, 'mock token');
-
-      expect(response.data).toEqual(mockResponse);
-    });
-  });
-
-  describe('getCompletedAmendment', () => {
-    const mockResponse = 'Mock amendment';
-    beforeAll(() => {
-      mockAxios.reset();
-      const url = /^.*\/v1\/facilities\/.*\/amendments\/completed$/;
-      mockAxios.onGet(url).reply(200, mockResponse);
-    });
-
-    it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid facility id' };
-
-      const response = await api.getCompletedAmendment(urlTraversal, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid facility id' };
-
-      const response = await api.getCompletedAmendment(localIp, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Makes an axios request when the facility id is valid', async () => {
-      const validFacilityId = '5ce819935e539c343f141ece';
-
-      const response = await api.getCompletedAmendment(validFacilityId, 'mock token');
-
-      expect(response.data).toEqual(mockResponse);
-    });
-  });
-
-  describe('getLatestCompletedAmendmentValue', () => {
-    const mockResponse = 'Mock amendment';
-    beforeAll(() => {
-      mockAxios.reset();
-      const url = /^.*\/v1\/facilities\/.*\/amendments\/completed\/latest-value$/;
-      mockAxios.onGet(url).reply(200, mockResponse);
-    });
-
-    it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid facility id' };
-
-      const response = await api.getLatestCompletedAmendmentValue(urlTraversal, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid facility id' };
-
-      const response = await api.getLatestCompletedAmendmentValue(localIp, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Makes an axios request when the facility id is valid', async () => {
-      const validFacilityId = '5ce819935e539c343f141ece';
-
-      const response = await api.getLatestCompletedAmendmentValue(validFacilityId, 'mock token');
-
-      expect(response.data).toEqual(mockResponse);
-    });
-  });
-
-  describe('getLatestCompletedAmendmentDate', () => {
-    const mockResponse = 'Mock amendment';
-    beforeAll(() => {
-      mockAxios.reset();
-      const url = /^.*\/v1\/facilities\/.*\/amendments\/completed\/latest-cover-end-date$/;
-      mockAxios.onGet(url).reply(200, mockResponse);
-    });
-
-    it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid facility id' };
-
-      const response = await api.getLatestCompletedAmendmentDate(urlTraversal, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid facility id' };
-
-      const response = await api.getLatestCompletedAmendmentDate(localIp, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Makes an axios request when the facility id is valid', async () => {
-      const validFacilityId = '5ce819935e539c343f141ece';
-
-      const response = await api.getLatestCompletedAmendmentDate(validFacilityId, 'mock token');
+      const response = await apiFunction(validFacilityId, 'mock token');
 
       expect(response.data).toEqual(mockResponse);
     });
@@ -321,41 +253,6 @@ describe('API is protected against SSRF attacks', () => {
       const validAmendmentId = '5ce819935e539c343f141ece';
 
       const response = await api.getAmendmentById(validFacilityId, validAmendmentId, 'mock token');
-
-      expect(response.data).toEqual(mockResponse);
-    });
-  });
-
-  describe('getAmendmentsByFacilityId', () => {
-    const mockResponse = 'Mock amendments';
-    beforeAll(() => {
-      mockAxios.reset();
-      const url = /^.*\/v1\/facilities\/.*\/amendments$/;
-      mockAxios.onGet(url).reply(200, mockResponse);
-    });
-
-    it('Returns an error when a url traversal is supplied', async () => {
-      const urlTraversal = '../../../etc/stealpassword';
-      const expectedResponse = { status: 400, data: 'Invalid facility id' };
-
-      const response = await api.getAmendmentsByFacilityId(urlTraversal, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Returns an error when a local IP is supplied', async () => {
-      const localIp = '127.0.0.1';
-      const expectedResponse = { status: 400, data: 'Invalid facility id' };
-
-      const response = await api.getAmendmentsByFacilityId(localIp, 'mock token');
-
-      expect(response).toMatchObject(expectedResponse);
-    });
-
-    it('Makes an axios request when the facility id is valid', async () => {
-      const validFacilityId = '5ce819935e539c343f141ece';
-
-      const response = await api.getAmendmentsByFacilityId(validFacilityId, 'mock token');
 
       expect(response.data).toEqual(mockResponse);
     });

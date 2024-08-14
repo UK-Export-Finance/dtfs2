@@ -13,9 +13,9 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /**
  * Write a file to local storage
- * @param {String} path File path
- * @param {String} data Data to write
- * @returns {Boolean} Boolean upon file write
+ * @param {string} path File path
+ * @param {string} data Data to write
+ * @returns {Promise<boolean>} Boolean upon file write
  */
 const write = async (path, data) => {
   if (path && data) {

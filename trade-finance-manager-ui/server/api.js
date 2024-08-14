@@ -48,9 +48,9 @@ const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
 /**
  * Makes a request to the GET /facilities TFM API endpoint
  * and throws an error if the page number is out of bounds
- * @param {Object} queryParams Query parameters
+ * @param {object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {Object} Facilities data and pagination metadata
+ * @returns {object} Facilities data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getFacilities = async (queryParams, token) => {
@@ -75,9 +75,9 @@ const getFacilities = async (queryParams, token) => {
 /**
  * Makes a request to the GET /deals TFM API endpoint
  * and throws an error if the page number is out of bounds
- * @param {Object} queryParams Query parameters
+ * @param {object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {Object} Deals data and pagination metadata
+ * @returns {object} Deals data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getDeals = async (queryParams, token) => {
@@ -623,6 +623,33 @@ const getLatestCompletedAmendmentDate = async (facilityId, token) => {
   } catch (error) {
     console.error('Unable to get the latest completed coverEndDate amendment %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get latest completed amendment date' };
+  }
+};
+
+/**
+ * @param {string} facilityId - The facility ID
+ * @param {string} token - The user token
+ * @returns {Promise<import('./api-response-types').GetLatestCompletedAmendmentFacilityEndDateResponse>}
+ */
+const getLatestCompletedAmendmentFacilityEndDate = async (facilityId, token) => {
+  try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('getLatestCompletedAmendmentFacilityEndDate: Invalid facility id provided %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed/latest-facility-end-date`,
+      headers: generateHeaders(token),
+    });
+
+    return { status: 200, data: response.data };
+  } catch (error) {
+    console.error('Unable to get the latest completed facilityEndDate amendment %o', error);
+    return { status: error?.response?.status || 500, data: 'Failed to get latest completed facility end date amendment' };
   }
 };
 
@@ -1196,6 +1223,7 @@ module.exports = {
   getAllAmendmentsInProgress,
   getLatestCompletedAmendmentValue,
   getLatestCompletedAmendmentDate,
+  getLatestCompletedAmendmentFacilityEndDate,
   getParty,
   getUkBankHolidays,
   getUtilisationReportsReconciliationSummary,

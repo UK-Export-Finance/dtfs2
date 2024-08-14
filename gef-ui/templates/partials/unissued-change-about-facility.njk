@@ -11,6 +11,8 @@
 {% import '../_macros/about-facility/cover-start-date.njk' as coverStartDateSection %}
 {% import '../_macros/about-facility/cover-end-date.njk' as coverEndDateSection %}
 {% import '../_macros/about-facility/cover-start-submission.njk' as coverStartSubmissionSection %}
+{% import '../_macros/about-facility/facility-end-date.njk' as facilityEndDateSection %}
+{% import '../_macros/what-is-a-facility-end-date.njk' as whatIsAFacilityEndDate %}
 
 {% block pageTitle -%}
   About this {{ facilityTypeString }} facility
@@ -57,60 +59,65 @@
       <form method="post" data-cy="form">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <input class="govuk-visually-hidden" id="facilityType" name="facilityType" hidden="true" value="{{ facilityType }}">
-          <input class="govuk-visually-hidden" id="hasBeenIssued" name="hasBeenIssued" hidden="true" value="{{ hasBeenIssued }}">
+        <input class="govuk-visually-hidden" id="hasBeenIssued" name="hasBeenIssued" hidden="true" value="{{ hasBeenIssued }}">
 
-            {% set facilityNameParams = {
-                facilityName: facilityName,
-                errors: errors,
-                text: "Name for this " + facilityTypeString + " facility"
-              } %}
+        {% set facilityNameParams = {
+          facilityName: facilityName,
+          errors: errors,
+          text: "Name for this " + facilityTypeString + " facility"
+        } %}
 
-            {{ facilityNameSection.render(facilityNameParams)}}
+        {{ facilityNameSection.render(facilityNameParams)}}
 
-            {{ issueDateSection.render(issueDateDay, issueDateMonth, issueDateYear, errors) }}
+        {{ issueDateSection.render(issueDateDay, issueDateMonth, issueDateYear, errors) }}
 
-            {% set coverStartHtml %}
+        {% set coverStartHtml %}
 
-              {% set coverStartDateParams = {
-                coverStartDateDay: coverStartDateDay,
-                coverStartDateMonth: coverStartDateMonth,
-                coverStartDateYear: coverStartDateYear,
-                errors: errors,
-                hint: "For example, 12 03 2021.  This must be within 3 months after the date you submit the notice to UKEF. It cannot be earlier than the date it's submitted inclusion notice."
-              } %}
+        {% set coverStartDateParams = {
+          coverStartDateDay: coverStartDateDay,
+          coverStartDateMonth: coverStartDateMonth,
+          coverStartDateYear: coverStartDateYear,
+          errors: errors,
+          hint: "For example, 12 03 2021.  This must be within 3 months after the date you submit the notice to UKEF. It cannot be earlier than the date it's submitted inclusion notice."
+        } %}
 
-              {{coverStartDateSection.render(coverStartDateParams)}}
+        {{coverStartDateSection.render(coverStartDateParams)}}
 
-            {% endset -%}
+        {% endset -%}
 
-            {% set coverStartSubmissionParams = {
-              shouldCoverStartOnSubmission: shouldCoverStartOnSubmission,
-              coverStartHtml: coverStartHtml,
-              errors: errors,
-              text: "Do you want UKEF cover to start on the same date as when it was issued?"
-            } %}
+        {% set coverStartSubmissionParams = {
+          shouldCoverStartOnSubmission: shouldCoverStartOnSubmission,
+          coverStartHtml: coverStartHtml,
+          errors: errors,
+          text: "Do you want UKEF cover to start on the same date as when it was issued?"
+        } %}
 
-            {{coverStartSubmissionSection.render(coverStartSubmissionParams)}}
+        {{coverStartSubmissionSection.render(coverStartSubmissionParams)}}
 
-            {{ coverEndDateSection.render(coverEndDateDay, coverEndDateMonth, coverEndDateYear, errors) }}
+        {{ coverEndDateSection.render(coverEndDateDay, coverEndDateMonth, coverEndDateYear, errors) }}
+        
+        {% if isFacilityEndDateEnabled %}
+          {{ facilityEndDateSection.render(isUsingFacilityEndDate, errors)}}
+          {{ whatIsAFacilityEndDate.render() }}
+        {% endif %}
 
-            <div class="govuk-button-group">
+        <div class="govuk-button-group">
 
-              {{ govukButton({
+          {{ govukButton({
                 text: "Continue",
                 attributes: {
                   'data-cy': 'continue-button'
                 }
               }) }}
 
-              {% if change === false %}
-                <a href="/gef/application-details/{{ dealId }}/unissued-facilities" class="govuk-link" data-cy="cancel-link">
+          {% if change === false %}
+            <a href="/gef/application-details/{{ dealId }}/unissued-facilities" class="govuk-link" data-cy="cancel-link">
                   Cancel</a>
-              {% else %}
-                <a href="/gef/application-details/{{ dealId }}" class="govuk-link" data-cy="cancel-link">Cancel</a>
-              {% endif %}
+          {% else %}
+            <a href="/gef/application-details/{{ dealId }}" class="govuk-link" data-cy="cancel-link">Cancel</a>
+          {% endif %}
 
-            </div>
+        </div>
       </form>
     </div>
   </div>

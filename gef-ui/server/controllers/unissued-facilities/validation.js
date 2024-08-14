@@ -1,4 +1,5 @@
 const { add, isAfter, isBefore, isEqual, set } = require('date-fns');
+const { zBooleanStrictCoerce, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { validationErrorHandler } = require('../../utils/helpers');
@@ -8,9 +9,6 @@ const coverDatesValidation = require('../../utils/coverDatesValidation.helper');
  * validation for changing facilities
  * checks issue date, coverStartDate and coverEndDate dates
  * returns required parameters for post update facility
- * @param {req}
- * @returns {res} if validation errors
- * @returns {Object} if no validation errors
  */
 const facilityValidation = async ({ body, query, params, facility, userToken }) => {
   const { facilityType } = body;
@@ -28,6 +26,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
     'cover-end-date-month': coverEndDateMonth,
     'cover-end-date-year': coverEndDateYear,
     shouldCoverStartOnSubmission,
+    isUsingFacilityEndDate: isUsingFacilityEndDateString,
   } = body;
 
   const application = await api.getApplication({ dealId, userToken });
@@ -395,6 +394,23 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
     }
   }
 
+  /**
+   * @type{boolean | undefined}
+   */
+  let isUsingFacilityEndDate;
+  if (isFacilityEndDateEnabledOnGefVersion(parseDealVersion(application.version))) {
+    try {
+      isUsingFacilityEndDate = zBooleanStrictCoerce.parse(isUsingFacilityEndDateString);
+    } catch {
+      if (!saveAndReturn) {
+        aboutFacilityErrors.push({
+          errRef: 'isUsingFacilityEndDate',
+          errMsg: 'Select if there is an end date for this facility',
+        });
+      }
+    }
+  }
+
   const errorsObject = {
     errors: validationErrorHandler(aboutFacilityErrors),
     facilityName: body.facilityName,
@@ -425,6 +441,7 @@ const facilityValidation = async ({ body, query, params, facility, userToken }) 
     facilityId,
     dealId,
     errorsObject,
+    isUsingFacilityEndDate,
   };
 };
 

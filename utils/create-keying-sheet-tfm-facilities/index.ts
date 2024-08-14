@@ -16,11 +16,11 @@ const run = async () => {
 
     const validGefDealIdGenerator = await getValidGefDealIdGenerator();
 
-    const facilities: Facility[] = facilityIdsToInsert.map((ukefFacilityId) => ({
+    const facilities = facilityIdsToInsert.map((ukefFacilityId) => ({
       ...aFacilityWithoutDealId(),
       ukefFacilityId,
       dealId: validGefDealIdGenerator(),
-    }));
+    })) as Facility[];
     await Promise.all(facilities.map((facility) => FacilityClient.insertIfNotExists(facility)));
 
     const tfmFacilities: WithoutId<TfmFacility>[] = facilities.map(generateRandomTfmFacilityForFacility);

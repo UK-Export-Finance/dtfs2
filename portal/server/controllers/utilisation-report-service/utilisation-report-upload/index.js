@@ -27,7 +27,7 @@ const setSessionUtilisationReport = (req, nextDueReportPeriod) => {
 /**
  * @typedef {import('./utilisation-report-details').ReportAndUserDetails} ReportAndUserDetails
  *
- * @typedef {Object} NextReportPeriodDetails
+ * @typedef {object} NextReportPeriodDetails
  * @property {string} nextReportPeriod - The upcoming report period (the current month) with format 'MMMM yyyy'
  * @property {string} nextReportPeriodSubmissionStart - The start of the month when the next report period report can be submitted with format 'd MMMM yyyy'
  *
