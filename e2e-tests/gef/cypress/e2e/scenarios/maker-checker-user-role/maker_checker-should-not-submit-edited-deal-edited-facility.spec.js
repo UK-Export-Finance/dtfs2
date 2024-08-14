@@ -43,7 +43,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       cy.login(BANK1_MAKER_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
-      applicationDetails.facilitySummaryListRowAction(0, 0).click();
+      applicationDetails.facilitySummaryListTable(0).nameAction().click();
       aboutFacility.saveAndReturnButton().click();
 
       cy.login(BANK1_MAKER1);

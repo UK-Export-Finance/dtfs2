@@ -125,12 +125,21 @@ describe('executeWithSqlTransaction', () => {
     expect(mockRelease).toHaveBeenCalled();
   });
 
-  it("throws a generic 'TransactionFailedError' if the supplied function throws a generic error", async () => {
+  it("throws a generic 'TransactionFailedError' if the supplied function throws an unexpected error", async () => {
     // Arrange
-    const functionToExecute = jest.fn().mockRejectedValue(new Error('Some error'));
+    const functionToExecute = jest.fn().mockRejectedValue('Some rejected value');
 
     // Act / Assert
-    await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(new TransactionFailedError());
+    await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(TransactionFailedError.forUnknownError());
+  });
+
+  it("throws a specific 'TransactionFailedError' if the supplied function throws an 'Error'", async () => {
+    // Arrange
+    const error = new Error('Some error');
+    const functionToExecute = jest.fn().mockRejectedValue(error);
+
+    // Act / Assert
+    await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(TransactionFailedError.forError(error));
   });
 
   it("throws a specific 'TransactionFailedError' if the supplied function throws an 'ApiError'", async () => {
@@ -143,7 +152,7 @@ describe('executeWithSqlTransaction', () => {
     const functionToExecute = jest.fn().mockRejectedValue(customError);
 
     // Act / Assert
-    await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(new TransactionFailedError(customError));
+    await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(TransactionFailedError.forApiError(customError));
   });
 
   it('returns the return value of the supplied function', async () => {
