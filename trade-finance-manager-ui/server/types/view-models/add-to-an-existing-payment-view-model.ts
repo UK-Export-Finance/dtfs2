@@ -27,6 +27,7 @@ export type AddToAnExistingPaymentViewModel = BaseViewModel & {
   bank: { name: string };
   formattedReportPeriod: string;
   reportedFeeDetails: SelectedReportedFeesDetailsViewModel;
+  backLinkHref: string;
   selectedFeeRecordCheckboxIds: PremiumPaymentsTableCheckboxId[];
   availablePaymentsHeading: string;
   availablePaymentGroups: AvailablePaymentGroupsViewModel;

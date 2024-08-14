@@ -5,7 +5,6 @@
 {% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
 {% import "./_macros/payment-group-radio-input-group.njk" as paymentGroupRadioInputGroup %}
 {% extends "index.njk" %}
-{% set backLinkHref = '/utilisation-reports/' + reportId %}
 {% set pageHeading = "Add reported fee" + ("s" if reportedFeeDetails.feeRecords | length > 1 else "") + " to an existing payment" %}
 {% block pageTitle %}
   {% if errors.errorSummary | length %}Error - {% endif %}
