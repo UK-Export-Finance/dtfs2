@@ -8,6 +8,7 @@ const PARTY = require('./party');
 const { BANK_HOLIDAY_REGION } = require('./bank-holiday-region');
 const { PRIMARY_NAVIGATION_KEYS } = require('./primary-navigation-keys');
 const { REGEX } = require('./regex');
+const { UTILISATION_REPORT_DISPLAY_FREQUENCY } = require('./utilisation-report-display-frequency');
 
 module.exports = {
   DEAL,
@@ -20,4 +21,5 @@ module.exports = {
   BANK_HOLIDAY_REGION,
   PRIMARY_NAVIGATION_KEYS,
   REGEX,
+  UTILISATION_REPORT_DISPLAY_FREQUENCY,
 };

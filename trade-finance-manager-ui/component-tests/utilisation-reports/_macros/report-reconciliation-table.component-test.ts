@@ -1,7 +1,7 @@
 import { IsoMonthStamp, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import { componentRenderer } from '../../componentRenderer';
 import { MOCK_TFM_SESSION_USER } from '../../../server/test-mocks/mock-tfm-session-user';
-import { ReportPeriodSummariesViewModel, UtilisationReportSummaryViewModel } from '../../../server/types/view-models';
+import { UtilisationReportSummaryViewModel } from '../../../server/types/view-models';
 
 jest.mock('../../../server/api');
 
@@ -17,11 +17,11 @@ type ReportReconciliationTableParams = {
 
 describe(component, () => {
   const getWrapper = () => {
-    const reportSummaries = aReportPeriodSummariesViewModelWithReportsInEachStatus();
+    const reportSummaries = aListOfUtilisationReportSummaryViewModelsWithReportsInEachStatus();
     const params = {
       user: MOCK_TFM_SESSION_USER,
-      summaryItems: reportSummaries[0].items,
-      submissionMonth: reportSummaries[0].submissionMonth,
+      summaryItems: reportSummaries,
+      submissionMonth: '2023-12',
     };
     return render(params);
   };
@@ -73,19 +73,12 @@ describe(component, () => {
   });
 });
 
-function aReportPeriodSummariesViewModelWithReportsInEachStatus(): ReportPeriodSummariesViewModel {
+function aListOfUtilisationReportSummaryViewModelsWithReportsInEachStatus(): UtilisationReportSummaryViewModel[] {
   return [
-    {
-      submissionMonth: '2023-12',
-      items: [
-        aReportNotReceivedReportForBank({ id: '1', name: 'Barclays' }),
-        aPendingReconciliationReportForBank({ id: '2', name: 'HSBC' }),
-        aReconciliationInProgressReportForBank({ id: '3', name: 'Newable' }),
-        aReconciliationCompletedReportForBank({ id: '4', name: 'Natwest' }),
-      ],
-      reportPeriodHeading: 'This is the page heading',
-      dueDateText: 'This is the due date text',
-    },
+    aReportNotReceivedReportForBank({ id: '1', name: 'Barclays' }),
+    aPendingReconciliationReportForBank({ id: '2', name: 'HSBC' }),
+    aReconciliationInProgressReportForBank({ id: '3', name: 'Newable' }),
+    aReconciliationCompletedReportForBank({ id: '4', name: 'Natwest' }),
   ];
 }
 

@@ -1,9 +1,8 @@
-import { endOfDay, format, isPast, isSameMonth, parseISO } from 'date-fns';
+import { endOfDay, format, isPast, isSameMonth, parseISO, subMonths } from 'date-fns';
 import {
   IsoMonthStamp,
   ReportPeriod,
   UtilisationReportReconciliationStatus,
-  getDateFromMonthAndYear,
   getFormattedReportPeriodWithShortMonth,
   isEqualMonthAndYear,
   isTfmPaymentReconciliationFeatureFlagEnabled,
@@ -11,7 +10,9 @@ import {
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
 import { getReportDueDate } from '../../../services/utilisation-report-service';
 import api from '../../../api';
-import { UtilisationReportSummaryViewModel, ReportPeriodSummariesViewModel, UtilisationReportDisplayFrequency } from '../../../types/view-models';
+import { UtilisationReportSummaryViewModel, ReportPeriodSummariesViewModel } from '../../../types/view-models';
+import { UtilisationReportDisplayFrequency } from '../../../types/utilisation-report-display-frequency';
+import { UTILISATION_REPORT_DISPLAY_FREQUENCY } from '../../../constants';
 
 export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not received',
@@ -20,10 +21,22 @@ export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportRe
   RECONCILIATION_COMPLETED: 'Report completed',
 };
 
+/**
+ * Get the display frequency for the report period
+ * @param reportPeriod - The report period
+ * @returns The display frequency
+ */
 const getUtilisationReportDisplayFrequency = (reportPeriod: ReportPeriod): UtilisationReportDisplayFrequency => {
-  return isEqualMonthAndYear(reportPeriod.start, reportPeriod.end) ? 'Monthly' : 'Quarterly';
+  return isEqualMonthAndYear(reportPeriod.start, reportPeriod.end)
+    ? UTILISATION_REPORT_DISPLAY_FREQUENCY.MONTHLY
+    : UTILISATION_REPORT_DISPLAY_FREQUENCY.QUARTERLY;
 };
 
+/**
+ * Get the summary item view model from the api summary item
+ * @param apiItem - The api summary item
+ * @returns The summary item view model
+ */
 const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummaryItem): UtilisationReportSummaryViewModel => {
   const { status, dateUploaded, reportId, reportPeriod } = apiItem;
 
@@ -36,6 +49,11 @@ const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummary
   };
 };
 
+/**
+ * Get distinct report periods by start month
+ * @param reportPeriods - The report periods
+ * @returns The report periods list filtered to distinct report periods
+ */
 const getDistinctReportPeriodsByStartMonth = (reportPeriods: ReportPeriod[]): ReportPeriod[] => {
   const yearMonthConcatenatedSet = new Set<number>();
   const distinctPeriods: ReportPeriod[] = [];
@@ -49,12 +67,23 @@ const getDistinctReportPeriodsByStartMonth = (reportPeriods: ReportPeriod[]): Re
   return distinctPeriods;
 };
 
+/**
+ * Get the report due date text for the given report due date
+ * @param reportDueDate - The report due date
+ * @returns The due date text
+ */
 export const getDueDateText = (reportDueDate: Date) => {
   const reportIsPastDue = isPast(endOfDay(reportDueDate));
   const formattedReportDueDate = format(reportDueDate, 'd MMMM yyyy');
   return `Reports${reportIsPastDue ? ' were ' : ' '}due to be received by ${formattedReportDueDate}.`;
 };
 
+/**
+ * Get report period heading with all periods
+ * @param submissionMonth - The submission month
+ * @param reportPeriods - List of report periods
+ * @returns Report period heading with the report periods listed
+ */
 const getReportPeriodHeadingWithAllPeriods = (submissionMonth: IsoMonthStamp, reportPeriods: ReportPeriod[]) => {
   const isCurrentSubmissionMonth = isSameMonth(new Date(submissionMonth), new Date());
 
@@ -63,20 +92,38 @@ const getReportPeriodHeadingWithAllPeriods = (submissionMonth: IsoMonthStamp, re
   return `${isCurrentSubmissionMonth ? 'Current reporting period' : 'Open reports'}: ${formattedReportPeriods}`;
 };
 
-const getReportPeriodHeadingWithPeriodEnd = (submissionMonth: IsoMonthStamp, reportPeriods: ReportPeriod[]) => {
-  const isCurrentSubmissionMonth = isSameMonth(new Date(submissionMonth), new Date());
+/**
+ * Get report period heading with report period end
+ * @param submissionMonth - The submission month
+ * @returns Report period heading with the report period end
+ */
+const getReportPeriodHeadingWithPeriodEnd = (submissionMonth: IsoMonthStamp) => {
+  const submissionMonthDate = new Date(submissionMonth);
+  const isCurrentSubmissionMonth = isSameMonth(submissionMonthDate, new Date());
 
-  const formattedReportPeriodEnd = format(getDateFromMonthAndYear(reportPeriods[0].end), 'MMMM yyyy');
+  const reportPeriodEnd = subMonths(submissionMonthDate, 1);
+  const formattedReportPeriodEnd = format(reportPeriodEnd, 'MMMM yyyy');
 
   return `${isCurrentSubmissionMonth ? 'Current' : 'Open reports'} reporting period end: ${formattedReportPeriodEnd}`;
 };
 
+/**
+ * Get the report period heading for the given submission month and report periods
+ * @param submissionMonth - the submission month
+ * @param reportPeriods - the report periods
+ * @returns The report period heading
+ */
 export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp, reportPeriods: ReportPeriod[]) => {
   return isTfmPaymentReconciliationFeatureFlagEnabled()
-    ? getReportPeriodHeadingWithPeriodEnd(submissionMonth, reportPeriods)
+    ? getReportPeriodHeadingWithPeriodEnd(submissionMonth)
     : getReportPeriodHeadingWithAllPeriods(submissionMonth, reportPeriods);
 };
 
+/**
+ * Get bank holiday dates
+ * @param userToken - The user token
+ * @returns The dates of the bank holidays
+ */
 const getBankHolidayDates = async (userToken: string): Promise<Date[]> => {
   const bankHolidays = await api.getUkBankHolidays(userToken);
   return bankHolidays['england-and-wales'].events.map((event) => new Date(event.date));

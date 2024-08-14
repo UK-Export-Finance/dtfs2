@@ -1,8 +1,7 @@
 import { IsoMonthStamp } from '@ukef/dtfs2-common';
 import { BaseViewModel } from './base-view-model';
 import { UtilisationReportReconciliationSummaryItem } from '../utilisation-reports';
-
-export type UtilisationReportDisplayFrequency = 'Monthly' | 'Quarterly';
+import { UtilisationReportDisplayFrequency } from '../utilisation-report-display-frequency';
 
 export type UtilisationReportSummaryViewModel = UtilisationReportReconciliationSummaryItem & {
   frequency: UtilisationReportDisplayFrequency;

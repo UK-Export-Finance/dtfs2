@@ -1,6 +1,7 @@
-const { TEAM_IDS, UTILISATION_REPORT_RECONCILIATION_STATUS } = require('@ukef/dtfs2-common');
-const { componentRenderer } = require('../../componentRenderer');
-const { MOCK_TFM_SESSION_USER } = require('../../../server/test-mocks/mock-tfm-session-user');
+import { TEAM_IDS, TeamId, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
+import { componentRenderer } from '../../componentRenderer';
+import { MOCK_TFM_SESSION_USER } from '../../../server/test-mocks/mock-tfm-session-user';
+import { UtilisationReportSummaryViewModel } from '../../../server/types/view-models';
 
 jest.mock('../../../server/api');
 
@@ -10,12 +11,12 @@ const tableSelector = '[data-cy="utilisation-report-reconciliation-table"]';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const getWrapper = ({ userTeams } = {}) => {
-    const reportPeriodSummaries = aReportPeriodSummariesViewModelWithReportsInEachStatus();
+  const getWrapper = (userTeams?: TeamId[]) => {
+    const reportPeriodSummaries = aListOfUtilisationReportSummaryViewModelsWithReportsInEachStatus();
     const params = {
       user: { ...MOCK_TFM_SESSION_USER, teams: userTeams ?? [TEAM_IDS.PDC_RECONCILE] },
-      summaryItems: reportPeriodSummaries[0].items,
-      submissionMonth: reportPeriodSummaries[0].submissionMonth,
+      summaryItems: reportPeriodSummaries,
+      submissionMonth: '2023-12',
     };
     return render(params);
   };
@@ -76,7 +77,7 @@ describe(component, () => {
 
   it('should not render the "mark report as completed" buttons for a user in the "PDC_READ" team', () => {
     const userTeams = [TEAM_IDS.PDC_READ];
-    const wrapper = getWrapper({ userTeams });
+    const wrapper = getWrapper(userTeams);
     wrapper.expectElement(`[data-cy="mark-report-as-completed-button"]`).notToExist();
     wrapper.expectElement(`[data-cy="mark-as-not-completed-button"]`).notToExist();
 
@@ -84,23 +85,16 @@ describe(component, () => {
   });
 });
 
-function aReportPeriodSummariesViewModelWithReportsInEachStatus() {
+function aListOfUtilisationReportSummaryViewModelsWithReportsInEachStatus(): UtilisationReportSummaryViewModel[] {
   return [
-    {
-      submissionMonth: '2023-12',
-      items: [
-        aReportNotReceivedReportForBank({ id: '1', name: 'Barclays' }),
-        aPendingReconciliationReportForBank({ id: '2', name: 'HSBC' }),
-        aReconciliationInProgressReportForBank({ id: '3', name: 'Newable' }),
-        aReconciliationCompletedReportForBank({ id: '4', name: 'Natwest' }),
-      ],
-      reportPeriodHeading: 'This is the page heading',
-      dueDateText: 'This is the due date text',
-    },
+    aReportNotReceivedReportForBank({ id: '1', name: 'Barclays' }),
+    aPendingReconciliationReportForBank({ id: '2', name: 'HSBC' }),
+    aReconciliationInProgressReportForBank({ id: '3', name: 'Newable' }),
+    aReconciliationCompletedReportForBank({ id: '4', name: 'Natwest' }),
   ];
 }
 
-function aReportNotReceivedReportForBank(bank) {
+function aReportNotReceivedReportForBank(bank: { id: string; name: string }): UtilisationReportSummaryViewModel {
   return {
     frequency: 'Monthly',
     displayStatus: 'Report Not Yet Received',
@@ -111,7 +105,7 @@ function aReportNotReceivedReportForBank(bank) {
   };
 }
 
-function aPendingReconciliationReportForBank(bank) {
+function aPendingReconciliationReportForBank(bank: { id: string; name: string }): UtilisationReportSummaryViewModel {
   return {
     frequency: 'Monthly',
     displayStatus: 'Report Received but Pending Reconciliation',
@@ -128,7 +122,7 @@ function aPendingReconciliationReportForBank(bank) {
   };
 }
 
-function aReconciliationInProgressReportForBank(bank) {
+function aReconciliationInProgressReportForBank(bank: { id: string; name: string }): UtilisationReportSummaryViewModel {
   return {
     frequency: 'Monthly',
     displayStatus: 'Report Reconciliation is in Progress',
@@ -145,7 +139,7 @@ function aReconciliationInProgressReportForBank(bank) {
   };
 }
 
-function aReconciliationCompletedReportForBank(bank) {
+function aReconciliationCompletedReportForBank(bank: { id: string; name: string }): UtilisationReportSummaryViewModel {
   return {
     frequency: 'Monthly',
     displayStatus: 'Reconciled',
