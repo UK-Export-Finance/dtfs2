@@ -2,7 +2,16 @@ import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, FacilityUtil
 import { Currency, FeeRecordStatus, ReportPeriod } from '../../types';
 import { FacilityUtilisationDataEntityMockBuilder } from './facility-utilisation-data.entity.mock-builder';
 
-const getPreviousMontlyReportPeriod = (reportPeriod: ReportPeriod): ReportPeriod => {
+/**
+ * Gets the previous report period based on a monthly reporting
+ * schedule. This is used because the attached facility utilisation
+ * data entity should normally be referencing the previous report
+ * period (where the attached report report period is the current
+ * report period)
+ * @param reportPeriod - The current report period
+ * @returns The previous report period
+ */
+const getPreviousMonthlyReportPeriod = (reportPeriod: ReportPeriod): ReportPeriod => {
   const previousReportPeriodIsInPreviousYear = reportPeriod.start.month === 1;
   const previousReportPeriodMonth = previousReportPeriodIsInPreviousYear ? 12 : reportPeriod.start.month - 1;
   const previousReportPeriodYear = previousReportPeriodIsInPreviousYear ? reportPeriod.start.year - 1 : reportPeriod.start.year;
@@ -29,7 +38,7 @@ export class FeeRecordEntityMockBuilder {
 
     data.id = 1;
     data.facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678')
-      .withReportPeriod(getPreviousMontlyReportPeriod(report.reportPeriod))
+      .withReportPeriod(getPreviousMonthlyReportPeriod(report.reportPeriod))
       .build();
     data.facilityId = '12345678';
     data.report = report;

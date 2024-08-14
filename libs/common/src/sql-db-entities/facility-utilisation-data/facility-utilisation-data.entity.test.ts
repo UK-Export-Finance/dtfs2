@@ -1,7 +1,7 @@
 import { FacilityUtilisationDataEntityMockBuilder } from '../../test-helpers';
 
 describe('FacilityUtilisationDataEntity', () => {
-  describe('updateWithFixedFeeUtilisationAndReportPeriod', () => {
+  describe('updateWithCurrentReportPeriodDetails', () => {
     it("sets the fixed fee, utilisation and report period and updates the 'lastUpdatedBy...' fields", () => {
       // Arrange
       const facilityUtilisationDataEntity = FacilityUtilisationDataEntityMockBuilder.forId('12345678')
@@ -16,7 +16,7 @@ describe('FacilityUtilisationDataEntity', () => {
       const userId = 'abc123';
 
       // Act
-      facilityUtilisationDataEntity.updateWithFixedFeeUtilisationAndReportPeriod({
+      facilityUtilisationDataEntity.updateWithCurrentReportPeriodDetails({
         fixedFee: 543.21,
         utilisation: 876543.21,
         reportPeriod: {

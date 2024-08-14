@@ -3,7 +3,7 @@ import { AuditableBaseEntity } from '../base-entities';
 import { FeeRecordEntity } from '../fee-record';
 import { MonetaryColumn } from '../custom-columns';
 import { ReportPeriodPartialEntity } from '../partial-entities';
-import { CreateFacilityUtilisationDataWithoutUtilisationParams, UpdateWithFixedFeeAndReportPeriodParams } from './facility-utilisation-data.types';
+import { CreateFacilityUtilisationDataWithoutUtilisationParams, UpdateWithCurrentReportPeriodDetailsParams } from './facility-utilisation-data.types';
 
 @Entity('FacilityUtilisationData')
 export class FacilityUtilisationDataEntity extends AuditableBaseEntity {
@@ -49,7 +49,7 @@ export class FacilityUtilisationDataEntity extends AuditableBaseEntity {
     return data;
   }
 
-  public updateWithFixedFeeUtilisationAndReportPeriod({ fixedFee, utilisation, reportPeriod, requestSource }: UpdateWithFixedFeeAndReportPeriodParams): void {
+  public updateWithCurrentReportPeriodDetails({ fixedFee, utilisation, reportPeriod, requestSource }: UpdateWithCurrentReportPeriodDetailsParams): void {
     this.fixedFee = fixedFee;
     this.utilisation = utilisation;
     this.reportPeriod = reportPeriod;

@@ -6,6 +6,7 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordStatus,
+  ReportPeriod,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   UtilisationReportReconciliationStatus,
@@ -327,121 +328,103 @@ describe(`POST ${BASE_URL}`, () => {
       expect(await getReadyToKeyFeeRecordsWithNonNullKeyingData()).toHaveLength(1);
     });
 
-    it('only generates keying data once all the fee records are at the MATCH status', async () => {
-      // Arrange 1
-      const report = anUploadedReconciliationInProgressUtilisationReport();
-
-      const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withStatus('TO_DO').build();
-
-      const feeRecordsAtMatchStatus = [
-        FeeRecordEntityMockBuilder.forReport(report).withId(2).withFacilityId(facilityId).withStatus('MATCH').build(),
-        FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
-      ];
-
-      const allFeeRecords = [toDoFeeRecord, ...feeRecordsAtMatchStatus];
-
-      report.feeRecords = allFeeRecords;
-      await SqlDbHelper.saveNewEntry('UtilisationReport', report);
-
-      // Act 1
-      const response1 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
-
-      // Assert 1
-      expect(response1.status).toBe(HttpStatusCode.Ok);
-      expect(await getReadyToKeyFeeRecordsWithNullKeyingData()).toHaveLength(2);
-      expect(await getReadyToKeyFeeRecordsWithNonNullKeyingData()).toHaveLength(0);
-
-      // Arrange 2
-      const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { status: 'TO_DO' });
-      existingToDoFeeRecord.status = 'MATCH';
-      await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
-
-      // Act 2
-      const response2 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
-
-      // Assert 2
-      expect(response2.status).toBe(HttpStatusCode.Ok);
-      expect(await getReadyToKeyFeeRecordsWithNullKeyingData()).toHaveLength(2);
-      const feeRecordWithKeyingData = await getReadyToKeyFeeRecordsWithNonNullKeyingData();
-      expect(feeRecordWithKeyingData).toHaveLength(1);
-      expect(feeRecordWithKeyingData[0].id).toBe(1);
-    });
-
-    it('only updates the facility utilisation data table when all the fee records are at the MATCH status', async () => {
-      // Arrange 1
-      const report = anUploadedReconciliationInProgressUtilisationReport();
-      report.reportPeriod = {
+    describe('and when the facility has already had keying data generated but there is still a fee record at the TO_DO status', () => {
+      const toDoFeeRecordId = 12;
+      const currentUtilisation = 1234567.89;
+      const currentReportPeriod: ReportPeriod = {
         start: { month: 1, year: 2024 },
         end: { month: 1, year: 2024 },
       };
 
-      const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId)
-        .withUtilisation(9876543.21)
-        .withFixedFee(123456)
-        .withReportPeriod({
-          start: { month: 12, year: 2023 },
-          end: { month: 12, year: 2023 },
-        })
-        .build();
-      await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
-
-      const feeRecordFacilityUtilisation = 1234567.89;
-      const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
-        .withId(1)
-        .withFacilityId(facilityId)
-        .withFacilityUtilisation(feeRecordFacilityUtilisation)
-        .withStatus('TO_DO')
-        .build();
-
-      const feeRecordsAtMatchStatus = [
-        FeeRecordEntityMockBuilder.forReport(report)
-          .withId(2)
-          .withFacilityId(facilityId)
-          .withFacilityUtilisation(feeRecordFacilityUtilisation)
-          .withStatus('MATCH')
-          .build(),
-        FeeRecordEntityMockBuilder.forReport(report)
-          .withId(3)
-          .withFacilityId(facilityId)
-          .withFacilityUtilisation(feeRecordFacilityUtilisation)
-          .withStatus('MATCH')
-          .build(),
-      ];
-
-      const allFeeRecords = [toDoFeeRecord, ...feeRecordsAtMatchStatus];
-
-      report.feeRecords = allFeeRecords;
-      await SqlDbHelper.saveNewEntry('UtilisationReport', report);
-
-      // Act 1
-      const response1 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
-
-      // Assert 1
-      expect(response1.status).toBe(HttpStatusCode.Ok);
-      const facilityUtilisationDataAfterFirstUpdate = await SqlDbHelper.manager.findOneByOrFail(FacilityUtilisationDataEntity, { id: facilityId });
-      expect(facilityUtilisationDataAfterFirstUpdate.utilisation).toBe(9876543.21);
-      expect(facilityUtilisationDataAfterFirstUpdate.fixedFee).toBe(123456);
-      expect(facilityUtilisationDataAfterFirstUpdate.reportPeriod).toEqual({
+      const previousUtilisation = 9876543.21;
+      const previousFixedFee = 6543.21;
+      const previousReportPeriod: ReportPeriod = {
         start: { month: 12, year: 2023 },
         end: { month: 12, year: 2023 },
+      };
+
+      const assertFacilityUtilisationDataHasNotChanged = async () => {
+        const facilityUtilisationData = await SqlDbHelper.manager.findOneByOrFail(FacilityUtilisationDataEntity, { id: facilityId });
+        expect(facilityUtilisationData.fixedFee).toBe(previousFixedFee);
+        expect(facilityUtilisationData.utilisation).toBe(previousUtilisation);
+        expect(facilityUtilisationData.reportPeriod).toEqual(previousReportPeriod);
+      };
+
+      beforeEach(async () => {
+        const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId)
+          .withReportPeriod(previousReportPeriod)
+          .withFixedFee(previousFixedFee)
+          .withUtilisation(previousUtilisation)
+          .build();
+        await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
+
+        const report = anUploadedReconciliationInProgressUtilisationReport();
+        report.reportPeriod = currentReportPeriod;
+
+        const feeRecordsForFacility = [
+          FeeRecordEntityMockBuilder.forReport(report)
+            .withId(toDoFeeRecordId)
+            .withFacilityUtilisation(currentUtilisation)
+            .withFacilityId(facilityId)
+            .withStatus('TO_DO')
+            .build(),
+          FeeRecordEntityMockBuilder.forReport(report)
+            .withId(2)
+            .withFacilityId(facilityId)
+            .withFacilityUtilisation(currentUtilisation)
+            .withStatus('MATCH')
+            .build(),
+          FeeRecordEntityMockBuilder.forReport(report)
+            .withId(3)
+            .withFacilityId(facilityId)
+            .withFacilityUtilisation(currentUtilisation)
+            .withStatus('MATCH')
+            .build(),
+        ];
+
+        report.feeRecords = feeRecordsForFacility;
+        await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+        const response1 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
+
+        expect(response1.status).toBe(HttpStatusCode.Ok);
+        expect(await getReadyToKeyFeeRecordsWithNullKeyingData()).toHaveLength(2);
+        expect(await getReadyToKeyFeeRecordsWithNonNullKeyingData()).toHaveLength(0);
+        await assertFacilityUtilisationDataHasNotChanged();
       });
 
-      // Arrange 2
-      const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { status: 'TO_DO' });
-      existingToDoFeeRecord.status = 'MATCH';
-      await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
+      it('generates keying data for the last facility fee record which has been moved to READY_TO_KEY', async () => {
+        // Arrange
+        const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: 'TO_DO' });
+        existingToDoFeeRecord.status = 'MATCH';
+        await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
 
-      // Act 2
-      const response2 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
+        // Act
+        const response = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
 
-      // Assert 2
-      expect(response2.status).toBe(HttpStatusCode.Ok);
-      const facilityUtilisationDataAfterSecondUpdate = await SqlDbHelper.manager.findOneByOrFail(FacilityUtilisationDataEntity, { id: facilityId });
-      expect(facilityUtilisationDataAfterSecondUpdate.utilisation).toBe(1234567.89);
-      expect(facilityUtilisationDataAfterSecondUpdate.fixedFee).not.toBe(123456);
-      expect(facilityUtilisationDataAfterSecondUpdate.reportPeriod).toEqual({
-        start: { month: 1, year: 2024 },
-        end: { month: 1, year: 2024 },
+        // Assert
+        expect(response.status).toBe(HttpStatusCode.Ok);
+        expect(await getReadyToKeyFeeRecordsWithNullKeyingData()).toHaveLength(2);
+        const feeRecordWithKeyingData = await getReadyToKeyFeeRecordsWithNonNullKeyingData();
+        expect(feeRecordWithKeyingData).toHaveLength(1);
+        expect(feeRecordWithKeyingData[0].id).toBe(toDoFeeRecordId);
+      });
+
+      it('updates the facility utilisation data table once all fee records for the facility have been moved to READY_TO_KEY', async () => {
+        // Arrange
+        const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: 'TO_DO' });
+        existingToDoFeeRecord.status = 'MATCH';
+        await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
+
+        // Act
+        const response = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
+
+        // Assert
+        expect(response.status).toBe(HttpStatusCode.Ok);
+        const facilityUtilisationData = await SqlDbHelper.manager.findOneByOrFail(FacilityUtilisationDataEntity, { id: facilityId });
+        expect(facilityUtilisationData.utilisation).toBe(currentUtilisation);
+        expect(facilityUtilisationData.fixedFee).not.toBe(previousFixedFee);
+        expect(facilityUtilisationData.reportPeriod).toEqual(currentReportPeriod);
       });
     });
   });

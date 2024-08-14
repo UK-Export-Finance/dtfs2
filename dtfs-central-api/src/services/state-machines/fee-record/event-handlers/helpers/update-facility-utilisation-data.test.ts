@@ -59,7 +59,7 @@ describe('updateFacilityUtilisationData', () => {
     expect(facilityUtilisationDataEntity.lastUpdatedByIsSystemUser).toBe(false);
   });
 
-  it('calculates the fixed fee using the supplied facility utilisation data id anf utilisation and the supplied report period and updates the facility utilisation data fixed fee', async () => {
+  it('calculates the fixed fee using the supplied facility utilisation data id and utilisation and the supplied report period and updates the facility utilisation data fixed fee', async () => {
     // Arrange
     const facilityUtilisationDataEntity = FacilityUtilisationDataEntityMockBuilder.forId('12345678')
       .withUtilisation(123.45)

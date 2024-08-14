@@ -26,7 +26,7 @@ export const updateFacilityUtilisationData = async (
 ): Promise<FacilityUtilisationDataEntity> => {
   const nextReportPeriodFixedFee = await getFixedFeeForFacility(facilityUtilisationDataEntity.id, utilisation, reportPeriod);
 
-  facilityUtilisationDataEntity.updateWithFixedFeeUtilisationAndReportPeriod({
+  facilityUtilisationDataEntity.updateWithCurrentReportPeriodDetails({
     fixedFee: nextReportPeriodFixedFee,
     utilisation,
     reportPeriod,
