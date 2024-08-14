@@ -33,10 +33,10 @@ const getLatestSubmittedBankReviewDate = async (facility, facilityId, userToken)
 const getAmendmentBankReviewDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
-  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
+  const { data: amendment, status: apiResponseStatus } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId, bankReviewDate, changeCoverEndDate, isUsingFacilityEndDate } = amendment;
 
-  if (status !== HttpStatusCode.Ok) {
+  if (apiResponseStatus !== HttpStatusCode.Ok) {
     return res.redirect('/not-found');
   }
 

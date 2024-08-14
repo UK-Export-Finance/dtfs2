@@ -1,7 +1,7 @@
 import { add } from 'date-fns';
 import facilityEndDateValidation from './amendmentFacilityEndDate.validate';
 
-const testCoverStartDate = new Date(2025, 7, 4).getTime();
+const testCoverStartDate = new Date(2025, 7, 4);
 
 describe('facilityEndDateValidation()', () => {
   it('should return an error if the facility end date is greater than 6 years in the future', () => {

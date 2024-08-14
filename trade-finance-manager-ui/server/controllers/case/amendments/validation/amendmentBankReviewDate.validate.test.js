@@ -1,7 +1,7 @@
 import { add } from 'date-fns';
 import bankReviewDateValidation from './amendmentBankReviewDate.validate';
 
-const testCoverStartDate = new Date(2025, 7, 4).getTime();
+const testCoverStartDate = new Date(2025, 7, 4);
 
 describe('bankReviewDateValidation()', () => {
   it('should return an error if the bank review date is greater than 6 years in the future', () => {

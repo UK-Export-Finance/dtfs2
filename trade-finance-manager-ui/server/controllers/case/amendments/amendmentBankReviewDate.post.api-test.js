@@ -130,9 +130,7 @@ describe('amendmentBankReviewDate routes', () => {
       it("should render the template with the current bank review date as undefined if bank review date is not in the facility snapshot and there hasn't yet been an amendment to it", async () => {
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
-          data: {
-            ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
-          },
+          data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
         api.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValueOnce({ status: 200, data: {} });
         api.getFacility = jest.fn().mockResolvedValueOnce({ facilitySnapshot: { dates: {} } });
@@ -175,9 +173,7 @@ describe('amendmentBankReviewDate routes', () => {
       it('should render the template with the current bank review date from the facility snapshot if it exists and this is the first amendment to it', async () => {
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
-          data: {
-            ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
-          },
+          data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
         api.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValueOnce({ status: 200, data: {} });
         api.getFacility = jest
@@ -222,9 +218,7 @@ describe('amendmentBankReviewDate routes', () => {
       it('should render the template with the most recent amended bank review date value if a previous amendment to it has been made', async () => {
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
-          data: {
-            ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
-          },
+          data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
         api.getLatestCompletedAmendmentFacilityEndDate = jest
           .fn()
@@ -272,9 +266,7 @@ describe('amendmentBankReviewDate routes', () => {
       it('should render the template with the current bank review date as not provided if a bank review date was originally submitted as part of the facility snapshot but a FED has been added since', async () => {
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
-          data: {
-            ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
-          },
+          data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
         api.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValueOnce({
           status: 200,

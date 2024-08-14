@@ -1,14 +1,21 @@
-const { applyStandardValidationAndParseDateInput } = require('@ukef/dtfs2-common');
-const { add, isAfter, isBefore, startOfDay } = require('date-fns');
+import { add, isAfter, isBefore, startOfDay } from 'date-fns';
+
+import { applyStandardValidationAndParseDateInput, DayMonthYearInput } from '@ukef/dtfs2-common';
+
+type ErrorOrBankReviewDate =
+  | {
+      error: { summary: { text: string }[]; fields: string[] };
+    }
+  | { bankReviewDate: Date; error: null };
 
 /**
- * @param {{day: string, month: string, year: string}}
+ * @param {import('@ukef/dtfs2-common').DayMonthYearInput} date
  * @param {Date} coverStartDate
  * @returns {object} containing errors and amendment bank review date
  */
 
-const bankReviewDateValidation = ({ day, month, year }, coverStartDate) => {
-  const { error: standardError, parsedDate } = applyStandardValidationAndParseDateInput({ day, month, year }, 'bank review date', 'bank-review-date');
+export const bankReviewDateValidation = (date: DayMonthYearInput, coverStartDate: Date): ErrorOrBankReviewDate => {
+  const { error: standardError, parsedDate } = applyStandardValidationAndParseDateInput(date, 'bank review date', 'bank-review-date');
 
   if (standardError) {
     return {
@@ -48,5 +55,3 @@ const bankReviewDateValidation = ({ day, month, year }, coverStartDate) => {
     error: null,
   };
 };
-
-module.exports = bankReviewDateValidation;

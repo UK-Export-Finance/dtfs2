@@ -1,14 +1,20 @@
-const { applyStandardValidationAndParseDateInput } = require('@ukef/dtfs2-common');
-const { add, isAfter, isBefore, startOfDay } = require('date-fns');
+import { applyStandardValidationAndParseDateInput, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { add, isAfter, isBefore, startOfDay } from 'date-fns';
+
+type ErrorOrFacilityEndDate =
+  | {
+      error: { summary: { text: string }[]; fields: string[] };
+    }
+  | { facilityEndDate: Date; error: null };
 
 /**
- * @param {{day: string, month: string, year: string}}
+ * @param {import('@ukef/dtfs2-common').DayMonthYearInput} date
  * @param {Date} coverStartDate
  * @returns {object} containing errors and amendment facility end date
  */
 
-const facilityEndDateValidation = ({ day, month, year }, coverStartDate) => {
-  const { error: standardError, parsedDate } = applyStandardValidationAndParseDateInput({ day, month, year }, 'facility end date', 'facility-end-date');
+export const facilityEndDateValidation = (date: DayMonthYearInput, coverStartDate: Date): ErrorOrFacilityEndDate => {
+  const { error: standardError, parsedDate } = applyStandardValidationAndParseDateInput(date, 'facility end date', 'facility-end-date');
 
   if (standardError) {
     return {
@@ -48,5 +54,3 @@ const facilityEndDateValidation = ({ day, month, year }, coverStartDate) => {
     error: null,
   };
 };
-
-module.exports = facilityEndDateValidation;
