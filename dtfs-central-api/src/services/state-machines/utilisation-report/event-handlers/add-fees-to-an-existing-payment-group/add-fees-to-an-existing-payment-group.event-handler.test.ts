@@ -66,7 +66,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     const { feeRecords, feeRecordStateMachines } = createFeeRecordsAndMocks(utilisationReport, feeRecordIds);
 
     const expectedFeeRecordsToAdd = [feeRecords[2]];
-    const expectedOtherFeeRecordsInPaymentGroup = [feeRecords[3]];
+    const expectedExistingFeeRecordsInPaymentGroup = [feeRecords[3]];
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
     const firstPayment = aPaymentWithIdAndFeeRecords(1, [feeRecords[0]]);
@@ -80,7 +80,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     await handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecordsToAdd: expectedFeeRecordsToAdd,
-      otherFeeRecordsInPaymentGroup: expectedOtherFeeRecordsInPaymentGroup,
+      existingFeeRecordsInPaymentGroup: expectedExistingFeeRecordsInPaymentGroup,
       payments,
       requestSource,
     });
@@ -109,7 +109,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
       const { feeRecords, eventHandlers, feeRecordStateMachines } = createFeeRecordsAndMocks(utilisationReport, feeRecordIds);
 
       const expectedFeeRecordsToAdd = [feeRecords[0], feeRecords[1]];
-      const expectedOtherFeeRecordsInPaymentGroup = [feeRecords[2]];
+      const expectedExistingFeeRecordsInPaymentGroup = [feeRecords[2]];
       jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
       jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(feeRecordsAndPaymentsMatch);
@@ -118,7 +118,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
       await handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(utilisationReport, {
         transactionEntityManager: mockEntityManager,
         feeRecordsToAdd: expectedFeeRecordsToAdd,
-        otherFeeRecordsInPaymentGroup: expectedOtherFeeRecordsInPaymentGroup,
+        existingFeeRecordsInPaymentGroup: expectedExistingFeeRecordsInPaymentGroup,
         payments: [],
         requestSource,
       });
@@ -151,7 +151,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
       const { feeRecords, eventHandlers, feeRecordStateMachines } = createFeeRecordsAndMocks(utilisationReport, feeRecordIds);
 
       const expectedFeeRecordsToAdd = [feeRecords[0], feeRecords[1]];
-      const expectedOtherFeeRecordsInPaymentGroup = [feeRecords[2]];
+      const expectedExistingFeeRecordsInPaymentGroup = [feeRecords[2]];
       jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
       jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(feeRecordsAndPaymentsMatch);
@@ -160,13 +160,13 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
       await handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(utilisationReport, {
         transactionEntityManager: mockEntityManager,
         feeRecordsToAdd: expectedFeeRecordsToAdd,
-        otherFeeRecordsInPaymentGroup: expectedOtherFeeRecordsInPaymentGroup,
+        existingFeeRecordsInPaymentGroup: expectedExistingFeeRecordsInPaymentGroup,
         payments: [],
         requestSource,
       });
 
       // Assert
-      expectedOtherFeeRecordsInPaymentGroup.forEach(({ id }) => {
+      expectedExistingFeeRecordsInPaymentGroup.forEach(({ id }) => {
         const eventHandler = eventHandlers[id];
         expect(eventHandler).toHaveBeenCalledWith({
           type: 'OTHER_FEE_ADDED_TO_PAYMENT_GROUP',
@@ -188,7 +188,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     await handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecordsToAdd: [],
-      otherFeeRecordsInPaymentGroup: [],
+      existingFeeRecordsInPaymentGroup: [],
       payments: [],
       requestSource,
     });

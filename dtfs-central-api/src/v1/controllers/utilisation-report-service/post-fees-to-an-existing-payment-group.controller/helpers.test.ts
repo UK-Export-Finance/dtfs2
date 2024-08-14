@@ -52,8 +52,8 @@ describe('post-fees-to-an-existing-payment-group.controller helpers', () => {
     it('initialises a utilisation report state machine with the supplied report', async () => {
       // Act
       const feeRecordsToAdd = [feeRecords[0]];
-      const otherFeeRecordsInPaymentGroup = [feeRecords[1]];
-      await addFeesToAnExistingPaymentGroup(utilisationReport, feeRecordsToAdd, otherFeeRecordsInPaymentGroup, payments, tfmUser);
+      const existingFeeRecordsInPaymentGroup = [feeRecords[1]];
+      await addFeesToAnExistingPaymentGroup(utilisationReport, feeRecordsToAdd, existingFeeRecordsInPaymentGroup, payments, tfmUser);
 
       // Assert
       expect(utilisationReportStateMachineConstructorSpy).toHaveBeenCalledWith(utilisationReport);
@@ -62,8 +62,8 @@ describe('post-fees-to-an-existing-payment-group.controller helpers', () => {
     it('adds the fee records to the existing payment group using the utilisation report state machine', async () => {
       // Act
       const feeRecordsToAdd = [feeRecords[0]];
-      const otherFeeRecordsInPaymentGroup = [feeRecords[1]];
-      await addFeesToAnExistingPaymentGroup(utilisationReport, feeRecordsToAdd, otherFeeRecordsInPaymentGroup, payments, tfmUser);
+      const existingFeeRecordsInPaymentGroup = [feeRecords[1]];
+      await addFeesToAnExistingPaymentGroup(utilisationReport, feeRecordsToAdd, existingFeeRecordsInPaymentGroup, payments, tfmUser);
 
       // Assert
       expect(handleEventSpy).toHaveBeenCalledWith({
@@ -71,7 +71,7 @@ describe('post-fees-to-an-existing-payment-group.controller helpers', () => {
         payload: {
           transactionEntityManager: mockEntityManager,
           feeRecordsToAdd,
-          otherFeeRecordsInPaymentGroup,
+          existingFeeRecordsInPaymentGroup,
           payments,
           requestSource: {
             platform: 'TFM',

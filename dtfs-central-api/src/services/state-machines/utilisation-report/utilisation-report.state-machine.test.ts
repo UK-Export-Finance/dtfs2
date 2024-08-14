@@ -362,7 +362,7 @@ describe('UtilisationReportStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsToAdd: [],
-          otherFeeRecordsInPaymentGroup: [],
+          existingFeeRecordsInPaymentGroup: [],
           payments: [],
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },

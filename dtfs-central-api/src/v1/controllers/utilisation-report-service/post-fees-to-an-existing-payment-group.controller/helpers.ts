@@ -6,7 +6,7 @@ import { UtilisationReportStateMachine } from '../../../../services/state-machin
 export const addFeesToAnExistingPaymentGroup = async (
   utilisationReport: UtilisationReportEntity,
   feeRecordsToAdd: FeeRecordEntity[],
-  otherFeeRecordsInPaymentGroup: FeeRecordEntity[],
+  existingFeeRecordsInPaymentGroup: FeeRecordEntity[],
   payments: PaymentEntity[],
   user: TfmSessionUser,
 ) => {
@@ -18,7 +18,7 @@ export const addFeesToAnExistingPaymentGroup = async (
       payload: {
         transactionEntityManager,
         feeRecordsToAdd,
-        otherFeeRecordsInPaymentGroup,
+        existingFeeRecordsInPaymentGroup,
         payments,
         requestSource: {
           platform: 'TFM',
