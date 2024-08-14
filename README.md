@@ -96,7 +96,7 @@ npm run stop
 There are 2 different docker compose files right now.
 
 - docker-compose.yml is used for local development
-- docker-compose.gha.yml is used for the pipelines to run our tests against
+- docker-compose.gha.yml is used for the pipelines to run our tests against. This has a replica set enabled.
 
 ## Login Credentials :key:
 
