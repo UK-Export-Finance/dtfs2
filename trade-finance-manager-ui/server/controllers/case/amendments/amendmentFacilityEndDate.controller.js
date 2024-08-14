@@ -2,7 +2,7 @@ const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@u
 const { HttpStatusCode } = require('axios');
 const { format, parseISO } = require('date-fns');
 const api = require('../../../api');
-const facilityEndDateValidation = require('./validation/amendmentFacilityEndDate.validate');
+const { facilityEndDateValidation } = require('./validation/amendmentFacilityEndDate.validate');
 
 const getNextPage = (status, changeFacilityValue, baseUrl, fallbackUrl) => {
   if (status !== HttpStatusCode.Ok) {
@@ -12,29 +12,12 @@ const getNextPage = (status, changeFacilityValue, baseUrl, fallbackUrl) => {
   return changeFacilityValue ? `${baseUrl}/facility-value` : `${baseUrl}/check-answers`;
 };
 
-const getLatestSubmittedFacilityEndDate = async (facility, facilityId, userToken) => {
-  const { data: latestAmendmentFacilityEndDateResponse } = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId, userToken);
-
-  if (latestAmendmentFacilityEndDateResponse?.facilityEndDate) {
-    return format(parseISO(latestAmendmentFacilityEndDateResponse.facilityEndDate), 'dd MMMM yyyy');
-  }
-
-  if (latestAmendmentFacilityEndDateResponse?.bankReviewDate) {
-    return undefined;
-  }
-
-  if (facility?.facilitySnapshot?.dates?.facilityEndDate) {
-    return format(parseISO(facility.facilitySnapshot.dates.facilityEndDate), 'dd MMMM yyyy');
-  }
-
-  return undefined;
-};
-
 const getAmendmentFacilityEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
   const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId, facilityEndDate, changeCoverEndDate, isUsingFacilityEndDate } = amendment;
+  const facility = await api.getFacility(facilityId, userToken);
 
   if (status !== 200) {
     return res.redirect('/not-found');
@@ -54,7 +37,9 @@ const getAmendmentFacilityEndDate = async (req, res) => {
   const facilityEndDateMonth = facilityEndDate ? format(new Date(facilityEndDate), 'M') : '';
   const facilityEndDateYear = facilityEndDate ? format(new Date(facilityEndDate), 'yyyy') : '';
 
-  const facility = await api.getFacility(facilityId, userToken);
+  const currentFacilityEndDate = facility?.facilitySnapshot?.dates?.facilityEndDate
+    ? format(parseISO(facility?.facilitySnapshot?.dates?.facilityEndDate), 'dd MMMM yyyy')
+    : undefined;
 
   return res.render('case/amendments/amendment-facility-end-date.njk', {
     dealId,
@@ -63,7 +48,7 @@ const getAmendmentFacilityEndDate = async (req, res) => {
     facilityEndDateDay,
     facilityEndDateMonth,
     facilityEndDateYear,
-    currentFacilityEndDate: await getLatestSubmittedFacilityEndDate(facility, facilityId, userToken),
+    currentFacilityEndDate,
     user: req.session.user,
   });
 };
@@ -76,12 +61,16 @@ const postAmendmentFacilityEndDate = async (req, res) => {
   const facility = await api.getFacility(facilityId, userToken);
   const { 'facility-end-date-day': day, 'facility-end-date-month': month, 'facility-end-date-year': year } = req.body;
 
-  const coverStartDate = new Date(Number(facility.facilitySnapshot.dates.coverStartDate));
+  const coverStartDate = new Date(Number(facility?.facilitySnapshot?.dates?.coverStartDate));
 
   const { error, facilityEndDate } = facilityEndDateValidation({ day, month, year }, coverStartDate);
 
   if (error?.fields) {
     const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isTfmFacilityEndDateFeatureFlagEnabled();
+    const currentFacilityEndDate = facility?.facilitySnapshot?.dates?.facilityEndDate
+      ? format(parseISO(facility?.facilitySnapshot?.dates?.facilityEndDate), 'dd MMMM yyyy')
+      : undefined;
+
     return res.render('case/amendments/amendment-facility-end-date.njk', {
       dealId,
       facilityId,
@@ -90,7 +79,7 @@ const postAmendmentFacilityEndDate = async (req, res) => {
       facilityEndDateMonth: month,
       facilityEndDateYear: year,
       error,
-      currentFacilityEndDate: await getLatestSubmittedFacilityEndDate(facility, facilityId, userToken),
+      currentFacilityEndDate,
       user: req.session.user,
     });
   }

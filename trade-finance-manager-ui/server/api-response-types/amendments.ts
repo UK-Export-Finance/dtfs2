@@ -12,6 +12,10 @@ type FacilityEndDateResponse =
       isUsingFacilityEndDate: false;
       bankReviewDate?: string;
     }
-  | {};
+  | {
+      isUsingFacilityEndDate: undefined;
+      bankReviewDate: undefined;
+      facilityEndDate: undefined;
+    };
 
 export type GetLatestCompletedAmendmentFacilityEndDateResponse = ErrorResponse | FacilityEndDateResponse;

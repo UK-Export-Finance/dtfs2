@@ -1,11 +1,13 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect, jest } from '@jest/globals';
+import { TEAM_IDS } from '@ukef/dtfs2-common';
 import { get, post } from '../../test-mocks/router-mock';
 import caseController from '../../controllers/case';
 import partiesController from '../../controllers/case/parties';
 import underwritingController from '../../controllers/case/underwriting';
 import activityController from '../../controllers/case/activity';
 import amendmentsController from '../../controllers/case/amendments';
+import { validateUserTeam } from '../../middleware';
 
 describe('routes - case', () => {
   afterEach(() => {
@@ -83,14 +85,31 @@ describe('routes - case', () => {
       amendmentsController.getAmendmentEffectiveDate,
     );
 
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.getAmendCoverEndDate);
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date',
+      expect.any(Function),
+      amendmentsController.getAmendCoverEndDate,
+    );
     expect(get).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date',
+      expect.any(Function),
       amendmentsController.getAmendmentIsUsingFacilityEndDate,
     );
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date', amendmentsController.getAmendmentFacilityEndDate);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date', amendmentsController.getAmendmentBankReviewDate);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.getAmendFacilityValue);
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date',
+      expect.any(Function),
+      amendmentsController.getAmendmentFacilityEndDate,
+    );
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date',
+      expect.any(Function),
+      amendmentsController.getAmendmentBankReviewDate,
+    );
+    expect(get).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value',
+      expect.any(Function),
+      amendmentsController.getAmendFacilityValue,
+    );
 
     expect(get).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter',
@@ -192,14 +211,31 @@ describe('routes - case', () => {
       amendmentsController.postAmendmentAddUnderwriterManagersFacilityValue,
     );
 
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.postAmendCoverEndDate);
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date',
+      expect.any(Function),
+      amendmentsController.postAmendCoverEndDate,
+    );
     expect(post).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date',
+      expect.any(Function),
       amendmentsController.postAmendmentIsUsingFacilityEndDate,
     );
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date', amendmentsController.postAmendmentFacilityEndDate);
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date', amendmentsController.postAmendmentBankReviewDate);
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.postAmendFacilityValue);
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date',
+      expect.any(Function),
+      amendmentsController.postAmendmentFacilityEndDate,
+    );
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date',
+      expect.any(Function),
+      amendmentsController.postAmendmentBankReviewDate,
+    );
+    expect(post).toHaveBeenCalledWith(
+      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value',
+      expect.any(Function),
+      amendmentsController.postAmendFacilityValue,
+    );
 
     expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.postAmendmentBankDecisionChoice);
     expect(post).toHaveBeenCalledWith(

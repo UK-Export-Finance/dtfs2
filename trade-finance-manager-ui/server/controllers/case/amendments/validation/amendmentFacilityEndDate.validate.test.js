@@ -1,5 +1,5 @@
 import { add } from 'date-fns';
-import facilityEndDateValidation from './amendmentFacilityEndDate.validate';
+import { facilityEndDateValidation } from './amendmentFacilityEndDate.validate';
 
 const testCoverStartDate = new Date(2025, 7, 4);
 

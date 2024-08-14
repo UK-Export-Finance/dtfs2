@@ -198,12 +198,11 @@ describe('amendmentBankReviewDate routes', () => {
         });
       });
 
-      it("should render the template with the current bank review date as undefined if bank review date is not in the facility snapshot and there hasn't yet been an amendment to it", async () => {
+      it('should render the template with the current bank review date as undefined if bank review date is not in the facility snapshot', async () => {
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
           data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
-        api.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValueOnce({ status: 200, data: {} });
         api.getFacility = jest.fn().mockResolvedValueOnce({ facilitySnapshot: { dates: {} } });
 
         const req = {
@@ -228,12 +227,11 @@ describe('amendmentBankReviewDate routes', () => {
         });
       });
 
-      it('should render the template with the current bank review date from the facility snapshot if it exists and this is the first amendment to it', async () => {
+      it('should render the template with the current bank review date from the facility snapshot if it exists', async () => {
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
           data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
-        api.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValueOnce({ status: 200, data: {} });
         api.getFacility = jest
           .fn()
           .mockResolvedValueOnce({ facilitySnapshot: { dates: { isUsingFacilityEndDate: false, bankReviewDate: new Date(2025, 11, 11).toISOString() } } });
@@ -255,75 +253,6 @@ describe('amendmentBankReviewDate routes', () => {
           bankReviewDateMonth: '',
           bankReviewDateYear: '',
           currentBankReviewDate: '11 December 2025',
-          isEditable: true,
-          user,
-        });
-      });
-
-      it('should render the template with the most recent amended bank review date value if a previous amendment to it has been made', async () => {
-        api.getAmendmentById.mockResolvedValueOnce({
-          status: 200,
-          data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
-        });
-        api.getLatestCompletedAmendmentFacilityEndDate = jest
-          .fn()
-          .mockResolvedValueOnce({ status: 200, data: { isUsingFacilityEndDate: false, bankReviewDate: new Date(2028, 1, 1).toISOString() } });
-        api.getFacility = jest
-          .fn()
-          .mockResolvedValueOnce({ facilitySnapshot: { dates: { isUsingFacilityEndDate: false, bankReviewDate: new Date(2025, 11, 11).toISOString() } } });
-
-        const req = {
-          params: {
-            _id: dealId,
-            amendmentId,
-            facilityId,
-          },
-          session,
-        };
-        await getAmendmentBankReviewDate(req, res);
-
-        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
-          dealId,
-          facilityId,
-          bankReviewDateDay: '',
-          bankReviewDateMonth: '',
-          bankReviewDateYear: '',
-          currentBankReviewDate: '01 February 2028',
-          isEditable: true,
-          user,
-        });
-      });
-
-      it('should render the template with the current bank review date as not provided if a bank review date was originally submitted as part of the facility snapshot but a FED has been added since', async () => {
-        api.getAmendmentById.mockResolvedValueOnce({
-          status: 200,
-          data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
-        });
-        api.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValueOnce({
-          status: 200,
-          data: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2028, 1, 1).toISOString(), bankReviewDate: null },
-        });
-        api.getFacility = jest
-          .fn()
-          .mockResolvedValueOnce({ facilitySnapshot: { dates: { isUsingFacilityEndDate: false, bankReviewDate: new Date(2025, 11, 11).toISOString() } } });
-
-        const req = {
-          params: {
-            _id: dealId,
-            amendmentId,
-            facilityId,
-          },
-          session,
-        };
-        await getAmendmentBankReviewDate(req, res);
-
-        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
-          dealId,
-          facilityId,
-          bankReviewDateDay: '',
-          bankReviewDateMonth: '',
-          bankReviewDateYear: '',
-          currentBankReviewDate: undefined,
           isEditable: true,
           user,
         });

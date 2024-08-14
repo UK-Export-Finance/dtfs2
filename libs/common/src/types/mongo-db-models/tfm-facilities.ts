@@ -12,6 +12,29 @@ type SubmittedByUser = {
 };
 
 /**
+ * Type of the mongo db "tfm-facilities" collection "tfm" property within the "amendments" property.
+ *
+ * This type is likely incomplete and should be added
+ * to as and when new properties are discovered
+ */
+export type FacilityAmendmentTfmObject = {
+  value?: {
+    value: number;
+    currency: Currency;
+  };
+  amendmentExposurePeriodInMonths?: number | null;
+  exposure?: {
+    exposure: number | string;
+    timestamp: UnixTimestamp | null;
+    ukefExposureValue: number;
+  };
+  coverEndDate?: UnixTimestamp;
+  facilityEndDate?: string;
+  bankReviewDate?: string;
+  isUsingFacilityEndDate?: boolean;
+};
+
+/**
  * Type of the mongo db "tfm-facilities" collection
  * "amendments" property
  *
@@ -75,19 +98,7 @@ export type TfmFacilityAmendment = {
     name: string;
     email: string;
   };
-  tfm?: {
-    value?: {
-      value: number;
-      currency: Currency;
-    };
-    exposurePeriodInMonths?: number;
-    exposure?: {
-      exposure: number | string;
-      timestamp: UnixTimestamp | null;
-      ukefExposureValue: number;
-    };
-    coverEndDate?: UnixTimestamp;
-  };
+  tfm?: FacilityAmendmentTfmObject;
   tasks?: {
     groupTitle: string;
     id: number;

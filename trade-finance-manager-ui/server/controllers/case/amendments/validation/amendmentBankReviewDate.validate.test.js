@@ -1,5 +1,5 @@
 import { add } from 'date-fns';
-import bankReviewDateValidation from './amendmentBankReviewDate.validate';
+import { bankReviewDateValidation } from './amendmentBankReviewDate.validate';
 
 const testCoverStartDate = new Date(2025, 7, 4);
 

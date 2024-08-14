@@ -55,6 +55,9 @@ export type Facility = {
   guaranteeFee: number;
   submittedAsIssuedDate: UnixTimestampString | null;
   ukefFacilityId: string | null;
+  isUsingFacilityEndDate?: boolean;
+  facilityEndDate?: Date | string;
+  bankReviewDate?: Date | string;
   feeType: string;
   feeFrequency: string;
   dayCountBasis: number;

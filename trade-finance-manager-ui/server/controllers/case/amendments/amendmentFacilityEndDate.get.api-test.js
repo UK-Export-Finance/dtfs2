@@ -200,14 +200,13 @@ describe('amendmentFacilityEndDate routes', () => {
         });
       });
 
-      it("should render the template with the current facility date as undefined if facility end date is not in the facility snapshot and there hasn't yet been an amendment to it", async () => {
+      it('should render the template with the current facility date as undefined if facility end date is not in the facility snapshot', async () => {
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
           data: {
             ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE,
           },
         });
-        api.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValueOnce({ status: 200, data: {} });
         api.getFacility = jest.fn().mockResolvedValueOnce({ facilitySnapshot: { dates: {} } });
 
         const req = {
@@ -232,14 +231,13 @@ describe('amendmentFacilityEndDate routes', () => {
         });
       });
 
-      it('should render the template with the current facility end date from the facility snapshot if it exists and this is the first amendment to it', async () => {
+      it('should render the template with the current facility end date from the facility snapshot if it exists', async () => {
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
           data: {
             ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE,
           },
         });
-        api.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValueOnce({ status: 200, data: {} });
         api.getFacility = jest
           .fn()
           .mockResolvedValueOnce({ facilitySnapshot: { dates: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2025, 11, 11).toISOString() } } });
@@ -261,79 +259,6 @@ describe('amendmentFacilityEndDate routes', () => {
           facilityEndDateMonth: '',
           facilityEndDateYear: '',
           currentFacilityEndDate: '11 December 2025',
-          isEditable: true,
-          user,
-        });
-      });
-
-      it('should render the template with the most recent amended facility end date value if a previous amendment to it has been made', async () => {
-        api.getAmendmentById.mockResolvedValueOnce({
-          status: 200,
-          data: {
-            ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE,
-          },
-        });
-        api.getLatestCompletedAmendmentFacilityEndDate = jest
-          .fn()
-          .mockResolvedValueOnce({ status: 200, data: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2028, 1, 1).toISOString() } });
-        api.getFacility = jest
-          .fn()
-          .mockResolvedValueOnce({ facilitySnapshot: { dates: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2025, 11, 11).toISOString() } } });
-
-        const req = {
-          params: {
-            _id: dealId,
-            amendmentId,
-            facilityId,
-          },
-          session,
-        };
-        await getAmendmentFacilityEndDate(req, res);
-
-        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
-          dealId,
-          facilityId,
-          facilityEndDateDay: '',
-          facilityEndDateMonth: '',
-          facilityEndDateYear: '',
-          currentFacilityEndDate: '01 February 2028',
-          isEditable: true,
-          user,
-        });
-      });
-
-      it('should render the template with the current facility end date as not provided if facility end date was originally submitted as part of the facility snapshot but a bank review date has been added since', async () => {
-        api.getAmendmentById.mockResolvedValueOnce({
-          status: 200,
-          data: {
-            ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE,
-          },
-        });
-        api.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValueOnce({
-          status: 200,
-          data: { isUsingFacilityEndDate: false, bankReviewDate: new Date(2028, 1, 1).toISOString(), facilityEndDate: null },
-        });
-        api.getFacility = jest
-          .fn()
-          .mockResolvedValueOnce({ facilitySnapshot: { dates: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2025, 11, 11).toISOString() } } });
-
-        const req = {
-          params: {
-            _id: dealId,
-            amendmentId,
-            facilityId,
-          },
-          session,
-        };
-        await getAmendmentFacilityEndDate(req, res);
-
-        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
-          dealId,
-          facilityId,
-          facilityEndDateDay: '',
-          facilityEndDateMonth: '',
-          facilityEndDateYear: '',
-          currentFacilityEndDate: undefined,
           isEditable: true,
           user,
         });

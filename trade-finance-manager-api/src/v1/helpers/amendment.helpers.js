@@ -525,9 +525,9 @@ const addLatestAmendmentCoverEndDate = async (tfmObject, latestCoverEndDateRespo
 /**
  * Populates the tfmObject with facility end date values
  * @param {import('@ukef/dtfs2-common').TfmFacility} tfmObject
- * @param {{ facilityEndDate?: string, bankReviewDate?:string, isUsingFacilityEndDate?: boolean } | undefined} latestFacilityEndDateDataResponse
+ * @param {{ facilityEndDate?: Date, bankReviewDate?: Date, isUsingFacilityEndDate?: boolean } | undefined} latestFacilityEndDateDataResponse
  * @param {string} facilityId
- * @returns {import('@ukef/dtfs2-common').TfmFacility & { coverEndDate?: string, amendmentExposurePeriodInMonths?: number, facilityEndDate?: string }}
+ * @returns {import('@ukef/dtfs2-common').TfmFacility & { coverEndDate?: Date, amendmentExposurePeriodInMonths?: number, facilityEndDate?: Date }}
  */
 const addLatestAmendmentFacilityEndDate = async (tfmObject, latestFacilityEndDateDataResponse, facilityId) => {
   const existingFacility = await api.findOneFacility(facilityId);

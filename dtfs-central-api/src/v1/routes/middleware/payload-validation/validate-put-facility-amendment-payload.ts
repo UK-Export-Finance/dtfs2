@@ -81,6 +81,9 @@ const PutFacilityAmendmentSchema = z.object({
             ukefExposureValue: z.number(),
           }),
           coverEndDate: z.number(),
+          isUsingFacilityEndDate: z.boolean().nullable(),
+          facilityEndDate: dateFromIsoStringSchema.nullable(),
+          bankReviewDate: dateFromIsoStringSchema.nullable(),
         })
         .partial(),
       tasks: z.array(
