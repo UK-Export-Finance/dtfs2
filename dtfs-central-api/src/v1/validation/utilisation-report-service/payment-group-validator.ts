@@ -15,7 +15,7 @@ export const validateThatSelectedPaymentsBelongToSamePaymentGroup = (payments: P
       firstPaymentFeeRecordIds.length !== currentPaymentFeeRecordIds.length ||
       !firstPaymentFeeRecordIds.every((id) => currentPaymentFeeRecordIds.includes(id))
     ) {
-      throw new InvalidPayloadError('Payment group payments must all have the same set of fee records attached.');
+      throw new InvalidPayloadError('Selected payments do not all belong to same payment group.');
     }
   });
 };
@@ -30,11 +30,11 @@ export const validateThatSelectedPaymentsFormACompletePaymentGroup = (payments: 
   const firstPaymentsFirstFeeRecordPaymentIds = firstPaymentsFirstFeeRecord?.payments.map((payment) => payment.id);
 
   if (!firstPaymentsFirstFeeRecordPaymentIds || firstPaymentsFirstFeeRecordPaymentIds.length !== paymentIds.length) {
-    throw new InvalidPayloadError('Payment group payment count must equal the number of payments attached to the first fee record of the first payment.');
+    throw new InvalidPayloadError('Selected payment count does not match the payment group size.');
   }
 
   if (firstPaymentsFirstFeeRecordPaymentIds.some((id) => !paymentIds.includes(id))) {
-    throw new InvalidPayloadError('Payment group payment IDs do not match the IDs of the payments attached to the first fee record of the first payment.');
+    throw new InvalidPayloadError('Selected payments do not match the expected payment group payments.');
   }
 };
 

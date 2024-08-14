@@ -44,7 +44,7 @@ describe('payment group validator', () => {
 
       // Act & Assert
       expect(() => validateThatSelectedPaymentsBelongToSamePaymentGroup(aListOfPaymentsWithAnUnequalFeeRecordCount)).toThrow(
-        new InvalidPayloadError('Payment group payments must all have the same set of fee records attached.'),
+        new InvalidPayloadError('Selected payments do not all belong to same payment group.'),
       );
     });
 
@@ -57,7 +57,7 @@ describe('payment group validator', () => {
 
       // Act & Assert
       expect(() => validateThatSelectedPaymentsBelongToSamePaymentGroup(aListOfPaymentsWithFeeRecordsOfDifferingIds)).toThrow(
-        new InvalidPayloadError('Payment group payments must all have the same set of fee records attached.'),
+        new InvalidPayloadError('Selected payments do not all belong to same payment group.'),
       );
     });
   });
@@ -101,7 +101,7 @@ describe('payment group validator', () => {
 
       // Act & Assert
       expect(() => validateThatSelectedPaymentsFormACompletePaymentGroup(payments, paymentIds)).toThrow(
-        new InvalidPayloadError('Payment group payment count must equal the number of payments attached to the first fee record of the first payment.'),
+        new InvalidPayloadError('Selected payment count does not match the payment group size.'),
       );
     });
 
@@ -112,7 +112,7 @@ describe('payment group validator', () => {
 
       // Act & Assert
       expect(() => validateThatSelectedPaymentsFormACompletePaymentGroup(payments, paymentIds)).toThrow(
-        new InvalidPayloadError('Payment group payment count must equal the number of payments attached to the first fee record of the first payment.'),
+        new InvalidPayloadError('Selected payment count does not match the payment group size.'),
       );
     });
   });

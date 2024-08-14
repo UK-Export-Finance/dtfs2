@@ -47,7 +47,7 @@ export const postFeesToAnExistingPaymentGroup = async (req: PostFeesToAnExisting
     );
 
     if (feeRecordsToAdd.length === 0) {
-      throw new InvalidPayloadError("No fee records selected that don't belong to the payment group.");
+      throw new InvalidPayloadError('Cannot add fees to the payment group they are already in.');
     }
 
     const utilisationReport = existingPaymentGroupFeeRecords.at(0)?.report;

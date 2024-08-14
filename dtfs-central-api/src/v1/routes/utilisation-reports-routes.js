@@ -622,7 +622,7 @@ utilisationReportsRouter
  *                 items:
  *                   type: number
  *               paymentIds:
- *                 description: The ids of the payment ids
+ *                 description: The ids of the payments
  *                 type: array
  *                 items:
  *                   type: number
