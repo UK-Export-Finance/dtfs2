@@ -9,7 +9,7 @@ import { PostFeesToAnExistingPaymentGroupPayload } from '../../../routes/middlew
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import {
   validateThatSelectedPaymentsBelongToSamePaymentGroup,
-  validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds,
+  validateThatSelectedPaymentsFormACompletePaymentGroup,
 } from '../../../validation/utilisation-report-service/payment-group-validator';
 
 export type PostFeesToAnExistingPaymentGroupRequest = CustomExpressRequest<{
@@ -35,7 +35,7 @@ export const postFeesToAnExistingPaymentGroup = async (req: PostFeesToAnExisting
     }
 
     validateThatSelectedPaymentsBelongToSamePaymentGroup(payments);
-    validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(payments, paymentIds);
+    validateThatSelectedPaymentsFormACompletePaymentGroup(payments, paymentIds);
 
     const existingFeeRecordsInPaymentGroup = payments.at(0)?.feeRecords;
     if (!existingFeeRecordsInPaymentGroup || existingFeeRecordsInPaymentGroup.length === 0) {

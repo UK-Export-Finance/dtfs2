@@ -7,7 +7,7 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import {
-  validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds,
+  validateThatSelectedPaymentsFormACompletePaymentGroup,
   validateThatSelectedPaymentsBelongToSamePaymentGroup,
 } from './payment-group-validator';
 
@@ -61,14 +61,14 @@ describe('payment group validator', () => {
     });
   });
 
-  describe('validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds', () => {
+  describe('validateThatSelectedPaymentsFormACompletePaymentGroup', () => {
     it('should not throw an error when payments array is empty', () => {
       // Arrange
       const anEmptyListOfPayments: PaymentEntity[] = [];
       const paymentIds = [1];
 
       // Act & Assert
-      expect(() => validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(anEmptyListOfPayments, paymentIds)).not.toThrow();
+      expect(() => validateThatSelectedPaymentsFormACompletePaymentGroup(anEmptyListOfPayments, paymentIds)).not.toThrow();
     });
 
     it('should not throw an error when first payment has no fee records', () => {
@@ -77,7 +77,7 @@ describe('payment group validator', () => {
       const paymentIds = [1];
 
       // Act & Assert
-      expect(() => validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(paymentsWithNoFeeRecords, paymentIds)).not.toThrow();
+      expect(() => validateThatSelectedPaymentsFormACompletePaymentGroup(paymentsWithNoFeeRecords, paymentIds)).not.toThrow();
     });
 
     it('should not throw an error when payment IDs match first fee record payment IDs', () => {
@@ -90,7 +90,7 @@ describe('payment group validator', () => {
       const paymentIds = [1];
 
       // Act & Assert
-      expect(() => validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(aListOfOnePaymentWithFeeRecordsWithPayments, paymentIds)).not.toThrow();
+      expect(() => validateThatSelectedPaymentsFormACompletePaymentGroup(aListOfOnePaymentWithFeeRecordsWithPayments, paymentIds)).not.toThrow();
     });
 
     it('should throw an InvalidPayloadError when payment count does not match first fee record payment count', () => {
@@ -99,7 +99,7 @@ describe('payment group validator', () => {
       const paymentIds = [1, 2, 3];
 
       // Act & Assert
-      expect(() => validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(payments, paymentIds)).toThrow(
+      expect(() => validateThatSelectedPaymentsFormACompletePaymentGroup(payments, paymentIds)).toThrow(
         new InvalidPayloadError('Payment group payment count must equal the number of payments attached to the first fee record of the first payment.'),
       );
     });
@@ -110,7 +110,7 @@ describe('payment group validator', () => {
       const paymentIds = [1, 3];
 
       // Act & Assert
-      expect(() => validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(payments, paymentIds)).toThrow(
+      expect(() => validateThatSelectedPaymentsFormACompletePaymentGroup(payments, paymentIds)).toThrow(
         new InvalidPayloadError('Payment group payment count must equal the number of payments attached to the first fee record of the first payment.'),
       );
     });

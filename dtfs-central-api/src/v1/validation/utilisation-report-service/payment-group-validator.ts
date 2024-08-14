@@ -20,7 +20,7 @@ export const validateThatSelectedPaymentsBelongToSamePaymentGroup = (payments: P
   });
 };
 
-export const validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds = (payments: PaymentEntity[], paymentIds: number[]) => {
+export const validateThatSelectedPaymentsFormACompletePaymentGroup = (payments: PaymentEntity[], paymentIds: number[]) => {
   if (payments.length === 0 || payments.at(0)?.feeRecords.length === 0) {
     return;
   }
