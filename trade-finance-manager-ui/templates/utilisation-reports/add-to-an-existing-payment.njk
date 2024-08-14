@@ -5,13 +5,21 @@
 {% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
 {% import "./_macros/payment-group-radio-input-group.njk" as paymentGroupRadioInputGroup %}
 {% extends "index.njk" %}
-{% set backLink = {"href": '/utilisation-reports/' + reportId} %}
+{% set backLinkHref = '/utilisation-reports/' + reportId %}
 {% set pageHeading = "Add reported fee" + ("s" if reportedFeeDetails.feeRecords | length > 1 else "") + " to an existing payment" %}
 {% block pageTitle %}
   {% if errors.errorSummary | length %}Error - {% endif %}
   {{ pageHeading }}
 {% endblock %}
 {% block content %}
+  {{ govukBackLink({
+    text: "Back",
+    href: backLinkHref,
+    attributes: {
+      "id": "back-link",
+      "data-cy": "back-link"
+    }
+  }) }}
   {% if errors.errorSummary | length %}
     {{ govukErrorSummary({
         titleText: "There is a problem",
@@ -58,7 +66,7 @@
           "data-cy": "continue-button"
         }
       }) }}
-      {# TODO FN-3293: Add 'Cancel' link and associated redirect logic to include selected fee record IDs. #}
+      <a class="govuk-link" href="{{ backLinkHref }}" id="cancel-button" data-cy="cancel-button">Cancel</a>
     </div>
   </form>
 {% endblock %}
