@@ -85,7 +85,11 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
     const facilityEndDateIsBlank = !facilityEndDateYear && !facilityEndDateMonth && !facilityEndDateDay;
 
     if (isTrueSet(saveAndReturn) && facilityEndDateIsBlank) {
-      return res.redirect(`/gef/application-details/${dealId}`);
+      if (change) {
+        return res.redirect(`/gef/application-details/${dealId}`);
+      }
+
+      return res.redirect(`/gef/application-details/${dealId}/unissued-facilities`);
     }
 
     const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
