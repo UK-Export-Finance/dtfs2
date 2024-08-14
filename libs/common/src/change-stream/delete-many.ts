@@ -47,6 +47,7 @@ const deleteManyWithAuditLogs = async <CollectionName extends MongoDbCollectionN
 
     const deletionCollection = await db.getCollection('deletion-audit-logs');
     const insertResult = await deletionCollection.insertMany(logsToInsert);
+
     if (!insertResult.acknowledged) {
       throw new WriteConcernError();
     }
@@ -60,11 +61,7 @@ const deleteManyWithAuditLogs = async <CollectionName extends MongoDbCollectionN
     }
     return deleteResult;
   } catch (error) {
-    console.error(
-      `Failed to delete many from collection ${collectionName} with filter ${JSON.stringify(
-        filter,
-      )}. Inconsistent deletion audit records may have been created`,
-    );
+    console.error('Failed to delete many from collection %s with filter %o. Inconsistent deletion audit records may have been created', collectionName, filter);
     throw error;
   }
 };
@@ -81,7 +78,7 @@ export const deleteMany = async <CollectionName extends MongoDbCollectionName>({
   auditDetails,
 }: DeleteManyParams<CollectionName>): Promise<DeleteResult> => {
   if (CHANGE_STREAM_ENABLED) {
-    return await deleteManyWithAuditLogs({
+    return deleteManyWithAuditLogs({
       filter,
       collectionName,
       db,
@@ -89,5 +86,5 @@ export const deleteMany = async <CollectionName extends MongoDbCollectionName>({
     });
   }
   const collection = await db.getCollection(collectionName);
-  return await collection.deleteMany(filter);
+  return collection.deleteMany(filter);
 };

@@ -27,6 +27,7 @@ const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, aud
       auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       expireAt: add(new Date(), { seconds: DELETION_AUDIT_LOGS_TTL_SECONDS }),
     });
+
     if (!insertResult.acknowledged) {
       throw new WriteConcernError();
     }
@@ -43,9 +44,7 @@ const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, aud
 
     return deleteResult;
   } catch (error) {
-    console.error(
-      `Failed to delete document ${documentId.toString()} from collection ${collectionName}. An inconsistent deletion audit record may have been created`,
-    );
+    console.error(`Failed to delete document %s from collection %s. An inconsistent deletion audit record may have been created`, documentId, collectionName);
     throw error;
   }
 };
@@ -57,7 +56,7 @@ const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, aud
  */
 export const deleteOne = async ({ documentId, collectionName, db, auditDetails }: DeleteOneParams): Promise<DeleteResult> => {
   if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-    return await deleteDocumentWithAuditLogs({
+    return deleteDocumentWithAuditLogs({
       documentId,
       collectionName,
       db,
@@ -66,5 +65,5 @@ export const deleteOne = async ({ documentId, collectionName, db, auditDetails }
   }
 
   const collection = await db.getCollection(collectionName);
-  return await collection.deleteOne({ _id: { $eq: documentId } });
+  return collection.deleteOne({ _id: { $eq: documentId } });
 };
