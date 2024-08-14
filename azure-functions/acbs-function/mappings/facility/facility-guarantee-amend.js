@@ -11,15 +11,15 @@ const facilityGuaranteeAmend = (amendment) => {
     const { amount, facilityGuaranteeDates } = amendment;
     const record = {};
 
-    if (!amount && !facilityGuaranteeDates && !facilityGuaranteeDates.guaranteeExpiryDate) {
-      throw new Error('Either amount or facilityGuaranteeDates.guaranteeExpiryDate is required.');
+    if (!amount && !facilityGuaranteeDates?.guaranteeExpiryDate) {
+      throw new Error('Invalid argument set provided');
     }
 
     if (amount) {
       record.guaranteedLimit = amount;
     }
 
-    if (facilityGuaranteeDates.guaranteeExpiryDate) {
+    if (facilityGuaranteeDates?.guaranteeExpiryDate) {
       record.expirationDate = facilityGuaranteeDates.guaranteeExpiryDate;
     }
 
