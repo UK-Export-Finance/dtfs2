@@ -30,30 +30,6 @@ describe('getKeyingSheetForReportId', () => {
     jest.resetAllMocks();
   });
 
-  it('throws an error when no join table entries can be found for the supplied report id', async () => {
-    // Arrange
-    const reportId = 1;
-    when(mockFind)
-      .calledWith(FeeRecordPaymentJoinTableEntity, {
-        where: {
-          feeRecord: {
-            report: { id: reportId },
-            status: In<FeeRecordStatus>(['READY_TO_KEY', 'RECONCILED']),
-          },
-        },
-        relations: {
-          feeRecord: true,
-          payment: true,
-        },
-      })
-      .mockResolvedValue([]);
-
-    // Act / Assert
-    await expect(getKeyingSheetForReportId(reportId)).rejects.toThrow(
-      new Error(`Failed to find keying sheet fee record payment join table entries for report id '${reportId}'`),
-    );
-  });
-
   it('throws an error when the found join table entries contain at least one entry with a null paymentAmountUsedForFeeRecord column', async () => {
     // Arrange
     const reportId = 1;

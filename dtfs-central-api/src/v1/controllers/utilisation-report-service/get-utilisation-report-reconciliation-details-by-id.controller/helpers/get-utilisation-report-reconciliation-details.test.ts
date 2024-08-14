@@ -66,7 +66,6 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         .build();
 
       const bankName = 'Test bank';
-      jest.mocked(getBankNameById).mockResolvedValue('Different bank');
       when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
       when(getKeyingSheetForReportId).calledWith(reportId).mockResolvedValue([]);
 

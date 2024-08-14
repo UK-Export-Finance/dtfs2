@@ -24,10 +24,6 @@ const getAndValidateKeyingSheetFeeRecordPaymentJoinTableEntries = async (reportI
     },
   });
 
-  if (joinTableEntities.length === 0) {
-    throw new Error(`Failed to find keying sheet fee record payment join table entries for report id '${reportId}'`);
-  }
-
   return joinTableEntities;
 };
 
