@@ -29,7 +29,7 @@ export const postFeesToAnExistingPaymentGroup = async (req: PostFeesToAnExisting
   const { feeRecordIds, paymentIds, user } = req.body;
 
   try {
-    const payments = await PaymentRepo.findByIdWithFeeRecordsAndReportAndPaymentsFilteredById(paymentIds, Number(reportId));
+    const payments = await PaymentRepo.findByIdAndReportIdWithFeeRecordsWithReportAndPayments(paymentIds, Number(reportId));
     if (payments.length === 0) {
       throw new NotFoundError('No payments found for the given payment IDs.');
     }

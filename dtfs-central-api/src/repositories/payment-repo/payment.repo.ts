@@ -53,7 +53,7 @@ export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
    * @param reportId - The report id of the report attached to the fee records
    * @returns The found payment entities
    */
-  async findByIdWithFeeRecordsAndReportAndPaymentsFilteredById(ids: number[], reportId: number): Promise<PaymentEntity[]> {
+  async findByIdAndReportIdWithFeeRecordsWithReportAndPayments(ids: number[], reportId: number): Promise<PaymentEntity[]> {
     return await this.find({
       where: {
         id: In(ids),
