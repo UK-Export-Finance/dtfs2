@@ -14,10 +14,8 @@ import relative from '../../relativeURL';
 context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing payments`, () => {
   const REPORT_ID = 1;
   const PAYMENT_ID_ONE = '1';
-  const PAYMENT_ID_TWO = '2';
   const FEE_RECORD_ID_ONE = '11';
   const FEE_RECORD_ID_TWO = '22';
-  const FEE_RECORD_ID_THREE = '33';
   const PAYMENT_CURRENCY = 'GBP';
 
   const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
@@ -30,12 +28,6 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     .withDateReceived(new Date('2023-02-02'))
     .withId(PAYMENT_ID_ONE)
     .withReference('REF00001')
-    .build();
-  const paymentTwo = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
-    .withAmount(100)
-    .withDateReceived(new Date('2023-02-02'))
-    .withId(PAYMENT_ID_TWO)
-    .withReference('REF00002')
     .build();
   const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report)
     .withId(FEE_RECORD_ID_ONE)
@@ -58,29 +50,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     .withPayments([paymentOne])
     .withStatus('DOES_NOT_MATCH')
     .build();
-  const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report)
-    .withId(FEE_RECORD_ID_THREE)
-    .withFacilityId('33333333')
-    .withExporter('Exporter 3')
-    .withPaymentCurrency(PAYMENT_CURRENCY)
-    .withFeesPaidToUkefForThePeriod(300)
-    .withFeesPaidToUkefForThePeriodCurrency('EUR')
-    .withPaymentExchangeRate(0.5)
-    .withPayments([paymentTwo])
-    .withStatus('DOES_NOT_MATCH')
-    .build();
 
   before(() => {
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
   });
 
-  beforeEach(() => {
-    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
-    cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
-    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
-
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo, feeRecordThree]);
-
+  const navigateToAddToExistingPaymentScreenGivenSelectedFeeRecord = () => {
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
@@ -91,52 +66,87 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
 
     cy.get('[type="submit"]').contains('Add reported fee to an existing payment').click();
+
+    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
+  };
+
+  describe('when there is one payment group', () => {
+    beforeEach(() => {
+      cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+      cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
+
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
+
+      navigateToAddToExistingPaymentScreenGivenSelectedFeeRecord();
+    });
+
+    it('should automatically select the first payment group when there is only one group to choose from', () => {
+      pages.utilisationReportAddToAnExistingPaymentPage
+        .availablePaymentGroups()
+        .should('contain', 'There is one existing payment that the reported fees will be added to');
+
+      pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
+
+      pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
+      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
+    });
   });
 
-  it('should render the add to an existing payment page', () => {
-    cy.get('h1').invoke('text').should('contain', 'Add reported fee to an existing payment');
-  });
+  describe('when there are multiple payment groups', () => {
+    beforeEach(() => {
+      const PAYMENT_ID_TWO = '2';
+      const FEE_RECORD_ID_THREE = '33';
+      const paymentTwo = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
+        .withAmount(100)
+        .withDateReceived(new Date('2023-02-02'))
+        .withId(PAYMENT_ID_TWO)
+        .withReference('REF00002')
+        .build();
+      const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report)
+        .withId(FEE_RECORD_ID_THREE)
+        .withFacilityId('33333333')
+        .withExporter('Exporter 3')
+        .withPaymentCurrency(PAYMENT_CURRENCY)
+        .withFeesPaidToUkefForThePeriod(300)
+        .withFeesPaidToUkefForThePeriodCurrency('EUR')
+        .withPaymentExchangeRate(0.5)
+        .withPayments([paymentTwo])
+        .withStatus('DOES_NOT_MATCH')
+        .build();
 
-  it('should render the selected fee records, render the available payments, and add fees to the payments', () => {
-    pages.utilisationReportAddToAnExistingPaymentPage.selectedReportedFeesDetailsTable().should('contain', '11111111');
-    pages.utilisationReportAddToAnExistingPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'Exporter 1');
-    pages.utilisationReportAddToAnExistingPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'JPY 100');
-    pages.utilisationReportAddToAnExistingPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'GBP 50');
-    pages.utilisationReportAddToAnExistingPaymentPage.selectedReportedFeesDetailsTable().contains('Total reported payments GBP 50').should('exist');
+      cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+      cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
 
-    pages.utilisationReportAddToAnExistingPaymentPage.availablePaymentGroups().should('exist');
-    pages.utilisationReportAddToAnExistingPaymentPage.availablePaymentGroups().should('contain', 'GBP 450.00');
-    pages.utilisationReportAddToAnExistingPaymentPage.availablePaymentGroups().should('contain', 'Payment reference: REF00001');
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo, feeRecordThree]);
 
-    pages.utilisationReportAddToAnExistingPaymentPage.paymentGroupRadioButton(`paymentIds-${PAYMENT_ID_ONE}`).click();
+      navigateToAddToExistingPaymentScreenGivenSelectedFeeRecord();
+    });
 
-    pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
+    it('should render the selected fee records, render the available payments, and add fees to the payments', () => {
+      pages.utilisationReportAddToAnExistingPaymentPage.selectedReportedFeesDetailsTable().should('contain', '11111111');
+      pages.utilisationReportAddToAnExistingPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'Exporter 1');
+      pages.utilisationReportAddToAnExistingPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'JPY 100');
+      pages.utilisationReportAddToAnExistingPaymentPage.selectedReportedFeesDetailsTable().should('contain', 'GBP 50');
+      pages.utilisationReportAddToAnExistingPaymentPage.selectedReportedFeesDetailsTable().contains('Total reported payments GBP 50').should('exist');
 
-    pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
-    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
-  });
+      pages.utilisationReportAddToAnExistingPaymentPage.availablePaymentGroups().should('exist');
+      pages.utilisationReportAddToAnExistingPaymentPage.availablePaymentGroups().should('contain', 'GBP 450.00');
+      pages.utilisationReportAddToAnExistingPaymentPage.availablePaymentGroups().should('contain', 'Payment reference: REF00001');
 
-  it('should automatically select the first payment group when there is only one group to choose from', () => {
-    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
-    cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
-    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
+      pages.utilisationReportAddToAnExistingPaymentPage.paymentGroupRadioButton(`paymentIds-${PAYMENT_ID_ONE}`).click();
 
-    cy.reload();
+      pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
 
-    pages.utilisationReportAddToAnExistingPaymentPage
-      .availablePaymentGroups()
-      .should('contain', 'There is one existing payment that the reported fees will be added to');
+      pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
+      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
+    });
 
-    pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
+    it('should display an error message when there are multiple payments to choose from and none have been selected', () => {
+      pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
 
-    pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
-    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
-  });
-
-  it('should display an error message when there are multiple payments to choose from and none have been selected', () => {
-    pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
-
-    pages.utilisationReportAddToAnExistingPaymentPage.errorSummary().contains('Select a payment to add the fee or fees to');
+      pages.utilisationReportAddToAnExistingPaymentPage.errorSummary().contains('Select a payment to add the fee or fees to');
+    });
   });
 });
