@@ -500,10 +500,10 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
 
 /**
  * Populates the tfmObject with cover end date values
- * @param {import('@ukef/dtfs2-common').TfmFacility} tfmObject
+ * @param {import('@ukef/dtfs2-common').FacilityAmendmentTfmObject} tfmObject
  * @param {{ coverEndDate?: number } | undefined} latestCoverEndDateResponse
  * @param {string} facilityId
- * @returns {import('@ukef/dtfs2-common').TfmFacility & { coverEndDate?: string, amendmentExposurePeriodInMonths?: number, facilityEndDate?: string }}
+ * @returns {import('@ukef/dtfs2-common').FacilityAmendmentTfmObject & { coverEndDate?: string, amendmentExposurePeriodInMonths?: number, facilityEndDate?: string }}
  */
 const addLatestAmendmentCoverEndDate = async (tfmObject, latestCoverEndDateResponse, facilityId) => {
   const existingFacility = await api.findOneFacility(facilityId);
@@ -524,19 +524,19 @@ const addLatestAmendmentCoverEndDate = async (tfmObject, latestCoverEndDateRespo
 
 /**
  * Populates the tfmObject with facility end date values
- * @param {import('@ukef/dtfs2-common').TfmFacility} tfmObject
- * @param {{ facilityEndDate?: Date, bankReviewDate?: Date, isUsingFacilityEndDate?: boolean } | undefined} latestFacilityEndDateDataResponse
+ * @param {import('@ukef/dtfs2-common').FacilityAmendmentTfmObject} tfmObject
+ * @param {Promise} latestFacilityEndDateDataResponse
  * @param {string} facilityId
- * @returns {import('@ukef/dtfs2-common').TfmFacility & { coverEndDate?: Date, amendmentExposurePeriodInMonths?: number, facilityEndDate?: Date }}
+ * @returns {import('@ukef/dtfs2-common').FacilityAmendmentTfmObject & { coverEndDate?: Date, amendmentExposurePeriodInMonths?: number, facilityEndDate?: Date }}
  */
 const addLatestAmendmentFacilityEndDate = async (tfmObject, latestFacilityEndDateDataResponse, facilityId) => {
   const existingFacility = await api.findOneFacility(facilityId);
 
-  if (!existingFacility) {
+  if (!existingFacility || !latestFacilityEndDateDataResponse) {
     return tfmObject;
   }
 
-  const { isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = Object(latestFacilityEndDateDataResponse);
+  const { isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = latestFacilityEndDateDataResponse;
 
   return {
     ...tfmObject,

@@ -67,9 +67,9 @@ describe('amendmentFacilityEndDate routes', () => {
           dealId,
           isEditable: true,
           facilityId,
-          facilityEndDateDay: '12',
-          facilityEndDateMonth: '11',
-          facilityEndDateYear: '2024',
+          dayInput: '12',
+          monthInput: '11',
+          yearInput: '2024',
           error: {
             summary: [
               {
@@ -111,9 +111,9 @@ describe('amendmentFacilityEndDate routes', () => {
           dealId,
           isEditable: true,
           facilityId,
-          facilityEndDateDay: sixYearsFromNowPlusDay.getDate().toString(),
-          facilityEndDateMonth: (sixYearsFromNowPlusDay.getMonth() + 1).toString(),
-          facilityEndDateYear: sixYearsFromNowPlusDay.getFullYear().toString(),
+          dayInput: sixYearsFromNowPlusDay.getDate().toString(),
+          monthInput: (sixYearsFromNowPlusDay.getMonth() + 1).toString(),
+          yearInput: sixYearsFromNowPlusDay.getFullYear().toString(),
           error: {
             summary: [
               {
@@ -153,9 +153,9 @@ describe('amendmentFacilityEndDate routes', () => {
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
           dealId,
           facilityId,
-          facilityEndDateDay: '',
-          facilityEndDateMonth: '',
-          facilityEndDateYear: '',
+          dayInput: '',
+          monthInput: '',
+          yearInput: '',
           currentFacilityEndDate: undefined,
           error: {
             summary: [
@@ -199,9 +199,9 @@ describe('amendmentFacilityEndDate routes', () => {
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
           dealId,
           facilityId,
-          facilityEndDateDay: '',
-          facilityEndDateMonth: '',
-          facilityEndDateYear: '',
+          dayInput: '',
+          monthInput: '',
+          yearInput: '',
           currentFacilityEndDate: '11 December 2025',
           error: {
             summary: [

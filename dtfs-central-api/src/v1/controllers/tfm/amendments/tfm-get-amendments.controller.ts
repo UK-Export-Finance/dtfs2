@@ -5,6 +5,19 @@ import { Currency, TfmFacilityAmendment, AMENDMENT_STATUS, AMENDMENT_QUERIES, Ap
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 import { AMENDMENT_QUERY_STATUSES } from '../../../../constants';
 
+type CompletedFacilityEndDate =
+  | {
+      amendmentId: string;
+      isUsingFacilityEndDate: true;
+      facilityEndDate: Date;
+    }
+  | {
+      amendmentId: string;
+      isUsingFacilityEndDate: false;
+      bankReviewDate: Date;
+    }
+  | { amendmentId: string; isUsingFacilityEndDate: undefined };
+
 export const getAllAmendmentsInProgress = async (_req: Request, res: Response) => {
   try {
     const inProgressAmendments = await TfmFacilitiesRepo.findAmendmentsByStatus(AMENDMENT_STATUS.IN_PROGRESS);
@@ -48,30 +61,31 @@ const mapAmendmentToLatestCompletedDate = (
   };
 };
 
-const mapAmendmentToLatestCompletedFacilityEndDate = (
-  amendment: TfmFacilityAmendment,
-): {
-  amendmentId: string;
-  isUsingFacilityEndDate: boolean | undefined;
-  facilityEndDate: string | undefined;
-  bankReviewDate: string | undefined;
-} => {
+const mapAmendmentToLatestCompletedFacilityEndDate = (amendment: TfmFacilityAmendment): CompletedFacilityEndDate => {
   const { amendmentId, isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = amendment;
   if (isUsingFacilityEndDate) {
     if (!facilityEndDate) {
       throw new Error('Found amendment does not have a defined facility end date');
     }
+    return {
+      amendmentId: amendmentId.toString(),
+      isUsingFacilityEndDate,
+      facilityEndDate,
+    };
   }
   if (isUsingFacilityEndDate === false) {
     if (!bankReviewDate) {
       throw new Error('Found amendment does not have a defined bank review date');
     }
+    return {
+      amendmentId: amendmentId.toString(),
+      isUsingFacilityEndDate,
+      bankReviewDate,
+    };
   }
   return {
     amendmentId: amendmentId.toString(),
-    isUsingFacilityEndDate,
-    facilityEndDate: isUsingFacilityEndDate ? facilityEndDate : undefined,
-    bankReviewDate: isUsingFacilityEndDate === false ? bankReviewDate : undefined,
+    isUsingFacilityEndDate: undefined,
   };
 };
 

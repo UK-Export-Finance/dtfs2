@@ -133,9 +133,9 @@ describe('amendmentBankReviewDate routes', () => {
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
           dealId,
           facilityId,
-          bankReviewDateDay: '',
-          bankReviewDateMonth: '',
-          bankReviewDateYear: '',
+          dayInput: '',
+          monthInput: '',
+          yearInput: '',
           isEditable: true,
           user,
         });
@@ -159,9 +159,9 @@ describe('amendmentBankReviewDate routes', () => {
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
           dealId,
           facilityId,
-          bankReviewDateDay: '',
-          bankReviewDateMonth: '',
-          bankReviewDateYear: '',
+          dayInput: '',
+          monthInput: '',
+          yearInput: '',
           isEditable: false,
           user,
         });
@@ -190,9 +190,9 @@ describe('amendmentBankReviewDate routes', () => {
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
           dealId,
           facilityId,
-          bankReviewDateDay: '11',
-          bankReviewDateMonth: '12',
-          bankReviewDateYear: '2025',
+          dayInput: '11',
+          monthInput: '12',
+          yearInput: '2025',
           isEditable: true,
           user,
         });
@@ -218,9 +218,9 @@ describe('amendmentBankReviewDate routes', () => {
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
           dealId,
           facilityId,
-          bankReviewDateDay: '',
-          bankReviewDateMonth: '',
-          bankReviewDateYear: '',
+          dayInput: '',
+          monthInput: '',
+          yearInput: '',
           currentBankReviewDate: undefined,
           isEditable: true,
           user,
@@ -249,9 +249,9 @@ describe('amendmentBankReviewDate routes', () => {
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
           dealId,
           facilityId,
-          bankReviewDateDay: '',
-          bankReviewDateMonth: '',
-          bankReviewDateYear: '',
+          dayInput: '',
+          monthInput: '',
+          yearInput: '',
           currentBankReviewDate: '11 December 2025',
           isEditable: true,
           user,

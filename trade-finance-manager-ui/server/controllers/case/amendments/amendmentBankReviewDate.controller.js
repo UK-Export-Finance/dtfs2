@@ -4,10 +4,9 @@ const { format, parseISO } = require('date-fns');
 const api = require('../../../api');
 const { bankReviewDateValidation } = require('./validation/amendmentBankReviewDate.validate');
 
-const getNextPage = (status, changeFacilityValue, baseUrl, fallbackUrl) => {
-  if (status !== HttpStatusCode.Ok) {
-    console.error('Unable to update bank review date');
-    return fallbackUrl;
+const getNextPage = (apiResponseStatus, changeFacilityValue, baseUrl) => {
+  if (apiResponseStatus !== HttpStatusCode.Ok) {
+    throw Error('Error updating amendment');
   }
   return changeFacilityValue ? `${baseUrl}/facility-value` : `${baseUrl}/check-answers`;
 };
@@ -33,9 +32,11 @@ const getAmendmentBankReviewDate = async (req, res) => {
 
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
-  const bankReviewDateDay = bankReviewDate ? format(new Date(bankReviewDate), 'd') : '';
-  const bankReviewDateMonth = bankReviewDate ? format(new Date(bankReviewDate), 'M') : '';
-  const bankReviewDateYear = bankReviewDate ? format(new Date(bankReviewDate), 'yyyy') : '';
+  const enteredBankReviewDate = bankReviewDate ? parseISO(bankReviewDate) : undefined;
+
+  const dayInput = enteredBankReviewDate ? format(enteredBankReviewDate, 'd') : '';
+  const monthInput = enteredBankReviewDate ? format(enteredBankReviewDate, 'M') : '';
+  const yearInput = enteredBankReviewDate ? format(enteredBankReviewDate, 'yyyy') : '';
 
   const currentBankReviewDate = facility?.facilitySnapshot?.dates?.bankReviewDate
     ? format(parseISO(facility?.facilitySnapshot?.dates?.bankReviewDate), 'dd MMMM yyyy')
@@ -45,9 +46,9 @@ const getAmendmentBankReviewDate = async (req, res) => {
     dealId,
     facilityId,
     isEditable,
-    bankReviewDateDay,
-    bankReviewDateMonth,
-    bankReviewDateYear,
+    dayInput,
+    monthInput,
+    yearInput,
     currentBankReviewDate,
     user: req.session.user,
   });
@@ -75,9 +76,9 @@ const postAmendmentBankReviewDate = async (req, res) => {
       dealId,
       facilityId,
       isEditable,
-      bankReviewDateDay: day,
-      bankReviewDateMonth: month,
-      bankReviewDateYear: year,
+      dayInput: day,
+      monthInput: month,
+      yearInput: year,
       error,
       currentBankReviewDate,
       user: req.session.user,
@@ -89,9 +90,9 @@ const postAmendmentBankReviewDate = async (req, res) => {
 
   try {
     const payload = { bankReviewDate };
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
+    const { status: apiResponseStatus } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
-    return res.redirect(getNextPage(status, changeFacilityValue, baseUrl, fallbackUrl));
+    return res.redirect(getNextPage(apiResponseStatus, changeFacilityValue, baseUrl));
   } catch (err) {
     console.error('There was a problem adding the bank review date', err);
 

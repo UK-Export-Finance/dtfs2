@@ -29,8 +29,8 @@ export type FacilityAmendmentTfmObject = {
     ukefExposureValue: number;
   };
   coverEndDate?: UnixTimestamp;
-  facilityEndDate?: string;
-  bankReviewDate?: string;
+  facilityEndDate?: Date;
+  bankReviewDate?: Date;
   isUsingFacilityEndDate?: boolean;
 };
 
@@ -53,8 +53,8 @@ export type TfmFacilityAmendment = {
   coverEndDate?: UnixTimestamp | null;
   currentCoverEndDate?: UnixTimestamp | null;
   isUsingFacilityEndDate?: boolean;
-  facilityEndDate?: string;
-  bankReviewDate?: string;
+  facilityEndDate?: Date;
+  bankReviewDate?: Date;
   changeFacilityValue?: boolean;
   value?: number | null;
   currentValue?: number | null;

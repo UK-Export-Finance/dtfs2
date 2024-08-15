@@ -4,10 +4,9 @@ const { format, parseISO } = require('date-fns');
 const api = require('../../../api');
 const { facilityEndDateValidation } = require('./validation/amendmentFacilityEndDate.validate');
 
-const getNextPage = (status, changeFacilityValue, baseUrl, fallbackUrl) => {
-  if (status !== HttpStatusCode.Ok) {
-    console.error('Unable to update facility end date');
-    return fallbackUrl;
+const getNextPage = (apiResponseStatus, changeFacilityValue, baseUrl) => {
+  if (apiResponseStatus !== HttpStatusCode.Ok) {
+    throw Error('Error updating amendment');
   }
   return changeFacilityValue ? `${baseUrl}/facility-value` : `${baseUrl}/check-answers`;
 };
@@ -15,11 +14,11 @@ const getNextPage = (status, changeFacilityValue, baseUrl, fallbackUrl) => {
 const getAmendmentFacilityEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
-  const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
+  const { data: amendment, status: apiResponseStatus } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId, facilityEndDate, changeCoverEndDate, isUsingFacilityEndDate } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
 
-  if (status !== 200) {
+  if (apiResponseStatus !== 200) {
     return res.redirect('/not-found');
   }
 
@@ -33,9 +32,11 @@ const getAmendmentFacilityEndDate = async (req, res) => {
 
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
-  const facilityEndDateDay = facilityEndDate ? format(new Date(facilityEndDate), 'd') : '';
-  const facilityEndDateMonth = facilityEndDate ? format(new Date(facilityEndDate), 'M') : '';
-  const facilityEndDateYear = facilityEndDate ? format(new Date(facilityEndDate), 'yyyy') : '';
+  const enteredFacilityEndDate = facilityEndDate ? parseISO(facilityEndDate) : undefined;
+
+  const dayInput = enteredFacilityEndDate ? format(enteredFacilityEndDate, 'd') : '';
+  const monthInput = enteredFacilityEndDate ? format(enteredFacilityEndDate, 'M') : '';
+  const yearInput = enteredFacilityEndDate ? format(enteredFacilityEndDate, 'yyyy') : '';
 
   const currentFacilityEndDate = facility?.facilitySnapshot?.dates?.facilityEndDate
     ? format(parseISO(facility?.facilitySnapshot?.dates?.facilityEndDate), 'dd MMMM yyyy')
@@ -45,9 +46,9 @@ const getAmendmentFacilityEndDate = async (req, res) => {
     dealId,
     facilityId,
     isEditable,
-    facilityEndDateDay,
-    facilityEndDateMonth,
-    facilityEndDateYear,
+    dayInput,
+    monthInput,
+    yearInput,
     currentFacilityEndDate,
     user: req.session.user,
   });
@@ -75,9 +76,9 @@ const postAmendmentFacilityEndDate = async (req, res) => {
       dealId,
       facilityId,
       isEditable,
-      facilityEndDateDay: day,
-      facilityEndDateMonth: month,
-      facilityEndDateYear: year,
+      dayInput: day,
+      monthInput: month,
+      yearInput: year,
       error,
       currentFacilityEndDate,
       user: req.session.user,
@@ -90,7 +91,7 @@ const postAmendmentFacilityEndDate = async (req, res) => {
   try {
     const payload = { facilityEndDate };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
-    return res.redirect(getNextPage(status, changeFacilityValue, baseUrl, fallbackUrl));
+    return res.redirect(getNextPage(status, changeFacilityValue, baseUrl));
   } catch (err) {
     console.error('There was a problem adding the facility end date', err);
     return res.redirect(fallbackUrl);

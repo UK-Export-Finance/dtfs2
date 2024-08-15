@@ -6,11 +6,11 @@ type ErrorResponse = {
 type FacilityEndDateResponse =
   | {
       isUsingFacilityEndDate: true;
-      facilityEndDate?: string;
+      facilityEndDate?: Date;
     }
   | {
       isUsingFacilityEndDate: false;
-      bankReviewDate?: string;
+      bankReviewDate?: Date;
     }
   | {
       isUsingFacilityEndDate: undefined;

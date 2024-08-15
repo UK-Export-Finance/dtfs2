@@ -250,7 +250,9 @@ describe('findLatestCompletedAmendment()', () => {
       const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
 
       // Assert
-      expect(result).toEqual(anAmendmentTfmObject());
+      expect(result.isUsingFacilityEndDate).toBeUndefined();
+      expect(result.facilityEndDate).toBeUndefined();
+      expect(result.bankReviewDate).toBeUndefined();
     });
   });
 

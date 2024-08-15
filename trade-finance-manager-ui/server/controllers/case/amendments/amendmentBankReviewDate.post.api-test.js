@@ -67,9 +67,9 @@ describe('amendmentBankReviewDate routes', () => {
           dealId,
           isEditable: true,
           facilityId,
-          bankReviewDateDay: '12',
-          bankReviewDateMonth: '11',
-          bankReviewDateYear: '2024',
+          dayInput: '12',
+          monthInput: '11',
+          yearInput: '2024',
           error: {
             summary: [
               {
@@ -111,9 +111,9 @@ describe('amendmentBankReviewDate routes', () => {
           dealId,
           isEditable: true,
           facilityId,
-          bankReviewDateDay: sixYearsFromNowPlusDay.getDate().toString(),
-          bankReviewDateMonth: (sixYearsFromNowPlusDay.getMonth() + 1).toString(),
-          bankReviewDateYear: sixYearsFromNowPlusDay.getFullYear().toString(),
+          dayInput: sixYearsFromNowPlusDay.getDate().toString(),
+          monthInput: (sixYearsFromNowPlusDay.getMonth() + 1).toString(),
+          yearInput: sixYearsFromNowPlusDay.getFullYear().toString(),
           currentBankReviewDate: undefined,
           error: {
             summary: [
@@ -152,9 +152,9 @@ describe('amendmentBankReviewDate routes', () => {
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
           dealId,
           facilityId,
-          bankReviewDateDay: '',
-          bankReviewDateMonth: '',
-          bankReviewDateYear: '',
+          dayInput: '',
+          monthInput: '',
+          yearInput: '',
           currentBankReviewDate: undefined,
           error: {
             summary: [
@@ -196,9 +196,9 @@ describe('amendmentBankReviewDate routes', () => {
         expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
           dealId,
           facilityId,
-          bankReviewDateDay: '',
-          bankReviewDateMonth: '',
-          bankReviewDateYear: '',
+          dayInput: '',
+          monthInput: '',
+          yearInput: '',
           currentBankReviewDate: '11 December 2025',
           error: {
             summary: [
