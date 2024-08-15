@@ -74,4 +74,19 @@ You can run this script using
 npm run validate-facility-ids
 ```
 
+In order to run this script against a specific environment, you need to update the following environment variables to the relevant values.
+
+```sh
+# Mongo DB
+MONGO_INITDB_DATABASE=
+MONGODB_URI_QA=
+
+# SQL
+SQL_DB_HOST=
+SQL_DB_PORT=
+SQL_DB_USERNAME=
+SQL_DB_PASSWORD=
+SQL_DB_NAME=
+```
+
 ---

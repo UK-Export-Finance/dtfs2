@@ -9,17 +9,12 @@ const run = async (): Promise<void> => {
     const tfmFacilitiesUkefFacilityIds = await getUniqueTfmFacilitiesUkefFacilityIds();
     const feeRecordFacilityIds = await getUniqueFeeRecordFacilityIds(dataSource);
 
-    const tfmFacilitiesFacilityIdsNotInFeeRecord = difference(tfmFacilitiesUkefFacilityIds, feeRecordFacilityIds);
     const feeRecordFacilityIdsNotInTfmFacilities = difference(feeRecordFacilityIds, tfmFacilitiesUkefFacilityIds);
 
-    if (tfmFacilitiesFacilityIdsNotInFeeRecord.length === 0 && feeRecordFacilityIdsNotInTfmFacilities.length === 0) {
+    if (feeRecordFacilityIdsNotInTfmFacilities.length === 0) {
       console.info('All fee record facility ids exist in the tfm facilities collection');
       return;
     }
-
-    tfmFacilitiesFacilityIdsNotInFeeRecord.forEach((facilityId) => {
-      console.info(`Facility id '${facilityId}' exists in the "tfm-facilities" collection but not in the FeeRecord table`);
-    });
 
     feeRecordFacilityIdsNotInTfmFacilities.forEach((facilityId) => {
       console.info(`Facility id '${facilityId}' exists in the FeeRecord table but not in the "tfm-facilities" collection`);
