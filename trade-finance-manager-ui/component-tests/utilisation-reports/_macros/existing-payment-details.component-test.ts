@@ -1,6 +1,6 @@
 import { componentRenderer } from '../../componentRenderer';
 
-const component = '../templates/utilisation-reports/_macros/payment-group-radio-input-group-details.njk';
+const component = '../templates/utilisation-reports/_macros/existing-payment-details.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {

@@ -3,7 +3,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
-{% import "./_macros/payment-group-radio-input-group.njk" as paymentGroupRadioInputGroup %}
+{% import "./_macros/payment-group-input.njk" as paymentGroupInput %}
 {% extends "index.njk" %}
 {% set backLink = {"href": '/utilisation-reports/' + reportId} %}
 {% set pageHeading = "Add reported fee" + ("s" if reportedFeeDetails.feeRecords | length > 1 else "") + " to an existing payment" %}
@@ -45,7 +45,7 @@
     <input type="hidden" name="addToAnExistingPaymentFormSubmission" value="true"/>
     {% for id in selectedFeeRecordCheckboxIds %}<input type="hidden" name={{ id }} value="on"/>{% endfor %}
 
-    {{ paymentGroupRadioInputGroup.render({
+    {{ paymentGroupInput.render({
       legendText: availablePaymentsHeading,
       paymentGroups: availablePaymentGroups,
       errorMessage: errors.paymentGroupErrorMessage
