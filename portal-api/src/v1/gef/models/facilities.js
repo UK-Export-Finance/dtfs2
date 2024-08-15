@@ -220,7 +220,7 @@ class Facility {
       throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
     }
 
-    if (req.facilityEndDate in req && req.bankReviewDate) {
+    if (req.facilityEndDate && req.bankReviewDate) {
       throw new InvalidPayloadError('A facility cannot have both a facilityEndDate and bankReviewDate');
     }
 
