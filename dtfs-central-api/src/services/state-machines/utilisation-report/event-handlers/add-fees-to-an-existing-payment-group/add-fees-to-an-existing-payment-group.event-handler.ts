@@ -27,7 +27,7 @@ const addSelectedFeeRecordsToPaymentGroup = async (
   await Promise.all(
     payments.map(async (payment) => {
       payment.updateWithAdditionalFeeRecords({
-        feeRecords: feeRecordsToAdd,
+        additionalFeeRecords: feeRecordsToAdd,
         requestSource,
       });
       await transactionEntityManager.save(PaymentEntity, payment);

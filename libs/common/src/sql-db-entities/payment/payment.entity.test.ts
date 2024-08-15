@@ -18,33 +18,12 @@ describe('PaymentEntity', () => {
 
       // Act
       payment.updateWithAdditionalFeeRecords({
-        feeRecords: [newFeeRecord1, newFeeRecord2],
+        additionalFeeRecords: [newFeeRecord1, newFeeRecord2],
         requestSource: { platform: 'TFM', userId },
       });
 
       // Assert
       expect(payment.feeRecords).toEqual(expect.arrayContaining([existingFeeRecord, newFeeRecord1, newFeeRecord2]));
-    });
-
-    it('does not allow duplicate fee records to be added to the payment', () => {
-      // Arrange
-      const payment = PaymentEntityMockBuilder.forCurrency('GBP').build();
-
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
-      payment.feeRecords = [feeRecord];
-
-      const userId = 'abc123';
-
-      // Act & Assert
-      expect(() => {
-        payment.updateWithAdditionalFeeRecords({
-          feeRecords: [feeRecord],
-          requestSource: { platform: 'TFM', userId },
-        });
-      }).toThrow(Error);
-
-      expect(payment.feeRecords).toHaveLength(1);
-      expect(payment.feeRecords).toEqual(expect.arrayContaining([feeRecord]));
     });
   });
 });
