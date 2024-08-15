@@ -289,8 +289,6 @@ describe('postChangeUnissuedFacility()', () => {
 
       if (isFacilityEndDateEnabled) {
         expected.payload.isUsingFacilityEndDate = true;
-        expected.payload.facilityEndDate = null;
-        expected.payload.bankReviewDate = null;
       }
 
       expect(api.updateFacility).toHaveBeenCalledWith(expected);
@@ -448,8 +446,6 @@ describe('postChangeUnissuedFacility()', () => {
 
       if (isFacilityEndDateEnabled) {
         expected.payload.isUsingFacilityEndDate = true;
-        expected.payload.facilityEndDate = null;
-        expected.payload.bankReviewDate = null;
       }
 
       expect(api.updateFacility).toHaveBeenCalledWith(expected);
@@ -548,8 +544,6 @@ describe('postChangeUnissuedFacility()', () => {
 
       if (isFacilityEndDateEnabled) {
         expected.payload.isUsingFacilityEndDate = true;
-        expected.payload.facilityEndDate = null;
-        expected.payload.bankReviewDate = null;
       }
 
       // should not go ahead with call as errors
@@ -608,7 +602,7 @@ describe('postChangeUnissuedFacility()', () => {
       expect(api.updateFacility).not.toHaveBeenCalled();
     });
 
-    it('redirects the user to the unissued facilities page', async () => {
+    it('redirects the user to the facility end date page if using facility end date', async () => {
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.facilityName = 'UKEF123';
       mockRequest.query.saveAndReturn = 'true';

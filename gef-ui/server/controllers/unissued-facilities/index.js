@@ -211,8 +211,6 @@ const postChangeUnissuedFacility = async (req, res) => {
 
     if (isFacilityEndDateEnabled) {
       applicationUpdatePayload.isUsingFacilityEndDate = isUsingFacilityEndDate;
-      applicationUpdatePayload.facilityEndDate = null;
-      applicationUpdatePayload.bankReviewDate = null;
     }
 
     await api.updateFacility({
