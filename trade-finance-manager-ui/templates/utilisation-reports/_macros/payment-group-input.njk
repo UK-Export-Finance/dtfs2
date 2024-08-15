@@ -31,7 +31,7 @@
         <div class="govuk-radios" data-module="govuk-radios">
           {% for paymentGroup in paymentGroups %}
             <div class="govuk-radios__item" data-cy="payment-group--{{ paymentGroup.radioId }}">
-              <input class="govuk-radios__input" name="paymentGroup" type="radio" value="{{ paymentGroup.radioId }}" data-cy="payment-group-input--{{ paymentGroup.radioId }}">
+              <input class="govuk-radios__input" name="paymentGroup" type="radio" value="{{ paymentGroup.radioId }}" id="{{ paymentGroup.radioId }}" data-cy="payment-group-input--{{ paymentGroup.radioId }}">
               <label class="govuk-label govuk-radios__label" for="{{ paymentGroup.radioId }}" data-cy="payment-group-label--{{ paymentGroup.radioId }}">
                 {% for payment in paymentGroup.payments %}
                   {{ existingPaymentDetails.render({

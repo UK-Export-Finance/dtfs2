@@ -102,6 +102,7 @@ describe(component, () => {
 
     const firstPaymentGroupInput = "[data-cy='payment-group--paymentIds-1,2']";
     wrapper.expectElement(`${firstPaymentGroupInput} input[data-cy="payment-group-input--paymentIds-1,2"]`).toHaveAttribute('value', 'paymentIds-1,2');
+    wrapper.expectElement(`${firstPaymentGroupInput} input[data-cy="payment-group-input--paymentIds-1,2"]`).toHaveAttribute('id', 'paymentIds-1,2');
     wrapper.expectElement(`${firstPaymentGroupInput} label`).toHaveCount(1);
     const firstPaymentGroupLabelSelector = `${firstPaymentGroupInput} label[data-cy='payment-group-label--paymentIds-1,2']`;
     wrapper.expectText(`${firstPaymentGroupLabelSelector} div[data-cy='payment-1-currency-and-amount']`).toContain('GBP 1,000');
@@ -111,6 +112,7 @@ describe(component, () => {
 
     const secondPaymentGroupInput = "[data-cy='payment-group--paymentIds-3']";
     wrapper.expectElement(`${secondPaymentGroupInput} input[data-cy="payment-group-input--paymentIds-3"]`).toHaveAttribute('value', 'paymentIds-3');
+    wrapper.expectElement(`${secondPaymentGroupInput} input[data-cy="payment-group-input--paymentIds-3"]`).toHaveAttribute('id', 'paymentIds-3');
     wrapper.expectElement(`${secondPaymentGroupInput} label`).toHaveCount(1);
     const secondPaymentGroupLabelSelector = `${secondPaymentGroupInput} label[data-cy='payment-group-label--paymentIds-3']`;
     wrapper.expectText(`${secondPaymentGroupLabelSelector} div[data-cy='payment-3-currency-and-amount']`).toContain('GBP 3,000');
