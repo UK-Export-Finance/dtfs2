@@ -9,8 +9,7 @@ import { PostAddFeesToAnExistingPaymentGroupPayload } from '../../../routes/midd
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import {
   validateThatPaymentGroupHasFeeRecords,
-  validateThatSelectedPaymentsBelongToSamePaymentGroup,
-  validateThatSelectedPaymentsFormACompletePaymentGroup,
+  validateThatRequestedPaymentsMatchSavedPayments,
 } from '../../../validation/utilisation-report-service/payment-group-validator';
 
 export type PostAddFeesToAnExistingPaymentGroupRequest = CustomExpressRequest<{
@@ -27,16 +26,15 @@ export type PostAddFeesToAnExistingPaymentGroupRequest = CustomExpressRequest<{
  */
 export const postAddFeesToAnExistingPaymentGroup = async (req: PostAddFeesToAnExistingPaymentGroupRequest, res: Response) => {
   const { reportId } = req.params;
-  const { feeRecordIds, paymentIds, user } = req.body;
+  const { feeRecordIds, paymentIds: requestedPaymentIds, user } = req.body;
 
   try {
-    const payments = await PaymentRepo.findByIdAndReportIdWithFeeRecordsWithReportAndPayments(paymentIds, Number(reportId));
+    const payments = await PaymentRepo.findPaymentsInGroupContainingPaymentWithIdAndReportId(requestedPaymentIds[0], Number(reportId));
     if (payments.length === 0) {
       throw new NotFoundError('No payments found for the given payment IDs.');
     }
 
-    validateThatSelectedPaymentsBelongToSamePaymentGroup(payments);
-    validateThatSelectedPaymentsFormACompletePaymentGroup(payments, paymentIds);
+    validateThatRequestedPaymentsMatchSavedPayments(payments, requestedPaymentIds);
 
     const existingPaymentGroupFeeRecords = payments.at(0)?.feeRecords;
     validateThatPaymentGroupHasFeeRecords(existingPaymentGroupFeeRecords);
