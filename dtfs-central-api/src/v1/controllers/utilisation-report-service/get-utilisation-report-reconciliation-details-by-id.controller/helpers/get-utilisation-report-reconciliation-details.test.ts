@@ -67,7 +67,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
       const bankName = 'Test bank';
       when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
-      when(getKeyingSheetForReportId).calledWith(reportId).mockResolvedValue([]);
+      when(getKeyingSheetForReportId).calledWith(reportId, []).mockResolvedValue([]);
 
       // Act
       const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, undefined);

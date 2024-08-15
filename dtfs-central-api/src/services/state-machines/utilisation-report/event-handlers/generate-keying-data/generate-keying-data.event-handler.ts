@@ -1,8 +1,8 @@
 import { EntityManager, In } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FeeRecordEntity, FeeRecordPaymentJoinTableEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
-import { updateFeeRecordPaymentJoinTablePaymentAmountsUsedForFeeRecord } from '../helpers';
+import { FeeRecordFeePayment, getFeeRecordFeePaymentsForFeeRecords } from '../helpers';
 
 const getFacilityIdsAtToDoOrDoesNotMatchStatus = async (entityManager: EntityManager, reportId: number): Promise<Set<string>> => {
   const feeRecordsAtToDoOrDoesNotMatchStatus = await entityManager.find(FeeRecordEntity, {
@@ -14,9 +14,23 @@ const getFacilityIdsAtToDoOrDoesNotMatchStatus = async (entityManager: EntityMan
   return feeRecordsAtToDoOrDoesNotMatchStatus.reduce((facilityIds, { facilityId }) => facilityIds.add(facilityId), new Set<string>());
 };
 
+const updateFeeRecordPaymentJoinTableWithFeeRecordFeePayments = async (
+  feeRecordFeePayments: FeeRecordFeePayment[],
+  entityManager: EntityManager,
+): Promise<void> => {
+  await Promise.all(
+    feeRecordFeePayments.map(({ feeRecordId, paymentId, feePaymentAmount }) =>
+      entityManager.update(FeeRecordPaymentJoinTableEntity, { feeRecordId, paymentId }, { paymentAmountUsedForFeeRecord: feePaymentAmount }).catch((error) => {
+        console.error(`Failed to update fee record payment join table for fee record id '${feeRecordId}' and payment id '${paymentId}'`);
+        throw error;
+      }),
+    ),
+  );
+};
+
 type GenerateKeyingDataEventPayload = {
   transactionEntityManager: EntityManager;
-  feeRecordsAtMatchStatus: FeeRecordEntity[];
+  feeRecordsAtMatchStatusWithPayments: FeeRecordEntity[];
   requestSource: DbRequestSource;
 };
 
@@ -24,12 +38,12 @@ export type UtilisationReportGenerateKeyingDataEvent = BaseUtilisationReportEven
 
 export const handleUtilisationReportGenerateKeyingDataEvent = async (
   report: UtilisationReportEntity,
-  { transactionEntityManager, feeRecordsAtMatchStatus, requestSource }: GenerateKeyingDataEventPayload,
+  { transactionEntityManager, feeRecordsAtMatchStatusWithPayments, requestSource }: GenerateKeyingDataEventPayload,
 ): Promise<UtilisationReportEntity> => {
   const finalFeeRecordFacilityIds = await getFacilityIdsAtToDoOrDoesNotMatchStatus(transactionEntityManager, report.id);
 
   const { reportPeriod } = report;
-  const feeRecordsWithPayloads = feeRecordsAtMatchStatus.map((feeRecord) => {
+  const feeRecordsWithPayloads = feeRecordsAtMatchStatusWithPayments.map((feeRecord) => {
     const { facilityId } = feeRecord;
 
     if (finalFeeRecordFacilityIds.has(facilityId)) {
@@ -56,7 +70,8 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
     }),
   );
 
-  await updateFeeRecordPaymentJoinTablePaymentAmountsUsedForFeeRecord(feeRecordsAtMatchStatus, transactionEntityManager);
+  const feeRecordFeePayments = getFeeRecordFeePaymentsForFeeRecords(feeRecordsAtMatchStatusWithPayments);
+  await updateFeeRecordPaymentJoinTableWithFeeRecordFeePayments(feeRecordFeePayments, transactionEntityManager);
 
   if (report.status === 'PENDING_RECONCILIATION') {
     report.updateWithStatus({ status: 'RECONCILIATION_IN_PROGRESS', requestSource });

@@ -31,6 +31,23 @@ export const FeeRecordRepo = SqlDbDataSource.getRepository(FeeRecordEntity).exte
   },
 
   /**
+   * Finds fee record entities attached to a report with the
+   * supplied id which match the supplied statuses
+   * @param reportId - The report id of the report attached to the fee records
+   * @param statuses - The fee record statuses to search by
+   * @returns The found fee record entities
+   */
+  async findByReportIdAndStatuses(reportId: number, statuses: FeeRecordStatus[]): Promise<FeeRecordEntity[]> {
+    return await this.find({
+      where: {
+        report: { id: reportId },
+        status: In(statuses),
+      },
+      relations: { report: false, payments: false },
+    });
+  },
+
+  /**
    * Finds fee record entities with supplied ids attached to a report with the
    * supplied report id with the report attached
    * @param ids - The fee record ids to search by

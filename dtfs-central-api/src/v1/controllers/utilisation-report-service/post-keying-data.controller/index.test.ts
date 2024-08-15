@@ -118,7 +118,7 @@ describe('post-keying-data.controller', () => {
         type: 'GENERATE_KEYING_DATA',
         payload: {
           transactionEntityManager: mockEntityManager,
-          feeRecordsAtMatchStatus: feeRecords,
+          feeRecordsAtMatchStatusWithPayments: feeRecords,
           requestSource: {
             platform: 'TFM',
             userId,

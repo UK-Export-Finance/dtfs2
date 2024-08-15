@@ -1,8 +1,11 @@
 import { In } from 'typeorm';
-import { FeeRecordPaymentJoinTableEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { remove } from 'lodash';
+import { FeeRecordEntity, FeeRecordPaymentJoinTableEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments } from '../../../../../mapping/keying-sheet-mapping';
 import { KeyingSheet, KeyingSheetFeePayment, KeyingSheetRow } from '../../../../../types/fee-records';
+
+const STATUSES_OF_FEE_RECORDS_TO_DISPLAY_ON_KEYING_SHEET: FeeRecordStatus[] = ['READY_TO_KEY', 'RECONCILED'];
 
 /**
  * Gets all the keying sheet fee record payment join table entries
@@ -10,12 +13,12 @@ import { KeyingSheet, KeyingSheetFeePayment, KeyingSheetRow } from '../../../../
  * @param reportId - The report id
  * @returns The join table entries linked to the report id
  */
-const getAndValidateKeyingSheetFeeRecordPaymentJoinTableEntries = async (reportId: number): Promise<FeeRecordPaymentJoinTableEntity[]> => {
-  const joinTableEntities = await SqlDbDataSource.manager.find(FeeRecordPaymentJoinTableEntity, {
+const getKeyingSheetFeeRecordPaymentJoinTableEntries = async (reportId: number): Promise<FeeRecordPaymentJoinTableEntity[]> =>
+  await SqlDbDataSource.manager.find(FeeRecordPaymentJoinTableEntity, {
     where: {
       feeRecord: {
         report: { id: reportId },
-        status: In<FeeRecordStatus>(['READY_TO_KEY', 'RECONCILED']),
+        status: In(STATUSES_OF_FEE_RECORDS_TO_DISPLAY_ON_KEYING_SHEET),
       },
     },
     relations: {
@@ -24,28 +27,37 @@ const getAndValidateKeyingSheetFeeRecordPaymentJoinTableEntries = async (reportI
     },
   });
 
-  return joinTableEntities;
-};
+/**
+ * Gets a zero amount keying sheet fee payment for the supplied fee record entity
+ * @param param - The fee record entity
+ * @returns The zero amount keying sheet fee payment
+ */
+const getZeroAmountKeyingSheetFeePayment = ({ paymentCurrency }: FeeRecordEntity): KeyingSheetFeePayment => ({
+  currency: paymentCurrency,
+  amount: 0,
+  dateReceived: null,
+});
 
 /**
  * Gets the keying sheet for the report with id matching the supplied report id
  * @param reportId - The report id
  * @returns The keying sheet
  */
-export const getKeyingSheetForReportId = async (reportId: number): Promise<KeyingSheet> => {
-  const joinTableEntities = await getAndValidateKeyingSheetFeeRecordPaymentJoinTableEntries(reportId);
+export const getKeyingSheetForReportId = async (reportId: number, allReportFeeRecords: FeeRecordEntity[]): Promise<KeyingSheet> => {
+  const joinTableEntities = await getKeyingSheetFeeRecordPaymentJoinTableEntries(reportId);
+  const keyingSheetFeeRecordsWithZeroFeePayment = allReportFeeRecords.filter(({ status }) =>
+    STATUSES_OF_FEE_RECORDS_TO_DISPLAY_ON_KEYING_SHEET.includes(status),
+  );
 
   const feeRecordIdToKeyingSheetRowMap = joinTableEntities.reduce(
     (map, { feeRecord, payment, paymentAmountUsedForFeeRecord }) => {
-      if (paymentAmountUsedForFeeRecord === null) {
-        throw new Error('Expected fee record at READY_TO_KEY or RECONCILED status to have a defined paymentAmountUsedForFeeRecord on the join table');
-      }
-
       const feeRecordId = feeRecord.id;
+      remove(keyingSheetFeeRecordsWithZeroFeePayment, ({ id }) => id === feeRecordId);
+
       const feePayment: KeyingSheetFeePayment = {
-        dateReceived: payment.dateReceived,
         currency: payment.currency,
-        amount: paymentAmountUsedForFeeRecord,
+        amount: paymentAmountUsedForFeeRecord ?? 0,
+        dateReceived: paymentAmountUsedForFeeRecord ? payment.dateReceived : null,
       };
 
       if (!map[feeRecordId]) {
@@ -64,5 +76,10 @@ export const getKeyingSheetForReportId = async (reportId: number): Promise<Keyin
     {} as { [key: number]: KeyingSheetRow },
   );
 
-  return Object.values(feeRecordIdToKeyingSheetRowMap);
+  const keyingSheetRowsWithZeroAmountFeePayments = keyingSheetFeeRecordsWithZeroFeePayment.map((feeRecord) => ({
+    ...mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecord),
+    feePayments: [getZeroAmountKeyingSheetFeePayment(feeRecord)],
+  }));
+
+  return [...Object.values(feeRecordIdToKeyingSheetRowMap), ...keyingSheetRowsWithZeroAmountFeePayments];
 };

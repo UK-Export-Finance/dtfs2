@@ -30,7 +30,7 @@ export const getUtilisationReportReconciliationDetails = async (
     throw new NotFoundError(`Failed to find a bank with id '${bankId}'`);
   }
 
-  const keyingSheet = await getKeyingSheetForReportId(utilisationReport.id);
+  const keyingSheet = await getKeyingSheetForReportId(utilisationReport.id, feeRecords);
 
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecords);
 
