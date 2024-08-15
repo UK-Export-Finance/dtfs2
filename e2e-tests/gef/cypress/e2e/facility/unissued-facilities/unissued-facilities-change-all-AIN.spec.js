@@ -15,6 +15,7 @@ import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facilit
 import applicationSubmission from '../../pages/application-submission';
 import statusBanner from '../../pages/application-status-banner';
 import facilityEndDate from '../../pages/facility-end-date';
+import bankReviewDate from '../../pages/bank-review-date';
 
 let dealId;
 let token;
@@ -349,6 +350,13 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       }
 
       aboutFacilityUnissued.continueButton().click();
+
+      if (facilityEndDateEnabled) {
+        bankReviewDate.bankReviewDateDay().clear().type(dateConstants.threeMonthsDay);
+        bankReviewDate.bankReviewDateMonth().clear().type(dateConstants.threeMonthsMonth);
+        bankReviewDate.bankReviewDateYear().clear().type(dateConstants.threeMonthsYear);
+        bankReviewDate.continueButton().click();
+      }
 
       unissuedFacilityTable.rows().should('have.length', 0);
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');

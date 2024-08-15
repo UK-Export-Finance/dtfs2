@@ -64,5 +64,17 @@ context('About unissued facility page', () => {
 
       cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/change`));
     });
+
+    it('redirects to application details page when visiting bank review date page from initially issuing', () => {
+      cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/bank-review-date`));
+
+      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/about`));
+    });
+
+    it('redirects to application details page when visiting bank review date page when changing the values', () => {
+      cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/bank-review-date/change`));
+
+      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/change`));
+    });
   });
 });

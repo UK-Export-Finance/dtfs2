@@ -49,7 +49,7 @@ context('About Facility Page', () => {
     it('redirects to application details page when visiting bank review date page', () => {
       cy.visit(relative(`/gef/application-details/${version0DealId}/facilities/${version0FacilityId}/bank-review-date`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/facilities/${version0FacilityId}/about-facility`));
     });
   });
 

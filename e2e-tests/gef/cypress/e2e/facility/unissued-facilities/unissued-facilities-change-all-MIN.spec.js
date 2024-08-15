@@ -14,6 +14,7 @@ import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
 import facilityEndDate from '../../pages/facility-end-date';
+import bankReviewDate from '../../pages/bank-review-date';
 import applicationSubmission from '../../pages/application-submission';
 import statusBanner from '../../pages/application-status-banner';
 
@@ -300,6 +301,13 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
 
       aboutFacilityUnissued.continueButton().click();
 
+      if (facilityEndDateEnabled) {
+        bankReviewDate.bankReviewDateDay().clear().type(dateConstants.threeMonthsDay);
+        bankReviewDate.bankReviewDateMonth().clear().type(dateConstants.threeMonthsMonth);
+        bankReviewDate.bankReviewDateYear().clear().type(dateConstants.threeMonthsYear);
+        bankReviewDate.continueButton().click();
+      }
+
       unissuedFacilityTable.rows().should('have.length', 0);
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');
       unissuedFacilityTable.continueButton().should('exist');
@@ -406,6 +414,13 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       }
 
       aboutFacilityUnissued.continueButton().click();
+
+      if (facilityEndDateEnabled) {
+        bankReviewDate.bankReviewDateDay().clear().type(dateConstants.threeMonthsDay);
+        bankReviewDate.bankReviewDateMonth().clear().type(dateConstants.threeMonthsMonth);
+        bankReviewDate.bankReviewDateYear().clear().type(dateConstants.threeMonthsYear);
+        bankReviewDate.continueButton().click();
+      }
 
       // checks that name has been updated
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(`${MOCK_FACILITY_ONE.name}name`);
