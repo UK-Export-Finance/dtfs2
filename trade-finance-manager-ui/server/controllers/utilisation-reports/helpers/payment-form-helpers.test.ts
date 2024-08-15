@@ -349,6 +349,19 @@ describe('payment-form-helpers', () => {
         addToAnExistingPaymentFormSubmission: 'true',
       };
 
+      // Act
+      const result = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
+
+      // Assert
+      expect(result.paymentIds).toEqual([]);
+    });
+
+    it('returns payment validation error when form validation fails', () => {
+      // Arrange
+      const requestBody: AddToAnExistingPaymentFormRequestBody = {
+        addToAnExistingPaymentFormSubmission: 'true',
+      };
+
       const paymentErrors: PaymentErrorsViewModel = {
         errorSummary: [{ text: 'Some text', href: '#some-href' }],
       };
@@ -358,7 +371,6 @@ describe('payment-form-helpers', () => {
       const result = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
 
       // Assert
-      expect(result.paymentIds).toEqual([]);
       expect(result.errors).toEqual(paymentErrors);
     });
   });
