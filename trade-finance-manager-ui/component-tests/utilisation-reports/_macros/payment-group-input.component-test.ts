@@ -18,7 +18,7 @@ describe(component, () => {
     wrapper.expectText('h2[data-cy="payment-group-radio-input-heading"]').toContain('Select a payment group');
   });
 
-  it('should not render a radio item or input if there is only one payment group', () => {
+  it('should render a hidden input and no radio items if there is only one payment group', () => {
     const paymentGroups: AvailablePaymentGroupsViewModel = [
       {
         radioId: 'paymentIds-1',
@@ -34,6 +34,7 @@ describe(component, () => {
     wrapper.expectElement('div.govuk-radios__item').toHaveCount(0);
     wrapper.expectElement(`input[type='radio']`).notToExist();
     wrapper.expectElement(`label[data-cy='payment-group-label--paymentIds-1']`).notToExist();
+
     wrapper.expectElement(`input[data-cy='paymentIds-1']`).toExist();
     wrapper.expectElement(`input[data-cy='paymentIds-1']`).toHaveAttribute('type', 'hidden');
   });

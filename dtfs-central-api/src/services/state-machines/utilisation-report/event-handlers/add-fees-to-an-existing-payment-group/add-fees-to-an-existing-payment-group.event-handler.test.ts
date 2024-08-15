@@ -136,7 +136,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     { feeRecordsAndPaymentsMatch: true, testNameSuffix: 'the fee records match the payments' },
     { feeRecordsAndPaymentsMatch: false, testNameSuffix: 'the fee records do not match the payments' },
   ])(
-    "calls the fee record state machine event handlers for existing fee records with 'feeRecordsAndPaymentsMatch' set to '$feeRecordsAndPaymentsMatch' if $testNameSuffix after the new fee records have been added",
+    "calls the fee record state machine 'OTHER_FEE_ADDED_TO_PAYMENT_GROUP' event handler for the existing fee records with 'feeRecordsAndPaymentsMatch' set to '$feeRecordsAndPaymentsMatch' if $testNameSuffix after the new fee records have been added",
     async ({ feeRecordsAndPaymentsMatch }) => {
       // Arrange
       const utilisationReport = aReconciliationInProgressReport();
