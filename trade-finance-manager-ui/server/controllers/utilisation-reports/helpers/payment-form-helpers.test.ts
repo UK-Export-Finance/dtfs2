@@ -9,7 +9,7 @@ import {
   extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent,
   extractEditPaymentFormValues,
 } from './payment-form-helpers';
-import { validateAddPaymentRequestFormValues } from './validate-payment-form-values';
+import { validateAddPaymentRequestFormValues, validateAddToAnExistingPaymentRequestFormValues } from './validate-payment-form-values';
 
 jest.mock('./validate-payment-form-values');
 
@@ -299,6 +299,10 @@ describe('payment-form-helpers', () => {
   });
 
   describe('extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent', () => {
+    beforeEach(() => {
+      jest.mocked(validateAddToAnExistingPaymentRequestFormValues).mockReturnValue(EMPTY_PAYMENT_ERRORS_VIEW_MODEL);
+    });
+
     it('returns isAddingToAnExistingPayment as false when addToAnExistingPaymentFormSubmission is not in the request body', () => {
       // Arrange
       const requestBody = {};
@@ -345,25 +349,17 @@ describe('payment-form-helpers', () => {
         addToAnExistingPaymentFormSubmission: 'true',
       };
 
+      const paymentErrors: PaymentErrorsViewModel = {
+        errorSummary: [{ text: 'Some text', href: '#some-href' }],
+      };
+      jest.mocked(validateAddToAnExistingPaymentRequestFormValues).mockReturnValue(paymentErrors);
+
       // Act
       const result = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
 
       // Assert
       expect(result.paymentIds).toEqual([]);
-    });
-
-    it('validates the extracted payment ids', () => {
-      // Arrange
-      const requestBody: AddToAnExistingPaymentFormRequestBody = {
-        addToAnExistingPaymentFormSubmission: 'true',
-        paymentGroup: 'paymentIds-1,2,3',
-      };
-
-      // Act
-      const result = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
-
-      // Assert
-      expect(result.errors).not.toEqual(EMPTY_PAYMENT_ERRORS_VIEW_MODEL);
+      expect(result.errors).toEqual(paymentErrors);
     });
   });
 });
