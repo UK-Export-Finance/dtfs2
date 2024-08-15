@@ -5,7 +5,6 @@ import {
   FeeRecordEntityMockBuilder,
   UtilisationReportEntity,
   PaymentEntityMockBuilder,
-  FeeRecordEntity,
   PaymentEntity,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent } from './add-fees-to-an-existing-payment-group.event-handler';
@@ -28,11 +27,6 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
 
   const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
 
-  const aFeeRecordForReport = (report: UtilisationReportEntity, id: number) => FeeRecordEntityMockBuilder.forReport(report).withId(id).build();
-
-  const aPaymentWithIdAndFeeRecords = (id: number, feeRecords: FeeRecordEntity[]) =>
-    PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords(feeRecords).build();
-
   const aMockEventHandler = () => jest.fn();
   const aMockFeeRecordStateMachine = (eventHandler: jest.Mock): FeeRecordStateMachine =>
     ({
@@ -40,7 +34,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     }) as unknown as FeeRecordStateMachine;
 
   const createFeeRecordsAndMocks = (utilisationReport: UtilisationReportEntity, feeRecordIds: number[]) => {
-    const feeRecords = feeRecordIds.map((id) => aFeeRecordForReport(utilisationReport, id));
+    const feeRecords = feeRecordIds.map((id) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).build());
     const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
     const feeRecordStateMachines = feeRecords.reduce(
       (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine(eventHandlers[id]) }),
@@ -69,8 +63,8 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     const expectedExistingFeeRecordsInPaymentGroup = [feeRecords[3]];
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
-    const firstPayment = aPaymentWithIdAndFeeRecords(1, [feeRecords[0]]);
-    const secondPayment = aPaymentWithIdAndFeeRecords(2, [feeRecords[1]]);
+    const firstPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(1).withFeeRecords([feeRecords[0]]).build();
+    const secondPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(2).withFeeRecords([feeRecords[1]]).build();
 
     const payments = [firstPayment, secondPayment];
 
