@@ -46,7 +46,7 @@ export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promis
   if (eStoreData?.exporterName) {
     const { dealId, siteId, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = eStoreData;
 
-    console.info('Creating deal directory %s for deal %s', exporterName, dealIdentifier);
+    console.info('Creating deal directory for deal %s', dealIdentifier);
 
     // Create the deal directory
     const response: DealFolderResponse | EstoreErrorResponse = await createDealFolder(siteId, {
@@ -59,7 +59,7 @@ export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promis
 
     // Validate response
     if (acceptableStatuses.includes(response?.status)) {
-      console.info('Creating deal directory %s for deal %s', buyerName, dealIdentifier);
+      console.info('Creating deal directory for deal %s', dealIdentifier);
 
       // Update `cron-job-logs`
       await cronJobLogs.updateOne(

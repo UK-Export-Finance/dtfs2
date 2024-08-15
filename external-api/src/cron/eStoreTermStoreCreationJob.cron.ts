@@ -45,7 +45,7 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
 
     // Add to term store
     const response: TermStoreResponse[] | EstoreErrorResponse[] = await Promise.all(
-      facilityIdentifiers.map((id: number) => addFacilityToTermStore({ id: id.toString() })),
+      facilityIdentifiers.map((facilityId: string) => addFacilityToTermStore({ facilityId })),
     );
 
     // Validate each and every response status code

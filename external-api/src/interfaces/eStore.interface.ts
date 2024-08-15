@@ -16,7 +16,7 @@
 export interface Estore {
   dealId: string;
   siteId: string;
-  facilityIdentifiers: number[];
+  facilityIdentifiers: string[];
   supportingInformation: string[];
   exporterName: string;
   buyerName: string;
@@ -40,7 +40,7 @@ export interface EstoreSite {
  * @property {string} id - Unique identifier for the term store.
  */
 export interface EstoreTermStore {
-  readonly id: string;
+  readonly facilityId: string;
 }
 
 /**
@@ -192,6 +192,7 @@ export interface FacilityFolderResponse {
   readonly data: {
     foldername?: string;
     error?: string;
+    message?: unknown;
   };
 }
 
