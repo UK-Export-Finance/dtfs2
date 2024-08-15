@@ -6,7 +6,7 @@ const component = '../templates/utilisation-reports/_macros/payment-group-radio-
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const getWrapper = (viewModel: { legendText: string; paymentGroups: AvailablePaymentGroupsViewModel }) => render(viewModel);
+  const getWrapper = (viewModel: { legendText: string; paymentGroups: AvailablePaymentGroupsViewModel; errorMessage?: string }) => render(viewModel);
 
   it('should render the legend text', () => {
     const viewModel = {
@@ -115,5 +115,31 @@ describe(component, () => {
     const secondPaymentGroupLabelSelector = `${secondPaymentGroupSelector} label[data-cy='payment-group-label--paymentIds-3']`;
     wrapper.expectText(`${secondPaymentGroupLabelSelector} div[data-cy='payment-3-currency-and-amount']`).toContain('GBP 3,000');
     wrapper.expectText(`${secondPaymentGroupLabelSelector} div[data-cy='payment-3-item-hint']`).toContain('Payment reference: REF003');
+  });
+
+  it('does not apply error styling wrappers if no error message is provided', () => {
+    const viewModel = {
+      legendText: 'Select a payment group',
+      paymentGroups: anAvailablePaymentGroupsViewModel(),
+      errorMessage: undefined,
+    };
+    const wrapper = getWrapper(viewModel);
+
+    wrapper.expectElement('div[data-cy="available-payment-groups-error-wrapper"]').notToExist();
+    wrapper.expectElement('p[data-cy="available-payment-groups-inline-error-wrapper"]').notToExist();
+  });
+
+  it('applies error styling wrappers if error message is provided', () => {
+    const viewModel = {
+      legendText: 'Select a payment group',
+      paymentGroups: anAvailablePaymentGroupsViewModel(),
+      errorMessage: 'Whoopsies',
+    };
+    const wrapper = getWrapper(viewModel);
+
+    wrapper.expectElement('div[data-cy="available-payment-groups-error-wrapper"]').toExist();
+    wrapper.expectElement('div[data-cy="available-payment-groups-error-wrapper"]').hasClass('govuk-form-group--error');
+    wrapper.expectElement('p[data-cy="available-payment-groups-inline-error-wrapper"]').toExist();
+    wrapper.expectElement('p[data-cy="available-payment-groups-inline-error-wrapper"]').hasClass('govuk-error-message');
   });
 });

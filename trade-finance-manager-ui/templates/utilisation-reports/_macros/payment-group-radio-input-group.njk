@@ -6,7 +6,6 @@
   {% set errorMessage = params.errorMessage %}
 
   {% if errorMessage %}
-    {# TODO FN-1749: Add tests for this error. #}
     <div class="govuk-form-group--error" data-cy="available-payment-groups-error-wrapper">
   {% endif %}
   <div class="govuk-form-group" data-cy="payment-group-radio-input">
@@ -17,7 +16,7 @@
         </h2>
       </legend>
       {% if errorMessage %}
-        <p class="govuk-error-message">
+        <p class="govuk-error-message" data-cy="available-payment-groups-inline-error-wrapper">
           <span class="govuk-visually-hidden">Error: </span>{{ errorMessage }}
         </p>
       {% endif %}
