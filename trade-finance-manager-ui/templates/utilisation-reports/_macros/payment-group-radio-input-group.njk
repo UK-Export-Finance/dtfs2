@@ -6,9 +6,10 @@
   {% set errorMessage = params.errorMessage %}
 
   {% if errorMessage %}
-    <div class="govuk-form-group--error" data-cy="fee-record-details-error-wrapper">
+    {# TODO FN-1749: Add tests for this error. #}
+    <div class="govuk-form-group--error" data-cy="available-payment-groups-error-wrapper">
   {% endif %}
-  <div class="govuk-form-group" id="paymentGroup" data-cy="payment-group-radio-input">
+  <div class="govuk-form-group" data-cy="payment-group-radio-input">
     <fieldset class="govuk-fieldset">
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l govuk-!-margin-bottom-0">
         <h2 class="govuk-fieldset__legend--m  govuk-!-margin-top-0" data-cy="payment-group-radio-input-heading">
@@ -21,7 +22,7 @@
         </p>
       {% endif %}
       {% if paymentGroups.length === 1 %}
-        <input id="{{ paymentGroups[0].radioId }}" name="paymentGroup" type="hidden" value="{{ paymentGroups[0].radioId }}">
+        <input name="paymentGroup" type="hidden" value="{{ paymentGroups[0].radioId }}" data-cy="{{ paymentGroups[0].radioId }}" >
         {% for payment in paymentGroups[0].payments %}
           {{ paymentGroupRadioInputGroupDetails.render({
             payment: payment
@@ -31,7 +32,7 @@
         <div class="govuk-radios" data-module="govuk-radios">
           {% for paymentGroup in paymentGroups %}
             <div class="govuk-radios__item" data-cy="payment-group--{{ paymentGroup.radioId }}">
-              <input class="govuk-radios__input" id="{{ paymentGroup.radioId }}" name="paymentGroup" type="radio" value="{{ paymentGroup.radioId }}">
+              <input class="govuk-radios__input" name="paymentGroup" type="radio" value="{{ paymentGroup.radioId }}" data-cy="payment-group-input--{{ paymentGroup.radioId }}">
               <label class="govuk-label govuk-radios__label" for="{{ paymentGroup.radioId }}" data-cy="payment-group-label--{{ paymentGroup.radioId }}">
                 {% for payment in paymentGroup.payments %}
                   {{ paymentGroupRadioInputGroupDetails.render({

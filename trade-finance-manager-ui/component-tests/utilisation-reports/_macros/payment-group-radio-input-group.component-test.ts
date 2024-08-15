@@ -34,6 +34,8 @@ describe(component, () => {
     wrapper.expectElement('div.govuk-radios__item').toHaveCount(0);
     wrapper.expectElement(`input[type='radio']`).notToExist();
     wrapper.expectElement(`label[data-cy='payment-group-label--paymentIds-1']`).notToExist();
+    wrapper.expectElement(`input[data-cy='paymentIds-1']`).toExist();
+    wrapper.expectElement(`input[data-cy='paymentIds-1']`).toHaveAttribute('type', 'hidden');
   });
 
   it('should render a single payments details within a group', () => {
@@ -49,8 +51,8 @@ describe(component, () => {
     };
     const wrapper = getWrapper(viewModel);
 
-    wrapper.expectText(`div[id='payment-1-currency-and-amount']`).toContain('GBP 1,000');
-    wrapper.expectText(`div[id='payment-1-item-hint']`).toContain('Payment reference: REF001');
+    wrapper.expectText(`div[data-cy='payment-1-currency-and-amount']`).toContain('GBP 1,000');
+    wrapper.expectText(`div[data-cy='payment-1-item-hint']`).toContain('Payment reference: REF001');
   });
 
   it('should render multiple payment details within a group', () => {
@@ -69,10 +71,10 @@ describe(component, () => {
     };
     const wrapper = getWrapper(viewModel);
 
-    wrapper.expectText(`div[id='payment-1-currency-and-amount']`).toContain('GBP 1,000');
-    wrapper.expectText(`div[id='payment-1-item-hint']`).toContain('Payment reference: REF001');
-    wrapper.expectText(`div[id='payment-2-currency-and-amount']`).toContain('GBP 2,000');
-    wrapper.expectText(`div[id='payment-2-item-hint']`).toContain('Payment reference: REF002');
+    wrapper.expectText(`div[data-cy='payment-1-currency-and-amount']`).toContain('GBP 1,000');
+    wrapper.expectText(`div[data-cy='payment-1-item-hint']`).toContain('Payment reference: REF001');
+    wrapper.expectText(`div[data-cy='payment-2-currency-and-amount']`).toContain('GBP 2,000');
+    wrapper.expectText(`div[data-cy='payment-2-item-hint']`).toContain('Payment reference: REF002');
   });
 
   it('should render radio buttons for each payment group with the group ID when there is more than one payment group', () => {
@@ -85,11 +87,8 @@ describe(component, () => {
     const radioInputSelector = 'div.govuk-radios__item > input[type="radio"].govuk-radios__input';
     wrapper.expectElement(radioInputSelector).toHaveCount(viewModel.paymentGroups.length);
 
-    wrapper.expectElement(`${radioInputSelector}:eq(0)`).toHaveAttribute('id', 'paymentIds-1,2');
-    wrapper.expectElement(`${radioInputSelector}:eq(0)`).toHaveAttribute('value', 'paymentIds-1,2');
-
-    wrapper.expectElement(`${radioInputSelector}:eq(1)`).toHaveAttribute('id', 'paymentIds-3');
-    wrapper.expectElement(`${radioInputSelector}:eq(1)`).toHaveAttribute('value', 'paymentIds-3');
+    wrapper.expectElement(`input[data-cy='payment-group-input--paymentIds-1,2']`).toHaveAttribute('value', 'paymentIds-1,2');
+    wrapper.expectElement(`input[data-cy='payment-group-input--paymentIds-3']`).toHaveAttribute('value', 'paymentIds-3');
   });
 
   it('should render both multiple and single payment details in different groups with a radio button for each group', () => {
@@ -99,19 +98,22 @@ describe(component, () => {
     };
     const wrapper = getWrapper(viewModel);
 
-    const radioSelector = 'div.govuk-radios__item';
-    wrapper.expectElement(radioSelector).toHaveCount(2);
+    wrapper.expectElement('div.govuk-radios__item').toHaveCount(2);
 
-    wrapper.expectElement(`${radioSelector}:eq(0) input`).toExist();
-    wrapper.expectElement(`${radioSelector}:eq(0) label`).toHaveCount(1);
-    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-1-currency-and-amount']`).toContain('GBP 1,000');
-    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-1-item-hint']`).toContain('Payment reference: REF001');
-    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-2-currency-and-amount']`).toContain('GBP 2,000');
-    wrapper.expectText(`${radioSelector}:eq(0) label:eq(0) div[id='payment-2-item-hint']`).toContain('Payment reference: REF002');
+    const firstPaymentGroupSelector = "[data-cy='payment-group--paymentIds-1,2']";
+    wrapper.expectElement(`${firstPaymentGroupSelector} input[data-cy="payment-group-input--paymentIds-1,2"]`).toHaveAttribute('value', 'paymentIds-1,2');
+    wrapper.expectElement(`${firstPaymentGroupSelector} label`).toHaveCount(1);
+    const firstPaymentGroupLabelSelector = `${firstPaymentGroupSelector} label[data-cy='payment-group-label--paymentIds-1,2']`;
+    wrapper.expectText(`${firstPaymentGroupLabelSelector} div[data-cy='payment-1-currency-and-amount']`).toContain('GBP 1,000');
+    wrapper.expectText(`${firstPaymentGroupLabelSelector} div[data-cy='payment-1-item-hint']`).toContain('Payment reference: REF001');
+    wrapper.expectText(`${firstPaymentGroupLabelSelector} div[data-cy='payment-2-currency-and-amount']`).toContain('GBP 2,000');
+    wrapper.expectText(`${firstPaymentGroupLabelSelector} div[data-cy='payment-2-item-hint']`).toContain('Payment reference: REF002');
 
-    wrapper.expectElement(`${radioSelector}:eq(1) input`).toExist();
-    wrapper.expectElement(`${radioSelector}:eq(1) label`).toHaveCount(1);
-    wrapper.expectText(`${radioSelector}:eq(1) label:eq(0) div[id='payment-3-currency-and-amount']`).toContain('GBP 3,000');
-    wrapper.expectText(`${radioSelector}:eq(1) label:eq(0) div[id='payment-3-item-hint']`).toContain('Payment reference: REF003');
+    const secondPaymentGroupSelector = "[data-cy='payment-group--paymentIds-3']";
+    wrapper.expectElement(`${secondPaymentGroupSelector} input[data-cy="payment-group-input--paymentIds-3"]`).toHaveAttribute('value', 'paymentIds-3');
+    wrapper.expectElement(`${secondPaymentGroupSelector} label`).toHaveCount(1);
+    const secondPaymentGroupLabelSelector = `${secondPaymentGroupSelector} label[data-cy='payment-group-label--paymentIds-3']`;
+    wrapper.expectText(`${secondPaymentGroupLabelSelector} div[data-cy='payment-3-currency-and-amount']`).toContain('GBP 3,000');
+    wrapper.expectText(`${secondPaymentGroupLabelSelector} div[data-cy='payment-3-item-hint']`).toContain('Payment reference: REF003');
   });
 });

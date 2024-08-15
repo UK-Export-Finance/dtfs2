@@ -12,7 +12,7 @@ describe(component, () => {
     };
     const wrapper = getWrapper(params);
 
-    wrapper.expectText('div[id="payment-1-currency-and-amount"]').toContain('GBP 1,000');
+    wrapper.expectText('div[data-cy="payment-1-currency-and-amount"]').toContain('GBP 1,000');
   });
 
   it('should add margin bottom class when there is no reference', () => {
@@ -21,7 +21,7 @@ describe(component, () => {
     };
     const wrapper = getWrapper(params);
 
-    wrapper.expectElement('div[id="payment-1-currency-and-amount"]').hasClass('govuk-!-margin-bottom-2');
+    wrapper.expectElement('div[data-cy="payment-1-currency-and-amount"]').hasClass('govuk-!-margin-bottom-2');
   });
 
   it('should not add margin bottom class when there is a reference', () => {
@@ -30,7 +30,7 @@ describe(component, () => {
     };
     const wrapper = getWrapper(params);
 
-    wrapper.expectElement('div[id="payment-1-currency-and-amount"]').doesNotHaveClass('govuk-!-margin-bottom-2');
+    wrapper.expectElement('div[data-cy="payment-1-currency-and-amount"]').doesNotHaveClass('govuk-!-margin-bottom-2');
   });
 
   it('should display the payment reference when provided', () => {
@@ -39,7 +39,7 @@ describe(component, () => {
     };
     const wrapper = getWrapper(params);
 
-    wrapper.expectText('div[id="payment-1-item-hint"]').toContain('Payment reference: REF007');
+    wrapper.expectText('div[data-cy="payment-1-item-hint"]').toContain('Payment reference: REF007');
   });
 
   it('should not display the payment reference when not provided', () => {
@@ -48,6 +48,6 @@ describe(component, () => {
     };
     const wrapper = getWrapper(params);
 
-    wrapper.expectElement('div[id="payment-1-item-hint"]').notToExist();
+    wrapper.expectElement('div[data-cy="payment-1-item-hint"]').notToExist();
   });
 });
