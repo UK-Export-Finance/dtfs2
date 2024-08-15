@@ -204,10 +204,10 @@ describe('date-validation helpers', () => {
         expectedParsedDate: new Date('2050-12-12T00:00:00.0000'),
       },
       {
-        description: 'Correct date with trailing white space',
-        day: '12 ',
-        month: '12 ',
-        year: '2050 ',
+        description: 'Correct date with leading and trailing white space',
+        day: ' 12 ',
+        month: ' 12  ',
+        year: ' 2050  ',
         expectedParsedDate: new Date('2050-12-12T00:00:00.0000'),
       },
       {

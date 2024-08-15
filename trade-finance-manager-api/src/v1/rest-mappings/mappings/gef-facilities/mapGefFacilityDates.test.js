@@ -132,6 +132,9 @@ describe('mapGefFacilityDates', () => {
       const facilityWithAmendments = {
         facilitySnapshot: {
           ...mockFacility.facilitySnapshot,
+          isUsingFacilityEndDate: undefined,
+          bankReviewDate: undefined,
+          facilityEndDate: undefined,
         },
         amendments: [
           {

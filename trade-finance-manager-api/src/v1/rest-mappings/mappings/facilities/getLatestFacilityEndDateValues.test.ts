@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { getLatestFacilityEndDateValues } from './getLatestFacilityEndDateValues.ts';
-import { MOCK_AMENDMENT, MOCK_FACILITY_SNAPSHOT } from '../../../__mocks__/mock-tfm-facilities';
+import { MOCK_FACILITY_SNAPSHOT } from '../../../__mocks__/mock-facility-snapshot.ts';
+import { MOCK_AMENDMENT } from '../../../__mocks__/mock-amendment';
 
 describe('getLatestFacilityEndDateValues', () => {
   const facility = {

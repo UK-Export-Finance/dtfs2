@@ -61,7 +61,7 @@ const mapAmendmentToLatestCompletedDate = (
   };
 };
 
-const mapAmendmentToLatestCompletedFacilityEndDate = (amendment: TfmFacilityAmendment): CompletedFacilityEndDate => {
+const mapAmendmentToFacilityEndDateValues = (amendment: TfmFacilityAmendment): CompletedFacilityEndDate => {
   const { amendmentId, isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = amendment;
   if (isUsingFacilityEndDate) {
     if (!facilityEndDate) {
@@ -108,7 +108,7 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
           amendment = latestAmendment ? mapAmendmentToLatestCompletedDate(latestAmendment) : {};
         } else if (type === AMENDMENT_QUERIES.LATEST_FACILITY_END_DATE) {
           const latestAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
-          amendment = latestAmendment ? mapAmendmentToLatestCompletedFacilityEndDate(latestAmendment) : {};
+          amendment = latestAmendment ? mapAmendmentToFacilityEndDateValues(latestAmendment) : {};
         } else {
           amendment = await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndStatus(facilityId, AMENDMENT_STATUS.COMPLETED);
         }
