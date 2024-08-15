@@ -5,7 +5,7 @@ import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
 import { addFeesToAnExistingPaymentGroup } from './helpers';
-import { PostFeesToAnExistingPaymentGroupPayload } from '../../../routes/middleware/payload-validation';
+import { PostAddFeesToAnExistingPaymentGroupPayload } from '../../../routes/middleware/payload-validation';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import {
   validateThatPaymentGroupHasFeeRecords,
@@ -13,11 +13,11 @@ import {
   validateThatSelectedPaymentsFormACompletePaymentGroup,
 } from '../../../validation/utilisation-report-service/payment-group-validator';
 
-export type PostFeesToAnExistingPaymentGroupRequest = CustomExpressRequest<{
+export type PostAddFeesToAnExistingPaymentGroupRequest = CustomExpressRequest<{
   params: {
     reportId: string;
   };
-  reqBody: PostFeesToAnExistingPaymentGroupPayload;
+  reqBody: PostAddFeesToAnExistingPaymentGroupPayload;
 }>;
 
 /**
@@ -25,7 +25,7 @@ export type PostFeesToAnExistingPaymentGroupRequest = CustomExpressRequest<{
  * @param req - The request object
  * @param res - The response object
  */
-export const postFeesToAnExistingPaymentGroup = async (req: PostFeesToAnExistingPaymentGroupRequest, res: Response) => {
+export const postAddFeesToAnExistingPaymentGroup = async (req: PostAddFeesToAnExistingPaymentGroupRequest, res: Response) => {
   const { reportId } = req.params;
   const { feeRecordIds, paymentIds, user } = req.body;
 

@@ -2,11 +2,11 @@ import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import { PaymentEntityMockBuilder, FeeRecordEntityMockBuilder, ApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import { PostFeesToAnExistingPaymentGroupRequest, postFeesToAnExistingPaymentGroup } from '.';
+import { PostAddFeesToAnExistingPaymentGroupRequest, postAddFeesToAnExistingPaymentGroup } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
 import { addFeesToAnExistingPaymentGroup } from './helpers';
-import { PostFeesToAnExistingPaymentGroupPayload } from '../../../routes/middleware/payload-validation';
+import { PostAddFeesToAnExistingPaymentGroupPayload } from '../../../routes/middleware/payload-validation';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
@@ -21,7 +21,7 @@ class TestApiError extends ApiError {
 }
 
 describe('post-fees-to-an-existing-payment-group.controller', () => {
-  describe('postFeesToAnExistingPaymentGroup', () => {
+  describe('postAddFeesToAnExistingPaymentGroup', () => {
     const tfmUserId = new ObjectId().toString();
     const tfmUser: TfmSessionUser = {
       ...aTfmSessionUser(),
@@ -53,7 +53,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       reportId: reportId.toString(),
     });
 
-    const aValidRequestBody = (): PostFeesToAnExistingPaymentGroupPayload => ({
+    const aValidRequestBody = (): PostAddFeesToAnExistingPaymentGroupPayload => ({
       feeRecordIds: [aFeeRecordToAdd.id],
       paymentIds,
       user: tfmUser,
@@ -61,7 +61,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
 
     it('attempts to add the fees to the payment group using the supplied report id, fee record ids, payment ids and user', async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostFeesToAnExistingPaymentGroupRequest>({
+      const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -70,7 +70,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       jest.mocked(addFeesToAnExistingPaymentGroup).mockResolvedValue();
 
       // Act
-      await postFeesToAnExistingPaymentGroup(req, res);
+      await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
       const expectedFeeRecordsToAdd = [aFeeRecordToAdd];
@@ -86,7 +86,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
 
     it("responds with a '200' if the report is saved successfully", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostFeesToAnExistingPaymentGroupRequest>({
+      const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -95,7 +95,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       jest.mocked(addFeesToAnExistingPaymentGroup).mockResolvedValue();
 
       // Act
-      await postFeesToAnExistingPaymentGroup(req, res);
+      await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
@@ -103,7 +103,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
 
     it("responds with a '404' if no payments are found with the supplied payment IDs", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostFeesToAnExistingPaymentGroupRequest>({
+      const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -112,7 +112,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       paymentRepoFindSpy.mockResolvedValue([]);
 
       // Act
-      await postFeesToAnExistingPaymentGroup(req, res);
+      await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
@@ -120,7 +120,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
 
     it("responds with a '400' if no fee records belong to the first payment in the payment group", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostFeesToAnExistingPaymentGroupRequest>({
+      const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
         params: aValidRequestQuery(),
         body: {
           ...aValidRequestBody(),
@@ -132,7 +132,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       paymentRepoFindSpy.mockResolvedValue(payments);
 
       // Act
-      await postFeesToAnExistingPaymentGroup(req, res);
+      await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -140,7 +140,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
 
     it("responds with a '400' if all of the supplied fee record ids already belong to the payment group.", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostFeesToAnExistingPaymentGroupRequest>({
+      const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
         params: aValidRequestQuery(),
         body: {
           ...aValidRequestBody(),
@@ -152,7 +152,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       feeRecordRepoFindSpy.mockResolvedValue([aFeeRecordWithPayments]);
 
       // Act
-      await postFeesToAnExistingPaymentGroup(req, res);
+      await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -160,7 +160,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
 
     it("responds with the specific error status if saving the report throws an 'ApiError'", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostFeesToAnExistingPaymentGroupRequest>({
+      const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -170,7 +170,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       jest.mocked(addFeesToAnExistingPaymentGroup).mockRejectedValue(new TestApiError(errorStatus, undefined));
 
       // Act
-      await postFeesToAnExistingPaymentGroup(req, res);
+      await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(errorStatus);
@@ -178,7 +178,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
 
     it("responds with the specific error message if saving the report throws an 'ApiError'", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostFeesToAnExistingPaymentGroupRequest>({
+      const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -188,7 +188,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       jest.mocked(addFeesToAnExistingPaymentGroup).mockRejectedValue(new TestApiError(undefined, errorMessage));
 
       // Act
-      await postFeesToAnExistingPaymentGroup(req, res);
+      await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
       expect(res._getData()).toBe(`Failed to add fees to an existing payment group: ${errorMessage}`);
@@ -196,7 +196,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
 
     it("responds with a '500' if an unknown error occurs", async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostFeesToAnExistingPaymentGroupRequest>({
+      const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -205,7 +205,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       jest.mocked(addFeesToAnExistingPaymentGroup).mockRejectedValue(new Error('Some error'));
 
       // Act
-      await postFeesToAnExistingPaymentGroup(req, res);
+      await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
@@ -213,7 +213,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
 
     it('responds with a generic error message if an unknown error occurs', async () => {
       // Arrange
-      const req = httpMocks.createRequest<PostFeesToAnExistingPaymentGroupRequest>({
+      const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
         params: aValidRequestQuery(),
         body: aValidRequestBody(),
       });
@@ -222,7 +222,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       jest.mocked(addFeesToAnExistingPaymentGroup).mockRejectedValue(new Error('Some error'));
 
       // Act
-      await postFeesToAnExistingPaymentGroup(req, res);
+      await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
       expect(res._getData()).toBe(`Failed to add fees to an existing payment group`);

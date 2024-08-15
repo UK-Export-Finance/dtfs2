@@ -28,7 +28,7 @@ describe(`POST ${BASE_URL}`, () => {
 
   utilisationReport.feeRecords = [aFeeRecordToAdd, aFeeRecordWithPayments];
 
-  const aPostFeesToAnExistingPaymentGroupRequestBody = () => ({
+  const aPostAddFeesToAnExistingPaymentGroupRequestBody = () => ({
     feeRecordIds: [aFeeRecordToAdd.id],
     paymentIds,
     user: {
@@ -62,12 +62,12 @@ describe(`POST ${BASE_URL}`, () => {
 
   withSqlIdPathParameterValidationTests({
     baseUrl: BASE_URL,
-    makeRequest: (url) => testApi.post(aPostFeesToAnExistingPaymentGroupRequestBody()).to(url),
+    makeRequest: (url) => testApi.post(aPostAddFeesToAnExistingPaymentGroupRequestBody()).to(url),
   });
 
   it('returns a 200 when fees can be added to the payment group', async () => {
     // Act
-    const response = await testApi.post(aPostFeesToAnExistingPaymentGroupRequestBody()).to(getUrl(reportId));
+    const response = await testApi.post(aPostAddFeesToAnExistingPaymentGroupRequestBody()).to(getUrl(reportId));
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -76,7 +76,7 @@ describe(`POST ${BASE_URL}`, () => {
   it("returns a 400 when the 'feeRecordIds' list is empty", async () => {
     // Arrange
     const requestBody = {
-      ...aPostFeesToAnExistingPaymentGroupRequestBody(),
+      ...aPostAddFeesToAnExistingPaymentGroupRequestBody(),
       feeRecordIds: [],
     };
 
@@ -90,7 +90,7 @@ describe(`POST ${BASE_URL}`, () => {
   it("returns a 400 when the 'paymentIds' list is empty", async () => {
     // Arrange
     const requestBody = {
-      ...aPostFeesToAnExistingPaymentGroupRequestBody(),
+      ...aPostAddFeesToAnExistingPaymentGroupRequestBody(),
       paymentIds: [],
     };
 
@@ -117,7 +117,7 @@ describe(`POST ${BASE_URL}`, () => {
   it('returns a 404 when no payments with the supplied ids can be found', async () => {
     // Arrange
     const requestBody = {
-      ...aPostFeesToAnExistingPaymentGroupRequestBody(),
+      ...aPostAddFeesToAnExistingPaymentGroupRequestBody(),
       paymentIds: [90, 91],
     };
 

@@ -1,17 +1,19 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import {
-  PostFeesToAnExistingPaymentGroupPayload,
-  validatePostFeesToAnExistingPaymentGroupPayload,
-} from './validate-post-fees-to-an-existing-payment-group-payload';
+  PostAddFeesToAnExistingPaymentGroupPayload,
+  validatePostAddFeesToAnExistingPaymentGroupPayload,
+} from './validate-post-add-fees-to-an-existing-payment-group-payload';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
 
-describe('validatePostFeesToAnExistingPaymentGroupPayload', () => {
+console.error = jest.fn();
+
+describe('validatePostAddFeesToAnExistingPaymentGroupPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
-  const requiredPayloadKeys: (keyof PostFeesToAnExistingPaymentGroupPayload)[] = ['feeRecordIds', 'paymentIds', 'user'];
+  const requiredPayloadKeys: (keyof PostAddFeesToAnExistingPaymentGroupPayload)[] = ['feeRecordIds', 'paymentIds', 'user'];
 
-  const aValidPayload = (): PostFeesToAnExistingPaymentGroupPayload => ({
+  const aValidPayload = (): PostAddFeesToAnExistingPaymentGroupPayload => ({
     feeRecordIds: [7],
     paymentIds: [77],
     user: aTfmSessionUser(),
@@ -29,7 +31,7 @@ describe('validatePostFeesToAnExistingPaymentGroupPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePostFeesToAnExistingPaymentGroupPayload(req, res, next);
+    validatePostAddFeesToAnExistingPaymentGroupPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -49,7 +51,7 @@ describe('validatePostFeesToAnExistingPaymentGroupPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePostFeesToAnExistingPaymentGroupPayload(req, res, next);
+    validatePostAddFeesToAnExistingPaymentGroupPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -69,7 +71,7 @@ describe('validatePostFeesToAnExistingPaymentGroupPayload', () => {
     req.body = invalidPayload;
 
     // Act
-    validatePostFeesToAnExistingPaymentGroupPayload(req, res, next);
+    validatePostAddFeesToAnExistingPaymentGroupPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
