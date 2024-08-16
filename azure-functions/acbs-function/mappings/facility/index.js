@@ -8,6 +8,7 @@ const facilityFee = require('./facility-fee');
 const facilityUpdate = require('./facility-update');
 const facilityMasterAmend = require('./facility-master-amend');
 const facilityLoanAmend = require('./facility-loan-amend');
+const facilityCovenantAmend = require('./facility-covenant-amend');
 
 module.exports = {
   facilityMaster,
@@ -20,4 +21,5 @@ module.exports = {
   facilityFee,
   facilityMasterAmend,
   facilityLoanAmend,
+  facilityCovenantAmend,
 };
