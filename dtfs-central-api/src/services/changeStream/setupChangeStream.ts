@@ -34,7 +34,7 @@ const setupChangeStreamForDeletionCollection = async () => {
     // Deletion audit logs should never be updated or replaced. Cosmos DB does not currently support filtering at the `watch` step
     // (See here https://learn.microsoft.com/en-us/answers/questions/356668/how-to-get-inserted-change-stream-data-use-cosmosd)
     if (changeStreamDocument.operationType !== 'insert') {
-      throw new Error('A document in deletion-audit-logs has been %sd', changeStreamDocument.operationType);
+      throw new Error(`A document in deletion-audit-logs has been ${changeStreamDocument.operationType}d`);
     }
     postDeletionAuditDetails(changeStreamDocument).catch((error) => {
       console.error('Error sending change stream update to API', error);
