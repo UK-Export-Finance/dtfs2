@@ -1,16 +1,11 @@
 import { getDaysInMonth, set, startOfDay } from 'date-fns';
 import Joi from 'joi';
 import { DayMonthYear } from '../types/date';
+import { ValidationError } from '../types/validation-error';
 
 type ValidationOptions = {
   errRef: string;
   variableDisplayName: string;
-};
-
-type ValidationError = {
-  errRef: string;
-  errMsg: string;
-  subFieldErrorRefs?: string[];
 };
 
 type ErrorsOrDate =

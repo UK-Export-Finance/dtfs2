@@ -3,8 +3,18 @@ import { uniq } from 'lodash';
 import { FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
 import { validateAndParseDayMonthYear } from '../../../utils/day-month-year-validation';
 import { DayMonthYear } from '../../../types/date';
+import { ValidationError } from '../../../types/validation-error';
 
-export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYear, coverStartDate: Date) => {
+type ErrorsOrDate =
+  | {
+      errors: null;
+      date: Date;
+    }
+  | {
+      errors: ValidationError[];
+    };
+
+export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYear, coverStartDate: Date): ErrorsOrDate => {
   const errRef = 'facilityEndDate';
 
   const formattingErrorsOrDate = validateAndParseDayMonthYear(dayMonthYear, {

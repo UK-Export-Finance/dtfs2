@@ -62,17 +62,18 @@ const ErrorMessagesMap = {
   },
 };
 
-/*
-  Maps through validation errors = require( the server and returns i)t
-  so both Summary Error component and field component
-  can display the error messages correctly.
-*/
+/**
+ * Maps through validation errors = require( the server and returns i)t
+ * so both Summary Error component and field component
+ * can display the error messages correctly.
+ * @returns {import('../types/view-models/facility-end-date-view-model').ViewModelErrors | null}
+ */
 const validationErrorHandler = (errs, href = '') => {
   const errorSummary = [];
   const fieldErrors = {};
 
   if (!errs) {
-    return false;
+    return null;
   }
 
   const errors = isObject(errs) ? [errs] : errs;
@@ -302,7 +303,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
   let unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change`;
   if (id === 'facilityEndDate') {
     // personalised href to change facility end date (once submitted to UKEF)
-    unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/facility-end-date?change=1`;
+    unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/facility-end-date/change`;
   }
   // personalised href for facility to change to unissued from issued (once submitted to UKEF and changed to issued)
   const issuedToUnissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change-to-unissued`;

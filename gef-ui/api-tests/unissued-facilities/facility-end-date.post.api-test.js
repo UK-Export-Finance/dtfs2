@@ -265,6 +265,6 @@ function postFacilityEndDateWithHeaders({ body, headers, saveAndReturn = false }
 
 function postChangeFacilityEndDateWithHeaders({ body, headers, saveAndReturn = false }) {
   return post(body, headers).to(
-    `/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date?change=1${saveAndReturn ? '&saveAndReturn=true' : ''}`,
+    `/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date/change${saveAndReturn ? '?saveAndReturn=true' : ''}`,
   );
 }

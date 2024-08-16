@@ -6,6 +6,7 @@ import * as api from '../../../services/api';
 import { validateAndParseFacilityEndDate } from './validation';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { FacilityEndDateViewModel } from '../../../types/view-models/facility-end-date-view-model';
+import { ValidationError } from '../../../types/validation-error';
 
 type FacilityEndDateParams = { dealId: string; facilityId: string };
 type FacilityEndDatePostBody = { 'facility-end-date-day': string; 'facility-end-date-month': string; 'facility-end-date-year': string };
@@ -14,41 +15,74 @@ type GetFacilityEndDateRequest = CustomExpressRequest<{ params: FacilityEndDateP
 type PostFacilityEndDateRequest = CustomExpressRequest<{
   reqBody: FacilityEndDatePostBody;
   params: FacilityEndDateParams;
-  query: { saveAndReturn: string; change: string };
+  query: { saveAndReturn: string };
 }>;
 
-export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Response) => {
+const getFacilityEndDateViewModel = async (req: GetFacilityEndDateRequest, previousPage: string): Promise<FacilityEndDateViewModel | null> => {
   const {
     params: { dealId, facilityId },
     session: { userToken },
-    query: { change },
   } = req;
 
-  try {
-    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
-    const deal = (await api.getApplication({ dealId, userToken })) as Record<string, unknown> & { version?: number };
+  const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
+  const deal = (await api.getApplication({ dealId, userToken })) as Record<string, unknown> & { version?: number };
 
-    if (!isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || !facility.isUsingFacilityEndDate) {
+  if (!isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || !facility.isUsingFacilityEndDate) {
+    return null;
+  }
+
+  const facilityEndDateViewModel: FacilityEndDateViewModel = {
+    dealId,
+    facilityId,
+    previousPage,
+  };
+
+  if ('facilityEndDate' in facility && typeof facility.facilityEndDate === 'string') {
+    const facilityEndDate = parseISO(facility.facilityEndDate);
+    facilityEndDateViewModel.facilityEndDate = {
+      day: String(getDate(facilityEndDate)),
+      month: String(getMonth(facilityEndDate) + 1),
+      year: String(getYear(facilityEndDate)),
+    };
+  }
+
+  return facilityEndDateViewModel;
+};
+
+export const getFacilityEndDateFromUnissuedFacilitiesPage = async (req: GetFacilityEndDateRequest, res: Response) => {
+  const {
+    params: { dealId, facilityId },
+  } = req;
+
+  const previousPage = `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/about`;
+
+  try {
+    const facilityEndDateViewModel = await getFacilityEndDateViewModel(req, previousPage);
+
+    if (!facilityEndDateViewModel) {
+      return res.redirect(previousPage);
+    }
+
+    return res.render('partials/facility-end-date.njk', facilityEndDateViewModel);
+  } catch (error) {
+    console.error(error);
+    return res.render('partials/problem-with-service.njk');
+  }
+};
+
+export const getFacilityEndDateFromApplicationPreviewPage = async (req: GetFacilityEndDateRequest, res: Response) => {
+  const {
+    params: { dealId, facilityId },
+  } = req;
+
+  const previousPage = `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/change`;
+
+  try {
+    const facilityEndDateViewModel = await getFacilityEndDateViewModel(req, previousPage);
+
+    if (!facilityEndDateViewModel) {
       return res.redirect(`/gef/application-details/${dealId}`);
     }
-
-    const facilityEndDateViewModel: FacilityEndDateViewModel = {
-      dealId,
-      facilityId,
-      previousPage: change
-        ? `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/change`
-        : `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/about`,
-    };
-
-    if ('facilityEndDate' in facility && typeof facility.facilityEndDate === 'string') {
-      const facilityEndDate = parseISO(facility.facilityEndDate);
-      facilityEndDateViewModel.facilityEndDate = {
-        day: String(getDate(facilityEndDate)),
-        month: String(getMonth(facilityEndDate) + 1),
-        year: String(getYear(facilityEndDate)),
-      };
-    }
-
     return res.render('partials/facility-end-date.njk', facilityEndDateViewModel);
   } catch (error) {
     console.error(error);
@@ -68,40 +102,70 @@ const getCoverStartDateOrStartOfToday = (facility: Record<string, unknown>): Dat
   throw new Error('Invalid coverStartDate');
 };
 
-export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: Response) => {
+export const validateAndReturnErrorsOrUpdateFacilityEndDate = async (req: PostFacilityEndDateRequest): Promise<ValidationError[] | null> => {
+  const {
+    params: { dealId, facilityId },
+    body: { 'facility-end-date-year': facilityEndDateYear, 'facility-end-date-month': facilityEndDateMonth, 'facility-end-date-day': facilityEndDateDay },
+    query: { saveAndReturn },
+  } = req;
+
+  const { userToken, user } = asLoggedInUserSession(req.session);
+
+  const facilityEndDateIsBlank = !facilityEndDateYear && !facilityEndDateMonth && !facilityEndDateDay;
+
+  if (isTrueSet(saveAndReturn) && facilityEndDateIsBlank) {
+    return null;
+  }
+
+  const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
+
+  const facilityEndDateErrorsAndDate = validateAndParseFacilityEndDate(
+    {
+      day: facilityEndDateDay,
+      month: facilityEndDateMonth,
+      year: facilityEndDateYear,
+    },
+    getCoverStartDateOrStartOfToday(facility),
+  );
+
+  if (facilityEndDateErrorsAndDate.errors) {
+    return facilityEndDateErrorsAndDate.errors;
+  }
+
+  const facilityEndDate = facilityEndDateErrorsAndDate.date;
+
+  const facilityEndDateValueIsUnchanged = typeof facility.facilityEndDate === 'string' && isSameDay(parseISO(facility.facilityEndDate), facilityEndDate);
+
+  if (!facilityEndDateValueIsUnchanged) {
+    await api.updateFacility({
+      facilityId,
+      payload: {
+        facilityEndDate,
+      },
+      userToken,
+    });
+
+    const applicationUpdate = {
+      editorId: user._id,
+    };
+    await api.updateApplication({ dealId, application: applicationUpdate, userToken });
+  }
+
+  return null;
+};
+
+export const postFacilityEndDateFromUnissuedFacilitiesPage = async (req: PostFacilityEndDateRequest, res: Response) => {
   try {
     const {
       params: { dealId, facilityId },
       body: { 'facility-end-date-year': facilityEndDateYear, 'facility-end-date-month': facilityEndDateMonth, 'facility-end-date-day': facilityEndDateDay },
-      query: { saveAndReturn, change },
     } = req;
 
-    const { userToken, user } = asLoggedInUserSession(req.session);
+    const facilityEndDateErrors = await validateAndReturnErrorsOrUpdateFacilityEndDate(req);
 
-    const facilityEndDateIsBlank = !facilityEndDateYear && !facilityEndDateMonth && !facilityEndDateDay;
-
-    if (isTrueSet(saveAndReturn) && facilityEndDateIsBlank) {
-      if (change) {
-        return res.redirect(`/gef/application-details/${dealId}`);
-      }
-
-      return res.redirect(`/gef/application-details/${dealId}/unissued-facilities`);
-    }
-
-    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
-
-    const facilityEndDateErrorsAndDate = validateAndParseFacilityEndDate(
-      {
-        day: facilityEndDateDay,
-        month: facilityEndDateMonth,
-        year: facilityEndDateYear,
-      },
-      getCoverStartDateOrStartOfToday(facility),
-    );
-
-    if (facilityEndDateErrorsAndDate.errors) {
-      return res.render('partials/facility-end-date.njk', {
-        errors: validationErrorHandler(facilityEndDateErrorsAndDate.errors),
+    if (facilityEndDateErrors) {
+      const facilityEndDateViewModel: FacilityEndDateViewModel = {
+        errors: validationErrorHandler(facilityEndDateErrors),
         dealId,
         facilityId,
         facilityEndDate: {
@@ -109,33 +173,43 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
           month: facilityEndDateMonth,
           year: facilityEndDateYear,
         },
-      });
-    }
-
-    const facilityEndDate = facilityEndDateErrorsAndDate.date;
-
-    const facilityEndDateValueIsUnchanged = typeof facility.facilityEndDate === 'string' && isSameDay(parseISO(facility.facilityEndDate), facilityEndDate);
-
-    if (!facilityEndDateValueIsUnchanged) {
-      await api.updateFacility({
-        facilityId,
-        payload: {
-          facilityEndDate,
-        },
-        userToken,
-      });
-
-      const applicationUpdate = {
-        editorId: user._id,
+        previousPage: `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/about`,
       };
-      await api.updateApplication({ dealId, application: applicationUpdate, userToken });
-    }
-
-    if (change) {
-      return res.redirect(`/gef/application-details/${dealId}`);
+      return res.render('partials/facility-end-date.njk', facilityEndDateViewModel);
     }
 
     return res.redirect(`/gef/application-details/${dealId}/unissued-facilities`);
+  } catch (error) {
+    console.error(error);
+    return res.render('partials/problem-with-service.njk');
+  }
+};
+
+export const postFacilityEndDateFromApplicationPreviewPage = async (req: PostFacilityEndDateRequest, res: Response) => {
+  try {
+    const {
+      params: { dealId, facilityId },
+      body: { 'facility-end-date-year': facilityEndDateYear, 'facility-end-date-month': facilityEndDateMonth, 'facility-end-date-day': facilityEndDateDay },
+    } = req;
+
+    const facilityEndDateErrors = await validateAndReturnErrorsOrUpdateFacilityEndDate(req);
+
+    if (facilityEndDateErrors) {
+      const facilityEndDateViewModel: FacilityEndDateViewModel = {
+        errors: validationErrorHandler(facilityEndDateErrors),
+        dealId,
+        facilityId,
+        facilityEndDate: {
+          day: facilityEndDateDay,
+          month: facilityEndDateMonth,
+          year: facilityEndDateYear,
+        },
+        previousPage: `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/change`,
+      };
+      return res.render('partials/facility-end-date.njk', facilityEndDateViewModel);
+    }
+
+    return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {
     console.error(error);
     return res.render('partials/problem-with-service.njk');

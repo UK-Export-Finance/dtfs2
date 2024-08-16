@@ -323,7 +323,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
     await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
     if (isUsingFacilityEndDate === true) {
-      return res.redirect(`/gef/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date?change=1`);
+      return res.redirect(`/gef/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date/change`);
     }
 
     return res.redirect(`/gef/application-details/${dealId}`);
