@@ -1,11 +1,17 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect, jest } from '@jest/globals';
+import { TEAM_IDS } from '@ukef/dtfs2-common';
 import { get, post } from '../../test-mocks/router-mock';
 import caseController from '../../controllers/case';
 import partiesController from '../../controllers/case/parties';
 import underwritingController from '../../controllers/case/underwriting';
 import activityController from '../../controllers/case/activity';
 import amendmentsController from '../../controllers/case/amendments';
+import { validateUserTeam } from '../../middleware';
+
+jest.mock('../../middleware', () => ({
+  validateUserTeam: jest.fn(),
+}));
 
 describe('routes - case', () => {
   afterEach(() => {
@@ -85,27 +91,27 @@ describe('routes - case', () => {
 
     expect(get).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date',
-      expect.any(Function),
+      validateUserTeam([TEAM_IDS.PIM]),
       amendmentsController.getAmendCoverEndDate,
     );
     expect(get).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date',
-      expect.any(Function),
+      validateUserTeam([TEAM_IDS.PIM]),
       amendmentsController.getAmendmentIsUsingFacilityEndDate,
     );
     expect(get).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date',
-      expect.any(Function),
+      validateUserTeam([TEAM_IDS.PIM]),
       amendmentsController.getAmendmentFacilityEndDate,
     );
     expect(get).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date',
-      expect.any(Function),
+      validateUserTeam([TEAM_IDS.PIM]),
       amendmentsController.getAmendmentBankReviewDate,
     );
     expect(get).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value',
-      expect.any(Function),
+      validateUserTeam([TEAM_IDS.PIM]),
       amendmentsController.getAmendFacilityValue,
     );
 
@@ -211,27 +217,27 @@ describe('routes - case', () => {
 
     expect(post).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date',
-      expect.any(Function),
+      validateUserTeam([TEAM_IDS.PIM]),
       amendmentsController.postAmendCoverEndDate,
     );
     expect(post).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date',
-      expect.any(Function),
+      validateUserTeam([TEAM_IDS.PIM]),
       amendmentsController.postAmendmentIsUsingFacilityEndDate,
     );
     expect(post).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date',
-      expect.any(Function),
+      validateUserTeam([TEAM_IDS.PIM]),
       amendmentsController.postAmendmentFacilityEndDate,
     );
     expect(post).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date',
-      expect.any(Function),
+      validateUserTeam([TEAM_IDS.PIM]),
       amendmentsController.postAmendmentBankReviewDate,
     );
     expect(post).toHaveBeenCalledWith(
       '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value',
-      expect.any(Function),
+      validateUserTeam([TEAM_IDS.PIM]),
       amendmentsController.postAmendFacilityValue,
     );
 

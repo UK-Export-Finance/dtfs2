@@ -9,18 +9,18 @@ import { FacilityType } from '../facility-type';
 type FacilityEndDateProperties =
   | {
       isUsingFacilityEndDate: true;
-      bankReviewDate: Date | null;
-      facilityEndDate?: null;
+      facilityEndDate?: Date | null;
+      bankReviewDate?: null;
     }
   | {
       isUsingFacilityEndDate: false;
-      bankReviewDate?: null;
-      facilityEndDate?: Date | null;
+      facilityEndDate?: null;
+      bankReviewDate?: Date | null;
     }
   | {
       isUsingFacilityEndDate?: null;
-      bankReviewDate?: null;
       facilityEndDate?: null;
+      bankReviewDate?: null;
     };
 
 /**
@@ -55,9 +55,6 @@ export type Facility = {
   guaranteeFee: number;
   submittedAsIssuedDate: UnixTimestampString | null;
   ukefFacilityId: string | null;
-  isUsingFacilityEndDate?: boolean;
-  facilityEndDate?: Date | string;
-  bankReviewDate?: Date | string;
   feeType: string;
   feeFrequency: string;
   dayCountBasis: number;

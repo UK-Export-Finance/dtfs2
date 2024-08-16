@@ -1,20 +1,38 @@
 import { ObjectId } from 'mongodb';
+import { Facility, TfmFacility } from '@ukef/dtfs2-common';
 import { getLatestFacilityEndDateValues } from './getLatestFacilityEndDateValues.ts';
 import { MOCK_FACILITY_SNAPSHOT } from '../../../__mocks__/mock-facility-snapshot.ts';
 import { MOCK_AMENDMENT } from '../../../__mocks__/mock-amendment';
 
 describe('getLatestFacilityEndDateValues', () => {
-  const facility = {
+  const facility: TfmFacility = {
     _id: new ObjectId('1234567890abcdef12345678'),
     facilitySnapshot: MOCK_FACILITY_SNAPSHOT,
+  };
+
+  const mockFacilityEndDate = new Date('2024-04-04');
+  const mockBankReviewDate = new Date('2025-05-05');
+
+  const facilitySnapshotWithFacilityEndDate: Facility = {
+    ...MOCK_FACILITY_SNAPSHOT,
+    isUsingFacilityEndDate: true,
+    facilityEndDate: mockFacilityEndDate,
+    bankReviewDate: undefined,
+  };
+
+  const facilitySnapshotWithBankReviewDate: Facility = {
+    ...MOCK_FACILITY_SNAPSHOT,
+    isUsingFacilityEndDate: false,
+    bankReviewDate: mockBankReviewDate,
+    facilityEndDate: undefined,
   };
 
   describe('when there are amendments', () => {
     it('should return the values from the facility snapshot when no amendments update the FED values', () => {
       // Arrange
-      const facilityWithAmendments = {
+      const facilityWithAmendments: TfmFacility = {
         ...facility,
-        facilitySnapshot: { ...MOCK_FACILITY_SNAPSHOT, isUsingFacilityEndDate: true, facilityEndDate: new Date('2024-03-05') },
+        facilitySnapshot: facilitySnapshotWithFacilityEndDate,
         amendments: [
           { ...MOCK_AMENDMENT, updatedAt: 1723653111, version: 1 },
           { ...MOCK_AMENDMENT, updatedAt: 1723653222, version: 2 },
@@ -25,16 +43,16 @@ describe('getLatestFacilityEndDateValues', () => {
       const result = getLatestFacilityEndDateValues(facilityWithAmendments);
 
       // Assert
-      expect(result).toEqual({ isUsingFacilityEndDate: true, facilityEndDate: new Date('2024-03-05'), bankReviewDate: undefined });
+      expect(result).toEqual({ isUsingFacilityEndDate: true, facilityEndDate: mockFacilityEndDate });
     });
 
     it('should return the the latest amendment value when the FED has been amended', () => {
       // Arrange
-      const facilityWithAmendments = {
+      const facilityWithAmendments: TfmFacility = {
         ...facility,
-        facilitySnapshot: { ...MOCK_FACILITY_SNAPSHOT, isUsingFacilityEndDate: true, facilityEndDate: new Date('2024-03-05') },
+        facilitySnapshot: facilitySnapshotWithFacilityEndDate,
         amendments: [
-          { ...MOCK_AMENDMENT, updatedAt: 1723653111, version: 1, tfm: { bankReviewDate: new Date('2025-05-05'), isUsingFacilityEndDate: false } },
+          { ...MOCK_AMENDMENT, updatedAt: 1723653111, version: 1, tfm: { bankReviewDate: mockBankReviewDate, isUsingFacilityEndDate: false } },
           { ...MOCK_AMENDMENT, updatedAt: 1723653222, version: 2 },
         ],
       };
@@ -43,37 +61,37 @@ describe('getLatestFacilityEndDateValues', () => {
       const result = getLatestFacilityEndDateValues(facilityWithAmendments);
 
       // Assert
-      expect(result).toEqual({ isUsingFacilityEndDate: false, bankReviewDate: new Date('2025-05-05'), facilityEndDate: undefined });
+      expect(result).toEqual({ isUsingFacilityEndDate: false, bankReviewDate: mockBankReviewDate });
     });
   });
 
   describe('when there are no amendments', () => {
     it('should return the values from the facility snapshot when isUsingFacilityEndDate is true', () => {
       // Arrange
-      const facilityWithFEDSnapshotValues = {
+      const facilityWithFEDSnapshotValues: TfmFacility = {
         ...facility,
-        facilitySnapshot: { ...MOCK_FACILITY_SNAPSHOT, isUsingFacilityEndDate: true, facilityEndDate: new Date('2024-03-05') },
+        facilitySnapshot: facilitySnapshotWithFacilityEndDate,
       };
 
       // Act
       const result = getLatestFacilityEndDateValues(facilityWithFEDSnapshotValues);
 
       // Assert
-      expect(result).toEqual({ isUsingFacilityEndDate: true, facilityEndDate: new Date('2024-03-05'), bankReviewDate: undefined });
+      expect(result).toEqual({ isUsingFacilityEndDate: true, facilityEndDate: mockFacilityEndDate });
     });
 
     it('should return the values from the facility snapshot when isUsingFacilityEndDate is false', () => {
       // Arrange
-      const facilityWithFEDSnapshotValues = {
+      const facilityWithFEDSnapshotValues: TfmFacility = {
         ...facility,
-        facilitySnapshot: { ...MOCK_FACILITY_SNAPSHOT, isUsingFacilityEndDate: false, bankReviewDate: new Date('2025-03-05') },
+        facilitySnapshot: facilitySnapshotWithBankReviewDate,
       };
 
       // Act
       const result = getLatestFacilityEndDateValues(facilityWithFEDSnapshotValues);
 
       // Assert
-      expect(result).toEqual({ isUsingFacilityEndDate: false, bankReviewDate: new Date('2025-03-05'), facilityEndDate: undefined });
+      expect(result).toEqual({ isUsingFacilityEndDate: false, bankReviewDate: mockBankReviewDate });
     });
   });
 });

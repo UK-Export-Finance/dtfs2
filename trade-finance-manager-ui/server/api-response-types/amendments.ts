@@ -1,3 +1,5 @@
+import { IsoDateTimeStamp } from '@ukef/dtfs2-common';
+
 type ErrorResponse = {
   status: number;
   data: string;
@@ -6,11 +8,11 @@ type ErrorResponse = {
 type FacilityEndDateResponse =
   | {
       isUsingFacilityEndDate: true;
-      facilityEndDate?: Date;
+      facilityEndDate?: IsoDateTimeStamp;
     }
   | {
       isUsingFacilityEndDate: false;
-      bankReviewDate?: Date;
+      bankReviewDate?: IsoDateTimeStamp;
     }
   | {
       isUsingFacilityEndDate: undefined;

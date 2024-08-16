@@ -221,7 +221,6 @@ describe('amendmentBankReviewDate routes', () => {
           dayInput: '',
           monthInput: '',
           yearInput: '',
-          currentBankReviewDate: undefined,
           isEditable: true,
           user,
         });

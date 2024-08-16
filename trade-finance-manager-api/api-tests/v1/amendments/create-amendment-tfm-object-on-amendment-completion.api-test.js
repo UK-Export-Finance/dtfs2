@@ -256,7 +256,6 @@ describe('update amendment-tfm on amendment completion', () => {
         const expected = {
           facilityEndDate: facilityEndDateIsoString,
           isUsingFacilityEndDate: true,
-          bankReviewDate: undefined,
         };
 
         expect(result).toEqual(expected);
@@ -273,7 +272,6 @@ describe('update amendment-tfm on amendment completion', () => {
         const expected = {
           bankReviewDate: bankReviewDateIsoString,
           isUsingFacilityEndDate: false,
-          facilityEndDate: undefined,
         };
 
         expect(result).toEqual(expected);
@@ -291,7 +289,6 @@ describe('update amendment-tfm on amendment completion', () => {
           coverEndDate: unixTime,
           isUsingFacilityEndDate: true,
           facilityEndDate: facilityEndDateIsoString,
-          bankReviewDate: undefined,
         };
 
         expect(result).toEqual(expected);
