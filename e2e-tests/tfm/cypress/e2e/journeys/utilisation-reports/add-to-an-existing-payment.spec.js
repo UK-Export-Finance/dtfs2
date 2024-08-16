@@ -23,13 +23,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     .withBankId('961')
     .build();
 
-  const paymentOne = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
+  const firstPayment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
     .withAmount(450)
     .withDateReceived(new Date('2023-02-02'))
     .withId(PAYMENT_ID_ONE)
     .withReference('REF00001')
     .build();
-  const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report)
+  const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
     .withId(FEE_RECORD_ID_ONE)
     .withFacilityId('11111111')
     .withExporter('Exporter 1')
@@ -39,7 +39,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     .withPaymentExchangeRate(2)
     .withStatus('TO_DO')
     .build();
-  const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report)
+  const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
     .withId(FEE_RECORD_ID_TWO)
     .withFacilityId('22222222')
     .withExporter('Exporter 2')
@@ -47,7 +47,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     .withFeesPaidToUkefForThePeriod(200)
     .withFeesPaidToUkefForThePeriodCurrency('EUR')
     .withPaymentExchangeRate(0.5)
-    .withPayments([paymentOne])
+    .withPayments([firstPayment])
     .withStatus('DOES_NOT_MATCH')
     .build();
 
@@ -76,7 +76,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
 
-      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
 
       navigateToAddToExistingPaymentScreenGivenSelectedFeeRecord();
     });
@@ -97,13 +97,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     beforeEach(() => {
       const PAYMENT_ID_TWO = '2';
       const FEE_RECORD_ID_THREE = '33';
-      const paymentTwo = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
+      const secondPayment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
         .withAmount(100)
         .withDateReceived(new Date('2023-02-02'))
         .withId(PAYMENT_ID_TWO)
         .withReference('REF00002')
         .build();
-      const feeRecordThree = FeeRecordEntityMockBuilder.forReport(report)
+      const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
         .withId(FEE_RECORD_ID_THREE)
         .withFacilityId('33333333')
         .withExporter('Exporter 3')
@@ -111,7 +111,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
         .withFeesPaidToUkefForThePeriod(300)
         .withFeesPaidToUkefForThePeriodCurrency('EUR')
         .withPaymentExchangeRate(0.5)
-        .withPayments([paymentTwo])
+        .withPayments([secondPayment])
         .withStatus('DOES_NOT_MATCH')
         .build();
 
@@ -119,7 +119,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
 
-      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo, feeRecordThree]);
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord]);
 
       navigateToAddToExistingPaymentScreenGivenSelectedFeeRecord();
     });
