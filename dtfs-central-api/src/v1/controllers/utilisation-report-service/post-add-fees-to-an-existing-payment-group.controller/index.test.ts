@@ -41,7 +41,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([aFeeRecordWithPayments]).build(),
     );
 
-    const paymentRepoFindSpy = jest.spyOn(PaymentRepo, 'findPaymentsInGroupContainingPaymentWithIdAndReportId');
+    const paymentRepoFindSpy = jest.spyOn(PaymentRepo, 'findPaymentsInGroupContainingPaymentByIdAndReportIdWithFeeRecords');
     const feeRecordRepoFindSpy = jest.spyOn(FeeRecordRepo, 'findByIdAndReportIdWithReport');
 
     beforeEach(() => {
