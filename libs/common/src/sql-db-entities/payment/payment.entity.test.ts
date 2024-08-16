@@ -26,7 +26,7 @@ describe('PaymentEntity', () => {
       expect(payment.feeRecords).toEqual(expect.arrayContaining([existingFeeRecord, firstNewFeeRecord, secondNewFeeRecord]));
     });
 
-    it('does not allow duplicate fee records to be added to the payment', () => {
+    it('does not allow adding a fee record which is already attached to payment', () => {
       // Arrange
       const payment = PaymentEntityMockBuilder.forCurrency('GBP').build();
 
