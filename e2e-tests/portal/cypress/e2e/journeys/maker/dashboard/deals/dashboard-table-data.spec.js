@@ -12,6 +12,7 @@ const { BSS_DEAL, GEF_DEAL, GEF_DEAL_MAKER_2, GEF_DEAL_BANK_2_MAKER_2 } = MOCK_D
 const regexDateTime = /\d?\d \w\w\w \d\d\d\d/;
 
 context('View dashboard deals as a maker', () => {
+  let ALL_BANK1_DEALS;
   let ALL_BANK2_DEALS;
   let gefDeal;
   let bssDeal;
@@ -58,11 +59,12 @@ context('View dashboard deals as a maker', () => {
     gefDealId = gefDeal._id;
     bssDealId = bssDeal._id;
 
+    ALL_BANK1_DEALS = ALL_DEALS.filter(({ bank }) => bank.id === BANK1_MAKER1.bank.id);
     ALL_BANK2_DEALS = ALL_DEALS.filter(({ bank }) => bank.id === BANK2_MAKER2.bank.id);
   });
 
   it('BSS and GEF deals render on the dashboard with correct values', () => {
-    cy.login(ADMIN);
+    cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
 
     const { exporter, bankRef, product, status, type, updated } = dashboardDeals.row;
@@ -72,7 +74,7 @@ context('View dashboard deals as a maker', () => {
       .totalItems()
       .invoke('text')
       .then((text) => {
-        expect(text.trim()).equal(`(${ALL_DEALS.length} items)`);
+        expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
       });
 
     //---------------------------------------------------------------
@@ -120,7 +122,7 @@ context('View dashboard deals as a maker', () => {
     //---------------------------------------------------------------
     // second deal (BSS)
     //---------------------------------------------------------------
-    cy.get('table tr').find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
+    cy.get('table tr').eq(2).find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
 
     exporter(bssDealId)
       .invoke('text')
@@ -177,18 +179,16 @@ context('View dashboard deals as a maker', () => {
 
   // TODO: DTFS2-5372 - fix.
   it('should not show deals created by other banks', () => {
-    cy.login(ADMIN);
+    cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
 
     dashboardDeals
       .totalItems()
       .invoke('text')
       .then((text) => {
-        expect(text.trim()).equal(`(${ALL_DEALS.length} items)`);
+        expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
       });
 
-    ALL_BANK2_DEALS.forEach((deal) => {
-      cy.get('table tr').find(`[data-cy="facility__name--link--${deal._id}"]`).should('not.exist');
-    });
+    cy.get('table tr').find(`[data-cy="deal__status--${ALL_BANK2_DEALS[0]._id}"]`).should('not.exist');
   });
 });
