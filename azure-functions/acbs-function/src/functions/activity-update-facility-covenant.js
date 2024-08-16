@@ -27,10 +27,10 @@ const { isHttpErrorStatus } = require('../../helpers/http');
  * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
  * If any other error occurs, it logs the error and throws a new error.
  *
- * @param {Object} payload - The payload containing the facilityIdentifier and acbsFacilityCovenantInput.
+ * @param {object} payload - The payload containing the facilityIdentifier and acbsFacilityCovenantInput.
  * @param {string} payload.facilityIdentifier - The identifier of the facility.
- * @param {Object} payload.acbsFacilityCovenantInput - The acbsFacilityCovenantInput object containing the covenant details.
- * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
+ * @param {object} payload.acbsFacilityCovenantInput - The acbsFacilityCovenantInput object containing the covenant details.
+ * @returns {object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request to generate the covenant ID fails, or if any other error occurs.
  */
 const handler = async (payload) => {
@@ -45,7 +45,6 @@ const handler = async (payload) => {
     const submittedToACBS = getNowAsIsoString();
     const { status, data } = await api.updateFacilityCovenant(facilityIdentifier, acbsFacilityCovenantInput);
 
-    // Throw error upon an unsuccessful response
     if (isHttpErrorStatus(status)) {
       throw new Error(
         JSON.stringify(

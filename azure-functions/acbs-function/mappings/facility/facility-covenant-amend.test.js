@@ -1,43 +1,29 @@
 const facilityCovenantAmend = require('./facility-covenant-amend');
 
 describe('facilityCovenantAmend', () => {
-  const aValidAmountRequest = { amount: 123.456 };
-  const aValidAmountExpectedResult = { targetAmount: 123.46 };
-
-  const aValidGuaranteeExpiryDateRequest = { facilityGuaranteeDates: { guaranteeExpiryDate: '2022-01-01' } };
-  const aValidGuaranteeExpiryDateExpectedResult = { expirationDate: '2022-01-01' };
-
-  const aValidAmountAndGuaranteeExpiryDateRequest = {
-    ...aValidAmountRequest,
-    ...aValidGuaranteeExpiryDateRequest,
-  };
-  const aValidAmountAndGuaranteeExpiryDateExpectedResult = {
-    ...aValidAmountExpectedResult,
-    ...aValidGuaranteeExpiryDateExpectedResult,
-  };
-
   describe('when there is an amendment amount', () => {
-    const amendment = aValidAmountRequest;
+    const amendment = { amount: 123.456 };
 
     it('returns the target amount rounded to 2 decimal places', () => {
       const result = facilityCovenantAmend(amendment);
-      expect(result).toEqual(aValidAmountExpectedResult);
+      expect(result).toEqual({ targetAmount: 123.46 });
     });
   });
 
   describe('when there is a guarantee expiry date', () => {
-    const amendment = aValidGuaranteeExpiryDateRequest;
+    const amendment = { facilityGuaranteeDates: { guaranteeExpiryDate: '2022-01-01' } };
+
     it('returns the guarantee expiry date', () => {
       const result = facilityCovenantAmend(amendment);
-      expect(result).toEqual(aValidGuaranteeExpiryDateExpectedResult);
+      expect(result).toEqual({ expirationDate: '2022-01-01' });
     });
   });
 
   describe('when there is an amendment amount and a guarantee expiry date', () => {
-    const amendment = aValidAmountAndGuaranteeExpiryDateRequest;
+    const amendment = { amount: 123.456, facilityGuaranteeDates: { guaranteeExpiryDate: '2022-01-01' } };
     it('returns the target amount rounded to 2 decimal places and the guarantee expiry date', () => {
       const result = facilityCovenantAmend(amendment);
-      expect(result).toEqual(aValidAmountAndGuaranteeExpiryDateExpectedResult);
+      expect(result).toEqual({ expirationDate: '2022-01-01', targetAmount: 123.46 });
     });
   });
 
@@ -51,9 +37,9 @@ describe('facilityCovenantAmend', () => {
 
   describe('when there are extra fields', () => {
     const amendment = {
-      ...aValidAmountAndGuaranteeExpiryDateRequest,
+      amount: 123.456,
+      facilityGuaranteeDates: { guaranteeExpiryDate: '2022-01-01', extraField: 'extra field' },
       extraField: 'extra field',
-      facilityGuaranteeDates: { ...aValidAmountAndGuaranteeExpiryDateRequest.facilityGuaranteeDates, extraField: 'extra field' },
     };
     it('returns the target amount rounded to 2 decimal places and the guarantee expiry date', () => {
       const result = facilityCovenantAmend(amendment);
