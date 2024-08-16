@@ -6,7 +6,7 @@ describe('facilityGuaranteeAmend', () => {
 
     it('returns the target amount rounded to 2 decimal places', () => {
       const result = facilityGuaranteeAmend(amendment);
-      expect(result).toEqual({ targetAmount: 123.46 });
+      expect(result).toEqual({ guaranteedLimit: 123.46 });
     });
   });
 
@@ -22,7 +22,7 @@ describe('facilityGuaranteeAmend', () => {
     const amendment = { amount: 123.456, facilityGuaranteeDates: { guaranteeExpiryDate: '2022-01-01' } };
     it('returns the target amount rounded to 2 decimal places and the guarantee expiry date', () => {
       const result = facilityGuaranteeAmend(amendment);
-      expect(result).toEqual({ targetAmount: 123.46, expirationDate: '2022-01-01' });
+      expect(result).toEqual({ guaranteedLimit: 123.46, expirationDate: '2022-01-01' });
     });
   });
 
@@ -40,7 +40,7 @@ describe('facilityGuaranteeAmend', () => {
     };
     it('returns the target amount rounded to 2 decimal places and the guarantee expiry date', () => {
       const result = facilityGuaranteeAmend(amendment);
-      expect(result).toEqual({ targetAmount: 123.46, expirationDate: '2022-01-01' });
+      expect(result).toEqual({ guaranteedLimit: 123.46, expirationDate: '2022-01-01' });
     });
   });
 });
