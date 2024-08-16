@@ -220,15 +220,15 @@ class Facility {
       throw new InvalidParameterError('isUsingFacilityEndDate', req.isUsingFacilityEndDate);
     }
 
-    if (req.facilityEndDate && req.bankReviewDate) {
+    if ('facilityEndDate' in req && 'bankReviewDate' in req) {
       throw new InvalidPayloadError('A facility cannot have both a facilityEndDate and bankReviewDate');
     }
 
-    if (req.isUsingFacilityEndDate === true && req.bankReviewDate) {
+    if ('isUsingFacilityEndDate' in req && req.isUsingFacilityEndDate === true && 'bankReviewDate' in req) {
       throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
     }
 
-    if (req.isUsingFacilityEndDate === false && req.facilityEndDate) {
+    if ('isUsingFacilityEndDate' in req && req.isUsingFacilityEndDate === false && 'facilityEndDate' in req) {
       throw new InvalidParameterError('facilityEndDate', req.facilityEndDate);
     }
 
@@ -242,33 +242,25 @@ class Facility {
     }
 
     if ('bankReviewDate' in req) {
-      if (req.bankReviewDate === null) {
-        this.bankReviewDate = null;
-      } else {
-        const bankReviewDate = parseISO(req.bankReviewDate);
-        if (!isValid(bankReviewDate)) {
-          throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
-        }
-
-        this.bankReviewDate = bankReviewDate;
-        this.isUsingFacilityEndDate = false;
-        this.facilityEndDate = null;
+      const bankReviewDate = parseISO(req.bankReviewDate);
+      if (!isValid(bankReviewDate)) {
+        throw new InvalidParameterError('bankReviewDate', req.bankReviewDate);
       }
+
+      this.bankReviewDate = bankReviewDate;
+      this.isUsingFacilityEndDate = false;
+      this.facilityEndDate = null;
     }
 
     if ('facilityEndDate' in req) {
-      if (req.bankReviewDate === null) {
-        this.bankReviewDate = null;
-      } else {
-        const facilityEndDate = parseISO(req.facilityEndDate);
-        if (!isValid(facilityEndDate)) {
-          throw new InvalidParameterError('facilityEndDate', req.facilityEndDate);
-        }
-
-        this.facilityEndDate = facilityEndDate;
-        this.isUsingFacilityEndDate = true;
-        this.bankReviewDate = null;
+      const facilityEndDate = parseISO(req.facilityEndDate);
+      if (!isValid(facilityEndDate)) {
+        throw new InvalidParameterError('facilityEndDate', req.facilityEndDate);
       }
+
+      this.facilityEndDate = facilityEndDate;
+      this.isUsingFacilityEndDate = true;
+      this.bankReviewDate = null;
     }
   }
 }

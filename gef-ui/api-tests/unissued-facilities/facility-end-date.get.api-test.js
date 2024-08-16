@@ -33,7 +33,7 @@ describe('facility end date routes', () => {
   });
 
   describe('GET /application-details/:dealId/unissued-facilities/:facilityId/facility-end-date', () => {
-    describe('with deal version 1 and not using facility end date', () => {
+    describe('with deal version 1 and using facility end date', () => {
       beforeEach(() => {
         mockIsUsingFacilityEndDate(true);
         mockDealVersion(1);

@@ -11,18 +11,18 @@ const { validationErrorHandler } = require('../../utils/helpers');
 
 /**
  * creates body/parameters for the template for unissued facilities
- * if change true, changes 'cancel' + 'back' button href back to application preview
+ * if hasComeFromApplicationPreviewPage true, changes 'cancel' + 'back' button href back to application preview
  * else renders back to unissued facilities list
  * @param {object} input - An object containing the below
  * @param {object} input.params - An object containing the facility id and deal id
  * @param {object} input.query - An object containing the query status
- * @param {boolean} input.change - A boolean to determine if change is true or false
+ * @param {boolean} input.hasComeFromApplicationPreviewPage - Whether the previous page was application preview or unissued facilities
  * @param {string} input.userToken - The user token
  * @returns {Promise<object>} body
  */
-const renderChangeFacilityPartial = async ({ params, query, change, userToken }) => {
+const renderChangeFacilityPartial = async ({ params, query, hasComeFromApplicationPreviewPage, userToken }) => {
   const { dealId, facilityId } = params;
-  const { status, overwrite } = query;
+  const { status } = query;
 
   const { details } = await api.getFacility({ facilityId, userToken });
   const deal = await api.getApplication({ dealId, userToken });
@@ -48,12 +48,12 @@ const renderChangeFacilityPartial = async ({ params, query, change, userToken })
     coverEndDateDay: coverEndDate ? format(coverEndDate, 'd') : null,
     coverEndDateMonth: coverEndDate ? format(coverEndDate, 'M') : null,
     coverEndDateYear: coverEndDate ? format(coverEndDate, 'yyyy') : null,
-    isUsingFacilityEndDate: change && !overwrite ? details.isUsingFacilityEndDate?.toString() : undefined,
+    isUsingFacilityEndDate: details.isUsingFacilityEndDate?.toString(),
     facilityTypeString,
     dealId,
     facilityId,
     status,
-    change,
+    previousPage: hasComeFromApplicationPreviewPage ? `/gef/application-details/${dealId}` : `/gef/application-details/${dealId}/unissued-facilities`,
     isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
   };
 };
@@ -71,7 +71,7 @@ const changeUnissuedFacility = async (req, res) => {
     const body = await renderChangeFacilityPartial({
       params,
       query,
-      change: false,
+      hasComeFromApplicationPreviewPage: false,
       userToken,
     });
 
@@ -94,7 +94,7 @@ const changeUnissuedFacilityPreview = async (req, res) => {
     const body = await renderChangeFacilityPartial({
       params,
       query,
-      change: true,
+      hasComeFromApplicationPreviewPage: true,
       userToken,
     });
 
@@ -196,26 +196,21 @@ const postChangeUnissuedFacility = async (req, res) => {
       _id: user._id,
     };
 
-    const applicationUpdatePayload = {
-      name: body.facilityName,
-      shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
-      monthsOfCover: details.monthsOfCover || null,
-      issueDate: issueDate ? format(issueDate, CONSTANTS.DATE_FORMAT.COVER) : null,
-      coverStartDate: coverStartDate ? format(coverStartDate, CONSTANTS.DATE_FORMAT.COVER) : null,
-      coverEndDate: coverEndDate ? format(coverEndDate, CONSTANTS.DATE_FORMAT.COVER) : null,
-      hasBeenIssued: true,
-      canResubmitIssuedFacilities: true,
-      coverDateConfirmed: true,
-      unissuedToIssuedByMaker: userObj,
-    };
-
-    if (isFacilityEndDateEnabled) {
-      applicationUpdatePayload.isUsingFacilityEndDate = isUsingFacilityEndDate;
-    }
-
     await api.updateFacility({
       facilityId,
-      payload: applicationUpdatePayload,
+      payload: {
+        name: body.facilityName,
+        shouldCoverStartOnSubmission: isTrueSet(body.shouldCoverStartOnSubmission),
+        monthsOfCover: details.monthsOfCover || null,
+        issueDate: issueDate ? format(issueDate, CONSTANTS.DATE_FORMAT.COVER) : null,
+        coverStartDate: coverStartDate ? format(coverStartDate, CONSTANTS.DATE_FORMAT.COVER) : null,
+        coverEndDate: coverEndDate ? format(coverEndDate, CONSTANTS.DATE_FORMAT.COVER) : null,
+        hasBeenIssued: true,
+        canResubmitIssuedFacilities: true,
+        coverDateConfirmed: true,
+        unissuedToIssuedByMaker: userObj,
+        isUsingFacilityEndDate,
+      },
       userToken,
     });
     req.success = {

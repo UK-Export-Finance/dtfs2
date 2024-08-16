@@ -367,7 +367,7 @@ context('Return to maker for unissued to issued facilities', () => {
       const facilityEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
       applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change?overwrite=1`));
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
 
       aboutFacilityUnissued.issueDateDay().type(dateConstants.threeDaysDay);
       aboutFacilityUnissued.issueDateMonth().type(dateConstants.threeDaysMonth);

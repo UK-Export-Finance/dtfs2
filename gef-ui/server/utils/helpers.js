@@ -215,7 +215,7 @@ const previewItemConditions = (previewParams) => {
      * add link displayed taking to unissued-facility-change change page, overwriting existing value for isFacilityEndDateProvided
      */
     summaryItems = generateActionsArrayForItem({
-      href: `${unissuedHref}?overwrite=1`,
+      href: `${unissuedHref}`,
       visuallyHiddenText: item.label,
       text: shouldDisplayChangeLinkIfUnissued && ACTION_TEXT.CHANGE,
       id: item.id,

@@ -59,7 +59,7 @@ describe('facility end date routes', () => {
     ];
 
     describe.each(describeCases)('$description', ({ postWithHeaders, successUrl }) => {
-      function postWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn = false }) {
+      const postWithBodyAndSessionCookie = ({ body, sessionCookie, saveAndReturn = false }) => {
         return postWithHeaders({
           body,
           headers: {
@@ -67,7 +67,7 @@ describe('facility end date routes', () => {
           },
           saveAndReturn,
         });
-      }
+      };
 
       describe('with saveAndReturn false', () => {
         withRoleValidationApiTests({

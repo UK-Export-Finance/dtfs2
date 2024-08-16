@@ -5,7 +5,7 @@ import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
 import * as api from '../../services/api';
 import { validateAndParseFacilityEndDate } from './validation';
 import { asLoggedInUserSession } from '../../utils/express-session';
-import { FacilityEndDateViewModel } from '../../types/view-models/facility-end-date-model';
+import { FacilityEndDateViewModel } from '../../types/view-models/facility-end-date-view-model';
 
 type FacilityEndDateParams = { dealId: string; facilityId: string };
 type FacilityEndDatePostBody = { 'facility-end-date-day': string; 'facility-end-date-month': string; 'facility-end-date-year': string };
