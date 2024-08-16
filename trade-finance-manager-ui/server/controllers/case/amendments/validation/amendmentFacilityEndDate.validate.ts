@@ -7,12 +7,6 @@ type ErrorOrFacilityEndDate =
     }
   | { facilityEndDate: Date; error: null };
 
-/**
- * @param {import('@ukef/dtfs2-common').DayMonthYearInput} date
- * @param {Date} coverStartDate
- * @returns {object} containing errors and amendment facility end date
- */
-
 export const facilityEndDateValidation = (date: DayMonthYearInput, coverStartDate: Date): ErrorOrFacilityEndDate => {
   const { error: standardError, parsedDate } = applyStandardValidationAndParseDateInput(date, 'facility end date', 'facility-end-date');
 

@@ -106,6 +106,8 @@ describe('mapGefFacilityDates', () => {
             tfm: {
               coverEndDate: 1723641632,
               isUsingFacilityEndDate: false,
+              facilityEndDate: new Date('2025-08-12'),
+              bankReviewDate: new Date('2025-07-12'),
             },
           },
         ],

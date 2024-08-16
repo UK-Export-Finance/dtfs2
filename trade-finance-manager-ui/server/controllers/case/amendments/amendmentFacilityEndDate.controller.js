@@ -18,7 +18,7 @@ const getAmendmentFacilityEndDate = async (req, res) => {
   const { dealId, facilityEndDate, changeCoverEndDate, isUsingFacilityEndDate } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
 
-  if (apiResponseStatus !== 200) {
+  if (apiResponseStatus !== HttpStatusCode.Ok) {
     return res.redirect('/not-found');
   }
 

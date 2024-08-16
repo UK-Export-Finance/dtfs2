@@ -1,5 +1,5 @@
 const { CURRENCY, AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
-const { orderBy } = require('lodash');
+const { orderBy, cloneDeep } = require('lodash');
 const { formattedNumber } = require('../../../utils/number');
 const { decimalsCount, roundNumber } = require('../../helpers/number');
 const isValidFacility = require('./isValidFacility.helper');
@@ -102,7 +102,7 @@ const findLatestCompletedAmendment = (amendments) => {
     if (!amendment.tfm) {
       return updatedFields;
     }
-    const existingUpdatedFields = { ...updatedFields };
+    const existingUpdatedFields = cloneDeep(updatedFields);
 
     if (!updatedFields.value) {
       existingUpdatedFields.value = amendment.tfm.value;
@@ -116,7 +116,7 @@ const findLatestCompletedAmendment = (amendments) => {
     }
 
     if (isTfmFacilityEndDateFeatureFlagEnabled()) {
-      if (updatedFields?.isUsingFacilityEndDate == null) {
+      if (updatedFields?.isUsingFacilityEndDate === null || updatedFields?.isUsingFacilityEndDate === undefined) {
         existingUpdatedFields.isUsingFacilityEndDate = amendment.tfm.isUsingFacilityEndDate;
         existingUpdatedFields.facilityEndDate = amendment.tfm.facilityEndDate;
         existingUpdatedFields.bankReviewDate = amendment.tfm.bankReviewDate;

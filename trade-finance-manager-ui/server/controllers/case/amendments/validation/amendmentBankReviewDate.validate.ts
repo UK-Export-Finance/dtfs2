@@ -1,5 +1,4 @@
 import { add, isAfter, isBefore, startOfDay } from 'date-fns';
-
 import { applyStandardValidationAndParseDateInput, DayMonthYearInput } from '@ukef/dtfs2-common';
 
 type ErrorOrBankReviewDate =
@@ -7,12 +6,6 @@ type ErrorOrBankReviewDate =
       error: { summary: { text: string }[]; fields: string[] };
     }
   | { bankReviewDate: Date; error: null };
-
-/**
- * @param {import('@ukef/dtfs2-common').DayMonthYearInput} date
- * @param {Date} coverStartDate
- * @returns {object} containing errors and amendment bank review date
- */
 
 export const bankReviewDateValidation = (date: DayMonthYearInput, coverStartDate: Date): ErrorOrBankReviewDate => {
   const { error: standardError, parsedDate } = applyStandardValidationAndParseDateInput(date, 'bank review date', 'bank-review-date');
