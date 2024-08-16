@@ -1,4 +1,4 @@
-import { FeeRecordEntity, PaymentEntity } from '@ukef/dtfs2-common';
+import { Currency, FeeRecordEntity, PaymentEntity } from '@ukef/dtfs2-common';
 import { InvalidPayloadError } from '../../../errors';
 
 export const validateThatRequestedPaymentsMatchSavedPayments = (savedPayments: PaymentEntity[], requestedPaymentIds: number[]) => {
@@ -7,6 +7,17 @@ export const validateThatRequestedPaymentsMatchSavedPayments = (savedPayments: P
   if (!savedPaymentIds.every((id) => requestedPaymentIds.includes(id)) || !requestedPaymentIds.every((id) => savedPaymentIds.includes(id))) {
     throw new InvalidPayloadError('Requested payment IDs do not match saved payment IDs');
   }
+};
+
+export const validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency = (selectedFeeRecords: FeeRecordEntity[], paymentGroupCurrency: Currency) => {
+  const paymentCurrencies = new Set<Currency>([paymentGroupCurrency]);
+
+  selectedFeeRecords.forEach((feeRecord) => {
+    const currency = feeRecord.paymentCurrency;
+    paymentCurrencies.add(currency);
+  });
+
+  return paymentCurrencies.size === 1;
 };
 
 export function validateThatPaymentGroupHasFeeRecords(

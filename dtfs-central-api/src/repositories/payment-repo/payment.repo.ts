@@ -75,5 +75,3 @@ export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
     return payment.feeRecords[0].payments;
   },
 });
-
-// TODO: API test for case where no payments returned.

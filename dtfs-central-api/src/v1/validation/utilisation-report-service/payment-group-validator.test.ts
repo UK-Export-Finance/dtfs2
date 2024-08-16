@@ -5,7 +5,11 @@ import {
   PaymentEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { validateThatRequestedPaymentsMatchSavedPayments, validateThatPaymentGroupHasFeeRecords } from './payment-group-validator';
+import {
+  validateThatRequestedPaymentsMatchSavedPayments,
+  validateThatPaymentGroupHasFeeRecords,
+  validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency,
+} from './payment-group-validator';
 
 describe('payment group validator', () => {
   const report = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
@@ -52,6 +56,10 @@ describe('payment group validator', () => {
         new InvalidPayloadError('Requested payment IDs do not match saved payment IDs'),
       );
     });
+
+    function aPaymentWithId(id: number) {
+      return PaymentEntityMockBuilder.forCurrency('GBP').withId(id).build();
+    }
   });
 
   describe('validateThatPaymentGroupHasFeeRecords', () => {
@@ -83,7 +91,62 @@ describe('payment group validator', () => {
     });
   });
 
-  function aPaymentWithId(id: number) {
-    return PaymentEntityMockBuilder.forCurrency('GBP').withId(id).build();
-  }
+  describe('validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency', () => {
+    it('should return true when all fee records and payment group have the same currency', () => {
+      // Arrange
+      const selectedFeeRecords = [
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
+      ];
+      const paymentGroupCurrency = 'USD';
+
+      // Act
+      const result = validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency);
+
+      // Assert
+      expect(result).toBe(true);
+    });
+
+    it('should return false when fee records have different currencies', () => {
+      // Arrange
+      const selectedFeeRecords = [
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('GBP').build(),
+      ];
+      const paymentGroupCurrency = 'USD';
+
+      // Act
+      const result = validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency);
+
+      // Assert
+      expect(result).toBe(false);
+    });
+
+    it('should return false when fee records currency differs from payment group currency', () => {
+      // Arrange
+      const selectedFeeRecords = [
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
+      ];
+      const paymentGroupCurrency = 'GBP';
+
+      // Act
+      const result = validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency);
+
+      // Assert
+      expect(result).toBe(false);
+    });
+
+    it('should return true when there are no fee records and only payment group currency', () => {
+      // Arrange
+      const selectedFeeRecords: FeeRecordEntity[] = [];
+      const paymentGroupCurrency = 'EUR';
+
+      // Act
+      const result = validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency);
+
+      // Assert
+      expect(result).toBe(true);
+    });
+  });
 });

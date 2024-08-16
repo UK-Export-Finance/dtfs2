@@ -8,6 +8,7 @@ import { addFeesToAnExistingPaymentGroup } from './helpers';
 import { PostAddFeesToAnExistingPaymentGroupPayload } from '../../../routes/middleware/payload-validation';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import {
+  validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency,
   validateThatPaymentGroupHasFeeRecords,
   validateThatRequestedPaymentsMatchSavedPayments,
 } from '../../../validation/utilisation-report-service/payment-group-validator';
@@ -36,14 +37,17 @@ export const postAddFeesToAnExistingPaymentGroup = async (req: PostAddFeesToAnEx
 
     validateThatRequestedPaymentsMatchSavedPayments(payments, requestedPaymentIds);
 
-    const existingPaymentGroupFeeRecords = payments.at(0)?.feeRecords;
+    const existingPaymentGroupFeeRecords = payments[0].feeRecords;
     validateThatPaymentGroupHasFeeRecords(existingPaymentGroupFeeRecords);
 
     const selectedFeeRecords = await FeeRecordRepo.findByIdAndReportIdWithReport(feeRecordIds, Number(reportId));
+
+    const paymentGroupCurrency = payments[0].currency;
+    validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency);
+
     const feeRecordsToAdd = selectedFeeRecords.filter(
       (record) => !existingPaymentGroupFeeRecords.some((paymentFeeRecord) => paymentFeeRecord.id === record.id),
     );
-
     if (feeRecordsToAdd.length === 0) {
       throw new InvalidPayloadError('Cannot add fees to the payment group they are already in.');
     }
