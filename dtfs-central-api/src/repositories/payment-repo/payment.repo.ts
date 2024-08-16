@@ -46,14 +46,14 @@ export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
   },
 
   /**
-   * Finds payment entities that are part of the same group as the payment with the supplied id.
+   * Finds payment entities that are part of the same group as the payment
+   * with the supplied id.
    * @param paymentId - The payment id
    * @param reportId - The report id
-   * @returns An array of payment entities in the same group as the specified payment
-   * @throws {NotFoundError} If a payment cannot be found with the matching id and report id
-   * @throws {Error} If the found payment has no fee records
+   * @returns An array of payment entities in the same group as the specified
+   * payment, including their fee records and associated reports.
    */
-  async findPaymentsInGroupContainingPaymentWithIdAndReportId(paymentId: number, reportId: number): Promise<PaymentEntity[]> {
+  async findPaymentsInGroupContainingPaymentByIdAndReportIdWithFeeRecords(paymentId: number, reportId: number): Promise<PaymentEntity[]> {
     const payment = await this.findOne({
       where: {
         id: paymentId,
@@ -61,7 +61,7 @@ export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
           report: { id: reportId },
         },
       },
-      relations: { feeRecords: { report: true, payments: true } },
+      relations: { feeRecords: { payments: { feeRecords: { report: true } } } },
     });
 
     if (!payment) {
