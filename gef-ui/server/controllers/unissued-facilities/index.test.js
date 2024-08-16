@@ -17,7 +17,7 @@ const userToken = 'test-token';
 
 const facilityId = 'xyz';
 
-const mockExpectedFacilityRenderChange = (change, dealVersion) => ({
+const mockExpectedFacilityRenderChange = (previousPage, dealVersion) => ({
   facilityType: CONSTANTS.FACILITY_TYPE.CASH,
   facilityName: 'UKEF123',
   hasBeenIssued: true,
@@ -36,7 +36,7 @@ const mockExpectedFacilityRenderChange = (change, dealVersion) => ({
   dealId: '1234567890abcdf123456789',
   facilityId,
   status: 'change',
-  change,
+  previousPage,
   isFacilityEndDateEnabled: dealVersion >= 1,
 });
 
@@ -58,31 +58,31 @@ describe('renderChangeFacilityPartial()', () => {
       jest.resetAllMocks();
     });
 
-    it('returns an object with expected parameters for changeUnissuedFacility', async () => {
+    it('returns an object with expected parameters for changeUnissuedFacilityPreview', async () => {
       mockRequest.query.status = 'change';
 
       const result = await renderChangeFacilityPartial({
         params: mockRequest.params,
         query: mockRequest.query,
-        change: true,
+        hasComeFromApplicationPreviewPage: true,
         userToken,
       });
 
-      const expected = mockExpectedFacilityRenderChange(true, dealVersion);
+      const expected = mockExpectedFacilityRenderChange('/gef/application-details/1234567890abcdf123456789', dealVersion);
 
       expect(result).toEqual(expected);
     });
 
-    it('returns an object with expected parameters for changeUnissuedFacilityPreview', async () => {
+    it('returns an object with expected parameters for changeUnissuedFacility', async () => {
       mockRequest.query.status = 'change';
       const result = await renderChangeFacilityPartial({
         params: mockRequest.params,
         query: mockRequest.query,
-        change: false,
+        hasComeFromApplicationPreviewPage: false,
         userToken,
       });
 
-      const expected = mockExpectedFacilityRenderChange(false, dealVersion);
+      const expected = mockExpectedFacilityRenderChange('/gef/application-details/1234567890abcdf123456789/unissued-facilities', dealVersion);
 
       expect(result).toEqual(expected);
     });
@@ -108,7 +108,7 @@ describe('changeUnissuedFacility()', () => {
     jest.resetAllMocks();
   });
 
-  it('changeUnissuedFacility should call renderChangeFacilityPartial with false', async () => {
+  it('changeUnissuedFacility should call renderChangeFacilityPartial with previous page unissued facilities', async () => {
     mockRequest.query.status = 'change';
 
     await changeUnissuedFacility(mockRequest, mockResponse);
@@ -116,20 +116,7 @@ describe('changeUnissuedFacility()', () => {
     expect(mockResponse.render).toHaveBeenCalledWith(
       'partials/unissued-change-about-facility.njk',
       expect.objectContaining({
-        change: false,
-      }),
-    );
-  });
-
-  it('changeUnissuedFacility should not call renderChangeFacilityPartial with true', async () => {
-    mockRequest.query.status = 'change';
-
-    await changeUnissuedFacility(mockRequest, mockResponse);
-
-    expect(mockResponse.render).not.toHaveBeenCalledWith(
-      'partials/unissued-change-about-facility.njk',
-      expect.objectContaining({
-        change: true,
+        previousPage: '/gef/application-details/1234567890abcdf123456789/unissued-facilities',
       }),
     );
   });
@@ -160,7 +147,7 @@ describe('changeUnissuedFacilityPreview()', () => {
     jest.resetAllMocks();
   });
 
-  it('changeUnissuedFacilityPreview should call renderChangeFacilityPartial with true', async () => {
+  it('changeUnissuedFacilityPreview should call renderChangeFacilityPartial with previous page application details', async () => {
     mockRequest.query.status = 'change';
 
     await changeUnissuedFacilityPreview(mockRequest, mockResponse);
@@ -168,20 +155,7 @@ describe('changeUnissuedFacilityPreview()', () => {
     expect(mockResponse.render).toHaveBeenCalledWith(
       'partials/unissued-change-about-facility.njk',
       expect.objectContaining({
-        change: true,
-      }),
-    );
-  });
-
-  it('changeUnissuedFacilityPreview should not call renderChangeFacilityPartial with false', async () => {
-    mockRequest.query.status = 'change';
-
-    await changeUnissuedFacilityPreview(mockRequest, mockResponse);
-
-    expect(mockResponse.render).not.toHaveBeenCalledWith(
-      'partials/unissued-change-about-facility.njk',
-      expect.objectContaining({
-        change: false,
+        previousPage: '/gef/application-details/1234567890abcdf123456789',
       }),
     );
   });

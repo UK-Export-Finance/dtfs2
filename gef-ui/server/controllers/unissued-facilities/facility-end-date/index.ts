@@ -81,7 +81,7 @@ export const getFacilityEndDateFromApplicationPreviewPage = async (req: GetFacil
     const facilityEndDateViewModel = await getFacilityEndDateViewModel(req, previousPage);
 
     if (!facilityEndDateViewModel) {
-      return res.redirect(`/gef/application-details/${dealId}`);
+      return res.redirect(previousPage);
     }
     return res.render('partials/facility-end-date.njk', facilityEndDateViewModel);
   } catch (error) {

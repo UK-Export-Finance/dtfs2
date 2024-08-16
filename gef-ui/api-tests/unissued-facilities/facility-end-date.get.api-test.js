@@ -32,7 +32,20 @@ describe('facility end date routes', () => {
     await storage.flush();
   });
 
-  describe('GET /application-details/:dealId/unissued-facilities/:facilityId/facility-end-date', () => {
+  const describeCases = [
+    {
+      url: `/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date`,
+      description: 'GET /application-details/:dealId/unissued-facilities/:facilityId/facility-end-date',
+      previousPageUrl: `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/about`,
+    },
+    {
+      url: `/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date/change`,
+      description: 'GET /application-details/:dealId/unissued-facilities/:facilityId/facility-end-date/change',
+      previousPageUrl: `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/change`,
+    },
+  ];
+
+  describe.each(describeCases)('$description', ({ url, previousPageUrl }) => {
     describe('with deal version 1 and using facility end date', () => {
       beforeEach(() => {
         mockIsUsingFacilityEndDate(true);
@@ -40,7 +53,7 @@ describe('facility end date routes', () => {
       });
 
       withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => get(`/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date`, {}, headers),
+        makeRequestWithHeaders: (headers) => get(url, {}, headers),
         whitelistedRoles: [MAKER],
         successCode: 200,
       });
@@ -52,55 +65,55 @@ describe('facility end date routes', () => {
         ({ sessionCookie } = await storage.saveUserSession([MAKER]));
       });
 
-      it('returns 200 when the deal v1 and facility is using facility end date', async () => {
+      it('returns 200 when the deal is version 1 and facility is using facility end date', async () => {
         // Arrange
         mockIsUsingFacilityEndDate(true);
         mockDealVersion(1);
 
         // Act
-        const response = await getFacilityEndDateWithSessionCookie(sessionCookie);
+        const response = await getWithSessionCookie(url, sessionCookie);
 
         // Assert
         expect(response.status).toBe(200);
       });
 
-      it('redirects the user to the application details page if the deal is version 0', async () => {
+      it('redirects the user to the previous page if the deal is version 0', async () => {
         // Arrange
         mockIsUsingFacilityEndDate(true);
         mockDealVersion(0);
 
         // Act
-        const response = await getFacilityEndDateWithSessionCookie(sessionCookie);
+        const response = await getWithSessionCookie(url, sessionCookie);
 
         // Assert
         expect(response.status).toBe(302);
-        expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
+        expect(response.headers.location).toBe(previousPageUrl);
       });
 
-      it('redirects the user to the application details page if version is 1 & isUsingFacilityEndDate is null ', async () => {
+      it('redirects the user to the previous page if version is 1 & isUsingFacilityEndDate is null ', async () => {
         // Arrange
         mockIsUsingFacilityEndDate(null);
         mockDealVersion(1);
 
         // Act
-        const response = await getFacilityEndDateWithSessionCookie(sessionCookie);
+        const response = await getWithSessionCookie(url, sessionCookie);
 
         // Assert
         expect(response.status).toBe(302);
-        expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
+        expect(response.headers.location).toBe(previousPageUrl);
       });
 
-      it('redirects the user to the application details page if version is 1 & isUsingFacilityEndDate is false', async () => {
+      it('redirects the user to the previous page if version is 1 & isUsingFacilityEndDate is false', async () => {
         // Arrange
         mockIsUsingFacilityEndDate(false);
         mockDealVersion(1);
 
         // Act
-        const response = await getFacilityEndDateWithSessionCookie(sessionCookie);
+        const response = await getWithSessionCookie(url, sessionCookie);
 
         // Assert
         expect(response.status).toBe(302);
-        expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
+        expect(response.headers.location).toBe(previousPageUrl);
       });
     });
   });
@@ -114,9 +127,9 @@ function mockDealVersion(version) {
   when(api.getApplication).calledWith({ dealId, userToken: expect.anything() }).mockResolvedValueOnce({ version });
 }
 
-function getFacilityEndDateWithSessionCookie(sessionCookie) {
+function getWithSessionCookie(url, sessionCookie) {
   return get(
-    `/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date`,
+    url,
     {},
     {
       Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
