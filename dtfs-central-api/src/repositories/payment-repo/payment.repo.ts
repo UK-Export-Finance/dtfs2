@@ -53,7 +53,7 @@ export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
    * @returns An array of payment entities in the same group as the specified
    * payment, including their fee records and associated reports.
    */
-  async findPaymentsInGroupContainingPaymentByIdAndReportIdWithFeeRecords(paymentId: number, reportId: number): Promise<PaymentEntity[]> {
+  async findPaymentsInGroupByPaymentIdAndReportIdWithFeeRecords(paymentId: number, reportId: number): Promise<PaymentEntity[]> {
     const payment = await this.findOne({
       where: {
         id: paymentId,
