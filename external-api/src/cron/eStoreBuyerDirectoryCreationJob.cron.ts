@@ -7,7 +7,7 @@ import { createBuyerFolder } from '../v1/controllers/estore/eStoreApi';
 import { getNowAsEpoch } from '../helpers/date';
 import { eStoreDealDirectoryCreationJob } from './eStoreDealDirectoryCreationJob.cron';
 
-const acceptableStatuses = [HttpStatusCode.Ok, HttpStatusCode.Created];
+const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
 /**
  * Executes the eStore buyer directory creation job.
@@ -52,7 +52,7 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
     });
 
     // Validate response
-    if (acceptableStatuses.includes(response?.status)) {
+    if (ACCEPTABLE_STATUSES.includes(response?.status)) {
       console.info('Creating buyer directory %s for deal %s', buyerName, dealIdentifier);
 
       // Update `cron-job-logs`

@@ -7,7 +7,7 @@ import { addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
 import { getNowAsEpoch } from '../helpers/date';
 import { eStoreBuyerDirectoryCreationJob } from './eStoreBuyerDirectoryCreationJob.cron';
 
-const acceptableStatuses = [HttpStatusCode.Ok, HttpStatusCode.Created];
+const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
 /**
  * Executes the eStore term store creation job.
@@ -49,7 +49,7 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
     );
 
     // Validate each and every response status code
-    if (response.every((term) => acceptableStatuses.includes(term?.status))) {
+    if (response.every((term) => ACCEPTABLE_STATUSES.includes(term?.status))) {
       console.info('Facilities have been added to term store for deal %s', dealIdentifier);
 
       // Update `cron-job-logs`

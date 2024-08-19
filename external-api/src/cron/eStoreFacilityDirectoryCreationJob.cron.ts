@@ -6,7 +6,7 @@ import { ESTORE_CRON_STATUS } from '../constants';
 import { createFacilityFolder } from '../v1/controllers/estore/eStoreApi';
 import { getNowAsEpoch } from '../helpers/date';
 
-const acceptableStatuses = [HttpStatusCode.Ok, HttpStatusCode.Created];
+const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
 /**
  * Executes the eStore facility directory creation job.
@@ -58,7 +58,7 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
     );
 
     // Validate each and every response status code
-    if (response.every((facility) => acceptableStatuses.includes(facility?.status))) {
+    if (response.every((facility) => ACCEPTABLE_STATUSES.includes(facility?.status))) {
       console.info('Facility %s directory has been created for deal %s', facilityIdentifiers, dealIdentifier);
 
       // Update `cron-job-logs`

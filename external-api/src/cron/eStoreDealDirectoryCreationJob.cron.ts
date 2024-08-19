@@ -7,7 +7,7 @@ import { createDealFolder } from '../v1/controllers/estore/eStoreApi';
 import { getNowAsEpoch } from '../helpers/date';
 import { eStoreFacilityDirectoryCreationJob } from './eStoreFacilityDirectoryCreationJob.cron';
 
-const acceptableStatuses = [HttpStatusCode.Ok, HttpStatusCode.Created];
+const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
 /**
  * Executes the eStore deal directory creation job.
@@ -58,7 +58,7 @@ export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promis
     });
 
     // Validate response
-    if (acceptableStatuses.includes(response?.status)) {
+    if (ACCEPTABLE_STATUSES.includes(response?.status)) {
       console.info('Creating deal directory for deal %s', dealIdentifier);
 
       // Update `cron-job-logs`
