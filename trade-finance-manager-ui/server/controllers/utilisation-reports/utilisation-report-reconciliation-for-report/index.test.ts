@@ -139,6 +139,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         facilityIdQueryError: undefined,
         facilityIdQuery,
         keyingSheet: [],
+        paymentDetails: [],
       });
     });
 

@@ -48,6 +48,8 @@ export type KeyingSheetViewModel = {
   isChecked: boolean;
 }[];
 
+export type PaymentDetailsViewModel = [];
+
 export type FeeRecordPaymentGroupViewModelItem = {
   feeRecords: FeeRecordViewModelItem[];
   totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
@@ -70,4 +72,5 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   facilityIdQueryError: ErrorSummaryViewModel | undefined;
   facilityIdQuery?: string;
   keyingSheet: KeyingSheetViewModel;
+  paymentDetails: PaymentDetailsViewModel;
 };

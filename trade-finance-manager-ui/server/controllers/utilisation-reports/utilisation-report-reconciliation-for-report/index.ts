@@ -51,6 +51,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       facilityIdQueryError,
       facilityIdQuery: facilityIdQueryAsString,
       keyingSheet: keyingSheetViewModel,
+      paymentDetails: [],
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);
