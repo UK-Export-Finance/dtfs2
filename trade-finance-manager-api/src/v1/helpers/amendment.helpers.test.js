@@ -885,21 +885,7 @@ describe('addLatestAmendmentCoverEndDate', () => {
 });
 
 describe('addLatestAmendmentFacilityEndDate', () => {
-  const mockFacility = {
-    facilitySnapshot: {
-      _id: '1',
-      facilityStage: '',
-      monthsOfCover: 12,
-      requestedCoverStartDate: '2021-12-08T00:00:00.000Z',
-      ukefFacilityType: FACILITY_TYPE.BOND,
-    },
-    tfm: {
-      exposurePeriodInMonths: 12,
-    },
-  };
-
   const emptyTfmObject = {};
-  const facilityId = '123';
 
   it('should return empty object when no isUsingFacilityEndDate value', async () => {
     const latestFacilityEndDateDataResponse = {
@@ -907,22 +893,8 @@ describe('addLatestAmendmentFacilityEndDate', () => {
       facilityEndDate: new Date('2023-07-01').toISOString(),
       bankReviewDate: undefined,
     };
-    api.findOneFacility = () => Promise.resolve(mockFacility);
 
-    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse, facilityId);
-
-    expect(response).toEqual({});
-  });
-
-  it('should return an empty object when there is no matching facility found', async () => {
-    const latestFacilityEndDateDataResponse = {
-      isUsingFacilityEndDate: true,
-      facilityEndDate: new Date('2023-07-01').toISOString(),
-      bankReviewDate: undefined,
-    };
-    api.findOneFacility = () => Promise.resolve(null);
-
-    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse, facilityId);
+    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse);
 
     expect(response).toEqual({});
   });
@@ -933,9 +905,8 @@ describe('addLatestAmendmentFacilityEndDate', () => {
       facilityEndDate: new Date('2023-07-01').toISOString(),
       bankReviewDate: new Date('2024-07-01').toISOString(),
     };
-    api.findOneFacility = () => Promise.resolve(mockFacility);
 
-    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse, facilityId);
+    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse);
 
     const expected = {
       isUsingFacilityEndDate: true,
@@ -952,9 +923,8 @@ describe('addLatestAmendmentFacilityEndDate', () => {
       facilityEndDate: new Date('2023-07-01').toISOString(),
       bankReviewDate: new Date('2024-07-01').toISOString(),
     };
-    api.findOneFacility = () => Promise.resolve(mockFacility);
 
-    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse, facilityId);
+    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse);
 
     const expected = {
       isUsingFacilityEndDate: false,

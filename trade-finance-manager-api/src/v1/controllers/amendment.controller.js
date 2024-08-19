@@ -97,7 +97,7 @@ const createAmendmentTFMObject = async (amendmentId, facilityId, auditDetails) =
     let latestFacilityEndDateResponse;
     if (isTfmFacilityEndDateFeatureFlagEnabled()) {
       latestFacilityEndDateResponse = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId);
-      tfmToAdd = await addLatestAmendmentFacilityEndDate(tfmToAdd, latestFacilityEndDateResponse, facilityId);
+      tfmToAdd = await addLatestAmendmentFacilityEndDate(tfmToAdd, latestFacilityEndDateResponse);
     }
 
     const payload = {
