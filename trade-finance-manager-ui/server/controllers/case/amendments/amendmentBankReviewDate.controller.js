@@ -1,8 +1,8 @@
-const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
+const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { format, parseISO } = require('date-fns');
 const api = require('../../../api');
-const { facilityEndDateValidation } = require('./validation/amendmentFacilityEndDate.validate');
+const { bankReviewDateValidation } = require('./validation/amendmentBankReviewDate.validate');
 
 const getNextPage = (apiResponseStatus, changeFacilityValue, baseUrl) => {
   if (apiResponseStatus !== HttpStatusCode.Ok) {
@@ -11,11 +11,11 @@ const getNextPage = (apiResponseStatus, changeFacilityValue, baseUrl) => {
   return changeFacilityValue ? `${baseUrl}/facility-value` : `${baseUrl}/check-answers`;
 };
 
-const getAmendmentFacilityEndDate = async (req, res) => {
+const getAmendmentBankReviewDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
   const { data: amendment, status: apiResponseStatus } = await api.getAmendmentById(facilityId, amendmentId, userToken);
-  const { dealId, facilityEndDate, changeCoverEndDate, isUsingFacilityEndDate } = amendment;
+  const { dealId, bankReviewDate, changeCoverEndDate, isUsingFacilityEndDate } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
 
   if (apiResponseStatus !== HttpStatusCode.Ok) {
@@ -26,53 +26,53 @@ const getAmendmentFacilityEndDate = async (req, res) => {
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
   }
 
-  if (!isUsingFacilityEndDate) {
+  if (isUsingFacilityEndDate !== false) {
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
   }
 
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
 
-  const enteredFacilityEndDate = facilityEndDate ? parseISO(facilityEndDate) : undefined;
+  const enteredBankReviewDate = bankReviewDate ? parseISO(bankReviewDate) : undefined;
 
-  const dayInput = enteredFacilityEndDate ? format(enteredFacilityEndDate, 'd') : '';
-  const monthInput = enteredFacilityEndDate ? format(enteredFacilityEndDate, 'M') : '';
-  const yearInput = enteredFacilityEndDate ? format(enteredFacilityEndDate, 'yyyy') : '';
+  const dayInput = enteredBankReviewDate ? format(enteredBankReviewDate, 'd') : '';
+  const monthInput = enteredBankReviewDate ? format(enteredBankReviewDate, 'M') : '';
+  const yearInput = enteredBankReviewDate ? format(enteredBankReviewDate, 'yyyy') : '';
 
-  const currentFacilityEndDate = facility?.facilitySnapshot?.dates?.facilityEndDate
-    ? format(parseISO(facility?.facilitySnapshot?.dates?.facilityEndDate), 'dd MMMM yyyy')
+  const currentBankReviewDate = facility?.facilitySnapshot?.dates?.bankReviewDate
+    ? format(parseISO(facility?.facilitySnapshot?.dates?.bankReviewDate), 'dd MMMM yyyy')
     : undefined;
 
-  return res.render('case/amendments/amendment-facility-end-date.njk', {
+  return res.render('case/amendments/amendment-bank-review-date.njk', {
     dealId,
     facilityId,
     isEditable,
     dayInput,
     monthInput,
     yearInput,
-    currentFacilityEndDate,
+    currentBankReviewDate,
     user: req.session.user,
   });
 };
 
-const postAmendmentFacilityEndDate = async (req, res) => {
+const postAmendmentBankReviewDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId, changeFacilityValue } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
-  const { 'facility-end-date-day': day, 'facility-end-date-month': month, 'facility-end-date-year': year } = req.body;
+  const { 'bank-review-date-day': day, 'bank-review-date-month': month, 'bank-review-date-year': year } = req.body;
 
   const coverStartDate = new Date(Number(facility?.facilitySnapshot?.dates?.coverStartDate));
 
-  const { error, facilityEndDate } = facilityEndDateValidation({ day, month, year }, coverStartDate);
+  const { error, bankReviewDate } = bankReviewDateValidation({ day, month, year }, coverStartDate);
 
   if (error?.fields) {
     const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isTfmFacilityEndDateFeatureFlagEnabled();
-    const currentFacilityEndDate = facility?.facilitySnapshot?.dates?.facilityEndDate
-      ? format(parseISO(facility?.facilitySnapshot?.dates?.facilityEndDate), 'dd MMMM yyyy')
+    const currentBankReviewDate = facility?.facilitySnapshot?.dates?.bankReviewDate
+      ? format(parseISO(facility?.facilitySnapshot?.dates?.bankReviewDate), 'dd MMMM yyyy')
       : undefined;
 
-    return res.render('case/amendments/amendment-facility-end-date.njk', {
+    return res.render('case/amendments/amendment-bank-review-date.njk', {
       dealId,
       facilityId,
       isEditable,
@@ -80,7 +80,7 @@ const postAmendmentFacilityEndDate = async (req, res) => {
       monthInput: month,
       yearInput: year,
       error,
-      currentFacilityEndDate,
+      currentBankReviewDate,
       user: req.session.user,
     });
   }
@@ -89,13 +89,15 @@ const postAmendmentFacilityEndDate = async (req, res) => {
   const fallbackUrl = `/case/${dealId}/facility/${facilityId}#amendments`;
 
   try {
-    const payload = { facilityEndDate };
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
-    return res.redirect(getNextPage(status, changeFacilityValue, baseUrl));
+    const payload = { bankReviewDate };
+    const { status: apiResponseStatus } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
+
+    return res.redirect(getNextPage(apiResponseStatus, changeFacilityValue, baseUrl));
   } catch (err) {
-    console.error('There was a problem adding the facility end date', err);
+    console.error('There was a problem adding the bank review date', err);
+
     return res.redirect(fallbackUrl);
   }
 };
 
-module.exports = { getAmendmentFacilityEndDate, postAmendmentFacilityEndDate };
+module.exports = { getAmendmentBankReviewDate, postAmendmentBankReviewDate };

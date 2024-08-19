@@ -648,7 +648,7 @@ const getLatestCompletedAmendmentFacilityEndDate = async (facilityId, token) => 
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the latest completed facilityEndDate amendment %o', error);
+    console.error('Unable to get the latest completed facility end date amendment %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get latest completed facility end date amendment' };
   }
 };

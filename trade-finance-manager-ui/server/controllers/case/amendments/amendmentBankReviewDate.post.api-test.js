@@ -2,8 +2,8 @@ import { isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS } from '@ukef/dtfs2-co
 import { add } from 'date-fns';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
-import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE } from '../../../test-mocks/amendment-test-mocks';
-import { postAmendmentFacilityEndDate } from './amendmentFacilityEndDate.controller';
+import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE } from '../../../test-mocks/amendment-test-mocks';
+import { postAmendmentBankReviewDate } from './amendmentBankReviewDate.controller';
 
 const res = mockRes();
 
@@ -29,22 +29,22 @@ jest.mock('@ukef/dtfs2-common', () => ({
   isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
 }));
 
-describe('amendmentFacilityEndDate routes', () => {
+describe('amendmentBankReviewDate routes', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
 
-  describe('POST postAmendmentFacilityEndDate', () => {
+  describe('POST postAmendmentBankReviewDate', () => {
     beforeEach(() => {
       jest.resetAllMocks();
       jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
     });
 
-    describe('incorrect facility end date entered', () => {
-      it('should render the template with errors if the entered facility end date is before the cover start date', async () => {
+    describe('incorrect bank review date entered', () => {
+      it('should render the template with errors if the entered bank review date is before the cover start date', async () => {
         const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2024, 11, 11).valueOf().toString() } } };
 
-        api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE });
+        api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
         api.getFacility.mockResolvedValueOnce(mockFacility);
 
@@ -55,15 +55,15 @@ describe('amendmentFacilityEndDate routes', () => {
             facilityId,
           },
           body: {
-            'facility-end-date-day': '12',
-            'facility-end-date-month': '11',
-            'facility-end-date-year': '2024',
+            'bank-review-date-day': '12',
+            'bank-review-date-month': '11',
+            'bank-review-date-year': '2024',
           },
           session,
         };
 
-        await postAmendmentFacilityEndDate(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
+        await postAmendmentBankReviewDate(req, res);
+        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
           dealId,
           isEditable: true,
           facilityId,
@@ -73,19 +73,19 @@ describe('amendmentFacilityEndDate routes', () => {
           error: {
             summary: [
               {
-                text: 'The facility end date cannot be before the cover start date',
+                text: 'The bank review date cannot be before the cover start date',
               },
             ],
-            fields: ['facility-end-date-day', 'facility-end-date-month', 'facility-end-date-year'],
+            fields: ['bank-review-date-day', 'bank-review-date-month', 'bank-review-date-year'],
           },
           user: req.session.user,
         });
       });
 
-      it('should render the template with errors if the entered facility end date is greater than 6 years in the future', async () => {
+      it('should render the template with errors if the entered bank review date is greater than 6 years in the future', async () => {
         const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2021, 11, 11).valueOf().toString() } } };
 
-        api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE });
+        api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
         api.getFacility.mockResolvedValueOnce(mockFacility);
 
@@ -99,39 +99,38 @@ describe('amendmentFacilityEndDate routes', () => {
             facilityId,
           },
           body: {
-            'facility-end-date-day': sixYearsFromNowPlusDay.getDate().toString(),
-            'facility-end-date-month': (sixYearsFromNowPlusDay.getMonth() + 1).toString(),
-            'facility-end-date-year': sixYearsFromNowPlusDay.getFullYear().toString(),
+            'bank-review-date-day': sixYearsFromNowPlusDay.getDate().toString(),
+            'bank-review-date-month': (sixYearsFromNowPlusDay.getMonth() + 1).toString(),
+            'bank-review-date-year': sixYearsFromNowPlusDay.getFullYear().toString(),
           },
           session,
         };
 
-        await postAmendmentFacilityEndDate(req, res);
-        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
+        await postAmendmentBankReviewDate(req, res);
+        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
           dealId,
           isEditable: true,
           facilityId,
           dayInput: sixYearsFromNowPlusDay.getDate().toString(),
           monthInput: (sixYearsFromNowPlusDay.getMonth() + 1).toString(),
           yearInput: sixYearsFromNowPlusDay.getFullYear().toString(),
+          currentBankReviewDate: undefined,
           error: {
             summary: [
               {
-                text: 'Facility end date cannot be greater than 6 years in the future',
+                text: 'Bank review date cannot be greater than 6 years in the future',
               },
             ],
-            fields: ['facility-end-date-day', 'facility-end-date-month', 'facility-end-date-year'],
+            fields: ['bank-review-date-day', 'bank-review-date-month', 'bank-review-date-year'],
           },
           user: req.session.user,
         });
       });
 
-      it('should render the template with the current facility date as undefined if facility end date is not in the facility snapshot', async () => {
+      it('should render the template with the current bank review date as undefined if bank review date is not in the facility snapshot', async () => {
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
-          data: {
-            ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE,
-          },
+          data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
         api.getFacility = jest.fn().mockResolvedValueOnce({ facilitySnapshot: { dates: {} } });
 
@@ -142,44 +141,42 @@ describe('amendmentFacilityEndDate routes', () => {
             facilityId,
           },
           body: {
-            'facility-end-date-day': '',
-            'facility-end-date-month': '',
-            'facility-end-date-year': '',
+            'bank-review-date-day': '',
+            'bank-review-date-month': '',
+            'bank-review-date-year': '',
           },
           session,
         };
-        await postAmendmentFacilityEndDate(req, res);
+        await postAmendmentBankReviewDate(req, res);
 
-        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
+        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
           dealId,
           facilityId,
           dayInput: '',
           monthInput: '',
           yearInput: '',
-          currentFacilityEndDate: undefined,
+          currentBankReviewDate: undefined,
           error: {
             summary: [
               {
-                text: 'Enter the facility end date',
+                text: 'Enter the bank review date',
               },
             ],
-            fields: ['facility-end-date-day', 'facility-end-date-month', 'facility-end-date-year'],
+            fields: ['bank-review-date-day', 'bank-review-date-month', 'bank-review-date-year'],
           },
           isEditable: true,
           user,
         });
       });
 
-      it('should render the template with the current facility end date from the facility snapshot if it exists', async () => {
+      it('should render the template with the current bank review date from the facility snapshot if it exists', async () => {
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
-          data: {
-            ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE,
-          },
+          data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
         api.getFacility = jest
           .fn()
-          .mockResolvedValueOnce({ facilitySnapshot: { dates: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2025, 11, 11).toISOString() } } });
+          .mockResolvedValueOnce({ facilitySnapshot: { dates: { isUsingBankReviewDate: true, bankReviewDate: new Date(2025, 11, 11).toISOString() } } });
 
         const req = {
           params: {
@@ -188,28 +185,28 @@ describe('amendmentFacilityEndDate routes', () => {
             facilityId,
           },
           body: {
-            'facility-end-date-day': '',
-            'facility-end-date-month': '',
-            'facility-end-date-year': '',
+            'bank-review-date-day': '',
+            'bank-review-date-month': '',
+            'bank-review-date-year': '',
           },
           session,
         };
-        await postAmendmentFacilityEndDate(req, res);
+        await postAmendmentBankReviewDate(req, res);
 
-        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-facility-end-date.njk', {
+        expect(res.render).toHaveBeenCalledWith('case/amendments/amendment-bank-review-date.njk', {
           dealId,
           facilityId,
           dayInput: '',
           monthInput: '',
           yearInput: '',
-          currentFacilityEndDate: '11 December 2025',
+          currentBankReviewDate: '11 December 2025',
           error: {
             summary: [
               {
-                text: 'Enter the facility end date',
+                text: 'Enter the bank review date',
               },
             ],
-            fields: ['facility-end-date-day', 'facility-end-date-month', 'facility-end-date-year'],
+            fields: ['bank-review-date-day', 'bank-review-date-month', 'bank-review-date-year'],
           },
           isEditable: true,
           user,
@@ -217,11 +214,11 @@ describe('amendmentFacilityEndDate routes', () => {
       });
     });
 
-    describe('correct facility end date entered', () => {
+    describe('correct bank review date entered', () => {
       it('should redirect to the check answers page when only the cover end date is being amended and there are no errors', async () => {
         const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
 
-        api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE });
+        api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
         api.getFacility.mockResolvedValueOnce(mockFacility);
 
@@ -232,14 +229,14 @@ describe('amendmentFacilityEndDate routes', () => {
             facilityId,
           },
           body: {
-            'facility-end-date-day': '12',
-            'facility-end-date-month': '11',
-            'facility-end-date-year': '2025',
+            'bank-review-date-day': '12',
+            'bank-review-date-month': '11',
+            'bank-review-date-year': '2025',
           },
           session,
         };
 
-        await postAmendmentFacilityEndDate(req, res);
+        await postAmendmentBankReviewDate(req, res);
 
         expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
       });
@@ -249,7 +246,7 @@ describe('amendmentFacilityEndDate routes', () => {
 
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
-          data: { ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE, changeFacilityValue: true },
+          data: { ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE, changeFacilityValue: true },
         });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
         api.getFacility.mockResolvedValueOnce(mockFacility);
@@ -261,14 +258,14 @@ describe('amendmentFacilityEndDate routes', () => {
             facilityId,
           },
           body: {
-            'facility-end-date-day': '12',
-            'facility-end-date-month': '11',
-            'facility-end-date-year': '2025',
+            'bank-review-date-day': '12',
+            'bank-review-date-month': '11',
+            'bank-review-date-year': '2025',
           },
           session,
         };
 
-        await postAmendmentFacilityEndDate(req, res);
+        await postAmendmentBankReviewDate(req, res);
 
         expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
       });
@@ -278,7 +275,7 @@ describe('amendmentFacilityEndDate routes', () => {
 
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
-          data: { ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE, changeFacilityValue: true },
+          data: { ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE, changeFacilityValue: true },
         });
         api.updateAmendment.mockResolvedValueOnce({ status: 400 });
         api.getFacility.mockResolvedValueOnce(mockFacility);
@@ -290,14 +287,14 @@ describe('amendmentFacilityEndDate routes', () => {
             facilityId,
           },
           body: {
-            'facility-end-date-day': '12',
-            'facility-end-date-month': '11',
-            'facility-end-date-year': '2025',
+            'bank-review-date-day': '12',
+            'bank-review-date-month': '11',
+            'bank-review-date-year': '2025',
           },
           session,
         };
 
-        await postAmendmentFacilityEndDate(req, res);
+        await postAmendmentBankReviewDate(req, res);
 
         expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}#amendments`);
       });
