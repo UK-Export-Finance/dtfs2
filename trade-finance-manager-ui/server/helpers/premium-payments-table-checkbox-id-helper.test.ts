@@ -1,5 +1,6 @@
 import { CURRENCY, Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import {
+  getFeeRecordIdsFromPremiumPaymentsCheckboxId,
   getFeeRecordIdsFromPremiumPaymentsCheckboxIds,
   getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId,
   getFeeRecordStatusFromPremiumPaymentsCheckboxId,
@@ -8,29 +9,44 @@ import {
 import { PremiumPaymentsTableCheckboxId } from '../types/premium-payments-table-checkbox-id';
 
 describe('premium payments table checkbox id helper', () => {
-  describe('getFeeRecordIdsFromPremiumPaymentsCheckboxIds', () => {
-    it('extracts all the fee record ids in a single checkbox id', () => {
+  describe('getFeeRecordIdsFromPremiumPaymentsCheckboxId', () => {
+    it('extracts a single fee record id from a checkbox id containing a single id', () => {
       // Arrange
-      const idList = [1, 27, 314];
-      const checkboxId: PremiumPaymentsTableCheckboxId = 'feeRecordIds-1,27,314-reportedPaymentsCurrency-GBP-status-TO_DO';
+      const idList = [27];
+      const checkboxId: PremiumPaymentsTableCheckboxId = 'feeRecordIds-27-reportedPaymentsCurrency-GBP-status-TO_DO';
 
       // Act
-      const extractedIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds([checkboxId]);
+      const extractedIds = getFeeRecordIdsFromPremiumPaymentsCheckboxId(checkboxId);
 
       // Assert
       expect(extractedIds).toEqual(idList);
     });
 
+    it('extracts all the fee record ids from a checkbox id containing multiple ids', () => {
+      // Arrange
+      const idList = [1, 27, 314];
+      const checkboxId: PremiumPaymentsTableCheckboxId = 'feeRecordIds-1,27,314-reportedPaymentsCurrency-GBP-status-TO_DO';
+
+      // Act
+      const extractedIds = getFeeRecordIdsFromPremiumPaymentsCheckboxId(checkboxId);
+
+      // Assert
+      expect(extractedIds).toEqual(idList);
+    });
+  });
+
+  describe('getFeeRecordIdsFromPremiumPaymentsCheckboxIds', () => {
     it('extracts all the fee records ids from multiple checkbox ids', () => {
       // Arrange
-      const checkboxId1: PremiumPaymentsTableCheckboxId = `feeRecordIds-1,2-reportedPaymentsCurrency-GBP-status-TO_DO`;
-      const checkboxId2: PremiumPaymentsTableCheckboxId = `feeRecordIds-23,5,6-reportedPaymentsCurrency-GBP-status-TO_DO`;
+      const idList = [2, 5, 6, 77, 1234];
+      const checkboxId1: PremiumPaymentsTableCheckboxId = `feeRecordIds-2-reportedPaymentsCurrency-GBP-status-TO_DO`;
+      const checkboxId2: PremiumPaymentsTableCheckboxId = `feeRecordIds-5,6,77,1234-reportedPaymentsCurrency-USD-status-TO_DO`;
 
       // Act
       const extractedIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds([checkboxId1, checkboxId2]);
 
       // Assert
-      expect(extractedIds).toEqual([1, 2, 23, 5, 6]);
+      expect(extractedIds).toEqual(idList);
     });
   });
 
