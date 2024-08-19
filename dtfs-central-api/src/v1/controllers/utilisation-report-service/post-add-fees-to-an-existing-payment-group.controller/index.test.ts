@@ -162,7 +162,11 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       // Arrange
       const paymentId = 3;
       const aPaymentInUSD = PaymentEntityMockBuilder.forCurrency('USD').withId(paymentId).withFeeRecords([]).build();
-      const aFeeRecordWithAPaymentInUSD = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withPayments([aPaymentInUSD]).build();
+      const aFeeRecordWithAPaymentInUSD = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withId(2)
+        .withPaymentCurrency('GBP')
+        .withPayments([aPaymentInUSD])
+        .build();
       const aPaymentInUSDWithFeeRecords = PaymentEntityMockBuilder.forCurrency('USD').withId(paymentId).withFeeRecords([aFeeRecordWithAPaymentInUSD]).build();
 
       const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
