@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   clamav:
     image: mkodockx/docker-clamav:alpine
@@ -57,7 +57,8 @@ services:
       - dtfs-mongo
       - external-api
     ports:
-      - '5005:5005'
+      - '5005:5005' # http
+      - '9223:9223' # debug
     volumes:
       - ./dtfs-central-api/src:/app/dtfs-central-api/src:ro
       - ./libs:/app/libs:ro
@@ -67,13 +68,12 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI
-      - DTFS_CENTRAL_API_URL=http://localhost:5005
       - TZ=Europe/London
-      - NODE_ENV
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
+      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - AUDIT_API_URL
       - AUDIT_API_USERNAME
@@ -98,7 +98,8 @@ services:
     depends_on:
       - trade-finance-manager-api
     ports:
-      - '5003:5003'
+      - '5003:5003' # http
+      - '9224:9224' # debug
     volumes:
       - ./trade-finance-manager-ui/server:/app/trade-finance-manager-ui/server:ro
       - ./trade-finance-manager-ui/public:/app/trade-finance-manager-ui/public:ro
@@ -115,6 +116,7 @@ services:
       - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL
       - REDIS_HOSTNAME=redis
+      - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV
@@ -136,7 +138,8 @@ services:
       - dtfs-central-api
       - external-api
     ports:
-      - '5004:5004'
+      - '5004:5004' # http
+      - '9225:9225' # debug
     volumes:
       - ./trade-finance-manager-api/src:/app/trade-finance-manager-api/src:ro
       - ./libs:/app/libs:ro
@@ -158,9 +161,8 @@ services:
       - UKEF_TFM_API_REPORTS_KEY
       - TFM_UI_URL=http://localhost:5003
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
-      - SENTRY_DSN=${SENTRY_DSN}
+      - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
-      - JWT_SIGNING_KEY=${JWT_SIGNING_KEY}
       - TZ=Europe/London
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV
@@ -181,7 +183,8 @@ services:
       - portal-api
       - clamav
     ports:
-      - '5000:5000'
+      - '5000:5000' # http
+      - '9226:9226' # debug
     volumes:
       - ./portal/server:/app/portal/server:ro
       - ./portal/public:/app/portal/public:ro
@@ -194,10 +197,10 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
+      - REDIS_HOSTNAME=redis
       - SESSION_SECRET
       - TZ=Europe/London
       - NODE_ENV
-      - REDIS_HOSTNAME=redis
       - RATE_LIMIT_THRESHOLD
       - CLAMAV_PORT=3310
       - CLAMAV_HOST=clamav
@@ -213,10 +216,12 @@ services:
     image: dtfs/portal-api
     restart: always
     depends_on:
+      - dtfs-sql
       - dtfs-central-api
       - external-api
     ports:
-      - '5001:5001'
+      - '5001:5001' # http
+      - '9227:9227' # debug
     volumes:
       - ./portal-api/src:/app/portal-api/src:ro
       - ./libs:/app/libs:ro
@@ -260,7 +265,6 @@ services:
       - CHANGE_STREAM_ENABLED
       - DELETION_AUDIT_LOGS_TTL_SECONDS
       - GEF_DEAL_VERSION
-    entrypoint: npx ts-node portal-api/src/index.ts
 
   external-api:
     build:
@@ -271,17 +275,18 @@ services:
     depends_on:
       - dtfs-mongo
     ports:
-      - '5002:5002'
+      - '5002:5002' # http
+      - '9228:9228' # debug
     volumes:
       - ./external-api/src:/app/external-api/src:ro
       - ./libs:/app/libs:ro
     environment:
       - PORT=5002
-      - CORS_ORIGIN
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
+      - CORS_ORIGIN
       - APIM_TFS_URL
       - APIM_TFS_KEY
       - APIM_TFS_VALUE
@@ -300,7 +305,7 @@ services:
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - ESTORE_CRON_MANAGER_SCHEDULE
-    entrypoint: npx nodemon external-api/src/index.ts -L
+    entrypoint: npx ts-node external-api/src/index.ts
 
   gef-ui:
     build:
@@ -312,7 +317,8 @@ services:
       - redis
       - portal-api
     ports:
-      - '5006:5006'
+      - '5006:5006' # http
+      - '9229:9229' # debug
     volumes:
       - ./gef-ui/server:/app/gef-ui/server:ro
       - ./gef-ui/public:/app/gef-ui/public:ro
@@ -321,13 +327,16 @@ services:
     environment:
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
+      - REDIS_HOSTNAME=redis
       - SESSION_SECRET
+      - AZURE_PORTAL_STORAGE_ACCOUNT
+      - AZURE_PORTAL_STORAGE_ACCESS_KEY
       - TZ=Europe/London
       - NODE_ENV
-      - REDIS_HOSTNAME=redis
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
+      - EXTERNAL_API_KEY
       - RATE_LIMIT_THRESHOLD
       - CONTACT_US_EMAIL_ADDRESS
       - GEF_DEAL_VERSION
