@@ -19,14 +19,14 @@ const renderUtilisationReportReconciliationForReport = (res: Response, viewModel
 export const getUtilisationReportReconciliationByReportId = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId } = req.params;
-  const { facilityIdQuery, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
+  const { facilityIdQuery, selectedFeeRecordIds } = req.query;
 
   try {
     const facilityIdQueryAsString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
     const facilityIdQueryError = validateFacilityIdQuery(facilityIdQueryAsString, req.originalUrl);
 
-    const selectedFeeRecordIdsQueryAsString = selectedFeeRecordIdsQuery ? asString(selectedFeeRecordIdsQuery, 'selectedFeeRecordIdsQuery') : undefined;
-    const isCheckboxCheckedQuery = getIsCheckboxCheckedFromQuery(selectedFeeRecordIdsQueryAsString);
+    const selectedFeeRecordIdsAsString = selectedFeeRecordIds ? asString(selectedFeeRecordIds, 'selectedFeeRecordIds') : undefined;
+    const isCheckboxCheckedQuery = getIsCheckboxCheckedFromQuery(selectedFeeRecordIdsAsString);
 
     const { errorSummary: premiumPaymentFormError, isCheckboxChecked: isCheckboxCheckedSession } = getAndClearFieldsFromRedirectSessionData(req);
 
