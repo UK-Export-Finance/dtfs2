@@ -250,10 +250,10 @@ describe('getKeyingSheetForReportId', () => {
     expect(keyingSheet[0].feePayments[2].dateReceived).toEqual(new Date('2023'));
   });
 
-  it('sets the keying sheet row fee payment date to null and amount to zero when the join table paymentAmountUsedForFeeRecord is null', async () => {
+  it('sets the keying sheet row fee payments only to the payment with a non-null paymentAmountUsedForFeeRecord column', async () => {
     // Arrange
     const firstPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(11).withDateReceived(new Date('2021')).build();
-    const secondPayment = PaymentEntityMockBuilder.forCurrency('USD').withDateReceived(new Date('2022')).withId(22).build();
+    const secondPayment = PaymentEntityMockBuilder.forCurrency('USD').withId(22).withDateReceived(new Date('2022')).build();
 
     const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('READY_TO_KEY').withId(12).build();
 
@@ -283,13 +283,10 @@ describe('getKeyingSheetForReportId', () => {
 
     // Assert
     expect(keyingSheet).toHaveLength(1);
-    expect(keyingSheet[0].feePayments).toHaveLength(2);
+    expect(keyingSheet[0].feePayments).toHaveLength(1);
     expect(keyingSheet[0].feePayments[0].currency).toBe('GBP');
     expect(keyingSheet[0].feePayments[0].amount).toBe(1000);
     expect(keyingSheet[0].feePayments[0].dateReceived).toEqual(new Date('2021'));
-    expect(keyingSheet[0].feePayments[1].currency).toBe('USD');
-    expect(keyingSheet[0].feePayments[1].amount).toBe(0);
-    expect(keyingSheet[0].feePayments[1].dateReceived).toBeNull();
   });
 
   describe('when there are fee records with no payments', () => {

@@ -51,6 +51,10 @@ export const getKeyingSheetForReportId = async (reportId: number, allReportFeeRe
 
   const feeRecordIdToKeyingSheetRowMap = joinTableEntities.reduce(
     (map, { feeRecord, payment, paymentAmountUsedForFeeRecord }) => {
+      if (paymentAmountUsedForFeeRecord === null) {
+        return map;
+      }
+
       const feeRecordId = feeRecord.id;
       remove(keyingSheetFeeRecordsWithZeroFeePayment, ({ id }) => id === feeRecordId);
 
