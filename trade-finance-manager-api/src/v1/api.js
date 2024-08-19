@@ -1509,6 +1509,27 @@ const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, 
   });
 };
 
+/**
+ * Adds the supplied fee records to an existing payment
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The list of fee record ids to add to the payment
+ * @param {number[]} paymentIds - The list of payment ids for the fee records to be added to
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user
+ */
+const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, user) => {
+  const response = await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/add-to-an-existing-payment`,
+    method: 'post',
+    headers: headers.central,
+    data: {
+      feeRecordIds,
+      paymentIds,
+      user,
+    },
+  });
+  return response.data;
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1581,4 +1602,5 @@ module.exports = {
   deletePaymentById,
   editPayment,
   removeFeesFromPayment,
+  addFeesToAnExistingPayment,
 };
