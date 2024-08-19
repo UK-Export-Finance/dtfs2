@@ -9,3 +9,4 @@ export * from './edit-payment';
 export * from './mark-fee-records-as-reconciled';
 export * from './mark-fee-records-as-ready-to-key';
 export * from './remove-fees-from-payment-group';
+export * from './add-fees-to-an-existing-payment-group';
