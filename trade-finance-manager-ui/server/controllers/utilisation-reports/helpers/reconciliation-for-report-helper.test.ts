@@ -2,6 +2,7 @@ import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common
 import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems, mapKeyingSheetToKeyingSheetViewModel } from './reconciliation-for-report-helper';
 import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import { aFeeRecordPaymentGroup, aFeeRecord, aPayment } from '../../../../test-helpers';
+import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 
 describe('reconciliation-for-report-helper', () => {
   describe('mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems', () => {
@@ -412,7 +413,7 @@ describe('reconciliation-for-report-helper', () => {
 
       const checkedCheckboxId = `feeRecordIds-${feeRecordId}-reportedPaymentsCurrency-${feeRecordReportedPaymentsCurrency}-status-${status}`;
 
-      const isCheckboxChecked = (checkboxId: string) => checkboxId === checkedCheckboxId;
+      const isCheckboxChecked = (checkboxId: PremiumPaymentsTableCheckboxId) => checkboxId === checkedCheckboxId;
 
       // Act
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
@@ -441,7 +442,7 @@ describe('reconciliation-for-report-helper', () => {
 
       const checkedCheckboxId = `feeRecordIds-${nonMatchingFeeRecordId}-reportedPaymentsCurrency-${feeRecordReportedPaymentsCurrency}-status-${status}`;
 
-      const isCheckboxChecked = (checkboxId: string) => checkboxId === checkedCheckboxId;
+      const isCheckboxChecked = (checkboxId: PremiumPaymentsTableCheckboxId) => checkboxId === checkedCheckboxId;
 
       // Act
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);

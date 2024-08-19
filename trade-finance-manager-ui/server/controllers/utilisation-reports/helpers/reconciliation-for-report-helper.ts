@@ -73,7 +73,7 @@ const getCheckboxAriaLabel = (feeRecords: FeeRecord[]): string => {
 
 export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
   feeRecordPaymentGroups: FeeRecordPaymentGroup[],
-  isCheckboxChecked: (checkboxId: string) => boolean = () => false,
+  isCheckboxChecked: (checkboxId: PremiumPaymentsTableCheckboxId) => boolean = () => false,
 ): FeeRecordPaymentGroupViewModelItem[] => {
   const totalReportedPaymentsDataSortValueMap = getDataSortValueMapForFeeRecordPaymentGroupProperty(feeRecordPaymentGroups, 'totalReportedPayments');
   const totalPaymentsReceivedDataSortValueMap = getDataSortValueMapForFeeRecordPaymentGroupProperty(feeRecordPaymentGroups, 'totalPaymentsReceived');

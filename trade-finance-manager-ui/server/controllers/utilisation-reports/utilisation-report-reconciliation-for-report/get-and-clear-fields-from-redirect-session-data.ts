@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { ErrorSummaryViewModel } from '../../../types/view-models';
 import { getAddPaymentError } from '../helpers/get-add-payment-error-helper';
 import { getGenerateKeyingDataError } from '../helpers';
+import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 
 const clearRedirectSessionData = (req: Request): void => {
   delete req.session.addPaymentErrorKey;
@@ -13,7 +14,7 @@ export const getAndClearFieldsFromRedirectSessionData = (
   req: Request,
 ): {
   errorSummary: ErrorSummaryViewModel | undefined;
-  isCheckboxChecked: (checkboxId: string) => boolean;
+  isCheckboxChecked: (checkboxId: PremiumPaymentsTableCheckboxId) => boolean;
 } => {
   const { addPaymentErrorKey, generateKeyingDataErrorKey } = req.session;
 
@@ -39,7 +40,7 @@ export const getAndClearFieldsFromRedirectSessionData = (
 
   const checkedCheckboxIds = { ...req.session.checkedCheckboxIds };
 
-  const isCheckboxChecked = (checkboxId: string): boolean => Boolean(checkedCheckboxIds[checkboxId]);
+  const isCheckboxChecked = (checkboxId: PremiumPaymentsTableCheckboxId): boolean => Boolean(checkedCheckboxIds[checkboxId]);
 
   switch (addPaymentErrorKey) {
     case 'no-fee-records-selected':

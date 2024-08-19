@@ -1,6 +1,7 @@
 import { createRequest } from 'node-mocks-http';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
 import { AddPaymentErrorKey, GenerateKeyingDataErrorKey } from '../helpers';
+import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 
 type RedirectSessionData = {
   addPaymentErrorKey: AddPaymentErrorKey | undefined;
@@ -24,7 +25,11 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     expect(req.session.generateKeyingDataErrorKey).toBeUndefined();
   };
 
-  const assertIsCheckboxCheckedReturnsValueWithInput = (isCheckboxChecked: (checkboxId: string) => boolean, input: string, expectedOutput: boolean) => {
+  const assertIsCheckboxCheckedReturnsValueWithInput = (
+    isCheckboxChecked: (checkboxId: PremiumPaymentsTableCheckboxId) => boolean,
+    input: PremiumPaymentsTableCheckboxId,
+    expectedOutput: boolean,
+  ) => {
     expect(isCheckboxChecked(input)).toBe(expectedOutput);
   };
 
@@ -55,7 +60,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
 
     // Assert
     assertSessionHasBeenCleared(req);
-    assertIsCheckboxCheckedReturnsValueWithInput(isCheckboxChecked, '', false);
+    assertIsCheckboxCheckedReturnsValueWithInput(isCheckboxChecked, 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO', false);
   });
 
   it('throws an error if the session generateKeyingDataErrorKey is not recognised', () => {
@@ -124,8 +129,8 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
 
   it('returns a function which returns true for a checkbox id defined in req.session.checkedCheckboxIds and false otherwise', () => {
     // Arrange
-    const checkedCheckboxId = 'some-checkbox-id';
-    const uncheckedCheckboxId = 'another-checkbox-id';
+    const checkedCheckboxId = 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO';
+    const uncheckedCheckboxId = 'feeRecordIds-2,3-reportedPaymentsCurrency-USD-status-DOES_NOT_MATCH';
 
     const req = getMockRequest({
       addPaymentErrorKey: 'different-fee-record-statuses',
