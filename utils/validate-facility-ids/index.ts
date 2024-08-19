@@ -3,7 +3,12 @@ import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { mongoDbClient } from './database-client';
 import { getUniqueFeeRecordFacilityIds, getUniqueTfmFacilitiesUkefFacilityIds } from './helpers';
 
+/**
+ * Runs the validate facility ids script
+ */
 const run = async (): Promise<void> => {
+  console.info("Running 'validate-facility-ids' util script");
+
   const dataSource = await SqlDbDataSource.initialize();
   try {
     const tfmFacilitiesUkefFacilityIds = await getUniqueTfmFacilitiesUkefFacilityIds();

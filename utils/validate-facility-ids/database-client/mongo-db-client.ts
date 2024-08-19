@@ -6,6 +6,10 @@ const mongoDbConfigSchema = z.object({
   MONGO_INITDB_DATABASE: z.string(),
 });
 
+/**
+ * Gets the mongo db client
+ * @returns The mongo db client
+ */
 const getMongoDbClient = (): MongoDbClient => {
   const mongoDbConfig = mongoDbConfigSchema.parse(process.env);
   return new MongoDbClient({
