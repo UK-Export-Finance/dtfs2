@@ -158,6 +158,32 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
     });
 
+    it("responds with a '400' if the fee records payment currency does not equal the payment group currency", async () => {
+      // Arrange
+      const paymentId = 3;
+      const aPaymentInUSD = PaymentEntityMockBuilder.forCurrency('USD').withId(paymentId).withFeeRecords([]).build();
+      const aFeeRecordWithAPaymentInUSD = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withPayments([aPaymentInUSD]).build();
+      const aPaymentInUSDWithFeeRecords = PaymentEntityMockBuilder.forCurrency('USD').withId(paymentId).withFeeRecords([aFeeRecordWithAPaymentInUSD]).build();
+
+      const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
+        params: aValidRequestQuery(),
+        body: {
+          ...aValidRequestBody(),
+          feeRecordIds: [aFeeRecordWithAPaymentInUSD.id],
+          paymentIds: [paymentId],
+        },
+      });
+      const res = httpMocks.createResponse();
+
+      paymentRepoFindSpy.mockResolvedValue([aPaymentInUSDWithFeeRecords]);
+
+      // Act
+      await postAddFeesToAnExistingPaymentGroup(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    });
+
     it("responds with the specific error status if saving the report throws an 'ApiError'", async () => {
       // Arrange
       const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({

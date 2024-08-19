@@ -92,7 +92,7 @@ describe('payment group validator', () => {
   });
 
   describe('validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency', () => {
-    it('should return true when all fee records and payment group have the same currency', () => {
+    it('should not throw an error when all fee records and payment group have the same currency', () => {
       // Arrange
       const selectedFeeRecords = [
         FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
@@ -100,14 +100,11 @@ describe('payment group validator', () => {
       ];
       const paymentGroupCurrency = 'USD';
 
-      // Act
-      const result = validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency);
-
-      // Assert
-      expect(result).toBe(true);
+      // Act & Assert
+      expect(() => validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency)).not.toThrow();
     });
 
-    it('should return false when fee records have different currencies', () => {
+    it('should throw an InvalidPayloadError when fee records have different currencies', () => {
       // Arrange
       const selectedFeeRecords = [
         FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
@@ -115,14 +112,13 @@ describe('payment group validator', () => {
       ];
       const paymentGroupCurrency = 'USD';
 
-      // Act
-      const result = validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency);
-
-      // Assert
-      expect(result).toBe(false);
+      // Act & Assert
+      expect(() => validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency)).toThrow(
+        new InvalidPayloadError('The selected fee records have mismatched payment currencies.'),
+      );
     });
 
-    it('should return false when fee records currency differs from payment group currency', () => {
+    it('should throw an InvalidPayloadError when fee records currency differs from payment group currency', () => {
       // Arrange
       const selectedFeeRecords = [
         FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
@@ -130,23 +126,19 @@ describe('payment group validator', () => {
       ];
       const paymentGroupCurrency = 'GBP';
 
-      // Act
-      const result = validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency);
-
-      // Assert
-      expect(result).toBe(false);
+      // Act & Assert
+      expect(() => validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency)).toThrow(
+        new InvalidPayloadError('The selected fee records payment currency does not match that of the payment group.'),
+      );
     });
 
-    it('should return true when there are no fee records and only payment group currency', () => {
+    it('should not throw an error when there are no fee records and only payment group currency', () => {
       // Arrange
       const selectedFeeRecords: FeeRecordEntity[] = [];
       const paymentGroupCurrency = 'EUR';
 
-      // Act
-      const result = validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency);
-
-      // Assert
-      expect(result).toBe(true);
+      // Act & Assert
+      expect(() => validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency)).not.toThrow();
     });
   });
 });

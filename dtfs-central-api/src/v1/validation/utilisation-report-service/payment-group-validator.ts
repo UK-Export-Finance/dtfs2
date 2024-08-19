@@ -10,14 +10,22 @@ export const validateThatRequestedPaymentsMatchSavedPayments = (savedPayments: P
 };
 
 export const validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency = (selectedFeeRecords: FeeRecordEntity[], paymentGroupCurrency: Currency) => {
-  const paymentCurrencies = new Set<Currency>([paymentGroupCurrency]);
+  const paymentCurrencies = new Set<Currency>();
 
   selectedFeeRecords.forEach((feeRecord) => {
     const currency = feeRecord.paymentCurrency;
     paymentCurrencies.add(currency);
   });
 
-  return paymentCurrencies.size === 1;
+  if (paymentCurrencies.size > 1) {
+    throw new InvalidPayloadError('The selected fee records have mismatched payment currencies.');
+  }
+
+  paymentCurrencies.add(paymentGroupCurrency);
+
+  if (paymentCurrencies.size > 1) {
+    throw new InvalidPayloadError('The selected fee records payment currency does not match that of the payment group.');
+  }
 };
 
 export function validateThatPaymentGroupHasFeeRecords(
