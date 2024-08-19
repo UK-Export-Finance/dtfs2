@@ -19,6 +19,6 @@ export type UpdatePaymentParams = {
 };
 
 export type UpdateWithAdditionalFeeRecordsParams = {
-  feeRecords: FeeRecordEntity[];
+  additionalFeeRecords: FeeRecordEntity[];
   requestSource: DbRequestSource;
 };

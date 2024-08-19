@@ -11,34 +11,39 @@ describe('PaymentEntity', () => {
       const existingFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
       payment.feeRecords = [existingFeeRecord];
 
-      const newFeeRecord1 = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build();
-      const newFeeRecord2 = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).build();
+      const firstNewFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).build();
+      const secondNewFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).build();
 
       const userId = 'abc123';
 
       // Act
       payment.updateWithAdditionalFeeRecords({
-        feeRecords: [newFeeRecord1, newFeeRecord2],
+        additionalFeeRecords: [firstNewFeeRecord, secondNewFeeRecord],
         requestSource: { platform: 'TFM', userId },
       });
 
       // Assert
-      expect(payment.feeRecords).toEqual(expect.arrayContaining([existingFeeRecord, newFeeRecord1, newFeeRecord2]));
+      expect(payment.feeRecords).toEqual(expect.arrayContaining([existingFeeRecord, firstNewFeeRecord, secondNewFeeRecord]));
     });
 
-    it('does not allow duplicate fee records to be added to the payment', () => {
+    it('does not allow adding a fee record which is already attached to payment', () => {
       // Arrange
       const payment = PaymentEntityMockBuilder.forCurrency('GBP').build();
 
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
       payment.feeRecords = [feeRecord];
 
+      const existingFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
+      payment.feeRecords = [existingFeeRecord];
+
+      const feeRecordWithDuplicateId = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
+
       const userId = 'abc123';
 
       // Act & Assert
       expect(() => {
         payment.updateWithAdditionalFeeRecords({
-          feeRecords: [feeRecord],
+          additionalFeeRecords: [feeRecordWithDuplicateId],
           requestSource: { platform: 'TFM', userId },
         });
       }).toThrow(Error);

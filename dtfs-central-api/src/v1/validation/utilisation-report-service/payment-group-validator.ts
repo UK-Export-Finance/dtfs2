@@ -1,39 +1,37 @@
-import { PaymentEntity } from '@ukef/dtfs2-common';
+import { Currency, FeeRecordEntity, PaymentEntity } from '@ukef/dtfs2-common';
 import { InvalidPayloadError } from '../../../errors';
 
-const getPaymentEntityFeeRecordIds = (payment: PaymentEntity) => {
-  return payment.feeRecords.map((record) => record.id);
+export const validateThatRequestedPaymentsMatchSavedPayments = (savedPayments: PaymentEntity[], requestedPaymentIds: number[]) => {
+  const savedPaymentIds = savedPayments.map((payment) => payment.id);
+
+  if (!savedPaymentIds.every((id) => requestedPaymentIds.includes(id)) || !requestedPaymentIds.every((id) => savedPaymentIds.includes(id))) {
+    throw new InvalidPayloadError('Requested payment IDs do not match saved payment IDs');
+  }
 };
 
-export const validatePaymentGroupPaymentsAllHaveSameFeeRecords = (payments: PaymentEntity[]) => {
-  const [firstPayment, ...otherPayments] = payments;
-  const firstPaymentFeeRecordIds = getPaymentEntityFeeRecordIds(firstPayment);
+export const validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency = (selectedFeeRecords: FeeRecordEntity[], paymentGroupCurrency: Currency) => {
+  const paymentCurrencies = new Set<Currency>();
 
-  otherPayments.forEach((payment) => {
-    const currentPaymentFeeRecordIds = getPaymentEntityFeeRecordIds(payment);
-    if (
-      firstPaymentFeeRecordIds.length !== currentPaymentFeeRecordIds.length ||
-      !firstPaymentFeeRecordIds.every((id) => currentPaymentFeeRecordIds.includes(id))
-    ) {
-      throw new InvalidPayloadError('Payment group payments must all have the same set of fee records attached.');
-    }
+  selectedFeeRecords.forEach((feeRecord) => {
+    const currency = feeRecord.paymentCurrency;
+    paymentCurrencies.add(currency);
   });
-};
 
-export const validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds = (payments: PaymentEntity[], paymentIds: number[]) => {
-  if (payments.length === 0 || payments.at(0)?.feeRecords.length === 0) {
-    return;
+  if (paymentCurrencies.size > 1) {
+    throw new InvalidPayloadError('The selected fee records have mismatched payment currencies.');
   }
 
-  const firstPayment = payments.at(0);
-  const firstPaymentsFirstFeeRecord = firstPayment?.feeRecords.at(0);
-  const firstPaymentsFirstFeeRecordPaymentIds = firstPaymentsFirstFeeRecord?.payments.map((payment) => payment.id);
+  paymentCurrencies.add(paymentGroupCurrency);
 
-  if (!firstPaymentsFirstFeeRecordPaymentIds || firstPaymentsFirstFeeRecordPaymentIds.length !== paymentIds.length) {
-    throw new InvalidPayloadError('Payment group payment count must equal the number of payments attached to the first fee record of the first payment.');
-  }
-
-  if (firstPaymentsFirstFeeRecordPaymentIds.some((id) => !paymentIds.includes(id))) {
-    throw new InvalidPayloadError('Payment group payment IDs do not match the IDs of the payments attached to the first fee record of the first payment.');
+  if (paymentCurrencies.size > 1) {
+    throw new InvalidPayloadError('The selected fee records payment currency does not match that of the payment group.');
   }
 };
+
+export function validateThatPaymentGroupHasFeeRecords(
+  paymentGroupFeeRecords: FeeRecordEntity[] | undefined,
+): asserts paymentGroupFeeRecords is FeeRecordEntity[] {
+  if (!paymentGroupFeeRecords || paymentGroupFeeRecords.length === 0) {
+    throw new InvalidPayloadError('The payment group has no fee records.');
+  }
+}

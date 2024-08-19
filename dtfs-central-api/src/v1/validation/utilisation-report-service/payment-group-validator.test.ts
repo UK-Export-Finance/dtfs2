@@ -2,125 +2,143 @@ import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   InvalidPayloadError,
-  PaymentEntity,
   PaymentEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import {
-  validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds,
-  validatePaymentGroupPaymentsAllHaveSameFeeRecords,
+  validateThatRequestedPaymentsMatchSavedPayments,
+  validateThatPaymentGroupHasFeeRecords,
+  validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency,
 } from './payment-group-validator';
 
 describe('payment group validator', () => {
   const report = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
 
-  describe('validatePaymentGroupPaymentsAllHaveSameFeeRecords', () => {
-    it('should not throw an error when there is only one payment', () => {
+  describe('validateThatRequestedPaymentsMatchSavedPayments', () => {
+    it('should not throw an error when requested payment IDs match saved payment IDs', () => {
       // Arrange
-      const aListOfOnePaymentWithFeeRecords = [aPaymentWithIdAndFeeRecords(1, [aFeeRecordWithId(1), aFeeRecordWithId(2)])];
+      const savedPayments = [aPaymentWithId(1), aPaymentWithId(2)];
+      const requestedPaymentIds = [1, 2];
 
       // Act & Assert
-      expect(() => validatePaymentGroupPaymentsAllHaveSameFeeRecords(aListOfOnePaymentWithFeeRecords)).not.toThrow();
+      expect(() => validateThatRequestedPaymentsMatchSavedPayments(savedPayments, requestedPaymentIds)).not.toThrow();
     });
 
-    it('should not throw an error when all payments have the same fee records', () => {
+    it('should throw an InvalidPayloadError when requested payment IDs do not match saved payment IDs', () => {
       // Arrange
-      const aListOfPaymentsWithMatchingFeeRecords = [
-        aPaymentWithIdAndFeeRecords(1, [aFeeRecordWithId(1), aFeeRecordWithId(2)]),
-        aPaymentWithIdAndFeeRecords(2, [aFeeRecordWithId(1), aFeeRecordWithId(2)]),
-      ];
+      const savedPayments = [aPaymentWithId(1), aPaymentWithId(2)];
+      const requestedPaymentIds = [1, 3];
 
       // Act & Assert
-      expect(() => validatePaymentGroupPaymentsAllHaveSameFeeRecords(aListOfPaymentsWithMatchingFeeRecords)).not.toThrow();
-    });
-
-    it('should throw an InvalidPayloadError when payments have different fee record lengths', () => {
-      // Arrange
-      const aListOfPaymentsWithAnUnequalFeeRecordCount = [
-        aPaymentWithIdAndFeeRecords(1, [aFeeRecordWithId(1), aFeeRecordWithId(2)]),
-        aPaymentWithIdAndFeeRecords(2, [aFeeRecordWithId(1)]),
-      ];
-
-      // Act & Assert
-      expect(() => validatePaymentGroupPaymentsAllHaveSameFeeRecords(aListOfPaymentsWithAnUnequalFeeRecordCount)).toThrow(
-        new InvalidPayloadError('Payment group payments must all have the same set of fee records attached.'),
+      expect(() => validateThatRequestedPaymentsMatchSavedPayments(savedPayments, requestedPaymentIds)).toThrow(
+        new InvalidPayloadError('Requested payment IDs do not match saved payment IDs'),
       );
     });
 
-    it('should throw an InvalidPayloadError when payments have different fee record ids', () => {
+    it('should throw an InvalidPayloadError when there are missing requested payment IDs', () => {
       // Arrange
-      const aListOfPaymentsWithFeeRecordsOfDifferingIds = [
-        aPaymentWithIdAndFeeRecords(1, [aFeeRecordWithId(1), aFeeRecordWithId(2)]),
-        aPaymentWithIdAndFeeRecords(2, [aFeeRecordWithId(1), aFeeRecordWithId(3)]),
+      const savedPayments = [aPaymentWithId(1), aPaymentWithId(2)];
+      const requestedPaymentIds = [1];
+
+      // Act & Assert
+      expect(() => validateThatRequestedPaymentsMatchSavedPayments(savedPayments, requestedPaymentIds)).toThrow(
+        new InvalidPayloadError('Requested payment IDs do not match saved payment IDs'),
+      );
+    });
+
+    it('should throw an InvalidPayloadError when there are extra requested payment IDs', () => {
+      // Arrange
+      const savedPayments = [aPaymentWithId(1), aPaymentWithId(2)];
+      const requestedPaymentIds = [1, 2, 3];
+
+      // Act & Assert
+      expect(() => validateThatRequestedPaymentsMatchSavedPayments(savedPayments, requestedPaymentIds)).toThrow(
+        new InvalidPayloadError('Requested payment IDs do not match saved payment IDs'),
+      );
+    });
+
+    function aPaymentWithId(id: number) {
+      return PaymentEntityMockBuilder.forCurrency('GBP').withId(id).build();
+    }
+  });
+
+  describe('validateThatPaymentGroupHasFeeRecords', () => {
+    it('should throw an InvalidPayloadError when payment group fee records are undefined', () => {
+      // Arrange
+      const paymentGroupFeeRecords = undefined;
+
+      // Act & Assert
+      expect(() => validateThatPaymentGroupHasFeeRecords(paymentGroupFeeRecords)).toThrow(new InvalidPayloadError('The payment group has no fee records.'));
+    });
+
+    it('should throw an InvalidPayloadError when payment group has no fee records', () => {
+      // Arrange
+      const paymentGroupFeeRecords: FeeRecordEntity[] = [];
+
+      // Act & Assert
+      expect(() => validateThatPaymentGroupHasFeeRecords(paymentGroupFeeRecords)).toThrow(new InvalidPayloadError('The payment group has no fee records.'));
+    });
+
+    it('should not throw an error when payment group has fee records', () => {
+      // Arrange
+      const paymentGroupFeeRecords = [
+        FeeRecordEntityMockBuilder.forReport(report).withId(1).build(),
+        FeeRecordEntityMockBuilder.forReport(report).withId(2).build(),
       ];
 
       // Act & Assert
-      expect(() => validatePaymentGroupPaymentsAllHaveSameFeeRecords(aListOfPaymentsWithFeeRecordsOfDifferingIds)).toThrow(
-        new InvalidPayloadError('Payment group payments must all have the same set of fee records attached.'),
-      );
+      expect(() => validateThatPaymentGroupHasFeeRecords(paymentGroupFeeRecords)).not.toThrow();
     });
   });
 
-  describe('validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds', () => {
-    it('should not throw an error when payments array is empty', () => {
+  describe('validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency', () => {
+    it('should not throw an error when all fee records and payment group have the same currency', () => {
       // Arrange
-      const anEmptyListOfPayments: PaymentEntity[] = [];
-      const paymentIds = [1];
+      const selectedFeeRecords = [
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
+      ];
+      const paymentGroupCurrency = 'USD';
 
       // Act & Assert
-      expect(() => validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(anEmptyListOfPayments, paymentIds)).not.toThrow();
+      expect(() => validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency)).not.toThrow();
     });
 
-    it('should not throw an error when first payment has no fee records', () => {
+    it('should throw an InvalidPayloadError when fee records have different currencies', () => {
       // Arrange
-      const paymentsWithNoFeeRecords = [aPaymentWithIdAndFeeRecords(1, [])];
-      const paymentIds = [1];
+      const selectedFeeRecords = [
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('GBP').build(),
+      ];
+      const paymentGroupCurrency = 'USD';
 
       // Act & Assert
-      expect(() => validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(paymentsWithNoFeeRecords, paymentIds)).not.toThrow();
-    });
-
-    it('should not throw an error when payment IDs match first fee record payment IDs', () => {
-      // Arrange
-      const aFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
-        .withId(2)
-        .withPayments([aPaymentWithIdAndFeeRecords(1, [])])
-        .build();
-      const aListOfOnePaymentWithFeeRecordsWithPayments = [aPaymentWithIdAndFeeRecords(1, [aFeeRecord])];
-      const paymentIds = [1];
-
-      // Act & Assert
-      expect(() => validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(aListOfOnePaymentWithFeeRecordsWithPayments, paymentIds)).not.toThrow();
-    });
-
-    it('should throw an InvalidPayloadError when payment count does not match first fee record payment count', () => {
-      // Arrange
-      const payments = [aPaymentWithIdAndFeeRecords(1, [aFeeRecordWithId(1), aFeeRecordWithId(2)])];
-      const paymentIds = [1, 2, 3];
-
-      // Act & Assert
-      expect(() => validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(payments, paymentIds)).toThrow(
-        new InvalidPayloadError('Payment group payment count must equal the number of payments attached to the first fee record of the first payment.'),
+      expect(() => validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency)).toThrow(
+        new InvalidPayloadError('The selected fee records have mismatched payment currencies.'),
       );
     });
 
-    it('should throw an InvalidPayloadError when payment IDs do not match first fee record payment IDs', () => {
+    it('should throw an InvalidPayloadError when fee records currency differs from payment group currency', () => {
       // Arrange
-      const payments = [aPaymentWithIdAndFeeRecords(1, [aFeeRecordWithId(1), aFeeRecordWithId(2)])];
-      const paymentIds = [1, 3];
+      const selectedFeeRecords = [
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
+        FeeRecordEntityMockBuilder.forReport(report).withPaymentCurrency('USD').build(),
+      ];
+      const paymentGroupCurrency = 'GBP';
 
       // Act & Assert
-      expect(() => validateProvidedPaymentIdsMatchFirstPaymentsFirstFeeRecordPaymentIds(payments, paymentIds)).toThrow(
-        new InvalidPayloadError('Payment group payment count must equal the number of payments attached to the first fee record of the first payment.'),
+      expect(() => validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency)).toThrow(
+        new InvalidPayloadError('The selected fee records payment currency does not match that of the payment group.'),
       );
+    });
+
+    it('should not throw an error when there are no fee records and only payment group currency', () => {
+      // Arrange
+      const selectedFeeRecords: FeeRecordEntity[] = [];
+      const paymentGroupCurrency = 'EUR';
+
+      // Act & Assert
+      expect(() => validateThatAllSelectedFeeRecordsAndPaymentGroupHaveSameCurrency(selectedFeeRecords, paymentGroupCurrency)).not.toThrow();
     });
   });
-
-  function aPaymentWithIdAndFeeRecords(id: number, feeRecords: FeeRecordEntity[]) {
-    return PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords(feeRecords).build();
-  }
-
-  function aFeeRecordWithId(id: number) {
-    return FeeRecordEntityMockBuilder.forReport(report).withId(id).build();
-  }
 });

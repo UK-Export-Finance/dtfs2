@@ -8,7 +8,7 @@ const {
   validatePostKeyingDataPayload,
   validatePutKeyingDataMarkAsPayload,
   validatePostRemoveFeesFromPaymentGroupPayload,
-  validatePostFeesToAnExistingPaymentGroupPayload,
+  validatePostAddFeesToAnExistingPaymentGroupPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
@@ -32,7 +32,7 @@ const { patchPayment } = require('../controllers/utilisation-report-service/patc
 const { putKeyingDataMarkAsDone } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-done.controller');
 const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-to-do.controller');
 const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
-const { postFeesToAnExistingPaymentGroup } = require('../controllers/utilisation-report-service/post-fees-to-an-existing-payment-group.controller');
+const { postAddFeesToAnExistingPaymentGroup } = require('../controllers/utilisation-report-service/post-add-fees-to-an-existing-payment-group.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -622,7 +622,7 @@ utilisationReportsRouter
  *                 items:
  *                   type: number
  *               paymentIds:
- *                 description: The ids of the payment ids
+ *                 description: The ids of the payments
  *                 type: array
  *                 items:
  *                   type: number
@@ -641,8 +641,8 @@ utilisationReportsRouter
   .post(
     validation.sqlIdValidation('reportId'),
     handleExpressValidatorResult,
-    validatePostFeesToAnExistingPaymentGroupPayload,
-    postFeesToAnExistingPaymentGroup,
+    validatePostAddFeesToAnExistingPaymentGroupPayload,
+    postAddFeesToAnExistingPaymentGroup,
   );
 
 module.exports = utilisationReportsRouter;

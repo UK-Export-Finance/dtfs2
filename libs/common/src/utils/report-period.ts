@@ -225,3 +225,12 @@ export const getFormattedReportPeriodWithLongMonth = (reportPeriod: ReportPeriod
  */
 export const getFormattedReportPeriodWithShortMonth = (reportPeriod: ReportPeriod, includePeriodicity: boolean, alwaysStateYear = false): string =>
   getFormattedReportPeriod(reportPeriod, 'MMM', includePeriodicity, alwaysStateYear);
+
+/**
+ * Checks whether or not two report periods are equal
+ * @param reportPeriod1 - A report period
+ * @param reportPeriod2 - Another report period
+ * @returns Whether or not the report periods are equal
+ */
+export const isEqualReportPeriod = (reportPeriod1: ReportPeriod, reportPeriod2: ReportPeriod): boolean =>
+  isEqualMonthAndYear(reportPeriod1.start, reportPeriod2.start) && isEqualMonthAndYear(reportPeriod1.end, reportPeriod2.end);

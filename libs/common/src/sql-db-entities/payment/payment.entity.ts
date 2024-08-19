@@ -61,14 +61,14 @@ export class PaymentEntity extends AuditableBaseEntity {
     this.updateLastUpdatedBy(requestSource);
   }
 
-  public updateWithAdditionalFeeRecords({ feeRecords, requestSource }: UpdateWithAdditionalFeeRecordsParams): void {
+  public updateWithAdditionalFeeRecords({ additionalFeeRecords, requestSource }: UpdateWithAdditionalFeeRecordsParams): void {
     const existingIds = new Set(this.feeRecords.map((record) => record.id));
-    const duplicateIds = feeRecords.filter((record) => existingIds.has(record.id));
+    const duplicateIds = additionalFeeRecords.filter((record) => existingIds.has(record.id));
     if (duplicateIds.length > 0) {
       throw new Error(`Fee record(s) with id(s) ${duplicateIds.map((record) => record.id).join(', ')} are already attached to this payment.`);
     }
 
-    this.feeRecords = [...this.feeRecords, ...feeRecords];
+    this.feeRecords = [...this.feeRecords, ...additionalFeeRecords];
     this.updateLastUpdatedBy(requestSource);
   }
 }

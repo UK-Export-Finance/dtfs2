@@ -1,5 +1,5 @@
 import { when } from 'jest-when';
-import { FacilityUtilisationDataEntityMockBuilder, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FacilityUtilisationDataEntityMockBuilder, FeeRecordEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { calculateFixedFeeAdjustment } from './calculate-fixed-fee-adjustment';
 import { aReportPeriod } from '../../../../../../test-helpers/test-data';
 import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
@@ -19,6 +19,23 @@ describe('calculateFixedFeeAdjustment', () => {
     // Act / Assert
     await expect(calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, aReportPeriod())).rejects.toThrow(
       new Error('Fee record facility id does not match the facility utilisation id'),
+    );
+  });
+
+  it('throws an error if the facility utilisation data report period is the same as the supplied report period', async () => {
+    // Arrange
+    const reportPeriod: ReportPeriod = {
+      start: { month: 1, year: 2024 },
+      end: { month: 1, year: 2024 },
+    };
+    const report = aUtilisationReport();
+    report.reportPeriod = reportPeriod;
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withFacilityId('11111111').build();
+    const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('11111111').withReportPeriod(reportPeriod).build();
+
+    // Act / Assert
+    await expect(calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod)).rejects.toThrow(
+      new Error('Fixed fee adjustment must be calculated before the facility utilisation data has been updated'),
     );
   });
 
@@ -42,10 +59,10 @@ describe('calculateFixedFeeAdjustment', () => {
       when(getFixedFeeForFacility).calledWith(facilityId, currentFacilityUtilisation, reportPeriod).mockResolvedValue(currentFixedFee);
 
       const previousFacilityUtilisation = 654.321;
-      const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withUtilisation(previousFacilityUtilisation).build();
-      when(getFixedFeeForFacility)
-        .calledWith(facilityId, previousFacilityUtilisation, facilityUtilisationData.reportPeriod)
-        .mockResolvedValue(previousFixedFee);
+      const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId)
+        .withUtilisation(previousFacilityUtilisation)
+        .withFixedFee(previousFixedFee)
+        .build();
 
       // Act
       const result = await calculateFixedFeeAdjustment(feeRecord, facilityUtilisationData, reportPeriod);

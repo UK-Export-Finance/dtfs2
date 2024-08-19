@@ -16,6 +16,7 @@ export class FacilityUtilisationDataEntityMockBuilder {
       start: { month: 1, year: 2024 },
       end: { month: 1, year: 2024 },
     };
+    facility.fixedFee = 0;
     facility.updateLastUpdatedBy({ platform: 'SYSTEM' });
     return new FacilityUtilisationDataEntityMockBuilder(facility);
   }
@@ -32,6 +33,11 @@ export class FacilityUtilisationDataEntityMockBuilder {
 
   public withReportPeriod(reportPeriod: ReportPeriod): FacilityUtilisationDataEntityMockBuilder {
     this.data.reportPeriod = reportPeriod;
+    return this;
+  }
+
+  public withFixedFee(fixedFee: number): FacilityUtilisationDataEntityMockBuilder {
+    this.data.fixedFee = fixedFee;
     return this;
   }
 

@@ -8,9 +8,10 @@ const {
   calculateUkefExposure,
   calculateAmendmentExposure,
   calculateAmendmentDateTenor,
-  addLatestAmendmentDates,
+  addLatestAmendmentCoverEndDate,
   addLatestAmendmentValue,
   internalAmendmentEmail,
+  addLatestAmendmentFacilityEndDate,
 } = require('./amendment.helpers');
 const CONSTANTS = require('../../constants');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
@@ -818,12 +819,9 @@ describe('calculateAmendmentDateTenor()', () => {
   });
 });
 
-describe('addLatestAmendmentDates', () => {
+describe('addLatestAmendmentCoverEndDate', () => {
   const latestCoverEndDateResponse = {
     coverEndDate: 1658403289,
-  };
-  const latestFacilityEndDateResponse = {
-    facilityEndDate: '2024-02-14T00:00:00.000+00:00',
   };
   const mockCoverEndDate = {
     'coverEndDate-day': '01',
@@ -851,110 +849,90 @@ describe('addLatestAmendmentDates', () => {
       exposurePeriodInMonths: 12,
     },
   };
+  const emptyTfmObject = {};
+  const facilityId = '123';
 
-  describe('when TFM Facility end date feature flag disabled', () => {
-    const FACILITY_END_DATE = undefined;
-    const EMPTY_TFM_OBJECT = {};
+  it('should return an empty object when the amendment contains no cover end date data', async () => {
+    const latestCoverEndDateResponseWithoutCoverEndDate = {};
 
-    it('should return an empty object when the amendment contains no cover end date data', async () => {
-      const latestCoverEndDateResponseWithoutCoverEndDate = {};
+    const response = await addLatestAmendmentCoverEndDate(emptyTfmObject, latestCoverEndDateResponseWithoutCoverEndDate, facilityId);
 
-      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, latestCoverEndDateResponseWithoutCoverEndDate, FACILITY_END_DATE, '123');
-
-      expect(response).toEqual({});
-    });
-
-    it('should return an empty object when there is no matching facility found', async () => {
-      api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
-      api.findOneFacility = () => Promise.resolve(null);
-
-      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, latestCoverEndDateResponse, FACILITY_END_DATE, '123');
-
-      expect(response).toEqual({});
-    });
-
-    it('should return an object containing coverEndDate and amendmentExposurePeriodInMonths when the amendment contains cover end date data and the api calls are successfully made', async () => {
-      api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
-      api.findOneFacility = () => Promise.resolve(mockFacility);
-
-      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, latestCoverEndDateResponse, FACILITY_END_DATE, '123');
-
-      const expected = {
-        coverEndDate: latestCoverEndDateResponse.coverEndDate,
-        amendmentExposurePeriodInMonths: 2,
-      };
-
-      expect(response).toEqual(expected);
-    });
+    expect(response).toEqual({});
   });
 
-  describe('when TFM Facility end date feature flag enabled', () => {
-    const EMPTY_TFM_OBJECT = {};
+  it('should return an empty object when there is no matching facility found', async () => {
+    api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
+    api.findOneFacility = () => Promise.resolve(null);
 
-    it('should return empty object when no coverEndDate and no facilityEndDate', async () => {
-      const latestCoverEndDateResponseWithoutCoverEndDate = {};
-      const latestFacilityEndDateResponseWithoutFacilityEndDate = {};
+    const response = await addLatestAmendmentCoverEndDate(emptyTfmObject, latestCoverEndDateResponse, facilityId);
 
-      const response = await addLatestAmendmentDates(
-        EMPTY_TFM_OBJECT,
-        latestCoverEndDateResponseWithoutCoverEndDate,
-        latestFacilityEndDateResponseWithoutFacilityEndDate,
-        '123',
-      );
+    expect(response).toEqual({});
+  });
 
-      expect(response).toEqual({});
-    });
+  it('should return an object containing coverEndDate and amendmentExposurePeriodInMonths when the amendment contains cover end date data and the api calls are successfully made', async () => {
+    api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
+    api.findOneFacility = () => Promise.resolve(mockFacility);
 
-    it('should return an empty object when there is no matching facility found', async () => {
-      api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
-      api.findOneFacility = () => Promise.resolve(null);
+    const response = await addLatestAmendmentCoverEndDate(emptyTfmObject, latestCoverEndDateResponse, facilityId);
 
-      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, latestCoverEndDateResponse, latestFacilityEndDateResponse, '123');
+    const expected = {
+      coverEndDate: latestCoverEndDateResponse.coverEndDate,
+      amendmentExposurePeriodInMonths: 2,
+    };
 
-      expect(response).toEqual({});
-    });
+    expect(response).toEqual(expected);
+  });
+});
 
-    it('should return an object containing coverEndDate and amendmentExposurePeriodInMonths when the amendment contains only cover end date data', async () => {
-      api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
-      api.findOneFacility = () => Promise.resolve(mockFacility);
+describe('addLatestAmendmentFacilityEndDate', () => {
+  const emptyTfmObject = {};
 
-      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, latestCoverEndDateResponse, {}, '123');
+  it('should return empty object when no isUsingFacilityEndDate value', async () => {
+    const latestFacilityEndDateDataResponse = {
+      isUsingFacilityEndDate: undefined,
+      facilityEndDate: new Date('2023-07-01').toISOString(),
+      bankReviewDate: undefined,
+    };
 
-      const expected = {
-        coverEndDate: latestCoverEndDateResponse.coverEndDate,
-        amendmentExposurePeriodInMonths: 2,
-      };
+    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse);
 
-      expect(response).toEqual(expected);
-    });
+    expect(response).toEqual({});
+  });
 
-    it('should return an object containing facilityEndDate when the amendment contains only facility end date data', async () => {
-      api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
-      api.findOneFacility = () => Promise.resolve(mockFacility);
+  it('should return an object containing facilityEndDate when isUsingFacilityEndDate is true', async () => {
+    const latestFacilityEndDateDataResponse = {
+      isUsingFacilityEndDate: true,
+      facilityEndDate: new Date('2023-07-01').toISOString(),
+      bankReviewDate: new Date('2024-07-01').toISOString(),
+    };
 
-      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, {}, latestFacilityEndDateResponse, '123');
+    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse);
 
-      const expected = {
-        facilityEndDate: latestFacilityEndDateResponse.facilityEndDate,
-      };
+    const expected = {
+      isUsingFacilityEndDate: true,
+      facilityEndDate: latestFacilityEndDateDataResponse.facilityEndDate,
+      bankReviewDate: undefined,
+    };
 
-      expect(response).toEqual(expected);
-    });
+    expect(response).toEqual(expected);
+  });
 
-    it('should return an object containing coverEndDate, amendmentExposurePeriodInMonths and facilityEndDate when the amendment contains both cover end date and facility end date data', async () => {
-      api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
-      api.findOneFacility = () => Promise.resolve(mockFacility);
+  it('should return an object containing bankReviewDate when isUsingFacilityEndDate is false', async () => {
+    const latestFacilityEndDateDataResponse = {
+      isUsingFacilityEndDate: false,
+      facilityEndDate: new Date('2023-07-01').toISOString(),
+      bankReviewDate: new Date('2024-07-01').toISOString(),
+    };
 
-      const response = await addLatestAmendmentDates(EMPTY_TFM_OBJECT, latestCoverEndDateResponse, latestFacilityEndDateResponse, '123');
+    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse);
 
-      const expected = {
-        coverEndDate: latestCoverEndDateResponse.coverEndDate,
-        amendmentExposurePeriodInMonths: 2,
-        facilityEndDate: latestFacilityEndDateResponse.facilityEndDate,
-      };
+    const expected = {
+      isUsingFacilityEndDate: false,
+      facilityEndDate: undefined,
+      bankReviewDate: latestFacilityEndDateDataResponse.bankReviewDate,
+    };
 
-      expect(response).toEqual(expected);
-    });
+    expect(response).toEqual(expected);
   });
 });
 

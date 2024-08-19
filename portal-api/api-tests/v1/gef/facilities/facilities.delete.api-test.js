@@ -91,7 +91,7 @@ describe(baseUrl, () => {
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentIds: () => facilitiesToDeleteIds,
-      expectedSuccessResponseBody: { acknowledged: true },
+      expectedSuccessResponseBody: { acknowledged: true, deletedCount: 2 },
     });
 
     // This behaviour matches existing implimentation

@@ -5,7 +5,6 @@ import {
   FeeRecordEntityMockBuilder,
   UtilisationReportEntity,
   PaymentEntityMockBuilder,
-  FeeRecordEntity,
   PaymentEntity,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent } from './add-fees-to-an-existing-payment-group.event-handler';
@@ -28,11 +27,6 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
 
   const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
 
-  const aFeeRecordForReport = (report: UtilisationReportEntity, id: number) => FeeRecordEntityMockBuilder.forReport(report).withId(id).build();
-
-  const aPaymentWithIdAndFeeRecords = (id: number, feeRecords: FeeRecordEntity[]) =>
-    PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords(feeRecords).build();
-
   const aMockEventHandler = () => jest.fn();
   const aMockFeeRecordStateMachine = (eventHandler: jest.Mock): FeeRecordStateMachine =>
     ({
@@ -40,7 +34,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     }) as unknown as FeeRecordStateMachine;
 
   const createFeeRecordsAndMocks = (utilisationReport: UtilisationReportEntity, feeRecordIds: number[]) => {
-    const feeRecords = feeRecordIds.map((id) => aFeeRecordForReport(utilisationReport, id));
+    const feeRecords = feeRecordIds.map((id) => FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(id).build());
     const eventHandlers = feeRecords.reduce((obj, { id }) => ({ ...obj, [id]: aMockEventHandler() }), {} as { [id: number]: jest.Mock });
     const feeRecordStateMachines = feeRecords.reduce(
       (stateMachines, { id }) => ({ ...stateMachines, [id]: aMockFeeRecordStateMachine(eventHandlers[id]) }),
@@ -66,11 +60,11 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     const { feeRecords, feeRecordStateMachines } = createFeeRecordsAndMocks(utilisationReport, feeRecordIds);
 
     const expectedFeeRecordsToAdd = [feeRecords[2]];
-    const expectedOtherFeeRecordsInPaymentGroup = [feeRecords[3]];
+    const expectedExistingFeeRecordsInPaymentGroup = [feeRecords[3]];
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
-    const firstPayment = aPaymentWithIdAndFeeRecords(1, [feeRecords[0]]);
-    const secondPayment = aPaymentWithIdAndFeeRecords(2, [feeRecords[1]]);
+    const firstPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(1).withFeeRecords([feeRecords[0]]).build();
+    const secondPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(2).withFeeRecords([feeRecords[1]]).build();
 
     const payments = [firstPayment, secondPayment];
 
@@ -80,7 +74,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     await handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
       feeRecordsToAdd: expectedFeeRecordsToAdd,
-      otherFeeRecordsInPaymentGroup: expectedOtherFeeRecordsInPaymentGroup,
+      existingFeeRecordsInPaymentGroup: expectedExistingFeeRecordsInPaymentGroup,
       payments,
       requestSource,
     });
@@ -100,7 +94,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     { feeRecordsAndPaymentsMatch: true, testNameSuffix: 'the fee records match the payments' },
     { feeRecordsAndPaymentsMatch: false, testNameSuffix: 'the fee records do not match the payments' },
   ])(
-    "calls the fee record state machine event handler for the fee records to add with 'feeRecordsAndPaymentsMatch' set to '$feeRecordsAndPaymentsMatch' if $testNameSuffix after the new fee records have been added",
+    "calls the fee record state machine 'PAYMENT_ADDED' event handler for the fee records to add with 'feeRecordsAndPaymentsMatch' set to '$feeRecordsAndPaymentsMatch' if $testNameSuffix after the new fee records have been added",
     async ({ feeRecordsAndPaymentsMatch }) => {
       // Arrange
       const utilisationReport = aReconciliationInProgressReport();
@@ -109,7 +103,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
       const { feeRecords, eventHandlers, feeRecordStateMachines } = createFeeRecordsAndMocks(utilisationReport, feeRecordIds);
 
       const expectedFeeRecordsToAdd = [feeRecords[0], feeRecords[1]];
-      const expectedOtherFeeRecordsInPaymentGroup = [feeRecords[2]];
+      const expectedExistingFeeRecordsInPaymentGroup = [feeRecords[2]];
       jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
       jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(feeRecordsAndPaymentsMatch);
@@ -118,7 +112,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
       await handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(utilisationReport, {
         transactionEntityManager: mockEntityManager,
         feeRecordsToAdd: expectedFeeRecordsToAdd,
-        otherFeeRecordsInPaymentGroup: expectedOtherFeeRecordsInPaymentGroup,
+        existingFeeRecordsInPaymentGroup: expectedExistingFeeRecordsInPaymentGroup,
         payments: [],
         requestSource,
       });
@@ -142,7 +136,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
     { feeRecordsAndPaymentsMatch: true, testNameSuffix: 'the fee records match the payments' },
     { feeRecordsAndPaymentsMatch: false, testNameSuffix: 'the fee records do not match the payments' },
   ])(
-    "calls the fee record state machine event handlers for unselected fee records with 'feeRecordsAndPaymentsMatch' set to '$feeRecordsAndPaymentsMatch' if $testNameSuffix after the new fee records have been added",
+    "calls the fee record state machine 'OTHER_FEE_ADDED_TO_PAYMENT_GROUP' event handler for the existing fee records with 'feeRecordsAndPaymentsMatch' set to '$feeRecordsAndPaymentsMatch' if $testNameSuffix after the new fee records have been added",
     async ({ feeRecordsAndPaymentsMatch }) => {
       // Arrange
       const utilisationReport = aReconciliationInProgressReport();
@@ -151,7 +145,7 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
       const { feeRecords, eventHandlers, feeRecordStateMachines } = createFeeRecordsAndMocks(utilisationReport, feeRecordIds);
 
       const expectedFeeRecordsToAdd = [feeRecords[0], feeRecords[1]];
-      const expectedOtherFeeRecordsInPaymentGroup = [feeRecords[2]];
+      const expectedExistingFeeRecordsInPaymentGroup = [feeRecords[2]];
       jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
 
       jest.mocked(feeRecordsMatchAttachedPayments).mockResolvedValue(feeRecordsAndPaymentsMatch);
@@ -160,13 +154,13 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
       await handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(utilisationReport, {
         transactionEntityManager: mockEntityManager,
         feeRecordsToAdd: expectedFeeRecordsToAdd,
-        otherFeeRecordsInPaymentGroup: expectedOtherFeeRecordsInPaymentGroup,
+        existingFeeRecordsInPaymentGroup: expectedExistingFeeRecordsInPaymentGroup,
         payments: [],
         requestSource,
       });
 
       // Assert
-      expectedOtherFeeRecordsInPaymentGroup.forEach(({ id }) => {
+      expectedExistingFeeRecordsInPaymentGroup.forEach(({ id }) => {
         const eventHandler = eventHandlers[id];
         expect(eventHandler).toHaveBeenCalledWith({
           type: 'OTHER_FEE_ADDED_TO_PAYMENT_GROUP',
@@ -179,24 +173,4 @@ describe('handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent', () => {
       });
     },
   );
-
-  it('updates and saves the updated report', async () => {
-    // Arrange
-    const utilisationReport = aReconciliationInProgressReport();
-
-    // Act
-    await handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(utilisationReport, {
-      transactionEntityManager: mockEntityManager,
-      feeRecordsToAdd: [],
-      otherFeeRecordsInPaymentGroup: [],
-      payments: [],
-      requestSource,
-    });
-
-    // Assert
-    expect(mockSave).toHaveBeenCalledWith(UtilisationReportEntity, utilisationReport);
-    expect(utilisationReport.lastUpdatedByIsSystemUser).toBe(false);
-    expect(utilisationReport.lastUpdatedByPortalUserId).toBeNull();
-    expect(utilisationReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
-  });
 });
