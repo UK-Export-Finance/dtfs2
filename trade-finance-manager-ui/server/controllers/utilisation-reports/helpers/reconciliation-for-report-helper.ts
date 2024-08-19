@@ -1,12 +1,14 @@
 import orderBy from 'lodash.orderby';
 import { FeeRecordStatus, getFormattedCurrencyAndAmount, KeyingSheetAdjustment } from '@ukef/dtfs2-common';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import {
   FeeRecordPaymentGroupViewModelItem,
   FeeRecordViewModelItem,
   KeyingSheetAdjustmentViewModel,
   KeyingSheetViewModel,
+  PaymentDetailsPaymentViewModel,
+  PaymentDetailsViewModel,
   PaymentViewModelItem,
 } from '../../../types/view-models';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
@@ -149,3 +151,68 @@ export const mapKeyingSheetToKeyingSheetViewModel = (keyingSheet: KeyingSheet): 
     checkboxId: getKeyingSheetRowCheckboxId(keyingSheetRow),
     isChecked: false,
   }));
+
+/**
+ * Maps the payment to the payment details view model payment
+ * @param paymentReceived - The received
+ * @param amountDataSortValue - The amount data sort value
+ * @param dateReceivedDataSortValue - The date received data sort value
+ * @returns The payment details view model payment
+ */
+const mapPaymentToPaymentDetailsViewModelPayment = (
+  payment: Payment,
+  amountDataSortValue: number,
+  dateReceivedDataSortValue: number,
+): PaymentDetailsPaymentViewModel => ({
+  amount: {
+    formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(payment),
+    dataSortValue: amountDataSortValue,
+  },
+  reference: payment.reference,
+  dateReceived: {
+    formattedDateReceived: format(new Date(payment.dateReceived), 'd MMM yyyy'),
+    dataSortValue: dateReceivedDataSortValue,
+  },
+});
+
+/**
+ * Returns the payments sorted by date received
+ * @param payments - The payments to sort
+ * @returns Sorted payments
+ */
+const getPaymentsSortedByDateReceived = (payments: Payment[]): Payment[] => orderBy(payments, [({ dateReceived }) => parseISO(dateReceived).getTime()], ['asc']);
+
+/**
+ * Maps the fee record payment groups to the payment details view model
+ * @param feeRecordPaymentGroups - The fee record payment groups
+ * @returns The payment details view model
+ */
+export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): PaymentDetailsViewModel => {
+  const allPayments = feeRecordPaymentGroups.reduce((payments, { paymentsReceived }) => [...payments, ...(paymentsReceived ?? [])], [] as Payment[]);
+  const paymentIdToAmountDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
+    allPayments.map(({ id, amount, currency }) => ({ key: id, currency, amount })),
+  );
+  const paymentIdToDateReceivedDataSortValueMap: { [key: number]: number } = getPaymentsSortedByDateReceived(allPayments).reduce(
+    (map, { id }, index) => ({ ...map, [id]: index }),
+    {},
+  );
+
+  return feeRecordPaymentGroups.reduce((paymentDetails, { feeRecords, paymentsReceived }) => {
+    if (!paymentsReceived) {
+      return paymentDetails;
+    }
+
+    const mappedFeeRecords = feeRecords.map(({ facilityId, exporter }) => ({ facilityId, exporter }));
+    return [
+      ...paymentDetails,
+      ...paymentsReceived.map((payment) => ({
+        payment: mapPaymentToPaymentDetailsViewModelPayment(
+          payment,
+          paymentIdToAmountDataSortValueMap[payment.id],
+          paymentIdToDateReceivedDataSortValueMap[payment.id],
+        ),
+        feeRecords: mappedFeeRecords,
+      })),
+    ];
+  }, [] as PaymentDetailsViewModel);
+};
