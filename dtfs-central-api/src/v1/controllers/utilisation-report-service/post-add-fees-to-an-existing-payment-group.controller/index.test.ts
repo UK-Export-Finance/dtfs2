@@ -34,8 +34,8 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
     const paymentIds = [3, 4];
     const payments = paymentIds.map((id) => PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([]).build());
 
-    const aFeeRecordToAdd = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).build();
-    const aFeeRecordWithPayments = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withPayments(payments).build();
+    const aFeeRecordToAdd = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withPaymentCurrency('GBP').withStatus('TO_DO').build();
+    const aFeeRecordWithPayments = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withPaymentCurrency('GBP').withPayments(payments).build();
 
     const paymentsWithFeeRecords = paymentIds.map((id) =>
       PaymentEntityMockBuilder.forCurrency('GBP').withId(id).withFeeRecords([aFeeRecordWithPayments]).build(),
@@ -161,31 +161,34 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
     it("responds with a '400' if the fee records payment currency does not equal the payment group currency", async () => {
       // Arrange
       const paymentId = 3;
-      const aPaymentInUSD = PaymentEntityMockBuilder.forCurrency('USD').withId(paymentId).withFeeRecords([]).build();
-      const aFeeRecordWithAPaymentInUSD = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-        .withId(2)
+      const feeRecordInExistingPaymentGroup = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withPaymentCurrency('USD').build();
+      const existingPayment = PaymentEntityMockBuilder.forCurrency('USD').withId(paymentId).withFeeRecords([feeRecordInExistingPaymentGroup]).build();
+
+      const feeRecordInDifferentCurrencyToExistingPayment = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withId(1)
         .withPaymentCurrency('GBP')
-        .withPayments([aPaymentInUSD])
+        .withStatus('TO_DO')
         .build();
-      const aPaymentInUSDWithFeeRecords = PaymentEntityMockBuilder.forCurrency('USD').withId(paymentId).withFeeRecords([aFeeRecordWithAPaymentInUSD]).build();
 
       const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
         params: aValidRequestQuery(),
         body: {
           ...aValidRequestBody(),
-          feeRecordIds: [aFeeRecordWithAPaymentInUSD.id],
+          feeRecordIds: [feeRecordInDifferentCurrencyToExistingPayment.id],
           paymentIds: [paymentId],
         },
       });
       const res = httpMocks.createResponse();
 
-      paymentRepoFindSpy.mockResolvedValue([aPaymentInUSDWithFeeRecords]);
+      paymentRepoFindSpy.mockResolvedValue([existingPayment]);
+      feeRecordRepoFindSpy.mockResolvedValue([feeRecordInDifferentCurrencyToExistingPayment]);
 
       // Act
       await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getData()).toContain('The selected fee records payment currency does not match that of the payment group.');
     });
 
     it("responds with the specific error status if saving the report throws an 'ApiError'", async () => {
@@ -255,7 +258,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       await postAddFeesToAnExistingPaymentGroup(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to add fees to an existing payment group`);
+      expect(res._getData()).toBe('Failed to add fees to an existing payment group');
     });
   });
 });
