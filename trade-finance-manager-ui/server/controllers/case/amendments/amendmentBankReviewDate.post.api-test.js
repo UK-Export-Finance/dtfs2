@@ -22,6 +22,8 @@ const user = {
 
 const session = { user, userToken: 'mockToken' };
 
+const gefFacilityType = 'Cash facility';
+
 const { dealId, facilityId, amendmentId } = MOCK_AMENDMENT_COVERENDDATE_CHANGE;
 
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -42,7 +44,7 @@ describe('amendmentBankReviewDate routes', () => {
 
     describe('incorrect bank review date entered', () => {
       it('should render the template with errors if the entered bank review date is before the cover start date', async () => {
-        const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2024, 11, 11).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2024, 11, 11).valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -83,7 +85,7 @@ describe('amendmentBankReviewDate routes', () => {
       });
 
       it('should render the template with errors if the entered bank review date is greater than 6 years in the future', async () => {
-        const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2021, 11, 11).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2021, 11, 11).valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -132,7 +134,7 @@ describe('amendmentBankReviewDate routes', () => {
           status: 200,
           data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
-        api.getFacility = jest.fn().mockResolvedValueOnce({ facilitySnapshot: { dates: {} } });
+        api.getFacility = jest.fn().mockResolvedValueOnce({ facilitySnapshot: { type: gefFacilityType, dates: {} } });
 
         const req = {
           params: {
@@ -174,9 +176,9 @@ describe('amendmentBankReviewDate routes', () => {
           status: 200,
           data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
-        api.getFacility = jest
-          .fn()
-          .mockResolvedValueOnce({ facilitySnapshot: { dates: { isUsingBankReviewDate: true, bankReviewDate: new Date(2025, 11, 11).toISOString() } } });
+        api.getFacility = jest.fn().mockResolvedValueOnce({
+          facilitySnapshot: { type: gefFacilityType, dates: { isUsingBankReviewDate: true, bankReviewDate: new Date(2025, 11, 11).toISOString() } },
+        });
 
         const req = {
           params: {
@@ -216,7 +218,7 @@ describe('amendmentBankReviewDate routes', () => {
 
     describe('correct bank review date entered', () => {
       it('should redirect to the check answers page when only the cover end date is being amended and there are no errors', async () => {
-        const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -242,7 +244,7 @@ describe('amendmentBankReviewDate routes', () => {
       });
 
       it('should redirect to the update facility value page when the facility value also needs amending and there are no errors', async () => {
-        const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
@@ -271,7 +273,7 @@ describe('amendmentBankReviewDate routes', () => {
       });
 
       it("should redirect to the amendments summary page if there's an error updating the amendment", async () => {
-        const mockFacility = { facilitySnapshot: { dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,

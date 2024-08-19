@@ -1,15 +1,26 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
-const { isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
+const { isFacilityEndDateEnabledForFacility } = require('../../helpers/isFacilityEndDateEnabledForFacility');
+
+const getNextPage = (apiResponseStatus, changeFacilityValue, showFacilityEndDatePage, baseUrl) => {
+  if (apiResponseStatus !== HttpStatusCode.Ok) {
+    throw Error('Error updating amendment');
+  }
+  if (showFacilityEndDatePage) {
+    return `${baseUrl}/is-using-facility-end-date`;
+  }
+  return changeFacilityValue ? `${baseUrl}/facility-value` : `${baseUrl}/check-answers`;
+};
 
 const getAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
   const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
-  if (status !== 200) {
+  if (status !== HttpStatusCode.Ok) {
     return res.redirect('/not-found');
   }
 
@@ -50,7 +61,7 @@ const postAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
-  const { dealId } = amendment;
+  const { dealId, changeFacilityValue } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
   const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, userToken);
 
@@ -77,27 +88,25 @@ const postAmendCoverEndDate = async (req, res) => {
     });
   }
 
+  const baseUrl = `/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}`;
+  const fallbackUrl = `/case/${dealId}/facility/${facilityId}#amendments`;
+
   try {
     let formatCurrentCoverEndDate = currentCoverEndDate;
     // convert the current end date to EPOCH format
     formatCurrentCoverEndDate = getUnixTime(new Date(formatCurrentCoverEndDate).setHours(2, 2, 2, 2));
+
     const payload = { coverEndDate, currentCoverEndDate: formatCurrentCoverEndDate };
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
-    if (status === 200) {
-      if (isTfmFacilityEndDateFeatureFlagEnabled()) {
-        return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
-      }
-      if (amendment.changeFacilityValue) {
-        return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
-      }
-      return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
-    }
-    console.error('Unable to update the cover end date');
-    return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
+    console.log('cover end date page woo', isTfmFacilityEndDateFeatureFlagEnabled(), isFacilityEndDateEnabledForFacility(facility), facility.facilitySnapshot);
+
+    const showFacilityEndDatePage = isFacilityEndDateEnabledForFacility(facility);
+
+    return res.redirect(getNextPage(status, changeFacilityValue, showFacilityEndDatePage, baseUrl));
   } catch (error) {
     console.error('There was a problem adding the cover end date %o', error);
-    return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}#amendments`);
+    return res.redirect(fallbackUrl);
   }
 };
 

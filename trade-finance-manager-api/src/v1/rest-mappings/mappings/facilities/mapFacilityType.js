@@ -5,7 +5,7 @@ const mapFacilityType = (facility) => {
   const { facilityProduct, ukefFacilityType } = facility;
 
   if (facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND) {
-    return facility.bondType;
+    return FACILITY_TYPE.BOND;
   }
 
   if (facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.LOAN) {

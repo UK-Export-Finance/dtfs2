@@ -1,0 +1,80 @@
+import relative from '../../../relativeURL';
+import facilityPage from '../../../pages/facilityPage';
+import amendmentsPage from '../../../pages/amendments/amendmentsPage';
+import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
+
+context('Amendments - BSS/EWCS deal does not display any Facility end date pages or fields', () => {
+  let dealId;
+  const dealFacilities = [];
+
+  before(() => {
+    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
+      dealId = insertedDeal._id;
+
+      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+
+      cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
+      });
+
+      cy.submitDeal(dealId, dealType, PIM_USER_1);
+    });
+  });
+
+  after(() => {
+    cy.deleteDeals(dealId, ADMIN);
+    dealFacilities.forEach((facility) => {
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
+    });
+  });
+
+  it('should not show any facility end date fields in the Details tab', () => {
+    cy.login(PIM_USER_1);
+    const facilityId = dealFacilities[0]._id;
+
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+    facilityPage.facilityIsUsingFacilityEndDate().should('not.exist');
+    facilityPage.facilityFacilityEndDate().should('not.exist');
+    facilityPage.facilityBankReviewDate().should('not.exist');
+  });
+
+  it('should go straight from the cover end date amendments page to the review amendment answers page without displaying any facility end date fields', () => {
+    cy.login(PIM_USER_1);
+    const facilityId = dealFacilities[0]._id;
+
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+    facilityPage.facilityTabAmendments().click();
+    amendmentsPage.addAmendmentButton().should('exist');
+    amendmentsPage.addAmendmentButton().contains('Add an amendment request');
+    amendmentsPage.addAmendmentButton().click();
+
+    cy.url().should('contain', 'request-date');
+    amendmentsPage.amendmentRequestDayInput().clear().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().type(dateConstants.todayYear);
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', 'request-approval');
+    amendmentsPage.amendmentRequestApprovalYes().click();
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', 'amendment-options');
+    amendmentsPage.amendmentCoverEndDateCheckbox().click();
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', 'cover-end-date');
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().type(dateConstants.todayDay);
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().type(dateConstants.todayYear);
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', 'check-answers');
+
+    amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('not.exist');
+    amendmentsPage.amendmentAnswerFacilityEndDate().should('not.exist');
+    amendmentsPage.amendmentAnswerBankReviewDate().should('not.exist');
+  });
+});

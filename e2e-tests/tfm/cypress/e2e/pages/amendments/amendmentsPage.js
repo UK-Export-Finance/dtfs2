@@ -1,4 +1,6 @@
+const { format } = require('date-fns');
 const dateConstants = require('../../../../../e2e-fixtures/dateConstants');
+const facilityPage = require('../facilityPage');
 
 const amendmentsPage = {
   amendmentInProgressBar: () => cy.get('[data-cy="amendment--in-progress-bar"]'),
@@ -37,6 +39,14 @@ const amendmentsPage = {
   amendmentFacilityEndDateDayInput: () => cy.get('[data-cy="amendment--facility-end-date-day"]'),
   amendmentFacilityEndDateMonthInput: () => cy.get('[data-cy="amendment--facility-end-date-month"]'),
   amendmentFacilityEndDateYearInput: () => cy.get('[data-cy="amendment--facility-end-date-year"]'),
+  amendmentCurrentFacilityEndDate: () => cy.get('[data-cy="amendment--current-facility-end-date"]'),
+  amendmentFacilityEndDateDetails: () => cy.get('[data-cy="amendment--facility-end-date-details"]'),
+
+  amendmentBankReviewDateDayInput: () => cy.get('[data-cy="amendment--bank-review-date-day"]'),
+  amendmentBankReviewDateMonthInput: () => cy.get('[data-cy="amendment--bank-review-date-month"]'),
+  amendmentBankReviewDateYearInput: () => cy.get('[data-cy="amendment--bank-review-date-year"]'),
+  amendmentCurrentBankReviewDate: () => cy.get('[data-cy="amendment--current-bank-review-date"]'),
+  amendmentBankReviewDateDetails: () => cy.get('[data-cy="amendment--bank-review-date-details"]'),
 
   navigateThroughFacilityEndDateAmendmentPages: () => {
     cy.url().should('contain', 'is-using-facility-end-date');
@@ -47,6 +57,59 @@ const amendmentsPage = {
     amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(dateConstants.todayMonth);
     amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.todayYear);
     amendmentsPage.continueAmendment().click();
+  },
+
+  navigateToIsUsingFacilityEndDatePage: (startNewAmendment, changeFacilityValue, newCoverEndDate) => {
+    facilityPage.facilityTabAmendments().click();
+
+    if (startNewAmendment) {
+      amendmentsPage.addAmendmentButton().should('exist');
+      amendmentsPage.addAmendmentButton().contains('Add an amendment request');
+      amendmentsPage.addAmendmentButton().click();
+    } else {
+      amendmentsPage.continueAmendmentButton().click();
+    }
+
+    cy.url().should('contain', 'request-date');
+    amendmentsPage.amendmentRequestDayInput().clear().type(dateConstants.todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().type(dateConstants.todayYear);
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', 'request-approval');
+    amendmentsPage.amendmentRequestApprovalNo().check();
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', 'amendment-effective-date');
+    amendmentsPage.amendmentEffectiveDayInput().clear().type(dateConstants.todayDay);
+    amendmentsPage.amendmentEffectiveMonthInput().clear().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentEffectiveYearInput().clear().type(dateConstants.todayYear);
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', 'amendment-options');
+    amendmentsPage.amendmentFacilityValueCheckbox().uncheck();
+    if (changeFacilityValue) {
+      amendmentsPage.amendmentFacilityValueCheckbox().check();
+    }
+    amendmentsPage.amendmentCoverEndDateCheckbox().check();
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', 'cover-end-date');
+    amendmentsPage
+      .amendmentCoverEndDateDayInput()
+      .clear()
+      .type(newCoverEndDate ? format(newCoverEndDate, 'd') : dateConstants.todayDay);
+    amendmentsPage
+      .amendmentCoverEndDateMonthInput()
+      .clear()
+      .type(newCoverEndDate ? format(newCoverEndDate, 'M') : dateConstants.todayMonth);
+    amendmentsPage
+      .amendmentCoverEndDateYearInput()
+      .clear()
+      .type(newCoverEndDate ? format(newCoverEndDate, 'yyyy') : dateConstants.todayYear);
+    amendmentsPage.continueAmendment().click();
+
+    cy.url().should('contain', 'is-using-facility-end-date');
   },
 
   addAmendmentButton: () => cy.get('[data-cy="amendment--add-amendment-button"]'),
@@ -79,7 +142,11 @@ const amendmentsPage = {
   amendmentAnswerEffectiveDate: () => cy.get('[data-cy="amendment--effective-date-response"]'),
   amendmentAnswerCoverEndDate: () => cy.get('[data-cy="amendment--cover-end-date-response"]'),
   amendmentAnswerIsUsingFacilityEndDate: () => cy.get('[data-cy="amendment--is-using-facility-end-date-response"]'),
+  amendmentAnswerIsUsingFacilityEndDateChangeLink: () => cy.get('[data-cy="amendment--is-using-facility-end-date-link"]'),
   amendmentAnswerFacilityEndDate: () => cy.get('[data-cy="amendment--facility-end-date-response"]'),
+  amendmentAnswerFacilityEndDateChangeLink: () => cy.get('[data-cy="amendment--facility-end-date-link"]'),
+  amendmentAnswerBankReviewDate: () => cy.get('[data-cy="amendment--bank-review-date-response"]'),
+  amendmentAnswerBankReviewDateChangeLink: () => cy.get('[data-cy="amendment--bank-review-date-link"]'),
   amendmentAnswerFacilityValue: () => cy.get('[data-cy="amendment--facility-value-response"]'),
 
   amendmentDetails: {

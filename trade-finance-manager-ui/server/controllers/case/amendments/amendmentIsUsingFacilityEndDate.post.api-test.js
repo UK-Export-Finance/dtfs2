@@ -8,6 +8,7 @@ const res = mockRes();
 
 api.getAmendmentById = jest.fn();
 api.updateAmendment = jest.fn();
+api.getFacility = jest.fn();
 
 const user = {
   _id: '12345678',
@@ -16,6 +17,10 @@ const user = {
   lastName: 'Bloggs',
   teams: [TEAM_IDS.PIM],
   email: 'test@localhost',
+};
+
+const gefFacility = {
+  facilitySnapshot: { type: 'Cash facility' },
 };
 
 const session = { user, userToken: 'mockToken' };
@@ -41,6 +46,7 @@ describe('amendmentIsUsingFacilityEndDate routes', () => {
     it('should render the template with errors if no value is provided', async () => {
       api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
       api.updateAmendment.mockResolvedValueOnce({ status: 200 });
+      api.getFacility.mockResolvedValueOnce(gefFacility);
 
       const req = {
         params: {
@@ -78,6 +84,7 @@ describe('amendmentIsUsingFacilityEndDate routes', () => {
     it('should redirect to the facility end date page when true is selected and there are no errors', async () => {
       api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
       api.updateAmendment.mockResolvedValueOnce({ status: 200 });
+      api.getFacility.mockResolvedValueOnce(gefFacility);
 
       const req = {
         params: {
@@ -99,6 +106,7 @@ describe('amendmentIsUsingFacilityEndDate routes', () => {
     it('should redirect to the bank review date page when false is selected and there are no errors', async () => {
       api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
       api.updateAmendment.mockResolvedValueOnce({ status: 200 });
+      api.getFacility.mockResolvedValueOnce(gefFacility);
 
       const req = {
         params: {
@@ -120,6 +128,7 @@ describe('amendmentIsUsingFacilityEndDate routes', () => {
     it("should redirect to the amendments summary page if there's an error updating the amendment", async () => {
       api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE });
       api.updateAmendment.mockResolvedValueOnce({ status: 400 });
+      api.getFacility.mockResolvedValueOnce(gefFacility);
 
       const req = {
         params: {

@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { getTask, showAmendmentButton, ukefDecisionRejected } = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
@@ -9,6 +9,7 @@ const { filterTasks } = require('../helpers/tasks.helper');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../helpers/amendments.helper');
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
+const { isFacilityEndDateEnabledForFacility } = require('../helpers/isFacilityEndDateEnabledForFacility');
 
 const {
   DEAL,
@@ -298,7 +299,7 @@ const getCaseFacility = async (req, res) => {
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
-
+  console.log('display page', isTfmFacilityEndDateFeatureFlagEnabled(), isFacilityEndDateEnabledForFacility(facility), facility.facilitySnapshot);
   return res.render('case/facility/facility.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
@@ -318,7 +319,7 @@ const getCaseFacility = async (req, res) => {
     allAmendments,
     amendments,
     amendmentsInProgress,
-    isTfmFacilityEndDateFeatureFlagEnabled: isTfmFacilityEndDateFeatureFlagEnabled(),
+    shouldDisplayFacilityEndDate: isFacilityEndDateEnabledForFacility(facility),
   });
 };
 

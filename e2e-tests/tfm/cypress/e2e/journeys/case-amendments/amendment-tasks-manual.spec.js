@@ -197,8 +197,8 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.filterRadioAllTasks().click();
 
     pages.tasksPage.tasks.row(1, 1).assignedTo().first().contains(`${PIM_USER_1.firstName} ${PIM_USER_1.lastName}`);
-    pages.tasksPage.tasks.row(1, 1).dateStarted().first().contains(dateConstants.todayTaskFormat);
-    pages.tasksPage.tasks.row(1, 1).dateCompleted().first().contains(dateConstants.todayTaskFormat);
+    pages.tasksPage.tasks.row(1, 1).dateStarted().first().contains(dateConstants.todayFullString);
+    pages.tasksPage.tasks.row(1, 1).dateCompleted().first().contains(dateConstants.todayFullString);
     pages.tasksPage.tasks.row(1, 1).status().first().contains('Done');
 
     pages.tasksPage.tasks.row(1, 2).status().contains('To do');
