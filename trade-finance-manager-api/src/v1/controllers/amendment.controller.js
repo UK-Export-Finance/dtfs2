@@ -16,7 +16,8 @@ const {
   canSendToAcbs,
   calculateAcbsUkefExposure,
   addLatestAmendmentValue,
-  addLatestAmendmentDates,
+  addLatestAmendmentCoverEndDate,
+  addLatestAmendmentFacilityEndDate,
 } = require('../helpers/amendment.helpers');
 const CONSTANTS = require('../../constants');
 
@@ -88,15 +89,16 @@ const createAmendmentTFMObject = async (amendmentId, facilityId, auditDetails) =
     const latestValueResponse = await api.getLatestCompletedAmendmentValue(facilityId);
     const latestCoverEndDateResponse = await api.getLatestCompletedAmendmentDate(facilityId);
 
-    let latestFacilityEndDateResponse;
-    if (isTfmFacilityEndDateFeatureFlagEnabled()) {
-      latestFacilityEndDateResponse = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId);
-    }
-
     let tfmToAdd = {};
     // populates array with latest value/exposure and date/tenor values
     tfmToAdd = await addLatestAmendmentValue(tfmToAdd, latestValueResponse, facilityId);
-    tfmToAdd = await addLatestAmendmentDates(tfmToAdd, latestCoverEndDateResponse, latestFacilityEndDateResponse, facilityId);
+    tfmToAdd = await addLatestAmendmentCoverEndDate(tfmToAdd, latestCoverEndDateResponse, facilityId);
+
+    let latestFacilityEndDateResponse;
+    if (isTfmFacilityEndDateFeatureFlagEnabled()) {
+      latestFacilityEndDateResponse = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId);
+      tfmToAdd = await addLatestAmendmentFacilityEndDate(tfmToAdd, latestFacilityEndDateResponse);
+    }
 
     const payload = {
       tfm: tfmToAdd,
