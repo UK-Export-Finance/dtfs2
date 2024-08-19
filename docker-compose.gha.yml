@@ -216,6 +216,7 @@ services:
     image: dtfs/portal-api
     restart: always
     depends_on:
+      - dtfs-sql
       - dtfs-central-api
       - external-api
     ports:
