@@ -55,7 +55,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
   });
 
-  const navigateToAddToExistingPaymentScreenGivenSelectedFeeRecord = () => {
+  const navigateToAddToExistingPaymentScreenForFirstFeeRecord = () => {
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
@@ -78,7 +78,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
 
-      navigateToAddToExistingPaymentScreenGivenSelectedFeeRecord();
+      navigateToAddToExistingPaymentScreenForFirstFeeRecord();
     });
 
     it('should automatically select the first payment group when there is only one group to choose from', () => {
@@ -121,7 +121,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
 
       cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord]);
 
-      navigateToAddToExistingPaymentScreenGivenSelectedFeeRecord();
+      navigateToAddToExistingPaymentScreenForFirstFeeRecord();
     });
 
     it('should render the selected fee records, render the available payments, and add fees to the payments', () => {
