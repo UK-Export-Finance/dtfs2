@@ -15,7 +15,7 @@ describe(component, () => {
     };
     const wrapper = getWrapper(viewModel);
 
-    wrapper.expectText('h2[data-cy="payment-group-radio-input-heading"]').toContain('Select a payment group');
+    wrapper.expectText('h2[data-cy="available-payment-groups-heading"]').toContain('Select a payment group');
   });
 
   it('should render a hidden input and no radio items if there is only one payment group', () => {

@@ -871,7 +871,7 @@ describe('validate-payment-form-values', () => {
       const result = validateAddToAnExistingPaymentRequestFormValues(paymentRadioIds);
 
       // Assert
-      expect(result.errorSummary).toEqual([{ text: 'Select a payment to add the fee or fees to', href: '#paymentGroup' }]);
+      expect(result.errorSummary).toEqual([{ text: 'Select a payment to add the fee or fees to', href: '#available-payment-groups' }]);
       expect(result.paymentGroupErrorMessage).toBe('Select a payment to add the fee or fees to');
     });
 
