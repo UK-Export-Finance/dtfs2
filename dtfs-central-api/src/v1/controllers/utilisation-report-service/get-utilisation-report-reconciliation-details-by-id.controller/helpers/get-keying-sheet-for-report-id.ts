@@ -60,7 +60,7 @@ export const getKeyingSheetForReportId = async (reportId: number, allReportFeeRe
 
       const feePayment: KeyingSheetFeePayment = {
         currency: payment.currency,
-        amount: paymentAmountUsedForFeeRecord ?? 0,
+        amount: paymentAmountUsedForFeeRecord,
         dateReceived: paymentAmountUsedForFeeRecord ? payment.dateReceived : null,
       };
 

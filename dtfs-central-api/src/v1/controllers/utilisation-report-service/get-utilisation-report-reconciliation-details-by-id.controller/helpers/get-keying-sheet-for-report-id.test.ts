@@ -377,6 +377,44 @@ describe('getKeyingSheetForReportId', () => {
     );
   });
 
+  describe('when there are fee records with multiple payments that have no entry in the join table', () => {
+    it('sets the keying sheet fee payments to a single zero amount keying sheet fee payment', async () => {
+      // Arrange
+      const payments = [
+        PaymentEntityMockBuilder.forCurrency('GBP').withAmount(1000).build(),
+        PaymentEntityMockBuilder.forCurrency('GBP').withAmount(1000).build(),
+        PaymentEntityMockBuilder.forCurrency('GBP').withAmount(1000).build(),
+      ];
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('READY_TO_KEY').withPayments(payments).build();
+
+      const reportId = 123;
+      when(mockFind)
+        .calledWith(FeeRecordPaymentJoinTableEntity, {
+          where: {
+            feeRecord: {
+              report: { id: reportId },
+              status: In<FeeRecordStatus>(['READY_TO_KEY', 'RECONCILED']),
+            },
+          },
+          relations: {
+            feeRecord: true,
+            payment: true,
+          },
+        })
+        .mockResolvedValue([]);
+
+      // Act
+      const keyingSheet = await getKeyingSheetForReportId(reportId, [feeRecord]);
+
+      // Assert
+      expect(keyingSheet).toHaveLength(1);
+      expect(keyingSheet[0].feePayments).toHaveLength(1);
+      expect(keyingSheet[0].feePayments[0].currency).toBe('GBP');
+      expect(keyingSheet[0].feePayments[0].dateReceived).toBeNull();
+      expect(keyingSheet[0].feePayments[0].amount).toBe(0);
+    });
+  });
+
   function aFeeRecordPaymentJoinTableEntityWith({
     feeRecordId,
     feeRecord,
