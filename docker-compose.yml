@@ -36,12 +36,8 @@ services:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
-    # ports:
-    #   - '27017-27019:27017-27019'
     ports:
       - "27017:27017"
-    # extra_hosts:
-    #   - "host.docker.internal:host-gateway"
     healthcheck:
       test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
       interval: 10s
@@ -92,7 +88,6 @@ services:
       - SQL_DB_LOGGING_ENABLED
       - ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE
       - DELETION_AUDIT_LOGS_TTL_SECONDS
-    entrypoint: npx ts-node dtfs-central-api/src/index.ts
 
   trade-finance-manager-ui:
     build:
@@ -174,7 +169,6 @@ services:
       - CHANGE_STREAM_ENABLED
       - DELETION_AUDIT_LOGS_TTL_SECONDS
       - FF_TFM_FACILITY_END_DATE_ENABLED
-    entrypoint: npx ts-node trade-finance-manager-api/src/index.ts
 
   portal:
     build:
