@@ -3,7 +3,7 @@ import { FeeRecordEntity } from '@ukef/dtfs2-common';
 import { orderBy } from 'lodash';
 import { FeeRecordPaymentEntityGroup, getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../../helpers';
 
-export type FeeRecordFeePayment = {
+export type KeyingSheetFeePaymentShare = {
   feeRecordId: number;
   paymentId: number;
   feePaymentAmount: number;
@@ -37,11 +37,11 @@ const sortPaymentsByAmountAscending = (payments: PaymentIdAndAmount[]): void => 
  * @param paymentsSortedAscending - The payments (sorted ascending)
  * @returns The fee record payment join table entities
  */
-const splitPaymentsIntoFeeRecordFeePayments = (
+const splitPaymentsIntoKeyingSheetFeePaymentShares = (
   feeRecord: FeeRecordEntity,
   paymentsSortedByAmountAscending: PaymentIdAndAmount[],
   isLastFeeRecordInGroup: boolean,
-): FeeRecordFeePayment[] => {
+): KeyingSheetFeePaymentShare[] => {
   const feeRecordId = feeRecord.id;
   let remainingFeeRecordAmount = new Big(feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency());
 
@@ -53,7 +53,7 @@ const splitPaymentsIntoFeeRecordFeePayments = (
     }));
   }
 
-  const feePayments: FeeRecordFeePayment[] = [];
+  const feePayments: KeyingSheetFeePaymentShare[] = [];
   while (paymentsSortedByAmountAscending.length !== 0) {
     const largestPayment = paymentsSortedByAmountAscending.pop()!;
 
@@ -87,7 +87,7 @@ const splitPaymentsIntoFeeRecordFeePayments = (
  * @param param.payments - The payment entities
  * @returns The fee payments
  */
-const getFeePaymentsForFeeRecordPaymentEntityGroup = ({ feeRecords, payments }: FeeRecordPaymentEntityGroup): FeeRecordFeePayment[] => {
+const getFeePaymentsForFeeRecordPaymentEntityGroup = ({ feeRecords, payments }: FeeRecordPaymentEntityGroup): KeyingSheetFeePaymentShare[] => {
   const paymentIdsWithAmounts: PaymentIdAndAmount[] = payments.map(({ id, amount }) => ({ id, amount: new Big(amount) }));
   sortPaymentsByAmountAscending(paymentIdsWithAmounts);
 
@@ -95,19 +95,19 @@ const getFeePaymentsForFeeRecordPaymentEntityGroup = ({ feeRecords, payments }: 
 
   return feeRecordsSortedDescendingByAmount.reduce((feePayments, feeRecord, feeRecordIndex) => {
     const isLastFeeRecordInGroup = feeRecordIndex === feeRecords.length - 1;
-    return [...feePayments, ...splitPaymentsIntoFeeRecordFeePayments(feeRecord, paymentIdsWithAmounts, isLastFeeRecordInGroup)];
-  }, [] as FeeRecordFeePayment[]);
+    return [...feePayments, ...splitPaymentsIntoKeyingSheetFeePaymentShares(feeRecord, paymentIdsWithAmounts, isLastFeeRecordInGroup)];
+  }, [] as KeyingSheetFeePaymentShare[]);
 };
 
 /**
- * Gets the fee record fee payments for the supplied fee records
+ * Gets a list of keying sheet fee payment shares for the supplied fee records
  * @param matchFeeRecordsWithPayments - The fee records at the `MATCH` status with attached payments
  * @returns The fee payments
  */
-export const getFeeRecordFeePaymentsForFeeRecords = (matchFeeRecordsWithPayments: FeeRecordEntity[]): FeeRecordFeePayment[] => {
+export const getKeyingSheetFeePaymentSharesForFeeRecords = (matchFeeRecordsWithPayments: FeeRecordEntity[]): KeyingSheetFeePaymentShare[] => {
   const matchFeeRecordPaymentGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(matchFeeRecordsWithPayments);
   return matchFeeRecordPaymentGroups.reduce(
     (acc, entityGroup) => [...acc, ...getFeePaymentsForFeeRecordPaymentEntityGroup(entityGroup)],
-    [] as FeeRecordFeePayment[],
+    [] as KeyingSheetFeePaymentShare[],
   );
 };

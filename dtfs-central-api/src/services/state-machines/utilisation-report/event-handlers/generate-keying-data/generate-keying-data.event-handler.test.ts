@@ -10,7 +10,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
-import { getFeeRecordFeePaymentsForFeeRecords } from '../helpers';
+import { getKeyingSheetFeePaymentSharesForFeeRecords } from '../helpers';
 
 jest.mock('../helpers');
 
@@ -43,7 +43,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
   beforeEach(() => {
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(aMockFeeRecordStateMachine(aMockEventHandler()));
-    jest.mocked(getFeeRecordFeePaymentsForFeeRecords).mockReturnValue([]);
+    jest.mocked(getKeyingSheetFeePaymentSharesForFeeRecords).mockReturnValue([]);
   });
 
   afterEach(() => {
@@ -68,7 +68,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
     mockFind.mockResolvedValue([]);
     mockUpdate.mockResolvedValue({});
 
-    jest.mocked(getFeeRecordFeePaymentsForFeeRecords).mockReturnValue([{ feeRecordId: 12, paymentId: 24, feePaymentAmount: 1000 }]);
+    jest.mocked(getKeyingSheetFeePaymentSharesForFeeRecords).mockReturnValue([{ feeRecordId: 12, paymentId: 24, feePaymentAmount: 1000 }]);
 
     // Act
     await handleUtilisationReportGenerateKeyingDataEvent(utilisationReport, {

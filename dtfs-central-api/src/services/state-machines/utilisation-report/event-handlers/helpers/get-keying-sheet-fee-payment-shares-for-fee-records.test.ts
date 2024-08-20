@@ -6,9 +6,9 @@ import {
   PaymentEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { FeeRecordFeePayment, getFeeRecordFeePaymentsForFeeRecords } from './get-fee-record-fee-payments-for-fee-records';
+import { KeyingSheetFeePaymentShare, getKeyingSheetFeePaymentSharesForFeeRecords } from './get-keying-sheet-fee-payment-shares-for-fee-records';
 
-describe('getFeeRecordFeePaymentsForFeeRecords', () => {
+describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
   describe('when there is one fee record linked to one payment', () => {
     it('creates one fee payment when the fee record amount exactly matches the payment amount', () => {
       // Arrange
@@ -28,11 +28,11 @@ describe('getFeeRecordFeePaymentsForFeeRecords', () => {
         .build();
 
       // Act
-      const result = getFeeRecordFeePaymentsForFeeRecords([matchFeeRecord]);
+      const result = getKeyingSheetFeePaymentSharesForFeeRecords([matchFeeRecord]);
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0]).toEqual<FeeRecordFeePayment>({ feeRecordId, paymentId, feePaymentAmount: 1000 });
+      expect(result[0]).toEqual<KeyingSheetFeePaymentShare>({ feeRecordId, paymentId, feePaymentAmount: 1000 });
     });
 
     it.each([
@@ -56,12 +56,12 @@ describe('getFeeRecordFeePaymentsForFeeRecords', () => {
         .build();
 
       // Act
-      const result = getFeeRecordFeePaymentsForFeeRecords([matchFeeRecord]);
+      const result = getKeyingSheetFeePaymentSharesForFeeRecords([matchFeeRecord]);
 
       // Assert
       expect(result).toHaveLength(1);
       expect(result[0].feeRecordId).toBe(feeRecordId);
-      expect(result[0]).toEqual<FeeRecordFeePayment>({ feeRecordId, paymentId, feePaymentAmount: paymentAmount });
+      expect(result[0]).toEqual<KeyingSheetFeePaymentShare>({ feeRecordId, paymentId, feePaymentAmount: paymentAmount });
     });
   });
 
@@ -92,13 +92,13 @@ describe('getFeeRecordFeePaymentsForFeeRecords', () => {
       ];
 
       // Act
-      const result = getFeeRecordFeePaymentsForFeeRecords(matchFeeRecords);
+      const result = getKeyingSheetFeePaymentSharesForFeeRecords(matchFeeRecords);
 
       // Assert
       expect(result).toHaveLength(3);
-      expect(result).toContainEqual<FeeRecordFeePayment>({ paymentId, feeRecordId: 12, feePaymentAmount: 150 });
-      expect(result).toContainEqual<FeeRecordFeePayment>({ paymentId, feeRecordId: 24, feePaymentAmount: 800 });
-      expect(result).toContainEqual<FeeRecordFeePayment>({ paymentId, feeRecordId: 36, feePaymentAmount: 50 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ paymentId, feeRecordId: 12, feePaymentAmount: 150 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ paymentId, feeRecordId: 24, feePaymentAmount: 800 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ paymentId, feeRecordId: 36, feePaymentAmount: 50 });
     });
 
     describe('and when the total payment amount is different to the total fee record amount due to tolerance', () => {
@@ -114,13 +114,13 @@ describe('getFeeRecordFeePaymentsForFeeRecords', () => {
         ];
 
         // Act
-        const result = getFeeRecordFeePaymentsForFeeRecords(matchFeeRecords);
+        const result = getKeyingSheetFeePaymentSharesForFeeRecords(matchFeeRecords);
 
         // Assert
         expect(result).toHaveLength(3);
-        expect(result).toContainEqual<FeeRecordFeePayment>({ paymentId, feeRecordId: 12, feePaymentAmount: 150 });
-        expect(result).toContainEqual<FeeRecordFeePayment>({ paymentId, feeRecordId: 24, feePaymentAmount: 800 });
-        expect(result).toContainEqual<FeeRecordFeePayment>({ paymentId, feeRecordId: 36, feePaymentAmount: 1050 }); // 2000 - 150 - 800
+        expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ paymentId, feeRecordId: 12, feePaymentAmount: 150 });
+        expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ paymentId, feeRecordId: 24, feePaymentAmount: 800 });
+        expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ paymentId, feeRecordId: 36, feePaymentAmount: 1050 }); // 2000 - 150 - 800
       });
 
       it('creates a fee payment for each fee record where the payment can be used to cover the fee record amount', () => {
@@ -135,12 +135,12 @@ describe('getFeeRecordFeePaymentsForFeeRecords', () => {
         ];
 
         // Act
-        const result = getFeeRecordFeePaymentsForFeeRecords(matchFeeRecords);
+        const result = getKeyingSheetFeePaymentSharesForFeeRecords(matchFeeRecords);
 
         // Assert
         expect(result).toHaveLength(2);
-        expect(result).toContainEqual<FeeRecordFeePayment>({ paymentId, feeRecordId: 12, feePaymentAmount: 1 });
-        expect(result).toContainEqual<FeeRecordFeePayment>({ paymentId, feeRecordId: 24, feePaymentAmount: 800 });
+        expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ paymentId, feeRecordId: 12, feePaymentAmount: 1 });
+        expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ paymentId, feeRecordId: 24, feePaymentAmount: 800 });
       });
     });
   });
@@ -170,13 +170,13 @@ describe('getFeeRecordFeePaymentsForFeeRecords', () => {
       feeRecord.payments = payments;
 
       // Act
-      const result = getFeeRecordFeePaymentsForFeeRecords([feeRecord]);
+      const result = getKeyingSheetFeePaymentSharesForFeeRecords([feeRecord]);
 
       // Assert
       expect(result).toHaveLength(3);
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId, paymentId: firstPaymentId, feePaymentAmount: 800 });
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId, paymentId: secondPaymentId, feePaymentAmount: 100 });
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId, paymentId: thirdPaymentId, feePaymentAmount: 100 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId, paymentId: firstPaymentId, feePaymentAmount: 800 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId, paymentId: secondPaymentId, feePaymentAmount: 100 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId, paymentId: thirdPaymentId, feePaymentAmount: 100 });
     });
 
     describe('and when the total payment amount is different to the total fee record amount due to tolerance', () => {
@@ -201,13 +201,13 @@ describe('getFeeRecordFeePaymentsForFeeRecords', () => {
         feeRecord.payments = payments;
 
         // Act
-        const result = getFeeRecordFeePaymentsForFeeRecords([feeRecord]);
+        const result = getKeyingSheetFeePaymentSharesForFeeRecords([feeRecord]);
 
         // Assert
         expect(result).toHaveLength(3);
-        expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId, paymentId: 11, feePaymentAmount: 100 });
-        expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId, paymentId: 22, feePaymentAmount: 200 });
-        expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId, paymentId: 33, feePaymentAmount: 300 });
+        expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId, paymentId: 11, feePaymentAmount: 100 });
+        expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId, paymentId: 22, feePaymentAmount: 200 });
+        expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId, paymentId: 33, feePaymentAmount: 300 });
       });
 
       it('creates a fee payment for each payment linked to the fee record when the total payment amount is smaller', () => {
@@ -231,13 +231,13 @@ describe('getFeeRecordFeePaymentsForFeeRecords', () => {
         feeRecord.payments = payments;
 
         // Act
-        const result = getFeeRecordFeePaymentsForFeeRecords([feeRecord]);
+        const result = getKeyingSheetFeePaymentSharesForFeeRecords([feeRecord]);
 
         // Assert
         expect(result).toHaveLength(3);
-        expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId, paymentId: 11, feePaymentAmount: 10 });
-        expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId, paymentId: 22, feePaymentAmount: 20 });
-        expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId, paymentId: 33, feePaymentAmount: 30 });
+        expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId, paymentId: 11, feePaymentAmount: 10 });
+        expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId, paymentId: 22, feePaymentAmount: 20 });
+        expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId, paymentId: 33, feePaymentAmount: 30 });
       });
     });
   });
@@ -274,31 +274,31 @@ describe('getFeeRecordFeePaymentsForFeeRecords', () => {
       ];
 
       // Act
-      const result = getFeeRecordFeePaymentsForFeeRecords(matchFeeRecords);
+      const result = getKeyingSheetFeePaymentSharesForFeeRecords(matchFeeRecords);
 
       // Assert: Fee record with id = 5
       // - takes 555.55 from payment A (id=12) - payment A now has 444.45 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 5, paymentId: 12, feePaymentAmount: 555.55 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 5, paymentId: 12, feePaymentAmount: 555.55 });
 
       // Assert: Fee record with id = 4
       // - takes 444.44 from payment C (id=36) - payment C now has 155.56 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 4, paymentId: 36, feePaymentAmount: 444.44 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 4, paymentId: 36, feePaymentAmount: 444.44 });
 
       // Assert: Fee record with id = 3
       // - takes 333.33 from payment A (id=12) - payment A now has 111.12 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 3, paymentId: 12, feePaymentAmount: 333.33 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 3, paymentId: 12, feePaymentAmount: 333.33 });
 
       // Assert: Fee record with id = 2
       // - takes 155.56 from payment C (id=36) - payment C now has 0 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 2, paymentId: 36, feePaymentAmount: 155.56 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 2, paymentId: 36, feePaymentAmount: 155.56 });
       // - takes 66.66 from payment A (id=12) - payment A now has 44.46 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 2, paymentId: 12, feePaymentAmount: 66.66 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 2, paymentId: 12, feePaymentAmount: 66.66 });
 
       // Assert: Fee record with id = 1
       // - takes 66.65 from payment B (id=24) - payment B now has 0 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 1, paymentId: 24, feePaymentAmount: 66.65 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 1, paymentId: 24, feePaymentAmount: 66.65 });
       // - takes 44.46 from payment A (id=12) - payment A now has 0 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 1, paymentId: 12, feePaymentAmount: 44.46 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 1, paymentId: 12, feePaymentAmount: 44.46 });
     });
 
     it('creates fee payments by greedily splitting the payments across the fee records when the total payment amount is slightly greater than the total fee record amount', () => {
@@ -318,31 +318,31 @@ describe('getFeeRecordFeePaymentsForFeeRecords', () => {
       ];
 
       // Act
-      const result = getFeeRecordFeePaymentsForFeeRecords(matchFeeRecords);
+      const result = getKeyingSheetFeePaymentSharesForFeeRecords(matchFeeRecords);
 
       // Assert: Fee record with id = 5
       // - takes 555.55 from payment A (id=12) - payment A now has 456.45 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 5, paymentId: 12, feePaymentAmount: 555.55 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 5, paymentId: 12, feePaymentAmount: 555.55 });
 
       // Assert: Fee record with id = 4
       // - takes 444.44 from payment C (id=36) - payment C now has 155.56 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 4, paymentId: 36, feePaymentAmount: 444.44 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 4, paymentId: 36, feePaymentAmount: 444.44 });
 
       // Assert: Fee record with id = 3
       // - takes 333.33 from payment A (id=12) - payment A now has 123.12 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 3, paymentId: 12, feePaymentAmount: 333.33 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 3, paymentId: 12, feePaymentAmount: 333.33 });
 
       // Assert: Fee record with id = 2
       // - takes 155.56 from payment C (id=36) - payment C now has 0 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 2, paymentId: 36, feePaymentAmount: 155.56 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 2, paymentId: 36, feePaymentAmount: 155.56 });
       // - takes 66.66 from payment A (id=12) - payment A now has 56.46 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 2, paymentId: 12, feePaymentAmount: 66.66 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 2, paymentId: 12, feePaymentAmount: 66.66 });
 
       // Assert: Fee record with id = 1
       // - takes 66.65 from payment B (id=24) - payment B now has 0 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 1, paymentId: 24, feePaymentAmount: 66.65 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 1, paymentId: 24, feePaymentAmount: 66.65 });
       // - takes 56.46 from payment A (id=12) - payment A now has 0 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 1, paymentId: 12, feePaymentAmount: 56.46 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 1, paymentId: 12, feePaymentAmount: 56.46 });
     });
 
     it('creates fee payments by greedily splitting the payments across the fee records when the total payment amount is slightly smaller than the total fee record amount', () => {
@@ -362,31 +362,31 @@ describe('getFeeRecordFeePaymentsForFeeRecords', () => {
       ];
 
       // Act
-      const result = getFeeRecordFeePaymentsForFeeRecords(matchFeeRecords);
+      const result = getKeyingSheetFeePaymentSharesForFeeRecords(matchFeeRecords);
 
       // Assert: Fee record with id = 5
       // - takes 555.55 from payment A (id=12) - payment A now has 432.45 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 5, paymentId: 12, feePaymentAmount: 555.55 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 5, paymentId: 12, feePaymentAmount: 555.55 });
 
       // Assert: Fee record with id = 4
       // - takes 444.44 from payment C (id=36) - payment C now has 155.56 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 4, paymentId: 36, feePaymentAmount: 444.44 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 4, paymentId: 36, feePaymentAmount: 444.44 });
 
       // Assert: Fee record with id = 3
       // - takes 333.33 from payment A (id=12) - payment A now has 99.12 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 3, paymentId: 12, feePaymentAmount: 333.33 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 3, paymentId: 12, feePaymentAmount: 333.33 });
 
       // Assert: Fee record with id = 2
       // - takes 155.56 from payment C (id=36) - payment C now has 0 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 2, paymentId: 36, feePaymentAmount: 155.56 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 2, paymentId: 36, feePaymentAmount: 155.56 });
       // - takes 66.66 from payment A (id=12) - payment A now has 32.46 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 2, paymentId: 12, feePaymentAmount: 66.66 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 2, paymentId: 12, feePaymentAmount: 66.66 });
 
       // Assert: Fee record with id = 1
       // - takes 66.65 from payment B (id=24) - payment B now has 0 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 1, paymentId: 24, feePaymentAmount: 66.65 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 1, paymentId: 24, feePaymentAmount: 66.65 });
       // - takes 32.46 from payment A (id=12) - payment A now has 0 remaining
-      expect(result).toContainEqual<FeeRecordFeePayment>({ feeRecordId: 1, paymentId: 12, feePaymentAmount: 32.46 });
+      expect(result).toContainEqual<KeyingSheetFeePaymentShare>({ feeRecordId: 1, paymentId: 12, feePaymentAmount: 32.46 });
     });
   });
 
@@ -396,7 +396,7 @@ describe('getFeeRecordFeePaymentsForFeeRecords', () => {
       const matchFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus('MATCH').withPayments([]).build();
 
       // Act
-      const result = getFeeRecordFeePaymentsForFeeRecords([matchFeeRecord]);
+      const result = getKeyingSheetFeePaymentSharesForFeeRecords([matchFeeRecord]);
 
       // Assert
       expect(result).toHaveLength(0);
