@@ -1,11 +1,13 @@
-const validator = require('validator');
-const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
+import validator from 'validator';
+import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
+import { UtilisationReportRowValidationErrorGenerator } from './types/validation-error-generator';
 
-const generatePaymentCurrencyError = (csvDataRow) => {
+export const generatePaymentCurrencyError: UtilisationReportRowValidationErrorGenerator = (csvDataRow) => {
   if (!csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value && !csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value) {
     return null;
   }
-  if (!csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value) {
+  const paymentCurrencyValue = csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value;
+  if (!paymentCurrencyValue) {
     return {
       errorMessage: 'Payment currency must have an entry when a payment exchange rate is supplied',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.column,
@@ -14,7 +16,7 @@ const generatePaymentCurrencyError = (csvDataRow) => {
       exporter: csvDataRow[UTILISATION_REPORT_HEADERS.EXPORTER]?.value,
     };
   }
-  if (!validator.isISO4217(csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value)) {
+  if (!validator.isISO4217(paymentCurrencyValue)) {
     return {
       errorMessage: 'Payment currency must be in the ISO 4217 currency code format',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.column,
@@ -25,5 +27,3 @@ const generatePaymentCurrencyError = (csvDataRow) => {
   }
   return null;
 };
-
-module.exports = { generatePaymentCurrencyError };

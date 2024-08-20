@@ -1,6 +1,7 @@
-const validator = require('validator');
+import validator from 'validator';
+import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 
-const generateMonthlyFeesPaidCurrencyError = (monthlyFeesPaidToUkefCurrencyObject, exporterName) => {
+export const generateMonthlyFeesPaidCurrencyError: UtilisationReportCellValidationErrorGenerator = (monthlyFeesPaidToUkefCurrencyObject, exporterName) => {
   if (!monthlyFeesPaidToUkefCurrencyObject?.value) {
     return {
       errorMessage: 'Fees paid to UKEF currency must have an entry',
@@ -20,8 +21,4 @@ const generateMonthlyFeesPaidCurrencyError = (monthlyFeesPaidToUkefCurrencyObjec
     };
   }
   return null;
-};
-
-module.exports = {
-  generateMonthlyFeesPaidCurrencyError,
 };

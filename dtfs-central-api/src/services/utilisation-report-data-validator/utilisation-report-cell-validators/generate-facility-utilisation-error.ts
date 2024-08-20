@@ -1,7 +1,8 @@
-const { CURRENCY_NUMBER_REGEX } = require('../../../../constants/regex');
-const { FILE_UPLOAD } = require('../../../../constants/file-upload');
+import { FILE_UPLOAD } from '../../../constants';
+import { CURRENCY_NUMBER_REGEX } from '../../../constants/regex';
+import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 
-const generateFacilityUtilisationError = (facilityUtilisationObject, exporterName) => {
+export const generateFacilityUtilisationError: UtilisationReportCellValidationErrorGenerator = (facilityUtilisationObject, exporterName) => {
   if (!facilityUtilisationObject?.value) {
     return {
       errorMessage: 'Facility utilisation must have an entry',
@@ -31,5 +32,3 @@ const generateFacilityUtilisationError = (facilityUtilisationObject, exporterNam
   }
   return null;
 };
-
-module.exports = { generateFacilityUtilisationError };

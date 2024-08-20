@@ -1,19 +1,16 @@
-const validator = require('validator');
-const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
+import validator from 'validator';
+import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
+import { UtilisationReportRowValidationErrorGenerator } from './types/validation-error-generator';
 
-/**
- * Validates an object representing a row of csv data to check if the total fees accrued currency is valid.
- * @param {unknown} csvDataRow - object representing a row of csv data.
- * @returns {object | null} - object comprising of error message and error location or null if valid.
- */
-const generateTotalFeesAccruedCurrencyError = (csvDataRow) => {
+export const generateTotalFeesAccruedCurrencyError: UtilisationReportRowValidationErrorGenerator = (csvDataRow) => {
   if (
     !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value &&
     !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value
   ) {
     return null;
   }
-  if (!csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value) {
+  const totalFeesAccruedCurrencyValue = csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value;
+  if (!totalFeesAccruedCurrencyValue) {
     return {
       errorMessage: 'Accrual currency must have an entry when an accrual exchange rate is supplied',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.column,
@@ -22,7 +19,7 @@ const generateTotalFeesAccruedCurrencyError = (csvDataRow) => {
       exporter: csvDataRow[UTILISATION_REPORT_HEADERS.EXPORTER]?.value,
     };
   }
-  if (!validator.isISO4217(csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value)) {
+  if (!validator.isISO4217(totalFeesAccruedCurrencyValue)) {
     return {
       errorMessage: 'Accrual currency must be in the ISO 4217 currency code format',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.column,
@@ -33,5 +30,3 @@ const generateTotalFeesAccruedCurrencyError = (csvDataRow) => {
   }
   return null;
 };
-
-module.exports = { generateTotalFeesAccruedCurrencyError };

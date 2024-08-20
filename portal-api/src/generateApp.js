@@ -63,8 +63,9 @@ const generateApp = () => {
 
   app.use('/', rootRouter);
 
-  app.use((error) => {
+  app.use((error, res, req, next) => {
     console.error(error);
+    next(error);
   });
   return app;
 };

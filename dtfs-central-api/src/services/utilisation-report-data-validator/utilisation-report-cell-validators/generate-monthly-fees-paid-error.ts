@@ -1,7 +1,9 @@
-const { CURRENCY_NUMBER_REGEX } = require('../../../../constants/regex');
-const { FILE_UPLOAD } = require('../../../../constants/file-upload');
+import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
+import { CURRENCY_NUMBER_REGEX } from '../../../constants/regex';
+import { FILE_UPLOAD } from '../../../constants';
 
-const generateMonthlyFeesPaidError = (monthlyFeesPaidObject, exporterName) => {
+// QQ docstrings and param names
+export const generateMonthlyFeesPaidError: UtilisationReportCellValidationErrorGenerator = (monthlyFeesPaidObject, exporterName) => {
   if (!monthlyFeesPaidObject?.value) {
     return {
       errorMessage: 'Fees paid to UKEF for the period must have an entry',
@@ -31,5 +33,3 @@ const generateMonthlyFeesPaidError = (monthlyFeesPaidObject, exporterName) => {
   }
   return null;
 };
-
-module.exports = { generateMonthlyFeesPaidError };

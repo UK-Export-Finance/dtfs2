@@ -1,5 +1,5 @@
 const { generateTotalFeesAccruedError } = require('./generate-total-fees-accrued-error');
-const { FILE_UPLOAD } = require('../../../../constants/file-upload');
+const { FILE_UPLOAD } = require('../../../constants/file-upload');
 
 describe('generateTotalFeesAccruedError', () => {
   const testExporterName = 'test-exporter';

@@ -270,6 +270,29 @@ const findLatestGefMandatoryCriteria = async () => {
 };
 
 /**
+ * Validates utilisation report data returning any errors to display to the user
+ * @param {import('@ukef/dtfs2-common').UtilisationReportRawCsvRowDataWithLocations[]} reportData
+ * @returns {Promise<import('./api-response-types').ValidateUtilisationReportDataResponseBody>} Object containing the validation errors to display to the user
+ */
+const validateUtilisationReportData = async (reportData) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/validate`,
+      headers: headers.central,
+      data: {
+        reportData,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to validate utilisation report', error);
+    throw error;
+  }
+};
+
+/**
  * Saves a utilisation report to the database
  * @param {number} reportId - The report id
  * @param {object} reportData - The report data
@@ -440,6 +463,7 @@ module.exports = {
   deleteFacility,
   tfmDealSubmit,
   findLatestGefMandatoryCriteria,
+  validateUtilisationReportData,
   saveUtilisationReport,
   getUtilisationReports,
   getUtilisationReportById,

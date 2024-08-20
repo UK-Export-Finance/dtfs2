@@ -31,6 +31,7 @@ const { patchPayment } = require('../controllers/utilisation-report-service/patc
 const { putKeyingDataMarkAsDone } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-done.controller');
 const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-to-do.controller');
 const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
+const { postValidateUtilisationReportData } = require('../controllers/utilisation-report-service/post-validate-utilisation-report-data.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -66,6 +67,8 @@ const utilisationReportsRouter = express.Router();
  *         description: Server conflict
  */
 utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValidator, postUploadUtilisationReport);
+
+utilisationReportsRouter.route('/validate').post(postValidateUtilisationReportData);
 
 /**
  * @openapi

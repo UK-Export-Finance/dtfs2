@@ -885,6 +885,27 @@ const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData,
 };
 
 /**
+ * Generates validation errors for all errors in the utilisation report data
+ * @param {} reportData - The csv data with location information
+ * @param {string} userToken - The user token
+ * @returns {} - The validation errors for the utilisation report data
+ */
+const generateValidationErrorsForUtilisationReportData = async (reportData, bankId, userToken) => {
+  const response = await axios({
+    method: 'post',
+    url: `${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports/validate`,
+    headers: {
+      Authorization: userToken,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+    data: {
+      reportData,
+    },
+  });
+  return response.data;
+};
+
+/**
  * Gets all previous reports for the supplied bank
  * @param {string} token - The user token
  * @param {string} bankId - The bank id
@@ -1021,6 +1042,7 @@ module.exports = {
   downloadEligibilityDocumentationFile,
   getUnissuedFacilitiesReport,
   getUkefDecisionReport,
+  generateValidationErrorsForUtilisationReportData,
   uploadUtilisationReportData,
   downloadUtilisationReport,
   getPreviousUtilisationReportsByBank,

@@ -1,7 +1,8 @@
-const { CURRENCY_NUMBER_REGEX } = require('../../../../constants/regex');
-const { FILE_UPLOAD } = require('../../../../constants/file-upload');
+import { CURRENCY_NUMBER_REGEX } from '../../../constants/regex';
+import { FILE_UPLOAD } from '../../../constants/file-upload';
+import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 
-const generateTotalFeesAccruedError = (totalFeesAccruedObject, exporterName) => {
+export const generateTotalFeesAccruedError: UtilisationReportCellValidationErrorGenerator = (totalFeesAccruedObject, exporterName) => {
   if (!totalFeesAccruedObject) {
     return {
       errorMessage: 'Total fees accrued for the period must have an entry',
@@ -11,7 +12,7 @@ const generateTotalFeesAccruedError = (totalFeesAccruedObject, exporterName) => 
 
   const { value, column, row } = totalFeesAccruedObject;
 
-  const generateError = (errorMessage) => ({ errorMessage, column, row, value, exporter: exporterName });
+  const generateError = (errorMessage: string) => ({ errorMessage, column, row, value, exporter: exporterName });
 
   if (!value) {
     return generateError('Total fees accrued for the period must have an entry');
@@ -24,5 +25,3 @@ const generateTotalFeesAccruedError = (totalFeesAccruedObject, exporterName) => 
   }
   return null;
 };
-
-module.exports = { generateTotalFeesAccruedError };

@@ -1,0 +1,3 @@
+export const FILE_UPLOAD = {
+  MAX_CELL_CHARACTER_COUNT: 15,
+};

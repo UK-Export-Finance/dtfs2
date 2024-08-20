@@ -1,6 +1,7 @@
-const { UKEF_FACILITY_ID_REGEX } = require('../../../../constants/regex');
+import { UKEF_FACILITY_ID_REGEX } from '../../../constants/regex';
+import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 
-const generateUkefFacilityIdError = (facilityIdObject, exporterName) => {
+export const generateUkefFacilityIdError: UtilisationReportCellValidationErrorGenerator = (facilityIdObject, exporterName) => {
   if (!facilityIdObject?.value) {
     return {
       errorMessage: 'UKEF facility ID must have an entry',
@@ -20,8 +21,4 @@ const generateUkefFacilityIdError = (facilityIdObject, exporterName) => {
     };
   }
   return null;
-};
-
-module.exports = {
-  generateUkefFacilityIdError,
 };

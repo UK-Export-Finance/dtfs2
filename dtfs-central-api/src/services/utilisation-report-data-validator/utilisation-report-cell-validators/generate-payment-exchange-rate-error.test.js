@@ -1,45 +1,55 @@
-const { generateTotalFeesAccruedExchangeRateError } = require('./generate-total-fees-accrued-exchange-rate-error');
-const { FILE_UPLOAD } = require('../../../../constants/file-upload');
+const { generatePaymentExchangeRateError } = require('./generate-payment-exchange-rate-error');
+const { FILE_UPLOAD } = require('../../../constants/file-upload');
 
-describe('generateTotalFeesAccruedExchangeRateError', () => {
+describe('generatePaymentExchangeRateError', () => {
   const testExporterName = 'test-exporter';
-  it('returns null if accrual currency is null and accrual exchange rate is null', async () => {
+  it('returns null if payment currency is null and payment exchange rate is null', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
         column: 1,
         row: 1,
       },
-      'accrual currency': {
+      'fees paid to ukef currency': {
+        value: 'GBP',
+        column: 2,
+        row: 1,
+      },
+      'payment currency': {
         value: null,
         column: 2,
         row: 1,
       },
-      'accrual exchange rate': {
+      'payment exchange rate': {
         value: null,
         row: 1,
         column: 3,
       },
     };
 
-    const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(null);
   });
 
-  it('returns an error if accrual currency is null and accrual exchange rate is not a number', async () => {
+  it('returns an error if payment currency is null and payment exchange rate is not a number', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
         column: 1,
         row: 1,
       },
-      'accrual currency': {
+      'fees paid to ukef currency': {
+        value: 'GBP',
+        column: 2,
+        row: 1,
+      },
+      'payment currency': {
         value: null,
         column: 2,
         row: 1,
       },
-      'accrual exchange rate': {
+      'payment exchange rate': {
         value: 'abc',
         row: 1,
         column: 3,
@@ -47,31 +57,36 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
     };
 
     const expectedError = {
-      errorMessage: 'Accrual exchange rate must be a number',
+      errorMessage: 'Payment exchange rate must be a number',
       column: 3,
       row: 1,
       value: 'abc',
       exporter: testExporterName,
     };
 
-    const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(expectedError);
   });
 
-  it('returns an error if accrual currency is null and accrual exchange rate is too long', async () => {
+  it('returns an error if payment currency is null and payment exchange rate is too long', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
         column: 1,
         row: 1,
       },
-      'accrual currency': {
+      'fees paid to ukef currency': {
+        value: 'GBP',
+        column: 2,
+        row: 1,
+      },
+      'payment currency': {
         value: null,
         column: 2,
         row: 1,
       },
-      'accrual exchange rate': {
+      'payment exchange rate': {
         value: '1.738491847362543',
         row: 1,
         column: 3,
@@ -79,94 +94,94 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
     };
 
     const expectedError = {
-      errorMessage: `Accrual exchange rate must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
+      errorMessage: `Payment exchange rate must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: 3,
       row: 1,
       value: '1.738491847362543',
       exporter: testExporterName,
     };
 
-    const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(expectedError);
   });
 
-  it('returns null if accrual currency is the same as base currency and accrual exchange rate is null', async () => {
+  it('returns null if payment currency is the same as fees paid to ukef currency and payment exchange rate is null', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
         column: 1,
         row: 1,
       },
-      'accrual currency': {
+      'fees paid to ukef currency': {
         value: 'GBP',
         column: 2,
         row: 1,
       },
-      'base currency': {
+      'payment currency': {
         value: 'GBP',
         column: 2,
         row: 1,
       },
-      'accrual exchange rate': {
+      'payment exchange rate': {
         value: null,
         row: 1,
         column: 3,
       },
     };
 
-    const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(null);
   });
 
-  it('returns null if accrual currency is the same as base currency and accrual exchange rate is 1', async () => {
+  it('returns null if payment currency is the same as fees paid to ukef currency and payment exchange rate is 1', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
         column: 1,
         row: 1,
       },
-      'accrual currency': {
+      'fees paid to ukef currency': {
         value: 'GBP',
         column: 2,
         row: 1,
       },
-      'base currency': {
+      'payment currency': {
         value: 'GBP',
         column: 2,
         row: 1,
       },
-      'accrual exchange rate': {
+      'payment exchange rate': {
         value: '1',
         row: 1,
         column: 3,
       },
     };
 
-    const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(null);
   });
 
-  it('returns an error if accrual currency is the same as base currency and accrual exchange rate is not 1 or null', async () => {
+  it('returns an error if payment currency is the same as fees paid to ukef currency and payment exchange rate is not 1 or null', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
         column: 1,
         row: 1,
       },
-      'accrual currency': {
+      'fees paid to ukef currency': {
         value: 'GBP',
         column: 2,
         row: 1,
       },
-      'base currency': {
+      'payment currency': {
         value: 'GBP',
         column: 2,
         row: 1,
       },
-      'accrual exchange rate': {
+      'payment exchange rate': {
         value: '2',
         row: 1,
         column: 3,
@@ -174,65 +189,65 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
     };
 
     const expectedError = {
-      errorMessage: 'Accrual exchange rate must be 1 or blank when accrual currency and base currency are the same',
+      errorMessage: 'Payment exchange rate must be 1 or blank when payment currency and fees paid to UKEF currency are the same',
       column: 3,
       row: 1,
       value: '2',
       exporter: testExporterName,
     };
 
-    const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(expectedError);
   });
 
-  it('returns null if accrual currency is different to base currency and accrual exchange rate is valid', async () => {
+  it('returns null if payment currency is different to fees paid to ukef currency and payment exchange rate is valid', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
         column: 1,
         row: 1,
       },
-      'accrual currency': {
+      'fees paid to ukef currency': {
         value: 'GBP',
         column: 2,
         row: 1,
       },
-      'base currency': {
+      'payment currency': {
         value: 'USD',
         column: 2,
         row: 1,
       },
-      'accrual exchange rate': {
+      'payment exchange rate': {
         value: '0.734',
         row: 1,
         column: 3,
       },
     };
 
-    const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(null);
   });
 
-  it('returns an error if accrual currency is different to base currency and accrual exchange rate is null', async () => {
+  it('returns an error if payment currency is different to fees paid to ukef currency and payment exchange rate is null', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
         column: 1,
         row: 1,
       },
-      'accrual currency': {
+      'fees paid to ukef currency': {
         value: 'GBP',
         column: 2,
         row: 1,
       },
-      'base currency': {
+      'payment currency': {
         value: 'USD',
         column: 2,
         row: 1,
       },
-      'accrual exchange rate': {
+      'payment exchange rate': {
         value: null,
         row: 1,
         column: 3,
@@ -240,36 +255,36 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
     };
 
     const expectedError = {
-      errorMessage: 'Accrual exchange rate must have an entry when an accrual currency is supplied',
+      errorMessage: 'Payment exchange rate must have an entry when a payment currency is supplied',
       column: 3,
       row: 1,
       value: null,
       exporter: testExporterName,
     };
 
-    const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(expectedError);
   });
 
-  it('returns an error if accrual currency is different to base currency and accrual exchange rate is not a number', async () => {
+  it('returns an error if payment currency is different to fees paid to ukef currency and payment exchange rate is not a number', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
         column: 1,
         row: 1,
       },
-      'accrual currency': {
+      'fees paid to ukef currency': {
         value: 'GBP',
         column: 2,
         row: 1,
       },
-      'base currency': {
+      'payment currency': {
         value: 'USD',
         column: 2,
         row: 1,
       },
-      'accrual exchange rate': {
+      'payment exchange rate': {
         value: 'abc',
         row: 1,
         column: 3,
@@ -277,36 +292,36 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
     };
 
     const expectedError = {
-      errorMessage: 'Accrual exchange rate must be a number',
+      errorMessage: 'Payment exchange rate must be a number',
       column: 3,
       row: 1,
       value: 'abc',
       exporter: testExporterName,
     };
 
-    const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(expectedError);
   });
 
-  it('returns an error if accrual currency is different to base currency and accrual exchange rate is too long', async () => {
+  it('returns an error if payment currency is different to fees paid to ukef currency and payment exchange rate is too long', async () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
         column: 1,
         row: 1,
       },
-      'accrual currency': {
+      'fees paid to ukef currency': {
         value: 'GBP',
         column: 2,
         row: 1,
       },
-      'base currency': {
+      'payment currency': {
         value: 'USD',
         column: 2,
         row: 1,
       },
-      'accrual exchange rate': {
+      'payment exchange rate': {
         value: '1.738491847362543',
         row: 1,
         column: 3,
@@ -314,14 +329,14 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
     };
 
     const expectedError = {
-      errorMessage: `Accrual exchange rate must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
+      errorMessage: `Payment exchange rate must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: 3,
       row: 1,
       value: '1.738491847362543',
       exporter: testExporterName,
     };
 
-    const exchangeRateError = generateTotalFeesAccruedExchangeRateError(csvDataRow);
+    const exchangeRateError = generatePaymentExchangeRateError(csvDataRow);
 
     expect(exchangeRateError).toEqual(expectedError);
   });

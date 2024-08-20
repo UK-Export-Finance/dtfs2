@@ -1,5 +1,5 @@
 const { generateFacilityUtilisationError } = require('./generate-facility-utilisation-error');
-const { FILE_UPLOAD } = require('../../../../constants/file-upload');
+const { FILE_UPLOAD } = require('../../../constants/file-upload');
 
 describe('generateFacilityUtilisationError', () => {
   const testExporterName = 'test-exporter';
