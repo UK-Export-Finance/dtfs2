@@ -2,10 +2,11 @@ const { format } = require('date-fns');
 const { isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const mapCoverEndDate = require('../facilities/mapCoverEndDate');
 const mapTenor = require('../facilities/mapTenor');
+const { getLatestFacilityEndDateValues } = require('../facilities/getLatestFacilityEndDateValues');
 const { convertDateToTimestamp } = require('../../../../utils/date');
 
 const mapGefFacilityDates = (facility, facilityTfm, dealSnapshot) => {
-  const { coverStartDate, coverEndDate, submittedAsIssuedDate, isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = facility.facilitySnapshot;
+  const { coverStartDate, coverEndDate, submittedAsIssuedDate } = facility.facilitySnapshot;
 
   const { submissionDate: dealSubmissionDate, manualInclusionNoticeSubmissionDate } = dealSnapshot;
 
@@ -27,6 +28,8 @@ const mapGefFacilityDates = (facility, facilityTfm, dealSnapshot) => {
   }
 
   if (isTfmFacilityEndDateFeatureFlagEnabled()) {
+    const { isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = getLatestFacilityEndDateValues(facility);
+
     mapped.isUsingFacilityEndDate = isUsingFacilityEndDate;
 
     if (isUsingFacilityEndDate) {

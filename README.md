@@ -93,11 +93,10 @@ npm run stop
 
 ## Different docker compose files
 
-There are 3 different docker compose files right now.
+There are 2 different docker compose files right now.
 
 - docker-compose.yml is used for local development
-- docker-compose.gha.yml is used for the pipelines to run our tests against
-- docker-compose.replica-set.yml is used when you need a replica set enabled on your local database, e.g. when working with the mongodb change stream
+- docker-compose.gha.yml is used for the pipelines to run our tests against. This has a replica set enabled.
 
 ## Login Credentials :key:
 
