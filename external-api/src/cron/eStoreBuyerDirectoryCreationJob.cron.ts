@@ -43,7 +43,7 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
   if (eStoreData?.buyerName) {
     const { dealId, siteId, exporterName, buyerName, dealIdentifier } = eStoreData;
 
-    console.info('Creating buyer directory %s for deal %s', buyerName, dealIdentifier);
+    console.info('Attempting to create a buyer directory %s for deal %s', buyerName, dealIdentifier);
 
     // Create the buyer directory
     const response: BuyerFolderResponse | EstoreErrorResponse = await createBuyerFolder(siteId, {
@@ -53,7 +53,7 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
 
     // Validate response
     if (ACCEPTABLE_STATUSES.includes(response?.status)) {
-      console.info('Creating buyer directory %s for deal %s', buyerName, dealIdentifier);
+      console.info('Attempting to create a buyer directory %s for deal %s', buyerName, dealIdentifier);
 
       // Update `cron-job-logs`
       await cronJobLogs.updateOne(

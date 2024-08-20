@@ -148,7 +148,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
        * Send `201` status code back to avoid
        * `TFM-API` awaiting.
        */
-      console.info('Creating new CRON job for deal %s', eStoreData.dealIdentifier);
+      console.info('Attempting to create a new CRON job for deal %s', eStoreData.dealIdentifier);
       res.status(HttpStatusCode.Created).send({ status: HttpStatusCode.Created, message: 'eStore job accepted' });
 
       // Step 1: Add CRON job to the collection

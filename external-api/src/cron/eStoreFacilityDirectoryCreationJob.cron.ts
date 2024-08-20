@@ -44,7 +44,7 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
   if (eStoreData?.facilityIdentifiers) {
     const { dealId, siteId, facilityIdentifiers, exporterName, buyerName, dealIdentifier } = eStoreData;
 
-    console.info('Creating facility directory %s for deal %s', facilityIdentifiers, dealIdentifier);
+    console.info('Attempting to create a facility directory %s for deal %s', facilityIdentifiers, dealIdentifier);
 
     // Create the facility directory
     const response: FacilityFolderResponse[] | EstoreErrorResponse[] = await Promise.all(
