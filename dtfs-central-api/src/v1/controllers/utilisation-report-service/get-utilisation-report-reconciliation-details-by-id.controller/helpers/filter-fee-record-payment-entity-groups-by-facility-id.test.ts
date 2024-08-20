@@ -7,11 +7,11 @@ import {
 } from '@ukef/dtfs2-common';
 import { filterFeeRecordPaymentEntityGroupsByFacilityId } from './filter-fee-record-payment-entity-groups-by-facility-id';
 import { FeeRecordPaymentEntityGroup } from '../../../../../helpers';
-import { getIncrementingPositiveIntegerIdGenerator } from '../../../../../../test-helpers';
+import { getSqlIdGenerator } from '../../../../../../test-helpers';
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
   describe('filterFeeRecordPaymentEntityGroupsByFacilityId', () => {
-    const feeRecordIdGenerator = getIncrementingPositiveIntegerIdGenerator(1);
+    const feeRecordIdGenerator = getSqlIdGenerator();
 
     const aFeeRecordWithFacilityIdAndPayments = (facilityId: string, payments: PaymentEntity[]) =>
       FeeRecordEntityMockBuilder.forReport(aUtilisationReport())

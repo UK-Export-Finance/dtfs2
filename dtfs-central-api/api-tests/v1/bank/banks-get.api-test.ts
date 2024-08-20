@@ -4,7 +4,7 @@ import { Bank, MonthAndYear, UtilisationReportEntity, UtilisationReportEntityMoc
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { aBank, getIncrementingPositiveIntegerIdGenerator } from '../../../test-helpers';
+import { aBank, getSqlIdGenerator } from '../../../test-helpers';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 
 const BASE_URL = '/v1/bank';
@@ -52,7 +52,7 @@ describe(`GET ${BASE_URL}`, () => {
   });
 
   describe("when the 'includeReportingYears' query is set to 'true'", () => {
-    const reportIdGenerator = getIncrementingPositiveIntegerIdGenerator(1);
+    const reportIdGenerator = getSqlIdGenerator();
 
     const aUtilisationReportForStatusBankIdAndMonthlyReportPeriod = (
       status: UtilisationReportReconciliationStatus,

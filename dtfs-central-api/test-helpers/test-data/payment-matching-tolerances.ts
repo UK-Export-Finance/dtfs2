@@ -1,8 +1,8 @@
 import { CURRENCY, PaymentMatchingToleranceEntityMockBuilder } from '@ukef/dtfs2-common';
-import { getIncrementingPositiveIntegerIdGenerator } from '../get-integer-id-generator';
+import { getSqlIdGenerator } from '../get-sql-id-generator';
 
 export const aListOfZeroThresholdActivePaymentMatchingTolerances = () => {
-  const toleranceIdGenerator = getIncrementingPositiveIntegerIdGenerator(1);
+  const toleranceIdGenerator = getSqlIdGenerator();
   return Object.values(CURRENCY).map((currency) =>
     PaymentMatchingToleranceEntityMockBuilder.forCurrency(currency).withIsActive(true).withThreshold(0).withId(toleranceIdGenerator.next().value).build(),
   );
