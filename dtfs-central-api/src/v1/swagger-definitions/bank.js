@@ -22,6 +22,7 @@
  *         items:
  *           type: string
  *           format: email
+ *           example: 'test-user@test.com'
  *       companiesHouseNo:
  *         type: string
  *         example: UKEF0001
@@ -40,6 +41,7 @@
  *             items:
  *               - type: string
  *                 format: email
+ *                 example: 'test-user@test.com'
  *       utilisationReportPeriodSchedule:
  *         - $ref: '#/definitions/BankReportPeriodSchedule'
  *       isVisibleInTfmUtilisationReports:
