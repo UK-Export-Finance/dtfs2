@@ -1,7 +1,6 @@
 import { createRequest } from 'node-mocks-http';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
 import { AddPaymentErrorKey, GenerateKeyingDataErrorKey } from '../helpers';
-import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 
 type RedirectSessionData = {
   addPaymentErrorKey: AddPaymentErrorKey | undefined;
@@ -25,14 +24,6 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     expect(req.session.generateKeyingDataErrorKey).toBeUndefined();
   };
 
-  const assertIsCheckboxCheckedReturnsValueWithInput = (
-    isCheckboxChecked: (checkboxId: PremiumPaymentsTableCheckboxId) => boolean,
-    input: PremiumPaymentsTableCheckboxId,
-    expectedOutput: boolean,
-  ) => {
-    expect(isCheckboxChecked(input)).toBe(expectedOutput);
-  };
-
   it('clears the session and returns an undefined errorSummary when the session error keys are undefined', () => {
     // Arrange
     const req = getMockRequest({
@@ -48,7 +39,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     expect(errorSummary).toBeUndefined();
   });
 
-  it('clears the session and returns a default isCheckboxChecked function when the session error keys are undefined', () => {
+  it('clears the session and returns an empty selectedFeeRecordIds set when the session error keys are undefined', () => {
     // Arrange
     const req = getMockRequest({
       addPaymentErrorKey: undefined,
@@ -56,11 +47,11 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     });
 
     // Act
-    const { isCheckboxChecked } = getAndClearFieldsFromRedirectSessionData(req);
+    const { selectedFeeRecordIds } = getAndClearFieldsFromRedirectSessionData(req);
 
     // Assert
     assertSessionHasBeenCleared(req);
-    assertIsCheckboxCheckedReturnsValueWithInput(isCheckboxChecked, 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO', false);
+    expect(selectedFeeRecordIds).toEqual(new Set());
   });
 
   it('throws an error if the session generateKeyingDataErrorKey is not recognised', () => {
@@ -130,7 +121,6 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
   it('returns a function which returns true for a checkbox id defined in req.session.checkedCheckboxIds and false otherwise', () => {
     // Arrange
     const checkedCheckboxId = 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO';
-    const uncheckedCheckboxId = 'feeRecordIds-2,3-reportedPaymentsCurrency-USD-status-DOES_NOT_MATCH';
 
     const req = getMockRequest({
       addPaymentErrorKey: 'different-fee-record-statuses',
@@ -141,11 +131,10 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     });
 
     // Act
-    const { isCheckboxChecked } = getAndClearFieldsFromRedirectSessionData(req);
+    const { selectedFeeRecordIds } = getAndClearFieldsFromRedirectSessionData(req);
 
     // Assert
     assertSessionHasBeenCleared(req);
-    assertIsCheckboxCheckedReturnsValueWithInput(isCheckboxChecked, checkedCheckboxId, true);
-    assertIsCheckboxCheckedReturnsValueWithInput(isCheckboxChecked, uncheckedCheckboxId, false);
+    expect(selectedFeeRecordIds).toEqual(new Set([1]));
   });
 });

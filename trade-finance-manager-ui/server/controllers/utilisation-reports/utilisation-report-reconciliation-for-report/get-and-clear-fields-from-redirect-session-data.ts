@@ -2,7 +2,10 @@ import { Request } from 'express';
 import { ErrorSummaryViewModel } from '../../../types/view-models';
 import { getAddPaymentError } from '../helpers/get-add-payment-error-helper';
 import { getGenerateKeyingDataError } from '../helpers';
-import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
+import {
+  getFeeRecordIdsFromPremiumPaymentsCheckboxIds,
+  getPremiumPaymentsCheckboxIdsFromObjectKeys,
+} from '../../../helpers/premium-payments-table-checkbox-id-helper';
 
 const clearRedirectSessionData = (req: Request): void => {
   delete req.session.addPaymentErrorKey;
@@ -14,7 +17,7 @@ export const getAndClearFieldsFromRedirectSessionData = (
   req: Request,
 ): {
   errorSummary: ErrorSummaryViewModel | undefined;
-  isCheckboxChecked: (checkboxId: PremiumPaymentsTableCheckboxId) => boolean;
+  selectedFeeRecordIds: Set<number>;
 } => {
   const { addPaymentErrorKey, generateKeyingDataErrorKey } = req.session;
 
@@ -24,7 +27,7 @@ export const getAndClearFieldsFromRedirectSessionData = (
       case 'no-matching-fee-records':
         return {
           errorSummary: getGenerateKeyingDataError(generateKeyingDataErrorKey),
-          isCheckboxChecked: () => false,
+          selectedFeeRecordIds: new Set(),
         };
       default:
         throw new Error(`Unrecognised generate keying data error key '${generateKeyingDataErrorKey}'`);
@@ -34,13 +37,14 @@ export const getAndClearFieldsFromRedirectSessionData = (
   if (!addPaymentErrorKey) {
     return {
       errorSummary: undefined,
-      isCheckboxChecked: () => false,
+      selectedFeeRecordIds: new Set(),
     };
   }
 
-  const checkedCheckboxIds = { ...req.session.checkedCheckboxIds };
-
-  const isCheckboxChecked = (checkboxId: PremiumPaymentsTableCheckboxId): boolean => Boolean(checkedCheckboxIds[checkboxId]);
+  const checkedCheckboxIdRecords = { ...req.session.checkedCheckboxIds };
+  const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(checkedCheckboxIdRecords);
+  const selectedFeeRecordIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds(checkedCheckboxIds);
+  const selectedFeeRecordIdsSet = new Set(selectedFeeRecordIds);
 
   switch (addPaymentErrorKey) {
     case 'no-fee-records-selected':
@@ -48,7 +52,7 @@ export const getAndClearFieldsFromRedirectSessionData = (
     case 'different-fee-record-payment-currencies':
     case 'multiple-does-not-match-selected':
       clearRedirectSessionData(req);
-      return { errorSummary: getAddPaymentError(addPaymentErrorKey), isCheckboxChecked };
+      return { errorSummary: getAddPaymentError(addPaymentErrorKey), selectedFeeRecordIds: selectedFeeRecordIdsSet };
     default:
       clearRedirectSessionData(req);
       throw new Error(`Unrecognised add payment error key '${addPaymentErrorKey}'`);

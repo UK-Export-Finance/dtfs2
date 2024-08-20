@@ -8,7 +8,8 @@ import { UtilisationReportReconciliationForReportViewModel } from '../../../type
 import { validateFacilityIdQuery } from './validate-facility-id-query';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
 import { FeeRecordPaymentGroup } from '../../../api-response-types';
-import { getIsCheckboxCheckedFromQuery } from './get-is-checkbox-checked-from-query';
+import { getIsCheckboxChecked } from './get-is-checkbox-checked';
+import { getSelectedFeeRecordIdsFromQuery } from './get-selected-fee-record-ids-from-query';
 
 const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): boolean =>
   feeRecordPaymentGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
@@ -19,18 +20,18 @@ const renderUtilisationReportReconciliationForReport = (res: Response, viewModel
 export const getUtilisationReportReconciliationByReportId = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId } = req.params;
-  const { facilityIdQuery, selectedFeeRecordIds } = req.query;
+  const { facilityIdQuery, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
 
   try {
     const facilityIdQueryAsString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
     const facilityIdQueryError = validateFacilityIdQuery(facilityIdQueryAsString, req.originalUrl);
 
-    const selectedFeeRecordIdsAsString = selectedFeeRecordIds ? asString(selectedFeeRecordIds, 'selectedFeeRecordIds') : undefined;
-    const isCheckboxCheckedQuery = getIsCheckboxCheckedFromQuery(selectedFeeRecordIdsAsString);
+    const { errorSummary: premiumPaymentFormError, selectedFeeRecordIds: selectedFeeRecordIdsFromSessionData } = getAndClearFieldsFromRedirectSessionData(req);
 
-    const { errorSummary: premiumPaymentFormError, isCheckboxChecked: isCheckboxCheckedSession } = getAndClearFieldsFromRedirectSessionData(req);
-
-    const isCheckboxChecked = isCheckboxCheckedQuery || isCheckboxCheckedSession;
+    const selectedFeeRecordIdsQueryAsString = selectedFeeRecordIdsQuery ? asString(selectedFeeRecordIdsQuery, 'selectedFeeRecordIdsQuery') : undefined;
+    const selectedFeeRecordIds: Set<number> =
+      selectedFeeRecordIdsFromSessionData.size > 0 ? selectedFeeRecordIdsFromSessionData : getSelectedFeeRecordIdsFromQuery(selectedFeeRecordIdsQueryAsString);
+    const isCheckboxChecked = getIsCheckboxChecked(selectedFeeRecordIds);
 
     const { feeRecordPaymentGroups, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
