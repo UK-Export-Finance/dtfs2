@@ -1,4 +1,5 @@
 const CONSTANTS = require('../../../constants');
+const { to2Decimals } = require('../../../helpers/currency');
 
 /**
  * Return facility fee record amount.
@@ -11,11 +12,11 @@ const CONSTANTS = require('../../../constants');
 const getFeeAmount = (facility, dealType, premiumScheduleIndex) => {
   // GEF
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
-    return Number(facility.tfm.feeRecord.toFixed(2));
+    return to2Decimals(facility.tfm.feeRecord);
   }
 
   // EWCS/BSS
-  return facility.tfm.premiumSchedule[premiumScheduleIndex] ? Number(facility.tfm.premiumSchedule[premiumScheduleIndex].income.toFixed(2)) : 0;
+  return facility.tfm.premiumSchedule[premiumScheduleIndex] ? to2Decimals(facility.tfm.premiumSchedule[premiumScheduleIndex].income) : 0;
 };
 
 module.exports = getFeeAmount;

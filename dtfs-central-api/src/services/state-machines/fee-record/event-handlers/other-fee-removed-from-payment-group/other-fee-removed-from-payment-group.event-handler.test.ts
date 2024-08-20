@@ -1,9 +1,9 @@
 import { EntityManager } from 'typeorm';
 import { FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { handleFeeRecordOtherFeeRemovedFromGroupEvent } from './other-fee-removed-from-group.event-handler';
+import { handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent } from './other-fee-removed-from-payment-group.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers/test-data/db-request-source';
 
-describe('handleFeeRecordOtherFeeRemovedFromGroupEvent', () => {
+describe('handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent', () => {
   const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
 
   const mockSave = jest.fn();
@@ -21,7 +21,7 @@ describe('handleFeeRecordOtherFeeRemovedFromGroupEvent', () => {
       const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).build();
 
       // Act
-      await handleFeeRecordOtherFeeRemovedFromGroupEvent(feeRecord, {
+      await handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent(feeRecord, {
         transactionEntityManager: mockEntityManager,
         feeRecordsAndPaymentsMatch,
         requestSource: aDbRequestSource(),
@@ -43,7 +43,7 @@ describe('handleFeeRecordOtherFeeRemovedFromGroupEvent', () => {
     const userId = '123';
 
     // Act
-    await handleFeeRecordOtherFeeRemovedFromGroupEvent(feeRecord, {
+    await handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       feeRecordsAndPaymentsMatch: true,
       requestSource: {
@@ -63,7 +63,7 @@ describe('handleFeeRecordOtherFeeRemovedFromGroupEvent', () => {
     const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).build();
 
     // Act
-    await handleFeeRecordOtherFeeRemovedFromGroupEvent(feeRecord, {
+    await handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent(feeRecord, {
       transactionEntityManager: mockEntityManager,
       feeRecordsAndPaymentsMatch: true,
       requestSource: aDbRequestSource(),

@@ -9,7 +9,11 @@ import {
 } from '../../../helpers/premium-payments-table-checkbox-id-helper';
 import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { mapToSelectedReportedFeesDetailsViewModel, PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../helpers';
+import {
+  extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent,
+  mapToSelectedReportedFeesDetailsViewModel,
+  PremiumPaymentsTableCheckboxSelectionsRequestBody,
+} from '../helpers';
 import { mapToAvailablePaymentGroupsViewModel } from '../helpers/available-payment-group-view-model-mapper';
 import { getAvailablePaymentsHeading } from '../helpers/add-to-an-existing-payment-helper';
 
@@ -34,6 +38,14 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
       throw new Error('No available payment groups attached to fee record details response.');
     }
 
+    const { isAddingToAnExistingPayment, errors, paymentIds } = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(req.body);
+    const formHasErrors = errors.errorSummary.length !== 0;
+
+    if (isAddingToAnExistingPayment && !formHasErrors) {
+      await api.addFeesToAnExistingPayment(reportId, feeRecordIds, paymentIds, user, userToken);
+      return res.redirect(`/utilisation-reports/${reportId}`);
+    }
+
     const addToAnExistingPaymentViewModel: AddToAnExistingPaymentViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -41,8 +53,10 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
       bank: selectedFeeRecordDetails.bank,
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(selectedFeeRecordDetails.reportPeriod),
       reportedFeeDetails: mapToSelectedReportedFeesDetailsViewModel(selectedFeeRecordDetails),
+      selectedFeeRecordCheckboxIds: checkedCheckboxIds,
       availablePaymentsHeading: getAvailablePaymentsHeading(availablePaymentGroups),
       availablePaymentGroups: mapToAvailablePaymentGroupsViewModel(availablePaymentGroups),
+      errors,
     };
     return renderAddToAnExistingPaymentPage(res, addToAnExistingPaymentViewModel);
   } catch (error) {

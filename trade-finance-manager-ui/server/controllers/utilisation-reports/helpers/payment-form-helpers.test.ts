@@ -1,13 +1,15 @@
 import { PaymentErrorsViewModel } from '../../../types/view-models';
 import {
   AddPaymentFormRequestBody,
+  AddToAnExistingPaymentFormRequestBody,
   EMPTY_ADD_PAYMENT_FORM_VALUES,
   EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
   EditPaymentFormRequestBody,
   extractAddPaymentFormValuesAndValidateIfPresent,
+  extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent,
   extractEditPaymentFormValues,
 } from './payment-form-helpers';
-import { validateAddPaymentRequestFormValues } from './validate-payment-form-values';
+import { validateAddPaymentRequestFormValues, validateAddToAnExistingPaymentRequestFormValues } from './validate-payment-form-values';
 
 jest.mock('./validate-payment-form-values');
 
@@ -294,5 +296,76 @@ describe('payment-form-helpers', () => {
         paymentReference: 'Some reference',
       };
     }
+  });
+
+  describe('extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent', () => {
+    beforeEach(() => {
+      jest.mocked(validateAddToAnExistingPaymentRequestFormValues).mockReturnValue(EMPTY_PAYMENT_ERRORS_VIEW_MODEL);
+    });
+
+    describe('when the requestBody addToAnExistingPaymentFormSubmission field is undefined', () => {
+      const requestBody: AddToAnExistingPaymentFormRequestBody = {};
+
+      it('sets the isAddingToAnExistingPayment property to false', () => {
+        // Act
+        const { isAddingToAnExistingPayment } = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
+
+        // Assert
+        expect(isAddingToAnExistingPayment).toBe(false);
+      });
+
+      it('sets the errors property to the empty payment errors view model', () => {
+        // Act
+        const { errors } = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
+
+        // Assert
+        expect(errors).toEqual(EMPTY_PAYMENT_ERRORS_VIEW_MODEL);
+      });
+
+      it('sets the paymentIds property to an empty array', () => {
+        // Act
+        const { paymentIds } = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
+
+        // Assert
+        expect(paymentIds).toEqual([]);
+      });
+    });
+
+    describe('when the requestBody addToAnExistingPaymentFormSubmission field is defined', () => {
+      const requestBody: AddToAnExistingPaymentFormRequestBody = {
+        addToAnExistingPaymentFormSubmission: 'true',
+        paymentGroup: 'paymentIds-1,2,3',
+      };
+
+      it('sets the isAddingToAnExistingPayment property to true', () => {
+        // Act
+        const { isAddingToAnExistingPayment } = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
+
+        // Assert
+        expect(isAddingToAnExistingPayment).toBe(true);
+      });
+
+      it('sets the errors property to the result of the validateAddPaymentRequestFormValues function', () => {
+        // Arrange
+        const paymentErrors: PaymentErrorsViewModel = {
+          errorSummary: [{ text: 'Some text', href: '#some-href' }],
+        };
+        jest.mocked(validateAddToAnExistingPaymentRequestFormValues).mockReturnValue(paymentErrors);
+
+        // Act
+        const { errors } = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
+
+        // Assert
+        expect(errors).toEqual(paymentErrors);
+      });
+
+      it('sets the paymentIds property to the extracted payment ids from the paymentGroup radio id', () => {
+        // Act
+        const result = extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent(requestBody);
+
+        // Assert
+        expect(result.paymentIds).toEqual([1, 2, 3]);
+      });
+    });
   });
 });
