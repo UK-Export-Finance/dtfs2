@@ -93,4 +93,24 @@ describe(page, () => {
     wrapper.expectElement('[data-cy="continue-button"]').toExist();
     wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
   });
+
+  it('should render the cancel link', () => {
+    // Arrange
+    const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
+    const wrapper = render(addToAnExistingPaymentViewModel);
+
+    // Assert
+    wrapper.expectElement('[data-cy="cancel-link"]').toExist();
+    wrapper.expectText('[data-cy="cancel-link"]').toRead('Cancel');
+  });
+
+  it('should render the back link', () => {
+    // Arrange
+    const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
+    const wrapper = render(addToAnExistingPaymentViewModel);
+
+    // Assert
+    wrapper.expectElement('[data-cy="back-link"]').toExist();
+    wrapper.expectText('[data-cy="back-link"]').toRead('Back');
+  });
 });
