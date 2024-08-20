@@ -1,4 +1,4 @@
-const setupFindUtilisationReportsByYearYearInput = (): void => {
+const enableFindUtilisationReportsByYearDropdownAutocomplete = (): void => {
   const findUtilisationReportsByYearForm: HTMLFormElement | null = document.querySelector('form#find-utilisation-reports-by-year--form');
 
   if (!findUtilisationReportsByYearForm) {
@@ -26,4 +26,4 @@ const setupFindUtilisationReportsByYearYearInput = (): void => {
   });
 };
 
-setupFindUtilisationReportsByYearYearInput();
+enableFindUtilisationReportsByYearDropdownAutocomplete();

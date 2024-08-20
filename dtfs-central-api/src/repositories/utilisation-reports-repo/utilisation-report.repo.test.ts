@@ -1,6 +1,6 @@
 import { when } from 'jest-when';
 import { Not } from 'typeorm';
-import { UtilisationReportEntityMockBuilder, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import { ReportPeriod, UtilisationReportEntity, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from './utilisation-report.repo';
 
 describe('UtilisationReportRepo', () => {
@@ -11,6 +11,9 @@ describe('UtilisationReportRepo', () => {
   describe('findReportingYearsByBankId', () => {
     const findSpy = jest.spyOn(UtilisationReportRepo, 'find');
 
+    const aUtilisationReportEntityWithOnlyReportPeriodSelected = (reportPeriod: ReportPeriod): UtilisationReportEntity =>
+      ({ reportPeriod }) as UtilisationReportEntity;
+
     beforeEach(() => {
       findSpy.mockRejectedValue('Some error');
     });
@@ -19,20 +22,14 @@ describe('UtilisationReportRepo', () => {
       // Arrange
       const bankId = '123';
       const reports = [
-        UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS')
-          .withBankId(bankId)
-          .withReportPeriod({
-            start: { month: 1, year: 2020 },
-            end: { month: 1, year: 2021 },
-          })
-          .build(),
-        UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
-          .withBankId(bankId)
-          .withReportPeriod({
-            start: { month: 1, year: 2023 },
-            end: { month: 1, year: 2023 },
-          })
-          .build(),
+        aUtilisationReportEntityWithOnlyReportPeriodSelected({
+          start: { month: 1, year: 2020 },
+          end: { month: 1, year: 2021 },
+        }),
+        aUtilisationReportEntityWithOnlyReportPeriodSelected({
+          start: { month: 1, year: 2023 },
+          end: { month: 1, year: 2023 },
+        }),
       ];
 
       when(findSpy)

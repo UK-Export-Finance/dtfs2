@@ -5,7 +5,7 @@ import { Bank } from '@ukef/dtfs2-common';
 import { getBanks } from './get-banks.controller';
 import { getAllBanks } from '../../../repositories/banks-repo';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
-import { aBank } from '../../../../test-helpers/test-data';
+import { aBank } from '../../../../test-helpers';
 
 jest.mock('../../../repositories/banks-repo');
 
@@ -53,13 +53,14 @@ describe('getBanks', () => {
         query: { includeReportingYears: 'true' },
       });
 
-    it('responds with a 200 (Ok) and the list of banks with the reporting years', async () => {
+    it('responds with a 200 (Ok) and the list of banks with the reporting years, only fetching reporting years for banks with isVisibleInTfmUtilisationReports set to true', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
       const banks: Bank[] = [
-        { ...aBank(), id: '123' },
-        { ...aBank(), id: '456' },
+        { ...aBank(), isVisibleInTfmUtilisationReports: true, id: '123' },
+        { ...aBank(), isVisibleInTfmUtilisationReports: true, id: '456' },
+        { ...aBank(), isVisibleInTfmUtilisationReports: false, id: '789' },
       ];
       jest.mocked(getAllBanks).mockResolvedValue(banks);
 
@@ -73,6 +74,7 @@ describe('getBanks', () => {
       const banksWithReportingYears = [
         { ...banks[0], reportingYears: [2021, 2022] },
         { ...banks[1], reportingYears: [2022, 2023, 2024] },
+        { ...banks[2], reportingYears: [] },
       ];
 
       // Act
@@ -82,6 +84,7 @@ describe('getBanks', () => {
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(res._getData()).toEqual(banksWithReportingYears);
       expect(res._isEndCalled()).toBe(true);
+      expect(findReportingYearsByBankIdSpy).not.toHaveBeenCalledWith('789');
     });
   });
 });

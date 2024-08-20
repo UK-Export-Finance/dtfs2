@@ -17,7 +17,11 @@ type BankWithReportingYears = Bank & {
 type GetBanksResponseBody = Bank[] | BankWithReportingYears[] | ApiErrorResponseBody;
 
 const mapBankToBankWithReportingYears = async (bank: Bank): Promise<BankWithReportingYears> => {
-  const bankId = bank.id;
+  const { id: bankId, isVisibleInTfmUtilisationReports } = bank;
+  if (!isVisibleInTfmUtilisationReports) {
+    return { ...bank, reportingYears: [] };
+  }
+
   const reportingYearsForBankId = await UtilisationReportRepo.findReportingYearsByBankId(bankId);
   return { ...bank, reportingYears: Array.from(reportingYearsForBankId) };
 };

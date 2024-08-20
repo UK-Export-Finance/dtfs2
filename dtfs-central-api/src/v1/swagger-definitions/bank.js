@@ -4,6 +4,8 @@
  *   Bank:
  *     type: object
  *     properties:
+ *       _id:
+ *         type: string
  *       id:
  *         type: string
  *         example: '9'
@@ -11,20 +13,44 @@
  *       name:
  *         type: string
  *         example: UKEF test bank (Delegated)
- *       emails:
- *         type: array
- *         items:
- *           type: string
- *           example: maker1@ukexportfinance.gov.uk
  *       mga:
  *         type: array
  *         items:
  *           type: string
- *           example: 'document.pdf'
+ *       emails:
+ *         type: array
+ *         items:
+ *           type: string
+ *           format: email
  *       companiesHouseNo:
  *         type: string
  *         example: UKEF0001
  *       partyUrn:
  *         type: string
  *         example: '00318345'
+ *       hasGefAccessOnly:
+ *         type: boolean
+ *       paymentOfficerTeam:
+ *         type: object
+ *           properties:
+ *             teamName:
+ *               type: string
+ *             emails:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 format: email
+ *       utilisationReportPeriodSchedule:
+ *         - $ref: '#/definitions/BankReportPeriodSchedule'
+ *       isVisibleInTfmUtilisationReports:
+ *         type: boolean
+ *   BankWithReportingYears:
+ *     allOf:
+ *       - $ref: '#/definitions/Bank'
+ *       - type: object
+ *         properties:
+ *           reportingYears:
+ *             type: array
+ *             items:
+ *               type: number
  */

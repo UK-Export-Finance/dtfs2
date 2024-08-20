@@ -4,7 +4,7 @@ import { Bank, MonthAndYear, UtilisationReportEntity, UtilisationReportEntityMoc
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { aBank } from '../../../test-helpers/test-data';
+import { aBank, getIncrementingPositiveIntegerIdGenerator } from '../../../test-helpers';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 
 const BASE_URL = '/v1/bank';
@@ -12,9 +12,11 @@ const BASE_URL = '/v1/bank';
 describe(`GET ${BASE_URL}`, () => {
   const BANK_ID_ONE = '123';
   const BANK_ID_TWO = '456';
+  const BANK_ID_THREE = '789';
   const MOCK_BANKS: Bank[] = [
-    { ...aBank(), id: BANK_ID_ONE, _id: new ObjectId() },
-    { ...aBank(), id: BANK_ID_TWO, _id: new ObjectId() },
+    { ...aBank(), id: BANK_ID_ONE, _id: new ObjectId(), isVisibleInTfmUtilisationReports: true },
+    { ...aBank(), id: BANK_ID_TWO, _id: new ObjectId(), isVisibleInTfmUtilisationReports: true },
+    { ...aBank(), id: BANK_ID_THREE, _id: new ObjectId(), isVisibleInTfmUtilisationReports: false },
   ];
 
   beforeEach(async () => {
@@ -50,7 +52,7 @@ describe(`GET ${BASE_URL}`, () => {
   });
 
   describe("when the 'includeReportingYears' query is set to 'true'", () => {
-    const reportIdGenerator = idGenerator();
+    const reportIdGenerator = getIncrementingPositiveIntegerIdGenerator(1);
 
     const aUtilisationReportForStatusBankIdAndMonthlyReportPeriod = (
       status: UtilisationReportReconciliationStatus,
@@ -86,6 +88,7 @@ describe(`GET ${BASE_URL}`, () => {
       const banksWithReportingYears = [
         { ...MOCK_BANKS[0], _id: MOCK_BANKS[0]._id.toString(), reportingYears: [2021, 2022] },
         { ...MOCK_BANKS[1], _id: MOCK_BANKS[1]._id.toString(), reportingYears: [2020, 2023] },
+        { ...MOCK_BANKS[2], _id: MOCK_BANKS[2]._id.toString(), reportingYears: [] },
       ];
 
       // Act
@@ -96,12 +99,4 @@ describe(`GET ${BASE_URL}`, () => {
       expect(response.body).toEqual(banksWithReportingYears);
     });
   });
-
-  function* idGenerator(): Generator<number, number, unknown> {
-    let id = 1;
-    while (true) {
-      yield id;
-      id += 1;
-    }
-  }
 });

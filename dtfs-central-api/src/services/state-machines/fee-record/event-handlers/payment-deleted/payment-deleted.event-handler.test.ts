@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { handleFeeRecordPaymentDeletedEvent } from './payment-deleted.event-handler';
-import { aDbRequestSource } from '../../../../../../test-helpers/test-data/db-request-source';
+import { aDbRequestSource } from '../../../../../../test-helpers';
 
 describe('handleFeeRecordPaymentDeletedEvent', () => {
   const PENDING_RECONCILIATION_REPORT = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();

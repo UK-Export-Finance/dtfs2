@@ -21,6 +21,12 @@ const handleExpressValidatorResult = require('../validation/route-validators/exp
  *     summary: Get an array of all banks in the banks collection
  *     tags: [Bank]
  *     description: Get an array of all banks in the banks collection
+ *     parameters:
+ *       - in: query
+ *         name: includeReportingYears
+ *         schema:
+ *           type: boolean
+ *         description: Whether or not to include the years where a bank has submitted a utilisation report
  *     responses:
  *       200:
  *         description: OK
@@ -29,12 +35,9 @@ const handleExpressValidatorResult = require('../validation/route-validators/exp
  *             schema:
  *               type: array
  *               items:
- *                 allOf:
+ *                 oneOf:
  *                   - $ref: '#/definitions/Bank'
- *                   - type: object
- *                     properties:
- *                       _id:
- *                         example: 123456abc
+ *                   - $ref: '#/definitions/BankWithReportingYears'
  *   post:
  *     summary: Create a bank in banks collection
  *     tags: [Bank]
