@@ -30,7 +30,6 @@ services:
     build:
       context: ./mongodb
       dockerfile: Dockerfile
-    # image: mongo:5.0.5
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=dtfs-submissions
