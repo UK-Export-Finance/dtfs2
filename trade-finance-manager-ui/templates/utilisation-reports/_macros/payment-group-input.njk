@@ -1,0 +1,51 @@
+{% import "./existing-payment-details.njk" as existingPaymentDetails %}
+
+{% macro render(params) %}
+  {% set legendText = params.legendText %}
+  {% set paymentGroups = params.paymentGroups %}
+  {% set errorMessage = params.errorMessage %}
+
+  {% if errorMessage %}
+    <div class="govuk-form-group--error" data-cy="available-payment-groups-error-wrapper">
+  {% endif %}
+  <div class="govuk-form-group" data-cy="payment-group-radio-input">
+    <fieldset class="govuk-fieldset">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l govuk-!-margin-bottom-0">
+        <h2 class="govuk-fieldset__legend--m  govuk-!-margin-top-0" data-cy="payment-group-radio-input-heading">
+          {{ legendText }}
+        </h2>
+      </legend>
+      {% if errorMessage %}
+        <p class="govuk-error-message" data-cy="available-payment-groups-inline-error-wrapper">
+          <span class="govuk-visually-hidden">Error: </span>{{ errorMessage }}
+        </p>
+      {% endif %}
+      {% if paymentGroups.length === 1 %}
+        <input name="paymentGroup" type="hidden" value="{{ paymentGroups[0].radioId }}" data-cy="{{ paymentGroups[0].radioId }}" >
+        {% for payment in paymentGroups[0].payments %}
+          {{ existingPaymentDetails.render({
+            payment: payment
+          }) }}
+        {% endfor %}
+      {% else %}
+        <div class="govuk-radios" data-module="govuk-radios">
+          {% for paymentGroup in paymentGroups %}
+            <div class="govuk-radios__item" data-cy="payment-group--{{ paymentGroup.radioId }}">
+              <input class="govuk-radios__input" name="paymentGroup" type="radio" value="{{ paymentGroup.radioId }}" id="{{ paymentGroup.radioId }}" data-cy="payment-group-input--{{ paymentGroup.radioId }}">
+              <label class="govuk-label govuk-radios__label" for="{{ paymentGroup.radioId }}" data-cy="payment-group-label--{{ paymentGroup.radioId }}">
+                {% for payment in paymentGroup.payments %}
+                  {{ existingPaymentDetails.render({
+                    payment: payment
+                  }) }}
+                {% endfor %}
+              </label>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </fieldset>
+  </div>
+  {% if errorMessage %}
+    </div>
+  {% endif %}
+{% endmacro %}

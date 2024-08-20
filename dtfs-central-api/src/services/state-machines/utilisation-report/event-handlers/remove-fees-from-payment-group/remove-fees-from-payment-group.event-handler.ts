@@ -38,7 +38,7 @@ const updateOtherFeePaymentsInGroup = async (transactionEntityManager: EntityMan
   await Promise.all(
     feeRecordStateMachines.map((stateMachine) =>
       stateMachine.handleEvent({
-        type: 'OTHER_FEE_REMOVED_FROM_GROUP',
+        type: 'OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP',
         payload: {
           transactionEntityManager,
           feeRecordsAndPaymentsMatch,

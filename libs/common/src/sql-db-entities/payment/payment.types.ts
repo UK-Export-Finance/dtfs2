@@ -17,3 +17,8 @@ export type UpdatePaymentParams = {
   reference: string | undefined;
   requestSource: DbRequestSource;
 };
+
+export type UpdateWithAdditionalFeeRecordsParams = {
+  additionalFeeRecords: FeeRecordEntity[];
+  requestSource: DbRequestSource;
+};

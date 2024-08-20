@@ -9,18 +9,18 @@ import { FacilityType } from '../facility-type';
 type FacilityEndDateProperties =
   | {
       isUsingFacilityEndDate: true;
-      bankReviewDate: Date | null;
-      facilityEndDate?: null;
+      facilityEndDate?: Date | null;
+      bankReviewDate?: null;
     }
   | {
       isUsingFacilityEndDate: false;
-      bankReviewDate?: null;
-      facilityEndDate?: Date | null;
+      facilityEndDate?: null;
+      bankReviewDate?: Date | null;
     }
   | {
       isUsingFacilityEndDate?: null;
-      bankReviewDate?: null;
       facilityEndDate?: null;
+      bankReviewDate?: null;
     };
 
 /**

@@ -499,14 +499,13 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
 };
 
 /**
- * Populates the tfmObject with date values
- * @param {import('@ukef/dtfs2-common').TfmFacility} tfmObject
+ * Populates the tfmObject with cover end date values
+ * @param {import('@ukef/dtfs2-common').FacilityAmendmentTfmObject} tfmObject
  * @param {{ coverEndDate?: number } | undefined} latestCoverEndDateResponse
- * @param {{ facilityEndDate?: string } | undefined} latestFacilityEndDateDataResponse
  * @param {string} facilityId
- * @returns {import('@ukef/dtfs2-common').TfmFacility & { coverEndDate?: string, amendmentExposurePeriodInMonths?: number, facilityEndDate?: string }}
+ * @returns {Promise<import('@ukef/dtfs2-common').FacilityAmendmentTfmObject>}
  */
-const addLatestAmendmentDates = async (tfmObject, latestCoverEndDateResponse, latestFacilityEndDateDataResponse, facilityId) => {
+const addLatestAmendmentCoverEndDate = async (tfmObject, latestCoverEndDateResponse, facilityId) => {
   const existingFacility = await api.findOneFacility(facilityId);
 
   if (!existingFacility) {
@@ -515,13 +514,31 @@ const addLatestAmendmentDates = async (tfmObject, latestCoverEndDateResponse, la
 
   const coverEndDate = latestCoverEndDateResponse?.coverEndDate;
   const amendmentExposurePeriodInMonths = coverEndDate ? await calculateAmendmentDateTenor(coverEndDate, existingFacility) : undefined;
-  const facilityEndDate = latestFacilityEndDateDataResponse?.facilityEndDate;
 
   return {
     ...tfmObject,
     coverEndDate,
     amendmentExposurePeriodInMonths,
-    facilityEndDate,
+  };
+};
+
+/**
+ * Populates the tfmObject with facility end date values
+ * @param {import('@ukef/dtfs2-common').FacilityAmendmentTfmObject} tfmObject
+ * @param {{facilityEndDate?: string, bankReviewDate?: string, isUsingFacilityEndDate?: boolean }} latestFacilityEndDateDataResponse
+ * @returns {Promise<import('@ukef/dtfs2-common').FacilityAmendmentTfmObject>}
+ */
+const addLatestAmendmentFacilityEndDate = async (tfmObject, latestFacilityEndDateDataResponse) => {
+  if (!latestFacilityEndDateDataResponse) {
+    return tfmObject;
+  }
+
+  const { isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = latestFacilityEndDateDataResponse;
+  return {
+    ...tfmObject,
+    isUsingFacilityEndDate,
+    facilityEndDate: isUsingFacilityEndDate ? facilityEndDate : undefined,
+    bankReviewDate: isUsingFacilityEndDate === false ? bankReviewDate : undefined,
   };
 };
 
@@ -571,7 +588,8 @@ module.exports = {
   calculateUkefExposure,
   formatCoverEndDate,
   addLatestAmendmentValue,
-  addLatestAmendmentDates,
+  addLatestAmendmentCoverEndDate,
+  addLatestAmendmentFacilityEndDate,
   calculateAmendmentDateTenor,
   calculateAmendmentExposure,
   calculateAcbsUkefExposure,
