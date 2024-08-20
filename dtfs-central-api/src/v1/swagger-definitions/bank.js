@@ -32,13 +32,13 @@
  *         type: boolean
  *       paymentOfficerTeam:
  *         type: object
- *           properties:
- *             teamName:
- *               type: string
- *             emails:
- *               type: array
- *               items:
- *                 type: string
+ *         properties:
+ *           teamName:
+ *             type: string
+ *           emails:
+ *             type: array
+ *             items:
+ *               - type: string
  *                 format: email
  *       utilisationReportPeriodSchedule:
  *         - $ref: '#/definitions/BankReportPeriodSchedule'
