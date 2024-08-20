@@ -11,11 +11,11 @@ export const getBackLinkUrl = (reportId: string, feeRecordIds: number[]): string
 
   const commaSeparatedFeeRecordIds = feeRecordIds.join(',');
 
-  const feeRecordIdsURLParams = new URLSearchParams({
+  const urlParams = new URLSearchParams({
     selectedFeeRecordIds: commaSeparatedFeeRecordIds,
   }).toString();
 
-  const urlWithParams = `${urlWithoutParams}?${feeRecordIdsURLParams}`;
+  const urlWithParams = `${urlWithoutParams}?${urlParams}`;
 
   const urlWithParamsMaxLength = MAX_URL_CHARACTERS - BASE_URL_CHARACTER_ALLOWANCE;
   if (urlWithParams.length > urlWithParamsMaxLength) {
