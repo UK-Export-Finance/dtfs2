@@ -33,6 +33,7 @@ describe(page, () => {
     facilityIdQueryError: undefined,
     facilityIdQuery,
     keyingSheet: [],
+    paymentDetails: [],
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -209,5 +210,15 @@ describe(page, () => {
     wrapper.expectElement(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-to-do-button"]`).notToExist();
 
     wrapper.expectElement(`${keyingSheetTabSelector} table[data-cy="keying-sheet-table"]`).toExist();
+  });
+
+  it('should render the payment details tab with headings and text when the payment details array is empty', () => {
+    const wrapper = getWrapper({ ...params, paymentDetails: [] });
+    const paymentDetailsTabSelector = 'div#payment-details';
+
+    wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
+    wrapper
+      .expectText(`${paymentDetailsTabSelector} p`)
+      .toMatch(/Payment details will be displayed when payments have been entered on the premium payments tab./);
   });
 });

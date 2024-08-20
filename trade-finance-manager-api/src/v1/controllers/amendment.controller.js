@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_QUERIES } = require('@ukef/dtfs2-common');
+const util = require('util');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
@@ -191,7 +192,9 @@ const getAllAmendments = async (req, res) => {
 
 const createFacilityAmendment = async (req, res) => {
   const { facilityId } = req.body;
-  const { amendmentId } = await api.createFacilityAmendment(facilityId, generateTfmAuditDetails(req.user._id));
+  const response = await api.createFacilityAmendment(facilityId, generateTfmAuditDetails(req.user._id));
+  console.info(util.inspect(response, { showHidden: false, depth: null, colors: true }));
+  const { amendmentId } = response;
   if (amendmentId) {
     return res.status(200).send({ amendmentId });
   }
