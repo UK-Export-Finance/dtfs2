@@ -82,52 +82,23 @@ context('Add a Loan to a Deal', () => {
 
       const row = pages.contract.loansTransactionsTable.row(loanId);
 
-      row
-        .nameLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal(LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
-        });
+      cy.assertText(row.nameLink, LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
 
-      row
-        .loanStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(row.loanStatus, 'Completed');
 
-      row
-        .facilityValue()
-        .invoke('text')
-        .then((text) => {
-          const expectedValue = `${deal.submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`;
+      cy.assertText(row.facilityValue, `${deal.submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`);
 
-          expect(text.trim()).equal(expectedValue);
-        });
+      cy.assertText(row.facilityStage, 'Unconditional');
 
-      row
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Unconditional');
-        });
+      cy.assertText(
+        row.requestedCoverStartDate,
+        `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear}`,
+      );
 
-      row
-        .requestedCoverStartDate()
-        .invoke('text')
-        .then((text) => {
-          const coverStartDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear}`;
-
-          expect(text.trim()).equal(coverStartDate);
-        });
-
-      row
-        .coverEndDate()
-        .invoke('text')
-        .then((text) => {
-          const expectedDate = `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear}`;
-          expect(text.trim()).equal(expectedDate);
-        });
+      cy.assertText(
+        row.coverEndDate,
+        `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear}`,
+      );
     });
   });
 
@@ -154,12 +125,7 @@ context('Add a Loan to a Deal', () => {
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
-        row
-          .loanStatus()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal('Incomplete');
-          });
+        cy.assertText(row.loanStatus, 'Incomplete');
 
         // check has has generic message on name and delete as name not set
         row.nameLink().contains('Loan’s reference number not entered');

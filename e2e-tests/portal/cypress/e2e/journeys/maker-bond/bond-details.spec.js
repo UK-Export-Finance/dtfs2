@@ -77,26 +77,9 @@ context('Bond Details', () => {
 
     pages.bondDetails.submit().click();
 
-    partials.taskListHeader
-      .itemStatus('bond-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
-
-    partials.taskListHeader
-      .itemStatus('financial-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
-
-    partials.taskListHeader
-      .itemStatus('fee-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('bond-details'), 'Incomplete');
+    cy.assertText(partials.taskListHeader.itemStatus('financial-details'), 'Incomplete');
+    cy.assertText(partials.taskListHeader.itemStatus('fee-details'), 'Incomplete');
 
     pages.bondDetails.bondDetails().click();
     pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
@@ -156,26 +139,9 @@ context('Bond Details', () => {
 
     pages.bondDetails.submit().click();
 
-    partials.taskListHeader
-      .itemStatus('bond-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
-
-    partials.taskListHeader
-      .itemStatus('financial-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
-
-    partials.taskListHeader
-      .itemStatus('fee-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('bond-details'), 'Completed');
+    cy.assertText(partials.taskListHeader.itemStatus('financial-details'), 'Incomplete');
+    cy.assertText(partials.taskListHeader.itemStatus('fee-details'), 'Incomplete');
   });
 
   describe('When a user selects `unissued` facility stage', () => {
@@ -239,19 +205,9 @@ context('Bond Details', () => {
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row
-          .uniqueNumberLink()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal('Bond’s reference number not entered');
-          });
+        cy.assertText(row.uniqueNumberLink(), 'Bond’s reference number not entered');
 
-        row
-          .facilityStage()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal('Unissued');
-          });
+        cy.assertText(row.facilityStage(), 'Unissued');
 
         // assert that clicking the `unique number` link progesses to the bond page
         row.uniqueNumberLink().click();

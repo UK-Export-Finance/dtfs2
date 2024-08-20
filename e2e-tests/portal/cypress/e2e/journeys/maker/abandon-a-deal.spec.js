@@ -33,12 +33,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
 
     cy.title().should('eq', `Abandon Deal${defaults.pageTitleAppend}`);
 
-    contractDelete
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`Are you sure you want to abandon ${deal.additionalRefName}?`);
-      });
+    cy.assertText(contractDelete.heading(), `Are you sure you want to abandon ${deal.additionalRefName}?`);
 
     // cancel
     contractDelete.cancel().click();
@@ -88,26 +83,14 @@ context('A maker selects to abandon a contract from the view-contract page', () 
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
-    successMessage
-      .successMessageListItem()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.match(/Supply Contract abandoned./);
-      });
+
+    cy.assertText(successMessage.successMessageListItem(), 'Supply Contract abandoned.');
 
     // visit the deal and confirm the updates have been made
     contract.visit(deal);
-    contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Abandoned');
-      });
-    contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Draft');
-      });
+
+    cy.assertText(contract.status(), 'Abandoned');
+
+    cy.assertText(contract.previousStatus(), 'Draft');
   });
 });

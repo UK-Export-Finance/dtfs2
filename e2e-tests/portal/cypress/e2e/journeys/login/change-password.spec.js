@@ -98,14 +98,11 @@ context('Admin user creates a new user; the new user sets their password and the
 
       // Expect failure
       cy.url().should('match', /change-password/);
-      changePassword
-        .passwordError()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.contain(
-            'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
-          );
-        });
+
+      cy.assertText(
+        changePassword.passwordError(),
+        'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
+      );
 
       // Try changing with wrong current password
       changePassword.currentPassword().type('wrongPassword');
@@ -115,12 +112,8 @@ context('Admin user creates a new user; the new user sets their password and the
 
       // Expect failure
       cy.url().should('match', /change-password/);
-      changePassword
-        .currentPasswordError()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.contain('Current password is not correct.');
-        });
+
+      cy.assertText(changePassword.currentPasswordError(), 'Current password is not correct.');
 
       // Try changing it to a password that is too short
       changePassword.currentPassword().type('AbC!2345');
@@ -128,14 +121,10 @@ context('Admin user creates a new user; the new user sets their password and the
       changePassword.confirmPassword().type(' ');
       changePassword.submit().click();
 
-      changePassword
-        .passwordError()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.contain(
-            'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
-          );
-        });
+      cy.assertText(
+        changePassword.passwordError(),
+        'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
+      );
     });
 
     it('should change the password', () => {
@@ -181,14 +170,11 @@ context('Admin user creates a new user; the new user sets their password and the
 
       // expect failure
       cy.url().should('match', /change-password/);
-      changePassword
-        .passwordError()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.contain(
-            'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
-          );
-        });
+
+      cy.assertText(
+        changePassword.passwordError(),
+        'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
+      );
     });
   });
 });

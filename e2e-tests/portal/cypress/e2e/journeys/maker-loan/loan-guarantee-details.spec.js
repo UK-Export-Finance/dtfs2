@@ -145,17 +145,13 @@ context('Loan Guarantee Details', () => {
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
-        row
-          .nameLink()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal('Loan’s reference number not entered');
-            // assert that clicking the `bank reference number` link progesses to the guarantee details page
-            row.nameLink().click();
-            cy.url().should('include', '/contract');
-            cy.url().should('include', '/loan/');
-            cy.url().should('include', '/guarantee-details');
-          });
+        cy.assertText(row.nameLink, 'Loan’s reference number not entered');
+
+        // assert that clicking the `bank reference number` link progesses to the guarantee details page
+        row.nameLink().click();
+        cy.url().should('include', '/contract');
+        cy.url().should('include', '/loan/');
+        cy.url().should('include', '/guarantee-details');
       });
     });
 

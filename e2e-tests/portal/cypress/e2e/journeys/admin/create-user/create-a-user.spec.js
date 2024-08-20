@@ -146,14 +146,10 @@ context('Admin user creates a new user', () => {
 
     cy.userSetPassword(userWithInvalidPassword.username, userWithInvalidPassword.password);
 
-    changePassword
-      .passwordError()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(
-          'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
-        );
-      });
+    cy.assertText(
+      changePassword.passwordError(),
+      'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
+    );
   });
 
   it('creates a new user with the trusted status', () => {
@@ -245,13 +241,8 @@ context('Admin user creates a new user', () => {
       createUser.createUser().click();
 
       cy.url().should('eq', relative('/admin/users/'));
-      users
-        .row(validUser)
-        .roles()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(READ_ONLY);
-        });
+
+      cy.assertText(users.row(validUser).roles(), READ_ONLY);
     });
 
     it('should unselect other roles if the read-only role is selected', () => {

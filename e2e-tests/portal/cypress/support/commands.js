@@ -29,8 +29,12 @@ import * as api from '../../../gef/cypress/support/commands/api';
 
 const { downloadFile } = require('./portal-api/fileshare');
 
+// Assert an element has some exact text
+Cypress.Commands.add('assertText', require('./utils/assertText'));
+
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+
 // create an element in a div
 Cypress.Commands.add('insertElement', require('./utils/insertElement'));
 

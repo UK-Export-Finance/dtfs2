@@ -37,12 +37,7 @@ context('Dashboard facilities pagination', () => {
     dashboardFacilities.rows().should('have.length', 20);
 
     // test pagination
-    dashboardFacilities
-      .totalItems()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('(21 items)');
-      });
+    cy.assertText(dashboardFacilities.totalItems(), '(21 items)');
 
     dashboardFacilities.first().should('not.exist');
     dashboardFacilities.previous().should('not.exist');
@@ -56,12 +51,7 @@ context('Dashboard facilities pagination', () => {
     dashboardFacilities.rows().should('have.length', 1);
 
     // test pagination
-    dashboardFacilities
-      .totalItems()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('(21 items)');
-      });
+    cy.assertText(dashboardFacilities.totalItems(), '(21 items)');
 
     dashboardFacilities.first().should('exist');
     dashboardFacilities.previous().should('exist');
