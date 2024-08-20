@@ -28,6 +28,8 @@ describe(page, () => {
       yearError,
     });
 
+  const getDatalistSelectorForBankId = (bankId: string) => `datalist#datalist--bankId-${bankId}`;
+
   it('should render the main heading', () => {
     // Arrange
     const wrapper = getWrapper();
@@ -63,9 +65,9 @@ describe(page, () => {
     const wrapper = getWrapper({ bankReportingYearsDataLists });
 
     // Assert
-    wrapper.expectElement('datalist#datalist--bankId-123').toExist();
-    wrapper.expectElement('datalist#datalist--bankId-456').toExist();
-    wrapper.expectElement('datalist#datalist--bankId-789').notToExist();
+    wrapper.expectElement(getDatalistSelectorForBankId('123')).toExist();
+    wrapper.expectElement(getDatalistSelectorForBankId('456')).toExist();
+    wrapper.expectElement(getDatalistSelectorForBankId('789')).notToExist();
   });
 
   it('should render a data list option for each of the bank reporting years with value equal to the year', () => {
@@ -74,12 +76,12 @@ describe(page, () => {
     const wrapper = getWrapper({ bankReportingYearsDataLists });
 
     // Assert
-    wrapper.expectElement('datalist#datalist--bankId-123').toExist();
-    wrapper.expectElement('datalist#datalist--bankId-123 option').toHaveCount(4);
-    wrapper.expectElement('datalist#datalist--bankId-123 option[value="2020"]').toExist();
-    wrapper.expectElement('datalist#datalist--bankId-123 option[value="2021"]').toExist();
-    wrapper.expectElement('datalist#datalist--bankId-123 option[value="2022"]').toExist();
-    wrapper.expectElement('datalist#datalist--bankId-123 option[value="2023"]').toExist();
+    wrapper.expectElement(`${getDatalistSelectorForBankId('123')}`).toExist();
+    wrapper.expectElement(`${getDatalistSelectorForBankId('123')} option`).toHaveCount(4);
+    wrapper.expectElement(`${getDatalistSelectorForBankId('123')} option[value="2020"]`).toExist();
+    wrapper.expectElement(`${getDatalistSelectorForBankId('123')} option[value="2021"]`).toExist();
+    wrapper.expectElement(`${getDatalistSelectorForBankId('123')} option[value="2022"]`).toExist();
+    wrapper.expectElement(`${getDatalistSelectorForBankId('123')} option[value="2023"]`).toExist();
   });
 
   it(`should render a radio button for each bank`, () => {
