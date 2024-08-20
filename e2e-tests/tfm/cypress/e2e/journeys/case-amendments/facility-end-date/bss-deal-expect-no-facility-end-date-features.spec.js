@@ -3,7 +3,7 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
+import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../../e2e-fixtures';
 
 context('Amendments - BSS/EWCS deal does not display any Facility end date pages or fields', () => {
   let dealId;
@@ -23,6 +23,12 @@ context('Amendments - BSS/EWCS deal does not display any Facility end date pages
     });
   });
 
+  beforeEach(() => {
+    cy.login(PIM_USER_1);
+    const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+  });
+
   after(() => {
     cy.deleteDeals(dealId, ADMIN);
     dealFacilities.forEach((facility) => {
@@ -31,21 +37,12 @@ context('Amendments - BSS/EWCS deal does not display any Facility end date pages
   });
 
   it('should not show any facility end date fields in the Details tab', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-
-    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
     facilityPage.facilityIsUsingFacilityEndDate().should('not.exist');
     facilityPage.facilityFacilityEndDate().should('not.exist');
     facilityPage.facilityBankReviewDate().should('not.exist');
   });
 
   it('should go straight from the cover end date amendments page to the review amendment answers page without displaying any facility end date fields', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-
-    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.addAmendmentButton().should('exist');
     amendmentsPage.addAmendmentButton().contains('Add an amendment request');
