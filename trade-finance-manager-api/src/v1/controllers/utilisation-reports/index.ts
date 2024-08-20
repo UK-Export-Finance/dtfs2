@@ -13,3 +13,4 @@ export { patchPayment } from './patch-payment.controller';
 export { postRemoveFeesFromPayment } from './post-remove-fees-from-payment.controller';
 export { putKeyingDataMarkAsDone } from './put-keying-data-mark-as-done.controller';
 export { putKeyingDataMarkAsToDo } from './put-keying-data-mark-as-to-do.controller';
+export { postFeesToAnExistingPayment } from './post-fees-to-an-existing-payment.controller';

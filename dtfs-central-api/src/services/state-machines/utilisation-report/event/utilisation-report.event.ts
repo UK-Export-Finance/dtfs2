@@ -10,6 +10,7 @@ import {
   UtilisationReportMarkFeeRecordsAsReconciledEvent,
   UtilisationReportMarkFeeRecordsAsReadyToKeyEvent,
   UtilisationReportRemoveFeesFromPaymentGroupEvent,
+  UtilisationReportAddFeesToAnExistingPaymentGroupEvent,
 } from '../event-handlers';
 
 export type UtilisationReportEvent =
@@ -23,4 +24,5 @@ export type UtilisationReportEvent =
   | UtilisationReportEditPaymentEvent
   | UtilisationReportMarkFeeRecordsAsReconciledEvent
   | UtilisationReportMarkFeeRecordsAsReadyToKeyEvent
-  | UtilisationReportRemoveFeesFromPaymentGroupEvent;
+  | UtilisationReportRemoveFeesFromPaymentGroupEvent
+  | UtilisationReportAddFeesToAnExistingPaymentGroupEvent;

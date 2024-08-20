@@ -1,6 +1,10 @@
 import { CURRENCY, Currency } from '@ukef/dtfs2-common';
 import { subDays } from 'date-fns';
-import { validateAddPaymentRequestFormValues, validateEditPaymentRequestFormValues } from './validate-payment-form-values';
+import {
+  validateAddPaymentRequestFormValues,
+  validateAddToAnExistingPaymentRequestFormValues,
+  validateEditPaymentRequestFormValues,
+} from './validate-payment-form-values';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { PaymentDateErrorViewModel } from '../../../types/view-models';
@@ -856,5 +860,43 @@ describe('validate-payment-form-values', () => {
         paymentReference: 'REFERENCE',
       };
     }
+  });
+
+  describe('validateAddToAnExistingPaymentRequestFormValues', () => {
+    it('should return error when no payment radio is selected', () => {
+      // Arrange
+      const paymentRadioIds: number[] = [];
+
+      // Act
+      const result = validateAddToAnExistingPaymentRequestFormValues(paymentRadioIds);
+
+      // Assert
+      expect(result.errorSummary).toEqual([{ text: 'Select a payment to add the fee or fees to', href: '#paymentGroup' }]);
+      expect(result.paymentGroupErrorMessage).toBe('Select a payment to add the fee or fees to');
+    });
+
+    it('should not return error when a payment radio is selected', () => {
+      // Arrange
+      const paymentRadioIds: number[] = [1];
+
+      // Act
+      const result = validateAddToAnExistingPaymentRequestFormValues(paymentRadioIds);
+
+      // Assert
+      expect(result.errorSummary).toEqual([]);
+      expect(result.paymentGroupErrorMessage).toBeUndefined();
+    });
+
+    it('should not return error when multiple payments are selected', () => {
+      // Arrange
+      const paymentRadioIds: number[] = [7, 8, 9];
+
+      // Act
+      const result = validateAddToAnExistingPaymentRequestFormValues(paymentRadioIds);
+
+      // Assert
+      expect(result.errorSummary).toEqual([]);
+      expect(result.paymentGroupErrorMessage).toBeUndefined();
+    });
   });
 });
