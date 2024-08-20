@@ -55,19 +55,22 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
   });
 
+  const navigateToAddToExistingPaymentScreen = () => {
+    cy.get('[type="submit"]').contains('Add a payment').click();
+    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
+
+    cy.get('[type="submit"]').contains('Add reported fees to an existing payment').click();
+    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
+  };
+
   const navigateToAddToExistingPaymentScreenForFirstFeeRecord = () => {
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
-    cy.get(`[type="checkbox"][id="feeRecordIds-${FEE_RECORD_ID_ONE}-reportedPaymentsCurrency-${PAYMENT_CURRENCY}-status-${FEE_RECORD_STATUS.TO_DO}"]`).check();
-    cy.get('[type="submit"]').contains('Add a payment').click();
+    getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
-
-    cy.get('[type="submit"]').contains('Add reported fee to an existing payment').click();
-
-    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
+    navigateToAddToExistingPaymentScreen();
   };
 
   describe('when there is one payment group', () => {
@@ -156,4 +159,62 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
     pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
   });
+
+  it('should redirect the user to then premium payments page when user clicks the back or cancel links and persist the selected fees', () => {
+    const FEE_RECORD_ID_THREE = '33';
+    const FEE_RECORD_ID_FOUR = '44';
+    const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
+      .withId(FEE_RECORD_ID_THREE)
+      .withFacilityId('33333333')
+      .withExporter('Exporter 3')
+      .withPaymentCurrency(PAYMENT_CURRENCY)
+      .withFeesPaidToUkefForThePeriod(300)
+      .withFeesPaidToUkefForThePeriodCurrency('EUR')
+      .withPaymentExchangeRate(0.5)
+      .withStatus('TO_DO')
+      .build();
+    const fourthFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
+      .withId(FEE_RECORD_ID_FOUR)
+      .withFacilityId('44444444')
+      .withExporter('Exporter 4')
+      .withPaymentCurrency(PAYMENT_CURRENCY)
+      .withFeesPaidToUkefForThePeriod(400)
+      .withFeesPaidToUkefForThePeriodCurrency('EUR')
+      .withPaymentExchangeRate(0.5)
+      .withPayments([firstPayment])
+      .withStatus('DOES_NOT_MATCH')
+      .build();
+
+    const verifyExpectedFeeRecordCheckboxesAreChecked = () => {
+      getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
+      getFeeRecordCheckbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
+      getFeeRecordCheckbox([FEE_RECORD_ID_TWO, FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH).should('not.be.checked');
+    };
+
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord, fourthFeeRecord]);
+
+    pages.landingPage.visit();
+    cy.login(USERS.PDC_RECONCILE);
+
+    cy.visit(`utilisation-reports/${REPORT_ID}`);
+    getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
+    getFeeRecordCheckbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
+
+    navigateToAddToExistingPaymentScreen();
+
+    pages.utilisationReportAddToAnExistingPaymentPage.backLink().click();
+    verifyExpectedFeeRecordCheckboxesAreChecked();
+
+    navigateToAddToExistingPaymentScreen();
+
+    pages.utilisationReportAddToAnExistingPaymentPage.cancelLink().click();
+    verifyExpectedFeeRecordCheckboxesAreChecked();
+  });
+
+  function getFeeRecordCheckbox(feeRecordIds, paymentCurrency, status) {
+    return cy.get(`[type="checkbox"][id="feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${paymentCurrency}-status-${status}"]`);
+  }
 });
