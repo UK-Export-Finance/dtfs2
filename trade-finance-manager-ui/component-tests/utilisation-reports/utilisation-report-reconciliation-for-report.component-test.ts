@@ -219,6 +219,6 @@ describe(page, () => {
     wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
     wrapper
       .expectText(`${paymentDetailsTabSelector} p`)
-      .toMatch(/Payment details will be displayed when payments has been entered on the premium payments tab./);
+      .toMatch(/Payment details will be displayed when payments have been entered on the premium payments tab./);
   });
 });
