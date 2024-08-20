@@ -1,3 +1,4 @@
+import util from 'util';
 import { AnyZodObject, ZodError } from 'zod';
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
@@ -27,9 +28,22 @@ const getErrorCode = (error: ZodError): ApiErrorCode => {
 export const createValidationMiddlewareForSchema =
   <TSchema extends AnyZodObject>(schema: TSchema) =>
   (req: Request, res: Response<ApiErrorResponseBody>, next: NextFunction) => {
+    console.info({ stepDescription: 'createValidationMiddlewareForSchema', schema });
     const { success, error, data } = schema.safeParse(req.body);
+    console.info(
+      util.inspect(
+        { stepDescription: 'handleExpressValidatorResult', schemaPassResults: { success, error, data } },
+        { showHidden: false, depth: null, colors: true },
+      ),
+    );
 
     if (success) {
+      console.info({
+        stepDescription: 'createValidationMiddlewareForSchema passed, calling next and assigning body',
+        oldBody: req.body as unknown,
+        newBody: data,
+      });
+
       req.body = data;
       return next();
     }
