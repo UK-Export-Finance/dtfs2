@@ -55,13 +55,10 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
   });
 
-  const navigateToAddToExistingPaymentScreen = () => {
-    cy.get('[type="submit"]').contains('Add a payment').click();
-    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
-
-    cy.get('[type="submit"]').contains('Add reported fees to an existing payment').click();
-    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
-  };
+  afterEach(() => {
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+  });
 
   const navigateToAddToExistingPaymentScreenForFirstFeeRecord = () => {
     pages.landingPage.visit();
@@ -70,7 +67,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     cy.visit(`utilisation-reports/${REPORT_ID}`);
     getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
 
-    navigateToAddToExistingPaymentScreen();
+    cy.get('[type="submit"]').contains('Add a payment').click();
+    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
+
+    cy.get('[type="submit"]').contains('Add reported fee to an existing payment').click();
+    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
   };
 
   describe('when there is one payment group', () => {
@@ -154,6 +155,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
   });
 
   it('should add the selected fees to the payments and update the fee record status after clicking the continue button', () => {
+    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
+
+    navigateToAddToExistingPaymentScreenForFirstFeeRecord();
+
     pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
@@ -184,6 +192,14 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       .withPayments([firstPayment])
       .withStatus('DOES_NOT_MATCH')
       .build();
+
+    const navigateToAddToExistingPaymentScreen = () => {
+      cy.get('[type="submit"]').contains('Add a payment').click();
+      cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
+
+      cy.get('[type="submit"]').contains('Add reported fees to an existing payment').click();
+      cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
+    };
 
     const verifyExpectedFeeRecordCheckboxesAreChecked = () => {
       getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
