@@ -18,7 +18,7 @@ import {
 } from './utilisation-report-cell-validators';
 
 export const validateCsvHeaders = (
-  csvDataRow: Record<string, UtilisationReportRawCsvCellDataWithLocation | undefined>,
+  csvDataRow: UtilisationReportRawCsvRowDataWithLocations,
 ): { missingHeaderErrors: UtilisationReportDataValidationError[]; availableHeaders: string[] } => {
   const headers = Object.keys(csvDataRow);
   const requiredHeaders = [

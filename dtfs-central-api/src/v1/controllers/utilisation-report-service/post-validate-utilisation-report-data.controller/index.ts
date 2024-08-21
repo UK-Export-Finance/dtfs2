@@ -1,26 +1,20 @@
-import { ApiError, CustomExpressRequest, UtilisationReportRawCsvCellDataWithLocation } from '@ukef/dtfs2-common';
+import { ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { validateCsvData } from '../../../../services/utilisation-report-data-validator';
+import { PostValidateUtilisationReportDataPayload } from '../../../routes/middleware/payload-validation/validate-post-validate-utilisation-report-data-payload';
 
-// QQ this should be exporting somewhere to be used for payload validation for the post upload route
-// QQ do we really want to use the upload request body though....
-// QQ the report data should be with keys of array of objects where the keys are the headers and then for each header
-// QQ we have { value: string, column: string, row: number }
-type PreReportDataValidationPostUploadUtilisationReportRequest = CustomExpressRequest<{
-  reqBody: {
-    reportData: Record<string, UtilisationReportRawCsvCellDataWithLocation>[];
-  };
+type PostValidateUtilisationReportDataRequest = CustomExpressRequest<{
+  reqBody: PostValidateUtilisationReportDataPayload;
 }>;
 
-export const postValidateUtilisationReportData = (req: PreReportDataValidationPostUploadUtilisationReportRequest, res: Response) => {
+export const postValidateUtilisationReportData = (req: PostValidateUtilisationReportDataRequest, res: Response) => {
   const { reportData } = req.body;
 
   try {
     const csvValidationErrors = validateCsvData(reportData);
     return res.status(HttpStatusCode.Ok).send({ csvValidationErrors });
   } catch (error) {
-    // QQ check happy with this error handling
     const errorMessage = 'Failed to validate report data';
     console.error(errorMessage, error);
     if (error instanceof ApiError) {

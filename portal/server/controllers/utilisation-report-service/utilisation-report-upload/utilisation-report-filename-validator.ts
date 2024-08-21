@@ -1,14 +1,14 @@
-const { isEqualMonthAndYear } = require('@ukef/dtfs2-common');
-const { MONTH_NAMES, FILE_UPLOAD } = require('../../../constants');
+import { isEqualMonthAndYear, OneIndexedMonth, ReportPeriod } from '@ukef/dtfs2-common';
+import { MONTH_NAMES, FILE_UPLOAD } from '../../../constants';
 
 /**
  * Gets the regex group for all the possible month representations we
  * are expecting for the supplied one indexed month
- * @param {import('@ukef/dtfs2-common').OneIndexedMonth} oneIndexedMonth - The one indexed month
- * @returns {string} A regex string for the given month and year combination
+ * @param oneIndexedMonth - The one indexed month
+ * @returns A regex string for the given month and year combination
  * @throws {Error} If a month matching the supplied `longMonthName` cannot be found
  */
-const getMonthRegexString = (oneIndexedMonth) => {
+const getMonthRegexString = (oneIndexedMonth: OneIndexedMonth): string => {
   const monthNames = Object.values(MONTH_NAMES).find(({ index }) => index === oneIndexedMonth);
   if (!monthNames) {
     throw new Error(`Failed to find month names for one indexed month '${oneIndexedMonth}'`);
@@ -19,8 +19,8 @@ const getMonthRegexString = (oneIndexedMonth) => {
 /**
  * Gets the regex instance for the supplied report period using
  * the format which is expected for the filename
- * @param  {import('@ukef/dtfs2-common').ReportPeriod} dueReportPeriod - The due report period
- * @returns {RegExp} The regex for the supplied report period
+ * @param dueReportPeriod - The due report period
+ * @returns The regex for the supplied report period
  * @example
  * // Monthly, January 2024
  * const dueReportPeriod = {
@@ -40,7 +40,7 @@ const getMonthRegexString = (oneIndexedMonth) => {
  *   dueReportPeriod,
  * ); // equivalent to '/(February|Feb|02)[-_]2024/i'
  */
-const getFilenameReportPeriodRegex = (dueReportPeriod) => {
+const getFilenameReportPeriodRegex = (dueReportPeriod: ReportPeriod): RegExp => {
   const endMonthRegexString = getMonthRegexString(dueReportPeriod.end.month);
   const endYear = dueReportPeriod.end.year.toString();
   const regexString = [endMonthRegexString, endYear].join(FILE_UPLOAD.FILENAME_SEPARATOR_GROUP);
@@ -48,21 +48,20 @@ const getFilenameReportPeriodRegex = (dueReportPeriod) => {
 };
 
 /**
- * Checks whether or not the supplied report period exists
- * in the supplied filename
- * @param {import('@ukef/dtfs2-common').ReportPeriod} dueReportPeriod - The due report period
- * @param {string} filename - The filename
- * @return {boolean}
+ * Checks whether or not the supplied report period exists in the supplied filename
+ * @param dueReportPeriod - The due report period
+ * @param filename - The filename
+ * @return A boolean indicating whether or not the supplied report period exists on the supplied file name
  */
-const isReportPeriodInFilename = (dueReportPeriod, filename) => {
+const isReportPeriodInFilename = (dueReportPeriod: ReportPeriod, filename: string): boolean => {
   const filenameReportPeriodRegex = getFilenameReportPeriodRegex(dueReportPeriod);
   return filenameReportPeriodRegex.test(filename);
 };
 
 /**
  * Gets an example filename for the specified report period
- * @param {import('@ukef/dtfs2-common').ReportPeriod} dueReportPeriod - The due report period
- * @returns {string} An example filename
+ * @param dueReportPeriod - The due report period
+ * @returns An example filename
  * @example
  * const dueReportPeriod = {
  *   start: { month: 1, year: 2024 },
@@ -70,7 +69,7 @@ const isReportPeriodInFilename = (dueReportPeriod, filename) => {
  * };
  * const exampleFilenameReportPeriod = getExampleFilenameReportPeriod(dueReportPeriod); // '03-2024'
  */
-const getExampleFilenameReportPeriod = (dueReportPeriod) => {
+const getExampleFilenameReportPeriod = (dueReportPeriod: ReportPeriod): string => {
   const exampleFilename = `${dueReportPeriod.end.month}-${dueReportPeriod.end.year}`;
 
   const singleDigitMonthRegex = /^(\d{1}-)/;
@@ -79,21 +78,16 @@ const getExampleFilenameReportPeriod = (dueReportPeriod) => {
 };
 
 /**
- * @typedef FilenameValidationError
- * @property {string} [filenameError]
- */
-
-/**
  * Given a filename and a report period, this function checks whether
  * or not the filename contains a month and, if it does, whether or
  * not the month matches the report period passed in. If it does match,
  * it returns an empty object. Otherwise, it returns an object containing
  * a filename error message related to the specific case reached
- * @param {string} filename - The filename, using either '_' or '-' as a separator
- * @param {import('@ukef/dtfs2-common').ReportPeriod} dueReportPeriod - The due report period
- * @returns {FilenameValidationError}
+ * @param filename - The filename, using either '_' or '-' as a separator
+ * @param dueReportPeriod - The due report period
+ * @returns Object containing file name error if present, or empty object if no error
  */
-const validateFilenameFormat = (filename, dueReportPeriod) => {
+export const validateFilenameFormat = (filename: string, dueReportPeriod: ReportPeriod): { filenameError?: string } => {
   if (filename.includes(FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR)) {
     const filenameError = `Report filename must not contain '${FILE_UPLOAD.FILENAME_SUBMITTED_INDICATOR}'`;
     return { filenameError };
@@ -115,8 +109,4 @@ const validateFilenameFormat = (filename, dueReportPeriod) => {
     return { filenameError };
   }
   return {};
-};
-
-module.exports = {
-  validateFilenameFormat,
 };

@@ -6,3 +6,4 @@ export * from './validate-put-keying-data-mark-as-payload';
 export * from './validate-post-remove-fees-from-payment-group-payload';
 export * from './validate-put-facility-amendment-payload';
 export * from './validate-post-facility-amendment-payload';
+export * from './validate-post-validate-utilisation-report-data-payload';

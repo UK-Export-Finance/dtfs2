@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { HttpStatusCode, isAxiosError } from 'axios';
 import api from '../../api';
 
-type ValidateUtilisationReportDataRequestBody = {
+export type ValidateUtilisationReportDataRequestBody = {
   reportData: Record<string, UtilisationReportRawCsvCellDataWithLocation>[];
 };
 

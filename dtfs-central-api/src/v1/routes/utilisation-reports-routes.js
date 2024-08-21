@@ -8,6 +8,7 @@ const {
   validatePostKeyingDataPayload,
   validatePutKeyingDataMarkAsPayload,
   validatePostRemoveFeesFromPaymentGroupPayload,
+  validatePostPostValidateUtilisationReportDataPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
@@ -68,7 +69,7 @@ const utilisationReportsRouter = express.Router();
  */
 utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValidator, postUploadUtilisationReport);
 
-utilisationReportsRouter.route('/validate').post(postValidateUtilisationReportData);
+utilisationReportsRouter.route('/validate').post(validatePostPostValidateUtilisationReportDataPayload, postValidateUtilisationReportData);
 
 /**
  * @openapi
