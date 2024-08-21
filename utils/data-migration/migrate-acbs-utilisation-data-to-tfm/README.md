@@ -5,7 +5,8 @@ This script migrates ACBS facility utilisation data to TFM by reading from a JSO
 ## JSON Input File Structure
 
 The script expects a JSON file with the following structure:
-```ts
+
+```
 [
   {
     "facilityId": "string",
