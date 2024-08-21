@@ -38,7 +38,7 @@ const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
  */
 export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promise<void> => {
   // Argument validation
-  if (!eStoreData?.siteId || !eStoreData?.buyerName || !eStoreData?.exporterName || !eStoreData.dealIdentifier) {
+  if (!eStoreData.dealId || !eStoreData?.siteId || !eStoreData?.exporterName || !eStoreData?.buyerName || !eStoreData.dealIdentifier) {
     console.error('Invalid arguments provided for eStore buyer directory creation');
     return;
   }

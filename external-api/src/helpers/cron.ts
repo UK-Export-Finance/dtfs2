@@ -83,8 +83,8 @@ export const cron = (eStoreCronJob: EstoreCronJob): boolean => {
 
   const cronJob = new CronJob(
     String(ESTORE_CRON_MANAGER_SCHEDULE), // Cron schedule
-    () => onTick(data), // On Tick
-    () => onComplete(data, category), // On complete
+    () => onTick(data),
+    () => onComplete(data, category),
     false, // Start the job
     TZ, // Timezone
   );

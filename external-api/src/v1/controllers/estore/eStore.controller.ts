@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
-import { ObjectId } from 'mongodb';
+import { InsertOneResult, ObjectId } from 'mongodb';
 import { Response } from 'express';
-import { update } from '../../../repositories/estore/estore-repo';
+import { find, insert, update } from '../../../repositories/estore/estore-repo';
 import { getCollection } from '../../../database';
 import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
 import { EstoreRequest } from '../../../helpers/types/estore';
@@ -55,7 +55,6 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
     }
 
     // Ensure new CRON job creation
-    const cronJobLogs = await getCollection('cron-job-logs');
     const tfmDeals = await getCollection('tfm-deals');
 
     const { dealId, siteId, facilityIdentifiers, supportingInformation, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = body;
@@ -137,9 +136,9 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
     }
 
     // Returns the document from `cron-job-logs` collection if exists
-    const cronJobEntry = await cronJobLogs.findOne({ 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } });
+    const cronJobExist = await find(new ObjectId(eStoreData.dealId));
 
-    if (!cronJobEntry) {
+    if (!cronJobExist) {
       /**
        * Send `201` status code back to avoid
        * `TFM-API` awaiting.
@@ -148,7 +147,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
       res.status(HttpStatusCode.Created).send({ status: HttpStatusCode.Created, message: 'eStore job accepted' });
 
       // Step 1: Add CRON job to the collection
-      const { insertedId: _id } = await cronJobLogs.insertOne({
+      const inserted = await insert({
         payload: eStoreData,
         timestamp: getNowAsEpoch(),
         cron: {
@@ -159,6 +158,12 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
           facility: { status: ESTORE_CRON_STATUS.PENDING },
         },
       });
+
+      if (!inserted) {
+        throw new Error('eStore CRON job log insertion failed');
+      }
+
+      const { insertedId: _id } = inserted as InsertOneResult;
 
       // Step 2: Site exists check
       console.info('Initiating eStore site existence check for exporter %s', eStoreData.exporterName);
