@@ -4,7 +4,7 @@ export { generateFacilityUtilisationError } from './generate-facility-utilisatio
 export { generateTotalFeesAccruedError } from './generate-total-fees-accrued-error';
 export { generateTotalFeesAccruedCurrencyError } from './generate-total-fees-accrued-currency-error';
 export { generateTotalFeesAccruedExchangeRateError } from './generate-total-fees-accrued-exchange-rate-error';
-export { generateMonthlyFeesPaidError } from './generate-monthly-fees-paid-error';
-export { generateMonthlyFeesPaidCurrencyError } from './generate-monthly-fees-paid-currency-error';
+export { generateFeesPaidForThePeriodError } from './generate-fees-paid-for-the-period-error';
+export { generateFeesPaidForThePeriodCurrencyError } from './generate-fees-paid-for-the-period-currency-error';
 export { generatePaymentCurrencyError } from './generate-payment-currency-error';
 export { generatePaymentExchangeRateError } from './generate-payment-exchange-rate-error';

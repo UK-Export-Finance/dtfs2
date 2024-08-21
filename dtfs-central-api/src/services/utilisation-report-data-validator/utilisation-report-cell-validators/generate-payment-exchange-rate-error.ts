@@ -3,6 +3,11 @@ import { FILE_UPLOAD } from '../../../constants/file-upload';
 import { EXCHANGE_RATE_REGEX } from '../../../constants/regex';
 import { UtilisationReportRowValidationErrorGenerator } from './types/validation-error-generator';
 
+/**
+ * Generate and return error for payment exchange rate entry in the csv row if value is invalid
+ * @param csvDataRow - The row data for which to validate the payment exchange rate
+ * @returns The error if the payment exchange rate entry is invalid, null if the payment exchange rate entry is valid
+ */
 export const generatePaymentExchangeRateError: UtilisationReportRowValidationErrorGenerator = (csvDataRow) => {
   if (
     !csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value &&

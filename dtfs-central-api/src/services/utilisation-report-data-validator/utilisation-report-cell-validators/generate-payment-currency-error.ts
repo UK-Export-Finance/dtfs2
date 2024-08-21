@@ -2,6 +2,11 @@ import validator from 'validator';
 import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
 import { UtilisationReportRowValidationErrorGenerator } from './types/validation-error-generator';
 
+/**
+ * Generate and return error for payment currency entry in the csv row if value is invalid
+ * @param csvDataRow - The row data for which to validate the payment currency
+ * @returns The error if the payment currency entry is invalid, null if the payment currency entry is valid
+ */
 export const generatePaymentCurrencyError: UtilisationReportRowValidationErrorGenerator = (csvDataRow) => {
   if (!csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value && !csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value) {
     return null;

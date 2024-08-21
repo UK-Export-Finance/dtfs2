@@ -8,13 +8,13 @@ import {
   generateUkefFacilityIdError,
   generateBaseCurrencyError,
   generateFacilityUtilisationError,
-  generateMonthlyFeesPaidError,
   generateTotalFeesAccruedError,
   generateTotalFeesAccruedCurrencyError,
   generateTotalFeesAccruedExchangeRateError,
-  generateMonthlyFeesPaidCurrencyError,
   generatePaymentCurrencyError,
   generatePaymentExchangeRateError,
+  generateFeesPaidForThePeriodError,
+  generateFeesPaidForThePeriodCurrencyError,
 } from './utilisation-report-cell-validators';
 
 export const validateCsvHeaders = (
@@ -76,10 +76,10 @@ export const validateCsvCellData = (
     { header: UTILISATION_REPORT_HEADERS.BASE_CURRENCY, errorGenerator: generateBaseCurrencyError },
     { header: UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION, errorGenerator: generateFacilityUtilisationError },
     { header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED, errorGenerator: generateTotalFeesAccruedError },
-    { header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD, errorGenerator: generateMonthlyFeesPaidError },
+    { header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD, errorGenerator: generateFeesPaidForThePeriodError },
     {
       header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY,
-      errorGenerator: generateMonthlyFeesPaidCurrencyError,
+      errorGenerator: generateFeesPaidForThePeriodCurrencyError,
     },
   ];
 

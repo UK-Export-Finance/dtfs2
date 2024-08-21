@@ -1,17 +1,17 @@
-const { generateFacilityUtilisationError } = require('./generate-facility-utilisation-error');
-const { FILE_UPLOAD } = require('../../../constants/file-upload');
+import { generateFacilityUtilisationError } from './generate-facility-utilisation-error';
+import { FILE_UPLOAD } from '../../../constants/file-upload';
 
 describe('generateFacilityUtilisationError', () => {
   const testExporterName = 'test-exporter';
-  it('returns an error when the value is missing', async () => {
+  it('returns an error when the value is missing', () => {
     const nullFacilityUtilisation = {
       value: null,
-      column: 1,
+      column: 'A',
       row: 1,
     };
     const expectedError = {
       errorMessage: 'Facility utilisation must have an entry',
-      column: 1,
+      column: 'A',
       row: 1,
       value: null,
       exporter: testExporterName,
@@ -22,15 +22,15 @@ describe('generateFacilityUtilisationError', () => {
     expect(facilityUtilisationError).toEqual(expectedError);
   });
 
-  it('returns an error when the value is not a number', async () => {
+  it('returns an error when the value is not a number', () => {
     const invalidFacilityUtilisation = {
       value: 'abc',
-      column: 1,
+      column: 'A',
       row: 1,
     };
     const expectedError = {
       errorMessage: 'Facility utilisation must be a number with a maximum of two decimal places',
-      column: 1,
+      column: 'A',
       row: 1,
       value: 'abc',
       exporter: testExporterName,
@@ -41,15 +41,15 @@ describe('generateFacilityUtilisationError', () => {
     expect(facilityUtilisationError).toEqual(expectedError);
   });
 
-  it('returns an error when the value has more than 2 decimal places', async () => {
+  it('returns an error when the value has more than 2 decimal places', () => {
     const invalidFacilityUtilisation = {
       value: '0.123',
-      column: 1,
+      column: 'A',
       row: 1,
     };
     const expectedError = {
       errorMessage: 'Facility utilisation must be a number with a maximum of two decimal places',
-      column: 1,
+      column: 'A',
       row: 1,
       value: '0.123',
       exporter: testExporterName,
@@ -60,15 +60,15 @@ describe('generateFacilityUtilisationError', () => {
     expect(facilityUtilisationError).toEqual(expectedError);
   });
 
-  it('returns an error when the value is too long', async () => {
+  it('returns an error when the value is too long', () => {
     const invalidFacilityUtilisation = {
       value: '1473812445951826593.52',
-      column: 1,
+      column: 'A',
       row: 1,
     };
     const expectedError = {
       errorMessage: `Facility utilisation must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
-      column: 1,
+      column: 'A',
       row: 1,
       value: '1473812445951826593.52',
       exporter: testExporterName,
@@ -79,10 +79,10 @@ describe('generateFacilityUtilisationError', () => {
     expect(facilityUtilisationError).toEqual(expectedError);
   });
 
-  it('returns null if the value is a valid facility utilisation', async () => {
+  it('returns null if the value is a valid facility utilisation', () => {
     const validFacilityUtilisation = {
       value: '1000000',
-      column: 1,
+      column: 'A',
       row: 1,
     };
 

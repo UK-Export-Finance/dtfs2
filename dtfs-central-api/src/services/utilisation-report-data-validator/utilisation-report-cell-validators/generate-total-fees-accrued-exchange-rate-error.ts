@@ -5,8 +5,8 @@ import { UtilisationReportRowValidationErrorGenerator } from './types/validation
 
 /**
  * Validates an object representing a row of csv data to check if the total fees accrued exchange rate is valid.
- * @param {unknown} csvDataRow - object representing a row of csv data.
- * @returns {object | null} - object comprising of error message and error location or null if valid.
+ * @param csvDataRow - object representing a row of csv data.
+ * @returns - object comprising of error message and error location or null if valid.
  */
 export const generateTotalFeesAccruedExchangeRateError: UtilisationReportRowValidationErrorGenerator = (csvDataRow) => {
   if (
