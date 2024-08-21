@@ -279,7 +279,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
     it('checks selected checkboxes when selected fee record ids query param defined', async () => {
       // Arrange
-      const selectedFeeRecordIdsQueryParam = '2,3';
+      const selectedFeeRecordIdsQueryParam = '1,2,3';
       const { req, res } = httpMocks.createMocks({
         session,
         params: { reportId },
