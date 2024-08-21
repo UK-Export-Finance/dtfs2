@@ -2,7 +2,6 @@ import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common
 import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems, mapKeyingSheetToKeyingSheetViewModel } from './reconciliation-for-report-helper';
 import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import { aFeeRecordPaymentGroup, aFeeRecord, aPayment } from '../../../../test-helpers';
-import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 
 describe('reconciliation-for-report-helper', () => {
   describe('mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems', () => {
@@ -394,7 +393,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].checkboxId).toBe(checkboxId);
     });
 
-    it('sets isChecked to true if the generated checkboxId is recognised by the supplied isCheckboxChecked function', () => {
+    it('sets isChecked to true if the payment groups fee record ids are recognised by the supplied isCheckboxChecked function', () => {
       // Arrange
       const feeRecordId = 1;
       const feeRecordReportedPaymentsCurrency: Currency = 'GBP';
@@ -411,9 +410,7 @@ describe('reconciliation-for-report-helper', () => {
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords: [feeRecord], status }];
 
-      const checkedCheckboxId = `feeRecordIds-${feeRecordId}-reportedPaymentsCurrency-${feeRecordReportedPaymentsCurrency}-status-${status}`;
-
-      const isCheckboxChecked = (checkboxId: PremiumPaymentsTableCheckboxId) => checkboxId === checkedCheckboxId;
+      const isCheckboxChecked = (feeRecordIdsToCheck: number[]) => feeRecordIdsToCheck.every((feeRecordIdToCheck) => feeRecordIdToCheck === feeRecordId);
 
       // Act
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
@@ -422,7 +419,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].isChecked).toBe(true);
     });
 
-    it('sets isChecked to false if the generated checkboxId is not recognised by the supplied isCheckboxChecked function', () => {
+    it('sets isChecked to false if the payment groups fee record ids are not recognised by the supplied isCheckboxChecked function', () => {
       // Arrange
       const feeRecordId = 1;
       const nonMatchingFeeRecordId = 5;
@@ -440,9 +437,8 @@ describe('reconciliation-for-report-helper', () => {
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords: [feeRecord], status }];
 
-      const checkedCheckboxId = `feeRecordIds-${nonMatchingFeeRecordId}-reportedPaymentsCurrency-${feeRecordReportedPaymentsCurrency}-status-${status}`;
-
-      const isCheckboxChecked = (checkboxId: PremiumPaymentsTableCheckboxId) => checkboxId === checkedCheckboxId;
+      const isCheckboxChecked = (feeRecordIdsToCheck: number[]) =>
+        feeRecordIdsToCheck.every((feeRecordIdToCheck) => feeRecordIdToCheck === nonMatchingFeeRecordId);
 
       // Act
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);

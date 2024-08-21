@@ -1,41 +1,53 @@
-import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 import { getIsCheckboxChecked } from './get-is-checkbox-checked';
 
 describe('getIsCheckboxChecked', () => {
   it('should return false when no fee record ids are checked', () => {
     // Arrange
     const checkedFeeRecordIds = new Set([]);
-    const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-10,11,12-reportedPaymentsCurrency-GBP-status-TO_DO`;
+    const checkboxFeeRecordIds = [1];
 
     // Act
     const isCheckboxChecked = getIsCheckboxChecked(checkedFeeRecordIds);
-    const result = isCheckboxChecked(checkboxId);
+    const result = isCheckboxChecked(checkboxFeeRecordIds);
 
     // Assert
     expect(result).toBe(false);
   });
 
-  it('should return false when checkbox ID does not match any selected fee record ids', () => {
+  it('should return false when checkbox fee record ids do not match any checked fee record ids', () => {
     // Arrange
     const checkedFeeRecordIds = new Set([1, 2, 3]);
-    const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-10,11,12-reportedPaymentsCurrency-GBP-status-TO_DO`;
+    const checkboxFeeRecordIds = [10];
 
     // Act
     const isCheckboxChecked = getIsCheckboxChecked(checkedFeeRecordIds);
-    const result = isCheckboxChecked(checkboxId);
+    const result = isCheckboxChecked(checkboxFeeRecordIds);
 
     // Assert
     expect(result).toBe(false);
   });
 
-  it('should return true when checkbox ID matches a selected fee record id', () => {
+  it('should return false when checkbox fee record ids only partially match checked fee record ids', () => {
     // Arrange
-    const checkedFeeRecordIds = new Set([1, 2, 7]);
-    const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-6,7,8-reportedPaymentsCurrency-GBP-status-TO_DO`;
+    const checkedFeeRecordIds = new Set([1, 2, 3]);
+    const checkboxFeeRecordIds = [1, 2, 7];
 
     // Act
     const isCheckboxChecked = getIsCheckboxChecked(checkedFeeRecordIds);
-    const result = isCheckboxChecked(checkboxId);
+    const result = isCheckboxChecked(checkboxFeeRecordIds);
+
+    // Assert
+    expect(result).toBe(false);
+  });
+
+  it('should return true when all checkbox fee record ids match a checked fee record ids', () => {
+    // Arrange
+    const checkedFeeRecordIds = new Set([1, 2, 7]);
+    const checkboxFeeRecordIds = [2, 7];
+
+    // Act
+    const isCheckboxChecked = getIsCheckboxChecked(checkedFeeRecordIds);
+    const result = isCheckboxChecked(checkboxFeeRecordIds);
 
     // Assert
     expect(result).toBe(true);
