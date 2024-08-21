@@ -29,6 +29,9 @@ import 'cypress-file-upload';
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
+// Assert an element has some exact text
+Cypress.Commands.add('assertText', require('./shared-commands/assertText'));
+
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
 

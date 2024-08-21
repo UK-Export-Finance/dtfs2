@@ -107,7 +107,11 @@ context('View dashboard deals as a checker', () => {
 
     cy.assertText(status(gefDealId), gefDeal.status);
 
-    cy.assertText(updated(gefDealId), regexDateTime);
+    updated(gefDealId)
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.match(regexDateTime);
+      });
 
     // link should take you to GEF deal page
     link(gefDealId).click();
@@ -132,7 +136,11 @@ context('View dashboard deals as a checker', () => {
 
     cy.assertText(status(bssDealId), bssDeal.status);
 
-    cy.assertText(updated(bssDealId), regexDateTime);
+    updated(bssDealId)
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.match(regexDateTime);
+      });
 
     // link should take you to BSS deal page
     link(bssDealId).click();

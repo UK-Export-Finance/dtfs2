@@ -146,10 +146,14 @@ context('Admin user creates a new user', () => {
 
     cy.userSetPassword(userWithInvalidPassword.username, userWithInvalidPassword.password);
 
-    cy.assertText(
-      changePassword.passwordError(),
-      'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
-    );
+    changePassword
+      .passwordError()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain(
+          'Your password must be at least 8 characters long and include at least one number, at least one upper-case character, at least one lower-case character and at least one special character. Passwords cannot be re-used.',
+        );
+      });
   });
 
   it('creates a new user with the trusted status', () => {

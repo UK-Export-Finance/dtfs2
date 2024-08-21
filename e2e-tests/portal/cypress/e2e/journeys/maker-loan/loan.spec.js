@@ -82,21 +82,21 @@ context('Add a Loan to a Deal', () => {
 
       const row = pages.contract.loansTransactionsTable.row(loanId);
 
-      cy.assertText(row.nameLink, LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
+      cy.assertText(row.nameLink(), LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
 
-      cy.assertText(row.loanStatus, 'Completed');
+      cy.assertText(row.loanStatus(), 'Completed');
 
-      cy.assertText(row.facilityValue, `${deal.submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`);
+      cy.assertText(row.facilityValue(), `${deal.submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`);
 
-      cy.assertText(row.facilityStage, 'Unconditional');
+      cy.assertText(row.facilityStage(), 'Unconditional');
 
       cy.assertText(
-        row.requestedCoverStartDate,
+        row.requestedCoverStartDate(),
         `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.requestedCoverStartDateYear}`,
       );
 
       cy.assertText(
-        row.coverEndDate,
+        row.coverEndDate(),
         `${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateDay}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth}/${LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear}`,
       );
     });
