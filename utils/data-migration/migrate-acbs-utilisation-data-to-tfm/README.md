@@ -17,6 +17,19 @@ The script expects a JSON file with the following structure:
 ]
 ```
 
+## Required Environment Variables
+
+To run the script, ensure the following environment variables are set to relevant values in the `.env` file located in the `utils` directory:
+
+```sh
+SQL_DB_HOST=
+SQL_DB_PORT=
+SQL_DB_USERNAME=
+SQL_DB_PASSWORD=
+SQL_DB_NAME=
+SQL_DB_LOGGING_ENABLED=true
+```
+
 ## Configuring the Script
 
 ### Report Period
@@ -31,11 +44,12 @@ To change the location of the input JSON file, modify the `JSON_FILE_PATH` const
 
 Follow these steps to run the migration script:
 
-1. Update the report period constant at the top of `index.ts` if necessary.
-2. Prepare your JSON input file with the required structure.
-3. Update the JSON input file path constant (`JSON_FILE_PATH`) with the correct path.
-4. Run the script from the `utils` directory using the script command:
+1. Ensure the required environment variables are set in the `utils/.env` file. See the ["Required Environment Variables" section](#required-environment-variables) for details.
+2. Update the report period constant at the top of `index.ts` if necessary.
+3. Prepare your JSON input file with the required structure. See the ["JSON Input File Structure" section](#json-input-file-structure) for details.
+4. Update the JSON input file path constant (`JSON_FILE_PATH`) with the correct path.
+5. Run the script from the `utils` directory using the script command:
 
     `npm run migrate-acbs-utilisation-data-to-tfm`
 
-5. Check the console output for any error messages or successful completion of the migration.
+6. Check the console output for any error messages or successful completion of the migration.
