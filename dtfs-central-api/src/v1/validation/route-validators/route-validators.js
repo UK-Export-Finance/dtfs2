@@ -1,3 +1,4 @@
+const util = require('util');
 const { param } = require('express-validator');
 const { ObjectId } = require('mongodb');
 const { HttpStatusCode } = require('axios');
@@ -13,10 +14,31 @@ exports.bankIdValidation = [bankIdValidation];
  * @returns {import('express').RequestHandler}
  */
 const mongoIdValidation = (paramName) => (req, res, next) => {
+  console.info(util.inspect({ stepDescription: 'mongoIdValidation', paramName }, { showHidden: false, depth: null, colors: true }));
   const pathParam = req.params[paramName];
+  console.info(util.inspect({ pathParam }, { showHidden: false, depth: null, colors: true }));
+
   if (ObjectId.isValid(pathParam)) {
+    console.info({ stepDescription: 'mongoIdValidation calling next' });
     return next();
   }
+
+  console.info(
+    util.inspect(
+      {
+        stepDescription: 'mongoIdValidation Failed',
+        response: {
+          status: HttpStatusCode.BadRequest,
+          body: {
+            message: `Expected path parameter '${paramName}' to be a valid mongo id`,
+            code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
+          },
+        },
+      },
+      { showHidden: false, depth: null, colors: true },
+    ),
+  );
+
   return res.status(HttpStatusCode.BadRequest).send({
     message: `Expected path parameter '${paramName}' to be a valid mongo id`,
     code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,

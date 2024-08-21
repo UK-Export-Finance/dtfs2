@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
+import { update } from '../../../repositories/estore/estore-repo';
 import { getCollection } from '../../../database';
 import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
 import { EstoreRequest } from '../../../helpers/types/estore';
@@ -91,40 +92,35 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
       console.error('❌ Invalid eStore payload %o', eStoreData);
 
       // CRON job log update
-      await cronJobLogs.updateOne(
-        { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
-        {
-          $set: {
-            cron: {
-              site: {
-                status: ESTORE_CRON_STATUS.FAILED,
-                response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch(),
-              },
-              term: {
-                status: ESTORE_CRON_STATUS.FAILED,
-                response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch(),
-              },
-              buyer: {
-                status: ESTORE_CRON_STATUS.FAILED,
-                response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch(),
-              },
-              deal: {
-                status: ESTORE_CRON_STATUS.FAILED,
-                response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch(),
-              },
-              facility: {
-                status: ESTORE_CRON_STATUS.FAILED,
-                response: ' Invalid eStore payload',
-                timestamp: getNowAsEpoch(),
-              },
-            },
+      await update(new ObjectId(eStoreData?.dealId), {
+        cron: {
+          site: {
+            status: ESTORE_CRON_STATUS.FAILED,
+            response: ' Invalid eStore payload',
+            timestamp: getNowAsEpoch(),
+          },
+          term: {
+            status: ESTORE_CRON_STATUS.FAILED,
+            response: ' Invalid eStore payload',
+            timestamp: getNowAsEpoch(),
+          },
+          buyer: {
+            status: ESTORE_CRON_STATUS.FAILED,
+            response: ' Invalid eStore payload',
+            timestamp: getNowAsEpoch(),
+          },
+          deal: {
+            status: ESTORE_CRON_STATUS.FAILED,
+            response: ' Invalid eStore payload',
+            timestamp: getNowAsEpoch(),
+          },
+          facility: {
+            status: ESTORE_CRON_STATUS.FAILED,
+            response: ' Invalid eStore payload',
+            timestamp: getNowAsEpoch(),
           },
         },
-      );
+      });
 
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid eStore payload' });
     }
@@ -178,20 +174,15 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
          * Update record-set with the site name.
          * Update `cron-job-logs`
          */
-        await cronJobLogs.updateOne(
-          { _id: { $eq: new ObjectId(_id) } },
-          {
-            $set: {
-              'cron.site.create': {
-                status: ESTORE_CRON_STATUS.COMPLETED,
-                response: siteExistsResponse.data.status,
-                timestamp: getNowAsEpoch(),
-                id: siteExistsResponse.data.siteId,
-              },
-              'cron.site.status': ESTORE_CRON_STATUS.COMPLETED,
-            },
+        await update(new ObjectId(_id), {
+          'cron.site.create': {
+            status: ESTORE_CRON_STATUS.COMPLETED,
+            response: siteExistsResponse.data.status,
+            timestamp: getNowAsEpoch(),
+            id: siteExistsResponse.data.siteId,
           },
-        );
+          'cron.site.status': ESTORE_CRON_STATUS.COMPLETED,
+        });
 
         // Update `tfm-deals`
         await tfmDeals.updateOne({ _id: { $eq: new ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
@@ -226,37 +217,27 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
           console.error('eStore site creation failed for deal %s %o', eStoreData.dealIdentifier, siteCreationResponse?.data);
 
           // CRON job log update
-          await cronJobLogs.updateOne(
-            { _id: { $eq: new ObjectId(_id) } },
-            {
-              $set: {
-                'cron.site.create': {
-                  response: siteCreationResponse?.data,
-                  status: ESTORE_CRON_STATUS.FAILED,
-                  timestamp: getNowAsEpoch(),
-                },
-                'cron.site.status': ESTORE_CRON_STATUS.FAILED,
-              },
+          await update(new ObjectId(_id), {
+            'cron.site.create': {
+              response: siteCreationResponse?.data,
+              status: ESTORE_CRON_STATUS.FAILED,
+              timestamp: getNowAsEpoch(),
             },
-          );
+            'cron.site.status': ESTORE_CRON_STATUS.FAILED,
+          });
         }
       } else {
         console.error('❌ eStore site exist check failed for deal %s %o', eStoreData.dealIdentifier, siteExistsResponse);
 
         // CRON job log update
-        await cronJobLogs.updateOne(
-          { _id: { $eq: new ObjectId(_id) } },
-          {
-            $set: {
-              'cron.site.create': {
-                status: ESTORE_CRON_STATUS.FAILED,
-                response: siteExistsResponse?.data,
-                timestamp: getNowAsEpoch(),
-              },
-              'cron.site.status': ESTORE_CRON_STATUS.FAILED,
-            },
+        await update(new ObjectId(_id), {
+          'cron.site.create': {
+            status: ESTORE_CRON_STATUS.FAILED,
+            response: siteExistsResponse?.data,
+            timestamp: getNowAsEpoch(),
           },
-        );
+          'cron.site.status': ESTORE_CRON_STATUS.FAILED,
+        });
       }
     } else {
       // When CRON job already exists for provided deal id.

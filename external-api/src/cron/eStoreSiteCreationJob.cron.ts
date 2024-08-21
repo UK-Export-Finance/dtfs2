@@ -1,5 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { ObjectId } from 'mongodb';
+import { update } from '../repositories/estore/estore-repo';
 import { cron } from '../helpers/cron';
 import { getCollection } from '../database';
 import { Estore, EstoreErrorResponse, SiteExistsResponse } from '../interfaces';
@@ -36,15 +37,23 @@ import { getNowAsEpoch } from '../helpers/date';
  *   .catch((error) => console.error('Cron job failed', error));
  */
 export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> => {
-  const cronJobLogs = await getCollection('cron-job-logs');
   const tfmDeals = await getCollection('tfm-deals');
   const data = cloneDeep(eStoreData);
   const now = new Date().toISOString();
 
+  // Argument validation
+  if (!eStoreData?.dealId || !eStoreData?.exporterName || !eStoreData.dealIdentifier) {
+    console.error('Invalid arguments provided for eStore site creation');
+    return;
+  }
+
   const { dealId, exporterName, dealIdentifier } = eStoreData;
 
   // Step 1: Initiate the CRON job
-  cron(eStoreData, ENDPOINT.SITE);
+  cron({
+    data: eStoreData,
+    category: ENDPOINT.SITE,
+  });
 
   // Step 2: Site existence check
   const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(exporterName);
@@ -56,26 +65,25 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     data.siteId = String(siteExistsResponse.data.siteId);
 
     // Update `cron-job-logs`
-    await cronJobLogs.updateOne(
-      { 'payload.dealId': { $eq: new ObjectId(dealId) } },
-      {
-        $set: {
-          'cron.site.create': {
-            status: ESTORE_CRON_STATUS.COMPLETED,
-            response: siteExistsResponse.data.status,
-            timestamp: getNowAsEpoch(),
-            id: siteExistsResponse.data.siteId,
-          },
-          'cron.site.status': ESTORE_CRON_STATUS.COMPLETED,
-        },
+    await update(new ObjectId(dealId), {
+      'cron.site.create': {
+        status: ESTORE_CRON_STATUS.COMPLETED,
+        response: siteExistsResponse.data.status,
+        timestamp: getNowAsEpoch(),
+        id: siteExistsResponse.data.siteId,
       },
-    );
+      'cron.site.status': ESTORE_CRON_STATUS.COMPLETED,
+    });
 
     // Update `tfm-deals`
     await tfmDeals.updateOne({ 'payload.dealId': { $eq: new ObjectId(dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
 
     // Stop CRON job
-    cron(eStoreData, ENDPOINT.SITE, true);
+    cron({
+      data: eStoreData,
+      category: ENDPOINT.SITE,
+      kill: true,
+    });
 
     // Add facility IDs to term store and create the buyer folder
     await eStoreTermStoreCreationJob(data);
@@ -84,25 +92,24 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s %s', siteExistsResponse.data.siteId, dealIdentifier, now);
 
     // Update status
-    await cronJobLogs.updateOne(
-      { 'payload.dealId': { $eq: new ObjectId(dealId) } },
-      {
-        $set: {
-          'cron.site.create': {
-            response: siteExistsResponse.data.status,
-            status: ESTORE_CRON_STATUS.RUNNING,
-            timestamp: getNowAsEpoch(),
-          },
-          'cron.site.status': ESTORE_CRON_STATUS.RUNNING,
-          'cron.site.id': siteExistsResponse?.data?.siteId,
-        },
+    await update(new ObjectId(dealId), {
+      'cron.site.create': {
+        response: siteExistsResponse.data.status,
+        status: ESTORE_CRON_STATUS.RUNNING,
+        timestamp: getNowAsEpoch(),
       },
-    );
+      'cron.site.status': ESTORE_CRON_STATUS.RUNNING,
+      'cron.site.id': siteExistsResponse?.data?.siteId,
+    });
   } else {
     // Step 3: Site creation has failed
 
     // Stop CRON job
-    cron(eStoreData, ENDPOINT.SITE, true);
+    cron({
+      data: eStoreData,
+      category: ENDPOINT.SITE,
+      kill: true,
+    });
 
     console.error(
       '❌ CRON: eStore site existence %s check has failed for deal %s %o %s',
@@ -113,18 +120,13 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     );
 
     // CRON job log update
-    await cronJobLogs.updateOne(
-      { 'payload.dealId': { $eq: new ObjectId(dealId) } },
-      {
-        $set: {
-          'cron.site.create': {
-            response: siteExistsResponse.data,
-            status: ESTORE_CRON_STATUS.FAILED,
-            timestamp: getNowAsEpoch(),
-          },
-          'cron.site.status': ESTORE_CRON_STATUS.FAILED,
-        },
+    await update(new ObjectId(dealId), {
+      'cron.site.create': {
+        response: siteExistsResponse.data,
+        status: ESTORE_CRON_STATUS.FAILED,
+        timestamp: getNowAsEpoch(),
       },
-    );
+      'cron.site.status': ESTORE_CRON_STATUS.FAILED,
+    });
   }
 };

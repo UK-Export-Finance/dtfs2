@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { getCollection } from '../database';
+import { update } from '../repositories/estore/estore-repo';
 import { TermStoreResponse, EstoreErrorResponse, Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
@@ -35,15 +35,19 @@ const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
  *   .catch((error) => console.error('Job failed', error));
  */
 export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<void> => {
-  const cronJobLogs = await getCollection('cron-job-logs');
+  // Argument validation
+  if (!eStoreData?.dealId || !eStoreData?.facilityIdentifiers || !eStoreData.dealIdentifier) {
+    console.error('Invalid arguments provided for eStore facility term store creation');
+    return;
+  }
 
-  // 1. Facilities existence check for addition to term store
+  // Facilities existence check for addition to term store
   if (eStoreData?.facilityIdentifiers?.length) {
     const { dealId, facilityIdentifiers, dealIdentifier } = eStoreData;
 
     console.info('Adding facilities to term store for deal %s', dealIdentifier);
 
-    // Add to term store
+    // Step 1: Add to term store
     const response: TermStoreResponse[] | EstoreErrorResponse[] = await Promise.all(
       facilityIdentifiers.map((facilityId: string) => addFacilityToTermStore({ facilityId })),
     );
@@ -52,37 +56,29 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
     if (response.every((term) => ACCEPTABLE_STATUSES.includes(term?.status))) {
       console.info('Facilities have been added to term store for deal %s', dealIdentifier);
 
-      // Update `cron-job-logs`
-      await cronJobLogs.updateOne(
-        { 'payload.dealId': { $eq: new ObjectId(dealId) } },
-        {
-          $set: {
-            'cron.term': {
-              status: ESTORE_CRON_STATUS.COMPLETED,
-              timestamp: getNowAsEpoch(),
-            },
+      // Step 2: Update `cron-job-logs`
+      await update(new ObjectId(dealId), {
+        $set: {
+          'cron.term': {
+            status: ESTORE_CRON_STATUS.COMPLETED,
+            timestamp: getNowAsEpoch(),
           },
         },
-      );
+      });
 
-      // Initiate buyer directory creation
+      // Step 3: Initiate buyer directory creation
       await eStoreBuyerDirectoryCreationJob(eStoreData);
     } else {
       console.error('Facilities have not been added to term store for deal %s %o', dealIdentifier, response);
 
       // Update `cron-job-logs`
-      await cronJobLogs.updateOne(
-        { 'payload.dealId': { $eq: new ObjectId(dealId) } },
-        {
-          $set: {
-            'cron.term': {
-              response,
-              status: ESTORE_CRON_STATUS.FAILED,
-              timestamp: getNowAsEpoch(),
-            },
-          },
+      await update(new ObjectId(dealId), {
+        'cron.term': {
+          response,
+          status: ESTORE_CRON_STATUS.FAILED,
+          timestamp: getNowAsEpoch(),
         },
-      );
+      });
     }
   }
 };

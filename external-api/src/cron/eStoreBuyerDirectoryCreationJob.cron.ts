@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { getCollection } from '../database';
+import { update } from '../repositories/estore/estore-repo';
 import { BuyerFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createBuyerFolder } from '../v1/controllers/estore/eStoreApi';
@@ -37,55 +37,46 @@ const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
  *   .catch((error) => console.error('Job failed', error));
  */
 export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promise<void> => {
-  const cronJobLogs = await getCollection('cron-job-logs');
+  // Argument validation
+  if (!eStoreData?.siteId || !eStoreData?.buyerName || !eStoreData?.exporterName || !eStoreData.dealIdentifier) {
+    console.error('Invalid arguments provided for eStore buyer directory creation');
+    return;
+  }
 
-  // 1. Creating buyer directory
-  if (eStoreData?.buyerName) {
-    const { dealId, siteId, exporterName, buyerName, dealIdentifier } = eStoreData;
+  const { dealId, siteId, exporterName, buyerName, dealIdentifier } = eStoreData;
 
+  console.info('Attempting to create a buyer directory %s for deal %s', buyerName, dealIdentifier);
+
+  // Step 1: Create the buyer directory
+  const response: BuyerFolderResponse | EstoreErrorResponse = await createBuyerFolder(siteId, {
+    exporterName,
+    buyerName,
+  });
+
+  // Validate response
+  if (ACCEPTABLE_STATUSES.includes(response?.status)) {
     console.info('Attempting to create a buyer directory %s for deal %s', buyerName, dealIdentifier);
 
-    // Create the buyer directory
-    const response: BuyerFolderResponse | EstoreErrorResponse = await createBuyerFolder(siteId, {
-      exporterName,
-      buyerName,
+    // Step 2: Update `cron-job-logs`
+    await update(new ObjectId(dealId), {
+      'cron.buyer': {
+        status: ESTORE_CRON_STATUS.COMPLETED,
+        timestamp: getNowAsEpoch(),
+      },
     });
 
-    // Validate response
-    if (ACCEPTABLE_STATUSES.includes(response?.status)) {
-      console.info('Attempting to create a buyer directory %s for deal %s', buyerName, dealIdentifier);
+    // Step 3: Initiate deal directory creation
+    await eStoreDealDirectoryCreationJob(eStoreData);
+  } else {
+    console.error('eStore buyer directory creation has failed for deal %s %o', dealIdentifier, response);
 
-      // Update `cron-job-logs`
-      await cronJobLogs.updateOne(
-        { 'payload.dealId': { $eq: new ObjectId(dealId) } },
-        {
-          $set: {
-            'cron.buyer': {
-              status: ESTORE_CRON_STATUS.COMPLETED,
-              timestamp: getNowAsEpoch(),
-            },
-          },
-        },
-      );
-
-      // Initiate deal directory creation
-      await eStoreDealDirectoryCreationJob(eStoreData);
-    } else {
-      console.error('eStore buyer directory creation has failed for deal %s %o', dealIdentifier, response);
-
-      // Update `cron-job-logs`
-      await cronJobLogs.updateOne(
-        { 'payload.dealId': { $eq: new ObjectId(dealId) } },
-        {
-          $set: {
-            'cron.buyer': {
-              response,
-              status: ESTORE_CRON_STATUS.FAILED,
-              timestamp: getNowAsEpoch(),
-            },
-          },
-        },
-      );
-    }
+    // Update `cron-job-logs`
+    await update(new ObjectId(dealId), {
+      'cron.buyer': {
+        response,
+        status: ESTORE_CRON_STATUS.FAILED,
+        timestamp: getNowAsEpoch(),
+      },
+    });
   }
 };

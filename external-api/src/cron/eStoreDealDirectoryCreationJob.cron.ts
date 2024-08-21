@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { getCollection } from '../database';
+import { update } from '../repositories/estore/estore-repo';
 import { DealFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createDealFolder } from '../v1/controllers/estore/eStoreApi';
@@ -40,58 +40,57 @@ const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
  *   .catch((error) => console.error('Job failed', error));
  */
 export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promise<void> => {
-  const cronJobLogs = await getCollection('cron-job-logs');
+  // Argument validation
+  if (
+    !eStoreData?.dealId ||
+    !eStoreData?.siteId ||
+    !eStoreData?.exporterName ||
+    !eStoreData?.buyerName ||
+    !eStoreData?.dealIdentifier ||
+    !eStoreData?.destinationMarket ||
+    !eStoreData?.riskMarket
+  ) {
+    console.error('Invalid arguments provided for eStore deal directory creation');
+    return;
+  }
 
-  // 1. Creating deal directory
-  if (eStoreData?.exporterName) {
-    const { dealId, siteId, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = eStoreData;
+  const { dealId, siteId, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = eStoreData;
 
+  console.info('Attempting to create a deal directory for deal %s', dealIdentifier);
+
+  // Step 1: Create the deal directory
+  const response: DealFolderResponse | EstoreErrorResponse = await createDealFolder(siteId, {
+    exporterName,
+    buyerName,
+    dealIdentifier,
+    destinationMarket,
+    riskMarket,
+  });
+
+  // Validate response
+  if (ACCEPTABLE_STATUSES.includes(response?.status)) {
     console.info('Attempting to create a deal directory for deal %s', dealIdentifier);
 
-    // Create the deal directory
-    const response: DealFolderResponse | EstoreErrorResponse = await createDealFolder(siteId, {
-      exporterName,
-      buyerName,
-      dealIdentifier,
-      destinationMarket,
-      riskMarket,
+    // Step 2: Update `cron-job-logs`
+    await update(new ObjectId(dealId), {
+      'cron.deal': {
+        status: ESTORE_CRON_STATUS.COMPLETED,
+        timestamp: getNowAsEpoch(),
+      },
     });
 
-    // Validate response
-    if (ACCEPTABLE_STATUSES.includes(response?.status)) {
-      console.info('Attempting to create a deal directory for deal %s', dealIdentifier);
+    // Step 3: Initiate facility directory creation
+    await eStoreFacilityDirectoryCreationJob(eStoreData);
+  } else {
+    console.error('eStore deal directory creation has failed for deal %s %o', dealIdentifier, response);
 
-      // Update `cron-job-logs`
-      await cronJobLogs.updateOne(
-        { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
-        {
-          $set: {
-            'cron.deal': {
-              status: ESTORE_CRON_STATUS.COMPLETED,
-              timestamp: getNowAsEpoch(),
-            },
-          },
-        },
-      );
-
-      // Initiate facility directory creation
-      await eStoreFacilityDirectoryCreationJob(eStoreData);
-    } else {
-      console.error('eStore deal directory creation has failed for deal %s %o', dealIdentifier, response);
-
-      // Update `cron-job-logs`
-      await cronJobLogs.updateOne(
-        { 'payload.dealId': { $eq: new ObjectId(dealId) } },
-        {
-          $set: {
-            'cron.deal': {
-              response,
-              status: ESTORE_CRON_STATUS.FAILED,
-              timestamp: getNowAsEpoch(),
-            },
-          },
-        },
-      );
-    }
+    // Update `cron-job-logs`
+    await update(new ObjectId(dealId), {
+      'cron.deal': {
+        response,
+        status: ESTORE_CRON_STATUS.FAILED,
+        timestamp: getNowAsEpoch(),
+      },
+    });
   }
 };

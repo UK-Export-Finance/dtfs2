@@ -152,7 +152,13 @@
 {% endset %}
 
 {% set paymentDetailsHtml %}
-  <div></div>
+  <h2 class="govuk-heading-l" data-cy="payment-details-heading">Payment details</h2>
+
+  <p class="govuk-body">
+    {% if paymentDetails.length === 0 %}
+      Payment details will be displayed when payments have been entered on the premium payments tab.
+    {% endif %}
+  </p>
 {% endset %}
 
 {% set utilisationHtml %}

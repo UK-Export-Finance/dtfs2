@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { getCollection } from '../database';
+import { update } from '../repositories/estore/estore-repo';
 import { FacilityFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createFacilityFolder } from '../v1/controllers/estore/eStoreApi';
@@ -38,59 +38,57 @@ const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
  *   .catch((error) => console.error('Job failed', error));
  */
 export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Promise<void> => {
-  const cronJobLogs = await getCollection('cron-job-logs');
+  // Argument validation
+  if (
+    !eStoreData?.dealId ||
+    !eStoreData?.siteId ||
+    !eStoreData?.facilityIdentifiers ||
+    !eStoreData?.exporterName ||
+    !eStoreData?.buyerName ||
+    !eStoreData?.dealIdentifier
+  ) {
+    console.error('Invalid arguments provided for eStore facility directory creation');
+    return;
+  }
 
-  // 1. Creating facility directory
-  if (eStoreData?.facilityIdentifiers) {
-    const { dealId, siteId, facilityIdentifiers, exporterName, buyerName, dealIdentifier } = eStoreData;
+  const { dealId, siteId, facilityIdentifiers, exporterName, buyerName, dealIdentifier } = eStoreData;
 
-    console.info('Attempting to create a facility directory %s for deal %s', facilityIdentifiers, dealIdentifier);
+  console.info('Attempting to create a facility directory %s for deal %s', facilityIdentifiers, dealIdentifier);
 
-    // Create the facility directory
-    const response: FacilityFolderResponse[] | EstoreErrorResponse[] = await Promise.all(
-      facilityIdentifiers.map((facilityIdentifier: string) =>
-        createFacilityFolder(siteId, dealIdentifier, {
-          facilityIdentifier,
-          buyerName,
-          exporterName,
-        }),
-      ),
-    );
+  // Step 1: Create the facility directory
+  const response: FacilityFolderResponse[] | EstoreErrorResponse[] = await Promise.all(
+    facilityIdentifiers.map((facilityIdentifier: string) =>
+      createFacilityFolder(siteId, dealIdentifier, {
+        facilityIdentifier,
+        buyerName,
+        exporterName,
+      }),
+    ),
+  );
 
-    // Validate each and every response status code
-    if (response.every((facility) => ACCEPTABLE_STATUSES.includes(facility?.status))) {
-      console.info('Facility %s directory has been created for deal %s', facilityIdentifiers, dealIdentifier);
+  // Validate each and every response status code
+  if (response.every((facility) => ACCEPTABLE_STATUSES.includes(facility?.status))) {
+    console.info('Facility %s directory has been created for deal %s', facilityIdentifiers, dealIdentifier);
 
-      // Update `cron-job-logs`
-      await cronJobLogs.updateOne(
-        { 'payload.dealId': { $eq: new ObjectId(eStoreData.dealId) } },
-        {
-          $set: {
-            'cron.facility': {
-              status: ESTORE_CRON_STATUS.COMPLETED,
-              timestamp: getNowAsEpoch(),
-            },
-          },
-        },
-      );
+    // Step 2: Update `cron-job-logs`
+    await update(new ObjectId(dealId), {
+      'cron.facility': {
+        status: ESTORE_CRON_STATUS.COMPLETED,
+        timestamp: getNowAsEpoch(),
+      },
+    });
 
-      // Initiate document upload
-    } else {
-      console.error('eStore facility directory creation has failed for deal %s %o', dealIdentifier, response);
+    // Step 3: Initiate document upload
+  } else {
+    console.error('eStore facility directory creation has failed for deal %s %o', dealIdentifier, response);
 
-      // Update `cron-job-logs`
-      await cronJobLogs.updateOne(
-        { 'payload.dealId': { $eq: new ObjectId(dealId) } },
-        {
-          $set: {
-            'cron.facility': {
-              response,
-              status: ESTORE_CRON_STATUS.FAILED,
-              timestamp: getNowAsEpoch(),
-            },
-          },
-        },
-      );
-    }
+    // Update `cron-job-logs`
+    await update(new ObjectId(dealId), {
+      'cron.facility': {
+        response,
+        status: ESTORE_CRON_STATUS.FAILED,
+        timestamp: getNowAsEpoch(),
+      },
+    });
   }
 };
