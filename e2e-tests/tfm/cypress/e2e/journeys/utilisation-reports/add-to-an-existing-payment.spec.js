@@ -193,14 +193,6 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       .withStatus('DOES_NOT_MATCH')
       .build();
 
-    const navigateToAddToExistingPaymentScreen = () => {
-      cy.get('[type="submit"]').contains('Add a payment').click();
-      cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
-
-      cy.get('[type="submit"]').contains('Add reported fees to an existing payment').click();
-      cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
-    };
-
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
@@ -213,14 +205,20 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
     getFeeRecordCheckbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
 
-    navigateToAddToExistingPaymentScreen();
+    cy.get('[type="submit"]').contains('Add a payment').click();
+    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
+    cy.get('[type="submit"]').contains('Add reported fees to an existing payment').click();
+    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
 
     pages.utilisationReportAddToAnExistingPaymentPage.backLink().click();
     getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
     getFeeRecordCheckbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
     getFeeRecordCheckbox([FEE_RECORD_ID_TWO, FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH).should('not.be.checked');
 
-    navigateToAddToExistingPaymentScreen();
+    cy.get('[type="submit"]').contains('Add a payment').click();
+    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
+    cy.get('[type="submit"]').contains('Add reported fees to an existing payment').click();
+    cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
 
     pages.utilisationReportAddToAnExistingPaymentPage.cancelLink().click();
     getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
