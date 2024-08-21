@@ -118,7 +118,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     expect(errorSummary?.href).toBeDefined();
   });
 
-  it('returns a function which returns true for a checkbox id defined in req.session.checkedCheckboxIds and false otherwise', () => {
+  it('returns a set of fee record ids for checked checkbox ids defined in req.session.checkedCheckboxIds', () => {
     // Arrange
     const checkedCheckboxId = 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO';
 

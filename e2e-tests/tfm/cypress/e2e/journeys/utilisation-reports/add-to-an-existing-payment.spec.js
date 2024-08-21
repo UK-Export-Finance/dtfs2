@@ -168,7 +168,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
   });
 
-  it('should redirect the user to then premium payments page when user clicks the back or cancel links and persist the selected fees', () => {
+  it('should redirect the user to the premium payments page when user clicks the back or cancel links and persist the selected fees', () => {
     const FEE_RECORD_ID_THREE = '33';
     const FEE_RECORD_ID_FOUR = '44';
     const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
