@@ -49,16 +49,10 @@ context('Create deal', () => {
     // confirm that we're on the newly created deal '/contract/XYZ'
     cy.url().should('include', '/contract/');
 
-    // confirm deal is in the correct starting state..
+    // confirm deal is in the correct starting state
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Not started');
 
-    // TODO:
-    // TODO:
-    // TODO:
-    // TODO:
-    // TODO: should be able to ueq assertText / equals here instead of to.contain()
-    contract.aboutSupplierDetailsStatus().should((status) => expect(status).to.contain('Not started'));
-
-    contract.eligibilityStatus().should((status) => expect(status).to.contain('Not started'));
+    cy.assertText(contract.eligibilityStatus(), 'Not started');
 
     // confirm that the data we've entered appears on the preview page
     contract.checkDealDetailsTab().click();
