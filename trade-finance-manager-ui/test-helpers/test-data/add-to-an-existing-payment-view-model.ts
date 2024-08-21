@@ -27,5 +27,5 @@ export const anAddToAnExistingPaymentViewModel = (): AddToAnExistingPaymentViewM
   errors: {
     errorSummary: [],
   },
-  backLinkHref: '/utilisation-reports/12',
+  backLinkHref: '/utilisation-reports/12?selectedFeeRecordIds=456',
 });

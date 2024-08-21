@@ -101,7 +101,7 @@ describe(page, () => {
 
     // Assert
     wrapper.expectElement('[data-cy="cancel-link"]').toExist();
-    wrapper.expectText('[data-cy="cancel-link"]').toRead('Cancel');
+    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo('/utilisation-reports/12?selectedFeeRecordIds=456', 'Cancel');
   });
 
   it('should render the back link', () => {
@@ -111,6 +111,6 @@ describe(page, () => {
 
     // Assert
     wrapper.expectElement('[data-cy="back-link"]').toExist();
-    wrapper.expectText('[data-cy="back-link"]').toRead('Back');
+    wrapper.expectLink('[data-cy="back-link"]').toLinkTo('/utilisation-reports/12?selectedFeeRecordIds=456', 'Back');
   });
 });

@@ -1,6 +1,6 @@
 // "Recommended Security and Performance Max: 2048 CHARACTERS" - https://stackoverflow.com/a/48230425
 const MAX_URL_CHARACTERS = 2048;
-const BASE_URL_CHARACTER_ALLOWANCE = 100;
+const BASE_URL_CHARACTER_ALLOWANCE = 150;
 
 export const getBackLinkUrl = (reportId: string, feeRecordIds: number[]): string => {
   const urlWithoutParams = `/utilisation-reports/${reportId}`;
