@@ -1,8 +1,8 @@
-import { getBackLinkUrl } from './get-back-link-href';
+import { getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage } from './get-back-link-href';
 
 console.error = jest.fn();
 
-describe('getBackLinkUrl', () => {
+describe('getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage', () => {
   describe('should return URL without params', () => {
     it('when feeRecordIds array is empty', () => {
       // Arrange
@@ -10,7 +10,7 @@ describe('getBackLinkUrl', () => {
       const feeRecordIds: number[] = [];
 
       // Act
-      const result = getBackLinkUrl(reportId, feeRecordIds);
+      const result = getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds);
 
       // Assert
       expect(result).toBe('/utilisation-reports/123');
@@ -22,7 +22,7 @@ describe('getBackLinkUrl', () => {
       const feeRecordIds = [...Array(1000).keys()];
 
       // Act
-      const result = getBackLinkUrl(reportId, feeRecordIds);
+      const result = getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds);
 
       // Assert
       expect(result).toBe('/utilisation-reports/123');
@@ -36,7 +36,7 @@ describe('getBackLinkUrl', () => {
       const feeRecordIds = [1];
 
       // Act
-      const result = getBackLinkUrl(reportId, feeRecordIds);
+      const result = getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds);
 
       // Assert
       expect(result).toBe('/utilisation-reports/123?selectedFeeRecordIds=1');
@@ -48,7 +48,7 @@ describe('getBackLinkUrl', () => {
       const feeRecordIds = [1, 2, 3];
 
       // Act
-      const result = getBackLinkUrl(reportId, feeRecordIds);
+      const result = getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds);
 
       // Assert
       expect(result).toBe('/utilisation-reports/123?selectedFeeRecordIds=1%2C2%2C3');
