@@ -3,55 +3,49 @@ import { getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage } 
 console.error = jest.fn();
 
 describe('getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage', () => {
-  describe('should return URL without params', () => {
-    it('when feeRecordIds array is empty', () => {
-      // Arrange
-      const reportId = '123';
-      const feeRecordIds: number[] = [];
+  const reportId = '123';
 
-      // Act
-      const result = getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds);
+  it('returns URL without params when feeRecordIds array is empty', () => {
+    // Arrange
+    const feeRecordIds: number[] = [];
 
-      // Assert
-      expect(result).toBe('/utilisation-reports/123');
-    });
+    // Act
+    const result = getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds);
 
-    it('when total length exceeds limit', () => {
-      // Arrange
-      const reportId = '123';
-      const feeRecordIds = [...Array(1000).keys()];
-
-      // Act
-      const result = getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds);
-
-      // Assert
-      expect(result).toBe('/utilisation-reports/123');
-    });
+    // Assert
+    expect(result).toBe('/utilisation-reports/123');
   });
 
-  describe('should return URL with params', () => {
-    it('when feeRecordIds array has one element', () => {
-      // Arrange
-      const reportId = '123';
-      const feeRecordIds = [1];
+  it('returns URL without params when total length exceeds limit', () => {
+    // Arrange
+    const feeRecordIds = [...Array(1000).keys()];
 
-      // Act
-      const result = getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds);
+    // Act
+    const result = getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds);
 
-      // Assert
-      expect(result).toBe('/utilisation-reports/123?selectedFeeRecordIds=1');
-    });
+    // Assert
+    expect(result).toBe('/utilisation-reports/123');
+  });
 
-    it('when total length is within limit', () => {
-      // Arrange
-      const reportId = '123';
-      const feeRecordIds = [1, 2, 3];
+  it('returns URL with params when feeRecordIds array has one element', () => {
+    // Arrange
+    const feeRecordIds = [1];
 
-      // Act
-      const result = getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds);
+    // Act
+    const result = getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds);
 
-      // Assert
-      expect(result).toBe('/utilisation-reports/123?selectedFeeRecordIds=1%2C2%2C3');
-    });
+    // Assert
+    expect(result).toBe('/utilisation-reports/123?selectedFeeRecordIds=1');
+  });
+
+  it('returns URL with params when total length is within limit', () => {
+    // Arrange
+    const feeRecordIds = [1, 22, 333];
+
+    // Act
+    const result = getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds);
+
+    // Assert
+    expect(result).toBe('/utilisation-reports/123?selectedFeeRecordIds=1%2C22%2C333');
   });
 });
