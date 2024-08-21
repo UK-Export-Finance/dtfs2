@@ -55,7 +55,7 @@ describe('getFixedFeeForFacility', () => {
           ukefFacilityId: facilityId,
           interestPercentage: 5,
           dayCountBasis: 365,
-          coverStartDate: TODAY.getTime().toString(),
+          coverStartDate: TODAY,
           coverEndDate: null,
         },
       });
@@ -79,7 +79,7 @@ describe('getFixedFeeForFacility', () => {
           ukefFacilityId: facilityId,
           interestPercentage: 5,
           dayCountBasis: 365,
-          coverEndDate: TODAY.getTime().toString(),
+          coverEndDate: TODAY,
           coverStartDate: null,
         },
       });

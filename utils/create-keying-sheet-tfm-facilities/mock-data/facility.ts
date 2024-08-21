@@ -1,15 +1,15 @@
 import { faker } from '@faker-js/faker';
 import { ObjectId } from 'mongodb';
 import { addMonths, subMonths } from 'date-fns';
-import { Facility, UnixTimestampString } from '@ukef/dtfs2-common';
+import { Facility } from '@ukef/dtfs2-common';
 
 const TODAY = new Date();
 
 const LATEST_COVER_START_DATE = subMonths(TODAY, 1);
-const getRandomCoverStartDateTimestamp = (): UnixTimestampString => faker.date.past({ years: 1, refDate: LATEST_COVER_START_DATE }).getTime().toString();
+const getRandomCoverStartDateTimestamp = (): Date => faker.date.past({ years: 1, refDate: LATEST_COVER_START_DATE });
 
 const EARLIEST_COVER_END_DATE = addMonths(TODAY, 12);
-const getRandomCoverEndDateTimestamp = (): UnixTimestampString => faker.date.future({ years: 2, refDate: EARLIEST_COVER_END_DATE }).getTime().toString();
+const getRandomCoverEndDateTimestamp = (): Date => faker.date.future({ years: 2, refDate: EARLIEST_COVER_END_DATE });
 
 export const aFacilityWithoutDealId = (): Omit<Facility, 'dealId'> => ({
   _id: new ObjectId(),
