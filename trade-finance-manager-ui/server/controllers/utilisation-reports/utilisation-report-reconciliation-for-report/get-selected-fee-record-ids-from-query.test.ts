@@ -33,4 +33,26 @@ describe('getSelectedFeeRecordIdsFromQuery', () => {
     // Assert
     expect(selectedFeeRecordIds).toEqual(new Set([7, 77, 777]));
   });
+
+  it('should handle query string with empty values', () => {
+    // Arrange
+    const selectedFeeRecordIdsQueryString = '1,,2';
+
+    // Act
+    const selectedFeeRecordIds = getSelectedFeeRecordIdsFromQuery(selectedFeeRecordIdsQueryString);
+
+    // Assert
+    expect(selectedFeeRecordIds).toEqual(new Set([1, 2]));
+  });
+
+  it('should return a set with only numeric ids when query string contains non-numeric chars', () => {
+    // Arrange
+    const selectedFeeRecordIdsQueryString = '1,abc2,3';
+
+    // Act
+    const selectedFeeRecordIds = getSelectedFeeRecordIdsFromQuery(selectedFeeRecordIdsQueryString);
+
+    // Assert
+    expect(selectedFeeRecordIds).toEqual(new Set([1, 3]));
+  });
 });

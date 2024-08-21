@@ -1,4 +1,13 @@
 export const getSelectedFeeRecordIdsFromQuery = (selectedFeeRecordIdsQueryString: string | undefined) => {
-  const feeRecordIds = selectedFeeRecordIdsQueryString?.split(',').map((id) => parseInt(id, 10));
-  return new Set(feeRecordIds);
+  return (
+    selectedFeeRecordIdsQueryString?.split(',').reduce((ids, id) => {
+      const parsedId = parseInt(id, 10);
+
+      if (!Number.isNaN(parsedId)) {
+        ids.add(parsedId);
+      }
+
+      return ids;
+    }, new Set<number>()) ?? new Set<number>()
+  );
 };
