@@ -94,7 +94,7 @@ describe(page, () => {
     wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
   });
 
-  it('should render the cancel link', () => {
+  it('should render the cancel link with the selected fee record ids', () => {
     // Arrange
     const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
     const wrapper = render(addToAnExistingPaymentViewModel);
@@ -104,7 +104,7 @@ describe(page, () => {
     wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo('/utilisation-reports/12?selectedFeeRecordIds=456', 'Cancel');
   });
 
-  it('should render the back link', () => {
+  it('should render the back link with the selected fee record ids', () => {
     // Arrange
     const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
     const wrapper = render(addToAnExistingPaymentViewModel);
