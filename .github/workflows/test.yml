@@ -678,7 +678,7 @@ jobs:
         run: npm ci
 
       - name: Docker
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Initialise
         working-directory: ./utils
