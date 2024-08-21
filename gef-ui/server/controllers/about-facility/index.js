@@ -1,4 +1,4 @@
-const { format, set, isSameDay, toDate } = require('date-fns');
+const { format, set, isSameDay } = require('date-fns');
 const { isFacilityEndDateEnabledOnGefVersion, parseDealVersion, zBooleanStrictCoerce } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { FACILITY_TYPE, DATE_FORMAT, DEAL_SUBMISSION_TYPE } = require('../../constants');
@@ -20,8 +20,8 @@ const aboutFacility = async (req, res) => {
     const deal = await api.getApplication({ dealId, userToken });
     const facilityTypeString = FACILITY_TYPE[details.type.toUpperCase()].toLowerCase();
     const shouldCoverStartOnSubmission = JSON.stringify(details.shouldCoverStartOnSubmission);
-    const coverStartDate = details.coverStartDate ? toDate(details.coverStartDate) : null;
-    const coverEndDate = details.coverEndDate ? toDate(details.coverEndDate) : null;
+    const coverStartDate = details.coverStartDate ? new Date(details.coverStartDate) : null;
+    const coverEndDate = details.coverEndDate ? new Date(details.coverEndDate) : null;
     const monthsOfCover = JSON.stringify(details.monthsOfCover);
 
     let isUsingFacilityEndDate;
@@ -170,7 +170,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
     facilityUpdate.isUsingFacilityEndDate = isUsingFacilityEndDate;
 
     const { details: existingFacility } = await api.getFacility({ facilityId, userToken });
-    const existingCoverStartDate = existingFacility.coverStartDate ? toDate(existingFacility.coverStartDate) : null;
+    const existingCoverStartDate = existingFacility.coverStartDate ? Date(existingFacility.coverStartDate) : null;
 
     const coverStartDateHasChanged = existingCoverStartDate && !isSameDay(existingCoverStartDate, coverStartDate);
 

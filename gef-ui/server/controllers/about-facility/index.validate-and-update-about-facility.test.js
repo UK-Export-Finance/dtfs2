@@ -109,6 +109,8 @@ describe('validateAndUpdateAboutFacility', () => {
       };
       if (dealVersion === 1) {
         expectedPayload.isUsingFacilityEndDate = true;
+        expectedPayload.facilityEndDate = null;
+        expectedPayload.bankReviewDate = null;
       }
       expect(api.updateFacility).toHaveBeenCalledWith({
         facilityId: 'xyz',

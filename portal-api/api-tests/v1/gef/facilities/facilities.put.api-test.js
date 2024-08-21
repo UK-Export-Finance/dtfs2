@@ -17,6 +17,7 @@ const mockApplications = require('../../../fixtures/gef/application');
 const { calculateUkefExposure, calculateGuaranteeFee } = require('../../../../src/v1/gef/calculations/facility-calculations');
 const { DB_COLLECTIONS } = require('../../../fixtures/constants');
 const { generateANewFacility } = require('./helpers/generate-a-new-facility.tests');
+const { generateACompleteFacilityUpdate } = require('./helpers/generate-a-facility-update.tests');
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
@@ -37,29 +38,6 @@ describe(baseUrl, () => {
 
   beforeEach(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
-
-    completeUpdate = {
-      hasBeenIssued: false,
-      name: 'TEST',
-      shouldCoverStartOnSubmission: null,
-      coverStartDate: new Date(),
-      coverEndDate: new Date(),
-      monthsOfCover: 12,
-      details: ['test', 'test'],
-      detailsOther: null,
-      currency: { id: CURRENCY.GBP },
-      value: 10000000,
-      coverPercentage: 75,
-      interestPercentage: 10,
-      paymentType: 'Monthly',
-      dayCountBasis: 365,
-      feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
-      feeFrequency: 'Monthly',
-      coverDateConfirmed: true,
-      ukefFacilityId: 1234,
-      issueDate: null,
-      hasBeenIssuedAndAcknowledged: true,
-    };
   });
 
   describe(`PUT ${baseUrl}/:id`, () => {
@@ -68,6 +46,7 @@ describe(baseUrl, () => {
         jest.mocked(getCurrentGefDealVersion).mockReturnValue(dealVersion);
         mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
         newFacility = generateANewFacility({ dealId: mockApplication.body._id, makerId: aMaker._id, dealVersion });
+        completeUpdate = generateACompleteFacilityUpdate({ dealVersion });
       });
 
       afterEach(() => {
@@ -272,7 +251,7 @@ describe(baseUrl, () => {
             guaranteeFee: calculateGuaranteeFee(completeUpdate, {}),
           },
           validation: {
-            required: addFacilityEndDateToValidation([], dealVersion),
+            required: [],
           },
         };
 
@@ -521,6 +500,14 @@ describe(baseUrl, () => {
         const { body: facilityBody } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
         const { status } = await as(aMaker).put({ facilityEndDate: new Date().toISOString() }).to(`${baseUrl}/${facilityBody.details._id}`);
+
+        expect(status).toBe(200);
+      });
+
+      it('returns 200 when payload if facilityEndDate & bank review date are null', async () => {
+        const { body: facilityBody } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+
+        const { status } = await as(aMaker).put({ facilityEndDate: null, bankReviewDate: null }).to(`${baseUrl}/${facilityBody.details._id}`);
 
         expect(status).toBe(200);
       });
