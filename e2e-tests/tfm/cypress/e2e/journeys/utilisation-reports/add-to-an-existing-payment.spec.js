@@ -201,12 +201,6 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
     };
 
-    const verifyExpectedFeeRecordCheckboxesAreChecked = () => {
-      getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
-      getFeeRecordCheckbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
-      getFeeRecordCheckbox([FEE_RECORD_ID_TWO, FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH).should('not.be.checked');
-    };
-
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
@@ -222,12 +216,16 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     navigateToAddToExistingPaymentScreen();
 
     pages.utilisationReportAddToAnExistingPaymentPage.backLink().click();
-    verifyExpectedFeeRecordCheckboxesAreChecked();
+    getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
+    getFeeRecordCheckbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
+    getFeeRecordCheckbox([FEE_RECORD_ID_TWO, FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH).should('not.be.checked');
 
     navigateToAddToExistingPaymentScreen();
 
     pages.utilisationReportAddToAnExistingPaymentPage.cancelLink().click();
-    verifyExpectedFeeRecordCheckboxesAreChecked();
+    getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
+    getFeeRecordCheckbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
+    getFeeRecordCheckbox([FEE_RECORD_ID_TWO, FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH).should('not.be.checked');
   });
 
   function getFeeRecordCheckbox(feeRecordIds, paymentCurrency, status) {
