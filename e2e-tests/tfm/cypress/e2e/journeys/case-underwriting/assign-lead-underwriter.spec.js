@@ -99,12 +99,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     // lead underwriter details should now be displayed
-    pages.leadUnderwriterPage
-      .leadUnderwriterEmail()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(UNDERWRITER_1.email);
-      });
+    cy.assertText(pages.leadUnderwriterPage.leadUnderwriterEmail(), UNDERWRITER_1.email);
 
     pages.leadUnderwriterPage
       .leadUnderwriterSummaryList()
@@ -181,13 +176,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.wrap(expectedTasks).each((row) => {
       const { groupId, taskId } = row;
 
-      pages.tasksPage.tasks
-        .row(groupId, taskId)
-        .assignedTo()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(`${underwriterManager1FullName}`);
-        });
+      cy.assertText(pages.tasksPage.tasks.row(groupId, taskId).assignedTo(), `${underwriterManager1FullName}`);
     });
   });
 });

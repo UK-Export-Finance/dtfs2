@@ -84,12 +84,8 @@ context('Case tasks - AIN deal', () => {
     // first task should have status `To do` and link
     //---------------------------------------------------------------
     const firstTask = pages.tasksPage.tasks.row(1, 1);
-    firstTask
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('To do');
-      });
+
+    cy.assertText(firstTask.status(), 'To do');
 
     firstTask.link().should('exist');
     firstTask.title().should('not.exist');
@@ -98,12 +94,8 @@ context('Case tasks - AIN deal', () => {
     // second task should have status `To do` and no link
     //---------------------------------------------------------------
     const secondTask = pages.tasksPage.tasks.row(1, 2);
-    firstTask
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('To do');
-      });
+
+    cy.assertText(secondTask.status(), 'To do');
 
     secondTask.link().should('not.exist');
     secondTask.title().should('exist');
@@ -130,23 +122,15 @@ context('Case tasks - AIN deal', () => {
     // first task should have status `In progress`
     //---------------------------------------------------------------
     firstTask = pages.tasksPage.tasks.row(1, 1);
-    firstTask
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('In progress');
-      });
+
+    cy.assertText(firstTask.status(), 'In progress');
 
     //---------------------------------------------------------------
     // second task should have status `Cannot start` and no link
     //---------------------------------------------------------------
     const secondTask = pages.tasksPage.tasks.row(1, 2);
-    secondTask
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Cannot start yet');
-      });
+
+    cy.assertText(secondTask.status(), 'Cannot start yet');
 
     secondTask.link().should('not.exist');
     secondTask.title().should('exist');
@@ -179,23 +163,15 @@ context('Case tasks - AIN deal', () => {
     // first task should have status `Done`
     //---------------------------------------------------------------
     firstTask = pages.tasksPage.tasks.row(1, 1);
-    firstTask
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Done');
-      });
+
+    cy.assertText(firstTask.status(), 'Done');
 
     //---------------------------------------------------------------
     // second task should have status `To do` and link
     //---------------------------------------------------------------
     let secondTask = pages.tasksPage.tasks.row(1, 2);
-    secondTask
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('To do');
-      });
+
+    cy.assertText(secondTask.status(), 'To do');
 
     secondTask.link().should('exist');
     secondTask.title().should('not.exist');
@@ -214,12 +190,8 @@ context('Case tasks - AIN deal', () => {
     // second task should have status 'In progress' and link
     //---------------------------------------------------------------
     secondTask = pages.tasksPage.tasks.row(1, 2);
-    secondTask
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('In progress');
-      });
+
+    cy.assertText(secondTask.status(), 'In progress');
 
     secondTask.link().should('exist');
     secondTask.title().should('not.exist');
@@ -261,19 +233,9 @@ context('Case tasks - AIN deal', () => {
       pages.tasksPage.filterRadioYourTeam().click();
       pages.tasksPage.filterSubmitButton().click();
 
-      firstTask
-        .assignedTo()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(differentUserInSameTeamFullName);
-        });
+      cy.assertText(firstTask.assignedTo(), differentUserInSameTeamFullName);
 
-      firstTask
-        .status()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('In progress');
-        });
+      cy.assertText(firstTask.status(), 'In progress');
     });
   });
 
@@ -403,19 +365,8 @@ context('Case tasks - AIN deal', () => {
     // task should have empty `date started` and `date completed` values
     //---------------------------------------------------------------
 
-    firstTask
-      .dateStarted()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('-');
-      });
-
-    firstTask
-      .dateCompleted()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('-');
-      });
+    cy.assertText(firstTask.dateStarted(), '-');
+    cy.assertText(firstTask.dateCompleted(), '-');
 
     //---------------------------------------------------------------
     // user completes a task
@@ -442,18 +393,7 @@ context('Case tasks - AIN deal', () => {
     ];
     expectedDate = expectedDate.join(' ');
 
-    firstTask
-      .dateStarted()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(expectedDate);
-      });
-
-    firstTask
-      .dateCompleted()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(expectedDate);
-      });
+    cy.assertText(firstTask.dateStarted(), expectedDate);
+    cy.assertText(firstTask.dateCompleted(), expectedDate);
   });
 });
