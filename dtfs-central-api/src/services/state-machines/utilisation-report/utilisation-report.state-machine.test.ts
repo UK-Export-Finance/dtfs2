@@ -156,7 +156,7 @@ describe('UtilisationReportStateMachine', () => {
         type: 'GENERATE_KEYING_DATA',
         payload: {
           transactionEntityManager: {} as EntityManager,
-          feeRecordsAtMatchStatus: [],
+          feeRecordsAtMatchStatusWithPayments: [],
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });
@@ -262,7 +262,7 @@ describe('UtilisationReportStateMachine', () => {
         type: 'GENERATE_KEYING_DATA',
         payload: {
           transactionEntityManager: {} as EntityManager,
-          feeRecordsAtMatchStatus: [],
+          feeRecordsAtMatchStatusWithPayments: [],
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });
