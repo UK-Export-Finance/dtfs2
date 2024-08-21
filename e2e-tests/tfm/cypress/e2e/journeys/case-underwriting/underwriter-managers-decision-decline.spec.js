@@ -51,44 +51,17 @@ context('Case Underwriting - Pricing and risk', () => {
     pages.managersDecisionPage.commentsInputInternal().type(MOCK_INTERNAL_COMMENTS);
     pages.managersDecisionPage.submitButton().click();
 
-    pages.managersDecisionPage
-      .decisionStatusTag()
-      .invoke('text')
-      .then(($text) => {
-        expect($text.trim()).to.equal('Declined');
-      });
+    cy.assertText(pages.managersDecisionPage.decisionStatusTag(), 'Declined');
 
-    pages.managersDecisionPage
-      .decisionMadeBy()
-      .invoke('text')
-      .then((text) => {
-        const { firstName, lastName } = UNDERWRITER_MANAGER_1;
-        const userFullName = `${firstName} ${lastName}`;
+    const { firstName, lastName } = UNDERWRITER_MANAGER_1;
+    const expectedName = `${firstName} ${lastName}`;
 
-        expect(text.trim()).to.equal(userFullName);
-      });
+    cy.assertText(pages.managersDecisionPage.decisionMadeBy(), expectedName);
 
-    pages.managersDecisionPage
-      .decisionDateTime()
-      .invoke('text')
-      .then((text) => {
-        const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' });
+    cy.assertText(pages.managersDecisionPage.decisionDateTime(), new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' }));
 
-        expect(text.trim()).contains(todayFormatted);
-      });
+    cy.assertText(pages.managersDecisionPage.conditions(), MOCK_COMMENTS);
 
-    pages.managersDecisionPage
-      .conditions()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(MOCK_COMMENTS);
-      });
-
-    pages.managersDecisionPage
-      .internalComments()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(MOCK_INTERNAL_COMMENTS);
-      });
+    cy.assertText(pages.managersDecisionPage.internalComments(), MOCK_INTERNAL_COMMENTS);
   });
 });
