@@ -1,5 +1,5 @@
 # Base image
-FROM mongo:5.0.5
+FROM mongo:4.2.0
 
 # Create keyfile
 RUN openssl rand -base64 756 > /mongo-keyfile
