@@ -57,7 +57,7 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
 
   // Step 1: Create the facility directory
   const response: FacilityFolderResponse[] | EstoreErrorResponse[] = await Promise.all(
-    facilityIdentifiers.map((facilityIdentifier: string) =>
+    facilityIdentifiers.map((facilityIdentifier: number) =>
       createFacilityFolder(siteId, dealIdentifier, {
         facilityIdentifier,
         buyerName,

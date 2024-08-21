@@ -8,7 +8,7 @@ import { Category } from '../helpers/types/estore';
  * @interface Estore
  * @property {string} dealId - Unique identifier for the deal.
  * @property {string} siteId - Unique identifier for the site.
- * @property {string[]} facilityIdentifiers - Array of identifiers for facilities.
+ * @property {number[]} facilityIdentifiers - Array of identifiers for facilities.
  * @property {string[]} supportingInformation - Array of supporting information strings.
  * @property {string} exporterName - Name of the exporter.
  * @property {string} buyerName - Name of the buyer.
@@ -19,7 +19,7 @@ import { Category } from '../helpers/types/estore';
 export interface Estore {
   dealId: string;
   siteId: string;
-  facilityIdentifiers: string[];
+  facilityIdentifiers: number[];
   supportingInformation: string[];
   exporterName: string;
   buyerName: string;
@@ -42,10 +42,10 @@ export interface EstoreSite {
  * Represents a term store within the eStore, identified by a unique string ID.
  *
  * @interface EstoreTermStore
- * @property {string} facilityId - Unique identifier for the term store.
+ * @property {number} facilityId - Unique identifier for the term store.
  */
 export interface EstoreTermStore {
-  readonly facilityId: string;
+  readonly facilityId: number;
 }
 
 /**
@@ -82,7 +82,7 @@ export interface EstoreDealFolder extends EstoreBuyer {
  * @property {string} facilityIdentifier - Unique identifier for the facility.
  */
 export interface EstoreFacilityFolder extends EstoreBuyer {
-  readonly facilityIdentifier: string;
+  readonly facilityIdentifier: number;
 }
 
 /**
