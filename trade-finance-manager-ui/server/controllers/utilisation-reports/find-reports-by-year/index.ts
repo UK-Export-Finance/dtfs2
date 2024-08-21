@@ -12,12 +12,27 @@ import {
 import { getFindReportSummaryItemViewModel } from '../helpers';
 import { BankWithReportingYearsResponseBody } from '../../../api-response-types';
 
+/**
+ * Renders the find utilisation reports by year page
+ * @param res - The response object
+ * @param viewModel - The view model
+ */
 const renderFindUtilisationReportsByYearPage = (res: Response, viewModel: FindUtilisationReportsByYearViewModel) =>
   res.render('utilisation-reports/find-utilisation-reports-by-year.njk', viewModel);
 
+/**
+ * Renders the utilisation reports by bank and year results page
+ * @param res - The response object
+ * @param viewModel - The view model
+ */
 const renderUtilisationReportsByBankAndYearResults = (res: Response, viewModel: UtilisationReportsByBankAndYearViewModel) =>
   res.render('utilisation-reports/utilisation-reports-by-bank-and-year-results.njk', viewModel);
 
+/**
+ * Gets tha bank id query and year query as string
+ * @param req - The request object
+ * @returns The bank id and year query
+ */
 const getBankIdQueryAndYearQueryAsString = (
   req: Request,
 ): {
@@ -30,11 +45,21 @@ const getBankIdQueryAndYearQueryAsString = (
   return { bankIdQuery, yearQuery };
 };
 
+/**
+ * Maps a bank with reporting years to a datalist view model
+ * @param bank - The bank
+ * @returns The datalist view model
+ */
 const mapBankWithReportingYearsToDataListViewModel = (bank: BankWithReportingYearsResponseBody): BankReportingYearsDataListViewModel => ({
   bankId: bank.id,
   reportingYears: bank.reportingYears,
 });
 
+/**
+ * Controller for the GET find reports by year route
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const getFindReportsByYear = async (req: Request, res: Response) => {
   const { user, userToken } = asUserSession(req.session);
   const { originalUrl } = req;

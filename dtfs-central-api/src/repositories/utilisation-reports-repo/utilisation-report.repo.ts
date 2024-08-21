@@ -1,5 +1,5 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { UtilisationReportEntity, ReportPeriod, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, ReportPeriod, FeeRecordStatus, UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import { Not, Equal, FindOptionsWhere, LessThan, In } from 'typeorm';
 import { FeeRecordRepo } from '../fee-record-repo';
 
@@ -247,7 +247,7 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
     const utilisationReports = await this.find({
       where: {
         bankId,
-        status: Not('REPORT_NOT_RECEIVED'),
+        status: Not(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED),
       },
       select: ['reportPeriod'],
     });

@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import axios from 'axios';
-import { Bank, MonthAndYear, UtilisationReportEntity, UtilisationReportEntityMockBuilder, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import { Bank, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
@@ -54,17 +54,23 @@ describe(`GET ${BASE_URL}`, () => {
   describe("when the 'includeReportingYears' query is set to 'true'", () => {
     const reportIdGenerator = getSqlIdGenerator();
 
-    const aUtilisationReportForStatusBankIdAndMonthlyReportPeriod = (
-      status: UtilisationReportReconciliationStatus,
-      bankId: string,
-      monthAndYear: MonthAndYear,
-    ): UtilisationReportEntity =>
+    const aUtilisationReportFor = ({
+      status,
+      bankId,
+      month,
+      year,
+    }: {
+      status: UtilisationReportReconciliationStatus;
+      bankId: string;
+      month: number;
+      year: number;
+    }) =>
       UtilisationReportEntityMockBuilder.forStatus(status)
         .withId(reportIdGenerator.next().value)
         .withBankId(bankId)
         .withReportPeriod({
-          start: monthAndYear,
-          end: monthAndYear,
+          start: { month, year },
+          end: { month, year },
         })
         .build();
 
@@ -76,12 +82,12 @@ describe(`GET ${BASE_URL}`, () => {
       });
 
       const utilisationReports = [
-        aUtilisationReportForStatusBankIdAndMonthlyReportPeriod('PENDING_RECONCILIATION', BANK_ID_ONE, { month: 1, year: 2021 }),
-        aUtilisationReportForStatusBankIdAndMonthlyReportPeriod('PENDING_RECONCILIATION', BANK_ID_ONE, { month: 2, year: 2021 }),
-        aUtilisationReportForStatusBankIdAndMonthlyReportPeriod('PENDING_RECONCILIATION', BANK_ID_ONE, { month: 2, year: 2022 }),
-        aUtilisationReportForStatusBankIdAndMonthlyReportPeriod('PENDING_RECONCILIATION', BANK_ID_TWO, { month: 1, year: 2020 }),
-        aUtilisationReportForStatusBankIdAndMonthlyReportPeriod('REPORT_NOT_RECEIVED', BANK_ID_TWO, { month: 1, year: 2022 }), // report exists but was not submitted
-        aUtilisationReportForStatusBankIdAndMonthlyReportPeriod('PENDING_RECONCILIATION', BANK_ID_TWO, { month: 1, year: 2023 }),
+        aUtilisationReportFor({ status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, bankId: BANK_ID_ONE, month: 1, year: 2021 }),
+        aUtilisationReportFor({ status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, bankId: BANK_ID_ONE, month: 2, year: 2021 }),
+        aUtilisationReportFor({ status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, bankId: BANK_ID_ONE, month: 2, year: 2022 }),
+        aUtilisationReportFor({ status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, bankId: BANK_ID_TWO, month: 1, year: 2020 }),
+        aUtilisationReportFor({ status: UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED, bankId: BANK_ID_TWO, month: 1, year: 2022 }), // report exists but was not submitted
+        aUtilisationReportFor({ status: UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION, bankId: BANK_ID_TWO, month: 1, year: 2023 }),
       ];
       await SqlDbHelper.saveNewEntries('UtilisationReport', utilisationReports);
 
