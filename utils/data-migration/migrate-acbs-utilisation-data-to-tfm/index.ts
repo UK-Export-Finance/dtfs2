@@ -24,7 +24,7 @@ const validateReportPeriod = (reportPeriod: ReportPeriodPartialEntity): void => 
   }
 };
 
-const insertFacilityUtilisationEntry = async (dataSource: DataSource, facilityId: string, utilisation: number, fixedFeePremium: number) => {
+const insertFacilityUtilisationEntry = async (dataSource: DataSource, { facilityId, utilisation, fixedFeePremium }: UtilisationDataEntry) => {
   const facilityUtilisationData = new FacilityUtilisationDataEntity();
   facilityUtilisationData.id = facilityId;
   facilityUtilisationData.reportPeriod = REPORT_PERIOD;
@@ -48,7 +48,7 @@ const run = async () => {
 
     const utilisationData = JSON.parse(jsonData) as UtilisationDataEntry[];
 
-    await Promise.all(utilisationData.map((entry) => insertFacilityUtilisationEntry(dataSource, entry.facilityId, entry.utilisation, entry.fixedFeePremium)));
+    await Promise.all(utilisationData.map((entry) => insertFacilityUtilisationEntry(dataSource, entry)));
   } catch (error) {
     console.error('Failed to migrate ACBS utilisation data to TFM:', error);
   } finally {
