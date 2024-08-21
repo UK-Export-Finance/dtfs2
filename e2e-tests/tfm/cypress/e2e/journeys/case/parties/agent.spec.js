@@ -162,12 +162,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.agentPage.saveButton().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
-        pages.agentPage
-          .agentUniqueRef()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal(partyUrn);
-          });
+        cy.assertText(pages.agentPage.agentUniqueRef(), partyUrn);
 
         pages.partiesPage.agentEditLink().click();
         pages.agentPage
@@ -193,18 +188,9 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.agentPage.saveButton().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
-        pages.agentPage
-          .agentUniqueRef()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal(partyUrn);
-          });
-        pages.agentPage
-          .agentCommissionRate()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal('1.234');
-          });
+        cy.assertText(pages.agentPage.agentUniqueRef(), partyUrn);
+
+        cy.assertText(pages.agentPage.agentCommissionRate(), '1.234');
 
         pages.partiesPage.agentEditLink().click();
         pages.agentPage
