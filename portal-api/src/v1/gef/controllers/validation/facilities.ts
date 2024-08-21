@@ -5,7 +5,6 @@ import { FACILITY_PAYMENT_TYPE } from '../../enums';
 /**
  * @returns array of missing properties on facility
  */
-
 const hasRequiredItems = (facility: Facility, dealVersion: number): (keyof Facility)[] => {
   const isMigratedFacility = 'dataMigration' in facility && facility.dataMigration;
 
@@ -75,7 +74,7 @@ const hasRequiredItems = (facility: Facility, dealVersion: number): (keyof Facil
 /**
  * @returns facility deal status. 'Not started' if never updated, 'Completed' if all required items are provided & 'In progress' otherwise
  */
-export const facilitiesStatus = (facility: Facility, dealVersion: number) => {
+export const facilitiesStatus = (facility: Facility, dealVersion: number): DealStatus => {
   const requiredCount = hasRequiredItems(facility, dealVersion).length;
   if (!facility.updatedAt) {
     return DEAL_STATUS.NOT_STARTED;
@@ -108,7 +107,6 @@ export const facilitiesOverallStatus = (facilities: FacilityInfo[]): DealStatus 
   }
 
   if (uniqueStatus.length === 1) {
-    // eslint-disable-next-line prefer-destructuring
     return uniqueStatus[0];
   }
 

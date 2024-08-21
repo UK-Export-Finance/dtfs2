@@ -6,10 +6,10 @@ import { Facility } from '@ukef/dtfs2-common';
 const TODAY = new Date();
 
 const LATEST_COVER_START_DATE = subMonths(TODAY, 1);
-const getRandomCoverStartDateTimestamp = (): Date => faker.date.past({ years: 1, refDate: LATEST_COVER_START_DATE });
+const getRandomCoverStartDate = (): Date => faker.date.past({ years: 1, refDate: LATEST_COVER_START_DATE });
 
 const EARLIEST_COVER_END_DATE = addMonths(TODAY, 12);
-const getRandomCoverEndDateTimestamp = (): Date => faker.date.future({ years: 2, refDate: EARLIEST_COVER_END_DATE });
+const getRandomCoverEndDate = (): Date => faker.date.future({ years: 2, refDate: EARLIEST_COVER_END_DATE });
 
 export const aFacilityWithoutDealId = (): Omit<Facility, 'dealId'> => ({
   _id: new ObjectId(),
@@ -17,8 +17,8 @@ export const aFacilityWithoutDealId = (): Omit<Facility, 'dealId'> => ({
   hasBeenIssued: true,
   name: 'facilityName',
   shouldCoverStartOnSubmission: true,
-  coverStartDate: getRandomCoverStartDateTimestamp(),
-  coverEndDate: getRandomCoverEndDateTimestamp(),
+  coverStartDate: getRandomCoverStartDate(),
+  coverEndDate: getRandomCoverEndDate(),
   issueDate: null,
   monthsOfCover: 12,
   details: [],

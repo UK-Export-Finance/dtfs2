@@ -26,9 +26,9 @@ const generateACompleteFacilityUpdate = ({ dealVersion }) => {
   };
 
   if (dealVersion >= 1) {
+    completeUpdate.isUsingFacilityEndDate = false;
     completeUpdate.bankReviewDate = new Date().toISOString();
     completeUpdate.facilityEndDate = null;
-    completeUpdate.isUsingFacilityEndDate = false;
   }
 
   return completeUpdate;

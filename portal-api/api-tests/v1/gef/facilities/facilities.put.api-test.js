@@ -504,7 +504,7 @@ describe(baseUrl, () => {
         expect(status).toBe(200);
       });
 
-      it('returns 200 when payload if facilityEndDate & bank review date are null', async () => {
+      it('returns 200 when facilityEndDate & bank review date are both null', async () => {
         const { body: facilityBody } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
         const { status } = await as(aMaker).put({ facilityEndDate: null, bankReviewDate: null }).to(`${baseUrl}/${facilityBody.details._id}`);
