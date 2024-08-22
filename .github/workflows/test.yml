@@ -141,9 +141,6 @@ env:
   SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
   ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
   CONTACT_US_EMAIL_ADDRESS: ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
-  FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
-  FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
-  GEF_DEAL_VERSION: 1
 
 jobs:
   # 1. Setup test infrastructure
@@ -704,6 +701,7 @@ jobs:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
           TZ: ${{ vars.TIMEZONE }}
           # Various feature flags
-          FF_TFM_FACILITY_END_DATE_ENABLED: 'false'
-          GEF_DEAL_VERSION: 0
+          FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
+          FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
+          GEF_DEAL_VERSION: 1
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec "${{ matrix.spec }}"
