@@ -4,8 +4,12 @@ import { getUtilisationReportReconciliationDetails } from './get-utilisation-rep
 import { getBankNameById } from '../../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../../errors';
 import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
+import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
+
+console.error = jest.fn();
 
 jest.mock('../../../../../repositories/banks-repo');
+jest.mock('./get-keying-sheet-for-report-id');
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
   describe('getUtilisationReportReconciliationDetails', () => {
@@ -15,6 +19,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
     beforeEach(() => {
       jest.resetAllMocks();
+      jest.mocked(getBankNameById).mockRejectedValue('Some error');
+      jest.mocked(getKeyingSheetForReportId).mockRejectedValue('Some error');
     });
 
     it.each(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS))(
@@ -35,7 +41,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       // Arrange
       const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
 
-      jest.mocked(getBankNameById).mockResolvedValue(undefined);
+      when(getBankNameById).calledWith(bankId).mockResolvedValue(undefined);
 
       // Act / Assert
       await expect(getUtilisationReportReconciliationDetails(uploadedReport, undefined)).rejects.toThrow(
@@ -60,8 +66,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         .build();
 
       const bankName = 'Test bank';
-      jest.mocked(getBankNameById).mockResolvedValue('Different bank');
       when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
+      when(getKeyingSheetForReportId).calledWith(reportId, []).mockResolvedValue([]);
 
       // Act
       const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, undefined);

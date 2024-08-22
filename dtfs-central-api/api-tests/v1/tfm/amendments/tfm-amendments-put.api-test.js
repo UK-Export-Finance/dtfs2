@@ -1,6 +1,7 @@
 const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
@@ -10,6 +11,8 @@ const aDeal = require('../../deal-builder');
 const { createDeal } = require('../../../helpers/create-deal');
 const { createFacility } = require('../../../helpers/create-facility');
 const { aPortalUser, aTfmUser } = require('../../../../test-helpers/test-data');
+
+console.error = jest.fn();
 
 describe('PUT TFM amendments', () => {
   let dealId;
@@ -51,7 +54,12 @@ describe('PUT TFM amendments', () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS]);
   });
 
-  describe('PUT /v1/tfm/facilities/:id/amendments/:amendmentId', () => {
+  describe('PUT /v1/tfm/facilities/:facilityId/amendments/:amendmentId', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:facilityId/amendments/:amendmentId',
+      makeRequest: (url) => testApi.put({}).to(url),
+    });
+
     describe('with a valid facility and amendment', () => {
       let facilityId;
       let amendmentId;

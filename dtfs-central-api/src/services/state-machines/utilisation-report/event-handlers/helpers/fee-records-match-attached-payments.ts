@@ -11,5 +11,5 @@ const getPaymentsAttachedToFeeRecord = async (feeRecord: FeeRecordEntity, transa
 };
 
 export const feeRecordsMatchAttachedPayments = async (feeRecords: FeeRecordEntity[], transactionEntityManager: EntityManager): Promise<boolean> => {
-  return feeRecordsAndPaymentsMatch(feeRecords, await getPaymentsAttachedToFeeRecord(feeRecords[0], transactionEntityManager));
+  return feeRecordsAndPaymentsMatch(feeRecords, await getPaymentsAttachedToFeeRecord(feeRecords[0], transactionEntityManager), transactionEntityManager);
 };

@@ -1,0 +1,104 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% import './_macros/amendment-what-is-a-bank-review-date.njk' as whatIsABankReviewDate %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Amendment - Enter the bank review date
+{%- endblock %}
+
+{% block sub_content %}
+
+{% if error %}
+  {{ govukErrorSummary({
+     titleText: "There is a problem",
+     errorList: error.summary,
+     attributes: {
+       'data-cy': 'amendment--error-summary'
+     },
+     classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+  }) }}
+ {% endif %}
+
+<form method="POST" autocomplete="off">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+  <fieldset class="govuk-fieldset" role="group" aria-describedby="bankReviewDate-hint">
+
+    <legend class="govuk-fieldset__legend">
+      <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-0" data-cy="amendment--bank-review-date-heading">Enter the new bank review date</h1>
+    </legend>
+
+    <dl class="govuk-body govuk-!-margin-bottom-4" data-cy="amendment--current-bank-review-date">
+      <dt class="govuk-body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Current bank review date</dt>
+      <dd>{{ ( currentBankReviewDate if currentBankReviewDate else "Not provided") }}</dd>
+    </dl>
+
+    {{ govukDateInput({
+      id: "bankReviewDate",
+      namePrefix: "bank-review-date",
+      hint: {
+        text: "For example, 31 3 2022",
+        attributes: {
+          "data-cy": "bank-review-date-hint"
+        }
+      },
+      errorMessage: error and {
+        text: error.summary[0].text,
+        attributes: {
+          'data-cy': 'amendment--inline-error'
+        }
+      },
+      items: [
+        {
+          label: "Day",
+          classes: (error and 'bank-review-date-day' in error.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "day",
+          value: dayInput,
+          attributes: {
+            'data-cy': "amendment--bank-review-date-day"
+          }
+        },
+        {
+          label: "Month",
+          classes: (error and 'bank-review-date-month' in error.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+          name: "month",
+          value: monthInput,
+          attributes: {
+            'data-cy': "amendment--bank-review-date-month"
+          }
+        },
+        {
+          label: "Year",
+          classes: (error and 'bank-review-date-year' in error.fields) and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+          name: "year",
+          value: yearInput,
+          attributes: {
+            'data-cy': "amendment--bank-review-date-year"
+          }
+        }
+      ]
+    }) }}
+  </fieldset>
+
+  <div class="govuk-button-group">
+    {% if isEditable %}
+      {{ govukButton({
+        text: "Continue",
+        attributes: {
+            "data-cy": "amendment--continue-button"
+        }
+        })
+      }}
+    {% endif %}
+    <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
+  </div>
+
+  {{ whatIsABankReviewDate.render() }}
+
+</form>
+
+{% endblock %}

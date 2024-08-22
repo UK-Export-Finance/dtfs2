@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
 
@@ -9,7 +9,6 @@ const { as } = require('../../api')(app);
 
 const users = require('./test-data');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { LOGIN_STATUSES } = require('../../../src/constants');
 const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { STATUS } = require('../../../src/constants/user');
@@ -121,7 +120,7 @@ describe('a user', () => {
         success: true,
         token: expect.any(String),
         user: { email: MOCK_USER.email },
-        loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+        loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD,
         expiresIn: '105m',
       });
     });
@@ -222,7 +221,7 @@ describe('a user', () => {
         success: true,
         token: expect.any(String),
         user: { email: MOCK_USER.email },
-        loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+        loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD,
         expiresIn: '105m',
       });
     });

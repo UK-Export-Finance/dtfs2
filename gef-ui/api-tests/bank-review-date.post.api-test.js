@@ -4,6 +4,7 @@ jest.mock('../server/middleware/csrf', () => ({
   csrfToken: () => (req, res, next) => next(),
 }));
 
+const { HttpStatusCode } = require('axios');
 const { when, resetAllWhenMocks } = require('jest-when');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
@@ -20,7 +21,7 @@ api.updateApplication = jest.fn();
 const dealId = '123';
 const facilityId = '111';
 
-describe('bank-review-date routes', () => {
+describe('bank review date routes', () => {
   beforeEach(async () => {
     resetAllWhenMocks();
     await storage.flush();
@@ -50,10 +51,81 @@ describe('bank-review-date routes', () => {
         makeRequestWithHeaders: (headers) =>
           postBankReviewDateWithHeaders({ body: { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' }, headers }),
         whitelistedRoles: [MAKER],
-        successCode: 302,
+        successCode: HttpStatusCode.Found,
         successHeaders: {
           location: `/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`,
         },
+      });
+
+      describe('when the user is a maker', () => {
+        let sessionCookie;
+
+        beforeEach(async () => {
+          ({ sessionCookie } = await storage.saveUserSession([MAKER]));
+        });
+
+        it('returns 200 & does not update the database if the request body fails validation', async () => {
+          // Arrange
+          const body = { 'bank-review-date-year': '2023', 'bank-review-date-month': '8', 'bank-review-date-day': '12' };
+
+          // Act
+          const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie });
+
+          // Assert
+          expect(response.status).toBe(HttpStatusCode.Ok);
+          expect(api.updateFacility).toHaveBeenCalledTimes(0);
+        });
+
+        it('redirects to provided facility page if the request body is valid', async () => {
+          // Arrange
+          const body = { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' };
+
+          // Act
+          const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie });
+
+          // Assert
+          expect(response.status).toBe(HttpStatusCode.Found);
+          expect(response.headers.location).toBe(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);
+        });
+
+        it('updates the facility if request body is valid', async () => {
+          // Arrange
+          const bankReviewDate = new Date(1723417200000);
+          const body = {
+            'bank-review-date-year': bankReviewDate.getFullYear().toString(),
+            'bank-review-date-month': (bankReviewDate.getMonth() + 1).toString(),
+            'bank-review-date-day': bankReviewDate.getDate().toString(),
+          };
+
+          // Act
+          await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie });
+
+          // Assert
+          expect(api.updateFacility).toHaveBeenCalledWith({
+            facilityId,
+            payload: {
+              bankReviewDate,
+            },
+            userToken: expect.anything(),
+          });
+        });
+
+        it('updates the application if request body is valid', async () => {
+          // Arrange
+          const body = { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' };
+
+          // Act
+          await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie });
+
+          // Assert
+          expect(api.updateApplication).toHaveBeenCalledWith({
+            dealId,
+            application: {
+              editorId: expect.anything(),
+            },
+            userToken: expect.anything(),
+          });
+        });
       });
     });
 
@@ -66,116 +138,92 @@ describe('bank-review-date routes', () => {
             saveAndReturn: true,
           }),
         whitelistedRoles: [MAKER],
-        successCode: 302,
+        successCode: HttpStatusCode.Found,
         successHeaders: {
           location: `/gef/application-details/${dealId}`,
         },
       });
-    });
 
-    describe('when the user is a maker', () => {
-      let sessionCookie;
+      describe('when the user is a maker', () => {
+        let sessionCookie;
 
-      beforeEach(async () => {
-        ({ sessionCookie } = await storage.saveUserSession([MAKER]));
-      });
-
-      it('returns 200 & does not update the database if the request body fails validation', async () => {
-        // Arrange
-        const body = { 'bank-review-date-year': '2023', 'bank-review-date-month': '8', 'bank-review-date-day': '12' };
-
-        // Act
-        const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie });
-
-        // Assert
-        expect(response.status).toBe(200);
-        expect(api.updateFacility).toHaveBeenCalledTimes(0);
-      });
-
-      it('returns 200 & does not update the database if the request body fails validation & saveAndReturn = true', async () => {
-        // Arrange
-        const body = { 'bank-review-date-year': '2023', 'bank-review-date-month': '8', 'bank-review-date-day': '12' };
-
-        // Act
-        const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
-
-        // Assert
-        expect(response.status).toBe(200);
-        expect(api.updateFacility).toHaveBeenCalledTimes(0);
-      });
-
-      it('redirects to application details page if the bank review date is blank & saveAndReturn = true', async () => {
-        // Arrange
-        const body = { 'bank-review-date-year': '', 'bank-review-date-month': '', 'bank-review-date-day': '' };
-
-        // Act
-        const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
-
-        // Assert
-        expect(response.status).toBe(302);
-        expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
-      });
-
-      it('redirects to application details page if the request body is valid & saveAndReturn = true', async () => {
-        // Arrange
-        const body = { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' };
-
-        // Act
-        const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
-
-        // Assert
-        expect(response.status).toBe(302);
-        expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
-      });
-
-      it('redirects to provided facility page if the request body is valid & saveAndReturn = false', async () => {
-        // Arrange
-        const body = { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' };
-
-        // Act
-        const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie });
-
-        // Assert
-        expect(response.status).toBe(302);
-        expect(response.headers.location).toBe(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);
-      });
-
-      it('updates the facility if request body is valid', async () => {
-        // Arrange
-        const bankReviewDate = new Date(1723417200000);
-        const body = {
-          'bank-review-date-year': bankReviewDate.getFullYear().toString(),
-          'bank-review-date-month': (bankReviewDate.getMonth() + 1).toString(),
-          'bank-review-date-day': bankReviewDate.getDate().toString(),
-        };
-
-        // Act
-        await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie });
-
-        // Assert
-        expect(api.updateFacility).toHaveBeenCalledWith({
-          facilityId,
-          payload: {
-            bankReviewDate,
-          },
-          userToken: expect.anything(),
+        beforeEach(async () => {
+          ({ sessionCookie } = await storage.saveUserSession([MAKER]));
         });
-      });
 
-      it('updates the application if request body is valid', async () => {
-        // Arrange
-        const body = { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' };
+        it('returns 200 & does not update the database if the request body fails validation', async () => {
+          // Arrange
+          const body = { 'bank-review-date-year': '2023', 'bank-review-date-month': '8', 'bank-review-date-day': '12' };
 
-        // Act
-        await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie });
+          // Act
+          const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
 
-        // Assert
-        expect(api.updateApplication).toHaveBeenCalledWith({
-          dealId,
-          application: {
-            editorId: expect.anything(),
-          },
-          userToken: expect.anything(),
+          // Assert
+          expect(response.status).toBe(HttpStatusCode.Ok);
+          expect(api.updateFacility).toHaveBeenCalledTimes(0);
+        });
+
+        it('redirects to application details page if the bank review date is blank', async () => {
+          // Arrange
+          const body = { 'bank-review-date-year': '', 'bank-review-date-month': '', 'bank-review-date-day': '' };
+
+          // Act
+          const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+
+          // Assert
+          expect(response.status).toBe(HttpStatusCode.Found);
+          expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
+        });
+
+        it('redirects to application details page if the request body is valid', async () => {
+          // Arrange
+          const body = { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' };
+
+          // Act
+          const response = await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+
+          // Assert
+          expect(response.status).toBe(HttpStatusCode.Found);
+          expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
+        });
+
+        it('updates the facility if request body is valid', async () => {
+          // Arrange
+          const bankReviewDate = new Date(1723417200000);
+          const body = {
+            'bank-review-date-year': bankReviewDate.getFullYear().toString(),
+            'bank-review-date-month': (bankReviewDate.getMonth() + 1).toString(),
+            'bank-review-date-day': bankReviewDate.getDate().toString(),
+          };
+
+          // Act
+          await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+
+          // Assert
+          expect(api.updateFacility).toHaveBeenCalledWith({
+            facilityId,
+            payload: {
+              bankReviewDate,
+            },
+            userToken: expect.anything(),
+          });
+        });
+
+        it('updates the application if request body is valid', async () => {
+          // Arrange
+          const body = { 'bank-review-date-year': '2024', 'bank-review-date-month': '08', 'bank-review-date-day': '12' };
+
+          // Act
+          await postBankReviewDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+
+          // Assert
+          expect(api.updateApplication).toHaveBeenCalledWith({
+            dealId,
+            application: {
+              editorId: expect.anything(),
+            },
+            userToken: expect.anything(),
+          });
         });
       });
     });

@@ -3,6 +3,7 @@ const {
   generatePortalAuditDetails,
   generateNoUserLoggedInAuditDetails,
 } = require('@ukef/dtfs2-common/change-stream');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const utils = require('../../crypto/utils');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
@@ -10,7 +11,6 @@ const { create, update, remove, list, findOne, disable } = require('./controller
 const { resetPassword, getUserByPasswordToken } = require('./reset-password.controller');
 const { sanitizeUser, sanitizeUsers } = require('./sanitizeUserData');
 const { applyCreateRules, applyUpdateRules } = require('./validation');
-const { LOGIN_STATUSES } = require('../../constants');
 const { SignInLinkController } = require('./sign-in-link.controller');
 const { SignInLinkService } = require('./sign-in-link.service');
 const { Pbkdf2Sha512HashStrategy } = require('../../crypto/pbkdf2-sha512-hash-strategy');
@@ -212,7 +212,7 @@ module.exports.login = async (req, res, next) => {
   return res.status(200).json({
     success: true,
     token: tokenObject.token,
-    loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD,
+    loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD,
     user: { email: userEmail },
     expiresIn: tokenObject.expires,
   });

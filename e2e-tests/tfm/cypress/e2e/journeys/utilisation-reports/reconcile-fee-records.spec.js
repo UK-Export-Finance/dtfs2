@@ -16,9 +16,30 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
   const REPORT_ID = 1;
   const FEE_RECORD_ID_ONE = '11';
   const FEE_RECORD_ID_TWO = '22';
+  const FACILITY_ID_ONE = '11111111';
+  const FACILITY_ID_TWO = '22222222';
+
+  const aTfmFacilityFacilitySnapshot = () => ({
+    coverStartDate: new Date().getTime(),
+    coverEndDate: new Date().getTime(),
+    interestPercentage: 5,
+    dayCountBasis: 365,
+  });
+
+  const TFM_FACILITIES = [
+    {
+      facilitySnapshot: { ...aTfmFacilityFacilitySnapshot(), ukefFacilityId: FACILITY_ID_ONE },
+    },
+    {
+      facilitySnapshot: { ...aTfmFacilityFacilitySnapshot(), ukefFacilityId: FACILITY_ID_TWO },
+    },
+  ];
 
   beforeEach(() => {
     const visibleBanks = [];
+
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, TFM_FACILITIES);
 
     cy.task(NODE_TASKS.GET_ALL_BANKS).then((getAllBanksResult) => {
       getAllBanksResult
@@ -28,7 +49,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
         });
     });
 
-    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
 
     cy.wrap(visibleBanks).each((bank) => {
       const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, SUBMISSION_MONTH);
@@ -39,14 +60,16 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .withBankId(BANK_ID)
           .withReportPeriod(reportPeriod)
           .build();
+        cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [reportToReconcile]);
+
         const paymentMatchingFeeRecordOneAndTwo = PaymentEntityMockBuilder.forCurrency('GBP')
           .withAmount(450)
           .withDateReceived(new Date('2023-02-02'))
           .withReference('REF01234')
           .build();
-        const feeRecordOne = FeeRecordEntityMockBuilder.forReport(undefined)
+        const feeRecordOne = FeeRecordEntityMockBuilder.forReport(reportToReconcile)
           .withId(FEE_RECORD_ID_ONE)
-          .withFacilityId('11111111')
+          .withFacilityId(FACILITY_ID_ONE)
           .withExporter('Exporter 1')
           .withPaymentCurrency('GBP')
           .withFeesPaidToUkefForThePeriod(100)
@@ -55,9 +78,10 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .withStatus('MATCH')
           .withPayments([paymentMatchingFeeRecordOneAndTwo])
           .build();
-        const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(undefined)
+
+        const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(reportToReconcile)
           .withId(FEE_RECORD_ID_TWO)
-          .withFacilityId('22222222')
+          .withFacilityId(FACILITY_ID_TWO)
           .withExporter('Exporter 2')
           .withFeesPaidToUkefForThePeriod(200)
           .withFeesPaidToUkefForThePeriodCurrency('EUR')
@@ -66,8 +90,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .withStatus('MATCH')
           .withPayments([paymentMatchingFeeRecordOneAndTwo])
           .build();
-        reportToReconcile.feeRecords = [feeRecordOne, feeRecordTwo];
-        cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [reportToReconcile]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
       } else {
         const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
           .withId(bank.id)

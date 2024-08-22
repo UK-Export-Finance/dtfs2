@@ -5,8 +5,8 @@ const mapFeeType = require('./map-fee-type');
 /**
  * Return ACBS field code for facility fee type.
  * Same ACBS code as fee frequency apart from `At Maturity`.
- * @param {Object} facility Facility object
- * @returns {String} ACBS fee type code
+ * @param {object} facility Facility object
+ * @returns {string} ACBS fee type code
  */
 const getFeeType = (facility) => {
   const feeType = mapFeeType(facility.facilitySnapshot);

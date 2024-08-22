@@ -93,7 +93,7 @@ const validateFacilityUtilisation = (facilityUtilisation, index) => validateMone
 
 /**
  * Validates the total fees accrued to be a monetary value or be falsey, returns an error message or null if valid.
- * @param {String | number | null} totalFeesAccrued
+ * @param {string | number | null} totalFeesAccrued
  * @param {number} index - index of the facility in the array.
  * @returns {UtilisationDataValidatorError | null} - Error message or null if valid.
  */

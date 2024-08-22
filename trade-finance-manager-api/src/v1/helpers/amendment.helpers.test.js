@@ -8,9 +8,10 @@ const {
   calculateUkefExposure,
   calculateAmendmentExposure,
   calculateAmendmentDateTenor,
-  addLatestAmendmentDates,
+  addLatestAmendmentCoverEndDate,
   addLatestAmendmentValue,
   internalAmendmentEmail,
+  addLatestAmendmentFacilityEndDate,
 } = require('./amendment.helpers');
 const CONSTANTS = require('../../constants');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
@@ -818,8 +819,8 @@ describe('calculateAmendmentDateTenor()', () => {
   });
 });
 
-describe('addLatestAmendmentDates', () => {
-  const latestDateResponse = {
+describe('addLatestAmendmentCoverEndDate', () => {
+  const latestCoverEndDateResponse = {
     coverEndDate: 1658403289,
   };
   const mockCoverEndDate = {
@@ -848,31 +849,87 @@ describe('addLatestAmendmentDates', () => {
       exposurePeriodInMonths: 12,
     },
   };
+  const emptyTfmObject = {};
+  const facilityId = '123';
 
-  it('should return empty object when no coverEndDate', async () => {
-    const response = await addLatestAmendmentDates({}, {}, '123');
+  it('should return an empty object when the amendment contains no cover end date data', async () => {
+    const latestCoverEndDateResponseWithoutCoverEndDate = {};
+
+    const response = await addLatestAmendmentCoverEndDate(emptyTfmObject, latestCoverEndDateResponseWithoutCoverEndDate, facilityId);
 
     expect(response).toEqual({});
   });
 
-  it('should return empty object when no facility response', async () => {
+  it('should return an empty object when there is no matching facility found', async () => {
     api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
     api.findOneFacility = () => Promise.resolve(null);
 
-    const response = await addLatestAmendmentDates({}, latestDateResponse, '123');
+    const response = await addLatestAmendmentCoverEndDate(emptyTfmObject, latestCoverEndDateResponse, facilityId);
 
     expect(response).toEqual({});
   });
 
-  it('should return populated object correct parameters and api calls are made', async () => {
+  it('should return an object containing coverEndDate and amendmentExposurePeriodInMonths when the amendment contains cover end date data and the api calls are successfully made', async () => {
     api.getFacilityExposurePeriod = () => Promise.resolve({ exposurePeriodInMonths: 2 });
     api.findOneFacility = () => Promise.resolve(mockFacility);
 
-    const response = await addLatestAmendmentDates({}, latestDateResponse, '123');
+    const response = await addLatestAmendmentCoverEndDate(emptyTfmObject, latestCoverEndDateResponse, facilityId);
 
     const expected = {
-      coverEndDate: latestDateResponse.coverEndDate,
+      coverEndDate: latestCoverEndDateResponse.coverEndDate,
       amendmentExposurePeriodInMonths: 2,
+    };
+
+    expect(response).toEqual(expected);
+  });
+});
+
+describe('addLatestAmendmentFacilityEndDate', () => {
+  const emptyTfmObject = {};
+
+  it('should return empty object when no isUsingFacilityEndDate value', async () => {
+    const latestFacilityEndDateDataResponse = {
+      isUsingFacilityEndDate: undefined,
+      facilityEndDate: new Date('2023-07-01').toISOString(),
+      bankReviewDate: undefined,
+    };
+
+    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse);
+
+    expect(response).toEqual({});
+  });
+
+  it('should return an object containing facilityEndDate when isUsingFacilityEndDate is true', async () => {
+    const latestFacilityEndDateDataResponse = {
+      isUsingFacilityEndDate: true,
+      facilityEndDate: new Date('2023-07-01').toISOString(),
+      bankReviewDate: new Date('2024-07-01').toISOString(),
+    };
+
+    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse);
+
+    const expected = {
+      isUsingFacilityEndDate: true,
+      facilityEndDate: latestFacilityEndDateDataResponse.facilityEndDate,
+      bankReviewDate: undefined,
+    };
+
+    expect(response).toEqual(expected);
+  });
+
+  it('should return an object containing bankReviewDate when isUsingFacilityEndDate is false', async () => {
+    const latestFacilityEndDateDataResponse = {
+      isUsingFacilityEndDate: false,
+      facilityEndDate: new Date('2023-07-01').toISOString(),
+      bankReviewDate: new Date('2024-07-01').toISOString(),
+    };
+
+    const response = await addLatestAmendmentFacilityEndDate(emptyTfmObject, latestFacilityEndDateDataResponse);
+
+    const expected = {
+      isUsingFacilityEndDate: false,
+      facilityEndDate: undefined,
+      bankReviewDate: latestFacilityEndDateDataResponse.bankReviewDate,
     };
 
     expect(response).toEqual(expected);

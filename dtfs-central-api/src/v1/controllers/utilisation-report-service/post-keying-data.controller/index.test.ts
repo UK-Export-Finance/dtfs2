@@ -36,7 +36,7 @@ describe('post-keying-data.controller', () => {
       FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('MATCH').build(),
     ];
 
-    const feeRecordRepoFindSpy = jest.spyOn(FeeRecordRepo, 'findByReportIdAndStatusesWithReport');
+    const feeRecordRepoFindSpy = jest.spyOn(FeeRecordRepo, 'findByReportIdAndStatusesWithReportAndPayments');
 
     const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReport');
 
@@ -78,8 +78,13 @@ describe('post-keying-data.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const undefinedReport = undefined as unknown as UtilisationReportEntity;
-      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH']).mockResolvedValue(someFeeRecordsForReport(undefinedReport));
+      const feeRecords = someFeeRecordsForReport(UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build());
+      feeRecords.forEach((feeRecord) => {
+        // @ts-expect-error We are setting the report to be undefined purposefully
+        // eslint-disable-next-line no-param-reassign
+        delete feeRecord.report;
+      });
+      when(feeRecordRepoFindSpy).calledWith(reportId, ['MATCH']).mockResolvedValue(feeRecords);
 
       // Act
       await postKeyingData(req, res);
@@ -113,7 +118,7 @@ describe('post-keying-data.controller', () => {
         type: 'GENERATE_KEYING_DATA',
         payload: {
           transactionEntityManager: mockEntityManager,
-          feeRecordsAtMatchStatus: feeRecords,
+          feeRecordsAtMatchStatusWithPayments: feeRecords,
           requestSource: {
             platform: 'TFM',
             userId,

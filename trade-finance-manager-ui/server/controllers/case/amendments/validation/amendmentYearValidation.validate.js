@@ -1,8 +1,8 @@
 const Joi = require('joi');
 
 /**
- * @param {String} year
- * @returns {Boolean}
+ * @param {string} year
+ * @returns {boolean}
  * function to validate year on amendment pages contains 4 numbers only
  * returns true if validation error
  */

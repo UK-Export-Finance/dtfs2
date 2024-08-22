@@ -1,6 +1,6 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { Currency, FEE_RECORD_STATUS, PaymentEntity } from '@ukef/dtfs2-common';
-import { In } from 'typeorm';
+import { NotFoundError } from '../../errors';
 
 export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
   /**
@@ -38,10 +38,40 @@ export const PaymentRepo = SqlDbDataSource.getRepository(PaymentEntity).extend({
       where: {
         feeRecords: {
           report: { id: reportId },
-          status: In([FEE_RECORD_STATUS.DOES_NOT_MATCH]),
+          status: FEE_RECORD_STATUS.DOES_NOT_MATCH,
         },
         currency,
       },
     });
+  },
+
+  /**
+   * Finds payment entities that are part of the same group as the payment
+   * with the supplied id.
+   * @param paymentId - The payment id
+   * @param reportId - The report id
+   * @returns An array of payment entities in the same group as the specified
+   * payment, including their fee records and associated reports.
+   */
+  async findPaymentsInGroupByPaymentIdAndReportIdWithFeeRecords(paymentId: number, reportId: number): Promise<PaymentEntity[]> {
+    const payment = await this.findOne({
+      where: {
+        id: paymentId,
+        feeRecords: {
+          report: { id: reportId },
+        },
+      },
+      relations: { feeRecords: { payments: { feeRecords: { report: true } } } },
+    });
+
+    if (!payment) {
+      throw new NotFoundError(`Failed to find payment with id ${paymentId}.`);
+    }
+
+    if (payment.feeRecords.length === 0) {
+      throw new Error(`Payment with id ${paymentId} has no fee records.`);
+    }
+
+    return payment.feeRecords[0].payments;
   },
 });

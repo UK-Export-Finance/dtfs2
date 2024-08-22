@@ -13,7 +13,7 @@ const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../con
 
 /**
  * canResubmitIssuedFacilities - changes flags to false
- * @param {Object} facilities
+ * @param {object} facilities
  */
 const updateChangedToIssued = async ({ facilities, auditDetails }) => {
   await Promise.all(
@@ -75,7 +75,7 @@ const portalActivityGenerator = (activityParams) => {
 /**
  * For facilities changed to issued
  * adds to front of portalActivity array in correct format
- * @param {Object} application
+ * @param {object} application
  * @param {Array} facilities
  * @returns {Promise<Array>} portalActivities
  */
@@ -115,7 +115,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
 /**
  * Generates activity for MIN submission to UKEF
  * Adds to front of portalActivities array in correct format
- * @param {Object} application
+ * @param {object} application
  * @returns {Promise<Array>} portalActivities
  */
 const ukefSubmissionPortalActivity = async (application) => {
@@ -170,7 +170,8 @@ const generateMINActivities = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails: ${error.message}`,
+        message: error.message,
+        code: error.code,
       });
     }
     return res.status(500).send({ status: 500, error });

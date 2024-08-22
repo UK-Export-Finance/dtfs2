@@ -59,10 +59,10 @@ context('Incomplete exporter section - application details page', () => {
 
       // should not be able to edit these 3 fields as locked by company house data
       applicationDetails.exporterSummaryListRowKey(0, 1).contains('Company name');
-      applicationDetails.exporterSummaryListRowAction(0, 1).should('not.exist');
+      applicationDetails.exporterSummaryListRowAction(0, 1).find('.govuk-link').should('have.class', 'govuk-!-display-none');
 
       applicationDetails.exporterSummaryListRowKey(0, 2).contains('Registered Address');
-      applicationDetails.exporterSummaryListRowAction(0, 2).should('not.exist');
+      applicationDetails.exporterSummaryListRowAction(0, 2).find('.govuk-link').should('have.class', 'govuk-!-display-none');
 
       applicationDetails.exporterSummaryListRowKey(0, 3).contains('Correspondence address, if different');
       applicationDetails.exporterSummaryListRowValue(0, 3).contains('—');
@@ -76,7 +76,7 @@ context('Incomplete exporter section - application details page', () => {
         });
 
       applicationDetails.exporterSummaryListRowKey(0, 4).contains('Industry');
-      applicationDetails.exporterSummaryListRowAction(0, 4).should('not.exist');
+      applicationDetails.exporterSummaryListRowAction(0, 4).find('.govuk-link').should('have.class', 'govuk-!-display-none');
 
       // should be - and be add as not yet added
       applicationDetails.exporterSummaryListRowKey(0, 5).contains('SME type');

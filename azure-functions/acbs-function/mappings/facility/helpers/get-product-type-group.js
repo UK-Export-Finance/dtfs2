@@ -3,9 +3,9 @@ const CONSTANTS = require('../../../constants');
 /**
  * Return facility product type group, commonly used for
  * facility loan record creation.
- * @param {Object} facility Facility object
- * @param {String} dealType Deal type i.e. GEF, BSS, EWCS
- * @returns {String} Facility product type group
+ * @param {object} facility Facility object
+ * @param {string} dealType Deal type i.e. GEF, BSS, EWCS
+ * @returns {string} Facility product type group
  */
 const getProductTypeGroup = (facility, dealType) => {
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {

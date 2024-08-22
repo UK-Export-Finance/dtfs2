@@ -2,6 +2,7 @@ const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = re
 const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
+const { DealNotFoundError } = require('@ukef/dtfs2-common');
 const { findOneDeal } = require('./get-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { ROUTES } = require('../../../../constants');
@@ -65,12 +66,12 @@ exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
 /**
  * Updates a deal in the database.
- * @param {Object} params - The parameters for updating the deal.
+ * @param {object} params - The parameters for updating the deal.
  * @param {string} params.dealId - The ID of the deal being updated.
- * @param {Object} params.dealUpdate - The update to be made to the deal.
- * @param {Object} params.user - The user making the changes.
+ * @param {object} params.dealUpdate - The update to be made to the deal.
+ * @param {object} params.user - The user making the changes.
  * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - The audit details for the update.
- * @param {Object} params.existingDeal - The existing deal object.
+ * @param {object} params.existingDeal - The existing deal object.
  * @param {string} params.routePath - The route path.
  * @returns {Promise<{ status: number, message: string }>} The updated deal object.
  */
@@ -156,6 +157,10 @@ exports.updateDeal = updateDeal;
 
 const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath, auditDetails) => {
   await findOneDeal(dealId, async (deal) => {
+    if (!deal) {
+      throw new DealNotFoundError(dealId);
+    }
+
     const { facilities } = deal;
 
     const updatedFacilities = [...facilities, newFacilityId.toHexString()];
@@ -226,7 +231,8 @@ exports.updateDealPut = async (req, res) => {
       if (error instanceof InvalidAuditDetailsError) {
         return res.status(error.status).send({
           status: error.status,
-          message: `Invalid auditDetails: ${error.message}`,
+          message: error.message,
+          code: error.code,
         });
       }
       return res.status(500).send({ status: 500, error });
@@ -246,7 +252,8 @@ exports.updateDealPut = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails: ${error.message}`,
+        message: error.message,
+        code: error.code,
       });
     }
 

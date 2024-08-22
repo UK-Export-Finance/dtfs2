@@ -6,3 +6,10 @@ export type CreateFacilityUtilisationDataWithoutUtilisationParams = {
   reportPeriod: ReportPeriod;
   requestSource: DbRequestSource;
 };
+
+export type UpdateWithCurrentReportPeriodDetailsParams = {
+  fixedFee: number;
+  utilisation: number;
+  reportPeriod: ReportPeriod;
+  requestSource: DbRequestSource;
+};

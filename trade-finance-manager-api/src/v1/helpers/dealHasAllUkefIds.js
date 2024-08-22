@@ -5,8 +5,8 @@ const { isValidUkefNumericId } = require('../validation/validateIds');
 /**
  * Verify whether the deal and all its facilities have a UKEF ID.
  * `PENDING` is an acceptable ID.
- * @param {String} dealId UKEF tfmDeal ID
- * @returns {Promise<Boolean>}  Boolean value
+ * @param {string} dealId UKEF tfmDeal ID
+ * @returns {Promise<boolean>}  Boolean value
  */
 const dealHasAllUkefIds = async (dealId) => {
   const tfmDeal = await findOneTfmDeal(dealId);
@@ -28,8 +28,8 @@ const dealHasAllUkefIds = async (dealId) => {
 /**
  * Verify whether the deal and all its facilities have a valid UKEF ID.
  * 10 digit numerical ID.
- * @param {String} dealId UKEF tfmDeal ID
- * @returns {Promise<Boolean>}  Boolean value
+ * @param {string} dealId UKEF tfmDeal ID
+ * @returns {Promise<boolean>}  Boolean value
  */
 const dealHasAllValidUkefIds = async (dealId) => {
   const tfmDeal = await findOneTfmDeal(dealId);

@@ -1,6 +1,7 @@
 import { Response } from 'supertest';
 import { HttpStatusCode, getUri } from 'axios';
 import { Bank, Currency, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
@@ -14,10 +15,12 @@ interface CustomResponse extends Response {
 
 console.error = jest.fn();
 
-describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
+const BASE_URL = '/v1/utilisation-reports/:reportId/payment/:paymentId';
+
+describe(`GET ${BASE_URL}`, () => {
   const getUrl = (reportId: number | string, paymentId: number | string, includeFeeRecords: boolean | undefined = false) =>
     getUri({
-      url: `/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
+      url: BASE_URL.replace(':reportId', reportId.toString()).replace(':paymentId', paymentId.toString()),
       params: { includeFeeRecords },
     });
 
@@ -84,20 +87,9 @@ describe('GET /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
-  it('returns a 400 when the report id is not a valid id', async () => {
-    // Act
-    const response: CustomResponse = await testApi.get(getUrl('invalid-id', paymentId));
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
-  });
-
-  it('returns a 400 when the payment id is not a valid id', async () => {
-    // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId, 'invalid-id'));
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+  withSqlIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
+    makeRequest: (url) => testApi.get(url),
   });
 
   it('returns a 404 when no payment with the supplied id can be found', async () => {

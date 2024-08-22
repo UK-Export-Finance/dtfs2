@@ -44,8 +44,8 @@ const isApprovedWithoutConditions = (ukefDecision) => {
 /**
  * Ascertain whether the requested amendment
  * have been declined or not.
- * @param {Object} amendment Amendment object
- * @returns {Boolean} Whether both the amendments decision has been declined by the underwriter.
+ * @param {object} amendment Amendment object
+ * @returns {boolean} Whether both the amendments decision has been declined by the underwriter.
  */
 const amendmentDeclined = (amendment) => {
   const { changeFacilityValue, changeCoverEndDate } = amendment;
@@ -276,7 +276,7 @@ const sendManualBankDecisionEmail = async (amendmentVariables, auditDetails) => 
  * Evaluated whether facility amendment is eligible
  * for ACBS interaction based on myriads of conditions.
  * This function evaluated across all amendment types.
- * @param {Object} amendment Facility amendments object
+ * @param {object} amendment Facility amendments object
  */
 const canSendToAcbs = (amendment) => {
   // Ensure at least one of the attribute has been amended
@@ -343,7 +343,7 @@ const sendFirstTaskEmail = async (taskVariables, auditDetails) => {
 /**
  * Initiate an internal UKEF team email, upon an amendment
  * submission (automatic) and approval (manual)
- * @param {String} ukefFacilityId UKEF Facility ID
+ * @param {string} ukefFacilityId UKEF Facility ID
  */
 const internalAmendmentEmail = (ukefFacilityId) => {
   try {
@@ -498,33 +498,55 @@ const calculateAmendmentDateTenor = async (coverEndDate, existingFacility) => {
   }
 };
 
-// populates tfmObject with date values
-const addLatestAmendmentDates = async (tfmObject, latestDate, facilityId) => {
-  // if there is a latest coverEndDate
-  if (latestDate?.coverEndDate) {
-    const { coverEndDate } = latestDate;
-    const existingFacility = await api.findOneFacility(facilityId);
+/**
+ * Populates the tfmObject with cover end date values
+ * @param {import('@ukef/dtfs2-common').FacilityAmendmentTfmObject} tfmObject
+ * @param {{ coverEndDate?: number } | undefined} latestCoverEndDateResponse
+ * @param {string} facilityId
+ * @returns {Promise<import('@ukef/dtfs2-common').FacilityAmendmentTfmObject>}
+ */
+const addLatestAmendmentCoverEndDate = async (tfmObject, latestCoverEndDateResponse, facilityId) => {
+  const existingFacility = await api.findOneFacility(facilityId);
 
-    if (!existingFacility) {
-      return tfmObject;
-    }
-    // populates with coverEndDate and exposurePeriod
-    const newTfmObject = {
-      ...tfmObject,
-      coverEndDate: latestDate.coverEndDate,
-      amendmentExposurePeriodInMonths: await calculateAmendmentDateTenor(coverEndDate, existingFacility),
-    };
-
-    return newTfmObject;
+  if (!existingFacility) {
+    return tfmObject;
   }
-  return tfmObject;
+
+  const coverEndDate = latestCoverEndDateResponse?.coverEndDate;
+  const amendmentExposurePeriodInMonths = coverEndDate ? await calculateAmendmentDateTenor(coverEndDate, existingFacility) : undefined;
+
+  return {
+    ...tfmObject,
+    coverEndDate,
+    amendmentExposurePeriodInMonths,
+  };
+};
+
+/**
+ * Populates the tfmObject with facility end date values
+ * @param {import('@ukef/dtfs2-common').FacilityAmendmentTfmObject} tfmObject
+ * @param {{facilityEndDate?: string, bankReviewDate?: string, isUsingFacilityEndDate?: boolean }} latestFacilityEndDateDataResponse
+ * @returns {Promise<import('@ukef/dtfs2-common').FacilityAmendmentTfmObject>}
+ */
+const addLatestAmendmentFacilityEndDate = async (tfmObject, latestFacilityEndDateDataResponse) => {
+  if (!latestFacilityEndDateDataResponse) {
+    return tfmObject;
+  }
+
+  const { isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = latestFacilityEndDateDataResponse;
+  return {
+    ...tfmObject,
+    isUsingFacilityEndDate,
+    facilityEndDate: isUsingFacilityEndDate ? facilityEndDate : undefined,
+    bankReviewDate: isUsingFacilityEndDate === false ? bankReviewDate : undefined,
+  };
 };
 
 /**
  * Calculates UKEF Exposure for the defined facility
  * based on updated facility amount and original cover percentage.
- * @param {Object} payload Amendment payload
- * @returns {Object} Computed payload with `ukefExposure` property calculated.
+ * @param {object} payload Amendment payload
+ * @returns {object} Computed payload with `ukefExposure` property calculated.
  */
 const calculateAcbsUkefExposure = (payload) => {
   if (payload?.value && payload?.coveredPercentage) {
@@ -539,8 +561,8 @@ const calculateAcbsUkefExposure = (payload) => {
 
 /**
  * Converts non-ms epoch to ms epoch.
- * @param {Object} payload Amendment payload
- * @returns {Object} Computed payload with EPOCH sm compatible `coverEndDate`.
+ * @param {object} payload Amendment payload
+ * @returns {object} Computed payload with EPOCH sm compatible `coverEndDate`.
  */
 const formatCoverEndDate = (payload) => {
   if (payload?.coverEndDate) {
@@ -566,7 +588,8 @@ module.exports = {
   calculateUkefExposure,
   formatCoverEndDate,
   addLatestAmendmentValue,
-  addLatestAmendmentDates,
+  addLatestAmendmentCoverEndDate,
+  addLatestAmendmentFacilityEndDate,
   calculateAmendmentDateTenor,
   calculateAmendmentExposure,
   calculateAcbsUkefExposure,

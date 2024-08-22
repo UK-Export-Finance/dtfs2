@@ -1,4 +1,4 @@
-import request from 'supertest';
+import request, { Response } from 'supertest';
 import dotenv from 'dotenv';
 import { Express } from 'express';
 import { createApp } from '../src/createApp';
@@ -39,30 +39,30 @@ class TestApi {
 
   public post(data: object) {
     this.assertIsInitialised();
-    const to = async (url: string) => await request(this.app).post(url).send(data).set(headers);
+    const to = async (url: string): Promise<Response> => await request(this.app).post(url).send(data).set(headers);
     return { to };
   }
 
   public put(data: object) {
     this.assertIsInitialised();
-    const to = async (url: string) => await request(this.app).put(url).send(data).set(headers);
+    const to = async (url: string): Promise<Response> => await request(this.app).put(url).send(data).set(headers);
     return { to };
   }
 
-  public async get(url: string, data?: object) {
+  public async get(url: string, data?: object): Promise<Response> {
     this.assertIsInitialised();
     return await request(this.app).get(url).send(data).set(headers);
   }
 
   public remove(data: object) {
     this.assertIsInitialised();
-    const to = async (url: string) => await request(this.app).delete(url).send(data).set(headers);
+    const to = async (url: string): Promise<Response> => await request(this.app).delete(url).send(data).set(headers);
     return { to };
   }
 
   public patch(data: object) {
     this.assertIsInitialised();
-    const to = async (url: string) => await request(this.app).patch(url).send(data).set(headers);
+    const to = async (url: string): Promise<Response> => await request(this.app).patch(url).send(data).set(headers);
     return { to };
   }
 }

@@ -13,7 +13,7 @@ import { premiumScheduleCalls, successStatus } from './premium-schedule.controll
  * Get premium schedule segments from facility URN
  * @param {Express.Request} req Facility ID
  * @param {Express.Response} res Facility ID
- * @returns {Object} Premium schedule data
+ * @returns {object} Premium schedule data
  */
 
 export const getPremiumSchedule = async (req: Request, res: Response) => {

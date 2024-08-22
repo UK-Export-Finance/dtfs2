@@ -22,7 +22,6 @@
   {% set feePayments = params.keyingSheetRow.feePayments if params.keyingSheetRow.feePayments.length > 0 else [{}] %}
   {% set baseCurrency = params.keyingSheetRow.baseCurrency %}
   {% set fixedFeeAdjustment = params.keyingSheetRow.fixedFeeAdjustment %}
-  {% set premiumAccrualBalanceAdjustment = params.keyingSheetRow.premiumAccrualBalanceAdjustment %}
   {% set principalBalanceAdjustment = params.keyingSheetRow.principalBalanceAdjustment %}
   {% set checkboxId = params.keyingSheetRow.checkboxId %}
   {% set isChecked = params.keyingSheetRow.isChecked %}
@@ -44,7 +43,6 @@
       </td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}">{{ baseCurrency if isFirstLineOfRow }}</td>
       {{ adjustmentColumns(fixedFeeAdjustment, { showBottomBorder: isLastLineOfRow, showValues: isFirstLineOfRow }) }}
-      {{ adjustmentColumns(premiumAccrualBalanceAdjustment, { showBottomBorder: isLastLineOfRow, showValues: isFirstLineOfRow }) }}
       {{ adjustmentColumns(principalBalanceAdjustment, { showBottomBorder: isLastLineOfRow, showValues: isFirstLineOfRow }) }}
       {% if userCanEdit %}
         <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}">

@@ -2,8 +2,8 @@ const utils = require('../../../../crypto/utils');
 
 /**
  * Ensures that if the change has a password property, it matches the current password
- * @param {Object} user the existing user
- * @param {Object} change the changes to make
+ * @param {object} user the existing user
+ * @param {object} change the changes to make
  * @returns {Array} either an empty array or an array containing an error object
  */
 const currentPasswordMustMatch = (user, change) => {

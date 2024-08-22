@@ -48,9 +48,9 @@ const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
 /**
  * Makes a request to the GET /facilities TFM API endpoint
  * and throws an error if the page number is out of bounds
- * @param {Object} queryParams Query parameters
+ * @param {object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {Object} Facilities data and pagination metadata
+ * @returns {object} Facilities data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getFacilities = async (queryParams, token) => {
@@ -75,9 +75,9 @@ const getFacilities = async (queryParams, token) => {
 /**
  * Makes a request to the GET /deals TFM API endpoint
  * and throws an error if the page number is out of bounds
- * @param {Object} queryParams Query parameters
+ * @param {object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {Object} Deals data and pagination metadata
+ * @returns {object} Deals data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getDeals = async (queryParams, token) => {
@@ -626,6 +626,33 @@ const getLatestCompletedAmendmentDate = async (facilityId, token) => {
   }
 };
 
+/**
+ * @param {string} facilityId - The facility ID
+ * @param {string} token - The user token
+ * @returns {Promise<import('./api-response-types').GetLatestCompletedAmendmentFacilityEndDateResponse>}
+ */
+const getLatestCompletedAmendmentFacilityEndDate = async (facilityId, token) => {
+  try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('getLatestCompletedAmendmentFacilityEndDate: Invalid facility id provided %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed/latest-facility-end-date`,
+      headers: generateHeaders(token),
+    });
+
+    return { status: 200, data: response.data };
+  } catch (error) {
+    console.error('Unable to get the latest completed facility end date amendment %o', error);
+    return { status: error?.response?.status || 500, data: 'Failed to get latest completed facility end date amendment' };
+  }
+};
+
 const getAmendmentById = async (facilityId, amendmentId, token) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -882,14 +909,41 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, facilityI
 };
 
 /**
+ * Gets the selected fee records details with the attached available payment
+ * groups.
  * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The ids of the selected fee records
  * @param {string} userToken - The user token
  * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
  */
-const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds, userToken) => {
+const getSelectedFeeRecordsDetailsWithAvailablePaymentGroups = async (reportId, feeRecordIds, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
     headers: generateHeaders(userToken),
+    params: {
+      includeAvailablePaymentGroups: true,
+    },
+    data: {
+      feeRecordIds,
+    },
+  });
+
+  return response.data;
+};
+
+/**
+ * Gets the selected fee records details without the attached available payment
+ * groups.
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The ids of the selected fee records
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
+ */
+const getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups = async (reportId, feeRecordIds, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
+    headers: generateHeaders(userToken),
+    params: {
+      includeAvailablePaymentGroups: false,
+    },
     data: {
       feeRecordIds,
     },
@@ -1136,6 +1190,28 @@ const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, 
   });
 };
 
+/**
+ * Adds the supplied fee records to an existing payment
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The list of fee record ids to add to the payment
+ * @param {number[]} paymentIds - The list of payment ids for the fee records to be added to
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user adding the payment
+ * @param {string} userToken - The user token
+ */
+const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, user, userToken) => {
+  const response = await axios({
+    method: 'post',
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/add-to-an-existing-payment`,
+    headers: generateHeaders(userToken),
+    data: {
+      feeRecordIds,
+      paymentIds,
+      user,
+    },
+  });
+  return response.data;
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1169,6 +1245,7 @@ module.exports = {
   getAllAmendmentsInProgress,
   getLatestCompletedAmendmentValue,
   getLatestCompletedAmendmentDate,
+  getLatestCompletedAmendmentFacilityEndDate,
   getParty,
   getUkBankHolidays,
   getUtilisationReportsReconciliationSummary,
@@ -1176,7 +1253,8 @@ module.exports = {
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
   getAllBanks,
-  getSelectedFeeRecordsDetails,
+  getSelectedFeeRecordsDetailsWithAvailablePaymentGroups,
+  getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups,
   getReportSummariesByBankAndYear,
   addPaymentToFeeRecords,
   generateKeyingData,
@@ -1188,4 +1266,5 @@ module.exports = {
   deletePaymentById,
   editPayment,
   removeFeesFromPayment,
+  addFeesToAnExistingPayment,
 };

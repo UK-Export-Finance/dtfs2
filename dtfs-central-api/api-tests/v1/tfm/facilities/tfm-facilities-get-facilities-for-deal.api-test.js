@@ -1,5 +1,6 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
@@ -17,16 +18,15 @@ const newFacility = {
   dealId: MOCK_DEAL.DEAL_ID,
 };
 
-describe('/v1/tfm/deals/:id/facilities', () => {
+describe('/v1/tfm/deals/:dealId/facilities', () => {
   beforeAll(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
-  describe('GET /v1/tfm/deal/:id/facilities', () => {
-    it('returns a 400 error if the id is not a valid mongo id', async () => {
-      const invalidMongoId = 'abc';
-      const { status } = await testApi.get(`/v1/tfm/deals/${invalidMongoId}/facilities`);
-      expect(status).toBe(400);
+  describe('GET /v1/tfm/deals/:dealId/facilities', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/deals/:dealId/facilities',
+      makeRequest: (url) => testApi.get(url),
     });
 
     it('returns the requested resource', async () => {

@@ -1,7 +1,6 @@
 const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const { clearACBSLog } = require('../../helpers/clear-acbs-log');
 const api = require('../../../src/v1/api');
-const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_ACBS = require('../../../src/v1/__mocks__/mock-deal-acbs');
 const CONSTANTS = require('../../../src/constants');
 
@@ -9,15 +8,11 @@ jest.mock('../../../src/v1/controllers/banks.controller', () => ({
   findOneBank: (mockBankId) => (mockBankId === '123' ? false : { id: mockBankId }),
 }));
 
-const MOCK_TFM_DEAL_ACBS = {
-  dealSnapshot: MOCK_DEAL_ACBS,
-  tfm: {
-    acbs: {
-      facilityStage: 'Unissued',
-      hasBeenIssued: false,
-    },
-  },
-};
+jest.mock('../../../src/v1/controllers/deal.controller', () => ({
+  findOneTfmDeal: jest.fn((dealId) => (dealId === MOCK_DEAL_ACBS._id ? Promise.resolve(MOCK_DEAL_ACBS) : Promise.resolve(false))),
+}));
+
+const invalidIds = ['invalid', '', '0000000000', '123', 'ABC', '!"£', [], {}];
 
 describe('acbs controller', () => {
   beforeAll(async () => {
@@ -63,20 +58,25 @@ describe('acbs controller', () => {
   });
 
   describe('createACBS', () => {
-    it('should return false if deal if no banks exists', async () => {
-      const result = await acbsController.createACBS({
-        dealSnapshot: {
-          ...MOCK_DEAL,
-          bank: null,
-        },
-      });
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it.each(invalidIds)('should return false if the Mongo deal object identifier specified is %s', async (dealId) => {
+      // Act
+      const result = await acbsController.createACBS(dealId);
+
+      // Assert
       expect(result).toEqual(false);
       expect(api.createACBS).not.toHaveBeenCalled();
     });
 
-    it('should call createACBS ACBS function', async () => {
-      await acbsController.createACBS(MOCK_TFM_DEAL_ACBS);
-      expect(api.createACBS).toHaveBeenCalled();
+    it('should call createACBS function', async () => {
+      // Act
+      await acbsController.createACBS(MOCK_DEAL_ACBS._id);
+
+      // Assert
+      expect(api.createACBS).toHaveBeenCalledTimes(1);
     });
   });
 

@@ -21,7 +21,7 @@ class SignInLinkService {
 
   /**
    * Creates and emails a sign-in link to the user.
-   * @param {Object} user - The user object with necessary information.
+   * @param {object} user - The user object with necessary information.
    * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
    * @returns {Promise<number>} - The new sign-in link count.
    * @throws {UserBlockedError} - If the user is blocked.
@@ -52,7 +52,7 @@ class SignInLinkService {
 
   /**
    * Gets the status of a sign-in token for a user.
-   * @param {Object} params - The parameters containing userId and signInToken.
+   * @param {object} params - The parameters containing userId and signInToken.
    * @returns {Promise<string>} - The status of the sign-in token.
    */
   async getSignInTokenStatus({ userId, signInToken }) {
@@ -91,7 +91,7 @@ class SignInLinkService {
    * Logs in a user and returns the user object and authentication token.
    * @param {string} userId - The ID of the user to log in.
    * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
-   * @returns {Promise<Object>} - The user object and authentication token.
+   * @returns {Promise<object>} - The user object and authentication token.
    */
   async loginUser(userId, auditDetails) {
     const user = await this.#userRepository.findById(userId);
@@ -114,7 +114,7 @@ class SignInLinkService {
 
   /**
    * Updates the last login timestamp and resets sign-in data for a user.
-   * @param {Object} params - The parameters containing userId and sessionIdentifier.
+   * @param {object} params - The parameters containing userId and sessionIdentifier.
    * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - user making the request
    * @returns {Promise<void>}
    */
@@ -137,7 +137,7 @@ class SignInLinkService {
 
   /**
    * Saves the hash and salt of the sign-in token along with its expiry for a user.
-   * @param {Object} params - The parameters containing userId and signInToken.
+   * @param {object} params - The parameters containing userId and signInToken.
    * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - user making the request
    * @throws {Error} - If there is an issue saving the sign-in token.
    */
@@ -159,7 +159,7 @@ class SignInLinkService {
 
   /**
    * Sends a sign-in link email to the user.
-   * @param {Object} params - The parameters containing userEmail, userFirstName, userLastName, and signInLink.
+   * @param {object} params - The parameters containing userEmail, userFirstName, userLastName, and signInLink.
    * @throws {Error} - If there is an issue sending the sign-in link email.
    */
   async #sendSignInLinkEmail({ userEmail, userFirstName, userLastName, signInLink }) {
@@ -181,7 +181,7 @@ class SignInLinkService {
 
   /**
    * Increments the sign-in link send count for a user and handles blocking if necessary.
-   * @param {Object} params - The parameters containing userId, isUserBlockedOrDisabled, userSignInLinkSendDate, and userEmail.
+   * @param {object} params - The parameters containing userId, isUserBlockedOrDisabled, userSignInLinkSendDate, and userEmail.
    * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - user making the request
    * @returns {Promise<number>} - The remaining number of sign-in link attempts.
    * @throws {UserBlockedError} - If the user is blocked due to excessive sign-in link attempts.
@@ -215,7 +215,7 @@ class SignInLinkService {
 
   /**
    * Resets sign-in data if it is stale based on the time since the last sign-in link send.
-   * @param {Object} params - The parameters containing userId and userSignInLinkSendDate.
+   * @param {object} params - The parameters containing userId and userSignInLinkSendDate.
    * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - user making the request
    */
   async #resetSignInDataIfStale({ userId, userSignInLinkSendDate, auditDetails }) {
@@ -231,7 +231,7 @@ class SignInLinkService {
 
   /**
    * Blocks a user with a given reason and sends a blocked email to the user.
-   * @param {Object} params - The parameters containing userId, userEmail, and reason.
+   * @param {object} params - The parameters containing userId, userEmail, and reason.
    * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - user making the request
    */
   async #blockUser({ userId, userEmail, reason, auditDetails }) {
@@ -241,7 +241,7 @@ class SignInLinkService {
 
   /**
    * Checks if a sign-in token is within its validity period.
-   * @param {Object} signInToken - The sign-in token object.
+   * @param {object} signInToken - The sign-in token object.
    * @returns {boolean} - Whether the sign-in token is within its validity period.
    */
   #isSignInTokenIsInDate(signInToken) {
@@ -250,7 +250,7 @@ class SignInLinkService {
 
   /**
    * Checks if a sign-in token is the last issued token for a user.
-   * @param {Object} params - The parameters containing signInTokenIndex and databaseSignInTokens.
+   * @param {object} params - The parameters containing signInTokenIndex and databaseSignInTokens.
    * @returns {boolean} - Whether the sign-in token is the last issued for the user.
    */
   #isSignInTokenIsLastIssued({ signInTokenIndex, databaseSignInTokens }) {
@@ -259,7 +259,7 @@ class SignInLinkService {
 
   /**
    * Checks if a user has saved sign-in tokens.
-   * @param {Object} user - The user object.
+   * @param {object} user - The user object.
    * @returns {boolean} - Whether the user has saved sign-in tokens.
    */
   #doesUserHaveSavedSignInTokens(user) {

@@ -62,7 +62,7 @@ exports.createMultipleFacilitiesPost = async (req, res) => {
   const { facilities, dealId, user, auditDetails } = req.body;
 
   if (!user) {
-    return res.status(404).send();
+    return res.sendStatus(404);
   }
 
   try {
@@ -71,7 +71,8 @@ exports.createMultipleFacilitiesPost = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails: ${error.message}`,
+        message: error.message,
+        code: error.code,
       });
     }
     return res.status(500).send({ status: 500, error });

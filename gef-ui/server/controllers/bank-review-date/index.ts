@@ -1,9 +1,10 @@
 import { Response } from 'express';
-import { getDate, getMonth, getYear, parseISO, startOfDay } from 'date-fns';
+import { getDate, getMonth, getYear, isSameDay, parseISO, startOfDay } from 'date-fns';
 import { CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
 import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
 import * as api from '../../services/api';
 import { validateAndParseBankReviewDate } from './validation';
+import { asLoggedInUserSession } from '../../utils/express-session';
 
 type BankReviewDateParams = { dealId: string; facilityId: string };
 type BankReviewDatePostBody = { 'bank-review-date-day': string; 'bank-review-date-month': string; 'bank-review-date-year': string };
@@ -53,7 +54,7 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
   }
 };
 
-const getCoverStartDate = (facility: Record<string, unknown>) => {
+const getCoverStartDateOrStartOfToday = (facility: Record<string, unknown>) => {
   if (typeof facility.coverStartDate === 'string') {
     return startOfDay(parseISO(facility.coverStartDate));
   }
@@ -66,20 +67,20 @@ const getCoverStartDate = (facility: Record<string, unknown>) => {
 };
 
 export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Response) => {
-  const {
-    params: { dealId, facilityId },
-    body: { 'bank-review-date-year': bankReviewDateYear, 'bank-review-date-month': bankReviewDateMonth, 'bank-review-date-day': bankReviewDateDay },
-    session: { userToken, user },
-    query: { saveAndReturn, status },
-  } = req;
-
-  const bankReviewDateIsBlank = !bankReviewDateYear && !bankReviewDateMonth && !bankReviewDateDay;
-
-  if (isTrueSet(saveAndReturn) && bankReviewDateIsBlank) {
-    return res.redirect(`/gef/application-details/${dealId}`);
-  }
-
   try {
+    const {
+      params: { dealId, facilityId },
+      body: { 'bank-review-date-year': bankReviewDateYear, 'bank-review-date-month': bankReviewDateMonth, 'bank-review-date-day': bankReviewDateDay },
+      query: { saveAndReturn, status },
+    } = req;
+    const { userToken, user } = asLoggedInUserSession(req.session);
+
+    const bankReviewDateIsBlank = !bankReviewDateYear && !bankReviewDateMonth && !bankReviewDateDay;
+
+    if (isTrueSet(saveAndReturn) && bankReviewDateIsBlank) {
+      return res.redirect(`/gef/application-details/${dealId}`);
+    }
+
     const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
 
     const bankReviewDateErrorsAndDate = validateAndParseBankReviewDate(
@@ -88,7 +89,7 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
         month: bankReviewDateMonth,
         year: bankReviewDateYear,
       },
-      getCoverStartDate(facility),
+      getCoverStartDateOrStartOfToday(facility),
     );
 
     if (bankReviewDateErrorsAndDate.errors) {
@@ -106,19 +107,22 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
     }
 
     const bankReviewDate = bankReviewDateErrorsAndDate.date;
+    const bankReviewDateValueIsUnchanged = typeof facility.bankReviewDate === 'string' && isSameDay(parseISO(facility.bankReviewDate), bankReviewDate);
 
-    await api.updateFacility({
-      facilityId,
-      payload: {
-        bankReviewDate,
-      },
-      userToken,
-    });
+    if (!bankReviewDateValueIsUnchanged) {
+      await api.updateFacility({
+        facilityId,
+        payload: {
+          bankReviewDate,
+        },
+        userToken,
+      });
 
-    const applicationUpdate = {
-      editorId: user?._id,
-    };
-    await api.updateApplication({ dealId, application: applicationUpdate, userToken });
+      const applicationUpdate = {
+        editorId: user._id,
+      };
+      await api.updateApplication({ dealId, application: applicationUpdate, userToken });
+    }
 
     if (isTrueSet(saveAndReturn)) {
       return res.redirect(`/gef/application-details/${dealId}`);

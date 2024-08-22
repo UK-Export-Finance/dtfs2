@@ -101,7 +101,7 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
     const createdFacilityUtilisationDataEntities = reportCsvDataWithoutExistingFacilityUtilisationData.map(({ 'ukef facility id': facilityId }) => {
       expect(mockExistsBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: facilityId });
 
-      return FacilityUtilisationDataEntity.createWithoutUtilisation({
+      return FacilityUtilisationDataEntity.createWithoutUtilisationAndFixedFee({
         id: facilityId,
         reportPeriod: reportReportPeriod,
         requestSource,

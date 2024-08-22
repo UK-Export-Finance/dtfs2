@@ -7,7 +7,7 @@ const headers = {
 
 /**
  * APIM MDM `GET` generic endpoint invocation call
- * @param {String} endpoint Endpoint with provided query parameters
+ * @param {string} endpoint Endpoint with provided query parameters
  * @returns Response object
  */
 const getAPI = async (endpoint) => {

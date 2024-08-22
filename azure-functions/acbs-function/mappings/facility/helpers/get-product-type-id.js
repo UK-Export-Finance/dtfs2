@@ -2,9 +2,9 @@ const CONSTANTS = require('../../../constants');
 
 /**
  * Return facility product ACBS compliant code.
- * @param {Object} facility Facility object
- * @param {Boolean} facilityMasterRecord Set to `true` if creating facility master record
- * @returns {String} Facility product ACBS compliant code, GEF facility master record will return `280`.
+ * @param {object} facility Facility object
+ * @param {boolean} facilityMasterRecord Set to `true` if creating facility master record
+ * @returns {string} Facility product ACBS compliant code, GEF facility master record will return `280`.
  */
 const getProductTypeId = (facility, facilityMasterRecord = false) => {
   switch (facility.type || facility.facilitySnapshot.type) {

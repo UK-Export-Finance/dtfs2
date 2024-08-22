@@ -1,12 +1,13 @@
 const CONSTANTS = require('../../../constants');
+const { to2Decimals } = require('../../../helpers/currency');
 
 /**
  * `GEF` = 10% of amount
  * `Loan` (EWCS) = Disbursement amount * (UKEF cover percentage / 100)
  * `Bond` (BSS) = Amount
  * @param {Float} amount Facility UKEF exposure
- * @param {Object} facility Facility
- * @param {Object} dealType Deal type
+ * @param {object} facility Facility
+ * @param {object} dealType Deal type
  */
 const getLoanMaximumLiability = (amount, facility, dealType) => {
   let ukefExposure;
@@ -37,7 +38,7 @@ const getLoanMaximumLiability = (amount, facility, dealType) => {
         : amount; // BSS
   }
 
-  return Number(Number(ukefExposure).toFixed(2));
+  return to2Decimals(ukefExposure);
 };
 
 module.exports = getLoanMaximumLiability;

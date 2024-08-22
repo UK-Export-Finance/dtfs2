@@ -79,6 +79,19 @@ context('Provided Facility Page', () => {
         );
       });
 
+      it('redirects user to `facility end date` page when clicking on `Back` Link if using facility end date', () => {
+        cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
+        aboutFacility.isUsingFacilityEndDateYes().click();
+        aboutFacility.saveAndReturnButton().click();
+
+        cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
+        providedFacility.backLink().click();
+        cy.url().should(
+          'eq',
+          relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-end-date`),
+        );
+      });
+
       it('redirects user to `bank review date` page when clicking on `Back` Link if not using facility end date', () => {
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
         aboutFacility.isUsingFacilityEndDateNo().click();

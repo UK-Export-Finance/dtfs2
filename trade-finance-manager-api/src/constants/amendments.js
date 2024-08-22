@@ -12,14 +12,7 @@ const AMENDMENT_QUERY_STATUSES = {
   COMPLETED: 'completed',
 };
 
-const AMENDMENT_QUERIES = {
-  LATEST_VALUE: 'latest-value',
-  LATEST_COVER_END_DATE: 'latest-cover-end-date',
-  LATEST: 'latest',
-};
-
 module.exports = {
   UNDERWRITER_MANAGER_DECISIONS,
   AMENDMENT_QUERY_STATUSES,
-  AMENDMENT_QUERIES,
 };

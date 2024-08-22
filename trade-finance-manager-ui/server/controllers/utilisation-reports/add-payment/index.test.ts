@@ -32,7 +32,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
       // Act
       await addPayment(req, res);
@@ -71,13 +71,13 @@ describe('controllers/utilisation-reports/add-payment', () => {
         ],
         canAddToExistingPayment: true,
       };
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(selectedFeeRecordDetailsResponse);
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(selectedFeeRecordDetailsResponse);
 
       // Act
       await addPayment(req, res);
 
       // Assert
-      expect(api.getSelectedFeeRecordsDetails).toHaveBeenCalledWith('123', [456], requestSession.userToken);
+      expect(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).toHaveBeenCalledWith('123', [456], requestSession.userToken);
       expect(res._getRenderView()).toEqual('utilisation-reports/add-payment.njk');
       expect((res._getRenderData() as AddPaymentViewModel).bank).toEqual({ name: 'Test' });
       expect((res._getRenderData() as AddPaymentViewModel).formattedReportPeriod).toEqual('February to April 2024');
@@ -110,7 +110,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue({ ...aSelectedFeeRecordsDetails(), payments: [] });
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue({ ...aSelectedFeeRecordsDetails(), payments: [] });
 
       // Act
       await addPayment(req, res);
@@ -126,7 +126,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
       // Act
       await addPayment(req, res);
@@ -144,7 +144,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
       // Act
       await addPayment(req, res);
@@ -162,7 +162,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           'feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
         },
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
       // Act
       await addPayment(req, res);
@@ -180,7 +180,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
       // Act
       await addPayment(req, res);
@@ -198,7 +198,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue({
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue({
         ...aSelectedFeeRecordsDetails(),
         feeRecords: [
           {
@@ -254,7 +254,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
         params: { reportId: '123' },
         body: requestBodyForPostFromPremiumPaymentsPage,
       });
-      jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue({
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue({
         ...aSelectedFeeRecordsDetails(),
         feeRecords: [
           {
@@ -318,7 +318,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           params: { reportId: '123' },
           body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
         });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
         // Act
         await addPayment(req, res);
@@ -334,7 +334,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           params: { reportId: '123' },
           body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
         });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue({
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue({
           ...aSelectedFeeRecordsDetails(),
           payments: [aSelectedFeeRecordsPaymentDetailsResponse(), aSelectedFeeRecordsPaymentDetailsResponse()],
         });
@@ -358,7 +358,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             paymentAmount: 'one hundred',
           },
         });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
         const validationSpy = jest.spyOn(validation, 'validateAddPaymentRequestFormValues').mockReturnValue({
           errorSummary: [{ text: 'Enter a valid amount received', href: '#paymentAmount' }],
           paymentAmountErrorMessage: 'Enter a valid amount received',
@@ -407,7 +407,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           params: { reportId: '123' },
           body: requestBody,
         });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
         // Act
         await addPayment(req, res);
@@ -436,7 +436,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             addPaymentFormSubmission: 'true',
           },
         });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue({
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue({
           bank: { name: 'Test' },
           reportPeriod: { start: { month: 2, year: 2024 }, end: { month: 4, year: 2024 } },
           totalReportedPayments: { amount: 1000, currency: 'JPY' },
@@ -464,7 +464,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
         await addPayment(req, res);
 
         // Assert
-        expect(api.getSelectedFeeRecordsDetails).toHaveBeenCalledWith('123', [456], requestSession.userToken);
+        expect(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).toHaveBeenCalledWith('123', [456], requestSession.userToken);
         expect((res._getRenderData() as AddPaymentViewModel).bank).toEqual({ name: 'Test' });
         expect((res._getRenderData() as AddPaymentViewModel).formattedReportPeriod).toEqual('February to April 2024');
         expect((res._getRenderData() as AddPaymentViewModel).reportedFeeDetails).toEqual({
@@ -499,7 +499,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             addPaymentFormSubmission: 'true',
           },
         });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
         // Act
         await addPayment(req, res);
@@ -517,7 +517,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           params: { reportId: '123' },
           body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
         });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
         // Act
         await addPayment(req, res);
@@ -533,7 +533,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           params: { reportId: '123' },
           body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
         });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue({
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue({
           ...aSelectedFeeRecordsDetails(),
           feeRecords: [
             {
@@ -589,7 +589,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
           params: { reportId: '123' },
           body: addPaymentFormSubmissionRequestBodyWithIncompleteData,
         });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue({
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue({
           ...aSelectedFeeRecordsDetails(),
           feeRecords: [
             {
@@ -663,7 +663,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
       });
 
       beforeEach(() => {
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
         addPaymentToFeeRecordsSpy.mockResolvedValue({});
       });
 
@@ -725,7 +725,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             addAnotherPayment: 'true',
           },
         });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
         // Act
         await addPayment(req, res);
@@ -744,7 +744,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             addAnotherPayment: 'true',
           },
         });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
         // Act
         await addPayment(req, res);
@@ -763,7 +763,7 @@ describe('controllers/utilisation-reports/add-payment', () => {
             addAnotherPayment: 'true',
           },
         });
-        jest.mocked(api.getSelectedFeeRecordsDetails).mockResolvedValue(aSelectedFeeRecordsDetails());
+        jest.mocked(api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
 
         // Act
         await addPayment(req, res);

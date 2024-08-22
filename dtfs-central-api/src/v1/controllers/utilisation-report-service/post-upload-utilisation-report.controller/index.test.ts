@@ -127,7 +127,7 @@ describe('post-upload-utilisation-report controller', () => {
         status: errorStatus,
       });
 
-      jest.mocked(executeWithSqlTransaction).mockRejectedValue(new TransactionFailedError(testApiError));
+      jest.mocked(executeWithSqlTransaction).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
 
       // Act
       await postUploadUtilisationReport(req, res);
@@ -160,7 +160,7 @@ describe('post-upload-utilisation-report controller', () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
-        jest.mocked(executeWithSqlTransaction).mockRejectedValue(new TransactionFailedError());
+        jest.mocked(executeWithSqlTransaction).mockRejectedValue(TransactionFailedError.forUnknownError());
 
         // Act
         await postUploadUtilisationReport(req, res);

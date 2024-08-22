@@ -28,19 +28,20 @@ export type FeeRecordToKey = FeeRecord & {
   status: FeeRecordStatus;
 };
 
+export type KeyingSheetFeePayment = {
+  dateReceived: Date | null;
+  currency: Currency;
+  amount: number;
+};
+
 export type KeyingSheetRow = {
   feeRecordId: number;
   status: KeyingSheetRowStatus;
   facilityId: string;
   exporter: string;
-  feePayments: {
-    dateReceived: Date | null;
-    currency: Currency;
-    amount: number;
-  }[];
+  feePayments: KeyingSheetFeePayment[];
   baseCurrency: Currency;
   fixedFeeAdjustment: KeyingSheetAdjustment | null;
-  premiumAccrualBalanceAdjustment: KeyingSheetAdjustment | null;
   principalBalanceAdjustment: KeyingSheetAdjustment | null;
 };
 

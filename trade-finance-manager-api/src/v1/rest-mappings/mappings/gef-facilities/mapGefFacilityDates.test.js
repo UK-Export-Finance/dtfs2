@@ -1,5 +1,4 @@
-import { isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
-import { formatISO } from 'date-fns';
+import { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
 
 const { format } = require('date-fns');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
@@ -10,7 +9,6 @@ const { convertDateToTimestamp } = require('../../../../utils/date');
 const MOCK_GEF_DEAL = require('../../../__mocks__/mock-gef-deal');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('../../../__mocks__/mock-cash-contingent-facilities');
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
@@ -69,7 +67,7 @@ describe('mapGefFacilityDates', () => {
     expect(result.coverEndDate).toEqual(expected);
   });
 
-  describe('facility end date feature flag not enabled', () => {
+  describe('when Facility end date feature flag not enabled', () => {
     beforeAll(() => {
       jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(false);
     });
@@ -78,17 +76,44 @@ describe('mapGefFacilityDates', () => {
       jest.resetAllMocks();
     });
 
-    it('should not return facility end date fields', () => {
-      const facilityWithEndDate = {
+    it('should not return facility end date fields when part of the facility snapshot', () => {
+      const facilityWithFEDinformation = {
         facilitySnapshot: {
           ...mockFacility.facilitySnapshot,
           isUsingFacilityEndDate: true,
-          facilityEndDate: '2021-12-08T00:00:00.000Z',
-          bankReviewDate: '2023-12-08T00:00:00.000Z',
+          facilityEndDate: new Date('2025-08-12'),
+          bankReviewDate: new Date('2025-07-12'),
         },
       };
 
-      const result = mapGefFacilityDates(facilityWithEndDate, mockFacilityTfm, MOCK_GEF_DEAL);
+      const result = mapGefFacilityDates(facilityWithFEDinformation, mockFacilityTfm, MOCK_GEF_DEAL);
+
+      expect(result.isUsingFacilityEndDate).toBeUndefined();
+      expect(result.facilityEndDate).toBeUndefined();
+      expect(result.bankReviewDate).toBeUndefined();
+    });
+
+    it('should not return facility end date fields when featured in an amendment', () => {
+      const facilityWithAmendments = {
+        facilitySnapshot: {
+          ...mockFacility.facilitySnapshot,
+        },
+        amendments: [
+          {
+            updatedAt: 1723641632,
+            version: 1,
+            status: AMENDMENT_STATUS.COMPLETED,
+            tfm: {
+              coverEndDate: 1723641632,
+              isUsingFacilityEndDate: false,
+              facilityEndDate: new Date('2025-08-12'),
+              bankReviewDate: new Date('2025-07-12'),
+            },
+          },
+        ],
+      };
+
+      const result = mapGefFacilityDates(facilityWithAmendments, mockFacilityTfm, MOCK_GEF_DEAL);
 
       expect(result.isUsingFacilityEndDate).toBeUndefined();
       expect(result.facilityEndDate).toBeUndefined();
@@ -96,7 +121,7 @@ describe('mapGefFacilityDates', () => {
     });
   });
 
-  describe('facility end date feature flag enabled', () => {
+  describe('when Facility end date feature flag enabled', () => {
     beforeAll(() => {
       jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
     });
@@ -105,87 +130,138 @@ describe('mapGefFacilityDates', () => {
       jest.resetAllMocks();
     });
 
-    it('should return all facility end date fields as undefined if they are received as undefined', () => {
-      const result = mapGefFacilityDates(mockFacility, mockFacilityTfm, MOCK_GEF_DEAL);
+    it('should return all facility end date fields as undefined if they are undefined in the snapshot and no amendment has been made to them', () => {
+      const facilityWithAmendments = {
+        facilitySnapshot: {
+          ...mockFacility.facilitySnapshot,
+          isUsingFacilityEndDate: undefined,
+          bankReviewDate: undefined,
+          facilityEndDate: undefined,
+        },
+        amendments: [
+          {
+            updatedAt: 1723641632,
+            version: 1,
+            status: AMENDMENT_STATUS.COMPLETED,
+            tfm: {
+              coverEndDate: 1723641632,
+            },
+          },
+        ],
+      };
+
+      const result = mapGefFacilityDates(facilityWithAmendments, mockFacilityTfm, MOCK_GEF_DEAL);
 
       expect(result.isUsingFacilityEndDate).toBeUndefined();
       expect(result.facilityEndDate).toBeUndefined();
       expect(result.bankReviewDate).toBeUndefined();
     });
 
-    it('should return isUsingFacilityEndDate', () => {
-      const facilityWithEndDate = {
+    it('should return isUsingFacilityEndDate from the snapshot if no amendment has been made to it', () => {
+      const facilityWithAmendments = {
         facilitySnapshot: {
           ...mockFacility.facilitySnapshot,
           isUsingFacilityEndDate: true,
         },
+        amendments: [
+          {
+            updatedAt: 1723641632,
+            version: 1,
+            status: AMENDMENT_STATUS.COMPLETED,
+            tfm: {
+              coverEndDate: 1723641632,
+            },
+          },
+        ],
       };
 
-      const result = mapGefFacilityDates(facilityWithEndDate, mockFacilityTfm, MOCK_GEF_DEAL);
+      const result = mapGefFacilityDates(facilityWithAmendments, mockFacilityTfm, MOCK_GEF_DEAL);
 
-      expect(result.isUsingFacilityEndDate).toEqual(facilityWithEndDate.facilitySnapshot.isUsingFacilityEndDate);
+      expect(result.isUsingFacilityEndDate).toEqual(true);
     });
 
-    it('should return mapped facilityEndDate if isUsingFacilityEndDate is true', () => {
-      const facilityEndDate = new Date(1638921600000);
-
-      const facilityWithEndDate = {
+    it('should return facilityEndDate from the snapshot if no amendment has been made to it', () => {
+      const facilityWithAmendments = {
         facilitySnapshot: {
           ...mockFacility.facilitySnapshot,
           isUsingFacilityEndDate: true,
-          facilityEndDate: formatISO(facilityEndDate),
+          facilityEndDate: new Date('2025-4-3'),
         },
+        amendments: [
+          {
+            updatedAt: 1723641632,
+            version: 1,
+            status: AMENDMENT_STATUS.COMPLETED,
+            tfm: {
+              coverEndDate: 1723641632,
+            },
+          },
+        ],
       };
 
-      const result = mapGefFacilityDates(facilityWithEndDate, mockFacilityTfm, MOCK_GEF_DEAL);
+      const result = mapGefFacilityDates(facilityWithAmendments, mockFacilityTfm, MOCK_GEF_DEAL);
 
-      expect(result.facilityEndDate).toEqual('1638921600000');
+      expect(result.facilityEndDate).toEqual(new Date('2025-4-3'));
     });
 
-    it('should not return bankReviewDate if isUsingFacilityEndDate is true', () => {
-      const facilityWithEndDate = {
-        facilitySnapshot: {
-          ...mockFacility.facilitySnapshot,
-          isUsingFacilityEndDate: true,
-          facilityEndDate: '2021-12-08T00:00:00.000Z',
-          bankReviewDate: '2023-12-08T00:00:00.000Z',
-        },
-      };
-
-      const result = mapGefFacilityDates(facilityWithEndDate, mockFacilityTfm, MOCK_GEF_DEAL);
-
-      expect(result.bankReviewDate).toBeUndefined();
-    });
-
-    it('should return mapped bankReviewDate if isUsingFacilityEndDate is false', () => {
-      const bankReviewDate = new Date(1752274800000);
-
-      const facilityWithEndDate = {
+    it('should return bankReviewDate from the snapshot if no amendment has been made to it', () => {
+      const facilityWithAmendments = {
         facilitySnapshot: {
           ...mockFacility.facilitySnapshot,
           isUsingFacilityEndDate: false,
-          bankReviewDate: formatISO(bankReviewDate),
+          bankReviewDate: new Date('2025-4-7'),
         },
+        amendments: [
+          {
+            updatedAt: 1723641632,
+            version: 1,
+            status: AMENDMENT_STATUS.COMPLETED,
+            tfm: {
+              coverEndDate: 1723641632,
+            },
+          },
+        ],
       };
 
-      const result = mapGefFacilityDates(facilityWithEndDate, mockFacilityTfm, MOCK_GEF_DEAL);
+      const result = mapGefFacilityDates(facilityWithAmendments, mockFacilityTfm, MOCK_GEF_DEAL);
 
-      expect(result.bankReviewDate).toEqual('1752274800000');
+      expect(result.bankReviewDate).toEqual(new Date('2025-4-7'));
     });
 
-    it('should not return facilityEndDate if isUsingFacilityEndDate is false', () => {
-      const facilityWithEndDate = {
+    it('should return the facility end date values from the most recent amendment if it has been amended', () => {
+      const facilityWithAmendments = {
         facilitySnapshot: {
           ...mockFacility.facilitySnapshot,
           isUsingFacilityEndDate: false,
-          facilityEndDate: '2021-12-08T00:00:00.000Z',
-          bankReviewDate: '2023-12-08T00:00:00.000Z',
+          bankReviewDate: new Date('2025-4-7'),
         },
+        amendments: [
+          {
+            updatedAt: 1723641632,
+            version: 1,
+            status: AMENDMENT_STATUS.COMPLETED,
+            tfm: {
+              coverEndDate: 1723641632,
+              isUsingFacilityEndDate: true,
+              facilityEndDate: new Date('2026-4-7'),
+            },
+          },
+          {
+            updatedAt: 1723641640,
+            version: 2,
+            status: AMENDMENT_STATUS.COMPLETED,
+            tfm: {
+              coverEndDate: 1723641640,
+            },
+          },
+        ],
       };
 
-      const result = mapGefFacilityDates(facilityWithEndDate, mockFacilityTfm, MOCK_GEF_DEAL);
+      const result = mapGefFacilityDates(facilityWithAmendments, mockFacilityTfm, MOCK_GEF_DEAL);
 
-      expect(result.facilityEndDate).toBeUndefined();
+      expect(result.isUsingFacilityEndDate).toEqual(true);
+      expect(result.facilityEndDate).toEqual(new Date('2026-4-7'));
+      expect(result.bankReviewDate).toEqual(undefined);
     });
   });
 

@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
-const { LOGIN_STATUSES } = require('../constants');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 
 dotenv.config();
 
@@ -62,8 +62,8 @@ function genPasswordResetToken(user) {
 }
 
 /**
- * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
- * @returns {Object} Token, expires in and session ID
+ * @param {object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @returns {object} Token, expires in and session ID
  */
 function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = crypto.randomBytes(32).toString('hex'), expiresIn, additionalPayload }) {
   const { _id } = user;
@@ -84,21 +84,21 @@ function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = crypto.randomB
 }
 
 /**
- * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
- * @returns {Object} Token, expires in and session ID
+ * @param {object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @returns {object} Token, expires in and session ID
  */
 function issueValidUsernameAndPasswordJWT(user) {
   return issueJWTWithExpiryAndPayload({
     user,
     // Expiry time is 105 minutes to allow for 3 login emails to be sent (each with a 30 minute expiry, and 5 minute leeway) without need to re-login
     expiresIn: '105m',
-    additionalPayload: { username: user.username, loginStatus: LOGIN_STATUSES.VALID_USERNAME_AND_PASSWORD },
+    additionalPayload: { username: user.username, loginStatus: PORTAL_LOGIN_STATUS.VALID_USERNAME_AND_PASSWORD },
   });
 }
 
 /**
- * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
- * @returns {Object} Token, expires in and session ID
+ * @param {object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @returns {object} Token, expires in and session ID
  */
 function issueValid2faJWT(user) {
   if (!user.sessionIdentifier) {
@@ -113,7 +113,7 @@ function issueValid2faJWT(user) {
       username: user.username,
       roles: user.roles,
       bank: user.bank,
-      loginStatus: LOGIN_STATUSES.VALID_2FA,
+      loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
     },
   });
 }

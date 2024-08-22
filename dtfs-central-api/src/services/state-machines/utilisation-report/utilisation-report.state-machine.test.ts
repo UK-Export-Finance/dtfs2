@@ -19,6 +19,7 @@ import {
   handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent,
   handleUtilisationReportMarkFeeRecordsAsReconciledEvent,
   handleUtilisationReportRemoveFeesFromPaymentGroupEvent,
+  handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent,
 } from './event-handlers';
 import { UtilisationReportRepo } from '../../../repositories/utilisation-reports-repo';
 import { UtilisationReportStateMachine } from './utilisation-report.state-machine';
@@ -155,7 +156,7 @@ describe('UtilisationReportStateMachine', () => {
         type: 'GENERATE_KEYING_DATA',
         payload: {
           transactionEntityManager: {} as EntityManager,
-          feeRecordsAtMatchStatus: [],
+          feeRecordsAtMatchStatusWithPayments: [],
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });
@@ -261,7 +262,7 @@ describe('UtilisationReportStateMachine', () => {
         type: 'GENERATE_KEYING_DATA',
         payload: {
           transactionEntityManager: {} as EntityManager,
-          feeRecordsAtMatchStatus: [],
+          feeRecordsAtMatchStatusWithPayments: [],
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });
@@ -351,6 +352,24 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportMarkFeeRecordsAsReconciledEvent).toHaveBeenCalledTimes(1);
     });
 
+    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_IN_PROGRESS_REPORT);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsToAdd: [],
+          existingFeeRecordsInPaymentGroup: [],
+          payments: [],
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+      expect(handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
     const VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES = [
       UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
       UTILISATION_REPORT_EVENT_TYPE.DELETE_PAYMENT,
@@ -359,6 +378,7 @@ describe('UtilisationReportStateMachine', () => {
       UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY,
       UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_RECONCILED,
       UTILISATION_REPORT_EVENT_TYPE.REMOVE_FEES_FROM_PAYMENT_GROUP,
+      UTILISATION_REPORT_EVENT_TYPE.ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP,
     ];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_RECONCILIATION_IN_PROGRESS_EVENT_TYPES))(

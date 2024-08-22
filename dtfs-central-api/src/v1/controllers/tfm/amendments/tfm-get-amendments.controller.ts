@@ -1,9 +1,22 @@
 import { ObjectId, Document } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { Currency, TfmFacilityAmendment, AMENDMENT_STATUS, ApiError } from '@ukef/dtfs2-common';
+import { Currency, TfmFacilityAmendment, AMENDMENT_STATUS, AMENDMENT_QUERIES, ApiError, API_ERROR_CODE } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
-import { AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES } from '../../../../constants';
+import { AMENDMENT_QUERY_STATUSES } from '../../../../constants';
+
+type CompletedFacilityEndDate =
+  | {
+      amendmentId: string;
+      isUsingFacilityEndDate: true;
+      facilityEndDate: Date;
+    }
+  | {
+      amendmentId: string;
+      isUsingFacilityEndDate: false;
+      bankReviewDate: Date;
+    }
+  | { amendmentId: string; isUsingFacilityEndDate: undefined };
 
 export const getAllAmendmentsInProgress = async (_req: Request, res: Response) => {
   try {
@@ -48,6 +61,34 @@ const mapAmendmentToLatestCompletedDate = (
   };
 };
 
+const mapAmendmentToFacilityEndDateValues = (amendment: TfmFacilityAmendment): CompletedFacilityEndDate => {
+  const { amendmentId, isUsingFacilityEndDate, facilityEndDate, bankReviewDate } = amendment;
+  if (isUsingFacilityEndDate) {
+    if (!facilityEndDate) {
+      throw new Error('Found amendment does not have a defined facility end date');
+    }
+    return {
+      amendmentId: amendmentId.toString(),
+      isUsingFacilityEndDate,
+      facilityEndDate,
+    };
+  }
+  if (isUsingFacilityEndDate === false) {
+    if (!bankReviewDate) {
+      throw new Error('Found amendment does not have a defined bank review date');
+    }
+    return {
+      amendmentId: amendmentId.toString(),
+      isUsingFacilityEndDate,
+      bankReviewDate,
+    };
+  }
+  return {
+    amendmentId: amendmentId.toString(),
+    isUsingFacilityEndDate: undefined,
+  };
+};
+
 export const getAmendmentsByFacilityId = async (req: Request, res: Response) => {
   const { facilityId, amendmentIdOrStatus, type } = req.params;
 
@@ -65,6 +106,9 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
         } else if (type === AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
           const latestAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
           amendment = latestAmendment ? mapAmendmentToLatestCompletedDate(latestAmendment) : {};
+        } else if (type === AMENDMENT_QUERIES.LATEST_FACILITY_END_DATE) {
+          const latestAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
+          amendment = latestAmendment ? mapAmendmentToFacilityEndDateValues(latestAmendment) : {};
         } else {
           amendment = await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndStatus(facilityId, AMENDMENT_STATUS.COMPLETED);
         }
@@ -72,7 +116,7 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
       default:
         if (amendmentIdOrStatus) {
           if (!ObjectId.isValid(amendmentIdOrStatus)) {
-            return res.status(400).send({ status: 400, message: 'Invalid amendment Id' });
+            return res.status(400).send({ status: 400, message: 'Invalid amendment Id', code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER });
           }
           amendment = (await TfmFacilitiesRepo.findAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentIdOrStatus)) ?? {};
         } else {

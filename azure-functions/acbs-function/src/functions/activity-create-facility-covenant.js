@@ -16,9 +16,9 @@ const mandatoryFields = ['covenantIdentifier', 'covenantType', 'maximumLiability
  * If the API request to generate the covenant ID fails, it throws an error with details about the request and the error.
  * If the API request to get the ACBS currency code fails, it defaults the currency code to GBP.
  *
- * @param {Object} payload - The payload containing the facilityIdentifier and acbsFacilityCovenantInput.
+ * @param {object} payload - The payload containing the facilityIdentifier and acbsFacilityCovenantInput.
  * @param {string} payload.facilityIdentifier - The identifier of the facility.
- * @param {Object} payload.acbsFacilityCovenantInput - The acbsFacilityCovenantInput object containing the covenant details.
+ * @param {object} payload.acbsFacilityCovenantInput - The acbsFacilityCovenantInput object containing the covenant details.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request to generate the covenant ID fails, or if any other error occurs.
  */
 const handler = async (payload) => {

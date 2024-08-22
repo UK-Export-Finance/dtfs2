@@ -10,7 +10,7 @@ const { DEAL } = CONSTANTS;
  * Renders all parties URN page
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Object} Express response, which renders all party URN page.
+ * @returns {Promise<object>} Express response, which renders all party URN page.
  */
 const getAllParties = async (req, res) => {
   try {
@@ -57,7 +57,7 @@ const getAllParties = async (req, res) => {
  * Renders party specific URN edit page
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Object} Express response as rendered party page.
+ * @returns {Promise<object>} Express response as rendered party page.
  */
 const getPartyDetails = async (req, res) => {
   try {
@@ -108,7 +108,7 @@ const getPartyDetails = async (req, res) => {
  * Renders party specific urn summary page
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Object} Express response as rendered party page.
+ * @returns {Promise<object>} Express response as rendered party page.
  */
 const getPartyUrnDetails = async (req, res) => {
   try {
@@ -178,7 +178,7 @@ const getPartyUrnDetails = async (req, res) => {
  * Renders bond specific urn summary page
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Object} Express response as rendered party page.
+ * @returns {Promise<object>} Express response as rendered party page.
  */
 const getBondUrnDetails = async (req, res) => {
   try {
@@ -240,7 +240,7 @@ const getBondUrnDetails = async (req, res) => {
  * Post party URN to the summary page for confirmation
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Object} Express response as rendered confirm party URN page.
+ * @returns {Promise<object>} Express response as rendered confirm party URN page.
  */
 const confirmPartyUrn = async (req, res) => {
   try {
@@ -339,7 +339,7 @@ const confirmPartyUrn = async (req, res) => {
  * Submits confirmed party URN to the TFM
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Object} Express response, if successful then re-directed to all parties page
+ * @returns {Promise<object>} Express response, if successful then re-directed to all parties page
  */
 const postPartyDetails = async (req, res) => {
   try {

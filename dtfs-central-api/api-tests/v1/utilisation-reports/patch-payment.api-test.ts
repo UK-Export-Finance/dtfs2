@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { In } from 'typeorm';
+import { difference } from 'lodash';
 import {
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
@@ -11,7 +12,7 @@ import {
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { difference } from 'lodash';
+import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { PatchPaymentPayload } from '../../../src/v1/routes/middleware/payload-validation';
@@ -19,8 +20,11 @@ import { aTfmSessionUser } from '../../../test-helpers/test-data';
 
 console.error = jest.fn();
 
-describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
-  const getUrl = (reportId: string | number, paymentId: string | number) => `/v1/utilisation-reports/${reportId}/payment/${paymentId}`;
+const BASE_URL = '/v1/utilisation-reports/:reportId/payment/:paymentId';
+
+describe(`PATCH ${BASE_URL}`, () => {
+  const getUrl = (reportId: string | number, paymentId: string | number) =>
+    BASE_URL.replace(':reportId', reportId.toString()).replace(':paymentId', paymentId.toString());
 
   const reportId = 12;
   const paymentId = 34;
@@ -63,20 +67,9 @@ describe('PATCH /v1/utilisation-reports/:reportId/payment/:paymentId', () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
   });
 
-  it('returns a 400 when the report id is not a valid id', async () => {
-    // Act
-    const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl('invalid-id', paymentId));
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
-  });
-
-  it('returns a 400 when the payment id is not a valid id', async () => {
-    // Act
-    const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, 'invalid-id'));
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+  withSqlIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
+    makeRequest: (url) => testApi.patch(aPatchPaymentRequestBody()).to(url),
   });
 
   it('returns a 404 when the payment with the supplied id does not exist', async () => {

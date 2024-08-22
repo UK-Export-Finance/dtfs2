@@ -20,6 +20,10 @@ context('PDC_RECONCILE users can route to the payments page for a bank', () => {
   const QUARTERLY_REPORTING_BANK_ID = '10';
   const MONTHLY_REPORTING_BANK_ID = '956';
 
+  before(() => {
+    cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
+  });
+
   beforeEach(() => {
     const visibleBanks = [];
     cy.task(NODE_TASKS.GET_ALL_BANKS).then((getAllBanksResult) => {

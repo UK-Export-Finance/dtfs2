@@ -188,6 +188,23 @@ context('About Facility Page', () => {
     });
 
     if (facilityEndDateEnabled) {
+      it('redirects user to `facility end date` page when using facility end date', () => {
+        cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+        aboutFacility.facilityName().clear().type('Name');
+        aboutFacility.shouldCoverStartOnSubmissionNo().click();
+        aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
+        aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
+        aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
+        aboutFacility.coverEndDateDay().clear().type(dateConstants.tomorrowDay);
+        aboutFacility.coverEndDateMonth().clear().type(dateConstants.tomorrowMonth);
+        aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
+        aboutFacility.isUsingFacilityEndDateYes().click();
+
+        aboutFacility.continueButton().click();
+
+        cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+      });
+
       it('redirects user to `bank review date` page when not using facility end date', () => {
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
         aboutFacility.facilityName().clear().type('Name');

@@ -208,13 +208,13 @@ jobs:
 
       - name: Start
         working-directory: ./
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common
@@ -401,13 +401,13 @@ jobs:
         run: npm ci
 
       - name: Docker
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common
@@ -475,13 +475,13 @@ jobs:
         run: npm ci
 
       - name: Docker
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common
@@ -503,7 +503,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    env:	
+    env:
       GEF_DEAL_VERSION: 0
     runs-on: ubuntu-latest
 
@@ -537,13 +537,13 @@ jobs:
         run: npm ci
 
       - name: Docker
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common
@@ -609,13 +609,74 @@ jobs:
         run: npm ci
 
       - name: Docker
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
+
+      - name: SQL
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+        run: npm run db:migrate
+
+      - name: Execute
+        working-directory: ./e2e-tests
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+          TZ: ${{ vars.TIMEZONE }}
+        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}"
+
+  # 6.1 E2E - TFM backwards compatibility
+  e2e-tests-tfm-feature-flag-backwards-compatibility:
+    name: E2E TFM feature flag compatability 👷
+    needs: setup
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    env:
+      FF_TFM_FACILITY_END_DATE_ENABLED: "false"
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        spec: ['case-amendments/**/*.spec.js']
+
+    concurrency:
+      group: e2e-tests-tfm-feature-flag-backwards-compatibility-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.node }}
+
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Docker
+        run: docker compose up --build -d
+
+      - name: Initialise
+        working-directory: ./utils
+        run: |
+          sleep 100s
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common
@@ -690,13 +751,13 @@ jobs:
         run: npm ci
 
       - name: Docker
-        run: docker compose -f docker-compose.gha.yml up --build -d
+        run: docker compose up --build -d
 
       - name: Initialise
-        working-directory: ./
+        working-directory: ./utils
         run: |
           sleep 100s
-          npm run load
+          npm run mock-data-loader
 
       - name: SQL
         working-directory: ./libs/common

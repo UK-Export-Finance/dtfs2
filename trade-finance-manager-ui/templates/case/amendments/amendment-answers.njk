@@ -93,6 +93,36 @@
         }
       %}
       {{- optionsWithHTML.push(defaultIsUsingFacilityEndDate) | reject() }}
+
+      {% if isUsingFacilityEndDate %}
+        {% set defaultFacilityEndDate =
+          {
+            key:{ text: 'Facility end date' },
+            value: { html: '<span data-cy="amendment--facility-end-date-response">' + facilityEndDate + '</span>' },
+            actions: { items: [ {
+              html: '<span data-cy="amendment--facility-end-date-link">Change</span>',
+              href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/facility-end-date',
+              visuallyHiddenText: 'facility end date'
+            } ] }
+          }
+        %}
+        {{- optionsWithHTML.push(defaultFacilityEndDate) | reject() }}
+      {% endif %}
+
+      {% if isUsingFacilityEndDate === false %}
+        {% set defaultBankReviewDate =
+          {
+            key:{ text: 'Bank review date' },
+            value: { html: '<span data-cy="amendment--bank-review-date-response">' + bankReviewDate + '</span>' },
+            actions: { items: [ {
+              html: '<span data-cy="amendment--bank-review-date-link">Change</span>',
+              href: '/case/' + dealId + '/facility/' + facilityId + '/amendment/' + amendmentId + '/bank-review-date',
+              visuallyHiddenText: 'bank review date'
+            } ] }
+          }
+        %}
+        {{- optionsWithHTML.push(defaultBankReviewDate) | reject() }}
+      {% endif %}
     {% endif %}
   {% endif %}
 

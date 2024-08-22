@@ -5,7 +5,11 @@ import { UtilisationReportRepo } from '../../../../repositories/utilisation-repo
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { NotFoundError, ApiError, InvalidPayloadError } from '../../../../errors';
 import { validateSelectedFeeRecordsAllHaveSamePaymentCurrency } from '../../../validation/utilisation-report-service/selected-fee-record-validator';
-import { canFeeRecordsBeAddedToExistingPayment, mapToSelectedFeeRecordDetails } from './helpers';
+import {
+  canFeeRecordsBeAddedToExistingPayment,
+  getSelectedFeeRecordsAvailablePaymentGroups,
+  mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups,
+} from './helpers';
 
 type GetSelectedFeeRecordDetailsRequestBody = {
   feeRecordIds: number[];
@@ -15,13 +19,22 @@ export type GetSelectedFeeRecordDetailsRequest = CustomExpressRequest<{
   params: {
     id: string;
   };
+  query: {
+    includeAvailablePaymentGroups?: 'true' | 'false';
+  };
   reqBody: GetSelectedFeeRecordDetailsRequestBody;
 }>;
 
 type ResponseBody = SelectedFeeRecordsDetails | string;
 
+/**
+ * Controller for the GET selected fee record route
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetailsRequest, res: Response<ResponseBody>) => {
   const { id: reportId } = req.params;
+  const { includeAvailablePaymentGroups } = req.query;
   const selectedFeeRecordIds = req.body.feeRecordIds;
 
   try {
@@ -44,12 +57,20 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
     validateSelectedFeeRecordsAllHaveSamePaymentCurrency(selectedFeeRecords);
 
     const canAddToExistingPayment = await canFeeRecordsBeAddedToExistingPayment(reportId, selectedFeeRecords);
-    const selectedFeeRecordsDetails = await mapToSelectedFeeRecordDetails(
+
+    const selectedFeeRecordsDetails = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(
       utilisationReport.bankId,
       utilisationReport.reportPeriod,
       selectedFeeRecords,
       canAddToExistingPayment,
     );
+
+    if (includeAvailablePaymentGroups === 'true') {
+      const reportedPaymentCurrency = selectedFeeRecords[0].paymentCurrency;
+      selectedFeeRecordsDetails.availablePaymentGroups = canAddToExistingPayment
+        ? await getSelectedFeeRecordsAvailablePaymentGroups(reportId, reportedPaymentCurrency)
+        : [];
+    }
 
     return res.status(HttpStatusCode.Ok).send(selectedFeeRecordsDetails);
   } catch (error) {

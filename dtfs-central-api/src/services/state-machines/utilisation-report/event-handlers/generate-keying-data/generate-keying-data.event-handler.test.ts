@@ -6,9 +6,13 @@ import {
   UtilisationReportEntity,
   FeeRecordEntity,
   UtilisationReportReconciliationStatus,
+  FeeRecordPaymentJoinTableEntity,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
+import { getKeyingSheetFeePaymentSharesForFeeRecords } from '../helpers';
+
+jest.mock('../helpers');
 
 describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
   const tfmUserId = 'abc123';
@@ -19,9 +23,11 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
   const mockSave = jest.fn();
   const mockFind = jest.fn();
+  const mockUpdate = jest.fn();
   const mockEntityManager = {
     save: mockSave,
     find: mockFind,
+    update: mockUpdate,
   } as unknown as EntityManager;
 
   const aReconciliationInProgressReport = () => UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
@@ -37,13 +43,14 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
   beforeEach(() => {
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(aMockFeeRecordStateMachine(aMockEventHandler()));
+    jest.mocked(getKeyingSheetFeePaymentSharesForFeeRecords).mockReturnValue([]);
   });
 
   afterEach(() => {
     jest.resetAllMocks();
   });
 
-  it('updates each fee record in the payload and calculates the keying data columns when all the supplied fee records have a unique facility id', async () => {
+  it('updates each fee record in the payload, calculates the keying data columns when all the supplied fee records have a unique facility id and updates the fee record payment join table', async () => {
     // Arrange
     const utilisationReport = aReconciliationInProgressReport();
     const feeRecords = [
@@ -59,11 +66,14 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
 
     jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockImplementation((feeRecord) => feeRecordStateMachines[feeRecord.id]);
     mockFind.mockResolvedValue([]);
+    mockUpdate.mockResolvedValue({});
+
+    jest.mocked(getKeyingSheetFeePaymentSharesForFeeRecords).mockReturnValue([{ feeRecordId: 12, paymentId: 24, feePaymentAmount: 1000 }]);
 
     // Act
     await handleUtilisationReportGenerateKeyingDataEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
-      feeRecordsAtMatchStatus: feeRecords,
+      feeRecordsAtMatchStatusWithPayments: feeRecords,
       requestSource,
     });
 
@@ -82,10 +92,13 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
         payload: {
           transactionEntityManager: mockEntityManager,
           isFinalFeeRecordForFacility: true,
+          reportPeriod: utilisationReport.reportPeriod,
           requestSource,
         },
       });
     });
+
+    expect(mockUpdate).toHaveBeenCalledWith(FeeRecordPaymentJoinTableEntity, { feeRecordId: 12, paymentId: 24 }, { paymentAmountUsedForFeeRecord: 1000 });
   });
 
   describe('when there are multiple fee records with the same facility id', () => {
@@ -111,7 +124,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
       // Act
       await handleUtilisationReportGenerateKeyingDataEvent(utilisationReport, {
         transactionEntityManager: mockEntityManager,
-        feeRecordsAtMatchStatus: feeRecords,
+        feeRecordsAtMatchStatusWithPayments: feeRecords,
         requestSource,
       });
 
@@ -130,6 +143,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
         payload: {
           transactionEntityManager: mockEntityManager,
           isFinalFeeRecordForFacility: true,
+          reportPeriod: utilisationReport.reportPeriod,
           requestSource,
         },
       });
@@ -141,6 +155,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
           payload: {
             transactionEntityManager: mockEntityManager,
             isFinalFeeRecordForFacility: false,
+            reportPeriod: utilisationReport.reportPeriod,
             requestSource,
           },
         });
@@ -169,7 +184,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
       // Act
       await handleUtilisationReportGenerateKeyingDataEvent(utilisationReport, {
         transactionEntityManager: mockEntityManager,
-        feeRecordsAtMatchStatus: feeRecords,
+        feeRecordsAtMatchStatusWithPayments: feeRecords,
         requestSource,
       });
 
@@ -188,6 +203,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
           payload: {
             transactionEntityManager: mockEntityManager,
             isFinalFeeRecordForFacility: false,
+            reportPeriod: utilisationReport.reportPeriod,
             requestSource,
           },
         });
@@ -204,7 +220,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
     // Act
     await handleUtilisationReportGenerateKeyingDataEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
-      feeRecordsAtMatchStatus: [],
+      feeRecordsAtMatchStatusWithPayments: [],
       requestSource,
     });
 
@@ -224,7 +240,7 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
     // Act
     await handleUtilisationReportGenerateKeyingDataEvent(utilisationReport, {
       transactionEntityManager: mockEntityManager,
-      feeRecordsAtMatchStatus: [],
+      feeRecordsAtMatchStatusWithPayments: [],
       requestSource,
     });
 

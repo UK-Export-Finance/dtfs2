@@ -1,3 +1,4 @@
+const util = require('util');
 const axios = require('axios');
 const { HEADERS } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
@@ -189,9 +190,9 @@ const findOneDeal = async (dealId) => {
 /**
  * @param {object} params
  * @param {string} params.dealId - deal to update
- * @param {Object} params.dealUpdate - update to make
+ * @param {object} params.dealUpdate - update to make
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
- * @typedef {Object} ErrorParam
+ * @typedef {object} ErrorParam
  * @property {string} message error message
  * @property {number} status HTTP status code
  * @param {(Error: ErrorParam) => any} params.onError
@@ -341,6 +342,7 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
 
 const createFacilityAmendment = async (facilityId, auditDetails) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+  console.info(util.inspect({ isValid, payload: auditDetails }, { showHidden: false, depth: null, colors: true }));
   if (isValid) {
     try {
       const response = await axios({
@@ -349,6 +351,7 @@ const createFacilityAmendment = async (facilityId, auditDetails) => {
         headers: headers.central,
         data: { auditDetails },
       });
+      console.info(util.inspect({ data: response.data, status: response.status }, { showHidden: false, depth: null, colors: true }));
 
       return response.data;
     } catch (error) {
@@ -470,6 +473,29 @@ const getLatestCompletedAmendmentDate = async (facilityId) => {
   } else {
     console.error('Invalid facility Id %s', facilityId);
     return { status: 400, data: 'Invalid facility Id provided' };
+  }
+};
+
+const getLatestCompletedAmendmentFacilityEndDate = async (facilityId) => {
+  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
+  if (!isValid) {
+    console.error('Invalid facility Id %s', facilityId);
+    return { status: 400, data: 'Invalid facility Id provided' };
+  }
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/completed/latest-facility-end-date`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get the latest completed facility end date amendment %o', error);
+    return {
+      status: error?.response?.status || 500,
+      data: 'Failed to get the latest completed facility end date amendment',
+    };
   }
 };
 
@@ -678,7 +704,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 /**
  * Get company information from Party URN
  * @param {Integer} partyUrn Party URN
- * @returns {Object} Company information
+ * @returns {Promise<object>} Company information
  */
 const getCompanyInfo = async (partyUrn) => {
   try {
@@ -928,9 +954,9 @@ const updateACBSfacility = async (facility, deal) => {
 
 /**
  * ACBS facility amendment
- * @param {String} ukefFacilityId UKEF Facility ID
- * @param {Object} amendments Facility object comprising of amendments
- * @returns {Object} updated FMR upon success otherwise error
+ * @param {string} ukefFacilityId UKEF Facility ID
+ * @param {object} amendments Facility object comprising of amendments
+ * @returns {Promise<object>} updated FMR upon success otherwise error
  */
 const amendACBSfacility = async (amendments, facility, deal) => {
   if (amendments && facility.facilitySnapshot) {
@@ -975,8 +1001,8 @@ const getFunctionsAPI = async (url = '') => {
  * An external API call, responsible for creating
  * eStore site, directories and documents (if applicable).
  * Upon any exception an empty object is returned.
- * @param {Object} data eStore API object
- * @returns {Object} eStore API response object
+ * @param {object} data eStore API object
+ * @returns {Promise<object>} eStore API response object
  */
 const createEstoreSite = async (data) => {
   try {
@@ -1281,13 +1307,17 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, facilityI
 
 /**
  * Gets the utilisation report reconciliation details by report id
- * @param {number} reportId - The report id
+ * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The selected fee record ids
+ * @param {boolean} includeAvailablePaymentGroups - Whether or not to include the available payment groups in the response
  * @returns {Promise<import('./api-response-types').SelectedFeeRecordsDetailsResponseBody>}
  */
-const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds) => {
+const getSelectedFeeRecordsDetails = async (reportId, feeRecordIds, includeAvailablePaymentGroups) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
     headers: headers.central,
+    params: {
+      includeAvailablePaymentGroups,
+    },
     data: {
       feeRecordIds,
     },
@@ -1482,6 +1512,27 @@ const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, 
   });
 };
 
+/**
+ * Adds the supplied fee records to an existing payment
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The list of fee record ids to add to the payment
+ * @param {number[]} paymentIds - The list of payment ids for the fee records to be added to
+ * @param {import('../types/tfm-session-user').TfmSessionUser} user - The user
+ */
+const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, user) => {
+  const response = await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/add-to-an-existing-payment`,
+    method: 'post',
+    headers: headers.central,
+    data: {
+      feeRecordIds,
+      paymentIds,
+      user,
+    },
+  });
+  return response.data;
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1503,6 +1554,7 @@ module.exports = {
   getCompletedAmendment,
   getLatestCompletedAmendmentValue,
   getLatestCompletedAmendmentDate,
+  getLatestCompletedAmendmentFacilityEndDate,
   getAmendmentById,
   getAmendmentByFacilityId,
   getAmendmentsByDealId,
@@ -1553,4 +1605,5 @@ module.exports = {
   deletePaymentById,
   editPayment,
   removeFeesFromPayment,
+  addFeesToAnExistingPayment,
 };

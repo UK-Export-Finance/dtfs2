@@ -127,12 +127,6 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   fixedFeeAdjustment!: number | null;
 
   /**
-   * The keying sheet premium accrual balance adjustment
-   */
-  @MonetaryColumn({ nullable: true })
-  premiumAccrualBalanceAdjustment!: number | null;
-
-  /**
    * The keying sheet principal balance adjustment
    */
   @MonetaryColumn({ nullable: true })
@@ -172,7 +166,6 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.updateLastUpdatedBy(requestSource);
     feeRecord.payments = [];
     feeRecord.fixedFeeAdjustment = null;
-    feeRecord.premiumAccrualBalanceAdjustment = null;
     feeRecord.principalBalanceAdjustment = null;
     return feeRecord;
   }
@@ -193,15 +186,9 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     this.updateLastUpdatedBy(requestSource);
   }
 
-  public updateWithKeyingData({
-    fixedFeeAdjustment,
-    premiumAccrualBalanceAdjustment,
-    principalBalanceAdjustment,
-    requestSource,
-  }: UpdateWithKeyingDataParams): void {
-    this.status = 'READY_TO_KEY';
+  public updateWithKeyingData({ fixedFeeAdjustment, principalBalanceAdjustment, status, requestSource }: UpdateWithKeyingDataParams): void {
+    this.status = status;
     this.fixedFeeAdjustment = fixedFeeAdjustment;
-    this.premiumAccrualBalanceAdjustment = premiumAccrualBalanceAdjustment;
     this.principalBalanceAdjustment = principalBalanceAdjustment;
     this.updateLastUpdatedBy(requestSource);
   }

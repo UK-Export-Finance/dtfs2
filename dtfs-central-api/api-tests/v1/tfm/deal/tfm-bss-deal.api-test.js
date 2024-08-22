@@ -23,12 +23,12 @@ const newDeal = aDeal({
   },
 });
 
-describe('/v1/tfm/deal/:id', () => {
+describe('/v1/tfm/deals/:id', () => {
   beforeEach(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
-  describe('GET /v1/tfm/deal/:id', () => {
+  describe('GET /v1/tfm/deals/:id', () => {
     it('returns the requested resource', async () => {
       const postResult = await createDeal({ deal: newDeal, user: MOCK_PORTAL_USER });
       const dealId = postResult.body._id;

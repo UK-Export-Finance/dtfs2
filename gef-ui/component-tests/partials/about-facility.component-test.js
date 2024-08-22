@@ -65,8 +65,8 @@ describe(page, () => {
       wrapper = render({ ...params, isFacilityEndDateEnabled: true });
     });
 
-    it(`renders the 'What is a Facility End Date' details`, () => {
-      wrapper.expectText('[data-cy="facility-end-date-details"] span').toRead('What is a Facility End Date');
+    it(`renders the 'What is a facility end date' details`, () => {
+      wrapper.expectText('[data-cy="facility-end-date-details"] span').toRead('What is a facility end date');
       wrapper
         .expectText('[data-cy="facility-end-date-details"] div')
         .toRead('The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated.');

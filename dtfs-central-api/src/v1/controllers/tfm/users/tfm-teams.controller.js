@@ -29,7 +29,8 @@ exports.createTfmTeam = async (req, res) => {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
         status: error.status,
-        message: `Invalid auditDetails: ${error.message}`,
+        message: error.message,
+        code: error.code,
       });
     }
     return res.status(500).send({ status: 500, error });
@@ -95,8 +96,9 @@ exports.deleteTfmTeam = async (req, res) => {
   } catch (error) {
     if (error instanceof InvalidAuditDetailsError) {
       return res.status(error.status).send({
-        status: 400,
-        message: `Invalid auditDetails: ${error.message}`,
+        status: error.status,
+        message: error.message,
+        code: error.code,
       });
     }
     return res.status(500).send({ status: 500, error });

@@ -3,11 +3,11 @@ const getAssigneeFullName = require('../helpers/get-assignee-full-name');
 
 /**
  * Assign multiple group tasks to a user
- * @param {String} deal ID
+ * @param {string} deal ID
  * @param {Array} array of group titles that the should be assigned to the user
- * @param {String} user ID
+ * @param {string} user ID
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
- * @returns {Array} Updated tasks
+ * @returns {Promise<object[]>} Updated tasks
  */
 const assignGroupTasksToOneUser = async (dealId, groupTitlesToAssign, userId, auditDetails) => {
   const deal = await api.findOneDeal(dealId);

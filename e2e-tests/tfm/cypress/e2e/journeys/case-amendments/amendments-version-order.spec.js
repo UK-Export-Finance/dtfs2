@@ -6,7 +6,7 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 
-const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED');
+const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 
 context('Amendments underwriting - amendments should be in correct order of versions (including when withdrawn)', () => {
   let dealId;
@@ -72,9 +72,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.continueAmendment().click();
 
     if (tfmFacilityEndDateEnabled) {
-      cy.url().should('contain', 'is-using-facility-end-date');
-      amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
     }
 
     cy.url().should('contain', 'facility-value');
@@ -193,9 +191,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.continueAmendment().click();
 
     if (tfmFacilityEndDateEnabled) {
-      cy.url().should('contain', 'is-using-facility-end-date');
-      amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
     }
 
     cy.url().should('contain', 'facility-value');
@@ -306,9 +302,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.continueAmendment().click();
 
     if (tfmFacilityEndDateEnabled) {
-      cy.url().should('contain', 'is-using-facility-end-date');
-      amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
     }
 
     cy.url().should('contain', 'facility-value');

@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { ObjectId } from 'mongodb';
 import { flatten } from 'mongo-dot-notation';
-import { ApiError, AuditDetails, CustomExpressRequest, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { ApiError, AuditDetails, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { HttpStatusCode } from 'axios';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
@@ -52,9 +52,8 @@ export const updateFacilityPut = async (req: UpdateFacilityPutRequest, res: Resp
   } catch (error) {
     console.error('Error updating facility:', error);
     if (error instanceof ApiError) {
-      const { status, message } = error;
-      const errorMessage = error instanceof InvalidAuditDetailsError ? `Invalid auditDetails: ${message}` : message;
-      return res.status(status).send({ status, message: errorMessage });
+      const { status, message, code } = error;
+      return res.status(status).send({ status, message, code });
     }
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,

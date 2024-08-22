@@ -8,8 +8,8 @@ const userCanEdit = (user) => userIsInTeam(user, [TEAM_IDS.BUSINESS_SUPPORT]);
 
 /**
  * Returns bond type from party type
- * @param {String} party party type either as `bond-issuer` or `bond-beneficiary`.
- * @returns {String} bond type
+ * @param {string} party party type either as `bond-issuer` or `bond-beneficiary`.
+ * @returns {string} bond type
  */
 const bondType = (party) => (party === CONSTANTS.PARTY.BOND.BOND_ISSUER ? 'bondIssuerPartyUrn' : 'bondBeneficiaryPartyUrn');
 
@@ -20,9 +20,9 @@ const isBondPartyType = (partyType) => bondParties.includes(partyType);
  * Constructs `errRef` based on `partyType`
  * if `bondBeneficiary` or `bondIssuer`, then add index for field reference
  * otherwise should return default field reference.
- * @param {String} partyType Party type
+ * @param {string} partyType Party type
  * @param {Integer} index Party URN field index
- * @returns {String} Party URN reference for an inline error display
+ * @returns {string} Party URN reference for an inline error display
  */
 const constructErrRef = (party, index) => (isBondPartyType(party) ? `partyUrn-${index}` : 'partyUrn');
 
@@ -31,8 +31,8 @@ const isEmptyString = (str) => !!(!str || ((typeof str === 'string' || str insta
 
 /**
  * Extracts party name from the URL
- * @param {String} url Request URL
- * @returns {String} Party name
+ * @param {string} url Request URL
+ * @returns {string} Party name
  */
 const partyType = (url) => {
   if (!url || typeof url !== 'string' || !url.trim()) {

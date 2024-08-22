@@ -9,7 +9,7 @@ import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1
 import { NOT_ADDED } from '../../../fixtures/constants';
 import pages from '../../pages';
 
-const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED');
+const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 
 context('Amendments underwriting - add banks decision - withdraw', () => {
   let dealId;
@@ -75,9 +75,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     amendmentsPage.continueAmendment().click();
 
     if (tfmFacilityEndDateEnabled) {
-      cy.url().should('contain', 'is-using-facility-end-date');
-      amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
     }
 
     cy.url().should('contain', 'facility-value');
@@ -381,9 +379,7 @@ context('Amendments underwriting - add banks decision - change from proceed to w
     amendmentsPage.continueAmendment().click();
 
     if (tfmFacilityEndDateEnabled) {
-      cy.url().should('contain', 'is-using-facility-end-date');
-      amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
     }
 
     cy.url().should('contain', 'facility-value');

@@ -41,7 +41,7 @@ describe(component, () => {
   };
   const facilityWithFacilityEndDateSpecified = {
     ...baseFacility,
-    dates: { ...baseFacility.dates, isUsingFacilityEndDate: true, facilityEndDate: '1796083200000' },
+    dates: { ...baseFacility.dates, isUsingFacilityEndDate: true, facilityEndDate: '2024-07-18T00:00:00.000+00:00' },
   };
   const facilityWithBankReviewDate = {
     ...baseFacility,
@@ -49,7 +49,7 @@ describe(component, () => {
   };
   const facilityWithBankReviewDateSpecified = {
     ...baseFacility,
-    dates: { ...baseFacility.dates, isUsingFacilityEndDate: false, bankReviewDate: '1796256000000' },
+    dates: { ...baseFacility.dates, isUsingFacilityEndDate: false, bankReviewDate: '2024-07-20T00:00:00.000+00:00' },
   };
 
   const params = {
@@ -250,8 +250,7 @@ describe(component, () => {
         });
 
         it('should render facilityEndDate', () => {
-          const expected = localiseTimestamp(facilityWithFacilityEndDateSpecified.dates.facilityEndDate, 'd MMMM yyyy', params.user.timezone);
-          wrapper.expectText('[data-cy="facility-end-date"]').toRead(expected);
+          wrapper.expectText('[data-cy="facility-end-date"]').toRead('18 July 2024');
         });
 
         it('should not render bankReviewDate', () => {
@@ -289,8 +288,7 @@ describe(component, () => {
         });
 
         it('should render bankReviewDate', () => {
-          const expected = localiseTimestamp(facilityWithBankReviewDateSpecified.dates.bankReviewDate, 'd MMMM yyyy', params.user.timezone);
-          wrapper.expectText('[data-cy="bank-review-date"]').toRead(expected);
+          wrapper.expectText('[data-cy="bank-review-date"]').toRead('20 July 2024');
         });
       });
     });

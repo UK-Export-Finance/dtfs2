@@ -20,7 +20,7 @@ const headers = {
 
 /**
  * Maps industry ID to ACBS compliant sector ID
- * @param {Number} industryId UKEF Industry ID
+ * @param {number} industryId UKEF Industry ID
  * @returns ACBS compliant industry ID
  */
 export const findACBSIndustrySector = async (industryId: number) => {

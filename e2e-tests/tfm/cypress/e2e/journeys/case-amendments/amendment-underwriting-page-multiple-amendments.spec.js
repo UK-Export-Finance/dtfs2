@@ -7,7 +7,7 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 
-const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED');
+const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 
 context('Amendments underwriting page - multiple amendments should show without automatic amendments', () => {
   let dealId;
@@ -79,9 +79,7 @@ context('Amendments underwriting page - multiple amendments should show without 
     amendmentsPage.continueAmendment().click();
 
     if (tfmFacilityEndDateEnabled) {
-      cy.url().should('contain', 'is-using-facility-end-date');
-      amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
     }
 
     cy.url().should('contain', 'facility-value');
@@ -132,9 +130,7 @@ context('Amendments underwriting page - multiple amendments should show without 
     amendmentsPage.continueAmendment().click();
 
     if (tfmFacilityEndDateEnabled) {
-      cy.url().should('contain', 'is-using-facility-end-date');
-      amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
     }
 
     cy.url().should('contain', 'facility-value');

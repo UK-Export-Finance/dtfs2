@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { flatten } from 'mongo-dot-notation';
 import { getUnixTime } from 'date-fns';
 import { HttpStatusCode } from 'axios';
-import { ApiError, AUDIT_USER_TYPES, CustomExpressRequest, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { ApiError, ApiErrorResponseBody, AUDIT_USER_TYPES, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { NotFoundError } from '../../../../errors';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
@@ -12,7 +12,9 @@ type UpdateTfmAmendmentRequest = CustomExpressRequest<{
   reqBody: PutFacilityAmendmentPayload;
 }>;
 
-export const updateTfmAmendment = async (req: UpdateTfmAmendmentRequest, res: Response) => {
+type UpdateTfmAmendmentResponse = Response<ApiErrorResponseBody | Document | null>;
+
+export const updateTfmAmendment = async (req: UpdateTfmAmendmentRequest, res: UpdateTfmAmendmentResponse) => {
   const { payload, auditDetails } = req.body;
   const { amendmentId, facilityId } = req.params;
 
@@ -39,17 +41,9 @@ export const updateTfmAmendment = async (req: UpdateTfmAmendmentRequest, res: Re
     return res.status(HttpStatusCode.Ok).json(updatedAmendment);
   } catch (error) {
     console.error('Error updating amendment:', error);
-    if (error instanceof InvalidAuditDetailsError) {
-      return res.status(error.status).send({
-        status: error.status,
-        message: `Invalid auditDetails: ${error.message}`,
-      });
-    }
     if (error instanceof ApiError) {
-      return res.status(error.status).send({
-        status: error.status,
-        message: error.message,
-      });
+      const { status, message, code } = error;
+      return res.status(status).send({ status, message, code });
     }
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,

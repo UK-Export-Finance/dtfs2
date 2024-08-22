@@ -8,6 +8,7 @@ const {
   validatePostKeyingDataPayload,
   validatePutKeyingDataMarkAsPayload,
   validatePostRemoveFeesFromPaymentGroupPayload,
+  validatePostAddFeesToAnExistingPaymentGroupPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const {
@@ -31,6 +32,7 @@ const { patchPayment } = require('../controllers/utilisation-report-service/patc
 const { putKeyingDataMarkAsDone } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-done.controller');
 const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-to-do.controller');
 const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
+const { postAddFeesToAnExistingPaymentGroup } = require('../controllers/utilisation-report-service/post-add-fees-to-an-existing-payment-group.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -201,6 +203,13 @@ utilisationReportsRouter
  *           type: string
  *         required: true
  *         description: the id for the report the fees belong to
+ *       - in: query
+ *         name: includeAvailablePaymentGroups
+ *         schema:
+ *           type: string
+ *           enum: [true, false]
+ *           required: false
+ *         description: Whether or not to include the available payment groups in the response body
  *     requestBody:
  *       required: true
  *       content:
@@ -219,8 +228,9 @@ utilisationReportsRouter
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               $ref: '#/definitions/SelectedFeeRecordsDetails'
+ *               oneOf:
+ *                 - $ref: '#/definitions/SelectedFeeRecordsDetailsWithAvailablePaymentGroupsResponseBody'
+ *                 - $ref: '#/definitions/SelectedFeeRecordsDetailsWithoutAvailablePaymentGroupsResponseBody'
  *       400:
  *         description: Bad request
  *       404:
@@ -583,6 +593,56 @@ utilisationReportsRouter
     handleExpressValidatorResult,
     validatePostRemoveFeesFromPaymentGroupPayload,
     postRemoveFeesFromPaymentGroup,
+  );
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/add-to-an-existing-payment:
+ *   post:
+ *     summary: Add the provided fee record ids to the provided payment ids
+ *     tags: [Utilisation Report]
+ *     description: Add the provided fee record ids to the provided payment ids
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feeRecordIds:
+ *                 description: The ids of the selected fee records
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *               paymentIds:
+ *                 description: The ids of the payments
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/add-to-an-existing-payment')
+  .post(
+    validation.sqlIdValidation('reportId'),
+    handleExpressValidatorResult,
+    validatePostAddFeesToAnExistingPaymentGroupPayload,
+    postAddFeesToAnExistingPaymentGroup,
   );
 
 module.exports = utilisationReportsRouter;

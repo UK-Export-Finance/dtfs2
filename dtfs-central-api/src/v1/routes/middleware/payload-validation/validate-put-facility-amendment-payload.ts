@@ -1,6 +1,7 @@
 import z from 'zod';
 import { AmendmentStatusSchema, AuditDetailsSchema, CurrencySchema, MongoObjectIdSchema } from './schemas';
 import { createValidationMiddlewareForSchema } from './create-validation-middleware-for-schema';
+import { dateFromIsoStringSchema } from './schemas/dateFromIsoString.schema.ts';
 
 const SubmittedBySchema = z.object({
   _id: MongoObjectIdSchema,
@@ -19,6 +20,8 @@ const PutFacilityAmendmentSchema = z.object({
       changeCoverEndDate: z.boolean(),
       currentCoverEndDate: z.number().nullable(),
       isUsingFacilityEndDate: z.boolean().nullable(),
+      facilityEndDate: dateFromIsoStringSchema.nullable(),
+      bankReviewDate: dateFromIsoStringSchema.nullable(),
       ukefExposure: z.number().nullable(),
       coveredPercentage: z.number(),
       currency: CurrencySchema.nullable(),
@@ -78,6 +81,9 @@ const PutFacilityAmendmentSchema = z.object({
             ukefExposureValue: z.number(),
           }),
           coverEndDate: z.number(),
+          isUsingFacilityEndDate: z.boolean().nullable(),
+          facilityEndDate: dateFromIsoStringSchema.nullable(),
+          bankReviewDate: dateFromIsoStringSchema.nullable(),
         })
         .partial(),
       tasks: z.array(

@@ -5,4 +5,5 @@ export * from './generate-keying-data';
 export * from './mark-as-reconciled';
 export * from './mark-as-ready-to-key';
 export * from './remove-from-payment-group';
-export * from './other-fee-removed-from-group';
+export * from './other-fee-removed-from-payment-group';
+export * from './other-fee-added-to-payment-group';

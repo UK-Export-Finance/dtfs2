@@ -1,6 +1,7 @@
 const { HttpStatusCode } = require('axios');
 const { generateNoUserLoggedInAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { LOGIN_STATUSES, SIGN_IN_LINK, HTTP_ERROR_CAUSES } = require('../../constants');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { SIGN_IN_LINK, HTTP_ERROR_CAUSES } = require('../../constants');
 const { UserNotFoundError, InvalidSignInTokenError, InvalidUserIdError } = require('../errors');
 const UserBlockedError = require('../errors/user-blocked.error');
 const UserDisabledError = require('../errors/user-disabled.error');
@@ -55,7 +56,7 @@ class SignInLinkController {
             success: true,
             token: tokenObject.token,
             user: sanitizeUser(user),
-            loginStatus: LOGIN_STATUSES.VALID_2FA,
+            loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
             expiresIn: tokenObject.expires,
           });
         }

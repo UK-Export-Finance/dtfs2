@@ -25,10 +25,6 @@ describe(component, () => {
       amount: '100',
       change: 'INCREASE',
     },
-    premiumAccrualBalanceAdjustment: {
-      amount: '100',
-      change: 'INCREASE',
-    },
     principalBalanceAdjustment: {
       amount: '100',
       change: 'INCREASE',
@@ -112,8 +108,8 @@ describe(component, () => {
   it('renders the keying sheet adjustment increase and decrease columns', () => {
     const wrapper = getWrapper();
 
-    wrapper.expectElement('tr td[data-cy="keying-sheet-adjustment--increase"]').toHaveCount(3);
-    wrapper.expectElement('tr td[data-cy="keying-sheet-adjustment--decrease"]').toHaveCount(3);
+    wrapper.expectElement('tr td[data-cy="keying-sheet-adjustment--increase"]').toHaveCount(2);
+    wrapper.expectElement('tr td[data-cy="keying-sheet-adjustment--decrease"]').toHaveCount(2);
   });
 
   it("renders the '-' in all the increase and decrease adjustment cells when the adjustment change is 'NONE'", () => {
@@ -121,13 +117,12 @@ describe(component, () => {
     const keyingSheetRow: KeyingSheetTableRow = {
       ...aKeyingSheetTableRow(),
       fixedFeeAdjustment: { change, amount: '111.11' },
-      premiumAccrualBalanceAdjustment: { change, amount: '222.22' },
       principalBalanceAdjustment: { change, amount: '333.33' },
     };
     const wrapper = getWrapper({ keyingSheetRow });
 
-    wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--increase"]:contains("-")`).toHaveCount(3);
-    wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--decrease"]:contains("-")`).toHaveCount(3);
+    wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--increase"]:contains("-")`).toHaveCount(2);
+    wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--decrease"]:contains("-")`).toHaveCount(2);
     wrapper.expectElement('tr td:contains("111.11")').notToExist();
     wrapper.expectElement('tr td:contains("222.22")').notToExist();
     wrapper.expectElement('tr td:contains("333.33")').notToExist();
@@ -149,17 +144,6 @@ describe(component, () => {
       wrapper.expectElement(`${increaseColumnSelector}:contains("111.11")`).hasClass('govuk-table__cell--numeric');
     });
 
-    it('renders the premium accrual balance adjustment in the increase column with the numeric cell class', () => {
-      const keyingSheetRow: KeyingSheetTableRow = {
-        ...aKeyingSheetTableRow(),
-        premiumAccrualBalanceAdjustment: { change, amount: '222.22' },
-      };
-      const wrapper = getWrapper({ keyingSheetRow });
-
-      wrapper.expectElement(`${increaseColumnSelector}:contains("222.22")`).toExist();
-      wrapper.expectElement(`${increaseColumnSelector}:contains("222.22")`).hasClass('govuk-table__cell--numeric');
-    });
-
     it('renders the principal balance adjustment in the increase column with the numeric cell class', () => {
       const keyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
@@ -175,12 +159,11 @@ describe(component, () => {
       const keyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         fixedFeeAdjustment: { change, amount: '111.11' },
-        premiumAccrualBalanceAdjustment: { change, amount: '222.22' },
         principalBalanceAdjustment: { change, amount: '333.33' },
       };
       const wrapper = getWrapper({ keyingSheetRow });
 
-      wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--decrease"]:contains("-")`).toHaveCount(3);
+      wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--decrease"]:contains("-")`).toHaveCount(2);
       wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--decrease"]:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
     });
   });
@@ -201,17 +184,6 @@ describe(component, () => {
       wrapper.expectElement(`${decreaseColumnSelector}:contains("111.11")`).hasClass('govuk-table__cell--numeric');
     });
 
-    it('renders the premium accrual balance adjustment in the decrease column with the numeric cell class', () => {
-      const keyingSheetRow: KeyingSheetTableRow = {
-        ...aKeyingSheetTableRow(),
-        premiumAccrualBalanceAdjustment: { change, amount: '222.22' },
-      };
-      const wrapper = getWrapper({ keyingSheetRow });
-
-      wrapper.expectElement(`${decreaseColumnSelector}:contains("222.22")`).toExist();
-      wrapper.expectElement(`${decreaseColumnSelector}:contains("222.22")`).hasClass('govuk-table__cell--numeric');
-    });
-
     it('renders the principal balance adjustment in the decrease column with the numeric cell class', () => {
       const keyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
@@ -227,12 +199,11 @@ describe(component, () => {
       const keyingSheetRow: KeyingSheetTableRow = {
         ...aKeyingSheetTableRow(),
         fixedFeeAdjustment: { change, amount: '111.11' },
-        premiumAccrualBalanceAdjustment: { change, amount: '222.22' },
         principalBalanceAdjustment: { change, amount: '333.33' },
       };
       const wrapper = getWrapper({ keyingSheetRow });
 
-      wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--increase"]:contains("-")`).toHaveCount(3);
+      wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--increase"]:contains("-")`).toHaveCount(2);
       wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--increase"]:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
     });
   });
@@ -300,7 +271,6 @@ describe(component, () => {
         baseCurrency: 'EUR',
         checkboxId: 'feeRecordId-123-status-TO_DO',
         fixedFeeAdjustment: { change: 'NONE', amount: '0' },
-        premiumAccrualBalanceAdjustment: { change: 'NONE', amount: '0' },
         principalBalanceAdjustment: { change: 'NONE', amount: '0' },
         feePayments: [aFeePayment(), aFeePayment(), aFeePayment()],
       };
@@ -324,7 +294,7 @@ describe(component, () => {
       wrapper.expectElement('tr:eq(1) td:contains("EUR")').notToExist();
       wrapper.expectElement('tr:eq(2) td:contains("EUR")').notToExist();
 
-      wrapper.expectElement('tr:eq(0) td:contains("-")').toHaveCount(6);
+      wrapper.expectElement('tr:eq(0) td:contains("-")').toHaveCount(4);
       wrapper.expectElement('tr:eq(1) td:contains("-")').notToExist();
       wrapper.expectElement('tr:eq(2) td:contains("-")').notToExist();
 
@@ -366,8 +336,8 @@ describe(component, () => {
       };
       const wrapper = getWrapper({ keyingSheetRow });
 
-      wrapper.expectElement('tr:eq(0) td.no-border').toHaveCount(13);
-      wrapper.expectElement('tr:eq(1) td.no-border').toHaveCount(13);
+      wrapper.expectElement('tr:eq(0) td.no-border').toHaveCount(11);
+      wrapper.expectElement('tr:eq(1) td.no-border').toHaveCount(11);
       wrapper.expectElement('tr:eq(2) td.no-border').notToExist();
     });
 

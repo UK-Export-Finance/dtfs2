@@ -1,5 +1,6 @@
 const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
@@ -42,6 +43,11 @@ describe('POST TFM amendments', () => {
   });
 
   describe('POST /v1/tfm/facilities/:id/amendments', () => {
+    withMongoIdPathParameterValidationTests({
+      baseUrl: '/v1/tfm/facilities/:id/amendments',
+      makeRequest: (url) => testApi.post({}).to(url),
+    });
+
     describe('with a valid facility submitted to portal', () => {
       let facilityId;
       beforeEach(async () => {
@@ -102,19 +108,6 @@ describe('POST TFM amendments', () => {
         .to('/v1/tfm/facilities/62727d055ca1841f08216353/amendments');
 
       expect(status).toEqual(404);
-    });
-
-    it('should return 400 if the facility Id is not valid', async () => {
-      await testApi
-        .put({
-          dealType: DEALS.DEAL_TYPE.BSS_EWCS,
-          dealId,
-          auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
-        })
-        .to('/v1/tfm/deals/submit');
-
-      const { status } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to('/v1/tfm/facilities/123/amendments');
-      expect(status).toEqual(400);
     });
   });
 });

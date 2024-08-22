@@ -9,9 +9,11 @@ export * from './portal';
 export * from './durable-functions-log.constant';
 export * from './fee-record-status';
 export * from './audit-user-types';
-export * as PAYLOAD_VERIFICATION from './payload-verification';
 export * from './company-registration-number';
 export * from './keying-sheet-row-status';
-export * from './amendment-status';
+export * from './amendments';
+export * from './api-error-code';
 export * from './facility-type';
 export * from './facility-provided-details';
+
+export * as PAYLOAD_VERIFICATION from './payload-verification';

@@ -4,6 +4,26 @@ import { Currency } from '../currency';
 import { FacilityType } from '../facility-type';
 
 /**
+ * These properties will not exist if on a BSS/EWCS deal or the deal version is less than 1
+ */
+type FacilityEndDateProperties =
+  | {
+      isUsingFacilityEndDate: true;
+      facilityEndDate?: Date | null;
+      bankReviewDate?: null;
+    }
+  | {
+      isUsingFacilityEndDate: false;
+      facilityEndDate?: null;
+      bankReviewDate?: Date | null;
+    }
+  | {
+      isUsingFacilityEndDate?: null;
+      facilityEndDate?: null;
+      bankReviewDate?: null;
+    };
+
+/**
  * Type of the mongo db "facilities" collection
  *
  * This type is likely incomplete and should be added
@@ -42,4 +62,4 @@ export type Facility = {
   hasBeenIssuedAndAcknowledged: boolean | null;
   canResubmitIssuedFacilities: boolean | null;
   unissuedToIssuedByMaker: object;
-};
+} & FacilityEndDateProperties;

@@ -155,6 +155,15 @@ describe(baseUrl, () => {
         expect(body).toEqual({ status: 400, message: 'Cannot add facility end date to deal version 0' });
         expect(status).toBe(400);
       });
+
+      it('returns 400 when payload contains facilityEndDate', async () => {
+        const { status, body } = await as(aMaker)
+          .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate: new Date().toISOString() })
+          .to(baseUrl);
+
+        expect(body).toEqual({ status: 400, message: 'Cannot add facility end date to deal version 0' });
+        expect(status).toBe(400);
+      });
     });
 
     describe(`with GEF_DEAL_VERSION = 1`, () => {
@@ -178,6 +187,14 @@ describe(baseUrl, () => {
       it('returns 201 when payload is valid & contains bankReviewDate', async () => {
         const { status } = await as(aMaker)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, bankReviewDate: new Date().toISOString() })
+          .to(baseUrl);
+
+        expect(status).toBe(201);
+      });
+
+      it('returns 201 when payload is valid & contains facilityEndDate', async () => {
+        const { status } = await as(aMaker)
+          .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate: new Date().toISOString() })
           .to(baseUrl);
 
         expect(status).toBe(201);
@@ -207,6 +224,58 @@ describe(baseUrl, () => {
           .to(baseUrl);
 
         expect(body).toEqual({ status: 400, message: 'Invalid bankReviewDate: "2024/07/09T10 - 37/15.200Z"' });
+        expect(status).toEqual(400);
+      });
+
+      it('returns 400 when facilityEndDate is not a string', async () => {
+        const { status, body } = await as(aMaker)
+          .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate: 1720521372395 })
+          .to(baseUrl);
+
+        expect(body).toEqual({ status: 400, message: 'Invalid facilityEndDate: 1720521372395' });
+        expect(status).toEqual(400);
+      });
+
+      it('returns 400 when facilityEndDate is not a valid ISO-8601 string', async () => {
+        const { status, body } = await as(aMaker)
+          .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate: '2024/07/09T10 - 37/15.200Z' })
+          .to(baseUrl);
+
+        expect(body).toEqual({ status: 400, message: 'Invalid facilityEndDate: "2024/07/09T10 - 37/15.200Z"' });
+        expect(status).toEqual(400);
+      });
+
+      it('returns 400 when payload contains facilityEndDate & bankReviewDate', async () => {
+        const bankReviewDate = new Date().toISOString();
+        const facilityEndDate = new Date().toISOString();
+
+        const { status, body } = await as(aMaker)
+          .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate, bankReviewDate })
+          .to(baseUrl);
+
+        expect(body).toEqual({ status: 400, message: 'A facility cannot have both a facilityEndDate and bankReviewDate' });
+        expect(status).toEqual(400);
+      });
+
+      it('returns 400 when payload contains facilityEndDate & isUsingFacilityEndDate = false', async () => {
+        const facilityEndDate = new Date().toISOString();
+
+        const { status, body } = await as(aMaker)
+          .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate, isUsingFacilityEndDate: false })
+          .to(baseUrl);
+
+        expect(body).toEqual({ status: 400, message: `Invalid facilityEndDate: ${JSON.stringify(facilityEndDate)}` });
+        expect(status).toEqual(400);
+      });
+
+      it('returns 400 when payload contains bankReviewDate & isUsingFacilityEndDate = true', async () => {
+        const bankReviewDate = new Date().toISOString();
+
+        const { status, body } = await as(aMaker)
+          .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, bankReviewDate, isUsingFacilityEndDate: true })
+          .to(baseUrl);
+
+        expect(body).toEqual({ status: 400, message: `Invalid bankReviewDate: ${JSON.stringify(bankReviewDate)}` });
         expect(status).toEqual(400);
       });
     });

@@ -55,8 +55,9 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       }
     }
 
-    const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetails(reportId, feeRecordIds, userToken);
+    const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups(reportId, feeRecordIds, userToken);
     const paymentNumber = selectedFeeRecordDetails.payments.length + 1;
+
     return renderAddPaymentPage(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,

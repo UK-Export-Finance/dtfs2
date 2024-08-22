@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { ApiError } from './api.error';
 import { InvalidParameterError } from './invalid-parameter-error';
 
@@ -71,7 +72,7 @@ describe('InvalidParameterError', () => {
     const error = new InvalidParameterError(parameterName, parameterValue);
 
     // Assert
-    expect(error.status).toBe(400);
+    expect(error.status).toBe(HttpStatusCode.BadRequest);
   });
 
   it('exposes the name of the exception', () => {

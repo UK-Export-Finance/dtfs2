@@ -139,6 +139,26 @@ describe('facilityItems', () => {
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').href).toEqual('testUrl/about-facility?status=change');
     });
 
-    // TODO DTFS2-7162: Test URLs for Facility end date and Bank review date rows
+    it('should provide the correct URL for the "Facility end date" row', () => {
+      // Arrange
+      const facility = { ...MOCK_FACILITY, isUsingFacilityEndDate: true, facilityEndDate: '2026-08-04T00:00:00.000Z' };
+
+      // Act
+      const result = facilityItems('testUrl', facility, 1);
+
+      // Assert
+      expect(result.find((item) => item.id === 'facilityEndDate').href).toEqual('testUrl/facility-end-date?status=change');
+    });
+
+    it('should provide the correct URL for the "Bank review date" row', () => {
+      // Arrange
+      const facility = { ...MOCK_FACILITY, isUsingFacilityEndDate: false, bankReviewDate: '2026-08-04T00:00:00.000Z' };
+
+      // Act
+      const result = facilityItems('testUrl', facility, 1);
+
+      // Assert
+      expect(result.find((item) => item.id === 'bankReviewDate').href).toEqual('testUrl/bank-review-date?status=change');
+    });
   });
 });

@@ -104,14 +104,14 @@ context('Return to Maker as MIA', () => {
       applicationDetails.deleteFacilityLink().should('exist');
 
       // should be able to edit facilities
-      applicationDetails.facilitySummaryListRowAction(0, 0).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(0, 1).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(0, 2).contains('Change');
+      applicationDetails.facilitySummaryListTable(0).nameAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(0).hasBeenIssuedAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(0).monthsOfCoverAction().contains('Change');
       if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListRowAction(0, 3).contains('Add');
+        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Add');
       }
-      applicationDetails.facilitySummaryListRowAction(0, facilityEndDateEnabled ? 4 : 3).contains('Change');
-      applicationDetails.facilitySummaryListRowAction(0, facilityEndDateEnabled ? 5 : 4).contains('Change');
+      applicationDetails.facilitySummaryListTable(0).facilityProvidedOnAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(0).valueAction().contains('Change');
 
       // should be able to edit company house reg number
       applicationDetails.exporterSummaryListRowAction(0, 0).contains('Change');

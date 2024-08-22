@@ -2,10 +2,10 @@ const CONSTANTS = require('../../../constants');
 
 /**
  * Return facility fee record period
- * @param {Object} facility Facility object
- * @param {String} dealType Deal type i.e. GEF, BSS, EWCS
+ * @param {object} facility Facility object
+ * @param {string} dealType Deal type i.e. GEF, BSS, EWCS
  * @param {Integer} premiumScheduleIndex Premium schedule index
- * @returns {String} Facility fee record period, padded with leading `0` if single digit.
+ * @returns {string} Facility fee record period, padded with leading `0` if single digit.
  */
 const getFeeRecordPeriod = (facility, dealType, premiumScheduleIndex) => {
   // GEF

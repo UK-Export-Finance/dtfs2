@@ -1,5 +1,8 @@
+const util = require('util');
 const { param } = require('express-validator');
-const { isValidIsoMonth, isValidIsoYear } = require('@ukef/dtfs2-common');
+const { ObjectId } = require('mongodb');
+const { HttpStatusCode } = require('axios');
+const { isValidIsoMonth, isValidIsoYear, API_ERROR_CODE } = require('@ukef/dtfs2-common');
 
 const bankIdValidation = param('bankId').isString().matches(/^\d+$/).withMessage('The bank id provided should be a string of numbers');
 
@@ -8,18 +11,57 @@ exports.bankIdValidation = [bankIdValidation];
 /**
  * Validator for a path parameter which is a mongo id
  * @param {string} paramName
- * @returns {import('express-validator').ValidationChain}
+ * @returns {import('express').RequestHandler}
  */
-const mongoIdValidation = (paramName) => param(paramName).isMongoId().withMessage(`Invalid MongoDB '${paramName}' path param provided`);
+const mongoIdValidation = (paramName) => (req, res, next) => {
+  console.info(util.inspect({ stepDescription: 'mongoIdValidation', paramName }, { showHidden: false, depth: null, colors: true }));
+  const pathParam = req.params[paramName];
+  console.info(util.inspect({ pathParam }, { showHidden: false, depth: null, colors: true }));
+
+  if (ObjectId.isValid(pathParam)) {
+    console.info({ stepDescription: 'mongoIdValidation calling next' });
+    return next();
+  }
+
+  console.info(
+    util.inspect(
+      {
+        stepDescription: 'mongoIdValidation Failed',
+        response: {
+          status: HttpStatusCode.BadRequest,
+          body: {
+            message: `Expected path parameter '${paramName}' to be a valid mongo id`,
+            code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
+          },
+        },
+      },
+      { showHidden: false, depth: null, colors: true },
+    ),
+  );
+
+  return res.status(HttpStatusCode.BadRequest).send({
+    message: `Expected path parameter '${paramName}' to be a valid mongo id`,
+    code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
+  });
+};
 
 exports.mongoIdValidation = mongoIdValidation;
 
 /**
  * Validator for a path parameter which is an sql integer id
  * @param {string} paramName - The parameter name
- * @returns {import('express-validator').ValidationChain}
+ * @returns {import('express').RequestHandler}
  */
-const sqlIdValidation = (paramName) => param(paramName).isInt({ min: 0 }).withMessage(`Invalid '${paramName}' path param provided`);
+const sqlIdValidation = (paramName) => (req, res, next) => {
+  const pathParam = req.params[paramName];
+  if (/^\d+$/.test(pathParam)) {
+    return next();
+  }
+  return res.status(HttpStatusCode.BadRequest).send({
+    message: `Expected path parameter '${paramName}' to be a valid sql id`,
+    code: API_ERROR_CODE.INVALID_SQL_ID_PATH_PARAMETER,
+  });
+};
 
 exports.sqlIdValidation = sqlIdValidation;
 

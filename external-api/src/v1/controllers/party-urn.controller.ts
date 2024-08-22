@@ -20,7 +20,7 @@ const headers = {
  * Fetches company information from party URN
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Object} Express response with `status` and `data`.
+ * @returns {object} Express response with `status` and `data`.
  */
 export const lookup = async (req: Request, res: Response) => {
   try {

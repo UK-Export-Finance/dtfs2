@@ -20,6 +20,10 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     .withDateUploaded(new Date())
     .build();
 
+  before(() => {
+    cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
+  });
+
   beforeEach(() => {
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 

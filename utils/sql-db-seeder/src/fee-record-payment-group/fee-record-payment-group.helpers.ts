@@ -42,7 +42,6 @@ export const createRandomFeeRecordForReport = (report: UtilisationReportEntity, 
   });
 
   feeRecord.fixedFeeAdjustment = null;
-  feeRecord.premiumAccrualBalanceAdjustment = null;
   feeRecord.principalBalanceAdjustment = null;
 
   feeRecord.updateLastUpdatedBy({ platform: 'SYSTEM' });
@@ -80,7 +79,6 @@ export const createAutoMatchedZeroPaymentFeeRecordForReport = (report: Utilisati
   });
 
   feeRecord.fixedFeeAdjustment = null;
-  feeRecord.premiumAccrualBalanceAdjustment = null;
   feeRecord.principalBalanceAdjustment = null;
 
   feeRecord.updateLastUpdatedBy({ platform: 'SYSTEM' });

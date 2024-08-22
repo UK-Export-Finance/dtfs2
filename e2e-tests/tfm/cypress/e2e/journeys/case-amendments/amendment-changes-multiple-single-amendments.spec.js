@@ -7,7 +7,7 @@ import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
 import caseDealPage from '../../pages/caseDealPage';
 
-const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED');
+const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 
 context('Amendments changes displayed - multiple single change amendments', () => {
   let dealId;
@@ -74,9 +74,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
     amendmentsPage.continueAmendment().click();
 
     if (tfmFacilityEndDateEnabled) {
-      cy.url().should('contain', 'is-using-facility-end-date');
-      amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
     }
 
     cy.url().should('contain', 'check-answers');

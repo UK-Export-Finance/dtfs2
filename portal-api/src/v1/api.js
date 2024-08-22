@@ -56,12 +56,12 @@ const createDeal = async (deal, user, auditDetails) => {
 
 /**
  * Sends a request to DTFS Central to update a deal
- * @param {Object} params - The parameters for updating the deal.
+ * @param {object} params - The parameters for updating the deal.
  * @param {string} params.dealId - The ID of the deal being updated.
- * @param {Object} params.dealUpdate - The update to be made to the deal.
- * @param {Object} params.user - The user making the changes.
- * @param {Object} params.auditDetails - The audit details for the update.
- * @returns {Promise<Object | false>} The updated deal object.
+ * @param {object} params.dealUpdate - The update to be made to the deal.
+ * @param {object} params.user - The user making the changes.
+ * @param {object} params.auditDetails - The audit details for the update.
+ * @returns {Promise<object | false>} The updated deal object.
  */
 const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
   try {
@@ -299,7 +299,7 @@ const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
 };
 
 /**
- * @typedef {Object} GetUtilisationReportsOptions
+ * @typedef {object} GetUtilisationReportsOptions
  * @property {import('../types/utilisation-reports').ReportPeriod} [reportPeriod] - a report period to filter reports by
  * @property {boolean} [excludeNotReceived] - whether or not to exclude reports which have not been uploaded
  */
@@ -405,7 +405,7 @@ const getAllBanks = async () => {
 /**
  * Call the central API to get the next report period for a bank
  * @param {string} bankId
- * @returns {object} response of API call or wrapped error response
+ * @returns {Promise<object>} response of API call or wrapped error response
  */
 const getNextReportPeriodByBankId = async (bankId) => {
   try {

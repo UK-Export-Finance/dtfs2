@@ -9,7 +9,7 @@ const { overrideFacilitiesIfAmendmentsInProgress } = require('./overrideFaciliti
 /**
  * Builds a query parameters object for requests to the GET /deals or GET /facilities TFM API endpoints
  * based on the values provided
- * @param {Object} sortBy Value for the sortBy query parameter
+ * @param {object} sortBy Value for the sortBy query parameter
  * @param {string} page Value for the page query parameter
  * @param {string} searchString Value for the searchString query parameter
  * @returns {string} Query parameters object
@@ -110,10 +110,10 @@ const getSingularCollectionName = (collectionName) => {
 
 /**
  * Makes a request to TFM API to get either the deals or facilities and renders the relevant page with the returned data
- * @param {String} collectionName The name of the collection, either 'deals' or 'facilities'
- * @param {Object} req The request object
- * @param {Object} res The response object
- * @returns {Object} The result from rendering the page
+ * @param {string} collectionName The name of the collection, either 'deals' or 'facilities'
+ * @param {object} req The request object
+ * @param {object} res The response object
+ * @returns {Promise<object>} The result from rendering the page
  */
 const renderDealsOrFacilitiesPage = async (collectionName, req, res) => {
   try {
@@ -159,10 +159,10 @@ const renderDealsOrFacilitiesPage = async (collectionName, req, res) => {
 
 /**
  * Redirects to either GET /deals or GET /facilities with a query string constructed from the query
- * @param {String} collectionName The name of the collection, either 'deals' or 'facilities'
- * @param {Object} req The request object
- * @param {Object} res The response object
- * @returns {Object} The result from redirecting
+ * @param {string} collectionName The name of the collection, either 'deals' or 'facilities'
+ * @param {object} req The request object
+ * @param {object} res The response object
+ * @returns {object} The result from redirecting
  */
 const queryDealsOrFacilities = (collectionName, req, res) => {
   const { search: newSearch, ascending, descending } = req.body;

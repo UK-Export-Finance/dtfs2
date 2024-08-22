@@ -43,11 +43,12 @@ export type KeyingSheetViewModel = {
     formattedDateReceived: string | undefined;
   }[];
   fixedFeeAdjustment: KeyingSheetAdjustmentViewModel;
-  premiumAccrualBalanceAdjustment: KeyingSheetAdjustmentViewModel;
   principalBalanceAdjustment: KeyingSheetAdjustmentViewModel;
   checkboxId: KeyingSheetCheckboxId;
   isChecked: boolean;
 }[];
+
+export type PaymentDetailsViewModel = [];
 
 export type FeeRecordPaymentGroupViewModelItem = {
   feeRecords: FeeRecordViewModelItem[];
@@ -71,4 +72,5 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   facilityIdQueryError: ErrorSummaryViewModel | undefined;
   facilityIdQuery?: string;
   keyingSheet: KeyingSheetViewModel;
+  paymentDetails: PaymentDetailsViewModel;
 };

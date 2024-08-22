@@ -3,7 +3,7 @@ const CONSTANTS = require('../constants');
 /**
  * Checks if a facility is complete by filtering its items based on their status and certain conditions,
  * and then comparing the length of the filtered arrays with the total number of items.
- * @param {Object} facilities - The facility object containing an array of items.
+ * @param {object} facilities - The facility object containing an array of items.
  * @returns {boolean} - True if the facility is complete, false otherwise.
  */
 const isEveryFacilityComplete = (facilities = []) => {
@@ -46,7 +46,7 @@ const hasAtLeastOneLoanOrBond = (deal) => {
 /**
  * Checks if the submission details of a deal are complete.
  *
- * @param {Object} deal - The deal object.
+ * @param {object} deal - The deal object.
  * @returns {boolean} - Returns true if the submission details are complete, otherwise false.
  */
 const isSubmissionDetailComplete = (deal) => deal?.submissionDetails?.status === CONSTANTS.STATUS.SECTION.COMPLETED;

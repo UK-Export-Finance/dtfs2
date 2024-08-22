@@ -2,10 +2,10 @@ const CONSTANTS = require('../../../constants');
 
 /**
  * Return facility fee record `expirationDate`, `nextDueDate` and `nextAccrueToDate` dates.
- * @param {Object} facility Facility object
- * @param {String} dealType Deal type i.e. GEF, BSS, EWCS
+ * @param {object} facility Facility object
+ * @param {string} dealType Deal type i.e. GEF, BSS, EWCS
  * @param {Integer} premiumScheduleIndex Premium schedule index
- * @returns {Object} Fee record dates
+ * @returns {object} Fee record dates
  */
 
 const getFeeDates = (facility, dealType, premiumScheduleIndex) => {

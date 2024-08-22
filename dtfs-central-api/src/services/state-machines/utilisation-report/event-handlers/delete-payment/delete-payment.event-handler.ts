@@ -42,7 +42,7 @@ export const handleUtilisationReportDeletePaymentEvent = async (
 
   const remainingLinkedPayments = feeRecordsWithPayments.payments;
 
-  const feesAndPaymentsMatch = feeRecordsAndPaymentsMatch(linkedFeeRecords, remainingLinkedPayments);
+  const feesAndPaymentsMatch = await feeRecordsAndPaymentsMatch(linkedFeeRecords, remainingLinkedPayments, transactionEntityManager);
   const feeRecordStateMachines = linkedFeeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
   await Promise.all(
     feeRecordStateMachines.map((stateMachine) =>

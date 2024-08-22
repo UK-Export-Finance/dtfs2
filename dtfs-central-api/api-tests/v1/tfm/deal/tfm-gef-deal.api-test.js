@@ -18,7 +18,7 @@ describe('/v1/tfm/deal/:id', () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
-  describe('GET /v1/tfm/deal/:id', () => {
+  describe('GET /v1/tfm/deals/:id', () => {
     it('returns the requested resource', async () => {
       const postResult = await testApi.post(newDeal).to('/v1/portal/gef/deals');
       const dealId = postResult.body._id;
