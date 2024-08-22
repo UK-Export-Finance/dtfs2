@@ -9,6 +9,7 @@ const { BANK_HOLIDAY_REGION } = require('./bank-holiday-region');
 const { PRIMARY_NAVIGATION_KEYS } = require('./primary-navigation-keys');
 const { REGEX } = require('./regex');
 const { UTILISATION_REPORT_DISPLAY_FREQUENCY } = require('./utilisation-report-display-frequency');
+const { BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX } = require('./bank-reports-for-period-table-header-prefix');
 
 module.exports = {
   DEAL,
@@ -22,4 +23,5 @@ module.exports = {
   PRIMARY_NAVIGATION_KEYS,
   REGEX,
   UTILISATION_REPORT_DISPLAY_FREQUENCY,
+  BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX,
 };

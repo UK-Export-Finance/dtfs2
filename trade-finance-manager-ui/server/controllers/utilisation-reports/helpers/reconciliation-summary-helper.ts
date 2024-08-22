@@ -12,7 +12,7 @@ import { getReportDueDate } from '../../../services/utilisation-report-service';
 import api from '../../../api';
 import { UtilisationReportSummaryViewModel, ReportPeriodSummariesViewModel } from '../../../types/view-models';
 import { UtilisationReportDisplayFrequency } from '../../../types/utilisation-report-display-frequency';
-import { UTILISATION_REPORT_DISPLAY_FREQUENCY } from '../../../constants';
+import { BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX, UTILISATION_REPORT_DISPLAY_FREQUENCY } from '../../../constants';
 
 export const reconciliationStatusCodeToDisplayStatus: Record<UtilisationReportReconciliationStatus, string> = {
   REPORT_NOT_RECEIVED: 'Not received',
@@ -104,7 +104,11 @@ const getReportPeriodHeadingWithPeriodEnd = (submissionMonth: IsoMonthStamp) => 
   const reportPeriodEnd = subMonths(submissionMonthDate, 1);
   const formattedReportPeriodEnd = format(reportPeriodEnd, 'MMMM yyyy');
 
-  return `${isCurrentSubmissionMonth ? 'Current' : 'Open reports'} reporting period end: ${formattedReportPeriodEnd}`;
+  return `${
+    isCurrentSubmissionMonth
+      ? BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.CURRENT_REPORTING_PERIOD
+      : BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.NOT_CURRENT_REPORTING_PERIOD
+  } reporting period end: ${formattedReportPeriodEnd}`;
 };
 
 /**

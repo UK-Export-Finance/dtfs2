@@ -1,0 +1,4 @@
+export const BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX = {
+  CURRENT_REPORTING_PERIOD: 'Current',
+  NOT_CURRENT_REPORTING_PERIOD: 'Open reports',
+} as const;
