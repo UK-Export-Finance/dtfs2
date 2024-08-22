@@ -33,3 +33,12 @@ export type UpdateWithKeyingDataParams = {
 export type RemoveAllPaymentsParams = {
   requestSource: DbRequestSource;
 };
+
+export type MarkAsReconciledParams = {
+  reconciledByUserId: string;
+  requestSource: DbRequestSource;
+};
+
+export type MarkAsReadyToKeyParams = {
+  requestSource: DbRequestSource;
+};

@@ -5,12 +5,22 @@ export type FeeRecordPaymentEntityGroup = {
   payments: PaymentEntity[];
 };
 
+/**
+ * Gets a payment id key for a list of payment entities
+ * @param payments - The payments
+ * @returns The payment id key
+ */
 const getPaymentIdKeyFromPaymentEntities = (payments: PaymentEntity[]) =>
   `paymentIds-${payments
     .map(({ id }) => id)
     .toSorted((id1, id2) => id1 - id2)
     .join('-')}`;
 
+/**
+ * Gets the fee record payment entity groups from a list of fee records
+ * @param feeRecords - The fee records
+ * @returns The fee record payment entity groups
+ */
 export const getFeeRecordPaymentEntityGroupsFromFeeRecordEntities = (feeRecords: FeeRecordEntity[]): FeeRecordPaymentEntityGroup[] => {
   function* generateUniqueKey(): Generator<string, string, unknown> {
     let key = 1;

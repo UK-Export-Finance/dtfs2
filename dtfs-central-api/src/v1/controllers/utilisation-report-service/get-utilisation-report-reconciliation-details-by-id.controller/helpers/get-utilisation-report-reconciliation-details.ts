@@ -34,7 +34,7 @@ export const getUtilisationReportReconciliationDetails = async (
 
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecords);
 
-  const feeRecordPaymentGroups = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(
+  const feeRecordPaymentGroups = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(
     facilityIdFilter ? filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityIdFilter) : feeRecordPaymentEntityGroups,
   );
 

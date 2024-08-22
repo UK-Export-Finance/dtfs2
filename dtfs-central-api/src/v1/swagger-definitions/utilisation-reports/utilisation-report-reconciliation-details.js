@@ -42,6 +42,18 @@
  *         nullable: true
  *       status:
  *         $ref: '#/definitions/FeeRecordStatus'
+ *       reconciledByUser:
+ *         type: object
+ *         nullable: true
+ *         properties:
+ *           firstName:
+ *             type: string
+ *           lastName:
+ *             type: string
+ *       dateReconciled:
+ *         type: string
+ *         format: date
+ *         nullable: true
  *   UtilisationReportReconciliationDetails:
  *     type: object
  *     properties:

@@ -233,6 +233,8 @@ describe(page, () => {
             reference: undefined,
           },
           feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
+          reconciledBy: '-',
+          dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
         },
       ],
     });

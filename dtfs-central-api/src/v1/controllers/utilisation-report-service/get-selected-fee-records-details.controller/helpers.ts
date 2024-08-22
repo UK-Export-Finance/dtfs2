@@ -80,7 +80,7 @@ export const getSelectedFeeRecordsAvailablePaymentGroups = async (
   const feeRecordEntities = await FeeRecordRepo.findByReportIdAndPaymentCurrencyAndStatusDoesNotMatchWithPayments(Number(reportId), paymentCurrency);
 
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecordEntities);
-  const feeRecordPaymentGroups = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
+  const feeRecordPaymentGroups = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
 
   return mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups(feeRecordPaymentGroups);
 };

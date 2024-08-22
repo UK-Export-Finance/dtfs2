@@ -7,6 +7,7 @@ type MarkFeeRecordsAsReconciledEventPayload = {
   requestSource: DbRequestSource;
   transactionEntityManager: EntityManager;
   feeRecordsToReconcile: FeeRecordEntity[];
+  reconciledByUserId: string;
 };
 
 export type UtilisationReportMarkFeeRecordsAsReconciledEvent = BaseUtilisationReportEvent<
@@ -16,7 +17,7 @@ export type UtilisationReportMarkFeeRecordsAsReconciledEvent = BaseUtilisationRe
 
 export const handleUtilisationReportMarkFeeRecordsAsReconciledEvent = async (
   report: UtilisationReportEntity,
-  { requestSource, transactionEntityManager, feeRecordsToReconcile }: MarkFeeRecordsAsReconciledEventPayload,
+  { requestSource, transactionEntityManager, feeRecordsToReconcile, reconciledByUserId }: MarkFeeRecordsAsReconciledEventPayload,
 ): Promise<UtilisationReportEntity> => {
   const feeRecordStateMachines = feeRecordsToReconcile.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
   await Promise.all(
@@ -25,6 +26,7 @@ export const handleUtilisationReportMarkFeeRecordsAsReconciledEvent = async (
         type: 'MARK_AS_RECONCILED',
         payload: {
           transactionEntityManager,
+          reconciledByUserId,
           requestSource,
         },
       }),

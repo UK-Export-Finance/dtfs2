@@ -1,5 +1,11 @@
 import { HttpStatusCode } from 'axios';
-import { FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { MOCK_TFM_USER } from '../../mocks/test-users/mock-tfm-user';
@@ -106,11 +112,16 @@ describe(`PUT ${BASE_URL}`, () => {
     expect(status).toBe(200);
   });
 
-  it('sets fee record status to RECONCILED', async () => {
+  it('sets fee record status to RECONCILED, reconciledByUserId to the user who performed the action and the dateReconciled to now', async () => {
     // Arrange
     const reportId = 1;
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('READY_TO_KEY').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report)
+      .withId(1)
+      .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+      .withReconciledByUserId(null)
+      .withDateReconciled(null)
+      .build();
     report.feeRecords = [feeRecord];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
@@ -123,8 +134,10 @@ describe(`PUT ${BASE_URL}`, () => {
     await testApi.put(requestBody).to(getUrl(reportId));
 
     // Assert
-    const updatedFeeRecord = await SqlDbHelper.manager.findOneBy(FeeRecordEntity, { id: 1 });
-    expect(updatedFeeRecord?.status).toEqual('RECONCILED');
+    const updatedFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: 1 });
+    expect(updatedFeeRecord.status).toEqual(FEE_RECORD_STATUS.RECONCILED);
+    expect(updatedFeeRecord.reconciledByUserId).toBe(MOCK_TFM_USER._id.toString());
+    expect(updatedFeeRecord.dateReconciled).not.toBeNull();
   });
 
   it('sets the report status to RECONCILIATION_COMPLETED if all fee records are now reconciled', async () => {

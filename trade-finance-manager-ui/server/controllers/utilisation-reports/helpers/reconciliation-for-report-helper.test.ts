@@ -792,7 +792,6 @@ describe('reconciliation-for-report-helper', () => {
 
     it('maps the payment to a formatted date received sorted by date ascending', () => {
       // Arrange
-      // Example: May 1 2023 VS Apr 1 2024 - Apr comes first
       const payments: Payment[] = [
         { ...aPayment(), id: 1, dateReceived: new Date('2024-06-01').toISOString() }, // '1 Jun 2024', dataSortValue = 3
         { ...aPayment(), id: 2, dateReceived: new Date('2024-07-01').toISOString() }, // '1 Jul 2024', dataSortValue = 4
@@ -818,6 +817,115 @@ describe('reconciliation-for-report-helper', () => {
         { formattedDateReceived: '1 May 2024', dataSortValue: 2 },
         { formattedDateReceived: '1 Apr 2024', dataSortValue: 1 },
       ]);
+    });
+
+    it('maps the reconciledByUser to the payment details reconciledBy field with value "-" when the reconciledByUser is null', () => {
+      // Arrange
+      const group: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [aFeeRecord()],
+        paymentsReceived: [aPayment()],
+        reconciledByUser: null,
+      };
+
+      // Act
+      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result[0].reconciledBy).toBe('-');
+    });
+
+    it('maps the reconciledByUser to the payment details reconciledBy field', () => {
+      // Arrange
+      const group: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [aFeeRecord()],
+        paymentsReceived: [aPayment()],
+        reconciledByUser: { firstName: 'John', lastName: 'Smith' },
+      };
+
+      // Act
+      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result[0].reconciledBy).toBe('John Smith');
+    });
+
+    it('maps the dateReconciled to the payment details dateReconciled field with value "-" when the dateReconciled is null', () => {
+      // Arrange
+      const group: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [aFeeRecord()],
+        paymentsReceived: [aPayment()],
+        dateReconciled: null,
+      };
+
+      // Act
+      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result[0].dateReconciled.formattedDateReconciled).toBe('-');
+    });
+
+    it.each([
+      { dateReconciled: '2024-01-12T15:30:00.000', formattedDate: '12 Jan 2024 at 03:30pm' },
+      { dateReconciled: '2024-12-01T10:30:00.000', formattedDate: '1 Dec 2024 at 10:30am' },
+    ])("maps a dateReconciled value of '$dateReconciled' to the formatted date '$formattedDate'", ({ dateReconciled, formattedDate }) => {
+      // Arrange
+      const group: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [aFeeRecord()],
+        paymentsReceived: [aPayment()],
+        dateReconciled,
+      };
+
+      // Act
+      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result[0].dateReconciled.formattedDateReconciled).toBe(formattedDate);
+    });
+
+    it('sorts the dateReconciled by date ascending with null dates being at the start of the sorted list', () => {
+      // Arrange
+      const firstGroup: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        paymentsReceived: [
+          { ...aPayment(), id: 0 }, // dataSortValue = 3
+          { ...aPayment(), id: 3 }, // dataSortValue = 4
+        ],
+        dateReconciled: '2024-01-01T03:00:00.000',
+      };
+
+      const secondGroup: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        paymentsReceived: [{ ...aPayment(), id: 4 }], // dataSortValue = 2
+        dateReconciled: '2024-01-01T00:00:00.000',
+      };
+
+      const thirdGroup: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        paymentsReceived: [
+          { ...aPayment(), id: 2 }, // dataSortValue = 0
+          { ...aPayment(), id: 1 }, // dataSortValue = 1
+        ],
+        dateReconciled: null,
+      };
+
+      // Act
+      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([firstGroup, secondGroup, thirdGroup]);
+
+      // Assert
+      expect(result).toHaveLength(5);
+      expect(result[0].dateReconciled.dataSortValue).toBe(3);
+      expect(result[1].dateReconciled.dataSortValue).toBe(4);
+      expect(result[2].dateReconciled.dataSortValue).toBe(2);
+      expect(result[3].dateReconciled.dataSortValue).toBe(0);
+      expect(result[4].dateReconciled.dataSortValue).toBe(1);
     });
   });
 });

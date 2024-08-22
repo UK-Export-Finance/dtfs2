@@ -66,8 +66,11 @@ export type PaymentDetailsViewModel = {
     facilityId: string;
     exporter: string;
   }[];
-  reconciledBy?: string;
-  dateReconciled?: string;
+  reconciledBy: string;
+  dateReconciled: {
+    formattedDateReconciled: string;
+    dataSortValue: number;
+  };
 }[];
 
 export type FeeRecordPaymentGroupViewModelItem = {

@@ -17,7 +17,7 @@ console.error = jest.fn();
 
 class TestApiError extends ApiError {
   constructor(status?: number, message?: string) {
-    super({ status: status ?? 500, message: message ?? '' });
+    super({ status: status ?? HttpStatusCode.InternalServerError, message: message ?? '' });
   }
 }
 

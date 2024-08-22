@@ -17,6 +17,11 @@ export type FeeRecordPaymentGroup = {
   paymentsReceived: Payment[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
   status: FeeRecordStatus;
+  reconciledByUser: {
+    firstName: string;
+    lastName: string;
+  } | null;
+  dateReconciled: IsoDateTimeStamp | null;
 };
 
 export type KeyingSheetRow = {

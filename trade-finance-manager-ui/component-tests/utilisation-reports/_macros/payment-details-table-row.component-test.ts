@@ -22,13 +22,16 @@ describe(component, () => {
   const aPaymentDetailsTableRow = (): PaymentDetailsTableRow => ({
     payment: aPaymentDetailsPayment(),
     feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
-    reconciledBy: undefined,
-    dateReconciled: undefined,
+    reconciledBy: '-',
+    dateReconciled: {
+      formattedDateReconciled: '-',
+      dataSortValue: 0,
+    },
   });
 
   const getWrapper = (paymentDetailsRow: PaymentDetailsTableRow) => render<PaymentDetailsTableRow>(paymentDetailsRow);
 
-  it('renders the payment reference and amount and fee record facility ID and exporter', () => {
+  it('renders the payment reference and amount, the fee record facility ID and exporter and the date reconciled and reconciled by user', () => {
     const paymentDetailsRow: PaymentDetailsTableRow = {
       ...aPaymentDetailsTableRow(),
       payment: {
@@ -45,6 +48,8 @@ describe(component, () => {
           exporter: 'Some exporter',
         },
       ],
+      dateReconciled: { formattedDateReconciled: 'Some date reconciled', dataSortValue: 0 },
+      reconciledBy: 'Some reconciled by user',
     };
     const wrapper = getWrapper(paymentDetailsRow);
 
@@ -52,32 +57,8 @@ describe(component, () => {
     wrapper.expectElement(`tr td:contains("Some payment reference")`).toExist();
     wrapper.expectElement(`tr td:contains("Some facility id")`).toExist();
     wrapper.expectElement(`tr td:contains("Some exporter")`).toExist();
-  });
-
-  it.each([
-    { column: 'reconciled by', property: 'reconciledBy' },
-    { column: 'date reconciled', property: 'dateReconciled' },
-  ] as const)("renders the '-' character when the $column column is undefined", ({ property }) => {
-    const paymentDetailsRow: PaymentDetailsTableRow = {
-      ...aPaymentDetailsTableRow(),
-      [property]: undefined,
-    };
-    const wrapper = getWrapper(paymentDetailsRow);
-
-    wrapper.expectElement(`tr td[data-cy="${property}"]:contains("-")`).toExist();
-  });
-
-  it.each([
-    { column: 'reconciled by', property: 'reconciledBy' },
-    { column: 'date reconciled', property: 'dateReconciled' },
-  ] as const)('renders the $column column', ({ property }) => {
-    const paymentDetailsRow: PaymentDetailsTableRow = {
-      ...aPaymentDetailsTableRow(),
-      [property]: 'Some custom property',
-    };
-    const wrapper = getWrapper(paymentDetailsRow);
-
-    wrapper.expectElement(`tr td[data-cy="${property}"]:contains("Some custom property")`).toExist();
+    wrapper.expectElement(`tr td:contains("Some date reconciled")`).toExist();
+    wrapper.expectElement(`tr td:contains("Some reconciled by user")`).toExist();
   });
 
   describe('when there are multiple fee records for the payment', () => {
@@ -113,7 +94,10 @@ describe(component, () => {
           },
         },
         reconciledBy: 'Some reconciled by user',
-        dateReconciled: 'Some reconciled date',
+        dateReconciled: {
+          formattedDateReconciled: 'Some reconciled date',
+          dataSortValue: 0,
+        },
       };
       const wrapper = getWrapper(paymentDetailsRow);
 
@@ -157,7 +141,10 @@ describe(component, () => {
           },
         },
         reconciledBy: 'Some reconciled by user',
-        dateReconciled: 'Some reconciled date',
+        dateReconciled: {
+          formattedDateReconciled: 'Some reconciled date',
+          dataSortValue: 36,
+        },
       };
       const wrapper = getWrapper(paymentDetailsRow);
 
@@ -179,9 +166,9 @@ describe(component, () => {
       wrapper.expectElement('tr:eq(1) td[data-sort-value="Some reconciled by user"]').toExist();
       wrapper.expectElement('tr:eq(2) td[data-sort-value="Some reconciled by user"]').toExist();
 
-      wrapper.expectElement('tr:eq(0) td:contains("Some reconciled date")').toHaveAttribute('data-sort-value', 'Some reconciled date');
-      wrapper.expectElement('tr:eq(1) td[data-sort-value="Some reconciled date"]').toExist();
-      wrapper.expectElement('tr:eq(2) td[data-sort-value="Some reconciled date"]').toExist();
+      wrapper.expectElement('tr:eq(0) td:contains("Some reconciled date")').toHaveAttribute('data-sort-value', '36');
+      wrapper.expectElement('tr:eq(1) td[data-sort-value="36"]').toExist();
+      wrapper.expectElement('tr:eq(2) td[data-sort-value="36"]').toExist();
     });
 
     it('renders every cell except those in the last row using the no border class', () => {

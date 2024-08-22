@@ -1,5 +1,5 @@
 import orderBy from 'lodash.orderby';
-import { FeeRecordStatus, getFormattedCurrencyAndAmount, KeyingSheetAdjustment } from '@ukef/dtfs2-common';
+import { FeeRecordStatus, getFormattedCurrencyAndAmount, IsoDateTimeStamp, KeyingSheetAdjustment } from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
 import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import {
@@ -17,6 +17,11 @@ import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 import { getKeyingSheetDisplayStatus } from './get-keying-sheet-display-status';
 import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
 
+/**
+ * Sort fee records by reported payments
+ * @param feeRecords - The fee records to sort
+ * @returns Fee records sorted by reported payments
+ */
 const sortFeeRecordsByReportedPayments = (feeRecords: FeeRecord[]): FeeRecord[] =>
   orderBy(feeRecords, [({ reportedPayments }) => reportedPayments.currency, ({ reportedPayments }) => reportedPayments.amount], ['asc']);
 
@@ -222,11 +227,59 @@ const getPaymentsSortedByDateReceived = (payments: Payment[]): Payment[] =>
   orderBy(payments, [({ dateReceived }) => parseISO(dateReceived).getTime()], ['asc']);
 
 /**
+ * Gets the payment id to date reconciled data sort value map
+ * @param feeRecordPaymentGroups - The fee record payment groups
+ * @returns The payment id to date reconciled data sort value map
+ */
+const getPaymentIdToDateReconciledDataSortValueMap = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): Record<number, number> => {
+  const allPaymentsWithDateReconciled = feeRecordPaymentGroups.reduce(
+    (paymentsWithDateReconciled, { paymentsReceived, dateReconciled }) => [
+      ...paymentsWithDateReconciled,
+      ...(paymentsReceived?.map((payment) => ({ ...payment, dateReconciled })) ?? []),
+    ],
+    [] as (Payment & { dateReconciled: IsoDateTimeStamp | null })[],
+  );
+  return orderBy(allPaymentsWithDateReconciled, [({ dateReconciled }) => (dateReconciled === null ? -1 : parseISO(dateReconciled).getTime())]).reduce(
+    (map, { id }, paymentIndex) => ({
+      ...map,
+      [id]: paymentIndex,
+    }),
+    {} as Record<number, number>,
+  );
+};
+
+/**
+ * Gets the formatted reconciled by user
+ * @param reconciledByUser - The reconciled by user
+ * @returns The formatted reconciled by user
+ */
+const getFormattedReconciledByUser = (reconciledByUser: { firstName: string; lastName: string } | null): string =>
+  reconciledByUser ? `${reconciledByUser.firstName} ${reconciledByUser.lastName}` : '-';
+
+/**
+ * Formats the date reconciled
+ *
+ * The "aaaaa'm'" selection is so we can format the date to use
+ * lowercase 'AM' or 'PM' and comes from the below link.
+ * {@link https://stackoverflow.com/questions/60728212/how-do-you-format-a-datetime-to-am-pm-without-periods-when-using-date-fns-vers}
+ * @param dateReconciled - The date reconciled
+ * @returns The formatted date
+ * @example
+ * getFormattedDateReconciled('2024-01-01T12:30:00.000'); // '1 Jan 2024 at 12:30pm'
+ * getFormattedDateReconciled('2024-01-01T11:30:00.000'); // '1 Jan 2024 at 11:30am'
+ * getFormattedDateReconciled(null); // '-'
+ */
+const getFormattedDateReconciled = (dateReconciled: IsoDateTimeStamp | null): string =>
+  dateReconciled ? format(new Date(dateReconciled), "d MMM yyyy 'at' hh:mmaaaaa'm'") : '-';
+
+/**
  * Maps the fee record payment groups to the payment details view model
  * @param feeRecordPaymentGroups - The fee record payment groups
  * @returns The payment details view model
  */
 export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): PaymentDetailsViewModel => {
+  const paymentIdToDateReconciledDataSortValueMap = getPaymentIdToDateReconciledDataSortValueMap(feeRecordPaymentGroups);
+
   const allPayments = feeRecordPaymentGroups.reduce((payments, { paymentsReceived }) => [...payments, ...(paymentsReceived ?? [])], [] as Payment[]);
   const paymentIdToAmountDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
     allPayments.map(({ id, amount, currency }) => ({ key: id, currency, amount })),
@@ -236,7 +289,7 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
     {},
   );
 
-  return feeRecordPaymentGroups.reduce((paymentDetails, { feeRecords, paymentsReceived }) => {
+  return feeRecordPaymentGroups.reduce((paymentDetails, { feeRecords, paymentsReceived, reconciledByUser, dateReconciled }) => {
     if (!paymentsReceived) {
       return paymentDetails;
     }
@@ -251,6 +304,11 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
           paymentIdToDateReceivedDataSortValueMap[payment.id],
         ),
         feeRecords: mappedFeeRecords,
+        reconciledBy: getFormattedReconciledByUser(reconciledByUser),
+        dateReconciled: {
+          formattedDateReconciled: getFormattedDateReconciled(dateReconciled),
+          dataSortValue: paymentIdToDateReconciledDataSortValueMap[payment.id],
+        },
       })),
     ];
   }, [] as PaymentDetailsViewModel);

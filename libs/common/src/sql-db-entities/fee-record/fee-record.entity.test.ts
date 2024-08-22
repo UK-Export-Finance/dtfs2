@@ -107,4 +107,84 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
     });
   });
+
+  describe('markAsReconciled', () => {
+    const mockDate = new Date('2024-01-01');
+
+    beforeAll(() => {
+      jest.useFakeTimers();
+    });
+
+    beforeEach(() => {
+      jest.setSystemTime(mockDate);
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    it('sets the fee record dateReconciled to now and the reconciledByUserId to the supplied value', () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withDateReconciled(null).build();
+
+      // Act
+      feeRecord.markAsReconciled({ reconciledByUserId: 'abc123', requestSource: { platform: 'TFM', userId: 'def456' } });
+
+      // Assert
+      expect(feeRecord.dateReconciled).toEqual(mockDate);
+      expect(feeRecord.reconciledByUserId).toBe('abc123');
+    });
+
+    it("sets the fee record status to RECONCILED and updates the 'lastUpdatedBy...' fields", () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
+        .withLastUpdatedByIsSystemUser(true)
+        .withLastUpdatedByPortalUserId(null)
+        .withLastUpdatedByTfmUserId(null)
+        .build();
+
+      // Act
+      feeRecord.markAsReconciled({ reconciledByUserId: 'abc123', requestSource: { platform: 'TFM', userId: 'abc123' } });
+
+      // Assert
+      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.RECONCILED);
+      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+      expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
+      expect(feeRecord.lastUpdatedByTfmUserId).toBe('abc123');
+    });
+  });
+
+  describe('markAsReadyToKey', () => {
+    it('sets the fee record dateReconciled and reconciledByUserId to null', () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withDateReconciled(new Date('2024')).withReconciledByUserId('abc123').build();
+
+      // Act
+      feeRecord.markAsReadyToKey({ requestSource: { platform: 'TFM', userId: 'abc123' } });
+
+      // Assert
+      expect(feeRecord.dateReconciled).toBeNull();
+      expect(feeRecord.reconciledByUserId).toBeNull();
+    });
+
+    it("sets the fee record status to READY_TO_KEY and updates the 'lastUpdatedBy...' fields", () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withStatus(FEE_RECORD_STATUS.RECONCILED)
+        .withLastUpdatedByIsSystemUser(true)
+        .withLastUpdatedByPortalUserId(null)
+        .withLastUpdatedByTfmUserId(null)
+        .build();
+
+      // Act
+      feeRecord.markAsReadyToKey({ requestSource: { platform: 'TFM', userId: 'abc123' } });
+
+      // Assert
+      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+      expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
+      expect(feeRecord.lastUpdatedByTfmUserId).toBe('abc123');
+    });
+  });
 });

@@ -13,6 +13,6 @@ export const handleFeeRecordMarkAsReadyToKeyEvent = async (
   feeRecord: FeeRecordEntity,
   { transactionEntityManager, requestSource }: MarkAsReadyToKeyEventPayload,
 ): Promise<FeeRecordEntity> => {
-  feeRecord.updateWithStatus({ status: 'READY_TO_KEY', requestSource });
+  feeRecord.markAsReadyToKey({ requestSource });
   return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
 };

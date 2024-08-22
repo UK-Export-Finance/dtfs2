@@ -1,10 +1,10 @@
 import { DataSource } from 'typeorm';
 import { getCurrentReportPeriodForBankSchedule, getPreviousReportPeriodForBankScheduleByMonth } from '@ukef/dtfs2-common';
-import { getAllBanksFromMongoDb, getPaymentReportOfficerOrFail } from '../helpers';
 import { UtilisationReportSeeder } from './utilisation-report.seeder';
+import { MongoDbDataLoader } from '../mongo-db-client';
 
 export const seedUtilisationReports = async (dataSource: DataSource): Promise<void> => {
-  const banks = (await getAllBanksFromMongoDb()).filter((bank) => bank.isVisibleInTfmUtilisationReports);
+  const banks = (await MongoDbDataLoader.getAllBanks()).filter((bank) => bank.isVisibleInTfmUtilisationReports);
   const bankIdsWithReportPeriod = banks.map(({ id, utilisationReportPeriodSchedule }) => ({
     bankId: id,
     reportPeriod: getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule),
@@ -14,7 +14,7 @@ export const seedUtilisationReports = async (dataSource: DataSource): Promise<vo
     reportPeriod: getPreviousReportPeriodForBankScheduleByMonth(banks[0].utilisationReportPeriodSchedule, '2024-04'),
   };
 
-  const paymentReportOfficer = await getPaymentReportOfficerOrFail('payment-officer1@ukexportfinance.gov.uk');
+  const paymentReportOfficer = await MongoDbDataLoader.getPaymentReportOfficerWithUsernameOrFail('payment-officer1@ukexportfinance.gov.uk');
   const uploadedByUserId = paymentReportOfficer._id.toString();
 
   const [pendingReconciliationBankIdWithReportPeriod, reconciliationInProgressBankIdWithReportPeriod, ...notReceivedBankIdsWithReportPeriod] =
