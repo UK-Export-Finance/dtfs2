@@ -1,6 +1,7 @@
 import {
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
+  getOneIndexedMonth,
   getPreviousReportPeriodForBankScheduleByMonth,
   toIsoMonthStamp,
 } from '@ukef/dtfs2-common';
@@ -12,9 +13,12 @@ import { aliasSelector } from '../../../../../support/alias-selector';
 
 context('PDC_RECONCILE users can route to the payments page for a bank', () => {
   const allBanksAlias = 'allBanksAlias';
-  const submissionMonth = toIsoMonthStamp(new Date());
-  const latestQuarterlySubmissionMonth = getLatestQuarterlySubmissionMonth();
-  const status = UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION;
+  const today = new Date();
+  const submissionMonthStamp = toIsoMonthStamp(today);
+  const previousSubmissionMonthStamp = toIsoMonthStamp(subMonths(today, 1));
+  const latestQuarterlySubmissionMonthStamp = getLatestQuarterlySubmissionMonthStamp();
+  const QUARTERLY_REPORTING_BANK_ID = '10';
+  const MONTHLY_REPORTING_BANK_ID = '956';
 
   beforeEach(() => {
     const visibleBanks = [];
@@ -30,16 +34,40 @@ context('PDC_RECONCILE users can route to the payments page for a bank', () => {
 
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
 
+    // Insert a report for each visible bank for their latest reporting period
     cy.wrap(visibleBanks).each((bank) => {
-      const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, submissionMonth);
+      const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, submissionMonthStamp);
 
-      const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(status)
-        .withId(bank.id)
-        .withBankId(bank.id)
-        .withReportPeriod(reportPeriod)
-        .build();
-      cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockUtilisationReport]);
+      if (bank.id === MONTHLY_REPORTING_BANK_ID) {
+        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+          .withId(bank.id)
+          .withBankId(bank.id)
+          .withReportPeriod(reportPeriod)
+          .build();
+        cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockUtilisationReport]);
+      } else {
+        const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
+          .withId(bank.id)
+          .withBankId(bank.id)
+          .withReportPeriod(reportPeriod)
+          .build();
+        cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockUtilisationReport]);
+      }
     });
+
+    // Insert a report for the previous month for a specific monthly reporting bank
+    const dateInCurrentMonth = new Date();
+    const dateInPreviousMonth = subMonths(dateInCurrentMonth, 1);
+    const previousMonthlyReportPeriod = {
+      start: { month: getOneIndexedMonth(dateInPreviousMonth), year: dateInPreviousMonth.getFullYear() },
+      end: { month: getOneIndexedMonth(dateInPreviousMonth), year: dateInPreviousMonth.getFullYear() },
+    };
+    const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
+      .withId(99999999)
+      .withBankId(MONTHLY_REPORTING_BANK_ID)
+      .withReportPeriod(previousMonthlyReportPeriod)
+      .build();
+    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockUtilisationReport]);
 
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
@@ -47,22 +75,29 @@ context('PDC_RECONCILE users can route to the payments page for a bank', () => {
     pages.utilisationReportsSummaryPage.visit();
   });
 
-  it('should only render a table row for the banks which should be visible', () => {
-    pages.utilisationReportsSummaryPage.heading(submissionMonth).should('exist');
+  it('should render all current reports and open previous reports for banks visible in tfm utilisation reports', () => {
+    pages.utilisationReportsSummaryPage.heading(submissionMonthStamp).should('exist');
+    pages.utilisationReportsSummaryPage.heading(previousSubmissionMonthStamp).should('exist');
 
     cy.get(aliasSelector(allBanksAlias)).each((bank) => {
       const { id, isVisibleInTfmUtilisationReports } = bank;
 
       if (isVisibleInTfmUtilisationReports) {
-        if (bank.id === '10') {
-          pages.utilisationReportsSummaryPage.tableRowSelector(id, latestQuarterlySubmissionMonth).should('exist');
+        if (id === QUARTERLY_REPORTING_BANK_ID) {
+          pages.utilisationReportsSummaryPage.tableRowSelector(id, latestQuarterlySubmissionMonthStamp).should('exist');
           return;
         }
-        pages.utilisationReportsSummaryPage.tableRowSelector(id, submissionMonth).should('exist');
+        if (id === MONTHLY_REPORTING_BANK_ID) {
+          pages.utilisationReportsSummaryPage.tableRowSelector(id, previousSubmissionMonthStamp).should('exist');
+        }
+        pages.utilisationReportsSummaryPage.tableRowSelector(id, submissionMonthStamp).should('exist');
       } else {
-        pages.utilisationReportsSummaryPage.tableRowSelector(id, submissionMonth).should('not.exist');
+        pages.utilisationReportsSummaryPage.tableRowSelector(id, submissionMonthStamp).should('not.exist');
       }
     });
+
+    pages.utilisationReportsSummaryPage.tableRowSelector(MONTHLY_REPORTING_BANK_ID, submissionMonthStamp).should('contain', 'Monthly');
+    pages.utilisationReportsSummaryPage.tableRowSelector(QUARTERLY_REPORTING_BANK_ID, latestQuarterlySubmissionMonthStamp).should('contain', 'Quarterly');
   });
 
   it('should show the problem with service page if there are no reports in the database', () => {
@@ -77,7 +112,7 @@ context('PDC_RECONCILE users can route to the payments page for a bank', () => {
       });
   });
 
-  function getLatestQuarterlySubmissionMonth() {
+  function getLatestQuarterlySubmissionMonthStamp() {
     const now = new Date();
     const currentMonthOneIndexed = now.getMonth() + 1;
     // Quarterly mock banks have report periods ending in months 2, 5, 8, 11
