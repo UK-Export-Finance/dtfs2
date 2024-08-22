@@ -57,7 +57,7 @@ const insertFacilityUtilisationEntry = async (dataSource: DataSource, { facility
 /**
  * Runs the migration process to transfer ACBS utilisation data to TFM.
  */
-const run = async () => {
+const runMigrationOfAcbsUtilisationDataToTfm = async () => {
   validateReportPeriod(REPORT_PERIOD);
 
   const dataSource = await SqlDbDataSource.initialize();
@@ -79,5 +79,5 @@ const run = async () => {
 };
 
 (async () => {
-  await run();
+  await runMigrationOfAcbsUtilisationDataToTfm();
 })();
