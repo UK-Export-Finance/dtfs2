@@ -1,5 +1,6 @@
 import { pageRenderer } from '../pageRenderer';
 import { anAddToAnExistingPaymentViewModel } from '../../test-helpers/test-data/add-to-an-existing-payment-view-model';
+import { AddToAnExistingPaymentViewModel } from '../../server/types/view-models';
 
 const page = '../templates/utilisation-reports/add-to-an-existing-payment.njk';
 const render = pageRenderer(page);
@@ -94,23 +95,31 @@ describe(page, () => {
     wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
   });
 
-  it('should render the cancel link with the selected fee record ids', () => {
+  it('should render cancel link button linking to backLinkHref', () => {
     // Arrange
-    const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
+    const backLinkHref = '/utilisation-reports/12?selectedFeeRecordIds=456';
+    const addToAnExistingPaymentViewModel: AddToAnExistingPaymentViewModel = {
+      ...anAddToAnExistingPaymentViewModel(),
+      backLinkHref,
+    };
     const wrapper = render(addToAnExistingPaymentViewModel);
 
     // Assert
     wrapper.expectElement('[data-cy="cancel-link"]').toExist();
-    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo('/utilisation-reports/12?selectedFeeRecordIds=456', 'Cancel');
+    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(backLinkHref, 'Cancel');
   });
 
-  it('should render the back link with the selected fee record ids', () => {
+  it('should render back link button linking to backLinkHref', () => {
     // Arrange
-    const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
+    const backLinkHref = '/utilisation-reports/12?selectedFeeRecordIds=456';
+    const addToAnExistingPaymentViewModel: AddToAnExistingPaymentViewModel = {
+      ...anAddToAnExistingPaymentViewModel(),
+      backLinkHref,
+    };
     const wrapper = render(addToAnExistingPaymentViewModel);
 
     // Assert
     wrapper.expectElement('[data-cy="back-link"]').toExist();
-    wrapper.expectLink('[data-cy="back-link"]').toLinkTo('/utilisation-reports/12?selectedFeeRecordIds=456', 'Back');
+    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(backLinkHref, 'Back');
   });
 });
