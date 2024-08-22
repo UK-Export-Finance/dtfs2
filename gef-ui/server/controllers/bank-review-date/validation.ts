@@ -12,7 +12,7 @@ export const validateAndParseBankReviewDate = (bankReviewDayMonthYear: DayMonthY
     variableDisplayName: 'bank review date',
   });
 
-  if (formattingErrorsOrDate.errors) {
+  if ('errors' in formattingErrorsOrDate) {
     return {
       errors: [
         {

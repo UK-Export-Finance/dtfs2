@@ -13,7 +13,7 @@ export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYear, cove
     variableDisplayName: 'facility end date',
   });
 
-  if (formattingErrorsOrDate.errors) {
+  if ('errors' in formattingErrorsOrDate) {
     return {
       errors: [
         {
@@ -54,5 +54,5 @@ export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYear, cove
     };
   }
 
-  return { errors: null, date: facilityEndDate };
+  return { date: facilityEndDate };
 };

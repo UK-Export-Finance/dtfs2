@@ -118,7 +118,7 @@ export const validateAndReturnErrorsOrUpdateFacilityEndDate = async (req: PostFa
     getCoverStartDateOrStartOfToday(facility),
   );
 
-  if (facilityEndDateErrorsAndDate.errors) {
+  if ('errors' in facilityEndDateErrorsAndDate) {
     return facilityEndDateErrorsAndDate.errors;
   }
 

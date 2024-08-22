@@ -132,7 +132,6 @@ export const validateAndParseDayMonthYear = ({ day, month, year }: DayMonthYear,
   }
 
   return {
-    errors: null,
     date: startOfDay(
       set(new Date(), {
         year: Number(year),

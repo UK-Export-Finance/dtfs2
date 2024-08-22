@@ -83,7 +83,7 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
       getCoverStartDateOrStartOfToday(facility),
     );
 
-    if (facilityEndDateErrorsAndDate.errors) {
+    if ('errors' in facilityEndDateErrorsAndDate) {
       return res.render('partials/facility-end-date.njk', {
         errors: validationErrorHandler(facilityEndDateErrorsAndDate.errors),
         dealId,
