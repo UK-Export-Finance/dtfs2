@@ -2,13 +2,20 @@ import { Document, InsertOneResult, ObjectId, UpdateResult, WithId } from 'mongo
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { getCollection } from '../../database';
 
+/**
+ * The EstoreRepo class provides methods to interact with the CRON_JOB_LOGS collection in the MongoDB database.
+ * It includes methods:
+ * 1. Find log by Mongo deal id
+ * 2. Insert one document
+ * 3. Update document by Mongo deal id
+ */
 export class EstoreRepo {
   /**
    * Finds a document in the CRON_JOB_LOGS collection based on the provided deal ID.
    *
    * @param {ObjectId} dealId - The unique identifier for the deal.
    *
-   * @returns {Promise<WithId<ObjectId> | WithoutId<unknown> | null>} - A promise that resolves to the found document, or `null` if no document is found.
+   * @returns {Promise<WithId<ObjectId> | null>} - A promise that resolves to the found document, or `null` if no document is found.
    *
    * @example
    * const dealId = new ObjectId('507f1f77bcf86cd799439011');
