@@ -2,14 +2,14 @@
 const MAX_URL_CHARACTERS = 2048;
 const BASE_URL_CHARACTER_ALLOWANCE = 150;
 
-export const getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage = (reportId: string, feeRecordIds: number[]): string => {
+export const getLinkToPremiumPaymentsTab = (reportId: string, selectedFeeRecordIds: number[]): string => {
   const urlWithoutParams = `/utilisation-reports/${reportId}`;
 
-  if (feeRecordIds.length === 0) {
+  if (selectedFeeRecordIds.length === 0) {
     return urlWithoutParams;
   }
 
-  const commaSeparatedFeeRecordIds = feeRecordIds.join(',');
+  const commaSeparatedFeeRecordIds = selectedFeeRecordIds.join(',');
 
   const urlParams = new URLSearchParams({
     selectedFeeRecordIds: commaSeparatedFeeRecordIds,

@@ -16,7 +16,7 @@ import {
 } from '../helpers';
 import { mapToAvailablePaymentGroupsViewModel } from '../helpers/available-payment-group-view-model-mapper';
 import { getAvailablePaymentsHeading } from '../helpers/add-to-an-existing-payment-helper';
-import { getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage } from './get-back-link-href';
+import { getLinkToPremiumPaymentsTab } from './get-link-to-premium-payments-tab';
 
 type AddToAnExistingPaymentRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;
@@ -58,7 +58,7 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
       availablePaymentsHeading: getAvailablePaymentsHeading(availablePaymentGroups),
       availablePaymentGroups: mapToAvailablePaymentGroupsViewModel(availablePaymentGroups),
       errors,
-      backLinkHref: getAddToExistingPaymentBackLinkToUtilisationReportReconciliationPage(reportId, feeRecordIds),
+      backLinkHref: getLinkToPremiumPaymentsTab(reportId, feeRecordIds),
     };
     return renderAddToAnExistingPaymentPage(res, addToAnExistingPaymentViewModel);
   } catch (error) {
