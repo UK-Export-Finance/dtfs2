@@ -84,4 +84,32 @@ context('PDC_RECONCILE users can search for reports by bank and year', () => {
     pages.searchUtilisationReportsResultsPage.heading().should('exist');
     pages.searchUtilisationReportsResultsPage.noReportsText().should('exist');
   });
+
+  it('should display the dropdown for banks which have reports and should not display anything for banks without reports', () => {
+    const getDatalistIdForBankId = (bankId) => `datalist--bankId-${bankId}`;
+
+    pages.searchUtilisationReportsFormPage.heading().should('exist');
+
+    pages.searchUtilisationReportsFormPage.yearInputDropdownId().should('equal', '');
+
+    pages.searchUtilisationReportsFormPage.bankRadioButton(BANK_WITHOUT_REPORTS_ID).click();
+    pages.searchUtilisationReportsFormPage
+      .yearInputDropdownId()
+      .should('equal', getDatalistIdForBankId(BANK_WITHOUT_REPORTS_ID))
+      .then((datalistId) => {
+        // Banks with no reports should have no datalist rendered
+        cy.get(`datalist#${datalistId}`).should('not.exist');
+      });
+
+    pages.searchUtilisationReportsFormPage.bankRadioButton(BANK_WITH_REPORTS_ID).click();
+    pages.searchUtilisationReportsFormPage
+      .yearInputDropdownId()
+      .should('equal', getDatalistIdForBankId(BANK_WITH_REPORTS_ID))
+      .then((datalistId) => {
+        const datalistSelector = `datalist#${datalistId}`;
+        cy.get(datalistSelector).should('exist');
+        cy.get(`${datalistSelector} > option`).should('have.length', 1);
+        cy.get(`${datalistSelector} option`).invoke('attr', 'value').should('equal', '2024');
+      });
+  });
 });
