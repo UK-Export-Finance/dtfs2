@@ -11,6 +11,7 @@ const utilisationReportPage = {
       getRow: (feeRecordId) => cy.get(`tr[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
       getCheckbox: (feeRecordIds, paymentCurrency, status) =>
         cy.get(`[type="checkbox"][id="feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${paymentCurrency}-status-${status}"]`),
+      getStatus: (feeRecordId) => cy.get(`[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-status"]`),
     },
   },
   keyingSheetTab: {

@@ -93,7 +93,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
 
       pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.getRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+        .getStatus(FEE_RECORD_ID_ONE)
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('MATCH');
+        });
     });
   });
 
@@ -144,7 +149,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
 
       pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.getRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+        .getStatus(FEE_RECORD_ID_ONE)
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.equal('MATCH');
+        });
     });
 
     it('should display an error message when there are multiple payments to choose from and none have been selected', () => {
@@ -165,7 +175,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.getRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+      .getStatus(FEE_RECORD_ID_ONE)
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('MATCH');
+      });
   });
 
   it('should redirect the user to the premium payments page when user clicks the back or cancel links and persist the selected fees', () => {
