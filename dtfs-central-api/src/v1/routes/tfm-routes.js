@@ -509,6 +509,7 @@ tfmRouter
   .route('/facilities/:facilityId/amendments')
   .post(
     validation.mongoIdValidation('facilityId'),
+    bugFixLogs,
     handleExpressValidatorResult,
     bugFixLogs,
     validatePostFacilityAmendmentPayload,
