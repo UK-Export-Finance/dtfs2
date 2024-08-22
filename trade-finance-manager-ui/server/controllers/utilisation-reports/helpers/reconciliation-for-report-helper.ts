@@ -180,7 +180,8 @@ const mapPaymentToPaymentDetailsViewModelPayment = (
  * @param payments - The payments to sort
  * @returns Sorted payments
  */
-const getPaymentsSortedByDateReceived = (payments: Payment[]): Payment[] => orderBy(payments, [({ dateReceived }) => parseISO(dateReceived).getTime()], ['asc']);
+const getPaymentsSortedByDateReceived = (payments: Payment[]): Payment[] =>
+  orderBy(payments, [({ dateReceived }) => parseISO(dateReceived).getTime()], ['asc']);
 
 /**
  * Maps the fee record payment groups to the payment details view model
