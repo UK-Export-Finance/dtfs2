@@ -76,7 +76,7 @@ const runMigrationOfAcbsUtilisationDataToTfm = async () => {
 
     await Promise.all(utilisationData.map((entry) => insertFacilityUtilisationEntry(dataSource, entry)));
   } catch (error) {
-    console.error('Failed to migrate ACBS utilisation data to TFM:', error);
+    console.error('Failed to migrate ACBS utilisation data to TFM: %s', error);
   } finally {
     await dataSource.destroy();
   }
