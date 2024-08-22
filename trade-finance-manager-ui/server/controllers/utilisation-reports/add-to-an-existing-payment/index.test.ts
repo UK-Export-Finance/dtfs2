@@ -12,6 +12,7 @@ jest.mock('../../../api');
 console.error = jest.fn();
 
 describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
+  const reportId = '123';
   const userToken = 'user-token';
   const requestSession = {
     userToken,
@@ -27,7 +28,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
       jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
@@ -43,7 +44,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
 
@@ -63,7 +64,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
 
@@ -83,7 +84,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
       const selectedFeeRecordDetailsResponse: SelectedFeeRecordsDetailsResponseBody = {
@@ -140,7 +141,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
       const selectedFeeRecordDetailsResponse: SelectedFeeRecordsDetailsResponseBody = {
@@ -200,7 +201,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
       jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
@@ -212,11 +213,73 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       expect((res._getRenderData() as AddToAnExistingPaymentViewModel).reportId).toEqual('123');
     });
 
+    it('should set the back link href', async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId },
+        body: {
+          'feeRecordIds-1,22-reportedPaymentsCurrency-USD-status-TO_DO': 'on',
+          'feeRecordIds-333-reportedPaymentsCurrency-USD-status-TO_DO': 'on',
+        },
+      });
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue({
+        ...aSelectedFeeRecordsDetails(),
+        feeRecords: [
+          {
+            ...aSelectedFeeRecordDetails(),
+            id: 1,
+            reportedFee: { amount: 2000, currency: 'EUR' },
+          },
+          {
+            ...aSelectedFeeRecordDetails(),
+            id: 22,
+            reportedFee: { amount: 3000, currency: 'EUR' },
+          },
+          {
+            ...aSelectedFeeRecordDetails(),
+            id: 333,
+            reportedFee: { amount: 100, currency: 'JPY' },
+          },
+        ],
+      });
+
+      // Act
+      await addToAnExistingPayment(req, res);
+
+      // Assert
+      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).backLinkHref).toEqual(
+        `/utilisation-reports/${reportId}?selectedFeeRecordIds=1%2C22%2C333`,
+      );
+    });
+
+    it('should set the selected fee record checkbox ids', async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId },
+        body: {
+          'feeRecordIds-1,22-reportedPaymentsCurrency-USD-status-TO_DO': 'on',
+          'feeRecordIds-333-reportedPaymentsCurrency-USD-status-TO_DO': 'on',
+        },
+      });
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
+
+      // Act
+      await addToAnExistingPayment(req, res);
+
+      // Assert
+      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).selectedFeeRecordCheckboxIds).toEqual([
+        'feeRecordIds-1,22-reportedPaymentsCurrency-USD-status-TO_DO',
+        'feeRecordIds-333-reportedPaymentsCurrency-USD-status-TO_DO',
+      ]);
+    });
+
     it('should set data sort values for reported fee column to order by currency alphabetically then value', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
       jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue({
@@ -272,7 +335,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
       jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue({
@@ -328,7 +391,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
 
