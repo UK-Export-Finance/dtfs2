@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { update } from '../repositories/estore/estore-repo';
+import { updateByDealId } from '../repositories/estore/estore-repo';
 import { FacilityFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createFacilityFolder } from '../v1/controllers/estore/eStoreApi';
@@ -20,8 +20,6 @@ const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
  * @param {Estore} eStoreData - The eStore data containing information about the deal, exporter, buyer, and facilities.
  *
  * @returns {Promise<void>} - A promise that resolves when the job is complete.
- *
- * @throws {Error} - Throws an error if there is an issue with database operations or API calls.
  *
  * @example
  * const eStoreData = {
@@ -71,7 +69,7 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
     console.info('Facility %s directory has been created for deal %s', facilityIdentifiers, dealIdentifier);
 
     // Step 2: Update `cron-job-logs`
-    await update(new ObjectId(dealId), {
+    await updateByDealId(new ObjectId(dealId), {
       'cron.facility': {
         status: ESTORE_CRON_STATUS.COMPLETED,
         timestamp: getNowAsEpoch(),
@@ -83,7 +81,7 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
     console.error('eStore facility directory creation has failed for deal %s %o', dealIdentifier, response);
 
     // Update `cron-job-logs`
-    await update(new ObjectId(dealId), {
+    await updateByDealId(new ObjectId(dealId), {
       'cron.facility': {
         response,
         status: ESTORE_CRON_STATUS.FAILED,

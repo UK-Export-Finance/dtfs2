@@ -9,8 +9,6 @@ import { getCollection } from '../../database';
  *
  * @returns {Promise<WithId<ObjectId> | WithoutId<unknown> | null>} - A promise that resolves to the found document, or `null` if no document is found.
  *
- * @throws {Error} - Throws an error if the find operation fails.
- *
  * @example
  * const dealId = new ObjectId('507f1f77bcf86cd799439011');
  *
@@ -18,11 +16,11 @@ import { getCollection } from '../../database';
  *   .then((document) => console.log('Document found', document))
  *   .catch((error) => console.error('Find operation failed', error));
  */
-export const find = async (dealId: ObjectId): Promise<WithId<ObjectId> | WithoutId<unknown> | null> => {
+export const findByDealId = async (dealId: ObjectId): Promise<WithId<object> | null> => {
   try {
     const collection = await getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
 
-    return collection.findOne({ 'payload.dealId': { $eq: new ObjectId(dealId) } });
+    return collection.findOne({ 'payload.dealId': { $eq: dealId } });
   } catch (error) {
     console.error('An error occurred while finding deal %s in %s collection.', dealId, MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
     return null;
@@ -36,8 +34,6 @@ export const find = async (dealId: ObjectId): Promise<WithId<ObjectId> | Without
  *
  * @returns {Promise<InsertOneResult | boolean>} - A promise that resolves to the result of the insert operation, or `false` if an error occurs.
  *
- * @throws {Error} - Throws an error if the insert operation fails.
- *
  * @example
  * const document = { dealId: '507f1f77bcf86cd799439011', status: 'new' };
  *
@@ -45,7 +41,7 @@ export const find = async (dealId: ObjectId): Promise<WithId<ObjectId> | Without
  *   .then((result) => console.log('Insert successful', result))
  *   .catch((error) => console.error('Insert failed', error));
  */
-export const insert = async (document: object): Promise<InsertOneResult | boolean> => {
+export const insertOne = async (document: object): Promise<InsertOneResult | boolean> => {
   try {
     const collection = await getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
 
@@ -64,8 +60,6 @@ export const insert = async (document: object): Promise<InsertOneResult | boolea
  *
  * @returns {Promise<UpdateResult | boolean>} - A promise that resolves to the result of the update operation, or `false` if an error occurs.
  *
- * @throws {Error} - Throws an error if the update operation fails.
- *
  * @example
  * const dealId = new ObjectId('507f1f77bcf86cd799439011');
  * const document = { status: 'updated' };
@@ -74,11 +68,11 @@ export const insert = async (document: object): Promise<InsertOneResult | boolea
  *   .then((result) => console.log('Update successful', result))
  *   .catch((error) => console.error('Update failed', error));
  */
-export const update = async (dealId: ObjectId, document: UpdateFilter<WithoutId<object>>): Promise<UpdateResult | boolean> => {
+export const updateByDealId = async (dealId: ObjectId, document: UpdateFilter<WithoutId<object>>): Promise<UpdateResult | boolean> => {
   try {
     const collection = await getCollection(MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
 
-    return collection.updateOne({ 'payload.dealId': { $eq: new ObjectId(dealId) } }, { $set: { document } });
+    return collection.updateOne({ 'payload.dealId': { $eq: dealId } }, { $set: { document } });
   } catch (error) {
     console.error('An error occurred while updating %s collection.', MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
     return false;

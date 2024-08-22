@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { InsertOneResult, ObjectId } from 'mongodb';
 import { Response } from 'express';
-import { find, insert, update } from '../../../repositories/estore/estore-repo';
+import { findByDealId, insertOne, updateByDealId } from '../../../repositories/estore/estore-repo';
 import { getCollection } from '../../../database';
 import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
 import { EstoreRequest } from '../../../helpers/types/estore';
@@ -91,7 +91,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
       console.error('❌ Invalid eStore payload %o', eStoreData);
 
       // CRON job log update
-      await update(new ObjectId(eStoreData?.dealId), {
+      await updateByDealId(new ObjectId(eStoreData?.dealId), {
         cron: {
           site: {
             status: ESTORE_CRON_STATUS.FAILED,
@@ -136,7 +136,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
     }
 
     // Returns the document from `cron-job-logs` collection if exists
-    const cronJobExist = await find(new ObjectId(eStoreData.dealId));
+    const cronJobExist = await findByDealId(new ObjectId(eStoreData.dealId));
 
     if (!cronJobExist) {
       /**
@@ -147,7 +147,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
       res.status(HttpStatusCode.Created).send({ status: HttpStatusCode.Created, message: 'eStore job accepted' });
 
       // Step 1: Add CRON job to the collection
-      const inserted = await insert({
+      const inserted = await insertOne({
         payload: eStoreData,
         timestamp: getNowAsEpoch(),
         cron: {
@@ -179,7 +179,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
          * Update record-set with the site name.
          * Update `cron-job-logs`
          */
-        await update(new ObjectId(_id), {
+        await updateByDealId(new ObjectId(_id), {
           'cron.site.create': {
             status: ESTORE_CRON_STATUS.COMPLETED,
             response: siteExistsResponse.data.status,
@@ -222,7 +222,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
           console.error('eStore site creation failed for deal %s %o', eStoreData.dealIdentifier, siteCreationResponse?.data);
 
           // CRON job log update
-          await update(new ObjectId(_id), {
+          await updateByDealId(new ObjectId(_id), {
             'cron.site.create': {
               response: siteCreationResponse?.data,
               status: ESTORE_CRON_STATUS.FAILED,
@@ -235,7 +235,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
         console.error('❌ eStore site exist check failed for deal %s %o', eStoreData.dealIdentifier, siteExistsResponse);
 
         // CRON job log update
-        await update(new ObjectId(_id), {
+        await updateByDealId(new ObjectId(_id), {
           'cron.site.create': {
             status: ESTORE_CRON_STATUS.FAILED,
             response: siteExistsResponse?.data,

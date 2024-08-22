@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { ObjectId } from 'mongodb';
-import { update } from '../repositories/estore/estore-repo';
+import { updateByDealId } from '../repositories/estore/estore-repo';
 import { cron } from '../helpers/cron';
 import { getCollection } from '../database';
 import { Estore, EstoreErrorResponse, SiteExistsResponse } from '../interfaces';
@@ -22,8 +22,6 @@ import { getNowAsEpoch } from '../helpers/date';
  * @param {Estore} eStoreData - The eStore data containing information about the deal, exporter, and other relevant details.
  *
  * @returns {Promise<void>} - A promise that resolves when the cron job is complete.
- *
- * @throws {Error} - Throws an error if there is an issue with database operations or API calls.
  *
  * @example
  * const eStoreData = {
@@ -65,7 +63,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     data.siteId = String(siteExistsResponse.data.siteId);
 
     // Update `cron-job-logs`
-    await update(new ObjectId(dealId), {
+    await updateByDealId(new ObjectId(dealId), {
       'cron.site.create': {
         status: ESTORE_CRON_STATUS.COMPLETED,
         response: siteExistsResponse.data.status,
@@ -92,7 +90,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s %s', siteExistsResponse.data.siteId, dealIdentifier, now);
 
     // Update status
-    await update(new ObjectId(dealId), {
+    await updateByDealId(new ObjectId(dealId), {
       'cron.site.create': {
         response: siteExistsResponse.data.status,
         status: ESTORE_CRON_STATUS.RUNNING,
@@ -120,7 +118,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     );
 
     // CRON job log update
-    await update(new ObjectId(dealId), {
+    await updateByDealId(new ObjectId(dealId), {
       'cron.site.create': {
         response: siteExistsResponse.data,
         status: ESTORE_CRON_STATUS.FAILED,
