@@ -48,7 +48,27 @@ export type KeyingSheetViewModel = {
   isChecked: boolean;
 }[];
 
-export type PaymentDetailsViewModel = [];
+export type PaymentDetailsPaymentViewModel = {
+  amount: {
+    formattedCurrencyAndAmount: CurrencyAndAmountString;
+    dataSortValue: number;
+  };
+  reference: string | undefined;
+  dateReceived: {
+    formattedDateReceived: string;
+    dataSortValue: number;
+  };
+};
+
+export type PaymentDetailsViewModel = {
+  payment: PaymentDetailsPaymentViewModel;
+  feeRecords: {
+    facilityId: string;
+    exporter: string;
+  }[];
+  reconciledBy?: string;
+  dateReconciled?: string;
+}[];
 
 export type FeeRecordPaymentGroupViewModelItem = {
   feeRecords: FeeRecordViewModelItem[];

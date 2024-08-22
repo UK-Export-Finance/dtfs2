@@ -1,0 +1,22 @@
+{% import "./payment-details-table-row.njk" as paymentDetailsTableRow %}
+{% macro render(params) %}
+  {% set paymentDetails = params.paymentDetails %}
+  <table class="govuk-table" data-module="moj-sortable-table" data-cy="payment-details-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header" aria-sort="ascending">Amount</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Payment reference</th>
+        <th scope="col" class="govuk-table__header">Facility ID</th>
+        <th scope="col" class="govuk-table__header">Exporter</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Date received</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Reconciled by</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Date reconciled</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for paymentDetailsRow in paymentDetails %}
+        {{ paymentDetailsTableRow.render(paymentDetailsRow) }}
+      {% endfor %}
+    </tbody>
+  </table>
+{% endmacro %}
