@@ -4,8 +4,14 @@ import { DataSource } from 'typeorm';
 import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 
+/**
+ * The file path to the JSON file containing ACBS utilisation data.
+ */
 const JSON_FILE_PATH = resolve(__dirname, 'acbs-utilisation-data.json');
 
+/**
+ * The report period for the utilisation data.
+ */
 const REPORT_PERIOD: ReportPeriodPartialEntity = {
   start: { month: 1, year: 2020 },
   end: { month: 3, year: 2020 },
@@ -17,6 +23,11 @@ type UtilisationDataEntry = {
   fixedFeePremium: number;
 };
 
+/**
+ * Validates the report period to ensure the end date is not before the start date.
+ * @param reportPeriod - The report period to validate.
+ * @throws {Error} If the end date is before the start date.
+ */
 const validateReportPeriod = (reportPeriod: ReportPeriodPartialEntity): void => {
   const { start, end } = reportPeriod;
   if (start.year > end.year || (start.year === end.year && start.month > end.month)) {
@@ -24,6 +35,14 @@ const validateReportPeriod = (reportPeriod: ReportPeriodPartialEntity): void => 
   }
 };
 
+/**
+ * Inserts a facility utilisation entry into the database.
+ * @param dataSource - The data source for database operations.
+ * @param utilisationDataEntry - The utilisation data entry to insert.
+ * @param utilisationDataEntry.facilityId - The ID of the facility.
+ * @param utilisationDataEntry.utilisation - The utilisation value.
+ * @param utilisationDataEntry.fixedFeePremium - The fixed fee premium value.
+ */
 const insertFacilityUtilisationEntry = async (dataSource: DataSource, { facilityId, utilisation, fixedFeePremium }: UtilisationDataEntry) => {
   const facilityUtilisationData = new FacilityUtilisationDataEntity();
   facilityUtilisationData.id = facilityId;
@@ -35,6 +54,9 @@ const insertFacilityUtilisationEntry = async (dataSource: DataSource, { facility
   await dataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
 };
 
+/**
+ * Runs the migration process to transfer ACBS utilisation data to TFM.
+ */
 const run = async () => {
   validateReportPeriod(REPORT_PERIOD);
 
