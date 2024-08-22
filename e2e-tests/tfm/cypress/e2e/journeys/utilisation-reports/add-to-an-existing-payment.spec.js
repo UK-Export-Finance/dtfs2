@@ -65,7 +65,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
-    getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.getRow([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
 
     cy.get('[data-cy="add-a-payment-button"]').contains('Add a payment').click();
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
@@ -93,7 +93,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
 
       pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
-      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.getRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
     });
   });
 
@@ -144,7 +144,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
 
       pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
-      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.getRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
     });
 
     it('should display an error message when there are multiple payments to choose from and none have been selected', () => {
@@ -165,7 +165,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
-    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.getRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
   });
 
   it('should redirect the user to the premium payments page when user clicks the back or cancel links and persist the selected fees', () => {
@@ -202,8 +202,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
-    getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
-    getFeeRecordCheckbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.getRow([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.getRow([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
 
     cy.get('[data-cy="add-a-payment-button"]').contains('Add a payment').click();
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
@@ -211,9 +211,15 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
 
     pages.utilisationReportAddToAnExistingPaymentPage.backLink().click();
-    getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
-    getFeeRecordCheckbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
-    getFeeRecordCheckbox([FEE_RECORD_ID_TWO, FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH).should('not.be.checked');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+      .getRow([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO)
+      .should('be.checked');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+      .getRow([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO)
+      .should('be.checked');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+      .getRow([FEE_RECORD_ID_TWO, FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH)
+      .should('not.be.checked');
 
     cy.get('[data-cy="add-a-payment-button"]').contains('Add a payment').click();
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
@@ -221,12 +227,14 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
 
     pages.utilisationReportAddToAnExistingPaymentPage.cancelLink().click();
-    getFeeRecordCheckbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
-    getFeeRecordCheckbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).should('be.checked');
-    getFeeRecordCheckbox([FEE_RECORD_ID_TWO, FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH).should('not.be.checked');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+      .getRow([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO)
+      .should('be.checked');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+      .getRow([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO)
+      .should('be.checked');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+      .getRow([FEE_RECORD_ID_TWO, FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH)
+      .should('not.be.checked');
   });
-
-  function getFeeRecordCheckbox(feeRecordIds, paymentCurrency, status) {
-    return cy.get(`[type="checkbox"][id="feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${paymentCurrency}-status-${status}"]`);
-  }
 });
