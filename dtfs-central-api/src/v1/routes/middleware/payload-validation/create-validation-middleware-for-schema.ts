@@ -25,21 +25,21 @@ const getErrorCode = (error: ZodError): ApiErrorCode => {
   return foundErrorCode ?? API_ERROR_CODE.INVALID_PAYLOAD;
 };
 
-export const createValidationMiddlewareForSchema = <TSchema extends AnyZodObject>(schema: TSchema) => {
-  console.info({ stepDescription: 'in createValidationMiddlewareForSchema creation function' });
-  return (req: Request, res: Response<ApiErrorResponseBody>, next: NextFunction) => {
-    console.info({ stepDescription: 'createValidationMiddlewareForSchema returned function', schema });
+export const createValidationMiddlewareForSchema =
+  <TSchema extends AnyZodObject>(schema: TSchema) =>
+  (req: Request, res: Response<ApiErrorResponseBody>, next: NextFunction) => {
+    console.info({ stepDescription: 'createValidationMiddlewareForSchema', schema });
     const { success, error, data } = schema.safeParse(req.body);
     console.info(
       util.inspect(
-        { stepDescription: 'createValidationMiddlewareForSchema returned function', schemaPassResults: { success, error, data } },
+        { stepDescription: 'handleExpressValidatorResult', schemaPassResults: { success, error, data } },
         { showHidden: false, depth: null, colors: true },
       ),
     );
 
     if (success) {
       console.info({
-        stepDescription: 'createValidationMiddlewareForSchema returned function passed, calling next and assigning body',
+        stepDescription: 'createValidationMiddlewareForSchema passed, calling next and assigning body',
         oldBody: req.body as unknown,
         newBody: data,
       });
@@ -58,4 +58,3 @@ export const createValidationMiddlewareForSchema = <TSchema extends AnyZodObject
       code: errorCode,
     });
   };
-};
