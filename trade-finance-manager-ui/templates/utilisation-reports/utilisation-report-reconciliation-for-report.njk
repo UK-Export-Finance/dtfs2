@@ -4,6 +4,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% import "./_macros/premium-payments-table.njk" as premiumPaymentsTable %}
 {% import "./_macros/keying-sheet-table.njk" as keyingSheetTable %}
+{% import "./_macros/payment-details-table.njk" as paymentDetailsTable %}
 
 {% extends "index.njk" %}
 
@@ -154,11 +155,20 @@
 {% set paymentDetailsHtml %}
   <h2 class="govuk-heading-l" data-cy="payment-details-heading">Payment details</h2>
 
-  <p class="govuk-body">
-    {% if paymentDetails.length === 0 %}
-      Payment details will be displayed when payments have been entered on the premium payments tab.
-    {% endif %}
-  </p>
+  {% if paymentDetails.length === 0 %}
+    <p class="govuk-body">Payment details will be displayed when payments have been entered on the premium payments tab.</p>
+  {% else %}
+    {{ govukButton({
+      text: "Show filter",
+      classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2",
+      id: "payment-details-show-filter-button",
+      attributes: {'data-cy': 'payment-details-show-filter-button'}
+    }) }}
+
+    {{ paymentDetailsTable.render({
+      paymentDetails: paymentDetails
+    }) }}
+  {% endif %}
 {% endset %}
 
 {% set utilisationHtml %}

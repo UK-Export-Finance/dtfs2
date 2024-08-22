@@ -1,6 +1,10 @@
 import { when } from 'jest-when';
 import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
-import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems, mapKeyingSheetToKeyingSheetViewModel } from './reconciliation-for-report-helper';
+import {
+  mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems,
+  mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
+  mapKeyingSheetToKeyingSheetViewModel,
+} from './reconciliation-for-report-helper';
 import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import { aFeeRecordPaymentGroup, aFeeRecord, aPayment } from '../../../../test-helpers';
 
@@ -634,6 +638,185 @@ describe('reconciliation-for-report-helper', () => {
       // Assert
       expect(result).toHaveLength(1);
       expect(result[0].checkboxId).toBe('feeRecordId-123-status-TO_DO');
+    });
+  });
+
+  describe('mapFeeRecordPaymentGroupsToPaymentDetailsViewModel', () => {
+    it('creates a list item for each distinct payment in the supplied groups', () => {
+      // Arrange
+      const firstGroup: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [aFeeRecord(), aFeeRecord()],
+        paymentsReceived: [aPayment(), aPayment()],
+      };
+      const secondGroup: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [aFeeRecord(), aFeeRecord(), aFeeRecord()],
+        paymentsReceived: [aPayment()],
+      };
+
+      // Act
+      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([firstGroup, secondGroup]);
+
+      // Assert
+      expect(result).toHaveLength(3);
+    });
+
+    it('maps the payment reference to the payment details view model reference', () => {
+      // Arrange
+      const group: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [aFeeRecord()],
+        paymentsReceived: [
+          { ...aPayment(), reference: 'First reference' },
+          { ...aPayment(), reference: 'Second reference' },
+          { ...aPayment(), reference: undefined },
+        ],
+      };
+
+      // Act
+      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+
+      // Assert
+      expect(result).toHaveLength(3);
+      expect(result[0].payment.reference).toBe('First reference');
+      expect(result[1].payment.reference).toBe('Second reference');
+      expect(result[2].payment.reference).toBeUndefined();
+    });
+
+    it('maps the fee records to an array of facility ids and exporters linked to the payment in the same group', () => {
+      // Arrange
+      const firstGroup: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [{ ...aFeeRecord(), facilityId: '11111111', exporter: 'Test exporter 1' }],
+        paymentsReceived: [aPayment()],
+      };
+      const secondGroup: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [{ ...aFeeRecord(), facilityId: '22222222', exporter: 'Test exporter 2' }],
+        paymentsReceived: [aPayment()],
+      };
+
+      // Act
+      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([firstGroup, secondGroup]);
+
+      // Assert
+      expect(result).toHaveLength(2);
+      expect(result[0].feeRecords).toHaveLength(1);
+      expect(result[0].feeRecords[0]).toEqual({ facilityId: '11111111', exporter: 'Test exporter 1' });
+      expect(result[1].feeRecords).toHaveLength(1);
+      expect(result[1].feeRecords[0]).toEqual({ facilityId: '22222222', exporter: 'Test exporter 2' });
+    });
+
+    it('maps the fee records in the group to an array of facility ids and exporters when a payment has multiple fee records', () => {
+      // Arrange
+      const group: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [
+          { ...aFeeRecord(), facilityId: '11111111', exporter: 'Test exporter 1' },
+          { ...aFeeRecord(), facilityId: '22222222', exporter: 'Test exporter 2' },
+          { ...aFeeRecord(), facilityId: '33333333', exporter: 'Test exporter 3' },
+        ],
+        paymentsReceived: [aPayment()],
+      };
+
+      // Act
+      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+
+      // Assert
+      expect(result).toHaveLength(1);
+      expect(result[0].feeRecords).toHaveLength(3);
+      expect(result[0].feeRecords[0]).toEqual({ facilityId: '11111111', exporter: 'Test exporter 1' });
+      expect(result[0].feeRecords[1]).toEqual({ facilityId: '22222222', exporter: 'Test exporter 2' });
+      expect(result[0].feeRecords[2]).toEqual({ facilityId: '33333333', exporter: 'Test exporter 3' });
+    });
+
+    it('maps the fee records to an array of facility ids and exporters for each payment in the group when a group has multiple fee records and payments', () => {
+      // Arrange
+      const group: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [
+          { ...aFeeRecord(), facilityId: '11111111', exporter: 'Test exporter 1' },
+          { ...aFeeRecord(), facilityId: '22222222', exporter: 'Test exporter 2' },
+          { ...aFeeRecord(), facilityId: '33333333', exporter: 'Test exporter 3' },
+        ],
+        paymentsReceived: [aPayment(), aPayment()],
+      };
+
+      // Act
+      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+
+      // Assert
+      expect(result).toHaveLength(2);
+
+      expect(result[0].feeRecords).toHaveLength(3);
+      expect(result[0].feeRecords[0]).toEqual({ facilityId: '11111111', exporter: 'Test exporter 1' });
+      expect(result[0].feeRecords[1]).toEqual({ facilityId: '22222222', exporter: 'Test exporter 2' });
+      expect(result[0].feeRecords[2]).toEqual({ facilityId: '33333333', exporter: 'Test exporter 3' });
+
+      expect(result[1].feeRecords).toHaveLength(3);
+      expect(result[1].feeRecords[0]).toEqual({ facilityId: '11111111', exporter: 'Test exporter 1' });
+      expect(result[1].feeRecords[1]).toEqual({ facilityId: '22222222', exporter: 'Test exporter 2' });
+      expect(result[1].feeRecords[2]).toEqual({ facilityId: '33333333', exporter: 'Test exporter 3' });
+    });
+
+    it('maps the payment to a formatted currency and amount sorted first by currency alphabetically and second by amount ascending', () => {
+      // Arrange
+      const payments: Payment[] = [
+        { ...aPayment(), id: 1, currency: 'GBP', amount: 200 }, // 'GBP 200.00', dataSortValue = 2
+        { ...aPayment(), id: 2, currency: 'USD', amount: 50 }, // 'USD 50.00', dataSortValue = 4
+        { ...aPayment(), id: 3, currency: 'GBP', amount: 100 }, // 'GBP 100.00', dataSortValue = 1
+        { ...aPayment(), id: 4, currency: 'EUR', amount: 200 }, // 'EUR 200.00', dataSortValue = 0
+        { ...aPayment(), id: 5, currency: 'GBP', amount: 300 }, // 'GBP 300.00', dataSortValue = 3
+      ];
+      const group: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [aFeeRecord()],
+        paymentsReceived: payments,
+      };
+
+      // Act
+      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+
+      // Assert
+      expect(result).toHaveLength(5);
+      expect(result.map(({ payment }) => payment.amount)).toEqual([
+        { formattedCurrencyAndAmount: 'GBP 200.00', dataSortValue: 2 },
+        { formattedCurrencyAndAmount: 'USD 50.00', dataSortValue: 4 },
+        { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 1 },
+        { formattedCurrencyAndAmount: 'EUR 200.00', dataSortValue: 0 },
+        { formattedCurrencyAndAmount: 'GBP 300.00', dataSortValue: 3 },
+      ]);
+    });
+
+    it('maps the payment to a formatted date received sorted by date ascending', () => {
+      // Arrange
+      // Example: May 1 2023 VS Apr 1 2024 - Apr comes first
+      const payments: Payment[] = [
+        { ...aPayment(), id: 1, dateReceived: new Date('2024-06-01').toISOString() }, // '1 Jun 2024', dataSortValue = 3
+        { ...aPayment(), id: 2, dateReceived: new Date('2024-07-01').toISOString() }, // '1 Jul 2024', dataSortValue = 4
+        { ...aPayment(), id: 3, dateReceived: new Date('2024-03-01').toISOString() }, // '1 Mar 2024', dataSortValue = 0
+        { ...aPayment(), id: 4, dateReceived: new Date('2024-05-01').toISOString() }, // '1 May 2024', dataSortValue = 2
+        { ...aPayment(), id: 5, dateReceived: new Date('2024-04-01').toISOString() }, // '1 Apr 2024', dataSortValue = 1
+      ];
+      const group: FeeRecordPaymentGroup = {
+        ...aFeeRecordPaymentGroup(),
+        feeRecords: [aFeeRecord()],
+        paymentsReceived: payments,
+      };
+
+      // Act
+      const result = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel([group]);
+
+      // Assert
+      expect(result).toHaveLength(5);
+      expect(result.map(({ payment }) => payment.dateReceived)).toEqual([
+        { formattedDateReceived: '1 Jun 2024', dataSortValue: 3 },
+        { formattedDateReceived: '1 Jul 2024', dataSortValue: 4 },
+        { formattedDateReceived: '1 Mar 2024', dataSortValue: 0 },
+        { formattedDateReceived: '1 May 2024', dataSortValue: 2 },
+        { formattedDateReceived: '1 Apr 2024', dataSortValue: 1 },
+      ]);
     });
   });
 });
