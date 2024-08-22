@@ -30,6 +30,8 @@ const bssEwcsFacility = {
   tfm: {},
 };
 
+const { dealId, facilityId, amendmentId } = MOCK_AMENDMENT_COVERENDDATE_CHANGE;
+
 const session = { user, userToken: 'mockToken' };
 
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -55,9 +57,9 @@ describe('POST postAmendCoverEndDate', () => {
 
         const req = {
           params: {
-            _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-            amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
-            facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+            _id: dealId,
+            amendmentId,
+            facilityId,
           },
           body: {
             'cover-end-date-day': '12',
@@ -69,9 +71,7 @@ describe('POST postAmendCoverEndDate', () => {
 
         await postAmendCoverEndDate(req, res);
 
-        expect(res.redirect).toHaveBeenCalledWith(
-          `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId}/is-using-facility-end-date`,
-        );
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
       });
     });
 
@@ -83,9 +83,9 @@ describe('POST postAmendCoverEndDate', () => {
 
         const req = {
           params: {
-            _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-            amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
-            facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+            _id: dealId,
+            amendmentId,
+            facilityId,
           },
           body: {
             'cover-end-date-day': '12',
@@ -97,9 +97,7 @@ describe('POST postAmendCoverEndDate', () => {
 
         await postAmendCoverEndDate(req, res);
 
-        expect(res.redirect).toHaveBeenCalledWith(
-          `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId}/check-answers`,
-        );
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
       });
 
       it('should redirect to the amend facility value page when no errors and also amending facility value', async () => {
@@ -109,9 +107,9 @@ describe('POST postAmendCoverEndDate', () => {
 
         const req = {
           params: {
-            _id: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.dealId,
-            amendmentId: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.amendmentId,
-            facilityId: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.facilityId,
+            _id: dealId,
+            amendmentId,
+            facilityId,
           },
           body: {
             'cover-end-date-day': '12',
@@ -123,9 +121,7 @@ describe('POST postAmendCoverEndDate', () => {
 
         await postAmendCoverEndDate(req, res);
 
-        expect(res.redirect).toHaveBeenCalledWith(
-          `/case/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.amendmentId}/facility-value`,
-        );
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
       });
     });
   });
@@ -146,9 +142,9 @@ describe('POST postAmendCoverEndDate', () => {
 
         const req = {
           params: {
-            _id: MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId,
-            amendmentId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId,
-            facilityId: MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId,
+            _id: dealId,
+            amendmentId,
+            facilityId,
           },
           body: {
             'cover-end-date-day': '12',
@@ -160,9 +156,7 @@ describe('POST postAmendCoverEndDate', () => {
 
         await postAmendCoverEndDate(req, res);
 
-        expect(res.redirect).toHaveBeenCalledWith(
-          `/case/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_COVERENDDATE_CHANGE.amendmentId}/check-answers`,
-        );
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
       });
 
       it('should redirect to the amend facility value page when no errors and also amending facility value', async () => {
@@ -172,9 +166,9 @@ describe('POST postAmendCoverEndDate', () => {
 
         const req = {
           params: {
-            _id: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.dealId,
-            amendmentId: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.amendmentId,
-            facilityId: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.facilityId,
+            _id: dealId,
+            amendmentId,
+            facilityId,
           },
           body: {
             'cover-end-date-day': '12',
@@ -186,9 +180,7 @@ describe('POST postAmendCoverEndDate', () => {
 
         await postAmendCoverEndDate(req, res);
 
-        expect(res.redirect).toHaveBeenCalledWith(
-          `/case/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.dealId}/facility/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.facilityId}/amendment/${MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE.amendmentId}/facility-value`,
-        );
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
       });
     });
   });

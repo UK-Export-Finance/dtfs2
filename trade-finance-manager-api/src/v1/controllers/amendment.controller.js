@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_QUERIES, isGefFacilityType } = require('@ukef/dtfs2-common');
+const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_QUERIES } = require('@ukef/dtfs2-common');
 const util = require('util');
 const api = require('../api');
 const acbs = require('./acbs.controller');
@@ -21,6 +21,7 @@ const {
   addLatestAmendmentFacilityEndDate,
 } = require('../helpers/amendment.helpers');
 const CONSTANTS = require('../../constants');
+const isGefFacility = require('../rest-mappings/helpers/isGefFacility');
 
 const sendAmendmentEmail = async (amendmentId, facilityId, auditDetails) => {
   try {
@@ -89,15 +90,17 @@ const createAmendmentTFMObject = async (amendmentId, facilityId, auditDetails) =
     // gets latest amendment value and dates
     const latestValueResponse = await api.getLatestCompletedAmendmentValue(facilityId);
     const latestCoverEndDateResponse = await api.getLatestCompletedAmendmentDate(facilityId);
-    const facility = await api.findOneFacility(facilityId); // unsure here
+    const facility = await api.findOneFacility(facilityId);
 
     let tfmToAdd = {};
     // populates array with latest value/exposure and date/tenor values
     tfmToAdd = await addLatestAmendmentValue(tfmToAdd, latestValueResponse, facilityId);
     tfmToAdd = await addLatestAmendmentCoverEndDate(tfmToAdd, latestCoverEndDateResponse, facilityId);
 
+    const isFacilityEndDateEnabledForFacility = isTfmFacilityEndDateFeatureFlagEnabled() && isGefFacility(facility.facilitySnapshot.type);
+
     let latestFacilityEndDateResponse;
-    if (isTfmFacilityEndDateFeatureFlagEnabled() && isGefFacilityType(facility.facilitySnapshot.type)) {
+    if (isFacilityEndDateEnabledForFacility) {
       latestFacilityEndDateResponse = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId);
       tfmToAdd = await addLatestAmendmentFacilityEndDate(tfmToAdd, latestFacilityEndDateResponse);
     }

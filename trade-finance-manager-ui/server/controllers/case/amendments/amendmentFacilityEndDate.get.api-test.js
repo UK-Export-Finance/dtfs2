@@ -264,18 +264,19 @@ describe('amendmentFacilityEndDate routes', () => {
       });
 
       it('should render the template with the current facility end date from the facility snapshot if it exists', async () => {
+        const facilityWithCurrentFacilityEndDate = {
+          facilitySnapshot: {
+            ...gefFacility.facilitySnapshot,
+            dates: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2025, 11, 11).toISOString() },
+          },
+        };
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
           data: {
             ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE,
           },
         });
-        api.getFacility = jest.fn().mockResolvedValueOnce({
-          facilitySnapshot: {
-            ...gefFacility.facilitySnapshot,
-            dates: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2025, 11, 11).toISOString() },
-          },
-        });
+        api.getFacility = jest.fn().mockResolvedValueOnce(facilityWithCurrentFacilityEndDate);
 
         const req = {
           params: {

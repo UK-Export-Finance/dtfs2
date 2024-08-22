@@ -10,6 +10,7 @@ const getAmendmentAnswers = async (req, res) => {
   const { userToken } = req.session;
   const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId, requireUkefApproval, changeCoverEndDate, changeFacilityValue } = amendment;
+
   const facility = await api.getFacility(facilityId, userToken);
 
   if (status !== HttpStatusCode.Ok) {

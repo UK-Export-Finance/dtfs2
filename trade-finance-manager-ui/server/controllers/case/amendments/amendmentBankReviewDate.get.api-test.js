@@ -260,13 +260,18 @@ describe('amendmentBankReviewDate routes', () => {
       });
 
       it('should render the template with the current bank review date from the facility snapshot if it exists', async () => {
+        const facilityWithCurrentBankReviewDate = {
+          facilitySnapshot: {
+            ...gefFacility.facilitySnapshot,
+            dates: { isUsingFacilityEndDate: false, bankReviewDate: new Date(2025, 11, 11).toISOString() },
+          },
+        };
+
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
           data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
-        api.getFacility = jest.fn().mockResolvedValueOnce({
-          facilitySnapshot: { ...gefFacility.facilitySnapshot, dates: { isUsingFacilityEndDate: false, bankReviewDate: new Date(2025, 11, 11).toISOString() } },
-        });
+        api.getFacility = jest.fn().mockResolvedValueOnce(facilityWithCurrentBankReviewDate);
 
         const req = {
           params: {

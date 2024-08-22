@@ -23,6 +23,12 @@ context('Amendments - Cover End Date', () => {
     });
   });
 
+  beforeEach(() => {
+    cy.login(PIM_USER_1);
+    const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+  });
+
   after(() => {
     cy.deleteDeals(dealId, ADMIN);
     dealFacilities.forEach((facility) => {
@@ -31,10 +37,6 @@ context('Amendments - Cover End Date', () => {
   });
 
   it('should take you to `Enter the new cover end date` page', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.addAmendmentButton().should('exist');
     amendmentsPage.addAmendmentButton().contains('Add an amendment request');
@@ -61,10 +63,6 @@ context('Amendments - Cover End Date', () => {
   });
 
   it('should NOT allow users to enter the same cover end date or with wrong year format', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.continueAmendmentButton().click();
     cy.url().should('contain', 'request-date');
@@ -107,10 +105,6 @@ context('Amendments - Cover End Date', () => {
   });
 
   it('should continue to the `Check answers` page if the cover end date is valid and only the cover end date is to be changed', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.continueAmendmentButton().click();
     cy.url().should('contain', 'request-date');
@@ -133,10 +127,6 @@ context('Amendments - Cover End Date', () => {
   });
 
   it('should continue to the `Enter the facility value` page if the cover end date is valid and the facility value also needs changing', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.continueAmendmentButton().click();
     cy.url().should('contain', 'request-date');

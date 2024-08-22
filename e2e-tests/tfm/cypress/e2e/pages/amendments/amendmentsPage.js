@@ -1,5 +1,5 @@
 const { format } = require('date-fns');
-const dateConstants = require('../../../../../e2e-fixtures/dateConstants');
+const { todayDay, todayMonth, todayYear } = require('../../../../../e2e-fixtures/dateConstants');
 const facilityPage = require('../facilityPage');
 
 const amendmentsPage = {
@@ -53,9 +53,9 @@ const amendmentsPage = {
     amendmentsPage.isUsingFacilityEndDateYes().click();
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'facility-end-date');
-    amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(dateConstants.todayDay);
-    amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.todayYear);
+    amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(todayDay);
+    amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(todayMonth);
+    amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(todayYear);
     amendmentsPage.continueAmendment().click();
   },
 
@@ -71,9 +71,9 @@ const amendmentsPage = {
     }
 
     cy.url().should('contain', 'request-date');
-    amendmentsPage.amendmentRequestDayInput().clear().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().type(dateConstants.todayYear);
+    amendmentsPage.amendmentRequestDayInput().clear().type(todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().type(todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().type(todayYear);
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', 'request-approval');
@@ -81,9 +81,9 @@ const amendmentsPage = {
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', 'amendment-effective-date');
-    amendmentsPage.amendmentEffectiveDayInput().clear().type(dateConstants.todayDay);
-    amendmentsPage.amendmentEffectiveMonthInput().clear().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentEffectiveYearInput().clear().type(dateConstants.todayYear);
+    amendmentsPage.amendmentEffectiveDayInput().clear().type(todayDay);
+    amendmentsPage.amendmentEffectiveMonthInput().clear().type(todayMonth);
+    amendmentsPage.amendmentEffectiveYearInput().clear().type(todayYear);
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', 'amendment-options');
@@ -98,15 +98,15 @@ const amendmentsPage = {
     amendmentsPage
       .amendmentCoverEndDateDayInput()
       .clear()
-      .type(newCoverEndDate ? format(newCoverEndDate, 'd') : dateConstants.todayDay);
+      .type(newCoverEndDate ? format(newCoverEndDate, 'd') : todayDay);
     amendmentsPage
       .amendmentCoverEndDateMonthInput()
       .clear()
-      .type(newCoverEndDate ? format(newCoverEndDate, 'M') : dateConstants.todayMonth);
+      .type(newCoverEndDate ? format(newCoverEndDate, 'M') : todayMonth);
     amendmentsPage
       .amendmentCoverEndDateYearInput()
       .clear()
-      .type(newCoverEndDate ? format(newCoverEndDate, 'yyyy') : dateConstants.todayYear);
+      .type(newCoverEndDate ? format(newCoverEndDate, 'yyyy') : todayYear);
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', 'is-using-facility-end-date');

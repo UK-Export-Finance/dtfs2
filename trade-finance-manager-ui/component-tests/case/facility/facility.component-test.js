@@ -55,18 +55,18 @@ describe(page, () => {
   describe('when shouldDisplayFacilityEndDate is false', () => {
     it('should not render facility end date', () => {
       wrapper = render({ ...params, shouldDisplayFacilityEndDate: false });
-      wrapper.expectElement('[data-cy="facility-is-using-facility-end-date"]').notToExist();
-      wrapper.expectElement('[data-cy="facility-facility-end-date"]').notToExist();
-      wrapper.expectElement('[data-cy="facility-bank-review-date"]').notToExist();
+      wrapper.expectElement('[data-cy="is-using-facility-end-date"]').notToExist();
+      wrapper.expectElement('[data-cy="facility-end-date"]').notToExist();
+      wrapper.expectElement('[data-cy="bank-review-date"]').notToExist();
     });
   });
 
   describe('when shouldDisplayFacilityEndDate is true', () => {
     it('should display the correct default facility end date fields', () => {
       wrapper = render({ ...params, shouldDisplayFacilityEndDate: true });
-      wrapper.expectElement('[data-cy="facility-is-using-facility-end-date"]').toExist();
-      wrapper.expectElement('[data-cy="facility-facility-end-date"]').toExist();
-      wrapper.expectElement('[data-cy="facility-bank-review-date"]').notToExist();
+      wrapper.expectElement('[data-cy="is-using-facility-end-date"]').toExist();
+      wrapper.expectElement('[data-cy="facility-end-date"]').toExist();
+      wrapper.expectElement('[data-cy="bank-review-date"]').notToExist();
     });
   });
 

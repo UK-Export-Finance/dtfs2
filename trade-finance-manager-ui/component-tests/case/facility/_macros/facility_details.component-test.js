@@ -194,15 +194,15 @@ describe(component, () => {
         wrapper = render({ ...params, facility: facilityWithFacilityEndDate, shouldDisplayFacilityEndDate: false });
       });
       it('should not render isUsingFacilityEndDate', () => {
-        wrapper.expectText('[data-cy="facility-is-using-facility-end-date"]').notToExist();
+        wrapper.expectText('[data-cy="is-using-facility-end-date"]').notToExist();
       });
 
       it('should not render facilityEndDate', () => {
-        wrapper.expectText('[data-cy="facility-facility-end-date"]').notToExist();
+        wrapper.expectText('[data-cy="facility-end-date"]').notToExist();
       });
 
       it('should not render bankReviewDate', () => {
-        wrapper.expectText('[data-cy="facility-bank-review-date"]').notToExist();
+        wrapper.expectText('[data-cy="bank-review-date"]').notToExist();
       });
     });
 
@@ -212,15 +212,15 @@ describe(component, () => {
           wrapper = render({ ...params, shouldDisplayFacilityEndDate: true });
         });
         it('should render a dash for isUsingFacilityEndDate', () => {
-          wrapper.expectText('[data-cy="facility-is-using-facility-end-date"]').toRead('-');
+          wrapper.expectText('[data-cy="is-using-facility-end-date"]').toRead('-');
         });
 
         it('should render a dash for facilityEndDate', () => {
-          wrapper.expectText('[data-cy="facility-facility-end-date"]').toRead('-');
+          wrapper.expectText('[data-cy="facility-end-date"]').toRead('-');
         });
 
         it('should not render bankReviewDate', () => {
-          wrapper.expectText('[data-cy="facility-bank-review-date"]').notToExist();
+          wrapper.expectText('[data-cy="bank-review-date"]').notToExist();
         });
       });
 
@@ -229,15 +229,15 @@ describe(component, () => {
           wrapper = render({ ...params, facility: facilityWithFacilityEndDate, shouldDisplayFacilityEndDate: true });
         });
         it('should render isUsingFacilityEndDate', () => {
-          wrapper.expectText('[data-cy="facility-is-using-facility-end-date"]').toRead('Yes');
+          wrapper.expectText('[data-cy="is-using-facility-end-date"]').toRead('Yes');
         });
 
         it('should render facilityEndDate', () => {
-          wrapper.expectText('[data-cy="facility-facility-end-date"]').toRead('-');
+          wrapper.expectText('[data-cy="facility-end-date"]').toRead('-');
         });
 
         it('should not render bankReviewDate', () => {
-          wrapper.expectText('[data-cy="facility-bank-review-date"]').notToExist();
+          wrapper.expectText('[data-cy="bank-review-date"]').notToExist();
         });
       });
 
@@ -246,15 +246,15 @@ describe(component, () => {
           wrapper = render({ ...params, facility: facilityWithFacilityEndDateSpecified, shouldDisplayFacilityEndDate: true });
         });
         it('should render isUsingFacilityEndDate', () => {
-          wrapper.expectText('[data-cy="facility-is-using-facility-end-date"]').toRead('Yes');
+          wrapper.expectText('[data-cy="is-using-facility-end-date"]').toRead('Yes');
         });
 
         it('should render facilityEndDate', () => {
-          wrapper.expectText('[data-cy="facility-facility-end-date"]').toRead('18 July 2024');
+          wrapper.expectText('[data-cy="facility-end-date"]').toRead('18 July 2024');
         });
 
         it('should not render bankReviewDate', () => {
-          wrapper.expectText('[data-cy="facility-bank-review-date"]').notToExist();
+          wrapper.expectText('[data-cy="bank-review-date"]').notToExist();
         });
       });
 
@@ -263,15 +263,15 @@ describe(component, () => {
           wrapper = render({ ...params, facility: facilityWithBankReviewDate, shouldDisplayFacilityEndDate: true });
         });
         it('should render isUsingFacilityEndDate', () => {
-          wrapper.expectText('[data-cy="facility-is-using-facility-end-date"]').toRead('No');
+          wrapper.expectText('[data-cy="is-using-facility-end-date"]').toRead('No');
         });
 
         it('should not render facilityEndDate', () => {
-          wrapper.expectText('[data-cy="facility-facility-end-date"]').notToExist();
+          wrapper.expectText('[data-cy="facility-end-date"]').notToExist();
         });
 
         it('should render bankReviewDate', () => {
-          wrapper.expectText('[data-cy="facility-bank-review-date"]').toRead('-');
+          wrapper.expectText('[data-cy="bank-review-date"]').toRead('-');
         });
       });
 
@@ -280,15 +280,15 @@ describe(component, () => {
           wrapper = render({ ...params, facility: facilityWithBankReviewDateSpecified, shouldDisplayFacilityEndDate: true });
         });
         it('should render isUsingFacilityEndDate', () => {
-          wrapper.expectText('[data-cy="facility-is-using-facility-end-date"]').toRead('No');
+          wrapper.expectText('[data-cy="is-using-facility-end-date"]').toRead('No');
         });
 
         it('should not render facilityEndDate', () => {
-          wrapper.expectText('[data-cy="facility-facility-end-date"]').notToExist();
+          wrapper.expectText('[data-cy="facility-end-date"]').notToExist();
         });
 
         it('should render bankReviewDate', () => {
-          wrapper.expectText('[data-cy="facility-bank-review-date"]').toRead('20 July 2024');
+          wrapper.expectText('[data-cy="bank-review-date"]').toRead('20 July 2024');
         });
       });
     });

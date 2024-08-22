@@ -1,18 +1,20 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
 const { isFacilityEndDateEnabledForFacility } = require('../../helpers/isFacilityEndDateEnabledForFacility');
 
-const getNextPage = (apiResponseStatus, changeFacilityValue, showFacilityEndDatePage, baseUrl) => {
-  if (apiResponseStatus !== HttpStatusCode.Ok) {
-    throw Error('Error updating amendment');
-  }
+const getNextPage = (changeFacilityValue, showFacilityEndDatePage, baseUrl) => {
   if (showFacilityEndDatePage) {
     return `${baseUrl}/is-using-facility-end-date`;
   }
-  return changeFacilityValue ? `${baseUrl}/facility-value` : `${baseUrl}/check-answers`;
+
+  if (changeFacilityValue) {
+    return `${baseUrl}/facility-value`;
+  }
+
+  return `${baseUrl}/check-answers`;
 };
 
 const getAmendCoverEndDate = async (req, res) => {
@@ -97,13 +99,15 @@ const postAmendCoverEndDate = async (req, res) => {
     formatCurrentCoverEndDate = getUnixTime(new Date(formatCurrentCoverEndDate).setHours(2, 2, 2, 2));
 
     const payload = { coverEndDate, currentCoverEndDate: formatCurrentCoverEndDate };
-    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
-    console.log('cover end date page woo', isTfmFacilityEndDateFeatureFlagEnabled(), isFacilityEndDateEnabledForFacility(facility), facility.facilitySnapshot);
+    const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
+    if (status !== HttpStatusCode.Ok) {
+      throw new Error('Error updating amendment with cover end date');
+    }
 
     const showFacilityEndDatePage = isFacilityEndDateEnabledForFacility(facility);
 
-    return res.redirect(getNextPage(status, changeFacilityValue, showFacilityEndDatePage, baseUrl));
+    return res.redirect(getNextPage(changeFacilityValue, showFacilityEndDatePage, baseUrl));
   } catch (error) {
     console.error('There was a problem adding the cover end date %o', error);
     return res.redirect(fallbackUrl);

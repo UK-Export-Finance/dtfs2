@@ -16,9 +16,9 @@ const facilityPage = {
   facilityBankIssueNoticeReceived: () => cy.get('[data-cy="facility-bank-issue-notice-received"]'),
   facilityCoverStartDate: () => cy.get('[data-cy="facility-cover-start-date"]'),
   facilityCoverEndDate: () => cy.get('[data-cy="facility-cover-end-date"]'),
-  facilityIsUsingFacilityEndDate: () => cy.get('[data-cy="facility-is-using-facility-end-date"]'),
-  facilityFacilityEndDate: () => cy.get('[data-cy="facility-facility-end-date"]'),
-  facilityBankReviewDate: () => cy.get('[data-cy="facility-bank-review-date"]'),
+  facilityIsUsingFacilityEndDate: () => cy.get('[data-cy="is-using-facility-end-date"]'),
+  facilityFacilityEndDate: () => cy.get('[data-cy="facility-end-date"]'),
+  facilityBankReviewDate: () => cy.get('[data-cy="bank-review-date"]'),
   facilityTenor: () => cy.get('[data-cy="facility-tenor"]'),
 
   facilityDealCreditRating: () => cy.get('[data-cy="credit-rating-value"]'),
