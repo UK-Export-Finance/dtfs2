@@ -60,12 +60,7 @@ context('PDC_RECONCILE users can route to the payments page for a bank', () => {
     });
 
     // Insert a report for the previous month for a specific monthly reporting bank
-    const dateInCurrentMonth = new Date();
-    const dateInPreviousMonth = subMonths(dateInCurrentMonth, 1);
-    const previousMonthlyReportPeriod = {
-      start: { month: getOneIndexedMonth(dateInPreviousMonth), year: dateInPreviousMonth.getFullYear() },
-      end: { month: getOneIndexedMonth(dateInPreviousMonth), year: dateInPreviousMonth.getFullYear() },
-    };
+    const previousMonthlyReportPeriod = getMonthlyReportPeriodForPreviousSubmissionMonth();
     const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.REPORT_NOT_RECEIVED)
       .withId(99999999)
       .withBankId(MONTHLY_REPORTING_BANK_ID)
@@ -140,5 +135,14 @@ context('PDC_RECONCILE users can route to the payments page for a bank', () => {
       default:
         return toIsoMonthStamp(now);
     }
+  }
+
+  function getMonthlyReportPeriodForPreviousSubmissionMonth() {
+    const dateInCurrentMonth = new Date();
+    const dateTwoMonthsAgo = subMonths(dateInCurrentMonth, 2);
+    return {
+      start: { month: getOneIndexedMonth(dateTwoMonthsAgo), year: dateTwoMonthsAgo.getFullYear() },
+      end: { month: getOneIndexedMonth(dateTwoMonthsAgo), year: dateTwoMonthsAgo.getFullYear() },
+    };
   }
 });
