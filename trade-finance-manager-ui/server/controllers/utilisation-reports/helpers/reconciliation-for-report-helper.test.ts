@@ -1,3 +1,4 @@
+import { when } from 'jest-when';
 import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems, mapKeyingSheetToKeyingSheetViewModel } from './reconciliation-for-report-helper';
 import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
@@ -410,7 +411,8 @@ describe('reconciliation-for-report-helper', () => {
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords: [feeRecord], status }];
 
-      const isCheckboxChecked = (feeRecordIdsToCheck: number[]) => feeRecordIdsToCheck.every((feeRecordIdToCheck) => feeRecordIdToCheck === feeRecordId);
+      const isCheckboxChecked = jest.fn().mockReturnValue(false);
+      when(isCheckboxChecked).calledWith([feeRecordId]).mockReturnValue(true);
 
       // Act
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
@@ -437,8 +439,8 @@ describe('reconciliation-for-report-helper', () => {
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords: [feeRecord], status }];
 
-      const isCheckboxChecked = (feeRecordIdsToCheck: number[]) =>
-        feeRecordIdsToCheck.every((feeRecordIdToCheck) => feeRecordIdToCheck === nonMatchingFeeRecordId);
+      const isCheckboxChecked = jest.fn().mockReturnValue(false);
+      when(isCheckboxChecked).calledWith([nonMatchingFeeRecordId]).mockReturnValue(true);
 
       // Act
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
