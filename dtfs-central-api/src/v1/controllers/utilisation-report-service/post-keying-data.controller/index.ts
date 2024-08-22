@@ -16,13 +16,13 @@ export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) 
   const { user } = req.body;
 
   try {
-    const feeRecordsAtMatchStatus = await FeeRecordRepo.findByReportIdAndStatusesWithReport(Number(reportId), ['MATCH']);
+    const feeRecordsAtMatchStatusWithPayments = await FeeRecordRepo.findByReportIdAndStatusesWithReportAndPayments(Number(reportId), ['MATCH']);
 
-    if (feeRecordsAtMatchStatus.length === 0) {
+    if (feeRecordsAtMatchStatusWithPayments.length === 0) {
       throw new NotFoundError(`Failed to find any fee records which can be keyed attached to report with id '${reportId}'`);
     }
 
-    const utilisationReport = feeRecordsAtMatchStatus[0].report;
+    const utilisationReport = feeRecordsAtMatchStatusWithPayments[0].report;
     if (!utilisationReport) {
       throw new Error('The report on the found fee records is not defined');
     }
@@ -33,7 +33,7 @@ export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) 
         type: 'GENERATE_KEYING_DATA',
         payload: {
           transactionEntityManager,
-          feeRecordsAtMatchStatus,
+          feeRecordsAtMatchStatusWithPayments,
           requestSource: {
             platform: 'TFM',
             userId: user._id.toString(),

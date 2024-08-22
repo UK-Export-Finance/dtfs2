@@ -5,7 +5,7 @@ import { UtilisationReportReconciliationDetails } from '../../../../../types/uti
 import { filterFeeRecordPaymentEntityGroupsByFacilityId } from './filter-fee-record-payment-entity-groups-by-facility-id';
 import { mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups } from './map-fee-record-payment-entity-groups-to-fee-record-payment-groups';
 import { getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../../helpers';
-import { mapFeeRecordPaymentEntityGroupsToKeyingSheet } from './map-fee-record-payment-entity-groups-to-keying-sheet';
+import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
 
 /**
  * Gets the utilisation report reconciliation details for the supplied report entity
@@ -30,13 +30,13 @@ export const getUtilisationReportReconciliationDetails = async (
     throw new NotFoundError(`Failed to find a bank with id '${bankId}'`);
   }
 
+  const keyingSheet = await getKeyingSheetForReportId(utilisationReport.id, feeRecords);
+
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecords);
 
   const feeRecordPaymentGroups = mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(
     facilityIdFilter ? filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityIdFilter) : feeRecordPaymentEntityGroups,
   );
-
-  const keyingSheet = mapFeeRecordPaymentEntityGroupsToKeyingSheet(feeRecordPaymentEntityGroups);
 
   return {
     reportId: id,
