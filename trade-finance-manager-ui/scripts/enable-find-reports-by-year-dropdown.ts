@@ -19,6 +19,7 @@ const enableFindReportsByYearDropdown = (): void => {
   }
 
   const yearInput: HTMLInputElement | null = document.querySelector('input#find-utilisation-reports-by-year--year-input');
+
   if (!yearInput) {
     return;
   }
