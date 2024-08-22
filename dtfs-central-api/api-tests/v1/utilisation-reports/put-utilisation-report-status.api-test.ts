@@ -1,6 +1,6 @@
 import { UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
-import { aTfmSessionUser } from '../../../test-helpers/test-data';
+import { aTfmSessionUser } from '../../../test-helpers';
 import { SqlDbHelper } from '../../sql-db-helper';
 
 console.error = jest.fn();

@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PutKeyingDataMarkAsPayload, validatePutKeyingDataMarkAsPayload } from './validate-put-keying-data-mark-as-payload';
 
 describe('validatePutKeyingDataMarkAsPayload', () => {

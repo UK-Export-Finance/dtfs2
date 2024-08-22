@@ -6,7 +6,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aBank } from '../../../test-helpers/test-data';
+import { aBank } from '../../../test-helpers';
 import { GetPaymentDetailsResponseBody } from '../../../src/v1/controllers/utilisation-report-service/get-payment-details-by-id.controller';
 
 interface CustomResponse extends Response {

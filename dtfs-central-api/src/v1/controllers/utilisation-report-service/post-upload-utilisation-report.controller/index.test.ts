@@ -7,7 +7,7 @@ import { postUploadUtilisationReport, postUploadUtilisationReportPayloadValidato
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { TransactionFailedError } from '../../../../errors';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
-import { aUtilisationReportRawCsvData } from '../../../../../test-helpers/test-data';
+import { aUtilisationReportRawCsvData } from '../../../../../test-helpers';
 
 jest.mock('../../../../helpers');
 

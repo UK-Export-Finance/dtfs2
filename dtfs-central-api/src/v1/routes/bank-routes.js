@@ -3,7 +3,7 @@ const express = require('express');
 const bankRouter = express.Router();
 
 const getBankController = require('../controllers/bank/get-bank.controller');
-const getBanksController = require('../controllers/bank/get-banks.controller');
+const { getBanks } = require('../controllers/bank/get-banks.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
 const getNextReportPeriodController = require('../controllers/bank/get-next-report-period-by-bank.controller');
 const { getUtilisationReportsByBankIdAndOptions } = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
@@ -17,6 +17,27 @@ const handleExpressValidatorResult = require('../validation/route-validators/exp
 /**
  * @openapi
  * /bank:
+ *   get:
+ *     summary: Get an array of all banks in the banks collection
+ *     tags: [Bank]
+ *     description: Get an array of all banks in the banks collection
+ *     parameters:
+ *       - in: query
+ *         name: includeReportingYears
+ *         schema:
+ *           type: boolean
+ *         description: Whether or not to include the years where a bank has submitted a utilisation report
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 oneOf:
+ *                   - $ref: '#/definitions/Bank'
+ *                   - $ref: '#/definitions/BankWithReportingYears'
  *   post:
  *     summary: Create a bank in banks collection
  *     tags: [Bank]
@@ -36,7 +57,7 @@ const handleExpressValidatorResult = require('../validation/route-validators/exp
  *             example:
  *               _id: 123456abc
  */
-bankRouter.route('/').post(createBankController.createBankPost);
+bankRouter.route('/').get(getBanks).post(createBankController.createBankPost);
 
 /**
  * @openapi
@@ -68,30 +89,6 @@ bankRouter.route('/').post(createBankController.createBankPost);
  *         description: Not found
  */
 bankRouter.route('/:bankId').get(validation.bankIdValidation, handleExpressValidatorResult, getBankController.findOneBankGet);
-
-/**
- * @openapi
- * /bank:
- *   get:
- *     summary: Get an array of all banks in the banks collection
- *     tags: [Bank]
- *     description: Get an array of all banks in the banks collection
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 allOf:
- *                   - $ref: '#/definitions/Bank'
- *                   - type: object
- *                     properties:
- *                       _id:
- *                         example: 123456abc
- */
-bankRouter.route('/').get(getBanksController.getAllBanksGet);
 
 /**
  * @openapi
