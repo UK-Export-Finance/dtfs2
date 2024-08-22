@@ -6,7 +6,7 @@ console.error = jest.fn();
 const URL = '/v1/utilisation-reports/validate';
 
 describe(`POST ${URL}`, () => {
-  it('returns a 200 with a valid request body', async () => {
+  it('returns a 200 when request body is valid', async () => {
     // Arrange
     const requestBody = {
       reportData: [{ 'a csv header': { value: null, row: '2', column: 'C' } }],
@@ -19,7 +19,7 @@ describe(`POST ${URL}`, () => {
     expect(response.status).toBe(HttpStatusCode.Ok);
   });
 
-  it("returns a 400 when the 'reportData' field is missing", async () => {
+  it("returns a 400 when the 'reportData' field is missing fom request body", async () => {
     // Arrange
     const requestBody = {};
 
@@ -33,7 +33,7 @@ describe(`POST ${URL}`, () => {
   it("returns a 400 when the 'reportData' items are not csv rows", async () => {
     // Arrange
     const requestBody = {
-      reportData: [{ 'a key': 'not cell data' }],
+      reportData: [{ 'a key': 'this is not cell data' }],
     };
 
     // Act

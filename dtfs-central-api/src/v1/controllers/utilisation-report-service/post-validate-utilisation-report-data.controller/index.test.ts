@@ -75,7 +75,7 @@ describe('post-validate-utilisation-report-data.controller', () => {
       postValidateUtilisationReportData(req, res);
 
       // Assert
-      expect(res._getData()).toBe(`Failed to add a new payment: ${errorMessage}`);
+      expect(res._getData()).toBe(`Failed to validate report data: ${errorMessage}`);
     });
 
     it("responds with a '500' if an unknown error occurs", () => {
@@ -111,7 +111,7 @@ describe('post-validate-utilisation-report-data.controller', () => {
       postValidateUtilisationReportData(req, res);
 
       // Assert
-      expect(res._getData()).toBe('Failed to add a new payment');
+      expect(res._getData()).toBe('Failed to validate report data');
     });
   });
 });

@@ -67,7 +67,7 @@ export const validateUtilisationReportCsvHeaders = (
   return { missingHeaderErrors, availableHeaders };
 };
 
-const validateUtilisationReportCsvCellData = (
+export const validateUtilisationReportCsvCellData = (
   csvData: Record<string, UtilisationReportCsvCellData>[],
   availableHeaders: string[],
 ): UtilisationReportDataValidationError[] => {

@@ -6,4 +6,4 @@ const UtilisationReportCsvCellDataSchema = z.object({
   row: z.union([z.string(), z.number()]),
 });
 
-export const UtilisationReportCsvRowDataSchema = z.record(UtilisationReportCsvCellDataSchema);
+export const UtilisationReportCsvRowDataSchema = z.record(z.string(), UtilisationReportCsvCellDataSchema);

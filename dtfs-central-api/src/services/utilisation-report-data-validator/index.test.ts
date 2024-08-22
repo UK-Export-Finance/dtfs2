@@ -1,12 +1,12 @@
-const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
-const { validateUtilisationReportCsvHeaders, validateUtilisationReportCsvCellData } = require('.');
-const {
+import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
+import { validateUtilisationReportCsvHeaders, validateUtilisationReportCsvCellData } from '.';
+import {
   generateUkefFacilityIdError,
   generateBaseCurrencyError,
   generateFacilityUtilisationError,
   generatePaymentCurrencyError,
   generatePaymentExchangeRateError,
-} = require('./utilisation-report-cell-validators');
+} from './utilisation-report-cell-validators';
 
 jest.mock('./utilisation-report-cell-validators', () => ({
   generateUkefFacilityIdError: jest.fn(),
@@ -20,7 +20,7 @@ jest.mock('./utilisation-report-cell-validators', () => ({
 
 describe('utilisation-report-validator', () => {
   describe('validateUtilisationReportCsvHeaders', () => {
-    it('returns an error if a header is missing', async () => {
+    it('returns an error if a header is missing', () => {
       const csvDataRowWithMissingHeader = {
         'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
         exporter: { value: 'test exporter', column: 'C', row: 1 },
@@ -39,7 +39,7 @@ describe('utilisation-report-validator', () => {
       expect(missingHeaderErrors[0].errorMessage).toBe('UKEF facility ID header is missing or spelt incorrectly');
     });
 
-    it('returns no errors when no headers are missing', async () => {
+    it('returns no errors when no headers are missing', () => {
       const csvDataRowWithCorrectHeaders = {
         'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
         'ukef facility id': { value: '20001371', column: 'B', row: 1 },
@@ -58,7 +58,7 @@ describe('utilisation-report-validator', () => {
       expect(missingHeaderErrors.length).toBe(0);
     });
 
-    it('returns multiple errors if multiple headers are missing', async () => {
+    it('returns multiple errors if multiple headers are missing', () => {
       const csvDataRowWithIncorrectlySpeltFacilityIdAndCurrency = {
         'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
         exporter: { value: 'test exporter', column: 'C', row: 1 },
@@ -81,7 +81,7 @@ describe('utilisation-report-validator', () => {
     // This test mocks out all the function from utilisation-report-cell-validators.js and
     // tests that if headers are available then the respective cell validator function is called on that data
 
-    it('calls the generate error functions for headers that are present', async () => {
+    it('calls the generate error functions for headers that are present', () => {
       const csvData = [
         {
           'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
@@ -104,7 +104,7 @@ describe('utilisation-report-validator', () => {
       expect(generateFacilityUtilisationError).not.toHaveBeenCalled();
     });
 
-    it('calls the generate payment currency and exchange rate error functions even if no headers are present', async () => {
+    it('calls the generate payment currency and exchange rate error functions even if no headers are present', () => {
       const csvData = [
         {
           'bank facility reference': { value: 'Britannia Energy GEF', column: 'A', row: 1 },
@@ -119,9 +119,7 @@ describe('utilisation-report-validator', () => {
         },
       ];
 
-      const availableHeaders = [];
-
-      validateUtilisationReportCsvCellData(csvData, availableHeaders);
+      validateUtilisationReportCsvCellData(csvData, []);
       expect(generatePaymentCurrencyError).toHaveBeenCalled();
       expect(generatePaymentExchangeRateError).toHaveBeenCalled();
     });
