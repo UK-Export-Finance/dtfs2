@@ -1,8 +1,8 @@
 import {
   UTILISATION_REPORT_HEADERS,
   UtilisationReportDataValidationError,
-  UtilisationReportRawCsvCellDataWithLocation,
-  UtilisationReportRawCsvRowDataWithLocations,
+  UtilisationReportCsvCellData,
+  UtilisationReportCsvRowData,
 } from '@ukef/dtfs2-common';
 import {
   generateUkefFacilityIdError,
@@ -17,8 +17,8 @@ import {
   generateFeesPaidForThePeriodCurrencyError,
 } from './utilisation-report-cell-validators';
 
-export const validateCsvHeaders = (
-  csvDataRow: UtilisationReportRawCsvRowDataWithLocations,
+export const validateUtilisationReportCsvHeaders = (
+  csvDataRow: UtilisationReportCsvRowData,
 ): { missingHeaderErrors: UtilisationReportDataValidationError[]; availableHeaders: string[] } => {
   const headers = Object.keys(csvDataRow);
   const requiredHeaders = [
@@ -67,8 +67,8 @@ export const validateCsvHeaders = (
   return { missingHeaderErrors, availableHeaders };
 };
 
-export const validateCsvCellData = (
-  csvData: Record<string, UtilisationReportRawCsvCellDataWithLocation>[],
+const validateUtilisationReportCsvCellData = (
+  csvData: Record<string, UtilisationReportCsvCellData>[],
   availableHeaders: string[],
 ): UtilisationReportDataValidationError[] => {
   const cellValidations = [
@@ -113,10 +113,10 @@ export const validateCsvCellData = (
   });
 };
 
-export const validateCsvData = (csvData: UtilisationReportRawCsvRowDataWithLocations[]): UtilisationReportDataValidationError[] => {
-  const { missingHeaderErrors, availableHeaders } = validateCsvHeaders(csvData[0]);
+export const validateUtilisationReportCsvData = (csvData: UtilisationReportCsvRowData[]): UtilisationReportDataValidationError[] => {
+  const { missingHeaderErrors, availableHeaders } = validateUtilisationReportCsvHeaders(csvData[0]);
 
-  const dataValidationErrors = validateCsvCellData(csvData, availableHeaders);
+  const dataValidationErrors = validateUtilisationReportCsvCellData(csvData, availableHeaders);
 
   const validationErrors = missingHeaderErrors.concat(dataValidationErrors);
 

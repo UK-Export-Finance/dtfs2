@@ -1,14 +1,8 @@
-import {
-  UtilisationReportDataValidationError,
-  UtilisationReportRawCsvCellDataWithLocation,
-  UtilisationReportRawCsvRowDataWithLocations,
-} from '@ukef/dtfs2-common';
+import { UtilisationReportDataValidationError, UtilisationReportCsvCellData, UtilisationReportCsvRowData } from '@ukef/dtfs2-common';
 
 export type UtilisationReportCellValidationErrorGenerator = (
-  cellData: UtilisationReportRawCsvCellDataWithLocation | undefined,
+  cellData: UtilisationReportCsvCellData | undefined,
   exporterName?: string | null,
 ) => UtilisationReportDataValidationError | null;
 
-export type UtilisationReportRowValidationErrorGenerator = (
-  rowData: UtilisationReportRawCsvRowDataWithLocations,
-) => UtilisationReportDataValidationError | null;
+export type UtilisationReportRowValidationErrorGenerator = (rowData: UtilisationReportCsvRowData) => UtilisationReportDataValidationError | null;

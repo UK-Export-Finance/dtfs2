@@ -69,6 +69,42 @@ const utilisationReportsRouter = express.Router();
  */
 utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValidator, postUploadUtilisationReport);
 
+/**
+ * @openapi
+ * /utilisation-reports/validate:
+ *   post:
+ *     summary: Validate utilisation report data
+ *     tags: [Utilisation Report]
+ *     description: Validate utilisation report data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reportData:
+ *                 $ref: '#/definitions/RawReportDataWithCellLocations'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - type: object
+ *                   properties:
+ *                     csvValidationErrors:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/definitions/CsvValidationError'
+ *       500:
+ *         description: Internal server error
+ *       400:
+ *         description: Invalid payload
+ *       409:
+ *         description: Server conflict
+ */
 utilisationReportsRouter.route('/validate').post(validatePostPostValidateUtilisationReportDataPayload, postValidateUtilisationReportData);
 
 /**
@@ -76,7 +112,7 @@ utilisationReportsRouter.route('/validate').post(validatePostPostValidateUtilisa
  * /utilisation-reports/:id:
  *   get:
  *     summary: Get utilisation report with the specified id ('id')
- *     tags: [Utilisation Report]
+ *     tags: c
  *     description: Get utilisation report with the specified id ('id')
  *     parameters:
  *       - in: path
@@ -357,8 +393,6 @@ utilisationReportsRouter
  *               $ref: '#/definitions/FeeRecordsToKeyResponseBody'
  *       400:
  *         description: Bad request
- *       404:
- *         description: Not Found
  *       500:
  *         description: Internal Server Error
  */

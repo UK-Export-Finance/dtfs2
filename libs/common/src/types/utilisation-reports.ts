@@ -29,9 +29,9 @@ export type UploadedByUserDetails = {
   surname: string;
 };
 
-export type UtilisationReportRawCsvCellDataWithLocation = { value: string | null; column: string; row: string | number };
+export type UtilisationReportCsvCellData = { value: string | null; column: string; row: string | number };
 
-export type UtilisationReportRawCsvRowDataWithLocations = Record<string, UtilisationReportRawCsvCellDataWithLocation>;
+export type UtilisationReportCsvRowData = Record<string, UtilisationReportCsvCellData>;
 
 export type UtilisationReportDataValidationError = {
   errorMessage: string;

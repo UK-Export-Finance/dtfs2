@@ -1,7 +1,7 @@
-import { UtilisationReportRawCsvRowDataWithLocationsSchema } from './utilisation-report-raw-csv-row-data-with-location.schema';
+import { UtilisationReportCsvRowDataSchema } from './utilisation-report-raw-csv-row-data-with-location.schema';
 
 describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
-  describe('UtilisationReportRawCsvRowDataWithLocationsSchema', () => {
+  describe('UtilisationReportCsvRowDataSchema', () => {
     it.each`
       condition      | testValue
       ${'undefined'} | ${undefined}
@@ -13,7 +13,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       const invalidRowData = { 'some key': { value: testValue, row: 3, column: 'E' } };
 
       // Act
-      const { success } = UtilisationReportRawCsvRowDataWithLocationsSchema.safeParse(invalidRowData);
+      const { success } = UtilisationReportCsvRowDataSchema.safeParse(invalidRowData);
 
       // Assert
       expect(success).toBe(false);
@@ -31,7 +31,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       const invalidRowData = { 'some key': { value: 'value', row: 3, column: testValue } };
 
       // Act
-      const { success } = UtilisationReportRawCsvRowDataWithLocationsSchema.safeParse(invalidRowData);
+      const { success } = UtilisationReportCsvRowDataSchema.safeParse(invalidRowData);
 
       // Assert
       expect(success).toBe(false);
@@ -48,7 +48,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       const invalidRowData = { 'some key': { value: 'value', row: testValue, column: 'R' } };
 
       // Act
-      const { success } = UtilisationReportRawCsvRowDataWithLocationsSchema.safeParse(invalidRowData);
+      const { success } = UtilisationReportCsvRowDataSchema.safeParse(invalidRowData);
 
       // Assert
       expect(success).toBe(false);
@@ -67,7 +67,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
         const invalidRowData = { 'some key': { value, row, column: 'R' } };
 
         // Act
-        const { success } = UtilisationReportRawCsvRowDataWithLocationsSchema.safeParse(invalidRowData);
+        const { success } = UtilisationReportCsvRowDataSchema.safeParse(invalidRowData);
 
         // Assert
         expect(success).toBe(true);
@@ -82,7 +82,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       };
 
       // Act
-      const { data } = UtilisationReportRawCsvRowDataWithLocationsSchema.safeParse(validRowData);
+      const { data } = UtilisationReportCsvRowDataSchema.safeParse(validRowData);
 
       // Assert
       expect(data).toBe({

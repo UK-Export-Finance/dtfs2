@@ -886,9 +886,9 @@ const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData,
 
 /**
  * Generates validation errors for all errors in the utilisation report data
- * @param {} reportData - The csv data with location information
+ * @param {import('@ukef/dtfs2-common').UtilisationReportCsvRowData[]} reportData - The csv data with location information
  * @param {string} userToken - The user token
- * @returns {} - The validation errors for the utilisation report data
+ * @returns {Promise<{csvValidationErrors: import('@ukef/dtfs2-common').UtilisationReportDataValidationError[]}>} - The validation errors for the utilisation report data
  */
 const generateValidationErrorsForUtilisationReportData = async (reportData, bankId, userToken) => {
   const response = await axios({

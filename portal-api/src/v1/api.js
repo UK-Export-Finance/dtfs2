@@ -271,7 +271,7 @@ const findLatestGefMandatoryCriteria = async () => {
 
 /**
  * Validates utilisation report data returning any errors to display to the user
- * @param {import('@ukef/dtfs2-common').UtilisationReportRawCsvRowDataWithLocations[]} reportData
+ * @param {import('@ukef/dtfs2-common').UtilisationReportCsvRowData[]} reportData
  * @returns {Promise<import('./api-response-types').ValidateUtilisationReportDataResponseBody>} Object containing the validation errors to display to the user
  */
 const validateUtilisationReportData = async (reportData) => {
