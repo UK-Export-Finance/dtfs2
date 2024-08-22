@@ -96,7 +96,7 @@ describe(component, () => {
       wrapper.expectElement('tr').toHaveCount(3);
     });
 
-    it('renders the none-fee record payment details data only in the first row', () => {
+    it('renders the non-fee record payment details data only in the first row', () => {
       const paymentDetailsRow: PaymentDetailsTableRow = {
         ...aPaymentDetailsTableRow(),
         feeRecords: [aFeeRecord(), aFeeRecord(), aFeeRecord()],

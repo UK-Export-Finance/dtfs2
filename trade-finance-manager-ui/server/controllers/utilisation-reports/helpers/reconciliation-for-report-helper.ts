@@ -54,6 +54,12 @@ const mapPaymentsToPaymentViewModelItems = (paymentsReceived: Payment[] | null):
 
 type SortableFeeRecordPaymentGroupProperty = 'totalReportedPayments' | 'totalPaymentsReceived';
 
+/**
+ * Gets the data sort value map for the fee record payment group by property
+ * @param feeRecordPaymentGroups - The fee record payment groups
+ * @param property - The property to sort by
+ * @returns The data sort value map
+ */
 const getDataSortValueMapForFeeRecordPaymentGroupProperty = (
   feeRecordPaymentGroups: FeeRecordPaymentGroup[],
   property: SortableFeeRecordPaymentGroupProperty,
@@ -62,17 +68,34 @@ const getDataSortValueMapForFeeRecordPaymentGroupProperty = (
   return getKeyToCurrencyAndAmountSortValueMap(propertyWithIndexAsKey);
 };
 
+/**
+ * Gets a checkbox id for a list of fee records and status
+ * @param feeRecords - The fee records
+ * @param status - The status
+ * @returns The checkbox id
+ */
 const getCheckboxIdForFeeRecordsAndStatus = (feeRecords: FeeRecord[], status: FeeRecordStatus): PremiumPaymentsTableCheckboxId => {
   const feeRecordIdList = feeRecords.map(({ id }) => id).join(',');
   const reportedPaymentsCurrency = feeRecords[0].reportedPayments.currency;
   return `feeRecordIds-${feeRecordIdList}-reportedPaymentsCurrency-${reportedPaymentsCurrency}-status-${status}`;
 };
 
+/**
+ * Gets a checkbox aria label
+ * @param feeRecords - The fee records
+ * @returns The checkbox aria label
+ */
 const getCheckboxAriaLabel = (feeRecords: FeeRecord[]): string => {
   const feeRecordFacilityIdList = feeRecords.map(({ facilityId }) => facilityId).join(' ');
   return `Select ${feeRecordFacilityIdList}`;
 };
 
+/**
+ * Maps the fee record payment groups to the fee record payment group view model items
+ * @param feeRecordPaymentGroups - The fee record payment groups
+ * @param isCheckboxChecked - Whether or not the fee record payment group checkbox is checked
+ * @returns The fee record payment group view model items
+ */
 export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
   feeRecordPaymentGroups: FeeRecordPaymentGroup[],
   isCheckboxChecked: (checkboxId: string) => boolean = () => false,
@@ -113,6 +136,11 @@ export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
   });
 };
 
+/**
+ * Gets the keying sheet adjustment view model
+ * @param adjustment - The keying sheet adjustment
+ * @returns The keying sheet adjustment view model
+ */
 const getKeyingSheetAdjustmentViewModel = (adjustment: KeyingSheetAdjustment | null): KeyingSheetAdjustmentViewModel => {
   if (!adjustment) {
     return { amount: undefined, change: 'NONE' };
@@ -123,12 +151,22 @@ const getKeyingSheetAdjustmentViewModel = (adjustment: KeyingSheetAdjustment | n
   };
 };
 
+/**
+ * Maps the keying sheet fee payments to the keying sheet fee payments view model
+ * @param feePayments - The fee payments
+ * @returns The fee payments view model
+ */
 const mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel = (feePayments: KeyingSheetRow['feePayments']) =>
   feePayments.map(({ currency, amount, dateReceived }) => ({
     formattedCurrencyAndAmount: getFormattedCurrencyAndAmount({ currency, amount }),
     formattedDateReceived: dateReceived ? format(new Date(dateReceived), 'd MMM yyyy') : undefined,
   }));
 
+/**
+ * Gets the keying sheet row checkbox id
+ * @param keyingSheetRow - The keying sheet row
+ * @returns The checkbox id
+ */
 const getKeyingSheetRowCheckboxId = (keyingSheetRow: KeyingSheetRow): KeyingSheetCheckboxId =>
   `feeRecordId-${keyingSheetRow.feeRecordId}-status-${keyingSheetRow.status}`;
 
@@ -153,13 +191,13 @@ export const mapKeyingSheetToKeyingSheetViewModel = (keyingSheet: KeyingSheet): 
   }));
 
 /**
- * Maps the payment to the payment details view model payment
- * @param paymentReceived - The received
+ * Maps the payment to the payment details payment view model
+ * @param paymentReceived - The received payment
  * @param amountDataSortValue - The amount data sort value
  * @param dateReceivedDataSortValue - The date received data sort value
  * @returns The payment details view model payment
  */
-const mapPaymentToPaymentDetailsViewModelPayment = (
+const mapPaymentToPaymentDetailsPaymentViewModel = (
   payment: Payment,
   amountDataSortValue: number,
   dateReceivedDataSortValue: number,
@@ -207,7 +245,7 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
     return [
       ...paymentDetails,
       ...paymentsReceived.map((payment) => ({
-        payment: mapPaymentToPaymentDetailsViewModelPayment(
+        payment: mapPaymentToPaymentDetailsPaymentViewModel(
           payment,
           paymentIdToAmountDataSortValueMap[payment.id],
           paymentIdToDateReceivedDataSortValueMap[payment.id],
