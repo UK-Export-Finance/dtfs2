@@ -3,6 +3,7 @@ const express = require('express');
 const tfmRouter = express.Router();
 
 const { validatePutFacilityAmendmentPayload, validatePostFacilityAmendmentPayload } = require('./middleware/payload-validation');
+const { bugFixLogs } = require('./middleware');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 
@@ -509,7 +510,9 @@ tfmRouter
   .post(
     validation.mongoIdValidation('facilityId'),
     handleExpressValidatorResult,
+    bugFixLogs,
     validatePostFacilityAmendmentPayload,
+    bugFixLogs,
     tfmPostAmendmentController.postTfmAmendment,
   );
 
