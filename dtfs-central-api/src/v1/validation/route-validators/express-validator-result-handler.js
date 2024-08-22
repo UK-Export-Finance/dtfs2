@@ -25,7 +25,7 @@ const handleExpressValidatorResult = (req, res, next) => {
     console.info(
       util.inspect(
         {
-          stepDescription: 'mongoIdValidationFailed',
+          stepDescription: 'handleExpressValidatorResult',
           response: {
             status: HttpStatusCode.BadRequest,
             body: { status: HttpStatusCode.BadRequest, errors: validationResults.array() },
