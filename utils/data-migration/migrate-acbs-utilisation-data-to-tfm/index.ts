@@ -30,7 +30,11 @@ type UtilisationDataEntry = {
  */
 const validateReportPeriod = (reportPeriod: ReportPeriodPartialEntity): void => {
   const { start, end } = reportPeriod;
-  if (start.year > end.year || (start.year === end.year && start.month > end.month)) {
+
+  const isStartYearAfterEndYear = start.year > end.year;
+  const isStartMonthAfterEndMonthInSameYear = start.year === end.year && start.month > end.month;
+
+  if (isStartYearAfterEndYear || isStartMonthAfterEndMonthInSameYear) {
     throw new Error('Report period end date cannot be before start date');
   }
 };
