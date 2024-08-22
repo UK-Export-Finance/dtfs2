@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { updateByDealId } from '../repositories/estore/estore-repo';
+import { EstoreRepo } from '../repositories/estore/estore-repo';
 import { BuyerFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createBuyerFolder } from '../v1/controllers/estore/eStoreApi';
@@ -56,7 +56,7 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
     console.info('Attempting to create a buyer directory %s for deal %s', buyerName, dealIdentifier);
 
     // Step 2: Update `cron-job-logs`
-    await updateByDealId(new ObjectId(dealId), {
+    await EstoreRepo.updateByDealId(new ObjectId(dealId), {
       'cron.buyer': {
         status: ESTORE_CRON_STATUS.COMPLETED,
         timestamp: getNowAsEpoch(),
@@ -69,7 +69,7 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
     console.error('eStore buyer directory creation has failed for deal %s %o', dealIdentifier, response);
 
     // Update `cron-job-logs`
-    await updateByDealId(new ObjectId(dealId), {
+    await EstoreRepo.updateByDealId(new ObjectId(dealId), {
       'cron.buyer': {
         response,
         status: ESTORE_CRON_STATUS.FAILED,

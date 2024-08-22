@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { updateByDealId } from '../repositories/estore/estore-repo';
+import { EstoreRepo } from '../repositories/estore/estore-repo';
 import { DealFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { createDealFolder } from '../v1/controllers/estore/eStoreApi';
@@ -70,7 +70,7 @@ export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promis
     console.info('Attempting to create a deal directory for deal %s', dealIdentifier);
 
     // Step 2: Update `cron-job-logs`
-    await updateByDealId(new ObjectId(dealId), {
+    await EstoreRepo.updateByDealId(new ObjectId(dealId), {
       'cron.deal': {
         status: ESTORE_CRON_STATUS.COMPLETED,
         timestamp: getNowAsEpoch(),
@@ -83,7 +83,7 @@ export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promis
     console.error('eStore deal directory creation has failed for deal %s %o', dealIdentifier, response);
 
     // Update `cron-job-logs`
-    await updateByDealId(new ObjectId(dealId), {
+    await EstoreRepo.updateByDealId(new ObjectId(dealId), {
       'cron.deal': {
         response,
         status: ESTORE_CRON_STATUS.FAILED,

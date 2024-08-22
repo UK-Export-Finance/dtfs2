@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { updateByDealId } from '../repositories/estore/estore-repo';
+import { EstoreRepo } from '../repositories/estore/estore-repo';
 import { TermStoreResponse, EstoreErrorResponse, Estore } from '../interfaces';
 import { ESTORE_CRON_STATUS } from '../constants';
 import { addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
@@ -55,7 +55,7 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
       console.info('Facilities have been added to term store for deal %s', dealIdentifier);
 
       // Step 2: Update `cron-job-logs`
-      await updateByDealId(new ObjectId(dealId), {
+      await EstoreRepo.updateByDealId(new ObjectId(dealId), {
         $set: {
           'cron.term': {
             status: ESTORE_CRON_STATUS.COMPLETED,
@@ -70,7 +70,7 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
       console.error('Facilities have not been added to term store for deal %s %o', dealIdentifier, response);
 
       // Update `cron-job-logs`
-      await updateByDealId(new ObjectId(dealId), {
+      await EstoreRepo.updateByDealId(new ObjectId(dealId), {
         'cron.term': {
           response,
           status: ESTORE_CRON_STATUS.FAILED,

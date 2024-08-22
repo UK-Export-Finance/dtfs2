@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { ObjectId } from 'mongodb';
-import { updateByDealId } from '../repositories/estore/estore-repo';
+import { EstoreRepo } from '../repositories/estore/estore-repo';
 import { cron } from '../helpers/cron';
 import { getCollection } from '../database';
 import { Estore, EstoreErrorResponse, SiteExistsResponse } from '../interfaces';
@@ -63,7 +63,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     data.siteId = String(siteExistsResponse.data.siteId);
 
     // Update `cron-job-logs`
-    await updateByDealId(new ObjectId(dealId), {
+    await EstoreRepo.updateByDealId(new ObjectId(dealId), {
       'cron.site.create': {
         status: ESTORE_CRON_STATUS.COMPLETED,
         response: siteExistsResponse.data.status,
@@ -90,7 +90,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s %s', siteExistsResponse.data.siteId, dealIdentifier, now);
 
     // Update status
-    await updateByDealId(new ObjectId(dealId), {
+    await EstoreRepo.updateByDealId(new ObjectId(dealId), {
       'cron.site.create': {
         response: siteExistsResponse.data.status,
         status: ESTORE_CRON_STATUS.RUNNING,
@@ -118,7 +118,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
     );
 
     // CRON job log update
-    await updateByDealId(new ObjectId(dealId), {
+    await EstoreRepo.updateByDealId(new ObjectId(dealId), {
       'cron.site.create': {
         response: siteExistsResponse.data,
         status: ESTORE_CRON_STATUS.FAILED,
