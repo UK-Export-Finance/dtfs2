@@ -1,12 +1,13 @@
 import { Response } from 'express';
-import { getDate, getMonth, getYear, isSameDay, parseISO, startOfDay } from 'date-fns';
+import { getDate, getMonth, getYear, isSameDay, parseISO } from 'date-fns';
 import { CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
 import { isTrueSet, validationErrorHandler } from '../../../utils/helpers';
 import * as api from '../../../services/api';
-import { validateAndParseFacilityEndDate } from './validation';
+import { validateAndParseFacilityEndDate } from '../../../utils/validate-facility-end-date';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { FacilityEndDateViewModel } from '../../../types/view-models/facility-end-date-view-model';
 import { ValidationError } from '../../../types/validation-error';
+import { getCoverStartDateOrStartOfToday } from '../../../utils/get-cover-start-date-or-start-of-today';
 
 type FacilityEndDateParams = { dealId: string; facilityId: string };
 type FacilityEndDatePostBody = { 'facility-end-date-day': string; 'facility-end-date-month': string; 'facility-end-date-year': string };
@@ -37,7 +38,7 @@ const getFacilityEndDateViewModel = async (req: GetFacilityEndDateRequest, previ
     previousPage,
   };
 
-  if ('facilityEndDate' in facility && typeof facility.facilityEndDate === 'string') {
+  if (typeof facility.facilityEndDate === 'string') {
     const facilityEndDate = parseISO(facility.facilityEndDate);
     facilityEndDateViewModel.facilityEndDate = {
       day: String(getDate(facilityEndDate)),
@@ -90,18 +91,6 @@ export const getFacilityEndDateFromApplicationPreviewPage = async (req: GetFacil
   }
 };
 
-const getCoverStartDateOrStartOfToday = (facility: Record<string, unknown>): Date => {
-  if (typeof facility.coverStartDate === 'string') {
-    return startOfDay(parseISO(facility.coverStartDate));
-  }
-
-  if (!facility.coverStartDate) {
-    return startOfDay(new Date());
-  }
-
-  throw new Error('Invalid coverStartDate');
-};
-
 export const validateAndReturnErrorsOrUpdateFacilityEndDate = async (req: PostFacilityEndDateRequest): Promise<ValidationError[] | null> => {
   const {
     params: { dealId, facilityId },
@@ -113,6 +102,7 @@ export const validateAndReturnErrorsOrUpdateFacilityEndDate = async (req: PostFa
 
   const facilityEndDateIsBlank = !facilityEndDateYear && !facilityEndDateMonth && !facilityEndDateDay;
 
+  // If the user clicks save and return with no values filled in, we do not update the database
   if (isTrueSet(saveAndReturn) && facilityEndDateIsBlank) {
     return null;
   }
@@ -134,9 +124,9 @@ export const validateAndReturnErrorsOrUpdateFacilityEndDate = async (req: PostFa
 
   const facilityEndDate = facilityEndDateErrorsAndDate.date;
 
-  const facilityEndDateValueIsUnchanged = typeof facility.facilityEndDate === 'string' && isSameDay(parseISO(facility.facilityEndDate), facilityEndDate);
+  const facilityEndDateNeedsUpdating = typeof facility.facilityEndDate !== 'string' || !isSameDay(parseISO(facility.facilityEndDate), facilityEndDate);
 
-  if (!facilityEndDateValueIsUnchanged) {
+  if (facilityEndDateNeedsUpdating) {
     await api.updateFacility({
       facilityId,
       payload: {

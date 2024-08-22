@@ -1,11 +1,12 @@
 import { Response } from 'express';
-import { getDate, getMonth, getYear, isSameDay, parseISO, startOfDay } from 'date-fns';
+import { getDate, getMonth, getYear, isSameDay, parseISO } from 'date-fns';
 import { CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
 import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
 import * as api from '../../services/api';
-import { validateAndParseFacilityEndDate } from './validation';
+import { validateAndParseFacilityEndDate } from '../../utils/validate-facility-end-date';
 import { asLoggedInUserSession } from '../../utils/express-session';
 import { FacilityEndDateViewModel } from '../../types/view-models/facility-end-date-view-model';
+import { getCoverStartDateOrStartOfToday } from '../../utils/get-cover-start-date-or-start-of-today';
 
 type FacilityEndDateParams = { dealId: string; facilityId: string };
 type FacilityEndDatePostBody = { 'facility-end-date-day': string; 'facility-end-date-month': string; 'facility-end-date-year': string };
@@ -53,18 +54,6 @@ export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Re
     console.error(error);
     return res.render('partials/problem-with-service.njk');
   }
-};
-
-const getCoverStartDateOrStartOfToday = (facility: Record<string, unknown>): Date => {
-  if (typeof facility.coverStartDate === 'string') {
-    return startOfDay(parseISO(facility.coverStartDate));
-  }
-
-  if (!facility.coverStartDate) {
-    return startOfDay(new Date());
-  }
-
-  throw new Error('Invalid coverStartDate');
 };
 
 export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: Response) => {

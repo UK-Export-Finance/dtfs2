@@ -1,10 +1,11 @@
 import { Response } from 'express';
-import { getDate, getMonth, getYear, isSameDay, parseISO, startOfDay } from 'date-fns';
+import { getDate, getMonth, getYear, isSameDay, parseISO } from 'date-fns';
 import { CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
 import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
 import * as api from '../../services/api';
 import { validateAndParseBankReviewDate } from './validation';
 import { asLoggedInUserSession } from '../../utils/express-session';
+import { getCoverStartDateOrStartOfToday } from '../../utils/get-cover-start-date-or-start-of-today';
 
 type BankReviewDateParams = { dealId: string; facilityId: string };
 type BankReviewDatePostBody = { 'bank-review-date-day': string; 'bank-review-date-month': string; 'bank-review-date-year': string };
@@ -52,18 +53,6 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
     console.error(error);
     return res.render('partials/problem-with-service.njk');
   }
-};
-
-const getCoverStartDateOrStartOfToday = (facility: Record<string, unknown>) => {
-  if (typeof facility.coverStartDate === 'string') {
-    return startOfDay(parseISO(facility.coverStartDate));
-  }
-
-  if (!facility.coverStartDate) {
-    return startOfDay(new Date());
-  }
-
-  throw new Error('Invalid coverStartDate');
 };
 
 export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Response) => {

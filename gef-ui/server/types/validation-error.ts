@@ -1,5 +1,6 @@
 export type ValidationError = {
   errRef: string;
   errMsg: string;
-  subFieldErrorRefs: string[];
+  errCode?: string;
+  subFieldErrorRefs?: string[];
 };

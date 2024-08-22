@@ -227,13 +227,14 @@ const postChangeUnissuedFacility = async (req, res) => {
       message: `${body.facilityName} is updated`,
     });
 
+    const facilityEndDateRedirectUri = `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date`;
+    const unissuedFacilitiesRedirectUri = `/gef/application-details/${dealId}/unissued-facilities`;
+
     if (isUsingFacilityEndDate === true) {
-      return res.redirect(`/gef/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date`);
+      return res.redirect(facilityEndDateRedirectUri);
     }
 
-    const redirectUrl = `/gef/application-details/${dealId}/unissued-facilities`;
-
-    return res.redirect(redirectUrl);
+    return res.redirect(unissuedFacilitiesRedirectUri);
   } catch (error) {
     console.error('Cannot update unissued facility %o', error);
     return res.render('partials/problem-with-service.njk');
@@ -322,11 +323,14 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
 
     await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
+    const facilityEndDateRedirectUri = `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date`;
+    const aboutFacilityRedirectUri = `/gef/application-details/${dealId}`;
+
     if (isUsingFacilityEndDate === true) {
-      return res.redirect(`/gef/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date/change`);
+      return res.redirect(facilityEndDateRedirectUri);
     }
 
-    return res.redirect(`/gef/application-details/${dealId}`);
+    return res.redirect(aboutFacilityRedirectUri);
   } catch (error) {
     console.error('Cannot update unissued facility from application preview %o', error);
     return res.render('partials/problem-with-service.njk');

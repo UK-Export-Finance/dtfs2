@@ -1,6 +1,6 @@
 import { add } from 'date-fns';
-import { validateAndParseDayMonthYear } from '../../../utils/day-month-year-validation';
-import { validateAndParseFacilityEndDate } from './validation';
+import { validateAndParseDayMonthYear } from './day-month-year-validation';
+import { validateAndParseFacilityEndDate } from './validate-facility-end-date';
 
 jest.mock('../../../utils/day-month-year-validation');
 

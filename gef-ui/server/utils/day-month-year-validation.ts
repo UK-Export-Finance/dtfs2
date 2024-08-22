@@ -2,20 +2,12 @@ import { getDaysInMonth, set, startOfDay } from 'date-fns';
 import Joi from 'joi';
 import { DayMonthYear } from '../types/date';
 import { ValidationError } from '../types/validation-error';
+import { ErrorsOrDate } from '../types/errors-or-date';
 
 type ValidationOptions = {
   errRef: string;
   variableDisplayName: string;
 };
-
-type ErrorsOrDate =
-  | {
-      errors: null;
-      date: Date;
-    }
-  | {
-      errors: ValidationError[];
-    };
 
 const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
