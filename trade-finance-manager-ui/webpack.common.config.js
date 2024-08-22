@@ -11,7 +11,7 @@ module.exports = {
     jsEnabled: './scripts/js-enabled.js',
     disableFormSubmitOnSubmission: '../libs/common/src/ui-scripts/disable-form-submit-on-submission.js',
     enableSelectAllTableCheckbox: './scripts/enable-select-all-table-checkbox.js',
-    enableFindUtilisationReportsByYearDropdownAutocomplete: './scripts/enable-find-utilisation-reports-by-year-dropdown-autocomplete.ts',
+    enableFindReportsByYearDropdown: './scripts/enable-find-reports-by-year-dropdown.ts',
   },
   output: {
     path: path.join(__dirname, 'public/js'),
