@@ -1,14 +1,14 @@
-const { applyStandardValidationAndParseDateInput } = require('@ukef/dtfs2-common');
-const { add, isAfter, isBefore, startOfDay } = require('date-fns');
+import { applyStandardValidationAndParseDateInput, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { add, isAfter, isBefore, startOfDay } from 'date-fns';
 
-/**
- * @param {{day: string, month: string, year: string}}
- * @param coverStartDate
- * @returns {Object} containing errors and amendment facility end date
- */
+type ErrorOrFacilityEndDate =
+  | {
+      error: { summary: { text: string }[]; fields: string[] };
+    }
+  | { facilityEndDate: Date; error: null };
 
-const facilityEndDateValidation = ({ day, month, year }, coverStartDate) => {
-  const { error: standardError, parsedDate } = applyStandardValidationAndParseDateInput({ day, month, year }, 'facility end date', 'facility-end-date');
+export const facilityEndDateValidation = (date: DayMonthYearInput, coverStartDate: Date): ErrorOrFacilityEndDate => {
+  const { error: standardError, parsedDate } = applyStandardValidationAndParseDateInput(date, 'facility end date', 'facility-end-date');
 
   if (standardError) {
     return {
@@ -21,7 +21,7 @@ const facilityEndDateValidation = ({ day, month, year }, coverStartDate) => {
 
   const today = startOfDay(new Date());
   const sixYearsFromToday = add(today, { years: 6 });
-  const coverStartDateToCompare = startOfDay(new Date(Number(coverStartDate)));
+  const coverStartDateToCompare = startOfDay(coverStartDate);
 
   // checks if the entered facility end date is greater than 6 years in the future
   if (isAfter(parsedDate, sixYearsFromToday)) {
@@ -45,8 +45,6 @@ const facilityEndDateValidation = ({ day, month, year }, coverStartDate) => {
 
   return {
     facilityEndDate: parsedDate,
-    error: {},
+    error: null,
   };
 };
-
-module.exports = facilityEndDateValidation;

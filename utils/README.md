@@ -64,4 +64,29 @@ or
 npm run load
 ```
 
+## Validate Facility IDs
+
+The `validate-facility-ids` directory contains a script which checks and compares the UKEF facility ids in the SQL `FeeRecord` table and the Mongo DB `tfm-facilities` collection to ensure that each entry in one database lines up with an entry in the other.
+
+You can run this script using
+
+```shell
+npm run validate-facility-ids
+```
+
+In order to run this script against a specific environment, you need to update the following environment variables to the relevant values.
+
+```sh
+# Mongo DB
+MONGO_INITDB_DATABASE=
+MONGODB_URI_QA=
+
+# SQL
+SQL_DB_HOST=
+SQL_DB_PORT=
+SQL_DB_USERNAME=
+SQL_DB_PASSWORD=
+SQL_DB_NAME=
+```
+
 ---

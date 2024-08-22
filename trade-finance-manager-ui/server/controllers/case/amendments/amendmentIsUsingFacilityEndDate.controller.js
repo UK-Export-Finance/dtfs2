@@ -1,19 +1,14 @@
 const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 const { isUsingFacilityEndDateValidation } = require('./validation/amendmentIsUsingFacilityEndDate.validate');
 
 const getNextPage = (status, changeFacilityValue, isUsingFacilityEndDate, baseUrl, fallbackUrl) => {
-  if (status !== 200) {
+  if (status !== HttpStatusCode.Ok) {
     console.error('Unable to update is using facility end date');
     return fallbackUrl;
   }
-  if (isUsingFacilityEndDate) {
-    return `${baseUrl}/facility-end-date`;
-  }
-  if (changeFacilityValue) {
-    return `${baseUrl}/facility-value`;
-  }
-  return `${baseUrl}/check-answers`;
+  return isUsingFacilityEndDate ? `${baseUrl}/facility-end-date` : `${baseUrl}/bank-review-date`;
 };
 
 const getAmendmentIsUsingFacilityEndDate = async (req, res) => {
@@ -21,7 +16,7 @@ const getAmendmentIsUsingFacilityEndDate = async (req, res) => {
   const { userToken } = req.session;
   const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
-  if (status !== 200) {
+  if (status !== HttpStatusCode.Ok) {
     return res.redirect('/not-found');
   }
 

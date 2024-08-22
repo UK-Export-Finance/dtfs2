@@ -1,9 +1,11 @@
 const express = require('express');
+const { TEAM_IDS } = require('@ukef/dtfs2-common');
 const caseController = require('../../controllers/case');
 const partiesController = require('../../controllers/case/parties');
 const underwritingController = require('../../controllers/case/underwriting');
 const activityController = require('../../controllers/case/activity');
 const amendmentsController = require('../../controllers/case/amendments');
+const { validateUserTeam } = require('../../middleware');
 
 const router = express.Router();
 
@@ -33,8 +35,8 @@ router.post('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effecti
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', amendmentsController.getAssignAmendmentLeadUnderwriter);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter', amendmentsController.postAssignAmendmentLeadUnderwriter);
 
-router.get('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.getAmendFacilityValue);
-router.post('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', amendmentsController.postAmendFacilityValue);
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', validateUserTeam([TEAM_IDS.PIM]), amendmentsController.getAmendFacilityValue);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value', validateUserTeam([TEAM_IDS.PIM]), amendmentsController.postAmendFacilityValue);
 
 router.get(
   '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision',
@@ -45,14 +47,41 @@ router.post(
   amendmentsController.postAmendmentAddUnderwriterManagersFacilityValue,
 );
 
-router.get('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.getAmendCoverEndDate);
-router.post('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', amendmentsController.postAmendCoverEndDate);
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', validateUserTeam([TEAM_IDS.PIM]), amendmentsController.getAmendCoverEndDate);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date', validateUserTeam([TEAM_IDS.PIM]), amendmentsController.postAmendCoverEndDate);
 
-router.get('/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date', amendmentsController.getAmendmentIsUsingFacilityEndDate);
-router.post('/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date', amendmentsController.postAmendmentIsUsingFacilityEndDate);
+router.get(
+  '/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date',
+  validateUserTeam([TEAM_IDS.PIM]),
+  amendmentsController.getAmendmentIsUsingFacilityEndDate,
+);
+router.post(
+  '/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date',
+  validateUserTeam([TEAM_IDS.PIM]),
+  amendmentsController.postAmendmentIsUsingFacilityEndDate,
+);
 
-router.get('/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date', amendmentsController.getAmendmentFacilityEndDate);
-router.post('/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date', amendmentsController.postAmendmentFacilityEndDate);
+router.get(
+  '/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date',
+  validateUserTeam([TEAM_IDS.PIM]),
+  amendmentsController.getAmendmentFacilityEndDate,
+);
+router.post(
+  '/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date',
+  validateUserTeam([TEAM_IDS.PIM]),
+  amendmentsController.postAmendmentFacilityEndDate,
+);
+
+router.get(
+  '/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date',
+  validateUserTeam([TEAM_IDS.PIM]),
+  amendmentsController.getAmendmentBankReviewDate,
+);
+router.post(
+  '/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date',
+  validateUserTeam([TEAM_IDS.PIM]),
+  amendmentsController.postAmendmentBankReviewDate,
+);
 
 router.get(
   '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision',
@@ -63,8 +92,8 @@ router.post(
   amendmentsController.postAmendmentAddUnderwriterManagersDecisionCoverEndDate,
 );
 
-router.get('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers', amendmentsController.getAmendmentAnswers);
-router.post('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers', amendmentsController.postAmendmentAnswers);
+router.get('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers', validateUserTeam([TEAM_IDS.PIM]), amendmentsController.getAmendmentAnswers);
+router.post('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers', validateUserTeam([TEAM_IDS.PIM]), amendmentsController.postAmendmentAnswers);
 
 router.get('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions', amendmentsController.getManagersConditionsAndComments);
 router.post('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions', amendmentsController.postManagersConditionsAndComments);

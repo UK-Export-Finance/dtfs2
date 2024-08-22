@@ -102,19 +102,13 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       cy.url().should('contain', 'facility-end-date');
     });
 
-    it("should continue to `Check your answers` page if 'No' is selected", () => {
-      // TODO DTFS2-7222: this will go to the 'Enter the bank review date' page instead.
+    it("should continue to `Enter the bank review date` page if 'No' is selected", () => {
       navigateToIsUsingFacilityEndDatePageGivenPrefilled();
 
       amendmentsPage.isUsingFacilityEndDateNo().click();
       amendmentsPage.continueAmendment().click();
 
-      cy.url().should('contain', 'check-answers');
-
-      amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
-      amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'Yes');
-      amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.todayDay);
-      amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('contain', 'No');
+      cy.url().should('contain', 'bank-review-date');
     });
   });
 }

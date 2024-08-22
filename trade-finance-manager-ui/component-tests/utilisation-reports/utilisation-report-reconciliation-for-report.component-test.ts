@@ -33,6 +33,7 @@ describe(page, () => {
     facilityIdQueryError: undefined,
     facilityIdQuery,
     keyingSheet: [],
+    paymentDetails: [],
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -209,5 +210,39 @@ describe(page, () => {
     wrapper.expectElement(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-to-do-button"]`).notToExist();
 
     wrapper.expectElement(`${keyingSheetTabSelector} table[data-cy="keying-sheet-table"]`).toExist();
+  });
+
+  it('should render the payment details tab with headings and text when the payment details array is empty', () => {
+    const wrapper = getWrapper({ ...params, paymentDetails: [] });
+    const paymentDetailsTabSelector = 'div#payment-details';
+
+    wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
+    wrapper
+      .expectText(`${paymentDetailsTabSelector} p`)
+      .toMatch(/Payment details will be displayed when payments have been entered on the premium payments tab./);
+  });
+
+  it('should render the payment details tab with headings (without text), the show filter button and the table when there are payment details', () => {
+    const wrapper = getWrapper({
+      ...params,
+      paymentDetails: [
+        {
+          payment: {
+            amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
+            dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
+            reference: undefined,
+          },
+          feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
+        },
+      ],
+    });
+    const paymentDetailsTabSelector = 'div#payment-details';
+
+    wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
+    wrapper.expectElement(`${paymentDetailsTabSelector} p`).notToExist();
+
+    wrapper.expectElement(`${paymentDetailsTabSelector} button[data-cy="payment-details-show-filter-button"]`).toExist();
+    wrapper.expectElement(`${paymentDetailsTabSelector} button[data-cy="payment-details-show-filter-button"]`).hasClass('govuk-button--secondary');
+    wrapper.expectElement(`${paymentDetailsTabSelector} table`).toExist();
   });
 });
