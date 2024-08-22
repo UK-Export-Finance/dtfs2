@@ -78,6 +78,10 @@ const runMigrationOfAcbsUtilisationDataToTfm = async () => {
   }
 };
 
-(async () => {
-  await runMigrationOfAcbsUtilisationDataToTfm();
-})();
+runMigrationOfAcbsUtilisationDataToTfm()
+  .then(() => {
+    console.info('✅ Migration of ACBS utilisation data to TFM completed successfully.');
+  })
+  .catch((error) => {
+    console.error('Error occurred during migration of ACBS utilisation data to TFM: %s', error);
+  });
