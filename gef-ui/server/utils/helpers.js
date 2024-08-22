@@ -64,7 +64,7 @@ const ErrorMessagesMap = {
 
 /**
  * Maps validation errors so both Summary Error component and field component display the error messages correctly.
- * @param {import('../types/validation-error').ValidationError[] | import('../types/validation-error').ValidationError[]} errs - errors to be mapped
+ * @param {import('../types/validation-error').ValidationError[] | import('../types/validation-error').ValidationError} errs - errors to be mapped
  * @param {string} href - the current page URL
  * @returns {import('../types/view-models/facility-end-date-view-model').ViewModelErrors | null}
  */
@@ -76,10 +76,7 @@ const validationErrorHandler = (errs, href = '') => {
     return null;
   }
 
-  /**
-   * @type {import('../types/validation-error').ValidationError[]}
-   */
-  const errors = isObject(errs) ? [errs] : errs;
+  const errors = Array.isArray(errs) ? errs : [errs];
 
   errors.forEach((el) => {
     const errorsForReference = ErrorMessagesMap[el.errRef];

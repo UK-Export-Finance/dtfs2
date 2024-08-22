@@ -30,6 +30,8 @@ describe('facility end date routes', () => {
       .calledWith({ facilityId, userToken: expect.anything() })
       .mockResolvedValueOnce({
         details: {
+          _id: facilityId,
+          dealId,
           isUsingFacilityEndDate: true,
           coverStartDate: '2024-07-15T00:00:00.000Z',
         },

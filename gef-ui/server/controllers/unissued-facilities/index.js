@@ -152,6 +152,8 @@ const postChangeUnissuedFacility = async (req, res) => {
 
     const isFacilityEndDateEnabled = isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version));
 
+    const isUsingFacilityEndDateAsString = body.isUsingFacilityEndDate;
+
     const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, errorsObject, isUsingFacilityEndDate } = await facilityValidation({
       body,
       query,
@@ -182,7 +184,7 @@ const postChangeUnissuedFacility = async (req, res) => {
         facilityId: errorsObject.facilityId,
         status: errorsObject.status,
         isFacilityEndDateEnabled,
-        isUsingFacilityEndDate: body.isUsingFacilityEndDate,
+        isUsingFacilityEndDate: isUsingFacilityEndDateAsString,
       });
     }
 
@@ -253,6 +255,8 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
   const { user, userToken } = req.session;
   const { _id: editorId } = user;
 
+  const isUsingFacilityEndDateAsString = body.isUsingFacilityEndDate;
+
   try {
     const { details } = await api.getFacility({ facilityId, userToken });
     const deal = await api.getApplication({ dealId, userToken });
@@ -287,7 +291,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
         facilityId: errorsObject.facilityId,
         status: errorsObject.status,
         isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
-        isUsingFacilityEndDate: body.isUsingFacilityEndDate,
+        isUsingFacilityEndDate: isUsingFacilityEndDateAsString,
       });
     }
 
@@ -323,7 +327,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
 
     await api.updateApplication({ dealId, application: applicationUpdate, userToken });
 
-    const facilityEndDateRedirectUri = `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date`;
+    const facilityEndDateRedirectUri = `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date/change`;
     const aboutFacilityRedirectUri = `/gef/application-details/${dealId}`;
 
     if (isUsingFacilityEndDate === true) {

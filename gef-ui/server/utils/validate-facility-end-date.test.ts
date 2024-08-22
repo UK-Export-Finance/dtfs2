@@ -2,7 +2,7 @@ import { add } from 'date-fns';
 import { validateAndParseDayMonthYear } from './day-month-year-validation';
 import { validateAndParseFacilityEndDate } from './validate-facility-end-date';
 
-jest.mock('../../../utils/day-month-year-validation');
+jest.mock('./day-month-year-validation');
 
 const mockValidateAndParseDayMonthYear = validateAndParseDayMonthYear as unknown as jest.Mock;
 

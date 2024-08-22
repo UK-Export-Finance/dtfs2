@@ -81,7 +81,7 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
       getCoverStartDateOrStartOfToday(facility),
     );
 
-    if (bankReviewDateErrorsAndDate.errors) {
+    if ('errors' in bankReviewDateErrorsAndDate) {
       return res.render('partials/bank-review-date.njk', {
         errors: validationErrorHandler(bankReviewDateErrorsAndDate.errors),
         dealId,

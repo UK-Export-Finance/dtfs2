@@ -3,8 +3,9 @@ import { uniq } from 'lodash';
 import { FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
 import { validateAndParseDayMonthYear } from '../../utils/day-month-year-validation';
 import { DayMonthYear } from '../../types/date';
+import { ErrorsOrDate } from '../../types/errors-or-date';
 
-export const validateAndParseBankReviewDate = (bankReviewDayMonthYear: DayMonthYear, coverStartDate: Date) => {
+export const validateAndParseBankReviewDate = (bankReviewDayMonthYear: DayMonthYear, coverStartDate: Date): ErrorsOrDate => {
   const errRef = 'bankReviewDate';
 
   const formattingErrorsOrDate = validateAndParseDayMonthYear(bankReviewDayMonthYear, {
@@ -53,5 +54,5 @@ export const validateAndParseBankReviewDate = (bankReviewDayMonthYear: DayMonthY
     };
   }
 
-  return { errors: null, date: bankReviewDate };
+  return { date: bankReviewDate };
 };
