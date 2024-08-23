@@ -6,7 +6,7 @@ import { ApiError, FeeRecordEntityMockBuilder, UtilisationReportEntity, Utilisat
 import { postKeyingData, PostKeyingDataRequest } from '.';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { executeWithSqlTransaction } from '../../../../helpers';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 
 jest.mock('../../../../helpers');

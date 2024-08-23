@@ -12,7 +12,7 @@ import {
   getSelectedFeeRecordsAvailablePaymentGroups,
   mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups,
 } from './helpers';
-import { aReportPeriod } from '../../../../../test-helpers/test-data/report-period';
+import { aReportPeriod } from '../../../../../test-helpers';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 

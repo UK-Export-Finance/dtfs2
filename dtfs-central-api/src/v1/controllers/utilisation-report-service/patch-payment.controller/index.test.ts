@@ -4,7 +4,7 @@ import { EntityManager } from 'typeorm';
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { patchPayment } from '.';
 import { PatchPaymentPayload } from '../../../routes/middleware/payload-validation';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { PaymentRepo } from '../../../../repositories/payment-repo';

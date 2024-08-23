@@ -4,15 +4,35 @@ import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { validateSearchInput } from './search-input-validator';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { FindUtilisationReportsByYearViewModel, UtilisationReportsByBankAndYearViewModel } from '../../../types/view-models';
+import {
+  BankReportingYearsDataListViewModel,
+  FindUtilisationReportsByYearViewModel,
+  UtilisationReportsByBankAndYearViewModel,
+} from '../../../types/view-models';
 import { getFindReportSummaryItemViewModel } from '../helpers';
+import { BankWithReportingYearsResponseBody } from '../../../api-response-types';
 
+/**
+ * Renders the find utilisation reports by year page
+ * @param res - The response object
+ * @param viewModel - The view model
+ */
 const renderFindUtilisationReportsByYearPage = (res: Response, viewModel: FindUtilisationReportsByYearViewModel) =>
   res.render('utilisation-reports/find-utilisation-reports-by-year.njk', viewModel);
 
+/**
+ * Renders the utilisation reports by bank and year results page
+ * @param res - The response object
+ * @param viewModel - The view model
+ */
 const renderUtilisationReportsByBankAndYearResults = (res: Response, viewModel: UtilisationReportsByBankAndYearViewModel) =>
   res.render('utilisation-reports/utilisation-reports-by-bank-and-year-results.njk', viewModel);
 
+/**
+ * Gets tha bank id query and year query as string
+ * @param req - The request object
+ * @returns The bank id and year query
+ */
 const getBankIdQueryAndYearQueryAsString = (
   req: Request,
 ): {
@@ -25,6 +45,21 @@ const getBankIdQueryAndYearQueryAsString = (
   return { bankIdQuery, yearQuery };
 };
 
+/**
+ * Maps a bank with reporting years to a datalist view model
+ * @param bank - The bank
+ * @returns The datalist view model
+ */
+const mapBankWithReportingYearsToDataListViewModel = (bank: BankWithReportingYearsResponseBody): BankReportingYearsDataListViewModel => ({
+  bankId: bank.id,
+  reportingYears: bank.reportingYears,
+});
+
+/**
+ * Controller for the GET find reports by year route
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const getFindReportsByYear = async (req: Request, res: Response) => {
   const { user, userToken } = asUserSession(req.session);
   const { originalUrl } = req;
@@ -32,8 +67,8 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
   try {
     const { bankIdQuery, yearQuery } = getBankIdQueryAndYearQueryAsString(req);
 
-    const allBanks = await api.getAllBanks(userToken);
-    const banksVisibleInTfm = allBanks.filter((bank) => bank.isVisibleInTfmUtilisationReports);
+    const allBanksWithReportingYears = await api.getAllBanksWithReportingYears(userToken);
+    const banksVisibleInTfm = allBanksWithReportingYears.filter((bank) => bank.isVisibleInTfmUtilisationReports);
 
     const validBankIds = banksVisibleInTfm.map((bank) => bank.id);
     const bankItems = banksVisibleInTfm.map((bank) => ({
@@ -41,12 +76,14 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
       text: bank.name,
       attributes: { 'data-cy': `${bank.id}-radio` },
     }));
+    const bankReportingYearsDataLists = banksVisibleInTfm.map(mapBankWithReportingYearsToDataListViewModel);
 
     if (!originalUrl.includes('?')) {
       return renderFindUtilisationReportsByYearPage(res, {
         user,
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         bankItems,
+        bankReportingYearsDataLists,
         errorSummary: [],
         bankError: undefined,
         yearError: undefined,
@@ -64,6 +101,7 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
         user,
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         bankItems,
+        bankReportingYearsDataLists,
         errorSummary,
         bankError,
         yearError,
