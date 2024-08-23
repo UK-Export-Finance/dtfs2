@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { TfmSessionUser } from '../../../../../types/tfm/tfm-session-user';
-import { aTfmSessionUser } from '../../../../../../test-helpers/test-data/tfm-session-user';
+import { aTfmSessionUser } from '../../../../../../test-helpers';
 import { TfmSessionUserSchema } from './tfm-session-user.schema';
 
 describe('tfm-session-user.schema', () => {

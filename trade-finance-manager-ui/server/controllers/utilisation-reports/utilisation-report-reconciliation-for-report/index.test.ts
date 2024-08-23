@@ -6,7 +6,7 @@ import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aFeeRecordPaymentGroup, aUtilisationReportReconciliationDetailsResponse, aPayment } from '../../../../test-helpers';
 import { UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
-import { FeeRecordPaymentGroupViewModelItem, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
+import { FeeRecordPaymentGroupViewModelItem, PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
@@ -83,7 +83,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
               },
             ],
             totalReportedPayments: { currency: 'GBP', amount: 100 },
-            paymentsReceived: [{ ...aPayment(), id: 1, currency: 'GBP', amount: 100 }],
+            paymentsReceived: [{ id: 1, currency: 'GBP', amount: 100, dateReceived: new Date('2024-01-01').toISOString() }],
             totalPaymentsReceived: { currency: 'GBP', amount: 100 },
             status: 'TO_DO',
           },
@@ -119,6 +119,17 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         },
       ];
 
+      const paymentDetailsViewModel: PaymentDetailsViewModel = [
+        {
+          payment: {
+            amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
+            dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
+            reference: undefined,
+          },
+          feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
+        },
+      ];
+
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
 
       // Act
@@ -139,7 +150,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         facilityIdQueryError: undefined,
         facilityIdQuery,
         keyingSheet: [],
-        paymentDetails: [],
+        paymentDetails: paymentDetailsViewModel,
       });
     });
 

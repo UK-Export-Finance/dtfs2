@@ -4,7 +4,7 @@ import { ApiError, Currency } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostPaymentRequest, postPayment } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { addPaymentToUtilisationReport } from './helpers';
 import { PostPaymentPayload } from '../../../routes/middleware/payload-validation/validate-post-payment-payload';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';

@@ -2,7 +2,7 @@ import { HttpStatusCode } from 'axios';
 import { FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
-import { aTfmSessionUser } from '../../../test-helpers/test-data';
+import { aTfmSessionUser } from '../../../test-helpers';
 import { SqlDbHelper } from '../../sql-db-helper';
 
 console.error = jest.fn();

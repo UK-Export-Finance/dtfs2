@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { FeeRecordEntity, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { handleFeeRecordRemoveFromPaymentGroupEvent } from './remove-from-payment-group.event-handler';
-import { aDbRequestSource } from '../../../../../../test-helpers/test-data/db-request-source';
+import { aDbRequestSource } from '../../../../../../test-helpers';
 
 describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
   const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();

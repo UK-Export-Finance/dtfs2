@@ -4,10 +4,6 @@ const api = require('../../../src/v1/api');
 const MOCK_DEAL_ACBS = require('../../../src/v1/__mocks__/mock-deal-acbs');
 const CONSTANTS = require('../../../src/constants');
 
-jest.mock('../../../src/v1/controllers/banks.controller', () => ({
-  findOneBank: (mockBankId) => (mockBankId === '123' ? false : { id: mockBankId }),
-}));
-
 jest.mock('../../../src/v1/controllers/deal.controller', () => ({
   findOneTfmDeal: jest.fn((dealId) => (dealId === MOCK_DEAL_ACBS._id ? Promise.resolve(MOCK_DEAL_ACBS) : Promise.resolve(false))),
 }));

@@ -15,7 +15,7 @@ import {
   handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent,
   handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent,
 } from './event-handlers';
-import { aReportPeriod } from '../../../../test-helpers/test-data';
+import { aReportPeriod } from '../../../../test-helpers';
 
 jest.mock('./event-handlers');
 
