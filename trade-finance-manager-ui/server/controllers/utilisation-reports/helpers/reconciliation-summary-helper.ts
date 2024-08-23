@@ -89,7 +89,9 @@ const getReportPeriodHeadingWithAllPeriods = (submissionMonth: IsoMonthStamp, re
 
   const formattedReportPeriods = reportPeriods.map((reportPeriod) => getFormattedReportPeriodWithShortMonth(reportPeriod, true)).join(' and ');
 
-  return `${isCurrentSubmissionMonth ? 'Current reporting period' : 'Open reports'}: ${formattedReportPeriods}`;
+  return `${
+    isCurrentSubmissionMonth ? BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.CURRENT_PERIOD : BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.OPEN_PERIOD
+  }: ${formattedReportPeriods}`;
 };
 
 /**
@@ -105,10 +107,8 @@ const getReportPeriodHeadingWithPeriodEnd = (submissionMonth: IsoMonthStamp) => 
   const formattedReportPeriodEnd = format(reportPeriodEnd, 'MMMM yyyy');
 
   return `${
-    isCurrentSubmissionMonth
-      ? BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.CURRENT_REPORTING_PERIOD
-      : BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.NOT_CURRENT_REPORTING_PERIOD
-  } reporting period end: ${formattedReportPeriodEnd}`;
+    isCurrentSubmissionMonth ? BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.CURRENT_PERIOD_END : BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.OPEN_PERIOD_END
+  }: ${formattedReportPeriodEnd}`;
 };
 
 /**
