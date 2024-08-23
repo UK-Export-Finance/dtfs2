@@ -1,6 +1,6 @@
 # ACBS Utilisation Data Migration to TFM
 
-This script migrates ACBS facility utilisation data to TFM by reading from a 
+This script migrates ACBS facility utilisation data to TFM by reading from a
 JSON file and inserting the data into the SQL database.
 
 ## JSON Input File Structure
@@ -11,8 +11,8 @@ The script expects a JSON file with the following structure:
 [
   {
     "facilityId": "string",
-    "utilisation": number,
-    "fixedFeePremium": number
+    "utilisation": 100000,
+    "fixedFeePremium": 1000
   },
   ...
 ]
@@ -20,7 +20,7 @@ The script expects a JSON file with the following structure:
 
 ## Required Environment Variables
 
-To run the script, ensure the following environment variables are set to 
+To run the script, ensure the following environment variables are set to
 relevant values in the `.env` file located in the `utils` directory:
 
 ```sh
@@ -36,30 +36,30 @@ SQL_DB_LOGGING_ENABLED=true
 
 ### Report Period
 
-To modify the report period, update the `REPORT_PERIOD` constant at the top of 
+To modify the report period, update the `REPORT_PERIOD` constant at the top of
 the `index.ts` file with appropriate values.
 
 ### JSON File Path
 
-To change the location of the input JSON file, modify the `JSON_FILE_PATH` 
+To change the location of the input JSON file, modify the `JSON_FILE_PATH`
 constant at the top of the `index.ts` file.
 
 ## Running the Script
 
 Follow these steps to run the migration script:
 
-1. Ensure the required environment variables are set in the `utils/.env` file. 
-See the 
-["Required Environment Variables" section](#required-environment-variables) 
+1. Ensure the required environment variables are set in the `utils/.env` file.
+See the
+["Required Environment Variables" section](#required-environment-variables)
 for details.
 2. Update the report period constant at the top of `index.ts` if necessary.
-3. Prepare your JSON input file with the required structure. See the 
+3. Prepare your JSON input file with the required structure. See the
 ["JSON Input File Structure" section](#json-input-file-structure) for details.
-4. Update the JSON input file path constant (`JSON_FILE_PATH`) with the 
+4. Update the JSON input file path constant (`JSON_FILE_PATH`) with the
 correct path.
 5. Run the script from the `utils` directory using the script command:
 
     `npm run migrate-acbs-utilisation-data-to-tfm`
 
-6. Check the console output for any error messages or successful completion of 
+6. Check the console output for any error messages or successful completion of
 the migration.
