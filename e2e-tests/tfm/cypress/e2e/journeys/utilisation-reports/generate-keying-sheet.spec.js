@@ -16,6 +16,7 @@ import relative from '../../relativeURL';
 context('PDC_RECONCILE users can generate keying data', () => {
   const BANK_ID = '961';
   const REPORT_ID = 1;
+  const PAYMENT_CURRENCY = CURRENCY.GBP;
   const TODAY = new Date();
 
   const START_OF_CURRENT_REPORT_PERIOD = startOfMonth(subMonths(TODAY, 1));
@@ -47,25 +48,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
   const ONE_YEAR_FROM_CURRENT_REPORT_PERIOD_START = addYears(START_OF_CURRENT_REPORT_PERIOD, 1); // days left in cover period = 365
 
   const FIRST_FEE_RECORD_ID = '11';
-  const firstFeeRecordBuilder = FeeRecordEntityMockBuilder.forReport(CURRENT_PERIOD_UTILISATION_REPORT)
-    .withId(FIRST_FEE_RECORD_ID)
-    .withStatus(FEE_RECORD_STATUS.TO_DO)
-    .withFacilityUtilisationData(FACILITY_UTILISATION_DATA)
-    .withBaseCurrency(CURRENCY.GBP)
-    .withFacilityUtilisation(CURRENT_PERIOD_UTILISATION)
-    .withPaymentCurrency(CURRENCY.GBP)
-    .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
-    .withFeesPaidToUkefForThePeriod(100);
-
   const SECOND_FEE_RECORD_ID = '22';
-  const secondFeeRecordBuilder = FeeRecordEntityMockBuilder.forReport(CURRENT_PERIOD_UTILISATION_REPORT)
-    .withId(SECOND_FEE_RECORD_ID)
-    .withFacilityUtilisationData(FACILITY_UTILISATION_DATA)
-    .withBaseCurrency(CURRENCY.GBP)
-    .withFacilityUtilisation(CURRENT_PERIOD_UTILISATION)
-    .withPaymentCurrency(CURRENCY.GBP)
-    .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
-    .withFeesPaidToUkefForThePeriod(100);
 
   const TFM_FACILITY = {
     facilitySnapshot: {
@@ -94,10 +77,32 @@ context('PDC_RECONCILE users can generate keying data', () => {
   });
 
   it('can generate keying data when only one fee record for a facility is at MATCH status but does not generate the fixed fee adjustment or principal balance adjustment', () => {
-    const matchingPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(100).build();
-    const firstFeeRecord = firstFeeRecordBuilder.withStatus(FEE_RECORD_STATUS.MATCH).withPayments([matchingPayment]).build();
-    const secondFeeRecord = secondFeeRecordBuilder.withStatus(FEE_RECORD_STATUS.TO_DO).build();
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
+    const matchingPayment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY).withAmount(100).build();
+    const matchingFeeRecord = FeeRecordEntityMockBuilder.forReport(CURRENT_PERIOD_UTILISATION_REPORT)
+      .withId(FIRST_FEE_RECORD_ID)
+      .withStatus(FEE_RECORD_STATUS.TO_DO)
+      .withFacilityUtilisationData(FACILITY_UTILISATION_DATA)
+      .withBaseCurrency(PAYMENT_CURRENCY)
+      .withFacilityUtilisation(CURRENT_PERIOD_UTILISATION)
+      .withPaymentCurrency(PAYMENT_CURRENCY)
+      .withFeesPaidToUkefForThePeriodCurrency(PAYMENT_CURRENCY)
+      .withFeesPaidToUkefForThePeriod(100)
+      .withStatus(FEE_RECORD_STATUS.MATCH)
+      .withPayments([matchingPayment])
+      .build();
+
+    const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(CURRENT_PERIOD_UTILISATION_REPORT)
+      .withId(SECOND_FEE_RECORD_ID)
+      .withFacilityUtilisationData(FACILITY_UTILISATION_DATA)
+      .withBaseCurrency(PAYMENT_CURRENCY)
+      .withFacilityUtilisation(CURRENT_PERIOD_UTILISATION)
+      .withPaymentCurrency(PAYMENT_CURRENCY)
+      .withFeesPaidToUkefForThePeriodCurrency(PAYMENT_CURRENCY)
+      .withFeesPaidToUkefForThePeriod(100)
+      .withStatus(FEE_RECORD_STATUS.TO_DO)
+      .build();
+
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [matchingFeeRecord, toDoFeeRecord]);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
     pages.utilisationReportPage.premiumPaymentsTab.generateKeyingDataButton().click();
@@ -116,10 +121,35 @@ context('PDC_RECONCILE users can generate keying data', () => {
   });
 
   it('calculates the fixed fee adjustment and principal balance adjustment when all fee records for a facility are at MATCH status for only one of the fee records for the facility', () => {
-    const matchingPayment = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withAmount(200).build();
-    const firstFeeRecord = firstFeeRecordBuilder.withStatus(FEE_RECORD_STATUS.MATCH).withPayments([matchingPayment]).build();
-    const secondFeeRecord = secondFeeRecordBuilder.withStatus(FEE_RECORD_STATUS.MATCH).withPayments([matchingPayment]).build();
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord]);
+    const matchingPayment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY).withAmount(200).build();
+    const matchingFeeRecords = [
+      FeeRecordEntityMockBuilder.forReport(CURRENT_PERIOD_UTILISATION_REPORT)
+        .withId(FIRST_FEE_RECORD_ID)
+        .withStatus(FEE_RECORD_STATUS.TO_DO)
+        .withFacilityUtilisationData(FACILITY_UTILISATION_DATA)
+        .withBaseCurrency(PAYMENT_CURRENCY)
+        .withFacilityUtilisation(CURRENT_PERIOD_UTILISATION)
+        .withPaymentCurrency(PAYMENT_CURRENCY)
+        .withFeesPaidToUkefForThePeriodCurrency(PAYMENT_CURRENCY)
+        .withFeesPaidToUkefForThePeriod(100)
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .withPayments([matchingPayment])
+        .build(),
+      FeeRecordEntityMockBuilder.forReport(CURRENT_PERIOD_UTILISATION_REPORT)
+        .withId(SECOND_FEE_RECORD_ID)
+        .withStatus(FEE_RECORD_STATUS.TO_DO)
+        .withFacilityUtilisationData(FACILITY_UTILISATION_DATA)
+        .withBaseCurrency(PAYMENT_CURRENCY)
+        .withFacilityUtilisation(CURRENT_PERIOD_UTILISATION)
+        .withPaymentCurrency(PAYMENT_CURRENCY)
+        .withFeesPaidToUkefForThePeriodCurrency(PAYMENT_CURRENCY)
+        .withFeesPaidToUkefForThePeriod(100)
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .withPayments([matchingPayment])
+        .build(),
+    ];
+
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, matchingFeeRecords);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
     pages.utilisationReportPage.premiumPaymentsTab.generateKeyingDataButton().click();
@@ -130,12 +160,31 @@ context('PDC_RECONCILE users can generate keying data', () => {
     pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FIRST_FEE_RECORD_ID).should('contain', 'TO DO');
     pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(SECOND_FEE_RECORD_ID).should('contain', 'TO DO');
 
-    const EXPECTED_PRINCIPAL_BALANCE_ADJUSTMENT = 20000; // 200000 - 180000, DECREASE
-    const EXPECTED_FIXED_FEE_ADJUSTMENT = 7100; // 8100 - 1000, INCREASE
+    /**
+     * The principal balance adjustment is simply the
+     * difference between the current and previous
+     * utilisation
+     */
+    const expectedPrincipalBalanceAdjustment = 20000; // 200000 - 180000, DECREASE
+
+    /**
+     * The fixed fee adjustment is the difference between
+     * the current fixed fee and the previous fixed fee,
+     * where the previous fixed fee is equal to the value
+     * stored on the FacilityUtilisationData table, and the
+     * current fixed fee is given by the product of the below
+     * values:
+     * - utilisation: 180000
+     * - bank margin: 0.9 (this is a fixed, constant value)
+     * - interest percentage: 0.05
+     * - number of days left in cover period divided by day count basis: 365 / 365 = 1
+     * This yields a current utilisation value of 8100
+     */
+    const expectedFixedFeeAdjustment = 7100; // 8100 - 1000, INCREASE
 
     pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', '-');
-    pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', EXPECTED_FIXED_FEE_ADJUSTMENT);
-    pages.utilisationReportPage.keyingSheetTab.principalBalanceAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', EXPECTED_PRINCIPAL_BALANCE_ADJUSTMENT);
+    pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', expectedFixedFeeAdjustment);
+    pages.utilisationReportPage.keyingSheetTab.principalBalanceAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', expectedPrincipalBalanceAdjustment);
     pages.utilisationReportPage.keyingSheetTab.principalBalanceAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', '-');
 
     pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentDecrease(SECOND_FEE_RECORD_ID).should('contain', '-');
