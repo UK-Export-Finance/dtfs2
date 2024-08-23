@@ -30,7 +30,7 @@ const generateApp = () => {
   app.use(createRateLimit());
   app.use(healthcheck);
   app.use(passport.initialize());
-  app.use(express.json());
+  app.use(express.json({ limit: '500kb' }));
   app.use(compression());
   app.use(removeCsrfToken);
 
