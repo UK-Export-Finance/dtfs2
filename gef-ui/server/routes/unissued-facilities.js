@@ -15,7 +15,7 @@ const {
   getFacilityEndDateFromUnissuedFacilitiesPage,
   postFacilityEndDateFromApplicationPreviewPage,
   postFacilityEndDateFromUnissuedFacilitiesPage,
-} = require('../controllers/unissued-facilities/facility-end-date');
+} = require('../controllers/facility-end-date');
 
 const router = express.Router();
 
