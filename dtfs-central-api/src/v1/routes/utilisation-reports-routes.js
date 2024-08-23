@@ -8,7 +8,7 @@ const {
   validatePostKeyingDataPayload,
   validatePutKeyingDataMarkAsPayload,
   validatePostRemoveFeesFromPaymentGroupPayload,
-  validatePostPostValidateUtilisationReportDataPayload,
+  validatePostValidateUtilisationReportDataPayload,
   validatePostAddFeesToAnExistingPaymentGroupPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
@@ -107,7 +107,7 @@ utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValid
  *       409:
  *         description: Server conflict
  */
-utilisationReportsRouter.route('/validate').post(validatePostPostValidateUtilisationReportDataPayload, postValidateUtilisationReportData);
+utilisationReportsRouter.route('/validate').post(validatePostValidateUtilisationReportDataPayload, postValidateUtilisationReportData);
 
 /**
  * @openapi
