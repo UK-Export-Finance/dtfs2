@@ -1,7 +1,7 @@
 import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { feeRecordCsvRowToSqlEntity } from './fee-record.helper';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
-import { aUtilisationReportRawCsvData } from '../../test-helpers/test-data';
+import { aUtilisationReportRawCsvData } from '../../test-helpers';
 
 describe('fee-record.helper', () => {
   describe('feeRecordCsvRowToSqlEntity', () => {

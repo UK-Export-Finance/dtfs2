@@ -9,3 +9,4 @@ export * from './utilisation-report-raw-csv-data';
 export * from './facility';
 export * from './tfm-facility-amendment';
 export * from './tfm-facility';
+export * from './payment-matching-tolerances';

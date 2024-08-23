@@ -6,7 +6,7 @@ import { SqlDbHelper } from '../../sql-db-helper';
 import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser } from '../../../test-helpers/test-data';
+import { aPortalUser } from '../../../test-helpers';
 
 console.error = jest.fn();
 
