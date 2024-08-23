@@ -60,6 +60,7 @@ const insertFacilityUtilisationEntry = async (dataSource: DataSource, { facility
 
 /**
  * Runs the migration process to transfer ACBS utilisation data to TFM.
+ * @throws {Error} If the JSON input file is not found.
  */
 const runMigrationOfAcbsUtilisationDataToTfm = async () => {
   validateReportPeriod(REPORT_PERIOD);
@@ -76,7 +77,7 @@ const runMigrationOfAcbsUtilisationDataToTfm = async () => {
 
     await Promise.all(utilisationData.map((entry) => insertFacilityUtilisationEntry(dataSource, entry)));
   } catch (error) {
-    console.error('Failed to migrate ACBS utilisation data to TFM: %s', error);
+    console.error('Failed to migrate ACBS utilisation data to TFM: %o', error);
   } finally {
     await dataSource.destroy();
   }
