@@ -48,12 +48,13 @@ const validateReportPeriod = (reportPeriod: ReportPeriodPartialEntity): void => 
  * @param utilisationDataEntry.fixedFeePremium - The fixed fee premium value.
  */
 const insertFacilityUtilisationEntry = async (dataSource: DataSource, { facilityId, utilisation, fixedFeePremium }: UtilisationDataEntry) => {
-  const facilityUtilisationData = new FacilityUtilisationDataEntity();
-  facilityUtilisationData.id = facilityId;
-  facilityUtilisationData.reportPeriod = REPORT_PERIOD;
-  facilityUtilisationData.utilisation = utilisation;
-  facilityUtilisationData.fixedFee = fixedFeePremium;
-  facilityUtilisationData.updateLastUpdatedBy({ platform: 'SYSTEM' });
+  const facilityUtilisationData = FacilityUtilisationDataEntity.create({
+    id: facilityId,
+    reportPeriod: REPORT_PERIOD,
+    utilisation,
+    fixedFee: fixedFeePremium,
+    requestSource: { platform: 'SYSTEM' },
+  });
 
   await dataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
 };
