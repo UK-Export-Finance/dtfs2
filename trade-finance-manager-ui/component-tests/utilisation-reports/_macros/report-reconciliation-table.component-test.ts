@@ -52,6 +52,21 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Reported fees left to reconcile")`).toExist();
   });
 
+  it('should render the table headings with fixed widths', async () => {
+    const wrapper = await getWrapper();
+    wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(6);
+    wrapper.expectElement(`${tableSelector} thead th:contains("Bank")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-sixth');
+    wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-sixth');
+    wrapper.expectElement(`${tableSelector} thead th:contains("Date report received")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-sixth');
+    wrapper
+      .expectElement(`${tableSelector} thead th:contains("Total facilities reported")`)
+      .toHaveAttribute('class', 'govuk-table__header ukef-width-one-sixth');
+    wrapper.expectElement(`${tableSelector} thead th:contains("Total fees reported")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-sixth');
+    wrapper
+      .expectElement(`${tableSelector} thead th:contains("Reported fees left to reconcile")`)
+      .toHaveAttribute('class', 'govuk-table__header ukef-width-one-sixth');
+  });
+
   it('should render the table data', async () => {
     const wrapper = await getWrapper();
     const { summaryItems, submissionMonth } = wrapper.params as ReportReconciliationTableParams;

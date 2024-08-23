@@ -25,7 +25,6 @@
   }
 }
 
-
 .govuk-grid-column-four-fifths {
   box-sizing: border-box;
   width: 100%;
@@ -47,6 +46,15 @@
   .govuk-grid-column-one-fifth {
     width: 20%;
     float: left;
+  }
+}
+
+.ukef-width-one-sixth {
+  width: 100% !important;
+}
+@media (min-width: 40.0625em) {
+  .ukef-width-one-sixth {
+    width: 16.6667% !important;
   }
 }
 
