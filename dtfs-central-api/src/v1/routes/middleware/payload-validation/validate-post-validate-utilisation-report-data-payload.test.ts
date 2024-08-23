@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { validatePostPostValidateUtilisationReportDataPayload } from './validate-post-validate-utilisation-report-data-payload';
+import { validatePostValidateUtilisationReportDataPayload } from './validate-post-validate-utilisation-report-data-payload';
 
 describe('validatePostRemoveFeesFromPaymentGroupPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
@@ -12,7 +12,7 @@ describe('validatePostRemoveFeesFromPaymentGroupPayload', () => {
     req.body = {};
 
     // Act
-    validatePostPostValidateUtilisationReportDataPayload(req, res, next);
+    validatePostValidateUtilisationReportDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -35,7 +35,7 @@ describe('validatePostRemoveFeesFromPaymentGroupPayload', () => {
     req.body = { reportData: testValue };
 
     // Act
-    validatePostPostValidateUtilisationReportDataPayload(req, res, next);
+    validatePostValidateUtilisationReportDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -51,7 +51,7 @@ describe('validatePostRemoveFeesFromPaymentGroupPayload', () => {
     req.body = { reportData: [{ 'some key': 'this is not cell data!' }] };
 
     // Act
-    validatePostPostValidateUtilisationReportDataPayload(req, res, next);
+    validatePostValidateUtilisationReportDataPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -72,7 +72,7 @@ describe('validatePostRemoveFeesFromPaymentGroupPayload', () => {
     };
 
     // Act
-    validatePostPostValidateUtilisationReportDataPayload(req, res, next);
+    validatePostValidateUtilisationReportDataPayload(req, res, next);
 
     // Assert
     expect(next).toHaveBeenCalled();

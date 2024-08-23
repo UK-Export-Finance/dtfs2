@@ -1,10 +1,10 @@
-import { CustomExpressRequest, UtilisationReportRawCsvCellDataWithLocation } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, UtilisationReportCsvCellData } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { HttpStatusCode, isAxiosError } from 'axios';
 import api from '../../api';
 
 export type ValidateUtilisationReportDataRequestBody = {
-  reportData: Record<string, UtilisationReportRawCsvCellDataWithLocation>[];
+  reportData: Record<string, UtilisationReportCsvCellData>[];
 };
 
 type ValidateUtilisationReportDataRequest = CustomExpressRequest<{
