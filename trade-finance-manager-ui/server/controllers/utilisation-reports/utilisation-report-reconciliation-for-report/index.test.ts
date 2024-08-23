@@ -1,5 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { SessionData } from 'express-session';
+import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getUtilisationReportReconciliationByReportId } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
@@ -85,7 +86,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
             totalReportedPayments: { currency: 'GBP', amount: 100 },
             paymentsReceived: [{ id: 1, currency: 'GBP', amount: 100, dateReceived: new Date('2024-01-01').toISOString() }],
             totalPaymentsReceived: { currency: 'GBP', amount: 100 },
-            status: 'TO_DO',
+            status: FEE_RECORD_STATUS.MATCH,
           },
         ],
       };
@@ -111,9 +112,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
             formattedCurrencyAndAmount: 'GBP 100.00',
             dataSortValue: 0,
           },
-          status: 'TO_DO',
-          displayStatus: 'TO DO',
-          checkboxId: 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO',
+          status: FEE_RECORD_STATUS.MATCH,
+          displayStatus: 'MATCH',
+          checkboxId: 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-MATCH',
           isChecked: false,
           checkboxAriaLabel: 'Select 12345678',
         },
@@ -122,11 +123,13 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const paymentDetailsViewModel: PaymentDetailsViewModel = [
         {
           payment: {
+            id: 1,
             amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
             dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
             reference: undefined,
           },
           feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
+          feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.MATCH,
         },
       ];
 

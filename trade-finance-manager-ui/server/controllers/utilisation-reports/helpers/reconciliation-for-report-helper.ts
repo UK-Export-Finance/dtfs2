@@ -202,6 +202,7 @@ const mapPaymentToPaymentDetailsPaymentViewModel = (
   amountDataSortValue: number,
   dateReceivedDataSortValue: number,
 ): PaymentDetailsPaymentViewModel => ({
+  id: payment.id,
   amount: {
     formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(payment),
     dataSortValue: amountDataSortValue,
@@ -236,7 +237,7 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
     {},
   );
 
-  return feeRecordPaymentGroups.reduce((paymentDetails, { feeRecords, paymentsReceived }) => {
+  return feeRecordPaymentGroups.reduce((paymentDetails, { feeRecords, paymentsReceived, status }) => {
     if (!paymentsReceived) {
       return paymentDetails;
     }
@@ -245,6 +246,7 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
     return [
       ...paymentDetails,
       ...paymentsReceived.map((payment) => ({
+        feeRecordPaymentGroupStatus: status,
         payment: mapPaymentToPaymentDetailsPaymentViewModel(
           payment,
           paymentIdToAmountDataSortValueMap[payment.id],
