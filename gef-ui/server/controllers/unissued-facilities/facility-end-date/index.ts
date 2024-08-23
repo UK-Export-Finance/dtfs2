@@ -18,8 +18,11 @@ type PostFacilityEndDateRequest = CustomExpressRequest<{
   query: { saveAndReturn: string };
 }>;
 
-const shouldRedirectFromPage = (dealVersion: number | undefined, isUsingFacilityEndDate: unknown) =>
-  !isFacilityEndDateEnabledOnGefVersion(parseDealVersion(dealVersion)) || !isUsingFacilityEndDate;
+type PostRequestUris = {
+  nextPage: string;
+  previousPage: string;
+  saveAndReturn: string;
+};
 
 const getFacilityEndDateViewModel = (facility: Record<string, unknown>, previousPage: string): FacilityEndDateViewModel => {
   if (typeof facility.dealId !== 'string' || typeof facility._id !== 'string') {
@@ -44,55 +47,34 @@ const getFacilityEndDateViewModel = (facility: Record<string, unknown>, previous
   return facilityEndDateViewModel;
 };
 
-export const getFacilityEndDateFromUnissuedFacilitiesPage = async (req: GetFacilityEndDateRequest, res: Response) => {
+const handleGetFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Response, previousPage: string) => {
   const {
     params: { dealId, facilityId },
     session: { userToken },
   } = req;
 
-  const previousPage = `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/about`;
-
   try {
     const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
     const deal = (await api.getApplication({ dealId, userToken })) as Record<string, unknown> & { version?: number };
 
-    if (shouldRedirectFromPage(deal.version, facility.isUsingFacilityEndDate)) {
+    const shouldRedirectFromPage = !isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || !facility.isUsingFacilityEndDate;
+
+    if (shouldRedirectFromPage) {
       return res.redirect(previousPage);
     }
 
-    const facilityEndDateViewModel = getFacilityEndDateViewModel(facility, previousPage);
-
-    return res.render('partials/facility-end-date.njk', facilityEndDateViewModel);
+    return res.render('partials/facility-end-date.njk', getFacilityEndDateViewModel(facility, previousPage));
   } catch (error) {
     console.error(error);
     return res.render('partials/problem-with-service.njk');
   }
 };
 
-export const getFacilityEndDateFromApplicationPreviewPage = async (req: GetFacilityEndDateRequest, res: Response) => {
-  const {
-    params: { dealId, facilityId },
-    session: { userToken },
-  } = req;
+export const getFacilityEndDateFromUnissuedFacilitiesPage = async (req: GetFacilityEndDateRequest, res: Response) =>
+  handleGetFacilityEndDate(req, res, `/gef/application-details/${req.params.dealId}/unissued-facilities/${req.params.facilityId}/about`);
 
-  const previousPage = `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/change`;
-
-  try {
-    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
-    const deal = (await api.getApplication({ dealId, userToken })) as Record<string, unknown> & { version?: number };
-
-    if (shouldRedirectFromPage(deal.version, facility.isUsingFacilityEndDate)) {
-      return res.redirect(previousPage);
-    }
-
-    const facilityEndDateViewModel = getFacilityEndDateViewModel(facility, previousPage);
-
-    return res.render('partials/facility-end-date.njk', facilityEndDateViewModel);
-  } catch (error) {
-    console.error(error);
-    return res.render('partials/problem-with-service.njk');
-  }
-};
+export const getFacilityEndDateFromApplicationPreviewPage = async (req: GetFacilityEndDateRequest, res: Response) =>
+  handleGetFacilityEndDate(req, res, `/gef/application-details/${req.params.dealId}/unissued-facilities/${req.params.facilityId}/change`);
 
 const updateFacilityEndDateIfChanged = async (
   existingFacility: Record<string, unknown>,
@@ -117,12 +99,6 @@ const updateFacilityEndDateIfChanged = async (
     editorId: userSession.user._id,
   };
   await api.updateApplication({ dealId: existingFacility.dealId, application: applicationUpdate, userToken: userSession.userToken });
-};
-
-type PostRequestUris = {
-  nextPage: string;
-  previousPage: string;
-  saveAndReturn: string;
 };
 
 const handlePostFacilityEndDate = async (req: PostFacilityEndDateRequest, res: Response, uris: PostRequestUris) => {
