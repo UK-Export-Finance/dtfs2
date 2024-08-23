@@ -8,6 +8,13 @@ export type PostValidateUtilisationReportDataRequest = CustomExpressRequest<{
   reqBody: PostValidateUtilisationReportDataPayload;
 }>;
 
+/**
+ * Controller to handle post request to validate utilisation report data route
+ * @param req - The request
+ * @param res - The response
+ * @returns - The response with the body set to contain any error messages to display
+ * to the user if there are validation errors
+ */
 export const postValidateUtilisationReportData = (req: PostValidateUtilisationReportDataRequest, res: Response) => {
   const { reportData } = req.body;
 

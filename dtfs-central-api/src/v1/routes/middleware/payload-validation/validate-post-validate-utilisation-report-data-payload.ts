@@ -8,4 +8,7 @@ const PostValidateUtilisationReportDataSchema = z.object({
 
 export type PostValidateUtilisationReportDataPayload = z.infer<typeof PostValidateUtilisationReportDataSchema>;
 
+/**
+ * Validates the payload for the post validate utilisation report data route
+ */
 export const validatePostValidateUtilisationReportDataPayload = createValidationMiddlewareForSchema(PostValidateUtilisationReportDataSchema);

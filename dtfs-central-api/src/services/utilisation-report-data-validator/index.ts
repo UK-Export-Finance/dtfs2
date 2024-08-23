@@ -17,6 +17,11 @@ import {
   generateFeesPaidForThePeriodCurrencyError,
 } from './utilisation-report-cell-validators';
 
+/**
+ * Validate utilisation report csv headers
+ * @param csvDataRow - A row of data
+ * @returns Errors for any missing required headers and a list of the present headers
+ */
 export const validateUtilisationReportCsvHeaders = (
   csvDataRow: UtilisationReportCsvRowData,
 ): { missingHeaderErrors: UtilisationReportDataValidationError[]; availableHeaders: string[] } => {
@@ -67,6 +72,12 @@ export const validateUtilisationReportCsvHeaders = (
   return { missingHeaderErrors, availableHeaders };
 };
 
+/**
+ * Validate the utilisation report data from the body of the csv
+ * @param csvData - The data from the uploaded csv file
+ * @param availableHeaders - The available headers
+ * @returns An array of errors if there are any
+ */
 export const validateUtilisationReportCsvCellData = (
   csvData: Record<string, UtilisationReportCsvCellData>[],
   availableHeaders: string[],
@@ -113,6 +124,11 @@ export const validateUtilisationReportCsvCellData = (
   });
 };
 
+/**
+ * Validate the utilisation report csv data
+ * @param csvData - The data from the utilisation report csv
+ * @returns An array of errors pertaining to the report if there are any
+ */
 export const validateUtilisationReportCsvData = (csvData: UtilisationReportCsvRowData[]): UtilisationReportDataValidationError[] => {
   const { missingHeaderErrors, availableHeaders } = validateUtilisationReportCsvHeaders(csvData[0]);
 
