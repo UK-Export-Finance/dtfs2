@@ -5,16 +5,30 @@ JSON file and inserting the data into the SQL database.
 
 ## JSON Input File Structure
 
-The script expects a JSON file with the following structure:
+The script expects a JSON file containing an array of objects with the structure:
+
+```json
+{
+  "facilityId": "string",
+  "utilisation": 100000,
+  "fixedFeePremium": 1000
+}
+```
+
+An example file follows:
 
 ```json
 [
   {
-    "facilityId": "string",
+    "facilityId": "123",
     "utilisation": 100000,
     "fixedFeePremium": 1000
   },
-  ...
+  {
+    "facilityId": "456",
+    "utilisation": 200000,
+    "fixedFeePremium": 2000
+  }
 ]
 ```
 
