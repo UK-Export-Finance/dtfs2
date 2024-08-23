@@ -102,6 +102,9 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
     toHaveAttribute: (attr: string, value: string) => {
       expect(wrapper(selector).attr(attr)).toEqual(value);
     },
+    notToHaveAttribute: (attr: string) => {
+      expect(wrapper(selector).attr(attr)).toBeUndefined();
+    },
   }),
   expectInput: (selector: string) => ({
     toHaveValue: (value: string) => {

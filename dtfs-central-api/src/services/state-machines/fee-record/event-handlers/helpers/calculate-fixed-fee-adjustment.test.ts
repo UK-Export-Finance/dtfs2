@@ -1,7 +1,7 @@
 import { when } from 'jest-when';
 import { FacilityUtilisationDataEntityMockBuilder, FeeRecordEntityMockBuilder, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { calculateFixedFeeAdjustment } from './calculate-fixed-fee-adjustment';
-import { aReportPeriod } from '../../../../../../test-helpers/test-data';
+import { aReportPeriod } from '../../../../../../test-helpers';
 import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
 
 jest.mock('./get-fixed-fee-for-facility');
