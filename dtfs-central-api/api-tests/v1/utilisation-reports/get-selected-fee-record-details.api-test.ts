@@ -14,7 +14,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
 import { mongoDbClient } from '../../../src/drivers/db-client';
-import { aBank, aReportPeriod } from '../../../test-helpers/test-data';
+import { aBank, aReportPeriod } from '../../../test-helpers';
 
 console.error = jest.fn();
 

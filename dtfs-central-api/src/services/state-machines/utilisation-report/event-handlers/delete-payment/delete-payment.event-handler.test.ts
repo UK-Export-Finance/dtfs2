@@ -4,7 +4,7 @@ import { when } from 'jest-when';
 import { handleUtilisationReportDeletePaymentEvent } from './delete-payment.event-handler';
 import { NotFoundError } from '../../../../../errors';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
-import { aDbRequestSource } from '../../../../../../test-helpers/test-data/db-request-source';
+import { aDbRequestSource } from '../../../../../../test-helpers';
 import { feeRecordsAndPaymentsMatch } from '../../../../../helpers/fee-record-matching';
 import { FeeRecordPaymentDeletedEvent } from '../../../fee-record/event-handlers';
 

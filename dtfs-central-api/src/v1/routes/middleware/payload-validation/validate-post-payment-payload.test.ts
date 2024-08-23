@@ -2,7 +2,7 @@ import { CURRENCY } from '@ukef/dtfs2-common';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { PostPaymentPayload, validatePostPaymentPayload } from './validate-post-payment-payload';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 
 describe('validatePostPaymentPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();

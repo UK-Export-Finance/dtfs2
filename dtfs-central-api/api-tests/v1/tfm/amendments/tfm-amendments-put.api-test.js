@@ -10,7 +10,7 @@ const { MOCK_DEAL } = require('../../mocks/mock-data');
 const aDeal = require('../../deal-builder');
 const { createDeal } = require('../../../helpers/create-deal');
 const { createFacility } = require('../../../helpers/create-facility');
-const { aPortalUser, aTfmUser } = require('../../../../test-helpers/test-data');
+const { aPortalUser, aTfmUser } = require('../../../../test-helpers');
 
 console.error = jest.fn();
 
