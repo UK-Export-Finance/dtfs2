@@ -673,7 +673,7 @@ describe('controllers - case', () => {
           allAmendments: expect.any(Array),
           amendmentsInProgress: expect.any(Array),
           amendments: expect.any(Array),
-          shouldDisplayFacilityEndDate: false,
+          showFacilityEndDate: false,
         });
       });
     });

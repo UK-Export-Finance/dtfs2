@@ -10,7 +10,7 @@ import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'false') {
   context('Amendments - GEF deal does not display any Facility end date pages or fields when TFM feature flag disabled', () => {
     let dealId;
-    let dealFacilities;
+    let facility;
 
     const MOCK_GEF_FACILITY_WITH_FACILITY_END_DATE = {
       ...MOCK_FACILITY_ONE,
@@ -27,8 +27,8 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'false') {
         // updates a gef deal so has relevant fields
         cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
-        cy.createGefFacilities(dealId, [MOCK_GEF_FACILITY_WITH_FACILITY_END_DATE], BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities = createdFacilities.details;
+        cy.createGefFacilities(dealId, [MOCK_GEF_FACILITY_WITH_FACILITY_END_DATE], BANK1_MAKER1).then((createdFacility) => {
+          facility = createdFacility.details;
         });
 
         cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
@@ -37,7 +37,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'false') {
 
     beforeEach(() => {
       cy.login(PIM_USER_1);
-      cy.visit(relative(`/case/${dealId}/facility/${dealFacilities._id}`));
+      cy.visit(relative(`/case/${dealId}/facility/${facility._id}`));
     });
 
     after(() => {

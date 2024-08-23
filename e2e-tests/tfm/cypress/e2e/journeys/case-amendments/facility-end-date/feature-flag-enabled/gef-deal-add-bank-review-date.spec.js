@@ -10,7 +10,7 @@ import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
   context('Amendments - GEF deal add bank review date', () => {
     let dealId;
-    let dealFacilities;
+    let facility;
 
     const MOCK_GEF_FACILITY = {
       ...MOCK_FACILITY_ONE,
@@ -27,8 +27,8 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         // updates a gef deal so has relevant fields
         cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
-        cy.createGefFacilities(dealId, [MOCK_GEF_FACILITY], BANK1_MAKER1).then((createdFacilities) => {
-          dealFacilities = createdFacilities.details;
+        cy.createGefFacilities(dealId, [MOCK_GEF_FACILITY], BANK1_MAKER1).then((createdFacility) => {
+          facility = createdFacility.details;
         });
 
         cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
@@ -37,7 +37,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     beforeEach(() => {
       cy.login(PIM_USER_1);
-      cy.visit(relative(`/case/${dealId}/facility/${dealFacilities._id}`));
+      cy.visit(relative(`/case/${dealId}/facility/${facility._id}`));
     });
 
     after(() => {
@@ -52,8 +52,8 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     it('should navigate to the bank review date page after selecting "No" to "Has the bank provided a facility end date"', () => {
       amendmentsPage.navigateToIsUsingFacilityEndDatePage(true, false);
-      amendmentsPage.isUsingFacilityEndDateYes().should('be.not.checked');
-      amendmentsPage.isUsingFacilityEndDateNo().should('be.not.checked');
+      amendmentsPage.isUsingFacilityEndDateYes().should('not.be.checked');
+      amendmentsPage.isUsingFacilityEndDateNo().should('not.be.checked');
 
       amendmentsPage.continueAmendment().click();
       amendmentsPage.errorSummary().contains('Select if the bank has provided an end date for this facility');
@@ -67,9 +67,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should return expected errors when entering an incorrect bank review date', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage(false, false);
-      amendmentsPage.continueAmendment().click();
-
+      amendmentsPage.navigateToIsUsingFacilityEndDatePage();
       cy.url().should('contain', 'bank-review-date');
       amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.sixYearsOneDayDay);
       amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.sixYearsOneDayMonth);
@@ -93,7 +91,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should continue to `Check your answers` page if the bank review date is valid and only the cover end date is being changed', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage(false, false);
+      amendmentsPage.navigateToIsUsingFacilityEndDatePage();
       amendmentsPage.continueAmendment().click();
 
       cy.url().should('contain', 'bank-review-date');
@@ -109,7 +107,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should allow bank review date amendments on the `Check your answers` page', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage(false, false);
+      amendmentsPage.navigateToIsUsingFacilityEndDatePage();
       amendmentsPage.continueAmendment().click();
 
       cy.url().should('contain', 'bank-review-date');
@@ -131,7 +129,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should correctly display amended values on the facility summary page', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage(false, false);
+      amendmentsPage.navigateToIsUsingFacilityEndDatePage();
       amendmentsPage.continueAmendment().click();
 
       cy.url().should('contain', 'bank-review-date');
@@ -140,7 +138,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       cy.url().should('contain', 'check-answers');
       amendmentsPage.continueAmendment().click();
 
-      cy.visit(relative(`/case/${dealId}/facility/${dealFacilities._id}`));
+      cy.visit(relative(`/case/${dealId}/facility/${facility._id}`));
       facilityPage.facilityIsUsingFacilityEndDate().should('have.text', 'No');
       facilityPage.facilityBankReviewDate().should('have.text', dateConstants.threeMonthsOneDayFullMonthString);
       facilityPage.facilityFacilityEndDate().should('not.exist');

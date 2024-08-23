@@ -5,6 +5,7 @@ const mapFacilityType = (facility) => {
   const { facilityProduct, ukefFacilityType } = facility;
 
   if (facilityProduct.code === CONSTANTS.FACILITIES.FACILITY_PRODUCT_CODE.BOND) {
+    // This has been returning 'undefined' as facility.bondType does not exist. It is expected that this should in fact be FACILITY_TYPE.BOND, however not changing due to potential backwards compatibility problems.
     return facility.bondType;
   }
 

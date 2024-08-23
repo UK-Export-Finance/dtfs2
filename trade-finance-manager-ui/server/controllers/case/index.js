@@ -319,7 +319,7 @@ const getCaseFacility = async (req, res) => {
     allAmendments,
     amendments,
     amendmentsInProgress,
-    shouldDisplayFacilityEndDate: isFacilityEndDateEnabledForFacility(facility),
+    showFacilityEndDate: isFacilityEndDateEnabledForFacility(facility),
   });
 };
 

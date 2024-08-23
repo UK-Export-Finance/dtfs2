@@ -7,7 +7,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../../e2e-fixtures'
 
 context('Amendments - BSS/EWCS deal does not display any Facility end date pages or fields', () => {
   let dealId;
-  const dealFacilities = [];
+  const facilities = [];
 
   before(() => {
     cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
@@ -16,7 +16,7 @@ context('Amendments - BSS/EWCS deal does not display any Facility end date pages
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
       cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
-        dealFacilities.push(...createdFacilities);
+        facilities.push(...createdFacilities);
       });
 
       cy.submitDeal(dealId, dealType, PIM_USER_1);
@@ -25,13 +25,13 @@ context('Amendments - BSS/EWCS deal does not display any Facility end date pages
 
   beforeEach(() => {
     cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
+    const facilityId = facilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
   });
 
   after(() => {
     cy.deleteDeals(dealId, ADMIN);
-    dealFacilities.forEach((facility) => {
+    facilities.forEach((facility) => {
       cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
   });

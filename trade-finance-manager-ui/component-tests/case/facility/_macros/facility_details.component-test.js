@@ -189,9 +189,9 @@ describe(component, () => {
       wrapper.expectText('[data-cy="facility-tenor"]').toRead(params.facility.dates.tenor);
     });
 
-    describe('when shouldDisplayFacilityEndDate is false', () => {
+    describe('when showFacilityEndDate is false', () => {
       beforeEach(() => {
-        wrapper = render({ ...params, facility: facilityWithFacilityEndDate, shouldDisplayFacilityEndDate: false });
+        wrapper = render({ ...params, facility: facilityWithFacilityEndDate, showFacilityEndDate: false });
       });
       it('should not render isUsingFacilityEndDate', () => {
         wrapper.expectText('[data-cy="is-using-facility-end-date"]').notToExist();
@@ -206,10 +206,10 @@ describe(component, () => {
       });
     });
 
-    describe('when shouldDisplayFacilityEndDate is true', () => {
+    describe('when showFacilityEndDate is true', () => {
       describe('when the facility has no end date information', () => {
         beforeEach(() => {
-          wrapper = render({ ...params, shouldDisplayFacilityEndDate: true });
+          wrapper = render({ ...params, showFacilityEndDate: true });
         });
         it('should render a dash for isUsingFacilityEndDate', () => {
           wrapper.expectText('[data-cy="is-using-facility-end-date"]').toRead('-');
@@ -226,7 +226,7 @@ describe(component, () => {
 
       describe('when the facility has an end date which is not specified', () => {
         beforeEach(() => {
-          wrapper = render({ ...params, facility: facilityWithFacilityEndDate, shouldDisplayFacilityEndDate: true });
+          wrapper = render({ ...params, facility: facilityWithFacilityEndDate, showFacilityEndDate: true });
         });
         it('should render isUsingFacilityEndDate', () => {
           wrapper.expectText('[data-cy="is-using-facility-end-date"]').toRead('Yes');
@@ -243,7 +243,7 @@ describe(component, () => {
 
       describe('when the facility has an end date which is specified', () => {
         beforeEach(() => {
-          wrapper = render({ ...params, facility: facilityWithFacilityEndDateSpecified, shouldDisplayFacilityEndDate: true });
+          wrapper = render({ ...params, facility: facilityWithFacilityEndDateSpecified, showFacilityEndDate: true });
         });
         it('should render isUsingFacilityEndDate', () => {
           wrapper.expectText('[data-cy="is-using-facility-end-date"]').toRead('Yes');
@@ -260,7 +260,7 @@ describe(component, () => {
 
       describe('when the facility does not have an end date and bank review date is not specified', () => {
         beforeEach(() => {
-          wrapper = render({ ...params, facility: facilityWithBankReviewDate, shouldDisplayFacilityEndDate: true });
+          wrapper = render({ ...params, facility: facilityWithBankReviewDate, showFacilityEndDate: true });
         });
         it('should render isUsingFacilityEndDate', () => {
           wrapper.expectText('[data-cy="is-using-facility-end-date"]').toRead('No');
@@ -277,7 +277,7 @@ describe(component, () => {
 
       describe('when the facility does not have an end date and bank review date specified', () => {
         beforeEach(() => {
-          wrapper = render({ ...params, facility: facilityWithBankReviewDateSpecified, shouldDisplayFacilityEndDate: true });
+          wrapper = render({ ...params, facility: facilityWithBankReviewDateSpecified, showFacilityEndDate: true });
         });
         it('should render isUsingFacilityEndDate', () => {
           wrapper.expectText('[data-cy="is-using-facility-end-date"]').toRead('No');

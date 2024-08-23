@@ -1,5 +1,5 @@
 const { format } = require('date-fns');
-const { todayDay, todayMonth, todayYear } = require('../../../../../e2e-fixtures/dateConstants');
+const { todayDay, todayMonth, todayYear, today } = require('../../../../../e2e-fixtures/dateConstants');
 const facilityPage = require('../facilityPage');
 
 const amendmentsPage = {
@@ -48,18 +48,7 @@ const amendmentsPage = {
   amendmentCurrentBankReviewDate: () => cy.get('[data-cy="amendment--current-bank-review-date"]'),
   amendmentBankReviewDateDetails: () => cy.get('[data-cy="amendment--bank-review-date-details"]'),
 
-  navigateThroughFacilityEndDateAmendmentPages: () => {
-    cy.url().should('contain', 'is-using-facility-end-date');
-    amendmentsPage.isUsingFacilityEndDateYes().click();
-    amendmentsPage.continueAmendment().click();
-    cy.url().should('contain', 'facility-end-date');
-    amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(todayDay);
-    amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(todayMonth);
-    amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(todayYear);
-    amendmentsPage.continueAmendment().click();
-  },
-
-  navigateToIsUsingFacilityEndDatePage: (startNewAmendment, changeFacilityValue, newCoverEndDate) => {
+  navigateToIsUsingFacilityEndDatePage: (startNewAmendment = false, changeFacilityValue = false, newCoverEndDate = today) => {
     facilityPage.facilityTabAmendments().click();
 
     if (startNewAmendment) {
@@ -95,18 +84,9 @@ const amendmentsPage = {
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', 'cover-end-date');
-    amendmentsPage
-      .amendmentCoverEndDateDayInput()
-      .clear()
-      .type(newCoverEndDate ? format(newCoverEndDate, 'd') : todayDay);
-    amendmentsPage
-      .amendmentCoverEndDateMonthInput()
-      .clear()
-      .type(newCoverEndDate ? format(newCoverEndDate, 'M') : todayMonth);
-    amendmentsPage
-      .amendmentCoverEndDateYearInput()
-      .clear()
-      .type(newCoverEndDate ? format(newCoverEndDate, 'yyyy') : todayYear);
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().type(format(newCoverEndDate, 'd'));
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().type(format(newCoverEndDate, 'M'));
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().type(format(newCoverEndDate, 'yyyy'));
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', 'is-using-facility-end-date');

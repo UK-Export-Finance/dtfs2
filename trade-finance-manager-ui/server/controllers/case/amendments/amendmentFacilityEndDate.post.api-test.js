@@ -4,6 +4,7 @@ import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE } from '../../../test-mocks/amendment-test-mocks';
 import { postAmendmentFacilityEndDate } from './amendmentFacilityEndDate.controller';
+import { MAPPED_FACILITY_TYPE } from '../../../constants/mapped-facility';
 
 const res = mockRes();
 
@@ -22,7 +23,7 @@ const user = {
 
 const session = { user, userToken: 'mockToken' };
 
-const gefFacilityType = 'Cash facility';
+const gefFacilityType = MAPPED_FACILITY_TYPE.CASH;
 
 const { dealId, facilityId, amendmentId } = MOCK_AMENDMENT_COVERENDDATE_CHANGE;
 
@@ -180,7 +181,7 @@ describe('amendmentFacilityEndDate routes', () => {
           },
         });
         api.getFacility = jest.fn().mockResolvedValueOnce({
-          facilitySnapshot: { type: 'Cash facility', dates: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2025, 11, 11).toISOString() } },
+          facilitySnapshot: { type: MAPPED_FACILITY_TYPE.CASH, dates: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2025, 11, 11).toISOString() } },
         });
 
         const req = {

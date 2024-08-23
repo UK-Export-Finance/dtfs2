@@ -266,14 +266,14 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateYear().should('have.value', dateConstants.tomorrowYear);
       if (application.version >= 1) {
         aboutFacility.isUsingFacilityEndDateYes().should('be.checked');
-        aboutFacility.isUsingFacilityEndDateNo().should('be.not.checked');
+        aboutFacility.isUsingFacilityEndDateNo().should('not.be.checked');
         aboutFacility.isUsingFacilityEndDateNo().click();
 
         aboutFacility.continueButton().click();
 
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
         aboutFacility.isUsingFacilityEndDateNo().should('be.checked');
-        aboutFacility.isUsingFacilityEndDateYes().should('be.not.checked');
+        aboutFacility.isUsingFacilityEndDateYes().should('not.be.checked');
       }
     });
   });
