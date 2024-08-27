@@ -264,7 +264,6 @@ describe('validateAndParseDayMonthYear', () => {
     const result = validateAndParseDayMonthYear(dayMonthYear, { errRef, variableDisplayName });
 
     expect(result).toEqual({
-      errors: null,
       date: expectedDate,
     });
   });
