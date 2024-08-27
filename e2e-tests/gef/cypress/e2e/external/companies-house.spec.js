@@ -45,14 +45,14 @@ context('Companies House Page', () => {
 
   describe('Clicking on Back link', () => {
     it('takes you to application page', () => {
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
   });
 
   describe('Clicking on Cancel button', () => {
     it('takes you to application page', () => {
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
   });

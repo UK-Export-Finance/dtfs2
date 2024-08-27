@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { backLink, continueButton } from '../partials';
+import { continueButton } from '../partials';
 import aboutFacility from '../pages/about-facility';
 import bankReviewDate from '../pages/bank-review-date';
 import facilityEndDate from '../pages/facility-end-date';
@@ -62,10 +62,10 @@ context('Changing between facility end date and bank review date', () => {
       continueButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
-      backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-      backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.isUsingFacilityEndDateYes().click();
@@ -78,10 +78,10 @@ context('Changing between facility end date and bank review date', () => {
       continueButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
-      backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
-      backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.isUsingFacilityEndDateNo().click();
@@ -98,10 +98,10 @@ context('Changing between facility end date and bank review date', () => {
       continueButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
-      backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-      backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.isUsingFacilityEndDateYes().click();

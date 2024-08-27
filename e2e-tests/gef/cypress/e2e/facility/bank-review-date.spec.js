@@ -76,7 +76,7 @@ context('Bank Review Date Page', () => {
     it('redirects the user to `About this facility` page when clicking on back link', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
     });

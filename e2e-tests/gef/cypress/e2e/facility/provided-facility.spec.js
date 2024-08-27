@@ -51,7 +51,7 @@ context('Provided Facility Page', () => {
     if (!facilityEndDateEnabled) {
       it('redirects user to `about facility` page when clicking on `Back` Link ', () => {
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
-        backLink().click();
+        cy.clickBackLink();
         cy.url().should(
           'eq',
           relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`),
@@ -63,7 +63,7 @@ context('Provided Facility Page', () => {
         continueButton().click();
         errorSummary();
 
-        backLink().click();
+        cy.clickBackLink();
 
         cy.url().should(
           'eq',
@@ -73,7 +73,7 @@ context('Provided Facility Page', () => {
     } else {
       it('redirects user to `about facility` page when clicking on `Back` Link if isUsingFacilityEndDate not selected', () => {
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
-        backLink().click();
+        cy.clickBackLink();
         cy.url().should(
           'eq',
           relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`),
@@ -86,7 +86,7 @@ context('Provided Facility Page', () => {
         saveAndReturnButton().click();
 
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
-        backLink().click();
+        cy.clickBackLink();
         cy.url().should(
           'eq',
           relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-end-date`),
@@ -99,7 +99,7 @@ context('Provided Facility Page', () => {
         saveAndReturnButton().click();
 
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
-        backLink().click();
+        cy.clickBackLink();
         cy.url().should(
           'eq',
           relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/bank-review-date`),
@@ -111,7 +111,7 @@ context('Provided Facility Page', () => {
         continueButton().click();
         errorSummary();
 
-        backLink().click();
+        cy.clickBackLink();
 
         cy.url().should(
           'eq',

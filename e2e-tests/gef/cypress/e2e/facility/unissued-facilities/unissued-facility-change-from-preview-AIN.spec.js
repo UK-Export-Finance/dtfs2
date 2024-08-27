@@ -9,7 +9,7 @@ import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
-import { backLink, mainHeading, continueButton, submitButton } from '../../partials';
+import { mainHeading, continueButton, submitButton } from '../../partials';
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
@@ -68,7 +68,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       statusBanner.applicationBanner().should('exist');
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
 

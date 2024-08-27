@@ -9,7 +9,7 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
-import { backLink, continueButton, errorSummary, mainHeading, submitButton } from '../../partials';
+import { continueButton, errorSummary, mainHeading, submitButton } from '../../partials';
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
@@ -98,13 +98,13 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
     it('clicking back or update later takes you back to application preview', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
 
       applicationPreview.unissuedFacilitiesReviewLink().click();
       // ensures that nothing has changed
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
 

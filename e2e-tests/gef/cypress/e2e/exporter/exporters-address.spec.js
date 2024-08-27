@@ -38,7 +38,7 @@ context('Exporters Address Page', () => {
     });
 
     it('redirects user to companies house page when clicking on Back Link', () => {
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/companies-house`));
     });
   });

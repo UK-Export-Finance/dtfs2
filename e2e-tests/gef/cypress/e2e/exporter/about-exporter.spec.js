@@ -68,7 +68,7 @@ context('About Exporter Page', () => {
 
     it('redirects user to enter exporters address page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/about-exporter`));
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithNoExporterIndustries._id}/exporters-address`));
     });
 

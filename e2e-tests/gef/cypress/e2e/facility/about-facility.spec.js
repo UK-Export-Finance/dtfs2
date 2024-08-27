@@ -75,7 +75,7 @@ context('About Facility Page', () => {
 
     it('redirects user to `Has your bank already issued` page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}`));
     });
 

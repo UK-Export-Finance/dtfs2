@@ -43,7 +43,7 @@ context('Select Exporters Correspondence Address Page', () => {
     });
 
     it('redirects user to exporters address page when clicking on `Back` Link', () => {
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/exporters-address`));
     });
 

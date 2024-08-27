@@ -48,7 +48,7 @@ context('Enter Exporters Correspondence Address Page', () => {
     });
 
     it('redirects user to select exporters address page when clicking on `Back` Link', () => {
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
 
@@ -60,7 +60,7 @@ context('Enter Exporters Correspondence Address Page', () => {
       exportersAddress.postcodeError();
       exportersAddress.manualAddressEntryLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`));
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
 

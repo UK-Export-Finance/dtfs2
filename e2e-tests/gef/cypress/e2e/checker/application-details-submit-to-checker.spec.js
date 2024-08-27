@@ -67,7 +67,7 @@ context('Application Details Submission', () => {
 
     it('takes user back to application details page if back link clicked', () => {
       applicationSubmission.commentsField().type('test');
-      backLink().click();
+      cy.clickBackLink();
       applicationPreview.applicationPreviewPage();
     });
 

@@ -54,7 +54,7 @@ context('Facilities Page', () => {
 
     it('redirects user back to application details page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0]}`));
     });
 

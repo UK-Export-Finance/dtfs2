@@ -1,7 +1,7 @@
 import { todayFormattedShort } from '../../../../e2e-fixtures/dateConstants';
 
 import relative from '../relativeURL';
-import { backLink, continueButton, form, mainHeading, saveAndReturnButton, submitButton } from '../partials';
+import { continueButton, form, mainHeading, saveAndReturnButton, submitButton } from '../partials';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import applicationDetails from '../pages/application-details';
 import submitToUkef from '../pages/submit-to-ukef';
@@ -102,7 +102,7 @@ context('Clone GEF (AIN) deal', () => {
     });
 
     it('should validate the information in the banner', () => {
-      backLink().click();
+      cy.clickBackLink();
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       cy.url().then((url) => {
         cy.visit(`${url}`);
@@ -120,7 +120,7 @@ context('Clone GEF (AIN) deal', () => {
     });
 
     it('should modify the Exporter details', () => {
-      backLink().click();
+      cy.clickBackLink();
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       cy.url().then((url) => {
         cy.visit(`${url}/about-exporter`);
@@ -283,7 +283,7 @@ context('Clone GEF (MIA) deal', () => {
     });
 
     it('should modify the Exporter details', () => {
-      backLink().click();
+      cy.clickBackLink();
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       cy.url().then((url) => {
         cy.visit(`${url}/about-exporter`);
@@ -295,7 +295,7 @@ context('Clone GEF (MIA) deal', () => {
     });
 
     it('should validate the information in the banner', () => {
-      backLink().click();
+      cy.clickBackLink();
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       cy.url().then((url) => {
         cy.visit(`${url}`);

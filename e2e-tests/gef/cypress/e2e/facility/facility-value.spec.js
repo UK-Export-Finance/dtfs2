@@ -45,7 +45,7 @@ context('Facility Value Page', () => {
 
     it('redirects user to `facility currency` page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      backLink().click();
+      cy.clickBackLink();
       cy.url().should(
         'eq',
         relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-currency`),
