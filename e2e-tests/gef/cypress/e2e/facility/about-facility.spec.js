@@ -207,7 +207,7 @@ context('About Facility Page', () => {
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
       });
 
-      it('wipes the facility end date value when updating the cover end date', () => {
+      it('wipes the facility end date value when updating the cover start date', () => {
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
         facilityEndDate.facilityEndDateDay().clear().type(dateConstants.tomorrowDay);
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.tomorrowMonth);
@@ -245,7 +245,7 @@ context('About Facility Page', () => {
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
       });
 
-      it('wipes the bank review date value when updating the cover end date', () => {
+      it('wipes the bank review date value when updating the cover start date', () => {
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
         bankReviewDate.bankReviewDateDay().clear().type(dateConstants.tomorrowDay);
         bankReviewDate.bankReviewDateMonth().clear().type(dateConstants.tomorrowMonth);
