@@ -45,7 +45,7 @@ run-name: 🚀 Deploying to ${{ github.event.workflow_run.head_branch }}
 
 on:
   workflow_run:
-    workflows: ["QAT"]
+    workflows: ['QAT']
     types:
       - completed
     branches:
@@ -58,7 +58,7 @@ on:
 env:
   PRODUCT: dtfs
   ENVIRONMENT: ${{  github.event.workflow_run.head_branch == 'release-*' && 'dev' || github.event.workflow_run.head_branch }}
-  TIMEZONE: "Europe/London"
+  TIMEZONE: 'Europe/London'
   # Base artifact
   FROM: latest
 
@@ -124,16 +124,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        webapp:
-          [
-            "portal-ui",
-            "gef-ui",
-            "trade-finance-manager-ui",
-            "portal-api",
-            "dtfs-central-api",
-            "external-api",
-            "trade-finance-manager-api",
-          ]
+        webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
 
     concurrency:
       group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
@@ -237,7 +228,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        functions: ["acbs-function"]
+        functions: ['acbs-function']
 
     concurrency:
       group: deployment-functions-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
