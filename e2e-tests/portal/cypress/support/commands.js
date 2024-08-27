@@ -1,6 +1,5 @@
 import 'cypress-file-upload';
 import * as api from '../../../gef/cypress/support/commands/api';
-import './portal/click-events';
 
 // ***********************************************
 // This example commands.js shows you how to
@@ -69,6 +68,15 @@ Cypress.Commands.add('updateLoan', require('./portal-api/updateLoan'));
 Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'));
 
 // commands that abstract common tasks you might perform while clicking round the portal..
+Cypress.Commands.add('clickAddBondButton', require('./portal/click-events/click-add-bond-button'));
+Cypress.Commands.add('clickAddLoanButton', require('./portal/click-events/click-add-loan-button'));
+Cypress.Commands.add('clickCancelButton', require('./portal/click-events/click-cancel-button'));
+Cypress.Commands.add('clickReturnToMakerButton', require('./portal/click-events/click-return-to-maker-button'));
+Cypress.Commands.add('clickProceedToReviewButton', require('./portal/click-events/click-proceed-to-review-button'));
+Cypress.Commands.add('clickProceedToSubmitButton', require('./portal/click-events/click-proceed-to-submit-button'));
+Cypress.Commands.add('clickSaveGoBackButton', require('./portal/click-events/click-save-go-back-button'));
+Cypress.Commands.add('clickSubmitButton', require('./portal/click-events/click-submit-button'));
+
 Cypress.Commands.add('addBondToDeal', require('./portal/addBondToDeal'));
 Cypress.Commands.add('addLoanToDeal', require('./portal/addLoanToDeal'));
 Cypress.Commands.add('createADeal', require('./portal/createADeal'));
