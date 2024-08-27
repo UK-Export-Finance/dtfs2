@@ -7,6 +7,7 @@ const utilisationReportPage = {
     getFacilityIdFilterInput: () => cy.getInputByLabelText('Filter by facility ID'),
     submitFacilityIdFilter: () => cy.get('button[data-cy="facility-filter-submit-button"]').click(),
     generateKeyingDataButton: () => cy.get('[data-cy="generate-keying-data-button"]'),
+    addAPaymentButton: () => cy.get('[data-cy="add-a-payment-button"]'),
     premiumPaymentsTable: {
       getRow: (feeRecordId) => cy.get(`tr[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
       getCheckbox: (feeRecordIds, paymentCurrency, status) =>
