@@ -70,7 +70,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     pages.utilisationReportPage.premiumPaymentsTab.addAPaymentButton().click();
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
 
-    pages.utilisationReportAddPaymentPage.addFeesToAnExistingPaymentButton().should('contain', 'Add reported fee to an existing payment');
+    pages.utilisationReportAddPaymentPage
+      .addFeesToAnExistingPaymentButton()
+      .invoke('val')
+      .then((text) => {
+        expect(text.trim()).to.equal('Add reported fee to an existing payment');
+      });
     pages.utilisationReportAddPaymentPage.addFeesToAnExistingPaymentButton().click();
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
   };
