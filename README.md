@@ -69,17 +69,17 @@ npm run start
 
 Several services are built:
 
-| Service       | URL                                                                                                                                                                   |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Portal UI     | [http://localhost:5000](http://localhost:5000)                                                                                                                        |
-| Portal API    | [http://localhost:5001](http://localhost:5001)                                                                                                                        |
-| External API  | [http://localhost:5002](http://localhost:5002)                                                                                                                        |
-| TFM UI        | [http://localhost:5003](http://localhost:5003)                                                                                                                        |
-| TFM API       | [http://localhost:5004](http://localhost:5004)                                                                                                                        |
-| Central API   | [http://localhost:5005](http://localhost:5005)                                                                                                                        |
-| GEF           | [http://localhost:5006](http://localhost:5006)                                                                                                                        |
-| MongoDB       | `root:r00t@localhost:27017` (Connect via MongoDB client)                                                                                                              |
-| SQL Server DB | SSMS: `Server=localhost:1433;Database=DTFS;User Id=dtfs;Password=AbC!2345;`<br/>DataGrip: `jdbc:sqlserver://localhost:1433;database=DTFS;user=dtfs;password=AbC!2345` |
+| Service       | URL                                                                                                                                                               |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Portal UI     | [http://localhost:5000](http://localhost:5000)                                                                                                                    |
+| Portal API    | [http://localhost:5001](http://localhost:5001)                                                                                                                    |
+| External API  | [http://localhost:5002](http://localhost:5002)                                                                                                                    |
+| TFM UI        | [http://localhost:5003](http://localhost:5003)                                                                                                                    |
+| TFM API       | [http://localhost:5004](http://localhost:5004)                                                                                                                    |
+| Central API   | [http://localhost:5005](http://localhost:5005)                                                                                                                    |
+| GEF           | [http://localhost:5006](http://localhost:5006)                                                                                                                    |
+| MongoDB       | `root:r00t@localhost:27017` (Connect via MongoDB client)                                                                                                          |
+| SQL Server DB | SSMS: `Server=localhost:1433;Database=DTFS;User Id=dtfs;Password=AbC!2345;` DataGrip: `jdbc:sqlserver://localhost:1433;database=DTFS;user=dtfs;password=AbC!2345` |
 
 To access GEF locally, use [http://localhost](http://localhost).
 

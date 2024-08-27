@@ -650,7 +650,33 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec: ['./gef/cypress/e2e/facility/**/*.spec.js', './tfm/cypress/e2e/journeys/case-amendments/**/*.spec.js']
+        spec:
+          [
+            './gef/cypress/e2e/*.spec.js',
+            './gef/cypress/e2e/application/**/*.spec.js',
+            './gef/cypress/e2e/checker/**/*.spec.js',
+            './gef/cypress/e2e/clone/**/*.spec.js',
+            './gef/cypress/e2e/eligibility/**/*.spec.js',
+            './gef/cypress/e2e/exporter/**/*.spec.js',
+            './gef/cypress/e2e/external/**/*.spec.js',
+            './gef/cypress/e2e/facility/**/*.spec.js',
+            './gef/cypress/e2e/maker/**/*.spec.js',
+            './gef/cypress/e2e/scenarios/**/*.spec.js',
+            './gef/cypress/e2e/security/**/*.spec.js',
+            './gef/cypress/e2e/ukef/**/*.spec.js',
+            './gef/cypress/e2e/upload/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/case-amendments/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/case-underwriting/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/deals/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/facility/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/feedback/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/footer/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/header/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/login/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/users/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/utilisation-reports/**/*.spec.js',
+          ]
 
     concurrency:
       group: e2e-tests-ukef-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
