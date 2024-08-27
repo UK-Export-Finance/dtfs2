@@ -1,10 +1,9 @@
 import relative from '../../relativeURL';
+import { saveAndReturnButton, submitButton } from '../../partials';
 import applicationDetails from '../../pages/application-details';
-import automaticCover from '../../pages/automatic-cover';
 import applicationSubmission from '../../pages/application-submission';
 import { BANK1_MAKER1, BANK1_MAKER_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import applicationPreview from '../../pages/application-preview';
-import returnToMaker from '../../pages/return-to-maker';
 
 context('Create application as MAKER, edit as MAKER_CHECKER, submit application to UKEF as MAKER_CHECKER', () => {
   const dealIds = [];
@@ -36,21 +35,21 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       cy.automaticEligibilityCriteria();
-      automaticCover.saveAndReturnButton().click();
+      saveAndReturnButton().click();
 
       cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       // submit the deal
-      applicationDetails.submitButton().click();
+      submitButton().click();
       applicationSubmission.commentsField().type('DTFS2-4698 Comments from original maker');
-      applicationSubmission.submitButton().click();
+      submitButton().click();
       applicationSubmission.confirmationPanelTitle();
 
       // login as a MAKER_CHECKER and return to the maker with a comment.
       cy.login(BANK1_MAKER_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       applicationPreview.returnButton().should('not.exist');
-      returnToMaker.submitButton().should('not.exist');
+      submitButton().should('not.exist');
     });
   });
 });

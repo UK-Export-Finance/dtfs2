@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { headingCaption, mainHeading, continueButton, errorSummary } from '../partials';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -38,12 +39,12 @@ context('manual inclusion Page', () => {
     });
 
     it('displays the correct elements', () => {
-      manualInclusion.headingCaption();
-      manualInclusion.mainHeading();
+      headingCaption();
+      mainHeading();
       manualInclusion.templateLinkDocx();
       manualInclusion.templateLinkPdf();
       manualInclusion.fileUploadComponent();
-      manualInclusion.continueButton();
+      continueButton();
       manualInclusion.cancelLink();
     });
 
@@ -82,8 +83,8 @@ context('manual inclusion Page', () => {
     });
 
     it('does not allow continue if no files are uploaded', () => {
-      manualInclusion.continueButton().click();
-      manualInclusion.errorSummary();
+      continueButton().click();
+      errorSummary();
     });
 
     it('does not allow a file of an incorrect type', () => {

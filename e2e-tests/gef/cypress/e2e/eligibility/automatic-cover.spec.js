@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { continueButton, errorSummary, form, mainHeading, saveAndReturnButton } from '../partials';
 import automaticCover from '../pages/automatic-cover';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -25,42 +26,42 @@ context('Automatic Cover Page', () => {
 
   describe('Visiting page', () => {
     it('displays the correct elements', () => {
-      automaticCover.mainHeading();
-      automaticCover.form();
+      mainHeading();
+      form();
       automaticCover.automaticCoverTerm(12).should('exist');
-      automaticCover.continueButton();
-      automaticCover.saveAndReturnButton();
+      continueButton();
+      saveAndReturnButton();
     });
   });
 
   describe('Clicking on Continue button', () => {
     it('shows errors if no radio button has been selected', () => {
-      automaticCover.continueButton().click();
-      automaticCover.errorSummary();
+      continueButton().click();
+      errorSummary();
       automaticCover.fieldError();
       automaticCover.automaticCoverTerm(12).should('exist');
     });
 
     it('removes error message from field if a radio button has been selected', () => {
       automaticCover.trueRadioButton(12).click();
-      automaticCover.continueButton().click();
+      continueButton().click();
       automaticCover.automaticCoverTerm(12).siblings('[data-cy="automatic-cover-error"]').should('not.exist');
     });
 
     it('takes user to `not eligible for automatic cover` page if at least 1 FALSE field has been selected', () => {
       cy.manualEligibilityCriteria();
-      automaticCover.continueButton().click();
+      continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
     });
 
     it('takes user to `eligible for automatic cover` page if all true fields have been selected', () => {
       cy.automaticEligibilityCriteria();
-      automaticCover.continueButton().click();
+      continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/eligible-automatic-cover`));
     });
 
     it('takes user to `automatic application details` page if they click on the save and return button', () => {
-      automaticCover.saveAndReturnButton().click();
+      saveAndReturnButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
   });

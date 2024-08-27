@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { continueButton, submitButton } from '../partials';
 import automaticCover from '../pages/automatic-cover';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import securityDetails from '../pages/security-details';
@@ -39,12 +40,12 @@ context('Submit to UKEF as MIA', () => {
       // Deny EC
       automaticCover.falseRadioButton(19).click();
 
-      automaticCover.continueButton().click();
-      manualInclusion.continueButton().click();
+      continueButton().click();
+      continueButton().click();
 
       cy.uploadFile('test.pdf', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('test.pdf');
-      manualInclusion.continueButton().click();
+      continueButton().click();
       cy.visit(relative(`/gef/application-details/${dealId}`));
 
       statusBanner.bannerStatus().contains('Draft');
@@ -54,17 +55,17 @@ context('Submit to UKEF as MIA', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test');
-      securityDetails.continueButton().click();
+      continueButton().click();
       securityDetails.visit(dealId);
       securityDetails.cancelButton().click();
 
-      applicationDetails.submitButton().click();
+      submitButton().click();
     });
 
     it('displays correct MIA checker submission message', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/submit`));
 
-      applicationSubmission.submitButton().click();
+      submitButton().click();
       applicationSubmission.confirmationPanelTitle().contains('Manual inclusion application submitted for checking at your bank');
       applicationSubmission
         .confirmation()

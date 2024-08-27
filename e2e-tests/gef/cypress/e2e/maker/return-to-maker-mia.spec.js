@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { continueButton, submitButton } from '../partials';
 import returnToMaker from '../pages/return-to-maker';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import applicationDetails from '../pages/application-details';
@@ -46,19 +47,19 @@ context('Return to Maker as MIA', () => {
       // Deny EC
       automaticCover.falseRadioButton(19).click();
 
-      automaticCover.continueButton().click();
+      continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
-      automaticCover.continueButton().click();
+      continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      securityDetails.continueButton().click();
+      continueButton().click();
 
-      applicationDetails.submitButton().click();
-      applicationSubmission.submitButton().click();
+      submitButton().click();
+      submitButton().click();
       applicationSubmission.confirmationPanelTitle();
     });
   });
@@ -78,7 +79,7 @@ context('Return to Maker as MIA', () => {
       applicationPreview.supportingInfoListRowAction(0, 1).should('not.exist');
       applicationPreview.returnButton().click();
       returnToMaker.comment().type('comment1');
-      returnToMaker.submitButton().click();
+      submitButton().click();
       cy.location('pathname').should('contain', 'dashboard');
     });
   });
@@ -165,12 +166,12 @@ context('Return to Maker as MIA', () => {
       securityDetails.securityDetailsChangeCta().click();
       securityDetails.exporterSecurity().type(' test3');
       securityDetails.facilitySecurity().type('test4');
-      securityDetails.continueButton().click();
+      continueButton().click();
     });
 
     it('can submit back to checker', () => {
-      applicationDetails.submitButton().click();
-      applicationSubmission.submitButton().click();
+      submitButton().click();
+      submitButton().click();
       applicationSubmission.confirmationPanelTitle().contains('Manual inclusion application submitted for checking at your bank');
       cy.visit(relative(`/gef/application-details/${dealId}`));
       statusBanner.bannerStatus().contains("Ready for Checker's approval");

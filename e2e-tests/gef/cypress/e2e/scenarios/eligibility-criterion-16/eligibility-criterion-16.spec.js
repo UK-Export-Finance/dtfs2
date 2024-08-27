@@ -1,4 +1,5 @@
 import relative from '../../relativeURL';
+import { mainHeading, form, continueButton, saveAndReturnButton } from '../../partials';
 import automaticCover from '../../pages/automatic-cover';
 import ineligibleAutomaticCover from '../../pages/ineligible-automatic-cover';
 import manualInclusion from '../../pages/manual-inclusion-questionnaire';
@@ -29,11 +30,11 @@ context('Eligibility Criterion 16', () => {
 
   describe('Visiting page eligibility criteria page', () => {
     it('displays the correct elements', () => {
-      automaticCover.mainHeading();
-      automaticCover.form();
+      mainHeading();
+      form();
       automaticCover.automaticCoverTerm(16).should('exist');
-      automaticCover.continueButton();
-      automaticCover.saveAndReturnButton();
+      continueButton();
+      saveAndReturnButton();
     });
   });
 
@@ -67,12 +68,12 @@ context('Eligibility Criterion 16', () => {
       // Criterion 16 - Converts to manual application
       automaticCover.falseRadioButton(16).click();
 
-      automaticCover.continueButton().click();
+      continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
 
-      ineligibleAutomaticCover.mainHeading().contains('This is not eligible for automatic cover');
+      mainHeading().contains('This is not eligible for automatic cover');
       ineligibleAutomaticCover.content().contains("You'll now need to complete a manual inclusion application.");
-      ineligibleAutomaticCover.continueButton().click();
+      continueButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
 
@@ -82,14 +83,14 @@ context('Eligibility Criterion 16', () => {
 
     it('successfully uploading file takes you to security details page', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
-      manualInclusion.continueButton().click();
+      continueButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/security-details`));
 
-      securityDetails.mainHeading().contains('Enter security details');
+      mainHeading().contains('Enter security details');
       securityDetails.exporterSecurity().type('exporter test');
       securityDetails.facilitySecurity().type('facility test');
-      securityDetails.continueButton().click();
+      continueButton().click();
     });
 
     it('eligibility criteria and supporting information sections should be completed', () => {

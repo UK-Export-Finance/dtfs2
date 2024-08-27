@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { backLink, errorSummary, headingCaption, form, continueButton } from '../partials';
 import facilities from '../pages/facilities';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import CONSTANTS from '../../fixtures/constants';
@@ -29,31 +30,31 @@ context('Facilities Page', () => {
   describe('Visiting facility page', () => {
     it('displays the correct elements for cash facility', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
-      facilities.backLink();
-      facilities.headingCaption();
+      backLink();
+      headingCaption();
       facilities.hasBeenIssuedHeading().contains('cash');
-      facilities.form();
+      form();
       facilities.hasBeenIssuedRadioYesRadioButton();
       facilities.hasBeenIssuedRadioNoRadioButton();
-      facilities.continueButton();
+      continueButton();
       facilities.cancelLink();
     });
 
     it('displays the correct elements for contingent facility', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities?facilityType=${CONSTANTS.FACILITY_TYPE.CONTINGENT}`));
-      facilities.backLink();
-      facilities.headingCaption();
+      backLink();
+      headingCaption();
       facilities.hasBeenIssuedHeading().contains('contingent');
-      facilities.form();
+      form();
       facilities.hasBeenIssuedRadioYesRadioButton();
       facilities.hasBeenIssuedRadioNoRadioButton();
-      facilities.continueButton();
+      continueButton();
       facilities.cancelLink();
     });
 
     it('redirects user back to application details page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
-      facilities.backLink().click();
+      backLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0]}`));
     });
 
@@ -67,22 +68,22 @@ context('Facilities Page', () => {
   describe('Clicking on Continue button', () => {
     it('validates form', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
-      facilities.continueButton().click();
+      continueButton().click();
       facilities.hasBeenIssuedHeading().contains('Has your bank already issued this cash facility to the exporter?');
-      facilities.errorSummary().contains('Select if your bank has already issued this cash facility');
+      errorSummary().contains('Select if your bank has already issued this cash facility');
       facilities.hasBeenIssuedError().contains('Select if your bank has already issued this cash facility');
     });
 
     it('takes you to `about facility` page when selecting one of the radio buttons', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.hasBeenIssuedRadioYesRadioButton().click();
-      facilities.continueButton().click();
+      continueButton().click();
       Cypress.minimatch('/gef/application-details/123/facilities/1234/about-facility', '/gef/application-details/*/facilities/*/about-facility', {
         matchBase: true,
       });
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.hasBeenIssuedRadioNoRadioButton().click();
-      facilities.continueButton().click();
+      continueButton().click();
       Cypress.minimatch('/gef/application-details/123/facilities/1234/about-facility', '/gef/application-details/*/facilities/*/about-facility', {
         matchBase: true,
       });

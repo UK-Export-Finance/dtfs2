@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { errorSummary, mainHeading, submitButton } from '../partials';
 import returnToMaker from '../pages/return-to-maker';
 import { BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -31,7 +32,7 @@ context('Return to Maker', () => {
 
   describe('Return to maker', () => {
     it('displays the page as expected', () => {
-      returnToMaker.mainHeading();
+      mainHeading();
       returnToMaker.comment();
       returnToMaker.submitButton();
       returnToMaker.cancelLink();
@@ -43,13 +44,13 @@ context('Return to Maker', () => {
     });
 
     it('submits without comments ', () => {
-      returnToMaker.submitButton().click();
+      submitButton().click();
       cy.location('pathname').should('contain', 'dashboard');
     });
 
     it('submits with comments', () => {
       returnToMaker.comment().type('Test comment');
-      returnToMaker.submitButton().click();
+      submitButton().click();
       cy.location('pathname').should('contain', 'dashboard');
     });
 
@@ -57,8 +58,8 @@ context('Return to Maker', () => {
       const longComment = 'a'.repeat(401);
 
       returnToMaker.comment().type(longComment);
-      returnToMaker.submitButton().click();
-      returnToMaker.errorSummary();
+      submitButton().click();
+      errorSummary();
     });
 
     it('takes checker back to application preview page when cancelled', () => {

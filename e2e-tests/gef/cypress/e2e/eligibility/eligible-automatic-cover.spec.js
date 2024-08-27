@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import eligibleAutomaticCover from '../pages/eligible-automatic-cover';
+import { mainHeading, continueButton } from '../partials';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 let dealId;
@@ -25,14 +25,14 @@ context('Eligible Automatic Cover Page', () => {
 
   describe('Visiting page', () => {
     it('displays the correct elements', () => {
-      eligibleAutomaticCover.mainHeading();
-      eligibleAutomaticCover.continueButton();
+      mainHeading();
+      continueButton();
     });
   });
 
   describe('Clicking on Continue button', () => {
     it('redirects user to Manual Application Page', () => {
-      eligibleAutomaticCover.continueButton().click();
+      continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
   });

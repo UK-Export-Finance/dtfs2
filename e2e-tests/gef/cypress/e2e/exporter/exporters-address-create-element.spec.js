@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { continueButton } from '../partials';
 import exportersAddress from '../pages/exporters-address';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import selectExportersCorAddress from '../pages/select-exporters-corr-address';
@@ -31,11 +32,11 @@ context('Exporters Address Page - Add element to page', () => {
 
     // adds populated text element to form
     cy.insertElement('separate-correspondence-form');
-    exportersAddress.continueButton().click();
+    continueButton().click();
 
     selectExportersCorAddress.selectAddress().select('0');
-    selectExportersCorAddress.continueButton().click();
-    selectExportersCorAddress.continueButton().click();
+    continueButton().click();
+    continueButton().click();
 
     cy.getApplicationById(dealId).then((deal) => {
       // checks extra field has not been added to the exporter correspondenceAddress object

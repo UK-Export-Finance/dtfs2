@@ -1,4 +1,5 @@
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
+import { continueButton } from '../partials';
 import applicationDetails from '../pages/application-details';
 import dashboardPage from '../pages/dashboard-page';
 import companiesHouse from '../pages/companies-house';
@@ -17,11 +18,11 @@ context('Incomplete exporter section - application details page', () => {
     it('creates the application', () => {
       dashboardPage.createNewSubmission().click();
       dashboardPage.gefSubmission().click();
-      dashboardPage.continueButton().click();
+      continueButton().click();
       dashboardPage.mandatoryCriteriaYes().click();
-      dashboardPage.continueButton().click();
+      continueButton().click();
       dashboardPage.internalRefName().type('A');
-      dashboardPage.continueButton().click();
+      continueButton().click();
       cy.url().then((thisUrl) => {
         url = thisUrl;
         // get dealId from last split
@@ -33,9 +34,9 @@ context('Incomplete exporter section - application details page', () => {
       cy.visit(url);
       applicationDetails.exporterDetailsLink().click();
       companiesHouse.regNumberField().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
-      companiesHouse.continueButton().click();
+      continueButton().click();
       exportersAddress.noRadioButton().click();
-      exportersAddress.continueButton().click();
+      continueButton().click();
       // exits without saving, to ensure does not bug and hide fields
       dashboardPage.dashboardHome().click();
     });

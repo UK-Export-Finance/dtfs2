@@ -3,12 +3,12 @@ import { todayFormatted, todayFormattedShort } from '../../../../e2e-fixtures/da
 import relative from '../relativeURL';
 import applicationActivities from '../pages/application-activities';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
+import { continueButton, mainHeading, submitButton } from '../partials';
 import applicationDetails from '../pages/application-details';
 import automaticCover from '../pages/automatic-cover';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import securityDetails from '../pages/security-details';
 import applicationSubmission from '../pages/application-submission';
-import applicationPreview from '../pages/application-preview';
 import submitToUkef from '../pages/submit-to-ukef';
 import statusBanner from '../pages/application-status-banner';
 
@@ -50,19 +50,19 @@ context('Submit AIN deal and check portalActivities', () => {
       // Deny EC
       automaticCover.falseRadioButton(19).click();
 
-      automaticCover.continueButton().click();
+      continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
-      automaticCover.continueButton().click();
+      continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      securityDetails.continueButton().click();
+      continueButton().click();
 
-      applicationDetails.submitButton().click();
-      applicationSubmission.submitButton().click();
+      submitButton().click();
+      submitButton().click();
       applicationSubmission.confirmationPanelTitle();
     });
   });
@@ -75,9 +75,9 @@ context('Submit AIN deal and check portalActivities', () => {
     });
 
     it('submits detail to UKEF', () => {
-      applicationPreview.submitButton().click();
+      submitButton().click();
       submitToUkef.confirmSubmissionCheckbox().click();
-      submitToUkef.submitButton().click();
+      submitButton().click();
     });
   });
 
@@ -92,10 +92,10 @@ context('Submit AIN deal and check portalActivities', () => {
     it('check that subnavigation banner exists and that links work', () => {
       applicationActivities.subNavigationBar().should('exist');
       applicationActivities.subNavigationBarApplication().click();
-      applicationPreview.mainHeading().should('exist');
+      mainHeading().should('exist');
       applicationActivities.activityTimeline().should('not.exist');
       applicationActivities.subNavigationBarActivities().click();
-      applicationPreview.mainHeading().should('not.exist');
+      mainHeading().should('not.exist');
       applicationActivities.activityTimeline().should('exist');
     });
 

@@ -1,4 +1,5 @@
 import relative from '../../relativeURL';
+import { mainHeading, form, continueButton, saveAndReturnButton, errorSummary } from '../../partials';
 import automaticCover from '../../pages/automatic-cover';
 import ineligibleAutomaticCover from '../../pages/ineligible-automatic-cover';
 import manualInclusion from '../../pages/manual-inclusion-questionnaire';
@@ -27,24 +28,24 @@ context('Eligibility Criterion 21', () => {
 
   describe('Visiting page eligibility criteria page', () => {
     it('displays the correct elements', () => {
-      automaticCover.mainHeading();
-      automaticCover.form();
+      mainHeading();
+      form();
       automaticCover.automaticCoverTerm(21).should('exist');
-      automaticCover.continueButton();
-      automaticCover.saveAndReturnButton();
+      continueButton();
+      saveAndReturnButton();
     });
   });
 
   describe('Selecting false on eligibility criteria 21', () => {
     it('Selecting neither of the true/false option should present an error message to the user', () => {
       // Click continue button
-      automaticCover.continueButton().click();
+      continueButton().click();
 
       // Display error message on the same page
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/automatic-cover`));
 
-      automaticCover.errorSummary().should('be.visible');
-      automaticCover.errorSummary().contains('21. Select if the Obligor is involved in any additional UKEF supported facility');
+      errorSummary().should('be.visible');
+      errorSummary().contains('21. Select if the Obligor is involved in any additional UKEF supported facility');
 
       automaticCover.fieldError().should('be.visible');
       automaticCover.fieldError().contains('21. Select if the Obligor is involved in any additional UKEF supported facility');
@@ -78,13 +79,13 @@ context('Eligibility Criterion 21', () => {
 
       // Criterion 21 - Converts to manual
       automaticCover.falseRadioButton(21).click();
-      automaticCover.continueButton().click();
+      continueButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
 
-      ineligibleAutomaticCover.mainHeading().contains('This is not eligible for automatic cover');
+      mainHeading().contains('This is not eligible for automatic cover');
       ineligibleAutomaticCover.content().contains("You'll now need to complete a manual inclusion application.");
-      ineligibleAutomaticCover.continueButton().click();
+      continueButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
 

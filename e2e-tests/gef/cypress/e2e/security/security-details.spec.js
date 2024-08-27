@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { mainHeading, form, continueButton, errorSummary } from '../partials';
 import securityDetails from '../pages/security-details';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -26,18 +27,18 @@ context('Security Details Page', () => {
   describe('Visiting page as cash facility', () => {
     it('displays the correct elements', () => {
       securityDetails.visit(dealId);
-      securityDetails.mainHeading();
-      securityDetails.form();
+      mainHeading();
+      form();
       securityDetails.exporterSecurity();
       securityDetails.facilitySecurity();
-      securityDetails.continueButton();
+      continueButton();
       securityDetails.cancelButton();
     });
 
     it('shows error message when security details have been entered', () => {
       securityDetails.visit(dealId);
-      securityDetails.continueButton().click();
-      securityDetails.errorSummary();
+      continueButton().click();
+      errorSummary();
       securityDetails.exporterSecurityError();
       securityDetails.facilitySecurityError();
     });
@@ -48,8 +49,8 @@ context('Security Details Page', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type(longString);
       securityDetails.facilitySecurity().type(longString);
-      securityDetails.continueButton().click();
-      securityDetails.errorSummary();
+      continueButton().click();
+      errorSummary();
       securityDetails.exporterSecurityError();
       securityDetails.facilitySecurityError();
     });
@@ -60,8 +61,8 @@ context('Security Details Page', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type(invalidString);
       securityDetails.facilitySecurity().type(invalidString);
-      securityDetails.continueButton().click();
-      securityDetails.errorSummary();
+      continueButton().click();
+      errorSummary();
       securityDetails.exporterSecurityError();
       securityDetails.facilitySecurityError();
     });
@@ -70,7 +71,7 @@ context('Security Details Page', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('Valid security details');
       securityDetails.facilitySecurity().type('Valid security details');
-      securityDetails.continueButton().click();
+      continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
 

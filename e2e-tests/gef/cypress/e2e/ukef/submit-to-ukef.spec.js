@@ -1,7 +1,7 @@
 import { todayFormattedShort } from '../../../../e2e-fixtures/dateConstants';
 
 import relative from '../relativeURL';
-import automaticCover from '../pages/automatic-cover';
+import { errorSummary, mainHeading, saveAndReturnButton, submitButton } from '../partials';
 import submitToUkef from '../pages/submit-to-ukef';
 import submitToUkefConfirmation from '../pages/submit-to-ukef-confirmation';
 import applicationDetails from '../pages/application-details';
@@ -31,7 +31,7 @@ context('Submit to UKEF', () => {
         // Make the deal an Automatic Inclusion Application
         applicationDetails.automaticCoverDetailsLink().click();
         cy.automaticEligibilityCriteria();
-        automaticCover.saveAndReturnButton().click();
+        saveAndReturnButton().click();
       });
 
     cy.login(BANK1_CHECKER1);
@@ -46,7 +46,7 @@ context('Submit to UKEF', () => {
 
   describe('Submit to UKEF', () => {
     it('displays the page as expected', () => {
-      submitToUkef.mainHeading().contains('Confirm your submission');
+      mainHeading().contains('Confirm your submission');
       submitToUkef.mainText().contains('you have reviewed the information given');
       submitToUkef.mainText().contains('you want to proceed with the submission');
 
@@ -60,13 +60,13 @@ context('Submit to UKEF', () => {
             'Confirm your submission, By submitting to UKEF you confirm that: you have reviewed the information given and you want to proceed with the submission, I understand and agree',
           );
         });
-      submitToUkef.submitButton();
+      submitButton();
       submitToUkef.cancelLink();
     });
 
     it('display an error when the confirmation checkbox is not checked', () => {
-      submitToUkef.submitButton().click();
-      submitToUkef.errorSummary().contains('Select that you have reviewed the information given and want to proceed with the submission');
+      submitButton().click();
+      errorSummary().contains('Select that you have reviewed the information given and want to proceed with the submission');
       cy.get('[id="confirmSubmitUkef-error"]').contains('Select that you have reviewed the information given and want to proceed with the submission');
     });
 
@@ -77,14 +77,14 @@ context('Submit to UKEF', () => {
 
     it('takes checker to dashboard from the confirmation page', () => {
       submitToUkef.confirmSubmissionCheckbox().click();
-      submitToUkef.submitButton().click();
+      submitButton().click();
       submitToUkefConfirmation.dashboardLink().click();
       cy.location('pathname').should('contain', 'dashboard');
     });
 
     it('submits once checkbox selected and displays the confirmation page', () => {
       submitToUkef.confirmSubmissionCheckbox().click();
-      submitToUkef.submitButton().click();
+      submitButton().click();
       submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)} submitted to UKEF`);
       submitToUkefConfirmation
         .confirmation()

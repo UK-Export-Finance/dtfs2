@@ -11,13 +11,13 @@ import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO_NULL_MIA, MOCK_FACILITY_THREE, MOC
 
 import { toTitleCase } from '../../fixtures/helpers';
 
+import { continueButton, errorSummary, submitButton } from '../partials';
 import applicationPreview from '../pages/application-preview';
 import unissuedFacilityTable from '../pages/unissued-facilities';
 import applicationSubmission from '../pages/application-submission';
 import statusBanner from '../pages/application-status-banner';
 import coverStartDate from '../pages/cover-start-date';
 import applicationDetails from '../pages/application-details';
-import returnToMaker from '../pages/return-to-maker';
 import applicationActivities from '../pages/application-activities';
 
 let dealId;
@@ -139,7 +139,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       applicationPreview.ukefReviewLink().click();
       // shows error message do not click yes radio button
       applicationPreview.reviewDecisionContinue().click();
-      applicationPreview.errorSummary().contains('Select yes if you want to accept the conditions and proceed with UKEF cover.');
+      errorSummary().contains('Select yes if you want to accept the conditions and proceed with UKEF cover.');
       applicationPreview.reviewDecisionError('Select yes if you want to accept the conditions and proceed with UKEF cover.');
 
       applicationPreview.reviewDecisionTrue().click();
@@ -167,9 +167,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       coverStartDate.coverStartDateYear().clear();
       coverStartDate.coverStartDateYear().type(dateConstants.tomorrowYear);
 
-      coverStartDate.continueButton().click();
+      continueButton().click();
 
-      coverStartDate.errorSummary().contains('The cover start date must be before the cover end date');
+      errorSummary().contains('The cover start date must be before the cover end date');
       coverStartDate.coverStartDateNo().click();
       coverStartDate.errorInput().contains('The cover start date must be before the cover end date');
     });
@@ -187,9 +187,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       coverStartDate.coverStartDateYear().clear();
       coverStartDate.coverStartDateYear().type(dateConstants.threeDaysYear);
 
-      coverStartDate.continueButton().click();
+      continueButton().click();
 
-      coverStartDate.errorSummary().contains('Cover date cannot be in the past');
+      errorSummary().contains('Cover date cannot be in the past');
       coverStartDate.coverStartDateNo().click();
       coverStartDate.errorInput().contains('Cover date cannot be in the past');
     });
@@ -207,9 +207,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       coverStartDate.coverStartDateYear().clear();
       coverStartDate.coverStartDateYear().type(dateConstants.threeMonthsOneDayYear);
 
-      coverStartDate.continueButton().click();
+      continueButton().click();
 
-      coverStartDate.errorSummary().contains('Cover date must be within 3 months');
+      errorSummary().contains('Cover date must be within 3 months');
       coverStartDate.coverStartDateNo().click();
       coverStartDate.errorInput().contains('Cover date must be within 3 months');
     });
@@ -228,10 +228,10 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       coverStartDate.coverStartDateYear().clear();
       coverStartDate.coverStartDateYear().type(dateConstants.todayYear);
 
-      coverStartDate.continueButton().click();
+      continueButton().click();
 
       coverStartDate.coverStartDateSuccess().contains('All cover start dates confirmed for issued facilities');
-      coverStartDate.continueButton().click();
+      continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
       unissuedFacilityTable.updateFacilitiesLater().click();
@@ -249,7 +249,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       applicationSubmission
         .submissionText()
         .contains(`Someone at your bank must check your ${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} before they can submit it to UKEF.`);
-      applicationSubmission.submitButton().click();
+      submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
       applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
@@ -326,10 +326,10 @@ context('Return to maker', () => {
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
-      applicationPreview.submitButton().should('exist');
+      submitButton().should('exist');
       applicationPreview.returnButton().should('exist');
       applicationPreview.returnButton().click();
-      returnToMaker.submitButton().click();
+      submitButton().click();
       cy.location('pathname').should('contain', 'dashboard');
     });
   });
@@ -431,8 +431,8 @@ context('Return to maker', () => {
     });
 
     it('should be able to submit to checker after making changes', () => {
-      applicationDetails.submitButton().click();
-      applicationSubmission.submitButton().click();
+      submitButton().click();
+      submitButton().click();
       applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
     });
   });
@@ -461,10 +461,10 @@ context('Submit to UKEF', () => {
     });
 
     it('submit to ukef and it should change to MIN (from MIA)', () => {
-      applicationPreview.submitButton().should('exist');
-      applicationPreview.submitButton().click();
+      submitButton().should('exist');
+      submitButton().click();
       applicationSubmission.confirmSubmissionCheckbox().click();
-      applicationSubmission.submitButton().click();
+      submitButton().click();
       applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIN)} submitted to UKEF`);
       // check that correct text is displayed under confirmation panel
       applicationSubmission.confirmationText().contains("We'll send you a confirmation email shortly, once we've acknowledged your inclusion notice.");

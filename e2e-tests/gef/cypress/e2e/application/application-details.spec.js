@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { headingCaption, mainHeading, saveAndReturnButton, submitButton } from '../partials';
 import applicationDetails from '../pages/application-details';
 import automaticCover from '../pages/automatic-cover';
 import facilities from '../pages/facilities';
@@ -61,9 +62,8 @@ context('Application Details Page', () => {
 
     it('displays the correct headings', () => {
       applicationDetails.applicationDetailsPage();
-      applicationDetails.captionHeading();
-      applicationDetails
-        .mainHeading()
+      headingCaption();
+      mainHeading()
         .invoke('text')
         .then((text) => {
           expect(text.trim()).to.equal('Application Details');
@@ -115,7 +115,7 @@ context('Application Details Page', () => {
 
     it('displays the correct submit elements', () => {
       applicationDetails.submitHeading();
-      applicationDetails.submitButton().should('not.exist');
+      submitButton().should('not.exist');
       applicationDetails.submitValidationText();
     });
 
@@ -151,7 +151,7 @@ context('Application Details Page', () => {
       // This puts the Eligibility Criteria section in an "in progress" state.
       applicationDetails.automaticCoverDetailsLink().click();
       automaticCover.trueRadioButton(12).click();
-      automaticCover.saveAndReturnButton().click();
+      saveAndReturnButton().click();
     });
 
     beforeEach(() => {
@@ -168,8 +168,7 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submission type heading', () => {
-      applicationDetails
-        .mainHeading()
+      mainHeading()
         .invoke('text')
         .then((text) => {
           expect(text.trim()).to.equal('Application Details');
@@ -201,7 +200,7 @@ context('Application Details Page', () => {
 
     it('displays the correct submit elements', () => {
       applicationDetails.submitHeading();
-      applicationDetails.submitButton().should('not.exist');
+      submitButton().should('not.exist');
       applicationDetails.submitValidationText();
     });
   });
@@ -214,7 +213,7 @@ context('Application Details Page', () => {
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       cy.automaticEligibilityCriteria();
-      automaticCover.saveAndReturnButton().click();
+      saveAndReturnButton().click();
     });
 
     beforeEach(() => {
@@ -232,7 +231,7 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submission type heading', () => {
-      applicationDetails.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
+      mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
     });
 
     it('displays the correct exporter elements', () => {
@@ -268,7 +267,7 @@ context('Application Details Page', () => {
 
     it('displays the correct submit elements', () => {
       applicationDetails.submitHeading();
-      applicationDetails.submitButton();
+      submitButton();
       applicationDetails.submitValidationText().should('not.exist');
     });
   });
@@ -281,7 +280,7 @@ context('Application Details Page', () => {
       // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       cy.manualEligibilityCriteria();
-      automaticCover.saveAndReturnButton().click();
+      saveAndReturnButton().click();
     });
 
     beforeEach(() => {
@@ -289,7 +288,7 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submission type heading and text in banner', () => {
-      applicationDetails.mainHeading().contains('Manual Inclusion Application');
+      mainHeading().contains('Manual Inclusion Application');
 
       statusBanner.bannerSubmissionType().should('have.text', CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
     });

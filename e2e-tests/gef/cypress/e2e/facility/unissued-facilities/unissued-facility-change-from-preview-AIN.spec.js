@@ -9,6 +9,7 @@ import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
+import { backLink, mainHeading, continueButton, submitButton } from '../../partials';
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
@@ -67,7 +68,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       statusBanner.applicationBanner().should('exist');
-      unissuedFacilityTable.backLink().click();
+      backLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
 
@@ -81,7 +82,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      aboutFacilityUnissued.mainHeading().contains("Tell us you've issued this facility");
+      mainHeading().contains("Tell us you've issued this facility");
       aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
       aboutFacilityUnissued.facilityName().should('have.value', MOCK_FACILITY_ONE.name);
 
@@ -122,11 +123,11 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      aboutFacilityUnissued.continueButton().click();
+      continueButton().click();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
-      unissuedFacilityTable.continueButton().should('not.exist');
+      continueButton().should('not.exist');
       // to go back to application preview page
       unissuedFacilityTable.updateFacilitiesLater().click();
     });
@@ -225,7 +226,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      aboutFacilityUnissued.continueButton().click();
+      continueButton().click();
     });
 
     it('change links should appear for facility four and three should be unissued still', () => {
@@ -272,7 +273,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       // ensures that can submit even with 1 unissued left still
       applicationPreview.submitButtonPostApproval().click();
       applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
-      applicationSubmission.submitButton().click();
+      submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');

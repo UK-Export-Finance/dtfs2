@@ -9,13 +9,13 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIN } from '../../../fixtures/mocks/mock-deals';
 import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
 
+import { continueButton, submitButton } from '../../partials';
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import applicationSubmission from '../../pages/application-submission';
 import statusBanner from '../../pages/application-status-banner';
-import returnToMaker from '../../pages/return-to-maker';
 import applicationDetails from '../../pages/application-details';
 import applicationActivities from '../../pages/application-activities';
 
@@ -88,13 +88,13 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      aboutFacilityUnissued.continueButton().click();
+      continueButton().click();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[1].name} is updated`);
       // checks the facility has been removed from unissued list
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
       // should not be able to continue until all facilities issued - instead use update later to go to preview
-      unissuedFacilityTable.continueButton().should('not.exist');
+      continueButton().should('not.exist');
 
       unissuedFacilityTable.updateIndividualFacilityButton(1).click();
       aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
@@ -113,11 +113,11 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      aboutFacilityUnissued.continueButton().click();
+      continueButton().click();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[2].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 2);
-      unissuedFacilityTable.continueButton().should('not.exist');
+      continueButton().should('not.exist');
 
       unissuedFacilityTable.updateFacilitiesLater().click();
     });
@@ -126,7 +126,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
       applicationPreview.submitButtonPostApproval().click();
       applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
-      applicationSubmission.submitButton().click();
+      submitButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
@@ -225,10 +225,10 @@ context('Return to maker for unissued to issued facilities', () => {
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
-      applicationPreview.submitButton().should('exist');
+      submitButton().should('exist');
       applicationPreview.returnButton().should('exist');
       applicationPreview.returnButton().click();
-      returnToMaker.submitButton().click();
+      submitButton().click();
       cy.location('pathname').should('contain', 'dashboard');
     });
   });
@@ -372,7 +372,7 @@ context('Return to maker for unissued to issued facilities', () => {
       if (facilityEndDateEnabled) {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
-      aboutFacilityUnissued.continueButton().click();
+      continueButton().click();
 
       // forth facility table has correct name and dates
       applicationDetails.facilitySummaryListTable(3).nameValue().contains(MOCK_FACILITY_ONE.name);
@@ -404,8 +404,8 @@ context('Return to maker for unissued to issued facilities', () => {
     });
 
     it('should be able to submit to checker after making changes', () => {
-      applicationDetails.submitButton().click();
-      applicationSubmission.submitButton().click();
+      submitButton().click();
+      submitButton().click();
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
     });
   });
@@ -511,10 +511,10 @@ context('Submit to UKEF with unissued to issued facilities', () => {
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
-      applicationPreview.submitButton().should('exist');
-      applicationPreview.submitButton().click();
+      submitButton().should('exist');
+      submitButton().click();
       applicationSubmission.confirmSubmissionCheckbox().click();
-      applicationSubmission.submitButton().click();
+      submitButton().click();
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted to UKEF');
       // check that correct text is displayed under confirmation panel
       applicationSubmission.confirmationText().contains("We'll send you a confirmation email shortly, once we've acknowledged your issued facilities.");

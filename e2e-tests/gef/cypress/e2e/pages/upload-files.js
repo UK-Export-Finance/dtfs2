@@ -14,8 +14,6 @@ const uploadFIles = {
   facilitySecurity: () => cy.get('[data-cy="facility-security"]'),
   exporterSecurityError: () => cy.get('[data-cy="exporter-security-error"]'),
   exporterSecurity: () => cy.get('[data-cy="exporter-security"]'),
-  continueButton: () => cy.get('[data-cy="submit-button"]'),
-  saveAndReturnButton: () => cy.get('[data-cy="save-and-return-button"]'),
 };
 
 export default uploadFIles;

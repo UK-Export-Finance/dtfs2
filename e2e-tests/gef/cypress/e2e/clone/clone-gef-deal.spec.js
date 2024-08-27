@@ -1,10 +1,9 @@
 import { todayFormattedShort } from '../../../../e2e-fixtures/dateConstants';
 
 import relative from '../relativeURL';
-import automaticCover from '../pages/automatic-cover';
+import { backLink, continueButton, form, mainHeading, saveAndReturnButton, submitButton } from '../partials';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import applicationDetails from '../pages/application-details';
-import applicationPreview from '../pages/application-preview';
 import submitToUkef from '../pages/submit-to-ukef';
 import aboutExporter from '../pages/about-exporter';
 import cloneGEFDeal from '../pages/clone-deal';
@@ -46,18 +45,18 @@ context('Clone GEF (AIN) deal', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${testDealId}/clone`));
       mandatoryCriteria.falseRadio().click();
-      mandatoryCriteria.form().submit();
+      form().submit();
       cy.url().should('eq', relative('/gef/ineligible-gef'));
-      applicationDetails.mainHeading().should('contain', 'This is not eligible for a GEF guarantee');
+      mainHeading().should('contain', 'This is not eligible for a GEF guarantee');
     });
 
     it('should show an error when the bank internal reference is empty', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${testDealId}/clone`));
       mandatoryCriteria.trueRadio().click();
-      mandatoryCriteria.form().submit();
+      form().submit();
       nameApplication.internalRef().clear();
-      nameApplication.form().submit();
+      form().submit();
       nameApplication.formError().should('contain', 'Application reference name is mandatory');
     });
   });
@@ -86,9 +85,9 @@ context('Clone GEF (AIN) deal', () => {
       // Make the deal an AIN
       applicationDetails.automaticCoverDetailsLink().click();
       cy.automaticEligibilityCriteria();
-      automaticCover.saveAndReturnButton().click();
-      applicationDetails.submitButton().click();
-      applicationDetails.submitButton().click();
+      saveAndReturnButton().click();
+      submitButton().click();
+      submitButton().click();
 
       cy.get('[data-cy="dashboard-link"]').click();
       cy.get(`[data-cy="deal__link--${AINdealId}"]`).click();
@@ -96,14 +95,14 @@ context('Clone GEF (AIN) deal', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
-      mandatoryCriteria.form().submit();
+      form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone/name-application`));
       nameApplication.internalRef().type('Cloned AIN deal');
-      nameApplication.form().submit();
+      form().submit();
     });
 
     it('should validate the information in the banner', () => {
-      cloneGEFDeal.backLink().click();
+      backLink().click();
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       cy.url().then((url) => {
         cy.visit(`${url}`);
@@ -115,29 +114,29 @@ context('Clone GEF (AIN) deal', () => {
         applicationDetails.automaticCoverStatus().contains('Not started');
         applicationDetails.facilityStatus().contains('Completed');
         applicationDetails.exporterStatus().contains('Completed');
-        applicationDetails.submitButton().should('not.exist');
+        submitButton().should('not.exist');
         cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
       });
     });
 
     it('should modify the Exporter details', () => {
-      cloneGEFDeal.backLink().click();
+      backLink().click();
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       cy.url().then((url) => {
         cy.visit(`${url}/about-exporter`);
         aboutExporter.mediumRadioButton().click();
         aboutExporter.probabilityOfDefaultInput().clear().focused().type('10');
         aboutExporter.isFinancingIncreasingRadioNo().click();
-        aboutExporter.saveAndReturnButton().click();
+        saveAndReturnButton().click();
       });
     });
 
     it('should clone submitted to UKEF AIN deal and reset issueDate on facilities table to -', () => {
       cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${AINdealId}`));
-      applicationPreview.submitButton().click();
+      submitButton().click();
       submitToUkef.confirmSubmissionCheckbox().click();
-      submitToUkef.submitButton().click();
+      submitButton().click();
 
       cy.login(BANK1_MAKER1);
 
@@ -146,10 +145,10 @@ context('Clone GEF (AIN) deal', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
-      mandatoryCriteria.form().submit();
+      form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone/name-application`));
       nameApplication.internalRef().type('Cloned AIN deal');
-      nameApplication.form().submit();
+      form().submit();
 
       cy.get('[data-cy="success-message-link"]').click();
 
@@ -199,8 +198,8 @@ context('Clone GEF (MIA) deal', () => {
       // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       cy.manualEligibilityCriteria();
-      automaticCover.continueButton().click();
-      manualInclusion.continueButton().click();
+      continueButton().click();
+      continueButton().click();
 
       // upload manual inclusion document
       cy.uploadFile('file1.png', `/gef/application-details/${MIAdealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
@@ -266,7 +265,7 @@ context('Clone GEF (MIA) deal', () => {
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/security-details`));
       uploadFiles.exporterSecurity().type('test');
       uploadFiles.facilitySecurity().type('test2');
-      uploadFiles.continueButton().click();
+      continueButton().click();
     });
 
     it('should verify the status of the Supporting Information section is set to `Complete`', () => {
@@ -277,26 +276,26 @@ context('Clone GEF (MIA) deal', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
-      mandatoryCriteria.form().submit();
+      form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/clone/name-application`));
       nameApplication.internalRef().clear().type('Cloned MIA deal');
-      nameApplication.form().submit();
+      form().submit();
     });
 
     it('should modify the Exporter details', () => {
-      cloneGEFDeal.backLink().click();
+      backLink().click();
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       cy.url().then((url) => {
         cy.visit(`${url}/about-exporter`);
         aboutExporter.mediumRadioButton().click();
         aboutExporter.probabilityOfDefaultInput().clear().focused().type('10');
         aboutExporter.isFinancingIncreasingRadioNo().click();
-        aboutExporter.saveAndReturnButton().click();
+        saveAndReturnButton().click();
       });
     });
 
     it('should validate the information in the banner', () => {
-      cloneGEFDeal.backLink().click();
+      backLink().click();
       cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       cy.url().then((url) => {
         cy.visit(`${url}`);
@@ -308,7 +307,7 @@ context('Clone GEF (MIA) deal', () => {
         applicationDetails.automaticCoverStatus().contains('Not started');
         applicationDetails.facilityStatus().contains('Completed');
         applicationDetails.exporterStatus().contains('Completed');
-        applicationDetails.submitButton().should('not.exist');
+        submitButton().should('not.exist');
         cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
       });
     });
@@ -347,10 +346,10 @@ context('Clone GEF (MIN) deal', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone`));
       mandatoryCriteria.trueRadio().click();
-      mandatoryCriteria.form().submit();
+      form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone/name-application`));
       nameApplication.internalRef().clear().type('Cloned MIN deal');
-      nameApplication.form().submit();
+      form().submit();
 
       cy.get('[data-cy="success-message-link"]').click();
       statusBanner.bannerStatus().contains('Draft');

@@ -1,9 +1,4 @@
 const aboutFacilityUnissued = {
-  errorSummary: () => cy.get('[data-cy="error-summary"]'),
-  backLink: () => cy.get('[data-cy="back-link"]'),
-  headingCaption: () => cy.get('[data-cy="heading-caption"]'),
-  mainHeading: () => cy.get('[data-cy="main-heading"]'),
-  form: () => cy.get('[data-cy="form"]'),
   facilityName: () => cy.get('[data-cy="facility-name"]'),
   facilityNameLabel: () => cy.get('[data-cy="facility-name-label"]'),
   facilityNameError: () => cy.get('[data-cy="facility-name-error"]'),
@@ -28,7 +23,6 @@ const aboutFacilityUnissued = {
   isUsingFacilityEndDateError: () => cy.get('[data-cy="is-using-facility-end-date-error"]'),
   isUsingFacilityEndDateYes: () => cy.get('[data-cy="is-using-facility-end-date-yes"]'),
   isUsingFacilityEndDateNo: () => cy.get('[data-cy="is-using-facility-end-date-no"]'),
-  continueButton: () => cy.get('[data-cy="continue-button"]'),
   cancelLink: () => cy.get('[data-cy="cancel-link"]'),
 };
 

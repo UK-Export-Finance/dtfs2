@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { errorSummary, form, headingCaption, mainHeading } from '../partials';
 import mandatoryCriteria from '../pages/mandatory-criteria';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -15,8 +16,8 @@ context('Mandatory Criteria Page', () => {
 
   describe('Visiting page', () => {
     it('displays the header', () => {
-      mandatoryCriteria.captionHeading();
-      mandatoryCriteria.mainHeading();
+      headingCaption();
+      mainHeading();
     });
 
     it('displays the mandatory criteria text', () => {
@@ -26,31 +27,31 @@ context('Mandatory Criteria Page', () => {
 
   describe('Clicking on Continue', () => {
     it('shows error summary at top of page when no radio button has been selected', () => {
-      mandatoryCriteria.form().submit();
-      mandatoryCriteria.errorSummary();
+      form().submit();
+      errorSummary();
     });
 
     it('Clicking on error link in error summary takes you to correct field', () => {
-      mandatoryCriteria.form().submit();
-      mandatoryCriteria.errorSummary();
+      form().submit();
+      errorSummary();
       mandatoryCriteria.firstErrorLink().click();
       cy.url().should('eq', relative('/gef/mandatory-criteria'));
     });
 
     it('shows validation error when no radio button has been selected', () => {
-      mandatoryCriteria.form().submit();
+      form().submit();
       mandatoryCriteria.formError();
     });
 
     it('redirects the user to ineligible page when they select `False`', () => {
       mandatoryCriteria.falseRadio().click();
-      mandatoryCriteria.form().submit();
+      form().submit();
       cy.url().should('eq', relative('/gef/ineligible-gef'));
     });
 
     it('redirects the user to the Name Application page when they select `True`', () => {
       mandatoryCriteria.trueRadio().click();
-      mandatoryCriteria.form().submit();
+      form().submit();
       cy.url().should('eq', relative('/gef/name-application'));
     });
   });
