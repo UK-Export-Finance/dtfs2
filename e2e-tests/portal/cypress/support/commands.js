@@ -71,6 +71,7 @@ Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'
 Cypress.Commands.add('clickAddBondButton', require('./portal/click-events/click-add-bond-button'));
 Cypress.Commands.add('clickAddLoanButton', require('./portal/click-events/click-add-loan-button'));
 Cypress.Commands.add('clickCancelButton', require('./portal/click-events/click-cancel-button'));
+Cypress.Commands.add('clickContinueButton', require('./portal/click-events/click-continue-button'));
 Cypress.Commands.add('clickReturnToMakerButton', require('./portal/click-events/click-return-to-maker-button'));
 Cypress.Commands.add('clickProceedToReviewButton', require('./portal/click-events/click-proceed-to-review-button'));
 Cypress.Commands.add('clickProceedToSubmitButton', require('./portal/click-events/click-proceed-to-submit-button'));
