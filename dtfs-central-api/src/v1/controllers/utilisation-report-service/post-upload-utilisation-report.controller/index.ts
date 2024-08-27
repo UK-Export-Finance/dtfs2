@@ -1,17 +1,13 @@
 import { Response, NextFunction } from 'express';
 import { HttpStatusCode } from 'axios';
-import { AzureFileInfo, Unknown, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import {
-  validateReportId,
-  validateUtilisationReportData,
-  validateFileInfo,
-  validateReportUser,
-} from '../../../validation/utilisation-report-service/utilisation-report-validator';
+import { AzureFileInfo, Unknown, UtilisationReportCsvRowData, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { validateReportId, validateFileInfo, validateReportUser } from '../../../validation/utilisation-report-service/utilisation-report-validator';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { UtilisationReportRawCsvData } from '../../../../types/utilisation-reports';
 import { ApiError } from '../../../../errors';
 import { executeWithSqlTransaction } from '../../../../helpers';
+import { validateUtilisationReportCsvData } from '../../../../services/utilisation-report-data-validator';
 
 export type PostUploadUtilisationReportRequestBody = {
   reportId: number;
@@ -33,10 +29,18 @@ type PreValidationPostUploadUtilisationReportRequest = CustomExpressRequest<{
 export const postUploadUtilisationReportPayloadValidator = (req: PreValidationPostUploadUtilisationReportRequest, res: Response, next: NextFunction) => {
   const { reportId, fileInfo, reportData, user } = req.body;
 
+  const reportDataRecord = reportData as Record<string, string>[];
+
+  const reportDataMapped = reportDataRecord.map((reportDataRow) => {
+    return Object.keys(reportDataRow).reduce((rowData, key) => {
+      return { ...rowData, [key]: { value: reportDataRow[key] } };
+    }, {} as UtilisationReportCsvRowData);
+  });
+
   const validationErrors = [
     validateReportId(reportId),
     ...validateFileInfo(fileInfo),
-    ...validateUtilisationReportData(reportData),
+    ...validateUtilisationReportCsvData(reportDataMapped).map(({ errorMessage, value }) => ({ errorMessage, value })),
     ...validateReportUser(user),
   ].filter(Boolean);
 

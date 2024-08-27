@@ -29,7 +29,7 @@ export type UploadedByUserDetails = {
   surname: string;
 };
 
-export type UtilisationReportCsvCellData = { value: string | null; column: string; row: string | number };
+export type UtilisationReportCsvCellData = { value: string | null; column?: string; row?: string | number };
 
 export type UtilisationReportCsvRowData = Record<string, UtilisationReportCsvCellData>;
 
