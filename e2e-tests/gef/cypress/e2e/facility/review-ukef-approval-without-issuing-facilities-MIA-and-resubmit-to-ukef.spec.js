@@ -138,12 +138,12 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
     it('clicking yes, accept and proceed takes you to cover-start-date page', () => {
       applicationPreview.ukefReviewLink().click();
       // shows error message do not click yes radio button
-      applicationPreview.reviewDecisionContinue().click();
+      continueButton().click();
       errorSummary().contains('Select yes if you want to accept the conditions and proceed with UKEF cover.');
       applicationPreview.reviewDecisionError('Select yes if you want to accept the conditions and proceed with UKEF cover.');
 
       applicationPreview.reviewDecisionTrue().click();
-      applicationPreview.reviewDecisionContinue().click();
+      continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/cover-start-date`));
 
       coverStartDate.rows().should('have.length', issuedFacilities.length);

@@ -85,7 +85,6 @@ const applicationPreview = {
     cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__actions'),
 
   submitHeading: () => cy.get('[data-cy="submit-heading"]'),
-  submitButton: () => cy.get('[data-cy="submit-button"]'),
   submitButtonPostApproval: () => cy.get('[data-cy="submit-ukef-approved-application-to-checker"]'),
   returnButton: () => cy.get('[data-cy="return-button"]'),
 };

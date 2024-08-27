@@ -4,7 +4,6 @@ const applicationSubmission = {
   commentsField: () => cy.get('[data-cy="application-comments"]'),
   submissionText: () => cy.get('[data-cy="application-submission-text"]'),
   confirmSubmissionCheckbox: () => cy.get('[data-cy="confirm-submit-ukef-checkbox"]'),
-  submitButton: () => cy.get('[data-cy="submit-button"]'),
   cancelLink: () => cy.get('[data-cy="cancel-link"]'),
   confirmation: () => cy.get('[data-cy="application-submission-confirmation"]'),
   confirmationPanelTitle: () => cy.get('[data-cy="submit-confirmation-title"]'),

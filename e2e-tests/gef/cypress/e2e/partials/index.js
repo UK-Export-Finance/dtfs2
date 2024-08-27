@@ -7,12 +7,5 @@ export const mainHeading = () => cy.get('[data-cy="main-heading"]');
 export const saveAndReturnButton = () => cy.get('[data-cy="save-and-return-button"]');
 export const submitButton = () => cy.get('[data-cy="submit-button"]');
 
-// TODO: search for submitbUtton instances.
-// and other selectors
-
-// don't need the exist part.
-// submitButton().should('exist');
-// submitButton().click();
-
 // TODO (?)
 // cancelButton
