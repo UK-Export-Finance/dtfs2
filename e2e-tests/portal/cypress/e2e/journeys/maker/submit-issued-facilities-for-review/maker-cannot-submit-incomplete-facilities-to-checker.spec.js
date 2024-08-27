@@ -251,8 +251,8 @@ context('A maker should not be able to submit the deal if it has atleast one `In
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${incompleteIssueFacilityBondId}/issue-facility`));
 
     pages.bondIssueFacility.name().type('1234');
-    pages.bondIssueFacility.submit().click();
-    pages.bondIssueFacility.cancelButton().click();
+    cy.clickSubmitButton();
+    cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
@@ -284,8 +284,8 @@ context('A maker should not be able to submit the deal if it has atleast one `In
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${incompleteIssueFacilityLoanId}/issue-facility`));
 
     pages.loanIssueFacility.disbursementAmount().type('1234');
-    pages.loanIssueFacility.submit().click();
-    pages.loanIssueFacility.cancelButton().click();
+    cy.clickSubmitButton();
+    cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------

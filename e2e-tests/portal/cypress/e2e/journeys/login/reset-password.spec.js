@@ -27,7 +27,7 @@ context('Password management screens', () => {
 
     it('Enter an empty email address displays error message', () => {
       resetPassword.emailInput().should('be.empty');
-      resetPassword.submit().click();
+      cy.clickSubmitButton();
 
       resetPassword.emailInputError().should('exist');
       resetPassword.emailInputError().contains('Enter an email address in the correct format, for example, name@example.com');
@@ -35,7 +35,7 @@ context('Password management screens', () => {
 
     it('should redirect to login page when a non-existant email is used', () => {
       resetPassword.emailInput().type('email_is_not_valid@ukexportfinance.gov.uk');
-      resetPassword.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
       cy.get('[data-cy="password-reset-notification').contains(expectedContactUsMessage);
@@ -43,7 +43,7 @@ context('Password management screens', () => {
 
     it('should redirect to login page on successful request for reset password', () => {
       resetPassword.emailInput().type(TEST_EMAIL_NO_GOV_NOTIFY.email);
-      resetPassword.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
       cy.get('[data-cy="password-reset-notification').contains(expectedContactUsMessage);
@@ -51,7 +51,7 @@ context('Password management screens', () => {
 
     it('should be case insensitive when accepting email', () => {
       resetPassword.emailInput().type(TEST_EMAIL_NO_GOV_NOTIFY.email.toUpperCase());
-      resetPassword.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
       cy.get('[data-cy="password-reset-notification').contains(expectedContactUsMessage);
@@ -71,7 +71,7 @@ context('Password management screens', () => {
 
     it('Should display error message on an empty new password field submit', () => {
       resetPassword.visitChangePassword();
-      changePassword.submit().click();
+      cy.clickSubmitButton();
 
       changePassword.passwordError().should('exist');
       changePassword.passwordError().contains('Empty password');
@@ -80,7 +80,7 @@ context('Password management screens', () => {
     it('Should display error message on an empty confirm new password field submit', () => {
       resetPassword.visitChangePassword();
       changePassword.password().type('abc');
-      changePassword.submit().click();
+      cy.clickSubmitButton();
 
       changePassword.passwordConfirmError().should('exist');
       changePassword.passwordConfirmError().contains('Empty password');
@@ -105,7 +105,7 @@ context('Password management screens', () => {
     });
 
     it('Should display error messages upon empty field submission', () => {
-      changePassword.submit().click();
+      cy.clickSubmitButton();
       cy.url().should('include', '/change-password');
 
       changePassword.currentPasswordError().should('exist');

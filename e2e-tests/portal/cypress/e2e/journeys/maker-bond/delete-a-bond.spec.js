@@ -134,7 +134,7 @@ context('Delete a Bond', () => {
     bondToDeleteRow.deleteLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondToDeleteId}/delete`));
 
-    pages.bondDelete.submit().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative(`/contract/${dealId}`));
 

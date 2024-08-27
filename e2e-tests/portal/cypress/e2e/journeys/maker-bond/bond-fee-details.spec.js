@@ -39,14 +39,14 @@ context('Bond Fee Details', () => {
       goToBondFeeDetailsPage(deal);
       cy.title().should('eq', `Bond Fee Details${pages.defaults.pageTitleAppend}`);
 
-      pages.bondFeeDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/check-your-answers');
       partials.taskListHeader.itemLink('fee-details').click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+      partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
       pages.bondFeeDetails.feeTypeInputErrorMessage().should('be.visible');
       pages.bondFeeDetails.dayCountBasisInputErrorMessage().should('be.visible');
@@ -59,14 +59,14 @@ context('Bond Fee Details', () => {
 
       pages.bondFeeDetails.feeTypeInAdvanceInput().click();
 
-      pages.bondFeeDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/check-your-answers');
       partials.taskListHeader.itemLink('fee-details').click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+      partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
       pages.bondFeeDetails.feeFrequencyInputErrorMessage().should('be.visible');
       pages.bondFeeDetails.dayCountBasisInputErrorMessage().should('be.visible');
@@ -90,7 +90,7 @@ context('Bond Fee Details', () => {
 
     fillBondForm.feeDetails();
 
-    pages.bondFeeDetails.submit().click();
+    cy.clickSubmitButton();
     partials.taskListHeader
       .itemStatus('fee-details')
       .invoke('text')
@@ -117,7 +117,7 @@ context('Bond Fee Details', () => {
     goToBondFeeDetailsPage(deal);
 
     fillBondForm.feeDetails();
-    pages.bondFeeDetails.submit().click();
+    cy.clickSubmitButton();
 
     cy.url().should('include', '/contract');
     cy.url().should('include', '/bond/');
@@ -148,7 +148,7 @@ context('Bond Fee Details', () => {
       partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
-        pages.bondFeeDetails.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
 
         cy.url().should('not.include', '/fee-details');
         cy.url().should('include', '/contract');

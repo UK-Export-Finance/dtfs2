@@ -1,3 +1,4 @@
+const { mainHeading } = require('../../../partials');
 const { previousReports } = require('../../../pages');
 const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
@@ -27,7 +28,7 @@ context('List previous utilisation reports', () => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/previous-reports'));
 
-      previousReports.mainHeading().should('contain', year);
+      mainHeading().should('contain', year);
 
       previousReports.sideNavigationItems().first().click();
 
@@ -53,7 +54,7 @@ context('List previous utilisation reports', () => {
 
       previousReports.sideNavigationItemByYear(year).click();
 
-      previousReports.mainHeading().should('contain', year);
+      mainHeading().should('contain', year);
     });
 
     it('List items for December 2022 displayed', () => {

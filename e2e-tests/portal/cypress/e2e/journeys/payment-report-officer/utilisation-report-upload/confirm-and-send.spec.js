@@ -1,3 +1,4 @@
+const { mainHeading } = require('../../../partials');
 const { utilisationReportUpload, confirmAndSend, problemWithService } = require('../../../pages');
 const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
@@ -21,29 +22,29 @@ context('Confirm and send', () => {
       cy.visit(relativeURL('/utilisation-report-upload'));
 
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023_monthly.xlsx');
-      utilisationReportUpload.continueButton().click();
+      cy.clickContinueButton();
 
       problemWithService.heading().should('not.exist');
     });
 
     it('Should route to the Upload Report page when the back button is selected', () => {
-      confirmAndSend.backLink().click();
+      cy.clickBackLink();
 
-      confirmAndSend.mainHeading().should('not.exist');
+      mainHeading().should('not.exist');
       utilisationReportUpload.assertOnThisPage();
     });
 
     it('Should route to the Upload Report page when the change button is selected', () => {
       confirmAndSend.changeLink().click();
 
-      confirmAndSend.mainHeading().should('not.exist');
+      mainHeading().should('not.exist');
       utilisationReportUpload.assertOnThisPage();
     });
 
     it('Should route to the Confirmation page when the Confirm and Send button is selected', () => {
       confirmAndSend.confirmAndSendButton().click();
 
-      confirmAndSend.mainHeading().should('not.exist');
+      mainHeading().should('not.exist');
       confirmAndSend.currentUrl().should('contain', '/confirmation');
     });
   });

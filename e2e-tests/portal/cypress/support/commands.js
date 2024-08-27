@@ -1,5 +1,6 @@
 import 'cypress-file-upload';
 import * as api from '../../../gef/cypress/support/commands/api';
+import './portal/click-events';
 
 // ***********************************************
 // This example commands.js shows you how to

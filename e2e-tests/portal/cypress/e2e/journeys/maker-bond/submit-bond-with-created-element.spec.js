@@ -35,17 +35,17 @@ context('Bond form - Submit bond with created element on page', () => {
     fillBondForm.details.facilityStageIssued();
     // inserts text element into form
     cy.insertElement('bond-form');
-    pages.bondDetails.submit().click();
+    cy.clickSubmitButton();
 
     fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
     // inserts text element into form
     cy.insertElement('bond-financial-details-form');
-    pages.bondFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     fillBondForm.feeDetails();
     // insert text element into form
     cy.insertElement('bond-fee-form');
-    pages.bondFeeDetails.submit().click();
+    cy.clickSubmitButton();
 
     // gets deal
     cy.getDeal(deal._id, BANK1_MAKER1).then((updatedDeal) => {

@@ -59,10 +59,10 @@ context("A maker is informed of a bond's status before submitting an issued bond
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
 
     // don't fill anything in. Submit and go back to deal page
-    pages.bondIssueFacility.submit().click();
+    cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
 
-    pages.bondIssueFacility.cancelButton().click();
+    cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     // assert bond status has changed

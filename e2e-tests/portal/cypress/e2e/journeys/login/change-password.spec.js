@@ -94,7 +94,7 @@ context('Admin user creates a new user; the new user sets their password and the
       changePassword.currentPassword().type(userToCreate.password);
       changePassword.password().type('fail');
       changePassword.confirmPassword().type('fail');
-      changePassword.submit().click();
+      cy.clickSubmitButton();
 
       // Expect failure
       cy.url().should('match', /change-password/);
@@ -111,7 +111,7 @@ context('Admin user creates a new user; the new user sets their password and the
       changePassword.currentPassword().type('wrongPassword');
       changePassword.password().type('P4ssPl£ase');
       changePassword.confirmPassword().type('P4ssPl£ase');
-      changePassword.submit().click();
+      cy.clickSubmitButton();
 
       // Expect failure
       cy.url().should('match', /change-password/);
@@ -126,7 +126,7 @@ context('Admin user creates a new user; the new user sets their password and the
       changePassword.currentPassword().type('AbC!2345');
       changePassword.password().type(' ');
       changePassword.confirmPassword().type(' ');
-      changePassword.submit().click();
+      cy.clickSubmitButton();
 
       changePassword
         .passwordError()
@@ -146,7 +146,7 @@ context('Admin user creates a new user; the new user sets their password and the
       changePassword.currentPassword().type(userToCreate.password);
       changePassword.password().type('P4ssPl£ase');
       changePassword.confirmPassword().type('P4ssPl£ase');
-      changePassword.submit().click();
+      cy.clickSubmitButton();
     });
 
     it('should allow users to log in using the new credentials', () => {
@@ -177,7 +177,7 @@ context('Admin user creates a new user; the new user sets their password and the
       changePassword.currentPassword().type('P4ssPl£ase');
       changePassword.password().type('AbC!2345');
       changePassword.confirmPassword().type('AbC!2345');
-      changePassword.submit().click();
+      cy.clickSubmitButton();
 
       // expect failure
       cy.url().should('match', /change-password/);

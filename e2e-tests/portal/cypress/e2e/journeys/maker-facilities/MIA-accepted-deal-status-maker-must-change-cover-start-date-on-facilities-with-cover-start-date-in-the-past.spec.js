@@ -75,7 +75,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_BOND_COVER_START_DATE().getDate());
     pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_BOND_COVER_START_DATE().getMonth() + 1);
     pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_BOND_COVER_START_DATE().getFullYear());
-    pages.facilityConfirmCoverStartDate.submit().click();
+    cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
@@ -89,7 +89,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.facilityConfirmCoverStartDate.coverStartDateDay().type(dateConstants.oneMonthDay);
     pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(dateConstants.oneMonthMonth);
     pages.facilityConfirmCoverStartDate.coverStartDateYear().type(dateConstants.oneMonthYear);
-    pages.facilityConfirmCoverStartDate.submit().click();
+    cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------

@@ -59,10 +59,10 @@ context("A maker is informed of a loan's status before submitting an issued loan
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
 
     // don't fill anything in. Submit and go back to deal page
-    pages.loanIssueFacility.submit().click();
+    cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
 
-    pages.loanIssueFacility.cancelButton().click();
+    cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     // assert loan status has changed

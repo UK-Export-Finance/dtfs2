@@ -48,7 +48,7 @@ context('Loan form - Submit loan with created element on page', () => {
     pages.loanGuaranteeDetails.coverEndDateMonthInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateMonth);
     pages.loanGuaranteeDetails.coverEndDateYearInput().type(LOAN_FORM_VALUES.GUARANTEE_DETAILS.coverEndDateYear);
 
-    pages.loanGuaranteeDetails.submit().click();
+    cy.clickSubmitButton();
 
     // insert text element onto loan form
     cy.insertElement('loan-financial-details-form');
@@ -60,12 +60,12 @@ context('Loan form - Submit loan with created element on page', () => {
     pages.loanFinancialDetails.minimumQuarterlyFeeInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.minimumQuarterlyFee);
 
     pages.loanFinancialDetails.disbursementAmountInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.disbursementAmount);
-    pages.loanFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     fillLoanForm.datesRepayments.inAdvanceAnnually();
     // insert text element onto loan form
     cy.insertElement('loan-repayment-form');
-    pages.loanDatesRepayments.submit().click();
+    cy.clickSubmitButton();
 
     // gets deal
     cy.getDeal(deal._id, BANK1_MAKER1).then((updatedDeal) => {

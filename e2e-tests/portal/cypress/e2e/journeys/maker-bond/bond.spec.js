@@ -47,7 +47,7 @@ context('Add a Bond to a Deal', () => {
     partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
       const bondId = bondIdHiddenInput[0].value;
 
-      pages.bondDetails.saveGoBackButton().click();
+      cy.clickSaveGoBackButton();
 
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
       bondRow.uniqueNumberLink().contains(DETAILS.name);
@@ -64,19 +64,19 @@ context('Add a Bond to a Deal', () => {
         bankDealName: MOCK_DEAL.additionalRefName,
       });
       pages.contract.addBondButton().click();
-      pages.bondDetails.submit().click();
-      pages.bondFinancialDetails.submit().click();
+      cy.clickSubmitButton();
+      cy.clickSubmitButton();
 
       partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
-        pages.bondFeeDetails.submit().click();
+        cy.clickSubmitButton();
 
         cy.url().should('include', '/contract');
         cy.url().should('include', '/bond/');
         cy.url().should('include', '/check-your-answers');
         cy.title().should('eq', `Check your answers - Bond - ${bondId}${pages.defaults.pageTitleAppend}`);
         const TOTAL_REQUIRED_FORM_FIELDS = 8;
-        partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+        partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
       });
     });
   });
@@ -91,7 +91,7 @@ context('Add a Bond to a Deal', () => {
       partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
-        pages.bondDetails.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
         cy.url().should('eq', relative(`/contract/${deal._id}`));
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
@@ -116,22 +116,22 @@ context('Add a Bond to a Deal', () => {
           bankDealName: MOCK_DEAL.additionalRefName,
         });
         pages.contract.addBondButton().click();
-        pages.bondDetails.submit().click();
-        pages.bondFinancialDetails.submit().click();
-        pages.bondFeeDetails.submit().click();
+        cy.clickSubmitButton();
+        cy.clickSubmitButton();
+        cy.clickSubmitButton();
 
         cy.url().should('include', '/contract');
         cy.url().should('include', '/bond/');
         cy.url().should('include', '/check-your-answers');
 
         partials.taskListHeader.itemLink('bond-details').click();
-        partials.errorSummary.errorSummaryLinks().should('have.length', 2);
+        partials.errorSummaryLinks().should('have.length', 2);
 
         partials.taskListHeader.itemLink('financial-details').click();
-        partials.errorSummary.errorSummaryLinks().should('have.length', 4);
+        partials.errorSummaryLinks().should('have.length', 4);
 
         partials.taskListHeader.itemLink('fee-details').click();
-        partials.errorSummary.errorSummaryLinks().should('have.length', 2);
+        partials.errorSummaryLinks().should('have.length', 2);
 
         partials.taskListHeader.checkYourAnswersLink().should('be.visible');
         partials.taskListHeader.checkYourAnswersLink().click();
@@ -204,7 +204,7 @@ context('Add a Bond to a Deal', () => {
       partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
-        pages.bondPreview.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
         cy.url().should('eq', relative(`/contract/${deal._id}`));
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
@@ -270,7 +270,7 @@ context('Add a Bond to a Deal', () => {
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
-      pages.bondPreview.saveGoBackButton().click();
+      cy.clickSaveGoBackButton();
 
       cy.url().should('not.include', '/check-your-answers');
       cy.url().should('include', '/contract');

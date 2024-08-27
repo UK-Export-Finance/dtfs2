@@ -36,14 +36,14 @@ context('Bond Details', () => {
       cy.title().should('eq', `Bond Details${pages.defaults.pageTitleAppend}`);
 
       pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
-      pages.bondDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/financial-details');
       partials.taskListHeader.itemLink('bond-details').click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+      partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
       pages.bondDetails.bondTypeInputErrorMessage().should('be.visible');
       pages.bondDetails.facilityStageInputErrorMessage().should('be.visible');
@@ -75,7 +75,7 @@ context('Bond Details', () => {
     pages.bondDetails.nameInput().type(BOND_FORM_VALUES.DETAILS.name);
     pages.bondDetails.bondBeneficiaryInput().type(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
 
-    pages.bondDetails.submit().click();
+    cy.clickSubmitButton();
 
     partials.taskListHeader
       .itemStatus('bond-details')
@@ -109,7 +109,7 @@ context('Bond Details', () => {
     pages.bondDetails.coverEndDateMonthInput().clear().type(`${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}-`);
     pages.bondDetails.coverEndDateYearInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateYear);
 
-    pages.bondDetails.submit().click();
+    cy.clickSubmitButton();
 
     pages.bondDetails.bondDetails().click();
     pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
@@ -122,7 +122,7 @@ context('Bond Details', () => {
     pages.bondDetails.coverEndDateMonthInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
     pages.bondDetails.coverEndDateYearInput().clear().type(`${BOND_FORM_VALUES.DETAILS.coverEndDateYear}-`);
 
-    pages.bondDetails.submit().click();
+    cy.clickSubmitButton();
 
     pages.bondDetails.bondDetails().click();
     pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The year for the requested Cover Start Date must include 4 numbers');
@@ -138,7 +138,7 @@ context('Bond Details', () => {
     partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
       const bondId = bondIdHiddenInput[0].value;
 
-      pages.bondDetails.saveGoBackButton().click();
+      cy.clickSaveGoBackButton();
 
       const row = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -154,7 +154,7 @@ context('Bond Details', () => {
 
     fillBondForm.details.facilityStageIssued();
 
-    pages.bondDetails.submit().click();
+    cy.clickSubmitButton();
 
     partials.taskListHeader
       .itemStatus('bond-details')
@@ -196,14 +196,14 @@ context('Bond Details', () => {
         pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
         pages.bondDetails.facilityStageUnissuedInput().click();
 
-        pages.bondDetails.submit().click();
+        cy.clickSubmitButton();
         cy.url().should('include', '/financial-details');
         partials.taskListHeader.itemLink('bond-details').click();
 
         const UNISSUED_REQUIRED_FORM_FIELDS = 1;
         const TOTAL_REQUIRED_FORM_FIELDS = UNISSUED_REQUIRED_FORM_FIELDS;
 
-        partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+        partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
         pages.bondDetails.ukefGuaranteeInMonthsInputErrorMessage().should('be.visible');
       });
     });
@@ -215,7 +215,7 @@ context('Bond Details', () => {
 
       fillBondForm.details.facilityStageUnissued();
 
-      pages.bondDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/contract');
       cy.url().should('include', '/bond/');
@@ -233,9 +233,9 @@ context('Bond Details', () => {
         const bondId = bondIdHiddenInput[0].value;
 
         fillBondForm.details.facilityStageUnissued();
-        pages.bondDetails.submit().click();
+        cy.clickSubmitButton();
 
-        pages.bondFinancialDetails.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -271,7 +271,7 @@ context('Bond Details', () => {
       pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
       pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
       pages.bondDetails.bondBeneficiaryInput().type(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
-      pages.bondDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/financial-details');
       partials.taskListHeader.itemLink('bond-details').click();
@@ -306,14 +306,14 @@ context('Bond Details', () => {
         pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
         pages.bondDetails.facilityStageIssuedInput().click();
 
-        pages.bondDetails.submit().click();
+        cy.clickSubmitButton();
         cy.url().should('include', '/financial-details');
         partials.taskListHeader.itemLink('bond-details').click();
 
         const ISSUED_REQUIRED_FORM_FIELDS = 2;
         const TOTAL_REQUIRED_FORM_FIELDS = ISSUED_REQUIRED_FORM_FIELDS;
 
-        partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+        partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
         pages.bondDetails.coverEndDateInputErrorMessage().should('be.visible');
         pages.bondDetails.nameInputErrorMessage().should('be.visible');
       });
@@ -325,7 +325,7 @@ context('Bond Details', () => {
       pages.contract.addBondButton().click();
 
       fillBondForm.details.facilityStageIssued();
-      pages.bondDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/contract');
       cy.url().should('include', '/bond/');
@@ -348,7 +348,7 @@ context('Bond Details', () => {
         partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
           const bondId = bondIdHiddenInput[0].value;
 
-          pages.bondDetails.saveGoBackButton().click();
+          cy.clickSaveGoBackButton();
 
           cy.url().should('not.include', '/details');
           cy.url().should('include', '/contract');
