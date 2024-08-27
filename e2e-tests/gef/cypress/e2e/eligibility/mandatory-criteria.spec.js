@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { cancelButton, errorSummary, form, headingCaption, mainHeading } from '../partials';
+import { errorSummary, form, headingCaption, mainHeading } from '../partials';
 import mandatoryCriteria from '../pages/mandatory-criteria';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -58,7 +58,7 @@ context('Mandatory Criteria Page', () => {
 
   describe('Clicking on Abandon', () => {
     it('takes the user back to the dashboard', () => {
-      cancelButton().click();
+      cy.clickCancelButton();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
   });

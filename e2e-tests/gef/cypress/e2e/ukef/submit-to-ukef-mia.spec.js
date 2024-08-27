@@ -1,6 +1,6 @@
 import relative from '../relativeURL';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import { cancelButton, continueButton, mainHeading, submitButton } from '../partials';
+import { continueButton, mainHeading, submitButton } from '../partials';
 import applicationDetails from '../pages/application-details';
 import automaticCover from '../pages/automatic-cover';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
@@ -56,7 +56,7 @@ context('Submit MIA to UKEF', () => {
       securityDetails.facilitySecurity().type('test2');
       continueButton().click();
       securityDetails.visit(dealId);
-      cancelButton().click();
+      cy.clickCancelButton();
 
       submitButton().click();
 

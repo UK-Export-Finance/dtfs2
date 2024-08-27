@@ -77,7 +77,7 @@ context('Security Details Page', () => {
 
     it('redirects user to application page when clicking on `Return to application` button', () => {
       securityDetails.visit(dealId);
-      cancelButton().click();
+      cy.clickCancelButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
   });

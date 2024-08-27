@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { cancelButton, continueButton, submitButton } from '../partials';
+import { continueButton, submitButton } from '../partials';
 import automaticCover from '../pages/automatic-cover';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import securityDetails from '../pages/security-details';
@@ -57,7 +57,7 @@ context('Submit to UKEF as MIA', () => {
       securityDetails.facilitySecurity().type('test');
       continueButton().click();
       securityDetails.visit(dealId);
-      cancelButton().click();
+      cy.clickCancelButton();
 
       submitButton().click();
     });
