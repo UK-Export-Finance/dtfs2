@@ -1,7 +1,6 @@
 import relative from '../../relativeURL';
 
 const { errorSummary } = require('../../partials');
-
 const { feedbackPage, header } = require('../../pages');
 
 context('User submit feedback on portal', () => {
