@@ -172,7 +172,7 @@ const validateAndUpdateAboutFacility = async (req, res) => {
     const { details: existingFacility } = await api.getFacility({ facilityId, userToken });
     const existingCoverStartDate = existingFacility.coverStartDate ? Date(existingFacility.coverStartDate) : null;
 
-    const coverStartDateHasChanged = existingCoverStartDate && !isSameDay(existingCoverStartDate, coverStartDate);
+    const coverStartDateHasChanged = coverStartDate && existingCoverStartDate && !isSameDay(existingCoverStartDate, coverStartDate);
 
     if (coverStartDateHasChanged) {
       facilityUpdate.facilityEndDate = null;

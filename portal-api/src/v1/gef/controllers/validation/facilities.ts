@@ -6,7 +6,7 @@ import { FACILITY_PAYMENT_TYPE } from '../../enums';
  * @returns array of missing properties on facility
  */
 const hasRequiredItems = (facility: Facility, dealVersion: number): (keyof Facility)[] => {
-  const isMigratedFacility = 'dataMigration' in facility && facility.dataMigration;
+  const isMigratedFacility = !!facility.dataMigration;
 
   const required: (keyof Facility)[] = [];
   if (!facility.type) {

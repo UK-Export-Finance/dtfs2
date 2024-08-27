@@ -81,7 +81,7 @@ describe('validateAndUpdateAboutFacility', () => {
       expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123');
     });
 
-    it('sets the correct date format using single day, month and year values', async () => {
+    it('calls api.updateFacility with the new values', async () => {
       const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.query.saveAndReturn = 'true';
@@ -107,11 +107,13 @@ describe('validateAndUpdateAboutFacility', () => {
         name: undefined,
         coverDateConfirmed: null,
       };
+
       if (dealVersion === 1) {
         expectedPayload.isUsingFacilityEndDate = true;
         expectedPayload.facilityEndDate = null;
         expectedPayload.bankReviewDate = null;
       }
+
       expect(api.updateFacility).toHaveBeenCalledWith({
         facilityId: 'xyz',
         payload: expectedPayload,

@@ -62,4 +62,8 @@ export type Facility = {
   hasBeenIssuedAndAcknowledged: boolean | null;
   canResubmitIssuedFacilities: boolean | null;
   unissuedToIssuedByMaker: object;
+  // Legacy data from migrating old GEF Facilities into DTFS
+  dataMigration?: {
+    drupalFacilityId: string;
+  };
 } & FacilityEndDateProperties;

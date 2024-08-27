@@ -505,7 +505,7 @@ describe(baseUrl, () => {
         expect(status).toBe(HttpStatusCode.Ok);
       });
 
-      it('returns 200 when facilityEndDate & bank review date are both null', async () => {
+      it('returns 200 when facilityEndDate & bankReviewDate are both null', async () => {
         const { body: facilityBody } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
         const { status } = await as(aMaker).put({ facilityEndDate: null, bankReviewDate: null }).to(`${baseUrl}/${facilityBody.details._id}`);
