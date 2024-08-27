@@ -6,6 +6,7 @@ import { AddToAnExistingPaymentViewModel } from '../../../types/view-models';
 import { SelectedFeeRecordsDetailsResponseBody } from '../../../api-response-types';
 import { aTfmSessionUser } from '../../../../test-helpers';
 import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../helpers';
+import { getLinkToPremiumPaymentsTab } from './get-link-to-premium-payments-tab';
 
 jest.mock('../../../api');
 
@@ -248,9 +249,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       await addToAnExistingPayment(req, res);
 
       // Assert
-      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).backLinkHref).toEqual(
-        `/utilisation-reports/${reportId}?selectedFeeRecordIds=1%2C22%2C333`,
-      );
+      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).backLinkHref).toEqual(getLinkToPremiumPaymentsTab(reportId, [1, 22, 333]));
     });
 
     it('should set the selected fee record checkbox ids', async () => {

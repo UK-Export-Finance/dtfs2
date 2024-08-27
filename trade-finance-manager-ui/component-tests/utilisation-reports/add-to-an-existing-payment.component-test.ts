@@ -97,7 +97,7 @@ describe(page, () => {
 
   it('should render cancel link button linking to backLinkHref', () => {
     // Arrange
-    const backLinkHref = '/utilisation-reports/12?selectedFeeRecordIds=456';
+    const backLinkHref = 'back-link-url';
     const addToAnExistingPaymentViewModel: AddToAnExistingPaymentViewModel = {
       ...anAddToAnExistingPaymentViewModel(),
       backLinkHref,
@@ -111,7 +111,7 @@ describe(page, () => {
 
   it('should render back link button linking to backLinkHref', () => {
     // Arrange
-    const backLinkHref = '/utilisation-reports/12?selectedFeeRecordIds=456';
+    const backLinkHref = 'back-link-url';
     const addToAnExistingPaymentViewModel: AddToAnExistingPaymentViewModel = {
       ...anAddToAnExistingPaymentViewModel(),
       backLinkHref,
