@@ -1,5 +1,4 @@
 import relative from '../../relativeURL';
-import { cancelLink } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
@@ -47,7 +46,7 @@ context('Amendments - Request date', () => {
     amendmentsPage.amendmentRequestMonthInput();
     amendmentsPage.amendmentRequestYearInput();
     amendmentsPage.continueAmendment();
-    cancelLink();
+    amendmentsPage.cancelLink();
   });
 
   it('should return errors when clicking continue on blank inputs', () => {
@@ -158,7 +157,7 @@ context('Amendments - Request date', () => {
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.addAmendmentButton().click();
 
-    cy.clickCancelLink();
+    amendmentsPage.cancelLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}#amendments`));
   });
 

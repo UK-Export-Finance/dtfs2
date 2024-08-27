@@ -245,7 +245,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     amendmentsPage.errorSummary().contains('Select if the bank wants to proceed or withdraw');
     amendmentsPage.errorMessage().contains('Select if the bank wants to proceed or withdraw');
 
-    cy.clickCancelLink();
+    amendmentsPage.cancelLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
 

@@ -161,7 +161,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter/assign`));
 
-    cy.clickCancelLink();
+    pages.leadUnderwriterPage.cancelLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
 

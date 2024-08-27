@@ -117,7 +117,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`));
 
-    cy.clickCancelLink();
+    pages.facilityRiskProfilePage.cancelLink().click();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
