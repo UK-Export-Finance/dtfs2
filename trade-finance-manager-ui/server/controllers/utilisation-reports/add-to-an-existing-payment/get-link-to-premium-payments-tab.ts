@@ -1,4 +1,22 @@
 /**
+ * Maximum recommended URL length for security and performance reasons.
+ * @see {@link https://stackoverflow.com/a/48230425}
+ */
+const MAX_URL_CHARACTERS = 2048;
+
+/**
+ * Estimated character allowance for the base URL (without query parameters).
+ */
+const BASE_URL_CHARACTER_ALLOWANCE = 150;
+
+/**
+ * Maximum length for URL with query parameters.
+ * This allows for approximately 189 seven-digit IDs to be passed as query parameters (see below for calculation).
+ * Calculation: (2048 - 150) = 1898 chars, 1898 / (7 digits per ID + 3 chars for percent-encoded comma) ≈ 189
+ */
+const URL_WITH_PARAMS_MAX_LENGTH = MAX_URL_CHARACTERS - BASE_URL_CHARACTER_ALLOWANCE;
+
+/**
  * Generates a link to the Premium Payments tab for a given utilisation report,
  * including selected fee record IDs as query parameters if within URL length limit.
  * @param reportId - The ID of the utilisation report.
@@ -20,16 +38,11 @@ export const getLinkToPremiumPaymentsTab = (reportId: string, selectedFeeRecordI
 
   const urlWithParams = `${urlWithoutParams}?${urlParams}`;
 
-  // "Recommended Security and Performance Max: 2048 CHARACTERS" - https://stackoverflow.com/a/48230425
-  const maxUrlCharacters = 2048;
-  const baseUrlCharacterAllowance = 150;
-  const urlWithParamsMaxLength = maxUrlCharacters - baseUrlCharacterAllowance;
-  if (urlWithParams.length > urlWithParamsMaxLength) {
-    // Passing the IDs as query params should handle up to ~189 seven digit IDs before we reach this limit.
-    // (2048 - 150) = 1898 chars, 1898 / (7 digits per ID + 3 chars for percent-encoded comma) = ~189 seven digit IDs.
+  if (urlWithParams.length > URL_WITH_PARAMS_MAX_LENGTH) {
     console.error(
-      `Back link URL with params exceeds maximum length (${urlWithParams.length} > ${urlWithParamsMaxLength}). Falling back to URL without params.`,
+      `Back link URL with params exceeds maximum length (${urlWithParams.length} > ${URL_WITH_PARAMS_MAX_LENGTH}). Falling back to URL without params.`,
     );
+
     return urlWithoutParams;
   }
 
