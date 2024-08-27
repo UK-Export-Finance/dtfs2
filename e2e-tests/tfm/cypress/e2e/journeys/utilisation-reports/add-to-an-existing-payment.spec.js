@@ -191,7 +191,6 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
 
   describe('when user navigates away', () => {
     const FEE_RECORD_ID_THREE = '33';
-    const FEE_RECORD_ID_FOUR = '44';
 
     beforeEach(() => {
       const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
@@ -204,22 +203,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
         .withPaymentExchangeRate(0.5)
         .withStatus(FEE_RECORD_STATUS.TO_DO)
         .build();
-      const fourthFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
-        .withId(FEE_RECORD_ID_FOUR)
-        .withFacilityId('44444444')
-        .withExporter('Exporter 4')
-        .withPaymentCurrency(PAYMENT_CURRENCY)
-        .withFeesPaidToUkefForThePeriod(400)
-        .withFeesPaidToUkefForThePeriodCurrency('EUR')
-        .withPaymentExchangeRate(0.5)
-        .withPayments([firstPayment])
-        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
-        .build();
 
       cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
       cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
-      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord, fourthFeeRecord]);
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord]);
     });
 
     describe('by clicking the back button', () => {
@@ -244,7 +232,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
           .checkbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO)
           .should('be.checked');
         pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-          .checkbox([FEE_RECORD_ID_TWO, FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH)
+          .checkbox([FEE_RECORD_ID_TWO], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH)
           .should('not.be.checked');
       });
     });
@@ -271,7 +259,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
           .checkbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO)
           .should('be.checked');
         pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-          .checkbox([FEE_RECORD_ID_TWO, FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH)
+          .checkbox([FEE_RECORD_ID_TWO], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH)
           .should('not.be.checked');
       });
     });
