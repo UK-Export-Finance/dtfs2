@@ -1,6 +1,6 @@
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import relative from '../relativeURL';
-import { errorSummary, headingCaption, mainHeading, backLink, form, continueButton } from '../partials';
+import { backLink, cancelLink, continueButton, errorSummary, form, headingCaption, mainHeading } from '../partials';
 import companiesHouse from '../pages/companies-house';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import { DEAL_STATUS } from '../../fixtures/constants';
@@ -38,7 +38,7 @@ context('Companies House Page', () => {
       form();
       companiesHouse.regNumberField();
       continueButton();
-      companiesHouse.cancelLink();
+      cancelLink();
       companiesHouse.summaryDetails();
     });
   });

@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { errorSummary, mainHeading } from '../partials';
+import { cancelLink, errorSummary, mainHeading, submitButton } from '../partials';
 import returnToMaker from '../pages/return-to-maker';
 import { BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -34,8 +34,8 @@ context('Return to Maker', () => {
     it('displays the page as expected', () => {
       mainHeading();
       returnToMaker.comment();
-      returnToMaker.submitButton();
-      returnToMaker.cancelLink();
+      submitButton();
+      cancelLink();
     });
 
     it("does not display for applications that aren't in checking state", () => {

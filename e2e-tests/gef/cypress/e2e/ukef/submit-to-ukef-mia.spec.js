@@ -1,6 +1,6 @@
 import relative from '../relativeURL';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import { mainHeading, submitButton } from '../partials';
+import { cancelLink, mainHeading, submitButton } from '../partials';
 import applicationDetails from '../pages/application-details';
 import automaticCover from '../pages/automatic-cover';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
@@ -100,7 +100,7 @@ context('Submit MIA to UKEF', () => {
           );
         });
       submitButton();
-      submitToUkef.cancelLink();
+      cancelLink();
     });
 
     it('Submits and displays the confirmation page', () => {

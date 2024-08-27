@@ -1,7 +1,7 @@
 import { todayFormattedShort } from '../../../../e2e-fixtures/dateConstants';
 
 import relative from '../relativeURL';
-import { errorSummary, mainHeading, submitButton } from '../partials';
+import { cancelLink, errorSummary, mainHeading, submitButton } from '../partials';
 import submitToUkef from '../pages/submit-to-ukef';
 import submitToUkefConfirmation from '../pages/submit-to-ukef-confirmation';
 import applicationDetails from '../pages/application-details';
@@ -61,7 +61,7 @@ context('Submit to UKEF', () => {
           );
         });
       submitButton();
-      submitToUkef.cancelLink();
+      cancelLink();
     });
 
     it('display an error when the confirmation checkbox is not checked', () => {

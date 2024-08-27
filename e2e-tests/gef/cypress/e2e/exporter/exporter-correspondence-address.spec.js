@@ -127,7 +127,7 @@ context('Incomplete exporter section - application details page', () => {
       selectExportersCorAddress.selectAddress().select('0');
       cy.clickContinueButton();
 
-      exportersAddress.saveAndReturn().click();
+      cy.clickSaveAndReturnButton();
     });
 
     it('link for correspondence address should be changed and redirect to correspondence address page', () => {

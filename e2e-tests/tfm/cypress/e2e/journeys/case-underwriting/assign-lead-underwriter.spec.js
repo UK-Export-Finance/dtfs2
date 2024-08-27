@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import partials from '../../partials';
+import { cancelLink, caseSubNavigation } from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_2, UNDERWRITER_1, T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
@@ -53,7 +53,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to lead underwriter page
-    partials.caseSubNavigation.underwritingLink().click();
+    caseSubNavigation.underwritingLink().click();
 
     pages.underwritingPage.showAllButton().click();
 
@@ -161,7 +161,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter/assign`));
 
-    pages.leadUnderwriterPage.cancelLink().click();
+    cancelLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
 

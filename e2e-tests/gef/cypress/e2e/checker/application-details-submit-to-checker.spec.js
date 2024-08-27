@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { backLink, errorSummary, submitButton } from '../partials';
+import { backLink, cancelLink, errorSummary, submitButton } from '../partials';
 import applicationSubmission from '../pages/application-submission';
 import applicationDetails from '../pages/application-details';
 import applicationPreview from '../pages/application-preview';
@@ -39,7 +39,7 @@ context('Application Details Submission', () => {
       backLink();
       applicationSubmission.commentsField();
       submitButton();
-      applicationSubmission.cancelLink();
+      cancelLink();
     });
 
     it('allows submission without comments', () => {

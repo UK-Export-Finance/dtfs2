@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { backLink, errorSummary, headingCaption, form, continueButton } from '../partials';
+import { backLink, cancelLink, continueButton, form, errorSummary, headingCaption } from '../partials';
 import facilities from '../pages/facilities';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import CONSTANTS from '../../fixtures/constants';
@@ -37,7 +37,7 @@ context('Facilities Page', () => {
       facilities.hasBeenIssuedRadioYesRadioButton();
       facilities.hasBeenIssuedRadioNoRadioButton();
       continueButton();
-      facilities.cancelLink();
+      cancelLink();
     });
 
     it('displays the correct elements for contingent facility', () => {
@@ -49,7 +49,7 @@ context('Facilities Page', () => {
       facilities.hasBeenIssuedRadioYesRadioButton();
       facilities.hasBeenIssuedRadioNoRadioButton();
       continueButton();
-      facilities.cancelLink();
+      cancelLink();
     });
 
     it('redirects user back to application details page when clicking on `Back` Link', () => {

@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { headingCaption, mainHeading, continueButton, errorSummary } from '../partials';
+import { cancelLink, continueButton, errorSummary, headingCaption, mainHeading } from '../partials';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -45,7 +45,7 @@ context('manual inclusion Page', () => {
       manualInclusion.templateLinkPdf();
       manualInclusion.fileUploadComponent();
       continueButton();
-      manualInclusion.cancelLink();
+      cancelLink();
     });
 
     it('displays the correct text for questionnaire download', () => {

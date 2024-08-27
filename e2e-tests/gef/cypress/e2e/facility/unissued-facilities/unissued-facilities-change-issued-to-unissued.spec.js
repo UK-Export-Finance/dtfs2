@@ -8,7 +8,7 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_AIN } from '../../../fixtures/mocks/mock-deals';
 import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE } from '../../../fixtures/mocks/mock-facilities';
-import { backLink, continueButton, headingCaption, mainHeading, submitButton } from '../../partials';
+import { backLink, cancelLink, continueButton, headingCaption, mainHeading, submitButton } from '../../partials';
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
@@ -227,7 +227,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
         });
       continueButton().should('exist');
       backLink().should('exist');
-      facilities.cancelLink().should('exist');
+      cancelLink().should('exist');
       headingCaption().should('not.exist');
     });
 
