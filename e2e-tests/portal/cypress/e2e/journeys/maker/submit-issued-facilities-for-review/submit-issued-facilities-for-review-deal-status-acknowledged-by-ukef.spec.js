@@ -391,7 +391,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     // Maker submit's deal for review
     //---------------------------------------------------------------
     pages.contract.proceedToReview().should('not.be.disabled');
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
 
     pages.contractReadyForReview.comments().type('Issued a bond');
     pages.contractReadyForReview.readyForCheckersApproval().click();

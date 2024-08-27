@@ -116,7 +116,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     pages.contract.proceedToReview().should('not.be.disabled');
 
     // submit deal for review
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
 
     pages.contractReadyForReview.comments().type('Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();

@@ -22,7 +22,7 @@ const MOCK_DEAL = {
 const goToBondFinancialDetailsPage = (deal) => {
   cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
-  pages.contract.addBondButton().click();
+  cy.clickAddBondButton();
   partials.taskListHeader.itemLink('financial-details').click();
   cy.url().should('include', '/contract');
   cy.url().should('include', '/bond/');
@@ -43,7 +43,7 @@ context('Bond Financial Details', () => {
     it('should render validation errors for all required fields', () => {
       cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
       cy.url().should('include', '/financial-details');
       cy.title().should('eq', `Bond Financial Details${pages.defaults.pageTitleAppend}`);
@@ -69,7 +69,7 @@ context('Bond Financial Details', () => {
     it('should dynamically update the `Guarantee Fee Payable By Bank` value on blur', () => {
       cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
 
       let riskMarginFee = '20';
@@ -88,7 +88,7 @@ context('Bond Financial Details', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
       cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
 
       pages.bondFinancialDetails.ukefExposureInput().invoke('attr', 'placeholder').should('eq', '0.00');
@@ -112,7 +112,7 @@ context('Bond Financial Details', () => {
   it('should display the correct title for bond financial details', () => {
     cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
-    pages.contract.addBondButton().click();
+    cy.clickAddBondButton();
     partials.taskListHeader.itemLink('financial-details').click();
 
     pages.bondFinancialDetails.title().contains('Add financial details');
@@ -121,7 +121,7 @@ context('Bond Financial Details', () => {
   it('form submit of all required fields should render a `completed` status tag only for `Bond Financial Details` in task list header', () => {
     cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
-    pages.contract.addBondButton().click();
+    cy.clickAddBondButton();
     partials.taskListHeader.itemLink('financial-details').click();
 
     fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
@@ -153,7 +153,7 @@ context('Bond Financial Details', () => {
     it('should progress to `Bond Fee Details` page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {
       cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
       cy.url().should('include', '/financial-details');
 
@@ -362,7 +362,7 @@ context('Bond Financial Details', () => {
     it('should save the form data, return to Deal page and repopulate form fields when returning back to `Bond Financial Details` page', () => {
       cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
       cy.url().should('include', '/financial-details');
 

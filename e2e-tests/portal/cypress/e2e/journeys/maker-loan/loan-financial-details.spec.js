@@ -19,7 +19,7 @@ const MOCK_DEAL = {
 
 const goToPageWithUnconditionalFacilityStage = (deal) => {
   cy.loginGoToDealPage(BANK1_MAKER1, deal);
-  pages.contract.addLoanButton().click();
+  cy.clickAddLoanButton();
 
   pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
   cy.clickSubmitButton();
@@ -30,7 +30,7 @@ const goToPageWithUnconditionalFacilityStage = (deal) => {
 
 const goToPage = (deal) => {
   cy.loginGoToDealPage(BANK1_MAKER1, deal);
-  pages.contract.addLoanButton().click();
+  cy.clickAddLoanButton();
   partials.taskListHeader.itemLink('loan-financial-details').click();
 
   cy.url().should('include', '/loan/');

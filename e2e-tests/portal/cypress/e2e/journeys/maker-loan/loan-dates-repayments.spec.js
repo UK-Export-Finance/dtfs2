@@ -17,7 +17,7 @@ const MOCK_DEAL = {
 
 const goToPage = (deal) => {
   cy.loginGoToDealPage(BANK1_MAKER1, deal);
-  pages.contract.addLoanButton().click();
+  cy.clickAddLoanButton();
   partials.taskListHeader.itemLink('dates-and-repayments').click();
 
   cy.url().should('include', '/loan/');

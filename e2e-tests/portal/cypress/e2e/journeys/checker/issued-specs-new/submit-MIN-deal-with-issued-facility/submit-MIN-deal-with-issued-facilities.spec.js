@@ -83,7 +83,7 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
       });
 
     // submit deal for review
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
 
     pages.contractReadyForReview.comments().type('Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
@@ -109,7 +109,7 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
         expect(text.trim()).to.equal('Ready for check');
       });
 
-    pages.contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     pages.contractConfirmSubmission.confirmSubmit().check();
     pages.contractConfirmSubmission.acceptAndSubmit().click();

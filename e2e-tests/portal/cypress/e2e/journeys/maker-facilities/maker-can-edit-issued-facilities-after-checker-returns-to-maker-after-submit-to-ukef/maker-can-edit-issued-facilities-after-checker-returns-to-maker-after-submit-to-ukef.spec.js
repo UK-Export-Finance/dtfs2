@@ -152,7 +152,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
     //---------------------------------------------------------------
 
     pages.contract.proceedToReview().should('not.be.disabled');
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
     pages.contractReadyForReview.comments().type('Updated issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 

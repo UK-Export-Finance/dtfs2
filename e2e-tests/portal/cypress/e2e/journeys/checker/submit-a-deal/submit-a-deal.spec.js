@@ -55,7 +55,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
     contract.visit(goodDeal);
-    contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     // cancel
     contractConfirmSubmission.cancel().click();
@@ -68,7 +68,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
     contract.visit(goodDeal);
-    contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     // submit without checking the checkbox
     contractConfirmSubmission.acceptAndSubmit().click();
@@ -91,7 +91,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // log in, visit a deal, submit
     cy.login(BANK1_CHECKER1);
     contract.visit(badDealInvalidLoanCoverStartDate);
-    contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     // submit with checkbox checked
     contractConfirmSubmission.confirmSubmit().check();
@@ -115,7 +115,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // log in, visit a deal, submit
     cy.login(BANK1_CHECKER1);
     contract.visit(badDealInvalidBondCoverStartDate);
-    contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     // submit with checkbox checked
     contractConfirmSubmission.confirmSubmit().check();
@@ -140,7 +140,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
       // log in, visit a deal, submit
       cy.login(BANK1_CHECKER1);
       contract.visit(dealBondCoverStartDateInThePast);
-      contract.proceedToSubmit().click();
+      cy.clickProceedToSubmitButton();
 
       // submit with checkbox checked
       contractConfirmSubmission.confirmSubmit().check();
@@ -162,7 +162,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
       // log in, visit a deal, submit
       cy.login(BANK1_CHECKER1);
       contract.visit(dealLoanCoverStartDateInThePast);
-      contract.proceedToSubmit().click();
+      cy.clickProceedToSubmitButton();
 
       // submit with checkbox checked
       contractConfirmSubmission.confirmSubmit().check();
@@ -183,7 +183,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
     contract.visit(goodDeal);
-    contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     // submit with checkbox checked
     contractConfirmSubmission.confirmSubmit().check();

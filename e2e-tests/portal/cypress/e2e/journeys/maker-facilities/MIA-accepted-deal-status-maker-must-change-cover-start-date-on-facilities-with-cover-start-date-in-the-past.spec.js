@@ -102,7 +102,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     // Maker can resubmit deal now, after all cover start dates have been changed/confirmed
     //---------------------------------------------------------------
     pages.contract.proceedToReview().should('not.be.disabled');
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
     pages.contractReadyForReview.comments().type('Updated cover start dates');
     pages.contractReadyForReview.readyForCheckersApproval().click();
     cy.url().should('eq', relative('/dashboard/deals/0'));

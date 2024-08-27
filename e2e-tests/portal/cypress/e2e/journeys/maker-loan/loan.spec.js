@@ -67,7 +67,7 @@ context('Add a Loan to a Deal', () => {
 
   it('should populate Deal page with the submitted loan, with `Completed` status and link to `Loan Guarantee Details` page', () => {
     cy.loginGoToDealPage(BANK1_MAKER1, deal);
-    pages.contract.addLoanButton().click();
+    cy.clickAddLoanButton();
     fillLoanForm.unconditionalWithCurrencySameAsSupplyContractCurrency();
     fillLoanForm.datesRepayments.inAdvanceAnnually();
     cy.clickSubmitButton();
@@ -134,7 +134,7 @@ context('Add a Loan to a Deal', () => {
   describe('when a user submits Loan forms without completing required fields', () => {
     it('loan should display all validation errors in `Loan Preview` page and `Incomplete` status in Deal page', () => {
       cy.loginGoToDealPage(BANK1_MAKER1, deal);
-      pages.contract.addLoanButton().click();
+      cy.clickAddLoanButton();
 
       cy.clickSubmitButton();
       cy.clickSubmitButton();

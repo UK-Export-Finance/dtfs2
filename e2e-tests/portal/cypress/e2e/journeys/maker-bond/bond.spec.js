@@ -63,7 +63,7 @@ context('Add a Bond to a Deal', () => {
         bankDealId: MOCK_DEAL.bankInternalRefName,
         bankDealName: MOCK_DEAL.additionalRefName,
       });
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
       cy.clickSubmitButton();
       cy.clickSubmitButton();
 
@@ -85,7 +85,7 @@ context('Add a Bond to a Deal', () => {
     it('bond should display `Incomplete` status in Deal page', () => {
       cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
 
       // get bondId, go back to Deal page
       partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
@@ -115,7 +115,7 @@ context('Add a Bond to a Deal', () => {
           bankDealId: MOCK_DEAL.bankInternalRefName,
           bankDealName: MOCK_DEAL.additionalRefName,
         });
-        pages.contract.addBondButton().click();
+        cy.clickAddBondButton();
         cy.clickSubmitButton();
         cy.clickSubmitButton();
         cy.clickSubmitButton();

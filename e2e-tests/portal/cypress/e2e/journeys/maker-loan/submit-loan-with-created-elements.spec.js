@@ -31,7 +31,7 @@ context('Loan form - Submit loan with created element on page', () => {
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
     pages.contract.visit(deal);
 
-    pages.contract.addLoanButton().click();
+    cy.clickAddLoanButton();
 
     // insert text element onto loan form
     cy.insertElement('loan-guarantee-form');

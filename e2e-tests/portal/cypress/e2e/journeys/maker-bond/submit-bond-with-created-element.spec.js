@@ -30,7 +30,7 @@ context('Bond form - Submit bond with created element on page', () => {
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
     pages.contract.visit(deal);
 
-    pages.contract.addBondButton().click();
+    cy.clickAddBondButton();
 
     fillBondForm.details.facilityStageIssued();
     // inserts text element into form

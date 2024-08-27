@@ -288,7 +288,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
 
     assertFacilityTableValuesWithDealStatusInDraft();
 
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
     pages.contractReadyForReview.comments().type('Ready for review');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
@@ -299,9 +299,9 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
 
-    pages.contract.returnToMaker().click();
+    cy.clickReturnToMakerButton();
     pages.contractReturnToMaker.comments().type('Nope');
-    pages.contractReturnToMaker.returnToMaker().click();
+    cy.clickReturnToMakerButton();
 
     //---------------------------------------------------------------
     // maker views deal
@@ -315,7 +315,7 @@ context('A maker and checker can submit and re-submit a deal to each other mult
     // maker re-submits deal with no changes
     //---------------------------------------------------------------
     pages.contract.proceedToReview().should('not.be.disabled');
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
     pages.contractReadyForReview.comments().type('Ready for review');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 

@@ -19,7 +19,7 @@ const MOCK_DEAL = {
 
 const goToPage = (deal) => {
   cy.loginGoToDealPage(BANK1_MAKER1, deal);
-  pages.contract.addLoanButton().click();
+  cy.clickAddLoanButton();
 };
 
 const assertVisibleRequestedCoverStartDateInputs = () => {

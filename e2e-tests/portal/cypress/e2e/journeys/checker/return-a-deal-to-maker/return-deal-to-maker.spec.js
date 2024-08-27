@@ -22,7 +22,7 @@ context('A checker selects to return a deal to maker from the view-contract page
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
     contract.visit(deal);
-    contract.returnToMaker().click();
+    cy.clickReturnToMakerButton();
 
     // cancel
     contractReturnToMaker.comments().should('have.value', '');
@@ -36,10 +36,10 @@ context('A checker selects to return a deal to maker from the view-contract page
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
     contract.visit(deal);
-    contract.returnToMaker().click();
+    cy.clickReturnToMakerButton();
 
     // submit without a comment
-    contractReturnToMaker.returnToMaker().click();
+    cy.clickReturnToMakerButton();
 
     // expect to stay on the abandon page, and see an error
     cy.url().should('eq', relative(`/contract/${deal._id}/return-to-maker`));
@@ -54,11 +54,11 @@ context('A checker selects to return a deal to maker from the view-contract page
     contract.commentsTab().click();
     contract.visit(deal);
 
-    contract.returnToMaker().click();
+    cy.clickReturnToMakerButton();
 
     // submit with a comment
     contractReturnToMaker.comments().type('to you');
-    contractReturnToMaker.returnToMaker().click();
+    cy.clickReturnToMakerButton();
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');

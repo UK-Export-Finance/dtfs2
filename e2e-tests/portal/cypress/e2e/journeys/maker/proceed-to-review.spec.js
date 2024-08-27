@@ -31,7 +31,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     pages.contract.proceedToReview().should('not.exist');
 
     // Add bond
-    pages.contract.addBondButton().click();
+    cy.clickAddBondButton();
 
     // Bond details
     fillBondForm.details.facilityStageUnissued();
@@ -54,7 +54,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     pages.contract.visit(deal);
 
     // Add loan
-    pages.contract.addLoanButton().click();
+    cy.clickAddLoanButton();
 
     // Loan details
     fillLoanForm.guaranteeDetails.facilityStageConditional();
@@ -88,7 +88,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     pages.contract.visit(deal);
 
     // Add bond
-    pages.contract.addBondButton().click();
+    cy.clickAddBondButton();
 
     // Bond details
     fillBondForm.details.facilityStageIssued();
@@ -111,7 +111,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     pages.contract.visit(deal);
 
     // Add loan
-    pages.contract.addLoanButton().click();
+    cy.clickAddLoanButton();
 
     // Loan details
     fillLoanForm.guaranteeDetails.facilityStageUnconditional();
@@ -145,7 +145,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     pages.contract.visit(deal);
 
     // Add loan
-    pages.contract.addLoanButton().click();
+    cy.clickAddLoanButton();
 
     // Loan details
     fillLoanForm.guaranteeDetails.facilityStageUnconditional();
