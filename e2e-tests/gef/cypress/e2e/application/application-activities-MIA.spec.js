@@ -3,7 +3,7 @@ import { todayFormatted, todayFormattedShort } from '../../../../e2e-fixtures/da
 import relative from '../relativeURL';
 import applicationActivities from '../pages/application-activities';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import { mainHeading, submitButton } from '../partials';
+import { mainHeading } from '../partials';
 import applicationDetails from '../pages/application-details';
 import automaticCover from '../pages/automatic-cover';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
@@ -61,8 +61,8 @@ context('Submit AIN deal and check portalActivities', () => {
       securityDetails.facilitySecurity().type('test2');
       cy.clickContinueButton();
 
-      submitButton().click();
-      submitButton().click();
+      cy.clickSubmitButton();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
     });
   });
@@ -75,9 +75,9 @@ context('Submit AIN deal and check portalActivities', () => {
     });
 
     it('submits detail to UKEF', () => {
-      submitButton().click();
+      cy.clickSubmitButton();
       submitToUkef.confirmSubmissionCheckbox().click();
-      submitButton().click();
+      cy.clickSubmitButton();
     });
   });
 

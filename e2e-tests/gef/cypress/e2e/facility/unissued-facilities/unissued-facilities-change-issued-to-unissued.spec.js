@@ -393,13 +393,13 @@ context('Change issued facilities back to unissued (changed to issued facilities
 
       // submit to checker
       applicationPreview.submitButtonPostApproval().click();
-      submitButton().click();
+      cy.clickSubmitButton();
       // log in
       cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
       // return to maker
       applicationPreview.returnButton().click();
-      submitButton().click();
+      cy.clickSubmitButton();
 
       cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));

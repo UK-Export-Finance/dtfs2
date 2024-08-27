@@ -249,7 +249,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       applicationSubmission
         .submissionText()
         .contains(`Someone at your bank must check your ${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} before they can submit it to UKEF.`);
-      submitButton().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
       applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
@@ -329,7 +329,7 @@ context('Return to maker', () => {
       submitButton().should('exist');
       applicationPreview.returnButton().should('exist');
       applicationPreview.returnButton().click();
-      submitButton().click();
+      cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
     });
   });
@@ -431,8 +431,8 @@ context('Return to maker', () => {
     });
 
     it('should be able to submit to checker after making changes', () => {
-      submitButton().click();
-      submitButton().click();
+      cy.clickSubmitButton();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
     });
   });
@@ -462,9 +462,9 @@ context('Submit to UKEF', () => {
 
     it('submit to ukef and it should change to MIN (from MIA)', () => {
       submitButton().should('exist');
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmSubmissionCheckbox().click();
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIN)} submitted to UKEF`);
       // check that correct text is displayed under confirmation panel
       applicationSubmission.confirmationText().contains("We'll send you a confirmation email shortly, once we've acknowledged your inclusion notice.");

@@ -65,7 +65,7 @@ context('Submit to UKEF', () => {
     });
 
     it('display an error when the confirmation checkbox is not checked', () => {
-      submitButton().click();
+      cy.clickSubmitButton();
       errorSummary().contains('Select that you have reviewed the information given and want to proceed with the submission');
       cy.get('[id="confirmSubmitUkef-error"]').contains('Select that you have reviewed the information given and want to proceed with the submission');
     });
@@ -77,14 +77,14 @@ context('Submit to UKEF', () => {
 
     it('takes checker to dashboard from the confirmation page', () => {
       submitToUkef.confirmSubmissionCheckbox().click();
-      submitButton().click();
+      cy.clickSubmitButton();
       submitToUkefConfirmation.dashboardLink().click();
       cy.location('pathname').should('contain', 'dashboard');
     });
 
     it('submits once checkbox selected and displays the confirmation page', () => {
       submitToUkef.confirmSubmissionCheckbox().click();
-      submitButton().click();
+      cy.clickSubmitButton();
       submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN)} submitted to UKEF`);
       submitToUkefConfirmation
         .confirmation()

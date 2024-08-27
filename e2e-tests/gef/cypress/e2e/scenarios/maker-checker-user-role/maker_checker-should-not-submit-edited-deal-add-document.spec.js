@@ -59,9 +59,9 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       // submit the deal
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.commentsField().type('DTFS2-4698 Comments from original maker');
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 
       // login as a maker_checker and ensure that cannot return or submit to ukef

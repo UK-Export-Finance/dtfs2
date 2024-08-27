@@ -43,19 +43,19 @@ context('Application Details Submission', () => {
     });
 
     it('allows submission without comments', () => {
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
     });
 
     it('allows submission with comments', () => {
       applicationSubmission.commentsField().type('test');
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
     });
 
     it('shows error when comments are too long', () => {
       applicationSubmission.commentsField().type(longComment);
-      submitButton().click();
+      cy.clickSubmitButton();
       errorSummary();
     });
 
@@ -72,7 +72,7 @@ context('Application Details Submission', () => {
     });
 
     it('takes user back to dashboard if they click the link in the confirmation page', () => {
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
       // Just asserting the link is there as the error on dashboard page causes test to fail
       applicationSubmission.backToDashboardLink();

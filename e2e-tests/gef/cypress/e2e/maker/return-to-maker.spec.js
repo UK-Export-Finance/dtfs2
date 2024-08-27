@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { errorSummary, mainHeading, submitButton } from '../partials';
+import { errorSummary, mainHeading } from '../partials';
 import returnToMaker from '../pages/return-to-maker';
 import { BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -44,13 +44,13 @@ context('Return to Maker', () => {
     });
 
     it('submits without comments ', () => {
-      submitButton().click();
+      cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
     });
 
     it('submits with comments', () => {
       returnToMaker.comment().type('Test comment');
-      submitButton().click();
+      cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
     });
 
@@ -58,7 +58,7 @@ context('Return to Maker', () => {
       const longComment = 'a'.repeat(401);
 
       returnToMaker.comment().type(longComment);
-      submitButton().click();
+      cy.clickSubmitButton();
       errorSummary();
     });
 

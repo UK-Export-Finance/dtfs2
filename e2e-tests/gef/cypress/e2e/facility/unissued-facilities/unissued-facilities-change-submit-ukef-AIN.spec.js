@@ -125,7 +125,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
       applicationPreview.submitButtonPostApproval().click();
       applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
-      submitButton().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
@@ -228,7 +228,7 @@ context('Return to maker for unissued to issued facilities', () => {
       submitButton().should('exist');
       applicationPreview.returnButton().should('exist');
       applicationPreview.returnButton().click();
-      submitButton().click();
+      cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
     });
   });
@@ -402,8 +402,8 @@ context('Return to maker for unissued to issued facilities', () => {
     });
 
     it('should be able to submit to checker after making changes', () => {
-      submitButton().click();
-      submitButton().click();
+      cy.clickSubmitButton();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');
     });
   });
@@ -510,9 +510,9 @@ context('Submit to UKEF with unissued to issued facilities', () => {
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
       submitButton().should('exist');
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmSubmissionCheckbox().click();
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted to UKEF');
       // check that correct text is displayed under confirmation panel
       applicationSubmission.confirmationText().contains("We'll send you a confirmation email shortly, once we've acknowledged your issued facilities.");

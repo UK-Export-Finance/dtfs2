@@ -1,5 +1,4 @@
 import relative from '../relativeURL';
-import { submitButton } from '../partials';
 import automaticCover from '../pages/automatic-cover';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import securityDetails from '../pages/security-details';
@@ -59,13 +58,13 @@ context('Submit to UKEF as MIA', () => {
       securityDetails.visit(dealId);
       cy.clickCancelButton();
 
-      submitButton().click();
+      cy.clickSubmitButton();
     });
 
     it('displays correct MIA checker submission message', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/submit`));
 
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle().contains('Manual inclusion application submitted for checking at your bank');
       applicationSubmission
         .confirmation()

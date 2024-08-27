@@ -40,9 +40,9 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
       cy.clickSaveAndReturnButton();
 
       // submit the deal
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.commentsField().type('DTFS2-4698 Comments from original maker');
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 
       // login as a MAKER_CHECKER and return to the maker with a comment.
@@ -50,7 +50,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       applicationPreview.returnButton().click();
       returnToMaker.comment().type('nope');
-      submitButton().click();
+      cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
@@ -66,11 +66,11 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
 
       // it allows the MAKER_CHECKER to submit to be checked at the bank
       // submit the application to be checked again
-      submitButton().click();
+      cy.clickSubmitButton();
 
       // it allows the maker to optionally add additional comments
       applicationSubmission.commentsField().type('Hello');
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 
       // it changes the status to Ready for Checker's approval

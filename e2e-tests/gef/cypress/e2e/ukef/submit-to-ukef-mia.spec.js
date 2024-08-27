@@ -58,9 +58,9 @@ context('Submit MIA to UKEF', () => {
       securityDetails.visit(dealId);
       cy.clickCancelButton();
 
-      submitButton().click();
+      cy.clickSubmitButton();
 
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
     });
   });
@@ -105,7 +105,7 @@ context('Submit MIA to UKEF', () => {
 
     it('Submits and displays the confirmation page', () => {
       submitToUkef.confirmSubmissionCheckbox().click();
-      submitButton().click();
+      cy.clickSubmitButton();
       submitToUkefConfirmation.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted to UKEF`);
       submitToUkefConfirmation.confirmationText().contains("We've sent you a confirmation email.");
       submitToUkefConfirmation.dashboardLink();

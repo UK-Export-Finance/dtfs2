@@ -1,5 +1,4 @@
 import relative from '../relativeURL';
-import { submitButton } from '../partials';
 import returnToMaker from '../pages/return-to-maker';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import applicationDetails from '../pages/application-details';
@@ -58,8 +57,8 @@ context('Return to Maker as MIA', () => {
       securityDetails.facilitySecurity().type('test2');
       cy.clickContinueButton();
 
-      submitButton().click();
-      submitButton().click();
+      cy.clickSubmitButton();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
     });
   });
@@ -79,7 +78,7 @@ context('Return to Maker as MIA', () => {
       applicationPreview.supportingInfoListRowAction(0, 1).should('not.exist');
       applicationPreview.returnButton().click();
       returnToMaker.comment().type('comment1');
-      submitButton().click();
+      cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
     });
   });
@@ -170,8 +169,8 @@ context('Return to Maker as MIA', () => {
     });
 
     it('can submit back to checker', () => {
-      submitButton().click();
-      submitButton().click();
+      cy.clickSubmitButton();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle().contains('Manual inclusion application submitted for checking at your bank');
       cy.visit(relative(`/gef/application-details/${dealId}`));
       statusBanner.bannerStatus().contains("Ready for Checker's approval");

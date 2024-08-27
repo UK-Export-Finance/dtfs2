@@ -1,5 +1,4 @@
 import relative from '../relativeURL';
-import { submitButton } from '../partials';
 import applicationDetails from '../pages/application-details';
 import applicationSubmission from '../pages/application-submission';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
@@ -36,9 +35,9 @@ context('Review application when returned to maker', () => {
     cy.clickSaveAndReturnButton();
 
     // submit the deal with a comment
-    submitButton().click();
+    cy.clickSubmitButton();
     applicationSubmission.commentsField().type('Hello');
-    submitButton().click();
+    cy.clickSubmitButton();
     applicationSubmission.confirmationPanelTitle();
 
     // then login as the checker and return to the maker with a comment
@@ -46,7 +45,7 @@ context('Review application when returned to maker', () => {
     cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
     applicationPreview.returnButton().click();
     returnToMaker.comment().type('Nope');
-    submitButton().click();
+    cy.clickSubmitButton();
     cy.location('pathname').should('contain', 'dashboard');
     cy.login(BANK1_MAKER1);
 
@@ -64,11 +63,11 @@ context('Review application when returned to maker', () => {
       applicationPreview.comments().contains('Nope');
 
       // it allows the maker to submit to be checked at the bank
-      submitButton().click();
+      cy.clickSubmitButton();
 
       // it allows the maker to optionally add additional comments
       applicationSubmission.commentsField().type('Comments from the maker');
-      submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 
       // it changes the status to Ready for Checker's approval

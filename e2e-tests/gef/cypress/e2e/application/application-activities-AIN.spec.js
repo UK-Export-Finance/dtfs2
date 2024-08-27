@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { submitButton, mainHeading } from '../partials';
+import { mainHeading } from '../partials';
 import applicationActivities from '../pages/application-activities';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import applicationDetails from '../pages/application-details';
@@ -45,9 +45,9 @@ context('Submit AIN deal and check portalActivities', () => {
       cy.automaticEligibilityCriteria();
       cy.clickSaveAndReturnButton();
 
-      submitButton().click();
+      cy.clickSubmitButton();
 
-      submitButton().click();
+      cy.clickSubmitButton();
     });
   });
 
@@ -59,9 +59,9 @@ context('Submit AIN deal and check portalActivities', () => {
     });
 
     it('submits detail to UKEF', () => {
-      submitButton().click();
+      cy.clickSubmitButton();
       submitToUkef.confirmSubmissionCheckbox().click();
-      submitButton().click();
+      cy.clickSubmitButton();
     });
   });
 

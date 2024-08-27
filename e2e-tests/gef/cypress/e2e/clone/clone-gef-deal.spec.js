@@ -86,8 +86,8 @@ context('Clone GEF (AIN) deal', () => {
       applicationDetails.automaticCoverDetailsLink().click();
       cy.automaticEligibilityCriteria();
       cy.clickSaveAndReturnButton();
-      submitButton().click();
-      submitButton().click();
+      cy.clickSubmitButton();
+      cy.clickSubmitButton();
 
       cy.get('[data-cy="dashboard-link"]').click();
       cy.get(`[data-cy="deal__link--${AINdealId}"]`).click();
@@ -134,9 +134,9 @@ context('Clone GEF (AIN) deal', () => {
     it('should clone submitted to UKEF AIN deal and reset issueDate on facilities table to -', () => {
       cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${AINdealId}`));
-      submitButton().click();
+      cy.clickSubmitButton();
       submitToUkef.confirmSubmissionCheckbox().click();
-      submitButton().click();
+      cy.clickSubmitButton();
 
       cy.login(BANK1_MAKER1);
 
