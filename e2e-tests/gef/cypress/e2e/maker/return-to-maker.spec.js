@@ -64,7 +64,7 @@ context('Return to Maker', () => {
 
     it('takes checker back to application preview page when cancelled', () => {
       returnToMaker.comment().type('Some comments here ....');
-      returnToMaker.cancelLink().click();
+      cy.clickCancelLink();
       cy.location('pathname').should('eq', `/gef/application-details/${dealIds[2]}`);
     });
   });

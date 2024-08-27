@@ -1,5 +1,6 @@
 export const backLink = () => cy.get('[data-cy="back-link"]');
 export const cancelButton = () => cy.get('[data-cy="cancel-button"]');
+export const cancelLink = () => cy.get('[data-cy="cancel-link"]');
 export const continueButton = () => cy.get('[data-cy="continue-button"]');
 export const errorSummary = () => cy.get('[data-cy="error-summary"]');
 export const form = () => cy.get('[data-cy="form"]');

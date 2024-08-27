@@ -61,7 +61,7 @@ context('Application Details Submission', () => {
 
     it('takes user back to application details page if cancel link clicked', () => {
       applicationSubmission.commentsField().type('test');
-      applicationSubmission.cancelLink().click();
+      cy.clickCancelLink();
       applicationPreview.applicationPreviewPage();
     });
 

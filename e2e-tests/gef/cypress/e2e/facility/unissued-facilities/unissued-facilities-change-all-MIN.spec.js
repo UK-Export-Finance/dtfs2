@@ -370,7 +370,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
         aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
       }
 
-      aboutFacilityUnissued.cancelLink().click();
+      cy.clickCancelLink();
 
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(MOCK_FACILITY_ONE.name);
 

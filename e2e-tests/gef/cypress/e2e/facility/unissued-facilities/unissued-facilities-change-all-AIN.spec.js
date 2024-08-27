@@ -414,7 +414,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.facilityName().clear();
       aboutFacilityUnissued.facilityName().type('a new name');
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
-      aboutFacilityUnissued.cancelLink().click();
+      cy.clickCancelLink();
 
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(MOCK_FACILITY_ONE.name);
       applicationPreview.facilitySummaryListTable(3).nameAction().contains('Change');

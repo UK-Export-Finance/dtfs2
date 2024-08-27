@@ -93,7 +93,7 @@ context('manual inclusion Page', () => {
     });
 
     it('displays the application page when pressing Cancel', () => {
-      manualInclusion.cancelLink().click();
+      cy.clickCancelLink();
       cy.url().should('eq', relative(`/gef/application-details/${id}`));
     });
   });

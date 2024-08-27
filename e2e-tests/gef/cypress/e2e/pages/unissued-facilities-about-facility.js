@@ -23,7 +23,6 @@ const aboutFacilityUnissued = {
   isUsingFacilityEndDateError: () => cy.get('[data-cy="is-using-facility-end-date-error"]'),
   isUsingFacilityEndDateYes: () => cy.get('[data-cy="is-using-facility-end-date-yes"]'),
   isUsingFacilityEndDateNo: () => cy.get('[data-cy="is-using-facility-end-date-no"]'),
-  cancelLink: () => cy.get('[data-cy="cancel-link"]'),
 };
 
 export default aboutFacilityUnissued;

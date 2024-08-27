@@ -71,7 +71,7 @@ context('Submit to UKEF', () => {
     });
 
     it('takes checker back to application review page when cancelled', () => {
-      submitToUkef.cancelLink().click();
+      cy.clickCancelLink();
       cy.location('pathname').should('eq', `/gef/application-details/${dealId}`);
     });
 

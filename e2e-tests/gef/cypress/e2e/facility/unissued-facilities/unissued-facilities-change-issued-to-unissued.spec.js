@@ -261,7 +261,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
       }
 
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().click();
-      facilities.cancelLink().click();
+      cy.clickCancelLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(MOCK_FACILITY_ONE.name);
       applicationPreview.facilitySummaryListTable(2).nameAction().contains('Change');
