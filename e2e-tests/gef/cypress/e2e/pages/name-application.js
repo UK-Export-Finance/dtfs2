@@ -2,7 +2,7 @@
 const nameApplication = {
   internalRef: () => cy.get('[data-cy="internal-ref"]'),
   additionalRef: () => cy.get('[data-cy="additional-ref"]'),
-  cancelButton: () => cy.get('[data-cy="cancel"]'),
+  cancelLink: () => cy.get('[data-cy="cancel-link"]'),
   formError: () => cy.get('[data-cy="internal-ref-error"]'),
   firstErrorLink: () => cy.get('[data-cy="error-summary"]').first('a'),
   applicationDetailsPage: () => cy.get('[data-cy="application-details-page"]'),

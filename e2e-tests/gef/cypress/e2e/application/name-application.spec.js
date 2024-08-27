@@ -37,7 +37,7 @@ context('Name Application Page', () => {
       nameApplication.internalRef();
       nameApplication.additionalRef();
       continueButton();
-      nameApplication.cancelButton();
+      nameApplication.cancelLink();
     });
   });
 
@@ -89,7 +89,7 @@ context('Name Application Page', () => {
 
   describe('Clicking on Abandon', () => {
     it('takes the user back to the dashboard', () => {
-      nameApplication.cancelButton().click();
+      nameApplication.cancelLink().click();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
   });
