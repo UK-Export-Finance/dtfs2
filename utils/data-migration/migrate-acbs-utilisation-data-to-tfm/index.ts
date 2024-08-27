@@ -72,8 +72,8 @@ const runMigrationOfAcbsUtilisationDataToTfm = async () => {
     if (!existsSync(JSON_FILE_PATH)) {
       throw new Error(`Migration JSON file not found at path: ${JSON_FILE_PATH}`);
     }
-    const jsonData = readFileSync(JSON_FILE_PATH, 'utf8');
 
+    const jsonData = readFileSync(JSON_FILE_PATH, 'utf8');
     const utilisationData = JSON.parse(jsonData) as UtilisationDataEntry[];
 
     await Promise.all(utilisationData.map((entry) => insertFacilityUtilisationEntry(dataSource, entry)));
