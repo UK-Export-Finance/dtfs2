@@ -1,5 +1,5 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { FacilityUtilisationDataEntity, ReportPeriodPartialEntity } from '@ukef/dtfs2-common';
+import { FacilityUtilisationDataEntity, ReportPeriodPartialEntity, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { DataSource } from 'typeorm';
 import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
@@ -53,7 +53,7 @@ const insertFacilityUtilisationEntry = async (dataSource: DataSource, { facility
     reportPeriod: REPORT_PERIOD,
     utilisation,
     fixedFee: fixedFeePremium,
-    requestSource: { platform: 'SYSTEM' },
+    requestSource: { platform: REQUEST_PLATFORM_TYPE.SYSTEM },
   });
 
   await dataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
