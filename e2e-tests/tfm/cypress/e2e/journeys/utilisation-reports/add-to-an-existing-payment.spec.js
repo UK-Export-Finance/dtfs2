@@ -37,7 +37,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     .withFeesPaidToUkefForThePeriod(100)
     .withFeesPaidToUkefForThePeriodCurrency('JPY')
     .withPaymentExchangeRate(2)
-    .withStatus('TO_DO')
+    .withStatus(FEE_RECORD_STATUS.TO_DO)
     .build();
   const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
     .withId(FEE_RECORD_ID_TWO)
@@ -48,7 +48,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     .withFeesPaidToUkefForThePeriodCurrency('EUR')
     .withPaymentExchangeRate(0.5)
     .withPayments([firstPayment])
-    .withStatus('DOES_NOT_MATCH')
+    .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
     .build();
 
   before(() => {
@@ -122,7 +122,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
         .withFeesPaidToUkefForThePeriodCurrency('EUR')
         .withPaymentExchangeRate(0.5)
         .withPayments([secondPayment])
-        .withStatus('DOES_NOT_MATCH')
+        .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
         .build();
 
       cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
@@ -195,7 +195,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       .withFeesPaidToUkefForThePeriod(300)
       .withFeesPaidToUkefForThePeriodCurrency('EUR')
       .withPaymentExchangeRate(0.5)
-      .withStatus('TO_DO')
+      .withStatus(FEE_RECORD_STATUS.TO_DO)
       .build();
     const fourthFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
       .withId(FEE_RECORD_ID_FOUR)
@@ -206,7 +206,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
       .withFeesPaidToUkefForThePeriodCurrency('EUR')
       .withPaymentExchangeRate(0.5)
       .withPayments([firstPayment])
-      .withStatus('DOES_NOT_MATCH')
+      .withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH)
       .build();
 
     cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
