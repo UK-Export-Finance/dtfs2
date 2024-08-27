@@ -91,11 +91,11 @@ context('Case tasks - AIN deal', () => {
     firstTask.title().should('not.exist');
 
     //---------------------------------------------------------------
-    // second task should have status `To do` and no link
+    // second task should have status `Cannot start yet` and no link
     //---------------------------------------------------------------
     const secondTask = pages.tasksPage.tasks.row(1, 2);
 
-    cy.assertText(secondTask.status(), 'To do');
+    cy.assertText(secondTask.status(), 'Cannot start yet');
 
     secondTask.link().should('not.exist');
     secondTask.title().should('exist');

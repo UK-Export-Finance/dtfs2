@@ -125,7 +125,7 @@ context('Add a Loan to a Deal', () => {
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
-        cy.assertText(row.loanStatus, 'Incomplete');
+        cy.assertText(row.loanStatus(), 'Incomplete');
 
         // check has has generic message on name and delete as name not set
         row.nameLink().contains('Loan’s reference number not entered');

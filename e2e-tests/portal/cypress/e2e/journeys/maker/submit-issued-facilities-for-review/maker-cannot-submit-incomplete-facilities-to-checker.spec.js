@@ -211,7 +211,7 @@ context('A maker should not be able to submit the deal if it has atleast one `In
     //---------------------------------------------------------------
 
     cy.assertText(incompleteIssueFacilityLoanRow.issueFacilityLink(), 'Issue facility');
-    cy.assertText(incompleteIssueFacilityLoanRow.bondStatus(), 'Incomplete');
+    cy.assertText(incompleteIssueFacilityLoanRow.loanStatus(), 'Incomplete');
   });
 
   it('Maker is unable to submit the application', () => {

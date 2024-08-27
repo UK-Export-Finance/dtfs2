@@ -46,6 +46,6 @@ context('Case tasks - MIA deal - EC 11 false', () => {
 
     const fourthTask = pages.tasksPage.tasks.row(1, 4);
 
-    cy.assertText(fourthTask.status(), 'Complete an agent check');
+    cy.assertText(fourthTask.title(), 'Complete an agent check');
   });
 });

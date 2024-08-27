@@ -185,7 +185,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', dealsWithMakerUkefTestBank.length);
 
-    cy.assertText(pages.dealsPage.heading(), `${dealsWithMakerUkefTestBank.length} result for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${dealsWithMakerUkefTestBank.length} results for "${searchString}"`);
   });
 
   it('search/filter by supplier name', () => {

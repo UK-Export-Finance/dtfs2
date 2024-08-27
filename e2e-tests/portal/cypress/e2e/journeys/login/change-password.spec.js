@@ -117,7 +117,7 @@ context('Admin user creates a new user; the new user sets their password and the
       // Expect failure
       cy.url().should('match', /change-password/);
 
-      cy.assertText(changePassword.currentPasswordError(), 'Current password is not correct.');
+      cy.assertText(changePassword.currentPasswordError(), 'Error: Current password is not correct.');
 
       // Try changing it to a password that is too short
       changePassword.currentPassword().type('AbC!2345');
