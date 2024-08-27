@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { mainHeading, form, continueButton, errorSummary } from '../partials';
+import { cancelButton, continueButton, errorSummary, mainHeading, form } from '../partials';
 import securityDetails from '../pages/security-details';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -32,7 +32,7 @@ context('Security Details Page', () => {
       securityDetails.exporterSecurity();
       securityDetails.facilitySecurity();
       continueButton();
-      securityDetails.cancelButton();
+      cancelButton();
     });
 
     it('shows error message when security details have been entered', () => {
@@ -77,7 +77,7 @@ context('Security Details Page', () => {
 
     it('redirects user to application page when clicking on `Return to application` button', () => {
       securityDetails.visit(dealId);
-      securityDetails.cancelButton().click();
+      cancelButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
   });

@@ -5,7 +5,6 @@ const securityDetails = {
   facilitySecurity: () => cy.get('[data-cy="facility-security"]'),
   exporterSecurityError: () => cy.get('[data-cy="exporter-security-error"]'),
   facilitySecurityError: () => cy.get('[data-cy="facility-security-error"]'),
-  cancelButton: () => cy.get('[data-cy="cancel-button"]'),
   securityDetailsChangeCta: () => cy.get('[data-cy="security-details-cta"]'),
 };
 
