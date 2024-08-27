@@ -1,6 +1,6 @@
 import relative from '../relativeURL';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import { continueButton, mainHeading, submitButton } from '../partials';
+import { mainHeading, submitButton } from '../partials';
 import applicationDetails from '../pages/application-details';
 import automaticCover from '../pages/automatic-cover';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
@@ -45,16 +45,16 @@ context('Submit MIA to UKEF', () => {
       // Deny EC
       automaticCover.falseRadioButton(19).click();
 
-      continueButton().click();
-      continueButton().click();
+      cy.clickContinueButton();
+      cy.clickContinueButton();
 
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
-      continueButton().click();
+      cy.clickContinueButton();
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      continueButton().click();
+      cy.clickContinueButton();
       securityDetails.visit(dealId);
       cy.clickCancelButton();
 

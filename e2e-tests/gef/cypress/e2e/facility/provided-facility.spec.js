@@ -60,7 +60,7 @@ context('Provided Facility Page', () => {
 
       it('The `Back` Link works after form has been validated', () => {
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
-        continueButton().click();
+        cy.clickContinueButton();
         errorSummary();
 
         cy.clickBackLink();
@@ -108,7 +108,7 @@ context('Provided Facility Page', () => {
 
       it('The `Back` Link works after form has been validated', () => {
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
-        continueButton().click();
+        cy.clickContinueButton();
         errorSummary();
 
         cy.clickBackLink();
@@ -122,7 +122,7 @@ context('Provided Facility Page', () => {
 
     it('clicking continue without selecting any options shows error messages', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
-      continueButton().click();
+      cy.clickContinueButton();
 
       errorSummary().contains('You must select at least one option');
       mainHeading().contains('You must select at least one option');
@@ -137,7 +137,7 @@ context('Provided Facility Page', () => {
     it('leaving `Enter details` empty shows an error message', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
       providedFacility.otherCheckbox().click();
-      continueButton().click();
+      cy.clickContinueButton();
       providedFacility.detailsOtherError().should('be.visible');
     });
 
@@ -145,7 +145,7 @@ context('Provided Facility Page', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
       providedFacility.otherCheckbox().click();
       providedFacility.detailsOther().type('some text here');
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should(
         'eq',
         relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`),

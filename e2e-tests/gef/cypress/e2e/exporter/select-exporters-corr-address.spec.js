@@ -25,7 +25,7 @@ context('Select Exporters Correspondence Address Page', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/exporters-address`));
     exportersAddress.yesRadioButton().click();
     exportersAddress.correspondenceAddress().type('E1 6JE');
-    continueButton().click();
+    cy.clickContinueButton();
   });
 
   describe('Visiting page', () => {
@@ -60,14 +60,14 @@ context('Select Exporters Correspondence Address Page', () => {
 
   describe('Clicking on Continue button', () => {
     it('shows error message if no address has been selected from dropdown', () => {
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary();
       selectExportersCorAddress.selectAddressError();
     });
 
     it('redirects user to enter exporters correspondence address page if they select an address', () => {
       selectExportersCorAddress.selectAddress().select('0');
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/enter-exporters-correspondence-address`));
     });
   });

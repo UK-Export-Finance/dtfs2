@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import { continueButton, submitButton } from '../../partials';
+import { submitButton } from '../../partials';
 import applicationDetails from '../../pages/application-details';
 import automaticCover from '../../pages/automatic-cover';
 import applicationSubmission from '../../pages/application-submission';
@@ -42,9 +42,9 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       // Deny EC
       automaticCover.falseRadioButton(19).click();
 
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[2]}/ineligible-automatic-cover`));
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire`));
       cy.uploadFile('upload-file-valid.doc', `${manualInclusion.url(dealIds[2])}/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
@@ -56,7 +56,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       securityDetails.visit(dealIds[2]);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.login(BANK1_MAKER1);
 

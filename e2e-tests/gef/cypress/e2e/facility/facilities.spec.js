@@ -68,7 +68,7 @@ context('Facilities Page', () => {
   describe('Clicking on Continue button', () => {
     it('validates form', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
-      continueButton().click();
+      cy.clickContinueButton();
       facilities.hasBeenIssuedHeading().contains('Has your bank already issued this cash facility to the exporter?');
       errorSummary().contains('Select if your bank has already issued this cash facility');
       facilities.hasBeenIssuedError().contains('Select if your bank has already issued this cash facility');
@@ -77,13 +77,13 @@ context('Facilities Page', () => {
     it('takes you to `about facility` page when selecting one of the radio buttons', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.hasBeenIssuedRadioYesRadioButton().click();
-      continueButton().click();
+      cy.clickContinueButton();
       Cypress.minimatch('/gef/application-details/123/facilities/1234/about-facility', '/gef/application-details/*/facilities/*/about-facility', {
         matchBase: true,
       });
       cy.visit(relative(`/gef/application-details/${dealIds[0]}/facilities`));
       facilities.hasBeenIssuedRadioNoRadioButton().click();
-      continueButton().click();
+      cy.clickContinueButton();
       Cypress.minimatch('/gef/application-details/123/facilities/1234/about-facility', '/gef/application-details/*/facilities/*/about-facility', {
         matchBase: true,
       });

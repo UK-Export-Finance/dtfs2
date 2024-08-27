@@ -59,7 +59,7 @@ context('Companies House Page', () => {
 
   describe('Clicking on Continue button', () => {
     it('shows the correct error message if no characters have been entered', () => {
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'Enter a Companies House registration number');
       companiesHouse.regNumberFieldError().should('be.visible');
@@ -68,7 +68,7 @@ context('Companies House Page', () => {
 
     it('shows the correct error message if the registration number is too short', () => {
       companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT);
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'Enter a valid Companies House registration number');
       companiesHouse.regNumberFieldError().should('be.visible');
@@ -77,7 +77,7 @@ context('Companies House Page', () => {
 
     it('shows the correct error message if the registration number is too long', () => {
       companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'Enter a valid Companies House registration number');
       companiesHouse.regNumberFieldError().should('be.visible');
@@ -86,7 +86,7 @@ context('Companies House Page', () => {
 
     it('shows the correct error message if the registration number has a special character', () => {
       companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPECIAL_CHARACTER);
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'Enter a valid Companies House registration number');
       companiesHouse.regNumberFieldError().should('be.visible');
@@ -95,7 +95,7 @@ context('Companies House Page', () => {
 
     it('shows the correct error message if the registration number has a space', () => {
       companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPACE);
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'Enter a valid Companies House registration number');
       companiesHouse.regNumberFieldError().should('be.visible');
@@ -104,7 +104,7 @@ context('Companies House Page', () => {
 
     it('shows the correct error message if the registration number is valid but does not exist', () => {
       companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT);
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'No company matching the Companies House registration number entered was found');
       companiesHouse.regNumberFieldError().should('be.visible');
@@ -113,7 +113,7 @@ context('Companies House Page', () => {
 
     it('shows the correct error message if the registration number is for an overseas company', () => {
       companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS);
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'UKEF can only process applications from companies based in the UK');
       companiesHouse.regNumberFieldError().should('be.visible');
@@ -122,7 +122,7 @@ context('Companies House Page', () => {
 
     it('takes user to `exporters address` page if company registration number exists', () => {
       companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}/exporters-address`));
     });
   });
@@ -135,7 +135,7 @@ context('Companies House Page', () => {
 
     it('redirects user back to application details page when clicking on `Continue` button', () => {
       cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/companies-house?status=change`));
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
   });

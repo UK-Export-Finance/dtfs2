@@ -1,5 +1,4 @@
 import relative from '../relativeURL';
-import { continueButton } from '../partials';
 import aboutFacility from '../pages/about-facility';
 import bankReviewDate from '../pages/bank-review-date';
 import facilityEndDate from '../pages/facility-end-date';
@@ -53,13 +52,13 @@ context('Changing between facility end date and bank review date', () => {
       aboutFacility.coverEndDateMonth().clear().type(todayMonth);
       aboutFacility.coverEndDateYear().clear().type(nextYear);
       aboutFacility.isUsingFacilityEndDateNo().click();
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
       bankReviewDate.bankReviewDateDay().clear().type(tomorrowDay);
       bankReviewDate.bankReviewDateMonth().clear().type(tomorrowMonth);
       bankReviewDate.bankReviewDateYear().clear().type(tomorrowYear);
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
       cy.clickBackLink();
@@ -69,13 +68,13 @@ context('Changing between facility end date and bank review date', () => {
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.isUsingFacilityEndDateYes().click();
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
       facilityEndDate.facilityEndDateDay().clear().type(tomorrowDay);
       facilityEndDate.facilityEndDateMonth().clear().type(tomorrowMonth);
       facilityEndDate.facilityEndDateYear().clear().type(tomorrowYear);
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
       cy.clickBackLink();
@@ -85,7 +84,7 @@ context('Changing between facility end date and bank review date', () => {
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.isUsingFacilityEndDateNo().click();
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
       bankReviewDate.bankReviewDateDay().should('have.value', '');
@@ -95,7 +94,7 @@ context('Changing between facility end date and bank review date', () => {
       bankReviewDate.bankReviewDateDay().type(tomorrowDay);
       bankReviewDate.bankReviewDateMonth().type(tomorrowMonth);
       bankReviewDate.bankReviewDateYear().type(tomorrowYear);
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
       cy.clickBackLink();
@@ -105,7 +104,7 @@ context('Changing between facility end date and bank review date', () => {
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.isUsingFacilityEndDateYes().click();
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
       facilityEndDate.facilityEndDateDay().should('have.value', '');
@@ -115,7 +114,7 @@ context('Changing between facility end date and bank review date', () => {
       facilityEndDate.facilityEndDateDay().clear().type(tomorrowDay);
       facilityEndDate.facilityEndDateMonth().clear().type(tomorrowMonth);
       facilityEndDate.facilityEndDateYear().clear().type(tomorrowYear);
-      continueButton().click();
+      cy.clickContinueButton();
     });
   }
 });

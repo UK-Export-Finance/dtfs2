@@ -10,7 +10,7 @@ import { MOCK_APPLICATION_AIN } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_FACILITY_ONE } from '../../../fixtures/mocks/mock-facilities';
 
-import { mainHeading, continueButton } from '../../partials';
+import { mainHeading } from '../../partials';
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
@@ -143,7 +143,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
       // Changing cover start date to issuance date
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
-      continueButton().click();
+      cy.clickContinueButton();
 
       // Success banner
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');

@@ -87,7 +87,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[1].name} is updated`);
       // checks the facility has been removed from unissued list
@@ -112,7 +112,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[2].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 2);
@@ -370,7 +370,7 @@ context('Return to maker for unissued to issued facilities', () => {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       // forth facility table has correct name and dates
       applicationDetails.facilitySummaryListTable(3).nameValue().contains(MOCK_FACILITY_ONE.name);

@@ -8,7 +8,7 @@ import { MOCK_APPLICATION_MIN } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
 
-import { mainHeading, continueButton, errorSummary } from '../../partials';
+import { mainHeading, errorSummary } from '../../partials';
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
@@ -103,7 +103,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
         applicationPreview.unissuedFacilitiesReviewLink().click();
         unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-        continueButton().click();
+        cy.clickContinueButton();
 
         errorSummary().contains('Select if there is an end date for this facility');
         aboutFacilityUnissued.isUsingFacilityEndDateError();
@@ -126,13 +126,13 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeYearsDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeYearsMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeYearsYear);
-      continueButton().click();
+      cy.clickContinueButton();
 
       errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
-      continueButton().click();
+      cy.clickContinueButton();
 
       errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
@@ -159,7 +159,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      continueButton().click();
+      cy.clickContinueButton();
       // to go back to application preview page
       unissuedFacilityTable.updateFacilitiesLater().click();
     });
@@ -182,13 +182,13 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeYearsDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeYearsMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeYearsYear);
-      continueButton().click();
+      cy.clickContinueButton();
 
       errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
-      continueButton().click();
+      cy.clickContinueButton();
 
       errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');

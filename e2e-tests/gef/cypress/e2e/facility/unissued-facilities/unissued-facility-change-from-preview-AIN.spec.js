@@ -123,7 +123,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
@@ -226,7 +226,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      continueButton().click();
+      cy.clickContinueButton();
     });
 
     it('change links should appear for facility four and three should be unissued still', () => {

@@ -1,6 +1,5 @@
 import relative from '../relativeURL';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import { continueButton } from '../partials';
 import applicationDetails from '../pages/application-details';
 import facilities from '../pages/facilities';
 import aboutFacility from '../pages/about-facility';
@@ -60,7 +59,7 @@ context('About Facility Page', () => {
       applicationDetails.addContingentFacilityButton().click();
 
       facilities.hasBeenIssuedRadioYesRadioButton().click();
-      continueButton().click();
+      cy.clickContinueButton();
 
       aboutFacility.facilityName();
       aboutFacility.isUsingFacilityEndDateYes().should('not.exist');

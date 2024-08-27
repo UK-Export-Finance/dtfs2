@@ -60,7 +60,7 @@ context('Facility Currency Page', () => {
 
     it('shows error message when no radio button has been selected', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`));
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary();
       facilityCurrency.currencyError();
     });
@@ -68,7 +68,7 @@ context('Facility Currency Page', () => {
     it('takes you to `Facility value` page when clicking on `Continue` button', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`));
       facilityCurrency.yenCheckbox().click();
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-value`));
     });
 

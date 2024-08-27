@@ -1,7 +1,7 @@
 import { todayFormattedShort } from '../../../../e2e-fixtures/dateConstants';
 
 import relative from '../relativeURL';
-import { continueButton, form, mainHeading, saveAndReturnButton, submitButton } from '../partials';
+import { form, mainHeading, saveAndReturnButton, submitButton } from '../partials';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import applicationDetails from '../pages/application-details';
 import submitToUkef from '../pages/submit-to-ukef';
@@ -198,8 +198,8 @@ context('Clone GEF (MIA) deal', () => {
       // Make the deal an Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       cy.manualEligibilityCriteria();
-      continueButton().click();
-      continueButton().click();
+      cy.clickContinueButton();
+      cy.clickContinueButton();
 
       // upload manual inclusion document
       cy.uploadFile('file1.png', `/gef/application-details/${MIAdealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
@@ -265,7 +265,7 @@ context('Clone GEF (MIA) deal', () => {
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/security-details`));
       uploadFiles.exporterSecurity().type('test');
       uploadFiles.facilitySecurity().type('test2');
-      continueButton().click();
+      cy.clickContinueButton();
     });
 
     it('should verify the status of the Supporting Information section is set to `Complete`', () => {

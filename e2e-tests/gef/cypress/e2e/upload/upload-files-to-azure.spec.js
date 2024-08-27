@@ -1,6 +1,5 @@
 import relative from '../relativeURL';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import { continueButton } from '../partials';
 import applicationDetails from '../pages/application-details';
 import uploadFiles from '../pages/upload-files';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
@@ -30,8 +29,8 @@ context('Upload files to Azure', () => {
       // Make the deal a Manual Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       cy.manualEligibilityCriteria();
-      continueButton().click();
-      continueButton().click();
+      cy.clickContinueButton();
+      cy.clickContinueButton();
 
       cy.uploadFile('test.pdf', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('test.pdf');
@@ -133,7 +132,7 @@ context('Upload files to Azure', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/security-details`));
       uploadFiles.exporterSecurity().type('test');
       uploadFiles.facilitySecurity().type('test2');
-      continueButton().click();
+      cy.clickContinueButton();
     });
 
     it('should verify the status of the Supporting Information section is set to `Complete`', () => {

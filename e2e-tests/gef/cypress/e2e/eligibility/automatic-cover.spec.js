@@ -36,7 +36,7 @@ context('Automatic Cover Page', () => {
 
   describe('Clicking on Continue button', () => {
     it('shows errors if no radio button has been selected', () => {
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary();
       automaticCover.fieldError();
       automaticCover.automaticCoverTerm(12).should('exist');
@@ -44,19 +44,19 @@ context('Automatic Cover Page', () => {
 
     it('removes error message from field if a radio button has been selected', () => {
       automaticCover.trueRadioButton(12).click();
-      continueButton().click();
+      cy.clickContinueButton();
       automaticCover.automaticCoverTerm(12).siblings('[data-cy="automatic-cover-error"]').should('not.exist');
     });
 
     it('takes user to `not eligible for automatic cover` page if at least 1 FALSE field has been selected', () => {
       cy.manualEligibilityCriteria();
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
     });
 
     it('takes user to `eligible for automatic cover` page if all true fields have been selected', () => {
       cy.automaticEligibilityCriteria();
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/eligible-automatic-cover`));
     });
 

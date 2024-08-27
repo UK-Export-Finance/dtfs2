@@ -83,7 +83,7 @@ context('manual inclusion Page', () => {
     });
 
     it('does not allow continue if no files are uploaded', () => {
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary();
     });
 

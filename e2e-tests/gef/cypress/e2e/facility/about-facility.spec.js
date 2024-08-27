@@ -81,7 +81,7 @@ context('About Facility Page', () => {
 
     it('validates form when clicking on Continue', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary();
       aboutFacility.facilityNameError();
       aboutFacility.shouldCoverStartOnSubmissionError();
@@ -109,7 +109,7 @@ context('About Facility Page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
       aboutFacility.coverStartDate();
-      continueButton().click();
+      cy.clickContinueButton();
       aboutFacility.coverStartDateError();
     });
 
@@ -123,7 +123,7 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateDay().type(`${now.getDate()}-`);
       aboutFacility.coverEndDateMonth().type(now.getMonth() + 1);
       aboutFacility.coverEndDateYear().type(now.getFullYear());
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('The day for the cover start date must include 1 or 2 numbers');
       errorSummary().contains('The day for the cover end date must include 1 or 2 numbers');
       aboutFacility.coverStartDateError().contains('The day for the cover start date must include 1 or 2 numbers');
@@ -133,7 +133,7 @@ context('About Facility Page', () => {
       aboutFacility.coverStartDateYear().type('-');
       aboutFacility.coverEndDateDay().clear().type(now.getDate());
       aboutFacility.coverEndDateYear().type('2');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('The year for the cover start date must include 4 numbers');
       errorSummary().contains('The year for the cover end date must include 4 numbers');
       aboutFacility.coverStartDateError().contains('The year for the cover start date must include 4 numbers');
@@ -156,7 +156,7 @@ context('About Facility Page', () => {
         .clear()
         .type(now.getMonth() + 1);
       aboutFacility.coverEndDateYear().clear().type(now.getFullYear());
-      continueButton().click();
+      cy.clickContinueButton();
       aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
     });
 
@@ -170,7 +170,7 @@ context('About Facility Page', () => {
         .clear()
         .type(now.getMonth() + 1);
       aboutFacility.coverEndDateYear().clear().type(now.getFullYear());
-      continueButton().click();
+      cy.clickContinueButton();
       aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
     });
 
@@ -184,7 +184,7 @@ context('About Facility Page', () => {
         .clear()
         .type(yesterday.getMonth() + 1);
       aboutFacility.coverEndDateYear().clear().type(yesterday.getFullYear());
-      continueButton().click();
+      cy.clickContinueButton();
       aboutFacility.coverEndDateError().contains('Cover end date cannot be before cover start date');
     });
 
@@ -201,7 +201,7 @@ context('About Facility Page', () => {
         aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
         aboutFacility.isUsingFacilityEndDateYes().click();
 
-        continueButton().click();
+        cy.clickContinueButton();
 
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
       });
@@ -218,7 +218,7 @@ context('About Facility Page', () => {
         aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
         aboutFacility.isUsingFacilityEndDateNo().click();
 
-        continueButton().click();
+        cy.clickContinueButton();
 
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
       });
@@ -234,7 +234,7 @@ context('About Facility Page', () => {
         aboutFacility.coverEndDateMonth().clear().type(dateConstants.tomorrowMonth);
         aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
 
-        continueButton().click();
+        cy.clickContinueButton();
 
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
       });
@@ -253,7 +253,7 @@ context('About Facility Page', () => {
       if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes().click();
       }
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().should('not.exist');
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
@@ -270,7 +270,7 @@ context('About Facility Page', () => {
         aboutFacility.isUsingFacilityEndDateNo().should('be.not.checked');
         aboutFacility.isUsingFacilityEndDateNo().click();
 
-        continueButton().click();
+        cy.clickContinueButton();
 
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
         aboutFacility.isUsingFacilityEndDateNo().should('be.checked');
@@ -320,7 +320,7 @@ context('About Facility Page', () => {
       if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes().click();
       }
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().should('not.exist');
       aboutFacility.facilityNameError().should('not.exist');
     });
@@ -329,12 +329,12 @@ context('About Facility Page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.monthsOfCover().clear();
       aboutFacility.monthsOfCover().type('ab');
-      continueButton().click();
+      cy.clickContinueButton();
       aboutFacility.monthsOfCoverError();
 
       aboutFacility.monthsOfCover().clear();
       aboutFacility.monthsOfCover().type('-100');
-      continueButton().click();
+      cy.clickContinueButton();
       aboutFacility.monthsOfCoverError();
     });
   });

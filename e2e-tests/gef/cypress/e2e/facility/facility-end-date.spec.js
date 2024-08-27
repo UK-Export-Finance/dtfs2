@@ -84,7 +84,7 @@ context('Facility End Date Page', () => {
     it('validates the form when clicking on Continue', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary();
       facilityEndDate.facilityEndDateError();
     });
@@ -129,7 +129,7 @@ context('Facility End Date Page', () => {
       aboutFacility.coverEndDateYear().clear().type(nextYear);
       aboutFacility.isUsingFacilityEndDateYes().click();
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
@@ -139,7 +139,7 @@ context('Facility End Date Page', () => {
       facilityEndDate.facilityEndDateMonth().clear().type(todayMonth);
       facilityEndDate.facilityEndDateYear().clear().type(todayYear);
 
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary();
       facilityEndDate.facilityEndDateError();
 
@@ -147,7 +147,7 @@ context('Facility End Date Page', () => {
       facilityEndDate.facilityEndDateMonth().clear().type(tomorrowMonth);
       facilityEndDate.facilityEndDateYear().clear().type(tomorrowYear);
 
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().should('not.exist');
     });
 
@@ -160,14 +160,14 @@ context('Facility End Date Page', () => {
       aboutFacility.coverEndDateYear().clear().type(nextYear);
       aboutFacility.isUsingFacilityEndDateYes().click();
 
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
       facilityEndDate.facilityEndDateDay().clear().type(yesterdayDay);
       facilityEndDate.facilityEndDateMonth().clear().type(yesterdayMonth);
       facilityEndDate.facilityEndDateYear().clear().type(yesterdayYear);
 
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary();
       facilityEndDate.facilityEndDateError();
 
@@ -175,7 +175,7 @@ context('Facility End Date Page', () => {
       facilityEndDate.facilityEndDateMonth().clear().type(todayMonth);
       facilityEndDate.facilityEndDateYear().clear().type(todayYear);
 
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().should('not.exist');
     });
 
@@ -195,7 +195,7 @@ context('Facility End Date Page', () => {
         .clear()
         .type(now.getFullYear() + 7);
 
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary();
       facilityEndDate.facilityEndDateError();
     });
@@ -207,7 +207,7 @@ context('Facility End Date Page', () => {
       facilityEndDate.facilityEndDateMonth().clear().type(todayMonth);
       facilityEndDate.facilityEndDateYear().clear().type(nextYear);
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
     });
@@ -219,7 +219,7 @@ context('Facility End Date Page', () => {
       facilityEndDate.facilityEndDateMonth().clear().type(todayMonth);
       facilityEndDate.facilityEndDateYear().clear().type(nextYear);
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
       facilityEndDate.facilityEndDateDay().should('have.value', now.getDate());
@@ -235,7 +235,7 @@ context('Facility End Date Page', () => {
       aboutFacility.coverEndDateMonth().clear().type(todayMonth);
       aboutFacility.coverEndDateYear().clear().type(nextYear);
       aboutFacility.isUsingFacilityEndDateNo().click();
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 

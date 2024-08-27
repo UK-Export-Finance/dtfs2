@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { continueButton, submitButton } from '../partials';
+import { submitButton } from '../partials';
 import returnToMaker from '../pages/return-to-maker';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import applicationDetails from '../pages/application-details';
@@ -47,16 +47,16 @@ context('Return to Maker as MIA', () => {
       // Deny EC
       automaticCover.falseRadioButton(19).click();
 
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      continueButton().click();
+      cy.clickContinueButton();
 
       submitButton().click();
       submitButton().click();
@@ -166,7 +166,7 @@ context('Return to Maker as MIA', () => {
       securityDetails.securityDetailsChangeCta().click();
       securityDetails.exporterSecurity().type(' test3');
       securityDetails.facilitySecurity().type('test4');
-      continueButton().click();
+      cy.clickContinueButton();
     });
 
     it('can submit back to checker', () => {

@@ -72,7 +72,7 @@ context('Facility Value Page', () => {
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('10');
       facilityValuePage.percentageCover().type('0');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 1 and 80');
       facilityValuePage.percentageCoverError().contains('You can only enter a number between 1 and 80');
 
@@ -80,7 +80,7 @@ context('Facility Value Page', () => {
       facilityValuePage.interestPercentage().type('10');
       facilityValuePage.percentageCover().clear();
       facilityValuePage.percentageCover().type('-1');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 1 and 80');
       facilityValuePage.percentageCoverError().contains('You can only enter a number between 1 and 80');
 
@@ -88,7 +88,7 @@ context('Facility Value Page', () => {
       facilityValuePage.interestPercentage().type('10');
       facilityValuePage.percentageCover().clear();
       facilityValuePage.percentageCover().type('a');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 1 and 80');
       facilityValuePage.percentageCoverError().contains('You can only enter a number between 1 and 80');
 
@@ -96,7 +96,7 @@ context('Facility Value Page', () => {
       facilityValuePage.interestPercentage().type('10');
       facilityValuePage.percentageCover().clear();
       facilityValuePage.percentageCover().type('81');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 1 and 80');
       facilityValuePage.percentageCoverError().contains('You can only enter a number between 1 and 80');
 
@@ -104,7 +104,7 @@ context('Facility Value Page', () => {
       facilityValuePage.interestPercentage().type('10');
       facilityValuePage.percentageCover().clear();
       facilityValuePage.percentageCover().type('80');
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should(
         'eq',
         relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
@@ -115,7 +115,7 @@ context('Facility Value Page', () => {
       facilityValuePage.interestPercentage().type('10');
       facilityValuePage.percentageCover().clear();
       facilityValuePage.percentageCover().type('1');
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should(
         'eq',
         relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
@@ -126,7 +126,7 @@ context('Facility Value Page', () => {
       facilityValuePage.interestPercentage().type('10');
       facilityValuePage.percentageCover().clear();
       facilityValuePage.percentageCover().type('79');
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should(
         'eq',
         relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
@@ -141,7 +141,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('-1');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
@@ -149,7 +149,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('a');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
@@ -157,7 +157,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('101');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
@@ -165,7 +165,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('1');
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should(
         'eq',
         relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
@@ -176,7 +176,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('100');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
@@ -185,7 +185,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('0.0000');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
@@ -194,7 +194,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('0.12345');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
@@ -203,7 +203,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('99.0001');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
@@ -212,7 +212,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('-5');
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
@@ -221,7 +221,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('99.0000');
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should(
         'eq',
         relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
@@ -232,7 +232,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('79');
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should(
         'eq',
         relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),
@@ -243,7 +243,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('79');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('10.1');
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should(
         'eq',
         relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`),

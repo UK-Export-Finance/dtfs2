@@ -150,12 +150,12 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
     it('clicking yes, accept and proceed takes you to cover-start-date page', () => {
       applicationPreview.ukefReviewLink().click();
       // shows error message do not click yes radio button
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary().contains('Select yes if you want to accept the conditions and proceed with UKEF cover.');
       applicationPreview.reviewDecisionError('Select yes if you want to accept the conditions and proceed with UKEF cover.');
 
       applicationPreview.reviewDecisionTrue().click();
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/cover-start-date`));
 
       coverStartDate.rows().should('have.length', issuedFacilities.length);
@@ -179,10 +179,10 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.coverStartDateYear().clear();
       coverStartDate.coverStartDateYear().type(dateConstants.todayYear);
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       coverStartDate.coverStartDateSuccess().contains('All cover start dates confirmed for issued facilities');
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
       unissuedFacilityTable.rows().contains(format(dateConstants.threeMonths, 'dd MMM yyyy'));
@@ -206,7 +206,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.coverStartDateYear().clear();
       coverStartDate.coverStartDateYear().type(dateConstants.threeDaysYear);
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       errorSummary().contains('Cover date cannot be in the past');
       coverStartDate.coverStartDateNo().click();
@@ -226,7 +226,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.coverStartDateYear().clear();
       coverStartDate.coverStartDateYear().type(dateConstants.threeMonthsOneDayYear);
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       errorSummary().contains('Cover date must be within 3 months');
       coverStartDate.coverStartDateNo().click();
@@ -255,7 +255,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);

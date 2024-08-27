@@ -68,12 +68,12 @@ context('Eligibility Criterion 16', () => {
       // Criterion 16 - Converts to manual application
       automaticCover.falseRadioButton(16).click();
 
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
 
       mainHeading().contains('This is not eligible for automatic cover');
       ineligibleAutomaticCover.content().contains("You'll now need to complete a manual inclusion application.");
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
 
@@ -83,14 +83,14 @@ context('Eligibility Criterion 16', () => {
 
     it('successfully uploading file takes you to security details page', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/security-details`));
 
       mainHeading().contains('Enter security details');
       securityDetails.exporterSecurity().type('exporter test');
       securityDetails.facilitySecurity().type('facility test');
-      continueButton().click();
+      cy.clickContinueButton();
     });
 
     it('eligibility criteria and supporting information sections should be completed', () => {

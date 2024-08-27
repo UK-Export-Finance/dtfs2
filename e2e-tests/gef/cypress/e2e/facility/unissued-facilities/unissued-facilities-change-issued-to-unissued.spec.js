@@ -117,7 +117,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       // checks the facility has been removed from unissued list
@@ -142,13 +142,13 @@ context('Change issued facilities back to unissued (changed to issued facilities
         aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
       }
 
-      continueButton().click();
+      cy.clickContinueButton();
 
       unissuedFacilityTable.rows().should('have.length', 0);
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');
       continueButton().should('exist');
       // exists since all unissued updated from table
-      continueButton().click();
+      cy.clickContinueButton();
     });
 
     // task comments box should show facilities names have changed to unissued
@@ -281,7 +281,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
       }
 
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().click();
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(MOCK_FACILITY_ONE.name);
       applicationPreview.facilitySummaryListTable(2).nameAction().contains('Change');
@@ -309,7 +309,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change-to-unissued`));
 
       facilities.hasBeenIssuedRadioNoRadioButton().click();
-      continueButton().click();
+      cy.clickContinueButton();
 
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(MOCK_FACILITY_ONE.name);
       applicationPreview.facilitySummaryListTable(2).nameAction().should('have.class', 'govuk-!-display-none');
@@ -345,7 +345,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().click();
 
       facilities.hasBeenIssuedRadioNoRadioButton().click();
-      continueButton().click();
+      cy.clickContinueButton();
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(MOCK_FACILITY_THREE.name);
       applicationPreview.facilitySummaryListTable(0).nameAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -388,7 +388,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      continueButton().click();
+      cy.clickContinueButton();
       unissuedFacilityTable.updateFacilitiesLater().click();
 
       // submit to checker
@@ -406,7 +406,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
       // unissue facility
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().click();
       facilities.hasBeenIssuedRadioNoRadioButton().click();
-      continueButton().click();
+      cy.clickContinueButton();
 
       submitButton().should('not.exist');
     });

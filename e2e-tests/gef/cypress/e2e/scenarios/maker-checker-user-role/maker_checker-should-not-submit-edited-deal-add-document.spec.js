@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import { continueButton, saveAndReturnButton, submitButton } from '../../partials';
+import { saveAndReturnButton, submitButton } from '../../partials';
 import applicationDetails from '../../pages/application-details';
 import automaticCover from '../../pages/automatic-cover';
 import applicationSubmission from '../../pages/application-submission';
@@ -54,7 +54,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       securityDetails.visit(dealIds[2]);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));

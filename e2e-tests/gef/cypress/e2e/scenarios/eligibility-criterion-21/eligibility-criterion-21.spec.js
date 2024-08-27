@@ -39,7 +39,7 @@ context('Eligibility Criterion 21', () => {
   describe('Selecting false on eligibility criteria 21', () => {
     it('Selecting neither of the true/false option should present an error message to the user', () => {
       // Click continue button
-      continueButton().click();
+      cy.clickContinueButton();
 
       // Display error message on the same page
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/automatic-cover`));
@@ -79,13 +79,13 @@ context('Eligibility Criterion 21', () => {
 
       // Criterion 21 - Converts to manual
       automaticCover.falseRadioButton(21).click();
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/ineligible-automatic-cover`));
 
       mainHeading().contains('This is not eligible for automatic cover');
       ineligibleAutomaticCover.content().contains("You'll now need to complete a manual inclusion application.");
-      continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire`));
 

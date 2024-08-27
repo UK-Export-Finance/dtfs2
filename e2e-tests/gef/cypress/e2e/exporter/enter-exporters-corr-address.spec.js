@@ -56,7 +56,7 @@ context('Enter Exporters Correspondence Address Page', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0].id}/exporters-address`));
       exportersAddress.yesRadioButton().click();
       exportersAddress.correspondenceAddress().type(POSTCODE.INVALID);
-      continueButton().click();
+      cy.clickContinueButton();
       exportersAddress.postcodeError();
       exportersAddress.manualAddressEntryLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`));
@@ -101,7 +101,7 @@ context('Enter Exporters Correspondence Address Page', () => {
   describe('Clicking on Continue button', () => {
     it('shows error message if no address has been selected from dropdown', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`));
-      continueButton().click();
+      cy.clickContinueButton();
       errorSummary();
       enterExportersCorAddress.addressLine1Error();
       enterExportersCorAddress.postcodeError();
@@ -114,7 +114,7 @@ context('Enter Exporters Correspondence Address Page', () => {
         enterExportersCorAddress.addressLine3().type('Line 3');
         enterExportersCorAddress.locality().type('Locality');
         enterExportersCorAddress.postcode().type('Postcode');
-        continueButton().click();
+        cy.clickContinueButton();
         cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}/about-exporter`));
       });
 
@@ -141,7 +141,7 @@ context('Enter Exporters Correspondence Address Page', () => {
 
     it('redirects user back to application details page when clicking on `Continue` button', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address?status=change`));
-      continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
   });
