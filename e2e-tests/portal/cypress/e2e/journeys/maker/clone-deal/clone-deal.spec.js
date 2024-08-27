@@ -111,7 +111,7 @@ context('Clone a deal', () => {
       cy.url().should('include', '/contract/');
 
       // confirm new supply contract ID
-      cy.assertText(pages.contract.bankInternalRefName(), `Copy of ${deal.bankInternalRefName}-cloned`);
+      cy.assertText(pages.contract.bankInternalRefName(), `${deal.bankInternalRefName}-cloned`);
 
       // confirm new supply contract name
       cy.assertText(pages.contract.additionalRefName(), `Copy of ${deal.additionalRefName}-cloned`);
