@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import { saveAndReturnButton, submitButton } from '../../partials';
+import { submitButton } from '../../partials';
 import applicationDetails from '../../pages/application-details';
 import automaticCover from '../../pages/automatic-cover';
 import applicationSubmission from '../../pages/application-submission';
@@ -41,7 +41,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       // Deny EC
       automaticCover.falseRadioButton(19).click();
 
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       // login as maker_checker to add a file only and then complete as maker
       cy.login(BANK1_MAKER_CHECKER1);

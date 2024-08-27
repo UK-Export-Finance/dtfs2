@@ -128,7 +128,7 @@ context('Enter Exporters Correspondence Address Page', () => {
   describe('Clicking on Save and return button', () => {
     it('bypasses validation and takes user back to application details page', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0].id}/enter-exporters-correspondence-address`));
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}`));
     });
   });

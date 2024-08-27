@@ -1,7 +1,7 @@
 import { todayFormattedShort } from '../../../../e2e-fixtures/dateConstants';
 
 import relative from '../relativeURL';
-import { errorSummary, mainHeading, saveAndReturnButton, submitButton } from '../partials';
+import { errorSummary, mainHeading, submitButton } from '../partials';
 import submitToUkef from '../pages/submit-to-ukef';
 import submitToUkefConfirmation from '../pages/submit-to-ukef-confirmation';
 import applicationDetails from '../pages/application-details';
@@ -31,7 +31,7 @@ context('Submit to UKEF', () => {
         // Make the deal an Automatic Inclusion Application
         applicationDetails.automaticCoverDetailsLink().click();
         cy.automaticEligibilityCriteria();
-        saveAndReturnButton().click();
+        cy.clickSaveAndReturnButton();
       });
 
     cy.login(BANK1_CHECKER1);

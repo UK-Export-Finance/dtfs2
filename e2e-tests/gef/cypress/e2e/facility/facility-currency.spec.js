@@ -74,7 +74,7 @@ context('Facility Currency Page', () => {
 
     it('saves the currency and redirects user to application page when clicking on `Save and return` button', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-currency`));
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}`));
     });
 

@@ -59,7 +59,7 @@ context('Bank Review Date Page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
       aboutFacility.isUsingFacilityEndDateNo().click();
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
@@ -91,7 +91,7 @@ context('Bank Review Date Page', () => {
 
     it('redirects user to application page when clicking on `save and return` button', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
     });
 
@@ -100,7 +100,7 @@ context('Bank Review Date Page', () => {
 
       bankReviewDate.bankReviewDateDay().clear().type(todayDay);
       bankReviewDate.bankReviewDateMonth().clear();
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       errorSummary();
       bankReviewDate.bankReviewDateError();
     });
@@ -112,7 +112,7 @@ context('Bank Review Date Page', () => {
       bankReviewDate.bankReviewDateMonth().clear().type(todayMonth);
       bankReviewDate.bankReviewDateYear().clear().type(nextYear);
 
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
     });

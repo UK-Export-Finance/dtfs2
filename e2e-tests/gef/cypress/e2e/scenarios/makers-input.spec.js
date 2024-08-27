@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { saveAndReturnButton, submitButton } from '../partials';
+import { submitButton } from '../partials';
 import applicationDetails from '../pages/application-details';
 import applicationSubmission from '../pages/application-submission';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
@@ -33,7 +33,7 @@ context('Review application when returned to maker', () => {
     // Make the deal an Automatic Inclusion Application
     applicationDetails.automaticCoverDetailsLink().click();
     cy.automaticEligibilityCriteria();
-    saveAndReturnButton().click();
+    cy.clickSaveAndReturnButton();
 
     // submit the deal with a comment
     submitButton().click();

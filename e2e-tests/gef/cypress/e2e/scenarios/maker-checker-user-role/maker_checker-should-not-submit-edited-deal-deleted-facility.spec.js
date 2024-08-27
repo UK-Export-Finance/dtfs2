@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import { saveAndReturnButton, submitButton } from '../../partials';
+import { submitButton } from '../../partials';
 import applicationDetails from '../../pages/application-details';
 import applicationSubmission from '../../pages/application-submission';
 import facilityConfirmDeletion from '../../pages/facility-confirm-deletion';
@@ -36,7 +36,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       cy.automaticEligibilityCriteria();
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       // login as maker_checker only to delete facility and then re-login as maker to submit to checker
       cy.login(BANK1_MAKER_CHECKER1);

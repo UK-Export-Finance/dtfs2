@@ -113,7 +113,7 @@ context('About Exporter Page', () => {
   describe('Clicking on Save and return, bypasses validation and takes user back to application details page', () => {
     it('validates form', () => {
       cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/about-exporter`));
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));
     });
   });

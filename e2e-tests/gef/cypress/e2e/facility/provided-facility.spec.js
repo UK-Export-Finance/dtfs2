@@ -83,7 +83,7 @@ context('Provided Facility Page', () => {
       it('redirects user to `facility end date` page when clicking on `Back` Link if using facility end date', () => {
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
         aboutFacility.isUsingFacilityEndDateYes().click();
-        saveAndReturnButton().click();
+        cy.clickSaveAndReturnButton();
 
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
         cy.clickBackLink();
@@ -96,7 +96,7 @@ context('Provided Facility Page', () => {
       it('redirects user to `bank review date` page when clicking on `Back` Link if not using facility end date', () => {
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
         aboutFacility.isUsingFacilityEndDateNo().click();
-        saveAndReturnButton().click();
+        cy.clickSaveAndReturnButton();
 
         cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
         cy.clickBackLink();
@@ -154,7 +154,7 @@ context('Provided Facility Page', () => {
 
     it('redirects user to application page when clicking on `save and return` button', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}`));
     });
 

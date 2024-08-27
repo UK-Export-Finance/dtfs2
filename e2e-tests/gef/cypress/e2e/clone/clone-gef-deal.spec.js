@@ -1,7 +1,7 @@
 import { todayFormattedShort } from '../../../../e2e-fixtures/dateConstants';
 
 import relative from '../relativeURL';
-import { form, mainHeading, saveAndReturnButton, submitButton } from '../partials';
+import { form, mainHeading, submitButton } from '../partials';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import applicationDetails from '../pages/application-details';
 import submitToUkef from '../pages/submit-to-ukef';
@@ -85,7 +85,7 @@ context('Clone GEF (AIN) deal', () => {
       // Make the deal an AIN
       applicationDetails.automaticCoverDetailsLink().click();
       cy.automaticEligibilityCriteria();
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       submitButton().click();
       submitButton().click();
 
@@ -127,7 +127,7 @@ context('Clone GEF (AIN) deal', () => {
         aboutExporter.mediumRadioButton().click();
         aboutExporter.probabilityOfDefaultInput().clear().focused().type('10');
         aboutExporter.isFinancingIncreasingRadioNo().click();
-        saveAndReturnButton().click();
+        cy.clickSaveAndReturnButton();
       });
     });
 
@@ -290,7 +290,7 @@ context('Clone GEF (MIA) deal', () => {
         aboutExporter.mediumRadioButton().click();
         aboutExporter.probabilityOfDefaultInput().clear().focused().type('10');
         aboutExporter.isFinancingIncreasingRadioNo().click();
-        saveAndReturnButton().click();
+        cy.clickSaveAndReturnButton();
       });
     });
 

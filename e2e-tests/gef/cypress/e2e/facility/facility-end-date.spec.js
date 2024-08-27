@@ -59,7 +59,7 @@ context('Facility End Date Page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
       aboutFacility.isUsingFacilityEndDateYes().click();
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
@@ -91,7 +91,7 @@ context('Facility End Date Page', () => {
 
     it('redirects user to application page when clicking on `save and return` button', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
     });
 
@@ -100,7 +100,7 @@ context('Facility End Date Page', () => {
 
       facilityEndDate.facilityEndDateDay().clear().type(todayDay);
       facilityEndDate.facilityEndDateMonth().clear();
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       errorSummary();
       facilityEndDate.facilityEndDateError();
     });
@@ -112,7 +112,7 @@ context('Facility End Date Page', () => {
       facilityEndDate.facilityEndDateMonth().clear().type(todayMonth);
       facilityEndDate.facilityEndDateYear().clear().type(nextYear);
 
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
     });

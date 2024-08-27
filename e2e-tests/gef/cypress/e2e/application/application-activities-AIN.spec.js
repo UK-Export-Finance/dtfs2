@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { saveAndReturnButton, submitButton, mainHeading } from '../partials';
+import { submitButton, mainHeading } from '../partials';
 import applicationActivities from '../pages/application-activities';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import applicationDetails from '../pages/application-details';
@@ -43,7 +43,7 @@ context('Submit AIN deal and check portalActivities', () => {
       // Make the deal an Automatic Inclusion Notice
       applicationDetails.automaticCoverDetailsLink().click();
       cy.automaticEligibilityCriteria();
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       submitButton().click();
 

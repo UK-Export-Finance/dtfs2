@@ -61,7 +61,7 @@ context('Automatic Cover Page', () => {
     });
 
     it('takes user to `automatic application details` page if they click on the save and return button', () => {
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
   });

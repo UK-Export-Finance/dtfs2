@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { backLink, errorSummary, headingCaption, mainHeading, continueButton, saveAndReturnButton } from '../partials';
+import { backLink, errorSummary, headingCaption, mainHeading, continueButton } from '../partials';
 import facilityValuePage from '../pages/facility-value';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -257,7 +257,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().clear();
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('-1');
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       errorSummary();
       facilityValuePage.interestPercentageError();
     });
@@ -267,7 +267,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().clear();
       facilityValuePage.percentageCover().type('-1');
       facilityValuePage.interestPercentage().clear();
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       errorSummary();
       facilityValuePage.percentageCoverError();
     });
@@ -276,7 +276,7 @@ context('Facility Value Page', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
       facilityValuePage.percentageCover().clear();
       facilityValuePage.interestPercentage().clear();
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}`));
     });
 
@@ -286,7 +286,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().type('80');
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('1');
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}`));
     });
 
@@ -295,7 +295,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().clear();
       facilityValuePage.interestPercentage().clear();
       facilityValuePage.interestPercentage().type('80');
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}`));
     });
 
@@ -304,7 +304,7 @@ context('Facility Value Page', () => {
       facilityValuePage.percentageCover().clear();
       facilityValuePage.percentageCover().type('80');
       facilityValuePage.interestPercentage().clear();
-      saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}`));
     });
 
