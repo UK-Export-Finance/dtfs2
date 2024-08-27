@@ -5,5 +5,4 @@ export type DeletionAuditLog = WithId<{
   collectionName: string;
   deletedDocumentId: ObjectId;
   auditRecord: AuditDatabaseRecord;
-  expireAt: Date;
 }>;

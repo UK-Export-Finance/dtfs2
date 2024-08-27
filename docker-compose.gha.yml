@@ -81,7 +81,6 @@ services:
       - SQL_DB_NAME
       - SQL_DB_LOGGING_ENABLED
       - ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE
-      - DELETION_AUDIT_LOGS_TTL_SECONDS
     entrypoint: npx ts-node dtfs-central-api/src/index.ts
 
   trade-finance-manager-ui:
@@ -160,7 +159,6 @@ services:
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - CHANGE_STREAM_ENABLED
-      - DELETION_AUDIT_LOGS_TTL_SECONDS
     entrypoint: npx ts-node trade-finance-manager-api/src/index.ts
 
   portal:
@@ -251,7 +249,6 @@ services:
       - SQL_DB_NAME
       - SQL_DB_LOGGING_ENABLED
       - CHANGE_STREAM_ENABLED
-      - DELETION_AUDIT_LOGS_TTL_SECONDS
       - GEF_DEAL_VERSION
     entrypoint: npx ts-node portal-api/src/index.ts
 

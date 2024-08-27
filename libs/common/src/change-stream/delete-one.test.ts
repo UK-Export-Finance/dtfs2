@@ -36,18 +36,15 @@ const mockDb = {
 
 describe('deleteOne', () => {
   const documentId = new ObjectId();
-  const originalDeletionAuditLogsDeleteAfterSeconds = process.env.DELETION_AUDIT_LOGS_TTL_SECONDS;
   const originalChangeStreamEnabled = process.env.CHANGE_STREAM_ENABLED;
 
   afterAll(() => {
     process.env.CHANGE_STREAM_ENABLED = originalChangeStreamEnabled;
-    process.env.DELETION_AUDIT_LOGS_TTL_SECONDS = originalDeletionAuditLogsDeleteAfterSeconds;
   });
 
   describe('when change stream enabled', () => {
     beforeAll(() => {
       process.env.CHANGE_STREAM_ENABLED = 'true';
-      process.env.DELETION_AUDIT_LOGS_TTL_SECONDS = '60';
     });
 
     beforeEach(() => {
@@ -76,7 +73,6 @@ describe('deleteOne', () => {
             collectionName: 'users',
             deletedDocumentId: documentId,
             auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
-            expireAt: expect.any(Date) as Date,
           },
           { session: mockSession },
         );

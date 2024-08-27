@@ -1,12 +1,8 @@
 import { DeleteResult, ObjectId, TransactionOptions } from 'mongodb';
-import { add } from 'date-fns';
 import { AuditDetails, MongoDbCollectionName } from '../types';
 import { MongoDbClient } from '../mongo-db-client';
 import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-database-record';
-import { changeStreamConfig } from './config';
 import { DocumentNotDeletedError, WriteConcernError } from '../errors';
-
-const { DELETION_AUDIT_LOGS_TTL_SECONDS } = changeStreamConfig;
 
 type DeleteOneParams = {
   documentId: ObjectId;
@@ -34,7 +30,6 @@ const deleteDocumentWithAuditLogs = async ({ documentId, collectionName, db, aud
           collectionName,
           deletedDocumentId: documentId,
           auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-          expireAt: add(new Date(), { seconds: DELETION_AUDIT_LOGS_TTL_SECONDS }),
         },
         { session },
       );

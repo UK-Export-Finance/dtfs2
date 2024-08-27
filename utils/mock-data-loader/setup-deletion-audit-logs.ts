@@ -18,12 +18,12 @@ export const setupDeletionAuditLogsCollection = async () => {
   logger.info('Setting up deletion audit logs collection');
   const dbConnection = await mongoDbClient.getConnection();
 
-  const collection = await dbConnection.createCollection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS, {
+  await dbConnection.createCollection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS, {
     validator: {
       $jsonSchema: {
         bsonType: 'object',
         title: 'deletion audit logs validation',
-        required: ['collectionName', 'deletedDocumentId', 'auditRecord', 'expireAt'],
+        required: ['collectionName', 'deletedDocumentId', 'auditRecord'],
         properties: {
           collectionName: {
             bsonType: 'string',
@@ -32,10 +32,6 @@ export const setupDeletionAuditLogsCollection = async () => {
           deletedDocumentId: {
             bsonType: 'objectId',
             description: 'deletedDocumentId must be an ObjectId',
-          },
-          expireAt: {
-            bsonType: 'date',
-            description: 'expireAt must be a BSON date',
           },
           auditRecord: {
             bsonType: 'object',
@@ -67,13 +63,4 @@ export const setupDeletionAuditLogsCollection = async () => {
       },
     },
   });
-
-  await collection.createIndex(
-    {
-      expireAt: 1,
-    },
-    {
-      expireAfterSeconds: 0,
-    },
-  );
 };

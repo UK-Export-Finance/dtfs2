@@ -81,7 +81,6 @@ services:
       - SQL_DB_NAME
       - SQL_DB_LOGGING_ENABLED
       - ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE
-      - DELETION_AUDIT_LOGS_TTL_SECONDS
 
   trade-finance-manager-ui:
     build:
@@ -161,7 +160,6 @@ services:
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - CHANGE_STREAM_ENABLED
-      - DELETION_AUDIT_LOGS_TTL_SECONDS
 
   portal:
     build:
@@ -247,7 +245,6 @@ services:
       - UTILISATION_REPORT_DUE_EMAIL_SCHEDULE
       - UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE
       - CHANGE_STREAM_ENABLED
-      - DELETION_AUDIT_LOGS_TTL_SECONDS
       - GEF_DEAL_VERSION
 
   external-api:

@@ -55,7 +55,6 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
               collectionName,
               deletedDocumentId: new ObjectId(getDeletedDocumentId()),
               auditRecord,
-              expireAt: expect.any(Date) as Date,
             },
           ]);
         });
@@ -140,7 +139,6 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
                 collectionName,
                 deletedDocumentId: getDeletedDocumentId(),
                 auditRecord,
-                expireAt: expect.any(Date) as Date,
               },
               { session: expect.any(ClientSession) as ClientSession },
             )
@@ -167,7 +165,6 @@ export const withDeleteOneTests = ({ makeRequest, collectionName, auditRecord, g
                 collectionName,
                 deletedDocumentId: getDeletedDocumentId(),
                 auditRecord,
-                expireAt: expect.any(Date) as Date,
               },
               { session: expect.any(ClientSession) as ClientSession },
             )

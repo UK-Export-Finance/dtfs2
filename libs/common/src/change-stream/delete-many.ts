@@ -1,13 +1,9 @@
 import 'dotenv/config.js';
 import type { Filter, TransactionOptions, WithoutId } from 'mongodb';
-import { add } from 'date-fns';
 import type { AuditDetails, DeletionAuditLog, MongoDbCollectionName } from '../types';
 import { MongoDbClient } from '../mongo-db-client';
 import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-database-record';
-import { changeStreamConfig } from './config';
 import { DocumentNotFoundError, WriteConcernError } from '../errors';
-
-const { DELETION_AUDIT_LOGS_TTL_SECONDS } = changeStreamConfig;
 
 type DeleteManyParams = {
   filter: Filter<any>;
@@ -41,7 +37,6 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
         collectionName,
         deletedDocumentId,
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-        expireAt: add(new Date(), { seconds: DELETION_AUDIT_LOGS_TTL_SECONDS }),
       }));
 
       const deletionCollection = await db.getCollection('deletion-audit-logs');
