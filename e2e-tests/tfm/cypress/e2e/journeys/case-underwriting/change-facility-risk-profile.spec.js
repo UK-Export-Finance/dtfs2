@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import { cancelLink, caseSubNavigation } from '../../partials';
+import { caseSubNavigation } from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
@@ -117,7 +117,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`));
 
-    cancelLink().click();
+    cy.clickCancelLink();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });

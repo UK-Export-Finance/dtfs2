@@ -158,7 +158,7 @@ context('Amendments - Request date', () => {
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.addAmendmentButton().click();
 
-    cancelLink().click();
+    cy.clickCancelLink();
     cy.url().should('eq', relative(`/case/${dealId}/facility/${facilityId}#amendments`));
   });
 

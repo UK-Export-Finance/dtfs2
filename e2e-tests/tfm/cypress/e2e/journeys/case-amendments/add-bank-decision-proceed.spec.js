@@ -1,6 +1,6 @@
 import { add } from 'date-fns';
 import relative from '../../relativeURL';
-import { cancelLink, caseSubNavigation } from '../../partials';
+import { caseSubNavigation } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../pages/caseDealPage';
@@ -245,7 +245,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     amendmentsPage.errorSummary().contains('Select if the bank wants to proceed or withdraw');
     amendmentsPage.errorMessage().contains('Select if the bank wants to proceed or withdraw');
 
-    cancelLink().click();
+    cy.clickCancelLink();
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
 
