@@ -50,98 +50,118 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       facilityPage.facilityBankReviewDate().should('not.exist');
     });
 
-    it('should navigate to the bank review date page after selecting "No" to "Has the bank provided a facility end date"', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true });
-      amendmentsPage.isUsingFacilityEndDateYes().should('not.be.checked');
-      amendmentsPage.isUsingFacilityEndDateNo().should('not.be.checked');
+    describe('when on the check your answers page', () => {
+      beforeEach(() => {
+        amendmentsPage.navigateToIsUsingFacilityEndDatePage();
+        amendmentsPage.continueAmendment().click();
 
-      amendmentsPage.continueAmendment().click();
-      amendmentsPage.errorSummary().contains('Select if the bank has provided an end date for this facility');
+        cy.url().should('contain', 'bank-review-date');
+        amendmentsPage.continueAmendment().click();
 
-      amendmentsPage.isUsingFacilityEndDateNo().click();
-      amendmentsPage.continueAmendment().click();
+        cy.url().should('contain', 'check-answers');
+      });
 
-      cy.url().should('contain', 'bank-review-date');
-      amendmentsPage.amendmentCurrentBankReviewDate().should('have.text', 'Not provided');
-      amendmentsPage.amendmentBankReviewDateDetails().should('exist');
+      it('should allow bank review date amendments on the `Check your answers` page', () => {
+        amendmentsPage.amendmentAnswerBankReviewDateChangeLink().click();
+
+        cy.url().should('contain', 'bank-review-date');
+        amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.threeMonthsOneDayDay);
+        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.threeMonthsOneDayMonth);
+        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.threeMonthsOneDayYear);
+        amendmentsPage.continueAmendment().click();
+
+        cy.url().should('contain', 'check-answers');
+        amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'No');
+        amendmentsPage.amendmentAnswerBankReviewDate().should('have.text', dateConstants.threeMonthsOneDayFullString);
+        amendmentsPage.amendmentAnswerFacilityEndDate().should('not.exist');
+      });
+
+      describe('when submitting and visiting the facility summary page', () => {
+        beforeEach(() => {
+          amendmentsPage.continueAmendment().click();
+          cy.visit(relative(`/case/${dealId}/facility/${facility._id}`));
+        });
+
+        it('should correctly display amended values', () => {
+          facilityPage.facilityIsUsingFacilityEndDate().should('have.text', 'No');
+          facilityPage.facilityBankReviewDate().should('have.text', dateConstants.threeMonthsOneDayFullMonthString);
+          facilityPage.facilityFacilityEndDate().should('not.exist');
+        });
+      });
     });
 
-    it('should return expected errors when entering an incorrect bank review date', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage();
-      cy.url().should('contain', 'bank-review-date');
-      amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.sixYearsOneDayDay);
-      amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.sixYearsOneDayMonth);
-      amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.sixYearsOneDayYear);
+    describe('when "No" is selected in response to "Has the bank provided a facility end date"', () => {
+      beforeEach(() => {
+        amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true });
+        amendmentsPage.isUsingFacilityEndDateYes().should('not.be.checked');
+        amendmentsPage.isUsingFacilityEndDateNo().should('not.be.checked');
 
-      amendmentsPage.continueAmendment().click();
-      amendmentsPage.errorSummary().contains('Bank review date cannot be greater than 6 years in the future');
+        amendmentsPage.continueAmendment().click();
+        amendmentsPage.errorSummary().contains('Select if the bank has provided an end date for this facility');
+
+        amendmentsPage.isUsingFacilityEndDateNo().click();
+        amendmentsPage.continueAmendment().click();
+      });
+
+      it('should navigate to the bank review date page', () => {
+        cy.url().should('contain', 'bank-review-date');
+        amendmentsPage.amendmentCurrentBankReviewDate().should('have.text', 'Not provided');
+        amendmentsPage.amendmentBankReviewDateDetails().should('exist');
+      });
     });
 
-    it('should continue to the facility value page if the bank review date is valid and the facility value also needs changing', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage({ changeFacilityValue: true });
-      amendmentsPage.continueAmendment().click();
+    describe('when the user has entered an incorrect bank review date', () => {
+      beforeEach(() => {
+        amendmentsPage.navigateToIsUsingFacilityEndDatePage();
+        cy.url().should('contain', 'bank-review-date');
 
-      cy.url().should('contain', 'bank-review-date');
-      amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.todayDay);
-      amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+        amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.sixYearsOneDayDay);
+        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.sixYearsOneDayMonth);
+        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.sixYearsOneDayYear);
 
-      cy.url().should('contain', 'facility-value');
+        amendmentsPage.continueAmendment().click();
+      });
+
+      it('should return expected errors when entering an incorrect bank review date', () => {
+        amendmentsPage.errorSummary().contains('Bank review date cannot be greater than 6 years in the future');
+      });
     });
 
-    it('should continue to `Check your answers` page if the bank review date is valid and only the cover end date is being changed', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage();
-      amendmentsPage.continueAmendment().click();
+    describe('when the bank review date is valid and the facility value needs changing', () => {
+      beforeEach(() => {
+        amendmentsPage.navigateToIsUsingFacilityEndDatePage({ changeFacilityValue: true });
+        amendmentsPage.continueAmendment().click();
 
-      cy.url().should('contain', 'bank-review-date');
-      amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.todayDay);
-      amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+        cy.url().should('contain', 'bank-review-date');
+        amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.todayDay);
+        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.todayMonth);
+        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.todayYear);
+        amendmentsPage.continueAmendment().click();
+      });
 
-      cy.url().should('contain', 'check-answers');
-      amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'No');
-      amendmentsPage.amendmentAnswerBankReviewDate().should('have.text', dateConstants.todayFullString);
-      amendmentsPage.amendmentAnswerFacilityEndDate().should('not.exist');
+      it('should continue to the facility value page', () => {
+        cy.url().should('contain', 'facility-value');
+      });
     });
 
-    it('should allow bank review date amendments on the `Check your answers` page', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage();
-      amendmentsPage.continueAmendment().click();
+    describe('when the bank review date is valid and only the cover end date is being changed', () => {
+      beforeEach(() => {
+        amendmentsPage.navigateToIsUsingFacilityEndDatePage();
+        amendmentsPage.continueAmendment().click();
 
-      cy.url().should('contain', 'bank-review-date');
-      amendmentsPage.continueAmendment().click();
+        cy.url().should('contain', 'bank-review-date');
+        amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.todayDay);
+        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.todayMonth);
+        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.todayYear);
+        amendmentsPage.continueAmendment().click();
+      });
 
-      cy.url().should('contain', 'check-answers');
-      amendmentsPage.amendmentAnswerBankReviewDateChangeLink().click();
-
-      cy.url().should('contain', 'bank-review-date');
-      amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.threeMonthsOneDayDay);
-      amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.threeMonthsOneDayMonth);
-      amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.threeMonthsOneDayYear);
-      amendmentsPage.continueAmendment().click();
-
-      cy.url().should('contain', 'check-answers');
-      amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'No');
-      amendmentsPage.amendmentAnswerBankReviewDate().should('have.text', dateConstants.threeMonthsOneDayFullString);
-      amendmentsPage.amendmentAnswerFacilityEndDate().should('not.exist');
-    });
-
-    it('should correctly display amended values on the facility summary page', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage();
-      amendmentsPage.continueAmendment().click();
-
-      cy.url().should('contain', 'bank-review-date');
-      amendmentsPage.continueAmendment().click();
-
-      cy.url().should('contain', 'check-answers');
-      amendmentsPage.continueAmendment().click();
-
-      cy.visit(relative(`/case/${dealId}/facility/${facility._id}`));
-      facilityPage.facilityIsUsingFacilityEndDate().should('have.text', 'No');
-      facilityPage.facilityBankReviewDate().should('have.text', dateConstants.threeMonthsOneDayFullMonthString);
-      facilityPage.facilityFacilityEndDate().should('not.exist');
+      it('should continue to "Check your answers" page', () => {
+        cy.url().should('contain', 'check-answers');
+        amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'No');
+        amendmentsPage.amendmentAnswerBankReviewDate().should('have.text', dateConstants.todayFullString);
+        amendmentsPage.amendmentAnswerFacilityEndDate().should('not.exist');
+      });
     });
   });
 }
