@@ -54,7 +54,7 @@ context('Submit MIA to UKEF', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
       securityDetails.visit(dealId);
       cy.clickCancelButton();
 

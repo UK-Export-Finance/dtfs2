@@ -51,7 +51,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       securityDetails.visit(dealIds[2]);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
 
       // login as maker_checker only to delete a file.  file readded as maker
       cy.login(BANK1_MAKER_CHECKER1);

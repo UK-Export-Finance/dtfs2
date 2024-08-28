@@ -54,7 +54,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       securityDetails.visit(dealIds[2]);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
 
       cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));

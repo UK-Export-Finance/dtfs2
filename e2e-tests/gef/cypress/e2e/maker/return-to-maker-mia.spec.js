@@ -55,7 +55,7 @@ context('Return to Maker as MIA', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
 
       cy.clickSubmitButton();
       cy.clickSubmitButton();
@@ -165,7 +165,7 @@ context('Return to Maker as MIA', () => {
       securityDetails.securityDetailsChangeCta().click();
       securityDetails.exporterSecurity().type(' test3');
       securityDetails.facilitySecurity().type('test4');
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
     });
 
     it('can submit back to checker', () => {

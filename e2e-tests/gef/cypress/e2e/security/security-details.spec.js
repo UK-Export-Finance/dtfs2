@@ -37,7 +37,7 @@ context('Security Details Page', () => {
 
     it('shows error message when security details have been entered', () => {
       securityDetails.visit(dealId);
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
       errorSummary();
       securityDetails.exporterSecurityError();
       securityDetails.facilitySecurityError();
@@ -49,7 +49,7 @@ context('Security Details Page', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type(longString);
       securityDetails.facilitySecurity().type(longString);
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
       errorSummary();
       securityDetails.exporterSecurityError();
       securityDetails.facilitySecurityError();
@@ -61,7 +61,7 @@ context('Security Details Page', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type(invalidString);
       securityDetails.facilitySecurity().type(invalidString);
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
       errorSummary();
       securityDetails.exporterSecurityError();
       securityDetails.facilitySecurityError();
@@ -71,7 +71,7 @@ context('Security Details Page', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('Valid security details');
       securityDetails.facilitySecurity().type('Valid security details');
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
 

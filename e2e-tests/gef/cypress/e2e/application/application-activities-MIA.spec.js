@@ -59,7 +59,7 @@ context('Submit AIN deal and check portalActivities', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
 
       cy.clickSubmitButton();
       cy.clickSubmitButton();

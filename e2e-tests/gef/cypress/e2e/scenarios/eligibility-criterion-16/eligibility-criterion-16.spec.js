@@ -90,7 +90,7 @@ context('Eligibility Criterion 16', () => {
       mainHeading().contains('Enter security details');
       securityDetails.exporterSecurity().type('exporter test');
       securityDetails.facilitySecurity().type('facility test');
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
     });
 
     it('eligibility criteria and supporting information sections should be completed', () => {
