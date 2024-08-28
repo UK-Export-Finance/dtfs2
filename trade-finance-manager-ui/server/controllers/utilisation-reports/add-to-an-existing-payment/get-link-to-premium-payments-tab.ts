@@ -1,20 +1,4 @@
-/**
- * Maximum recommended URL length for security and performance reasons.
- * @see {@link https://stackoverflow.com/a/48230425}
- */
-const MAX_URL_CHARACTERS = 2048;
-
-/**
- * Estimated character allowance for the base URL (without query parameters).
- */
-const BASE_URL_CHARACTER_ALLOWANCE = 150;
-
-/**
- * Maximum length for URL with query parameters.
- * This allows for approximately 189 seven-digit IDs to be passed as query parameters (see below for calculation).
- * Calculation: (2048 - 150) = 1898 chars, 1898 / (7 digits per ID + 3 chars for percent-encoded comma) ≈ 189
- */
-const URL_WITH_PARAMS_MAX_LENGTH = MAX_URL_CHARACTERS - BASE_URL_CHARACTER_ALLOWANCE;
+import { URL_WITH_PARAMS_MAX_LENGTH } from '@ukef/dtfs2-common';
 
 /**
  * Generates a link to the Premium Payments tab for a given utilisation report,
