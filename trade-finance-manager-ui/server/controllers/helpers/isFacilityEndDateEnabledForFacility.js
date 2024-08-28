@@ -1,5 +1,4 @@
-import { isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
-import { MAPPED_FACILITY_TYPE } from '../../constants/mapped-facility';
+import { isTfmFacilityEndDateFeatureFlagEnabled, MAPPED_FACILITY_TYPE } from '@ukef/dtfs2-common';
 
 /**
  * Facilities are part of a GEF deal if and only if they have a cash or contingent facility type.

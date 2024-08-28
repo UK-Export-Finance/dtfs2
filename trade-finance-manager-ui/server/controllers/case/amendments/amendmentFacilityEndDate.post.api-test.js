@@ -1,10 +1,9 @@
-import { isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS } from '@ukef/dtfs2-common';
+import { isTfmFacilityEndDateFeatureFlagEnabled, MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
 import { add } from 'date-fns';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE } from '../../../test-mocks/amendment-test-mocks';
 import { postAmendmentFacilityEndDate } from './amendmentFacilityEndDate.controller';
-import { MAPPED_FACILITY_TYPE } from '../../../constants/mapped-facility';
 
 const res = mockRes();
 

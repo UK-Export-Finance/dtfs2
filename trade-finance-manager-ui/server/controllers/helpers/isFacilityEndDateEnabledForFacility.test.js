@@ -1,6 +1,5 @@
-import { isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { isTfmFacilityEndDateFeatureFlagEnabled, MAPPED_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { isFacilityEndDateEnabledForFacility } from './isFacilityEndDateEnabledForFacility';
-import { MAPPED_FACILITY_TYPE } from '../../constants/mapped-facility';
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),

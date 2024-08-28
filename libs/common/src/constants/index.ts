@@ -15,5 +15,5 @@ export * from './amendments';
 export * from './api-error-code';
 export * from './facility-type';
 export * from './facility-provided-details';
-
+export * from './facility-type-mapped';
 export * as PAYLOAD_VERIFICATION from './payload-verification';

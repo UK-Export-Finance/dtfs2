@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, FACILITY_TYPE, isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, FACILITY_TYPE, isTfmFacilityEndDateFeatureFlagEnabled, MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import {
@@ -7,7 +7,6 @@ import {
   MOCK_AMENDMENT_FACILITYVALUE_CHANGE,
 } from '../../../test-mocks/amendment-test-mocks';
 import { getAmendmentFacilityEndDate } from './amendmentFacilityEndDate.controller';
-import { MAPPED_FACILITY_TYPE } from '../../../constants/mapped-facility';
 
 const res = mockRes();
 
