@@ -217,9 +217,9 @@ context('About Facility Page', () => {
 
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
-        aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
-        aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
-        aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
+        aboutFacility.coverStartDateDay().clear().type(dateConstants.tomorrowDay);
+        aboutFacility.coverStartDateMonth().clear().type(dateConstants.tomorrowMonth);
+        aboutFacility.coverStartDateYear().clear().type(dateConstants.tomorrowYear);
 
         aboutFacility.continueButton().click();
 
@@ -255,9 +255,9 @@ context('About Facility Page', () => {
 
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
-        aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
-        aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
-        aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
+        aboutFacility.coverStartDateDay().clear().type(dateConstants.tomorrowDay);
+        aboutFacility.coverStartDateMonth().clear().type(dateConstants.tomorrowMonth);
+        aboutFacility.coverStartDateYear().clear().type(dateConstants.tomorrowYear);
 
         aboutFacility.continueButton().click();
 
