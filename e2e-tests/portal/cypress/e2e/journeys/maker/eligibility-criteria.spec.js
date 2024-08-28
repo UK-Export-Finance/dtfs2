@@ -1,5 +1,5 @@
 const { contract, eligibilityCriteria, defaults } = require('../../pages');
-const { errorSummary, taskListHeader } = require('../../partials');
+const { errorSummaryLinks, taskListHeader } = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
@@ -41,7 +41,7 @@ context('Eligibility Criteria', () => {
 
     taskListHeader.itemLink('eligibility-criteria').click();
 
-    errorSummary.errorSummaryLinks().should('have.length', criteriaCount - 1);
+    errorSummaryLinks().should('have.length', criteriaCount - 1);
   });
 
   it('should toggle display of criteria 11 extra info if criteria 11 is true/false', () => {

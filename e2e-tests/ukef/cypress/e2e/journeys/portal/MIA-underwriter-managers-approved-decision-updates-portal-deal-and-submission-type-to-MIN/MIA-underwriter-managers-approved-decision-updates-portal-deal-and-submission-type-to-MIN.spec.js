@@ -128,7 +128,7 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
     tfmPages.managersDecisionPage.commentsInputApproveWithConditions().type(MOCK_COMMENTS);
-    tfmPages.managersDecisionPage.submitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // Go back to Portal
@@ -175,7 +175,7 @@ context('Portal to TFM deal submission', () => {
 
     bondRow.changeOrConfirmCoverStartDateLink().click();
     portalPages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
-    portalPages.facilityConfirmCoverStartDate.submit().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // portal maker confirms loan start date
@@ -185,7 +185,7 @@ context('Portal to TFM deal submission', () => {
 
     loanRow.changeOrConfirmCoverStartDateLink().click();
     portalPages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
-    portalPages.facilityConfirmCoverStartDate.submit().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // portal maker submits deal for second review
