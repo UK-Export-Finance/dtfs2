@@ -1,5 +1,5 @@
 const { cancelButton, submitButton } = require('../../partials');
-const { resetPassword, changePassword, header, userProfile } = require('../../pages');
+const { resetPassword, changePassword, header } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { TEST_EMAIL_NO_GOV_NOTIFY } = require('../../../../../e2e-fixtures/portal-users.fixture');
@@ -93,7 +93,7 @@ context('Password management screens', () => {
       cy.login(BANK1_MAKER1);
       cy.url().should('eq', relative('/dashboard/deals/0'));
       header.profile().click();
-      userProfile.changePassword().click();
+      cy.clickSubmitButton();
       cy.url().should('include', '/change-password');
     });
 

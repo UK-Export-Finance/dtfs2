@@ -1,4 +1,4 @@
-const { header, users, createUser, userProfile, changePassword, landingPage } = require('../../pages');
+const { header, users, createUser, changePassword, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
 
 const MOCK_USERS = require('../../../../../e2e-fixtures');
@@ -71,7 +71,7 @@ context('Admin user creates a new user; the new user sets their password and the
       header.profile().click();
 
       // Goto change password screen
-      userProfile.changePassword().click();
+      cy.clickSubmitButton();
       cy.url().should('include', '/user/');
 
       // Go back to the profile page
@@ -88,7 +88,7 @@ context('Admin user creates a new user; the new user sets their password and the
       cy.url().should('include', '/user/');
 
       // Change password
-      userProfile.changePassword().click();
+      cy.clickSubmitButton();
 
       // Input
       changePassword.currentPassword().type(userToCreate.password);
@@ -141,7 +141,7 @@ context('Admin user creates a new user; the new user sets their password and the
     it('should change the password', () => {
       cy.login(userToCreate);
       header.profile().click();
-      userProfile.changePassword().click();
+      cy.clickSubmitButton();
       // try to change to a legit password
       changePassword.currentPassword().type(userToCreate.password);
       changePassword.password().type('P4ssPl£ase');
@@ -168,7 +168,7 @@ context('Admin user creates a new user; the new user sets their password and the
         password: 'P4ssPl£ase',
       });
       header.profile().click();
-      userProfile.changePassword().click();
+      cy.clickSubmitButton();
 
       changePassword.currentPassword().should('exist');
       changePassword.password().should('exist');
