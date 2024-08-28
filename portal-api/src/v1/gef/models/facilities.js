@@ -206,9 +206,9 @@ class Facility {
   }
 
   #validateAndSetFacilityEndDateValues(req, dealVersion) {
-    const reqContainsFacilityEndDateFields = 'isUsingFacilityEndDate' in req || 'facilityEndDate' in req || 'bankReviewDate' in req;
-
     if (!isFacilityEndDateEnabledOnGefVersion(dealVersion)) {
+      const reqContainsFacilityEndDateFields = 'isUsingFacilityEndDate' in req || 'facilityEndDate' in req || 'bankReviewDate' in req;
+
       if (reqContainsFacilityEndDateFields) {
         throw new DealVersionError(`Cannot add facility end date to deal version ${dealVersion}`);
       }
