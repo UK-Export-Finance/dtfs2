@@ -235,9 +235,9 @@ context('About Facility Page', () => {
         aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
         aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
         aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
-        aboutFacility.coverEndDateDay().clear().type(dateConstants.tomorrowDay);
-        aboutFacility.coverEndDateMonth().clear().type(dateConstants.tomorrowMonth);
-        aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
+        aboutFacility.coverEndDateDay().clear().type(dateConstants.twoDaysDay);
+        aboutFacility.coverEndDateMonth().clear().type(dateConstants.twoDaysMonth);
+        aboutFacility.coverEndDateYear().clear().type(dateConstants.twoDaysYear);
         aboutFacility.isUsingFacilityEndDateNo().click();
 
         aboutFacility.continueButton().click();
