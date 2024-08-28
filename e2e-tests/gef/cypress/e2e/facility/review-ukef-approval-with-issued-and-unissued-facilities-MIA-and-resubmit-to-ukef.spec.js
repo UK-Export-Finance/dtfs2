@@ -19,6 +19,7 @@ import statusBanner from '../pages/application-status-banner';
 import coverStartDate from '../pages/cover-start-date';
 import applicationDetails from '../pages/application-details';
 import returnToMaker from '../pages/return-to-maker';
+import facilityEndDate from '../pages/facility-end-date';
 import applicationActivities from '../pages/application-activities';
 
 const { format } = require('date-fns');
@@ -256,6 +257,13 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       }
 
       aboutFacilityUnissued.continueButton().click();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        facilityEndDate.continueButton().click();
+      }
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
