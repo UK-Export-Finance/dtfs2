@@ -1,6 +1,24 @@
 const CONSTANTS = require('./constants');
+const dateConstants = require('../../../e2e-fixtures/dateConstants');
+
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
+/**
+ * Gets facility end date properties if enabled on default deal version
+ * @returns {Pick<import('@ukef/dtfs2-common').Facility,'isUsingFacilityEndDate' | 'facilityEndDate'> | {} } mock facility end date properties if enabled, or empty object if not
+ */
+const getFacilityEndDateProperties = () => {
+  if (facilityEndDateEnabled) {
+    return {
+      isUsingFacilityEndDate: true,
+      facilityEndDate: new Date(1830297600000),
+    };
+  }
+  return {};
+};
 
 exports.MOCK_FACILITY_ONE = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: false,
   name: 'Facility one',
@@ -18,9 +36,7 @@ exports.MOCK_FACILITY_ONE = {
     'Other',
   ],
   detailsOther: 'Other',
-  currency: {
-    id: 'GBP',
-  },
+  currency: 'GBP',
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,
@@ -30,7 +46,7 @@ exports.MOCK_FACILITY_ONE = {
   ukefExposure: 1600,
   guaranteeFee: 0.9,
   submittedAsIssuedDate: '1638363717231',
-  feeType: 'In advance',
+  feeType: 'in advance',
   feeFrequency: 'Monthly',
   ukefFacilityId: '10000011',
   dayCountBasis: 365,
@@ -39,6 +55,7 @@ exports.MOCK_FACILITY_ONE = {
 };
 
 exports.MOCK_FACILITY_TWO = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: true,
   name: 'Facility two',
@@ -75,12 +92,13 @@ exports.MOCK_FACILITY_TWO = {
 };
 
 exports.MOCK_FACILITY_TWO_NULL_MIA = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: true,
   name: 'Facility two',
   shouldCoverStartOnSubmission: true,
   coverStartDate: 1638403200000,
-  coverEndDate: '2030-01-01T00:00:00.000Z',
+  coverEndDate: dateConstants.tomorrow,
   monthsOfCover: null,
   details: [
     'Term basis',
@@ -111,6 +129,7 @@ exports.MOCK_FACILITY_TWO_NULL_MIA = {
 };
 
 exports.MOCK_FACILITY_THREE = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CONTINGENT,
   hasBeenIssued: false,
   name: 'Facility three',
@@ -147,6 +166,7 @@ exports.MOCK_FACILITY_THREE = {
 };
 
 exports.MOCK_FACILITY_FOUR = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: false,
   name: 'Facility four',

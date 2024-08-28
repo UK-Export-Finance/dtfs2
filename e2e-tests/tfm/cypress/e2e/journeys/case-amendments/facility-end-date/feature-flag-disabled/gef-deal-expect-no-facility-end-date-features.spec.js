@@ -11,15 +11,6 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'false') {
   context('Amendments - GEF deal does not display any Facility end date pages or fields when TFM feature flag disabled', () => {
     let dealId;
     let facility;
-
-    const MOCK_GEF_FACILITY_WITH_FACILITY_END_DATE = {
-      ...MOCK_FACILITY_ONE,
-      hasBeenIssued: true,
-      isUsingFacilityEndDate: true,
-      facilityEndDate: new Date('2023-02-01'),
-      bankReviewDate: undefined,
-    };
-
     before(() => {
       // inserts a gef deal
       cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
@@ -27,7 +18,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'false') {
         // updates a gef deal so has relevant fields
         cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
-        cy.createGefFacilities(dealId, [MOCK_GEF_FACILITY_WITH_FACILITY_END_DATE], BANK1_MAKER1).then((createdFacility) => {
+        cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], BANK1_MAKER1).then((createdFacility) => {
           facility = createdFacility.details;
         });
 
