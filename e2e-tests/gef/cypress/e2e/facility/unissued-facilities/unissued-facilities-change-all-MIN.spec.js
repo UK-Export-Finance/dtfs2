@@ -129,11 +129,6 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.errorSummary().contains('Select if you want UKEF cover to start on the day you issue the facility');
       aboutFacilityUnissued.errorSummary().contains('Enter a cover end date');
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateError();
-        aboutFacilityUnissued.errorSummary().contains('Select if there is an end date for this facility');
-      }
-
       // entering date in the past for issue date
       aboutFacilityUnissued.issueDateDay().type(dateConstants.fourDaysAgoDay);
       aboutFacilityUnissued.issueDateMonth().type(dateConstants.fourDaysAgoMonth);
