@@ -8,12 +8,13 @@
   <table class="govuk-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header ukef-width-one-sixth" aria-sort="ascending">Bank</th>
-        <th scope="col" class="govuk-table__header ukef-width-one-sixth" aria-sort="none">Status</th>
-        <th scope="col" class="govuk-table__header ukef-width-one-sixth" aria-sort="none">Date report received</th>
-        <th scope="col" class="govuk-table__header ukef-width-one-sixth" aria-sort="none">Total facilities reported</th>
-        <th scope="col" class="govuk-table__header ukef-width-one-sixth" aria-sort="none">Total fees reported</th>
-        <th scope="col" class="govuk-table__header ukef-width-one-sixth" aria-sort="none">Reported fees left to reconcile</th>
+        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="ascending">Bank</th>
+        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="none">Status</th>
+        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="none">Frequency</th>
+        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="none">Date report received</th>
+        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="none">Total facilities reported</th>
+        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="none">Total fees reported</th>
+        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="none">Reported fees left to reconcile</th>
       </tr>
     </thead>
 
@@ -42,6 +43,9 @@
             status: summaryItem.status,
             displayStatus: summaryItem.displayStatus
           }) }}
+        </td>
+        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.frequency }}">
+          {{ summaryItem.frequency }}
         </td>
         <td class="govuk-table__cell" data-sort-value="{{ summaryItem.dateUploaded }}">
           {{ summaryItem.formattedDateUploaded }}

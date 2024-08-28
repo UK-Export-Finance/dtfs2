@@ -62,20 +62,21 @@ const ErrorMessagesMap = {
   },
 };
 
-/*
-  Maps through validation errors = require( the server and returns i)t
-  so both Summary Error component and field component
-  can display the error messages correctly.
-*/
+/**
+ * Maps validation errors so both Summary Error component and field component display the error messages correctly.
+ * @param {import('../types/validation-error').ValidationError[] | import('../types/validation-error').ValidationError} errs - errors to be mapped
+ * @param {string} href - the current page URL
+ * @returns {import('../types/view-models/facility-end-date-view-model').ViewModelErrors | null}
+ */
 const validationErrorHandler = (errs, href = '') => {
   const errorSummary = [];
   const fieldErrors = {};
 
   if (!errs) {
-    return false;
+    return null;
   }
 
-  const errors = isObject(errs) ? [errs] : errs;
+  const errors = Array.isArray(errs) ? errs : [errs];
 
   errors.forEach((el) => {
     const errorsForReference = ErrorMessagesMap[el.errRef];
@@ -212,10 +213,10 @@ const previewItemConditions = (previewParams) => {
      * If submitted to UKEF or FURTHER MAKER'S INPUT REQUIRED && logged in as maker && facility still unissued
      * only shows if other facilities have been changed to issued
      * changes to issued
-     * add link displayed taking to unissued-facility-change change page
+     * add link displayed taking to unissued-facility-change change page, overwriting existing value for isFacilityEndDateProvided
      */
     summaryItems = generateActionsArrayForItem({
-      href: unissuedHref,
+      href: `${unissuedHref}`,
       visuallyHiddenText: item.label,
       text: shouldDisplayChangeLinkIfUnissued && ACTION_TEXT.CHANGE,
       id: item.id,
@@ -299,7 +300,11 @@ const summaryItemsConditions = (summaryItemsObj) => {
   // Issued facility change link (post confirmation)
   const issuedHref = `/gef/application-details/${app._id}/${data.details._id}/confirm-cover-start-date`;
   // personalised href for facility to change to issued (once submitted to UKEF)
-  const unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change`;
+  let unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change`;
+  if (id === 'facilityEndDate') {
+    // personalised href to change facility end date (once submitted to UKEF)
+    unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/facility-end-date/change`;
+  }
   // personalised href for facility to change to unissued from issued (once submitted to UKEF and changed to issued)
   const issuedToUnissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change-to-unissued`;
   // array of facilities which have been changed to issued

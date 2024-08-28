@@ -11,6 +11,7 @@ import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILIT
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
+import facilityEndDate from '../../pages/facility-end-date';
 import statusBanner from '../../pages/application-status-banner';
 
 let dealId;
@@ -159,9 +160,55 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       }
 
       aboutFacilityUnissued.continueButton().click();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        facilityEndDate.continueButton().click();
+      }
+
       // to go back to application preview page
       unissuedFacilityTable.updateFacilitiesLater().click();
     });
+
+    if (facilityEndDateEnabled) {
+      it('should display error on facility end date page if date is not provided', () => {
+        applicationPreview.facilitySummaryListTable(1).facilityEndDateAction().click();
+
+        facilityEndDate.facilityEndDateDay().clear();
+        facilityEndDate.facilityEndDateMonth().clear();
+        facilityEndDate.facilityEndDateYear().clear();
+        facilityEndDate.continueButton().click();
+
+        facilityEndDate.errorSummary().contains('Facility end date must be in the correct format DD/MM/YYYY');
+        facilityEndDate.facilityEndDateError();
+      });
+
+      it('should display error on facility end date page if date is over 6 years in the future', () => {
+        applicationPreview.facilitySummaryListTable(1).facilityEndDateAction().click();
+
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.sixYearsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.sixYearsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.sixYearsOneDayYear);
+        facilityEndDate.continueButton().click();
+
+        facilityEndDate.errorSummary().contains('Facility end date cannot be greater than 6 years in the future');
+        facilityEndDate.facilityEndDateError();
+      });
+
+      it('should display error on facility end date page if date before the cover start date', () => {
+        applicationPreview.facilitySummaryListTable(1).facilityEndDateAction().click();
+
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.todayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.todayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.todayYear);
+        facilityEndDate.continueButton().click();
+
+        facilityEndDate.errorSummary().contains('Facility end date cannot be before the cover start date');
+        facilityEndDate.facilityEndDateError();
+      });
+    }
 
     it('should not be able to update facility from application preview with coverStartDate more than 3 months in the future if specialIssuePermission', () => {
       // to change to issued from preview page by clicking change on issued row

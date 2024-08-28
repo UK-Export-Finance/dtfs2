@@ -84,7 +84,6 @@ describe('validateAndParseFacilityEndDate', () => {
     const coverStartDate = add(new Date(), { days: 1 });
 
     mockValidateAndParseDayMonthYear.mockReturnValueOnce({
-      errors: null,
       date: facilityEndDate,
     });
 
@@ -112,7 +111,6 @@ describe('validateAndParseFacilityEndDate', () => {
     const coverStartDate = add(new Date(), { days: 1 });
 
     mockValidateAndParseDayMonthYear.mockReturnValueOnce({
-      errors: null,
       date: facilityEndDate,
     });
 
@@ -140,7 +138,6 @@ describe('validateAndParseFacilityEndDate', () => {
     const coverStartDate = add(new Date(), { days: 1 });
 
     mockValidateAndParseDayMonthYear.mockReturnValueOnce({
-      errors: null,
       date: facilityEndDate,
     });
 
@@ -152,7 +149,6 @@ describe('validateAndParseFacilityEndDate', () => {
 
     // Assert
     expect(result).toEqual({
-      errors: null,
       date: facilityEndDate,
     });
   });
