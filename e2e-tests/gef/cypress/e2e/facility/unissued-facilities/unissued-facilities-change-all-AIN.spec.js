@@ -15,6 +15,7 @@ import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
 import applicationSubmission from '../../pages/application-submission';
 import statusBanner from '../../pages/application-status-banner';
+import facilityEndDate from '../../pages/facility-end-date';
 
 let dealId;
 let token;
@@ -285,6 +286,15 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
       cy.clickContinueButton();
 
+      if (facilityEndDateEnabled) {
+        cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/facility-end-date`));
+
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsYear);
+        facilityEndDate.continueButton().click();
+      }
+
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       // checks the facility has been removed from unissued list
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
@@ -310,6 +320,13 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
       cy.clickContinueButton();
 
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsYear);
+        facilityEndDate.continueButton().click();
+      }
+
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[1].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 2);
       continueButton().should('not.exist');
@@ -329,7 +346,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
 
       if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+        aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
       }
 
       cy.clickContinueButton();
@@ -373,7 +390,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       applicationPreview.facilitySummaryListTable(0).coverEndDateAction().contains('Change');
 
       if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateValue().contains('Yes');
+        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateValue().contains('No');
         applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Change');
       }
 
@@ -429,6 +446,13 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       }
 
       cy.clickContinueButton();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsYear);
+        facilityEndDate.continueButton().click();
+      }
 
       // checks that name has been updated
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(`${MOCK_FACILITY_ONE.name}name`);

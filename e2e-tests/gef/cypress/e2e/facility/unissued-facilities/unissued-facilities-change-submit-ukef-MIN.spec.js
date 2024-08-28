@@ -18,6 +18,7 @@ import applicationSubmission from '../../pages/application-submission';
 import statusBanner from '../../pages/application-status-banner';
 import applicationDetails from '../../pages/application-details';
 import applicationActivities from '../../pages/application-activities';
+import facilityEndDate from '../../pages/facility-end-date';
 
 let dealId;
 let token;
@@ -90,6 +91,13 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
 
       cy.clickContinueButton();
 
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        facilityEndDate.continueButton().click();
+      }
+
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[1].name} is updated`);
       // checks the facility has been removed from unissued list
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
@@ -114,6 +122,13 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       }
 
       cy.clickContinueButton();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        facilityEndDate.continueButton().click();
+      }
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[2].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 2);
@@ -352,6 +367,7 @@ context('Return to maker for unissued to issued facilities', () => {
       const issuedDate = format(dateConstants.today, 'd MMMM yyyy');
       const coverStart = format(dateConstants.today, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
+      const facilityEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
       applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
@@ -374,6 +390,13 @@ context('Return to maker for unissued to issued facilities', () => {
       }
       cy.clickContinueButton();
 
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        facilityEndDate.continueButton().click();
+      }
+
       // forth facility table has correct name and dates
       applicationDetails.facilitySummaryListTable(3).nameValue().contains(MOCK_FACILITY_ONE.name);
       applicationDetails.facilitySummaryListTable(3).nameAction().contains('Change');
@@ -393,6 +416,8 @@ context('Return to maker for unissued to issued facilities', () => {
 
       if (facilityEndDateEnabled) {
         applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
+        applicationDetails.facilitySummaryListTable(3).facilityEndDateValue().contains(facilityEnd);
+
         applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateAction().contains('Change');
       }
 

@@ -15,6 +15,7 @@ import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
 import applicationSubmission from '../../pages/application-submission';
 import statusBanner from '../../pages/application-status-banner';
+import facilityEndDate from '../../pages/facility-end-date';
 
 let dealId;
 let token;
@@ -125,6 +126,13 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
 
       cy.clickContinueButton();
 
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        facilityEndDate.continueButton().click();
+      }
+
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
       continueButton().should('not.exist');
@@ -227,6 +235,13 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       }
 
       cy.clickContinueButton();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        cy.clickContinueButton();
+      }
     });
 
     it('change links should appear for facility four and three should be unissued still', () => {

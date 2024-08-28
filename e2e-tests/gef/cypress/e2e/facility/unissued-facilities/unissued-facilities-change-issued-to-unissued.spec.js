@@ -15,6 +15,7 @@ import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facilit
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import statusBanner from '../../pages/application-status-banner';
 import facilities from '../../pages/facilities';
+import facilityEndDate from '../../pages/facility-end-date';
 
 let dealId;
 let token;
@@ -118,6 +119,13 @@ context('Change issued facilities back to unissued (changed to issued facilities
       }
 
       cy.clickContinueButton();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        cy.clickContinueButton();
+      }
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       // checks the facility has been removed from unissued list
@@ -235,6 +243,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
       const issuedDate = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
       const coverStart = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
+      const facilityEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
       // should be able to change number 1 as changed to issued
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(MOCK_FACILITY_ONE.name);
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().click();
@@ -257,6 +266,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
 
       if (facilityEndDateEnabled) {
         applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateValue().contains('Yes');
+        applicationPreview.facilitySummaryListTable(2).facilityEndDateValue().contains(facilityEnd);
         applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().contains('Change');
       }
 
@@ -277,6 +287,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
 
       if (facilityEndDateEnabled) {
         applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateValue().contains('Yes');
+        applicationPreview.facilitySummaryListTable(2).facilityEndDateValue().contains(facilityEnd);
         applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().contains('Change');
       }
 
@@ -297,6 +308,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
 
       if (facilityEndDateEnabled) {
         applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateValue().contains('Yes');
+        applicationPreview.facilitySummaryListTable(2).facilityEndDateValue().contains(facilityEnd);
         applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().contains('Change');
       }
     });
@@ -316,7 +328,6 @@ context('Change issued facilities back to unissued (changed to issued facilities
       applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedValue().contains('Unissued');
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().contains('Change');
-      // TODO: add if statement for FED enabled & check those rows
       applicationPreview.facilitySummaryListTable(2).monthsOfCoverValue().contains(MOCK_FACILITY_ONE.monthsOfCover);
       applicationPreview.facilitySummaryListTable(2).monthsOfCoverAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
@@ -332,6 +343,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
 
       if (facilityEndDateEnabled) {
         applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
+        applicationPreview.facilitySummaryListTable(2).facilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
 
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
@@ -351,7 +363,6 @@ context('Change issued facilities back to unissued (changed to issued facilities
       applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedValue().contains('Unissued');
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
-      // TODO: add if statement for FED enabled & check those rows
       applicationPreview.facilitySummaryListTable(0).monthsOfCoverValue().contains(MOCK_FACILITY_THREE.monthsOfCover);
       applicationPreview.facilitySummaryListTable(0).monthsOfCoverAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
@@ -360,6 +371,10 @@ context('Change issued facilities back to unissued (changed to issued facilities
       applicationPreview.facilitySummaryListTable(0).interestPercentageAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
+
+      if (facilityEndDateEnabled) {
+        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
+      }
 
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
@@ -389,6 +404,14 @@ context('Change issued facilities back to unissued (changed to issued facilities
       }
 
       cy.clickContinueButton();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        cy.clickContinueButton();
+      }
+
       unissuedFacilityTable.updateFacilitiesLater().click();
 
       // submit to checker
