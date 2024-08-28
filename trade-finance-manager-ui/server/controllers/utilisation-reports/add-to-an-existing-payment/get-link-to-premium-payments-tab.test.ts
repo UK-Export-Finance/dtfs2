@@ -13,7 +13,7 @@ describe('getLinkToPremiumPaymentsTab', () => {
     const result = getLinkToPremiumPaymentsTab(reportId, selectedFeeRecordIds);
 
     // Assert
-    expect(result).toBe('/utilisation-reports/123');
+    expect(result).toBe(`/utilisation-reports/${reportId}`);
   });
 
   it('returns URL without params when total length exceeds limit', () => {
@@ -24,7 +24,7 @@ describe('getLinkToPremiumPaymentsTab', () => {
     const result = getLinkToPremiumPaymentsTab(reportId, selectedFeeRecordIds);
 
     // Assert
-    expect(result).toBe('/utilisation-reports/123');
+    expect(result).toBe(`/utilisation-reports/${reportId}`);
   });
 
   it('returns URL with params when selectedFeeRecordIds array has one element', () => {
@@ -35,7 +35,7 @@ describe('getLinkToPremiumPaymentsTab', () => {
     const result = getLinkToPremiumPaymentsTab(reportId, selectedFeeRecordIds);
 
     // Assert
-    expect(result).toBe('/utilisation-reports/123?selectedFeeRecordIds=1');
+    expect(result).toBe(`/utilisation-reports/${reportId}?selectedFeeRecordIds=1`);
   });
 
   it('returns URL with params when total length is within limit', () => {
@@ -46,6 +46,6 @@ describe('getLinkToPremiumPaymentsTab', () => {
     const result = getLinkToPremiumPaymentsTab(reportId, selectedFeeRecordIds);
 
     // Assert
-    expect(result).toBe('/utilisation-reports/123?selectedFeeRecordIds=1%2C22%2C333');
+    expect(result).toBe(`/utilisation-reports/${reportId}?selectedFeeRecordIds=1%2C22%2C333`);
   });
 });
