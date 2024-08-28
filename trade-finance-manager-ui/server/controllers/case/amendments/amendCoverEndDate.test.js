@@ -126,7 +126,7 @@ describe('POST postAmendCoverEndDate', () => {
     });
   });
 
-  describe('TFM facility end date feature flag disabled', () => {
+  describe('When the TFM facility end date feature flag is disabled', () => {
     beforeEach(() => {
       jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(false);
     });

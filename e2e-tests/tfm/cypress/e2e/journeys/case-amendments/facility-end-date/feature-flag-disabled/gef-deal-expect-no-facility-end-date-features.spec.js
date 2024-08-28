@@ -8,7 +8,7 @@ import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
 import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 
 if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'false') {
-  context('Amendments - GEF deal does not display any Facility end date pages or fields when TFM feature flag disabled', () => {
+  context('Amendments - GEF deal does not display any Facility end date pages or fields when TFM feature flag is disabled', () => {
     let dealId;
     let facility;
     before(() => {
