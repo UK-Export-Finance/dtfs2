@@ -17,7 +17,7 @@ const generateRandomTfmFacilityAmendmentsForFacility = (facility: Facility): Tfm
 };
 
 export const generateRandomTfmFacilityForFacility = (facility: Facility): WithoutId<TfmFacility> => {
-  const tfmFacility: WithoutId<TfmFacility> = { facilitySnapshot: facility };
+  const tfmFacility: WithoutId<TfmFacility> = { facilitySnapshot: facility, tfm: {} };
 
   const amendments = generateRandomTfmFacilityAmendmentsForFacility(facility);
   if (amendments) {

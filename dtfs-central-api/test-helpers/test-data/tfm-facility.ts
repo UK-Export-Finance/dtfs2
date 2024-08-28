@@ -12,5 +12,6 @@ export const aTfmFacility = (): TfmFacility => {
       _id: tfmFacilityId,
     },
     amendments: [],
+    tfm: {},
   };
 };
