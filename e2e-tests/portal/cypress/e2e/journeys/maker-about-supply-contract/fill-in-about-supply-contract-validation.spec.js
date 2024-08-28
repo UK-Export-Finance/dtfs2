@@ -333,10 +333,10 @@ context('about-supply-contract', () => {
     cy.get('[data-cy="scheme-bss"]').click();
     cy.get('[data-cy="continue-button"]').click();
     cy.get('[data-cy="criteriaMet-true"]').click();
-    cy.get('[data-cy="submit-button"]').click();
+    cy.clickSubmitButton();
     cy.get('[data-cy="bankInternalRefName"]').type('TestBank1903');
     cy.get('[data-cy="additionalRefName"]').type('TestBank1903');
-    cy.get('[data-cy="submit-button"]').click();
+    cy.clickSubmitButton();
 
     // Click on "View Details" under the "About the Supplier" contract
     cy.get('[data-cy="ViewAboutSupplierDetails"]').click();
