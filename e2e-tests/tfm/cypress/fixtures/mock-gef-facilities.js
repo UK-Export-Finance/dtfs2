@@ -1,5 +1,4 @@
 const CONSTANTS = require('./constants');
-const dateConstants = require('../../../e2e-fixtures/dateConstants');
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
@@ -98,7 +97,7 @@ exports.MOCK_FACILITY_TWO_NULL_MIA = {
   name: 'Facility two',
   shouldCoverStartOnSubmission: true,
   coverStartDate: 1638403200000,
-  coverEndDate: dateConstants.tomorrow,
+  coverEndDate: '2030-01-01T00:00:00.000Z',
   monthsOfCover: null,
   details: [
     'Term basis',
