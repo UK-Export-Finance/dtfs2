@@ -51,7 +51,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should amend the facility correctly when first adding a facility end date and then switching to a bank review date during the amendment', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, changeFacilityValue: false });
+      amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true });
       amendmentsPage.isUsingFacilityEndDateYes().should('not.be.checked');
       amendmentsPage.isUsingFacilityEndDateNo().should('not.be.checked');
 
