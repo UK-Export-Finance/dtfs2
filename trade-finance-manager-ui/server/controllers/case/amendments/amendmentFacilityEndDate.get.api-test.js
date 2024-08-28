@@ -7,6 +7,7 @@ import {
   MOCK_AMENDMENT_FACILITYVALUE_CHANGE,
 } from '../../../test-mocks/amendment-test-mocks';
 import { getAmendmentFacilityEndDate } from './amendmentFacilityEndDate.controller';
+import { MAPPED_FACILITY_TYPE } from '../../../constants/mapped-facility';
 
 const res = mockRes();
 
@@ -24,7 +25,7 @@ const user = {
 };
 
 const gefFacility = {
-  facilitySnapshot: { type: FACILITY_TYPE.CASH },
+  facilitySnapshot: { type: MAPPED_FACILITY_TYPE.CASH },
 };
 
 const bssEwcsFacility = {

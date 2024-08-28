@@ -1,5 +1,6 @@
-import { FACILITY_TYPE, isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { isFacilityEndDateEnabledForFacility } from './isFacilityEndDateEnabledForFacility';
+import { MAPPED_FACILITY_TYPE } from '../../constants/mapped-facility';
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
@@ -8,15 +9,15 @@ jest.mock('@ukef/dtfs2-common', () => ({
 
 describe('isFacilityEndDateEnabledForTfmFacility', () => {
   const gefCashFacility = {
-    facilitySnapshot: { type: FACILITY_TYPE.CASH },
+    facilitySnapshot: { type: MAPPED_FACILITY_TYPE.CASH },
   };
 
   const gefContingentFacility = {
-    facilitySnapshot: { type: FACILITY_TYPE.CONTINGENT },
+    facilitySnapshot: { type: MAPPED_FACILITY_TYPE.CONTINGENT },
   };
 
   const bssEwcsFacility = {
-    facilitySnapshot: { type: FACILITY_TYPE.LOAN },
+    facilitySnapshot: { type: MAPPED_FACILITY_TYPE.LOAN },
   };
 
   describe('when TFM Facility end date feature flag disabled', () => {
