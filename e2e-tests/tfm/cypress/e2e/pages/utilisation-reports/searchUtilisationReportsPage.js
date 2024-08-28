@@ -3,6 +3,7 @@ const searchUtilisationReportsFormPage = {
   heading: () => cy.get(`[data-cy="find-reports-by-year-heading"]`),
   bankRadioButton: (bankId) => cy.get(`[data-cy="${bankId}-radio"]`),
   yearInput: () => cy.get(`[data-cy="year-input"]`),
+  yearInputDropdownId: () => cy.get(`[data-cy="year-input"]`).invoke('attr', 'list'),
   continueButton: () => cy.get(`[data-cy="continue-button"]`),
 };
 

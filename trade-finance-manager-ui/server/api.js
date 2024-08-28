@@ -971,6 +971,24 @@ const getAllBanks = async (userToken) => {
 };
 
 /**
+ * Fetches all banks with their available report years
+ * @param {string} userToken - token to validate session
+ * @returns {Promise<import('./api-response-types').BankWithReportingYearsResponseBody[]>}
+ */
+const getAllBanksWithReportingYears = async (userToken) => {
+  try {
+    const { data } = await axios.get(`${TFM_API_URL}/v1/banks?includeReportingYears=true`, {
+      headers: generateHeaders(userToken),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get banks with reporting years', error);
+    throw error;
+  }
+};
+
+/**
  * Fetches all submitted reports by bank ID and year
  * @param {string} userToken - token to validate session
  * @param {string} bankId - the bank ID
@@ -1253,6 +1271,7 @@ module.exports = {
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
   getAllBanks,
+  getAllBanksWithReportingYears,
   getSelectedFeeRecordsDetailsWithAvailablePaymentGroups,
   getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups,
   getReportSummariesByBankAndYear,

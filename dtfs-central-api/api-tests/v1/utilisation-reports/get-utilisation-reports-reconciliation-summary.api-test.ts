@@ -14,7 +14,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../src/types/utilisation-reports';
 import { withoutMongoId } from '../../../src/helpers/mongodb';
-import { aPortalUser } from '../../../test-helpers/test-data';
+import { aPortalUser } from '../../../test-helpers';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 
 console.error = jest.fn();

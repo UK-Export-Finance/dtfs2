@@ -36,6 +36,9 @@ describe(component, () => {
   const getWrapper = ({ keyingSheetRow, userCanEdit }: { keyingSheetRow?: KeyingSheetTableRow; userCanEdit?: boolean } = {}) =>
     render({ keyingSheetRow: keyingSheetRow ?? aKeyingSheetTableRow(), userCanEdit: userCanEdit ?? true });
 
+  const getPrincipalBalanceAdjustmentSelector = (change: 'increase' | 'decrease') => `td[data-cy="principal-balance-adjustment--${change}"]`;
+  const getFixedFeeAdjustmentSelector = (change: 'increase' | 'decrease') => `td[data-cy="fixed-fee-adjustment--${change}"]`;
+
   it('renders the keying sheet status, facility id, exporter, base currency and fee payment in the table row when keying sheet row has fee payments', () => {
     const keyingSheetRow: KeyingSheetTableRow = {
       ...aKeyingSheetTableRow(),
@@ -108,8 +111,10 @@ describe(component, () => {
   it('renders the keying sheet adjustment increase and decrease columns', () => {
     const wrapper = getWrapper();
 
-    wrapper.expectElement('tr td[data-cy="keying-sheet-adjustment--increase"]').toHaveCount(2);
-    wrapper.expectElement('tr td[data-cy="keying-sheet-adjustment--decrease"]').toHaveCount(2);
+    wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('increase')}`).toExist();
+    wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('decrease')}`).toExist();
+    wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('increase')}`).toExist();
+    wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('decrease')}`).toExist();
   });
 
   it("renders the '-' in all the increase and decrease adjustment cells when the adjustment change is 'NONE'", () => {
@@ -117,21 +122,21 @@ describe(component, () => {
     const keyingSheetRow: KeyingSheetTableRow = {
       ...aKeyingSheetTableRow(),
       fixedFeeAdjustment: { change, amount: '111.11' },
-      principalBalanceAdjustment: { change, amount: '333.33' },
+      principalBalanceAdjustment: { change, amount: '222.22' },
     };
     const wrapper = getWrapper({ keyingSheetRow });
 
-    wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--increase"]:contains("-")`).toHaveCount(2);
-    wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--decrease"]:contains("-")`).toHaveCount(2);
+    wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('increase')}:contains("-")`).toExist();
+    wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('decrease')}:contains("-")`).toExist();
+    wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('increase')}:contains("-")`).toExist();
+    wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('decrease')}:contains("-")`).toExist();
+
     wrapper.expectElement('tr td:contains("111.11")').notToExist();
     wrapper.expectElement('tr td:contains("222.22")').notToExist();
-    wrapper.expectElement('tr td:contains("333.33")').notToExist();
   });
 
   describe('when the keying sheet adjustment value change field is set to INCREASE', () => {
     const change = 'INCREASE';
-
-    const increaseColumnSelector = 'tr td[data-cy="keying-sheet-adjustment--increase"]';
 
     it('renders the fixed fee adjustment amount in the increase column with the numeric cell class', () => {
       const keyingSheetRow: KeyingSheetTableRow = {
@@ -140,8 +145,8 @@ describe(component, () => {
       };
       const wrapper = getWrapper({ keyingSheetRow });
 
-      wrapper.expectElement(`${increaseColumnSelector}:contains("111.11")`).toExist();
-      wrapper.expectElement(`${increaseColumnSelector}:contains("111.11")`).hasClass('govuk-table__cell--numeric');
+      wrapper.expectElement(`${getFixedFeeAdjustmentSelector('increase')}:contains("111.11")`).toExist();
+      wrapper.expectElement(`${getFixedFeeAdjustmentSelector('increase')}:contains("111.11")`).hasClass('govuk-table__cell--numeric');
     });
 
     it('renders the principal balance adjustment in the increase column with the numeric cell class', () => {
@@ -151,8 +156,8 @@ describe(component, () => {
       };
       const wrapper = getWrapper({ keyingSheetRow });
 
-      wrapper.expectElement(`${increaseColumnSelector}:contains("333.33")`).toExist();
-      wrapper.expectElement(`${increaseColumnSelector}:contains("333.33")`).hasClass('govuk-table__cell--numeric');
+      wrapper.expectElement(`${getPrincipalBalanceAdjustmentSelector('increase')}:contains("333.33")`).toExist();
+      wrapper.expectElement(`${getPrincipalBalanceAdjustmentSelector('increase')}:contains("333.33")`).hasClass('govuk-table__cell--numeric');
     });
 
     it("sets all the decrease columns to the '-' character and does not use the numeric cell class", () => {
@@ -163,15 +168,15 @@ describe(component, () => {
       };
       const wrapper = getWrapper({ keyingSheetRow });
 
-      wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--decrease"]:contains("-")`).toHaveCount(2);
-      wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--decrease"]:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
+      wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('decrease')}:contains("-")`).toExist();
+      wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('decrease')}:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
+      wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('decrease')}:contains("-")`).toExist();
+      wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('decrease')}:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
     });
   });
 
   describe('when the keying sheet adjustment value change field is set to DECREASE', () => {
     const change = 'DECREASE';
-
-    const decreaseColumnSelector = 'tr td[data-cy="keying-sheet-adjustment--decrease"]';
 
     it('renders the fixed fee adjustment amount in the decrease column with the numeric cell class', () => {
       const keyingSheetRow: KeyingSheetTableRow = {
@@ -180,8 +185,8 @@ describe(component, () => {
       };
       const wrapper = getWrapper({ keyingSheetRow });
 
-      wrapper.expectElement(`${decreaseColumnSelector}:contains("111.11")`).toExist();
-      wrapper.expectElement(`${decreaseColumnSelector}:contains("111.11")`).hasClass('govuk-table__cell--numeric');
+      wrapper.expectElement(`${getFixedFeeAdjustmentSelector('decrease')}:contains("111.11")`).toExist();
+      wrapper.expectElement(`${getFixedFeeAdjustmentSelector('decrease')}:contains("111.11")`).hasClass('govuk-table__cell--numeric');
     });
 
     it('renders the principal balance adjustment in the decrease column with the numeric cell class', () => {
@@ -191,8 +196,8 @@ describe(component, () => {
       };
       const wrapper = getWrapper({ keyingSheetRow });
 
-      wrapper.expectElement(`${decreaseColumnSelector}:contains("333.33")`).toExist();
-      wrapper.expectElement(`${decreaseColumnSelector}:contains("333.33")`).hasClass('govuk-table__cell--numeric');
+      wrapper.expectElement(`${getPrincipalBalanceAdjustmentSelector('decrease')}:contains("333.33")`).toExist();
+      wrapper.expectElement(`${getPrincipalBalanceAdjustmentSelector('decrease')}:contains("333.33")`).hasClass('govuk-table__cell--numeric');
     });
 
     it("sets all the increase columns to the '-' character and does not use the numeric cell class", () => {
@@ -203,8 +208,10 @@ describe(component, () => {
       };
       const wrapper = getWrapper({ keyingSheetRow });
 
-      wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--increase"]:contains("-")`).toHaveCount(2);
-      wrapper.expectElement(`tr td[data-cy="keying-sheet-adjustment--increase"]:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
+      wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('increase')}:contains("-")`).toExist();
+      wrapper.expectElement(`tr ${getFixedFeeAdjustmentSelector('increase')}:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
+      wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('increase')}:contains("-")`).toExist();
+      wrapper.expectElement(`tr ${getPrincipalBalanceAdjustmentSelector('increase')}:contains("-")`).doesNotHaveClass('govuk-table__cell--numeric');
     });
   });
 

@@ -30,24 +30,14 @@
     }) }}
   {% endif %}
 
-  {% if change === false %}
-    {{ govukBackLink({
-      text: "Back",
-      href: "/gef/application-details/" + dealId + "/unissued-facilities",
-      attributes: {
-        'data-cy': 'back-link'
-      }
-    }) }}
+  {{ govukBackLink({
+    text: "Back",
+    href: previousPage,
+    attributes: {
+      'data-cy': 'back-link'
+    }
+  }) }}
 
-  {% else %}
-    {{ govukBackLink({
-      text: "Back",
-      href: "/gef/application-details/" + dealId,
-      attributes: {
-        'data-cy': 'back-link'
-      }
-    }) }}
-  {% endif %}
 
   <header data-cy="application-details-page">
     <h1 class="govuk-heading-xl" data-cy="main-heading">

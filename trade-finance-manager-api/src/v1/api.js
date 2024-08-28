@@ -1196,13 +1196,20 @@ const findBankById = async (bankId) => {
 };
 
 /**
- * Get all banks
- * @returns {Promise<import('./api-response-types').BankResponseBody[]>}
+ * @typedef {object} GetBanksQuery
+ * @property {boolean | undefined} includeReportingYears - Whether or not to include the bank reporting years
  */
-const getAllBanks = async () => {
+
+/**
+ * Get all banks
+ * @param {GetBanksQuery} queryParams - The query parameters
+ * @returns {Promise<import('./api-response-types').BankResponseBody[] | import('./api-response-types').BankWithReportingYearsResponseBody[]>}
+ */
+const getBanks = async (queryParams = {}) => {
   const url = `${DTFS_CENTRAL_API_URL}/v1/bank`;
   const response = await axios.get(url, {
     headers: headers.central,
+    params: queryParams,
   });
 
   return response.data;
@@ -1584,7 +1591,7 @@ module.exports = {
   addUnderwriterCommentToGefDeal,
   updateGefMINActivity,
   findBankById,
-  getAllBanks,
+  getBanks,
   getGefMandatoryCriteriaByVersion,
   getBankHolidays,
   getUtilisationReportsReconciliationSummary,

@@ -11,8 +11,7 @@ import {
 import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
 import { generateReconciliationSummaries, getAllReportsForSubmissionMonth, getPreviousOpenReportsBySubmissionMonth } from './reconciliation-summary-generator';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../../../types/utilisation-reports';
-import { aBank } from '../../../../../../test-helpers/test-data/bank';
-import { aMonthlyBankReportPeriodSchedule } from '../../../../../../test-helpers/test-data/bank-report-period-schedule';
+import { aBank, aMonthlyBankReportPeriodSchedule } from '../../../../../../test-helpers';
 import { getAllBanks } from '../../../../../repositories/banks-repo';
 
 jest.mock('../../../../../repositories/banks-repo');
