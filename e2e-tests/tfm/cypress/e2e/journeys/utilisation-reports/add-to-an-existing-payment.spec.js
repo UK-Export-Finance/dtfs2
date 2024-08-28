@@ -216,7 +216,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     });
 
     describe('by clicking the back button', () => {
-      it('should redirect the user to the premium payments page and persist the selected fees', () => {
+      beforeEach(() => {
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
 
@@ -231,7 +231,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
         cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
 
         pages.utilisationReportAddToAnExistingPaymentPage.backLink().click();
+      });
 
+      it('should redirect the user to the premium payments page', () => {
+        cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}?selectedFeeRecordIds=${FEE_RECORD_ID_ONE}%2C${FEE_RECORD_ID_THREE}`));
+      });
+
+      it('should persist the selected fees', () => {
         pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
           .checkbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO)
           .should('be.checked');
@@ -247,7 +253,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     });
 
     describe('by clicking the cancel button', () => {
-      it('should redirect the user to the premium payments page and persist the selected fees', () => {
+      beforeEach(() => {
         pages.landingPage.visit();
         cy.login(USERS.PDC_RECONCILE);
 
@@ -262,7 +268,13 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
         cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-to-an-existing-payment`));
 
         pages.utilisationReportAddToAnExistingPaymentPage.cancelLink().click();
+      });
 
+      it('should redirect the user to the premium payments page', () => {
+        cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}?selectedFeeRecordIds=${FEE_RECORD_ID_ONE}%2C${FEE_RECORD_ID_THREE}`));
+      });
+
+      it('should persist the selected fees', () => {
         pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
           .checkbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO)
           .should('be.checked');
