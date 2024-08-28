@@ -42,14 +42,10 @@ export const getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId = (checkbo
   return currency as Currency;
 };
 
-export const getFeeRecordIdsFromPremiumPaymentsCheckboxId = (checkboxId: PremiumPaymentsTableCheckboxId): number[] => {
-  const { commaSeparatedIds } = COMMA_SEPARATED_IDS_REGEX.exec(checkboxId)!.groups!;
-
-  return commaSeparatedIds.split(',').map((id) => parseInt(id, 10));
-};
-
 export const getFeeRecordIdsFromPremiumPaymentsCheckboxIds = (checkboxIds: PremiumPaymentsTableCheckboxId[]): number[] =>
   checkboxIds.reduce((ids, checkboxId) => {
-    const newIds = getFeeRecordIdsFromPremiumPaymentsCheckboxId(checkboxId);
+    const { commaSeparatedIds } = COMMA_SEPARATED_IDS_REGEX.exec(checkboxId)!.groups!;
+
+    const newIds = commaSeparatedIds.split(',').map((id) => parseInt(id, 10));
     return [...ids, ...newIds];
   }, [] as number[]);

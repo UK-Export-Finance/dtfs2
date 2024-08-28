@@ -1,6 +1,5 @@
 import { CURRENCY, Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import {
-  getFeeRecordIdsFromPremiumPaymentsCheckboxId,
   getFeeRecordIdsFromPremiumPaymentsCheckboxIds,
   getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId,
   getFeeRecordStatusFromPremiumPaymentsCheckboxId,
@@ -9,33 +8,19 @@ import {
 import { PremiumPaymentsTableCheckboxId } from '../types/premium-payments-table-checkbox-id';
 
 describe('premium payments table checkbox id helper', () => {
-  describe('getFeeRecordIdsFromPremiumPaymentsCheckboxId', () => {
-    it('extracts a single fee record id from a checkbox id containing a single id', () => {
-      // Arrange
-      const idList = [27];
-      const checkboxId: PremiumPaymentsTableCheckboxId = 'feeRecordIds-27-reportedPaymentsCurrency-GBP-status-TO_DO';
-
-      // Act
-      const extractedIds = getFeeRecordIdsFromPremiumPaymentsCheckboxId(checkboxId);
-
-      // Assert
-      expect(extractedIds).toEqual(idList);
-    });
-
-    it('extracts all the fee record ids from a checkbox id containing multiple ids', () => {
+  describe('getFeeRecordIdsFromPremiumPaymentsCheckboxIds', () => {
+    it('extracts all the fee record ids in a single checkbox id', () => {
       // Arrange
       const idList = [1, 27, 314];
       const checkboxId: PremiumPaymentsTableCheckboxId = 'feeRecordIds-1,27,314-reportedPaymentsCurrency-GBP-status-TO_DO';
 
       // Act
-      const extractedIds = getFeeRecordIdsFromPremiumPaymentsCheckboxId(checkboxId);
+      const extractedIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds([checkboxId]);
 
       // Assert
       expect(extractedIds).toEqual(idList);
     });
-  });
 
-  describe('getFeeRecordIdsFromPremiumPaymentsCheckboxIds', () => {
     it('extracts all the fee records ids from multiple checkbox ids', () => {
       // Arrange
       const checkboxId1: PremiumPaymentsTableCheckboxId = `feeRecordIds-2-reportedPaymentsCurrency-GBP-status-TO_DO`;
