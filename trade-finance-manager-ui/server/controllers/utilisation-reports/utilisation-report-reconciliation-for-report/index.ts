@@ -29,9 +29,9 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
   try {
     const facilityIdQueryString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
 
-    const facilityIdQueryError = validateFacilityIdQuery(facilityIdQueryString, req.originalUrl);
+    const filterError = validateFacilityIdQuery(facilityIdQueryString, req.originalUrl);
 
-    const { errorSummary, selectedFeeRecordIds: selectedFeeRecordIdsFromSessionData } = getAndClearFieldsFromRedirectSessionData(req);
+    const { tableError, selectedFeeRecordIds: selectedFeeRecordIdsFromSessionData } = getAndClearFieldsFromRedirectSessionData(req);
 
     const selectedFeeRecordIdsQueryString = selectedFeeRecordIdsQuery ? asString(selectedFeeRecordIdsQuery, 'selectedFeeRecordIdsQuery') : undefined;
 
@@ -64,8 +64,8 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       reportId,
       enablePaymentsReceivedSorting,
       feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
-      premiumPaymentFormError: errorSummary,
-      facilityIdQueryError,
+      tableError,
+      filterError: filterError,
       facilityIdQuery: facilityIdQueryString,
       keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,

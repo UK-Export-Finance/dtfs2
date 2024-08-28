@@ -146,8 +146,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         enablePaymentsReceivedSorting: true,
         reportId: '1',
         feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
-        premiumPaymentFormError: undefined,
-        facilityIdQueryError: undefined,
+        tableError: undefined,
+        filterError: undefined,
         facilityIdQuery,
         keyingSheet: [],
         paymentDetails: paymentDetailsViewModel,
@@ -177,9 +177,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.premiumPaymentFormError).toBeDefined();
-      expect(viewModel.premiumPaymentFormError?.href).toBe('#premium-payments-table');
-      expect(viewModel.premiumPaymentFormError?.text).toBe('Select a fee or fees with the same status');
+      expect(viewModel.tableError).toBeDefined();
+      expect(viewModel.tableError?.href).toBe('#premium-payments-table');
+      expect(viewModel.tableError?.text).toBe('Select a fee or fees with the same status');
       expect(viewModel.feeRecordPaymentGroups[0].isChecked).toBe(true);
     });
 
@@ -283,9 +283,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.facilityIdQueryError).toBeDefined();
-      expect(viewModel.facilityIdQueryError?.href).toBe('#facility-id-filter');
-      expect(viewModel.facilityIdQueryError?.text).toBe('Facility ID must be a number');
+      expect(viewModel.filterError).toBeDefined();
+      expect(viewModel.filterError?.href).toBe('#facility-id-filter');
+      expect(viewModel.filterError?.text).toBe('Facility ID must be a number');
     });
 
     it('checks selected checkboxes when selected fee record ids query param defined', async () => {

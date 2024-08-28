@@ -11,7 +11,7 @@ describe('get-generate-keying-data-error-helper', () => {
 
       // Assert
       expect(generateKeyingDataError.text).toBe('No matched fees to generate keying data with');
-      expect(generateKeyingDataError.href).toBe('#no-matching-fee-records');
+      expect(generateKeyingDataError.href).toBe('#premium-payments-table');
     });
   });
 });

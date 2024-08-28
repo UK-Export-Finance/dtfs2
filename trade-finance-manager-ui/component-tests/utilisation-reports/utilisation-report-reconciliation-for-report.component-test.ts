@@ -29,8 +29,8 @@ describe(page, () => {
     reportId: reportId.toString(),
     feeRecordPaymentGroups: [],
     enablePaymentsReceivedSorting: false,
-    premiumPaymentFormError: undefined,
-    facilityIdQueryError: undefined,
+    tableError: undefined,
+    filterError: undefined,
     facilityIdQuery,
     keyingSheet: [],
     paymentDetails: [],
@@ -121,8 +121,8 @@ describe(page, () => {
     wrapper.expectText('[data-cy="facility-filter-clear-button"]').toRead('Clear filter');
   });
 
-  it('renders error when facilityIdQueryError is provided', () => {
-    const wrapper = getWrapper({ ...params, facilityIdQueryError: { text: 'Oh no that is not correct', href: '#filter-component' } });
+  it('renders error when filterError is provided', () => {
+    const wrapper = getWrapper({ ...params, filterError: { text: 'Oh no that is not correct', href: '#filter-component' } });
     wrapper.expectText('[data-cy="facility-filter-form"]').toContain('Oh no that is not correct');
     wrapper.expectLink('[data-cy="error-summary"] a').toLinkTo('#filter-component', 'Oh no that is not correct');
   });
