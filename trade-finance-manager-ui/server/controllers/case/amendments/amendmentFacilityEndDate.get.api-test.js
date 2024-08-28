@@ -69,7 +69,7 @@ describe('amendmentFacilityEndDate routes', () => {
       });
     });
 
-    describe('when TFM Facility end date feature flag enabled', () => {
+    describe('when TFM Facility end date feature flag is enabled', () => {
       beforeEach(() => {
         jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
       });

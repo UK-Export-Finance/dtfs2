@@ -44,7 +44,7 @@ describe('POST postAmendCoverEndDate', () => {
     jest.resetAllMocks();
   });
 
-  describe('TFM facility end date feature flag enabled', () => {
+  describe('TFM facility end date feature flag is enabled', () => {
     beforeEach(() => {
       jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
     });

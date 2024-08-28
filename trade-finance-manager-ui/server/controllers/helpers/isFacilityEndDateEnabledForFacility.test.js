@@ -29,7 +29,7 @@ describe('isFacilityEndDateEnabledForTfmFacility', () => {
     });
   });
 
-  describe('when TFM Facility end date feature flag enabled', () => {
+  describe('when TFM Facility end date feature flag is enabled', () => {
     it("should return true when a GEF facility with 'Cash facility' type", () => {
       jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
 
