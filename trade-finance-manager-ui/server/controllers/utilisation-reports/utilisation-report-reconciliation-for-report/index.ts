@@ -27,19 +27,22 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
   const { facilityIdQuery, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
 
   try {
-    const facilityIdQueryAsString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
-    const facilityIdQueryError = validateFacilityIdQuery(facilityIdQueryAsString, req.originalUrl);
+    const facilityIdQueryString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
 
-    const { errorSummary: premiumPaymentFormError, selectedFeeRecordIds: selectedFeeRecordIdsFromSessionData } = getAndClearFieldsFromRedirectSessionData(req);
+    const facilityIdQueryError = validateFacilityIdQuery(facilityIdQueryString, req.originalUrl);
 
-    const selectedFeeRecordIdsQueryAsString = selectedFeeRecordIdsQuery ? asString(selectedFeeRecordIdsQuery, 'selectedFeeRecordIdsQuery') : undefined;
+    const { errorSummary, selectedFeeRecordIds: selectedFeeRecordIdsFromSessionData } = getAndClearFieldsFromRedirectSessionData(req);
+
+    const selectedFeeRecordIdsQueryString = selectedFeeRecordIdsQuery ? asString(selectedFeeRecordIdsQuery, 'selectedFeeRecordIdsQuery') : undefined;
+
     const selectedFeeRecordIds: Set<number> =
-      selectedFeeRecordIdsFromSessionData.size > 0 ? selectedFeeRecordIdsFromSessionData : getSelectedFeeRecordIdsFromQuery(selectedFeeRecordIdsQueryAsString);
+      selectedFeeRecordIdsFromSessionData.size > 0 ? selectedFeeRecordIdsFromSessionData : getSelectedFeeRecordIdsFromQuery(selectedFeeRecordIdsQueryString);
+
     const isCheckboxChecked = getIsCheckboxChecked(selectedFeeRecordIds);
 
     const { feeRecordPaymentGroups, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
-      facilityIdQueryAsString,
+      facilityIdQueryString,
       userToken,
     );
 
@@ -61,9 +64,9 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       reportId,
       enablePaymentsReceivedSorting,
       feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
-      premiumPaymentFormError,
+      premiumPaymentFormError: errorSummary,
       facilityIdQueryError,
-      facilityIdQuery: facilityIdQueryAsString,
+      facilityIdQuery: facilityIdQueryString,
       keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,
     });
