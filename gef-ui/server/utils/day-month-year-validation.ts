@@ -1,26 +1,13 @@
 import { getDaysInMonth, set, startOfDay } from 'date-fns';
 import Joi from 'joi';
 import { DayMonthYear } from '../types/date';
+import { ValidationError } from '../types/validation-error';
+import { ErrorsOrDate } from '../types/errors-or-date';
 
 type ValidationOptions = {
   errRef: string;
   variableDisplayName: string;
 };
-
-type ValidationError = {
-  errRef: string;
-  errMsg: string;
-  subFieldErrorRefs?: string[];
-};
-
-type ErrorsOrDate =
-  | {
-      errors: null;
-      date: Date;
-    }
-  | {
-      errors: ValidationError[];
-    };
 
 const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -145,7 +132,6 @@ export const validateAndParseDayMonthYear = ({ day, month, year }: DayMonthYear,
   }
 
   return {
-    errors: null,
     date: startOfDay(
       set(new Date(), {
         year: Number(year),
