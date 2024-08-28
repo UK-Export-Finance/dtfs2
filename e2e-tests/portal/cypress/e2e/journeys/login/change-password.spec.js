@@ -59,7 +59,7 @@ context('Admin user creates a new user; the new user sets their password and the
       header.profile().click();
 
       // Cancel and go back
-      userProfile.cancel().click();
+      cy.clickCancelButton();
       cy.url().should('include', '/dashboard');
     });
 

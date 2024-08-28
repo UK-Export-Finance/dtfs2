@@ -5,6 +5,7 @@ const ukefComments = require('./ukef-comments');
 const taskListHeader = require('./taskListHeader');
 
 module.exports = {
+  backLink: () => cy.get('[data-cy="back-link"]'),
   cancelButton: () => cy.get('[data-cy="cancel-button"]'),
   continueButton: () => cy.get('[data-cy="continue-button"]'),
   dashboardFilters,

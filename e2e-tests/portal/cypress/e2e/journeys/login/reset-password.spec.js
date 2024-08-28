@@ -22,8 +22,8 @@ context('Password management screens', () => {
     it('Should have email address input, submit and cancel buttons on the page', () => {
       cy.url().should('eq', relative('/reset-password'));
       resetPassword.emailInput().should('exist');
-      resetPassword.submit().should('exist');
-      resetPassword.cancel().should('exist');
+      submitButton().should('exist');
+      cancelButton().should('exist');
     });
 
     it('Enter an empty email address displays error message', () => {
