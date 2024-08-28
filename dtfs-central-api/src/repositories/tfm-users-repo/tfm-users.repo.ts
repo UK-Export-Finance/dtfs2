@@ -18,6 +18,6 @@ export class TfmUsersRepo {
    */
   public static async findOneUserById(id: string | ObjectId): Promise<TfmUser | null> {
     const collection = await this.getCollection();
-    return await collection.findOne({ _id: new ObjectId(id) });
+    return collection.findOne({ _id: new ObjectId(id) });
   }
 }

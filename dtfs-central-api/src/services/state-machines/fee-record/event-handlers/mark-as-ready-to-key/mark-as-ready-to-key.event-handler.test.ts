@@ -14,10 +14,11 @@ describe('handleFeeRecordMarkAsReadyToKeyEvent', () => {
     UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS,
   ).build();
 
-  const reconciledFeeRecordBuilder = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT)
-    .withStatus(FEE_RECORD_STATUS.RECONCILED)
-    .withReconciledByUserId('abc123')
-    .withDateReconciled(new Date('2024'));
+  const reconciledFeeRecordBuilder = () =>
+    FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT)
+      .withStatus(FEE_RECORD_STATUS.RECONCILED)
+      .withReconciledByUserId('abc123')
+      .withDateReconciled(new Date('2024'));
 
   const mockSave = jest.fn();
   const mockEntityManager = {
@@ -32,7 +33,7 @@ describe('handleFeeRecordMarkAsReadyToKeyEvent', () => {
 
   it('saves the updated fee record with the supplied entity manager', async () => {
     // Arrange
-    const feeRecord = reconciledFeeRecordBuilder.build();
+    const feeRecord = reconciledFeeRecordBuilder().build();
 
     // Act
     await handleFeeRecordMarkAsReadyToKeyEvent(feeRecord, {
@@ -46,7 +47,7 @@ describe('handleFeeRecordMarkAsReadyToKeyEvent', () => {
 
   it('sets the fee record status to READY_TO_KEY', async () => {
     // Arrange
-    const feeRecord = reconciledFeeRecordBuilder.build();
+    const feeRecord = reconciledFeeRecordBuilder().build();
 
     // Act
     await handleFeeRecordMarkAsReadyToKeyEvent(feeRecord, {
@@ -60,7 +61,7 @@ describe('handleFeeRecordMarkAsReadyToKeyEvent', () => {
 
   it('sets the dateReconciled and reconciledByUserId to null', async () => {
     // Arrange
-    const feeRecord = reconciledFeeRecordBuilder.build();
+    const feeRecord = reconciledFeeRecordBuilder().build();
 
     // Act
     await handleFeeRecordMarkAsReadyToKeyEvent(feeRecord, {
@@ -75,7 +76,7 @@ describe('handleFeeRecordMarkAsReadyToKeyEvent', () => {
 
   it('updates the last updated by user fields using the db request source', async () => {
     // Arrange
-    const feeRecord = reconciledFeeRecordBuilder
+    const feeRecord = reconciledFeeRecordBuilder()
       .withLastUpdatedByIsSystemUser(true)
       .withLastUpdatedByPortalUserId('123')
       .withLastUpdatedByTfmUserId(null)

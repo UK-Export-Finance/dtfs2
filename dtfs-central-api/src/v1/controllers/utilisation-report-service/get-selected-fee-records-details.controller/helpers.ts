@@ -13,18 +13,14 @@ import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
-import { FeeRecordPaymentGroup } from '../../../../types/utilisation-reports';
-import { getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../helpers';
-import { mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups } from '../get-utilisation-report-reconciliation-details-by-id.controller/helpers/map-fee-record-payment-entity-groups-to-fee-record-payment-groups';
+import { FeeRecordPaymentEntityGroup, getFeeRecordPaymentEntityGroups } from '../../../../helpers';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
-const mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups = (
-  feeRecordPaymentGroups: FeeRecordPaymentGroup[],
-): SelectedFeeRecordsAvailablePaymentGroups => {
+const mapToSelectedFeeRecordsAvailablePaymentGroups = (feeRecordPaymentGroups: FeeRecordPaymentEntityGroup[]): SelectedFeeRecordsAvailablePaymentGroups => {
   return feeRecordPaymentGroups
-    .filter((group) => group.paymentsReceived !== null)
+    .filter((group) => group.payments.length !== 0)
     .map((group) =>
-      group.paymentsReceived!.map((groupPayment) => ({
+      group.payments.map((groupPayment) => ({
         id: groupPayment.id,
         amount: groupPayment.amount,
         currency: groupPayment.currency,
@@ -79,10 +75,8 @@ export const getSelectedFeeRecordsAvailablePaymentGroups = async (
 ): Promise<SelectedFeeRecordsAvailablePaymentGroups> => {
   const feeRecordEntities = await FeeRecordRepo.findByReportIdAndPaymentCurrencyAndStatusDoesNotMatchWithPayments(Number(reportId), paymentCurrency);
 
-  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecordEntities);
-  const feeRecordPaymentGroups = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
-
-  return mapFeeRecordPaymentGroupsToSelectedFeeRecordsAvailablePaymentGroups(feeRecordPaymentGroups);
+  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroups(feeRecordEntities);
+  return mapToSelectedFeeRecordsAvailablePaymentGroups(feeRecordPaymentEntityGroups);
 };
 
 /**

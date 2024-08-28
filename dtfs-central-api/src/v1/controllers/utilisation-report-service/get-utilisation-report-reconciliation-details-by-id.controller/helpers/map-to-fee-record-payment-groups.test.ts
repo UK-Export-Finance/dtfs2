@@ -10,7 +10,7 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { FeeRecordReconciledByUser } from '../../../../../types/utilisation-reports';
-import { mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups } from './map-fee-record-payment-entity-groups-to-fee-record-payment-groups';
+import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
 import { FeeRecordPaymentEntityGroup } from '../../../../../helpers';
 import { TfmUsersRepo } from '../../../../../repositories/tfm-users-repo';
 import { aTfmUser } from '../../../../../../test-helpers/test-data';
@@ -26,7 +26,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     jest.resetAllMocks();
   });
 
-  describe('mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups', () => {
+  describe('mapToFeeRecordPaymentGroups', () => {
     const NON_RECONCILED_FEE_RECORD_STATUSES = difference(Object.values(FEE_RECORD_STATUS), [FEE_RECORD_STATUS.RECONCILED]);
 
     const reconciledFeeRecordBuilder = ({
@@ -40,6 +40,23 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         .withStatus(FEE_RECORD_STATUS.RECONCILED)
         .withReconciledByUserId(reconciledByUserId)
         .withDateReconciled(dateReconciled);
+
+    it('throws an error when a group has multiple fee records but only one payment', async () => {
+      // Arrange
+      const group: FeeRecordPaymentEntityGroup = {
+        feeRecords: [
+          FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withId(1).build(),
+          FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withId(2).build(),
+          FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withId(3).build(),
+        ],
+        payments: [],
+      };
+
+      // Act / Assert
+      await expect(mapToFeeRecordPaymentGroups([group])).rejects.toThrow(
+        new Error('Fee record payment entity group cannot have more than one fee record if there are multiple payments'),
+      );
+    });
 
     describe('when a group has a single fee record with no payments', () => {
       const currency: Currency = 'GBP';
@@ -67,7 +84,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         ];
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(groups);
+        const result = await mapToFeeRecordPaymentGroups(groups);
 
         // Assert
         expect(result).toHaveLength(groups.length);
@@ -82,7 +99,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         ];
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(groups);
+        const result = await mapToFeeRecordPaymentGroups(groups);
 
         // Assert
         result.forEach((group, index) => {
@@ -95,7 +112,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const groups = [createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, 'TO_DO')];
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(groups);
+        const result = await mapToFeeRecordPaymentGroups(groups);
 
         // Assert
         expect(result[0].totalReportedPayments).toEqual({ currency, amount });
@@ -106,7 +123,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const groups = [createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, 'TO_DO')];
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(groups);
+        const result = await mapToFeeRecordPaymentGroups(groups);
 
         // Assert
         expect(result[0].paymentsReceived).toBeNull();
@@ -117,7 +134,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const groups = [createFeeRecordEntityPaymentGroupForSingleFeeRecord(1, 'TO_DO')];
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(groups);
+        const result = await mapToFeeRecordPaymentGroups(groups);
 
         // Assert
         expect(result[0].totalPaymentsReceived).toBeNull();
@@ -137,7 +154,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         };
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         expect(result).toHaveLength(1);
@@ -157,7 +174,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           .mockResolvedValue({ ...aTfmUser(), firstName: 'John', lastName: 'Smith' });
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         expect(result).toHaveLength(1);
@@ -175,7 +192,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         };
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         expect(result).toHaveLength(1);
@@ -191,7 +208,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         };
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         expect(result[0].status).toBe<FeeRecordStatus>('READY_TO_KEY');
@@ -209,7 +226,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         findTfmUserSpy.mockResolvedValue(aTfmUser());
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         expect(result[0].status).toBe(status);
@@ -233,7 +250,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         findTfmUserSpy.mockResolvedValue(aTfmUser());
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         expect(result[0].status).toBe(FEE_RECORD_STATUS.RECONCILED);
@@ -249,7 +266,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         };
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         expect(result[0].feeRecords).toHaveLength(2);
@@ -274,7 +291,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         };
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         // 100 + 400 / 2 = 100 + 200 = 300
@@ -290,7 +307,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         };
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         expect(result[0].paymentsReceived).toHaveLength(2);
@@ -304,7 +321,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         };
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         expect(result[0].totalPaymentsReceived).toEqual({ currency: 'GBP', amount: 500 });
@@ -326,7 +343,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           };
 
           // Act
-          const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+          const result = await mapToFeeRecordPaymentGroups([group]);
 
           // Assert
           expect(result).toHaveLength(1);
@@ -348,7 +365,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         };
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         expect(result).toHaveLength(1);
@@ -373,7 +390,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           .mockResolvedValue({ ...aTfmUser(), firstName: 'John', lastName: 'Smith' });
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         expect(result).toHaveLength(1);
@@ -396,7 +413,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         when(findTfmUserSpy).calledWith('def456').mockResolvedValue(null);
 
         // Act
-        const result = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups([group]);
+        const result = await mapToFeeRecordPaymentGroups([group]);
 
         // Assert
         expect(result).toHaveLength(1);

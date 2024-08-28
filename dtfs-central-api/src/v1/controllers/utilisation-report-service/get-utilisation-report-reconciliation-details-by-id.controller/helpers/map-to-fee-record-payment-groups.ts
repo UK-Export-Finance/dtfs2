@@ -15,6 +15,7 @@ const getStatusForGroupOfFeeRecords = (feeRecordEntitiesInGroup: FeeRecordEntity
   if (feeRecordEntitiesInGroup.some((feeRecordEntity) => feeRecordEntity.status === 'READY_TO_KEY')) {
     return 'READY_TO_KEY';
   }
+
   return feeRecordEntitiesInGroup[0].status;
 };
 
@@ -27,6 +28,7 @@ const getMostRecentlyReconciledFeeRecord = (feeRecordsAtReconciledStatus: FeeRec
   if (feeRecordsAtReconciledStatus.some((feeRecord) => feeRecord.dateReconciled === null)) {
     throw new Error('Expected list of fee records at RECONCILED status to all have a non-null date reconciled');
   }
+
   const feeRecordsSortedByDateReconciledDescending = orderBy(feeRecordsAtReconciledStatus, [(feeRecord) => feeRecord.dateReconciled!.getTime()], ['desc']);
   return feeRecordsSortedByDateReconciledDescending[0];
 };
@@ -40,15 +42,17 @@ const getReconciledByUserForFeeRecord = async (feeRecord: FeeRecordEntity): Prom
   if (feeRecord.reconciledByUserId === null) {
     return null;
   }
+
   const user = await TfmUsersRepo.findOneUserById(feeRecord.reconciledByUserId);
+
   if (!user) {
     console.info("Find to find the TFM user with id '%s' who reconciled a fee record payment group", feeRecord.reconciledByUserId);
     return null;
   }
-  return {
-    firstName: user.firstName,
-    lastName: user.lastName,
-  };
+
+  const { firstName, lastName } = user;
+
+  return { firstName, lastName };
 };
 
 /**
@@ -78,9 +82,7 @@ const getReconciliationDataForFeeRecords = async (
  * @param feeRecordPaymentEntityGroups - The fee record payment entity groups
  * @returns The fee record payment groups
  */
-export const mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups = async (
-  feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[],
-): Promise<FeeRecordPaymentGroup[]> =>
+export const mapToFeeRecordPaymentGroups = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[]): Promise<FeeRecordPaymentGroup[]> =>
   await Promise.all(
     feeRecordPaymentEntityGroups.map(async ({ feeRecords: feeRecordEntitiesInGroup, payments }) => {
       const groupStatus = getStatusForGroupOfFeeRecords(feeRecordEntitiesInGroup);
@@ -88,6 +90,10 @@ export const mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups = async (
 
       if (payments.length === 0) {
         // If there are no payments, there is only one fee record in the group
+        if (feeRecordEntitiesInGroup.length !== 1) {
+          throw new Error('Fee record payment entity group cannot have more than one fee record if there are multiple payments');
+        }
+
         const feeRecord = mapFeeRecordEntityToFeeRecord(feeRecordEntitiesInGroup[0]);
         const totalReportedPayments = feeRecord.reportedPayments;
 

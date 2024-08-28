@@ -3,8 +3,8 @@ import { NotFoundError } from '../../../../../errors';
 import { getBankNameById } from '../../../../../repositories/banks-repo';
 import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
 import { filterFeeRecordPaymentEntityGroupsByFacilityId } from './filter-fee-record-payment-entity-groups-by-facility-id';
-import { mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups } from './map-fee-record-payment-entity-groups-to-fee-record-payment-groups';
-import { getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../../helpers';
+import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
+import { getFeeRecordPaymentEntityGroups } from '../../../../../helpers';
 import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
 
 /**
@@ -32,9 +32,9 @@ export const getUtilisationReportReconciliationDetails = async (
 
   const keyingSheet = await getKeyingSheetForReportId(utilisationReport.id, feeRecords);
 
-  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecords);
+  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroups(feeRecords);
 
-  const feeRecordPaymentGroups = await mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups(
+  const feeRecordPaymentGroups = await mapToFeeRecordPaymentGroups(
     facilityIdFilter ? filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityIdFilter) : feeRecordPaymentEntityGroups,
   );
 
