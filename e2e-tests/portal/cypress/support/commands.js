@@ -44,6 +44,7 @@ Cypress.Commands.add('createFacilities', require('./portal-api/createFacilities'
 // commands that abstract common tasks you might perform while clicking round the portal..
 Cypress.Commands.add('clickAddBondButton', require('./portal/click-events/click-add-bond-button'));
 Cypress.Commands.add('clickAddLoanButton', require('./portal/click-events/click-add-loan-button'));
+Cypress.Commands.add('clickBackLink', require('./portal/click-events/click-back-link'));
 Cypress.Commands.add('clickCancelButton', require('./portal/click-events/click-cancel-button'));
 Cypress.Commands.add('clickContinueButton', require('./portal/click-events/click-continue-button'));
 Cypress.Commands.add('clickReturnToMakerButton', require('./portal/click-events/click-return-to-maker-button'));
