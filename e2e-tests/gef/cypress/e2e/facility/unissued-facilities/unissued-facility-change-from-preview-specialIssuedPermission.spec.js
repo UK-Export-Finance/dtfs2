@@ -140,7 +140,7 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
         facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeYearsDay);
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeYearsMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeYearsYear);
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
       }
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);

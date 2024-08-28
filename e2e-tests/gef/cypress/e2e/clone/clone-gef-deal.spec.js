@@ -265,7 +265,7 @@ context('Clone GEF (MIA) deal', () => {
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/security-details`));
       uploadFiles.exporterSecurity().type('test');
       uploadFiles.facilitySecurity().type('test2');
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
     });
 
     it('should verify the status of the Supporting Information section is set to `Complete`', () => {

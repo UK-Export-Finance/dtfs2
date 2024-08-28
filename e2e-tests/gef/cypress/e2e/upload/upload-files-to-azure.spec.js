@@ -132,7 +132,7 @@ context('Upload files to Azure', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/security-details`));
       uploadFiles.exporterSecurity().type('test');
       uploadFiles.facilitySecurity().type('test2');
-      cy.clickContinueButton();
+      cy.clickSubmitButton();
     });
 
     it('should verify the status of the Supporting Information section is set to `Complete`', () => {

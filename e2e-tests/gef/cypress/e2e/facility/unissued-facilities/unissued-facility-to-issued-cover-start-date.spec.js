@@ -150,7 +150,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
         facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
       }
 
       // Success banner

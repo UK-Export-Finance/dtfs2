@@ -130,7 +130,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
         facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
       }
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);

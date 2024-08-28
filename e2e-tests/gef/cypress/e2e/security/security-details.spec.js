@@ -1,5 +1,5 @@
 import relative from '../relativeURL';
-import { cancelButton, continueButton, errorSummary, mainHeading, form } from '../partials';
+import { cancelButton, errorSummary, form, mainHeading, submitButton } from '../partials';
 import securityDetails from '../pages/security-details';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -31,7 +31,7 @@ context('Security Details Page', () => {
       form();
       securityDetails.exporterSecurity();
       securityDetails.facilitySecurity();
-      continueButton();
+      submitButton();
       cancelButton();
     });
 
