@@ -5,6 +5,12 @@ import CONSTANTS from '../../constants';
 
 jest.mock('../../services/api');
 
+const now = new Date();
+const tomorrow = add(now, { days: 1 });
+const yesterday = sub(now, { days: 1 });
+const threeMonthsAndOneDayFromNow = add(now, { months: 3, days: 1 });
+const oneDayLessThanThreeMonthsFromNow = sub(add(now, { months: 3 }), { days: 1 });
+
 const MockResponse = () => {
   const res = {};
   res.redirect = jest.fn();
@@ -29,27 +35,20 @@ const MockRequest = () => {
   return req;
 };
 
-const MockFacilityResponse = () => {
-  const res = {};
-  res.details = {
+const mockFacilityResponse = () => ({
+  details: {
     type: CONSTANTS.FACILITY_TYPE.CASH,
     name: 'UKEF123',
     hasBeenIssued: true,
     monthsOfCover: null,
-    coverStartDate: '2030-01-02T00:00:00.000+00:00',
+    coverStartDate: tomorrow,
     shouldCoverStartOnSubmission: true,
     coverEndDate: null,
-  };
-  return res;
-};
+  },
+});
 
 describe('validateAndUpdateAboutFacility', () => {
   let mockResponse;
-  const now = new Date();
-  const tomorrow = add(now, { days: 1 });
-  const yesterday = sub(now, { days: 1 });
-  const threeMonthsAndOneDayFromNow = add(now, { months: 3, days: 1 });
-  const oneDayLessThanThreeMonthsFromNow = sub(add(now, { months: 3 }), { days: 1 });
 
   const updateApplicationSpy = jest.fn();
 
@@ -59,9 +58,7 @@ describe('validateAndUpdateAboutFacility', () => {
 
   beforeEach(() => {
     mockResponse = MockResponse();
-    const mockFacilityResponse = MockFacilityResponse();
-
-    api.getFacility.mockResolvedValue(mockFacilityResponse);
+    api.getFacility.mockResolvedValue(mockFacilityResponse());
     api.updateFacility.mockResolvedValue({});
     api.updateApplication = updateApplicationSpy;
   });
@@ -120,6 +117,95 @@ describe('validateAndUpdateAboutFacility', () => {
         userToken,
       });
     });
+
+    if (dealVersion === 1) {
+      it('sets facility end date & bank review date to null if the cover start date has changed', async () => {
+        // Arrange
+        const mockRequest = MockRequest();
+        mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+        mockRequest.query.saveAndReturn = 'true';
+        mockRequest.body['cover-start-date-day'] = format(now, 'd');
+        mockRequest.body['cover-start-date-month'] = format(now, 'M');
+        mockRequest.body['cover-start-date-year'] = format(now, 'yyyy');
+
+        // Act
+        await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+        // Assert
+        const expectedPayload = {
+          coverEndDate: null,
+          coverStartDate: format(now, 'MMMM d, yyyy'),
+          shouldCoverStartOnSubmission: null,
+          monthsOfCover: null,
+          name: undefined,
+          coverDateConfirmed: null,
+          facilityEndDate: null,
+          bankReviewDate: null,
+        };
+
+        expect(api.updateFacility).toHaveBeenCalledWith({
+          facilityId: 'xyz',
+          payload: expectedPayload,
+          userToken,
+        });
+      });
+
+      it('does not set the facility end date & bank review date to null if the cover start date has not changed', async () => {
+        // Arrange
+        const mockRequest = MockRequest();
+        mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+        mockRequest.query.saveAndReturn = 'true';
+        mockRequest.body['cover-start-date-day'] = format(tomorrow, 'd');
+        mockRequest.body['cover-start-date-month'] = format(tomorrow, 'M');
+        mockRequest.body['cover-start-date-year'] = format(tomorrow, 'yyyy');
+
+        // Act
+        await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+        // Assert
+        const expectedPayload = {
+          coverEndDate: null,
+          coverStartDate: format(tomorrow, 'MMMM d, yyyy'),
+          shouldCoverStartOnSubmission: null,
+          monthsOfCover: null,
+          name: undefined,
+          coverDateConfirmed: null,
+          isUsingFacilityEndDate: undefined,
+        };
+
+        expect(api.updateFacility).toHaveBeenCalledWith({
+          facilityId: 'xyz',
+          payload: expectedPayload,
+          userToken,
+        });
+      });
+
+      it('does not set the facility end date & bank review date to null if the cover start date value is not provided', async () => {
+        // Arrange
+        const mockRequest = MockRequest();
+        mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
+        mockRequest.query.saveAndReturn = 'true';
+
+        // Act
+        await validateAndUpdateAboutFacility(mockRequest, mockResponse);
+
+        // Assert
+        const expectedPayload = {
+          coverEndDate: null,
+          coverStartDate: null,
+          shouldCoverStartOnSubmission: null,
+          monthsOfCover: null,
+          name: undefined,
+          coverDateConfirmed: null,
+        };
+
+        expect(api.updateFacility).toHaveBeenCalledWith({
+          facilityId: 'xyz',
+          payload: expectedPayload,
+          userToken,
+        });
+      });
+    }
 
     it('calls api.updateApplication with editorId if successfully updates facility when `saveAndReturn` true', async () => {
       const mockRequest = MockRequest();
