@@ -182,7 +182,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
         facilityEndDate.facilityEndDateYear().clear();
         cy.clickContinueButton();
 
-        facilityEndDate.errorSummary().contains('Facility end date must be in the correct format DD/MM/YYYY');
+        errorSummary().contains('Facility end date must be in the correct format DD/MM/YYYY');
         facilityEndDate.facilityEndDateError();
       });
 
@@ -194,7 +194,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.sixYearsOneDayYear);
         cy.clickContinueButton();
 
-        facilityEndDate.errorSummary().contains('Facility end date cannot be greater than 6 years in the future');
+        errorSummary().contains('Facility end date cannot be greater than 6 years in the future');
         facilityEndDate.facilityEndDateError();
       });
 
@@ -206,7 +206,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.todayYear);
         cy.clickContinueButton();
 
-        facilityEndDate.errorSummary().contains('Facility end date cannot be before the cover start date');
+        errorSummary().contains('Facility end date cannot be before the cover start date');
         facilityEndDate.facilityEndDateError();
       });
     }
