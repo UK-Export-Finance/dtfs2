@@ -38,7 +38,6 @@ describe('getLatestFacilityEndDateValues', () => {
           { ...MOCK_AMENDMENT, updatedAt: 1723653111, version: 1 },
           { ...MOCK_AMENDMENT, updatedAt: 1723653222, version: 2 },
         ],
-        tfm: {},
       };
 
       // Act
