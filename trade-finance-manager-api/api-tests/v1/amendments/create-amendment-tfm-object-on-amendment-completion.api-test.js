@@ -294,31 +294,34 @@ describe('update amendment-tfm on amendment completion', () => {
         expect(result).toEqual(expected);
       });
 
-      it('should create tfm object excluding facility end date data when the facility is from a non GEF deal type', async () => {
-        const nonGefFacility = { facilitySnapshot: { ...mockFacility.facilitySnapshot, type: FACILITY_TYPE.BOND } };
+      it.each([FACILITY_TYPE.BOND, FACILITY_TYPE.LOAN])(
+        'should create tfm object excluding facility end date data when the facility is from a non GEF deal type (%s)',
+        async (typeOfNonGefDealToTest) => {
+          const nonGefFacility = { facilitySnapshot: { ...mockFacility.facilitySnapshot, type: typeOfNonGefDealToTest } };
 
-        externalApis.getFacilityExposurePeriod = jest.fn().mockResolvedValue({ exposurePeriodInMonths: 5 });
-        externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue(facilityEndDateChange);
-        externalApis.findOneFacility = jest.fn().mockResolvedValue(nonGefFacility);
+          externalApis.getFacilityExposurePeriod = jest.fn().mockResolvedValue({ exposurePeriodInMonths: 5 });
+          externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue(facilityEndDateChange);
+          externalApis.findOneFacility = jest.fn().mockResolvedValue(nonGefFacility);
 
-        const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
+          const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
 
-        const expected = {
-          amendmentExposurePeriodInMonths: 5,
-          coverEndDate: unixTime,
-          exposure: {
-            exposure: '4,000.00',
-            timestamp: expect.any(Number),
-            ukefExposureValue: 4000,
-          },
-          value: {
-            currency: CURRENCY.GBP,
-            value: 5000,
-          },
-        };
+          const expected = {
+            amendmentExposurePeriodInMonths: 5,
+            coverEndDate: unixTime,
+            exposure: {
+              exposure: '4,000.00',
+              timestamp: expect.any(Number),
+              ukefExposureValue: 4000,
+            },
+            value: {
+              currency: CURRENCY.GBP,
+              value: 5000,
+            },
+          };
 
-        expect(result).toEqual(expected);
-      });
+          expect(result).toEqual(expected);
+        },
+      );
     });
   });
 });
