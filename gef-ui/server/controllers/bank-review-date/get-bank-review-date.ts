@@ -3,6 +3,8 @@ import { getDate, getMonth, getYear, parseISO } from 'date-fns';
 import { CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
 import * as api from '../../services/api';
 import { BankReviewDateViewModel } from '../../types/view-models/bank-review-date-view-model';
+import { asLoggedInUserSession } from '../../utils/express-session';
+import { Facility } from '../../types/facility';
 
 type BankReviewDateParams = { dealId: string; facilityId: string };
 
@@ -14,7 +16,7 @@ type HandleGetBankReviewDateParams = {
   previousPage: string;
 };
 
-const getBankReviewDateViewModel = (facility: Record<string, unknown>, previousPage: string, status: string | undefined): BankReviewDateViewModel => {
+const getBankReviewDateViewModel = (facility: Facility, previousPage: string, status: string | undefined): BankReviewDateViewModel => {
   if (typeof facility.dealId !== 'string' || typeof facility._id !== 'string') {
     throw new Error('Invalid facility or deal id provided');
   }
@@ -42,12 +44,12 @@ const handleGetBankReviewDate = async ({ req, res, previousPage }: HandleGetBank
   const {
     params: { dealId, facilityId },
     query: { status },
-    session: { userToken },
   } = req;
+  const { userToken } = asLoggedInUserSession(req.session);
 
   try {
-    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
-    const deal = (await api.getApplication({ dealId, userToken })) as Record<string, unknown> & { version?: number };
+    const { details: facility } = await api.getFacility({ facilityId, userToken });
+    const deal = await api.getApplication({ dealId, userToken });
 
     const shouldRedirectFromPage = !isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || facility.isUsingFacilityEndDate !== false;
 

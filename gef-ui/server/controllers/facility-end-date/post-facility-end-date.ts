@@ -7,6 +7,7 @@ import { validateAndParseFacilityEndDate } from './validation';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../utils/express-session';
 import { FacilityEndDateViewModel } from '../../types/view-models/facility-end-date-view-model';
 import { getCoverStartDateOrStartOfToday } from '../../utils/get-cover-start-date-or-start-of-today';
+import { Facility } from '../../types/facility';
 
 type FacilityEndDateParams = { dealId: string; facilityId: string };
 type FacilityEndDatePostBody = { 'facility-end-date-day': string; 'facility-end-date-month': string; 'facility-end-date-year': string };
@@ -29,11 +30,7 @@ type HandlePostFacilityEndDateParams = {
   uris: PostRequestUris;
 };
 
-const updateFacilityEndDateIfChanged = async (
-  existingFacility: Record<string, unknown>,
-  facilityEndDate: Date,
-  { userToken, user }: LoggedInUserSession,
-): Promise<void> => {
+const updateFacilityEndDateIfChanged = async (existingFacility: Facility, facilityEndDate: Date, { userToken, user }: LoggedInUserSession): Promise<void> => {
   const facilityEndDateNeedsUpdating =
     typeof existingFacility.facilityEndDate !== 'string' || !isSameDay(parseISO(existingFacility.facilityEndDate), facilityEndDate);
 
@@ -72,7 +69,7 @@ const handlePostFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityE
       return res.redirect(uris.saveAndReturn);
     }
 
-    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
+    const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     const facilityEndDateErrorsAndDate = validateAndParseFacilityEndDate(
       {

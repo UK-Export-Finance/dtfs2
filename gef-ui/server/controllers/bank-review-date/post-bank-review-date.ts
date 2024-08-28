@@ -7,6 +7,7 @@ import { validateAndParseBankReviewDate } from './validation';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../utils/express-session';
 import { getCoverStartDateOrStartOfToday } from '../../utils/get-cover-start-date-or-start-of-today';
 import { BankReviewDateViewModel } from '../../types/view-models/bank-review-date-view-model';
+import { Facility } from '../../types/facility';
 
 type BankReviewDateParams = { dealId: string; facilityId: string };
 type BankReviewDatePostBody = { 'bank-review-date-day': string; 'bank-review-date-month': string; 'bank-review-date-year': string };
@@ -29,11 +30,7 @@ type HandlePostBankReviewDateParams = {
   uris: PostRequestUris;
 };
 
-const updateBankReviewDateIfChanged = async (
-  existingFacility: Record<string, unknown>,
-  bankReviewDate: Date,
-  { userToken, user }: LoggedInUserSession,
-): Promise<void> => {
+const updateBankReviewDateIfChanged = async (existingFacility: Facility, bankReviewDate: Date, { userToken, user }: LoggedInUserSession): Promise<void> => {
   const bankReviewDateNeedsUpdating =
     typeof existingFacility.bankReviewDate !== 'string' || !isSameDay(parseISO(existingFacility.bankReviewDate), bankReviewDate);
 
@@ -72,7 +69,7 @@ const handlePostBankReviewDate = async ({ req, res, uris }: HandlePostBankReview
       return res.redirect(uris.saveAndReturn);
     }
 
-    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
+    const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     const bankReviewDateErrorsAndDate = validateAndParseBankReviewDate(
       {

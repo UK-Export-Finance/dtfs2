@@ -14,6 +14,7 @@ export * from './keying-sheet-row-status';
 export * from './amendments';
 export * from './api-error-code';
 export * from './facility-type';
+export * from './deal-type';
 export * from './facility-provided-details';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';
