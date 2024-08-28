@@ -292,7 +292,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
         facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsDay);
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsYear);
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
       }
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
@@ -324,7 +324,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
         facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsDay);
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsYear);
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
       }
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[1].name} is updated`);
@@ -451,7 +451,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
         facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsDay);
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsYear);
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
       }
 
       // checks that name has been updated
