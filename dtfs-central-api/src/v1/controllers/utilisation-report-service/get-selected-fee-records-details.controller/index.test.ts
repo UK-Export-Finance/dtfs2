@@ -3,7 +3,7 @@ import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, SelectedFeeRecord
 import { HttpStatusCode } from 'axios';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { GetSelectedFeeRecordDetailsRequest, getSelectedFeeRecordDetails } from '.';
-import { aReportPeriod } from '../../../../../test-helpers/test-data/report-period';
+import { aReportPeriod } from '../../../../../test-helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
 

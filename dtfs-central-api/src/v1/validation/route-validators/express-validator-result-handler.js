@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const { validationResult } = require('express-validator');
 
 /**
@@ -9,7 +10,7 @@ const { validationResult } = require('express-validator');
 const handleExpressValidatorResult = (req, res, next) => {
   const validationResults = validationResult(req);
   if (!validationResults.isEmpty()) {
-    return res.status(400).json({ status: 400, errors: validationResults.array() });
+    return res.status(HttpStatusCode.BadRequest).json({ status: HttpStatusCode.BadRequest, errors: validationResults.array() });
   }
   return next();
 };

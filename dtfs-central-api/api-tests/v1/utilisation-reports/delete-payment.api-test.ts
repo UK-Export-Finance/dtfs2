@@ -5,7 +5,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser, aTfmUser, aTfmSessionUser } from '../../../test-helpers/test-data';
+import { aPortalUser, aTfmUser, aTfmSessionUser } from '../../../test-helpers';
 
 console.error = jest.fn();
 

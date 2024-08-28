@@ -6,7 +6,7 @@ import { ApiError, FeeRecordEntityMockBuilder, UtilisationReportEntity, Utilisat
 import { postKeyingData, PostKeyingDataRequest } from '.';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { executeWithSqlTransaction } from '../../../../helpers';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 
 jest.mock('../../../../helpers');
@@ -36,7 +36,7 @@ describe('post-keying-data.controller', () => {
       FeeRecordEntityMockBuilder.forReport(report).withId(2).withStatus('MATCH').build(),
     ];
 
-    const feeRecordRepoFindSpy = jest.spyOn(FeeRecordRepo, 'findByReportIdAndStatusesWithReport');
+    const feeRecordRepoFindSpy = jest.spyOn(FeeRecordRepo, 'findByReportIdAndStatusesWithReportAndPayments');
 
     const utilisationReportStateMachineConstructorSpy = jest.spyOn(UtilisationReportStateMachine, 'forReport');
 
@@ -118,7 +118,7 @@ describe('post-keying-data.controller', () => {
         type: 'GENERATE_KEYING_DATA',
         payload: {
           transactionEntityManager: mockEntityManager,
-          feeRecordsAtMatchStatus: feeRecords,
+          feeRecordsAtMatchStatusWithPayments: feeRecords,
           requestSource: {
             platform: 'TFM',
             userId,

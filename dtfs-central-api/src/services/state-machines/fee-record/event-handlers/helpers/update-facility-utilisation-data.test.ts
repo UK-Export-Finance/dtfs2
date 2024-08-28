@@ -3,7 +3,7 @@ import { when } from 'jest-when';
 import { DbRequestSource, FacilityUtilisationDataEntity, FacilityUtilisationDataEntityMockBuilder, ReportPeriod } from '@ukef/dtfs2-common';
 import { updateFacilityUtilisationData } from './update-facility-utilisation-data';
 import { getFixedFeeForFacility } from './get-fixed-fee-for-facility';
-import { aDbRequestSource } from '../../../../../../test-helpers/test-data';
+import { aDbRequestSource } from '../../../../../../test-helpers';
 
 jest.mock('./get-fixed-fee-for-facility');
 

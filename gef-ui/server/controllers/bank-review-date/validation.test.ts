@@ -84,7 +84,6 @@ describe('validateAndParseBankReviewDate', () => {
     const coverStartDate = add(new Date(), { days: 1 });
 
     mockValidateAndParseDayMonthYear.mockReturnValueOnce({
-      errors: null,
       date: bankReviewDate,
     });
 
@@ -112,7 +111,6 @@ describe('validateAndParseBankReviewDate', () => {
     const coverStartDate = add(new Date(), { days: 1 });
 
     mockValidateAndParseDayMonthYear.mockReturnValueOnce({
-      errors: null,
       date: bankReviewDate,
     });
 
@@ -140,7 +138,6 @@ describe('validateAndParseBankReviewDate', () => {
     const coverStartDate = add(new Date(), { days: 1 });
 
     mockValidateAndParseDayMonthYear.mockReturnValueOnce({
-      errors: null,
       date: bankReviewDate,
     });
 
@@ -152,7 +149,6 @@ describe('validateAndParseBankReviewDate', () => {
 
     // Assert
     expect(result).toEqual({
-      errors: null,
       date: bankReviewDate,
     });
   });
