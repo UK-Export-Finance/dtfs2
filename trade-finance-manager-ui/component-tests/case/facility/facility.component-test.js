@@ -68,6 +68,15 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="facility-end-date"]').toExist();
       wrapper.expectElement('[data-cy="bank-review-date"]').notToExist();
     });
+
+    describe('when isUsingFacilityEndDate is false', () => {
+      it('should display the correct default bank review date fields', () => {
+        wrapper = render({ ...params, showFacilityEndDate: true, facility: { dates: { isUsingFacilityEndDate: false } } });
+        wrapper.expectElement('[data-cy="is-using-facility-end-date"]').toExist();
+        wrapper.expectElement('[data-cy="facility-end-date"]').notToExist();
+        wrapper.expectElement('[data-cy="bank-review-date"]').toExist();
+      });
+    });
   });
 
   it('should render pricing and risk', () => {
