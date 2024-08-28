@@ -8,6 +8,7 @@ describe('getLatestFacilityEndDateValues', () => {
   const facility: TfmFacility = {
     _id: new ObjectId('1234567890abcdef12345678'),
     facilitySnapshot: MOCK_FACILITY_SNAPSHOT,
+    tfm: {},
   };
 
   const mockFacilityEndDate = new Date('2024-04-04');
@@ -37,6 +38,7 @@ describe('getLatestFacilityEndDateValues', () => {
           { ...MOCK_AMENDMENT, updatedAt: 1723653111, version: 1 },
           { ...MOCK_AMENDMENT, updatedAt: 1723653222, version: 2 },
         ],
+        tfm: {},
       };
 
       // Act
