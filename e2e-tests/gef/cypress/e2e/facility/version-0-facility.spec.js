@@ -40,10 +40,10 @@ context('About Facility Page', () => {
       aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
     });
 
-    it('redirects to application details page when visiting facility end date page', () => {
+    it('redirects to about facility page when visiting facility end date page', () => {
       cy.visit(relative(`/gef/application-details/${version0DealId}/facilities/${version0FacilityId}/facility-end-date`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/facilities/${version0FacilityId}/about-facility`));
     });
 
     it('redirects to application details page when visiting bank review date page', () => {

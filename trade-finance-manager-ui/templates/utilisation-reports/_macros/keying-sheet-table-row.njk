@@ -4,12 +4,13 @@
   {% macro adjustmentColumns(adjustment, options) %}
     {% set amount = adjustment.amount %}
     {% set change = adjustment.change %}
+    {% set name = options.name %}
     {% set showBottomBorder = options.showBottomBorder %}
     {% set showValues = options.showValues %}
-    <td class="{{ ["govuk-table__cell", " govuk-table__cell--numeric" if change === "INCREASE", " no-border" if not showBottomBorder] | join }}" data-cy="keying-sheet-adjustment--increase">
+    <td class="{{ ["govuk-table__cell", " govuk-table__cell--numeric" if change === "INCREASE", " no-border" if not showBottomBorder] | join }}" data-cy="{{ name }}--increase">
       {{ (amount if change === "INCREASE" else "-") if showValues }}
     </td>
-    <td class="{{ ["govuk-table__cell", " govuk-table__cell--numeric" if change === "DECREASE", " no-border" if not showBottomBorder] | join }}" data-cy="keying-sheet-adjustment--decrease">
+    <td class="{{ ["govuk-table__cell", " govuk-table__cell--numeric" if change === "DECREASE", " no-border" if not showBottomBorder] | join }}" data-cy="{{ name }}--decrease">
       {{ (amount if change === "DECREASE" else "-") if showValues }}
     </td>
   {% endmacro %}
@@ -38,12 +39,15 @@
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ facilityId }}">{{ facilityId if isFirstLineOfRow }}</td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ exporter }}">{{ exporter if isFirstLineOfRow }}</td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-cy="keying-sheet-fee-payment-date-received">{{ feePayment.formattedDateReceived or "-" }}</td>
-      <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastLineOfRow }}" data-cy="keying-sheet-fee-payment-currency-and-amount">
+      <td
+        class="govuk-table__cell govuk-table__cell--numeric{{ "
+        no-border" if not isLastLineOfRow }}"
+        data-cy="keying-sheet-fee-payment-currency-and-amount">
         {{ feePayment.formattedCurrencyAndAmount or "-" }}
       </td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}">{{ baseCurrency if isFirstLineOfRow }}</td>
-      {{ adjustmentColumns(fixedFeeAdjustment, { showBottomBorder: isLastLineOfRow, showValues: isFirstLineOfRow }) }}
-      {{ adjustmentColumns(principalBalanceAdjustment, { showBottomBorder: isLastLineOfRow, showValues: isFirstLineOfRow }) }}
+      {{ adjustmentColumns(fixedFeeAdjustment, { showBottomBorder: isLastLineOfRow, showValues: isFirstLineOfRow, name: "fixed-fee-adjustment" }) }}
+      {{ adjustmentColumns(principalBalanceAdjustment, { showBottomBorder: isLastLineOfRow, showValues: isFirstLineOfRow, name: "principal-balance-adjustment" }) }}
       {% if userCanEdit %}
         <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}">
           {{ tableCellCheckbox.render({
