@@ -9,6 +9,7 @@ import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../helpers';
 import { getLinkToPremiumPaymentsTab } from './get-link-to-premium-payments-tab';
 
 jest.mock('../../../api');
+jest.mock('./get-link-to-premium-payments-tab');
 
 console.error = jest.fn();
 
@@ -245,11 +246,15 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
         ],
       });
 
+      const expectedBackLinkHref = 'back-link-href';
+      jest.mocked(getLinkToPremiumPaymentsTab).mockReturnValue(expectedBackLinkHref);
+
       // Act
       await addToAnExistingPayment(req, res);
 
       // Assert
-      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).backLinkHref).toEqual(getLinkToPremiumPaymentsTab(reportId, [1, 22, 333]));
+      expect(getLinkToPremiumPaymentsTab).toHaveBeenCalledWith(reportId, [1, 22, 333]);
+      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).backLinkHref).toEqual(expectedBackLinkHref);
     });
 
     it('should set the selected fee record checkbox ids', async () => {
