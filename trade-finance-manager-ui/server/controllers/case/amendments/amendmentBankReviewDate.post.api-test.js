@@ -1,10 +1,9 @@
-import { isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS } from '@ukef/dtfs2-common';
+import { FACILITY_TYPE, isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS } from '@ukef/dtfs2-common';
 import { add } from 'date-fns';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE } from '../../../test-mocks/amendment-test-mocks';
 import { postAmendmentBankReviewDate } from './amendmentBankReviewDate.controller';
-import { MAPPED_FACILITY_TYPE } from '../../../constants/mapped-facility';
 
 const res = mockRes();
 
@@ -23,7 +22,7 @@ const user = {
 
 const session = { user, userToken: 'mockToken' };
 
-const gefFacilityType = MAPPED_FACILITY_TYPE.CASH;
+const gefFacilityType = FACILITY_TYPE.CASH;
 
 const { dealId, facilityId, amendmentId } = MOCK_AMENDMENT_COVERENDDATE_CHANGE;
 

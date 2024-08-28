@@ -1,9 +1,8 @@
-import { isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS } from '@ukef/dtfs2-common';
+import { isTfmFacilityEndDateFeatureFlagEnabled, FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE } from '../../../test-mocks/amendment-test-mocks';
 import { postAmendmentIsUsingFacilityEndDate } from './amendmentIsUsingFacilityEndDate.controller';
-import { MAPPED_FACILITY_TYPE } from '../../../constants/mapped-facility';
 
 const res = mockRes();
 
@@ -21,7 +20,7 @@ const user = {
 };
 
 const gefFacility = {
-  facilitySnapshot: { type: MAPPED_FACILITY_TYPE.CASH },
+  facilitySnapshot: { type: FACILITY_TYPE.CASH },
 };
 
 const session = { user, userToken: 'mockToken' };

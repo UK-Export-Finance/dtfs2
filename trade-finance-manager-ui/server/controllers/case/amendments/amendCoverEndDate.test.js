@@ -1,10 +1,9 @@
-import { isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS } from '@ukef/dtfs2-common';
+import { FACILITY_TYPE, isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE } from '../../../test-mocks/amendment-test-mocks';
 import { postAmendCoverEndDate } from './amendCoverEndDate.controller';
 import { DEAL_TYPE } from '../../../constants/deal';
-import { MAPPED_FACILITY_TYPE } from '../../../constants/mapped-facility';
 
 const res = mockRes();
 
@@ -22,12 +21,12 @@ const user = {
 };
 
 const gefFacility = {
-  facilitySnapshot: { dates: { coverEndDate: '1 Oct 2020' }, type: MAPPED_FACILITY_TYPE.CASH },
+  facilitySnapshot: { dates: { coverEndDate: '1 Oct 2020' }, type: FACILITY_TYPE.CASH },
   tfm: {},
 };
 
 const bssEwcsFacility = {
-  facilitySnapshot: { dates: { coverEndDate: '2 Oct 2020' }, type: MAPPED_FACILITY_TYPE.LOAN },
+  facilitySnapshot: { dates: { coverEndDate: '2 Oct 2020' }, type: FACILITY_TYPE.LOAN },
   tfm: {},
 };
 

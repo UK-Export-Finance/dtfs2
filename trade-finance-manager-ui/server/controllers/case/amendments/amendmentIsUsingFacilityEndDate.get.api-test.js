@@ -3,7 +3,6 @@ import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_FACILITYVALUE_CHANGE } from '../../../test-mocks/amendment-test-mocks';
 import { getAmendmentIsUsingFacilityEndDate } from './amendmentIsUsingFacilityEndDate.controller';
-import { MAPPED_FACILITY_TYPE } from '../../../constants/mapped-facility';
 
 const res = mockRes();
 
@@ -21,7 +20,7 @@ const user = {
 };
 
 const gefFacility = {
-  facilitySnapshot: { type: MAPPED_FACILITY_TYPE.CASH },
+  facilitySnapshot: { type: FACILITY_TYPE.CASH },
 };
 
 const bssEwcsFacility = {
