@@ -51,7 +51,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should navigate to the facility end date page after selecting "Yes" to "Has the bank provided a facility end date"', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage(true, false);
+      amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, changeFacilityValue: false });
       amendmentsPage.isUsingFacilityEndDateYes().should('not.be.checked');
       amendmentsPage.isUsingFacilityEndDateNo().should('not.be.checked');
 
@@ -80,7 +80,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should continue to the facility value page if the facility end date is valid and the facility value also needs changing', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage(false, true);
+      amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: false, changeFacilityValue: true });
       amendmentsPage.continueAmendment().click();
 
       cy.url().should('contain', 'facility-end-date');

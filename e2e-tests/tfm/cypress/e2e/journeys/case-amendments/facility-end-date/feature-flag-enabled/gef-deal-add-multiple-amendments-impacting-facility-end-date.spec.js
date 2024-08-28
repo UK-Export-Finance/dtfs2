@@ -62,7 +62,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should display the correct values during and after amending the bank review date for the first time', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage(true, false, Date1);
+      amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, changeFacilityValue: false, newCoverEndDate: Date1 });
       amendmentsPage.isUsingFacilityEndDateNo().click();
       amendmentsPage.continueAmendment().click();
 
@@ -89,7 +89,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should display the correct values during and after amending the bank review date for a second time', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage(true, false, Date2);
+      amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, changeFacilityValue: false, newCoverEndDate: Date2 });
       amendmentsPage.isUsingFacilityEndDateNo().click();
       amendmentsPage.continueAmendment().click();
 
@@ -116,7 +116,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should display the correct values during and after amending the facility end date for the first time', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage(true, false, Date3);
+      amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, changeFacilityValue: false, newCoverEndDate: Date3 });
       amendmentsPage.isUsingFacilityEndDateYes().click();
       amendmentsPage.continueAmendment().click();
 
@@ -143,7 +143,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should display the correct values during and after amending the facility end date for the second time', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage(true, false, Date4);
+      amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, changeFacilityValue: false, newCoverEndDate: Date4 });
 
       amendmentsPage.isUsingFacilityEndDateNo().click();
       amendmentsPage.continueAmendment().click();

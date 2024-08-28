@@ -48,7 +48,7 @@ const amendmentsPage = {
   amendmentCurrentBankReviewDate: () => cy.get('[data-cy="amendment--current-bank-review-date"]'),
   amendmentBankReviewDateDetails: () => cy.get('[data-cy="amendment--bank-review-date-details"]'),
 
-  navigateToIsUsingFacilityEndDatePage: (startNewAmendment = false, changeFacilityValue = false, newCoverEndDate = today) => {
+  navigateToIsUsingFacilityEndDatePage: ({ startNewAmendment = false, changeFacilityValue = false, newCoverEndDate = today } = {}) => {
     facilityPage.facilityTabAmendments().click();
 
     if (startNewAmendment) {
