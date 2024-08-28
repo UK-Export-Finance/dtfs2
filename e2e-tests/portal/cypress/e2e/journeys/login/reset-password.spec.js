@@ -1,3 +1,4 @@
+const { cancelButton, submitButton } = require('../../partials');
 const { resetPassword, changePassword, header, userProfile } = require('../../pages');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
@@ -65,8 +66,8 @@ context('Password management screens', () => {
       changePassword.currentPassword().should('not.exist');
       changePassword.password().should('exist');
       changePassword.confirmPassword().should('exist');
-      changePassword.submit().should('exist');
-      changePassword.cancel().should('exist');
+      submitButton().should('exist');
+      cancelButton().should('exist');
     });
 
     it('Should display error message on an empty new password field submit', () => {
@@ -100,8 +101,8 @@ context('Password management screens', () => {
       changePassword.currentPassword().should('exist');
       changePassword.password().should('exist');
       changePassword.confirmPassword().should('exist');
-      changePassword.submit().should('exist');
-      changePassword.cancel().should('exist');
+      submitButton().should('exist');
+      cancelButton().should('exist');
     });
 
     it('Should display error messages upon empty field submission', () => {

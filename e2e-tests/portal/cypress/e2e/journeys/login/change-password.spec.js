@@ -75,7 +75,7 @@ context('Admin user creates a new user; the new user sets their password and the
       cy.url().should('include', '/user/');
 
       // Go back to the profile page
-      changePassword.cancel().click();
+      cy.clickCancelButton();
       cy.url().should('include', '/user/');
     });
 
