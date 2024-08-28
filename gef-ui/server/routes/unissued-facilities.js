@@ -10,6 +10,12 @@ const {
 } = require('../controllers/unissued-facilities');
 const { validateRole, validateToken, validateBank } = require('../middleware');
 const { MAKER } = require('../constants/roles');
+const {
+  getFacilityEndDateFromApplicationPreviewPage,
+  getFacilityEndDateFromUnissuedFacilitiesPage,
+  postFacilityEndDateFromApplicationPreviewPage,
+  postFacilityEndDateFromUnissuedFacilitiesPage,
+} = require('../controllers/facility-end-date');
 
 const router = express.Router();
 
@@ -48,5 +54,17 @@ router.post(
   [validateToken, validateBank, validateRole({ role: [MAKER] })],
   (req, res) => postChangeIssuedToUnissuedFacility(req, res),
 );
+
+router
+  .route('/application-details/:dealId/unissued-facilities/:facilityId/facility-end-date')
+  .all([validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getFacilityEndDateFromUnissuedFacilitiesPage)
+  .post(postFacilityEndDateFromUnissuedFacilitiesPage);
+
+router
+  .route('/application-details/:dealId/unissued-facilities/:facilityId/facility-end-date/change')
+  .all([validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getFacilityEndDateFromApplicationPreviewPage)
+  .post(postFacilityEndDateFromApplicationPreviewPage);
 
 module.exports = router;
