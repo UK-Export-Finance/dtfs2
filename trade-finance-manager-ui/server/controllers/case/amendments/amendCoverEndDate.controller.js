@@ -5,7 +5,14 @@ const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
 const { isFacilityEndDateEnabledForFacility } = require('../../helpers/isFacilityEndDateEnabledForFacility');
 
-const getNextPage = (changeFacilityValue, showFacilityEndDatePage, baseUrl) => {
+/**
+ * Gets the next page url based on the current state of the facility
+ * @param {boolean} changeFacilityValue if the facility value is to be changed
+ * @param {boolean} showFacilityEndDatePage if the facility end date page should be shown
+ * @param {string} baseUrl the base url to create the next page url
+ * @returns {string} next page url
+ */
+const getNextPageUrl = (changeFacilityValue, showFacilityEndDatePage, baseUrl) => {
   if (showFacilityEndDatePage) {
     return `${baseUrl}/is-using-facility-end-date`;
   }
@@ -107,7 +114,7 @@ const postAmendCoverEndDate = async (req, res) => {
 
     const showFacilityEndDatePage = isFacilityEndDateEnabledForFacility(facility);
 
-    return res.redirect(getNextPage(changeFacilityValue, showFacilityEndDatePage, baseUrl));
+    return res.redirect(getNextPageUrl(changeFacilityValue, showFacilityEndDatePage, baseUrl));
   } catch (error) {
     console.error('There was a problem adding the cover end date %o', error);
     return res.redirect(fallbackUrl);
