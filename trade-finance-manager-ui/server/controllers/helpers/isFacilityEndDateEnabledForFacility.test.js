@@ -30,18 +30,14 @@ describe('isFacilityEndDateEnabledForTfmFacility', () => {
   });
 
   describe('when TFM Facility end date feature flag is enabled', () => {
-    it("should return true when a GEF facility with 'Cash facility' type", () => {
+    it.each`
+      testFacility
+      ${gefCashFacility}
+      ${gefContingentFacility}
+    `(`should return true when provided a GEF facility with '$testFacility.facilitySnapshot.type' type`, ({ testFacility }) => {
       jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
 
-      const result = isFacilityEndDateEnabledForFacility(gefCashFacility);
-
-      expect(result).toEqual(true);
-    });
-
-    it("should return true when a GEF facility with 'Contingent facility' type", () => {
-      jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
-
-      const result = isFacilityEndDateEnabledForFacility(gefContingentFacility);
+      const result = isFacilityEndDateEnabledForFacility(testFacility);
 
       expect(result).toEqual(true);
     });
