@@ -202,7 +202,7 @@ jobs:
         working-directory: ./utils
         run: |
           sleep 100s
-          npm run mock-data-loader
+          npm run load
 
       - name: SQL
         working-directory: ./libs/common
@@ -395,7 +395,7 @@ jobs:
         working-directory: ./utils
         run: |
           sleep 100s
-          npm run mock-data-loader
+          npm run load
 
       - name: SQL
         working-directory: ./libs/common
@@ -469,7 +469,7 @@ jobs:
         working-directory: ./utils
         run: |
           sleep 100s
-          npm run mock-data-loader
+          npm run load
 
       - name: SQL
         working-directory: ./libs/common
@@ -541,7 +541,7 @@ jobs:
         working-directory: ./utils
         run: |
           sleep 100s
-          npm run mock-data-loader
+          npm run load
 
       - name: SQL
         working-directory: ./libs/common
@@ -622,7 +622,7 @@ jobs:
         working-directory: ./utils
         run: |
           sleep 100s
-          npm run mock-data-loader
+          npm run load
 
       - name: SQL
         working-directory: ./libs/common
@@ -707,7 +707,7 @@ jobs:
         working-directory: ./utils
         run: |
           sleep 100s
-          npm run mock-data-loader
+          npm run load
 
       - name: SQL
         working-directory: ./libs/common

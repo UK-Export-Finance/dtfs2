@@ -30,18 +30,16 @@ services:
     build:
       context: ./mongodb
       dockerfile: Dockerfile
+      args:
+        ENABLE_REPLICA_SET: ${ENABLE_REPLICA_SET}
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
+      - ENABLE_REPLICA_SET
     ports:
-      - "27017:27017"
-    healthcheck:
-      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
-      interval: 10s
-      start_period: 30s
-    command: "--bind_ip_all --keyFile /mongo-keyfile --replSet rs0"
+      - '27017:27017'
     volumes:
       - ./dtfs-mongo-volume-dtfs-submissions:/data/db
 

@@ -4,40 +4,47 @@ This section contains utility scripts and data for various purposes.
 
 ## Data Migration :arrows_counterclockwise:
 
-The `data-migration` directory contains scripts designed to facilitate the migration of data from Portal V1 to Portal V2. For detailed instructions and usage, please refer to the [data-migration/README.md](data-migration/README.md) file.
+The `data-migration` directory contains scripts designed to facilitate the
+migration of data from Portal V1 to Portal V2. For detailed instructions and
+usage, please refer to the [data-migration/README.md](data-migration/README.md) file.
 
 ## Mock Data Loader :page_with_curl:
 
-The `mock-data-loader` directory contains mock data that can be used for local development and in non-production environments.
+The `mock-data-loader` directory contains mock data that can be used for local
+development and in non-production environments.
 
-You can run mock data loader directly using
+Use the following NPM script from the project root
+to perform following operations:
 
-```shell
-npm run mock-data-loader
-```
-
-or as part of the all-purpose
+- Clearing all the collections.
+- Insert mock data to the following collections:
+  - Portal
+  - TFM
+  - Users (both TFM and Portal)
+  - Banks
+  - Mandatory criteria
+  - Eligibility criteria
 
 ```shell
 npm run load
 ```
 
-command.
-
 ## SQL DB Seeder
 
-The `sql-db-seeder` directory contains a script which seeds random data into the SQL database for utilisation reports.
+The `sql-db-seeder` directory contains a script which seeds random data into the
+SQL database for utilisation reports.
 
-You can run the SQL seeder directly using
+You can run the following command to initiate MSSQL seeder directly
 
 ```shell
 npm run db:seed
 ```
 
-or as part of the all-purpose
+If you wish to intiate a mock data loader for both Mongo and MSSQL, one can call
+the following script from `utils` directory.
 
 ```shell
-npm run load
+npm run load:sql
 ```
 
 command.

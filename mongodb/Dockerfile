@@ -1,10 +1,15 @@
 # Base image
 FROM mongo:5.0.5
 
-# Create keyfile
-RUN openssl rand -base64 756 > /mongo-keyfile
+# Enviornment variable
+ARG ENABLE_REPLICA_SET
 
-# Read only permission
+# Mongo Key
+RUN openssl rand -base64 756 > /mongo-keyfile
 RUN chmod 400 /mongo-keyfile
-# 999 as Owner and Group
 RUN chown 999:999 /mongo-keyfile
+
+# Entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
