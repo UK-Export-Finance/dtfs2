@@ -2,7 +2,7 @@ const { FACILITY_TYPE, MAPPED_FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../../constants');
 
 /**
- * @description Maps facility type to a different, tfm-api specific facility type.
+ * Maps facility type to a different, tfm-api specific facility type.
  * Note there is a difference between this facility type, the input facility type,
  * and how the facility type is displayed in the front end.
  *
