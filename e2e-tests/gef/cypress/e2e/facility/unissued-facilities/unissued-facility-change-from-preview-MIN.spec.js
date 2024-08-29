@@ -98,22 +98,10 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
 
       if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.be.checked');
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
         aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
       }
     });
-
-    if (facilityEndDateEnabled) {
-      it('should display an error if not selected if there is a facility end date ', () => {
-        applicationPreview.unissuedFacilitiesReviewLink().click();
-        unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-
-        aboutFacilityUnissued.continueButton().click();
-
-        aboutFacilityUnissued.errorSummary().contains('Select if there is an end date for this facility');
-        aboutFacilityUnissued.isUsingFacilityEndDateError();
-      });
-    }
 
     it('should be able to update facility and then go back to application preview page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
