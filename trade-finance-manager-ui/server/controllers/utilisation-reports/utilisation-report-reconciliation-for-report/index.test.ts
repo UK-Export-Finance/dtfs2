@@ -146,7 +146,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         enablePaymentsReceivedSorting: true,
         reportId: '1',
         feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
-        tableError: undefined,
+        tableDataError: undefined,
         filterError: undefined,
         facilityIdQuery,
         keyingSheet: [],
@@ -177,9 +177,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.tableError).toBeDefined();
-      expect(viewModel.tableError?.href).toBe('#premium-payments-table');
-      expect(viewModel.tableError?.text).toBe('Select a fee or fees with the same status');
+      expect(viewModel.tableDataError).toBeDefined();
+      expect(viewModel.tableDataError?.href).toBe('#premium-payments-table');
+      expect(viewModel.tableDataError?.text).toBe('Select a fee or fees with the same status');
       expect(viewModel.feeRecordPaymentGroups[0].isChecked).toBe(true);
     });
 

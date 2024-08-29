@@ -16,7 +16,7 @@ const clearRedirectSessionData = (req: Request): void => {
 export const getAndClearFieldsFromRedirectSessionData = (
   req: Request,
 ): {
-  tableError: ErrorSummaryViewModel | undefined;
+  tableDataError: ErrorSummaryViewModel | undefined;
   selectedFeeRecordIds: Set<number>;
 } => {
   const { addPaymentErrorKey, generateKeyingDataErrorKey } = req.session;
@@ -26,7 +26,7 @@ export const getAndClearFieldsFromRedirectSessionData = (
     switch (generateKeyingDataErrorKey) {
       case 'no-matching-fee-records':
         return {
-          tableError: getGenerateKeyingDataError(generateKeyingDataErrorKey),
+          tableDataError: getGenerateKeyingDataError(generateKeyingDataErrorKey),
           selectedFeeRecordIds: new Set(),
         };
       default:
@@ -36,7 +36,7 @@ export const getAndClearFieldsFromRedirectSessionData = (
 
   if (!addPaymentErrorKey) {
     return {
-      tableError: undefined,
+      tableDataError: undefined,
       selectedFeeRecordIds: new Set(),
     };
   }
@@ -52,7 +52,7 @@ export const getAndClearFieldsFromRedirectSessionData = (
     case 'different-fee-record-payment-currencies':
     case 'multiple-does-not-match-selected':
       clearRedirectSessionData(req);
-      return { tableError: getAddPaymentError(addPaymentErrorKey), selectedFeeRecordIds: selectedFeeRecordIdsSet };
+      return { tableDataError: getAddPaymentError(addPaymentErrorKey), selectedFeeRecordIds: selectedFeeRecordIdsSet };
     default:
       clearRedirectSessionData(req);
       throw new Error(`Unrecognised add payment error key '${addPaymentErrorKey}'`);

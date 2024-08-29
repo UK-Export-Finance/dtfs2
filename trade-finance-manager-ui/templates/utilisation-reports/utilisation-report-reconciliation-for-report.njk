@@ -15,10 +15,10 @@
 {% endblock %}
 
 {% set premiumPaymentsHtml %}
-  {% if tableError or filterError %}
+  {% if tableDataError or filterError %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: [tableError, filterError],
+      errorList: [tableDataError, filterError],
       attributes: {
         'data-cy': 'error-summary'
       }
@@ -79,7 +79,7 @@
       </div>
     </div>
 
-  {% if tableError %}
+  {% if tableDataError %}
     <div class="govuk-form-group--error">
   {% endif %}
   {% if userCanEdit %}
@@ -111,7 +111,7 @@
   {% if userCanEdit %}
     </form>
   {% endif %}
-  {% if tableError %}
+  {% if tableDataError %}
     </div>
   {% endif %}
 {% endset %}

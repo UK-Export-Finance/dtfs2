@@ -24,7 +24,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     expect(req.session.generateKeyingDataErrorKey).toBeUndefined();
   };
 
-  it('clears the session and returns an undefined tableError when the session error keys are undefined', () => {
+  it('clears the session and returns an undefined tableDataError when the session error keys are undefined', () => {
     // Arrange
     const req = getMockRequest({
       addPaymentErrorKey: undefined,
@@ -32,11 +32,11 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     });
 
     // Act
-    const { tableError } = getAndClearFieldsFromRedirectSessionData(req);
+    const { tableDataError } = getAndClearFieldsFromRedirectSessionData(req);
 
     // Assert
     assertSessionHasBeenCleared(req);
-    expect(tableError).toBeUndefined();
+    expect(tableDataError).toBeUndefined();
   });
 
   it('clears the session and returns an empty selectedFeeRecordIds set when the session error keys are undefined', () => {
@@ -67,7 +67,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     assertSessionHasBeenCleared(req);
   });
 
-  it("clears the session and returns the tableError when the generateKeyingDataErrorKey is 'no-matching-fee-records'", () => {
+  it("clears the session and returns the tableDataError when the generateKeyingDataErrorKey is 'no-matching-fee-records'", () => {
     // Arrange
     const req = getMockRequest({
       addPaymentErrorKey: undefined,
@@ -75,12 +75,12 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     });
 
     // Act
-    const { tableError } = getAndClearFieldsFromRedirectSessionData(req);
+    const { tableDataError } = getAndClearFieldsFromRedirectSessionData(req);
 
     // Assert
     assertSessionHasBeenCleared(req);
-    expect(tableError?.text).toBeDefined();
-    expect(tableError?.href).toBeDefined();
+    expect(tableDataError?.text).toBeDefined();
+    expect(tableDataError?.href).toBeDefined();
   });
 
   it('throws an error if the session addPaymentErrorKey is not recognised', () => {
@@ -101,7 +101,7 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     'multiple-does-not-match-selected',
     'no-fee-records-selected',
     'different-fee-record-payment-currencies',
-  ])("clears the session and returns the tableError when the addPaymentErrorKey is '%s'", (addPaymentErrorKey) => {
+  ])("clears the session and returns the tableDataError when the addPaymentErrorKey is '%s'", (addPaymentErrorKey) => {
     // Arrange
     const req = getMockRequest({
       addPaymentErrorKey,
@@ -110,12 +110,12 @@ describe('getAndClearFieldsFromRedirectSessionData', () => {
     });
 
     // Act
-    const { tableError } = getAndClearFieldsFromRedirectSessionData(req);
+    const { tableDataError } = getAndClearFieldsFromRedirectSessionData(req);
 
     // Assert
     assertSessionHasBeenCleared(req);
-    expect(tableError?.text).toBeDefined();
-    expect(tableError?.href).toBeDefined();
+    expect(tableDataError?.text).toBeDefined();
+    expect(tableDataError?.href).toBeDefined();
   });
 
   it('returns a set of fee record ids for checked checkbox ids defined in req.session.checkedCheckboxIds', () => {
