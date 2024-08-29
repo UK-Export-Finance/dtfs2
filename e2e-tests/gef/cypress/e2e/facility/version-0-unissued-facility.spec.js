@@ -37,12 +37,32 @@ context('About unissued facility page', () => {
   });
 
   describe('issuing an unissued facility', () => {
-    it('does not display the facility end date questions', () => {
+    it('does not display the facility end date questions when initially issuing the facility', () => {
       cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/about`));
 
       aboutFacilityUnissued.facilityName();
       aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.exist');
       aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.exist');
+    });
+
+    it('does not display the facility end date questions when changing the values', () => {
+      cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/change`));
+
+      aboutFacilityUnissued.facilityName();
+      aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.exist');
+      aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.exist');
+    });
+
+    it('redirects to application details page when visiting facility end date page from initially issuing', () => {
+      cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/facility-end-date`));
+
+      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/about`));
+    });
+
+    it('redirects to application details page when visiting facility end date page when changing the values', () => {
+      cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/facility-end-date/change`));
+
+      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/change`));
     });
   });
 });
