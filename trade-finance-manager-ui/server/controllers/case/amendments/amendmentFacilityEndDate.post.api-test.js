@@ -20,6 +20,11 @@ const user = {
   email: 'test@localhost',
 };
 
+const now = new Date();
+const oneYearFromNowMinusDay = add(now, { years: 1, days: -1 });
+const oneYearFromNow = add(now, { years: 1 });
+const sixYearsFromNowPlusDay = add(now, { years: 6, days: 1 });
+
 const session = { user, userToken: 'mockToken' };
 
 const gefFacilityType = MAPPED_FACILITY_TYPE.CASH;
@@ -44,7 +49,7 @@ describe('amendmentFacilityEndDate routes', () => {
 
     describe('incorrect facility end date entered', () => {
       it('should render the template with errors if the entered facility end date is before the cover start date', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2024, 11, 11).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: oneYearFromNow.valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -57,9 +62,9 @@ describe('amendmentFacilityEndDate routes', () => {
             facilityId,
           },
           body: {
-            'facility-end-date-day': '12',
-            'facility-end-date-month': '11',
-            'facility-end-date-year': '2024',
+            'facility-end-date-day': oneYearFromNowMinusDay.getDate().toString(),
+            'facility-end-date-month': (oneYearFromNowMinusDay.getMonth() + 1).toString(),
+            'facility-end-date-year': oneYearFromNowMinusDay.getFullYear().toString(),
           },
           session,
         };
@@ -69,9 +74,9 @@ describe('amendmentFacilityEndDate routes', () => {
           dealId,
           isEditable: true,
           facilityId,
-          dayInput: '12',
-          monthInput: '11',
-          yearInput: '2024',
+          dayInput: oneYearFromNowMinusDay.getDate().toString(),
+          monthInput: (oneYearFromNowMinusDay.getMonth() + 1).toString(),
+          yearInput: oneYearFromNowMinusDay.getFullYear().toString(),
           error: {
             summary: [
               {
@@ -85,14 +90,11 @@ describe('amendmentFacilityEndDate routes', () => {
       });
 
       it('should render the template with errors if the entered facility end date is greater than 6 years in the future', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2021, 11, 11).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now.valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
         api.getFacility.mockResolvedValueOnce(mockFacility);
-
-        const now = new Date();
-        const sixYearsFromNowPlusDay = add(now, { years: 6, days: 1 });
 
         const req = {
           params: {
@@ -221,7 +223,7 @@ describe('amendmentFacilityEndDate routes', () => {
 
     describe('correct facility end date entered', () => {
       it('should redirect to the check answers page when only the cover end date is being amended and there are no errors', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now.valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -234,9 +236,9 @@ describe('amendmentFacilityEndDate routes', () => {
             facilityId,
           },
           body: {
-            'facility-end-date-day': '12',
-            'facility-end-date-month': '11',
-            'facility-end-date-year': '2025',
+            'facility-end-date-day': oneYearFromNow.getDate().toString(),
+            'facility-end-date-month': (oneYearFromNow.getMonth() + 1).toString(),
+            'facility-end-date-year': oneYearFromNow.getFullYear().toString(),
           },
           session,
         };
@@ -263,9 +265,9 @@ describe('amendmentFacilityEndDate routes', () => {
             facilityId,
           },
           body: {
-            'facility-end-date-day': '12',
-            'facility-end-date-month': '11',
-            'facility-end-date-year': '2025',
+            'facility-end-date-day': oneYearFromNow.getDate().toString(),
+            'facility-end-date-month': (oneYearFromNow.getMonth() + 1).toString(),
+            'facility-end-date-year': oneYearFromNow.getFullYear().toString(),
           },
           session,
         };
@@ -276,7 +278,7 @@ describe('amendmentFacilityEndDate routes', () => {
       });
 
       it("should redirect to the amendments summary page if there's an error updating the amendment", async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now.valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
@@ -292,9 +294,9 @@ describe('amendmentFacilityEndDate routes', () => {
             facilityId,
           },
           body: {
-            'facility-end-date-day': '12',
-            'facility-end-date-month': '11',
-            'facility-end-date-year': '2025',
+            'facility-end-date-day': oneYearFromNow.getDate().toString(),
+            'facility-end-date-month': (oneYearFromNow.getMonth() + 1).toString(),
+            'facility-end-date-year': oneYearFromNow.getFullYear().toString(),
           },
           session,
         };
