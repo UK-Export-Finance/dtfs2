@@ -42,7 +42,7 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
 
       // select option, submit
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputGood().click();
-      pages.underwritingPricingAndRiskEditPage.submitButton().click();
+      cy.clickSubmitButton();
 
       // assert elements/value in `pricing and risk` page
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
@@ -73,7 +73,7 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
 
       // submit different value
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputAcceptable().click();
-      pages.underwritingPricingAndRiskEditPage.submitButton().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 

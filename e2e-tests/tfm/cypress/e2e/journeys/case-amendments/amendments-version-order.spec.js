@@ -47,12 +47,12 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
     amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
     // manual approval
     amendmentsPage.amendmentRequestApprovalYes().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'amendment-options');
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
@@ -63,13 +63,13 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.amendmentFacilityValueCheckbox().click();
     amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
     amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
     amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     if (tfmFacilityEndDateEnabled) {
       amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
@@ -79,9 +79,9 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
@@ -91,11 +91,11 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputApproveWithoutConditions().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/facility-value/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputApproveWithoutConditions().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS);
@@ -106,7 +106,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS);
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions/summary');
 
     amendmentsPage.amendmentSendToBankButton().click();
@@ -120,25 +120,25 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.url().should('contain', '/banks-decision');
 
     amendmentsPage.amendmentBankChoiceProceedRadio().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/received-date');
 
     amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
     amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('06');
     amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('2022');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/effective-date');
 
     amendmentsPage.amendmentBankDecisionEffectiveDateDay().clear().focused().type('05');
     amendmentsPage.amendmentBankDecisionEffectiveDateMonth().clear().focused().type('06');
     amendmentsPage.amendmentBankDecisionEffectiveDateYear().clear().focused().type('2022');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/check-answers');
 
-    amendmentsPage.assignLeadUnderwriterSaveButton().click();
+    cy.clickContinueButton();
   });
 
   it('should show the correct details for amendment 1 on facility amendments page', () => {
@@ -166,12 +166,12 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
     amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
     // manual approval
     amendmentsPage.amendmentRequestApprovalYes().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'amendment-options');
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
@@ -182,13 +182,13 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.amendmentFacilityValueCheckbox().click();
     amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
     amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
     amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.threeMonthsDay);
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.threeMonthsMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeMonthsYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     if (tfmFacilityEndDateEnabled) {
       amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
@@ -197,9 +197,9 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('1234');
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
@@ -209,18 +209,18 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputApproveWithoutConditions().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/facility-value/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputApproveWithoutConditions().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentDetails.row(2).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS);
 
     amendmentsPage.amendmentDetails.row(2).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS);
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions/summary');
 
     amendmentsPage.amendmentSendToBankButton().click();
@@ -234,18 +234,18 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.url().should('contain', '/banks-decision');
 
     amendmentsPage.amendmentBankChoiceWithdrawRadio().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/received-date');
 
     amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
     amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('06');
     amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('2022');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/check-answers');
 
-    amendmentsPage.assignLeadUnderwriterSaveButton().click();
+    cy.clickContinueButton();
   });
 
   it('should show the correct details for amendment 2 on facility amendments page', () => {
@@ -277,12 +277,12 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
     amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
     // manual approval
     amendmentsPage.amendmentRequestApprovalYes().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'amendment-options');
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
@@ -293,13 +293,13 @@ context('Amendments underwriting - amendments should be in correct order of vers
     amendmentsPage.amendmentFacilityValueCheckbox().click();
     amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
     amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
     amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.threeYearsDay);
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.threeYearsMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeYearsYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     if (tfmFacilityEndDateEnabled) {
       amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
@@ -308,9 +308,9 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('12345');
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
@@ -320,18 +320,18 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputApproveWithoutConditions().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/facility-value/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputApproveWithoutConditions().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentDetails.row(3).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS);
 
     amendmentsPage.amendmentDetails.row(3).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS);
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions/summary');
 
     amendmentsPage.amendmentSendToBankButton().click();
@@ -345,25 +345,25 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.url().should('contain', '/banks-decision');
 
     amendmentsPage.amendmentBankChoiceProceedRadio().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/received-date');
 
     amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
     amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('06');
     amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('2022');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/effective-date');
 
     amendmentsPage.amendmentBankDecisionEffectiveDateDay().clear().focused().type('05');
     amendmentsPage.amendmentBankDecisionEffectiveDateMonth().clear().focused().type('06');
     amendmentsPage.amendmentBankDecisionEffectiveDateYear().clear().focused().type('2022');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/check-answers');
 
-    amendmentsPage.assignLeadUnderwriterSaveButton().click();
+    cy.clickContinueButton();
   });
 
   it('should show the correct details for amendment 3 on facility amendments page', () => {

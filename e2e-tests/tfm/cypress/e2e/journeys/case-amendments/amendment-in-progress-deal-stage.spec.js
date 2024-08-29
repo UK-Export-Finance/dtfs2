@@ -106,12 +106,12 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
     amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
     // manual approval
     amendmentsPage.amendmentRequestApprovalYes().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'amendment-options');
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
@@ -122,13 +122,13 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     amendmentsPage.amendmentFacilityValueCheckbox().click();
     amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
     amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
     amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     if (tfmFacilityEndDateEnabled) {
       amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
@@ -138,9 +138,9 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
   });
 
   it('should submit an second amendment request', () => {
@@ -157,12 +157,12 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
     amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
     // manual approval
     amendmentsPage.amendmentRequestApprovalYes().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'amendment-options');
     amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
@@ -170,14 +170,14 @@ context('Amendments deal stage - amendment in progress and in progress amendment
     // update the facility value
     amendmentsPage.amendmentFacilityValueCheckbox().click();
     amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
   });
 
   it('should show amendment in progress on tasks page and show amendment in progress bar', () => {

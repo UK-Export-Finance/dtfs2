@@ -1,5 +1,4 @@
 const pricingAndRiskEditPage = {
-  errorSummaryItems: () => cy.get('[data-cy="error-summary"] li'),
   creditRatingRadioInputValidationError: () => cy.get('[data-cy="credit-rating-input-validation-error"]'),
 
   creditRatingRadioInputGood: () => cy.get('[data-cy="credit-rating-good"]'),
@@ -8,7 +7,6 @@ const pricingAndRiskEditPage = {
   creditRatingTextInputOther: () => cy.get('[data-cy="credit-rating-other-input"]'),
   creditRatingTextInputOtherValidationError: () => cy.get('[data-cy="credit-rating-other-input-validation-error"]'),
 
-  submitButton: () => cy.get('[data-cy="submit-button"]'),
   closeLink: () => cy.get('[data-cy="close-link"]'),
 };
 

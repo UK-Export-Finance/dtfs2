@@ -97,7 +97,7 @@ context('Case tasks - MIA deal', () => {
     pages.taskPage.taskStatusRadioInputInProgress().click();
 
     // submit form
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     // should now be back on the tasks page
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -117,7 +117,7 @@ context('Case tasks - MIA deal', () => {
     //---------------------------------------------------------------
     pages.taskPage.assignedToSelectInput().select('Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     // should now be back on the tasks page
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -190,7 +190,7 @@ context('Case tasks - MIA deal', () => {
 
     cy.url().should('eq', relative(`/case/${dealId}/tasks/1/1`));
     pages.taskPage.taskStatusRadioInputDone().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     pages.tasksPage.filterRadioAllTasks().click();
     const secondTask = pages.tasksPage.tasks.row(1, 2);
@@ -198,7 +198,7 @@ context('Case tasks - MIA deal', () => {
 
     cy.url().should('eq', relative(`/case/${dealId}/tasks/1/2`));
     pages.taskPage.taskStatusRadioInputDone().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // user cannot click on task as belongs to another group

@@ -84,7 +84,7 @@ context('User can navigate through a paginated table of deals using the paginati
     const searchString = 'Company 1';
     const expectedNumberOfMatches = Math.ceil(numberOfDeals / 2);
     pages.dealsPage.searchFormInput().type(searchString);
-    pages.dealsPage.searchFormSubmitButton().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/deals/0?search=Company%201'));
     pages.dealsPage
@@ -121,7 +121,7 @@ context('User can navigate through a paginated table of deals using the paginati
     cy.visit('/deals/2');
     const searchString = 'Company 1';
     pages.dealsPage.searchFormInput().type(searchString);
-    pages.dealsPage.searchFormSubmitButton().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/deals/0?search=Company%201'));
     cy.checkDealIdCells({ firstDealId: '10000001', increment: 2, numberToCheck: 20 });

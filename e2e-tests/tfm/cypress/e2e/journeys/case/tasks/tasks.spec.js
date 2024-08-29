@@ -19,7 +19,7 @@ const assignTaskToSomeoneElseInMyTeam = (dealId, differentUserInSameTeam) =>
       pages.taskPage.taskStatusRadioInputInProgress().click();
 
       // submit form
-      pages.taskPage.submitButton().click();
+      cy.clickSubmitButton();
 
       // should now be back on the tasks page
       cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -121,7 +121,7 @@ context('Case tasks - AIN deal', () => {
 
     pages.taskPage.assignedToSelectInput().select(userId);
     pages.taskPage.taskStatusRadioInputInProgress().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     pages.tasksPage.filterRadioAllTasks().click();
     pages.tasksPage.filterSubmitButton().click();
@@ -170,7 +170,7 @@ context('Case tasks - AIN deal', () => {
 
     pages.taskPage.assignedToSelectInput().select(userId);
     pages.taskPage.taskStatusRadioInputDone().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     pages.tasksPage.filterRadioAllTasks().click();
     pages.tasksPage.filterSubmitButton().click();
@@ -205,7 +205,7 @@ context('Case tasks - AIN deal', () => {
 
     pages.taskPage.assignedToSelectInput().select(userId);
     pages.taskPage.taskStatusRadioInputInProgress().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     pages.tasksPage.filterRadioAllTasks().click();
     pages.tasksPage.filterSubmitButton().click();
@@ -290,7 +290,7 @@ context('Case tasks - AIN deal', () => {
     // make sure the task is unassigned to start with
     pages.taskPage.assignedToSelectInput().select('Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     pages.tasksPage.filterRadioYourTeam().click();
     pages.tasksPage.filterSubmitButton().click();
@@ -424,7 +424,7 @@ context('Case tasks - AIN deal', () => {
 
     pages.taskPage.assignedToSelectInput().select(userId);
     pages.taskPage.taskStatusRadioInputDone().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // dates should be updated

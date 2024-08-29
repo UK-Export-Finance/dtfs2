@@ -1,4 +1,5 @@
 import relative from '../../../relativeURL';
+import { errorSummary } from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
@@ -81,7 +82,7 @@ context('Bond beneficiary URN - User can add, edit, confirm and submit URN to th
         pages.bondBeneficiaryPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondBeneficiaryPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(2).contains('Enter a minimum of 3 numbers');
 
@@ -93,7 +94,7 @@ context('Bond beneficiary URN - User can add, edit, confirm and submit URN to th
         pages.bondBeneficiaryPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondBeneficiaryPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(2).contains('Enter a minimum of 3 numbers');
 
@@ -102,7 +103,7 @@ context('Bond beneficiary URN - User can add, edit, confirm and submit URN to th
         pages.bondBeneficiaryPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondBeneficiaryPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(2).contains('Enter a minimum of 3 numbers');
 
@@ -111,7 +112,7 @@ context('Bond beneficiary URN - User can add, edit, confirm and submit URN to th
         pages.bondBeneficiaryPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondBeneficiaryPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(2).contains('Enter a minimum of 3 numbers');
 
@@ -120,7 +121,7 @@ context('Bond beneficiary URN - User can add, edit, confirm and submit URN to th
         pages.bondBeneficiaryPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondBeneficiaryPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(2).contains('Enter a minimum of 3 numbers');
 
@@ -129,7 +130,7 @@ context('Bond beneficiary URN - User can add, edit, confirm and submit URN to th
         pages.bondBeneficiaryPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondBeneficiaryPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(2).contains('Enter a minimum of 3 numbers');
 
@@ -138,7 +139,7 @@ context('Bond beneficiary URN - User can add, edit, confirm and submit URN to th
         pages.bondBeneficiaryPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondBeneficiaryPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondBeneficiaryPage.urnError(2).contains('Enter a minimum of 3 numbers');
       });

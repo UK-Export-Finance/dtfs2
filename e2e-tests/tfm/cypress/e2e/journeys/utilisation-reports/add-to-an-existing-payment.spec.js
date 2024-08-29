@@ -5,6 +5,7 @@ import {
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
+import { errorSummary } from '../../partials';
 import pages from '../../pages';
 import USERS from '../../../fixtures/users';
 import { PDC_TEAMS } from '../../../fixtures/teams';
@@ -146,7 +147,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     it('should display an error message when there are multiple payments to choose from and none have been selected', () => {
       pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
 
-      pages.utilisationReportAddToAnExistingPaymentPage.errorSummary().contains('Select a payment to add the fee or fees to');
+      errorSummary().contains('Select a payment to add the fee or fees to');
     });
   });
 });

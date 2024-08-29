@@ -1,4 +1,5 @@
 import relative from '../../relativeURL';
+import { errorSummary } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
@@ -37,15 +38,15 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.continueAmendmentButton().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'request-date');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'request-approval');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-options');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'cover-end-date');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'is-using-facility-end-date');
     };
 
@@ -64,19 +65,19 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       amendmentsPage.amendmentRequestDayInput().clear().type(dateConstants.todayDay);
       amendmentsPage.amendmentRequestMonthInput().clear().type(dateConstants.todayMonth);
       amendmentsPage.amendmentRequestYearInput().clear().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'request-approval');
       amendmentsPage.amendmentRequestApprovalYes().click();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().click();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'cover-end-date');
       amendmentsPage.amendmentCoverEndDateDayInput().clear().type(dateConstants.todayDay);
       amendmentsPage.amendmentCoverEndDateMonthInput().clear().type(dateConstants.todayMonth);
       amendmentsPage.amendmentCoverEndDateYearInput().clear().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       amendmentsPage.isUsingFacilityEndDateYes().should('be.not.checked');
       amendmentsPage.isUsingFacilityEndDateNo().should('be.not.checked');
@@ -88,16 +89,16 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       amendmentsPage.isUsingFacilityEndDateYes().should('be.not.checked');
       amendmentsPage.isUsingFacilityEndDateNo().should('be.not.checked');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
-      amendmentsPage.errorSummary().contains('Select if the bank has provided an end date for this facility');
+      errorSummary().contains('Select if the bank has provided an end date for this facility');
     });
 
     it("should continue to `Enter the new facility end date` page if 'Yes' is selected", () => {
       navigateToIsUsingFacilityEndDatePageGivenPrefilled();
 
       amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'facility-end-date');
     });
@@ -106,7 +107,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       navigateToIsUsingFacilityEndDatePageGivenPrefilled();
 
       amendmentsPage.isUsingFacilityEndDateNo().click();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'bank-review-date');
     });

@@ -18,7 +18,7 @@ const completeTask = (completeTaskParams) => {
 
   pages.taskPage.assignedToSelectInput().select(userId);
   pages.taskPage.taskStatusRadioInputDone().click();
-  pages.taskPage.submitButton().click();
+  cy.clickSubmitButton();
 };
 
 context('Amendments tasks - manual amendment tasks', () => {
@@ -81,12 +81,12 @@ context('Amendments tasks - manual amendment tasks', () => {
     amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
     amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
     // manual approval
     amendmentsPage.amendmentRequestApprovalYes().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'amendment-options');
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
@@ -97,13 +97,13 @@ context('Amendments tasks - manual amendment tasks', () => {
     amendmentsPage.amendmentFacilityValueCheckbox().click();
     amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
     amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
     amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     if (tfmFacilityEndDateEnabled) {
       amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
@@ -113,9 +113,9 @@ context('Amendments tasks - manual amendment tasks', () => {
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
   });
 
   it('should open task links with correct amendment tasks with correct status and titles', () => {
@@ -422,7 +422,7 @@ context('Amendments tasks - manual amendment tasks', () => {
 
     pages.taskPage.assignedToSelectInput().select(UWManagerId);
     pages.taskPage.taskStatusRadioInputInProgress().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
     pages.tasksPage.filterRadioAllTasks().click();
 

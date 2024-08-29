@@ -1,4 +1,5 @@
 import relative from '../../../relativeURL';
+import { errorSummary } from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
@@ -80,7 +81,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a unique reference number');
+        errorSummary().contains('Enter a unique reference number');
         pages.agentPage.urnError().contains('Enter a unique reference number');
 
         pages.agentPage.agentUniqueRefInput().clear();
@@ -89,42 +90,42 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.agentPage.agentUniqueRefInput().clear().type('12');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.agentPage.agentUniqueRefInput().clear().type('ABC123');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.agentPage.agentUniqueRefInput().clear().type('"!£!"£!"£!"£');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.agentPage.agentUniqueRefInput().clear().type('1234!');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.agentPage.agentUniqueRefInput().clear().type(' ');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
       });
 

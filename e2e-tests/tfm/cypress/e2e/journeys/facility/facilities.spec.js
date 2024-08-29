@@ -117,7 +117,7 @@ context('Facility page', () => {
     cy.url().should('eq', relative('/facilities/0'));
     const searchString = '1000000';
     pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.clickSubmitButton();
 
     cy.checkFacilitiesTableRowsTotal(4);
   });
@@ -128,7 +128,7 @@ context('Facility page', () => {
     const searchString = MOCK_DEAL_AIN.exporter.companyName;
 
     pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.clickSubmitButton();
 
     cy.checkFacilitiesTableRowsTotal(2);
   });
@@ -139,7 +139,7 @@ context('Facility page', () => {
     const searchString = MOCK_DEAL_MIA.exporter.companyName;
 
     pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.clickSubmitButton();
 
     cy.checkFacilitiesTableRowsTotal(2);
   });
