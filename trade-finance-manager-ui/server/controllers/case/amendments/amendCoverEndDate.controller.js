@@ -108,6 +108,7 @@ const postAmendCoverEndDate = async (req, res) => {
     const payload = { coverEndDate, currentCoverEndDate: formatCurrentCoverEndDate };
 
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
+
     if (status !== HttpStatusCode.Ok) {
       throw new Error('Error updating amendment with cover end date');
     }
