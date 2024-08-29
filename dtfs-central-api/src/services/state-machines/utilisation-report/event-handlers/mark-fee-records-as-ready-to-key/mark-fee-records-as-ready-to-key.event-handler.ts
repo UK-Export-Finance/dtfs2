@@ -14,6 +14,12 @@ export type UtilisationReportMarkFeeRecordsAsReadyToKeyEvent = BaseUtilisationRe
   MarkFeeRecordsAsReadyToKeyEventPayload
 >;
 
+/**
+ * Handler for the mark fee records as ready to key event
+ * @param report - The report
+ * @param param - The payload
+ * @returns The modified report
+ */
 export const handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent = async (
   report: UtilisationReportEntity,
   { requestSource, transactionEntityManager, feeRecordsToMarkAsReadyToKey }: MarkFeeRecordsAsReadyToKeyEventPayload,

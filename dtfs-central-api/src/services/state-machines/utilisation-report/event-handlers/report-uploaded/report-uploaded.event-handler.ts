@@ -34,11 +34,12 @@ const createFacilityUtilisationDataEntityIfNotExists = async (
 };
 
 export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<'REPORT_UPLOADED', ReportUploadedEventPayload>;
+
 /**
- * Handler for the utilisation report "report uploaded" event
- * @param report - The report to update
- * @param param1 - The payload for the event
- * @returns The updated report
+ * Handler for the report uploaded event
+ * @param report - The report
+ * @param param - The payload
+ * @returns The modified report
  */
 export const handleUtilisationReportReportUploadedEvent = async (
   report: UtilisationReportEntity,

@@ -10,6 +10,12 @@ type PaymentEditedEventPayload = {
 
 export type FeeRecordPaymentEditedEvent = BaseFeeRecordEvent<'PAYMENT_EDITED', PaymentEditedEventPayload>;
 
+/**
+ * Handler for the payment edited event
+ * @param feeRecord - The fee record
+ * @param param - The payload
+ * @returns The modified fee record
+ */
 export const handleFeeRecordPaymentEditedEvent = async (
   feeRecord: FeeRecordEntity,
   { transactionEntityManager, feeRecordsAndPaymentsMatch, requestSource }: PaymentEditedEventPayload,

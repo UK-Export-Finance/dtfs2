@@ -9,6 +9,12 @@ type MarkAsReadyToKeyEventPayload = {
 
 export type FeeRecordMarkAsReadyToKeyEvent = BaseFeeRecordEvent<'MARK_AS_READY_TO_KEY', MarkAsReadyToKeyEventPayload>;
 
+/**
+ * Handler for the mark as ready to key event
+ * @param feeRecord - The fee record
+ * @param param - The payload
+ * @returns The modified fee record
+ */
 export const handleFeeRecordMarkAsReadyToKeyEvent = async (
   feeRecord: FeeRecordEntity,
   { transactionEntityManager, requestSource }: MarkAsReadyToKeyEventPayload,

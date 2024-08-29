@@ -13,6 +13,12 @@ type DeletePaymentEventPayload = {
 
 export type UtilisationReportDeletePaymentEvent = BaseUtilisationReportEvent<'DELETE_PAYMENT', DeletePaymentEventPayload>;
 
+/**
+ * Handler for the delete payment event
+ * @param report - The report
+ * @param param - The payload
+ * @returns The modified report
+ */
 export const handleUtilisationReportDeletePaymentEvent = async (
   report: UtilisationReportEntity,
   { paymentId, transactionEntityManager, requestSource }: DeletePaymentEventPayload,

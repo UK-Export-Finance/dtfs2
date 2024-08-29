@@ -9,6 +9,12 @@ type ManuallySetCompletedEventPayload = {
 
 export type UtilisationReportManuallySetCompletedEvent = BaseUtilisationReportEvent<'MANUALLY_SET_COMPLETED', ManuallySetCompletedEventPayload>;
 
+/**
+ * Handler for the manually set complete event
+ * @param report - The report
+ * @param param - The payload
+ * @returns The modified report
+ */
 export const handleUtilisationReportManuallySetCompletedEvent = async (
   report: UtilisationReportEntity,
   { requestSource, transactionEntityManager }: ManuallySetCompletedEventPayload,

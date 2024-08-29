@@ -16,6 +16,12 @@ type EditPayloadEventPayload = {
 
 export type UtilisationReportEditPaymentEvent = BaseUtilisationReportEvent<'EDIT_PAYMENT', EditPayloadEventPayload>;
 
+/**
+ * Handler for the edit payment event
+ * @param report - The report
+ * @param param - The payload
+ * @returns The modified report
+ */
 export const handleUtilisationReportEditPaymentEvent = async (
   report: UtilisationReportEntity,
   { transactionEntityManager, payment, feeRecords, paymentAmount, datePaymentReceived, paymentReference, requestSource }: EditPayloadEventPayload,

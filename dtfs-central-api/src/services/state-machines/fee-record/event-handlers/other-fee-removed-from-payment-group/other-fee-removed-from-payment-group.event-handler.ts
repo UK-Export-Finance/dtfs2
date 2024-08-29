@@ -13,6 +13,12 @@ export type FeeRecordOtherFeeRemovedFromPaymentGroupEvent = BaseFeeRecordEvent<
   OtherFeeRemovedFromPaymentGroupEventPayload
 >;
 
+/**
+ * Handler for the other fee record removed from payment group event
+ * @param feeRecord - The fee record
+ * @param param - The payload
+ * @returns The modified fee record
+ */
 export const handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent = async (
   feeRecord: FeeRecordEntity,
   { transactionEntityManager, feeRecordsAndPaymentsMatch, requestSource }: OtherFeeRemovedFromPaymentGroupEventPayload,

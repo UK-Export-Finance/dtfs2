@@ -11,6 +11,12 @@ type PaymentDeletedEventPayload = {
 
 export type FeeRecordPaymentDeletedEvent = BaseFeeRecordEvent<'PAYMENT_DELETED', PaymentDeletedEventPayload>;
 
+/**
+ * Handler for the payment deleted event
+ * @param feeRecord - The fee record
+ * @param param - The payload
+ * @returns The modified fee record
+ */
 export const handleFeeRecordPaymentDeletedEvent = async (
   feeRecord: FeeRecordEntity,
   { transactionEntityManager, feeRecordsAndPaymentsMatch, hasAttachedPayments, requestSource }: PaymentDeletedEventPayload,

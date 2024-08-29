@@ -9,6 +9,12 @@ type MarkAsReconciledEventPayload = {
 
 export type FeeRecordMarkAsReconciledEvent = BaseFeeRecordEvent<'MARK_AS_RECONCILED', MarkAsReconciledEventPayload>;
 
+/**
+ * Handler for the mark as reconciled event
+ * @param feeRecord - The fee record
+ * @param param - The payload
+ * @returns The modified fee record
+ */
 export const handleFeeRecordMarkAsReconciledEvent = async (
   feeRecord: FeeRecordEntity,
   { transactionEntityManager, requestSource }: MarkAsReconciledEventPayload,

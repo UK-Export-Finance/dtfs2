@@ -4,6 +4,12 @@ import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { KeyingSheetFeePaymentShare, getKeyingSheetFeePaymentSharesForFeeRecords } from '../helpers';
 
+/**
+ * Gets the facility ids at the TO_DO or DOES_NOT_MATCH status
+ * @param entityManager - The entity manager
+ * @param reportId - The report id
+ * @returns The facility ids of the fee records at the TO_DO or DOES_NOT_MATCH status
+ */
 const getFacilityIdsAtToDoOrDoesNotMatchStatus = async (entityManager: EntityManager, reportId: number): Promise<Set<string>> => {
   const feeRecordsAtToDoOrDoesNotMatchStatus = await entityManager.find(FeeRecordEntity, {
     where: {
@@ -14,12 +20,14 @@ const getFacilityIdsAtToDoOrDoesNotMatchStatus = async (entityManager: EntityMan
   return feeRecordsAtToDoOrDoesNotMatchStatus.reduce((facilityIds, { facilityId }) => facilityIds.add(facilityId), new Set<string>());
 };
 
-const updateFeeRecordPaymentJoinTableWithKeyingSheetFeePaymentShares = async (
-  KeyingSheetFeePaymentShares: KeyingSheetFeePaymentShare[],
-  entityManager: EntityManager,
-): Promise<void> => {
+/**
+ * Updates the fee record payment join table with the supplied keying sheet fee payment shares
+ * @param keyingSheetFeePaymentShares - The keying sheet fee payment shares
+ * @param entityManager - The entity manager
+ */
+const updateFeeRecordPaymentJoinTable = async (keyingSheetFeePaymentShares: KeyingSheetFeePaymentShare[], entityManager: EntityManager): Promise<void> => {
   await Promise.all(
-    KeyingSheetFeePaymentShares.map(({ feeRecordId, paymentId, feePaymentAmount }) =>
+    keyingSheetFeePaymentShares.map(({ feeRecordId, paymentId, feePaymentAmount }) =>
       entityManager.update(FeeRecordPaymentJoinTableEntity, { feeRecordId, paymentId }, { paymentAmountUsedForFeeRecord: feePaymentAmount }).catch((error) => {
         console.error(`Failed to update fee record payment join table for fee record id '${feeRecordId}' and payment id '${paymentId}'`);
         throw error;
@@ -36,6 +44,12 @@ type GenerateKeyingDataEventPayload = {
 
 export type UtilisationReportGenerateKeyingDataEvent = BaseUtilisationReportEvent<'GENERATE_KEYING_DATA', GenerateKeyingDataEventPayload>;
 
+/**
+ * Handler for the generate keying data event
+ * @param report - The report
+ * @param param - The payload
+ * @returns The modified report
+ */
 export const handleUtilisationReportGenerateKeyingDataEvent = async (
   report: UtilisationReportEntity,
   { transactionEntityManager, feeRecordsAtMatchStatusWithPayments, requestSource }: GenerateKeyingDataEventPayload,
@@ -71,7 +85,7 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
   );
 
   const KeyingSheetFeePaymentShares = getKeyingSheetFeePaymentSharesForFeeRecords(feeRecordsAtMatchStatusWithPayments);
-  await updateFeeRecordPaymentJoinTableWithKeyingSheetFeePaymentShares(KeyingSheetFeePaymentShares, transactionEntityManager);
+  await updateFeeRecordPaymentJoinTable(KeyingSheetFeePaymentShares, transactionEntityManager);
 
   if (report.status === 'PENDING_RECONCILIATION') {
     report.updateWithStatus({ status: 'RECONCILIATION_IN_PROGRESS', requestSource });

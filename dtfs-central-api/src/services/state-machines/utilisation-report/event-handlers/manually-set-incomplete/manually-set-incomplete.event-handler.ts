@@ -9,6 +9,12 @@ type ManuallySetIncompleteEventPayload = {
 
 export type UtilisationReportManuallySetIncompleteEvent = BaseUtilisationReportEvent<'MANUALLY_SET_INCOMPLETE', ManuallySetIncompleteEventPayload>;
 
+/**
+ * Handler for the manually set incomplete event
+ * @param report - The report
+ * @param param - The payload
+ * @returns The modified report
+ */
 export const handleUtilisationReportManuallySetIncompleteEvent = async (
   report: UtilisationReportEntity,
   { requestSource, transactionEntityManager }: ManuallySetIncompleteEventPayload,

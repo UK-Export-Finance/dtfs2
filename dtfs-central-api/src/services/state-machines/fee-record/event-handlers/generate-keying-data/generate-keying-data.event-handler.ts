@@ -12,6 +12,12 @@ type GenerateKeyingDataEventPayload = {
 
 export type FeeRecordGenerateKeyingDataEvent = BaseFeeRecordEvent<'GENERATE_KEYING_DATA', GenerateKeyingDataEventPayload>;
 
+/**
+ * Handler for the generate keying data event
+ * @param feeRecord - The fee record
+ * @param param - The payload
+ * @returns The modified fee record
+ */
 export const handleFeeRecordGenerateKeyingDataEvent = async (
   feeRecord: FeeRecordEntity,
   { transactionEntityManager, isFinalFeeRecordForFacility, reportPeriod, requestSource }: GenerateKeyingDataEventPayload,
