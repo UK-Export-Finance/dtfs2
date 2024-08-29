@@ -26,10 +26,12 @@ You can update the mock seeding by navigating to the `utils/sql-db-seeder/src` a
 
 To run the seeder, see the [seeding data command](#seeding-data) below.
 
-In order to generate data which is in line with the data in MongoDB, the SQL seeder needs to query data inserted by the [mock data loader](../utils/mock-data-loader/). And you need to seed tfm facilities for every facility id used in the fee records (otherwise generate keying data will fail). This results in three things which are important to remember:
+In order to generate data which is in line with the data in MongoDB, the SQL db seeder needs to query data inserted by the [mock data loader](../utils/mock-data-loader/).
+Additionally, we need to seed tfm facilities for every facility id used by fee records inserted by the SQL db seeder (otherwise generate keying data will fail).
+This results in three things which are important to remember:
 
-1. Mock data loader must be run _before_ the SQL seeder
-2. Create tfm keying sheet facilities must be run _after_ the SQL seeder.
+1. The `mock-data-loader` script must be run _before_ the SQL seeder
+2. The `create-tfm-keying-sheet-facilities` script must be run _after_ the SQL seeder.
 3. The `utils/sql-db-seeder` `.env` file must include the connection strings required to initialise the [MongoDbClient](../libs/common/src/mongo-db-client/index.ts) _and_ the [SqlDbDataSource](../libs/common/src/sql-db-connection/data-source.ts) (see [.env.sample](../utils/sql-db-seeder/.env.sample))
 
 ### DB Commands

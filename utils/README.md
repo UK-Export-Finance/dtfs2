@@ -8,11 +8,11 @@ The `data-migration` directory contains scripts designed to facilitate the migra
 
 ## Data seeding
 
-The project uses two different databases, a mongo db and a SQL db. It is useful to seed these with data for running locally to speed up development, and we also run some seeding before running e2e-tests to make testing possible.
+The project uses two different databases, a Mongo db and an MSSQL Server db. It is useful to seed these with data for running locally to speed up development, and we also run some seeding before running e2e-tests to make testing possible.
 
-Running `npm run load` will run mock-data-loader, then sql-db-seeder, then create-keying-sheet-tfm-facilities all in turn.
+Running `npm run load` will run `mock-data-loader`, `sql-db-seeder` and then finally `create-keying-sheet-tfm-facilities` scripts one after another.
 
-:warning: Please note you will need to run the SQL db migrations before running the SQL seeding, and therefore also before `npm run load` (since it is one of the steps) if you haven't run them previously (or recently if there are new migrations).
+:warning: Please note you will need to run the MSSQL db migrations before running the MSSQL seeding, and therefore also before `npm run load` (since it is one of the steps) if you haven't run them previously (or recently if there are new migrations).
 
 ### Mock Data Loader :page_with_curl:
 
@@ -38,7 +38,7 @@ command.
 
 ### SQL DB Seeder
 
-The `sql-db-seeder` directory contains a script which seeds random data into the SQL database for utilisation reports.
+The `sql-db-seeder` directory contains a script which seeds random data into the MSSQL database for utilisation reports.
 
 You can run the SQL seeder directly using
 
@@ -54,11 +54,12 @@ npm run load
 
 command.
 
-Please make sure your SQL_DB_HOST env var in the utils folder is correct for where you are running the command. If you are running the command from outside the docker container locally this will need to be `localhost`, but if you are running from inside the docker container then it should be `dtfs-sql`.
+Please make sure your `SQL_DB_HOST` env var in the `utils` folder is correct for where you are running the command.
+If you are running the command from outside the docker container locally this will need to be `localhost`, but if you are running from inside the docker container then it should be `dtfs-sql`.
 
 This script will delete all current data in the SQL db, replacing it with fresh data.
 
-If you wish to wipe all data from the SQL database and not replace it, please see the `npm run db:reset` command which can be run from `libs/common` which is explained in more detail in [the SQL db documentation](../doc/sql-db.md).
+If you wish to wipe all data from the SQL database and not replace it,please see the `npm run db:reset` command which can be run from `libs/common` which is explained in more detail in [the SQL db documentation](../doc/sql-db.md).
 
 ### Create Keying Sheet TFM Facilities
 
