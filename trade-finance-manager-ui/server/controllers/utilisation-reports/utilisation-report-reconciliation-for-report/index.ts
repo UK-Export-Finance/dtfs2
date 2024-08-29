@@ -21,6 +21,18 @@ const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGro
 const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
   res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
 
+/**
+ * Controller for the GET utilisation report reconciliation for report route.
+ *
+ * Retrieves report details associated with the provided utilisation report ID
+ * and maps these to view models.
+ *
+ * Checks fee record checkboxes based on selected IDs from session or query
+ * parameters. These may have been set if the user was redirected from another
+ * page.
+ * @param req - The Express request object.
+ * @param res - The Express response object.
+ */
 export const getUtilisationReportReconciliationByReportId = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId } = req.params;
