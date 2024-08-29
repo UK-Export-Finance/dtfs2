@@ -1,4 +1,4 @@
-import { DealType, IsoDateTimeStamp } from '@ukef/dtfs2-common';
+import { DealStatus, DealType, IsoDateTimeStamp } from '@ukef/dtfs2-common';
 
 /**
  * Deal object received from portal-api
@@ -10,7 +10,7 @@ export type Deal = {
   dealType: DealType;
   version?: number;
   maker: Record<string, unknown>;
-  status: string; // TODO: Use type once updated with main
+  status: DealStatus;
   bank: Record<string, unknown>;
   exporter: Record<string, unknown>;
   bankInternalRefName: string | null;
