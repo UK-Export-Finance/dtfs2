@@ -20,6 +20,11 @@ const user = {
   email: 'test@localhost',
 };
 
+const now = new Date();
+const oneYearFromNowMinusDay = add(now, { years: 1, days: -1 });
+const oneYearFromNow = add(now, { years: 1 });
+const sixYearsFromNowPlusDay = add(now, { years: 6, days: 1 });
+
 const session = { user, userToken: 'mockToken' };
 
 const gefFacilityType = MAPPED_FACILITY_TYPE.CASH;
@@ -44,7 +49,7 @@ describe('amendmentBankReviewDate routes', () => {
 
     describe('incorrect bank review date entered', () => {
       it('should render the template with errors if the entered bank review date is before the cover start date', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2024, 11, 11).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: oneYearFromNow } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -57,9 +62,9 @@ describe('amendmentBankReviewDate routes', () => {
             facilityId,
           },
           body: {
-            'bank-review-date-day': '12',
-            'bank-review-date-month': '11',
-            'bank-review-date-year': '2024',
+            'bank-review-date-day': oneYearFromNowMinusDay.getDate().toString(),
+            'bank-review-date-month': (oneYearFromNowMinusDay.getMonth() + 1).toString(),
+            'bank-review-date-year': oneYearFromNowMinusDay.getFullYear().toString(),
           },
           session,
         };
@@ -85,14 +90,11 @@ describe('amendmentBankReviewDate routes', () => {
       });
 
       it('should render the template with errors if the entered bank review date is greater than 6 years in the future', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2021, 11, 11).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now.valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
         api.getFacility.mockResolvedValueOnce(mockFacility);
-
-        const now = new Date();
-        const sixYearsFromNowPlusDay = add(now, { years: 6, days: 1 });
 
         const req = {
           params: {
@@ -177,7 +179,7 @@ describe('amendmentBankReviewDate routes', () => {
           data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
         api.getFacility = jest.fn().mockResolvedValueOnce({
-          facilitySnapshot: { type: gefFacilityType, dates: { isUsingBankReviewDate: true, bankReviewDate: new Date(2025, 11, 11).toISOString() } },
+          facilitySnapshot: { type: gefFacilityType, dates: { isUsingBankReviewDate: true, bankReviewDate: now.toISOString() } },
         });
 
         const req = {
@@ -218,7 +220,7 @@ describe('amendmentBankReviewDate routes', () => {
 
     describe('correct bank review date entered', () => {
       it('should redirect to the check answers page when only the cover end date is being amended and there are no errors', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -231,9 +233,9 @@ describe('amendmentBankReviewDate routes', () => {
             facilityId,
           },
           body: {
-            'bank-review-date-day': '12',
-            'bank-review-date-month': '11',
-            'bank-review-date-year': '2025',
+            'bank-review-date-day': oneYearFromNow.getDate().toString(),
+            'bank-review-date-month': (oneYearFromNow.getMonth() + 1).toString(),
+            'bank-review-date-year': oneYearFromNow.getFullYear().toString(),
           },
           session,
         };
@@ -244,7 +246,7 @@ describe('amendmentBankReviewDate routes', () => {
       });
 
       it('should redirect to the update facility value page when the facility value also needs amending and there are no errors', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now } } };
 
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
@@ -260,9 +262,9 @@ describe('amendmentBankReviewDate routes', () => {
             facilityId,
           },
           body: {
-            'bank-review-date-day': '12',
-            'bank-review-date-month': '11',
-            'bank-review-date-year': '2025',
+            'bank-review-date-day': oneYearFromNow.getDate().toString(),
+            'bank-review-date-month': (oneYearFromNow.getMonth() + 1).toString(),
+            'bank-review-date-year': oneYearFromNow.getFullYear().toString(),
           },
           session,
         };
@@ -273,7 +275,7 @@ describe('amendmentBankReviewDate routes', () => {
       });
 
       it("should redirect to the amendments summary page if there's an error updating the amendment", async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now } } };
 
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
@@ -289,9 +291,9 @@ describe('amendmentBankReviewDate routes', () => {
             facilityId,
           },
           body: {
-            'bank-review-date-day': '12',
-            'bank-review-date-month': '11',
-            'bank-review-date-year': '2025',
+            'bank-review-date-day': oneYearFromNow.getDate().toString(),
+            'bank-review-date-month': (oneYearFromNow.getMonth() + 1).toString(),
+            'bank-review-date-year': oneYearFromNow.getFullYear().toString(),
           },
           session,
         };
