@@ -36,6 +36,9 @@ const facilityFieldsObj = (facility) => {
     feeType,
     feeFrequency,
     dayCountBasis,
+    isUsingFacilityEndDate,
+    facilityEndDate,
+    bankReviewDate,
   }) => ({
     ukefFacilityId,
     bankReference,
@@ -51,6 +54,9 @@ const facilityFieldsObj = (facility) => {
     feeType,
     feeFrequency,
     dayCountBasis,
+    isUsingFacilityEndDate,
+    facilityEndDate,
+    bankReviewDate,
   }))(facility);
 
   // format for emails
@@ -89,7 +95,13 @@ const facilityFieldsObj = (facility) => {
 const generateFacilityFieldListItemString = (type, fieldName, fieldValue) => {
   const title = CONTENT_STRINGS.LIST_ITEM_TITLES[type?.toUpperCase()][fieldName];
 
-  const str = generateListItemString(`${title}: ${fieldValue}`);
+  let displayValue = fieldValue;
+
+  if (fieldName === 'isUsingFacilityEndDate') {
+    displayValue = fieldValue ? 'Yes' : 'No';
+  }
+
+  const str = generateListItemString(`${title}: ${displayValue}`);
 
   return str;
 };
@@ -107,7 +119,7 @@ const generateFacilityFieldsListString = (facility) => {
   Object.keys(fields).forEach((fieldName) => {
     const value = fields[fieldName];
 
-    if (value) {
+    if (value !== undefined && value !== null) {
       singleFacilityListString += generateFacilityFieldListItemString(facility.type, fieldName, value);
     }
   });
