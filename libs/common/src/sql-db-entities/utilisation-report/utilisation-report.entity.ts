@@ -63,6 +63,11 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
   })
   feeRecords!: FeeRecordEntity[];
 
+  /**
+   * Creates a utilisation report entity with status REPORT_NOT_RECEIVED
+   * @param param - The parameters to create the entity with
+   * @returns The created entity
+   */
   static createNotReceived({ bankId, reportPeriod, requestSource }: CreateNotReceivedUtilisationReportEntityParams): UtilisationReportEntity {
     const report = new UtilisationReportEntity();
     report.bankId = bankId;
@@ -74,6 +79,10 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     return report;
   }
 
+  /**
+   * Updates the report with the upload details
+   * @param param - The parameters to update the report with
+   */
   public updateWithUploadDetails({ azureFileInfo, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
     this.dateUploaded = new Date();
     this.azureFileInfo = azureFileInfo;
@@ -82,10 +91,18 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     this.updateLastUpdatedBy(requestSource);
   }
 
+  /**
+   * Updates the report with fee records
+   * @param param - The parameters to update the report with
+   */
   public updateWithFeeRecords({ feeRecords }: UpdateWithFeeRecordsParams): void {
     this.feeRecords = feeRecords;
   }
 
+  /**
+   * Updates the report with a supplied status
+   * @param param - The parameters to update the report with
+   */
   public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
     this.status = status;
     this.updateLastUpdatedBy(requestSource);

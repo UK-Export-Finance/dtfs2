@@ -53,6 +53,11 @@ export class AzureFileInfoEntity extends AuditableBaseEntity {
   @JoinColumn()
   utilisationReport!: UtilisationReportEntity;
 
+  /**
+   * Creates an instance of the azure file info entity
+   * @param param - The parameters to create the entity with
+   * @returns The created entity
+   */
   static create({ folder, filename, fullPath, url, mimetype, requestSource }: CreateAzureFileInfoParams): AzureFileInfoEntity {
     const azureFileInfo = new AzureFileInfoEntity();
     azureFileInfo.folder = folder;

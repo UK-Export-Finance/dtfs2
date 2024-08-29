@@ -170,6 +170,10 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     return feeRecord;
   }
 
+  /**
+   * Gets the fees paid to UKEF for the period converted to the payment currency
+   * @returns The fees paid
+   */
   public getFeesPaidToUkefForThePeriodInThePaymentCurrency(): number {
     if (this.paymentCurrency === this.feesPaidToUkefForThePeriodCurrency) {
       return this.feesPaidToUkefForThePeriod;
@@ -181,11 +185,19 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     return feesPaidToUkefForThePeriodAsBig.div(paymentExchangeRateAsBig).round(precision).toNumber();
   }
 
+  /**
+   * Updates the fee record with a status
+   * @param param - The update parameters
+   */
   public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
     this.status = status;
     this.updateLastUpdatedBy(requestSource);
   }
 
+  /**
+   * Updates a fee record with keying data
+   * @param param - The update parameters
+   */
   public updateWithKeyingData({ fixedFeeAdjustment, principalBalanceAdjustment, status, requestSource }: UpdateWithKeyingDataParams): void {
     this.status = status;
     this.fixedFeeAdjustment = fixedFeeAdjustment;
@@ -193,6 +205,10 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     this.updateLastUpdatedBy(requestSource);
   }
 
+  /**
+   * Removes all payments from the fee record
+   * @param param - The update parameters
+   */
   public removeAllPayments({ requestSource }: RemoveAllPaymentsParams): void {
     this.payments = [];
     this.status = 'TO_DO';
