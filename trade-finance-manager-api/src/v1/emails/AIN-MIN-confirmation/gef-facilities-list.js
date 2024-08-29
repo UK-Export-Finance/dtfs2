@@ -104,7 +104,7 @@ const generateFacilityFieldsListString = (facility) => {
   Object.keys(fields).forEach((fieldName) => {
     const value = fields[fieldName];
 
-    if (value !== undefined && value !== null) {
+    if (value) {
       singleFacilityListString += generateFacilityFieldListItemString(facility.type, fieldName, value);
     }
   });
