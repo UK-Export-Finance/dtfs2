@@ -1,9 +1,8 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
-const { isFacilityEndDateEnabledForFacility } = require('../../helpers/isFacilityEndDateEnabledForFacility');
 
 /**
  * Gets the next page url based on the current state of the facility
@@ -113,7 +112,7 @@ const postAmendCoverEndDate = async (req, res) => {
       throw new Error('Error updating amendment with cover end date');
     }
 
-    const showFacilityEndDatePage = isFacilityEndDateEnabledForFacility(facility);
+    const showFacilityEndDatePage = isTfmFacilityEndDateFeatureFlagEnabled() && facility.facilitySnapshot.isGef;
 
     return res.redirect(getNextPageUrl(changeFacilityValue, showFacilityEndDatePage, baseUrl));
   } catch (error) {

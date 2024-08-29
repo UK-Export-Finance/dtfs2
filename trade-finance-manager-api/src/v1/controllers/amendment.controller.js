@@ -20,7 +20,6 @@ const {
   addLatestAmendmentFacilityEndDate,
 } = require('../helpers/amendment.helpers');
 const CONSTANTS = require('../../constants');
-const isGefFacility = require('../rest-mappings/helpers/isGefFacility');
 
 const sendAmendmentEmail = async (amendmentId, facilityId, auditDetails) => {
   try {
@@ -96,10 +95,10 @@ const createAmendmentTFMObject = async (amendmentId, facilityId, auditDetails) =
     tfmToAdd = await addLatestAmendmentValue(tfmToAdd, latestValueResponse, facilityId);
     tfmToAdd = await addLatestAmendmentCoverEndDate(tfmToAdd, latestCoverEndDateResponse, facilityId);
 
-    const isFacilityEndDateEnabledForFacility = isTfmFacilityEndDateFeatureFlagEnabled() && isGefFacility(facility.facilitySnapshot.type);
-
     let latestFacilityEndDateResponse;
-    if (isFacilityEndDateEnabledForFacility) {
+
+    const isFacilityEndDateEnabled = isTfmFacilityEndDateFeatureFlagEnabled() && facility.facilitySnapshot.isGef;
+    if (isFacilityEndDateEnabled) {
       latestFacilityEndDateResponse = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId);
       tfmToAdd = await addLatestAmendmentFacilityEndDate(tfmToAdd, latestFacilityEndDateResponse);
     }
