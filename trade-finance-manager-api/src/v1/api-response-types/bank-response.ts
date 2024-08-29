@@ -18,3 +18,7 @@ export type BankResponseBody = {
   utilisationReportPeriodSchedule: BankReportPeriodSchedule;
   isVisibleInTfmUtilisationReports: boolean;
 };
+
+export type BankWithReportingYearsResponseBody = BankResponseBody & {
+  reportingYears: number[];
+};

@@ -11,6 +11,7 @@ module.exports = {
     jsEnabled: './scripts/js-enabled.js',
     disableFormSubmitOnSubmission: '../libs/common/src/ui-scripts/disable-form-submit-on-submission.js',
     enableSelectAllTableCheckbox: './scripts/enable-select-all-table-checkbox.js',
+    enableFindReportsByYearDropdown: './scripts/enable-find-reports-by-year-dropdown.ts',
   },
   output: {
     path: path.join(__dirname, 'public/js'),
@@ -37,6 +38,13 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
+        },
+      },
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'ts-loader',
         },
       },
       {

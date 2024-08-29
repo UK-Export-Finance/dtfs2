@@ -4,7 +4,7 @@ import { PaymentEntityMockBuilder, FeeRecordEntityMockBuilder, ApiError, Utilisa
 import { HttpStatusCode } from 'axios';
 import { PostRemoveFeesFromPaymentGroupRequest, postRemoveFeesFromPaymentGroup } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { removeFeesFromPaymentGroup } from './helpers';
 import { PostRemoveFeesFromPaymentGroupPayload } from '../../../routes/middleware/payload-validation/validate-post-remove-fees-from-payment-group-payload';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
