@@ -101,9 +101,7 @@ const generateFacilityFieldListItemString = (type, fieldName, fieldValue) => {
     displayValue = fieldValue ? 'Yes' : 'No';
   }
 
-  const str = generateListItemString(`${title}: ${displayValue}`);
-
-  return str;
+  return generateListItemString(`${title}: ${displayValue}`);
 };
 
 /*
