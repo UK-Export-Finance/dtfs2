@@ -67,8 +67,8 @@ export type FeeRecordPaymentGroup = {
   paymentsReceived: Payment[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
   status: FeeRecordStatus;
-  reconciledByUser: FeeRecordReconciledByUser | null;
-  dateReconciled: Date | null;
+  reconciledByUser?: FeeRecordReconciledByUser;
+  dateReconciled?: Date;
 };
 
 export type UtilisationReportReconciliationDetails = {

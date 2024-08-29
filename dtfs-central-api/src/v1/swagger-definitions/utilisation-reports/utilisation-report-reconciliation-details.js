@@ -26,6 +26,12 @@
  *   UtilisationReportReconciliationDetailsFeeRecordPaymentGroup:
  *     type: object
  *     properties:
+ *       required:
+ *         - feeRecords
+ *         - totalReportedPayments
+ *         - paymentsReceived
+ *         - totalPaymentsReceived
+ *         - status
  *       feeRecords:
  *         type: array
  *         items:
@@ -44,7 +50,6 @@
  *         $ref: '#/definitions/FeeRecordStatus'
  *       reconciledByUser:
  *         type: object
- *         nullable: true
  *         properties:
  *           firstName:
  *             type: string
@@ -53,7 +58,6 @@
  *       dateReconciled:
  *         type: string
  *         format: date
- *         nullable: true
  *   UtilisationReportReconciliationDetails:
  *     type: object
  *     properties:

@@ -17,11 +17,11 @@ type FeeRecordPaymentGroup = {
   paymentsReceived: Payment[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
   status: FeeRecordStatus;
-  reconciledByUser: {
+  reconciledByUser?: {
     firstName: string;
     lastName: string;
-  } | null;
-  dateReconciled: IsoDateTimeStamp | null;
+  };
+  dateReconciled?: IsoDateTimeStamp;
 };
 
 type KeyingSheet = {
