@@ -1,4 +1,4 @@
-const { format } = require('date-fns');
+const { format, parseISO } = require('date-fns');
 const getFacilitiesByType = require('../../helpers/get-facilities-by-type');
 const { generateHeadingString, generateListItemString } = require('../../helpers/notify-template-formatters');
 const CONSTANTS = require('../../../constants');
@@ -21,43 +21,25 @@ const mapIssuedValue = (hasBeenIssued) => {
  * returns a new object with the fields/values we need to consume and display in the email.
  */
 const facilityFieldsObj = (facility) => {
-  const fields = (({
-    ukefFacilityId,
-    bankReference,
-    hasBeenIssued,
-    coverStartDate,
-    coverEndDate,
-    value,
-    currencyCode,
-    coverPercentage,
-    interestPercentage,
-    guaranteeFee,
-    ukefExposure,
-    feeType,
-    feeFrequency,
-    dayCountBasis,
-    isUsingFacilityEndDate,
-    facilityEndDate,
-    bankReviewDate,
-  }) => ({
-    ukefFacilityId,
-    bankReference,
-    hasBeenIssued,
-    coverStartDate,
-    coverEndDate,
-    value,
-    currencyCode,
-    coverPercentage,
-    interestPercentage,
-    guaranteeFee,
-    ukefExposure,
-    feeType,
-    feeFrequency,
-    dayCountBasis,
-    isUsingFacilityEndDate,
-    facilityEndDate,
-    bankReviewDate,
-  }))(facility);
+  const fields = {
+    ukefFacilityId: facility.ukefFacilityId,
+    bankReference: facility.bankReference,
+    hasBeenIssued: facility.hasBeenIssued,
+    coverStartDate: facility.coverStartDate,
+    coverEndDate: facility.coverEndDate,
+    isUsingFacilityEndDate: facility.isUsingFacilityEndDate,
+    facilityEndDate: facility.facilityEndDate,
+    bankReviewDate: facility.bankReviewDate,
+    value: facility.value,
+    currencyCode: facility.currencyCode,
+    coverPercentage: facility.coverPercentage,
+    interestPercentage: facility.interestPercentage,
+    guaranteeFee: facility.guaranteeFee,
+    ukefExposure: facility.ukefExposure,
+    feeType: facility.feeType,
+    feeFrequency: facility.feeFrequency,
+    dayCountBasis: facility.dayCountBasis,
+  };
 
   // format for emails
   if (fields.hasBeenIssued) {
@@ -69,8 +51,19 @@ const facilityFieldsObj = (facility) => {
   }
 
   if (fields.coverEndDate) {
-    const epochCoverEndDate = new Date(fields.coverEndDate);
-    fields.coverEndDate = format(Number(epochCoverEndDate), 'do MMMM yyyy');
+    fields.coverEndDate = format(parseISO(fields.coverEndDate), 'do MMMM yyyy');
+  }
+
+  if (typeof fields.isUsingFacilityEndDate === 'boolean') {
+    fields.isUsingFacilityEndDate = fields.isUsingFacilityEndDate ? 'Yes' : 'No';
+  }
+
+  if (fields.facilityEndDate) {
+    fields.facilityEndDate = format(parseISO(fields.facilityEndDate), 'do MMMM yyyy');
+  }
+
+  if (fields.bankReviewDate) {
+    fields.bankReviewDate = format(parseISO(fields.bankReviewDate), 'do MMMM yyyy');
   }
 
   if (fields.coverPercentage) {
@@ -95,13 +88,7 @@ const facilityFieldsObj = (facility) => {
 const generateFacilityFieldListItemString = (type, fieldName, fieldValue) => {
   const title = CONTENT_STRINGS.LIST_ITEM_TITLES[type?.toUpperCase()][fieldName];
 
-  let displayValue = fieldValue;
-
-  if (fieldName === 'isUsingFacilityEndDate') {
-    displayValue = fieldValue ? 'Yes' : 'No';
-  }
-
-  return generateListItemString(`${title}: ${displayValue}`);
+  return generateListItemString(`${title}: ${fieldValue}`);
 };
 
 /*
