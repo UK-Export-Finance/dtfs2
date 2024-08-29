@@ -16,70 +16,58 @@ const mapIssuedValue = (hasBeenIssued) => {
   return CONSTANTS.FACILITIES.FACILITY_STAGE_PORTAL.UNISSUED;
 };
 
+/**
+ * @param {unknown} value
+ * @returns {string | undefined} Returns 'Yes'/'No' if value is True/False, or undefined otherwise
+ */
+const mapBooleanToYesOrNo = (value) => {
+  if (typeof value === 'boolean') {
+    return value ? 'Yes' : 'No';
+  }
+  return undefined;
+};
+
 /*
  * facilityFieldsObj
  * returns a new object with the fields/values we need to consume and display in the email.
  */
-const facilityFieldsObj = (facility) => {
-  const fields = {
-    ukefFacilityId: facility.ukefFacilityId,
-    bankReference: facility.bankReference,
-    hasBeenIssued: facility.hasBeenIssued,
-    coverStartDate: facility.coverStartDate,
-    coverEndDate: facility.coverEndDate,
-    isUsingFacilityEndDate: facility.isUsingFacilityEndDate,
-    facilityEndDate: facility.facilityEndDate,
-    bankReviewDate: facility.bankReviewDate,
-    value: facility.value,
-    currencyCode: facility.currencyCode,
-    coverPercentage: facility.coverPercentage,
-    interestPercentage: facility.interestPercentage,
-    guaranteeFee: facility.guaranteeFee,
-    ukefExposure: facility.ukefExposure,
-    feeType: facility.feeType,
-    feeFrequency: facility.feeFrequency,
-    dayCountBasis: facility.dayCountBasis,
-  };
-
-  // format for emails
-  if (fields.hasBeenIssued) {
-    fields.hasBeenIssued = mapIssuedValue(fields.hasBeenIssued);
-  }
-
-  if (fields.coverStartDate) {
-    fields.coverStartDate = format(Number(fields.coverStartDate), 'do MMMM yyyy');
-  }
-
-  if (fields.coverEndDate) {
-    fields.coverEndDate = format(parseISO(fields.coverEndDate), 'do MMMM yyyy');
-  }
-
-  if (typeof fields.isUsingFacilityEndDate === 'boolean') {
-    fields.isUsingFacilityEndDate = fields.isUsingFacilityEndDate ? 'Yes' : 'No';
-  }
-
-  if (fields.facilityEndDate) {
-    fields.facilityEndDate = format(parseISO(fields.facilityEndDate), 'do MMMM yyyy');
-  }
-
-  if (fields.bankReviewDate) {
-    fields.bankReviewDate = format(parseISO(fields.bankReviewDate), 'do MMMM yyyy');
-  }
-
-  if (fields.coverPercentage) {
-    fields.coverPercentage = `${fields.coverPercentage}%`;
-  }
-
-  if (fields.interestPercentage) {
-    fields.interestPercentage = `${fields.interestPercentage}%`;
-  }
-
-  if (fields.guaranteeFee) {
-    fields.guaranteeFee = `${fields.guaranteeFee}%`;
-  }
-
-  return fields;
-};
+const facilityFieldsObj = ({
+  ukefFacilityId,
+  bankReference,
+  hasBeenIssued,
+  coverStartDate,
+  coverEndDate,
+  isUsingFacilityEndDate,
+  facilityEndDate,
+  bankReviewDate,
+  value,
+  currencyCode,
+  coverPercentage,
+  interestPercentage,
+  guaranteeFee,
+  ukefExposure,
+  feeType,
+  feeFrequency,
+  dayCountBasis,
+}) => ({
+  ukefFacilityId,
+  bankReference,
+  hasBeenIssued: hasBeenIssued && mapIssuedValue(hasBeenIssued),
+  coverStartDate: coverStartDate && format(Number(coverStartDate), 'do MMMM yyyy'),
+  coverEndDate: coverEndDate && format(parseISO(coverEndDate), 'do MMMM yyyy'),
+  isUsingFacilityEndDate: mapBooleanToYesOrNo(isUsingFacilityEndDate),
+  facilityEndDate: facilityEndDate && format(parseISO(facilityEndDate), 'do MMMM yyyy'),
+  bankReviewDate: bankReviewDate && format(parseISO(bankReviewDate), 'do MMMM yyyy'),
+  value,
+  currencyCode,
+  coverPercentage: coverPercentage && `${coverPercentage}%`,
+  interestPercentage: interestPercentage && `${interestPercentage}%`,
+  guaranteeFee: guaranteeFee && `${guaranteeFee}%`,
+  ukefExposure,
+  feeType,
+  feeFrequency,
+  dayCountBasis,
+});
 
 /*
  * generateFacilityFieldListItemString
