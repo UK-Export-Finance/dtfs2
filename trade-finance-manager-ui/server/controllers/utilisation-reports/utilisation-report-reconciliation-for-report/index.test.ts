@@ -86,8 +86,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
             paymentsReceived: [{ id: 1, currency: 'GBP', amount: 100, dateReceived: new Date('2024-01-01').toISOString() }],
             totalPaymentsReceived: { currency: 'GBP', amount: 100 },
             status: 'TO_DO',
-            reconciledByUser: null,
-            dateReconciled: null,
+            reconciledByUser: undefined,
+            dateReconciled: undefined,
           },
         ],
       };

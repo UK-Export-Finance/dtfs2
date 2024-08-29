@@ -819,13 +819,13 @@ describe('reconciliation-for-report-helper', () => {
       ]);
     });
 
-    it('maps the reconciledByUser to the payment details reconciledBy field with value "-" when the reconciledByUser is null', () => {
+    it('maps the reconciledByUser to the payment details reconciledBy field with value "-" when the reconciledByUser is undefined', () => {
       // Arrange
       const group: FeeRecordPaymentGroup = {
         ...aFeeRecordPaymentGroup(),
         feeRecords: [aFeeRecord()],
         paymentsReceived: [aPayment()],
-        reconciledByUser: null,
+        reconciledByUser: undefined,
       };
 
       // Act
@@ -853,13 +853,13 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].reconciledBy).toBe('John Smith');
     });
 
-    it('maps the dateReconciled to the payment details dateReconciled field with value "-" when the dateReconciled is null', () => {
+    it('maps the dateReconciled to the payment details dateReconciled field with value "-" when the dateReconciled is undefined', () => {
       // Arrange
       const group: FeeRecordPaymentGroup = {
         ...aFeeRecordPaymentGroup(),
         feeRecords: [aFeeRecord()],
         paymentsReceived: [aPayment()],
-        dateReconciled: null,
+        dateReconciled: undefined,
       };
 
       // Act
@@ -890,7 +890,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].dateReconciled.formattedDateReconciled).toBe(formattedDate);
     });
 
-    it('sorts the dateReconciled by date ascending with null dates being at the start of the sorted list', () => {
+    it('sorts the dateReconciled by date ascending with undefined dates being at the start of the sorted list', () => {
       // Arrange
       const firstGroup: FeeRecordPaymentGroup = {
         ...aFeeRecordPaymentGroup(),
@@ -913,7 +913,7 @@ describe('reconciliation-for-report-helper', () => {
           { ...aPayment(), id: 2 }, // dataSortValue = 0
           { ...aPayment(), id: 1 }, // dataSortValue = 1
         ],
-        dateReconciled: null,
+        dateReconciled: undefined,
       };
 
       // Act

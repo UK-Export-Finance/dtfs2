@@ -233,13 +233,15 @@ const getPaymentsSortedByDateReceived = (payments: Payment[]): Payment[] =>
  */
 const getPaymentIdToDateReconciledDataSortValueMap = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): Record<number, number> => {
   const allPaymentsWithDateReconciled = feeRecordPaymentGroups.reduce(
-    (paymentsWithDateReconciled, { paymentsReceived, dateReconciled }) => [
-      ...paymentsWithDateReconciled,
-      ...(paymentsReceived?.map((payment) => ({ ...payment, dateReconciled })) ?? []),
-    ],
-    [] as (Payment & { dateReconciled: IsoDateTimeStamp | null })[],
+    (paymentsWithDateReconciled, { paymentsReceived, dateReconciled }) => {
+      if (!paymentsReceived) {
+        return paymentsWithDateReconciled;
+      }
+      return [...paymentsWithDateReconciled, ...paymentsReceived.map((payment) => ({ ...payment, dateReconciled }))];
+    },
+    [] as (Payment & { dateReconciled?: IsoDateTimeStamp })[],
   );
-  return orderBy(allPaymentsWithDateReconciled, [({ dateReconciled }) => (dateReconciled === null ? -1 : parseISO(dateReconciled).getTime())]).reduce(
+  return orderBy(allPaymentsWithDateReconciled, [({ dateReconciled }) => (dateReconciled === undefined ? -1 : parseISO(dateReconciled).getTime())]).reduce(
     (map, { id }, paymentIndex) => ({
       ...map,
       [id]: paymentIndex,
@@ -253,7 +255,7 @@ const getPaymentIdToDateReconciledDataSortValueMap = (feeRecordPaymentGroups: Fe
  * @param reconciledByUser - The reconciled by user
  * @returns The formatted reconciled by user
  */
-const getFormattedReconciledByUser = (reconciledByUser: { firstName: string; lastName: string } | null): string =>
+const getFormattedReconciledByUser = (reconciledByUser: { firstName: string; lastName: string } | undefined): string =>
   reconciledByUser ? `${reconciledByUser.firstName} ${reconciledByUser.lastName}` : '-';
 
 /**
@@ -269,7 +271,7 @@ const getFormattedReconciledByUser = (reconciledByUser: { firstName: string; las
  * getFormattedDateReconciled('2024-01-01T11:30:00.000'); // '1 Jan 2024 at 11:30am'
  * getFormattedDateReconciled(null); // '-'
  */
-const getFormattedDateReconciled = (dateReconciled: IsoDateTimeStamp | null): string =>
+const getFormattedDateReconciled = (dateReconciled: IsoDateTimeStamp | undefined): string =>
   dateReconciled ? format(new Date(dateReconciled), "d MMM yyyy 'at' hh:mmaaaaa'm'") : '-';
 
 /**
