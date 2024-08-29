@@ -228,21 +228,9 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue({
         ...aSelectedFeeRecordsDetails(),
         feeRecords: [
-          {
-            ...aSelectedFeeRecordDetails(),
-            id: 1,
-            reportedFee: { amount: 2000, currency: 'EUR' },
-          },
-          {
-            ...aSelectedFeeRecordDetails(),
-            id: 22,
-            reportedFee: { amount: 3000, currency: 'EUR' },
-          },
-          {
-            ...aSelectedFeeRecordDetails(),
-            id: 333,
-            reportedFee: { amount: 100, currency: 'JPY' },
-          },
+          { ...aSelectedFeeRecordDetails(), id: 1 },
+          { ...aSelectedFeeRecordDetails(), id: 22 },
+          { ...aSelectedFeeRecordDetails(), id: 333 },
         ],
       });
 
