@@ -141,7 +141,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       .status(FEE_RECORD_ID_ONE)
       .invoke('text')
       .then((text) => {
-        expect(text.trim()).to.equal('MATCH');
+        expect(text.trim()).to.equal(FEE_RECORD_STATUS.MATCH);
       });
   });
 
