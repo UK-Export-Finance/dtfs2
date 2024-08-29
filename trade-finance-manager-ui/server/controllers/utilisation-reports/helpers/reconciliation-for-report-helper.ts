@@ -237,7 +237,7 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
     {},
   );
 
-  return feeRecordPaymentGroups.reduce((paymentDetails, { feeRecords, paymentsReceived, status }) => {
+  return feeRecordPaymentGroups.reduce((paymentDetails, { feeRecords, paymentsReceived, status: feeRecordPaymentGroupStatus }) => {
     if (!paymentsReceived) {
       return paymentDetails;
     }
@@ -246,7 +246,7 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
     return [
       ...paymentDetails,
       ...paymentsReceived.map((payment) => ({
-        feeRecordPaymentGroupStatus: status,
+        feeRecordPaymentGroupStatus,
         payment: mapPaymentToPaymentDetailsPaymentViewModel(
           payment,
           paymentIdToAmountDataSortValueMap[payment.id],
