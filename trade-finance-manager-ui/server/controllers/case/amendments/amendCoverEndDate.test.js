@@ -44,84 +44,74 @@ describe('POST postAmendCoverEndDate', () => {
     jest.resetAllMocks();
   });
 
+  const aRequest = () => ({
+    params: {
+      _id: dealId,
+      amendmentId,
+      facilityId,
+    },
+    body: {
+      'cover-end-date-day': '12',
+      'cover-end-date-month': '8',
+      'cover-end-date-year': '2030',
+    },
+    session,
+  });
+
   describe('TFM facility end date feature flag is enabled', () => {
     beforeEach(() => {
       jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
     });
 
     describe('GEF deal', () => {
-      it('should redirect to is using facility end date page when no errors', async () => {
-        api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
-        api.getFacility.mockResolvedValueOnce(gefFacility);
-        api.updateAmendment.mockResolvedValueOnce({ status: 200 });
+      describe('when there are no errors when getting the facility or updating the amendment', () => {
+        beforeEach(() => {
+          api.getFacility.mockResolvedValueOnce(gefFacility);
+          api.updateAmendment.mockResolvedValueOnce({ status: 200 });
+        });
 
-        const req = {
-          params: {
-            _id: dealId,
-            amendmentId,
-            facilityId,
-          },
-          body: {
-            'cover-end-date-day': '12',
-            'cover-end-date-month': '8',
-            'cover-end-date-year': '2030',
-          },
-          session,
-        };
+        describe('when the existing amendment is a cover end date change only', () => {
+          it('should redirect to is using facility end date page', async () => {
+            api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
 
-        await postAmendCoverEndDate(req, res);
+            await postAmendCoverEndDate(aRequest(), res);
 
-        expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
+            expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
+          });
+        });
       });
     });
 
     describe('BSS/EWCS deal', () => {
-      it('should redirect to the check answers page when no errors and only changing cover end date', async () => {
-        api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
-        api.getFacility.mockResolvedValueOnce(bssEwcsFacility);
-        api.updateAmendment.mockResolvedValueOnce({ status: 200 });
+      describe('when there are no errors when getting the facility or updating the amendment', () => {
+        beforeEach(() => {
+          api.getFacility.mockResolvedValueOnce(bssEwcsFacility);
+          api.updateAmendment.mockResolvedValueOnce({ status: 200 });
+        });
 
-        const req = {
-          params: {
-            _id: dealId,
-            amendmentId,
-            facilityId,
-          },
-          body: {
-            'cover-end-date-day': '12',
-            'cover-end-date-month': '8',
-            'cover-end-date-year': '2030',
-          },
-          session,
-        };
+        describe('when the existing amendment is a cover end date change only', () => {
+          beforeEach(() => {
+            api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
+          });
 
-        await postAmendCoverEndDate(req, res);
+          it('should redirect to the check answers page when only changing cover end date', async () => {
+            await postAmendCoverEndDate(aRequest(), res);
 
-        expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
-      });
+            expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
+          });
+        });
 
-      it('should redirect to the amend facility value page when no errors and also amending facility value', async () => {
-        api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE });
-        api.getFacility.mockResolvedValueOnce(bssEwcsFacility);
-        api.updateAmendment.mockResolvedValueOnce({ status: 200 });
+        describe('when the existing amendment is a facility value and cover end date change', () => {
+          beforeEach(() => {
+            api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE });
+          });
 
-        const req = {
-          params: {
-            _id: dealId,
-            amendmentId,
-            facilityId,
-          },
-          body: {
-            'cover-end-date-day': '12',
-            'cover-end-date-month': '8',
-            'cover-end-date-year': '2030',
-          },
-          session,
-        };
+          it('should redirect to the amend facility value page when amending facility value', async () => {
+            await postAmendCoverEndDate(aRequest(), res);
 
-        await postAmendCoverEndDate(req, res);
-
-        expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
+            expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
+          });
+        });
       });
     });
   });
@@ -140,21 +130,7 @@ describe('POST postAmendCoverEndDate', () => {
         api.getFacility.mockResolvedValueOnce(facility);
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
 
-        const req = {
-          params: {
-            _id: dealId,
-            amendmentId,
-            facilityId,
-          },
-          body: {
-            'cover-end-date-day': '12',
-            'cover-end-date-month': '8',
-            'cover-end-date-year': '2030',
-          },
-          session,
-        };
-
-        await postAmendCoverEndDate(req, res);
+        await postAmendCoverEndDate(aRequest(), res);
 
         expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
       });
@@ -164,21 +140,7 @@ describe('POST postAmendCoverEndDate', () => {
         api.getFacility.mockResolvedValueOnce(facility);
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
 
-        const req = {
-          params: {
-            _id: dealId,
-            amendmentId,
-            facilityId,
-          },
-          body: {
-            'cover-end-date-day': '12',
-            'cover-end-date-month': '8',
-            'cover-end-date-year': '2030',
-          },
-          session,
-        };
-
-        await postAmendCoverEndDate(req, res);
+        await postAmendCoverEndDate(aRequest(), res);
 
         expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
       });
