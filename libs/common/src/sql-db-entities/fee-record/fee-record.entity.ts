@@ -222,6 +222,10 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
     this.status = status;
     this.updateLastUpdatedBy(requestSource);
+
+    if (status === FEE_RECORD_STATUS.RECONCILED) {
+      this.dateReconciled = new Date();
+    }
   }
 
   /**
@@ -237,6 +241,10 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     this.fixedFeeAdjustment = fixedFeeAdjustment;
     this.principalBalanceAdjustment = principalBalanceAdjustment;
     this.updateLastUpdatedBy(requestSource);
+
+    if (status === FEE_RECORD_STATUS.RECONCILED) {
+      this.dateReconciled = new Date();
+    }
   }
 
   /**

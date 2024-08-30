@@ -3,6 +3,7 @@ import { IsNull, Not } from 'typeorm';
 import {
   FacilityUtilisationDataEntity,
   FacilityUtilisationDataEntityMockBuilder,
+  FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordPaymentJoinTableEntity,
@@ -465,6 +466,33 @@ describe(`POST ${BASE_URL}`, () => {
         expect(facilityUtilisationData.utilisation).toBe(currentUtilisation);
         expect(facilityUtilisationData.fixedFee).not.toBe(previousFixedFee);
         expect(facilityUtilisationData.reportPeriod).toEqual(currentReportPeriod);
+      });
+    });
+
+    describe('and when one of the fee records can be auto-reconciled', () => {
+      it(`sets the fee record status to ${FEE_RECORD_STATUS.RECONCILED} and sets the dateReconciled field`, async () => {
+        // Arrange
+        const report = anUploadedReconciliationInProgressUtilisationReport();
+
+        const feeRecordToAutoReconcile = FeeRecordEntityMockBuilder.forReport(report)
+          .withId(12)
+          .withFeesPaidToUkefForThePeriod(0)
+          .withStatus(FEE_RECORD_STATUS.MATCH)
+          .build();
+        const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(24).withStatus(FEE_RECORD_STATUS.TO_DO).build();
+
+        report.feeRecords = [feeRecordToAutoReconcile, toDoFeeRecord];
+        await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+        // Act
+        const response = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
+
+        // Assert
+        expect(response.status).toBe(HttpStatusCode.Ok);
+
+        const modifiedFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: 12 });
+        expect(modifiedFeeRecord.status).toBe(FEE_RECORD_STATUS.RECONCILED);
+        expect(modifiedFeeRecord.dateReconciled).not.toBeNull();
       });
     });
   });

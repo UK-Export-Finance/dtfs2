@@ -53,7 +53,11 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
   return feeRecord;
 };
 
-function getStatusToUpdateTo(feesPaidToUkefForThePeriod: number, fixedFeeAdjustment: number = 0, principalBalanceAdjustment: number = 0): FeeRecordStatus {
+function getStatusToUpdateTo(
+  feesPaidToUkefForThePeriod: number,
+  fixedFeeAdjustment: number = 0,
+  principalBalanceAdjustment: number = 0,
+): Extract<FeeRecordStatus, 'READY_TO_KEY' | 'RECONCILED'> {
   return feeRecordCanBeAutoReconciled(feesPaidToUkefForThePeriod, fixedFeeAdjustment, principalBalanceAdjustment) ? 'RECONCILED' : 'READY_TO_KEY';
 }
 

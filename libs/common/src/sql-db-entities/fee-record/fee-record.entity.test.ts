@@ -1,9 +1,23 @@
-import { FEE_RECORD_STATUS } from '../../constants';
+import { FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE, UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 import { Currency } from '../../types';
 
 describe('FeeRecordEntity', () => {
-  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').build();
+  const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
+
+  const mockDate = new Date('2024-01-01');
+
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  beforeEach(() => {
+    jest.setSystemTime(mockDate);
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
 
   describe('getFeesPaidToUkefForThePeriodInThePaymentCurrency', () => {
     it('returns the fees paid to ukef for the period with no exchange rate applied when the payment and fees paid currencies match', () => {
@@ -74,6 +88,20 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
       expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
     });
+
+    it(`sets the dateReconciled field to now when the status to set is ${FEE_RECORD_STATUS.RECONCILED}`, () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(FEE_RECORD_STATUS.MATCH).withDateReconciled(null).build();
+
+      // Act
+      feeRecord.updateWithStatus({
+        status: FEE_RECORD_STATUS.RECONCILED,
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
+      });
+
+      // Assert
+      expect(feeRecord.dateReconciled).toEqual(mockDate);
+    });
   });
 
   describe('removeAllPayments', () => {
@@ -109,20 +137,6 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('markAsReconciled', () => {
-    const mockDate = new Date('2024-01-01');
-
-    beforeAll(() => {
-      jest.useFakeTimers();
-    });
-
-    beforeEach(() => {
-      jest.setSystemTime(mockDate);
-    });
-
-    afterAll(() => {
-      jest.useRealTimers();
-    });
-
     it('sets the fee record dateReconciled to now and the reconciledByUserId to the supplied value', () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withDateReconciled(null).build();
@@ -185,6 +199,110 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
       expect(feeRecord.lastUpdatedByTfmUserId).toBe('abc123');
+    });
+  });
+
+  describe('updateWithKeyingData', () => {
+    describe(`when the status to set is ${FEE_RECORD_STATUS.READY_TO_KEY}`, () => {
+      const status = FEE_RECORD_STATUS.READY_TO_KEY;
+
+      it(`sets the fee record status to ${FEE_RECORD_STATUS.READY_TO_KEY} and updates the principalBalanceAdjustment, fixedFeeAdjustment and 'lastUpdatedBy...' fields`, () => {
+        // Arrange
+        const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withStatus(FEE_RECORD_STATUS.MATCH)
+          .withPrincipalBalanceAdjustment(null)
+          .withFixedFeeAdjustment(null)
+          .withLastUpdatedByIsSystemUser(true)
+          .withLastUpdatedByPortalUserId(null)
+          .withLastUpdatedByTfmUserId(null)
+          .build();
+
+        // Act
+        feeRecord.updateWithKeyingData({
+          fixedFeeAdjustment: 1000,
+          principalBalanceAdjustment: 1000000,
+          status,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        });
+
+        // Assert
+        expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+        expect(feeRecord.principalBalanceAdjustment).toBe(1000000);
+        expect(feeRecord.fixedFeeAdjustment).toBe(1000);
+        expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+        expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
+        expect(feeRecord.lastUpdatedByTfmUserId).toBe('abc123');
+      });
+
+      it('does not set the fee record dateReconciled or the reconciledByUserId', () => {
+        // Arrange
+        const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withStatus(FEE_RECORD_STATUS.MATCH)
+          .withDateReconciled(null)
+          .withReconciledByUserId(null)
+          .build();
+
+        // Act
+        feeRecord.updateWithKeyingData({
+          fixedFeeAdjustment: 1000,
+          principalBalanceAdjustment: 1000000,
+          status,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        });
+
+        // Assert
+        expect(feeRecord.dateReconciled).toBeNull();
+        expect(feeRecord.reconciledByUserId).toBeNull();
+      });
+    });
+
+    describe(`when the status to set is ${FEE_RECORD_STATUS.RECONCILED}`, () => {
+      const status = FEE_RECORD_STATUS.RECONCILED;
+
+      it(`sets the fee record status to ${FEE_RECORD_STATUS.RECONCILED} and updates the principalBalanceAdjustment, fixedFeeAdjustment and 'lastUpdatedBy...' fields`, () => {
+        // Arrange
+        const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withStatus(FEE_RECORD_STATUS.MATCH)
+          .withPrincipalBalanceAdjustment(null)
+          .withFixedFeeAdjustment(null)
+          .withLastUpdatedByIsSystemUser(true)
+          .withLastUpdatedByPortalUserId(null)
+          .withLastUpdatedByTfmUserId(null)
+          .build();
+
+        // Act
+        feeRecord.updateWithKeyingData({
+          fixedFeeAdjustment: 1000,
+          principalBalanceAdjustment: 1000000,
+          status,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        });
+
+        // Assert
+        expect(feeRecord.status).toBe(FEE_RECORD_STATUS.RECONCILED);
+        expect(feeRecord.principalBalanceAdjustment).toBe(1000000);
+        expect(feeRecord.fixedFeeAdjustment).toBe(1000);
+        expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+        expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
+        expect(feeRecord.lastUpdatedByTfmUserId).toBe('abc123');
+      });
+
+      it('sets the dateReconciled to now and does not set the reconciledByUserId', () => {
+        // Arrange
+        const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(FEE_RECORD_STATUS.MATCH).withDateReconciled(null).build();
+
+        // Act
+        feeRecord.updateWithKeyingData({
+          fixedFeeAdjustment: 1000,
+          principalBalanceAdjustment: 1000000,
+          status,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        });
+
+        // Assert
+        expect(feeRecord.dateReconciled).toEqual(mockDate);
+        expect(feeRecord.reconciledByUserId).toBeNull();
+      });
     });
   });
 });
