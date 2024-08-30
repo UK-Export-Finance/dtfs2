@@ -49,7 +49,7 @@ describe('amendmentFacilityEndDate routes', () => {
 
     describe('incorrect facility end date entered', () => {
       it('should render the template with errors if the entered facility end date is before the cover start date', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: oneYearFromNow.valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { isGef: true, type: gefFacilityType, dates: { coverStartDate: oneYearFromNow.valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -90,7 +90,7 @@ describe('amendmentFacilityEndDate routes', () => {
       });
 
       it('should render the template with errors if the entered facility end date is greater than 6 years in the future', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now.valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { isGef: true, type: gefFacilityType, dates: { coverStartDate: now.valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -137,7 +137,7 @@ describe('amendmentFacilityEndDate routes', () => {
             ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE,
           },
         });
-        api.getFacility = jest.fn().mockResolvedValueOnce({ facilitySnapshot: { type: gefFacilityType, dates: {} } });
+        api.getFacility = jest.fn().mockResolvedValueOnce({ facilitySnapshot: { isGef: true, type: gefFacilityType, dates: {} } });
 
         const req = {
           params: {
@@ -182,7 +182,11 @@ describe('amendmentFacilityEndDate routes', () => {
           },
         });
         api.getFacility = jest.fn().mockResolvedValueOnce({
-          facilitySnapshot: { type: MAPPED_FACILITY_TYPE.CASH, dates: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2025, 11, 11).toISOString() } },
+          facilitySnapshot: {
+            isGef: true,
+            type: MAPPED_FACILITY_TYPE.CASH,
+            dates: { isUsingFacilityEndDate: true, facilityEndDate: new Date(2025, 11, 11).toISOString() },
+          },
         });
 
         const req = {
@@ -223,7 +227,7 @@ describe('amendmentFacilityEndDate routes', () => {
 
     describe('correct facility end date entered', () => {
       it('should redirect to the check answers page when only the cover end date is being amended and there are no errors', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now.valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { isGef: true, type: gefFacilityType, dates: { coverStartDate: now.valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_FACILITY_ENDDATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -249,7 +253,7 @@ describe('amendmentFacilityEndDate routes', () => {
       });
 
       it('should redirect to the update facility value page when the facility value also needs amending and there are no errors', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { isGef: true, type: gefFacilityType, dates: { coverStartDate: new Date(2024, 1, 1).valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
@@ -278,7 +282,7 @@ describe('amendmentFacilityEndDate routes', () => {
       });
 
       it("should redirect to the amendments summary page if there's an error updating the amendment", async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now.valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { isGef: true, type: gefFacilityType, dates: { coverStartDate: now.valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
