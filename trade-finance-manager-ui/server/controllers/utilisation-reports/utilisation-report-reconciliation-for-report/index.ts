@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { asString, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -9,11 +9,8 @@ import {
   mapKeyingSheetToKeyingSheetViewModel,
 } from '../helpers';
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
-import { validateFacilityIdQuery } from './validate-facility-id-query';
-import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
 import { FeeRecordPaymentGroup } from '../../../api-response-types';
-import { getIsCheckboxChecked } from './get-is-checkbox-checked';
-import { getSelectedFeeRecordIdsFromQuery } from './get-selected-fee-record-ids-from-query';
+import { extractQueryAndSessionData } from './extract-query-and-session-data';
 
 const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): boolean =>
   feeRecordPaymentGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
@@ -30,27 +27,16 @@ const renderUtilisationReportReconciliationForReport = (res: Response, viewModel
  * Checks fee record checkboxes based on selected IDs from session or query
  * parameters. These may have been set if the user was redirected from another
  * page.
- * @param req - The Express request object.
- * @param res - The Express response object.
+ *
+ * @param req - The request object
+ * @param res - The response object
  */
 export const getUtilisationReportReconciliationByReportId = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId } = req.params;
-  const { facilityIdQuery, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
 
   try {
-    const facilityIdQueryString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
-
-    const filterError = validateFacilityIdQuery(facilityIdQueryString, req.originalUrl);
-
-    const { tableDataError, selectedFeeRecordIds: selectedFeeRecordIdsFromSessionData } = getAndClearFieldsFromRedirectSessionData(req);
-
-    const selectedFeeRecordIdsQueryString = selectedFeeRecordIdsQuery ? asString(selectedFeeRecordIdsQuery, 'selectedFeeRecordIdsQuery') : undefined;
-
-    const selectedFeeRecordIds: Set<number> =
-      selectedFeeRecordIdsFromSessionData.size > 0 ? selectedFeeRecordIdsFromSessionData : getSelectedFeeRecordIdsFromQuery(selectedFeeRecordIdsQueryString);
-
-    const isCheckboxChecked = getIsCheckboxChecked(selectedFeeRecordIds);
+    const { facilityIdQueryString, filterError, tableDataError, isCheckboxChecked } = extractQueryAndSessionData(req);
 
     const { feeRecordPaymentGroups, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
