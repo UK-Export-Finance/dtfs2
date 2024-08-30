@@ -5,7 +5,17 @@ import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../pages/caseDealPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
+import {
+  oneMonthFormattedTable,
+  todayDay,
+  todayMonth,
+  todayYear,
+  tomorrowDay,
+  tomorrowMonth,
+  tomorrowYear,
+  oneMonthFormattedFull,
+  tomorrowFormattedFull,
+} from '../../../../../e2e-fixtures/dateConstants';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
@@ -52,7 +62,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonthFormattedTable);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -63,7 +73,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
-    facilityPage.facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
+    facilityPage.facilityCoverEndDate().contains(oneMonthFormattedTable);
     facilityPage.facilityTenor().contains(facilityTenor);
   });
 
@@ -78,9 +88,9 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    amendmentsPage.amendmentRequestDayInput().clear().focused().type(todayDay);
+    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(todayMonth);
+    amendmentsPage.amendmentRequestYearInput().clear().focused().type(todayYear);
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', 'request-approval');
@@ -100,9 +110,9 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'cover-end-date');
 
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.tomorrowMonth);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.tomorrowYear);
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(tomorrowDay);
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(tomorrowMonth);
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(tomorrowYear);
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', 'facility-value');
@@ -145,8 +155,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
-    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
+    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrowDay);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonthFormattedFull);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -184,8 +194,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     amendmentsPage.amendmentSendToBankButton().should('be.visible');
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
-    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
+    amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', tomorrowDay);
+    amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', oneMonthFormattedFull);
 
     amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
@@ -200,7 +210,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(oneMonthFormattedTable);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -211,7 +221,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
-    facilityPage.facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
+    facilityPage.facilityCoverEndDate().contains(oneMonthFormattedTable);
     facilityPage.facilityTenor().contains(facilityTenor);
   });
 
@@ -507,7 +517,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(updatedFacilityTenor);
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.tomorrowFormattedFull);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(tomorrowFormattedFull);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
@@ -518,7 +528,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
     facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at 5 June 2022`);
 
-    facilityPage.facilityCoverEndDate().contains(dateConstants.tomorrowFormattedFull);
+    facilityPage.facilityCoverEndDate().contains(tomorrowFormattedFull);
     facilityPage.facilityTenor().contains(updatedFacilityTenor);
   });
 });
