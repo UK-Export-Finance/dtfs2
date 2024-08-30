@@ -8,13 +8,11 @@ import { UtilisationReportRowValidationErrorGenerator } from './types/validation
  * @returns The error if the total fees accrued currency entry is invalid, null if the total fees accrued currency entry is valid
  */
 export const generateTotalFeesAccruedCurrencyError: UtilisationReportRowValidationErrorGenerator = (csvDataRow) => {
-  if (
-    !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value &&
-    !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value
-  ) {
+  const totalFeesAccruedCurrencyValue = csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value;
+
+  if (!totalFeesAccruedCurrencyValue && !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value) {
     return null;
   }
-  const totalFeesAccruedCurrencyValue = csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value;
   if (!totalFeesAccruedCurrencyValue) {
     return {
       errorMessage: 'Accrual currency must have an entry when an accrual exchange rate is supplied',

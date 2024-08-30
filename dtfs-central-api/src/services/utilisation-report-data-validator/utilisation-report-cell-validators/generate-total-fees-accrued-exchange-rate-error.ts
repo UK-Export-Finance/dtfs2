@@ -9,15 +9,15 @@ import { UtilisationReportRowValidationErrorGenerator } from './types/validation
  * @returns - object comprising of error message and error location or null if valid.
  */
 export const generateTotalFeesAccruedExchangeRateError: UtilisationReportRowValidationErrorGenerator = (csvDataRow) => {
+  const totalFeesAccruedExchangeRateValue = csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value;
+
   if (
-    !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value &&
+    !totalFeesAccruedExchangeRateValue &&
     (!csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value ||
       csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value)
   ) {
     return null;
   }
-
-  const totalFeesAccruedExchangeRateValue = csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value;
   if (!totalFeesAccruedExchangeRateValue) {
     return {
       errorMessage: 'Accrual exchange rate must have an entry when an accrual currency is supplied',

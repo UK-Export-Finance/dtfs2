@@ -18,7 +18,7 @@ export const generateFeesPaidForThePeriodError: UtilisationReportCellValidationE
       exporter: exporterName,
     };
   }
-  if (!CURRENCY_NUMBER_REGEX.test(feesPaidForThePeriodCellData?.value)) {
+  if (!CURRENCY_NUMBER_REGEX.test(feesPaidForThePeriodCellData.value)) {
     return {
       errorMessage: 'Fees paid to UKEF for the period must be a number with a maximum of two decimal places',
       column: feesPaidForThePeriodCellData?.column,
@@ -27,7 +27,7 @@ export const generateFeesPaidForThePeriodError: UtilisationReportCellValidationE
       exporter: exporterName,
     };
   }
-  if (feesPaidForThePeriodCellData?.value.length > FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT) {
+  if (feesPaidForThePeriodCellData.value.length > FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT) {
     return {
       errorMessage: `Fees paid to UKEF for the period must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: feesPaidForThePeriodCellData?.column,

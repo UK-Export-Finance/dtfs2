@@ -278,7 +278,7 @@ const validateUtilisationReportData = async (reportData) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/validate`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/report-data-validation`,
       headers: headers.central,
       data: {
         reportData,
@@ -287,7 +287,7 @@ const validateUtilisationReportData = async (reportData) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to validate utilisation report', error);
+    console.error('Unable to validate utilisation report data', error);
     throw error;
   }
 };

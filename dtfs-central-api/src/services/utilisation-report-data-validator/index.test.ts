@@ -1,5 +1,5 @@
 import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
-import { validateUtilisationReportCsvHeaders, validateUtilisationReportCsvCellData } from '.';
+import { validateUtilisationReportCsvHeaders, validateUtilisationReportCsvCellData, getHeaderIsMissingErrorMessage } from '.';
 import {
   generateUkefFacilityIdError,
   generateBaseCurrencyError,
@@ -19,6 +19,19 @@ jest.mock('./utilisation-report-cell-validators', () => ({
 }));
 
 describe('utilisation-report-validator', () => {
+  describe('getHeaderIsMissingErrorMessage', () => {
+    it("returns the passed in string followed by the text 'header is missing or spelt incorrectly'", () => {
+      // Arrange
+      const header = 'some string';
+
+      // Act
+      const error = getHeaderIsMissingErrorMessage(header);
+
+      // Assert
+      expect(error).toEqual(`${header} header is missing or spelt incorrectly`);
+    });
+  });
+
   describe('validateUtilisationReportCsvHeaders', () => {
     it('returns an error if a header is missing', () => {
       const csvDataRowWithMissingHeader = {

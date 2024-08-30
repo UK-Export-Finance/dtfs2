@@ -18,7 +18,7 @@ export const generateFacilityUtilisationError: UtilisationReportCellValidationEr
       exporter: exporterName,
     };
   }
-  if (!CURRENCY_NUMBER_REGEX.test(facilityUtilisationCellData?.value)) {
+  if (!CURRENCY_NUMBER_REGEX.test(facilityUtilisationCellData.value)) {
     return {
       errorMessage: 'Facility utilisation must be a number with a maximum of two decimal places',
       column: facilityUtilisationCellData?.column,
@@ -27,7 +27,7 @@ export const generateFacilityUtilisationError: UtilisationReportCellValidationEr
       exporter: exporterName,
     };
   }
-  if (facilityUtilisationCellData?.value?.length > FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT) {
+  if (facilityUtilisationCellData.value.length > FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT) {
     return {
       errorMessage: `Facility utilisation must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: facilityUtilisationCellData?.column,

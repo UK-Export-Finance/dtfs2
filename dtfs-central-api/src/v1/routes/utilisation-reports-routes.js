@@ -8,7 +8,7 @@ const {
   validatePostKeyingDataPayload,
   validatePutKeyingDataMarkAsPayload,
   validatePostRemoveFeesFromPaymentGroupPayload,
-  validatePostValidateUtilisationReportDataPayload,
+  validatePostReportDataValidationPayload,
   validatePostAddFeesToAnExistingPaymentGroupPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
@@ -33,7 +33,7 @@ const { patchPayment } = require('../controllers/utilisation-report-service/patc
 const { putKeyingDataMarkAsDone } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-done.controller');
 const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-to-do.controller');
 const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
-const { postValidateUtilisationReportData } = require('../controllers/utilisation-report-service/post-validate-utilisation-report-data.controller');
+const { postReportDataValidation } = require('../controllers/utilisation-report-service/post-report-data-validation.controller');
 const { postAddFeesToAnExistingPaymentGroup } = require('../controllers/utilisation-report-service/post-add-fees-to-an-existing-payment-group.controller');
 
 const utilisationReportsRouter = express.Router();
@@ -73,7 +73,7 @@ utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValid
 
 /**
  * @openapi
- * /utilisation-reports/validate:
+ * /utilisation-reports/report-data-validation:
  *   post:
  *     summary: Validate utilisation report data
  *     tags: [Utilisation Report]
@@ -104,17 +104,15 @@ utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValid
  *         description: Internal server error
  *       400:
  *         description: Invalid payload
- *       409:
- *         description: Server conflict
  */
-utilisationReportsRouter.route('/validate').post(validatePostValidateUtilisationReportDataPayload, postValidateUtilisationReportData);
+utilisationReportsRouter.route('/report-data-validation').post(validatePostReportDataValidationPayload, postReportDataValidation);
 
 /**
  * @openapi
  * /utilisation-reports/:id:
  *   get:
  *     summary: Get utilisation report with the specified id ('id')
- *     tags: c
+ *     tags: [Utilisation Report]
  *     description: Get utilisation report with the specified id ('id')
  *     parameters:
  *       - in: path
@@ -395,6 +393,8 @@ utilisationReportsRouter
  *               $ref: '#/definitions/FeeRecordsToKeyResponseBody'
  *       400:
  *         description: Bad request
+ *       404:
+ *         description: Not Found
  *       500:
  *         description: Internal Server Error
  */

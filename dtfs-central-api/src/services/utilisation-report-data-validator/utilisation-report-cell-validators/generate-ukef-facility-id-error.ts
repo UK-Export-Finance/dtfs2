@@ -17,7 +17,7 @@ export const generateUkefFacilityIdError: UtilisationReportCellValidationErrorGe
       exporter: exporterName,
     };
   }
-  if (!UKEF_FACILITY_ID_REGEX.test(facilityIdCellData?.value)) {
+  if (!UKEF_FACILITY_ID_REGEX.test(facilityIdCellData.value)) {
     return {
       errorMessage: 'UKEF facility ID must be an 8 to 10 digit number',
       column: facilityIdCellData?.column,

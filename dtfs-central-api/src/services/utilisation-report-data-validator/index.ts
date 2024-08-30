@@ -17,6 +17,10 @@ import {
   generateFeesPaidForThePeriodCurrencyError,
 } from './utilisation-report-cell-validators';
 
+const HEADER_IS_MISSING_BASE_ERROR_MESSAGE = 'header is missing or spelt incorrectly';
+
+export const getHeaderIsMissingErrorMessage = (header: string) => `${header} ${HEADER_IS_MISSING_BASE_ERROR_MESSAGE}`;
+
 /**
  * Validate utilisation report csv headers
  * @param csvDataRow - A row of data
@@ -29,27 +33,27 @@ export const validateUtilisationReportCsvHeaders = (
   const requiredHeaders = [
     {
       header: UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID,
-      missingErrorMessage: 'UKEF facility ID header is missing or spelt incorrectly',
+      missingErrorMessage: getHeaderIsMissingErrorMessage('UKEF facility ID'),
     },
     {
       header: UTILISATION_REPORT_HEADERS.BASE_CURRENCY,
-      missingErrorMessage: 'Base currency header is missing or spelt incorrectly',
+      missingErrorMessage: getHeaderIsMissingErrorMessage('Base currency'),
     },
     {
       header: UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION,
-      missingErrorMessage: 'Facility utilisation header is missing or spelt incorrectly',
+      missingErrorMessage: getHeaderIsMissingErrorMessage('Facility utilisation'),
     },
     {
       header: UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED,
-      missingErrorMessage: 'Total fees accrued for the period header is missing or spelt incorrectly',
+      missingErrorMessage: getHeaderIsMissingErrorMessage('Total fees accrued for the period'),
     },
     {
       header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD,
-      missingErrorMessage: 'Fees paid to UKEF for the period header is missing or spelt incorrectly',
+      missingErrorMessage: getHeaderIsMissingErrorMessage('Fees paid to UKEF for the period'),
     },
     {
       header: UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY,
-      missingErrorMessage: 'Fees paid to UKEF currency header is missing or spelt incorrectly',
+      missingErrorMessage: getHeaderIsMissingErrorMessage('Fees paid to UKEF currency'),
     },
   ];
   const missingHeaderErrors: UtilisationReportDataValidationError[] = [];
@@ -94,7 +98,7 @@ export const validateUtilisationReportCsvCellData = (
     },
   ];
 
-  const optionalValueCellValidations = [
+  const rowValidations = [
     generateTotalFeesAccruedCurrencyError,
     generateTotalFeesAccruedExchangeRateError,
     generatePaymentCurrencyError,
@@ -113,7 +117,7 @@ export const validateUtilisationReportCsvCellData = (
       }
     });
 
-    optionalValueCellValidations.forEach((errorGenerator) => {
+    rowValidations.forEach((errorGenerator) => {
       const error = errorGenerator(csvRow);
       if (error) {
         csvDataErrors.push(error);

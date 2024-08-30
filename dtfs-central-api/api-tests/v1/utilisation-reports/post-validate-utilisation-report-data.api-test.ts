@@ -3,7 +3,7 @@ import { testApi } from '../../test-api';
 
 console.error = jest.fn();
 
-const URL = '/v1/utilisation-reports/validate';
+const URL = '/v1/utilisation-reports/report-data-validation';
 
 describe(`POST ${URL}`, () => {
   it('returns a 200 when request body is valid', async () => {

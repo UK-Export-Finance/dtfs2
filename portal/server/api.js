@@ -893,7 +893,7 @@ const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData,
 const generateValidationErrorsForUtilisationReportData = async (reportData, bankId, userToken) => {
   const response = await axios({
     method: 'post',
-    url: `${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports/validate`,
+    url: `${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports/report-data-validation`,
     headers: {
       Authorization: userToken,
       [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,

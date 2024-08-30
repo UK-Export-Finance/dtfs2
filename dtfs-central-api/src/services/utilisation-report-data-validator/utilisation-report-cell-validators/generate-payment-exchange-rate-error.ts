@@ -9,15 +9,12 @@ import { UtilisationReportRowValidationErrorGenerator } from './types/validation
  * @returns The error if the payment exchange rate entry is invalid, null if the payment exchange rate entry is valid
  */
 export const generatePaymentExchangeRateError: UtilisationReportRowValidationErrorGenerator = (csvDataRow) => {
-  if (
-    !csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value &&
-    (!csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value ||
-      csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]?.value)
-  ) {
+  const paymentExchangeRateValue = csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value;
+  const paymentCurrencyValue = csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value;
+  const feesPaidInPeriodCurrencyValue = csvDataRow[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]?.value;
+  if (!paymentExchangeRateValue && (!paymentCurrencyValue || paymentCurrencyValue === feesPaidInPeriodCurrencyValue)) {
     return null;
   }
-
-  const paymentExchangeRateValue = csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value;
   if (!paymentExchangeRateValue) {
     return {
       errorMessage: 'Payment exchange rate must have an entry when a payment currency is supplied',
@@ -27,10 +24,7 @@ export const generatePaymentExchangeRateError: UtilisationReportRowValidationErr
       exporter: csvDataRow[UTILISATION_REPORT_HEADERS.EXPORTER]?.value,
     };
   }
-  if (
-    csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]?.value &&
-    parseFloat(paymentExchangeRateValue) !== 1
-  ) {
+  if (paymentCurrencyValue === feesPaidInPeriodCurrencyValue && parseFloat(paymentExchangeRateValue) !== 1) {
     return {
       errorMessage: 'Payment exchange rate must be 1 or blank when payment currency and fees paid to UKEF currency are the same',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.column,

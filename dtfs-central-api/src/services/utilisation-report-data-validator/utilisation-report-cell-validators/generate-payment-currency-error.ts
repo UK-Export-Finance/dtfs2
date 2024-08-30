@@ -8,10 +8,10 @@ import { UtilisationReportRowValidationErrorGenerator } from './types/validation
  * @returns The error if the payment currency entry is invalid, null if the payment currency entry is valid
  */
 export const generatePaymentCurrencyError: UtilisationReportRowValidationErrorGenerator = (csvDataRow) => {
-  if (!csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value && !csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value) {
+  const paymentCurrencyValue = csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value;
+  if (!csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value && !paymentCurrencyValue) {
     return null;
   }
-  const paymentCurrencyValue = csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value;
   if (!paymentCurrencyValue) {
     return {
       errorMessage: 'Payment currency must have an entry when a payment exchange rate is supplied',

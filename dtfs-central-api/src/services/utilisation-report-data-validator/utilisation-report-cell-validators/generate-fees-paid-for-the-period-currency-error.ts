@@ -20,7 +20,7 @@ export const generateFeesPaidForThePeriodCurrencyError: UtilisationReportCellVal
       exporter: exporterName,
     };
   }
-  if (!validator.isISO4217(feesPaidForThePeriodCurrencyCellData?.value)) {
+  if (!validator.isISO4217(feesPaidForThePeriodCurrencyCellData.value)) {
     return {
       errorMessage: 'Fees paid to UKEF currency must be in the ISO 4217 currency code format',
       column: feesPaidForThePeriodCurrencyCellData?.column,

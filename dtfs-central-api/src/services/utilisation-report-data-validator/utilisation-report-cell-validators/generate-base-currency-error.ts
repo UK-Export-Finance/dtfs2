@@ -17,7 +17,7 @@ export const generateBaseCurrencyError: UtilisationReportCellValidationErrorGene
       exporter: exporterName,
     };
   }
-  if (!validator.isISO4217(currencyCellData?.value)) {
+  if (!validator.isISO4217(currencyCellData.value)) {
     return {
       errorMessage: 'Base currency must be in the ISO 4217 currency code format',
       column: currencyCellData?.column,

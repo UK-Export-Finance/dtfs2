@@ -2,20 +2,18 @@ import { ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { validateUtilisationReportCsvData } from '../../../../services/utilisation-report-data-validator';
-import { PostValidateUtilisationReportDataPayload } from '../../../routes/middleware/payload-validation/validate-post-validate-utilisation-report-data-payload';
+import { PostReportDataValidationPayload } from '../../../routes/middleware/payload-validation/validate-post-validate-utilisation-report-data-payload';
 
-export type PostValidateUtilisationReportDataRequest = CustomExpressRequest<{
-  reqBody: PostValidateUtilisationReportDataPayload;
+export type PostReportDataValidationRequest = CustomExpressRequest<{
+  reqBody: PostReportDataValidationPayload;
 }>;
 
 /**
- * Controller to handle post request to validate utilisation report data route
+ * Controller to handle post request to report data validation route
  * @param req - The request
  * @param res - The response
- * @returns - The response with the body set to contain any error messages to display
- * to the user if there are validation errors
  */
-export const postValidateUtilisationReportData = (req: PostValidateUtilisationReportDataRequest, res: Response) => {
+export const postReportDataValidation = (req: PostReportDataValidationRequest, res: Response) => {
   const { reportData } = req.body;
 
   try {

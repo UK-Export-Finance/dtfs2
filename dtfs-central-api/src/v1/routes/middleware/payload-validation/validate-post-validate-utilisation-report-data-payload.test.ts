@@ -1,8 +1,8 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { validatePostValidateUtilisationReportDataPayload } from './validate-post-validate-utilisation-report-data-payload';
+import { validatePostReportDataValidationPayload } from './validate-post-validate-utilisation-report-data-payload';
 
-describe('validatePostRemoveFeesFromPaymentGroupPayload', () => {
+describe('validatePostReportDataValidationPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
   it(`responds with a '${HttpStatusCode.BadRequest}' if the reportData field is missing`, () => {
@@ -12,7 +12,7 @@ describe('validatePostRemoveFeesFromPaymentGroupPayload', () => {
     req.body = {};
 
     // Act
-    validatePostValidateUtilisationReportDataPayload(req, res, next);
+    validatePostReportDataValidationPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -35,7 +35,7 @@ describe('validatePostRemoveFeesFromPaymentGroupPayload', () => {
     req.body = { reportData: testValue };
 
     // Act
-    validatePostValidateUtilisationReportDataPayload(req, res, next);
+    validatePostReportDataValidationPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -51,7 +51,7 @@ describe('validatePostRemoveFeesFromPaymentGroupPayload', () => {
     req.body = { reportData: [{ 'some key': 'this is not cell data!' }] };
 
     // Act
-    validatePostValidateUtilisationReportDataPayload(req, res, next);
+    validatePostReportDataValidationPayload(req, res, next);
 
     // Assert
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
@@ -72,7 +72,7 @@ describe('validatePostRemoveFeesFromPaymentGroupPayload', () => {
     };
 
     // Act
-    validatePostValidateUtilisationReportDataPayload(req, res, next);
+    validatePostReportDataValidationPayload(req, res, next);
 
     // Assert
     expect(next).toHaveBeenCalled();
