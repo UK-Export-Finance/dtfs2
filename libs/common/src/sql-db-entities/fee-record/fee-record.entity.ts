@@ -199,8 +199,8 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   }
 
   /**
-   * Gets the fees paid to ukef for the period in the payment currency
-   * @returns The fees paid in the payment currency
+   * Gets the fees paid to UKEF for the period converted to the payment currency
+   * @returns The fees paid
    */
   public getFeesPaidToUkefForThePeriodInThePaymentCurrency(): number {
     if (this.paymentCurrency === this.feesPaidToUkefForThePeriodCurrency) {
@@ -216,8 +216,8 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * Updates the fee record with a status
    * @param param - The update parameters
-   * @param param.status - The fee record status to set
-   * @param param.requestSource - The request source making the update
+   * @param param.status - The status
+   * @param param.requestSource - The request source
    */
   public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
     this.status = status;
@@ -225,12 +225,12 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   }
 
   /**
-   * Updates the fee record with keying data
+   * Updates a fee record with keying data
    * @param param - The update parameters
    * @param param.fixedFeeAdjustment - The fixed fee adjustment
    * @param param.principalBalanceAdjustment - The principal balance adjustment
    * @param param.status - The status
-   * @param param.requestSource - The request source making the update
+   * @param param.requestSource - The request source
    */
   public updateWithKeyingData({ fixedFeeAdjustment, principalBalanceAdjustment, status, requestSource }: UpdateWithKeyingDataParams): void {
     this.status = status;
@@ -242,7 +242,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * Removes all payments from the fee record
    * @param param - The update parameters
-   * @param param.requestSource - The request source making the update
+   * @param param.requestSource - The request source
    */
   public removeAllPayments({ requestSource }: RemoveAllPaymentsParams): void {
     this.payments = [];

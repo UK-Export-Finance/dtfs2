@@ -49,6 +49,7 @@ export type KeyingSheetViewModel = {
 }[];
 
 export type PaymentDetailsPaymentViewModel = {
+  id: number;
   amount: {
     formattedCurrencyAndAmount: CurrencyAndAmountString;
     dataSortValue: number;
@@ -61,6 +62,7 @@ export type PaymentDetailsPaymentViewModel = {
 };
 
 export type PaymentDetailsViewModel = {
+  feeRecordPaymentGroupStatus: FeeRecordStatus;
   payment: PaymentDetailsPaymentViewModel;
   feeRecords: {
     facilityId: string;
