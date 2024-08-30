@@ -1,6 +1,8 @@
 {% import "./payment-details-table-row.njk" as paymentDetailsTableRow %}
 {% macro render(params) %}
+  {% set reportId = params.reportId %}
   {% set paymentDetails = params.paymentDetails %}
+  {% set userCanEdit = params.userCanEdit %}
   <table class="govuk-table" data-module="moj-sortable-table" data-cy="payment-details-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
@@ -15,7 +17,7 @@
     </thead>
     <tbody class="govuk-table__body">
       {% for paymentDetailsRow in paymentDetails %}
-        {{ paymentDetailsTableRow.render(paymentDetailsRow) }}
+        {{ paymentDetailsTableRow.render({ reportId: reportId, paymentDetails: paymentDetailsRow, userCanEdit: userCanEdit }) }}
       {% endfor %}
     </tbody>
   </table>
