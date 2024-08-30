@@ -11,7 +11,7 @@ const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.v
  * @param {string} baseUrl the base url to create the next page url
  * @returns {string} next page url
  */
-const getNextPageUrl = (changeFacilityValue, showFacilityEndDatePage, baseUrl) => {
+const getNextPageUrl = ({ changeFacilityValue, showFacilityEndDatePage, baseUrl }) => {
   if (showFacilityEndDatePage) {
     return `${baseUrl}/is-using-facility-end-date`;
   }
@@ -114,11 +114,11 @@ const postAmendCoverEndDate = async (req, res) => {
 
     const showFacilityEndDatePage = isTfmFacilityEndDateFeatureFlagEnabled() && facility.facilitySnapshot.isGef;
 
-    return res.redirect(getNextPageUrl(changeFacilityValue, showFacilityEndDatePage, baseUrl));
+    return res.redirect(getNextPageUrl({ changeFacilityValue, showFacilityEndDatePage, baseUrl }));
   } catch (error) {
     console.error('There was a problem adding the cover end date %o', error);
     return res.redirect(fallbackUrl);
   }
 };
 
-module.exports = { getAmendCoverEndDate, postAmendCoverEndDate };
+module.exports = { getAmendCoverEndDate, postAmendCoverEndDate, getNextPageUrl };
