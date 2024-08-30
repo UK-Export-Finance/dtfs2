@@ -1,4 +1,4 @@
-const { format, set } = require('date-fns');
+const { format, set, isSameDay } = require('date-fns');
 const { isFacilityEndDateEnabledOnGefVersion, parseDealVersion, zBooleanStrictCoerce } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { FACILITY_TYPE, DATE_FORMAT, DEAL_SUBMISSION_TYPE } = require('../../constants');
@@ -157,18 +157,33 @@ const validateAndUpdateAboutFacility = async (req, res) => {
     });
   }
 
+  const facilityUpdate = {
+    name: facilityName,
+    shouldCoverStartOnSubmission: isTrueSet(shouldCoverStartOnSubmission),
+    monthsOfCover: monthsOfCover || null,
+    coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
+    coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
+    coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN ? true : null,
+  };
+
+  if (isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version))) {
+    facilityUpdate.isUsingFacilityEndDate = isUsingFacilityEndDate;
+
+    const { details: existingFacility } = await api.getFacility({ facilityId, userToken });
+    const existingCoverStartDate = existingFacility.coverStartDate ? new Date(existingFacility.coverStartDate) : null;
+
+    const coverStartDateHasChanged = coverStartDate && existingCoverStartDate && !isSameDay(existingCoverStartDate, coverStartDate);
+
+    if (coverStartDateHasChanged) {
+      facilityUpdate.facilityEndDate = null;
+      facilityUpdate.bankReviewDate = null;
+    }
+  }
+
   try {
     await api.updateFacility({
       facilityId,
-      payload: {
-        name: facilityName,
-        shouldCoverStartOnSubmission: isTrueSet(shouldCoverStartOnSubmission),
-        monthsOfCover: monthsOfCover || null,
-        coverStartDate: coverStartDate ? format(coverStartDate, DATE_FORMAT.COVER) : null,
-        coverEndDate: coverEndDate ? format(coverEndDate, DATE_FORMAT.COVER) : null,
-        coverDateConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN ? true : null,
-        isUsingFacilityEndDate: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) ? isUsingFacilityEndDate : undefined,
-      },
+      payload: facilityUpdate,
       userToken,
     });
 

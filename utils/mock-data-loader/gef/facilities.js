@@ -1,5 +1,19 @@
 const { add } = require('date-fns');
-const { CURRENCY, FACILITY_PROVIDED_DETAILS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { CURRENCY, FACILITY_PROVIDED_DETAILS, FACILITY_TYPE, isFacilityEndDateEnabledOnGefVersion, getCurrentGefDealVersion } = require('@ukef/dtfs2-common');
+
+/**
+ * Gets facility end date properties if enabled on default deal version
+ * @returns {Pick<import('@ukef/dtfs2-common').Facility,'isUsingFacilityEndDate' | 'facilityEndDate'> | {} } mock facility end date properties if enabled, or empty object if not
+ */
+const getFacilityEndDateProperties = () => {
+  if (isFacilityEndDateEnabledOnGefVersion(getCurrentGefDealVersion())) {
+    return {
+      isUsingFacilityEndDate: true,
+      facilityEndDate: add(new Date(), { months: 2 }),
+    };
+  }
+  return {};
+};
 
 const FACILITIES = [
   [],
@@ -41,6 +55,7 @@ const FACILITIES = [
   ],
   [
     {
+      ...getFacilityEndDateProperties(),
       type: FACILITY_TYPE.CASH,
       hasBeenIssued: true,
       name: 'This Cash facility 1',
@@ -61,6 +76,7 @@ const FACILITIES = [
       dayCountBasis: '365',
     },
     {
+      ...getFacilityEndDateProperties(),
       type: FACILITY_TYPE.CASH,
       hasBeenIssued: false,
       name: 'That Cash facility 2',
@@ -89,6 +105,7 @@ const FACILITIES = [
       dayCountBasis: '365',
     },
     {
+      ...getFacilityEndDateProperties(),
       type: FACILITY_TYPE.CONTINGENT,
       hasBeenIssued: true,
       name: 'This Contingent facility 1',
@@ -109,6 +126,7 @@ const FACILITIES = [
       dayCountBasis: '365',
     },
     {
+      ...getFacilityEndDateProperties(),
       type: FACILITY_TYPE.CONTINGENT,
       hasBeenIssued: false,
       name: 'This Contingent facility 2',
