@@ -30,8 +30,6 @@ describe(page, () => {
     reportId: reportId.toString(),
     feeRecordPaymentGroups: [],
     enablePaymentsReceivedSorting: false,
-    tableDataError: undefined,
-    filterError: undefined,
     facilityIdQuery,
     keyingSheet: [],
     paymentDetails: [],
