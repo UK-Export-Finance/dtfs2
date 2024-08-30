@@ -33,7 +33,6 @@ services:
       - MONGO_INITDB_DATABASE
       - MONGO_INITDB_ROOT_USERNAME
       - MONGO_INITDB_ROOT_PASSWORD
-      - ENABLE_REPLICA_SET
     restart: always
     ports:
       - '27017:27017'
