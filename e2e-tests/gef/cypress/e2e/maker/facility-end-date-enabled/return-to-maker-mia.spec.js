@@ -1,17 +1,15 @@
-import relative from '../relativeURL';
-import returnToMaker from '../pages/return-to-maker';
-import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import applicationDetails from '../pages/application-details';
-import automaticCover from '../pages/automatic-cover';
-import manualInclusion from '../pages/manual-inclusion-questionnaire';
-import securityDetails from '../pages/security-details';
-import applicationSubmission from '../pages/application-submission';
-import applicationPreview from '../pages/application-preview';
-import statusBanner from '../pages/application-status-banner';
+import relative from '../../relativeURL';
+import returnToMaker from '../../pages/return-to-maker';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
+import applicationDetails from '../../pages/application-details';
+import automaticCover from '../../pages/automatic-cover';
+import manualInclusion from '../../pages/manual-inclusion-questionnaire';
+import securityDetails from '../../pages/security-details';
+import applicationSubmission from '../../pages/application-submission';
+import applicationPreview from '../../pages/application-preview';
+import statusBanner from '../../pages/application-status-banner';
 
 let dealId;
-
-const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
 context('Return to Maker as MIA', () => {
   before(() => {
@@ -107,10 +105,8 @@ context('Return to Maker as MIA', () => {
       applicationDetails.facilitySummaryListTable(0).nameAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).hasBeenIssuedAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).monthsOfCoverAction().contains('Change');
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Change');
-        applicationDetails.facilitySummaryListTable(0).facilityEndDateAction().contains('Change');
-      }
+      applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(0).facilityEndDateAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).facilityProvidedOnAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).valueAction().contains('Change');
 
