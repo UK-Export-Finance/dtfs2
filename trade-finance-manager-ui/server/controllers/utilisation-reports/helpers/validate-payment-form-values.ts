@@ -201,7 +201,7 @@ export const validateAddToAnExistingPaymentRequestFormValues = (paymentRadioIds:
 
   const paymentGroupErrorMessage = paymentRadioIds.length > 0 ? undefined : 'Select a payment to add the fee or fees to';
   if (paymentGroupErrorMessage) {
-    errorSummary.push({ text: paymentGroupErrorMessage, href: '#available-payment-groups' });
+    errorSummary.push({ text: paymentGroupErrorMessage, href: '#payment-groups' });
   }
 
   return { errorSummary, paymentGroupErrorMessage };
