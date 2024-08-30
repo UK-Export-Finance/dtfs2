@@ -591,10 +591,11 @@ describe('controllers - case', () => {
 
   describe('GET case facility', () => {
     describe('when facility exists', () => {
-      const mockFacility = {
+      const mockNonGefFacility = {
         _id: '61f6ac5b02fade01b1e8efef',
         facilitySnapshot: {
           _id: '61f6ac5b02fade01b1e8efef',
+          isGef: false,
           dealId: '12345678',
           mock: true,
           value: 'GBP 1,000,000.00',
@@ -638,7 +639,7 @@ describe('controllers - case', () => {
       };
 
       beforeEach(() => {
-        api.getFacility = () => Promise.resolve(mockFacility);
+        api.getFacility = () => Promise.resolve(mockNonGefFacility);
         api.getDeal = () => Promise.resolve(mockDeal);
         api.getAmendmentInProgress = () => Promise.resolve({ status: 200, data: { amendmentId: '626bae8c43c01e02076352e1', version: 1 } });
         api.getAmendmentsByFacilityId = () => Promise.resolve({ status: 200, data: [mockAmendment] });
@@ -648,7 +649,7 @@ describe('controllers - case', () => {
       it('should render deal template with data', async () => {
         const req = {
           params: {
-            facilityId: mockFacility._id,
+            facilityId: mockNonGefFacility._id,
           },
           session: SESSION,
         };
@@ -658,8 +659,8 @@ describe('controllers - case', () => {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
           dealId: mockDeal.dealSnapshot._id,
-          facility: mockFacility.facilitySnapshot,
-          facilityTfm: mockFacility.tfm,
+          facility: mockNonGefFacility.facilitySnapshot,
+          facilityTfm: mockNonGefFacility.tfm,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'facility',
           facilityId: req.params.facilityId,
