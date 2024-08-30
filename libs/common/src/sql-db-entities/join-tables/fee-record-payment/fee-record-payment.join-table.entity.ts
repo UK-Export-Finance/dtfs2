@@ -50,6 +50,9 @@ export class FeeRecordPaymentJoinTableEntity {
   /**
    * Creates an instance of the entity
    * @param param - The parameters to create the entity with
+   * @param param.feeRecordId - The fee record id
+   * @param param.paymentId - The payment id
+   * @param param.paymentAmountUsedForFeeRecord - The payment amount used for the fee record
    * @returns The created entity
    */
   public static create({

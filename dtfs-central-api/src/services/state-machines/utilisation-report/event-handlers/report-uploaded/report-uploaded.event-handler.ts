@@ -39,6 +39,11 @@ export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<'R
  * Handler for the report uploaded event
  * @param report - The report
  * @param param - The payload
+ * @param param.azureFileInfo - The azure file info
+ * @param param.reportCsvData - The report CSV data
+ * @param param.uploadedByUserId - The id of the user uploading the report
+ * @param param.requestSource - The request source
+ * @param param.transactionEntityManager - The transaction entity manager
  * @returns The modified report
  */
 export const handleUtilisationReportReportUploadedEvent = async (

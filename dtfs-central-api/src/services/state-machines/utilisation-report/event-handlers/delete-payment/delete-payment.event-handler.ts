@@ -17,6 +17,9 @@ export type UtilisationReportDeletePaymentEvent = BaseUtilisationReportEvent<'DE
  * Handler for the delete payment event
  * @param report - The report
  * @param param - The payload
+ * @param param.paymentId - The payment id
+ * @param param.transactionEntityManager - The transaction entity manager
+ * @param param.requestSource - The request source
  * @returns The modified report
  */
 export const handleUtilisationReportDeletePaymentEvent = async (

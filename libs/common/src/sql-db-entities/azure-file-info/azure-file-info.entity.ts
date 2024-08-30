@@ -56,6 +56,12 @@ export class AzureFileInfoEntity extends AuditableBaseEntity {
   /**
    * Creates an instance of the azure file info entity
    * @param param - The parameters to create the entity with
+   * @param param.folder - The folder
+   * @param param.filename - The filename
+   * @param param.fullPath - The full path
+   * @param param.url - The URL
+   * @param param.mimetype - The mimetype
+   * @param param.requestSource - The request source
    * @returns The created entity
    */
   static create({ folder, filename, fullPath, url, mimetype, requestSource }: CreateAzureFileInfoParams): AzureFileInfoEntity {

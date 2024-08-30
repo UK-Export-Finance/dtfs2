@@ -73,6 +73,10 @@ const updateRemainingFeeRecords = async (
  * Handler for the remove fees from payment group event
  * @param report - The report
  * @param param - The payload
+ * @param param.transactionEntityManager - The transaction entity manager
+ * @param param.feeRecordsToRemove - The fee records to remove
+ * @param param.otherFeeRecordsInGroup - The other fee records in the group
+ * @param param.requestSource - The request source
  * @returns The modified report
  */
 export const handleUtilisationReportRemoveFeesFromPaymentGroupEvent = async (

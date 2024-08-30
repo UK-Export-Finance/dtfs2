@@ -13,6 +13,8 @@ export type UtilisationReportManuallySetCompletedEvent = BaseUtilisationReportEv
  * Handler for the manually set complete event
  * @param report - The report
  * @param param - The payload
+ * @param param.requestSource - The request source
+ * @param param.transactionEntityManager - The transaction entity manager
  * @returns The modified report
  */
 export const handleUtilisationReportManuallySetCompletedEvent = async (

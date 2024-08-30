@@ -48,6 +48,9 @@ export type UtilisationReportGenerateKeyingDataEvent = BaseUtilisationReportEven
  * Handler for the generate keying data event
  * @param report - The report
  * @param param - The payload
+ * @param param.transactionEntityManager - The transaction entity manager
+ * @param param.requestSource - The request source
+ * @param param.feeRecordsAtMatchStatusWithPayments - The fee records at MATCH status with payments
  * @returns The modified report
  */
 export const handleUtilisationReportGenerateKeyingDataEvent = async (

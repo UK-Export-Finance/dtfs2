@@ -1,7 +1,13 @@
 import { Column } from 'typeorm';
 
 type MonetaryColumnOptions = {
+  /**
+   * Whether or not the column is nullable
+   */
   nullable?: boolean;
+  /**
+   * The default value for the column
+   */
   defaultValue?: number;
 };
 

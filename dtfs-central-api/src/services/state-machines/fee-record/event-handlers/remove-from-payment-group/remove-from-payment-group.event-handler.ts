@@ -13,6 +13,8 @@ export type FeeRecordRemoveFromPaymentGroupEvent = BaseFeeRecordEvent<'REMOVE_FR
  * Handler for the remove from payment group event
  * @param feeRecord - The fee record
  * @param param - The payload
+ * @param param.transactionEntityManager - The transaction entity manager
+ * @param param.requestSource - The request source
  * @returns The modified fee record
  */
 export const handleFeeRecordRemoveFromPaymentGroupEvent = async (

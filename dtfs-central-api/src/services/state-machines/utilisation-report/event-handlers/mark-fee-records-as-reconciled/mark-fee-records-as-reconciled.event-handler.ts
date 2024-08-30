@@ -18,6 +18,9 @@ export type UtilisationReportMarkFeeRecordsAsReconciledEvent = BaseUtilisationRe
  * Handler for the mark fee records as reconciled event
  * @param report - The report
  * @param param - The payload
+ * @param param.requestSource - The request source
+ * @param param.transactionEntityManager - The transaction entity manager
+ * @param param.feeRecordsToReconcile - The fee records to reconcile
  * @returns The modified report
  */
 export const handleUtilisationReportMarkFeeRecordsAsReconciledEvent = async (

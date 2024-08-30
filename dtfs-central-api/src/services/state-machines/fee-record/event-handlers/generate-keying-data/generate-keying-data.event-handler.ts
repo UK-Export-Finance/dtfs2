@@ -16,6 +16,10 @@ export type FeeRecordGenerateKeyingDataEvent = BaseFeeRecordEvent<'GENERATE_KEYI
  * Handler for the generate keying data event
  * @param feeRecord - The fee record
  * @param param - The payload
+ * @param param.transactionEntityManager - The transaction entity manager
+ * @param param.isFinalFeeRecordForFacility - Whether or not the fee record is the final fee record for a facility
+ * @param param.reportPeriod - The report period
+ * @param param.requestSource - The request source
  * @returns The modified fee record
  */
 export const handleFeeRecordGenerateKeyingDataEvent = async (

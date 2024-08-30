@@ -64,6 +64,7 @@ export class UtilisationReportStateMachine {
   /**
    * Handles an invalid transition event
    * @param param - The event
+   * @param param.type - The event type
    */
   private handleInvalidTransition = ({ type: eventType }: UtilisationReportEvent): never => {
     const entityName = UtilisationReportEntity.name;

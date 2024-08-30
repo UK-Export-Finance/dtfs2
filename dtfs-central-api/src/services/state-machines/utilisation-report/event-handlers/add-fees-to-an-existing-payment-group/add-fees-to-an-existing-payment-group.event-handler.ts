@@ -89,6 +89,11 @@ const updateExistingFeeRecordsInPaymentGroup = async (
  * Handler for the add fees to an existing payment group event
  * @param report - The report
  * @param param - The payload
+ * @param param.transactionEntityManager - The transaction entity manager
+ * @param param.feeRecordsToAdd - The fee records to add
+ * @param param.existingFeeRecordsInPaymentGroup - The existing fee records in the payment group
+ * @param param.payments - The payments
+ * @param param.requestSource - The request source
  * @returns The modified report
  */
 export const handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent = async (

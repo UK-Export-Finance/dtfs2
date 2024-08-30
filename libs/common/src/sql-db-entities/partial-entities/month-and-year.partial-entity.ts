@@ -1,15 +1,16 @@
 import { Column } from 'typeorm';
+import { OneIndexedMonth } from '../../types';
 
 export class MonthAndYearPartialEntity {
   /**
-   * The month
+   * The month (one-indexed)
    */
-  @Column()
-  month!: number;
+  @Column({ type: 'int' })
+  month!: OneIndexedMonth;
 
   /**
    * The year
    */
-  @Column()
+  @Column({ type: 'int' })
   year!: number;
 }

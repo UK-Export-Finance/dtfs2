@@ -13,6 +13,8 @@ export type UtilisationReportManuallySetIncompleteEvent = BaseUtilisationReportE
  * Handler for the manually set incomplete event
  * @param report - The report
  * @param param - The payload
+ * @param param.transactionEntityManager - The transaction entity manager
+ * @param param.requestSource - The request source
  * @returns The modified report
  */
 export const handleUtilisationReportManuallySetIncompleteEvent = async (

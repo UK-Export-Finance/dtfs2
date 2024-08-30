@@ -20,6 +20,13 @@ export type UtilisationReportEditPaymentEvent = BaseUtilisationReportEvent<'EDIT
  * Handler for the edit payment event
  * @param report - The report
  * @param param - The payload
+ * @param param.transactionEntityManager - The transaction entity manager
+ * @param param.payment - The payment
+ * @param param.feeRecords - The fee records
+ * @param param.paymentAmount - The new payment amount
+ * @param param.datePaymentReceived - The new date payment received
+ * @param param.paymentReference - The new payment reference
+ * @param param.requestSource - The request source
  * @returns The modified report
  */
 export const handleUtilisationReportEditPaymentEvent = async (

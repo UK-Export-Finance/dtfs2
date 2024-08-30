@@ -46,6 +46,12 @@ export class PaymentEntity extends AuditableBaseEntity {
   /**
    * Creates an instance of the entity
    * @param param - The parameters to create the entity with
+   * @param param.currency - The currency
+   * @param param.amount - The amount
+   * @param param.dateReceived - The date received
+   * @param param.reference - The reference
+   * @param param.feeRecords - The fee records
+   * @param param.requestSource - The request source
    * @returns The created entity
    */
   static create({ currency, amount, dateReceived, reference, feeRecords, requestSource }: CreatePaymentParams): PaymentEntity {
@@ -62,6 +68,10 @@ export class PaymentEntity extends AuditableBaseEntity {
   /**
    * Updates the payment entity
    * @param param - The parameters to update the payment with
+   * @param param.amount - The amount
+   * @param param.dateReceived - The date received
+   * @param param.reference - The reference
+   * @param param.requestSource - The request source
    */
   public update({ amount, dateReceived, reference, requestSource }: UpdatePaymentParams): void {
     this.amount = amount;
@@ -73,6 +83,8 @@ export class PaymentEntity extends AuditableBaseEntity {
   /**
    * Updates the payment with additional fee records
    * @param param - The parameters to update the payment with
+   * @param param.additionalFeeRecords - The additional fee records
+   * @param param.requestSource - The request source
    */
   public updateWithAdditionalFeeRecords({ additionalFeeRecords, requestSource }: UpdateWithAdditionalFeeRecordsParams): void {
     const existingIds = new Set(this.feeRecords.map((record) => record.id));

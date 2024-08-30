@@ -50,6 +50,7 @@ export class FeeRecordStateMachine {
   /**
    * Handles an invalid transition event
    * @param param - The event
+   * @param param.type - The event type
    */
   private handleInvalidTransition = ({ type: eventType }: FeeRecordEvent): never => {
     const entityName = FeeRecordEntity.name;
