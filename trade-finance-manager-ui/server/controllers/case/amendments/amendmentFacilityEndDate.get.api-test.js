@@ -24,11 +24,11 @@ const user = {
 };
 
 const gefFacility = {
-  facilitySnapshot: { type: MAPPED_FACILITY_TYPE.CASH },
+  facilitySnapshot: { isGef: true, type: MAPPED_FACILITY_TYPE.CASH },
 };
 
 const bssEwcsFacility = {
-  facilitySnapshot: { type: FACILITY_TYPE.BOND },
+  facilitySnapshot: { isGef: false, type: FACILITY_TYPE.BOND },
 };
 const session = { user, userToken: 'mockToken' };
 
