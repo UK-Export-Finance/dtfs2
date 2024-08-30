@@ -184,10 +184,10 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       await addToAnExistingPayment(req, res);
 
       // Assert
-      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).availablePaymentsHeading).toEqual(
+      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).paymentsHeading).toEqual(
         'Which payment or group of payments do you want to add the reported fees to?',
       );
-      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).availablePaymentGroups).toEqual([
+      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).paymentGroups).toEqual([
         {
           radioId: 'paymentIds-1,2',
           payments: [

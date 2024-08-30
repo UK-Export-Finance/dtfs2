@@ -1,14 +1,14 @@
 import { SelectedFeeRecordsAvailablePaymentDetails, SelectedFeeRecordsAvailablePaymentGroups } from '@ukef/dtfs2-common';
-import { getAvailablePaymentsHeading } from './add-to-an-existing-payment-helper';
+import { getPaymentsHeading } from './add-to-an-existing-payment-helper';
 
 describe('add-to-an-existing-payment-helper', () => {
-  describe('getAvailablePaymentsHeading', () => {
+  describe('getPaymentsHeading', () => {
     it('should return "one existing payment" heading for a single payment', () => {
       // Arrange
       const paymentGroups: SelectedFeeRecordsAvailablePaymentGroups = [[aSelectedFeeRecordsAvailablePaymentDetails()]];
 
       // Act
-      const result = getAvailablePaymentsHeading(paymentGroups);
+      const result = getPaymentsHeading(paymentGroups);
 
       // Assert
       expect(result).toBe('There is one existing payment that the reported fees will be added to');
@@ -21,7 +21,7 @@ describe('add-to-an-existing-payment-helper', () => {
       ];
 
       // Act
-      const result = getAvailablePaymentsHeading(paymentGroups);
+      const result = getPaymentsHeading(paymentGroups);
 
       // Assert
       expect(result).toBe('There is one existing group of payments that the reported fees will be added to');
@@ -36,7 +36,7 @@ describe('add-to-an-existing-payment-helper', () => {
       ];
 
       // Act
-      const result = getAvailablePaymentsHeading(paymentGroups);
+      const result = getPaymentsHeading(paymentGroups);
 
       // Assert
       expect(result).toBe('Which payment do you want to add the reported fees to?');
@@ -51,7 +51,7 @@ describe('add-to-an-existing-payment-helper', () => {
       ];
 
       // Act
-      const result = getAvailablePaymentsHeading(paymentGroups);
+      const result = getPaymentsHeading(paymentGroups);
 
       // Assert
       expect(result).toBe('Which group of payments do you want to add the reported fees to?');
@@ -67,7 +67,7 @@ describe('add-to-an-existing-payment-helper', () => {
       ];
 
       // Act
-      const result = getAvailablePaymentsHeading(paymentGroups);
+      const result = getPaymentsHeading(paymentGroups);
 
       // Assert
       expect(result).toBe('Which payment or group of payments do you want to add the reported fees to?');

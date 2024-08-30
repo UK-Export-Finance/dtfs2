@@ -1,6 +1,6 @@
 import { PRIMARY_NAVIGATION_KEYS } from '../../server/constants';
 import { AddToAnExistingPaymentViewModel } from '../../server/types/view-models';
-import { anAvailablePaymentGroupsViewModel } from './available-payment-groups-view-model';
+import { anPaymentGroupInputsViewModel } from './available-payment-groups-view-model';
 import { aTfmSessionUser } from './tfm-session-user';
 
 export const anAddToAnExistingPaymentViewModel = (): AddToAnExistingPaymentViewModel => ({
@@ -22,8 +22,8 @@ export const anAddToAnExistingPaymentViewModel = (): AddToAnExistingPaymentViewM
       },
     ],
   },
-  availablePaymentsHeading: 'Available payments',
-  availablePaymentGroups: anAvailablePaymentGroupsViewModel(),
+  paymentsHeading: 'Payments',
+  paymentGroups: anPaymentGroupInputsViewModel(),
   errors: {
     errorSummary: [],
   },

@@ -46,8 +46,8 @@
     {% for id in selectedFeeRecordCheckboxIds %}<input type="hidden" name={{ id }} value="on"/>{% endfor %}
 
     {{ paymentGroupInput.render({
-      legendText: availablePaymentsHeading,
-      paymentGroups: availablePaymentGroups,
+      legendText: paymentsHeading,
+      paymentGroups: paymentGroups,
       errorMessage: errors.paymentGroupErrorMessage
     }) }}
 

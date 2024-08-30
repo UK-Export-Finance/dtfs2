@@ -10,18 +10,18 @@ export type AddToAnExistingPaymentErrorsViewModel = {
   paymentGroupErrorMessage?: string;
 };
 
-export type AvailablePaymentViewModelItem = {
+export type PaymentInputViewModelItem = {
   id: string;
   formattedCurrencyAndAmount: CurrencyAndAmountString;
   reference?: string;
 };
 
-export type AvailablePaymentGroupViewModel = {
+export type PaymentGroupInputViewModel = {
   radioId: AddToAnExistingPaymentRadioId;
-  payments: AvailablePaymentViewModelItem[];
+  payments: PaymentInputViewModelItem[];
 };
 
-export type AvailablePaymentGroupsViewModel = AvailablePaymentGroupViewModel[];
+export type PaymentGroupInputsViewModel = PaymentGroupInputViewModel[];
 
 export type AddToAnExistingPaymentViewModel = BaseViewModel & {
   reportId: string;
@@ -30,7 +30,7 @@ export type AddToAnExistingPaymentViewModel = BaseViewModel & {
   reportedFeeDetails: SelectedReportedFeesDetailsViewModel;
   backLinkHref: string;
   selectedFeeRecordCheckboxIds: PremiumPaymentsTableCheckboxId[];
-  availablePaymentsHeading: string;
-  availablePaymentGroups: AvailablePaymentGroupsViewModel;
+  paymentsHeading: string;
+  paymentGroups: PaymentGroupInputsViewModel;
   errors: AddToAnExistingPaymentErrorsViewModel;
 };
