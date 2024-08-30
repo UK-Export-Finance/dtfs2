@@ -1,5 +1,5 @@
 import { isTfmFacilityEndDateFeatureFlagEnabled, MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
-import { add } from 'date-fns';
+import { add, format } from 'date-fns';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE } from '../../../test-mocks/amendment-test-mocks';
@@ -49,7 +49,7 @@ describe('amendmentBankReviewDate routes', () => {
 
     describe('incorrect bank review date entered', () => {
       it('should render the template with errors if the entered bank review date is before the cover start date', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: oneYearFromNow } } };
+        const mockFacility = { facilitySnapshot: { isGef: true, type: gefFacilityType, dates: { coverStartDate: oneYearFromNow } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -74,9 +74,9 @@ describe('amendmentBankReviewDate routes', () => {
           dealId,
           isEditable: true,
           facilityId,
-          dayInput: '12',
-          monthInput: '11',
-          yearInput: '2024',
+          dayInput: oneYearFromNowMinusDay.getDate().toString(),
+          monthInput: (oneYearFromNowMinusDay.getMonth() + 1).toString(),
+          yearInput: oneYearFromNowMinusDay.getFullYear().toString(),
           error: {
             summary: [
               {
@@ -90,7 +90,7 @@ describe('amendmentBankReviewDate routes', () => {
       });
 
       it('should render the template with errors if the entered bank review date is greater than 6 years in the future', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now.valueOf().toString() } } };
+        const mockFacility = { facilitySnapshot: { isGef: true, type: gefFacilityType, dates: { coverStartDate: now.valueOf().toString() } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -136,7 +136,7 @@ describe('amendmentBankReviewDate routes', () => {
           status: 200,
           data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
-        api.getFacility = jest.fn().mockResolvedValueOnce({ facilitySnapshot: { type: gefFacilityType, dates: {} } });
+        api.getFacility = jest.fn().mockResolvedValueOnce({ facilitySnapshot: { isGef: true, type: gefFacilityType, dates: {} } });
 
         const req = {
           params: {
@@ -179,7 +179,7 @@ describe('amendmentBankReviewDate routes', () => {
           data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
         api.getFacility = jest.fn().mockResolvedValueOnce({
-          facilitySnapshot: { type: gefFacilityType, dates: { isUsingBankReviewDate: true, bankReviewDate: now.toISOString() } },
+          facilitySnapshot: { isGef: true, type: gefFacilityType, dates: { isUsingBankReviewDate: true, bankReviewDate: now.toISOString() } },
         });
 
         const req = {
@@ -203,7 +203,7 @@ describe('amendmentBankReviewDate routes', () => {
           dayInput: '',
           monthInput: '',
           yearInput: '',
-          currentBankReviewDate: '11 December 2025',
+          currentBankReviewDate: format(now, 'dd MMMM yyyy'),
           error: {
             summary: [
               {
@@ -220,7 +220,7 @@ describe('amendmentBankReviewDate routes', () => {
 
     describe('correct bank review date entered', () => {
       it('should redirect to the check answers page when only the cover end date is being amended and there are no errors', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now } } };
+        const mockFacility = { facilitySnapshot: { isGef: true, type: gefFacilityType, dates: { coverStartDate: now } } };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
         api.updateAmendment.mockResolvedValueOnce({ status: 200 });
@@ -246,7 +246,7 @@ describe('amendmentBankReviewDate routes', () => {
       });
 
       it('should redirect to the update facility value page when the facility value also needs amending and there are no errors', async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now } } };
+        const mockFacility = { facilitySnapshot: { isGef: true, type: gefFacilityType, dates: { coverStartDate: now } } };
 
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
@@ -275,7 +275,7 @@ describe('amendmentBankReviewDate routes', () => {
       });
 
       it("should redirect to the amendments summary page if there's an error updating the amendment", async () => {
-        const mockFacility = { facilitySnapshot: { type: gefFacilityType, dates: { coverStartDate: now } } };
+        const mockFacility = { facilitySnapshot: { isGef: true, type: gefFacilityType, dates: { coverStartDate: now } } };
 
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
