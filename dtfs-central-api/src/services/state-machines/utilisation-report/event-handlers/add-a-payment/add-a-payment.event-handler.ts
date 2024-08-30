@@ -14,6 +14,16 @@ type AddAPaymentEventPayload = {
 
 export type UtilisationReportAddAPaymentEvent = BaseUtilisationReportEvent<'ADD_A_PAYMENT', AddAPaymentEventPayload>;
 
+/**
+ * Handler for the add a payment event
+ * @param report - The report
+ * @param param - The payload
+ * @param param.transactionEntityManager - The transaction entity manager
+ * @param param.feeRecords - The fee records
+ * @param param.paymentDetails - The payment details
+ * @param param.requestSource - The request source
+ * @returns The modified report
+ */
 export const handleUtilisationReportAddAPaymentEvent = async (
   report: UtilisationReportEntity,
   { transactionEntityManager, feeRecords, paymentDetails, requestSource }: AddAPaymentEventPayload,
