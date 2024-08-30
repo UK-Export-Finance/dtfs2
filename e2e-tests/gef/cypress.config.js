@@ -6,7 +6,7 @@ const { createTasks } = require('../support/tasks');
 // Read from root `./.env` directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const { PORTAL_API_KEY, GEF_DEAL_VERSION } = process.env;
+const { PORTAL_API_KEY } = process.env;
 
 module.exports = defineConfig({
   dealApiProtocol: 'http://',
@@ -36,9 +36,6 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       const { dbName, dbConnectionString } = config;
       on('task', createTasks({ dbName, dbConnectionString }));
-    },
-    env: {
-      GEF_DEAL_VERSION,
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
