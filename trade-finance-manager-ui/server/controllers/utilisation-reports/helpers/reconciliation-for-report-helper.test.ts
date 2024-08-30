@@ -662,15 +662,15 @@ describe('reconciliation-for-report-helper', () => {
       expect(result).toHaveLength(3);
     });
 
-    it('maps the payment reference to the payment details view model reference', () => {
+    it('maps the payment id and reference to the payment details view model reference', () => {
       // Arrange
       const group: FeeRecordPaymentGroup = {
         ...aFeeRecordPaymentGroup(),
         feeRecords: [aFeeRecord()],
         paymentsReceived: [
-          { ...aPayment(), reference: 'First reference' },
-          { ...aPayment(), reference: 'Second reference' },
-          { ...aPayment(), reference: undefined },
+          { ...aPayment(), id: 123, reference: 'First reference' },
+          { ...aPayment(), id: 456, reference: 'Second reference' },
+          { ...aPayment(), id: 789, reference: undefined },
         ],
       };
 
@@ -679,8 +679,11 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toHaveLength(3);
+      expect(result[0].payment.id).toBe(123);
       expect(result[0].payment.reference).toBe('First reference');
+      expect(result[1].payment.id).toBe(456);
       expect(result[1].payment.reference).toBe('Second reference');
+      expect(result[2].payment.id).toBe(789);
       expect(result[2].payment.reference).toBeUndefined();
     });
 
