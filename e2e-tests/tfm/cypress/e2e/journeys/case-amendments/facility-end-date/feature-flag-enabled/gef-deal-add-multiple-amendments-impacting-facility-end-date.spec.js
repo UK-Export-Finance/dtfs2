@@ -165,8 +165,8 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         // We reset it to bank review date here.
         amendmentsPage.amendmentCurrentBankReviewDate().should('have.text', 'Not provided');
         amendmentsPage.amendmentBankReviewDateDayInput().clear().type(format(Date5, 'd'));
-        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(format(Date5, 'd'));
-        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(format(Date5, 'd'));
+        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(format(Date5, 'M'));
+        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(format(Date5, 'yyyy'));
         amendmentsPage.continueAmendment().click();
 
         cy.url().should('contain', 'check-answers');
