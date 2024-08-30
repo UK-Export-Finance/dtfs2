@@ -1,9 +1,14 @@
-import { AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
 import { getTask } from '../helpers';
 import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
+}));
 
 const res = mockRes();
 
@@ -21,6 +26,10 @@ const SESSION = {
 };
 
 describe('controllers - case', () => {
+  beforeEach(() => {
+    jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
+  });
+
   describe('GET case deal', () => {
     describe('when deal exists', () => {
       const mockDeal = {
@@ -591,7 +600,7 @@ describe('controllers - case', () => {
 
   describe('GET case facility', () => {
     describe('when facility exists', () => {
-      const mockNonGefFacility = {
+      const mockFacility = {
         _id: '61f6ac5b02fade01b1e8efef',
         facilitySnapshot: {
           _id: '61f6ac5b02fade01b1e8efef',
@@ -639,17 +648,70 @@ describe('controllers - case', () => {
       };
 
       beforeEach(() => {
-        api.getFacility = () => Promise.resolve(mockNonGefFacility);
+        api.getFacility = () => Promise.resolve(mockFacility);
         api.getDeal = () => Promise.resolve(mockDeal);
         api.getAmendmentInProgress = () => Promise.resolve({ status: 200, data: { amendmentId: '626bae8c43c01e02076352e1', version: 1 } });
         api.getAmendmentsByFacilityId = () => Promise.resolve({ status: 200, data: [mockAmendment] });
         api.getAmendmentsByDealId = () => Promise.resolve({ status: 200, data: [mockAmendment] });
       });
 
+      describe('showFacilityEndDate', () => {
+        describe.each([
+          {
+            facilityFeatureFlagValue: true,
+            isGefValue: true,
+            expectedValue: true,
+          },
+          {
+            facilityFeatureFlagValue: true,
+            isGefValue: false,
+            expectedValue: false,
+          },
+          {
+            facilityFeatureFlagValue: false,
+            isGefValue: true,
+            expectedValue: false,
+          },
+          {
+            facilityFeatureFlagValue: false,
+            isGefValue: false,
+            expectedValue: false,
+          },
+        ])('when the facility end date feature flag is $facilityFeatureFlagValue', ({ facilityFeatureFlagValue, isGefValue, expectedValue }) => {
+          beforeEach(() => {
+            jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(facilityFeatureFlagValue);
+          });
+
+          describe(`when the facility is ${isGefValue}`, () => {
+            beforeEach(() => {
+              api.getFacility = () => Promise.resolve({ ...mockFacility, facilitySnapshot: { ...mockFacility.facilitySnapshot, isGef: isGefValue } });
+            });
+
+            it(`should render with the showFacilityEndDate parameter as ${expectedValue}`, async () => {
+              const req = {
+                params: {
+                  facilityId: mockFacility._id,
+                },
+                session: SESSION,
+              };
+
+              await caseController.getCaseFacility(req, res);
+
+              expect(res.render).toHaveBeenCalledWith(
+                'case/facility/facility.njk',
+                expect.objectContaining({
+                  showFacilityEndDate: expectedValue,
+                }),
+              );
+            });
+          });
+        });
+      });
+
       it('should render deal template with data', async () => {
         const req = {
           params: {
-            facilityId: mockNonGefFacility._id,
+            facilityId: mockFacility._id,
           },
           session: SESSION,
         };
@@ -659,8 +721,8 @@ describe('controllers - case', () => {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
           dealId: mockDeal.dealSnapshot._id,
-          facility: mockNonGefFacility.facilitySnapshot,
-          facilityTfm: mockNonGefFacility.tfm,
+          facility: mockFacility.facilitySnapshot,
+          facilityTfm: mockFacility.tfm,
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'facility',
           facilityId: req.params.facilityId,
