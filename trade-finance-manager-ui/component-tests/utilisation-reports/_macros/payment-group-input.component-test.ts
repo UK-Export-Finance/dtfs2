@@ -1,6 +1,6 @@
 import { PaymentGroupInputsViewModel } from '../../../server/types/view-models/add-to-an-existing-payment-view-model';
 import { componentRenderer } from '../../componentRenderer';
-import { anPaymentGroupInputsViewModel } from '../../../test-helpers/test-data/available-payment-groups-view-model';
+import { aPaymentGroupInputsViewModel } from '../../../test-helpers/test-data/payment-group-inputs-view-model';
 
 const component = '../templates/utilisation-reports/_macros/payment-group-input.njk';
 const render = componentRenderer(component);
@@ -81,7 +81,7 @@ describe(component, () => {
   it('should render radio buttons for each payment group with the group ID when there is more than one payment group', () => {
     const viewModel = {
       legendText: 'Select a payment group',
-      paymentGroups: anPaymentGroupInputsViewModel(),
+      paymentGroups: aPaymentGroupInputsViewModel(),
     };
     const wrapper = getWrapper(viewModel);
 
@@ -95,7 +95,7 @@ describe(component, () => {
   it('should render both multiple and single payment details in different groups with a radio button for each group', () => {
     const viewModel = {
       legendText: 'Select a payment group',
-      paymentGroups: anPaymentGroupInputsViewModel(),
+      paymentGroups: aPaymentGroupInputsViewModel(),
     };
     const wrapper = getWrapper(viewModel);
 
@@ -123,7 +123,7 @@ describe(component, () => {
   it('does not apply error styling wrappers if no error message is provided', () => {
     const viewModel = {
       legendText: 'Select a payment group',
-      paymentGroups: anPaymentGroupInputsViewModel(),
+      paymentGroups: aPaymentGroupInputsViewModel(),
       errorMessage: undefined,
     };
     const wrapper = getWrapper(viewModel);
@@ -135,7 +135,7 @@ describe(component, () => {
   it('applies error styling wrappers if error message is provided', () => {
     const viewModel = {
       legendText: 'Select a payment group',
-      paymentGroups: anPaymentGroupInputsViewModel(),
+      paymentGroups: aPaymentGroupInputsViewModel(),
       errorMessage: 'Whoopsies',
     };
     const wrapper = getWrapper(viewModel);

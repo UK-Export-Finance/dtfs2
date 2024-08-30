@@ -1,6 +1,6 @@
 import { PaymentGroupInputsViewModel } from '../../server/types/view-models';
 
-export const anPaymentGroupInputsViewModel = (): PaymentGroupInputsViewModel => [
+export const aPaymentGroupInputsViewModel = (): PaymentGroupInputsViewModel => [
   {
     radioId: 'paymentIds-1,2',
     payments: [
