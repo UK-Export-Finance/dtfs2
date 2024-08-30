@@ -444,7 +444,7 @@ jobs:
             "eligibility/**/*.spec.js",
             "exporter/**/*.spec.js",
             "external/**/*.spec.js",
-            "facility/**/*.spec.js",
+            "facility/facility-end-date-disabled/**/*.spec.js",
             "maker/**/*.spec.js",
             "scenarios/**/*.spec.js",
             "security/**/*.spec.js",
@@ -512,7 +512,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec: ['facility/**/*.spec.js']
+        spec: ["facility/facility-end-date-enabled/**/*.spec.js"]
 
     concurrency:
       group: e2e-tests-gef-feature-flag-backwards-compatibility-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
