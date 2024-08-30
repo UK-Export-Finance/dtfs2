@@ -336,5 +336,27 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.feeRecordPaymentGroups[1].isChecked).toBe(true);
       expect(viewModel.feeRecordPaymentGroups[2].isChecked).toBe(false);
     });
+
+    it('clears redirect session data', async () => {
+      // Arrange
+      const sessionData: Partial<SessionData> = {
+        addPaymentErrorKey: 'no-fee-records-selected',
+        checkedCheckboxIds: {
+          'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO': true,
+        },
+        generateKeyingDataErrorKey: 'no-matching-fee-records',
+      };
+      const { req, res } = getHttpMocksWithSessionData(sessionData);
+
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(aUtilisationReportReconciliationDetailsResponse());
+
+      // Act
+      await getUtilisationReportReconciliationByReportId(req, res);
+
+      // Assert
+      expect(req.session.addPaymentErrorKey).toBeUndefined();
+      expect(req.session.checkedCheckboxIds).toBeUndefined();
+      expect(req.session.generateKeyingDataErrorKey).toBeUndefined();
+    });
   });
 });

@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { SessionData } from 'express-session';
 import { ErrorSummaryViewModel } from '../../../types/view-models';
 import { getAddPaymentError } from '../helpers/get-add-payment-error-helper';
 import { getGenerateKeyingDataError } from '../helpers';
@@ -7,22 +7,15 @@ import {
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from '../../../helpers/premium-payments-table-checkbox-id-helper';
 
-const clearRedirectSessionData = (req: Request): void => {
-  delete req.session.addPaymentErrorKey;
-  delete req.session.checkedCheckboxIds;
-  delete req.session.generateKeyingDataErrorKey;
-};
-
-export const getAndClearFieldsFromRedirectSessionData = (
-  req: Request,
-): {
+export const handleRedirectSessionData = ({
+  addPaymentErrorKey,
+  generateKeyingDataErrorKey,
+  checkedCheckboxIds: checkedCheckboxIdsSession,
+}: Partial<SessionData>): {
   tableDataError: ErrorSummaryViewModel | undefined;
   selectedFeeRecordIds: Set<number>;
 } => {
-  const { addPaymentErrorKey, generateKeyingDataErrorKey } = req.session;
-
   if (generateKeyingDataErrorKey) {
-    clearRedirectSessionData(req);
     switch (generateKeyingDataErrorKey) {
       case 'no-matching-fee-records':
         return {
@@ -41,7 +34,7 @@ export const getAndClearFieldsFromRedirectSessionData = (
     };
   }
 
-  const checkedCheckboxIdRecords = { ...req.session.checkedCheckboxIds };
+  const checkedCheckboxIdRecords = { ...checkedCheckboxIdsSession };
   const checkedCheckboxIds = getPremiumPaymentsCheckboxIdsFromObjectKeys(checkedCheckboxIdRecords);
   const selectedFeeRecordIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds(checkedCheckboxIds);
   const selectedFeeRecordIdsSet = new Set(selectedFeeRecordIds);
@@ -51,10 +44,8 @@ export const getAndClearFieldsFromRedirectSessionData = (
     case 'different-fee-record-statuses':
     case 'different-fee-record-payment-currencies':
     case 'multiple-does-not-match-selected':
-      clearRedirectSessionData(req);
       return { tableDataError: getAddPaymentError(addPaymentErrorKey), selectedFeeRecordIds: selectedFeeRecordIdsSet };
     default:
-      clearRedirectSessionData(req);
       throw new Error(`Unrecognised add payment error key '${addPaymentErrorKey}'`);
   }
 };

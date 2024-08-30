@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -11,6 +11,19 @@ import {
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { FeeRecordPaymentGroup } from '../../../api-response-types';
 import { extractQueryAndSessionData } from './extract-query-and-session-data';
+
+export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
+  query: {
+    facilityIdQuery?: string;
+    selectedFeeRecordIds?: string;
+  };
+}>;
+
+const clearRedirectSessionData = (req: Request): void => {
+  delete req.session.addPaymentErrorKey;
+  delete req.session.checkedCheckboxIds;
+  delete req.session.generateKeyingDataErrorKey;
+};
 
 const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): boolean =>
   feeRecordPaymentGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
@@ -31,12 +44,22 @@ const renderUtilisationReportReconciliationForReport = (res: Response, viewModel
  * @param req - The request object
  * @param res - The response object
  */
-export const getUtilisationReportReconciliationByReportId = async (req: Request, res: Response) => {
+export const getUtilisationReportReconciliationByReportId = async (req: GetUtilisationReportReconciliationRequest, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId } = req.params;
 
   try {
-    const { facilityIdQueryString, filterError, tableDataError, isCheckboxChecked } = extractQueryAndSessionData(req);
+    const { facilityIdQuery, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
+
+    const { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds } = req.session;
+
+    clearRedirectSessionData(req);
+
+    const { facilityIdQueryString, filterError, tableDataError, isCheckboxChecked } = extractQueryAndSessionData(
+      { facilityIdQuery, selectedFeeRecordIdsQuery },
+      { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
+      req.originalUrl,
+    );
 
     const { feeRecordPaymentGroups, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
