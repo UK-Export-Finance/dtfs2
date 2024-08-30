@@ -1,4 +1,5 @@
 const { format, parseISO } = require('date-fns');
+const { LONG_FORM_DATE_FORMAT } = require('@ukef/dtfs2-common');
 const getFacilitiesByType = require('../../helpers/get-facilities-by-type');
 const { generateHeadingString, generateListItemString } = require('../../helpers/notify-template-formatters');
 const CONSTANTS = require('../../../constants');
@@ -19,6 +20,7 @@ const mapIssuedValue = (hasBeenIssued) => {
 /**
  * @param {unknown} value
  * @returns {string | undefined} Returns 'Yes'/'No' if value is True/False, or undefined otherwise
+ * @protected this function is exported for unit testing only. If it is used elsewhere it should be moved to a suitable commonised helper file
  */
 const mapBooleanToYesOrNo = (value) => {
   if (typeof value === 'boolean') {
@@ -53,11 +55,11 @@ const facilityFieldsObj = ({
   ukefFacilityId,
   bankReference,
   hasBeenIssued: hasBeenIssued && mapIssuedValue(hasBeenIssued),
-  coverStartDate: coverStartDate && format(Number(coverStartDate), 'do MMMM yyyy'),
-  coverEndDate: coverEndDate && format(parseISO(coverEndDate), 'do MMMM yyyy'),
+  coverStartDate: coverStartDate && format(Number(coverStartDate), LONG_FORM_DATE_FORMAT),
+  coverEndDate: coverEndDate && format(parseISO(coverEndDate), LONG_FORM_DATE_FORMAT),
   isUsingFacilityEndDate: mapBooleanToYesOrNo(isUsingFacilityEndDate),
-  facilityEndDate: facilityEndDate && format(parseISO(facilityEndDate), 'do MMMM yyyy'),
-  bankReviewDate: bankReviewDate && format(parseISO(bankReviewDate), 'do MMMM yyyy'),
+  facilityEndDate: facilityEndDate && format(parseISO(facilityEndDate), LONG_FORM_DATE_FORMAT),
+  bankReviewDate: bankReviewDate && format(parseISO(bankReviewDate), LONG_FORM_DATE_FORMAT),
   value,
   currencyCode,
   coverPercentage: coverPercentage && `${coverPercentage}%`,
@@ -151,6 +153,7 @@ const gefFacilitiesList = (facilities) => {
 };
 
 module.exports = {
+  mapBooleanToYesOrNo,
   mapIssuedValue,
   facilityFieldsObj,
   generateFacilityFieldListItemString,

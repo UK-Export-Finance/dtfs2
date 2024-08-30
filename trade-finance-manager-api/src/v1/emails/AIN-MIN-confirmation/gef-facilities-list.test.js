@@ -1,5 +1,5 @@
-const { format } = require('date-fns');
-const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { format, parseISO } = require('date-fns');
+const { FACILITY_TYPE, LONG_FORM_DATE_FORMAT } = require('@ukef/dtfs2-common');
 const {
   mapIssuedValue,
   facilityFieldsObj,
@@ -7,6 +7,7 @@ const {
   generateFacilityFieldsListString,
   generateFacilitiesListString,
   gefFacilitiesList,
+  mapBooleanToYesOrNo,
 } = require('./gef-facilities-list');
 const { generateHeadingString, generateListItemString } = require('../../helpers/notify-template-formatters');
 const CONSTANTS = require('../../../constants');
@@ -59,6 +60,32 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
     });
   });
 
+  describe('mapBooleanToYesOrNo', () => {
+    it('maps true to `Yes`', () => {
+      const result = mapBooleanToYesOrNo(true);
+
+      expect(result).toBe('Yes');
+    });
+
+    it('maps false to `No`', () => {
+      const result = mapBooleanToYesOrNo(false);
+
+      expect(result).toBe('No');
+    });
+
+    it('maps undefined to undefined', () => {
+      const result = mapBooleanToYesOrNo(undefined);
+
+      expect(result).toBe(undefined);
+    });
+
+    it('maps null to undefined', () => {
+      const result = mapBooleanToYesOrNo(null);
+
+      expect(result).toBe(undefined);
+    });
+  });
+
   describe('facilityFieldsObj', () => {
     it('should return and format specific fields from a facility object', () => {
       const result = facilityFieldsObj(mockFacility);
@@ -100,16 +127,20 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
     it('should format facilityEndDate to readable format', () => {
       const facilityEndDate = new Date(2021, 7, 12);
+
       const result = facilityFieldsObj({ facilityEndDate: facilityEndDate.toISOString() });
 
-      expect(result).toEqual({ facilityEndDate: '12th August 2021' });
+      const expected = format(parseISO(facilityEndDate), LONG_FORM_DATE_FORMAT);
+      expect(result.facilityEndDate).toEqual(expected);
     });
 
     it('should format bankReviewDate to readable format', () => {
       const bankReviewDate = new Date(2021, 7, 12);
+
       const result = facilityFieldsObj({ bankReviewDate: bankReviewDate.toISOString() });
 
-      expect(result).toEqual({ bankReviewDate: '12th August 2021' });
+      const expected = format(parseISO(bankReviewDate), LONG_FORM_DATE_FORMAT);
+      expect(result.bankReviewDate).toEqual(expected);
     });
   });
 
