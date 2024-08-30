@@ -1,4 +1,4 @@
-const { format, parseISO } = require('date-fns');
+const { format } = require('date-fns');
 const { FACILITY_TYPE, LONG_FORM_DATE_FORMAT } = require('@ukef/dtfs2-common');
 const {
   mapIssuedValue,
@@ -130,7 +130,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
       const result = facilityFieldsObj({ facilityEndDate: facilityEndDate.toISOString() });
 
-      const expected = format(parseISO(facilityEndDate), LONG_FORM_DATE_FORMAT);
+      const expected = format(facilityEndDate, LONG_FORM_DATE_FORMAT);
       expect(result.facilityEndDate).toEqual(expected);
     });
 
@@ -139,7 +139,7 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
       const result = facilityFieldsObj({ bankReviewDate: bankReviewDate.toISOString() });
 
-      const expected = format(parseISO(bankReviewDate), LONG_FORM_DATE_FORMAT);
+      const expected = format(bankReviewDate, LONG_FORM_DATE_FORMAT);
       expect(result.bankReviewDate).toEqual(expected);
     });
   });
