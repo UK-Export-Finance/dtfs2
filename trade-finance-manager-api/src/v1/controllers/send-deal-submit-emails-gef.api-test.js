@@ -1,7 +1,6 @@
 const { sendFirstTaskEmail, sendDealSubmitEmails, sendMiaAcknowledgement, sendAinMinAcknowledgement } = require('./send-deal-submit-emails');
 const mapSubmittedDeal = require('../mappings/map-submitted-deal');
 const { gefFacilitiesList } = require('../emails/AIN-MIN-confirmation/gef-facilities-list');
-const generateAinMinConfirmationEmailVars = require('../emails/AIN-MIN-confirmation/generate-email-variables');
 const { generateMiaConfirmationEmailVars } = require('../emails/MIA-confirmation/generate-email-variables');
 
 const CONSTANTS = require('../../constants');
@@ -9,6 +8,7 @@ const api = require('../api');
 
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 const { mockFindOneDeal } = require('../__mocks__/common-api-mocks');
+const gefEmailVariables = require('../emails/AIN-MIN-confirmation/gef-email-variables');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 const findBankByIdSpy = jest.fn(() => Promise.resolve({ emails: [] }));
@@ -81,7 +81,7 @@ describe('send-deal-submit-emails - GEF', () => {
 
       const facilityLists = gefFacilitiesList(mappedDeal.facilities);
 
-      const expectedEmailVariables = await generateAinMinConfirmationEmailVars(mappedDeal, facilityLists);
+      const expectedEmailVariables = await gefEmailVariables(mappedDeal, facilityLists);
 
       expect(sendEmailApiSpy).toHaveBeenCalled();
 
@@ -143,7 +143,7 @@ describe('send-deal-submit-emails - GEF', () => {
 
       const facilityLists = gefFacilitiesList(mappedDeal.facilities);
 
-      const expectedEmailVariables = await generateAinMinConfirmationEmailVars(mappedDeal, facilityLists);
+      const expectedEmailVariables = await gefEmailVariables(mappedDeal, facilityLists);
 
       expect(sendEmailApiSpy).toHaveBeenCalled();
 
