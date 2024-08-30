@@ -8,12 +8,22 @@ import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../../fixtures/mocks/mock-facilities';
+import {
+  anUnissuedCashFacility,
+  anIssuedCashFacility,
+  anUnissuedContingentFacility,
+  anUnissuedCashFacilityWith20MonthsOfCover,
+} from '../../../../fixtures/mocks/mock-facilities';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
 import applicationSubmission from '../../../pages/application-submission';
 import statusBanner from '../../../pages/application-status-banner';
+
+const MOCK_FACILITY_ONE = anUnissuedCashFacility();
+const MOCK_FACILITY_TWO = anIssuedCashFacility();
+const MOCK_FACILITY_THREE = anUnissuedContingentFacility();
+const MOCK_FACILITY_FOUR = anUnissuedCashFacilityWith20MonthsOfCover();
 
 let dealId;
 let token;

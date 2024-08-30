@@ -13,9 +13,11 @@ import mandatoryCriteria from '../pages/mandatory-criteria';
 import uploadFiles from '../pages/upload-files';
 import statusBanner from '../pages/application-status-banner';
 import CONSTANTS from '../../fixtures/constants';
-import { MOCK_FACILITY_ONE } from '../../fixtures/mocks/mock-facilities';
+import { anUnissuedCashFacility } from '../../fixtures/mocks/mock-facilities';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_MIN } from '../../fixtures/mocks/mock-deals';
+
+const MOCK_FACILITY_ONE = anUnissuedCashFacility();
 
 context('Clone GEF (AIN) deal', () => {
   let AINdealId;

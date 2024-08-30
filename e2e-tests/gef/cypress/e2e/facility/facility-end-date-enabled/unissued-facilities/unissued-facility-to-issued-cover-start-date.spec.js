@@ -8,7 +8,7 @@ import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_FACILITY_ONE } from '../../../../fixtures/mocks/mock-facilities';
+import { anUnissuedCashFacility } from '../../../../fixtures/mocks/mock-facilities';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
@@ -18,6 +18,8 @@ import facilityEndDate from '../../../pages/facility-end-date';
 let dealId;
 let token;
 let facilityOneId;
+
+const MOCK_FACILITY_ONE = anUnissuedCashFacility({ facilityEndDateEnabled: true });
 
 const unissuedFacilitiesArray = [MOCK_FACILITY_ONE];
 

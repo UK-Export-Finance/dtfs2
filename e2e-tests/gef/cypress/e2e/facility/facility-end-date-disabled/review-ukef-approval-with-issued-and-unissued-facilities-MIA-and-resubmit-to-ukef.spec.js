@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import relative from '../../relativeURL';
 
 import CONSTANTS from '../../../fixtures/constants';
@@ -7,7 +8,12 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
 
 import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO_NULL_MIA, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
+import {
+  anUnissuedCashFacility,
+  anIssuedCashFacilityWithCoverDateConfirmed,
+  anUnissuedContingentFacility,
+  anUnissuedCashFacilityWith20MonthsOfCover,
+} from '../../../fixtures/mocks/mock-facilities';
 
 import { toTitleCase } from '../../../fixtures/helpers';
 
@@ -21,7 +27,10 @@ import applicationDetails from '../../pages/application-details';
 import returnToMaker from '../../pages/return-to-maker';
 import applicationActivities from '../../pages/application-activities';
 
-const { format } = require('date-fns');
+const MOCK_FACILITY_ONE = anUnissuedCashFacility();
+const MOCK_FACILITY_TWO_NULL_MIA = anIssuedCashFacilityWithCoverDateConfirmed();
+const MOCK_FACILITY_THREE = anUnissuedContingentFacility();
+const MOCK_FACILITY_FOUR = anUnissuedCashFacilityWith20MonthsOfCover();
 
 let dealId;
 let token;

@@ -8,7 +8,12 @@ import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../../fixtures/mocks/mock-facilities';
+import {
+  anUnissuedCashFacility,
+  anIssuedCashFacility,
+  anUnissuedContingentFacility,
+  anUnissuedCashFacilityWith20MonthsOfCover,
+} from '../../../../fixtures/mocks/mock-facilities';
 
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -20,6 +25,11 @@ import facilityEndDate from '../../../pages/facility-end-date';
 let dealId;
 let token;
 let facilityOneId;
+
+const MOCK_FACILITY_ONE = anUnissuedCashFacility({ facilityEndDateEnabled: true });
+const MOCK_FACILITY_TWO = anIssuedCashFacility({ facilityEndDateEnabled: true });
+const MOCK_FACILITY_THREE = anUnissuedContingentFacility({ facilityEndDateEnabled: true });
+const MOCK_FACILITY_FOUR = anUnissuedCashFacilityWith20MonthsOfCover({ facilityEndDateEnabled: true });
 
 const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR];
 
