@@ -70,7 +70,9 @@ const postAmendmentBankReviewDate = async (req, res) => {
 
   if (error?.fields) {
     const isFacilityEndDateEnabled = isTfmFacilityEndDateFeatureFlagEnabled() && facility.facilitySnapshot.isGef;
+
     const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isFacilityEndDateEnabled;
+
     const currentBankReviewDate = facility?.facilitySnapshot?.dates?.bankReviewDate
       ? format(parseISO(facility?.facilitySnapshot?.dates?.bankReviewDate), 'dd MMMM yyyy')
       : undefined;
