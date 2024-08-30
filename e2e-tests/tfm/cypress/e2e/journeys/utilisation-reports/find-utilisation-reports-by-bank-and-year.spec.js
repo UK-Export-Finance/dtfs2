@@ -85,14 +85,16 @@ context('PDC_RECONCILE users can search for reports by bank and year', () => {
     pages.searchUtilisationReportsResultsPage.noReportsText().should('exist');
   });
 
-  it('should display the dropdown for banks which have reports and should not display anything for banks without reports', () => {
+  it('should disable the input until a bank is selected and display the dropdown for banks which have reports and should not display anything for banks without reports', () => {
     const getDatalistIdForBankId = (bankId) => `datalist--bankId-${bankId}`;
 
     pages.searchUtilisationReportsFormPage.heading().should('exist');
 
+    pages.searchUtilisationReportsFormPage.yearInput().should('be.disabled');
     pages.searchUtilisationReportsFormPage.yearInputDropdownId().should('equal', '');
 
     pages.searchUtilisationReportsFormPage.bankRadioButton(BANK_WITHOUT_REPORTS_ID).click();
+    pages.searchUtilisationReportsFormPage.yearInput().should('be.enabled');
     pages.searchUtilisationReportsFormPage
       .yearInputDropdownId()
       .should('equal', getDatalistIdForBankId(BANK_WITHOUT_REPORTS_ID))
@@ -102,6 +104,7 @@ context('PDC_RECONCILE users can search for reports by bank and year', () => {
       });
 
     pages.searchUtilisationReportsFormPage.bankRadioButton(BANK_WITH_REPORTS_ID).click();
+    pages.searchUtilisationReportsFormPage.yearInput().should('be.enabled');
     pages.searchUtilisationReportsFormPage
       .yearInputDropdownId()
       .should('equal', getDatalistIdForBankId(BANK_WITH_REPORTS_ID))
