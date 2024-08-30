@@ -20,7 +20,7 @@ const user = {
 };
 
 const gefFacility = {
-  facilitySnapshot: { type: MAPPED_FACILITY_TYPE.CASH },
+  facilitySnapshot: { isGef: true, type: MAPPED_FACILITY_TYPE.CASH },
 };
 
 const session = { user, userToken: 'mockToken' };
