@@ -21,12 +21,12 @@ const user = {
 };
 
 const gefFacility = {
-  facilitySnapshot: { dates: { coverEndDate: '1 Oct 2020' }, type: MAPPED_FACILITY_TYPE.CASH },
+  facilitySnapshot: { isGef: true, dates: { coverEndDate: '1 Oct 2020' }, type: MAPPED_FACILITY_TYPE.CASH },
   tfm: {},
 };
 
 const bssEwcsFacility = {
-  facilitySnapshot: { dates: { coverEndDate: '2 Oct 2020' }, type: MAPPED_FACILITY_TYPE.LOAN },
+  facilitySnapshot: { isGef: false, dates: { coverEndDate: '2 Oct 2020' }, type: MAPPED_FACILITY_TYPE.LOAN },
   tfm: {},
 };
 
