@@ -29,11 +29,6 @@ services:
     build:
       context: ./mongodb
       dockerfile: Dockerfile
-      args:
-        MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
-        MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-        MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-        ENABLE_REPLICA_SET: ${ENABLE_REPLICA_SET}
     environment:
       - MONGO_INITDB_DATABASE
       - MONGO_INITDB_ROOT_USERNAME
