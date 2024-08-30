@@ -166,7 +166,9 @@
     }) }}
 
     {{ paymentDetailsTable.render({
-      paymentDetails: paymentDetails
+      reportId: reportId,
+      paymentDetails: paymentDetails,
+      userCanEdit: userCanEdit
     }) }}
   {% endif %}
 {% endset %}

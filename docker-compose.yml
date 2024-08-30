@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   clamav:
     image: mkodockx/docker-clamav:alpine
@@ -31,13 +30,16 @@ services:
       context: ./mongodb
       dockerfile: Dockerfile
       args:
+        MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+        MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+        MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
         ENABLE_REPLICA_SET: ${ENABLE_REPLICA_SET}
-    restart: always
     environment:
-      - MONGO_INITDB_DATABASE=dtfs-submissions
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=r00t
+      - MONGO_INITDB_DATABASE
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
       - ENABLE_REPLICA_SET
+    restart: always
     ports:
       - '27017:27017'
     volumes:
