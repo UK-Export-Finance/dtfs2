@@ -73,7 +73,7 @@
     "node-mocks-http": "^1.14.1",
     "supertest": "6.3.3",
     "ts-jest": "^29.1.4",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.4"
   },
   "engines": {
     "node": ">=20",
