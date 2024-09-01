@@ -53,7 +53,7 @@
     "express": "^4.19.2",
     "lodash.difference": "^4.5.0",
     "mongodb": "^4.17.2",
-    "mssql": "^10.0.2",
+    "mssql": "^11.0.1",
     "node-cron": "^3.0.3",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.20",
