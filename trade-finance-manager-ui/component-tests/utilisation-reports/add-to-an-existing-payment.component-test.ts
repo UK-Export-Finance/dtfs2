@@ -1,5 +1,6 @@
 import { pageRenderer } from '../pageRenderer';
 import { anAddToAnExistingPaymentViewModel } from '../../test-helpers/test-data/add-to-an-existing-payment-view-model';
+import { AddToAnExistingPaymentViewModel } from '../../server/types/view-models';
 
 const page = '../templates/utilisation-reports/add-to-an-existing-payment.njk';
 const render = pageRenderer(page);
@@ -73,13 +74,13 @@ describe(page, () => {
     wrapper.expectText(tableSelector).toContain('JPY 1');
   });
 
-  it('should render available payment groups radio input', () => {
+  it('should render payment groups', () => {
     // Arrange
     const addToAnExistingPaymentViewModel = anAddToAnExistingPaymentViewModel();
     const wrapper = render(addToAnExistingPaymentViewModel);
 
     // Assert
-    wrapper.expectElement('div[data-cy="payment-group-radio-input"]').toExist();
+    wrapper.expectElement('div[data-cy="payment-groups"]').toExist();
     wrapper.expectElement('[data-cy="payment-group--paymentIds-1,2"]').toExist();
     wrapper.expectElement('[data-cy="payment-group--paymentIds-3"]').toExist();
   });
@@ -92,5 +93,33 @@ describe(page, () => {
     // Assert
     wrapper.expectElement('[data-cy="continue-button"]').toExist();
     wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
+  });
+
+  it('should render cancel link button linking to backLinkHref', () => {
+    // Arrange
+    const backLinkHref = 'back-link-url';
+    const addToAnExistingPaymentViewModel: AddToAnExistingPaymentViewModel = {
+      ...anAddToAnExistingPaymentViewModel(),
+      backLinkHref,
+    };
+    const wrapper = render(addToAnExistingPaymentViewModel);
+
+    // Assert
+    wrapper.expectElement('[data-cy="cancel-link"]').toExist();
+    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(backLinkHref, 'Cancel');
+  });
+
+  it('should render back link button linking to backLinkHref', () => {
+    // Arrange
+    const backLinkHref = 'back-link-url';
+    const addToAnExistingPaymentViewModel: AddToAnExistingPaymentViewModel = {
+      ...anAddToAnExistingPaymentViewModel(),
+      backLinkHref,
+    };
+    const wrapper = render(addToAnExistingPaymentViewModel);
+
+    // Assert
+    wrapper.expectElement('[data-cy="back-link"]').toExist();
+    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(backLinkHref, 'Back');
   });
 });
