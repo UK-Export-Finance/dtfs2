@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
@@ -19,12 +19,6 @@ export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   };
 }>;
 
-const clearRedirectSessionData = (req: Request): void => {
-  delete req.session.addPaymentErrorKey;
-  delete req.session.checkedCheckboxIds;
-  delete req.session.generateKeyingDataErrorKey;
-};
-
 const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): boolean =>
   feeRecordPaymentGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
 
@@ -41,6 +35,8 @@ const renderUtilisationReportReconciliationForReport = (res: Response, viewModel
  * parameters. These may have been set if the user was redirected from another
  * page.
  *
+ * Deletes any related session data after processing.
+ *
  * @param req - The request object
  * @param res - The response object
  */
@@ -53,7 +49,9 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds } = req.session;
 
-    clearRedirectSessionData(req);
+    delete req.session.addPaymentErrorKey;
+    delete req.session.checkedCheckboxIds;
+    delete req.session.generateKeyingDataErrorKey;
 
     const { facilityIdQueryString, filterError, tableDataError, isCheckboxChecked } = extractQueryAndSessionData(
       { facilityIdQuery, selectedFeeRecordIdsQuery },
