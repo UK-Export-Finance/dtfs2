@@ -444,8 +444,8 @@ jobs:
             "eligibility/**/*.spec.js",
             "exporter/**/*.spec.js",
             "external/**/*.spec.js",
-            "facility/facility-end-date-enabled/**/*.spec.js",
-            "maker/facility-end-date-enabled/**/*.spec.js",
+            "facility/**/*.spec.js",
+            "maker/**/*.spec.js",
             "scenarios/**/*.spec.js",
             "security/**/*.spec.js",
             "ukef/**/*.spec.js",
@@ -454,68 +454,6 @@ jobs:
 
     concurrency:
       group: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Repository
-        uses: actions/checkout@v4
-
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.node }}
-
-      - name: Timezone
-        uses: szenius/set-timezone@v1.2
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.timezone }}
-
-      - name: Dependencies
-        working-directory: ./
-        run: npm ci
-
-      - name: Docker
-        run: docker compose up --build -d
-
-      - name: Initialise
-        working-directory: ./utils
-        run: |
-          sleep 100s
-          npm run mock-data-loader
-
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
-
-      - name: Execute
-        working-directory: ./e2e-tests
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-          TZ: ${{ vars.TIMEZONE }}
-        run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}"
-
-
-  # 5.1 E2E - GEF backwards compatibility
-  e2e-tests-gef-feature-flag-backwards-compatibility:
-    name: E2E GEF feature flag compatability 👷
-    needs: setup
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    env:
-      GEF_DEAL_VERSION: 0
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        spec: ["facility/facility-end-date-disabled/**/*.spec.js", "maker/facility-end-date-disabled/**/*.spec.js"]
-
-    concurrency:
-      group: e2e-tests-gef-feature-flag-backwards-compatibility-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
       cancel-in-progress: true
 
     steps:
