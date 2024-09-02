@@ -12,8 +12,10 @@ RUN chown 999:999 /mongo-keyfile
 # To Run MongoDB with RS, uncomment second CMD statement.
 
 
+# TODO: DTFS2-7317
+
 # Non-RS initilisation
-CMD ["mongod", "--bind_ip_all", "--auth"]
+# CMD ["mongod", "--bind_ip_all", "--auth"]
 
 # RS initlisation
 # CMD ["mongod", "--bind_ip_all", "--keyFile", "/mongo-keyfile", "--replSet", "rs0"]
