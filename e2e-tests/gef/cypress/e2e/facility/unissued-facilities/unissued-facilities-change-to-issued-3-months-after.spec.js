@@ -75,7 +75,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about`));
     });
 
-    it('update facility page should have correct titles and text (only name should be prepopulated', () => {
+    it('update facility page should have correct titles and text', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
@@ -94,22 +94,10 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
 
       if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.be.checked');
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
         aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
       }
     });
-
-    if (facilityEndDateEnabled) {
-      it('should display an error if not selected if there is a facility end date ', () => {
-        applicationPreview.unissuedFacilitiesReviewLink().click();
-        unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-
-        cy.clickContinueButton();
-
-        errorSummary().contains('Select if there is an end date for this facility');
-        aboutFacilityUnissued.isUsingFacilityEndDateError();
-      });
-    }
 
     it('should not be able to update facility and then go back to application preview page with coverStartDate more than 3 months in the future', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
@@ -127,6 +115,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeYearsDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeYearsMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeYearsYear);
+
       cy.clickContinueButton();
 
       errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');

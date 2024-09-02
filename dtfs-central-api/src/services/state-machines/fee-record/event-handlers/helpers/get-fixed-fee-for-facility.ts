@@ -4,6 +4,11 @@ import { NotFoundError } from '../../../../../errors';
 import { convertTimestampToDate, getLatestCompletedAmendmentCoverEndDate } from '../../../../../helpers';
 import { calculateFixedFee } from './calculate-fixed-fee';
 
+/**
+ * Gets the latest values for the TFM facility with the supplied facility id
+ * @param facilityId - The facility id
+ * @returns The latest values
+ */
 const getLatestTfmFacilityValues = async (
   facilityId: string,
 ): Promise<{
