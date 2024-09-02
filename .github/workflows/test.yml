@@ -118,9 +118,9 @@ env:
   EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-  PORTAL_API_URL: http://localhost:5001
-  DTFS_CENTRAL_API_URL: http://localhost:5005
-  TFM_API_URL: http://localhost:5004
+  PORTAL_API_URL: ${{ secrets.PORTAL_API_URL }}
+  DTFS_CENTRAL_API_URL: ${{ secrets.DTFS_CENTRAL_API_URL }}
+  TFM_API_URL: ${{ secrets.TFM_API_URL }}
   RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD }}
   UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
   UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
@@ -143,6 +143,9 @@ env:
   SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
   ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
   CONTACT_US_EMAIL_ADDRESS: ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
+  FF_TFM_PAYMENT_RECONCILIATION_ENABLED: ${{ vars.FF_TFM_PAYMENT_RECONCILIATION_ENABLED }}
+  FF_TFM_FACILITY_END_DATE_ENABLED: ${{ vars.FF_TFM_FACILITY_END_DATE_ENABLED }}
+  GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -643,6 +646,11 @@ jobs:
   e2e-tests-ff:
     name: E2E Feature flag 👷
     needs: setup
+    env:
+      # Various feature flags
+      FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
+      FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
+      GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -728,8 +736,4 @@ jobs:
         env:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
           TZ: ${{ vars.TIMEZONE }}
-          # Various feature flags
-          FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
-          FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
-          GEF_DEAL_VERSION: 1
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec "${{ matrix.spec }}"
