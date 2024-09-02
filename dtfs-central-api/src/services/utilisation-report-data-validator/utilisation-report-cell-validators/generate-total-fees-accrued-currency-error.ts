@@ -13,6 +13,7 @@ export const generateTotalFeesAccruedCurrencyError: UtilisationReportRowValidati
   if (!totalFeesAccruedCurrencyValue && !csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value) {
     return null;
   }
+
   if (!totalFeesAccruedCurrencyValue) {
     return {
       errorMessage: 'Accrual currency must have an entry when an accrual exchange rate is supplied',
@@ -22,6 +23,7 @@ export const generateTotalFeesAccruedCurrencyError: UtilisationReportRowValidati
       exporter: csvDataRow[UTILISATION_REPORT_HEADERS.EXPORTER]?.value,
     };
   }
+
   if (!validator.isISO4217(totalFeesAccruedCurrencyValue)) {
     return {
       errorMessage: 'Accrual currency must be in the ISO 4217 currency code format',
@@ -31,5 +33,6 @@ export const generateTotalFeesAccruedCurrencyError: UtilisationReportRowValidati
       exporter: csvDataRow[UTILISATION_REPORT_HEADERS.EXPORTER]?.value,
     };
   }
+
   return null;
 };

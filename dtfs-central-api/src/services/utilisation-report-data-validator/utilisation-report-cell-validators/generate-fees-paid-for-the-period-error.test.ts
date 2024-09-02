@@ -1,5 +1,5 @@
 import { generateFeesPaidForThePeriodError } from './generate-fees-paid-for-the-period-error';
-import { FILE_UPLOAD } from '../../../constants/file-upload';
+import { CSV } from '../../../constants/csv';
 
 describe('generateMonthlyFeesPaidError', () => {
   const testExporterName = 'test-exporter';
@@ -67,7 +67,7 @@ describe('generateMonthlyFeesPaidError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: `Fees paid to UKEF for the period must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
+      errorMessage: `Fees paid to UKEF for the period must be ${CSV.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: 'A',
       row: 1,
       value: '1473812445951826593.52',

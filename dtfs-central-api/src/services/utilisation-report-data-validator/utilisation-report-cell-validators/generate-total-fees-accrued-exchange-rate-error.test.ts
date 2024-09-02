@@ -1,5 +1,5 @@
 import { generateTotalFeesAccruedExchangeRateError } from './generate-total-fees-accrued-exchange-rate-error';
-import { FILE_UPLOAD } from '../../../constants/file-upload';
+import { CSV } from '../../../constants/csv';
 
 describe('generateTotalFeesAccruedExchangeRateError', () => {
   const testExporterName = 'test-exporter';
@@ -79,7 +79,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
     };
 
     const expectedError = {
-      errorMessage: `Accrual exchange rate must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
+      errorMessage: `Accrual exchange rate must be ${CSV.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: 'E',
       row: 1,
       value: '1.738491847362543',
@@ -314,7 +314,7 @@ describe('generateTotalFeesAccruedExchangeRateError', () => {
     };
 
     const expectedError = {
-      errorMessage: `Accrual exchange rate must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
+      errorMessage: `Accrual exchange rate must be ${CSV.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: 'F',
       row: 1,
       value: '1.738491847362543',

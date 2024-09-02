@@ -18,6 +18,7 @@ export const postReportDataValidation = (req: PostReportDataValidationRequest, r
 
   try {
     const csvValidationErrors = validateUtilisationReportCsvData(reportData);
+
     return res.status(HttpStatusCode.Ok).send({ csvValidationErrors });
   } catch (error) {
     const errorMessage = 'Failed to validate report data';

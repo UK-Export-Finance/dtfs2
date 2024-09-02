@@ -1,6 +1,6 @@
 import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 import { CURRENCY_NUMBER_REGEX } from '../../../constants/regex';
-import { FILE_UPLOAD } from '../../../constants';
+import { CSV } from '../../../constants';
 
 /**
  * Generate and return error for fees paid to ukef for the period cell if value is invalid
@@ -18,6 +18,7 @@ export const generateFeesPaidForThePeriodError: UtilisationReportCellValidationE
       exporter: exporterName,
     };
   }
+
   if (!CURRENCY_NUMBER_REGEX.test(feesPaidForThePeriodCellData.value)) {
     return {
       errorMessage: 'Fees paid to UKEF for the period must be a number with a maximum of two decimal places',
@@ -27,14 +28,16 @@ export const generateFeesPaidForThePeriodError: UtilisationReportCellValidationE
       exporter: exporterName,
     };
   }
-  if (feesPaidForThePeriodCellData.value.length > FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT) {
+
+  if (feesPaidForThePeriodCellData.value.length > CSV.MAX_CELL_CHARACTER_COUNT) {
     return {
-      errorMessage: `Fees paid to UKEF for the period must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
+      errorMessage: `Fees paid to UKEF for the period must be ${CSV.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: feesPaidForThePeriodCellData?.column,
       row: feesPaidForThePeriodCellData?.row,
       value: feesPaidForThePeriodCellData?.value,
       exporter: exporterName,
     };
   }
+
   return null;
 };

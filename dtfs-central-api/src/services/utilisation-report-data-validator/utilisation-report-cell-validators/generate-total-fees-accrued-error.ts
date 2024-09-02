@@ -1,5 +1,5 @@
 import { CURRENCY_NUMBER_REGEX } from '../../../constants/regex';
-import { FILE_UPLOAD } from '../../../constants/file-upload';
+import { CSV } from '../../../constants/csv';
 import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 
 /**
@@ -23,11 +23,14 @@ export const generateTotalFeesAccruedError: UtilisationReportCellValidationError
   if (!value) {
     return generateError('Total fees accrued for the period must have an entry');
   }
+
   if (!CURRENCY_NUMBER_REGEX.test(value)) {
     return generateError('Total fees accrued for the period must be a number with a maximum of two decimal places');
   }
-  if (value.length > FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT) {
-    return generateError(`Total fees accrued for the period must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`);
+
+  if (value.length > CSV.MAX_CELL_CHARACTER_COUNT) {
+    return generateError(`Total fees accrued for the period must be ${CSV.MAX_CELL_CHARACTER_COUNT} characters or less`);
   }
+
   return null;
 };

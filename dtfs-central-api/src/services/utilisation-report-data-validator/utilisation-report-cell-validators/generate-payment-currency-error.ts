@@ -12,6 +12,7 @@ export const generatePaymentCurrencyError: UtilisationReportRowValidationErrorGe
   if (!csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE]?.value && !paymentCurrencyValue) {
     return null;
   }
+
   if (!paymentCurrencyValue) {
     return {
       errorMessage: 'Payment currency must have an entry when a payment exchange rate is supplied',
@@ -21,6 +22,7 @@ export const generatePaymentCurrencyError: UtilisationReportRowValidationErrorGe
       exporter: csvDataRow[UTILISATION_REPORT_HEADERS.EXPORTER]?.value,
     };
   }
+
   if (!validator.isISO4217(paymentCurrencyValue)) {
     return {
       errorMessage: 'Payment currency must be in the ISO 4217 currency code format',
@@ -30,5 +32,6 @@ export const generatePaymentCurrencyError: UtilisationReportRowValidationErrorGe
       exporter: csvDataRow[UTILISATION_REPORT_HEADERS.EXPORTER]?.value,
     };
   }
+
   return null;
 };

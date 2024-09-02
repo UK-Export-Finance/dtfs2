@@ -20,7 +20,7 @@ import {
 const HEADER_IS_MISSING_BASE_ERROR_MESSAGE = 'header is missing or spelt incorrectly';
 
 /**
- * Constructs header is missing error message
+ * Constructs "header is missing" error message
  * @param header - The header text
  * @returns The header is missing error message for the provided header
  */
@@ -66,13 +66,7 @@ export const validateUtilisationReportCsvHeaders = (
 
   requiredHeaders.forEach(({ header, missingErrorMessage }) => {
     if (!headers.includes(header)) {
-      missingHeaderErrors.push({
-        errorMessage: missingErrorMessage,
-        column: null,
-        row: null,
-        value: null,
-        exporter: null,
-      });
+      missingHeaderErrors.push({ errorMessage: missingErrorMessage });
     } else {
       availableHeaders.push(header);
     }

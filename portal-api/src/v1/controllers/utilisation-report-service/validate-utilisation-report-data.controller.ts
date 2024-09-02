@@ -19,12 +19,17 @@ type ValidateUtilisationReportDataRequest = CustomExpressRequest<{
 export const validateUtilisationReportData = async (req: ValidateUtilisationReportDataRequest, res: Response) => {
   try {
     const { reportData } = req.body;
+
     const validationErrors = await api.validateUtilisationReportData(reportData);
+
     return res.status(HttpStatusCode.Ok).send(validationErrors);
   } catch (error) {
     const errorMessage = 'Failed to validate utilisation report data';
+
     console.error(errorMessage, error);
+
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
+
     return res.status(errorStatus).send(errorMessage);
   }
 };

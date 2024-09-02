@@ -1,5 +1,5 @@
 import { generateTotalFeesAccruedError } from './generate-total-fees-accrued-error';
-import { FILE_UPLOAD } from '../../../constants/file-upload';
+import { CSV } from '../../../constants/csv';
 
 describe('generateTotalFeesAccruedError', () => {
   const testExporterName = 'test-exporter';
@@ -67,7 +67,7 @@ describe('generateTotalFeesAccruedError', () => {
       row: 1,
     };
     const expectedError = {
-      errorMessage: `Total fees accrued for the period must be ${FILE_UPLOAD.MAX_CELL_CHARACTER_COUNT} characters or less`,
+      errorMessage: `Total fees accrued for the period must be ${CSV.MAX_CELL_CHARACTER_COUNT} characters or less`,
       column: 'A',
       row: 1,
       value: '1473812445951826593.52',
