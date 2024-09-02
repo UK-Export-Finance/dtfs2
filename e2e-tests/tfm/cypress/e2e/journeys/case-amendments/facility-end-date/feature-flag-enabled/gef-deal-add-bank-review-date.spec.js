@@ -61,7 +61,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         cy.url().should('contain', 'check-answers');
       });
 
-      it('should allow bank review date amendments on the `Check your answers` page', () => {
+      it('should show bank review date amendments on the `Check your answers` page', () => {
         amendmentsPage.amendmentAnswerBankReviewDateChangeLink().click();
 
         cy.url().should('contain', 'bank-review-date');
