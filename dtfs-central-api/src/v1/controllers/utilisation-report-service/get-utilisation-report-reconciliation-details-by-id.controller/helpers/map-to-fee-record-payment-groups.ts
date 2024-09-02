@@ -22,7 +22,7 @@ export const mapToFeeRecordPaymentGroups = async (feeRecordPaymentEntityGroups: 
       if (group.payments.length === 0) {
         // If there are no payments, there is only one fee record in the group
         if (group.feeRecords.length !== 1) {
-          throw new Error('Fee record payment entity group cannot have more than one fee record if there are multiple payments');
+          throw new Error('Fee record payment entity group cannot have more than one fee record if there are no payments');
         }
 
         const feeRecord = mapFeeRecordEntityToFeeRecord(group.feeRecords[0]);

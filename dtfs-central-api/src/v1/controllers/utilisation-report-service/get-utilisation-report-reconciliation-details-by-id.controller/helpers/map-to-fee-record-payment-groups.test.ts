@@ -28,7 +28,7 @@ describe('mapToFeeRecordPaymentGroups', () => {
     jest.resetAllMocks();
   });
 
-  it('throws an error when a group has multiple fee records but only one payment', async () => {
+  it('throws an error when a group has multiple fee records but no payments', async () => {
     // Arrange
     const group: FeeRecordPaymentEntityGroup = {
       feeRecords: [
@@ -41,7 +41,7 @@ describe('mapToFeeRecordPaymentGroups', () => {
 
     // Act / Assert
     await expect(mapToFeeRecordPaymentGroups([group])).rejects.toThrow(
-      new Error('Fee record payment entity group cannot have more than one fee record if there are multiple payments'),
+      new Error('Fee record payment entity group cannot have more than one fee record if there are no payments'),
     );
   });
 
