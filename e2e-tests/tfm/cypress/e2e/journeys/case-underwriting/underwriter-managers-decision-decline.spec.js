@@ -58,7 +58,9 @@ context('Case Underwriting - Pricing and risk', () => {
 
     cy.assertText(pages.managersDecisionPage.decisionMadeBy(), expectedName);
 
-    cy.assertText(pages.managersDecisionPage.decisionDateTime(), new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' }));
+    const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' });
+
+    cy.assertText(pages.managersDecisionPage.decisionDateTime(), expectedDate);
 
     cy.assertText(pages.managersDecisionPage.conditions(), MOCK_COMMENTS);
 
