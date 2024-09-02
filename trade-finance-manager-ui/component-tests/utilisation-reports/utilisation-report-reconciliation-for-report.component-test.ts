@@ -1,3 +1,4 @@
+import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import { PRIMARY_NAVIGATION_KEYS } from '../../server/constants';
 import { pageRenderer } from '../pageRenderer';
 import { aTfmSessionUser } from '../../test-helpers/test-data/tfm-session-user';
@@ -228,11 +229,13 @@ describe(page, () => {
       paymentDetails: [
         {
           payment: {
+            id: 1,
             amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
             dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
             reference: undefined,
           },
           feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
+          feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH,
         },
       ],
     });

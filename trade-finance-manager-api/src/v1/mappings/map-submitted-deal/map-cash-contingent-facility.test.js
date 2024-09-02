@@ -109,6 +109,8 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         facilityStage: mapFacilityStage(hasBeenIssued),
         tfm: mockFacility.tfm,
         hasBeenIssuedAndAcknowledged,
+        facilityEndDate: mockFacility.facilityEndDate,
+        isUsingFacilityEndDate: mockFacility.isUsingFacilityEndDate,
       };
 
       expect(result).toEqual(expected);
