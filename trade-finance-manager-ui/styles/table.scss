@@ -158,15 +158,8 @@ table.premium-payments-table {
   }
 }
 
-.utilisation-report-reconciliation-table {
+table.utilisation-report-reconciliation-table {
   table-layout: fixed;
-  // width: 100%;
-
-  th, td {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-  }
 
   .ukef-width-one-ninth {
     width: 11.11% !important;
@@ -176,10 +169,8 @@ table.premium-payments-table {
     width: 22.22% !important;
   }
 }
-
-@media (max-width: 65em) {
+@media (max-width:65em) {
   table.utilisation-report-reconciliation-table {
-    table-layout: fixed;
     width: 55em;
 
     .govuk-table__header,
@@ -188,14 +179,3 @@ table.premium-payments-table {
     }
   }
 }
-
-// table.utilisation-report-reconciliation-table {
-//   table-layout: auto;
-// }
-
-// /* Min width to prevent column overflow on small screens. Max width to prevent element overlap on large screens with large font sizes. */
-// @media (min-width: 55em) and (max-width: 1920px) {
-//   table.utilisation-report-reconciliation-table {
-//     table-layout: fixed;
-//   }
-// }

@@ -40,8 +40,9 @@ describe(component, () => {
 
   it('should render the table headings with fixed widths', () => {
     const wrapper = getWrapper();
+    wrapper.expectElement(tableSelector).toHaveAttribute('class', 'govuk-table utilisation-report-reconciliation-table');
     wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(7);
-    wrapper.expectElement(`${tableSelector} thead th:contains("Bank")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-ninth');
+    wrapper.expectElement(`${tableSelector} thead th:contains("Bank")`).toHaveAttribute('class', 'govuk-table__header ukef-width-two-ninths');
     wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toHaveAttribute('class', 'govuk-table__header ukef-width-two-ninths');
     wrapper.expectElement(`${tableSelector} thead th:contains("Frequency")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-ninth');
     wrapper.expectElement(`${tableSelector} thead th:contains("Date report received")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-ninth');
