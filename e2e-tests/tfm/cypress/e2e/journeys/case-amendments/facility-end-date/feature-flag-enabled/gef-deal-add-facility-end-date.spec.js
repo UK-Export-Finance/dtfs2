@@ -42,6 +42,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     after(() => {
       cy.deleteDeals(dealId, ADMIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     it('should display the default blank facility end date fields in the Details tab', () => {

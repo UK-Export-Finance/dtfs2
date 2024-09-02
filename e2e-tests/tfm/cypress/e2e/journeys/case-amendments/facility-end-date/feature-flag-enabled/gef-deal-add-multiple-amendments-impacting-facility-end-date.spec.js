@@ -53,6 +53,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     after(() => {
       cy.deleteDeals(dealId, ADMIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     it('should display the current bank review date details from the facility snapshot in the Details tab', () => {
