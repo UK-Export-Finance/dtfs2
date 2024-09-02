@@ -193,12 +193,14 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         cy.assertText(pages.agentPage.agentCommissionRate(), '1.234');
 
         pages.partiesPage.agentEditLink().click();
+
         pages.agentPage
           .agentUniqueRefInput()
           .invoke('val')
           .then((value) => {
             expect(value.trim()).equal(partyUrn);
           });
+
         pages.agentPage
           .agentCommissionRateInput()
           .invoke('val')
