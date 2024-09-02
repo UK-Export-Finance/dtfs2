@@ -7,6 +7,7 @@ import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
 import { todayDay, todayMonth, todayYear } from '../../../../../../../e2e-fixtures/dateConstants';
+import { DATE_FORMATS } from '../../../../../fixtures/constants';
 
 if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
   context('Amendments - GEF deal add multiple consecutive amendments impacting facility end date values', () => {
@@ -19,9 +20,9 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     const Date4 = new Date('2024-04-04');
     const Date5 = new Date('2024-05-05');
 
-    const currentDateFormat = 'dd MMMM yyyy';
-    const checkAnswersDateFormat = 'dd MMM yyyy';
-    const facilityPageDateFormat = 'd MMMM yyyy';
+    const currentDateFormat = DATE_FORMATS.FULL;
+    const checkAnswersDateFormat = DATE_FORMATS.SHORT;
+    const facilityPageDateFormat = DATE_FORMATS.SINGLE_DIGIT_DAY_LONG;
 
     const MOCK_GEF_FACILITY_WITH_BANK_REVIEW_DATE = {
       ...MOCK_FACILITY_ONE,
