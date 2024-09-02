@@ -33,6 +33,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'false') {
 
     after(() => {
       cy.deleteDeals(dealId, ADMIN);
+      cy.deleteFacility(facility._id, BANK1_MAKER1);
     });
 
     it('should not show any facility end date fields in the Details tab', () => {
