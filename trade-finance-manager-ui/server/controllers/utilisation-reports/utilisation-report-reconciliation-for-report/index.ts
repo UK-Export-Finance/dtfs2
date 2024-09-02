@@ -88,6 +88,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       premiumPayments: premiumPaymentsViewModel,
       keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,
+      displayMatchSuccessNotification: true,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);
