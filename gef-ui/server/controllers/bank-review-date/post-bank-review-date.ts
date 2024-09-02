@@ -24,12 +24,18 @@ type PostRequestUris = {
   saveAndReturn: string;
 };
 
-type HandlePostBankReviewDateParams = {
+type PostBankReviewDateParams = {
   req: PostBankReviewDateRequest;
   res: Response;
   uris: PostRequestUris;
 };
 
+/**
+ * Update the bank review date if it has changed
+ * @param existingFacility the current facility from the api
+ * @param bankReviewDate the new bank review date
+ * @param session the user session
+ */
 const updateBankReviewDateIfChanged = async (existingFacility: Facility, bankReviewDate: Date, { userToken, user }: LoggedInUserSession): Promise<void> => {
   const bankReviewDateNeedsUpdating =
     typeof existingFacility.bankReviewDate !== 'string' || !isSameDay(parseISO(existingFacility.bankReviewDate), bankReviewDate);
@@ -52,7 +58,10 @@ const updateBankReviewDateIfChanged = async (existingFacility: Facility, bankRev
   await api.updateApplication({ dealId: existingFacility.dealId, application: applicationUpdate, userToken });
 };
 
-const handlePostBankReviewDate = async ({ req, res, uris }: HandlePostBankReviewDateParams) => {
+/**
+ * Handle the bank review date request
+ */
+const postBankReviewDate = async ({ req, res, uris }: PostBankReviewDateParams) => {
   try {
     const {
       params: { dealId, facilityId },
@@ -109,8 +118,11 @@ const handlePostBankReviewDate = async ({ req, res, uris }: HandlePostBankReview
   }
 };
 
+/**
+ * Controller for post bank review date from application preview page
+ */
 export const postBankReviewDateFromApplicationPreviewPage = async (req: PostBankReviewDateRequest, res: Response) =>
-  handlePostBankReviewDate({
+  postBankReviewDate({
     req,
     res,
     uris: {
@@ -120,8 +132,11 @@ export const postBankReviewDateFromApplicationPreviewPage = async (req: PostBank
     },
   });
 
+/**
+ * Controller for post bank review date from unissued facilities page
+ */
 export const postBankReviewDateFromUnissuedFacilitiesPage = async (req: PostBankReviewDateRequest, res: Response) =>
-  handlePostBankReviewDate({
+  postBankReviewDate({
     req,
     res,
     uris: {
@@ -131,8 +146,11 @@ export const postBankReviewDateFromUnissuedFacilitiesPage = async (req: PostBank
     },
   });
 
+/**
+ * Controller for post bank review date from application details page
+ */
 export const postBankReviewDateFromApplicationDetailsPage = async (req: PostBankReviewDateRequest, res: Response) =>
-  handlePostBankReviewDate({
+  postBankReviewDate({
     req,
     res,
     uris: {

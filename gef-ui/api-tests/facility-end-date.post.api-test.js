@@ -182,7 +182,7 @@ describe('facility end date routes', () => {
           expect(api.updateFacility).toHaveBeenCalledTimes(0);
         });
 
-        it('redirects if the facility end date is blank and does not update the database', async () => {
+        it('redirects if the facility end date is blank', async () => {
           // Arrange
           const body = { 'facility-end-date-year': '', 'facility-end-date-month': '', 'facility-end-date-day': '' };
 
@@ -192,7 +192,16 @@ describe('facility end date routes', () => {
           // Assert
           expect(response.status).toBe(HttpStatusCode.Found);
           expect(response.headers.location).toBe(saveAndReturnRedirectUrl);
+        });
 
+        it('does not update the database if the facility end date is blank', async () => {
+          // Arrange
+          const body = { 'facility-end-date-year': '', 'facility-end-date-month': '', 'facility-end-date-day': '' };
+
+          // Act
+          await makeRequest(body);
+
+          // Assert
           expect(api.updateFacility).toHaveBeenCalledTimes(0);
         });
 

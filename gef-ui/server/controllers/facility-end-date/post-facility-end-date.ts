@@ -30,6 +30,12 @@ type HandlePostFacilityEndDateParams = {
   uris: PostRequestUris;
 };
 
+/**
+ * Update the facility end date if it has changed
+ * @param existingFacility the current facility from the api
+ * @param facilityEndDate the new facility end date
+ * @param session the user session
+ */
 const updateFacilityEndDateIfChanged = async (existingFacility: Facility, facilityEndDate: Date, { userToken, user }: LoggedInUserSession): Promise<void> => {
   const facilityEndDateNeedsUpdating =
     typeof existingFacility.facilityEndDate !== 'string' || !isSameDay(parseISO(existingFacility.facilityEndDate), facilityEndDate);
@@ -52,7 +58,10 @@ const updateFacilityEndDateIfChanged = async (existingFacility: Facility, facili
   await api.updateApplication({ dealId: existingFacility.dealId, application: applicationUpdate, userToken });
 };
 
-const handlePostFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityEndDateParams) => {
+/**
+ * handle post facility end date request
+ */
+const postFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityEndDateParams) => {
   try {
     const {
       params: { dealId, facilityId },
@@ -109,8 +118,11 @@ const handlePostFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityE
   }
 };
 
+/**
+ * Controller for post bank review date from application preview page
+ */
 export const postFacilityEndDateFromApplicationPreviewPage = async (req: PostFacilityEndDateRequest, res: Response) =>
-  handlePostFacilityEndDate({
+  postFacilityEndDate({
     req,
     res,
     uris: {
@@ -120,8 +132,11 @@ export const postFacilityEndDateFromApplicationPreviewPage = async (req: PostFac
     },
   });
 
+/**
+ * Controller for post bank review date from unissued facilities page
+ */
 export const postFacilityEndDateFromUnissuedFacilitiesPage = async (req: PostFacilityEndDateRequest, res: Response) =>
-  handlePostFacilityEndDate({
+  postFacilityEndDate({
     req,
     res,
     uris: {
@@ -131,8 +146,11 @@ export const postFacilityEndDateFromUnissuedFacilitiesPage = async (req: PostFac
     },
   });
 
+/**
+ * Controller for post bank review date from application details page
+ */
 export const postFacilityEndDateFromApplicationDetailsPage = async (req: PostFacilityEndDateRequest, res: Response) =>
-  handlePostFacilityEndDate({
+  postFacilityEndDate({
     req,
     res,
     uris: {

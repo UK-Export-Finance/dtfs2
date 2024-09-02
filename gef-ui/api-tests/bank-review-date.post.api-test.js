@@ -182,7 +182,7 @@ describe('bank review date routes', () => {
           expect(api.updateFacility).toHaveBeenCalledTimes(0);
         });
 
-        it('redirects if the bank review date is blank and does not update the database', async () => {
+        it('redirects if the bank review date is blank', async () => {
           // Arrange
           const body = { 'bank-review-date-year': '', 'bank-review-date-month': '', 'bank-review-date-day': '' };
 
@@ -192,7 +192,16 @@ describe('bank review date routes', () => {
           // Assert
           expect(response.status).toBe(HttpStatusCode.Found);
           expect(response.headers.location).toBe(saveAndReturnRedirectUrl);
+        });
 
+        it('does not update the database if the bank review date is blank', async () => {
+          // Arrange
+          const body = { 'bank-review-date-year': '', 'bank-review-date-month': '', 'bank-review-date-day': '' };
+
+          // Act
+          await makeRequest(body);
+
+          // Assert
           expect(api.updateFacility).toHaveBeenCalledTimes(0);
         });
 

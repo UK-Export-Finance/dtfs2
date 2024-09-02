@@ -10,12 +10,18 @@ type FacilityEndDateParams = { dealId: string; facilityId: string };
 
 type GetFacilityEndDateRequest = CustomExpressRequest<{ params: FacilityEndDateParams; query: { status: string | undefined } }>;
 
-type HandleGetFacilityEndDateParams = {
+type GetFacilityEndDateParams = {
   req: GetFacilityEndDateRequest;
   res: Response;
   previousPage: string;
 };
 
+/**
+ * @param facility - the facility
+ * @param previousPage - the previous page url
+ * @param status - the query parameter status
+ * @returns view model for the facility end date template
+ */
 const getFacilityEndDateViewModel = (facility: Facility, previousPage: string, status: string | undefined): FacilityEndDateViewModel => {
   if (typeof facility.dealId !== 'string' || typeof facility._id !== 'string') {
     throw new Error('Invalid facility or deal id provided');
@@ -40,7 +46,10 @@ const getFacilityEndDateViewModel = (facility: Facility, previousPage: string, s
   return facilityEndDateViewModel;
 };
 
-const handleGetFacilityEndDate = async ({ req, res, previousPage }: HandleGetFacilityEndDateParams) => {
+/**
+ * Handle get facility end date requests
+ */
+const getFacilityEndDate = async ({ req, res, previousPage }: GetFacilityEndDateParams) => {
   const {
     params: { dealId, facilityId },
     query: { status },
@@ -51,7 +60,8 @@ const handleGetFacilityEndDate = async ({ req, res, previousPage }: HandleGetFac
     const { details: facility } = await api.getFacility({ facilityId, userToken });
     const deal = await api.getApplication({ dealId, userToken });
 
-    const shouldRedirectFromPage = !isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || !facility.isUsingFacilityEndDate;
+    const dealVersion = parseDealVersion(deal.version);
+    const shouldRedirectFromPage = !isFacilityEndDateEnabledOnGefVersion(dealVersion) || !facility.isUsingFacilityEndDate;
 
     if (shouldRedirectFromPage) {
       return res.redirect(previousPage);
@@ -59,16 +69,25 @@ const handleGetFacilityEndDate = async ({ req, res, previousPage }: HandleGetFac
 
     return res.render('partials/facility-end-date.njk', getFacilityEndDateViewModel(facility, previousPage, status));
   } catch (error) {
-    console.error(error);
+    console.error('Error in getFacilityEndDate', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
 
+/**
+ * Controller for get facility end date from unissued facilities page
+ */
 export const getFacilityEndDateFromUnissuedFacilitiesPage = async (req: GetFacilityEndDateRequest, res: Response) =>
-  handleGetFacilityEndDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/unissued-facilities/${req.params.facilityId}/about` });
+  getFacilityEndDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/unissued-facilities/${req.params.facilityId}/about` });
 
+/**
+ * Controller for get facility end date from application preview page
+ */
 export const getFacilityEndDateFromApplicationPreviewPage = async (req: GetFacilityEndDateRequest, res: Response) =>
-  handleGetFacilityEndDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/unissued-facilities/${req.params.facilityId}/change` });
+  getFacilityEndDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/unissued-facilities/${req.params.facilityId}/change` });
 
+/**
+ * Controller for get facility end date from application details page
+ */
 export const getFacilityEndDateFromApplicationDetailsPage = async (req: GetFacilityEndDateRequest, res: Response) =>
-  handleGetFacilityEndDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/facilities/${req.params.facilityId}/about-facility` });
+  getFacilityEndDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/facilities/${req.params.facilityId}/about-facility` });

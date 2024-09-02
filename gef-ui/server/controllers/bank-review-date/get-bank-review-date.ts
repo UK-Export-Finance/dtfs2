@@ -16,6 +16,12 @@ type HandleGetBankReviewDateParams = {
   previousPage: string;
 };
 
+/**
+ * @param facility - the facility
+ * @param previousPage - the previous page url
+ * @param status - the query parameter status
+ * @returns view model for the bank review date template
+ */
 const getBankReviewDateViewModel = (facility: Facility, previousPage: string, status: string | undefined): BankReviewDateViewModel => {
   if (typeof facility.dealId !== 'string' || typeof facility._id !== 'string') {
     throw new Error('Invalid facility or deal id provided');
@@ -40,7 +46,10 @@ const getBankReviewDateViewModel = (facility: Facility, previousPage: string, st
   return bankReviewDateViewModel;
 };
 
-const handleGetBankReviewDate = async ({ req, res, previousPage }: HandleGetBankReviewDateParams) => {
+/**
+ * Handle get bank review date requests
+ */
+const getBankReviewDate = async ({ req, res, previousPage }: HandleGetBankReviewDateParams) => {
   const {
     params: { dealId, facilityId },
     query: { status },
@@ -64,11 +73,20 @@ const handleGetBankReviewDate = async ({ req, res, previousPage }: HandleGetBank
   }
 };
 
+/**
+ * Controller for get bank review date from unissued facilities page
+ */
 export const getBankReviewDateFromUnissuedFacilitiesPage = async (req: GetBankReviewDateRequest, res: Response) =>
-  handleGetBankReviewDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/unissued-facilities/${req.params.facilityId}/about` });
+  getBankReviewDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/unissued-facilities/${req.params.facilityId}/about` });
 
+/**
+ * Controller for get bank review date from application preview page
+ */
 export const getBankReviewDateFromApplicationPreviewPage = async (req: GetBankReviewDateRequest, res: Response) =>
-  handleGetBankReviewDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/unissued-facilities/${req.params.facilityId}/change` });
+  getBankReviewDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/unissued-facilities/${req.params.facilityId}/change` });
 
+/**
+ * Controller for get bank review date from application details page
+ */
 export const getBankReviewDateFromApplicationDetailsPage = async (req: GetBankReviewDateRequest, res: Response) =>
-  handleGetBankReviewDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/facilities/${req.params.facilityId}/about-facility` });
+  getBankReviewDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/facilities/${req.params.facilityId}/about-facility` });
