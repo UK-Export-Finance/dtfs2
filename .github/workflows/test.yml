@@ -163,7 +163,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
 
     strategy:
       # Do not cancel in-progress jobs upon failure
