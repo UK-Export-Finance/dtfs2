@@ -15,13 +15,10 @@ RUN openssl rand -base64 756 > /mongo-keyfile
 RUN chmod 400 /mongo-keyfile
 RUN chown 999:999 /mongo-keyfile
 
-# Execute
+# Execute - TODO: DTFS2-7317
 # ENTRYPOINT syntax does allow an execution of MongoDB
 # with custom authentication and database.
 # To Run MongoDB with RS, uncomment second CMD statement.
-
-
-# TODO: DTFS2-7317
 
 # Non-RS initilisation
 CMD ["mongod", "--bind_ip_all", "--auth"]
