@@ -7,6 +7,16 @@ import {
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from '../../../helpers/premium-payments-table-checkbox-id-helper';
 
+/**
+ * Handles redirect session data for utilisation report reconciliation.
+ *
+ * @param sessionData - The session data
+ * @param sessionData.addPaymentErrorKey - The add payment error key
+ * @param sessionData.generateKeyingDataErrorKey - The generate keying data error key
+ * @param sessionData.checkedCheckboxIds - The checked checkbox IDs
+ * @returns An object containing table data error and selected fee record IDs
+ * @throws {Error} If an unrecognised error key is provided
+ */
 export const handleRedirectSessionData = ({
   addPaymentErrorKey,
   generateKeyingDataErrorKey,
