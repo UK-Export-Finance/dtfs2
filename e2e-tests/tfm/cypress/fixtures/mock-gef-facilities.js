@@ -4,7 +4,6 @@ const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
 /**
  * Gets facility end date properties if enabled on default deal version
- * @returns {Pick<import('@ukef/dtfs2-common').Facility,'isUsingFacilityEndDate' | 'facilityEndDate'> | {} } mock facility end date properties if enabled, or empty object if not
  */
 const getFacilityEndDateProperties = () => {
   if (facilityEndDateEnabled) {
