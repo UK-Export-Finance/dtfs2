@@ -347,9 +347,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.continueButton().click();
 
       if (facilityEndDateEnabled) {
-        bankReviewDate.bankReviewDateDay().clear().type(dateConstants.threeMonthsDay);
-        bankReviewDate.bankReviewDateMonth().clear().type(dateConstants.threeMonthsMonth);
-        bankReviewDate.bankReviewDateYear().clear().type(dateConstants.threeMonthsYear);
+        bankReviewDate.fillInBankReviewDate(dateConstants.threeMonths);
         bankReviewDate.continueButton().click();
       }
 

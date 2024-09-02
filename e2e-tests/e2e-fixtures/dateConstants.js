@@ -195,6 +195,7 @@ module.exports = {
   threeMonthsOneDayDay,
   threeMonthsOneDayMonth,
   threeMonthsOneDayYear,
+  sixYearsOneDay,
   sixYearsOneDayDay,
   sixYearsOneDayMonth,
   sixYearsOneDayYear,

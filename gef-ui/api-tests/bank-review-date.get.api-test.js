@@ -95,7 +95,7 @@ describe('bank review date routes', () => {
         expect(response.headers.location).toBe(previousPageUrl);
       });
 
-      it('redirects the user to the previous page if version is 1 & isUsingFacilityEndDate is null ', async () => {
+      it('redirects the user to the previous page if version is 1 & isUsingFacilityEndDate is null', async () => {
         // Arrange
         mockIsUsingFacilityEndDate(null);
         mockDealVersion(1);

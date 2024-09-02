@@ -9,7 +9,7 @@ import facilityGuarantee from '../pages/facility-guarantee';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import bankReviewDate from '../pages/bank-review-date';
 import facilityEndDate from '../pages/facility-end-date';
-import { todayDay, todayMonth, todayYear } from '../../../../e2e-fixtures/dateConstants';
+import { todayDay, todayMonth, todayYear, today } from '../../../../e2e-fixtures/dateConstants';
 
 const applications = [];
 let token;
@@ -77,9 +77,7 @@ context('Changing facility details from application-details page should take you
 
         applicationDetails.facilitySummaryListTable(0).bankReviewDateAction().click();
 
-        bankReviewDate.bankReviewDateDay().type(todayDay);
-        bankReviewDate.bankReviewDateMonth().type(todayMonth);
-        bankReviewDate.bankReviewDateYear().type(todayYear);
+        bankReviewDate.fillInBankReviewDate(today);
         bankReviewDate.continueButton().click();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));
       });
