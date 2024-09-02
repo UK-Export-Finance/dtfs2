@@ -19,6 +19,11 @@ import {
 
 const HEADER_IS_MISSING_BASE_ERROR_MESSAGE = 'header is missing or spelt incorrectly';
 
+/**
+ * Constructs header is missing error message
+ * @param header - The header text
+ * @returns The header is missing error message for the provided header
+ */
 export const getHeaderIsMissingErrorMessage = (header: string) => `${header} ${HEADER_IS_MISSING_BASE_ERROR_MESSAGE}`;
 
 /**
