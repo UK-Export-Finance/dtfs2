@@ -5,8 +5,8 @@
   {% set groupStatus = paymentDetails.feeRecordPaymentGroupStatus %}
   {% set payment = paymentDetails.payment %}
   {% set feeRecords = paymentDetails.feeRecords %}
-  {% set reconciledBy = paymentDetails.reconciledBy or "-" %}
-  {% set dateReconciled = paymentDetails.dateReconciled or "-" %}
+  {% set reconciledBy = paymentDetails.reconciledBy %}
+  {% set dateReconciled = paymentDetails.dateReconciled %}
   {% set paymentAmountHtml %}
   {% if userCanEdit and groupStatus !== 'READY_TO_KEY' and groupStatus !== 'RECONCILED' %}
     <a href="/utilisation-reports/{{ reportId }}/edit-payment/{{ payment.id }}">

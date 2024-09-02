@@ -66,32 +66,6 @@ describe(component, () => {
     wrapper.expectElement(`tr td:contains("Some reconciled by user")`).toExist();
   });
 
-  it.each([
-    { column: 'reconciled by', property: 'reconciledBy' },
-    { column: 'date reconciled', property: 'dateReconciled' },
-  ] as const)("renders the '-' character when the $column column is undefined", ({ property }) => {
-    const paymentDetailsRow: PaymentDetailsTableRow = {
-      ...aPaymentDetailsTableRow(),
-      [property]: undefined,
-    };
-    const wrapper = getWrapper({ paymentDetailsRow });
-
-    wrapper.expectElement(`tr td[data-cy="${property}"]:contains("-")`).toExist();
-  });
-
-  it.each([
-    { column: 'reconciled by', property: 'reconciledBy' },
-    { column: 'date reconciled', property: 'dateReconciled' },
-  ] as const)('renders the $column column', ({ property }) => {
-    const paymentDetailsRow: PaymentDetailsTableRow = {
-      ...aPaymentDetailsTableRow(),
-      [property]: 'Some custom property',
-    };
-    const wrapper = getWrapper({ paymentDetailsRow });
-
-    wrapper.expectElement(`tr td[data-cy="${property}"]:contains("Some custom property")`).toExist();
-  });
-
   describe('when userCanEdit is set to true', () => {
     const userCanEdit = true;
 
