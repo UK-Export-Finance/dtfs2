@@ -86,7 +86,7 @@ env:
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
-  MONGODB_URI_QA: mongodb://root:r00t@dtfs-mongo:27017/?authMechanism=DEFAULT&directConnection=true
+  MONGODB_URI_QA: mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT&directConnection=true
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
   AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
@@ -163,7 +163,7 @@ jobs:
     needs: setup
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
 
     strategy:
       # Do not cancel in-progress jobs upon failure

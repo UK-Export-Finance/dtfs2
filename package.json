@@ -42,7 +42,7 @@
     "stop": "docker compose down",
     "type-check:all": "npm run type-check --workspaces --if-present",
     "validate:all": "npm run lint:all && npm run prettier:all && npm run type-check:all && npm run validate:yml",
-    "validate:yml": "npx yaml-lint **/*.yml --ignore=**/node_modules"
+    "validate:yml": "npx yaml-lint **/*.yml --ignore=**/node_modules --ignore=dtfs-mongo-volume-dtfs-submissions"
   },
   "lint-staged": {
     "**/package.json": "sort-package-json",
