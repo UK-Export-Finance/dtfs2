@@ -8,6 +8,9 @@ const GENERIC_LIST_ITEM_TITLES = {
   guaranteeFee: 'Guarantee fee payable by bank',
   ukefExposure: 'UKEF exposure',
   dayCountBasis: 'Day count basis',
+  isUsingFacilityEndDate: 'Has a facility end date',
+  facilityEndDate: 'Facility end date',
+  bankReviewDate: 'Bank review date',
 };
 
 const GEF_FACILITIES_CONTENT_STRINGS = {
@@ -24,6 +27,9 @@ const GEF_FACILITIES_CONTENT_STRINGS = {
       requestedCoverStartDate: GENERIC_LIST_ITEM_TITLES.requestedCoverStartDate,
       coverStartDate: GENERIC_LIST_ITEM_TITLES.coverStartDate,
       coverEndDate: GENERIC_LIST_ITEM_TITLES.coverEndDate,
+      isUsingFacilityEndDate: GENERIC_LIST_ITEM_TITLES.isUsingFacilityEndDate,
+      facilityEndDate: GENERIC_LIST_ITEM_TITLES.facilityEndDate,
+      bankReviewDate: GENERIC_LIST_ITEM_TITLES.bankReviewDate,
       value: 'Cash facility value',
       currencyCode: 'Cash facility currency',
       coverPercentage: GENERIC_LIST_ITEM_TITLES.coverPercentage,
@@ -41,6 +47,9 @@ const GEF_FACILITIES_CONTENT_STRINGS = {
       requestedCoverStartDate: GENERIC_LIST_ITEM_TITLES.requestedCoverStartDate,
       coverStartDate: GENERIC_LIST_ITEM_TITLES.coverStartDate,
       coverEndDate: GENERIC_LIST_ITEM_TITLES.coverEndDate,
+      isUsingFacilityEndDate: GENERIC_LIST_ITEM_TITLES.isUsingFacilityEndDate,
+      facilityEndDate: GENERIC_LIST_ITEM_TITLES.facilityEndDate,
+      bankReviewDate: GENERIC_LIST_ITEM_TITLES.bankReviewDate,
       value: 'Contingent facility value',
       currencyCode: 'Contingent facility currency',
       coverPercentage: GENERIC_LIST_ITEM_TITLES.coverPercentage,
