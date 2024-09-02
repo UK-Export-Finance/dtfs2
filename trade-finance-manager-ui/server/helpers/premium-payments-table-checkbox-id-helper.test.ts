@@ -23,14 +23,14 @@ describe('premium payments table checkbox id helper', () => {
 
     it('extracts all the fee records ids from multiple checkbox ids', () => {
       // Arrange
-      const checkboxId1: PremiumPaymentsTableCheckboxId = `feeRecordIds-1,2-reportedPaymentsCurrency-GBP-status-TO_DO`;
-      const checkboxId2: PremiumPaymentsTableCheckboxId = `feeRecordIds-23,5,6-reportedPaymentsCurrency-GBP-status-TO_DO`;
+      const checkboxId1: PremiumPaymentsTableCheckboxId = `feeRecordIds-2-reportedPaymentsCurrency-GBP-status-TO_DO`;
+      const checkboxId2: PremiumPaymentsTableCheckboxId = `feeRecordIds-5,6,77,1234-reportedPaymentsCurrency-USD-status-TO_DO`;
 
       // Act
       const extractedIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds([checkboxId1, checkboxId2]);
 
       // Assert
-      expect(extractedIds).toEqual([1, 2, 23, 5, 6]);
+      expect(extractedIds).toEqual([2, 5, 6, 77, 1234]);
     });
   });
 

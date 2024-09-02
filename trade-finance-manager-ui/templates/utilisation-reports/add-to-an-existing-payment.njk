@@ -5,7 +5,7 @@
 {% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
 {% import "./_macros/payment-group-input.njk" as paymentGroupInput %}
 {% extends "index.njk" %}
-{% set backLink = {"href": '/utilisation-reports/' + reportId} %}
+{% set backLink = { "href": backLinkHref } %}
 {% set pageHeading = "Add reported fee" + ("s" if reportedFeeDetails.feeRecords | length > 1 else "") + " to an existing payment" %}
 {% block pageTitle %}
   {% if errors.errorSummary | length %}Error - {% endif %}
@@ -46,8 +46,8 @@
     {% for id in selectedFeeRecordCheckboxIds %}<input type="hidden" name={{ id }} value="on"/>{% endfor %}
 
     {{ paymentGroupInput.render({
-      legendText: availablePaymentsHeading,
-      paymentGroups: availablePaymentGroups,
+      legendText: paymentsHeading,
+      paymentGroups: paymentGroups,
       errorMessage: errors.paymentGroupErrorMessage
     }) }}
 
@@ -58,6 +58,7 @@
           "data-cy": "continue-button"
         }
       }) }}
+      <a class="govuk-link" href="{{ backLinkHref }}" id="cancel-link" data-cy="cancel-link">Cancel</a>
     </div>
   </form>
 {% endblock %}
