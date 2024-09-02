@@ -4,6 +4,7 @@ import pages from '../../pages';
 import partials from '../../partials';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../e2e-fixtures';
+import { DATE_FORMATS } from '../../../fixtures/constants';
 
 context('User can view a case deal', () => {
   let dealId;
@@ -81,7 +82,7 @@ context('User can view a case deal', () => {
         dealFacilities[0]['coverEndDate-day'],
       );
       // formats to correct format in table
-      const coverEndDate = format(coverEndDateRaw, 'dd MMMM yyyy');
+      const coverEndDate = format(coverEndDateRaw, DATE_FORMATS.FULL);
 
       facilityRow.facilityCoverEndDate().contains(coverEndDate);
       facilityRow.facilityCoverEndDate().contains('(expected)');

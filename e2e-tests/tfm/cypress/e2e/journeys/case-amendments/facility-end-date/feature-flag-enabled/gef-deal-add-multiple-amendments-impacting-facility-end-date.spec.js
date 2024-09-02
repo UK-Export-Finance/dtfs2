@@ -178,7 +178,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         amendmentsPage.continueAmendment().click();
 
         cy.url().should('contain', 'facility-end-date');
-        amendmentsPage.amendmentCurrentFacilityEndDate().should('have.text', format(Date4, 'dd MMMM yyyy'));
+        amendmentsPage.amendmentCurrentFacilityEndDate().should('have.text', format(Date4, DATE_FORMATS.FULL));
         amendmentsPage.amendmentFacilityEndDateDetails().should('exist');
 
         amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(format(Date5, 'd'));
