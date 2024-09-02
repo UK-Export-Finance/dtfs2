@@ -12,6 +12,7 @@ import { FeeRecordPaymentGroup } from '../../../../../types/utilisation-reports'
  * Maps the fee record payment entity groups to the fee record payment groups
  * @param feeRecordPaymentEntityGroups - The fee record payment entity groups
  * @returns The fee record payment groups
+ * @throws {Error} If the group has no payments but has multiple fee records
  */
 export const mapToFeeRecordPaymentGroups = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[]): Promise<FeeRecordPaymentGroup[]> =>
   await Promise.all(

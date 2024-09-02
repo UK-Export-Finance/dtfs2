@@ -1,5 +1,7 @@
 import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
 import {
+  getFormattedDateReconciled,
+  getFormattedReconciledByUser,
   mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems,
   mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
@@ -929,6 +931,59 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[2].dateReconciled.dataSortValue).toBe(2);
       expect(result[3].dateReconciled.dataSortValue).toBe(0);
       expect(result[4].dateReconciled.dataSortValue).toBe(1);
+    });
+  });
+
+  describe('getFormattedReconciledByUser', () => {
+    it('returns the formatted reconciled by user', () => {
+      // Arrange
+      const reconciledByUser = { firstName: 'John', lastName: 'Smith' };
+
+      // Act
+      const result = getFormattedReconciledByUser(reconciledByUser);
+
+      // Assert
+      expect(result).toBe('John Smith');
+    });
+
+    it('returns the "-" character when the supplied user is undefined', () => {
+      // Act
+      const result = getFormattedReconciledByUser(undefined);
+
+      // Assert
+      expect(result).toBe('-');
+    });
+  });
+
+  describe('getFormattedDateReconciled', () => {
+    it('returns the formatted date reconciled using "am" when the date is in the morning', () => {
+      // Arrange
+      const dateReconciled = '2024-01-01T10:45:00.000';
+
+      // Act
+      const result = getFormattedDateReconciled(dateReconciled);
+
+      // Assert
+      expect(result).toBe('1 Jan 2024 at 10:45am');
+    });
+
+    it('returns the formatted date reconciled using "pm" when the date is in the afternoon', () => {
+      // Arrange
+      const dateReconciled = '2024-01-01T15:45:00.000';
+
+      // Act
+      const result = getFormattedDateReconciled(dateReconciled);
+
+      // Assert
+      expect(result).toBe('1 Jan 2024 at 03:45pm');
+    });
+
+    it('returns the "-" character when the supplied date reconciled is undefined', () => {
+      // Act
+      const result = getFormattedDateReconciled(undefined);
+
+      // Assert
+      expect(result).toBe('-');
     });
   });
 });

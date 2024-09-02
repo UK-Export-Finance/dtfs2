@@ -1,6 +1,7 @@
 import { difference } from 'lodash';
 import { when } from 'jest-when';
 import {
+  CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
@@ -12,11 +13,12 @@ import {
   getFeeRecordPaymentEntityGroups,
   getFeeRecordPaymentEntityGroupStatus,
   getFeeRecordPaymentEntityGroupReconciliationData,
-} from './fee-record-payment-entity-group.helper';
+  getPaymentIdKeyFromPaymentEntities,
+} from './fee-record-payment-entity-group-helpers';
 import { TfmUsersRepo } from '../repositories/tfm-users-repo';
 import { aTfmUser } from '../../test-helpers';
 
-describe('fee-record-payment-entity-group.helper', () => {
+describe('fee-record-payment-entity-group-helpers', () => {
   const findTfmUserSpy = jest.spyOn(TfmUsersRepo, 'findOneUserById');
 
   beforeEach(() => {
@@ -329,6 +331,34 @@ describe('fee-record-payment-entity-group.helper', () => {
           lastName: 'Smith',
         },
       });
+    });
+  });
+
+  describe('getPaymentIdKeyFromPaymentEntities', () => {
+    const paymentWithId = (id: number) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(id).build();
+
+    it('generates an id using the payment entity ids sorted ascending', () => {
+      // Arrange
+      const payments = [paymentWithId(1), paymentWithId(3), paymentWithId(2)];
+
+      // Act
+      const result = getPaymentIdKeyFromPaymentEntities(payments);
+
+      // Assert
+      expect(result).toBe('paymentIds-1-2-3');
+    });
+
+    it('generates the same id for two lists of payments with the same ids but in a different order', () => {
+      // Arrange
+      const firstPayments = [paymentWithId(12), paymentWithId(36), paymentWithId(24)];
+      const secondPayments = [paymentWithId(24), paymentWithId(12), paymentWithId(36)];
+
+      // Act
+      const firstResult = getPaymentIdKeyFromPaymentEntities(firstPayments);
+      const secondResult = getPaymentIdKeyFromPaymentEntities(secondPayments);
+
+      // Assert
+      expect(firstResult === secondResult).toBe(true);
     });
   });
 

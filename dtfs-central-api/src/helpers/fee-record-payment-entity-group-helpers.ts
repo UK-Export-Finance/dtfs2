@@ -13,7 +13,7 @@ export type FeeRecordPaymentEntityGroup = {
  * @param payments - The payments
  * @returns The payment id key
  */
-const getPaymentIdKeyFromPaymentEntities = (payments: PaymentEntity[]) => {
+export const getPaymentIdKeyFromPaymentEntities = (payments: PaymentEntity[]) => {
   const prefix = 'paymentIds';
   const paymentIdsSortedAscending = payments
     .map(({ id }) => id)

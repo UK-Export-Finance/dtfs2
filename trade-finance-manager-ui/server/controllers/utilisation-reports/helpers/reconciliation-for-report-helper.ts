@@ -16,6 +16,7 @@ import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-
 import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 import { getKeyingSheetDisplayStatus } from './get-keying-sheet-display-status';
 import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
+import { getKeyToDateSortValueMap } from './get-key-to-date-sort-value-map-helper';
 
 /**
  * Sort fee records by reported payments
@@ -220,43 +221,11 @@ const mapPaymentToPaymentDetailsPaymentViewModel = (
 });
 
 /**
- * Returns the payments sorted by date received
- * @param payments - The payments to sort
- * @returns Sorted payments
- */
-const getPaymentsSortedByDateReceived = (payments: Payment[]): Payment[] =>
-  orderBy(payments, [({ dateReceived }) => parseISO(dateReceived).getTime()], ['asc']);
-
-/**
- * Gets the payment id to date reconciled data sort value map
- * @param feeRecordPaymentGroups - The fee record payment groups
- * @returns The payment id to date reconciled data sort value map
- */
-const getPaymentIdToDateReconciledDataSortValueMap = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): Record<number, number> => {
-  const allPaymentsWithDateReconciled = feeRecordPaymentGroups.reduce(
-    (paymentsWithDateReconciled, { paymentsReceived, dateReconciled }) => {
-      if (!paymentsReceived) {
-        return paymentsWithDateReconciled;
-      }
-      return [...paymentsWithDateReconciled, ...paymentsReceived.map((payment) => ({ ...payment, dateReconciled }))];
-    },
-    [] as (Payment & { dateReconciled?: IsoDateTimeStamp })[],
-  );
-  return orderBy(allPaymentsWithDateReconciled, [({ dateReconciled }) => (dateReconciled === undefined ? -1 : parseISO(dateReconciled).getTime())]).reduce(
-    (map, { id }, paymentIndex) => ({
-      ...map,
-      [id]: paymentIndex,
-    }),
-    {} as Record<number, number>,
-  );
-};
-
-/**
  * Gets the formatted reconciled by user
  * @param reconciledByUser - The reconciled by user
  * @returns The formatted reconciled by user
  */
-const getFormattedReconciledByUser = (reconciledByUser: { firstName: string; lastName: string } | undefined): string =>
+export const getFormattedReconciledByUser = (reconciledByUser: { firstName: string; lastName: string } | undefined): string =>
   reconciledByUser ? `${reconciledByUser.firstName} ${reconciledByUser.lastName}` : '-';
 
 /**
@@ -270,10 +239,10 @@ const getFormattedReconciledByUser = (reconciledByUser: { firstName: string; las
  * @example
  * getFormattedDateReconciled('2024-01-01T12:30:00.000'); // '1 Jan 2024 at 12:30pm'
  * getFormattedDateReconciled('2024-01-01T11:30:00.000'); // '1 Jan 2024 at 11:30am'
- * getFormattedDateReconciled(null); // '-'
+ * getFormattedDateReconciled(undefined); // '-'
  */
-const getFormattedDateReconciled = (dateReconciled: IsoDateTimeStamp | undefined): string =>
-  dateReconciled ? format(new Date(dateReconciled), "d MMM yyyy 'at' hh:mmaaaaa'm'") : '-';
+export const getFormattedDateReconciled = (dateReconciled: IsoDateTimeStamp | undefined): string =>
+  dateReconciled ? format(parseISO(dateReconciled), "d MMM yyyy 'at' hh:mmaaaaa'm'") : '-';
 
 /**
  * Maps the fee record payment groups to the payment details view model
@@ -281,15 +250,25 @@ const getFormattedDateReconciled = (dateReconciled: IsoDateTimeStamp | undefined
  * @returns The payment details view model
  */
 export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): PaymentDetailsViewModel => {
-  const paymentIdToDateReconciledDataSortValueMap = getPaymentIdToDateReconciledDataSortValueMap(feeRecordPaymentGroups);
+  const allPaymentsWithDateReconciled = feeRecordPaymentGroups.reduce(
+    (payments, { paymentsReceived, dateReconciled }) => {
+      if (!paymentsReceived) {
+        return payments;
+      }
 
-  const allPayments = feeRecordPaymentGroups.reduce((payments, { paymentsReceived }) => [...payments, ...(paymentsReceived ?? [])], [] as Payment[]);
-  const paymentIdToAmountDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
-    allPayments.map(({ id, amount, currency }) => ({ key: id, currency, amount })),
+      return [...payments, ...paymentsReceived.map((payment) => ({ ...payment, dateReconciled }))];
+    },
+    [] as (Payment & { dateReconciled?: IsoDateTimeStamp })[],
   );
-  const paymentIdToDateReceivedDataSortValueMap: { [key: number]: number } = getPaymentsSortedByDateReceived(allPayments).reduce(
-    (map, { id }, index) => ({ ...map, [id]: index }),
-    {},
+
+  const paymentIdToAmountDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
+    allPaymentsWithDateReconciled.map(({ id, amount, currency }) => ({ key: id, currency, amount })),
+  );
+  const paymentIdToDateReceivedDataSortValueMap: { [key: number]: number } = getKeyToDateSortValueMap(
+    allPaymentsWithDateReconciled.map(({ id, dateReceived }) => ({ key: id, date: dateReceived })),
+  );
+  const paymentIdToDateReconciledDataSortValueMap = getKeyToDateSortValueMap(
+    allPaymentsWithDateReconciled.map(({ id, dateReconciled }) => ({ key: id, date: dateReconciled })),
   );
 
   return feeRecordPaymentGroups.reduce(

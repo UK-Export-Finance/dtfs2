@@ -51,6 +51,3 @@ const run = async (): Promise<void> => {
 (async () => {
   await run();
 })();
-run()
-  .then(() => {})
-  .catch(() => {});

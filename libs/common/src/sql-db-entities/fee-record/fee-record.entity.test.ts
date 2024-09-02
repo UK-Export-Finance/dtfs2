@@ -79,7 +79,7 @@ describe('FeeRecordEntity', () => {
       // Act
       feeRecord.updateWithStatus({
         status,
-        requestSource: { platform: 'TFM', userId },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId },
       });
 
       // Assert
@@ -124,7 +124,7 @@ describe('FeeRecordEntity', () => {
 
       // Act
       feeRecord.removeAllPayments({
-        requestSource: { platform: 'TFM', userId },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId },
       });
 
       // Assert
@@ -142,7 +142,7 @@ describe('FeeRecordEntity', () => {
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withDateReconciled(null).build();
 
       // Act
-      feeRecord.markAsReconciled({ reconciledByUserId: 'abc123', requestSource: { platform: 'TFM', userId: 'def456' } });
+      feeRecord.markAsReconciled({ reconciledByUserId: 'abc123', requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'def456' } });
 
       // Assert
       expect(feeRecord.dateReconciled).toEqual(mockDate);
@@ -159,7 +159,7 @@ describe('FeeRecordEntity', () => {
         .build();
 
       // Act
-      feeRecord.markAsReconciled({ reconciledByUserId: 'abc123', requestSource: { platform: 'TFM', userId: 'abc123' } });
+      feeRecord.markAsReconciled({ reconciledByUserId: 'abc123', requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' } });
 
       // Assert
       expect(feeRecord.status).toBe(FEE_RECORD_STATUS.RECONCILED);
@@ -175,7 +175,7 @@ describe('FeeRecordEntity', () => {
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withDateReconciled(new Date('2024')).withReconciledByUserId('abc123').build();
 
       // Act
-      feeRecord.markAsReadyToKey({ requestSource: { platform: 'TFM', userId: 'abc123' } });
+      feeRecord.markAsReadyToKey({ requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' } });
 
       // Assert
       expect(feeRecord.dateReconciled).toBeNull();
@@ -192,7 +192,7 @@ describe('FeeRecordEntity', () => {
         .build();
 
       // Act
-      feeRecord.markAsReadyToKey({ requestSource: { platform: 'TFM', userId: 'abc123' } });
+      feeRecord.markAsReadyToKey({ requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' } });
 
       // Assert
       expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
@@ -222,7 +222,7 @@ describe('FeeRecordEntity', () => {
           fixedFeeAdjustment: 1000,
           principalBalanceAdjustment: 1000000,
           status,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         });
 
         // Assert
@@ -247,7 +247,7 @@ describe('FeeRecordEntity', () => {
           fixedFeeAdjustment: 1000,
           principalBalanceAdjustment: 1000000,
           status,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         });
 
         // Assert
@@ -275,7 +275,7 @@ describe('FeeRecordEntity', () => {
           fixedFeeAdjustment: 1000,
           principalBalanceAdjustment: 1000000,
           status,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         });
 
         // Assert
@@ -296,7 +296,7 @@ describe('FeeRecordEntity', () => {
           fixedFeeAdjustment: 1000,
           principalBalanceAdjustment: 1000000,
           status,
-          requestSource: { platform: 'TFM', userId: 'abc123' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         });
 
         // Assert
