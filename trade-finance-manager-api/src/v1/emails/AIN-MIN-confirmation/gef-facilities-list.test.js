@@ -1,4 +1,5 @@
 const { format } = require('date-fns');
+const { FACILITY_TYPE, LONG_FORM_DATE_FORMAT } = require('@ukef/dtfs2-common');
 const {
   mapIssuedValue,
   facilityFieldsObj,
@@ -6,6 +7,7 @@ const {
   generateFacilityFieldsListString,
   generateFacilitiesListString,
   gefFacilitiesList,
+  mapBooleanToYesOrNo,
 } = require('./gef-facilities-list');
 const { generateHeadingString, generateListItemString } = require('../../helpers/notify-template-formatters');
 const CONSTANTS = require('../../../constants');
@@ -58,6 +60,32 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
     });
   });
 
+  describe('mapBooleanToYesOrNo', () => {
+    it('maps true to `Yes`', () => {
+      const result = mapBooleanToYesOrNo(true);
+
+      expect(result).toBe('Yes');
+    });
+
+    it('maps false to `No`', () => {
+      const result = mapBooleanToYesOrNo(false);
+
+      expect(result).toBe('No');
+    });
+
+    it('maps undefined to undefined', () => {
+      const result = mapBooleanToYesOrNo(undefined);
+
+      expect(result).toBe(undefined);
+    });
+
+    it('maps null to undefined', () => {
+      const result = mapBooleanToYesOrNo(null);
+
+      expect(result).toBe(undefined);
+    });
+  });
+
   describe('facilityFieldsObj', () => {
     it('should return and format specific fields from a facility object', () => {
       const result = facilityFieldsObj(mockFacility);
@@ -69,6 +97,8 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
         hasBeenIssued: mapIssuedValue(mockFacility.hasBeenIssued),
         coverStartDate: format(Number(mockFacility.coverStartDate), 'do MMMM yyyy'),
         coverEndDate: format(Number(coverEndDate), 'do MMMM yyyy'),
+        isUsingFacilityEndDate: 'Yes',
+        facilityEndDate: '12th August 2021',
         value: mockFacility.value,
         currencyCode: mockFacility.currencyCode,
         interestPercentage: `${mockFacility.interestPercentage}%`,
@@ -82,20 +112,64 @@ describe('generate AIN/MIN confirmation email facilities list email variable/str
 
       expect(result).toEqual(expected);
     });
+
+    it('should format isUsingFacilityEndDate to Yes when true', () => {
+      const result = facilityFieldsObj({ isUsingFacilityEndDate: true });
+
+      expect(result).toEqual({ isUsingFacilityEndDate: 'Yes' });
+    });
+
+    it('should format isUsingFacilityEndDate to No when false', () => {
+      const result = facilityFieldsObj({ isUsingFacilityEndDate: false });
+
+      expect(result).toEqual({ isUsingFacilityEndDate: 'No' });
+    });
+
+    it('should format facilityEndDate to readable format', () => {
+      const facilityEndDate = new Date(2021, 7, 12);
+
+      const result = facilityFieldsObj({ facilityEndDate: facilityEndDate.toISOString() });
+
+      const expected = format(facilityEndDate, LONG_FORM_DATE_FORMAT);
+      expect(result.facilityEndDate).toEqual(expected);
+    });
+
+    it('should format bankReviewDate to readable format', () => {
+      const bankReviewDate = new Date(2021, 7, 12);
+
+      const result = facilityFieldsObj({ bankReviewDate: bankReviewDate.toISOString() });
+
+      const expected = format(bankReviewDate, LONG_FORM_DATE_FORMAT);
+      expect(result.bankReviewDate).toEqual(expected);
+    });
   });
 
   describe('generateFacilityFieldListItemString', () => {
-    it('should return a formatted string with field value and name/title mapped from content strings', () => {
-      const mockFieldName = 'bankReference';
-      const mockFieldValue = '123-test';
+    it.each(Object.keys(CONTENT_STRINGS.LIST_ITEM_TITLES.CASH))(
+      'should return a formatted string with %s mapped from content strings for a cash facility',
+      (fieldName) => {
+        const mockFieldValue = '123-test';
 
-      const result = generateFacilityFieldListItemString(mockType.value, mockFieldName, mockFieldValue);
+        const result = generateFacilityFieldListItemString(FACILITY_TYPE.CASH, fieldName, mockFieldValue);
 
-      const expectedTitle = CONTENT_STRINGS.LIST_ITEM_TITLES[mockType.value?.toUpperCase()][mockFieldName];
-      const expected = generateListItemString(`${expectedTitle}: ${mockFieldValue}`);
+        const expectedTitle = CONTENT_STRINGS.LIST_ITEM_TITLES.CASH[fieldName];
+        const expected = generateListItemString(`${expectedTitle}: ${mockFieldValue}`);
+        expect(result).toEqual(expected);
+      },
+    );
 
-      expect(result).toEqual(expected);
-    });
+    it.each(Object.keys(CONTENT_STRINGS.LIST_ITEM_TITLES.CONTINGENT))(
+      'should return a formatted string with %s mapped from content strings for a contingent facility',
+      (fieldName) => {
+        const mockFieldValue = '123-test';
+
+        const result = generateFacilityFieldListItemString(FACILITY_TYPE.CONTINGENT, fieldName, mockFieldValue);
+
+        const expectedTitle = CONTENT_STRINGS.LIST_ITEM_TITLES.CONTINGENT[fieldName];
+        const expected = generateListItemString(`${expectedTitle}: ${mockFieldValue}`);
+        expect(result).toEqual(expected);
+      },
+    );
   });
 
   describe('generateFacilityFieldsListString', () => {
