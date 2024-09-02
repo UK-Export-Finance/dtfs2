@@ -2,7 +2,7 @@ const api = require('../api');
 const CONSTANTS = require('../../constants');
 const { getFirstTask } = require('../helpers/tasks');
 const { generateTaskEmailVariables } = require('../helpers/generate-task-email-variables');
-const generateAinMinConfirmationEmailVars = require('../emails/AIN-MIN-confirmation/generate-email-variables');
+const gefEmailVariables = require('../emails/AIN-MIN-confirmation/gef-email-variables');
 const { gefFacilitiesList } = require('../emails/AIN-MIN-confirmation/gef-facilities-list');
 const { generateFacilityLists } = require('../helpers/notify-template-formatters');
 const { generateMiaConfirmationEmailVars } = require('../emails/MIA-confirmation/generate-email-variables');
@@ -130,12 +130,6 @@ const sendAinMinAcknowledgement = async (deal) => {
       return null;
     }
 
-    let facilityLists;
-    let templateId;
-    let emailVariables;
-    let makerEmailResponse;
-    let pimEmailResponse;
-    let bankResponse;
     const bankId = maker.bank.id;
     const { email: makerEmailAddress } = maker;
     const { emails: bankEmails } = await api.findBankById(bankId);
@@ -143,33 +137,33 @@ const sendAinMinAcknowledgement = async (deal) => {
     const { email: pimEmail } = await api.findOneTeam(CONSTANTS.TEAMS.PIM.id);
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-      facilityLists = generateFacilityLists(dealType, facilities);
+      const facilityLists = generateFacilityLists(dealType, facilities);
 
-      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_SUBMIT_CONFIRMATION;
+      const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_SUBMIT_CONFIRMATION;
 
-      emailVariables = generateBssDealAinMinConfirmationEmailVariables(deal, facilityLists);
+      const emailVariables = generateBssDealAinMinConfirmationEmailVariables(deal, facilityLists);
 
       // send an email to the maker
-      makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
+      const makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
       // send a copy of the email to PIM
-      pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
+      const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
       // send a copy of the email to the bank's general email address
-      bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
+      const bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-      facilityLists = gefFacilitiesList(facilities);
+      const facilityLists = gefFacilitiesList(facilities);
 
-      templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_SUBMIT_CONFIRMATION;
+      const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_SUBMIT_CONFIRMATION;
 
-      emailVariables = await generateAinMinConfirmationEmailVars(deal, facilityLists);
+      const emailVariables = await gefEmailVariables(deal, facilityLists);
 
-      makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
+      const makerEmailResponse = await sendTfmEmail(templateId, makerEmailAddress, emailVariables, deal);
       // send a copy of the email to PIM
-      pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
+      const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
       // send a copy of the email to the bank's general email address
-      bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
+      const bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
 
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }
