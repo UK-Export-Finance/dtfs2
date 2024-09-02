@@ -5,12 +5,19 @@ import { HttpStatusCode } from 'axios';
 import { aUtilisationReportRawCsvData } from '../../../../../test-helpers/test-data';
 import { validatePostUploadUtilisationReportPayload } from './validate-post-upload-utilisation-report-payload';
 import { PostUploadUtilisationReportRequestBody } from '../../../controllers/utilisation-report-service/post-upload-utilisation-report.controller';
+import { validateUtilisationReportCsvData } from '../../../../services/utilisation-report-data-validator';
+
+jest.mock('../../../../services/utilisation-report-data-validator');
 
 describe('validate-post-upload-utilisation-report-payload', () => {
   describe('postUploadUtilisationReportPayloadValidator', () => {
     const mockNext = jest.fn();
 
     beforeEach(() => {
+      jest.mocked(validateUtilisationReportCsvData).mockReturnValue([]);
+    });
+
+    afterEach(() => {
       jest.resetAllMocks();
     });
 
@@ -28,10 +35,8 @@ describe('validate-post-upload-utilisation-report-payload', () => {
     const getHttpMocks = (options?: Partial<Unknown<PostUploadUtilisationReportRequestBody>>) =>
       httpMocks.createMocks({
         body: {
-          reportId: options?.reportId ?? aValidPayload.reportId,
-          fileInfo: options?.fileInfo ?? aValidPayload.fileInfo,
-          reportData: options?.reportData ?? aValidPayload.reportData,
-          user: options?.user ?? aValidPayload.user,
+          ...aValidPayload,
+          ...options,
         },
       });
 
@@ -40,11 +45,12 @@ describe('validate-post-upload-utilisation-report-payload', () => {
       const { req, res } = getHttpMocks({
         reportId: 1,
         fileInfo: MOCK_AZURE_FILE_INFO,
-        reportData: { 'a header': 'a value', 'another header': null },
+        reportData: [{ 'a header': 'a value', 'another header': null }],
         user: {
           _id: userId,
         },
       });
+      jest.mocked(validateUtilisationReportCsvData).mockReturnValue([]);
 
       // Act
       validatePostUploadUtilisationReportPayload(req, res, mockNext);
@@ -95,6 +101,21 @@ describe('validate-post-upload-utilisation-report-payload', () => {
       const { req, res } = getHttpMocks({
         reportData: value,
       });
+
+      // Act
+      validatePostUploadUtilisationReportPayload(req, res, mockNext);
+
+      // Assert
+      expect(mockNext).not.toHaveBeenCalled();
+      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    });
+
+    it('responds with an error if the reportData contains validation errors', () => {
+      // Arrange
+      const { req, res } = getHttpMocks({
+        reportData: [{ 'a header': 'a value' }],
+      });
+      jest.mocked(validateUtilisationReportCsvData).mockReturnValue([{ errorMessage: 'That is not valid report data' }]);
 
       // Act
       validatePostUploadUtilisationReportPayload(req, res, mockNext);
