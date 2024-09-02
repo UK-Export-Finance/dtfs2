@@ -214,7 +214,7 @@ context('About Facility Page', () => {
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.tomorrowMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.tomorrowYear);
 
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
 
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
@@ -222,7 +222,7 @@ context('About Facility Page', () => {
         aboutFacility.coverStartDateMonth().clear().type(dateConstants.tomorrowMonth);
         aboutFacility.coverStartDateYear().clear().type(dateConstants.tomorrowYear);
 
-        aboutFacility.continueButton().click();
+        cy.clickContinueButton();
 
         facilityEndDate.facilityEndDateDay().should('have.value', '');
         facilityEndDate.facilityEndDateMonth().should('have.value', '');
@@ -252,7 +252,7 @@ context('About Facility Page', () => {
         bankReviewDate.bankReviewDateMonth().clear().type(dateConstants.tomorrowMonth);
         bankReviewDate.bankReviewDateYear().clear().type(dateConstants.tomorrowYear);
 
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
 
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
@@ -260,7 +260,7 @@ context('About Facility Page', () => {
         aboutFacility.coverStartDateMonth().clear().type(dateConstants.tomorrowMonth);
         aboutFacility.coverStartDateYear().clear().type(dateConstants.tomorrowYear);
 
-        aboutFacility.continueButton().click();
+        cy.clickContinueButton();
 
         bankReviewDate.bankReviewDateDay().should('have.value', '');
         bankReviewDate.bankReviewDateMonth().should('have.value', '');
