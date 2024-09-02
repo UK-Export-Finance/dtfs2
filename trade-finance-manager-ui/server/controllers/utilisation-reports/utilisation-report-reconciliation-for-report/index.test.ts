@@ -149,8 +149,6 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         enablePaymentsReceivedSorting: true,
         reportId: '1',
         feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
-        tableDataError: undefined,
-        filterError: undefined,
         facilityIdQuery,
         keyingSheet: [],
         paymentDetails: paymentDetailsViewModel,

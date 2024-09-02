@@ -22,7 +22,6 @@ describe('extractQueryAndSessionData', () => {
     // Arrange
     const queryParams = {
       facilityIdQuery: FACILITY_ID_QUERY,
-      selectedFeeRecordIdsQuery: undefined,
     };
     const sessionData = {};
 
@@ -37,7 +36,6 @@ describe('extractQueryAndSessionData', () => {
     // Arrange
     const queryParams = {
       facilityIdQuery: FACILITY_ID_QUERY,
-      selectedFeeRecordIdsQuery: undefined,
     };
     const sessionData = {};
 
@@ -56,7 +54,6 @@ describe('extractQueryAndSessionData', () => {
     // Arrange
     const queryParams = {
       facilityIdQuery: FACILITY_ID_QUERY,
-      selectedFeeRecordIdsQuery: undefined,
     };
     const sessionData = {};
 
@@ -95,7 +92,6 @@ describe('extractQueryAndSessionData', () => {
     // Arrange
     const queryParams = {
       facilityIdQuery: FACILITY_ID_QUERY,
-      selectedFeeRecordIdsQuery: undefined,
     };
     const sessionData = {};
 

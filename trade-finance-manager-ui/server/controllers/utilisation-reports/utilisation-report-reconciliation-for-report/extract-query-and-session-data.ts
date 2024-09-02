@@ -6,8 +6,8 @@ import { getSelectedFeeRecordIdsFromQuery } from './get-selected-fee-record-ids-
 import { validateFacilityIdQuery } from './validate-facility-id-query';
 
 type GetUtilisationReportReconciliationQuery = {
-  facilityIdQuery: string | undefined;
-  selectedFeeRecordIdsQuery: string | undefined;
+  facilityIdQuery?: string;
+  selectedFeeRecordIdsQuery?: string;
 };
 
 /**
