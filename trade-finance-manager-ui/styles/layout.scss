@@ -49,14 +49,23 @@
   }
 }
 
-.ukef-width-one-seventh {
-  width: 100% !important;
-}
-@media (min-width: 40.0625em) {
-  .ukef-width-one-seventh {
-    width: 14.28571429% !important;
-  }
-}
+// .ukef-width-one-ninth {
+//   width: 100% !important;
+// }
+// @media (min-width: 40.0625em) {
+//   .ukef-width-one-ninth {
+//     width: 12.5% !important;
+//   }
+// }
+
+// .ukef-width-two-ninths {
+//   width: 100% !important;
+// }
+// @media (min-width: 40.0625em) {
+//   .ukef-width-two-ninths {
+//     width: 25% !important;
+//   }
+// }
 
 .ukef-flex-container {
   display: flex;

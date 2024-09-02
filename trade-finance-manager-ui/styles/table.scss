@@ -157,3 +157,45 @@ table.premium-payments-table {
     list-style-type: none;
   }
 }
+
+.utilisation-report-reconciliation-table {
+  table-layout: fixed;
+  // width: 100%;
+
+  th, td {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+
+  .ukef-width-one-ninth {
+    width: 11.11% !important;
+  }
+
+  .ukef-width-two-ninths {
+    width: 22.22% !important;
+  }
+}
+
+@media (max-width: 65em) {
+  table.utilisation-report-reconciliation-table {
+    table-layout: fixed;
+    width: 55em;
+
+    .govuk-table__header,
+    .govuk-table__cell {
+      white-space: normal;
+    }
+  }
+}
+
+// table.utilisation-report-reconciliation-table {
+//   table-layout: auto;
+// }
+
+// /* Min width to prevent column overflow on small screens. Max width to prevent element overlap on large screens with large font sizes. */
+// @media (min-width: 55em) and (max-width: 1920px) {
+//   table.utilisation-report-reconciliation-table {
+//     table-layout: fixed;
+//   }
+// }

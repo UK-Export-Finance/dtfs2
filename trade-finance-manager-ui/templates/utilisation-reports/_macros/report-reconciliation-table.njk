@@ -5,62 +5,64 @@
 {% macro render(params) %}
   {% set summaryItems = params.summaryItems %}
   {% set submissionMonth = params.submissionMonth %}
-  <table class="govuk-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
-    <thead class="govuk-table__head">
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="ascending">Bank</th>
-        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="none">Status</th>
-        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="none">Frequency</th>
-        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="none">Date report received</th>
-        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="none">Total facilities reported</th>
-        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="none">Total fees reported</th>
-        <th scope="col" class="govuk-table__header ukef-width-one-seventh" aria-sort="none">Reported fees left to reconcile</th>
-      </tr>
-    </thead>
+  <div class="moj-scrollable-pane">
+    <table class="govuk-table utilisation-report-reconciliation-table" data-module="moj-sortable-table" data-cy="utilisation-report-reconciliation-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header ukef-width-two-ninths" aria-sort="ascending">Bank</th>
+          <th scope="col" class="govuk-table__header ukef-width-two-ninths" aria-sort="none">Status</th>
+          <th scope="col" class="govuk-table__header ukef-width-one-ninth" aria-sort="none">Frequency</th>
+          <th scope="col" class="govuk-table__header ukef-width-one-ninth" aria-sort="none">Date report received</th>
+          <th scope="col" class="govuk-table__header ukef-width-one-ninth" aria-sort="none">Total facilities reported</th>
+          <th scope="col" class="govuk-table__header ukef-width-one-ninth" aria-sort="none">Total fees reported</th>
+          <th scope="col" class="govuk-table__header ukef-width-one-ninth" aria-sort="none">Reported fees left to reconcile</th>
+        </tr>
+      </thead>
 
-    <tbody class="govuk-table__body">
-    {% for summaryItem in summaryItems %}
-      {% set checkboxId = ['set-status--reportId-', summaryItem.reportId, '-currentStatus-', summaryItem.status] | join %}
-      <tr
-        class="govuk-table__row"
-        data-cy="utilisation-report-reconciliation-table-row-bank-{{ summaryItem.bank.id }}-submission-month-{{ submissionMonth }}"
-      >
-        <th
-          scope="row"
-          class="govuk-table__header govuk-!-font-weight-regular"
-          data-sort-value="{{ summaryItem.bank.name }}"
+      <tbody class="govuk-table__body">
+      {% for summaryItem in summaryItems %}
+        {% set checkboxId = ['set-status--reportId-', summaryItem.reportId, '-currentStatus-', summaryItem.status] | join %}
+        <tr
+          class="govuk-table__row"
+          data-cy="utilisation-report-reconciliation-table-row-bank-{{ summaryItem.bank.id }}-submission-month-{{ submissionMonth }}"
         >
-          <p class="govuk-body govuk-!-margin-0">
-            {% if summaryItem.status === "REPORT_NOT_RECEIVED" %}
-              {{ summaryItem.bank.name }}
-            {% else %}
-              <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/{{ summaryItem.reportId }}" data-cy="utilisation-report-link-{{ summaryItem.bank.id }}-submission-month-{{ submissionMonth }}">{{ summaryItem.bank.name }}</a>
-            {% endif %}
-          </p>
-        </th>
-        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.displayStatus }}">
-          {{ reconciliationStatus.render({
-            status: summaryItem.status,
-            displayStatus: summaryItem.displayStatus
-          }) }}
-        </td>
-        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.frequency }}">
-          {{ summaryItem.frequency }}
-        </td>
-        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.dateUploaded }}">
-          {{ summaryItem.formattedDateUploaded }}
-        </td>
-        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.totalFacilitiesReported }}">
-          {{ summaryItem.totalFacilitiesReported }}
-        </td>
-        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.totalFeesReported }}">
-          {{ summaryItem.totalFeesReported }}
-        </td>
-        <td class="govuk-table__cell" data-sort-value="{{ summaryItem.reportedFeesLeftToReconcile }}">
-          {{ summaryItem.reportedFeesLeftToReconcile }}
-        </td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
+          <th
+            scope="row"
+            class="govuk-table__header govuk-!-font-weight-regular"
+            data-sort-value="{{ summaryItem.bank.name }}"
+          >
+            <p class="govuk-body govuk-!-margin-0">
+              {% if summaryItem.status === "REPORT_NOT_RECEIVED" %}
+                {{ summaryItem.bank.name }}
+              {% else %}
+                <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/{{ summaryItem.reportId }}" data-cy="utilisation-report-link-{{ summaryItem.bank.id }}-submission-month-{{ submissionMonth }}">{{ summaryItem.bank.name }}</a>
+              {% endif %}
+            </p>
+          </th>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.displayStatus }}">
+            {{ reconciliationStatus.render({
+              status: summaryItem.status,
+              displayStatus: summaryItem.displayStatus
+            }) }}
+          </td>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.frequency }}">
+            {{ summaryItem.frequency }}
+          </td>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.dateUploaded }}">
+            {{ summaryItem.formattedDateUploaded }}
+          </td>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.totalFacilitiesReported }}">
+            {{ summaryItem.totalFacilitiesReported }}
+          </td>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.totalFeesReported }}">
+            {{ summaryItem.totalFeesReported }}
+          </td>
+          <td class="govuk-table__cell" data-sort-value="{{ summaryItem.reportedFeesLeftToReconcile }}">
+            {{ summaryItem.reportedFeesLeftToReconcile }}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endmacro %}

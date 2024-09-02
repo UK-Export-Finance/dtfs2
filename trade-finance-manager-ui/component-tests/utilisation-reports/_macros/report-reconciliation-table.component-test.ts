@@ -41,17 +41,17 @@ describe(component, () => {
   it('should render the table headings with fixed widths', () => {
     const wrapper = getWrapper();
     wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(7);
-    wrapper.expectElement(`${tableSelector} thead th:contains("Bank")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-seventh');
-    wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-seventh');
-    wrapper.expectElement(`${tableSelector} thead th:contains("Frequency")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-seventh');
-    wrapper.expectElement(`${tableSelector} thead th:contains("Date report received")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-seventh');
+    wrapper.expectElement(`${tableSelector} thead th:contains("Bank")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-ninth');
+    wrapper.expectElement(`${tableSelector} thead th:contains("Status")`).toHaveAttribute('class', 'govuk-table__header ukef-width-two-ninths');
+    wrapper.expectElement(`${tableSelector} thead th:contains("Frequency")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-ninth');
+    wrapper.expectElement(`${tableSelector} thead th:contains("Date report received")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-ninth');
     wrapper
       .expectElement(`${tableSelector} thead th:contains("Total facilities reported")`)
-      .toHaveAttribute('class', 'govuk-table__header ukef-width-one-seventh');
-    wrapper.expectElement(`${tableSelector} thead th:contains("Total fees reported")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-seventh');
+      .toHaveAttribute('class', 'govuk-table__header ukef-width-one-ninth');
+    wrapper.expectElement(`${tableSelector} thead th:contains("Total fees reported")`).toHaveAttribute('class', 'govuk-table__header ukef-width-one-ninth');
     wrapper
       .expectElement(`${tableSelector} thead th:contains("Reported fees left to reconcile")`)
-      .toHaveAttribute('class', 'govuk-table__header ukef-width-one-seventh');
+      .toHaveAttribute('class', 'govuk-table__header ukef-width-one-ninth');
   });
 
   it('should render the table data', () => {
