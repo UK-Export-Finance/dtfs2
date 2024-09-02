@@ -1,4 +1,3 @@
-const util = require('util');
 const axios = require('axios');
 const { HEADERS } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
@@ -342,7 +341,6 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
 
 const createFacilityAmendment = async (facilityId, auditDetails) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
-  console.info(util.inspect({ isValid, payload: auditDetails }, { showHidden: false, depth: null, colors: true }));
   if (isValid) {
     try {
       const response = await axios({
@@ -351,7 +349,6 @@ const createFacilityAmendment = async (facilityId, auditDetails) => {
         headers: headers.central,
         data: { auditDetails },
       });
-      console.info(util.inspect({ data: response.data, status: response.status }, { showHidden: false, depth: null, colors: true }));
 
       return response.data;
     } catch (error) {

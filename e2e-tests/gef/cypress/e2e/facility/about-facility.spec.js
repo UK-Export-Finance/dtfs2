@@ -1,5 +1,7 @@
 import relative from '../relativeURL';
 import aboutFacility from '../pages/about-facility';
+import bankReviewDate from '../pages/bank-review-date';
+import facilityEndDate from '../pages/facility-end-date';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import dateConstants from '../../../../e2e-fixtures/dateConstants';
 
@@ -195,14 +197,35 @@ context('About Facility Page', () => {
         aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
         aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
         aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
-        aboutFacility.coverEndDateDay().clear().type(dateConstants.tomorrowDay);
-        aboutFacility.coverEndDateMonth().clear().type(dateConstants.tomorrowMonth);
-        aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
+        aboutFacility.coverEndDateDay().clear().type(dateConstants.twoDaysDay);
+        aboutFacility.coverEndDateMonth().clear().type(dateConstants.twoDaysMonth);
+        aboutFacility.coverEndDateYear().clear().type(dateConstants.twoDaysYear);
         aboutFacility.isUsingFacilityEndDateYes().click();
 
         aboutFacility.continueButton().click();
 
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+      });
+
+      it('wipes the facility end date value when updating the cover start date', () => {
+        cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.tomorrowDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.tomorrowMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.tomorrowYear);
+
+        facilityEndDate.continueButton().click();
+
+        cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+
+        aboutFacility.coverStartDateDay().clear().type(dateConstants.tomorrowDay);
+        aboutFacility.coverStartDateMonth().clear().type(dateConstants.tomorrowMonth);
+        aboutFacility.coverStartDateYear().clear().type(dateConstants.tomorrowYear);
+
+        aboutFacility.continueButton().click();
+
+        facilityEndDate.facilityEndDateDay().should('have.value', '');
+        facilityEndDate.facilityEndDateMonth().should('have.value', '');
+        facilityEndDate.facilityEndDateYear().should('have.value', '');
       });
 
       it('redirects user to `bank review date` page when not using facility end date', () => {
@@ -212,14 +235,35 @@ context('About Facility Page', () => {
         aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
         aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
         aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
-        aboutFacility.coverEndDateDay().clear().type(dateConstants.tomorrowDay);
-        aboutFacility.coverEndDateMonth().clear().type(dateConstants.tomorrowMonth);
-        aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
+        aboutFacility.coverEndDateDay().clear().type(dateConstants.twoDaysDay);
+        aboutFacility.coverEndDateMonth().clear().type(dateConstants.twoDaysMonth);
+        aboutFacility.coverEndDateYear().clear().type(dateConstants.twoDaysYear);
         aboutFacility.isUsingFacilityEndDateNo().click();
 
         aboutFacility.continueButton().click();
 
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
+      });
+
+      it('wipes the bank review date value when updating the cover start date', () => {
+        cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
+        bankReviewDate.bankReviewDateDay().clear().type(dateConstants.tomorrowDay);
+        bankReviewDate.bankReviewDateMonth().clear().type(dateConstants.tomorrowMonth);
+        bankReviewDate.bankReviewDateYear().clear().type(dateConstants.tomorrowYear);
+
+        facilityEndDate.continueButton().click();
+
+        cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+
+        aboutFacility.coverStartDateDay().clear().type(dateConstants.tomorrowDay);
+        aboutFacility.coverStartDateMonth().clear().type(dateConstants.tomorrowMonth);
+        aboutFacility.coverStartDateYear().clear().type(dateConstants.tomorrowYear);
+
+        aboutFacility.continueButton().click();
+
+        bankReviewDate.bankReviewDateDay().should('have.value', '');
+        bankReviewDate.bankReviewDateMonth().should('have.value', '');
+        bankReviewDate.bankReviewDateYear().should('have.value', '');
       });
     } else {
       it('redirects the user to `provided facility` page', () => {

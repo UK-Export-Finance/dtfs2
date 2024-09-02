@@ -115,7 +115,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about`));
     });
 
-    it('update facility page should have correct titles and text (only name should be prepopulated', () => {
+    it('update facility page should have correct titles and text', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
@@ -137,7 +137,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
       if (facilityEndDateEnabled) {
         aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.be.checked');
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
       }
     });
 
@@ -255,11 +255,6 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.issueDateError().contains('The year for the issue date must include 4 numbers');
       aboutFacilityUnissued.coverStartDateError().contains('The year for the cover start date must include 4 numbers');
       aboutFacilityUnissued.coverEndDateError().contains('The year for the cover end date must include 4 numbers');
-
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateError();
-        aboutFacilityUnissued.errorSummary().contains('Select if there is an end date for this facility');
-      }
     });
 
     it('the correct success messages should be displayed after changing facility to issued', () => {

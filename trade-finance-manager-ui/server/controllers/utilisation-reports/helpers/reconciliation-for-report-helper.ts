@@ -98,7 +98,7 @@ const getCheckboxAriaLabel = (feeRecords: FeeRecord[]): string => {
  */
 export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
   feeRecordPaymentGroups: FeeRecordPaymentGroup[],
-  isCheckboxChecked: (checkboxId: string) => boolean = () => false,
+  isCheckboxChecked: (feeRecordIds: number[]) => boolean = () => false,
 ): FeeRecordPaymentGroupViewModelItem[] => {
   const totalReportedPaymentsDataSortValueMap = getDataSortValueMapForFeeRecordPaymentGroupProperty(feeRecordPaymentGroups, 'totalReportedPayments');
   const totalPaymentsReceivedDataSortValueMap = getDataSortValueMapForFeeRecordPaymentGroupProperty(feeRecordPaymentGroups, 'totalPaymentsReceived');
@@ -109,7 +109,7 @@ export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
     const displayStatus = getFeeRecordDisplayStatus(status);
 
     const checkboxId = getCheckboxIdForFeeRecordsAndStatus(feeRecords, status);
-    const isChecked = isCheckboxChecked(checkboxId);
+    const isChecked = isCheckboxChecked(feeRecords.map(({ id }) => id));
     const checkboxAriaLabel = getCheckboxAriaLabel(feeRecords);
 
     const feeRecordsSortedByReportedPayments = sortFeeRecordsByReportedPayments(feeRecords);
@@ -202,6 +202,7 @@ const mapPaymentToPaymentDetailsPaymentViewModel = (
   amountDataSortValue: number,
   dateReceivedDataSortValue: number,
 ): PaymentDetailsPaymentViewModel => ({
+  id: payment.id,
   amount: {
     formattedCurrencyAndAmount: getFormattedCurrencyAndAmount(payment),
     dataSortValue: amountDataSortValue,
@@ -236,7 +237,7 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
     {},
   );
 
-  return feeRecordPaymentGroups.reduce((paymentDetails, { feeRecords, paymentsReceived }) => {
+  return feeRecordPaymentGroups.reduce((paymentDetails, { feeRecords, paymentsReceived, status: feeRecordPaymentGroupStatus }) => {
     if (!paymentsReceived) {
       return paymentDetails;
     }
@@ -245,6 +246,7 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
     return [
       ...paymentDetails,
       ...paymentsReceived.map((payment) => ({
+        feeRecordPaymentGroupStatus,
         payment: mapPaymentToPaymentDetailsPaymentViewModel(
           payment,
           paymentIdToAmountDataSortValueMap[payment.id],
