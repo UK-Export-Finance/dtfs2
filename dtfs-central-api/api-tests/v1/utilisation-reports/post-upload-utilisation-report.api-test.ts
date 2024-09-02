@@ -127,13 +127,37 @@ describe(`POST ${getUrl()}`, () => {
     expect(azureFileInfo).toHaveLength(1);
   });
 
-  it('saves the report when there is a large number of fee records', async () => {
+  it('saves the report when there is a large number of fee records all for the same facility', async () => {
     // Arrange
     const numberOfReportDataEntriesToCreate = 500;
 
+    const facilityId = '12345678';
     const reportData: UtilisationReportRawCsvData[] = [];
     while (reportData.length < numberOfReportDataEntriesToCreate) {
-      reportData.push(aUtilisationReportRawCsvData());
+      reportData.push({ ...aUtilisationReportRawCsvData(), 'ukef facility id': facilityId });
+    }
+
+    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
+
+    // Act
+    const response = await testApi.post(payload).to(getUrl());
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.Created);
+
+    const numberOfInsertedFeeRecords = await SqlDbHelper.manager.count(FeeRecordEntity, {});
+    expect(numberOfInsertedFeeRecords).toBe(numberOfReportDataEntriesToCreate);
+  });
+
+  it('saves the report when there is a large number of fee records and each fee record has a unique facility id which does not exist in the facility utilisation data table', async () => {
+    // Arrange
+    const numberOfReportDataEntriesToCreate = 500;
+
+    let facilityId = 10000000;
+    const reportData: UtilisationReportRawCsvData[] = [];
+    while (reportData.length < numberOfReportDataEntriesToCreate) {
+      reportData.push({ ...aUtilisationReportRawCsvData(), 'ukef facility id': facilityId.toString() });
+      facilityId += 1;
     }
 
     const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
