@@ -16,6 +16,3 @@ module.exports = {
   errorSummaryItems: () => cy.get('[data-cy="error-summary"] li'),
   submitButton: () => cy.get('[data-cy="submit-button"]'),
 };
-
-// errorMessage ??
-// commentErrorMessage // replace with "inline error"
