@@ -1,5 +1,6 @@
 import './trade-finance-manager-api';
 import './ui';
+
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
