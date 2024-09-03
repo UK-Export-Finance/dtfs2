@@ -4,7 +4,7 @@ import { EXCHANGE_RATE_REGEX } from '../../../constants/regex';
 import { UtilisationReportRowValidationErrorGenerator } from './types/validation-error-generator';
 
 /**
- * Generate and return error for payment exchange rate entry in the csv row if value is invalid
+ * Generate and return an error for payment exchange rate entry in the csv row if value is invalid
  * @param csvDataRow - The row data for which to validate the payment exchange rate
  * @returns The error if the payment exchange rate entry is invalid, null if the payment exchange rate entry is valid
  */

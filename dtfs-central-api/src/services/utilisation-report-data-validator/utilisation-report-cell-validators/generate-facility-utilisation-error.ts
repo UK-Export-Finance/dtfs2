@@ -3,7 +3,7 @@ import { CURRENCY_NUMBER_REGEX } from '../../../constants/regex';
 import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 
 /**
- * Generate and return error for facility utilisation cell if value is invalid
+ * Generate and return an error for facility utilisation cell if value is invalid
  * @param facilityUtilisationCellData - The cell data for the facility utilisation cell
  * @param exporterName - The name of the exporter for that csv row
  * @returns The error if data is invalid, null if the data is valid

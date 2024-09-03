@@ -94,7 +94,7 @@ describe('put-keying-data-mark-as-to-do.controller', () => {
       expect(res._getData()).toBe(`Failed to mark keying data with fee record ids ${feeRecordId} from report with id ${reportId} as TO DO: ${errorMessage}`);
     });
 
-    it("responds with a '500' if an unknown error occurs", async () => {
+    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
       // Arrange
       const req = httpMocks.createRequest<PutKeyingDataMarkToDoRequest>({
         params: aValidRequestQuery(),

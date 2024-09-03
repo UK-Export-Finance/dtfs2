@@ -10,12 +10,11 @@ import { UtilisationReportRowValidationErrorGenerator } from './types/validation
  */
 export const generateTotalFeesAccruedExchangeRateError: UtilisationReportRowValidationErrorGenerator = (csvDataRow) => {
   const totalFeesAccruedExchangeRateValue = csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.value;
+  const totalFeesAccruedCurrencyValue = csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value;
+  const baseCurrencyValue = csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value;
+  const totalFeesAccruedCurrencyMatchesBaseCurrency = totalFeesAccruedCurrencyValue === baseCurrencyValue;
 
-  if (
-    !totalFeesAccruedExchangeRateValue &&
-    (!csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value ||
-      csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value)
-  ) {
+  if (!totalFeesAccruedExchangeRateValue && (!totalFeesAccruedCurrencyValue || totalFeesAccruedCurrencyMatchesBaseCurrency)) {
     return null;
   }
 
@@ -29,10 +28,7 @@ export const generateTotalFeesAccruedExchangeRateError: UtilisationReportRowVali
     };
   }
 
-  if (
-    csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value === csvDataRow[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.value &&
-    parseFloat(totalFeesAccruedExchangeRateValue) !== 1
-  ) {
+  if (totalFeesAccruedCurrencyMatchesBaseCurrency && parseFloat(totalFeesAccruedExchangeRateValue) !== 1) {
     return {
       errorMessage: 'Accrual exchange rate must be 1 or blank when accrual currency and base currency are the same',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE]?.column,

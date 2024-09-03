@@ -3,7 +3,7 @@ import { CSV } from '../../../constants/csv';
 import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 
 /**
- * Generate and return error for the total fees accrued cell if value is invalid
+ * Generate and return an error for the total fees accrued cell if value is invalid
  * @param totalFeesAccruedCellData - The cell data for the total fees accrued cell
  * @param exporterName - The name of the exporter for that csv row
  * @returns The error if data is invalid, null if the data is valid

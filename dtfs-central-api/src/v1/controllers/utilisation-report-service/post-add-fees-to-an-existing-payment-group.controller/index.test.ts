@@ -227,7 +227,7 @@ describe('post-fees-to-an-existing-payment-group.controller', () => {
       expect(res._getData()).toBe(`Failed to add fees to an existing payment group: ${errorMessage}`);
     });
 
-    it("responds with a '500' if an unknown error occurs", async () => {
+    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
       // Arrange
       const req = httpMocks.createRequest<PostAddFeesToAnExistingPaymentGroupRequest>({
         params: aValidRequestQuery(),

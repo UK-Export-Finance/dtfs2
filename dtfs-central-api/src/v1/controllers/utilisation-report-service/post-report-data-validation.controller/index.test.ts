@@ -25,7 +25,7 @@ describe('post-report-data-validation.controller', () => {
       reportData: [{ header: { value: 'value', column: 'A', row: '1' } }],
     });
 
-    it('return 200 (Ok) and validation errors when successfully validates the report data', () => {
+    it(`respond with a ${HttpStatusCode.Ok} and validation errors when successfully validates the report data`, () => {
       // Arrange
       const reportData = [{ header: { value: 'value', column: 'A', row: '1' } }];
       const req = httpMocks.createRequest<PostReportDataValidationRequest>({
@@ -82,7 +82,7 @@ describe('post-report-data-validation.controller', () => {
       expect(res._getData()).toBe(`Failed to validate report data: ${errorMessage}`);
     });
 
-    it("responds with a '500' if an unknown error occurs", () => {
+    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, () => {
       // Arrange
       const req = httpMocks.createRequest<PostReportDataValidationRequest>({
         body: aValidRequestBody(),

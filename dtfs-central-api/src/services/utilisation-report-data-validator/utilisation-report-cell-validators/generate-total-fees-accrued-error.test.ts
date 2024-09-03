@@ -88,6 +88,6 @@ describe('generateTotalFeesAccruedError', () => {
 
     const totalFeesAccruedError = generateTotalFeesAccruedError(validTotalFeesAccrued, testExporterName);
 
-    expect(totalFeesAccruedError).toEqual(null);
+    expect(totalFeesAccruedError).toBeNull();
   });
 });

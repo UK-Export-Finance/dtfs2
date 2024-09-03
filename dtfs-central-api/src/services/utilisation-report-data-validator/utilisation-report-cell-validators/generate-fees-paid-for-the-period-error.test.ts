@@ -88,6 +88,6 @@ describe('generateMonthlyFeesPaidError', () => {
 
     const monthlyFeesPaidError = generateFeesPaidForThePeriodError(validMonthlyFeesPaid, testExporterName);
 
-    expect(monthlyFeesPaidError).toEqual(null);
+    expect(monthlyFeesPaidError).toBeNull();
   });
 });

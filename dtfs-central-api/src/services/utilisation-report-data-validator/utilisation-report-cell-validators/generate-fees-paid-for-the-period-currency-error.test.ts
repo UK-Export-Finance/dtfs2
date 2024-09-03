@@ -49,6 +49,6 @@ describe('generateMonthlyFeesPaidCurrencyError', () => {
 
     const monthlyFeesPaidToUkefCurrencyError = generateFeesPaidForThePeriodCurrencyError(validBaseCurrency, testExporterName);
 
-    expect(monthlyFeesPaidToUkefCurrencyError).toEqual(null);
+    expect(monthlyFeesPaidToUkefCurrencyError).toBeNull();
   });
 });

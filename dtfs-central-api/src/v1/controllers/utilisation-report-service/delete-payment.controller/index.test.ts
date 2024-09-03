@@ -161,7 +161,7 @@ describe('delete-payment.controller', () => {
       expect(res._getData()).toBe(`Failed to delete payment with id ${paymentId}: ${errorMessage}`);
     });
 
-    it("responds with a '500' if an unknown error occurs", async () => {
+    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
       // Arrange
       const req = httpMocks.createRequest<DeletePaymentRequest>({
         params: aValidRequestQuery(),

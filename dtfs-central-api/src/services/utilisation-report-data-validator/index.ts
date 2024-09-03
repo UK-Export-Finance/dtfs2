@@ -27,7 +27,7 @@ const HEADER_IS_MISSING_BASE_ERROR_MESSAGE = 'header is missing or spelt incorre
 export const getHeaderIsMissingErrorMessage = (header: string) => `${header} ${HEADER_IS_MISSING_BASE_ERROR_MESSAGE}`;
 
 /**
- * Validate utilisation report csv headers
+ * Validate utilisation report csv headers and get available headers
  * @param csvDataRow - A row of data
  * @returns Errors for any missing required headers and a list of the present headers
  */

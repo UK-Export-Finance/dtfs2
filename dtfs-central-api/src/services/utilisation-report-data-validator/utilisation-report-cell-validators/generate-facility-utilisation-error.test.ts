@@ -88,6 +88,6 @@ describe('generateFacilityUtilisationError', () => {
 
     const facilityUtilisationError = generateFacilityUtilisationError(validFacilityUtilisation, testExporterName);
 
-    expect(facilityUtilisationError).toEqual(null);
+    expect(facilityUtilisationError).toBeNull();
   });
 });

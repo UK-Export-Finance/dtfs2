@@ -108,8 +108,8 @@ describe('utilisation-report-validator', () => {
       const availableHeaders = [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID, UTILISATION_REPORT_HEADERS.BASE_CURRENCY];
 
       validateUtilisationReportCsvCellData(csvData, availableHeaders);
-      expect(generateUkefFacilityIdError).toHaveBeenCalledWith({ value: '20001371', column: 'B', row: 1 }, 'test exporter');
-      expect(generateBaseCurrencyError).toHaveBeenCalledWith({ value: 'GBP', column: 'D', row: 1 }, 'test exporter');
+      expect(generateUkefFacilityIdError).toHaveBeenCalledWith(csvData[0]['ukef facility id'], 'test exporter');
+      expect(generateBaseCurrencyError).toHaveBeenCalledWith(csvData[0]['base currency'], 'test exporter');
       expect(generateFacilityUtilisationError).not.toHaveBeenCalled();
     });
 

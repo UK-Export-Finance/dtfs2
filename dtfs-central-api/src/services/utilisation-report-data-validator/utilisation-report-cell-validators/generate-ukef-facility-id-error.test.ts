@@ -49,7 +49,7 @@ describe('generateUkefFacilityIdError', () => {
 
     const ukefFacilityIdError = generateUkefFacilityIdError(validFacilityId);
 
-    expect(ukefFacilityIdError).toEqual(null);
+    expect(ukefFacilityIdError).toBeNull();
   });
 
   it('it returns the correct column and row when an error is found', () => {
