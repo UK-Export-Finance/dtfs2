@@ -1,3 +1,4 @@
+import { when } from 'jest-when';
 import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
 import {
   mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems,
@@ -397,7 +398,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].checkboxId).toBe(checkboxId);
     });
 
-    it('sets isChecked to true if the generated checkboxId is recognised by the supplied isCheckboxChecked function', () => {
+    it('sets isChecked to true if the payment groups fee record ids are recognised by the supplied isCheckboxChecked function', () => {
       // Arrange
       const feeRecordId = 1;
       const feeRecordReportedPaymentsCurrency: Currency = 'GBP';
@@ -414,9 +415,8 @@ describe('reconciliation-for-report-helper', () => {
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords: [feeRecord], status }];
 
-      const checkedCheckboxId = `feeRecordIds-${feeRecordId}-reportedPaymentsCurrency-${feeRecordReportedPaymentsCurrency}-status-${status}`;
-
-      const isCheckboxChecked = (checkboxId: string) => checkboxId === checkedCheckboxId;
+      const isCheckboxChecked = jest.fn().mockReturnValue(false);
+      when(isCheckboxChecked).calledWith([feeRecordId]).mockReturnValue(true);
 
       // Act
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
@@ -425,7 +425,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].isChecked).toBe(true);
     });
 
-    it('sets isChecked to false if the generated checkboxId is not recognised by the supplied isCheckboxChecked function', () => {
+    it('sets isChecked to false if the payment groups fee record ids are not recognised by the supplied isCheckboxChecked function', () => {
       // Arrange
       const feeRecordId = 1;
       const nonMatchingFeeRecordId = 5;
@@ -443,9 +443,8 @@ describe('reconciliation-for-report-helper', () => {
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords: [feeRecord], status }];
 
-      const checkedCheckboxId = `feeRecordIds-${nonMatchingFeeRecordId}-reportedPaymentsCurrency-${feeRecordReportedPaymentsCurrency}-status-${status}`;
-
-      const isCheckboxChecked = (checkboxId: string) => checkboxId === checkedCheckboxId;
+      const isCheckboxChecked = jest.fn().mockReturnValue(false);
+      when(isCheckboxChecked).calledWith([nonMatchingFeeRecordId]).mockReturnValue(true);
 
       // Act
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
@@ -663,15 +662,15 @@ describe('reconciliation-for-report-helper', () => {
       expect(result).toHaveLength(3);
     });
 
-    it('maps the payment reference to the payment details view model reference', () => {
+    it('maps the payment id and reference to the payment details view model reference', () => {
       // Arrange
       const group: FeeRecordPaymentGroup = {
         ...aFeeRecordPaymentGroup(),
         feeRecords: [aFeeRecord()],
         paymentsReceived: [
-          { ...aPayment(), reference: 'First reference' },
-          { ...aPayment(), reference: 'Second reference' },
-          { ...aPayment(), reference: undefined },
+          { ...aPayment(), id: 123, reference: 'First reference' },
+          { ...aPayment(), id: 456, reference: 'Second reference' },
+          { ...aPayment(), id: 789, reference: undefined },
         ],
       };
 
@@ -680,8 +679,11 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toHaveLength(3);
+      expect(result[0].payment.id).toBe(123);
       expect(result[0].payment.reference).toBe('First reference');
+      expect(result[1].payment.id).toBe(456);
       expect(result[1].payment.reference).toBe('Second reference');
+      expect(result[2].payment.id).toBe(789);
       expect(result[2].payment.reference).toBeUndefined();
     });
 

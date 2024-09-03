@@ -15,6 +15,7 @@ import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
 import applicationSubmission from '../../pages/application-submission';
 import statusBanner from '../../pages/application-status-banner';
+import facilityEndDate from '../../pages/facility-end-date';
 
 let dealId;
 let token;
@@ -107,7 +108,7 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
 
       if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.be.checked');
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
         aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
       }
     });
@@ -133,6 +134,13 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
       aboutFacilityUnissued.continueButton().click();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeYearsDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeYearsMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeYearsYear);
+        facilityEndDate.continueButton().click();
+      }
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
@@ -229,6 +237,13 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       }
 
       aboutFacilityUnissued.continueButton().click();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        facilityEndDate.continueButton().click();
+      }
     });
 
     it('change links should appear for facility four and three should be unissued still', () => {

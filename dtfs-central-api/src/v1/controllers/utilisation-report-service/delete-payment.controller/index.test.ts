@@ -4,7 +4,7 @@ import { TestApiError, UtilisationReportEntity, UtilisationReportEntityMockBuild
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { DeletePaymentRequest, deletePayment } from '.';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { DeletePaymentPayload } from '../../../routes/middleware/payload-validation/validate-delete-payment-payload';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';

@@ -1078,7 +1078,7 @@ describe('summaryItemsConditions()', () => {
 
       expect(text).toEqual('Change');
       expect(href).toContain('/unissued-facilities/');
-      expect(href).toContain('/change');
+      expect(href).toContain('/facility-end-date/change');
     });
 
     it('Should be able to change bankReviewDate', () => {

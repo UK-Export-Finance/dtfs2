@@ -1,8 +1,8 @@
 import { SelectedFeeRecordsAvailablePaymentGroups } from '@ukef/dtfs2-common';
-import { mapToAvailablePaymentGroupsViewModel } from './available-payment-group-view-model-mapper';
+import { mapToPaymentGroupInputsViewModel } from './available-payment-group-view-model-mapper';
 
 describe('available-payment-group-view-model-mapper', () => {
-  describe('mapToAvailablePaymentGroupsViewModel', () => {
+  describe('mapToPaymentGroupInputsViewModel', () => {
     it('maps the available payment groups to view model', () => {
       const availablePaymentGroupsData: SelectedFeeRecordsAvailablePaymentGroups = [
         [
@@ -12,7 +12,7 @@ describe('available-payment-group-view-model-mapper', () => {
         [{ id: 3, currency: 'USD', amount: 3000, reference: 'REF003' }],
       ];
 
-      const result = mapToAvailablePaymentGroupsViewModel(availablePaymentGroupsData);
+      const result = mapToPaymentGroupInputsViewModel(availablePaymentGroupsData);
 
       expect(result).toEqual([
         {

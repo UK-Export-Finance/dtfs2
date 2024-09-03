@@ -2,31 +2,27 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-
 {% extends "index.njk" %}
-
 {% set backLink = { href: "/utilisation-reports" } %}
-
 {% block pageTitle %}
   Find reports by year
 {% endblock %}
 {% block content %}
   <div class="govuk-grid-row govuk-!-padding-top-7">
-    <div
-      class="govuk-grid-column-full">
+    <div class="govuk-grid-column-full">
       {% if errorSummary | length %}
         {{ govukErrorSummary({
           titleText: "There is a problem",
           errorList: errorSummary,
           attributes: {
-            'data-cy': 'error-summary'
+            "data-cy": "error-summary"
           }
         }) }}
       {% endif %}
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="find-reports-by-year-heading">
         Find reports by year
       </h1>
-      <form method="GET" data-cy="form">
+      <form method="GET" data-cy="form" id="find-utilisation-reports-by-year--form">
         {{ govukRadios({
           classes: "govuk-radios--small",
           name: "bank",
@@ -40,40 +36,50 @@
           errorMessage: bankError and {
             text: bankError,
             attributes: {
-              'data-cy': 'bank-error-message'
+              "data-cy": "bank-error-message"
             }
           },
           value: selectedBank
         }) }}
-          {{ govukInput ({
-              label: {
-                text: "Year",
-                classes: "govuk-label govuk-label--s",
-                attributes: {
-                  "data-cy": "year-label"
-                }
-              },
-              classes: "govuk-input govuk-!-width-one-quarter",
-              id: "year",
-              name: "year",
-              inputmode: "numeric",
-              attributes: {
-                'data-cy': "year-input"
-              },
-              errorMessage: yearError and {
-                text: yearError,
-                attributes: {
-                  'data-cy': 'year-error-message'
-                }
-              },
-              value: selectedYear
-            }) }}
-          {{ govukButton ({
-            text: "Continue",
+        {{ govukInput ({
+          label: {
+            text: "Year",
+            classes: "govuk-label govuk-label--s",
             attributes: {
-              'data-cy': 'continue-button'
+              "data-cy": "year-label"
             }
-          }) }}
+          },
+          classes: "govuk-input govuk-!-width-one-quarter",
+          id: "find-utilisation-reports-by-year--year-input",
+          name: "year",
+          inputmode: "numeric",
+          attributes: {
+            "data-cy": "year-input",
+            "list": ""
+          },
+          errorMessage: yearError and {
+            text: yearError,
+            attributes: {
+              "data-cy": "year-error-message"
+            }
+          },
+          value: selectedYear
+        }) }}
+        {% for dataList in bankReportingYearsDataLists %}
+          {% if dataList.reportingYears.length > 0 %}
+            <datalist id="datalist--bankId-{{ dataList.bankId }}">
+              {% for year in dataList.reportingYears %}
+                <option value="{{ year }}"></option>
+              {% endfor %}
+            </datalist>
+          {% endif %}
+        {% endfor %}
+        {{ govukButton ({
+          text: "Continue",
+          attributes: {
+            "data-cy": "continue-button"
+          }
+        }) }}
       </form>
     </div>
   </div>

@@ -7,7 +7,7 @@ import {
   UtilisationReportEntity,
 } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import { aListOfZeroThresholdActivePaymentMatchingTolerances } from '../test-helpers/test-data/payment-matching-tolerances';
+import { aListOfZeroThresholdActivePaymentMatchingTolerances } from '../test-helpers';
 
 type SqlTableName = 'UtilisationReport' | 'FeeRecord' | 'AzureFileInfo' | 'Payment' | 'FacilityUtilisationData' | 'PaymentMatchingTolerance';
 

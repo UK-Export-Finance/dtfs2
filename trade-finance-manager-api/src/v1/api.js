@@ -1,4 +1,3 @@
-const util = require('util');
 const axios = require('axios');
 const { HEADERS } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
@@ -342,7 +341,6 @@ const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
 
 const createFacilityAmendment = async (facilityId, auditDetails) => {
   const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
-  console.info(util.inspect({ isValid, payload: auditDetails }, { showHidden: false, depth: null, colors: true }));
   if (isValid) {
     try {
       const response = await axios({
@@ -351,7 +349,6 @@ const createFacilityAmendment = async (facilityId, auditDetails) => {
         headers: headers.central,
         data: { auditDetails },
       });
-      console.info(util.inspect({ data: response.data, status: response.status }, { showHidden: false, depth: null, colors: true }));
 
       return response.data;
     } catch (error) {
@@ -1199,13 +1196,20 @@ const findBankById = async (bankId) => {
 };
 
 /**
- * Get all banks
- * @returns {Promise<import('./api-response-types').BankResponseBody[]>}
+ * @typedef {object} GetBanksQuery
+ * @property {boolean | undefined} includeReportingYears - Whether or not to include the bank reporting years
  */
-const getAllBanks = async () => {
+
+/**
+ * Get all banks
+ * @param {GetBanksQuery} queryParams - The query parameters
+ * @returns {Promise<import('./api-response-types').BankResponseBody[] | import('./api-response-types').BankWithReportingYearsResponseBody[]>}
+ */
+const getBanks = async (queryParams = {}) => {
   const url = `${DTFS_CENTRAL_API_URL}/v1/bank`;
   const response = await axios.get(url, {
     headers: headers.central,
+    params: queryParams,
   });
 
   return response.data;
@@ -1587,7 +1591,7 @@ module.exports = {
   addUnderwriterCommentToGefDeal,
   updateGefMINActivity,
   findBankById,
-  getAllBanks,
+  getBanks,
   getGefMandatoryCriteriaByVersion,
   getBankHolidays,
   getUtilisationReportsReconciliationSummary,

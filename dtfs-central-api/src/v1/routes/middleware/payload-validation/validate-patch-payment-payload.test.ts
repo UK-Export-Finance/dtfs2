@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { PatchPaymentPayload, validatePatchPaymentPayload } from './validate-patch-payment-payload';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 
 describe('validatePatchPaymentPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();

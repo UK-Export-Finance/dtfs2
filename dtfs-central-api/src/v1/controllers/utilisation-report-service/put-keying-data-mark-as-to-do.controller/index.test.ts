@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 import { FeeRecordEntityMockBuilder, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { PutKeyingDataMarkToDoRequest, putKeyingDataMarkAsToDo } from '.';

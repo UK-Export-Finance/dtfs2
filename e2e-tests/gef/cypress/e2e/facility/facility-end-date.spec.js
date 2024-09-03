@@ -238,13 +238,13 @@ context('Facility End Date Page', () => {
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
     });
   } else {
-    it('redirects to application details page', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
+    it('redirects to about facility page', () => {
+      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
     });
   }
 });

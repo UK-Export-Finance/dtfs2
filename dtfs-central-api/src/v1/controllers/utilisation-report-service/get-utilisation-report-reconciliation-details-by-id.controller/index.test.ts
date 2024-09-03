@@ -5,7 +5,7 @@ import { TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-co
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import { getUtilisationReportReconciliationDetails } from './helpers';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
-import { aReportPeriod } from '../../../../../test-helpers/test-data/report-period';
+import { aReportPeriod } from '../../../../../test-helpers';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 
 jest.mock('./helpers');

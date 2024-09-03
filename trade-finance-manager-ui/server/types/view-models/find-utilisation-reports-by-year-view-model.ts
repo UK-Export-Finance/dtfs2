@@ -7,9 +7,15 @@ export type FindUtilisationReportsByYearBankViewModel = {
   attributes?: Record<string, string>;
 };
 
+export type BankReportingYearsDataListViewModel = {
+  bankId: string;
+  reportingYears: number[];
+};
+
 export type FindUtilisationReportsByYearViewModel = BaseViewModel &
   FindUtilisationReportByYearValidationErrors & {
     bankItems: FindUtilisationReportsByYearBankViewModel[];
+    bankReportingYearsDataLists: BankReportingYearsDataListViewModel[];
     selectedBank?: string;
     selectedYear?: string;
   };
