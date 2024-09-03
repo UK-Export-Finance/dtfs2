@@ -71,9 +71,11 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
-    cy.get(
-      `[type="checkbox"][id="feeRecordIds-${FEE_RECORD_ID_ONE},${FEE_RECORD_ID_TWO}-reportedPaymentsCurrency-${PAYMENT_CURRENCY}-status-${FEE_RECORD_STATUS.DOES_NOT_MATCH}"]`,
-    ).check();
+
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+      .checkbox([FEE_RECORD_ID_ONE, FEE_RECORD_ID_TWO], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH)
+      .click();
+
     cy.get('[type="submit"]').contains('Add a payment').click();
   });
 
@@ -135,7 +137,12 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     cy.contains('button', 'Continue').click();
 
     cy.contains('Premium payments').should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+      .status(FEE_RECORD_ID_ONE)
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(FEE_RECORD_STATUS.MATCH);
+      });
   });
 
   it('submits form and reloads the page with no values when user submits form with valid values and user selects yes to adding another payment', () => {

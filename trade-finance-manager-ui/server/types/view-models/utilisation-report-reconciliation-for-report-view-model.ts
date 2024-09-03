@@ -90,8 +90,8 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   reportId: string;
   enablePaymentsReceivedSorting: boolean;
   feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[];
-  premiumPaymentFormError: ErrorSummaryViewModel | undefined;
-  facilityIdQueryError: ErrorSummaryViewModel | undefined;
+  tableDataError?: ErrorSummaryViewModel;
+  filterError?: ErrorSummaryViewModel;
   facilityIdQuery?: string;
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
