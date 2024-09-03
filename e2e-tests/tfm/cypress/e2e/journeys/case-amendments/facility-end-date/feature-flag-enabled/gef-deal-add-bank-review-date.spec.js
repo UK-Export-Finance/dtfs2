@@ -53,7 +53,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     describe('when "No" is selected in response to "Has the bank provided a facility end date"', () => {
       beforeEach(() => {
-        amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true });
+        cy.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true });
         amendmentsPage.isUsingFacilityEndDateYes().should('not.be.checked');
         amendmentsPage.isUsingFacilityEndDateNo().should('not.be.checked');
 
@@ -73,7 +73,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     describe('when the user has entered an incorrect bank review date', () => {
       beforeEach(() => {
-        amendmentsPage.navigateToIsUsingFacilityEndDatePage();
+        cy.navigateToIsUsingFacilityEndDatePage();
         amendmentsPage.continueAmendment().click();
         cy.url().should('contain', 'bank-review-date');
 
@@ -91,7 +91,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     describe('when the bank review date is valid and the facility value needs changing', () => {
       beforeEach(() => {
-        amendmentsPage.navigateToIsUsingFacilityEndDatePage({ changeFacilityValue: true });
+        cy.navigateToIsUsingFacilityEndDatePage({ changeFacilityValue: true });
         amendmentsPage.continueAmendment().click();
 
         cy.url().should('contain', 'bank-review-date');
@@ -108,7 +108,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     describe('when the bank review date is valid and only the cover end date is being changed', () => {
       beforeEach(() => {
-        amendmentsPage.navigateToIsUsingFacilityEndDatePage();
+        cy.navigateToIsUsingFacilityEndDatePage();
         amendmentsPage.continueAmendment().click();
 
         cy.url().should('contain', 'bank-review-date');
@@ -128,7 +128,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     describe('when on the check your answers page', () => {
       beforeEach(() => {
-        amendmentsPage.navigateToIsUsingFacilityEndDatePage();
+        cy.navigateToIsUsingFacilityEndDatePage();
         amendmentsPage.continueAmendment().click();
 
         cy.url().should('contain', 'bank-review-date');

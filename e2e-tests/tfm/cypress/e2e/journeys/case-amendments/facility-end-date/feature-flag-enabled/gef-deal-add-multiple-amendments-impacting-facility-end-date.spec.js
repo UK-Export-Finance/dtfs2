@@ -65,7 +65,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     describe('when amending the bank review date for the first time', () => {
       beforeEach(() => {
-        amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, newCoverEndDate: Date1 });
+        cy.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, newCoverEndDate: Date1 });
         amendmentsPage.isUsingFacilityEndDateNo().click();
         amendmentsPage.continueAmendment().click();
 
@@ -96,7 +96,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     describe('when amending the bank review date for a second time', () => {
       beforeEach(() => {
-        amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, newCoverEndDate: Date2 });
+        cy.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, newCoverEndDate: Date2 });
         amendmentsPage.isUsingFacilityEndDateNo().click();
         amendmentsPage.continueAmendment().click();
 
@@ -127,7 +127,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     describe('when amending the facility end date for the first time', () => {
       beforeEach(() => {
-        amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, newCoverEndDate: Date3 });
+        cy.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, newCoverEndDate: Date3 });
         amendmentsPage.isUsingFacilityEndDateYes().click();
         amendmentsPage.continueAmendment().click();
 
@@ -158,7 +158,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
     describe('when amending the facility end date for a second time', () => {
       beforeEach(() => {
-        amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, newCoverEndDate: Date4 });
+        cy.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true, newCoverEndDate: Date4 });
 
         amendmentsPage.isUsingFacilityEndDateNo().click();
         amendmentsPage.continueAmendment().click();

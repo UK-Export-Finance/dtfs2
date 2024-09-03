@@ -1,7 +1,3 @@
-const { format } = require('date-fns');
-const { todayDay, todayMonth, todayYear, today } = require('../../../../../e2e-fixtures/dateConstants');
-const facilityPage = require('../facilityPage');
-
 const amendmentsPage = {
   amendmentInProgressBar: () => cy.get('[data-cy="amendment--in-progress-bar"]'),
   amendmentInProgressBarLink: () => cy.get('[data-cy="amendment--in-progress-bar-link"]'),
@@ -47,50 +43,6 @@ const amendmentsPage = {
   amendmentBankReviewDateYearInput: () => cy.get('[data-cy="amendment--bank-review-date-year"]'),
   amendmentCurrentBankReviewDate: () => cy.get('[data-cy="amendment--current-bank-review-date"]'),
   amendmentBankReviewDateDetails: () => cy.get('[data-cy="amendment--bank-review-date-details"]'),
-
-  navigateToIsUsingFacilityEndDatePage: ({ startNewAmendment = false, changeFacilityValue = false, newCoverEndDate = today } = {}) => {
-    facilityPage.facilityTabAmendments().click();
-
-    if (startNewAmendment) {
-      amendmentsPage.addAmendmentButton().should('exist');
-      amendmentsPage.addAmendmentButton().contains('Add an amendment request');
-      amendmentsPage.addAmendmentButton().click();
-    } else {
-      amendmentsPage.continueAmendmentButton().click();
-    }
-
-    cy.url().should('contain', 'request-date');
-    amendmentsPage.amendmentRequestDayInput().clear().type(todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().type(todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().type(todayYear);
-    amendmentsPage.continueAmendment().click();
-
-    cy.url().should('contain', 'request-approval');
-    amendmentsPage.amendmentRequestApprovalNo().check();
-    amendmentsPage.continueAmendment().click();
-
-    cy.url().should('contain', 'amendment-effective-date');
-    amendmentsPage.amendmentEffectiveDayInput().clear().type(todayDay);
-    amendmentsPage.amendmentEffectiveMonthInput().clear().type(todayMonth);
-    amendmentsPage.amendmentEffectiveYearInput().clear().type(todayYear);
-    amendmentsPage.continueAmendment().click();
-
-    cy.url().should('contain', 'amendment-options');
-    amendmentsPage.amendmentFacilityValueCheckbox().uncheck();
-    if (changeFacilityValue) {
-      amendmentsPage.amendmentFacilityValueCheckbox().check();
-    }
-    amendmentsPage.amendmentCoverEndDateCheckbox().check();
-    amendmentsPage.continueAmendment().click();
-
-    cy.url().should('contain', 'cover-end-date');
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().type(format(newCoverEndDate, 'd'));
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().type(format(newCoverEndDate, 'M'));
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().type(format(newCoverEndDate, 'yyyy'));
-    amendmentsPage.continueAmendment().click();
-
-    cy.url().should('contain', 'is-using-facility-end-date');
-  },
 
   addAmendmentButton: () => cy.get('[data-cy="amendment--add-amendment-button"]'),
   continueAmendmentButton: () => cy.get('[data-cy="amendment--continue-amendment-button"]'),

@@ -52,7 +52,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should navigate to the facility end date page after selecting "Yes" to "Has the bank provided a facility end date"', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true });
+      cy.navigateToIsUsingFacilityEndDatePage({ startNewAmendment: true });
       amendmentsPage.isUsingFacilityEndDateYes().should('not.be.checked');
       amendmentsPage.isUsingFacilityEndDateNo().should('not.be.checked');
 
@@ -68,7 +68,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should return expected errors when entering an incorrect facility end date', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage();
+      cy.navigateToIsUsingFacilityEndDatePage();
       amendmentsPage.continueAmendment().click();
 
       cy.url().should('contain', 'facility-end-date');
@@ -81,7 +81,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should continue to the facility value page if the facility end date is valid and the facility value also needs changing', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage({ changeFacilityValue: true });
+      cy.navigateToIsUsingFacilityEndDatePage({ changeFacilityValue: true });
       amendmentsPage.continueAmendment().click();
 
       cy.url().should('contain', 'facility-end-date');
@@ -94,7 +94,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should continue to `Check your answers` page if the facility end date is valid and only the cover end date is being changed', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage();
+      cy.navigateToIsUsingFacilityEndDatePage();
       amendmentsPage.continueAmendment().click();
 
       cy.url().should('contain', 'facility-end-date');
@@ -110,7 +110,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should allow facility end date amendments on the `Check your answers` page', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage();
+      cy.navigateToIsUsingFacilityEndDatePage();
       amendmentsPage.continueAmendment().click();
 
       cy.url().should('contain', 'facility-end-date');
@@ -134,7 +134,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     it('should correctly display amended values on the facility summary page', () => {
-      amendmentsPage.navigateToIsUsingFacilityEndDatePage();
+      cy.navigateToIsUsingFacilityEndDatePage();
       amendmentsPage.continueAmendment().click();
 
       cy.url().should('contain', 'facility-end-date');
