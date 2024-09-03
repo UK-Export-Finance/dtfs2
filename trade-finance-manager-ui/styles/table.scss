@@ -162,15 +162,14 @@ table.utilisation-report-reconciliation-table {
   table-layout: fixed;
 
   .ukef-width-one-tenth {
-    width: 10% !important;
+    width: 10%;
   }
 
   .ukef-width-one-quarter {
-    width: 25% !important;
+    width: 25%;
   }
-}
-@media (max-width:65em) {
-  table.utilisation-report-reconciliation-table {
+
+  @media (max-width:65em) {
     width: 55em;
 
     .govuk-table__header,
