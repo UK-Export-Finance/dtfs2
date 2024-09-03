@@ -4,7 +4,7 @@ import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '
 import { removeFeesFromPaymentGroup } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { executeWithSqlTransaction } from '../../../../helpers';
 
 jest.mock('../../../../helpers');

@@ -6,7 +6,7 @@ import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aBank } from '../../../../test-helpers/test-data/bank';
 import { aMonthlyBankReportPeriodSchedule } from '../../../../test-helpers/test-data/bank-report-period-schedule';
-import { Bank } from '../../../types/banks';
+import { BankWithReportingYearsResponseBody } from '../../../api-response-types';
 import { FindUtilisationReportsByYearViewModel, UtilisationReportsByBankAndYearViewModel } from '../../../types/view-models';
 
 jest.mock('../../../api');
@@ -20,13 +20,14 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
   const BANK_NAME_ONE = 'Barclays Bank';
   const BANK_NAME_TWO = 'HSBC';
   const BANK_NAME_THREE = 'Newable';
-  const BANKS: Bank[] = [
+  const BANKS: BankWithReportingYearsResponseBody[] = [
     {
       ...aBank(),
       id: BANK_ID_ONE,
       name: BANK_NAME_ONE,
       utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),
       isVisibleInTfmUtilisationReports: true,
+      reportingYears: [2020],
     },
     {
       ...aBank(),
@@ -39,6 +40,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         { startMonth: 10, endMonth: 12 },
       ],
       isVisibleInTfmUtilisationReports: true,
+      reportingYears: [2021, 2022, 2023],
     },
     {
       ...aBank(),
@@ -46,6 +48,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       name: BANK_NAME_THREE,
       utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),
       isVisibleInTfmUtilisationReports: true,
+      reportingYears: [2024],
     },
   ];
 
@@ -64,6 +67,21 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       value: BANK_ID_THREE,
       text: BANK_NAME_THREE,
       attributes: { 'data-cy': `${BANK_ID_THREE}-radio` },
+    },
+  ];
+
+  const EXPECTED_DATA_LISTS = [
+    {
+      bankId: BANK_ID_ONE,
+      reportingYears: [2020],
+    },
+    {
+      bankId: BANK_ID_TWO,
+      reportingYears: [2021, 2022, 2023],
+    },
+    {
+      bankId: BANK_ID_THREE,
+      reportingYears: [2024],
     },
   ];
 
@@ -113,7 +131,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         session: requestSession,
       });
 
-      jest.mocked(api.getAllBanks).mockRejectedValue({
+      jest.mocked(api.getAllBanksWithReportingYears).mockRejectedValue({
         response: { status: 404 },
       });
 
@@ -130,7 +148,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         session: requestSession,
       });
 
-      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+      jest.mocked(api.getAllBanksWithReportingYears).mockResolvedValue(BANKS);
 
       // Act
       await getFindReportsByYear(req, res);
@@ -140,6 +158,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       expect(res._getRenderData()).toMatchObject({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         bankItems: EXPECTED_BANK_ITEMS,
+        bankReportingYearsDataLists: EXPECTED_DATA_LISTS,
         errorSummary: [],
         bankError: undefined,
         yearError: undefined,
@@ -161,7 +180,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         { text: expectedYearError, href: '#year' },
       ];
 
-      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+      jest.mocked(api.getAllBanksWithReportingYears).mockResolvedValue(BANKS);
 
       // Act
       await getFindReportsByYear(req, res);
@@ -183,7 +202,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         originalUrl,
       });
 
-      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+      jest.mocked(api.getAllBanksWithReportingYears).mockResolvedValue(BANKS);
 
       const expectedBankError = 'Select a bank';
       const expectedYearError = 'Enter a valid year';
@@ -203,6 +222,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         errorSummary: expectedErrorSummary,
         bankError: expectedBankError,
         yearError: expectedYearError,
+        bankReportingYearsDataLists: EXPECTED_DATA_LISTS,
       });
     });
 
@@ -211,13 +231,14 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       const { res, req } = httpMocks.createMocks({
         session: requestSession,
       });
-      const bankNotVisibleInTfmUtilisationReports: Bank = {
+      const bankNotVisibleInTfmUtilisationReports: BankWithReportingYearsResponseBody = {
         ...aBank(),
         id: '999',
         isVisibleInTfmUtilisationReports: false,
+        reportingYears: [],
       };
 
-      jest.mocked(api.getAllBanks).mockResolvedValue([...BANKS, bankNotVisibleInTfmUtilisationReports]);
+      jest.mocked(api.getAllBanksWithReportingYears).mockResolvedValue([...BANKS, bankNotVisibleInTfmUtilisationReports]);
 
       // Act
       await getFindReportsByYear(req, res);
@@ -238,7 +259,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         originalUrl,
       });
 
-      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+      jest.mocked(api.getAllBanksWithReportingYears).mockResolvedValue(BANKS);
 
       // Act
       await getFindReportsByYear(req, res);
@@ -256,7 +277,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         originalUrl,
       });
 
-      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+      jest.mocked(api.getAllBanksWithReportingYears).mockResolvedValue(BANKS);
 
       // Act
       await getFindReportsByYear(req, res);
@@ -274,7 +295,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         originalUrl,
       });
 
-      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+      jest.mocked(api.getAllBanksWithReportingYears).mockResolvedValue(BANKS);
 
       // Act
       await getFindReportsByYear(req, res);
@@ -330,7 +351,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         originalUrl,
       });
 
-      jest.mocked(api.getAllBanks).mockResolvedValue(BANKS);
+      jest.mocked(api.getAllBanksWithReportingYears).mockResolvedValue(BANKS);
       jest.mocked(api.getReportSummariesByBankAndYear).mockResolvedValue({ bankName: BANK_NAME_ONE, year: yearQuery, reports: [mockReportSummaryItem] });
 
       // Act

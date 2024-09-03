@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const { CURRENCY, getCurrentGefDealVersion, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../../database-helper');
 const CONSTANTS = require('../../../../src/constants');
@@ -17,6 +18,7 @@ const mockApplications = require('../../../fixtures/gef/application');
 const { calculateUkefExposure, calculateGuaranteeFee } = require('../../../../src/v1/gef/calculations/facility-calculations');
 const { DB_COLLECTIONS } = require('../../../fixtures/constants');
 const { generateANewFacility } = require('./helpers/generate-a-new-facility.tests');
+const { generateACompleteFacilityUpdate } = require('./helpers/generate-a-facility-update.tests');
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
@@ -37,29 +39,6 @@ describe(baseUrl, () => {
 
   beforeEach(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
-
-    completeUpdate = {
-      hasBeenIssued: false,
-      name: 'TEST',
-      shouldCoverStartOnSubmission: null,
-      coverStartDate: new Date(),
-      coverEndDate: new Date(),
-      monthsOfCover: 12,
-      details: ['test', 'test'],
-      detailsOther: null,
-      currency: { id: CURRENCY.GBP },
-      value: 10000000,
-      coverPercentage: 75,
-      interestPercentage: 10,
-      paymentType: 'Monthly',
-      dayCountBasis: 365,
-      feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
-      feeFrequency: 'Monthly',
-      coverDateConfirmed: true,
-      ukefFacilityId: 1234,
-      issueDate: null,
-      hasBeenIssuedAndAcknowledged: true,
-    };
   });
 
   describe(`PUT ${baseUrl}/:id`, () => {
@@ -68,6 +47,7 @@ describe(baseUrl, () => {
         jest.mocked(getCurrentGefDealVersion).mockReturnValue(dealVersion);
         mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
         newFacility = generateANewFacility({ dealId: mockApplication.body._id, makerId: aMaker._id, dealVersion });
+        completeUpdate = generateACompleteFacilityUpdate({ dealVersion });
       });
 
       afterEach(() => {
@@ -109,7 +89,7 @@ describe(baseUrl, () => {
         };
 
         expect(body).toEqual(expected);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it('removes start cover date if shouldCoverStartOnSubmission is true', async () => {
@@ -125,14 +105,14 @@ describe(baseUrl, () => {
 
         // first update - insert start date
         const res1 = await as(aMaker).put(firstUpdate).to(`${baseUrl}/${item.body.details._id}`);
-        expect(res1.status).toEqual(200);
+        expect(res1.status).toEqual(HttpStatusCode.Ok);
         expect(res1.body.details.shouldCoverStartOnSubmission).toEqual(false);
         expect(res1.body.details.coverStartDate).toEqual(expect.any(String));
         expect(res1.body.details.coverEndDate).toEqual(expect.any(String));
 
         // second update - remove start date
         const res2 = await as(aMaker).put(secondUpdate).to(`${baseUrl}/${item.body.details._id}`);
-        expect(res2.status).toEqual(200);
+        expect(res2.status).toEqual(HttpStatusCode.Ok);
         expect(res2.body.details.shouldCoverStartOnSubmission).toEqual(true);
         expect(res2.body.details.coverStartDate).toEqual(null);
         expect(res2.body.details.coverEndDate).toEqual(expect.any(String));
@@ -183,7 +163,7 @@ describe(baseUrl, () => {
         expected.details.currency = update.currency;
 
         expect(body).toEqual(expected);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it('name is required if hasBeenIssued', async () => {
@@ -227,7 +207,7 @@ describe(baseUrl, () => {
         expected.details.currency = { id: CURRENCY.GBP };
 
         expect(body).toEqual(expected);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it('other description is required if I select the other checkmark', async () => {
@@ -253,7 +233,7 @@ describe(baseUrl, () => {
         };
 
         expect(body).toEqual(expected);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it('completely updates a facility', async () => {
@@ -272,14 +252,14 @@ describe(baseUrl, () => {
             guaranteeFee: calculateGuaranteeFee(completeUpdate, {}),
           },
           validation: {
-            required: addFacilityEndDateToValidation([], dealVersion),
+            required: [],
           },
         };
 
         expected.details.currency = { id: CURRENCY.GBP };
 
         expect(body).toEqual(expected);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it("updates the associated deal's facilitiesUpdated timestamp", async () => {
@@ -335,7 +315,7 @@ describe(baseUrl, () => {
         };
 
         expect(body).toEqual(expected);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it('should update the coverStartDate and coverEndDate in the right format set to midnight if leap year', async () => {
@@ -371,7 +351,7 @@ describe(baseUrl, () => {
         };
 
         expect(body).toEqual(expected);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it('should update the coverStartDate and coverEndDate in the right format set to midnight if years are 9999 and 10000 (upper edge cases)', async () => {
@@ -407,7 +387,7 @@ describe(baseUrl, () => {
         };
 
         expect(body).toEqual(expected);
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
       });
 
       it('returns an enum error when putting the wrong type', async () => {
@@ -433,7 +413,7 @@ describe(baseUrl, () => {
         const mockQuery = { dealId: mockApplication.body._id };
         const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
 
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
         expect(body.status).toEqual(CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS);
         expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
       });
@@ -450,7 +430,7 @@ describe(baseUrl, () => {
         const mockQuery = { dealId: mockApplication.body._id };
         const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
 
-        expect(status).toEqual(200);
+        expect(status).toEqual(HttpStatusCode.Ok);
         expect(body.status).toEqual(CONSTANTS.DEAL.DEAL_STATUS.COMPLETED);
         expect(body).not.toEqual({ success: false, msg: "you don't have the right role" });
       });
@@ -506,7 +486,7 @@ describe(baseUrl, () => {
 
         const { status } = await as(aMaker).put({ isUsingFacilityEndDate: true }).to(`${baseUrl}/${facilityBody.details._id}`);
 
-        expect(status).toBe(200);
+        expect(status).toBe(HttpStatusCode.Ok);
       });
 
       it('returns 200 when payload is valid & contains bankReviewDate', async () => {
@@ -514,7 +494,7 @@ describe(baseUrl, () => {
 
         const { status } = await as(aMaker).put({ bankReviewDate: new Date().toISOString() }).to(`${baseUrl}/${facilityBody.details._id}`);
 
-        expect(status).toBe(200);
+        expect(status).toBe(HttpStatusCode.Ok);
       });
 
       it('returns 200 when payload is valid & contains facilityEndDate', async () => {
@@ -522,7 +502,15 @@ describe(baseUrl, () => {
 
         const { status } = await as(aMaker).put({ facilityEndDate: new Date().toISOString() }).to(`${baseUrl}/${facilityBody.details._id}`);
 
-        expect(status).toBe(200);
+        expect(status).toBe(HttpStatusCode.Ok);
+      });
+
+      it('returns 200 when facilityEndDate & bankReviewDate are both null', async () => {
+        const { body: facilityBody } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+
+        const { status } = await as(aMaker).put({ facilityEndDate: null, bankReviewDate: null }).to(`${baseUrl}/${facilityBody.details._id}`);
+
+        expect(status).toBe(HttpStatusCode.Ok);
       });
 
       it('returns 400 when isUsingFacilityEndDate is not a boolean', async () => {

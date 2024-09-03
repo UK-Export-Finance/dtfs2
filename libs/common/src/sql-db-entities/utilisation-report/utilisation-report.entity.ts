@@ -63,6 +63,14 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
   })
   feeRecords!: FeeRecordEntity[];
 
+  /**
+   * Creates a utilisation report entity with status REPORT_NOT_RECEIVED
+   * @param param - The parameters to create the entity with
+   * @param param.bankId - The bank id
+   * @param param.reportPeriod - The report period
+   * @param param.requestSource - The request source
+   * @returns The created entity
+   */
   static createNotReceived({ bankId, reportPeriod, requestSource }: CreateNotReceivedUtilisationReportEntityParams): UtilisationReportEntity {
     const report = new UtilisationReportEntity();
     report.bankId = bankId;
@@ -74,6 +82,13 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     return report;
   }
 
+  /**
+   * Updates the report with the upload details
+   * @param param - The parameters to update the report with
+   * @param param.azureFileInfo - The azure file info
+   * @param param.uploadedByUserId - The id of the user who uploaded the report
+   * @param param.requestSource - The request source
+   */
   public updateWithUploadDetails({ azureFileInfo, uploadedByUserId, requestSource }: UpdateWithUploadDetailsParams): void {
     this.dateUploaded = new Date();
     this.azureFileInfo = azureFileInfo;
@@ -82,10 +97,21 @@ export class UtilisationReportEntity extends AuditableBaseEntity {
     this.updateLastUpdatedBy(requestSource);
   }
 
+  /**
+   * Updates the report with fee records
+   * @param param - The parameters to update the report with
+   * @param param.feeRecords - The fee records
+   */
   public updateWithFeeRecords({ feeRecords }: UpdateWithFeeRecordsParams): void {
     this.feeRecords = feeRecords;
   }
 
+  /**
+   * Updates the report with a supplied status
+   * @param param - The parameters to update the report with
+   * @param param.status - The status
+   * @param param.requestSource - The request source
+   */
   public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
     this.status = status;
     this.updateLastUpdatedBy(requestSource);

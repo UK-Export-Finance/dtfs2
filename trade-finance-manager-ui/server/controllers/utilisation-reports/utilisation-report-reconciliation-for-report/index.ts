@@ -1,13 +1,23 @@
-import { Request, Response } from 'express';
-import { asString, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { Response } from 'express';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
-import { mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems, mapKeyingSheetToKeyingSheetViewModel } from '../helpers';
+import {
+  mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems,
+  mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
+  mapKeyingSheetToKeyingSheetViewModel,
+} from '../helpers';
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
-import { validateFacilityIdQuery } from './validate-facility-id-query';
-import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
 import { FeeRecordPaymentGroup } from '../../../api-response-types';
+import { extractQueryAndSessionData } from './extract-query-and-session-data';
+
+export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
+  query: {
+    facilityIdQuery?: string;
+    selectedFeeRecordIds?: string;
+  };
+}>;
 
 const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): boolean =>
   feeRecordPaymentGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
@@ -15,19 +25,43 @@ const feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived = (feeRecordPaymentGro
 const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
   res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
 
-export const getUtilisationReportReconciliationByReportId = async (req: Request, res: Response) => {
+/**
+ * Controller for the GET utilisation report reconciliation for report route.
+ *
+ * Retrieves report details associated with the provided utilisation report ID
+ * and maps these to view models.
+ *
+ * Checks fee record checkboxes based on selected IDs from session or query
+ * parameters. These may have been set if the user was redirected from another
+ * page.
+ *
+ * Deletes any related session data after processing.
+ *
+ * @param req - The request object
+ * @param res - The response object
+ */
+export const getUtilisationReportReconciliationByReportId = async (req: GetUtilisationReportReconciliationRequest, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId } = req.params;
-  const { facilityIdQuery } = req.query;
 
   try {
-    const facilityIdQueryAsString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
-    const facilityIdQueryError = validateFacilityIdQuery(facilityIdQueryAsString, req.originalUrl);
-    const { errorSummary: premiumPaymentFormError, isCheckboxChecked } = getAndClearFieldsFromRedirectSessionData(req);
+    const { facilityIdQuery, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
+
+    const { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds } = req.session;
+
+    delete req.session.addPaymentErrorKey;
+    delete req.session.checkedCheckboxIds;
+    delete req.session.generateKeyingDataErrorKey;
+
+    const { facilityIdQueryString, filterError, tableDataError, isCheckboxChecked } = extractQueryAndSessionData(
+      { facilityIdQuery, selectedFeeRecordIdsQuery },
+      { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
+      req.originalUrl,
+    );
 
     const { feeRecordPaymentGroups, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
-      facilityIdQueryAsString,
+      facilityIdQueryString,
       userToken,
     );
 
@@ -39,6 +73,8 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
+    const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(feeRecordPaymentGroups);
+
     return renderUtilisationReportReconciliationForReport(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -47,11 +83,11 @@ export const getUtilisationReportReconciliationByReportId = async (req: Request,
       reportId,
       enablePaymentsReceivedSorting,
       feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
-      premiumPaymentFormError,
-      facilityIdQueryError,
-      facilityIdQuery: facilityIdQueryAsString,
+      tableDataError,
+      filterError,
+      facilityIdQuery: facilityIdQueryString,
       keyingSheet: keyingSheetViewModel,
-      paymentDetails: [],
+      paymentDetails: paymentDetailsViewModel,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

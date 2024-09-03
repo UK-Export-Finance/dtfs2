@@ -15,7 +15,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aUtilisationReportRawCsvData, aPortalUser } from '../../../test-helpers/test-data';
+import { aUtilisationReportRawCsvData, aPortalUser } from '../../../test-helpers';
 import { PostUploadUtilisationReportRequestBody } from '../../../src/v1/controllers/utilisation-report-service/post-upload-utilisation-report.controller';
 
 console.error = jest.fn();

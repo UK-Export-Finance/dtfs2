@@ -15,5 +15,8 @@ export * from './amendments';
 export * from './api-error-code';
 export * from './facility-type';
 export * from './facility-provided-details';
+export * from './request-platform-type';
+export * from './date-formats';
+export * from './url-character-allowances';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

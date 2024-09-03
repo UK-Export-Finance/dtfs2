@@ -9,7 +9,7 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
-import { aReportPeriod } from '../../../../../../test-helpers/test-data';
+import { aReportPeriod } from '../../../../../../test-helpers';
 import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData } from '../helpers';
 
 jest.mock<unknown>('../helpers', () => ({

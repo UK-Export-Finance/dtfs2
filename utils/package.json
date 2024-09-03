@@ -12,6 +12,7 @@
         "lint": "eslint --color **/*.{ts,js} --ignore-path ../.eslintignore",
         "lint:fix": "eslint --fix --color **/*.{ts,js}",
         "load": "npm run mock-data-loader && npm run db:seed",
+        "migrate-acbs-utilisation-data-to-tfm": "npx ts-node data-migration/migrate-acbs-utilisation-data-to-tfm/index.ts",
         "mock-data-loader": "ts-node mock-data-loader/re-insert-mocks.js",
         "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js} --ignore-path ../.prettierignore",
         "prettier:fix": "prettier --write **/*.{ts,js} --ignore-path ../.prettierignore",

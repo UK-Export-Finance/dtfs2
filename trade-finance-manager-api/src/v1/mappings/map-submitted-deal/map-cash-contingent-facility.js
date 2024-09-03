@@ -40,6 +40,9 @@ const mapCashContingentFacility = (facility) => {
     dayCountBasis,
     hasBeenIssuedAndAcknowledged,
     tfm,
+    isUsingFacilityEndDate,
+    facilityEndDate,
+    bankReviewDate,
   } = facility;
 
   const mapped = {
@@ -61,6 +64,9 @@ const mapCashContingentFacility = (facility) => {
     dayCountBasis,
     hasBeenIssuedAndAcknowledged,
     tfm,
+    isUsingFacilityEndDate,
+    facilityEndDate,
+    bankReviewDate,
   };
 
   // these extra fields are only used in GEF submission confirmation email
