@@ -3,23 +3,58 @@ import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { aUtilisationReportRawCsvData } from '../../../../../test-helpers/test-data';
-import { validatePostUploadUtilisationReportPayload } from './validate-post-upload-utilisation-report-payload';
+import { getReportDataErrors, validatePostUploadUtilisationReportPayload } from './validate-post-upload-utilisation-report-payload';
 import { PostUploadUtilisationReportRequestBody } from '../../../controllers/utilisation-report-service/post-upload-utilisation-report.controller';
 import { validateUtilisationReportCsvData } from '../../../../services/utilisation-report-data-validator';
 
 jest.mock('../../../../services/utilisation-report-data-validator');
 
 describe('validate-post-upload-utilisation-report-payload', () => {
+  beforeEach(() => {
+    jest.mocked(validateUtilisationReportCsvData).mockReturnValue([]);
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  describe('getReportDataErrors', () => {
+    it('should map data into cell data row format before validation', () => {
+      const data: Record<string, string | null>[] = [
+        { 'first row first header': 'first value', 'first row second header': 'second value' },
+        { 'other row header': null },
+      ];
+
+      getReportDataErrors(data);
+
+      expect(validateUtilisationReportCsvData).toHaveBeenCalledTimes(1);
+      expect(validateUtilisationReportCsvData).toHaveBeenCalledWith([
+        { 'first row first header': { value: 'first value', row: 2 }, 'first row second header': { value: 'second value', row: 2 } },
+        { 'other row header': { value: null, row: 3 } },
+      ]);
+    });
+
+    it('should map errors into reduced object without exporter before returning', () => {
+      const data: Record<string, string | null>[] = [];
+
+      jest.mocked(validateUtilisationReportCsvData).mockReturnValue([
+        {
+          errorMessage: 'that is not right',
+          column: null,
+          row: 2,
+          value: 'some value',
+          exporter: null,
+        },
+      ]);
+
+      const errors = getReportDataErrors(data);
+
+      expect(errors).toEqual([{ errorMessage: 'that is not right', row: 2, value: 'some value' }]);
+    });
+  });
+
   describe('postUploadUtilisationReportPayloadValidator', () => {
     const mockNext = jest.fn();
-
-    beforeEach(() => {
-      jest.mocked(validateUtilisationReportCsvData).mockReturnValue([]);
-    });
-
-    afterEach(() => {
-      jest.resetAllMocks();
-    });
 
     const userId = new ObjectId().toString();
     const reportData = [aUtilisationReportRawCsvData()];
@@ -115,7 +150,10 @@ describe('validate-post-upload-utilisation-report-payload', () => {
       const { req, res } = getHttpMocks({
         reportData: [{ 'a header': 'a value' }],
       });
-      jest.mocked(validateUtilisationReportCsvData).mockReturnValue([{ errorMessage: 'That is not valid report data' }]);
+
+      jest
+        .mocked(validateUtilisationReportCsvData)
+        .mockReturnValue([{ errorMessage: 'That is not valid report data', value: '300', row: 3, column: null, exporter: null }]);
 
       // Act
       validatePostUploadUtilisationReportPayload(req, res, mockNext);
@@ -123,6 +161,7 @@ describe('validate-post-upload-utilisation-report-payload', () => {
       // Assert
       expect(mockNext).not.toHaveBeenCalled();
       expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+      expect(res._getData()).toEqual([{ errorMessage: 'That is not valid report data', value: '300', row: 3 }]);
     });
   });
 });
