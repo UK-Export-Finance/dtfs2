@@ -15,10 +15,10 @@
 {% endblock %}
 
 {% set premiumPaymentsHtml %}
-  {% if premiumPaymentFormError or facilityIdQueryError %}
+  {% if tableDataError or filterError %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: [premiumPaymentFormError, facilityIdQueryError],
+      errorList: [tableDataError, filterError],
       attributes: {
         'data-cy': 'error-summary'
       }
@@ -50,8 +50,8 @@
               id: "facility-id-filter",
               name: "facilityIdQuery",
               value: facilityIdQuery,
-              errorMessage: facilityIdQueryError and {
-                text: facilityIdQueryError.text
+              errorMessage: filterError and {
+                text: filterError.text
               },
               attributes: {'data-cy': 'facility-filter-input'}
             }) }}
@@ -79,7 +79,7 @@
       </div>
     </div>
 
-  {% if premiumPaymentFormError %}
+  {% if tableDataError %}
     <div class="govuk-form-group--error">
   {% endif %}
   {% if userCanEdit %}
@@ -111,7 +111,7 @@
   {% if userCanEdit %}
     </form>
   {% endif %}
-  {% if premiumPaymentFormError %}
+  {% if tableDataError %}
     </div>
   {% endif %}
 {% endset %}

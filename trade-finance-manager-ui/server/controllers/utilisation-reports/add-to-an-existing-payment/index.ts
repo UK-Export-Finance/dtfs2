@@ -14,8 +14,9 @@ import {
   mapToSelectedReportedFeesDetailsViewModel,
   PremiumPaymentsTableCheckboxSelectionsRequestBody,
 } from '../helpers';
-import { mapToAvailablePaymentGroupsViewModel } from '../helpers/available-payment-group-view-model-mapper';
-import { getAvailablePaymentsHeading } from '../helpers/add-to-an-existing-payment-helper';
+import { mapToPaymentGroupInputsViewModel } from '../helpers/available-payment-group-view-model-mapper';
+import { getPaymentsHeading } from '../helpers/add-to-an-existing-payment-helper';
+import { getLinkToPremiumPaymentsTab } from './get-link-to-premium-payments-tab';
 
 type AddToAnExistingPaymentRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;
@@ -54,9 +55,10 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(selectedFeeRecordDetails.reportPeriod),
       reportedFeeDetails: mapToSelectedReportedFeesDetailsViewModel(selectedFeeRecordDetails),
       selectedFeeRecordCheckboxIds: checkedCheckboxIds,
-      availablePaymentsHeading: getAvailablePaymentsHeading(availablePaymentGroups),
-      availablePaymentGroups: mapToAvailablePaymentGroupsViewModel(availablePaymentGroups),
+      paymentsHeading: getPaymentsHeading(availablePaymentGroups),
+      paymentGroups: mapToPaymentGroupInputsViewModel(availablePaymentGroups),
       errors,
+      backLinkHref: getLinkToPremiumPaymentsTab(reportId, feeRecordIds),
     };
     return renderAddToAnExistingPaymentPage(res, addToAnExistingPaymentViewModel);
   } catch (error) {

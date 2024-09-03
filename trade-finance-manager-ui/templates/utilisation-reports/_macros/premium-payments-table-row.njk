@@ -54,7 +54,7 @@
       <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}" data-sort-value="{{ totalPaymentsReceived.dataSortValue }}">
         {{ totalPaymentsReceived.formattedCurrencyAndAmount if isFirstFeeRecordInGroup else "" }}
       </td>
-      <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}" data-sort-value="{{ displayStatus }}">
+      <td class="govuk-table__cell{{ " no-border" if not isLastFeeRecordInGroup }}" data-sort-value="{{ displayStatus }}" data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}-status">
         {{ feeRecordStatus.render({
           status: status,
           displayStatus: displayStatus
