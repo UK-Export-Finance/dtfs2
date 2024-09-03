@@ -60,7 +60,7 @@ describe(`POST ${getUrl()}`, () => {
     const response = await testApi.post(payload).to(getUrl());
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it("responds with a 201 (Created) with a valid payload and sets the report status to 'PENDING_RECONCILIATION'", async () => {
@@ -68,7 +68,7 @@ describe(`POST ${getUrl()}`, () => {
     const response = await testApi.post(aValidPayload()).to(getUrl());
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Created);
+    expect(response.status).toEqual(HttpStatusCode.Created);
 
     const report = await SqlDbHelper.manager.findOneByOrFail(UtilisationReportEntity, { id: reportId });
     expect(report.status).toBe<UtilisationReportReconciliationStatus>('PENDING_RECONCILIATION');
@@ -88,10 +88,10 @@ describe(`POST ${getUrl()}`, () => {
     const response = await testApi.post(payload).to(getUrl());
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Created);
+    expect(response.status).toEqual(HttpStatusCode.Created);
 
     const feeRecordCount = await SqlDbHelper.manager.count(FeeRecordEntity, {});
-    expect(feeRecordCount).toBe(3);
+    expect(feeRecordCount).toEqual(3);
   });
 
   it('creates an entry in the FacilityUtilisationData table for each facility id in the report csv data', async () => {
@@ -108,7 +108,7 @@ describe(`POST ${getUrl()}`, () => {
     const response = await testApi.post(payload).to(getUrl());
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Created);
+    expect(response.status).toEqual(HttpStatusCode.Created);
 
     const facilityIdExists = await Promise.all(
       facilityIds.map((facilityId) => SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityId })),
@@ -121,55 +121,56 @@ describe(`POST ${getUrl()}`, () => {
     const response = await testApi.post(aValidPayload()).to(getUrl());
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Created);
+    expect(response.status).toEqual(HttpStatusCode.Created);
 
     const azureFileInfo = await SqlDbHelper.manager.find(AzureFileInfoEntity, {});
     expect(azureFileInfo).toHaveLength(1);
   });
 
-  it('saves the report when there is a large number of fee records all for the same facility', async () => {
-    // Arrange
+  describe('when uploading a report with a large number of fee records each for a distinct facility', () => {
+    let responseStatus: number | undefined;
+
     const numberOfReportDataEntriesToCreate = 500;
 
-    const facilityId = '12345678';
-    const reportData: UtilisationReportRawCsvData[] = [];
-    while (reportData.length < numberOfReportDataEntriesToCreate) {
-      reportData.push({ ...aUtilisationReportRawCsvData(), 'ukef facility id': facilityId });
+    let ukefFacilityId = 10000001;
+    const ukefFacilityIds: string[] = [];
+    while (ukefFacilityIds.length < numberOfReportDataEntriesToCreate) {
+      ukefFacilityIds.push(ukefFacilityId.toString());
+      ukefFacilityId += 1;
     }
 
-    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
+    const reportData: UtilisationReportRawCsvData[] = ukefFacilityIds.map((facilityId) => ({
+      ...aUtilisationReportRawCsvData(),
+      'ukef facility id': facilityId,
+    }));
 
-    // Act
-    const response = await testApi.post(payload).to(getUrl());
+    beforeEach(async () => {
+      // Arrange
+      const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
 
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.Created);
+      // Act
+      const response = await testApi.post(payload).to(getUrl());
+      responseStatus = response.status;
+    });
 
-    const numberOfInsertedFeeRecords = await SqlDbHelper.manager.count(FeeRecordEntity, {});
-    expect(numberOfInsertedFeeRecords).toBe(numberOfReportDataEntriesToCreate);
-  });
+    it(`responds with a '${HttpStatusCode.Created}'`, () => {
+      // Assert
+      expect(responseStatus).toEqual(HttpStatusCode.Created);
+    });
 
-  it('saves the report when there is a large number of fee records and each fee record has a unique facility id which does not exist in the facility utilisation data table', async () => {
-    // Arrange
-    const numberOfReportDataEntriesToCreate = 500;
+    it('saves each individual fee record', async () => {
+      // Assert
+      const numberOfInsertedFeeRecords = await SqlDbHelper.manager.count(FeeRecordEntity, {});
+      expect(numberOfInsertedFeeRecords).toEqual(numberOfReportDataEntriesToCreate);
+    });
 
-    let facilityId = 10000000;
-    const reportData: UtilisationReportRawCsvData[] = [];
-    while (reportData.length < numberOfReportDataEntriesToCreate) {
-      reportData.push({ ...aUtilisationReportRawCsvData(), 'ukef facility id': facilityId.toString() });
-      facilityId += 1;
-    }
-
-    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
-
-    // Act
-    const response = await testApi.post(payload).to(getUrl());
-
-    // Assert
-    expect(response.status).toBe(HttpStatusCode.Created);
-
-    const numberOfInsertedFeeRecords = await SqlDbHelper.manager.count(FeeRecordEntity, {});
-    expect(numberOfInsertedFeeRecords).toBe(numberOfReportDataEntriesToCreate);
+    it('saves each new individual facility utilisation data entity', async () => {
+      // Assert
+      for (const facilityId of ukefFacilityIds) {
+        const facilityUtilisationDataExists = await SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityId });
+        expect(facilityUtilisationDataExists).toEqual(true);
+      }
+    });
   });
 
   it('creates a new FacilityUtilisationData row using the report reportPeriod if the report data has a facility id which does not already exist', async () => {
@@ -192,10 +193,10 @@ describe(`POST ${getUrl()}`, () => {
     const response = await testApi.post(payload).to(getUrl());
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Created);
+    expect(response.status).toEqual(HttpStatusCode.Created);
 
     const facilityUtilisationDataEntityExists = await SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityId, reportPeriod });
-    expect(facilityUtilisationDataEntityExists).toBe(true);
+    expect(facilityUtilisationDataEntityExists).toEqual(true);
   });
 
   it('does not update the existing FacilityUtilisationData row if the report data has a facility id which already exists', async () => {
@@ -225,7 +226,7 @@ describe(`POST ${getUrl()}`, () => {
     const response = await testApi.post(payload).to(getUrl());
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Created);
+    expect(response.status).toEqual(HttpStatusCode.Created);
 
     const facilityUtilisationDataEntity = await SqlDbHelper.manager.findOneByOrFail(FacilityUtilisationDataEntity, { id: facilityId });
     expect(facilityUtilisationDataEntity.reportPeriod).not.toEqual(reportReportPeriod);
