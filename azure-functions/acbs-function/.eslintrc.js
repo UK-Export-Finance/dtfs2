@@ -44,7 +44,7 @@ const baseRules = {
 };
 
 module.exports = {
-  extends: ['airbnb-base', 'plugin:prettier/recommended'],
+  extends: ['airbnb-base', 'plugin:prettier/recommended', 'plugin:import/errors', 'plugin:import/warnings', 'plugin:import/typescript'],
   env: {
     jest: true,
     browser: true,
@@ -55,8 +55,7 @@ module.exports = {
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-        moduleDirectory: ['server', 'node_modules'],
+        extensions: ['.ts', '.tsx'],
       },
     },
   },
