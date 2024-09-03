@@ -110,7 +110,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
 
       if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.be.checked');
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
         aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
       }
     });

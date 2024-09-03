@@ -55,7 +55,7 @@ export class FacilityUtilisationDataEntity extends AuditableBaseEntity {
    * @param facilityUtilisationData.utilisation - The facility utilisation
    * @param facilityUtilisationData.fixedFee - The facility fixed fee
    * @param facilityUtilisationData.requestSource - The source of the request
-   * @returns {FacilityUtilisationDataEntity}
+   * @returns The created entity
    */
   public static create({ id, reportPeriod, utilisation, fixedFee, requestSource }: CreateFacilityUtilisationDataParams): FacilityUtilisationDataEntity {
     const data = new FacilityUtilisationDataEntity();
@@ -73,7 +73,7 @@ export class FacilityUtilisationDataEntity extends AuditableBaseEntity {
    * @param facilityUtilisationData.id - The ID of the entity
    * @param facilityUtilisationData.reportPeriod - The report period details
    * @param facilityUtilisationData.requestSource - The source of the request
-   * @returns {FacilityUtilisationDataEntity}
+   * @returns The created entity
    */
   public static createWithoutUtilisationAndFixedFee({
     id,

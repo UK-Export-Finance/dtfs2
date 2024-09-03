@@ -4,10 +4,16 @@ const utilisationReportPage = {
   premiumPaymentsTab: {
     getPaymentLink: (paymentId) => cy.get(`a[data-cy="edit-payment-link--paymentId-${paymentId}"]`),
     clickPaymentLink: (paymentId) => cy.get(`a[data-cy="edit-payment-link--paymentId-${paymentId}"]`).click(),
-    getPremiumPaymentsTableRow: (feeRecordId) => cy.get(`tr[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
     getFacilityIdFilterInput: () => cy.getInputByLabelText('Filter by facility ID'),
     submitFacilityIdFilter: () => cy.get('button[data-cy="facility-filter-submit-button"]').click(),
     generateKeyingDataButton: () => cy.get('[data-cy="generate-keying-data-button"]'),
+    addAPaymentButton: () => cy.get('[data-cy="add-a-payment-button"]'),
+    premiumPaymentsTable: {
+      row: (feeRecordId) => cy.get(`tr[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
+      checkbox: (feeRecordIds, paymentCurrency, status) =>
+        cy.get(`[type="checkbox"][id="feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${paymentCurrency}-status-${status}"]`),
+      status: (feeRecordId) => cy.get(`[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-status"]`),
+    },
   },
   keyingSheetTab: {
     markAsDoneButton: () => cy.get('[data-cy="keying-sheet-mark-as-done-button"]'),
