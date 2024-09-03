@@ -13,14 +13,9 @@ module.exports = {
   backLink: () => cy.get('[data-cy="back-link"]'),
   continueButton: () => cy.get('[data-cy="continue-button"]'),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
+  errorSummaryItems: () => cy.get('[data-cy="error-summary"] li'),
   submitButton: () => cy.get('[data-cy="submit-button"]'),
 };
 
-// we need  commands:
-// cy.clickBackLink
-// cy.clickContinueButton
-// cy.clickSubmitButton
-
 // errorMessage ??
-// errorSummaryItems
-// commentErrorMessage
+// commentErrorMessage // replace with "inline error"
