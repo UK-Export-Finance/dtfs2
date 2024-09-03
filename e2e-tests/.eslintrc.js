@@ -79,9 +79,7 @@ module.exports = {
   rules: baseRules,
   settings: {
     'import/resolver': {
-      node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      },
+      typescript: {},
     },
   },
   parserOptions: baseParserOptions,

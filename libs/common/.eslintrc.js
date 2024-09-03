@@ -66,6 +66,7 @@ module.exports = {
     'import/resolver': {
       node: {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        moduleDirectory: ['server', 'node_modules'],
       },
     },
   },
