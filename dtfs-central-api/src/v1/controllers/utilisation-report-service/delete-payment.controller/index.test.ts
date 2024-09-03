@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { ApiError, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { TestApiError, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { DeletePaymentRequest, deletePayment } from '.';
@@ -14,12 +14,6 @@ jest.mock('../../../../helpers');
 jest.mock('../../../../services/state-machines/utilisation-report/utilisation-report.state-machine');
 
 console.error = jest.fn();
-
-class TestApiError extends ApiError {
-  constructor(status?: number, message?: string) {
-    super({ status: status ?? 500, message: message ?? '' });
-  }
-}
 
 describe('delete-payment.controller', () => {
   describe('deletePayment', () => {

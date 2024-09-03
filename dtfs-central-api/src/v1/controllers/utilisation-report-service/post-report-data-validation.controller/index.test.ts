@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
-import { ApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
+import { TestApiError } from '@ukef/dtfs2-common';
 import { PostReportDataValidationPayload } from '../../../routes/middleware/payload-validation';
 import { postReportDataValidation, PostReportDataValidationRequest } from '.';
 import { validateUtilisationReportCsvData } from '../../../../services/utilisation-report-data-validator';
@@ -8,12 +8,6 @@ import { validateUtilisationReportCsvData } from '../../../../services/utilisati
 jest.mock('../../../../services/utilisation-report-data-validator');
 
 console.error = jest.fn();
-
-class TestApiError extends ApiError {
-  constructor(status?: number, message?: string) {
-    super({ status: status ?? HttpStatusCode.InternalServerError, message: message ?? '' });
-  }
-}
 
 describe('post-report-data-validation.controller', () => {
   afterEach(() => {

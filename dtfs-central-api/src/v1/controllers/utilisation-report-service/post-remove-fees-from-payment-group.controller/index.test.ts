@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { PaymentEntityMockBuilder, FeeRecordEntityMockBuilder, ApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { PaymentEntityMockBuilder, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostRemoveFeesFromPaymentGroupRequest, postRemoveFeesFromPaymentGroup } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
@@ -12,12 +12,6 @@ import { PaymentRepo } from '../../../../repositories/payment-repo';
 jest.mock('./helpers');
 
 console.error = jest.fn();
-
-class TestApiError extends ApiError {
-  constructor(status?: number, message?: string) {
-    super({ status: status ?? 500, message: message ?? '' });
-  }
-}
 
 describe('post-remove-fees-from-payment-group.controller', () => {
   describe('postRemoveFeesFromPaymentGroup', () => {
