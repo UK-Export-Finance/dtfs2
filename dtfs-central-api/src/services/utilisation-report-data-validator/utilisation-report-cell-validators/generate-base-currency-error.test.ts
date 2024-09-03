@@ -49,6 +49,6 @@ describe('generateBaseCurrencyError', () => {
 
     const baseCurrencyError = generateBaseCurrencyError(validBaseCurrency, testExporterName);
 
-    expect(baseCurrencyError).toEqual(null);
+    expect(baseCurrencyError).toBeNull();
   });
 });

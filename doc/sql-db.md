@@ -16,19 +16,23 @@ Below are some example systems you can use to connect to the database locally if
 
 - [SSMS](https://learn.microsoft.com/en-gb/sql/ssms) (Windows only) - dedicated SQL Server tool from Microsoft
 - [DataGrip](https://www.jetbrains.com/datagrip/) (Windows, Mac, and Linux) - generic database tool from JetBrains
+- [Azure Data Studio](https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall) (Windows, Mac, and Linux) - a lightweight database tool from Microsoft
 
 Use the `SQL_DB...` values in the common package [.env.sample](../libs/common/.env.sample) to connect.
 
 ### Seeding mock data
 
-To add a new seed to the project, navigate to the `utils/sql-db-seeder/src` directory and create a directory for the entity you wish to create a seeder for. Seeds are defined as files which have the `.seed.ts` extension, whilst factories are defined using the `.factory.ts` extension (see the [seeder data source](../utils/sql-db-seeder/src/seeding-data-source.ts) `seederOptions` parameter). Note: a factory is not required, but can be useful if you want to create many rows with randomised data.
+You can update the mock seeding by navigating to the `utils/sql-db-seeder/src` and making changes.
 
 To run the seeder, see the [seeding data command](#seeding-data) below.
 
-In order to generate data which is in line with the data in MongoDB, the SQL seeder needs to query data inserted by the [mock data loader](../utils/mock-data-loader/). This results in two things which are important to remember:
+In order to generate data which is in line with the data in MongoDB, the SQL db seeder needs to query data inserted by the [mock data loader](../utils/mock-data-loader/).
+Additionally, we need to seed tfm facilities for every facility id used by fee records inserted by the SQL db seeder (otherwise generate keying data will fail).
+This results in three things which are important to remember:
 
-1. Mock data loader must be run _before_ the SQL seeder
-2. The `utils/sql-db-seeder` `.env` file must include the connection strings required to initialise the [MongoDbClient](../libs/common/src/mongo-db-client/index.ts) _and_ the [SqlDbDataSource](../libs/common/src/sql-db-connection/data-source.ts) (see [.env.sample](../utils/sql-db-seeder/.env.sample))
+1. The `mock-data-loader` script must be run _before_ the SQL seeder
+2. The `create-tfm-keying-sheet-facilities` script must be run _after_ the SQL seeder.
+3. The `utils/sql-db-seeder` `.env` file must include the connection strings required to initialise the [MongoDbClient](../libs/common/src/mongo-db-client/index.ts) _and_ the [SqlDbDataSource](../libs/common/src/sql-db-connection/data-source.ts) (see [.env.sample](../utils/sql-db-seeder/.env.sample))
 
 ### DB Commands
 

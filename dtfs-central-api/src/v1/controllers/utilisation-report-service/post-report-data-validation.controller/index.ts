@@ -2,7 +2,7 @@ import { ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { validateUtilisationReportCsvData } from '../../../../services/utilisation-report-data-validator';
-import { PostReportDataValidationPayload } from '../../../routes/middleware/payload-validation/validate-post-validate-utilisation-report-data-payload';
+import { PostReportDataValidationPayload } from '../../../routes/middleware/payload-validation/validate-post-report-data-validation-payload';
 
 export type PostReportDataValidationRequest = CustomExpressRequest<{
   reqBody: PostReportDataValidationPayload;
@@ -18,6 +18,7 @@ export const postReportDataValidation = (req: PostReportDataValidationRequest, r
 
   try {
     const csvValidationErrors = validateUtilisationReportCsvData(reportData);
+
     return res.status(HttpStatusCode.Ok).send({ csvValidationErrors });
   } catch (error) {
     const errorMessage = 'Failed to validate report data';

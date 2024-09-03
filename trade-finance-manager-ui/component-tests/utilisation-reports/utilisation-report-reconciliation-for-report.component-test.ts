@@ -1,3 +1,4 @@
+import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import { PRIMARY_NAVIGATION_KEYS } from '../../server/constants';
 import { pageRenderer } from '../pageRenderer';
 import { aTfmSessionUser } from '../../test-helpers/test-data/tfm-session-user';
@@ -29,8 +30,6 @@ describe(page, () => {
     reportId: reportId.toString(),
     feeRecordPaymentGroups: [],
     enablePaymentsReceivedSorting: false,
-    premiumPaymentFormError: undefined,
-    facilityIdQueryError: undefined,
     facilityIdQuery,
     keyingSheet: [],
     paymentDetails: [],
@@ -121,8 +120,8 @@ describe(page, () => {
     wrapper.expectText('[data-cy="facility-filter-clear-button"]').toRead('Clear filter');
   });
 
-  it('renders error when facilityIdQueryError is provided', () => {
-    const wrapper = getWrapper({ ...params, facilityIdQueryError: { text: 'Oh no that is not correct', href: '#filter-component' } });
+  it('renders error when filterError is provided', () => {
+    const wrapper = getWrapper({ ...params, filterError: { text: 'Oh no that is not correct', href: '#filter-component' } });
     wrapper.expectText('[data-cy="facility-filter-form"]').toContain('Oh no that is not correct');
     wrapper.expectLink('[data-cy="error-summary"] a').toLinkTo('#filter-component', 'Oh no that is not correct');
   });
@@ -228,11 +227,13 @@ describe(page, () => {
       paymentDetails: [
         {
           payment: {
+            id: 1,
             amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
             dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
             reference: undefined,
           },
           feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
+          feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH,
         },
       ],
     });

@@ -2,22 +2,16 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { EntityManager } from 'typeorm';
-import { ApiError, FeeRecordEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, TestApiError, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { postKeyingData, PostKeyingDataRequest } from '.';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { executeWithSqlTransaction } from '../../../../helpers';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 
 jest.mock('../../../../helpers');
 
 console.error = jest.fn();
-
-class TestApiError extends ApiError {
-  constructor(status?: number, message?: string) {
-    super({ status: status ?? 500, message: message ?? '' });
-  }
-}
 
 describe('post-keying-data.controller', () => {
   describe('postKeyingData', () => {

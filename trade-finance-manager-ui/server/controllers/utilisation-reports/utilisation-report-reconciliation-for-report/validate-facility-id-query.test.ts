@@ -7,10 +7,10 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const facilityIdQuery = undefined;
 
       // Act
-      const facilityIdQueryError = validateFacilityIdQuery(facilityIdQuery, '');
+      const filterError = validateFacilityIdQuery(facilityIdQuery, '');
 
       // Assert
-      expect(facilityIdQueryError).toEqual(undefined);
+      expect(filterError).toEqual(undefined);
     });
 
     it('returns no error when no facilityIdQuery but originalUrl has other query param', () => {
@@ -18,10 +18,10 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const facilityIdQuery = undefined;
 
       // Act
-      const facilityIdQueryError = validateFacilityIdQuery(facilityIdQuery, '?someOtherQueryParam');
+      const filterError = validateFacilityIdQuery(facilityIdQuery, '?someOtherQueryParam');
 
       // Assert
-      expect(facilityIdQueryError).toEqual(undefined);
+      expect(filterError).toEqual(undefined);
     });
 
     it('returns error when facilityIdQuery param provided with empty value', () => {
@@ -29,10 +29,10 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const facilityIdQuery = undefined;
 
       // Act
-      const facilityIdQueryError = validateFacilityIdQuery(facilityIdQuery, '?facilityIdQuery=');
+      const filterError = validateFacilityIdQuery(facilityIdQuery, '?facilityIdQuery=');
 
       // Assert
-      expect(facilityIdQueryError).toEqual({
+      expect(filterError).toEqual({
         text: 'Enter a facility ID',
         href: '#facility-id-filter',
       });
@@ -40,10 +40,10 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
     it.each(['abcd', 'c3c3c', '?????'])('returns error when facilityIdQuery %p is not a number', (facilityIdQuery) => {
       // Act
-      const facilityIdQueryError = validateFacilityIdQuery(facilityIdQuery, '?facilityIdQuery');
+      const filterError = validateFacilityIdQuery(facilityIdQuery, '?facilityIdQuery');
 
       // Assert
-      expect(facilityIdQueryError).toEqual({
+      expect(filterError).toEqual({
         text: 'Facility ID must be a number',
         href: '#facility-id-filter',
       });
@@ -51,10 +51,10 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
     it.each(['123', '12345678901'])('returns error when facilityIdQuery %p is not within 4 and 10 characters', (facilityIdQuery) => {
       // Act
-      const facilityIdQueryError = validateFacilityIdQuery(facilityIdQuery, '?facilityIdQuery');
+      const filterError = validateFacilityIdQuery(facilityIdQuery, '?facilityIdQuery');
 
       // Assert
-      expect(facilityIdQueryError).toEqual({
+      expect(filterError).toEqual({
         text: 'Facility ID must be between 4 and 10 characters',
         href: '#facility-id-filter',
       });
@@ -65,10 +65,10 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const facilityIdQuery = '1234';
 
       // Act
-      const facilityIdQueryError = validateFacilityIdQuery(facilityIdQuery, '?someOtherQueryParam=1234&facilityIdQuery=1234');
+      const filterError = validateFacilityIdQuery(facilityIdQuery, '?someOtherQueryParam=1234&facilityIdQuery=1234');
 
       // Assert
-      expect(facilityIdQueryError).toEqual(undefined);
+      expect(filterError).toEqual(undefined);
     });
   });
 });

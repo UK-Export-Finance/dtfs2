@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
-import { ApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
+import { TestApiError } from '@ukef/dtfs2-common';
 import { PostReportDataValidationPayload } from '../../../routes/middleware/payload-validation';
 import { postReportDataValidation, PostReportDataValidationRequest } from '.';
 import { validateUtilisationReportCsvData } from '../../../../services/utilisation-report-data-validator';
@@ -8,12 +8,6 @@ import { validateUtilisationReportCsvData } from '../../../../services/utilisati
 jest.mock('../../../../services/utilisation-report-data-validator');
 
 console.error = jest.fn();
-
-class TestApiError extends ApiError {
-  constructor(status?: number, message?: string) {
-    super({ status: status ?? HttpStatusCode.InternalServerError, message: message ?? '' });
-  }
-}
 
 describe('post-report-data-validation.controller', () => {
   afterEach(() => {
@@ -25,7 +19,7 @@ describe('post-report-data-validation.controller', () => {
       reportData: [{ header: { value: 'value', column: 'A', row: '1' } }],
     });
 
-    it('return 200 (Ok) and validation errors when successfully validates the report data', () => {
+    it(`respond with a ${HttpStatusCode.Ok} and validation errors when successfully validates the report data`, () => {
       // Arrange
       const reportData = [{ header: { value: 'value', column: 'A', row: '1' } }];
       const req = httpMocks.createRequest<PostReportDataValidationRequest>({
@@ -82,7 +76,7 @@ describe('post-report-data-validation.controller', () => {
       expect(res._getData()).toBe(`Failed to validate report data: ${errorMessage}`);
     });
 
-    it("responds with a '500' if an unknown error occurs", () => {
+    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, () => {
       // Arrange
       const req = httpMocks.createRequest<PostReportDataValidationRequest>({
         body: aValidRequestBody(),

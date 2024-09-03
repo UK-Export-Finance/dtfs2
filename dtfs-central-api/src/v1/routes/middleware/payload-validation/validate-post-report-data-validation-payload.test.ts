@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { validatePostReportDataValidationPayload } from './validate-post-validate-utilisation-report-data-payload';
+import { validatePostReportDataValidationPayload } from './validate-post-report-data-validation-payload';
 
 describe('validatePostReportDataValidationPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();

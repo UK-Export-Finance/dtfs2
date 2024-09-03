@@ -14,10 +14,15 @@ import {
 
 const HEADER_IS_MISSING_BASE_ERROR_MESSAGE = 'header is missing or spelt incorrectly';
 
+/**
+ * Constructs "header is missing" error message
+ * @param header - The header text
+ * @returns The header is missing error message for the provided header
+ */
 export const getHeaderIsMissingErrorMessage = (header: string) => `${header} ${HEADER_IS_MISSING_BASE_ERROR_MESSAGE}`;
 
 /**
- * Validate utilisation report csv headers
+ * Validate utilisation report csv headers and get available headers
  * @param csvDataRow - A row of data
  * @returns Errors for any missing required headers and a list of the present headers
  */
@@ -56,13 +61,7 @@ export const validateUtilisationReportCsvHeaders = (
 
   requiredHeaders.forEach(({ header, missingErrorMessage }) => {
     if (!headers.includes(header)) {
-      missingHeaderErrors.push({
-        errorMessage: missingErrorMessage,
-        column: null,
-        row: null,
-        value: null,
-        exporter: null,
-      });
+      missingHeaderErrors.push({ errorMessage: missingErrorMessage });
     } else {
       availableHeaders.push(header);
     }

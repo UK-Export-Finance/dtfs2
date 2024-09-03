@@ -13,6 +13,7 @@ import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
 import statusBanner from '../../pages/application-status-banner';
+import facilityEndDate from '../../pages/facility-end-date';
 
 let dealId;
 let token;
@@ -109,7 +110,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
 
       if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.be.checked');
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
         aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
       }
     });
@@ -142,6 +143,13 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       // Changing cover start date to issuance date
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
       aboutFacilityUnissued.continueButton().click();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        facilityEndDate.continueButton().click();
+      }
 
       // Success banner
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');

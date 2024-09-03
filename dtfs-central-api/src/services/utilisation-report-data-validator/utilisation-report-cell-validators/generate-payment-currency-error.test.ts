@@ -100,6 +100,6 @@ describe('generatePaymentCurrencyError', () => {
 
     const paymentCurrencyError = generatePaymentCurrencyError(csvDataRow);
 
-    expect(paymentCurrencyError).toEqual(null);
+    expect(paymentCurrencyError).toBeNull();
   });
 });

@@ -1,3 +1,4 @@
+const { MAX_REQUEST_SIZE } = require('@ukef/dtfs2-common');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
@@ -30,7 +31,7 @@ const generateApp = () => {
   app.use(createRateLimit());
   app.use(healthcheck);
   app.use(passport.initialize());
-  app.use(express.json({ limit: '500kb' }));
+  app.use(express.json({ limit: MAX_REQUEST_SIZE }));
   app.use(compression());
   app.use(removeCsrfToken);
 

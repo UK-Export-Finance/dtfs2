@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { PostRemoveFeesFromPaymentGroupPayload, validatePostRemoveFeesFromPaymentGroupPayload } from './validate-post-remove-fees-from-payment-group-payload';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 
 describe('validatePostRemoveFeesFromPaymentGroupPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();

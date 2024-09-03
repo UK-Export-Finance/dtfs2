@@ -85,6 +85,6 @@ describe('generateTotalFeesAccruedCurrencyError', () => {
 
     const paymentCurrencyError = generateTotalFeesAccruedCurrencyError(csvDataRow);
 
-    expect(paymentCurrencyError).toEqual(null);
+    expect(paymentCurrencyError).toBeNull();
   });
 });

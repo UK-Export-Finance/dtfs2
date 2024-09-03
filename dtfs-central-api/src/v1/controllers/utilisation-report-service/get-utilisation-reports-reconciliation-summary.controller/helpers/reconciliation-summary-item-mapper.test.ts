@@ -8,7 +8,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import { mapReportToSummaryItem } from './reconciliation-summary-item-mapper';
-import { aBank } from '../../../../../../test-helpers/test-data';
+import { aBank } from '../../../../../../test-helpers';
 
 describe('reconciliation-summary-item-mapper', () => {
   describe('mapReportToSummaryItem', () => {

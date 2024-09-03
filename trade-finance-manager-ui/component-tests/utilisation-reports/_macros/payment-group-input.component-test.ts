@@ -1,12 +1,12 @@
-import { AvailablePaymentGroupsViewModel } from '../../../server/types/view-models/add-to-an-existing-payment-view-model';
+import { PaymentGroupInputsViewModel } from '../../../server/types/view-models/add-to-an-existing-payment-view-model';
 import { componentRenderer } from '../../componentRenderer';
-import { anAvailablePaymentGroupsViewModel } from '../../../test-helpers/test-data/available-payment-groups-view-model';
+import { aPaymentGroupInputsViewModel } from '../../../test-helpers/test-data/payment-group-inputs-view-model';
 
 const component = '../templates/utilisation-reports/_macros/payment-group-input.njk';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  const getWrapper = (viewModel: { legendText: string; paymentGroups: AvailablePaymentGroupsViewModel; errorMessage?: string }) => render(viewModel);
+  const getWrapper = (viewModel: { legendText: string; paymentGroups: PaymentGroupInputsViewModel; errorMessage?: string }) => render(viewModel);
 
   it('should render the legend text', () => {
     const viewModel = {
@@ -15,11 +15,11 @@ describe(component, () => {
     };
     const wrapper = getWrapper(viewModel);
 
-    wrapper.expectText('h2[data-cy="payment-group-radio-input-heading"]').toContain('Select a payment group');
+    wrapper.expectText('h2[data-cy="payment-groups-heading"]').toContain('Select a payment group');
   });
 
   it('should render a hidden input and no radio items if there is only one payment group', () => {
-    const paymentGroups: AvailablePaymentGroupsViewModel = [
+    const paymentGroups: PaymentGroupInputsViewModel = [
       {
         radioId: 'paymentIds-1',
         payments: [{ id: '1', formattedCurrencyAndAmount: 'GBP 1,000', reference: 'REF001' }],
@@ -40,7 +40,7 @@ describe(component, () => {
   });
 
   it('should render a single payments details within a group', () => {
-    const paymentGroups: AvailablePaymentGroupsViewModel = [
+    const paymentGroups: PaymentGroupInputsViewModel = [
       {
         radioId: 'paymentIds-1',
         payments: [{ id: '1', formattedCurrencyAndAmount: 'GBP 1,000', reference: 'REF001' }],
@@ -57,7 +57,7 @@ describe(component, () => {
   });
 
   it('should render multiple payment details within a group', () => {
-    const paymentGroups: AvailablePaymentGroupsViewModel = [
+    const paymentGroups: PaymentGroupInputsViewModel = [
       {
         radioId: 'paymentIds-1,2',
         payments: [
@@ -81,7 +81,7 @@ describe(component, () => {
   it('should render radio buttons for each payment group with the group ID when there is more than one payment group', () => {
     const viewModel = {
       legendText: 'Select a payment group',
-      paymentGroups: anAvailablePaymentGroupsViewModel(),
+      paymentGroups: aPaymentGroupInputsViewModel(),
     };
     const wrapper = getWrapper(viewModel);
 
@@ -95,7 +95,7 @@ describe(component, () => {
   it('should render both multiple and single payment details in different groups with a radio button for each group', () => {
     const viewModel = {
       legendText: 'Select a payment group',
-      paymentGroups: anAvailablePaymentGroupsViewModel(),
+      paymentGroups: aPaymentGroupInputsViewModel(),
     };
     const wrapper = getWrapper(viewModel);
 
@@ -123,27 +123,27 @@ describe(component, () => {
   it('does not apply error styling wrappers if no error message is provided', () => {
     const viewModel = {
       legendText: 'Select a payment group',
-      paymentGroups: anAvailablePaymentGroupsViewModel(),
+      paymentGroups: aPaymentGroupInputsViewModel(),
       errorMessage: undefined,
     };
     const wrapper = getWrapper(viewModel);
 
-    wrapper.expectElement('div[data-cy="available-payment-groups-error-wrapper"]').notToExist();
-    wrapper.expectElement('p[data-cy="available-payment-groups-inline-error-wrapper"]').notToExist();
+    wrapper.expectElement('div[data-cy="payment-groups-error-wrapper"]').notToExist();
+    wrapper.expectElement('p[data-cy="payment-groups-inline-error-wrapper"]').notToExist();
   });
 
   it('applies error styling wrappers if error message is provided', () => {
     const viewModel = {
       legendText: 'Select a payment group',
-      paymentGroups: anAvailablePaymentGroupsViewModel(),
+      paymentGroups: aPaymentGroupInputsViewModel(),
       errorMessage: 'Whoopsies',
     };
     const wrapper = getWrapper(viewModel);
 
-    wrapper.expectElement('div[data-cy="available-payment-groups-error-wrapper"]').toExist();
-    wrapper.expectElement('div[data-cy="available-payment-groups-error-wrapper"]').hasClass('govuk-form-group--error');
+    wrapper.expectElement('div[data-cy="payment-groups-error-wrapper"]').toExist();
+    wrapper.expectElement('div[data-cy="payment-groups-error-wrapper"]').hasClass('govuk-form-group--error');
 
-    wrapper.expectElement('p[data-cy="available-payment-groups-inline-error-wrapper"]').toExist();
-    wrapper.expectElement('p[data-cy="available-payment-groups-inline-error-wrapper"]').hasClass('govuk-error-message');
+    wrapper.expectElement('p[data-cy="payment-groups-inline-error-wrapper"]').toExist();
+    wrapper.expectElement('p[data-cy="payment-groups-inline-error-wrapper"]').hasClass('govuk-error-message');
   });
 });
