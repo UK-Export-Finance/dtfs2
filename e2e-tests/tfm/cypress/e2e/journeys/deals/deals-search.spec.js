@@ -1,6 +1,6 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
-import partials from '../../partials';
+import { primaryNavigation } from '../../partials';
 import DATE_CONSTANTS from '../../../../../e2e-fixtures/dateConstants';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
@@ -449,7 +449,7 @@ context('User can view and filter multiple deals', () => {
     pages.dealsPage.dealsTableRows().should('have.length', 1);
 
     // click `all deals` link
-    partials.primaryNavigation.allDealsLink().click();
+    primaryNavigation.allDealsLink().click();
     cy.url().should('eq', relative('/deals/0'));
 
     const TOTAL_DEALS = ALL_SUBMITTED_DEALS.length;

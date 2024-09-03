@@ -87,7 +87,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
         .availablePaymentGroups()
         .should('contain', 'There is one existing payment that the reported fees will be added to');
 
-      pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
+      cy.clickContinueButton();
 
       pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
       pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
@@ -138,14 +138,14 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
 
       pages.utilisationReportAddToAnExistingPaymentPage.paymentGroupRadioButton(`paymentIds-${PAYMENT_ID_ONE}`).click();
 
-      pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
+      cy.clickContinueButton();
 
       pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
       pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
     });
 
     it('should display an error message when there are multiple payments to choose from and none have been selected', () => {
-      pages.utilisationReportAddToAnExistingPaymentPage.continueButton().click();
+      cy.clickContinueButton();
 
       errorSummary().contains('Select a payment to add the fee or fees to');
     });

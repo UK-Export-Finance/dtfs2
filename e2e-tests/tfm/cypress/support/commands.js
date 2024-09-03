@@ -1,3 +1,5 @@
+import './click-events';
+
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 

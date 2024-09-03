@@ -68,9 +68,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.partiesPage.agentEditLink().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
 
-        pages.partiesPage.backLink().should('exist');
-
-        pages.partiesPage.backLink().click();
+        cy.clickBackLink();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
       });
 
