@@ -1,12 +1,12 @@
 import { SelectedFeeRecordsAvailablePaymentGroups } from '@ukef/dtfs2-common';
 
 /**
- * Gets the available payments heading for the selected fee records available
- * payment groups
- * @param paymentGroups - The  selected fee records available payment groups
- * @returns The available payments heading string
+ * Gets the payments heading for the selected fee records available payment
+ * groups
+ * @param paymentGroups - The selected fee records available payment groups
+ * @returns The payments heading string
  */
-export const getAvailablePaymentsHeading = (paymentGroups: SelectedFeeRecordsAvailablePaymentGroups) => {
+export const getPaymentsHeading = (paymentGroups: SelectedFeeRecordsAvailablePaymentGroups) => {
   const totalNumberOfPaymentGroups = paymentGroups.length;
   const numberOfSinglePayments = paymentGroups.filter((group) => group.length === 1).length;
   const numberOfGroupPayments = totalNumberOfPaymentGroups - numberOfSinglePayments;
