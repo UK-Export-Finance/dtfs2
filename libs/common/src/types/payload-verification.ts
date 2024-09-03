@@ -1,8 +1,9 @@
 import z from 'zod';
 import { Prettify } from './types-helper';
+import { AnyObject } from './any-object';
 
 type BaseIsVerifiedPayloadParams = {
-  payload: Record<string, unknown>;
+  payload: AnyObject;
 };
 export type IsVerifiedPayloadByZodParams = Prettify<BaseIsVerifiedPayloadParams & { template: z.Schema }>;
 
