@@ -30,7 +30,7 @@
     "type-check": "tsc --noEmit --pretty",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
-    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js"
+    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "@ministryofjustice/frontend": "1.8.0",

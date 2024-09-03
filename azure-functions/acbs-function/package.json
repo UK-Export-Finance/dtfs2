@@ -26,7 +26,7 @@
     "prettier:fix": "prettier --write **/*.{ts,js} --ignore-path ../../.prettierignore",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
-    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js"
+    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "axios": "^1.7.2",

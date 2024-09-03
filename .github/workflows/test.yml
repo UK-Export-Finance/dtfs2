@@ -340,7 +340,7 @@ jobs:
 
   # 3. Unit tests - FF
   unit-tests-ff:
-    name: E2E Feature flag 👷
+    name: Unit feature flag 👷
     needs: setup
     env:
       # Various feature flags
@@ -708,7 +708,7 @@ jobs:
 
   #8. E2E - FF
   e2e-tests-ff:
-    name: E2E Feature flag 👷
+    name: E2E feature flag 👷
     needs: setup
     env:
       # Various feature flags
