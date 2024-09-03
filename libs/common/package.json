@@ -42,7 +42,8 @@
     "type-check": "tsc --noEmit --pretty",
     "typeorm": "typeorm-ts-node-commonjs",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js"
   },
   "dependencies": {
     "axios": "^1.7.2",

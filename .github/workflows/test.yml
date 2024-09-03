@@ -338,6 +338,70 @@ jobs:
           flags: unit-test
           verbose: true
 
+  # 3. Unit tests - FF
+  unit-tests-ff:
+    name: E2E Feature flag 👷
+    needs: setup
+    env:
+      # Various feature flags
+      FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
+      FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
+      GEF_DEAL_VERSION: 1
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        services:
+          [
+            './portal',
+            './gef-ui',
+            './trade-finance-manager-ui',
+            './portal-api',
+            './dtfs-central-api',
+            './external-api',
+            './trade-finance-manager-api',
+            './libs/common',
+            './azure-functions/acbs-function',
+          ]
+
+    concurrency:
+      group: unit-tests-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.timezone }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.node }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
+      - name: Execute
+        working-directory: ${{ matrix.services }}
+        run: npm run unit-test-ff
+
+      - name: Coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unit-test
+          verbose: true
+
   # 4. E2E - PORTAL
   e2e-tests-portal:
     name: E2E Portal 👷
