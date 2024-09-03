@@ -37,11 +37,11 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     ports:
       - "27017:27017"
-    healthcheck:
-      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
-      interval: 10s
-      start_period: 30s
-    command: "--bind_ip_all --keyFile /mongo-keyfile --replSet rs0"
+    # healthcheck:
+    #   test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
+    #   interval: 10s
+    #   start_period: 30s
+    # command: "--bind_ip_all --keyFile /mongo-keyfile --replSet rs0"
     volumes:
       - ./dtfs-mongo-volume-dtfs-submissions:/data/db
 
