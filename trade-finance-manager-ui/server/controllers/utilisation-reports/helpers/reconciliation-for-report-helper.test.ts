@@ -35,8 +35,8 @@ describe('reconciliation-for-report-helper', () => {
       // Assert
       expect(viewModel).toHaveLength(1);
       expect(viewModel[0].feeRecords).toHaveLength(2);
-      expect(viewModel[0].feeRecords[0].id).toBe(firstFeeRecordId);
-      expect(viewModel[0].feeRecords[1].id).toBe(secondFeeRecordId);
+      expect(viewModel[0].feeRecords[0].id).toEqual(firstFeeRecordId);
+      expect(viewModel[0].feeRecords[1].id).toEqual(secondFeeRecordId);
     });
 
     it('maps the group feeRecords facilityId to the view model feeRecords facilityId', () => {
@@ -60,8 +60,8 @@ describe('reconciliation-for-report-helper', () => {
       // Assert
       expect(viewModel).toHaveLength(1);
       expect(viewModel[0].feeRecords).toHaveLength(2);
-      expect(viewModel[0].feeRecords[0].facilityId).toBe(firstFeeRecordFacilityId);
-      expect(viewModel[0].feeRecords[1].facilityId).toBe(secondFeeRecordFacilityId);
+      expect(viewModel[0].feeRecords[0].facilityId).toEqual(firstFeeRecordFacilityId);
+      expect(viewModel[0].feeRecords[1].facilityId).toEqual(secondFeeRecordFacilityId);
     });
 
     it('maps the group feeRecords exporter to the view model feeRecords exporter', () => {
@@ -85,8 +85,8 @@ describe('reconciliation-for-report-helper', () => {
       // Assert
       expect(viewModel).toHaveLength(1);
       expect(viewModel[0].feeRecords).toHaveLength(2);
-      expect(viewModel[0].feeRecords[0].exporter).toBe(firstFeeRecordExporter);
-      expect(viewModel[0].feeRecords[1].exporter).toBe(secondFeeRecordExporter);
+      expect(viewModel[0].feeRecords[0].exporter).toEqual(firstFeeRecordExporter);
+      expect(viewModel[0].feeRecords[1].exporter).toEqual(secondFeeRecordExporter);
     });
 
     it('maps the group feeRecords reportedFees to the view model feeRecords reportedFees formatted currency and amount', () => {
@@ -112,8 +112,8 @@ describe('reconciliation-for-report-helper', () => {
       // Assert
       expect(viewModel).toHaveLength(1);
       expect(viewModel[0].feeRecords).toHaveLength(2);
-      expect(viewModel[0].feeRecords[0].reportedFees).toBe(firstFeeRecordFormattedReportedFees);
-      expect(viewModel[0].feeRecords[1].reportedFees).toBe(secondFeeRecordFormattedReportedFees);
+      expect(viewModel[0].feeRecords[0].reportedFees).toEqual(firstFeeRecordFormattedReportedFees);
+      expect(viewModel[0].feeRecords[1].reportedFees).toEqual(secondFeeRecordFormattedReportedFees);
     });
 
     it('maps the group feeRecords reportedPayments to the view model feeRecords reportedPayments formatted currency and amount', () => {
@@ -139,8 +139,8 @@ describe('reconciliation-for-report-helper', () => {
       // Assert
       expect(viewModel).toHaveLength(1);
       expect(viewModel[0].feeRecords).toHaveLength(2);
-      expect(viewModel[0].feeRecords[0].reportedPayments).toBe(firstFeeRecordFormattedReportedPayments);
-      expect(viewModel[0].feeRecords[1].reportedPayments).toBe(secondFeeRecordFormattedReportedPayments);
+      expect(viewModel[0].feeRecords[0].reportedPayments).toEqual(firstFeeRecordFormattedReportedPayments);
+      expect(viewModel[0].feeRecords[1].reportedPayments).toEqual(secondFeeRecordFormattedReportedPayments);
     });
 
     it('sorts the view model feeRecords reportedPayments by currency first and amount second in ascending order', () => {
@@ -164,11 +164,11 @@ describe('reconciliation-for-report-helper', () => {
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
-      expect(viewModel[0].feeRecords[0].reportedPayments).toBe('EUR 100.00');
-      expect(viewModel[0].feeRecords[1].reportedPayments).toBe('GBP 100.00');
-      expect(viewModel[0].feeRecords[2].reportedPayments).toBe('GBP 500.00');
-      expect(viewModel[0].feeRecords[3].reportedPayments).toBe('USD 100.00');
-      expect(viewModel[0].feeRecords[4].reportedPayments).toBe('USD 200.00');
+      expect(viewModel[0].feeRecords[0].reportedPayments).toEqual('EUR 100.00');
+      expect(viewModel[0].feeRecords[1].reportedPayments).toEqual('GBP 100.00');
+      expect(viewModel[0].feeRecords[2].reportedPayments).toEqual('GBP 500.00');
+      expect(viewModel[0].feeRecords[3].reportedPayments).toEqual('USD 100.00');
+      expect(viewModel[0].feeRecords[4].reportedPayments).toEqual('USD 200.00');
     });
 
     it('maps the group totalReportedPayments to the view model totalReportedPayments formattedCurrencyAndAmount', () => {
@@ -188,7 +188,7 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(viewModel).toHaveLength(1);
-      expect(viewModel[0].totalReportedPayments.formattedCurrencyAndAmount).toBe(totalReportedPaymentsFormattedCurrencyAndAmount);
+      expect(viewModel[0].totalReportedPayments.formattedCurrencyAndAmount).toEqual(totalReportedPaymentsFormattedCurrencyAndAmount);
     });
 
     it('sorts the group totalReportedPayments and sets to the view model totalReportedPayments dataSortValue', () => {
@@ -210,10 +210,10 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(viewModel).toHaveLength(4);
-      expect(viewModel[0].totalReportedPayments.dataSortValue).toBe(2);
-      expect(viewModel[1].totalReportedPayments.dataSortValue).toBe(1);
-      expect(viewModel[2].totalReportedPayments.dataSortValue).toBe(3);
-      expect(viewModel[3].totalReportedPayments.dataSortValue).toBe(0);
+      expect(viewModel[0].totalReportedPayments.dataSortValue).toEqual(2);
+      expect(viewModel[1].totalReportedPayments.dataSortValue).toEqual(1);
+      expect(viewModel[2].totalReportedPayments.dataSortValue).toEqual(3);
+      expect(viewModel[3].totalReportedPayments.dataSortValue).toEqual(0);
     });
 
     it('sets the view model paymentsReceived to undefined when the group paymentsReceived is null', () => {
@@ -245,7 +245,7 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(viewModel[0].paymentsReceived).toHaveLength(1);
-      expect(viewModel[0].paymentsReceived![0].formattedCurrencyAndAmount).toBe(paymentsReceivedFormattedCurrencyAndAmount);
+      expect(viewModel[0].paymentsReceived![0].formattedCurrencyAndAmount).toEqual(paymentsReceivedFormattedCurrencyAndAmount);
     });
 
     it('maps the group paymentsReceived id to the view model paymentsReceived id', () => {
@@ -264,7 +264,7 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(viewModel[0].paymentsReceived).toHaveLength(1);
-      expect(viewModel[0].paymentsReceived![0].id).toBe(1);
+      expect(viewModel[0].paymentsReceived![0].id).toEqual(1);
     });
 
     it('sets the view model totalPaymentsReceived formattedCurrencyAndAmount to undefined when the group totalPaymentsReceived is null', () => {
@@ -301,7 +301,7 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(viewModel).toHaveLength(1);
-      expect(viewModel[0].totalPaymentsReceived.formattedCurrencyAndAmount).toBe(totalPaymentsReceivedFormattedCurrencyAndAmount);
+      expect(viewModel[0].totalPaymentsReceived.formattedCurrencyAndAmount).toEqual(totalPaymentsReceivedFormattedCurrencyAndAmount);
     });
 
     it('sorts the group totalPaymentsReceived and sets to the view model totalPaymentsReceived dataSortValue', () => {
@@ -323,10 +323,10 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(viewModel).toHaveLength(4);
-      expect(viewModel[0].totalPaymentsReceived.dataSortValue).toBe(2);
-      expect(viewModel[1].totalPaymentsReceived.dataSortValue).toBe(1);
-      expect(viewModel[2].totalPaymentsReceived.dataSortValue).toBe(3);
-      expect(viewModel[3].totalPaymentsReceived.dataSortValue).toBe(0);
+      expect(viewModel[0].totalPaymentsReceived.dataSortValue).toEqual(2);
+      expect(viewModel[1].totalPaymentsReceived.dataSortValue).toEqual(1);
+      expect(viewModel[2].totalPaymentsReceived.dataSortValue).toEqual(3);
+      expect(viewModel[3].totalPaymentsReceived.dataSortValue).toEqual(0);
     });
 
     it('maps the group status to the view model status', () => {
@@ -339,7 +339,7 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(viewModel).toHaveLength(1);
-      expect(viewModel[0].status).toBe(status);
+      expect(viewModel[0].status).toEqual(status);
     });
 
     it.each([
@@ -358,7 +358,7 @@ describe('reconciliation-for-report-helper', () => {
         const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
         // Assert
-        expect(viewModel[0].displayStatus).toBe(feeRecordDisplayStatus);
+        expect(viewModel[0].displayStatus).toEqual(feeRecordDisplayStatus);
       },
     );
 
@@ -397,7 +397,7 @@ describe('reconciliation-for-report-helper', () => {
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
-      expect(viewModel[0].checkboxId).toBe(checkboxId);
+      expect(viewModel[0].checkboxId).toEqual(checkboxId);
     });
 
     it('sets isChecked to true if the payment groups fee record ids are recognised by the supplied isCheckboxChecked function', () => {
@@ -424,7 +424,7 @@ describe('reconciliation-for-report-helper', () => {
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
 
       // Assert
-      expect(viewModel[0].isChecked).toBe(true);
+      expect(viewModel[0].isChecked).toEqual(true);
     });
 
     it('sets isChecked to false if the payment groups fee record ids are not recognised by the supplied isCheckboxChecked function', () => {
@@ -452,7 +452,7 @@ describe('reconciliation-for-report-helper', () => {
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
 
       // Assert
-      expect(viewModel[0].isChecked).toBe(false);
+      expect(viewModel[0].isChecked).toEqual(false);
     });
 
     it('sets the checkbox aria label to "Select" followed by the fee record facility ids', () => {
@@ -475,7 +475,7 @@ describe('reconciliation-for-report-helper', () => {
       const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
-      expect(viewModel[0].checkboxAriaLabel).toBe('Select 123 456');
+      expect(viewModel[0].checkboxAriaLabel).toEqual('Select 123 456');
     });
   });
 
@@ -509,11 +509,11 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].status).toBe('TO_DO');
-      expect(result[0].facilityId).toBe('11111111');
-      expect(result[0].exporter).toBe('Some exporter');
-      expect(result[0].baseCurrency).toBe('JPY');
-      expect(result[0].feeRecordId).toBe(11);
+      expect(result[0].status).toEqual('TO_DO');
+      expect(result[0].facilityId).toEqual('11111111');
+      expect(result[0].exporter).toEqual('Some exporter');
+      expect(result[0].baseCurrency).toEqual('JPY');
+      expect(result[0].feeRecordId).toEqual(11);
     });
 
     it.each([
@@ -530,7 +530,7 @@ describe('reconciliation-for-report-helper', () => {
 
         // Assert
         expect(result).toHaveLength(1);
-        expect(result[0].displayStatus).toBe(displayStatus);
+        expect(result[0].displayStatus).toEqual(displayStatus);
       },
     );
 
@@ -554,14 +554,14 @@ describe('reconciliation-for-report-helper', () => {
       // Assert
       expect(result).toHaveLength(1);
       expect(result[0].feePayments).toHaveLength(4);
-      expect(result[0].feePayments[0].formattedCurrencyAndAmount).toBe('GBP 100.12');
-      expect(result[0].feePayments[0].formattedDateReceived).toBe('1 Jan 2024');
-      expect(result[0].feePayments[1].formattedCurrencyAndAmount).toBe('EUR 90.91');
-      expect(result[0].feePayments[1].formattedDateReceived).toBe('5 Dec 2023');
-      expect(result[0].feePayments[2].formattedCurrencyAndAmount).toBe('GBP 0.01');
-      expect(result[0].feePayments[2].formattedDateReceived).toBe('1 May 2024');
-      expect(result[0].feePayments[3].formattedCurrencyAndAmount).toBe('JPY 0.00');
-      expect(result[0].feePayments[3].formattedDateReceived).toBe(undefined);
+      expect(result[0].feePayments[0].formattedCurrencyAndAmount).toEqual('GBP 100.12');
+      expect(result[0].feePayments[0].formattedDateReceived).toEqual('1 Jan 2024');
+      expect(result[0].feePayments[1].formattedCurrencyAndAmount).toEqual('EUR 90.91');
+      expect(result[0].feePayments[1].formattedDateReceived).toEqual('5 Dec 2023');
+      expect(result[0].feePayments[2].formattedCurrencyAndAmount).toEqual('GBP 0.01');
+      expect(result[0].feePayments[2].formattedDateReceived).toEqual('1 May 2024');
+      expect(result[0].feePayments[3].formattedCurrencyAndAmount).toEqual('JPY 0.00');
+      expect(result[0].feePayments[3].formattedDateReceived).toEqual(undefined);
     });
 
     it.each([
@@ -639,7 +639,7 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].checkboxId).toBe('feeRecordId-123-status-TO_DO');
+      expect(result[0].checkboxId).toEqual('feeRecordId-123-status-TO_DO');
     });
   });
 
@@ -681,11 +681,11 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toHaveLength(3);
-      expect(result[0].payment.id).toBe(123);
-      expect(result[0].payment.reference).toBe('First reference');
-      expect(result[1].payment.id).toBe(456);
-      expect(result[1].payment.reference).toBe('Second reference');
-      expect(result[2].payment.id).toBe(789);
+      expect(result[0].payment.id).toEqual(123);
+      expect(result[0].payment.reference).toEqual('First reference');
+      expect(result[1].payment.id).toEqual(456);
+      expect(result[1].payment.reference).toEqual('Second reference');
+      expect(result[2].payment.id).toEqual(789);
       expect(result[2].payment.reference).toBeUndefined();
     });
 
@@ -837,7 +837,7 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].reconciledBy).toBe('-');
+      expect(result[0].reconciledBy).toEqual('-');
     });
 
     it('maps the reconciledByUser to the payment details reconciledBy field', () => {
@@ -854,7 +854,7 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].reconciledBy).toBe('John Smith');
+      expect(result[0].reconciledBy).toEqual('John Smith');
     });
 
     it('maps the dateReconciled to the payment details dateReconciled field with value "-" when the dateReconciled is undefined', () => {
@@ -871,7 +871,7 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].dateReconciled.formattedDateReconciled).toBe('-');
+      expect(result[0].dateReconciled.formattedDateReconciled).toEqual('-');
     });
 
     it.each([
@@ -891,7 +891,7 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toHaveLength(1);
-      expect(result[0].dateReconciled.formattedDateReconciled).toBe(formattedDate);
+      expect(result[0].dateReconciled.formattedDateReconciled).toEqual(formattedDate);
     });
 
     it('sorts the dateReconciled by date ascending with undefined dates being at the start of the sorted list', () => {
@@ -925,11 +925,11 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toHaveLength(5);
-      expect(result[0].dateReconciled.dataSortValue).toBe(3);
-      expect(result[1].dateReconciled.dataSortValue).toBe(4);
-      expect(result[2].dateReconciled.dataSortValue).toBe(2);
-      expect(result[3].dateReconciled.dataSortValue).toBe(0);
-      expect(result[4].dateReconciled.dataSortValue).toBe(1);
+      expect(result[0].dateReconciled.dataSortValue).toEqual(3);
+      expect(result[1].dateReconciled.dataSortValue).toEqual(4);
+      expect(result[2].dateReconciled.dataSortValue).toEqual(2);
+      expect(result[3].dateReconciled.dataSortValue).toEqual(0);
+      expect(result[4].dateReconciled.dataSortValue).toEqual(1);
     });
   });
 
@@ -942,7 +942,7 @@ describe('reconciliation-for-report-helper', () => {
       const result = getFormattedReconciledByUser(reconciledByUser);
 
       // Assert
-      expect(result).toBe('John Smith');
+      expect(result).toEqual('John Smith');
     });
 
     it('returns the "-" character when the supplied user is undefined', () => {
@@ -950,7 +950,7 @@ describe('reconciliation-for-report-helper', () => {
       const result = getFormattedReconciledByUser(undefined);
 
       // Assert
-      expect(result).toBe('-');
+      expect(result).toEqual('-');
     });
   });
 
@@ -963,7 +963,7 @@ describe('reconciliation-for-report-helper', () => {
       const result = getFormattedDateReconciled(dateReconciled);
 
       // Assert
-      expect(result).toBe('1 Jan 2024 at 10:45am');
+      expect(result).toEqual('1 Jan 2024 at 10:45am');
     });
 
     it('returns the formatted date reconciled using "pm" when the date is in the afternoon', () => {
@@ -974,7 +974,7 @@ describe('reconciliation-for-report-helper', () => {
       const result = getFormattedDateReconciled(dateReconciled);
 
       // Assert
-      expect(result).toBe('1 Jan 2024 at 03:45pm');
+      expect(result).toEqual('1 Jan 2024 at 03:45pm');
     });
 
     it('returns the "-" character when the supplied date reconciled is undefined', () => {
@@ -982,7 +982,7 @@ describe('reconciliation-for-report-helper', () => {
       const result = getFormattedDateReconciled(undefined);
 
       // Assert
-      expect(result).toBe('-');
+      expect(result).toEqual('-');
     });
   });
 });

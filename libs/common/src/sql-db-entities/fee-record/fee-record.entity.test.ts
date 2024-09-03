@@ -42,7 +42,7 @@ describe('FeeRecordEntity', () => {
       const feesPaidToUkefForThePeriodInThePaymentCurrency = feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency();
 
       // Assert
-      expect(feesPaidToUkefForThePeriodInThePaymentCurrency).toBe(expectedFeesPaidToUkefForThePeriodInThePaymentCurrency);
+      expect(feesPaidToUkefForThePeriodInThePaymentCurrency).toEqual(expectedFeesPaidToUkefForThePeriodInThePaymentCurrency);
     });
 
     it('returns the fees paid to ukef for the period in the payment currency using the payment exchange rate', () => {
@@ -65,7 +65,7 @@ describe('FeeRecordEntity', () => {
       const feesPaidToUkefForThePeriodInThePaymentCurrency = feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency();
 
       // Assert
-      expect(feesPaidToUkefForThePeriodInThePaymentCurrency).toBe(expectedFeesPaidToUkefForThePeriodInThePaymentCurrency);
+      expect(feesPaidToUkefForThePeriodInThePaymentCurrency).toEqual(expectedFeesPaidToUkefForThePeriodInThePaymentCurrency);
     });
   });
 
@@ -83,10 +83,10 @@ describe('FeeRecordEntity', () => {
       });
 
       // Assert
-      expect(feeRecord.status).toBe(status);
-      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+      expect(feeRecord.status).toEqual(status);
+      expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
-      expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+      expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
     });
 
     it(`sets the dateReconciled field to now when the status to set is ${FEE_RECORD_STATUS.RECONCILED}`, () => {
@@ -129,10 +129,10 @@ describe('FeeRecordEntity', () => {
 
       // Assert
       expect(feeRecord.payments).toHaveLength(0);
-      expect(feeRecord.status).toBe('TO_DO');
-      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+      expect(feeRecord.status).toEqual('TO_DO');
+      expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
-      expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+      expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
     });
   });
 
@@ -146,7 +146,7 @@ describe('FeeRecordEntity', () => {
 
       // Assert
       expect(feeRecord.dateReconciled).toEqual(mockDate);
-      expect(feeRecord.reconciledByUserId).toBe('abc123');
+      expect(feeRecord.reconciledByUserId).toEqual('abc123');
     });
 
     it("sets the fee record status to RECONCILED and updates the 'lastUpdatedBy...' fields", () => {
@@ -162,10 +162,10 @@ describe('FeeRecordEntity', () => {
       feeRecord.markAsReconciled({ reconciledByUserId: 'abc123', requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' } });
 
       // Assert
-      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.RECONCILED);
-      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.RECONCILED);
+      expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
-      expect(feeRecord.lastUpdatedByTfmUserId).toBe('abc123');
+      expect(feeRecord.lastUpdatedByTfmUserId).toEqual('abc123');
     });
   });
 
@@ -195,10 +195,10 @@ describe('FeeRecordEntity', () => {
       feeRecord.markAsReadyToKey({ requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' } });
 
       // Assert
-      expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
-      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
+      expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
-      expect(feeRecord.lastUpdatedByTfmUserId).toBe('abc123');
+      expect(feeRecord.lastUpdatedByTfmUserId).toEqual('abc123');
     });
   });
 
@@ -226,12 +226,12 @@ describe('FeeRecordEntity', () => {
         });
 
         // Assert
-        expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
-        expect(feeRecord.principalBalanceAdjustment).toBe(1000000);
-        expect(feeRecord.fixedFeeAdjustment).toBe(1000);
-        expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+        expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
+        expect(feeRecord.principalBalanceAdjustment).toEqual(1000000);
+        expect(feeRecord.fixedFeeAdjustment).toEqual(1000);
+        expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
         expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
-        expect(feeRecord.lastUpdatedByTfmUserId).toBe('abc123');
+        expect(feeRecord.lastUpdatedByTfmUserId).toEqual('abc123');
       });
 
       it('does not set the fee record dateReconciled or the reconciledByUserId', () => {
@@ -279,12 +279,12 @@ describe('FeeRecordEntity', () => {
         });
 
         // Assert
-        expect(feeRecord.status).toBe(FEE_RECORD_STATUS.RECONCILED);
-        expect(feeRecord.principalBalanceAdjustment).toBe(1000000);
-        expect(feeRecord.fixedFeeAdjustment).toBe(1000);
-        expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+        expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.RECONCILED);
+        expect(feeRecord.principalBalanceAdjustment).toEqual(1000000);
+        expect(feeRecord.fixedFeeAdjustment).toEqual(1000);
+        expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
         expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
-        expect(feeRecord.lastUpdatedByTfmUserId).toBe('abc123');
+        expect(feeRecord.lastUpdatedByTfmUserId).toEqual('abc123');
       });
 
       it('sets the dateReconciled to now and does not set the reconciledByUserId', () => {

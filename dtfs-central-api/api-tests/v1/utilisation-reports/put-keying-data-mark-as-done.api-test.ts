@@ -44,7 +44,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const response = await testApi.put(requestBody).to(getUrl(1));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('returns a 400 when the request does not contain a user', async () => {
@@ -57,7 +57,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const response = await testApi.put(requestBody).to(getUrl(1));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('returns a 404 when no report with the supplied id can be found', async () => {
@@ -71,7 +71,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const response = await testApi.put(requestBody).to(getUrl(1));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 404 when there is a report but without the requested fee record', async () => {
@@ -89,7 +89,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const response = await testApi.put(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 200 if the request body is valid', async () => {
@@ -109,7 +109,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const { status } = await testApi.put(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(status).toBe(200);
+    expect(status).toEqual(200);
   });
 
   it('sets fee record status to RECONCILED, reconciledByUserId to the user who performed the action and the dateReconciled to now', async () => {
@@ -136,7 +136,7 @@ describe(`PUT ${BASE_URL}`, () => {
     // Assert
     const updatedFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: 1 });
     expect(updatedFeeRecord.status).toEqual(FEE_RECORD_STATUS.RECONCILED);
-    expect(updatedFeeRecord.reconciledByUserId).toBe(MOCK_TFM_USER._id.toString());
+    expect(updatedFeeRecord.reconciledByUserId).toEqual(MOCK_TFM_USER._id.toString());
     expect(updatedFeeRecord.dateReconciled).not.toBeNull();
   });
 

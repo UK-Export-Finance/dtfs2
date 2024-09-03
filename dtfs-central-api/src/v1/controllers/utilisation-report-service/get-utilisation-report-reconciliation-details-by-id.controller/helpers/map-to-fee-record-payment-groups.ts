@@ -1,5 +1,4 @@
 import {
-  FeeRecordPaymentEntityGroup,
   calculateTotalCurrencyAndAmount,
   getFeeRecordPaymentEntityGroupReconciliationData,
   getFeeRecordPaymentEntityGroupStatus,
@@ -7,6 +6,7 @@ import {
 import { mapPaymentEntityToPayment } from '../../../../../mapping/payment-mapper';
 import { mapFeeRecordEntityToFeeRecord } from '../../../../../mapping/fee-record-mapper';
 import { FeeRecordPaymentGroup } from '../../../../../types/utilisation-reports';
+import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 
 /**
  * Maps the fee record payment entity groups to the fee record payment groups

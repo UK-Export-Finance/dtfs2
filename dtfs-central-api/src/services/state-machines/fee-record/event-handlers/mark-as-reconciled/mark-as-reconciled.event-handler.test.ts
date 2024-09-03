@@ -61,7 +61,7 @@ describe('handleFeeRecordMarkAsReconciledEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toBe<FeeRecordStatus>('RECONCILED');
+    expect(feeRecord.status).toEqual<FeeRecordStatus>('RECONCILED');
   });
 
   it('sets the dateReconciled to the current date and reconciledByUserId field to the supplied value', async () => {
@@ -80,7 +80,7 @@ describe('handleFeeRecordMarkAsReconciledEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.reconciledByUserId).toBe('abc123');
+    expect(feeRecord.reconciledByUserId).toEqual('abc123');
     expect(feeRecord.dateReconciled).toEqual(mockDate);
   });
 
@@ -101,8 +101,8 @@ describe('handleFeeRecordMarkAsReconciledEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
-    expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+    expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
+    expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
     expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
   });
 });

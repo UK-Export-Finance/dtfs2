@@ -11,6 +11,7 @@ import {
   PaymentDetailsViewModel,
   PaymentViewModelItem,
 } from '../../../types/view-models';
+import { DATE_FORMAT } from '../../../constants';
 import { getKeyToCurrencyAndAmountSortValueMap } from './get-key-to-currency-and-amount-sort-value-map-helper';
 import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-table-checkbox-id';
 import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
@@ -165,7 +166,7 @@ const getKeyingSheetAdjustmentViewModel = (adjustment: KeyingSheetAdjustment | n
 const mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel = (feePayments: KeyingSheetRow['feePayments']) =>
   feePayments.map(({ currency, amount, dateReceived }) => ({
     formattedCurrencyAndAmount: getFormattedCurrencyAndAmount({ currency, amount }),
-    formattedDateReceived: dateReceived ? format(new Date(dateReceived), 'd MMM yyyy') : undefined,
+    formattedDateReceived: dateReceived ? format(new Date(dateReceived), DATE_FORMAT.DAY_SHORT_MONTH_YEAR) : undefined,
   }));
 
 /**
@@ -215,7 +216,7 @@ const mapPaymentToPaymentDetailsPaymentViewModel = (
   },
   reference: payment.reference,
   dateReceived: {
-    formattedDateReceived: format(new Date(payment.dateReceived), 'd MMM yyyy'),
+    formattedDateReceived: format(new Date(payment.dateReceived), DATE_FORMAT.DAY_SHORT_MONTH_YEAR),
     dataSortValue: dateReceivedDataSortValue,
   },
 });
@@ -242,7 +243,7 @@ export const getFormattedReconciledByUser = (reconciledByUser: { firstName: stri
  * getFormattedDateReconciled(undefined); // '-'
  */
 export const getFormattedDateReconciled = (dateReconciled: IsoDateTimeStamp | undefined): string =>
-  dateReconciled ? format(parseISO(dateReconciled), "d MMM yyyy 'at' hh:mmaaaaa'm'") : '-';
+  dateReconciled ? format(parseISO(dateReconciled), DATE_FORMAT.DAY_SHORT_MONTH_YEAR_AT_TIME) : '-';
 
 /**
  * Maps the fee record payment groups to the payment details view model

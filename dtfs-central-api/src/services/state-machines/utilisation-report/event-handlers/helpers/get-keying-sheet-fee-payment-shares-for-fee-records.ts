@@ -1,7 +1,8 @@
 import Big from 'big.js';
 import { FeeRecordEntity } from '@ukef/dtfs2-common';
 import { orderBy } from 'lodash';
-import { FeeRecordPaymentEntityGroup, getFeeRecordPaymentEntityGroups } from '../../../../../helpers';
+import { getFeeRecordPaymentEntityGroups } from '../../../../../helpers';
+import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 
 export type KeyingSheetFeePaymentShare = {
   feeRecordId: number;

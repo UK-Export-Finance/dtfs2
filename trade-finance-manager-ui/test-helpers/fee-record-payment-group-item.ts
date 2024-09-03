@@ -23,6 +23,4 @@ export const aFeeRecordPaymentGroup = (): FeeRecordPaymentGroup => ({
   paymentsReceived: null,
   totalPaymentsReceived: null,
   status: 'TO_DO',
-  reconciledByUser: undefined,
-  dateReconciled: undefined,
 });

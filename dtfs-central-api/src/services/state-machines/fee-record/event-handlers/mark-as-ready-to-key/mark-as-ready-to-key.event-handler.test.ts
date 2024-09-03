@@ -56,7 +56,7 @@ describe('handleFeeRecordMarkAsReadyToKeyEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+    expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
   });
 
   it('sets the dateReconciled and reconciledByUserId to null', async () => {
@@ -89,8 +89,8 @@ describe('handleFeeRecordMarkAsReadyToKeyEvent', () => {
     });
 
     // Assert
-    expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
-    expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
+    expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
+    expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
     expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
   });
 });

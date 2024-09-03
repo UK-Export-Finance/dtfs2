@@ -9,7 +9,7 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
-import type { FeeRecordPaymentEntityGroup } from '../../../../../helpers';
+import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 import * as helpersModule from '../../../../../helpers';
 import { TfmUsersRepo } from '../../../../../repositories/tfm-users-repo';
 
@@ -70,9 +70,9 @@ describe('mapToFeeRecordPaymentGroups', () => {
 
     // Assert
     expect(result).toHaveLength(3);
-    expect(result[0].status).toBe(FEE_RECORD_STATUS.TO_DO);
-    expect(result[1].status).toBe(FEE_RECORD_STATUS.DOES_NOT_MATCH);
-    expect(result[2].status).toBe(FEE_RECORD_STATUS.READY_TO_KEY);
+    expect(result[0].status).toEqual(FEE_RECORD_STATUS.TO_DO);
+    expect(result[1].status).toEqual(FEE_RECORD_STATUS.DOES_NOT_MATCH);
+    expect(result[2].status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
   });
 
   it('populates each of the groups with their respective reconciliation data', async () => {

@@ -13,9 +13,16 @@ import { getBankNameById } from '../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../errors';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
-import { FeeRecordPaymentEntityGroup, getFeeRecordPaymentEntityGroups } from '../../../../helpers';
+import { getFeeRecordPaymentEntityGroups } from '../../../../helpers';
+import { FeeRecordPaymentEntityGroup } from '../../../../types/fee-record-payment-entity-group';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 
+/**
+ * Maps the fee record payment entity groups to the selected
+ * fee records available payment groups
+ * @param feeRecordPaymentGroups - The fee record payment entity groups
+ * @returns The selected fee records available payment groups
+ */
 const mapToSelectedFeeRecordsAvailablePaymentGroups = (feeRecordPaymentGroups: FeeRecordPaymentEntityGroup[]): SelectedFeeRecordsAvailablePaymentGroups => {
   return feeRecordPaymentGroups
     .filter((group) => group.payments.length !== 0)
@@ -29,14 +36,26 @@ const mapToSelectedFeeRecordsAvailablePaymentGroups = (feeRecordPaymentGroups: F
     );
 };
 
-const mapPaymentEntityToSelectedFeeRecordsPaymentDetails = (paymentEntity: PaymentEntity): SelectedFeeRecordsPaymentDetails => ({
+/**
+ * Maps the payment entity to the selected fee records
+ * payment details
+ * @param paymentEntity - The payment entity
+ * @returns The selected fee records payment details
+ */
+const mapToSelectedFeeRecordsPaymentDetails = (paymentEntity: PaymentEntity): SelectedFeeRecordsPaymentDetails => ({
   amount: paymentEntity.amount,
   currency: paymentEntity.currency,
   reference: paymentEntity.reference,
   dateReceived: paymentEntity.dateReceived,
 });
 
-const mapFeeRecordEntityToSelectedFeeRecordDetails = (feeRecordEntity: FeeRecordEntity): SelectedFeeRecordDetails => ({
+/**
+ * Maps the fee record entity to the selected
+ * fee record details
+ * @param feeRecordEntity - The fee record entity
+ * @returns The selected fee record details
+ */
+const mapToSelectedFeeRecordDetails = (feeRecordEntity: FeeRecordEntity): SelectedFeeRecordDetails => ({
   id: feeRecordEntity.id,
   facilityId: feeRecordEntity.facilityId,
   exporter: feeRecordEntity.exporter,
@@ -100,8 +119,8 @@ export const mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups = async 
 
   // On the premium payments tab it is only possible to select fee records with no linked payments or a single group of fee records all having the same linked payments
   const distinctPaymentsForFeeRecords = selectedFeeRecordEntities[0].payments;
-  const recordedPaymentDetails = distinctPaymentsForFeeRecords.map((paymentEntity) => mapPaymentEntityToSelectedFeeRecordsPaymentDetails(paymentEntity));
-  const selectedFeeRecordDetails = selectedFeeRecordEntities.map((feeRecordEntity) => mapFeeRecordEntityToSelectedFeeRecordDetails(feeRecordEntity));
+  const recordedPaymentDetails = distinctPaymentsForFeeRecords.map(mapToSelectedFeeRecordsPaymentDetails);
+  const selectedFeeRecordDetails = selectedFeeRecordEntities.map(mapToSelectedFeeRecordDetails);
 
   return {
     bank: { name: bankName },

@@ -32,6 +32,14 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         throw new Error('Some error');
       });
       jest.mocked(mapToFeeRecordPaymentGroups).mockRejectedValue('Some error');
+
+      when(getKeyingSheetForReportId).calledWith(reportId, []).mockResolvedValue([]);
+      when(getFeeRecordPaymentEntityGroups).calledWith([]).mockReturnValue([]);
+      when(mapToFeeRecordPaymentGroups).calledWith([]).mockResolvedValue([]);
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
     });
 
     it.each(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS))(
@@ -78,9 +86,6 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
       const bankName = 'Test bank';
       when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
-      when(getKeyingSheetForReportId).calledWith(reportId, []).mockResolvedValue([]);
-      when(getFeeRecordPaymentEntityGroups).calledWith([]).mockReturnValue([]);
-      when(mapToFeeRecordPaymentGroups).calledWith([]).mockResolvedValue([]);
 
       // Act
       const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, undefined);
@@ -114,9 +119,6 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
       const bankName = 'Test bank';
       when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
-      when(getKeyingSheetForReportId).calledWith(reportId, []).mockResolvedValue([]);
-      when(getFeeRecordPaymentEntityGroups).calledWith([]).mockReturnValue([]);
-      when(mapToFeeRecordPaymentGroups).calledWith([]).mockResolvedValue([]);
 
       const facilityIdFilter = 'some filter';
 
@@ -138,9 +140,6 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
       const bankName = 'Test bank';
       when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
-      when(getKeyingSheetForReportId).calledWith(reportId, []).mockResolvedValue([]);
-      when(getFeeRecordPaymentEntityGroups).calledWith([]).mockReturnValue([]);
-      when(mapToFeeRecordPaymentGroups).calledWith([]).mockResolvedValue([]);
 
       const facilityIdFilter = undefined;
 

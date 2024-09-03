@@ -3,11 +3,8 @@ export { feeRecordCsvRowToSqlEntity } from './fee-record-helpers';
 export { executeWithSqlTransaction } from './execute-with-sql-transaction';
 export { calculateTotalCurrencyAndAmount } from './calculate-total-currency-and-amount';
 export { feeRecordsAndPaymentsMatch } from './fee-record-matching';
-export {
-  FeeRecordPaymentEntityGroup,
-  getFeeRecordPaymentEntityGroups,
-  getFeeRecordPaymentEntityGroupStatus,
-  getFeeRecordPaymentEntityGroupReconciliationData,
-} from './fee-record-payment-entity-group-helpers';
+export { getFeeRecordPaymentEntityGroups } from './get-fee-record-payment-entity-groups';
+export { getFeeRecordPaymentEntityGroupStatus } from './get-fee-record-payment-entity-group-status';
+export { getFeeRecordPaymentEntityGroupReconciliationData } from './get-fee-record-payment-entity-group-reconciliation-data';
 export { convertTimestampToDate } from './convert-timestamp-to-date';
 export { getLatestCompletedAmendmentCoverEndDate } from './tfm-facilities-helpers';
