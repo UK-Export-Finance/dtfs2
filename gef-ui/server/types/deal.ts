@@ -1,4 +1,4 @@
-import { DealStatus, DealType, IsoDateTimeStamp } from '@ukef/dtfs2-common';
+import { DealStatus, DealType, IsoDateTimeStamp, AnyObject } from '@ukef/dtfs2-common';
 
 /**
  * Deal object received from portal-api
@@ -9,15 +9,15 @@ import { DealStatus, DealType, IsoDateTimeStamp } from '@ukef/dtfs2-common';
 export type Deal = {
   dealType: DealType;
   version?: number;
-  maker: Record<string, unknown>;
+  maker: AnyObject;
   status: DealStatus;
-  bank: Record<string, unknown>;
-  exporter: Record<string, unknown>;
+  bank: AnyObject;
+  exporter: AnyObject;
   bankInternalRefName: string | null;
   createdAt: IsoDateTimeStamp;
   updatedAt: IsoDateTimeStamp;
   submissionCount: number;
-  supportingInformation: Record<string, unknown>;
+  supportingInformation: AnyObject;
   editedBy: string[];
   additionalRefName: string | null;
 };

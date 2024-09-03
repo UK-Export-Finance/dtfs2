@@ -1,4 +1,4 @@
-import { GefFacilityType, IsoDateTimeStamp } from '@ukef/dtfs2-common';
+import { GefFacilityType, IsoDateTimeStamp, AnyObject } from '@ukef/dtfs2-common';
 
 /**
  * Facility object received from portal-api
@@ -16,9 +16,9 @@ export type Facility = {
   coverEndDate?: IsoDateTimeStamp | null;
   issueDate?: IsoDateTimeStamp | null;
   monthsOfCover?: number | null;
-  details?: Record<string, unknown> | null;
+  details?: AnyObject | null;
   detailsOther?: string | null;
-  currency?: Record<string, unknown> | null;
+  currency?: AnyObject | null;
   value?: number | null;
   coverPercentage?: number | null;
   interestPercentage?: number | null;
@@ -26,9 +26,9 @@ export type Facility = {
   updatedAt?: IsoDateTimeStamp;
   ukefFacilityId?: string;
   dayCountBasis?: number | null;
-  specialIssuePermission: Record<string, unknown> | null;
+  specialIssuePermission: AnyObject | null;
   canResubmitIssuedFacilities?: boolean | null;
-  unissuedToIssuedByMaker?: Record<string, unknown> | null;
+  unissuedToIssuedByMaker?: AnyObject | null;
   // The following are only found on facilities from version 1 or higher deals
   isUsingFacilityEndDate?: boolean | null;
   facilityEndDate?: IsoDateTimeStamp | null;
