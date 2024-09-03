@@ -188,3 +188,29 @@ describe(`${page} when deal is NDB`, () => {
     wrapper.expectElement('[data-cy="bank-security-facility-text"]').toExist();
   });
 });
+
+describe(`${page} cancel deal button`, () => {
+  let wrapper;
+
+  describe(`when showDealCancelButton is true`, () => {
+    beforeEach(() => {
+      params.showDealCancelButton = true;
+      wrapper = render(params);
+    });
+
+    it("should render the 'Cancel deal' button", () => {
+      wrapper.expectElement('[data-cy="cancel-deal-button"]').toExist();
+    });
+  });
+
+  describe(`when showDealCancelButton is false`, () => {
+    beforeEach(() => {
+      params.showDealCancelButton = false;
+      wrapper = render(params);
+    });
+
+    it("should not render the 'Cancel deal' button", () => {
+      wrapper.expectElement('[data-cy="cancel-deal-button"]').notToExist();
+    });
+  });
+});

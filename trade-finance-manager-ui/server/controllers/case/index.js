@@ -50,7 +50,7 @@ const getCaseDeal = async (req, res) => {
     amendments,
     amendmentsInProgress,
     hasAmendmentInProgress,
-    showDealCancelButton: dealCancellationEnabled(deal.submissionType),
+    showDealCancelButton: dealCancellationEnabled(deal.dealSnapshot.submissionType),
   });
 };
 
