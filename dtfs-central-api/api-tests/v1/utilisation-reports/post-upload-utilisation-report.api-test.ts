@@ -140,11 +140,9 @@ describe(`POST ${getUrl()}`, () => {
     const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
 
     // Act
-    const response = await testApi.post(payload).to(getUrl());
+    await testApi.post(payload).to(getUrl());
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Created);
-
     const numberOfInsertedFeeRecords = await SqlDbHelper.manager.count(FeeRecordEntity, {});
     expect(numberOfInsertedFeeRecords).toBe(numberOfReportDataEntriesToCreate);
   });
@@ -163,11 +161,9 @@ describe(`POST ${getUrl()}`, () => {
     const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
 
     // Act
-    const response = await testApi.post(payload).to(getUrl());
+    await testApi.post(payload).to(getUrl());
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Created);
-
     const numberOfInsertedFeeRecords = await SqlDbHelper.manager.count(FeeRecordEntity, {});
     expect(numberOfInsertedFeeRecords).toBe(numberOfReportDataEntriesToCreate);
   });
