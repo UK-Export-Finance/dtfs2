@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import { caseSubNavigation, errorSummary } from '../../partials';
+import { caseSubNavigation, continueButton, errorSummary } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../pages/caseDealPage';
@@ -129,7 +129,7 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     amendmentsPage.amendmentsManagersDecisionReasons().should('be.visible');
     amendmentsPage.amendmentsManagersDecisionComments().should('be.visible');
 
-    amendmentsPage.continueAmendment().should('be.visible');
+    continueButton().should('be.visible');
   });
 
   it('should take you to `Add conditions, reasons and comments` summary page', () => {
@@ -433,7 +433,7 @@ context('Amendments underwriting - add banks decision - change from proceed to w
     amendmentsPage.amendmentsManagersDecisionReasons().should('be.visible');
     amendmentsPage.amendmentsManagersDecisionComments().should('be.visible');
 
-    amendmentsPage.continueAmendment().should('be.visible');
+    continueButton().should('be.visible');
   });
 
   it('should take you to `Add conditions, reasons and comments` summary page', () => {

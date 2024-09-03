@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import { errorSummary } from '../../partials';
+import { continueButton, errorSummary } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
@@ -178,7 +178,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentsManagersDecisionReasons().should('be.visible');
     amendmentsPage.amendmentsManagersDecisionComments().should('be.visible');
 
-    amendmentsPage.continueAmendment().should('be.visible');
+    continueButton().should('be.visible');
   });
 
   it('should take you to `Add conditions, reasons and comments` summary page if no errors', () => {

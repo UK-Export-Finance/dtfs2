@@ -46,7 +46,7 @@ context('Amendments - Request date', () => {
     amendmentsPage.amendmentRequestDayInput();
     amendmentsPage.amendmentRequestMonthInput();
     amendmentsPage.amendmentRequestYearInput();
-    amendmentsPage.continueAmendment();
+    cy.clickContinueButton();
     cy.clickCancelLink();
   });
 

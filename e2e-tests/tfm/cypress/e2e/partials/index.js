@@ -11,6 +11,7 @@ module.exports = {
   underwritingSubNav,
   primaryNavigation,
   backLink: () => cy.get('[data-cy="back-link"]'),
+  cancelLink: () => cy.get('[data-cy="cancel-link"]'),
   continueButton: () => cy.get('[data-cy="continue-button"]'),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
   errorSummaryItems: () => cy.get('[data-cy="error-summary"] li'),

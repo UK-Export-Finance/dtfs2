@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import { errorSummary } from '../../partials';
+import { continueButton, errorSummary } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
@@ -59,8 +59,8 @@ context('Amendments - Effective date', () => {
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.continueAmendmentButton().should('exist');
-    amendmentsPage.continueAmendmentButton().contains('Continue with amendment request 1');
+    continueButton().should('exist');
+    continueButton().contains('Continue with amendment request 1');
     cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
 
@@ -86,8 +86,8 @@ context('Amendments - Effective date', () => {
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.continueAmendmentButton().should('exist');
-    amendmentsPage.continueAmendmentButton().contains('Continue with amendment request 1');
+    continueButton().should('exist');
+    continueButton().contains('Continue with amendment request 1');
     cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
 
@@ -144,8 +144,8 @@ context('Amendments - Effective date', () => {
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.continueAmendmentButton().should('exist');
-    amendmentsPage.continueAmendmentButton().contains('Continue with amendment request 1');
+    continueButton().should('exist');
+    continueButton().contains('Continue with amendment request 1');
     cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
 

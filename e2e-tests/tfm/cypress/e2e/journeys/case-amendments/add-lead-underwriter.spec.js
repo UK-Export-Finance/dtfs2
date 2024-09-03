@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import { continueButton } from '../../partials';
+import { cancelLink, continueButton } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
@@ -107,7 +107,7 @@ context('Amendments underwriting - add lead underwriter', () => {
       pages.amendmentsPage.assignedToSelectInputSelectedOption();
 
       continueButton();
-      pages.amendmentsPage.assignLeadUnderwriterCancelLink();
+      cancelLink();
     });
 
     it('should still show add lead underwriter button if press cancel on assign page', () => {
@@ -118,7 +118,7 @@ context('Amendments underwriting - add lead underwriter', () => {
 
       pages.underwritingPage.amendmentAddLeadUnderwriterLink().click({ force: true });
 
-      pages.amendmentsPage.assignLeadUnderwriterCancelLink().click();
+      cy.clickCancelLink();
 
       pages.underwritingPage.amendmentAddLeadUnderwriterLink().contains('Add underwriter');
     });
