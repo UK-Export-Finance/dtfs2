@@ -81,10 +81,10 @@ export const validateUtilisationReportCsvHeaders = (
  * @param availableHeaders - The available headers
  * @returns An array of errors if there are any
  */
-export const validateUtilisationReportCsvCellData = (
+export const validateUtilisationReportCsvCellData = async (
   csvData: Record<string, UtilisationReportCsvCellData>[],
   availableHeaders: string[],
-): UtilisationReportDataValidationError[] => {
+): Promise<UtilisationReportDataValidationError[]> => {
   const cellValidations = [
     { header: UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID, errorGenerator: generateUkefFacilityIdError },
     { header: UTILISATION_REPORT_HEADERS.BASE_CURRENCY, errorGenerator: generateBaseCurrencyError },
@@ -104,27 +104,23 @@ export const validateUtilisationReportCsvCellData = (
     generatePaymentExchangeRateError,
   ];
 
-  return csvData.flatMap((csvRow) => {
-    const csvDataErrors: UtilisationReportDataValidationError[] = [];
-
-    cellValidations.forEach(({ header, errorGenerator }) => {
-      if (availableHeaders.includes(header)) {
-        const error = errorGenerator(csvRow[header], csvRow.exporter?.value);
-        if (error) {
-          csvDataErrors.push(error);
+  const allErrors = await Promise.all(
+    csvData.map(async (csvRow) => {
+      const cellErrorPromises = cellValidations.map(({ header, errorGenerator }) => {
+        if (!availableHeaders.includes(header)) {
+          return null;
         }
-      }
-    });
 
-    rowValidations.forEach((errorGenerator) => {
-      const error = errorGenerator(csvRow);
-      if (error) {
-        csvDataErrors.push(error);
-      }
-    });
+        return errorGenerator(csvRow[header], csvRow.exporter?.value);
+      });
 
-    return csvDataErrors;
-  });
+      const rowErrorPromises = rowValidations.map((errorGenerator) => errorGenerator(csvRow));
+
+      return Promise.all([...cellErrorPromises, ...rowErrorPromises]);
+    }),
+  );
+
+  return allErrors.flat().filter((error): error is UtilisationReportDataValidationError => error !== null);
 };
 
 /**
@@ -132,10 +128,10 @@ export const validateUtilisationReportCsvCellData = (
  * @param csvData - The data from the utilisation report csv
  * @returns An array of errors pertaining to the report if there are any
  */
-export const validateUtilisationReportCsvData = (csvData: UtilisationReportCsvRowData[]): UtilisationReportDataValidationError[] => {
+export const validateUtilisationReportCsvData = async (csvData: UtilisationReportCsvRowData[]): Promise<UtilisationReportDataValidationError[]> => {
   const { missingHeaderErrors, availableHeaders } = validateUtilisationReportCsvHeaders(csvData[0]);
 
-  const dataValidationErrors = validateUtilisationReportCsvCellData(csvData, availableHeaders);
+  const dataValidationErrors = await validateUtilisationReportCsvCellData(csvData, availableHeaders);
 
   const validationErrors = missingHeaderErrors.concat(dataValidationErrors);
 

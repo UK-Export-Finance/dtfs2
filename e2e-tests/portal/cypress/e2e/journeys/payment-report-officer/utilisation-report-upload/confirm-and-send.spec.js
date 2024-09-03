@@ -1,7 +1,7 @@
 const { utilisationReportUpload, confirmAndSend, problemWithService } = require('../../../pages');
 const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
-const { february2023ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
+const { february2023ReportDetails, facilityUtilisationDataForReport } = require('../../../../fixtures/mockUtilisationReportDetails');
 
 context('Confirm and send', () => {
   before(() => {
@@ -16,6 +16,7 @@ context('Confirm and send', () => {
     beforeEach(() => {
       cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
       cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [february2023ReportDetails]);
+      cy.task(NODE_TASKS.INSERT_FACILITY_UTILISATION_DATA_INTO_DB, facilityUtilisationDataForReport);
 
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
       cy.visit(relativeURL('/utilisation-report-upload'));

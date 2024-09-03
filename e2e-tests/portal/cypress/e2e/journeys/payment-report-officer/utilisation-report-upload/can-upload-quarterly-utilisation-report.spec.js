@@ -1,12 +1,14 @@
 const { utilisationReportUpload } = require('../../../pages');
 const { NODE_TASKS, BANK2_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
-const { december2023ToFebruary2024ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
+const { december2023ToFebruary2024ReportDetails, facilityUtilisationDataForReport } = require('../../../../fixtures/mockUtilisationReportDetails');
 
 context('Quarterly utilisation report upload', () => {
   beforeEach(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [december2023ToFebruary2024ReportDetails]);
+    cy.task(NODE_TASKS.INSERT_FACILITY_UTILISATION_DATA_INTO_DB, facilityUtilisationDataForReport);
+
     cy.login(BANK2_PAYMENT_REPORT_OFFICER1);
     cy.visit(relativeURL('/utilisation-report-upload'));
   });

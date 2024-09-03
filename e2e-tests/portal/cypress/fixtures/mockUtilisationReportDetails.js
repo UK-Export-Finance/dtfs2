@@ -1,5 +1,10 @@
 const { eachMonthOfInterval, getYear, getMonth, subMonths } = require('date-fns');
-const { UtilisationReportEntityMockBuilder, AzureFileInfoEntity, MOCK_AZURE_FILE_INFO } = require('@ukef/dtfs2-common');
+const {
+  UtilisationReportEntityMockBuilder,
+  AzureFileInfoEntity,
+  MOCK_AZURE_FILE_INFO,
+  FacilityUtilisationDataEntityMockBuilder,
+} = require('@ukef/dtfs2-common');
 const { BANK1_PAYMENT_REPORT_OFFICER1, BANK2_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
 
 const bankId = BANK1_PAYMENT_REPORT_OFFICER1.bank.id;
@@ -84,10 +89,14 @@ const generateUpToDateReportDetails = () => {
 
 const upToDateReportDetails = generateUpToDateReportDetails();
 
+const facilityUtilisationDataForReport = FacilityUtilisationDataEntityMockBuilder.forId() // lines up with the "valid-<...>.xlsx" files UKEF facility ID column
+  .build();
+
 module.exports = {
   previousReportDetails,
   february2023ReportDetails,
   march2023ReportDetails,
   upToDateReportDetails,
   december2023ToFebruary2024ReportDetails,
+  facilityUtilisationDataForReport,
 };
