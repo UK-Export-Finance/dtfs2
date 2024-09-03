@@ -18,5 +18,6 @@ export * from './facility-provided-details';
 export * from './request-platform-type';
 export * from './date-formats';
 export * from './url-character-allowances';
+export * from './deal-submission-type';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

@@ -9,6 +9,7 @@ const { filterTasks } = require('../helpers/tasks.helper');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../helpers/amendments.helper');
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
+const { dealCancellationEnabled } = require('../../helpers/deal-cancellation-enabled');
 
 const {
   DEAL,
@@ -49,6 +50,7 @@ const getCaseDeal = async (req, res) => {
     amendments,
     amendmentsInProgress,
     hasAmendmentInProgress,
+    showDealCancelButton: dealCancellationEnabled(deal.submissionType),
   });
 };
 
