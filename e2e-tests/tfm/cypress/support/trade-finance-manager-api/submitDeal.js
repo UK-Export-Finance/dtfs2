@@ -5,9 +5,9 @@ const { BANK1_CHECKER1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/portal
 /**
  * submitDeal
  * Login to TFM and submit a deal.
- * @param {Integer} dealId: Deal ID
- * @param {String} dealType: Deal type
- * @param {Object} user: User object
+ * @param {number} dealId: Deal ID
+ * @param {string} dealType: Deal type
+ * @param {object} user: User object
  */
 const submitDeal = (dealId, dealType, user) => {
   console.info('submitDeal::');
