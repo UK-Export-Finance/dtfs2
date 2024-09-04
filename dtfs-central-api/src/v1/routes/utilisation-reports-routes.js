@@ -107,6 +107,42 @@ utilisationReportsRouter.route('/report-data-validation').post(validatePostRepor
 
 /**
  * @openapi
+ * /utilisation-reports/report-data-validation:
+ *   post:
+ *     summary: Validate utilisation report data
+ *     tags: [Utilisation Report]
+ *     description: Validate utilisation report data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reportData:
+ *                 $ref: '#/definitions/RawReportDataWithCellLocations'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - type: object
+ *                   properties:
+ *                     csvValidationErrors:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/definitions/CsvValidationError'
+ *       500:
+ *         description: Internal server error
+ *       400:
+ *         description: Invalid payload
+ */
+utilisationReportsRouter.route('/report-data-validation').post(validatePostReportDataValidationPayload, postReportDataValidation);
+
+/**
+ * @openapi
  * /utilisation-reports/:id:
  *   get:
  *     summary: Get utilisation report with the specified id ('id')

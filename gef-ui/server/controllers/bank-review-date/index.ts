@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { getDate, getMonth, getYear, isSameDay, parseISO } from 'date-fns';
-import { CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
+import { AnyObject, CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
 import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
 import * as api from '../../services/api';
 import { validateAndParseBankReviewDate } from './validation';
@@ -26,8 +26,8 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
   } = req;
 
   try {
-    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
-    const deal = (await api.getApplication({ dealId, userToken })) as Record<string, unknown> & { version?: number };
+    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: AnyObject };
+    const deal = (await api.getApplication({ dealId, userToken })) as AnyObject & { version?: number };
 
     if (!isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || facility.isUsingFacilityEndDate !== false) {
       return res.redirect(`/gef/application-details/${dealId}`);
@@ -70,7 +70,7 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
+    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: AnyObject };
 
     const bankReviewDateErrorsAndDate = validateAndParseBankReviewDate(
       {
