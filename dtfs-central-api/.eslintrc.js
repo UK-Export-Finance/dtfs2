@@ -57,7 +57,10 @@ module.exports = {
       node: {
         extensions: ['.ts', '.tsx'],
       },
-      typescript: {},
+      typescript: {
+        alwaysTryTypes: true,
+        project: './tsconfig.json',
+      },
     },
   },
   parserOptions: baseParserOptions,
