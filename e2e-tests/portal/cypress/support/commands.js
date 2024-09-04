@@ -84,6 +84,7 @@ Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./p
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
 Cypress.Commands.add('createBssApplicationReadyForCheck', require('./portal/createBssApplicationReadyForCheck'));
+Cypress.Commands.add('createGefApplicationReadyForCheck', require('./portal/createGefApplicationReadyForCheck'));
 
 // commands that add/edit facilities directly in central API
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
