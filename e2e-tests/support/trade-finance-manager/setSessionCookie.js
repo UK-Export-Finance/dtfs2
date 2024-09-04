@@ -3,8 +3,8 @@ const cookieSignature = require('cookie-signature');
 /**
  * setTfmSessionCookie
  * Sign sessionId and set as session cookie value.
- * @param {String} sessionIdentifier: ExpressJs session id
- * @param {Number} maxAge: session age
+ * @param {string} sessionIdentifier ExpressJs session id
+ * @param {number} maxAge session age
  */
 const setSessionCookie = (sessionIdentifier, maxAge) => {
   const cookieOptions = {
