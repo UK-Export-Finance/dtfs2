@@ -28,3 +28,15 @@ export type UploadedByUserDetails = {
   firstname: string;
   surname: string;
 };
+
+export type UtilisationReportCsvCellData = { value: string | null; column: string; row: string | number };
+
+export type UtilisationReportCsvRowData = Record<string, UtilisationReportCsvCellData>;
+
+export type UtilisationReportDataValidationError = {
+  errorMessage: string;
+  column?: string | null;
+  row?: number | string | null;
+  value?: string | null;
+  exporter?: string | null;
+};
