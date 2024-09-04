@@ -14,8 +14,8 @@ const LOGIN_SESSION_MAX_AGE = 1800; // 30 min
  * 3) Set session in Redis
  * 4) Set session id in Cookie, if isSessionForAPICall is false (default behaviour)
  * 5) Redirects to TFM root /, if isSessionForAPICall is false (default behaviour)
- * @param {object} user: User object for login
- * @param {boolean} isSessionForAPICall: if true no cookie set and no redirect will happen.
+ * @param {object} user User object for login
+ * @param {boolean} [isSessionForAPICall = false] if true no cookie set and no redirect will happen.
  * @returns {Promise<string>} TFM JWT token.
  *
  * @example
