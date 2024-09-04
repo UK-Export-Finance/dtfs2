@@ -6,7 +6,7 @@ const { BANK1_CHECKER1_WITH_MOCK_ID } = require('../../../../e2e-fixtures/portal
  * submitManyDeals
  * Login to TFM and submit many deals.
  * @param {Array} deals: Deals
- * @param {Object} user: User object
+ * @param {object} user: User object
  */
 const submitManyDeals = (deals, user) => {
   console.info('submitManyDeals::');
