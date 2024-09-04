@@ -26,7 +26,19 @@
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ payment.reference }}">{{ payment.reference if isFirstLineOfRow }}</td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}">{{ feeRecord.facilityId }}</td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}">{{ feeRecord.exporter }}</td>
-      <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ payment.dateReceived.dataSortValue }}">{{ payment.dateReceived.formattedDateReceived if isFirstLineOfRow }}</td>
+      <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ payment.dateReceived.dataSortValue }}">
+        {% if isFirstLineOfRow %}
+          {% if isLastLineOfRow %}
+            {{ payment.dateReceived.formattedDateReceived }}
+          {% else %}
+            <span aria-hidden="true"> {{ payment.dateReceived.formattedDateReceived }}</span>
+          {% endif %}
+        {% else %}
+          {% if isLastLineOfRow %}
+            <span class="govuk-visually-hidden">{{ payment.dateReceived.formattedDateReceived }}</span>
+          {% endif %}
+        {% endif %}
+        </td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ reconciledBy }}" data-cy="reconciledBy">{{ reconciledBy if isFirstLineOfRow }}</td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ dateReconciled }}" data-cy="dateReconciled">{{ dateReconciled if isFirstLineOfRow }}</td>
     </tr>
