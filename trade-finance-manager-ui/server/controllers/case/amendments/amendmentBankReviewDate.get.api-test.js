@@ -1,4 +1,4 @@
-import { isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS, AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, FACILITY_TYPE, isTfmFacilityEndDateFeatureFlagEnabled, MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import {
@@ -23,6 +23,14 @@ const user = {
   email: 'test@localhost',
 };
 
+const gefFacility = {
+  facilitySnapshot: { isGef: true, type: MAPPED_FACILITY_TYPE.CASH },
+};
+
+const bssEwcsFacility = {
+  facilitySnapshot: { isGef: false, type: FACILITY_TYPE.BOND },
+};
+
 const session = { user, userToken: 'mockToken' };
 
 const { dealId, facilityId, amendmentId } = MOCK_AMENDMENT_COVERENDDATE_CHANGE;
@@ -38,13 +46,14 @@ describe('amendmentBankReviewDate routes', () => {
   });
 
   describe('GET getAmendmentBankReviewDate', () => {
-    describe('when TFM Facility end date feature flag disabled', () => {
+    describe('when TFM Facility end date feature flag is disabled', () => {
       beforeEach(() => {
         jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(false);
       });
 
       it('should redirect to the amendment options selection page', async () => {
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
+        api.getFacility = jest.fn().mockResolvedValueOnce(gefFacility);
 
         const req = {
           params: {
@@ -61,13 +70,32 @@ describe('amendmentBankReviewDate routes', () => {
       });
     });
 
-    describe('when TFM Facility end date feature flag enabled', () => {
+    describe('when TFM Facility end date feature flag is enabled', () => {
       beforeEach(() => {
         jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
       });
 
       it('should redirect to the amendment options selection page when the cover end date is not to be changed', async () => {
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_FACILITYVALUE_CHANGE });
+        api.getFacility = jest.fn().mockResolvedValueOnce(gefFacility);
+
+        const req = {
+          params: {
+            _id: dealId,
+            amendmentId,
+            facilityId,
+          },
+          session,
+        };
+
+        await getAmendmentBankReviewDate(req, res);
+
+        expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
+      });
+
+      it('should redirect to the amendment options selection page when the deal type is not GEF', async () => {
+        api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_FACILITYVALUE_CHANGE });
+        api.getFacility = jest.fn().mockResolvedValueOnce(bssEwcsFacility);
 
         const req = {
           params: {
@@ -85,6 +113,7 @@ describe('amendmentBankReviewDate routes', () => {
 
       it("should redirect to the 'Has the bank provided a facility end date' question page when the user has not yet answered that question", async () => {
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: { ...MOCK_AMENDMENT_COVERENDDATE_CHANGE, isUsingFacilityEndDate: undefined } });
+        api.getFacility = jest.fn().mockResolvedValueOnce(gefFacility);
 
         const req = {
           params: {
@@ -102,6 +131,7 @@ describe('amendmentBankReviewDate routes', () => {
 
       it("should redirect to the 'Has the bank provided a facility end date' page if using FED instead of bank review date", async () => {
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: { ...MOCK_AMENDMENT_COVERENDDATE_CHANGE, isUsingFacilityEndDate: true } });
+        api.getFacility = jest.fn().mockResolvedValueOnce(gefFacility);
 
         const req = {
           params: {
@@ -119,6 +149,7 @@ describe('amendmentBankReviewDate routes', () => {
 
       it('should render the template with isEditable true when the amendment is found and is in progress', async () => {
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE });
+        api.getFacility = jest.fn().mockResolvedValueOnce(gefFacility);
 
         const req = {
           params: {
@@ -145,6 +176,7 @@ describe('amendmentBankReviewDate routes', () => {
         const COMPLETED_AMENDMENT = { ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE, status: AMENDMENT_STATUS.COMPLETED };
 
         api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: COMPLETED_AMENDMENT });
+        api.getFacility = jest.fn().mockResolvedValueOnce(gefFacility);
 
         const req = {
           params: {
@@ -176,6 +208,7 @@ describe('amendmentBankReviewDate routes', () => {
             bankReviewDate: previouslyEnteredBankReviewDate,
           },
         });
+        api.getFacility = jest.fn().mockResolvedValueOnce(gefFacility);
 
         const req = {
           params: {
@@ -203,7 +236,7 @@ describe('amendmentBankReviewDate routes', () => {
           status: 200,
           data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
-        api.getFacility = jest.fn().mockResolvedValueOnce({ facilitySnapshot: { dates: {} } });
+        api.getFacility = jest.fn().mockResolvedValueOnce(gefFacility);
 
         const req = {
           params: {
@@ -227,13 +260,18 @@ describe('amendmentBankReviewDate routes', () => {
       });
 
       it('should render the template with the current bank review date from the facility snapshot if it exists', async () => {
+        const facilityWithCurrentBankReviewDate = {
+          facilitySnapshot: {
+            ...gefFacility.facilitySnapshot,
+            dates: { isUsingFacilityEndDate: false, bankReviewDate: new Date(2025, 11, 11).toISOString() },
+          },
+        };
+
         api.getAmendmentById.mockResolvedValueOnce({
           status: 200,
           data: MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE,
         });
-        api.getFacility = jest
-          .fn()
-          .mockResolvedValueOnce({ facilitySnapshot: { dates: { isUsingFacilityEndDate: false, bankReviewDate: new Date(2025, 11, 11).toISOString() } } });
+        api.getFacility = jest.fn().mockResolvedValueOnce(facilityWithCurrentBankReviewDate);
 
         const req = {
           params: {
