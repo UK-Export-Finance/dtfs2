@@ -7,6 +7,11 @@ import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options
 
 const res = mockRes();
 
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isTfmDealCancellationFeatureFlagEnabled: jest.fn(),
+}));
+
 const TOKEN = 'test-token';
 
 const SESSION = {
