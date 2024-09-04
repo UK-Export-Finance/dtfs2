@@ -32,9 +32,9 @@
       <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-0" data-cy="amendment--bank-review-date-heading">Enter the new bank review date</h1>
     </legend>
 
-    <dl class="govuk-body govuk-!-margin-bottom-4" data-cy="amendment--current-bank-review-date">
+    <dl class="govuk-body govuk-!-margin-bottom-4">
       <dt class="govuk-body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Current bank review date</dt>
-      <dd>{{ ( currentBankReviewDate if currentBankReviewDate else "Not provided") }}</dd>
+      <dd data-cy="amendment--current-bank-review-date">{{ ( currentBankReviewDate if currentBankReviewDate else "Not provided") }}</dd>
     </dl>
 
     {{ govukDateInput({

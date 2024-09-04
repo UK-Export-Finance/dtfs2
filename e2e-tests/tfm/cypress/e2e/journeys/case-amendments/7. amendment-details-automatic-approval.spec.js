@@ -7,8 +7,6 @@ import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN, CURRENCY } from '../../../../../e2e-fixtures';
 
-const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
-
 context('Amendments - automatic approval journey', () => {
   // If the expiry & commencement date are the same day of the month then we add one to the month
   // difference for BS (but not for EWCS)
@@ -51,7 +49,7 @@ context('Amendments - automatic approval journey', () => {
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.oneMonthFormattedTable);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -165,11 +163,6 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.twoMonthsMonth);
       amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.twoMonthsYear);
       amendmentsPage.continueAmendment().click();
-
-      if (tfmFacilityEndDateEnabled) {
-        amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
-      }
-
       cy.url().should('contain', 'facility-value');
       amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
       amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
@@ -197,9 +190,6 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.continueAmendment().click();
       cy.url().should('contain', 'cover-end-date');
       amendmentsPage.continueAmendment().click();
-      if (tfmFacilityEndDateEnabled) {
-        amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
-      }
       cy.url().should('contain', 'facility-value');
       amendmentsPage.continueAmendment().click();
       cy.url().should('contain', 'check-answers');
@@ -208,9 +198,6 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'No');
       amendmentsPage.amendmentAnswerEffectiveDate().should('contain', dateConstants.fourDaysAgoDay);
       amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.twoMonthsFormatted);
-      if (tfmFacilityEndDateEnabled) {
-        amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('contain', 'Yes');
-      }
       amendmentsPage.amendmentAnswerFacilityValue().should('contain', 'GBP 123.00');
 
       amendmentsPage.continueAmendment().click();
@@ -241,7 +228,7 @@ context('Amendments - automatic approval journey', () => {
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().should('not.contain', facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.twoMonthsFormattedTable);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.twoMonthsFormattedTable);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
@@ -290,7 +277,7 @@ context('Amendments - automatic approval journey', () => {
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.oneMonthFormattedTable);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -348,10 +335,6 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.twoMonthsYear);
       amendmentsPage.continueAmendment().click();
 
-      if (tfmFacilityEndDateEnabled) {
-        amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
-      }
-
       cy.url().should('contain', 'check-answers');
     });
 
@@ -374,11 +357,8 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.continueAmendment().click();
       cy.url().should('contain', 'cover-end-date');
       amendmentsPage.continueAmendment().click();
-      if (tfmFacilityEndDateEnabled) {
-        amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
-      }
-      cy.url().should('contain', 'check-answers');
 
+      cy.url().should('contain', 'check-answers');
       amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
       amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'No');
       amendmentsPage.amendmentAnswerEffectiveDate().should('contain', dateConstants.fourDaysAgoDay);
@@ -412,7 +392,7 @@ context('Amendments - automatic approval journey', () => {
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().should('not.contain', facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.twoMonthsFormattedTable);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.twoMonthsFormattedTable);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -459,7 +439,7 @@ context('Amendments - automatic approval journey', () => {
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.oneMonthFormattedTable);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -572,7 +552,7 @@ context('Amendments - automatic approval journey', () => {
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.oneMonthFormattedTable);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);

@@ -1,4 +1,4 @@
-const dealsPage = require('../../e2e/pages/dealsPage');
+const dealsPage = require('../../../e2e/pages/dealsPage');
 
 module.exports = ({ firstDealId, increment, numberToCheck }) => {
   let expectedDealId = Number(firstDealId);

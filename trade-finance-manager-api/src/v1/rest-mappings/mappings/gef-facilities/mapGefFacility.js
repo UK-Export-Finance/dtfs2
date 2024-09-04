@@ -10,6 +10,11 @@ const mapGefFacilityDates = require('./mapGefFacilityDates');
 const mapFacilityValueExportCurrency = require('../facilities/mapFacilityValueExportCurrency');
 const mapUkefExposureValue = require('../facilities/mapUkefExposureValue');
 
+/**
+ * Maps existing GEF facility to the facility used in TFM API.
+ * Note: This implimentation modifies the facility snapshot
+ * to have values not consistent with the facility snapshot in the database.
+ */
 const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
   const { facilitySnapshot, tfm: facilityTfm } = facility;
 
@@ -28,6 +33,7 @@ const mapGefFacility = (facility, dealSnapshot, dealTfm) => {
     _id: facility._id,
     facilitySnapshot: {
       _id: facility._id,
+      isGef: true,
       dealId,
       bankFacilityReference: name,
       banksInterestMargin: `${interestPercentage}%`,

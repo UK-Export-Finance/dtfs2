@@ -1,10 +1,10 @@
+import './trade-finance-manager-api';
+import './ui';
+
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
 Cypress.Commands.add('getInputByLabelText', require('./utils/getInputByLabelText'));
-
-// commands used to interact directly with TFM UI
-Cypress.Commands.add('login', require('./ui/logIn'));
 
 // commands used to interact directly with Deal API
 // NOTE: this will eventually become TFM API, that calls Deal API.
@@ -26,17 +26,3 @@ Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
 Cypress.Commands.add('deleteTfmDeals', require('./central-api/deleteTfmDeals'));
 
 Cypress.Commands.add('updateTFMDeal', require('./central-api/updateTFMDeal'));
-
-Cypress.Commands.add('submitDeal', require('./trade-finance-manager-api/submitDeal'));
-Cypress.Commands.add('submitManyDeals', require('./trade-finance-manager-api/submitManyDeals'));
-Cypress.Commands.add('getUser', require('./trade-finance-manager-api/getUser'));
-
-Cypress.Commands.add('typeWithoutDelay', { prevSubject: true }, require('./ui/type-without-delay'));
-Cypress.Commands.add('insertManyTfmDealsIntoDb', require('./trade-finance-manager-api/insertManyTfmDealsIntoDb'));
-Cypress.Commands.add('deleteAllTfmDealsFromDb', require('./trade-finance-manager-api/deleteAllTfmDealsFromDb'));
-Cypress.Commands.add('insertManyTfmFacilitiesAndTwoLinkedDealsIntoDb', require('./trade-finance-manager-api/insertManyTfmFacilitiesAndTwoLinkedDealsIntoDb'));
-Cypress.Commands.add('deleteAllTfmFacilitiesFromDb', require('./trade-finance-manager-api/deleteAllTfmFacilitiesFromDb'));
-Cypress.Commands.add('checkDealIdCells', require('./trade-finance-manager-api/checkDealIdCells'));
-Cypress.Commands.add('checkDealsTableRowsTotal', require('./trade-finance-manager-api/checkDealsTableRowsTotal'));
-Cypress.Commands.add('checkFacilityIdCells', require('./trade-finance-manager-api/checkFacilityIdCells'));
-Cypress.Commands.add('checkFacilitiesTableRowsTotal', require('./trade-finance-manager-api/checkFacilitiesTableRowsTotal'));
