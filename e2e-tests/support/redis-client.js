@@ -5,8 +5,8 @@ let connection = null;
 /**
  * redisConnect
  * Create and connect to a redis client.
- * @param {Object} config: Redis configuration
- * @returns {RedisClient}
+ * @param {object} config: Redis configuration
+ * @returns {Promise<import('redis').RedisClientType>}
  */
 const redisConnect = async (config) => {
   let redisOptions = {};
@@ -26,10 +26,10 @@ const redisConnect = async (config) => {
 /**
  * set
  * Set the redis connection.
- * @param {String} key: DB storage key
- * @param {Object} value: value to store
- * @param {Number} maxAge: keep value for
- * @param {Object} config: Redis configuration
+ * @param {string} key: DB storage key
+ * @param {object} value: value to store
+ * @param {number} maxAge: keep value for
+ * @param {object} config: Redis configuration
  */
 const set = async ({ key, value, maxAge, config }) => {
   if (!connection) {
