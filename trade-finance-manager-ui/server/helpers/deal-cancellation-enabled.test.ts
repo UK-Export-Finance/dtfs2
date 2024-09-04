@@ -1,13 +1,16 @@
-import * as ukefCommon from '@ukef/dtfs2-common';
-import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_SUBMISSION_TYPE, isTfmDealCancellationFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { dealCancellationEnabled } from './deal-cancellation-enabled';
 
-describe('dealCancellationEnabled', () => {
-  const isTfmDealCancellationFeatureFlagEnabledSpy = jest.spyOn(ukefCommon, 'isTfmDealCancellationFeatureFlagEnabled');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isTfmDealCancellationFeatureFlagEnabled: jest.fn(),
+}));
 
+describe('dealCancellationEnabled', () => {
   describe('when TFM Deal Cancellation feature flag is enabled', () => {
     beforeEach(() => {
-      isTfmDealCancellationFeatureFlagEnabledSpy.mockReturnValue(true);
+      jest.mocked(isTfmDealCancellationFeatureFlagEnabled).mockReturnValue(true);
     });
 
     it('should return false if the deal type is MIA', () => {
@@ -31,7 +34,7 @@ describe('dealCancellationEnabled', () => {
 
   describe('when TFM Deal Cancellation feature flag is disabled', () => {
     beforeEach(() => {
-      isTfmDealCancellationFeatureFlagEnabledSpy.mockReturnValue(false);
+      jest.mocked(isTfmDealCancellationFeatureFlagEnabled).mockReturnValue(false);
     });
 
     it.each([DEAL_SUBMISSION_TYPE.MIA, DEAL_SUBMISSION_TYPE.MIN, DEAL_SUBMISSION_TYPE.AIN])('should return false if the deal type is %s', (type) => {
