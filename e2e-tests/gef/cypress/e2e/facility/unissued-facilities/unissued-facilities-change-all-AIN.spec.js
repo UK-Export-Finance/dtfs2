@@ -409,6 +409,40 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       }
     });
 
+    if (facilityEndDateEnabled) {
+      it('cannot submit facility without bank review date', () => {
+        applicationPreview.submitButtonPostApproval();
+
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().click();
+
+        aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
+        aboutFacilityUnissued.continueButton().click();
+
+        cy.visit(relative(`/gef/application-details/${dealId}`));
+
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('No');
+        applicationPreview.facilitySummaryListTable(3).bankReviewDateValue().contains('Required');
+
+        applicationPreview.submitButtonPostApproval().should('not.exist');
+      });
+
+      it('cannot submit facility without facility end date', () => {
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('No');
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().click();
+
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+        aboutFacilityUnissued.continueButton().click();
+
+        cy.visit(relative(`/gef/application-details/${dealId}`));
+
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
+        applicationPreview.facilitySummaryListTable(3).facilityEndDateValue().contains('Required');
+
+        applicationPreview.submitButtonPostApproval().should('not.exist');
+      });
+    }
+
     // checks that can edit changed facility
     it('clicking change should take you to about facility page with different url', () => {
       const issuedDate = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
