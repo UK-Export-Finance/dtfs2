@@ -16,6 +16,7 @@ export * from './api-error-code';
 export * from './facility-type';
 export * from './facility-provided-details';
 export * from './facility-type-mapped';
+export * from './max-request-size';
 export * from './request-platform-type';
 export * from './date-formats';
 export * from './url-character-allowances';

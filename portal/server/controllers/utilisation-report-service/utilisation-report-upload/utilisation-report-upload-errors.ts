@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { validateFilenameFormat } from './utilisation-report-validator';
+import { validateFilenameFormat } from './utilisation-report-filename-validator';
 import { asLoggedInUserSession } from '../../../helpers/express-session';
 
 /**
