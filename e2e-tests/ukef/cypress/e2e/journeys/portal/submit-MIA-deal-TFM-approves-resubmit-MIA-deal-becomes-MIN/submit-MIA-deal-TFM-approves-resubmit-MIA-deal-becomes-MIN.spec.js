@@ -165,7 +165,7 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithoutConditions().click();
 
-    tfmPages.managersDecisionPage.submitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // portal BANK1_MAKER1 confirms no need to change cover start dates

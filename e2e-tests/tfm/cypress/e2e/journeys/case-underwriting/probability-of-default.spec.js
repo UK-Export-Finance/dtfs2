@@ -67,7 +67,7 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
       cy.clickSubmitButton();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/probability-of-default`));
       errorSummary().contains('Enter a probability of default');
-      pages.underwritingProbabilityOfDefaultPage.errorList().contains('Enter a probability of default');
+      pages.underwritingProbabilityOfDefaultPage.errorMessage().contains('Enter a probability of default');
     });
 
     it('should return to pricing & risk page without updating value if cancel', () => {
@@ -86,27 +86,27 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('15');
       cy.clickSubmitButton();
       errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorMessage().contains('You must enter a percentage between 0.01% to 14.09%');
 
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('14.1');
       cy.clickSubmitButton();
       errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorMessage().contains('You must enter a percentage between 0.01% to 14.09%');
 
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('12.123');
       cy.clickSubmitButton();
       errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorMessage().contains('You must enter a percentage between 0.01% to 14.09%');
 
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('0');
       cy.clickSubmitButton();
       errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorMessage().contains('You must enter a percentage between 0.01% to 14.09%');
 
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('abc');
       cy.clickSubmitButton();
       errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
-      pages.underwritingProbabilityOfDefaultPage.errorList().contains('You must enter a percentage between 0.01% to 14.09%');
+      pages.underwritingProbabilityOfDefaultPage.errorMessage().contains('You must enter a percentage between 0.01% to 14.09%');
     });
 
     it('should update Probability of default if between 0.01 and 14.09', () => {

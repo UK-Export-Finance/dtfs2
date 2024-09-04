@@ -128,7 +128,7 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
     tfmPages.managersDecisionPage.commentsInputApproveWithConditions().type(MOCK_COMMENTS);
-    tfmPages.managersDecisionPage.submitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // Go back to Portal

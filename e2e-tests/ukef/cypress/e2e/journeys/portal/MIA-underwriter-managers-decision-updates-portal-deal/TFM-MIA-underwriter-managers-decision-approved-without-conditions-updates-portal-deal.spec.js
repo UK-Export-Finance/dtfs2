@@ -91,7 +91,7 @@ context('Portal to TFM deal submission', () => {
     tfmPages.managersDecisionPage.addDecisionLink().click({ force: true });
 
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithoutConditions().click();
-    tfmPages.managersDecisionPage.submitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // Go back to Portal

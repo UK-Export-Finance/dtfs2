@@ -1,4 +1,5 @@
 import 'cypress-file-upload';
+import './click-events';
 
 // ***********************************************
 // This example commands.js shows you how to
