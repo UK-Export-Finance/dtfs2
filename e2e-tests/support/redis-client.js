@@ -42,8 +42,8 @@ const set = async ({ key, value, maxAge, config }) => {
 /**
  * getConnection
  * Get the redis connection.
- * @param {Object} config: Redis configuration
- * @returns {RedisClient}
+ * @param {object} config: Redis configuration
+ * @returns {Promise<import('redis').RedisClientType>}
  */
 const getConnection = async (config) => {
   if (!connection) {
