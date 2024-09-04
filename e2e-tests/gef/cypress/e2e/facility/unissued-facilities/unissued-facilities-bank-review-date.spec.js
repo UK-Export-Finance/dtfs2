@@ -98,7 +98,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should redirect user to the unissued facility page when clicking continue', () => {
-        bankReviewDate.fillInBankReviewDate(dateConstants.today);
+        cy.fillInBankReviewDate(dateConstants.today);
 
         bankReviewDate.continueButton().click();
 
@@ -106,7 +106,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should redirect user to the unissued facility page when clicking save and return', () => {
-        bankReviewDate.fillInBankReviewDate(dateConstants.today);
+        cy.fillInBankReviewDate(dateConstants.today);
 
         bankReviewDate.saveAndReturnButton().click();
 
@@ -141,14 +141,14 @@ if (facilityEndDateEnabled) {
       });
 
       it('should redirect user to the application details page when clicking continue', () => {
-        bankReviewDate.fillInBankReviewDate(dateConstants.today);
+        cy.fillInBankReviewDate(dateConstants.today);
         bankReviewDate.continueButton().click();
 
         cy.url().should('eq', applicationDetailsUrl);
       });
 
       it('should redirect user to the application details page when clicking save and return', () => {
-        bankReviewDate.fillInBankReviewDate(dateConstants.today);
+        cy.fillInBankReviewDate(dateConstants.today);
 
         bankReviewDate.saveAndReturnButton().click();
 

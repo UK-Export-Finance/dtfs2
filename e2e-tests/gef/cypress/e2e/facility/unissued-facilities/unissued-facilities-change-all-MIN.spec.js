@@ -297,7 +297,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.continueButton().click();
 
       if (facilityEndDateEnabled) {
-        bankReviewDate.fillInBankReviewDate(dateConstants.threeMonths);
+        cy.fillInBankReviewDate(dateConstants.threeMonths);
         bankReviewDate.continueButton().click();
       }
 
@@ -409,7 +409,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.continueButton().click();
 
       if (facilityEndDateEnabled) {
-        bankReviewDate.fillInBankReviewDate(dateConstants.threeMonths);
+        cy.fillInBankReviewDate(dateConstants.threeMonths);
         bankReviewDate.continueButton().click();
       }
 

@@ -108,7 +108,7 @@ context('Bank Review Date Page', () => {
     it('redirects user to application page when clicking on `save and return` button and form has been successfully filled in', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.fillInBankReviewDate(twoYears);
+      cy.fillInBankReviewDate(twoYears);
 
       bankReviewDate.saveAndReturnButton().click();
 
@@ -133,13 +133,13 @@ context('Bank Review Date Page', () => {
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.fillInBankReviewDate(today);
+      cy.fillInBankReviewDate(today);
 
       bankReviewDate.continueButton().click();
       bankReviewDate.errorSummary();
       bankReviewDate.bankReviewDateError();
 
-      bankReviewDate.fillInBankReviewDate(tomorrow);
+      cy.fillInBankReviewDate(tomorrow);
 
       bankReviewDate.continueButton().click();
       bankReviewDate.errorSummary().should('not.exist');
@@ -157,13 +157,13 @@ context('Bank Review Date Page', () => {
       aboutFacility.continueButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.fillInBankReviewDate(yesterday);
+      cy.fillInBankReviewDate(yesterday);
 
       bankReviewDate.continueButton().click();
       bankReviewDate.errorSummary();
       bankReviewDate.bankReviewDateError();
 
-      bankReviewDate.fillInBankReviewDate(today);
+      cy.fillInBankReviewDate(today);
 
       bankReviewDate.continueButton().click();
       bankReviewDate.errorSummary().should('not.exist');
@@ -172,7 +172,7 @@ context('Bank Review Date Page', () => {
     it('validates bank review date is less than 6 years in the future', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.fillInBankReviewDate(sixYearsOneDay);
+      cy.fillInBankReviewDate(sixYearsOneDay);
 
       bankReviewDate.continueButton().click();
       bankReviewDate.errorSummary();
@@ -182,7 +182,7 @@ context('Bank Review Date Page', () => {
     it('redirects the user to `provided facility` page when form has been successfully filled in', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.fillInBankReviewDate(twoYears);
+      cy.fillInBankReviewDate(twoYears);
 
       bankReviewDate.continueButton().click();
 
@@ -192,7 +192,7 @@ context('Bank Review Date Page', () => {
     it('stores the inputted values', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.fillInBankReviewDate(twoYears);
+      cy.fillInBankReviewDate(twoYears);
 
       bankReviewDate.continueButton().click();
 

@@ -56,7 +56,7 @@ context('Changing between facility end date and bank review date', () => {
       aboutFacility.continueButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-      bankReviewDate.fillInBankReviewDate(tomorrow);
+      cy.fillInBankReviewDate(tomorrow);
       bankReviewDate.continueButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
@@ -90,7 +90,7 @@ context('Changing between facility end date and bank review date', () => {
       bankReviewDate.bankReviewDateMonth().should('have.value', '');
       bankReviewDate.bankReviewDateYear().should('have.value', '');
 
-      bankReviewDate.fillInBankReviewDate(tomorrow);
+      cy.fillInBankReviewDate(tomorrow);
       bankReviewDate.continueButton().click();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));

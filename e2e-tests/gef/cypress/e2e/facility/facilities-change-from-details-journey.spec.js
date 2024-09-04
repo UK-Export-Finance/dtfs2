@@ -77,7 +77,7 @@ context('Changing facility details from application-details page should take you
 
         applicationDetails.facilitySummaryListTable(0).bankReviewDateAction().click();
 
-        bankReviewDate.fillInBankReviewDate(today);
+        cy.fillInBankReviewDate(today);
         bankReviewDate.continueButton().click();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));
       });

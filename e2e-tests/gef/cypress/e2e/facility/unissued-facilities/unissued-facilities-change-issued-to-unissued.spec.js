@@ -155,7 +155,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
       aboutFacilityUnissued.continueButton().click();
 
       if (facilityEndDateEnabled) {
-        bankReviewDate.fillInBankReviewDate(dateConstants.threeMonths);
+        cy.fillInBankReviewDate(dateConstants.threeMonths);
         bankReviewDate.continueButton().click();
       }
 
