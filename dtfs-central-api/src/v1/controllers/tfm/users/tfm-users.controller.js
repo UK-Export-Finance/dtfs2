@@ -1,25 +1,23 @@
-const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION, AUDIT_USER_TYPES, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
-const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
-const {
+import { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION, AUDIT_USER_TYPES, DocumentNotDeletedError, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { isVerifiedPayload } from '@ukef/dtfs2-common/payload-verification';
+import {
   validateAuditDetails,
   generateAuditDatabaseRecordFromAuditDetails,
   deleteOne,
   validateAuditDetailsAndUserType,
-} = require('@ukef/dtfs2-common/change-stream');
-const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+} from '@ukef/dtfs2-common/change-stream';
+import { ObjectId } from 'mongodb';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
-const createUser = async (user, auditDetails) => {
+export const createUser = async (user, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
   return collection.insertOne({ ...user, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) });
 };
-exports.createUser = createUser;
 
 /**
  * @deprecated Do not use -- Favour TFM API (removal todo:DTFS2-7160)
  */
-exports.createTfmUser = async (req, res) => {
+export const createTfmUser = async (req, res) => {
   const { user: payload, auditDetails } = req.body;
 
   if (!isVerifiedPayload({ payload, template: PAYLOAD_VERIFICATION.TFM.USER })) {
@@ -45,18 +43,17 @@ exports.createTfmUser = async (req, res) => {
   return res.status(200).json({ _id: insertedId });
 };
 
-const listUsers = async () => {
+export const listUsers = async () => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
   return collection.find().toArray();
 };
-exports.listUsers = listUsers;
 
-exports.listTfmUser = async (req, res) => {
+export const listTfmUser = async (req, res) => {
   const users = await listUsers();
   return res.status(200).send({ users });
 };
 
-const findOneUser = async (username) => {
+export const findOneUser = async (username) => {
   if (typeof username !== 'string') {
     return { status: 400, message: 'Invalid Username' };
   }
@@ -64,9 +61,8 @@ const findOneUser = async (username) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
   return collection.findOne({ username: { $eq: username } });
 };
-exports.findOneUser = findOneUser;
 
-exports.findOneTfmUser = async (req, res) => {
+export const findOneTfmUser = async (req, res) => {
   const user = await findOneUser(req.params.username);
 
   if (user) {
@@ -76,7 +72,7 @@ exports.findOneTfmUser = async (req, res) => {
   return res.status(404).send();
 };
 
-const findOneUserById = async (userId) => {
+export const findOneUserById = async (userId) => {
   if (ObjectId.isValid(userId)) {
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_USERS);
     const user = await collection.findOne({ _id: { $eq: new ObjectId(userId) } });
@@ -84,9 +80,8 @@ const findOneUserById = async (userId) => {
   }
   return { status: 400, message: 'Invalid User Id' };
 };
-exports.findOneUserById = findOneUserById;
 
-exports.findOneTfmUserById = async (req, res) => {
+export const findOneTfmUserById = async (req, res) => {
   if (ObjectId.isValid(req.params.userId)) {
     const user = await findOneUserById(req.params.userId);
 
@@ -99,7 +94,7 @@ exports.findOneTfmUserById = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid User Id' });
 };
 
-exports.findTfmTeamUser = async (req, res) => {
+export const findTfmTeamUser = async (req, res) => {
   const { teamId } = req.params;
 
   if (typeof teamId !== 'string') {
@@ -113,7 +108,7 @@ exports.findTfmTeamUser = async (req, res) => {
   return res.status(200).send(reversedTeamUsers);
 };
 
-exports.deleteTfmUser = async (req, res) => {
+export const deleteTfmUser = async (req, res) => {
   const { username } = req.params;
   const { auditDetails } = req.body;
 

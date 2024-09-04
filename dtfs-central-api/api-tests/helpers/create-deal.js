@@ -1,5 +1,5 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { testApi } = require('../test-api');
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { testApi } from '../test-api';
 
 const createDeal = async ({ deal, user }) => {
   const auditDetails = generatePortalAuditDetails(user._id);
@@ -7,4 +7,4 @@ const createDeal = async ({ deal, user }) => {
   return { auditDetails, body, status };
 };
 
-module.exports = { createDeal };
+export { createDeal };

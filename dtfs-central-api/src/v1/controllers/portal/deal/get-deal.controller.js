@@ -1,7 +1,7 @@
-const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
+import { MONGO_DB_COLLECTIONS, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
+import { findAllGefFacilitiesByDealId } from '../gef-facility/get-facilities.controller';
 
 const extendDealWithFacilities = async (deal) => {
   const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
@@ -47,7 +47,7 @@ const extendDealWithFacilities = async (deal) => {
   return mappedDeal;
 };
 
-const findOneDeal = async (_id, callback) => {
+export const findOneDeal = async (_id, callback) => {
   if (!ObjectId.isValid(_id)) {
     throw new Error('Invalid Deal Id');
   }
@@ -75,9 +75,8 @@ const findOneDeal = async (_id, callback) => {
 
   return deal;
 };
-exports.findOneDeal = findOneDeal;
 
-const findOneGefDeal = async (_id, callback) => {
+export const findOneGefDeal = async (_id, callback) => {
   if (ObjectId.isValid(_id)) {
     const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
@@ -97,9 +96,8 @@ const findOneGefDeal = async (_id, callback) => {
   }
   return { status: 400, message: 'Invalid Deal Id' };
 };
-exports.findOneGefDeal = findOneGefDeal;
 
-exports.findOneDealGet = async (req, res) => {
+export const findOneDealGet = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const deal = await findOneDeal(req.params.id);
 

@@ -1,10 +1,10 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { getTime, format } = require('date-fns');
-const wipeDB = require('../../../wipeDB');
-const { testApi } = require('../../../test-api');
-const { newDeal, createAndSubmitDeals, updateDealsTfm } = require('./tfm-deals-get.api-test');
-const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { generateParsedMockTfmUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
+import { getTime, format } from 'date-fns';
+import * as wipeDB from '../../../wipeDB';
+import { testApi } from '../../../test-api';
+import { newDeal, createAndSubmitDeals, updateDealsTfm } from './tfm-deals-get.api-test';
+import { MOCK_TFM_USER } from '../../../mocks/test-users/mock-tfm-user';
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {

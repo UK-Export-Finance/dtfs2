@@ -1,6 +1,6 @@
-const { orderNumber } = require('../../../utils/error-list-order-number');
+import { orderNumber } from '../../../utils/error-list-order-number';
 
-module.exports = (deal, errorList) => {
+const makerObject = (deal, errorList) => {
   const newErrorList = { ...errorList };
   const { bank, maker } = deal;
 
@@ -13,3 +13,5 @@ module.exports = (deal, errorList) => {
 
   return newErrorList;
 };
+
+export default makerObject;

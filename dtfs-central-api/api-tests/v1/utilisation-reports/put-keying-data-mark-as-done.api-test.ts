@@ -35,7 +35,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.put(requestBody).to(getUrl(1));
+    const response = (await testApi.put(requestBody).to(getUrl(1))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -48,7 +48,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.put(requestBody).to(getUrl(1));
+    const response = (await testApi.put(requestBody).to(getUrl(1))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -62,7 +62,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.put(requestBody).to(getUrl(1));
+    const response = (await testApi.put(requestBody).to(getUrl(1))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -80,7 +80,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.put(requestBody).to(getUrl(reportId));
+    const response = (await testApi.put(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -100,7 +100,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(getUrl(reportId));
+    const { status } = (await testApi.put(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(status).toBe(200);

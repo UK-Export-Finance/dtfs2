@@ -1,5 +1,5 @@
-const { HttpStatusCode } = require('axios');
-const { validationResult } = require('express-validator');
+import { HttpStatusCode } from 'axios';
+import { validationResult } from 'express-validator';
 
 /**
  * Validation middleware, used on a per route basis to handle result of validations that are run on the inputs of an API route.
@@ -15,4 +15,4 @@ const handleExpressValidatorResult = (req, res, next) => {
   return next();
 };
 
-module.exports = handleExpressValidatorResult;
+export default handleExpressValidatorResult;

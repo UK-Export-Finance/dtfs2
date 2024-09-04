@@ -1,18 +1,14 @@
-const express = require('express');
+import express from 'express';
+import * as getBankController from '../controllers/bank/get-bank.controller';
+import { getBanks } from '../controllers/bank/get-banks.controller';
+import * as createBankController from '../controllers/bank/create-bank.controller';
+import * as getNextReportPeriodController from '../controllers/bank/get-next-report-period-by-bank.controller';
+import { getUtilisationReportsByBankIdAndOptions } from '../controllers/utilisation-report-service/get-utilisation-reports.controller';
+import { getUtilisationReportSummariesByBankIdAndYear } from '../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller';
+import * as validation from '../validation/route-validators/route-validators';
+import handleExpressValidatorResult from '../validation/route-validators/express-validator-result-handler';
 
 const bankRouter = express.Router();
-
-const getBankController = require('../controllers/bank/get-bank.controller');
-const { getBanks } = require('../controllers/bank/get-banks.controller');
-const createBankController = require('../controllers/bank/create-bank.controller');
-const getNextReportPeriodController = require('../controllers/bank/get-next-report-period-by-bank.controller');
-const { getUtilisationReportsByBankIdAndOptions } = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
-const {
-  getUtilisationReportSummariesByBankIdAndYear,
-} = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
-
-const validation = require('../validation/route-validators/route-validators');
-const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 
 /**
  * @openapi
@@ -201,4 +197,4 @@ bankRouter
   .route('/:bankId/utilisation-reports/reconciliation-summary-by-year/:year')
   .get(validation.bankIdValidation, validation.yearValidation('year'), handleExpressValidatorResult, getUtilisationReportSummariesByBankIdAndYear);
 
-module.exports = bankRouter;
+export default bankRouter;

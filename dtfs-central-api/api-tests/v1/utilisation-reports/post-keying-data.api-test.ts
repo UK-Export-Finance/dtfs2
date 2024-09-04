@@ -95,7 +95,7 @@ describe(`POST ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId));
+    const response = (await testApi.post(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -112,7 +112,7 @@ describe(`POST ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     // Act
-    const response = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
+    const response = (await testApi.post(aValidRequestBody()).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -134,7 +134,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId));
+    const response = (await testApi.post(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -153,7 +153,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId));
+    const response = (await testApi.post(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -196,7 +196,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId));
+    const response = (await testApi.post(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -232,7 +232,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId));
+    const response = (await testApi.post(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -276,7 +276,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId));
+    const response = (await testApi.post(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -303,7 +303,7 @@ describe(`POST ${BASE_URL}`, () => {
     const requestBody = aValidRequestBody();
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId));
+    const response = (await testApi.post(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -354,7 +354,7 @@ describe(`POST ${BASE_URL}`, () => {
       await insertMatchingPaymentsForFeeRecords(feeRecordsAtMatchStatus);
 
       // Act
-      const response1 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
+      const response1 = (await testApi.post(aValidRequestBody()).to(getUrl(reportId))) as Response;
 
       // Assert
       expect(response1.status).toBe(HttpStatusCode.Ok);
@@ -423,7 +423,7 @@ describe(`POST ${BASE_URL}`, () => {
         await SqlDbHelper.saveNewEntry('UtilisationReport', report);
         await insertMatchingPaymentsForFeeRecords(matchFeeRecords);
 
-        const response1 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
+        const response1 = (await testApi.post(aValidRequestBody()).to(getUrl(reportId))) as Response;
 
         expect(response1.status).toBe(HttpStatusCode.Ok);
         expect(await getReadyToKeyFeeRecordsWithNullKeyingData()).toHaveLength(2);
@@ -439,7 +439,7 @@ describe(`POST ${BASE_URL}`, () => {
         await insertMatchingPaymentsForFeeRecords([existingToDoFeeRecord]);
 
         // Act
-        const response = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
+        const response = (await testApi.post(aValidRequestBody()).to(getUrl(reportId))) as Response;
 
         // Assert
         expect(response.status).toBe(HttpStatusCode.Ok);
@@ -457,7 +457,7 @@ describe(`POST ${BASE_URL}`, () => {
         await insertMatchingPaymentsForFeeRecords([existingToDoFeeRecord]);
 
         // Act
-        const response = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
+        const response = (await testApi.post(aValidRequestBody()).to(getUrl(reportId))) as Response;
 
         // Assert
         expect(response.status).toBe(HttpStatusCode.Ok);

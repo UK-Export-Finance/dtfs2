@@ -1,5 +1,5 @@
-const { addAuditRecordToExpectedResponse } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { expectMongoId } = require('../../expectMongoIds');
+import { addAuditRecordToExpectedResponse } from '@ukef/dtfs2-common/change-stream/test-helpers';
+import { expectMongoId } from '../../expectMongoIds';
 
 const addBaseFields = (baseDeal) => {
   let eligibilityUpdate;
@@ -65,7 +65,4 @@ const expectAddedFieldsWithEditedBy = ({ baseDeal, user, auditDetails, numberOfU
   return expectationWithAuditRecord;
 };
 
-module.exports = {
-  expectAddedFields,
-  expectAddedFieldsWithEditedBy,
-};
+export { expectAddedFields, expectAddedFieldsWithEditedBy };

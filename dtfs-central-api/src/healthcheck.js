@@ -1,6 +1,6 @@
-const util = require('util');
-const express = require('express');
-const { MongoClient } = require('mongodb');
+import util from 'util';
+import express from 'express';
+import { MongoClient } from 'mongodb';
 
 const router = express.Router();
 const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
@@ -35,4 +35,4 @@ router.get('/healthcheck', (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

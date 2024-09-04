@@ -1,16 +1,16 @@
-const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const {
+import { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import {
   MONGO_DB_COLLECTIONS,
   InvalidAuditDetailsError,
   FacilityNotFoundError,
   InvalidDealIdError,
   InvalidFacilityIdError,
   ApiError,
-} = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+} from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
-const updateFacility = async ({ facilityId, facilityUpdate, auditDetails }) => {
+export const updateFacility = async ({ facilityId, facilityUpdate, auditDetails }) => {
   if (!ObjectId.isValid(facilityId)) {
     throw new InvalidFacilityIdError(facilityId);
   }
@@ -51,9 +51,8 @@ const updateFacility = async ({ facilityId, facilityUpdate, auditDetails }) => {
     throw error;
   }
 };
-exports.updateFacility = updateFacility;
 
-exports.updateFacilityPut = async (req, res) => {
+export const updateFacilityPut = async (req, res) => {
   const {
     params: { id: facilityId },
     body: { facilityUpdate, auditDetails },

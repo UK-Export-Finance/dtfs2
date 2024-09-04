@@ -1,9 +1,9 @@
-const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
-const { findOneFacility } = require('./get-facility.controller');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import $ from 'mongo-dot-notation';
+import { findOneFacility } from './get-facility.controller';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -11,7 +11,7 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacilityStatus = async ({ facilityId, status, existingFacility, auditDetails }) => {
+export const updateFacilityStatus = async ({ facilityId, status, existingFacility, auditDetails }) => {
   if (ObjectId.isValid(facilityId)) {
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
 
@@ -39,9 +39,8 @@ const updateFacilityStatus = async ({ facilityId, status, existingFacility, audi
   }
   return { status: 400, message: 'Invalid Facility Id' };
 };
-exports.updateFacilityStatus = updateFacilityStatus;
 
-exports.updateFacilityStatusPut = async (req, res) => {
+export const updateFacilityStatusPut = async (req, res) => {
   const {
     body: { status, auditDetails },
     params: { id: facilityId },

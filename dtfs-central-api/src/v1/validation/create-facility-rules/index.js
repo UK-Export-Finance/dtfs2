@@ -1,9 +1,9 @@
-const type = require('./type');
-const dealId = require('./associated-deal-id');
+import type from './type';
+import dealId from './associated-deal-id';
 
 const rules = [type, dealId];
 
-module.exports = (facility) => {
+const applyRules = (facility) => {
   let errorList = {};
 
   for (let i = 0; i < rules.length; i += 1) {
@@ -12,3 +12,5 @@ module.exports = (facility) => {
 
   return errorList;
 };
+
+export default applyRules;

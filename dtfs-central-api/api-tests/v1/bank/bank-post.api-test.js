@@ -1,8 +1,8 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const wipeDB = require('../../wipeDB');
-const { MOCK_BANKS } = require('../../mocks/banks');
-const { withoutMongoId } = require('../../../src/helpers/mongodb');
-const { testApi } = require('../../test-api');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import * as wipeDB from '../../wipeDB';
+import { MOCK_BANKS } from '../../mocks/banks';
+import { withoutMongoId } from '../../../src/helpers/mongodb';
+import { testApi } from '../../test-api';
 
 describe('/v1/bank', () => {
   beforeAll(async () => {

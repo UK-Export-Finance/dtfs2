@@ -1,12 +1,12 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const wipeDB = require('../../../wipeDB');
-const { testApi } = require('../../../test-api');
-const { DEALS } = require('../../../../src/constants');
-const DEFAULTS = require('../../../../src/v1/defaults');
-const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
-const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
+import { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { generateParsedMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
+import * as wipeDB from '../../../wipeDB';
+import { testApi } from '../../../test-api';
+import { DEALS } from '../../../../src/constants';
+import DEFAULTS from '../../../../src/v1/defaults';
+import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
+import { withValidateAuditDetailsTests } from '../../../helpers/with-validate-audit-details.api-tests';
 
 const newDeal = {
   dealType: DEALS.DEAL_TYPE.GEF,

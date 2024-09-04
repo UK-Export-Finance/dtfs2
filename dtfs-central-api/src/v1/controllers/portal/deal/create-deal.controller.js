@@ -1,9 +1,8 @@
-const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
-const { InvalidAuditDetailsError, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const DEFAULTS = require('../../../defaults');
-const getDealErrors = require('../../../validation/create-deal');
+import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
+import { InvalidAuditDetailsError, AUDIT_USER_TYPES, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
+import DEFAULTS from '../../../defaults';
+import getDealErrors from '../../../validation/create-deal';
 
 const createDeal = async (deal, maker, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
@@ -45,7 +44,7 @@ const createDeal = async (deal, maker, auditDetails) => {
   };
 };
 
-exports.createDealPost = async (req, res) => {
+export const createDealPost = async (req, res) => {
   const { user, deal, auditDetails } = req.body;
 
   if (!user) {

@@ -1,8 +1,8 @@
-const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const wipeDB = require('../../wipeDB');
-const { testApi } = require('../../test-api');
-const { DEALS } = require('../../../src/constants');
-const { MOCK_DEAL } = require('../mocks/mock-data');
+import { MONGO_DB_COLLECTIONS, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import * as wipeDB from '../../wipeDB';
+import { testApi } from '../../test-api';
+import { DEALS } from '../../../src/constants';
+import { MOCK_DEAL } from '../mocks/mock-data';
 
 const newDeal = {
   dealType: DEALS.DEAL_TYPE.GEF,

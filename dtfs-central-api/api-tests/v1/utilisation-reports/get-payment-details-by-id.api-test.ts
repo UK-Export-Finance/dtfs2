@@ -94,7 +94,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a 404 when no payment with the supplied id can be found', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId, paymentId + 1));
+    const response = (await testApi.get(getUrl(reportId, paymentId + 1))) as CustomResponse;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -102,7 +102,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a 404 when the payment is not attached to a report with the supplied id', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId + 1, paymentId));
+    const response = (await testApi.get(getUrl(reportId + 1, paymentId))) as CustomResponse;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -117,7 +117,7 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('Payment', paymentForNewReport);
 
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(2, 2));
+    const response = (await testApi.get(getUrl(2, 2))) as CustomResponse;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -125,7 +125,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a 200 with a valid report and payment id', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId, paymentId));
+    const response = (await testApi.get(getUrl(reportId, paymentId))) as CustomResponse;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -133,7 +133,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a request body containing the feeRecords and totalReportedPayments when the includeFeeRecords query is set to true', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId, paymentId, true));
+    const response = (await testApi.get(getUrl(reportId, paymentId, true))) as CustomResponse;
 
     // Assert
     expect(response.body.feeRecords).toBeDefined();
@@ -142,7 +142,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a request body not containing the feeRecords and totalReportedPayments when the includeFeeRecords query is set to false', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId, paymentId, false));
+    const response = (await testApi.get(getUrl(reportId, paymentId, false))) as CustomResponse;
 
     // Assert
     expect(response.body.feeRecords).toBeUndefined();
@@ -151,7 +151,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a request body not containing the feeRecords and totalReportedPayments when the includeFeeRecords query is undefined', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId, paymentId, undefined));
+    const response = (await testApi.get(getUrl(reportId, paymentId, undefined))) as CustomResponse;
 
     // Assert
     expect(response.body.feeRecords).toBeUndefined();

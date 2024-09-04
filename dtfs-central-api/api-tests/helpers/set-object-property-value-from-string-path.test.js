@@ -1,4 +1,4 @@
-const setObjectPropertyValueFromStringPath = require('./set-object-property-value-from-string-path');
+import setObjectPropertyValueFromStringPath from './set-object-property-value-from-string-path';
 
 describe('setObjectPropertyValueFromStringPath', () => {
   it('should update an existing property in an object from the given string path', () => {

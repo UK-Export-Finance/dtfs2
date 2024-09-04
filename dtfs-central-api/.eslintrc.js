@@ -54,6 +54,9 @@ module.exports = {
   rules: baseRules,
   settings: {
     'import/resolver': {
+      node: {
+        extensions: ['.ts', '.tsx'],
+      },
       typescript: {},
     },
   },

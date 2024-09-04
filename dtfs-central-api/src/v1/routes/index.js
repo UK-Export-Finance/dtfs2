@@ -1,15 +1,8 @@
-const bankRoutes = require('./bank-routes');
-const portalRoutes = require('./portal-routes');
-const tfmRoutes = require('./tfm-routes');
-const userRoutes = require('./user-routes');
-const utilisationReportsRoutes = require('./utilisation-reports-routes');
-const swaggerRoutes = require('./swagger-routes');
+import bankRoutes from './bank-routes';
+import portalRoutes from './portal-routes';
+import tfmRoutes from './tfm-routes';
+import userRoutes from './user-routes';
+import utilisationReportsRoutes from './utilisation-reports-routes';
+import swaggerRoutes from './swagger-routes';
 
-module.exports = {
-  bankRoutes,
-  portalRoutes,
-  tfmRoutes,
-  userRoutes,
-  utilisationReportsRoutes,
-  swaggerRoutes,
-};
+export { bankRoutes, portalRoutes, tfmRoutes, userRoutes, utilisationReportsRoutes, swaggerRoutes };

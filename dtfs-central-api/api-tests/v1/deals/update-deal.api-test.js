@@ -1,14 +1,14 @@
-const { ObjectId } = require('mongodb');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const wipeDB = require('../../wipeDB');
-const aDeal = require('../deal-builder');
-const { testApi } = require('../../test-api');
-const { expectAddedFieldsWithEditedBy } = require('./expectAddedFields');
-const { DEALS } = require('../../../src/constants');
-const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
-const { createDeal } = require('../../helpers/create-deal');
-const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
+import { ObjectId } from 'mongodb';
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import * as wipeDB from '../../wipeDB';
+import aDeal from '../deal-builder';
+import { testApi } from '../../test-api';
+import { expectAddedFieldsWithEditedBy } from './expectAddedFields';
+import { DEALS } from '../../../src/constants';
+import { MOCK_PORTAL_USER } from '../../mocks/test-users/mock-portal-user';
+import { createDeal } from '../../helpers/create-deal';
+import { withValidateAuditDetailsTests } from '../../helpers/with-validate-audit-details.api-tests';
 
 const newDeal = aDeal({
   dealType: DEALS.DEAL_TYPE.BSS_EWCS,

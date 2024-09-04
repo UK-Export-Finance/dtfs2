@@ -1,5 +1,5 @@
-const { mapDataModel } = require('./mapDataModel');
-const { DEALS } = require('../constants');
+import { mapDataModel } from './mapDataModel';
+import { DEALS } from '../constants';
 
 const deal = {
   dealSnapshot: {

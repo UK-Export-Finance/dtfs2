@@ -1,13 +1,12 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
-const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
-const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { findOneDeal } = require('./tfm-get-deal.controller');
-const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
-const { DEALS } = require('../../../../constants');
-const { isNumber } = require('../../../../helpers');
+import { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
+import { ObjectId } from 'mongodb';
+import $ from 'mongo-dot-notation';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
+import { findOneDeal } from './tfm-get-deal.controller';
+import { findAllFacilitiesByDealId } from '../../portal/facility/get-facilities.controller';
+import { DEALS } from '../../../../constants';
+import { isNumber } from '../../../../helpers';
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -77,7 +76,7 @@ const updateDeal = async ({ dealId, dealUpdate, existingDeal, auditDetails }) =>
   return findAndUpdateResponse.value;
 };
 
-exports.updateDealPut = async (req, res) => {
+export const updateDealPut = async (req, res) => {
   const dealId = req.params.id;
   if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
@@ -142,7 +141,7 @@ const updateDealSnapshot = async (deal, snapshotChanges, auditDetails) => {
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
-exports.updateDealSnapshotPut = async (req, res) => {
+export const updateDealSnapshotPut = async (req, res) => {
   const dealId = req.params.id;
   if (!ObjectId.isValid(dealId)) {
     return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });

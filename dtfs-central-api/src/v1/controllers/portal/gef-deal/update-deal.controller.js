@@ -1,11 +1,11 @@
-const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { findOneDeal } = require('./get-gef-deal.controller');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { isNumber } = require('../../../../helpers');
+import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { findOneDeal } from './get-gef-deal.controller';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
+import { isNumber } from '../../../../helpers';
 
-const updateDeal = async ({ dealId, dealUpdate, auditDetails }) => {
+export const updateDeal = async ({ dealId, dealUpdate, auditDetails }) => {
   try {
     if (!ObjectId.isValid(dealId)) {
       return { status: 400, message: 'Invalid Deal Id' };
@@ -34,9 +34,8 @@ const updateDeal = async ({ dealId, dealUpdate, auditDetails }) => {
     return { status: 500, message: error };
   }
 };
-exports.updateDeal = updateDeal;
 
-exports.updateDealPut = async (req, res) => {
+export const updateDealPut = async (req, res) => {
   const {
     params: { id: dealId },
     body: { dealUpdate, auditDetails },

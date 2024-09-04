@@ -1,6 +1,6 @@
-const applyRules = require('./create-facility-rules');
+import applyRules from './create-facility-rules';
 
-module.exports = (facility) => {
+export const createFacility = (facility) => {
   const errorList = applyRules(facility);
   const totalErrors = Object.keys(errorList).length;
 

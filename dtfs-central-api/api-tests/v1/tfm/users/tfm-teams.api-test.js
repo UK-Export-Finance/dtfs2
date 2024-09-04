@@ -1,12 +1,12 @@
-const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
-const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { withDeleteOneTests, generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const wipeDB = require('../../../wipeDB');
-const { testApi } = require('../../../test-api');
-const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
-const { expectMongoIds } = require('../../../expectMongoIds');
-const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
+import { ObjectId } from 'mongodb';
+import { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } from '@ukef/dtfs2-common';
+import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { withDeleteOneTests, generateMockTfmUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
+import * as wipeDB from '../../../wipeDB';
+import { testApi } from '../../../test-api';
+import { withValidateAuditDetailsTests } from '../../../helpers/with-validate-audit-details.api-tests';
+import { expectMongoIds } from '../../../expectMongoIds';
+import { MOCK_TFM_USER } from '../../../mocks/test-users/mock-tfm-user';
 
 const mockTeams = [
   {

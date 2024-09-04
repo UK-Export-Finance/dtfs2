@@ -1,27 +1,27 @@
-const express = require('express');
+import express from 'express';
+
+import { validatePutFacilityAmendmentPayload, validatePostFacilityAmendmentPayload } from './middleware/payload-validation';
+import * as validation from '../validation/route-validators/route-validators';
+import handleExpressValidatorResult from '../validation/route-validators/express-validator-result-handler';
+
+import * as tfmGetDealController from '../controllers/tfm/deal/tfm-get-deal.controller';
+import * as tfmGetDealsController from '../controllers/tfm/deal/tfm-get-deals.controller';
+import * as tfmUpdateDealController from '../controllers/tfm/deal/tfm-update-deal.controller';
+import * as tfmDeleteDealController from '../controllers/tfm/deal/tfm-delete-deal.controller';
+import * as tfmSubmitDealController from '../controllers/tfm/deal/tfm-submit-deal.controller';
+import * as tfmGetFacilitiesController from '../controllers/tfm/facility/tfm-get-facilities.controller';
+import * as tfmGetFacilityController from '../controllers/tfm/facility/tfm-get-facility.controller';
+import * as tfmUpdateFacilityController from '../controllers/tfm/facility/tfm-update-facility.controller';
+import * as tfmGetAmendmentController from '../controllers/tfm/amendments/tfm-get-amendments.controller';
+import * as tfmPutAmendmentController from '../controllers/tfm/amendments/tfm-put-amendments.controller';
+import * as tfmPostAmendmentController from '../controllers/tfm/amendments/tfm-post-amendments.controller';
+
+import * as tfmTeamsController from '../controllers/tfm/users/tfm-teams.controller';
+import * as tfmUsersController from '../controllers/tfm/users/tfm-users.controller';
+
+import { ROUTES } from '../../constants';
 
 const tfmRouter = express.Router();
-
-const { validatePutFacilityAmendmentPayload, validatePostFacilityAmendmentPayload } = require('./middleware/payload-validation');
-const validation = require('../validation/route-validators/route-validators');
-const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
-
-const tfmGetDealController = require('../controllers/tfm/deal/tfm-get-deal.controller');
-const tfmGetDealsController = require('../controllers/tfm/deal/tfm-get-deals.controller');
-const tfmUpdateDealController = require('../controllers/tfm/deal/tfm-update-deal.controller');
-const tfmDeleteDealController = require('../controllers/tfm/deal/tfm-delete-deal.controller');
-const tfmSubmitDealController = require('../controllers/tfm/deal/tfm-submit-deal.controller');
-const tfmGetFacilitiesController = require('../controllers/tfm/facility/tfm-get-facilities.controller');
-const tfmGetFacilityController = require('../controllers/tfm/facility/tfm-get-facility.controller');
-const tfmUpdateFacilityController = require('../controllers/tfm/facility/tfm-update-facility.controller');
-const tfmGetAmendmentController = require('../controllers/tfm/amendments/tfm-get-amendments.controller');
-const tfmPutAmendmentController = require('../controllers/tfm/amendments/tfm-put-amendments.controller');
-const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-post-amendments.controller');
-
-const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
-const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
-
-const { ROUTES } = require('../../constants');
 
 tfmRouter.use((req, res, next) => {
   req.routePath = ROUTES.TFM_ROUTE;
@@ -775,4 +775,4 @@ tfmRouter.route('/users/id/:userId').get(tfmUsersController.findOneTfmUserById);
  */
 tfmRouter.route('/users/team/:teamId').get(tfmUsersController.findTfmTeamUser);
 
-module.exports = tfmRouter;
+export default tfmRouter;

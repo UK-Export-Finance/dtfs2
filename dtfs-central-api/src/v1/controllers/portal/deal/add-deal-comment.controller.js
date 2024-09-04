@@ -1,8 +1,8 @@
-const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { findOneDeal } = require('./get-deal.controller');
+import { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
+import { findOneDeal } from './get-deal.controller';
 
 const addDealComment = async (_id, commentType, comment, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
@@ -39,7 +39,7 @@ const addDealComment = async (_id, commentType, comment, auditDetails) => {
   return value;
 };
 
-exports.addDealCommentPost = async (req, res) => {
+export const addDealCommentPost = async (req, res) => {
   const {
     params: { id: dealId },
     body: { commentType, comment, auditDetails },

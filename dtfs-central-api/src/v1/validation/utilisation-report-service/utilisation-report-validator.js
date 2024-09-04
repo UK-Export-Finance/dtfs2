@@ -1,7 +1,7 @@
-const { isMongoId } = require('validator');
-const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
-const { REGEX } = require('../../../constants');
-const {
+import { isMongoId } from 'validator';
+import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
+import { REGEX } from '../../../constants';
+import {
   validateUkefId,
   validateExporter,
   validateBaseCurrency,
@@ -13,7 +13,7 @@ const {
   validateMonthlyFeesPaidCurrency,
   validatePaymentCurrency,
   validatePaymentExchangeRate,
-} = require('./utilisation-data-validator');
+} from './utilisation-data-validator';
 
 /**
  * Validate the ID of a utilisation report
@@ -180,11 +180,4 @@ const validateReportUser = (user) => {
   return errors;
 };
 
-module.exports = {
-  validateReportId,
-  validateUtilisationReportData,
-  validateMonth,
-  validateYear,
-  validateFileInfo,
-  validateReportUser,
-};
+export { validateReportId, validateUtilisationReportData, validateMonth, validateYear, validateFileInfo, validateReportUser };

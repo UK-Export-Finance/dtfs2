@@ -1,6 +1,6 @@
-const applyRules = require('./create-deal-rules');
+import applyRules from './create-deal-rules';
 
-module.exports = (deal) => {
+export const createDeal = (deal) => {
   const errorList = applyRules(deal);
   const totalErrors = Object.keys(errorList).length;
 

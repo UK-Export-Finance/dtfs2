@@ -1,5 +1,5 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
 const getLatestGefMandatoryCriteria = async (req, res) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.GEF_MANDATORY_CRITERIA_VERSIONED);
@@ -31,7 +31,4 @@ const getGefMandatoryCriteriaByVersion = async (req, res) => {
   return res.status(404).send({ status: 404, message: 'No mandatory criteria found' });
 };
 
-module.exports = {
-  getLatestGefMandatoryCriteria,
-  getGefMandatoryCriteriaByVersion,
-};
+export { getLatestGefMandatoryCriteria, getGefMandatoryCriteriaByVersion };

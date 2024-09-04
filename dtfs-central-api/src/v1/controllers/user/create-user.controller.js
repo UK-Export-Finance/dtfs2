@@ -1,7 +1,7 @@
-const { PORTAL_USER } = require('@ukef/dtfs2-common/schemas');
-const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { mongoDbClient: db } = require('../../../drivers/db-client');
+import { PORTAL_USER } from '@ukef/dtfs2-common/schemas';
+import { isVerifiedPayload } from '@ukef/dtfs2-common/payload-verification';
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { mongoDbClient as db } from '../../../drivers/db-client';
 
 /**
  * @deprecated Do not use -- Favour Portal API (removal todo:DTFS2-7160)
@@ -21,7 +21,7 @@ const createUser = async (user) => {
 /**
  * @deprecated Do not use -- Favour Portal API (removal todo:DTFS2-7160)
  */
-exports.createUserPost = async (req, res) => {
+export const createUserPost = async (req, res) => {
   const payload = req.body;
 
   if (!isVerifiedPayload({ payload, template: PORTAL_USER.CREATE })) {

@@ -1,16 +1,16 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
-const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { generateParsedMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
-const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
-const wipeDB = require('../../../wipeDB');
-const { testApi } = require('../../../test-api');
-const { DEALS } = require('../../../../src/constants');
-const { MOCK_DEAL } = require('../../mocks/mock-data');
-const aDeal = require('../../deal-builder');
-const { createDeal } = require('../../../helpers/create-deal');
-const { createFacility } = require('../../../helpers/create-facility');
-const { aPortalUser, aTfmUser } = require('../../../../test-helpers');
+import { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } from '@ukef/dtfs2-common';
+import { generateTfmAuditDetails, generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { generateParsedMockTfmUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
+import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
+import { withValidateAuditDetailsTests } from '../../../helpers/with-validate-audit-details.api-tests';
+import * as wipeDB from '../../../wipeDB';
+import { testApi } from '../../../test-api';
+import { DEALS } from '../../../../src/constants';
+import { MOCK_DEAL } from '../../mocks/mock-data';
+import aDeal from '../../deal-builder';
+import { createDeal } from '../../../helpers/create-deal';
+import { createFacility } from '../../../helpers/create-facility';
+import { aPortalUser, aTfmUser } from '../../../../test-helpers';
 
 console.error = jest.fn();
 

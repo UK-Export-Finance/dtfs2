@@ -1,7 +1,7 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const wipeDB = require('../../wipeDB');
-const { testApi } = require('../../test-api');
-const { DEALS } = require('../../../src/constants');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import * as wipeDB from '../../wipeDB';
+import { testApi } from '../../test-api';
+import { DEALS } from '../../../src/constants';
 
 const newDeal = {
   dealType: DEALS.DEAL_TYPE.GEF,

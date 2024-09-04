@@ -67,7 +67,7 @@ describe(`POST ${BASE_URL}`, () => {
 
   it('returns a 200 when fees can be added to the payment group', async () => {
     // Act
-    const response = await testApi.post(aPostAddFeesToAnExistingPaymentGroupRequestBody()).to(getUrl(reportId));
+    const response = (await testApi.post(aPostAddFeesToAnExistingPaymentGroupRequestBody()).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -81,7 +81,7 @@ describe(`POST ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId));
+    const response = (await testApi.post(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -95,7 +95,7 @@ describe(`POST ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId));
+    const response = (await testApi.post(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -108,7 +108,7 @@ describe(`POST ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId));
+    const response = (await testApi.post(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -122,7 +122,7 @@ describe(`POST ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId));
+    const response = (await testApi.post(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);

@@ -32,7 +32,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(BASE_URL);
+    const { status } = (await testApi.put(requestBody).to(BASE_URL)) as Response;
 
     // Assert
     expect(status).toBe(404);
@@ -51,7 +51,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(BASE_URL);
+    const { status } = (await testApi.put(requestBody).to(BASE_URL)) as Response;
 
     // Assert
     expect(status).toBe(400);
@@ -70,7 +70,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(BASE_URL);
+    const { status } = (await testApi.put(requestBody).to(BASE_URL)) as Response;
 
     // Assert
     expect(status).toBe(400);
@@ -89,7 +89,7 @@ describe(`PUT ${BASE_URL}`, () => {
     };
 
     // Act
-    const { status } = await testApi.put(requestBody).to(BASE_URL);
+    const { status } = (await testApi.put(requestBody).to(BASE_URL)) as Response;
 
     // Assert
     expect(status).toBe(200);

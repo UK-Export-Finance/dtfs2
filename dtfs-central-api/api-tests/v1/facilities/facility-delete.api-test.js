@@ -1,14 +1,14 @@
-const { AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { withDeleteOneTests, generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
-const { testApi } = require('../../test-api');
-const { DEALS } = require('../../../src/constants');
-const aDeal = require('../deal-builder');
-const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
-const { createDeal } = require('../../helpers/create-deal');
-const { createFacility } = require('../../helpers/create-facility');
+import { AUDIT_USER_TYPES } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { withDeleteOneTests, generateMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
+import { withValidateAuditDetailsTests } from '../../helpers/with-validate-audit-details.api-tests';
+import { testApi } from '../../test-api';
+import { DEALS } from '../../../src/constants';
+import aDeal from '../deal-builder';
+import { MOCK_PORTAL_USER } from '../../mocks/test-users/mock-portal-user';
+import { createDeal } from '../../helpers/create-deal';
+import { createFacility } from '../../helpers/create-facility';
 
 const newDeal = aDeal({
   dealType: DEALS.DEAL_TYPE.BSS_EWCS,

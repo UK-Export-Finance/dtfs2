@@ -1,12 +1,11 @@
-const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
-const { DealNotFoundError } = require('@ukef/dtfs2-common');
-const { findOneDeal } = require('./get-deal.controller');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { ROUTES } = require('../../../../constants');
-const { isNumber } = require('../../../../helpers');
+import { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError, DealNotFoundError } from '@ukef/dtfs2-common';
+import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { ObjectId } from 'mongodb';
+import $ from 'mongo-dot-notation';
+import { findOneDeal } from './get-deal.controller';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
+import { ROUTES } from '../../../../constants';
+import { isNumber } from '../../../../helpers';
 
 const handleEditedByPortal = async (dealId, dealUpdate, user) => {
   let editedBy = [];
@@ -44,7 +43,7 @@ const handleEditedByPortal = async (dealId, dealUpdate, user) => {
   return editedBy;
 };
 
-const updateDealEditedByPortal = async ({ dealId, user, auditDetails }) => {
+export const updateDealEditedByPortal = async ({ dealId, user, auditDetails }) => {
   if (!ObjectId.isValid(dealId)) {
     return { status: 400, message: 'Invalid Deal Id' };
   }
@@ -62,8 +61,6 @@ const updateDealEditedByPortal = async ({ dealId, user, auditDetails }) => {
   return value;
 };
 
-exports.updateDealEditedByPortal = updateDealEditedByPortal;
-
 /**
  * Updates a deal in the database.
  * @param {object} params - The parameters for updating the deal.
@@ -75,7 +72,7 @@ exports.updateDealEditedByPortal = updateDealEditedByPortal;
  * @param {string} params.routePath - The route path.
  * @returns {Promise<{ status: number, message: string }>} The updated deal object.
  */
-const updateDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal, routePath }) => {
+export const updateDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal, routePath }) => {
   try {
     if (!ObjectId.isValid(dealId)) {
       return { status: 400, message: 'Invalid Deal Id' };
@@ -153,9 +150,8 @@ const updateDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal
     return { status: 500, message: error };
   }
 };
-exports.updateDeal = updateDeal;
 
-const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath, auditDetails) => {
+export const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath, auditDetails) => {
   await findOneDeal(dealId, async (deal) => {
     if (!deal) {
       throw new DealNotFoundError(dealId);
@@ -180,9 +176,7 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath, audit
   });
 };
 
-exports.addFacilityIdToDeal = addFacilityIdToDeal;
-
-const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath, auditDetails) => {
+export const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath, auditDetails) => {
   await findOneDeal(dealId, async (deal) => {
     if (deal?.facilities) {
       const { facilities } = deal;
@@ -211,9 +205,7 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath, aud
   });
 };
 
-exports.removeFacilityIdFromDeal = removeFacilityIdFromDeal;
-
-exports.updateDealPut = async (req, res) => {
+export const updateDealPut = async (req, res) => {
   try {
     const {
       params: { id: dealId },

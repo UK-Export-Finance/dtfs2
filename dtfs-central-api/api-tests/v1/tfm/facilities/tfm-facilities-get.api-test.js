@@ -1,9 +1,8 @@
-const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const wipeDB = require('../../../wipeDB');
-const { testApi } = require('../../../test-api');
-const { DEALS } = require('../../../../src/constants');
-const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+import { MONGO_DB_COLLECTIONS, FACILITY_TYPE, generatePortalAuditDetails } from '@ukef/dtfs2-common';
+import * as wipeDB from '../../../wipeDB';
+import { testApi } from '../../../test-api';
+import { DEALS } from '../../../../src/constants';
+import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
 
 const newDeal = {
   dealType: DEALS.DEAL_TYPE.GEF,

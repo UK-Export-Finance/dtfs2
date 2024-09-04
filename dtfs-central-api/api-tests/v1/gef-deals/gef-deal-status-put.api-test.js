@@ -1,11 +1,11 @@
-const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
-const wipeDB = require('../../wipeDB');
-const { testApi } = require('../../test-api');
-const { DEALS } = require('../../../src/constants');
+import { generateParsedMockAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { ObjectId } from 'mongodb';
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { withValidateAuditDetailsTests } from '../../helpers/with-validate-audit-details.api-tests';
+import * as wipeDB from '../../wipeDB';
+import { testApi } from '../../test-api';
+import { DEALS } from '../../../src/constants';
 
 describe('/v1/portal/gef/deals/:id/status', () => {
   describe('PUT /v1/portal/gef/deals/:id/status', () => {

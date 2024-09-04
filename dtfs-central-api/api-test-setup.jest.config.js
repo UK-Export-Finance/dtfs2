@@ -1,6 +1,6 @@
-const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
-const { testApi } = require('./api-tests/test-api');
-const { mongoDbClient: db } = require('./src/drivers/db-client');
+import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
+import { testApi } from './api-tests/test-api';
+import { mongoDbClient as db } from './src/drivers/db-client';
 
 jest.mock('node-cron', () => ({
   schedule: jest.fn(),

@@ -1,8 +1,8 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
-const findOneFacility = async (_id, callback) => {
+export const findOneFacility = async (_id, callback) => {
   if (ObjectId.isValid(_id)) {
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
     const facility = await collection.findOne({ _id: { $eq: ObjectId(_id) } });
@@ -15,9 +15,8 @@ const findOneFacility = async (_id, callback) => {
   }
   return { status: 400, message: 'Invalid Facility Id' };
 };
-exports.findOneFacility = findOneFacility;
 
-exports.findOneFacilityGet = async (req, res) => {
+export const findOneFacilityGet = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const facility = await findOneFacility(req.params.id);
 

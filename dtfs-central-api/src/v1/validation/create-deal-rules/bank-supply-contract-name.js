@@ -1,9 +1,9 @@
-const { isNonEmptyString } = require('@ukef/dtfs2-common');
-const { orderNumber } = require('../../../utils/error-list-order-number');
+import { isNonEmptyString } from '@ukef/dtfs2-common';
+import { orderNumber } from '../../../utils/error-list-order-number';
 
 const MAX_CHARACTERS = 100;
 
-module.exports = (deal, errorList) => {
+const bankSupplyContractName = (deal, errorList) => {
   const newErrorList = { ...errorList };
   const { additionalRefName } = deal;
 
@@ -25,3 +25,5 @@ module.exports = (deal, errorList) => {
 
   return newErrorList;
 };
+
+export default bankSupplyContractName;

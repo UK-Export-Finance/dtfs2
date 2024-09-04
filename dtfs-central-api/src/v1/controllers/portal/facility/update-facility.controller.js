@@ -1,11 +1,11 @@
-const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
-const { findOneFacility } = require('./get-facility.controller');
-const { updateDealEditedByPortal } = require('../deal/update-deal.controller');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { ROUTES } = require('../../../../constants');
+import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import $ from 'mongo-dot-notation';
+import { findOneFacility } from './get-facility.controller';
+import { updateDealEditedByPortal } from '../deal/update-deal.controller';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
+import { ROUTES } from '../../../../constants';
 
 const withoutId = (obj) => {
   const cleanedObject = { ...obj };
@@ -13,7 +13,7 @@ const withoutId = (obj) => {
   return cleanedObject;
 };
 
-const updateFacility = async ({ facilityId, facilityUpdate, dealId, user, routePath, auditDetails }) => {
+export const updateFacility = async ({ facilityId, facilityUpdate, dealId, user, routePath, auditDetails }) => {
   if (!ObjectId.isValid(dealId) || !ObjectId.isValid(facilityId)) {
     return { status: 400, message: 'Invalid Deal or Facility Id' };
   }
@@ -40,9 +40,8 @@ const updateFacility = async ({ facilityId, facilityUpdate, dealId, user, routeP
 
   return updatedFacility;
 };
-exports.updateFacility = updateFacility;
 
-exports.updateFacilityPut = async (req, res) => {
+export const updateFacilityPut = async (req, res) => {
   const {
     params: { id: facilityId },
     body: { user, facilityUpdate, auditDetails },

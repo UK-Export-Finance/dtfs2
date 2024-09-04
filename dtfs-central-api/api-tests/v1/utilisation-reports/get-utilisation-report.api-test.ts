@@ -55,7 +55,7 @@ describe(`GET ${BASE_URL}`, () => {
     const { id } = await SqlDbHelper.saveNewEntry('UtilisationReport', uploadedReport);
 
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(id.toString()));
+    const response = (await testApi.get(getUrl(id.toString()))) as CustomResponse;
 
     // Assert
     expect(response.status).toEqual(200);

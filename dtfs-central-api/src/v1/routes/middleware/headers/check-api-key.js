@@ -1,4 +1,4 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -39,4 +39,4 @@ const checkApiKey = (req, res, next) => {
   return res.status(401).send('Unauthorised');
 };
 
-module.exports = checkApiKey;
+export default checkApiKey;

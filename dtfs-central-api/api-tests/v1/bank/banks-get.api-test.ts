@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import axios from 'axios';
 import { Bank, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder, UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
-import wipeDB from '../../wipeDB';
+import * as wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { aBank, getSqlIdGenerator } from '../../../test-helpers';
@@ -43,7 +43,7 @@ describe(`GET ${BASE_URL}`, () => {
       const banks = MOCK_BANKS.map((bank) => ({ ...bank, _id: bank._id.toString() }));
 
       // Act
-      const response = await testApi.get(requestUrl);
+      const response = (await testApi.get(requestUrl)) as Response;
 
       // Assert
       expect(response.status).toBe(axios.HttpStatusCode.Ok);
@@ -98,7 +98,7 @@ describe(`GET ${BASE_URL}`, () => {
       ];
 
       // Act
-      const response = await testApi.get(requestUrl);
+      const response = (await testApi.get(requestUrl)) as Response;
 
       // Assert
       expect(response.status).toBe(axios.HttpStatusCode.Ok);

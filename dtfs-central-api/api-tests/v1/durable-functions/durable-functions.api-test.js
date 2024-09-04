@@ -1,9 +1,9 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generateSystemAuditDatabaseRecord, generateSystemAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { generateMockSystemAuditDatabaseRecord, withDeleteManyTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { testApi } = require('../../test-api');
-const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
-const { mongoDbClient } = require('../../../src/drivers/db-client');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { generateSystemAuditDatabaseRecord, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { generateMockSystemAuditDatabaseRecord, withDeleteManyTests } from '@ukef/dtfs2-common/change-stream/test-helpers';
+import { testApi } from '../../test-api';
+import { withValidateAuditDetailsTests } from '../../helpers/with-validate-audit-details.api-tests';
+import { mongoDbClient } from '../../../src/drivers/db-client';
 
 describe('DELETE /v1/portal/durable-functions', () => {
   let logsToDeleteIds;

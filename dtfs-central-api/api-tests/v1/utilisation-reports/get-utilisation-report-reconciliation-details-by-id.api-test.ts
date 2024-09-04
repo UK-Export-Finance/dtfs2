@@ -64,7 +64,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a 404 when a report with the matching id does not exist', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(99999));
+    const response = (await testApi.get(getUrl(99999))) as CustomResponse;
 
     // Assert
     expect(response.status).toBe(404);
@@ -82,7 +82,7 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', reportWithNoMatchingBank);
 
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportIdWithNoMatchingBank));
+    const response = (await testApi.get(getUrl(reportIdWithNoMatchingBank))) as CustomResponse;
 
     // Assert
     expect(response.status).toBe(404);
@@ -90,7 +90,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('gets a utilisation report', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId));
+    const response = (await testApi.get(getUrl(reportId))) as CustomResponse;
 
     // Assert
     expect(response.status).toEqual(200);

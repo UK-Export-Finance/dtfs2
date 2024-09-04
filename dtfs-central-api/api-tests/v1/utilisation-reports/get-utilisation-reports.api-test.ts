@@ -52,7 +52,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns 400 when an invalid bank id is provided', async () => {
     // Act
-    const response: CustomErrorResponse = await testApi.get(getUrl('invalid-id'));
+    const response = (await testApi.get(getUrl('invalid-id'))) as CustomErrorResponse;
 
     // Assert
     expect(response.status).toEqual(400);
@@ -75,7 +75,7 @@ describe(`GET ${BASE_URL}`, () => {
     await saveReportsToDatabase(uploadedReport, nonUploadedReport);
 
     // Act
-    const response: CustomSuccessResponse = await testApi.get(getUrl(bankId));
+    const response = (await testApi.get(getUrl(bankId))) as CustomSuccessResponse;
 
     // Assert
     expect(response.status).toEqual(200);
@@ -103,7 +103,7 @@ describe(`GET ${BASE_URL}`, () => {
     await saveReportsToDatabase(uploadedReport, notReceivedReport, reconciliationCompletedReport);
 
     // Act
-    const response: CustomSuccessResponse = await testApi.get(`${getUrl(bankId)}?excludeNotReceived=true`);
+    const response = (await testApi.get(`${getUrl(bankId)}?excludeNotReceived=true`)) as CustomSuccessResponse;
 
     // Assert
     expect(response.status).toEqual(200);
@@ -139,7 +139,7 @@ describe(`GET ${BASE_URL}`, () => {
 
     // Act
     const urlWithQueryParams = axios.getUri({ url: getUrl(bankId), params: { reportPeriod } });
-    const response: CustomSuccessResponse = await testApi.get(urlWithQueryParams);
+    const response = (await testApi.get(urlWithQueryParams)) as CustomSuccessResponse;
 
     // Assert
     expect(response.status).toEqual(200);
@@ -175,7 +175,7 @@ describe(`GET ${BASE_URL}`, () => {
       url: getUrl(bankId),
       params: { reportPeriod, excludeNotReceived: true },
     });
-    const response: CustomSuccessResponse = await testApi.get(urlWithQueryParams);
+    const response = (await testApi.get(urlWithQueryParams)) as CustomSuccessResponse;
 
     // Assert
     expect(response.status).toEqual(200);

@@ -1,11 +1,11 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const wipeDB = require('../../../wipeDB');
-const { testApi } = require('../../../test-api');
-const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
-const setObjectPropertyValueFromStringPath = require('../../../helpers/set-object-property-value-from-string-path');
-const { DEALS } = require('../../../../src/constants');
-const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { FACILITY_TYPE } from '@ukef/dtfs2-common';
+import * as wipeDB from '../../../wipeDB';
+import { testApi } from '../../../test-api';
+import getObjectPropertyValueFromStringPath from '../../../../src/utils/getObjectPropertyValueFromStringPath';
+import setObjectPropertyValueFromStringPath from '../../../helpers/set-object-property-value-from-string-path';
+import { DEALS } from '../../../../src/constants';
+import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
 
 describe('/v1/tfm/facilities', () => {
   beforeEach(async () => {

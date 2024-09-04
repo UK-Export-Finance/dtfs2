@@ -1,5 +1,5 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
 const createDeal = async (deal) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
@@ -13,7 +13,7 @@ const createDeal = async (deal) => {
   };
 };
 
-exports.createDealPost = async (req, res) => {
+export const createDealPost = async (req, res) => {
   const deal = req?.body;
 
   if (typeof deal?.dealType !== 'string') {

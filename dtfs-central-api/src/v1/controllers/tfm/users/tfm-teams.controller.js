@@ -1,22 +1,20 @@
-const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION, AUDIT_USER_TYPES, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
-const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
-const {
+import { ObjectId } from 'mongodb';
+import { MONGO_DB_COLLECTIONS, PAYLOAD_VERIFICATION, AUDIT_USER_TYPES, DocumentNotDeletedError, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import {
   validateAuditDetails,
   generateAuditDatabaseRecordFromAuditDetails,
   deleteOne,
   validateAuditDetailsAndUserType,
-} = require('@ukef/dtfs2-common/change-stream');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+} from '@ukef/dtfs2-common/change-stream';
+import { isVerifiedPayload } from '@ukef/dtfs2-common/payload-verification';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
-const createTeam = async (team, auditDetails) => {
+export const createTeam = async (team, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
   return collection.insertOne({ ...team, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) });
 };
-exports.createTeam = createTeam;
 
-exports.createTfmTeam = async (req, res) => {
+export const createTfmTeam = async (req, res) => {
   const { team: teamToCreate, auditDetails } = req.body;
 
   if (!isVerifiedPayload({ payload: teamToCreate, template: PAYLOAD_VERIFICATION.TFM.TEAM })) {
@@ -43,18 +41,17 @@ exports.createTfmTeam = async (req, res) => {
   });
 };
 
-const listTeams = async () => {
+export const listTeams = async () => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
   return collection.find().toArray();
 };
-exports.listTeams = listTeams;
 
-exports.listTfmTeam = async (req, res) => {
+export const listTfmTeam = async (req, res) => {
   const teams = await listTeams();
   return res.status(200).send({ teams });
 };
 
-const findOneTeam = async (id) => {
+export const findOneTeam = async (id) => {
   if (typeof id !== 'string') {
     throw new Error('Invalid Team Id');
   }
@@ -62,9 +59,8 @@ const findOneTeam = async (id) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_TEAMS);
   return collection.findOne({ id: { $eq: id } });
 };
-exports.findOneTeam = findOneTeam;
 
-exports.findOneTfmTeam = async (req, res) => {
+export const findOneTfmTeam = async (req, res) => {
   const team = await findOneTeam(req.params.id);
   if (team) {
     return res.status(200).send({
@@ -75,7 +71,7 @@ exports.findOneTfmTeam = async (req, res) => {
   return res.status(404).send();
 };
 
-exports.deleteTfmTeam = async (req, res) => {
+export const deleteTfmTeam = async (req, res) => {
   const { id } = req.params;
   const { auditDetails } = req.body;
 

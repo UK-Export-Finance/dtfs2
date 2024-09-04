@@ -1,12 +1,12 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const wipeDB = require('../../../wipeDB');
-const { testApi } = require('../../../test-api');
-const { DEALS } = require('../../../../src/constants');
-const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
-const { createDeal } = require('../../../helpers/create-deal');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { generateTfmAuditDetails, generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import * as wipeDB from '../../../wipeDB';
+import { testApi } from '../../../test-api';
+import { DEALS } from '../../../../src/constants';
+import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
+import { createDeal } from '../../../helpers/create-deal';
 
-const newDeal = (dealOverrides) => ({
+export const newDeal = (dealOverrides) => ({
   additionalRefName: 'mock name',
   bankInternalRefName: 'mock id',
   dealType: 'BSS/EWCS',
@@ -28,9 +28,8 @@ const newDeal = (dealOverrides) => ({
   loanTransactions: dealOverrides.loanTransactions,
   ...dealOverrides,
 });
-module.exports.newDeal = newDeal;
 
-const createAndSubmitDeals = async (deals) => {
+export const createAndSubmitDeals = async (deals) => {
   const result = await Promise.all(
     deals.map(async (deal) => {
       // create deal
@@ -54,9 +53,8 @@ const createAndSubmitDeals = async (deals) => {
 
   return result;
 };
-module.exports.createAndSubmitDeals = createAndSubmitDeals;
 
-const updateDealsTfm = async (dealsTfmUpdate, sessionTfmUser) => {
+export const updateDealsTfm = async (dealsTfmUpdate, sessionTfmUser) => {
   const result = await Promise.all(
     dealsTfmUpdate.map(async (deal) => {
       const updateResponse = await testApi
@@ -75,7 +73,6 @@ const updateDealsTfm = async (dealsTfmUpdate, sessionTfmUser) => {
 
   return result;
 };
-module.exports.updateDealsTfm = updateDealsTfm;
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {

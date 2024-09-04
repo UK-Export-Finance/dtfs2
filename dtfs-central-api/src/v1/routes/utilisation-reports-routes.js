@@ -1,7 +1,7 @@
-const express = require('express');
-const validation = require('../validation/route-validators/route-validators');
-const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
-const {
+import express from 'express';
+import * as validation from '../validation/route-validators/route-validators';
+import handleExpressValidatorResult from '../validation/route-validators/express-validator-result-handler';
+import {
   validatePostPaymentPayload,
   validateDeletePaymentPayload,
   validatePatchPaymentPayload,
@@ -9,30 +9,26 @@ const {
   validatePutKeyingDataMarkAsPayload,
   validatePostRemoveFeesFromPaymentGroupPayload,
   validatePostAddFeesToAnExistingPaymentGroupPayload,
-} = require('./middleware/payload-validation');
-const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
-const {
+} from './middleware/payload-validation';
+import { getUtilisationReportById } from '../controllers/utilisation-report-service/get-utilisation-report.controller';
+import {
   postUploadUtilisationReport,
   postUploadUtilisationReportPayloadValidator,
-} = require('../controllers/utilisation-report-service/post-upload-utilisation-report.controller');
-const {
-  getUtilisationReportsReconciliationSummary,
-} = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
-const putUtilisationReportStatusController = require('../controllers/utilisation-report-service/put-utilisation-report-status.controller');
-const {
-  getUtilisationReportReconciliationDetailsById,
-} = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
-const { getSelectedFeeRecordDetails } = require('../controllers/utilisation-report-service/get-selected-fee-records-details.controller');
-const { postPayment } = require('../controllers/utilisation-report-service/post-payment.controller');
-const { deletePayment } = require('../controllers/utilisation-report-service/delete-payment.controller');
-const { postKeyingData } = require('../controllers/utilisation-report-service/post-keying-data.controller');
-const { getFeeRecordsToKey } = require('../controllers/utilisation-report-service/get-fee-records-to-key.controller');
-const { getPaymentDetailsById } = require('../controllers/utilisation-report-service/get-payment-details-by-id.controller');
-const { patchPayment } = require('../controllers/utilisation-report-service/patch-payment.controller');
-const { putKeyingDataMarkAsDone } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-done.controller');
-const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-to-do.controller');
-const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
-const { postAddFeesToAnExistingPaymentGroup } = require('../controllers/utilisation-report-service/post-add-fees-to-an-existing-payment-group.controller');
+} from '../controllers/utilisation-report-service/post-upload-utilisation-report.controller';
+import { getUtilisationReportsReconciliationSummary } from '../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller';
+import * as putUtilisationReportStatusController from '../controllers/utilisation-report-service/put-utilisation-report-status.controller';
+import { getUtilisationReportReconciliationDetailsById } from '../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller';
+import { getSelectedFeeRecordDetails } from '../controllers/utilisation-report-service/get-selected-fee-records-details.controller';
+import { postPayment } from '../controllers/utilisation-report-service/post-payment.controller';
+import { deletePayment } from '../controllers/utilisation-report-service/delete-payment.controller';
+import { postKeyingData } from '../controllers/utilisation-report-service/post-keying-data.controller';
+import { getFeeRecordsToKey } from '../controllers/utilisation-report-service/get-fee-records-to-key.controller';
+import { getPaymentDetailsById } from '../controllers/utilisation-report-service/get-payment-details-by-id.controller';
+import { patchPayment } from '../controllers/utilisation-report-service/patch-payment.controller';
+import { putKeyingDataMarkAsDone } from '../controllers/utilisation-report-service/put-keying-data-mark-as-done.controller';
+import { putKeyingDataMarkAsToDo } from '../controllers/utilisation-report-service/put-keying-data-mark-as-to-do.controller';
+import { postRemoveFeesFromPaymentGroup } from '../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller';
+import { postAddFeesToAnExistingPaymentGroup } from '../controllers/utilisation-report-service/post-add-fees-to-an-existing-payment-group.controller';
 
 const utilisationReportsRouter = express.Router();
 
@@ -645,4 +641,4 @@ utilisationReportsRouter
     postAddFeesToAnExistingPaymentGroup,
   );
 
-module.exports = utilisationReportsRouter;
+export default utilisationReportsRouter;

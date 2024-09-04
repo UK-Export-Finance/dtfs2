@@ -1,7 +1,7 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { mongoDbClient: db } = require('../../../drivers/db-client');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { mongoDbClient as db } from '../../../drivers/db-client';
 
-const findOneBank = async (id) => {
+export const findOneBank = async (id) => {
   if (typeof id !== 'string') {
     return { status: 400, message: 'Invalid Bank Id' };
   }
@@ -12,9 +12,8 @@ const findOneBank = async (id) => {
 
   return bank;
 };
-exports.findOneBank = findOneBank;
 
-exports.findOneBankGet = async (req, res) => {
+export const findOneBankGet = async (req, res) => {
   const bank = await findOneBank(req.params.bankId);
 
   if (bank) {

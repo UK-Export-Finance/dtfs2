@@ -1,10 +1,10 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const wipeDB = require('../../../wipeDB');
-const { testApi } = require('../../../test-api');
-const { newDeal, createAndSubmitDeals, updateDealsTfm } = require('./tfm-deals-get.api-test');
-const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
-const setObjectPropertyValueFromStringPath = require('../../../helpers/set-object-property-value-from-string-path');
-const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import * as wipeDB from '../../../wipeDB';
+import { testApi } from '../../../test-api';
+import { newDeal, createAndSubmitDeals, updateDealsTfm } from './tfm-deals-get.api-test';
+import getObjectPropertyValueFromStringPath from '../../../../src/utils/getObjectPropertyValueFromStringPath';
+import setObjectPropertyValueFromStringPath from '../../../helpers/set-object-property-value-from-string-path';
+import { MOCK_TFM_USER } from '../../../mocks/test-users/mock-tfm-user';
 
 describe('/v1/tfm/deals', () => {
   beforeEach(async () => {

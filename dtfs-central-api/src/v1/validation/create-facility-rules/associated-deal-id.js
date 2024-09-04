@@ -1,7 +1,7 @@
-const { isNonEmptyString } = require('@ukef/dtfs2-common');
-const { orderNumber } = require('../../../utils/error-list-order-number');
+import { isNonEmptyString } from '@ukef/dtfs2-common';
+import { orderNumber } from '../../../utils/error-list-order-number';
 
-module.exports = (facility, errorList) => {
+const associatedDealId = (facility, errorList) => {
   const newErrorList = { ...errorList };
   const dealId = facility?.dealId;
 
@@ -14,3 +14,5 @@ module.exports = (facility, errorList) => {
 
   return newErrorList;
 };
+
+export default associatedDealId;

@@ -1,5 +1,5 @@
-const { ObjectId } = require('mongodb');
-const { validateMonth, validateYear, validateFileInfo, validateUtilisationReportData, validateReportUser } = require('./utilisation-report-validator');
+import { ObjectId } from 'mongodb';
+import { validateMonth, validateYear, validateFileInfo, validateUtilisationReportData, validateReportUser } from './utilisation-report-validator';
 
 describe('utilisation-report-validator', () => {
   describe('validateMonth', () => {

@@ -70,7 +70,7 @@ describe(`POST ${BASE_URL}`, () => {
 
   it('returns a 200 when fees can be removed from the payment', async () => {
     // Act
-    const response = await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl(reportId, paymentId));
+    const response = (await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl(reportId, paymentId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -82,7 +82,7 @@ describe(`POST ${BASE_URL}`, () => {
       ...aRemoveFeesFromPaymentGroupRequestBody(),
       selectedFeeRecordIds: feeRecordIds,
     };
-    const response = await testApi.post(paymentRequestBody).to(getUrl(reportId, paymentId));
+    const response = (await testApi.post(paymentRequestBody).to(getUrl(reportId, paymentId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -95,7 +95,7 @@ describe(`POST ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.post(requestBody).to(getUrl(reportId, paymentId));
+    const response = (await testApi.post(requestBody).to(getUrl(reportId, paymentId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -106,7 +106,7 @@ describe(`POST ${BASE_URL}`, () => {
     const invalidReportId = reportId + 1;
 
     // Act
-    const response = await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl(invalidReportId, paymentId));
+    const response = (await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl(invalidReportId, paymentId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -117,7 +117,7 @@ describe(`POST ${BASE_URL}`, () => {
     const invalidPaymentId = paymentId + 1;
 
     // Act
-    const response = await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl(reportId, invalidPaymentId));
+    const response = (await testApi.post(aRemoveFeesFromPaymentGroupRequestBody()).to(getUrl(reportId, invalidPaymentId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);

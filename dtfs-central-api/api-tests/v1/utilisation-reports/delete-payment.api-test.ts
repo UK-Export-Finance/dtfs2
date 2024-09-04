@@ -75,7 +75,7 @@ describe(`DELETE ${BASE_URL}`, () => {
 
   it('returns a 200 when payment can be deleted', async () => {
     // Act
-    const response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, paymentId));
+    const response = (await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, paymentId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -88,7 +88,7 @@ describe(`DELETE ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.remove(requestBody).to(getUrl(reportId, paymentId));
+    const response = (await testApi.remove(requestBody).to(getUrl(reportId, paymentId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -99,7 +99,7 @@ describe(`DELETE ${BASE_URL}`, () => {
     const invalidReportId = reportId + 1;
 
     // Act
-    const response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(invalidReportId, paymentId));
+    const response = (await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(invalidReportId, paymentId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -110,7 +110,7 @@ describe(`DELETE ${BASE_URL}`, () => {
     const invalidPaymentId = paymentId + 1;
 
     // Act
-    const response = await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, invalidPaymentId));
+    const response = (await testApi.remove(aDeletePaymentRequestBody()).to(getUrl(reportId, invalidPaymentId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);

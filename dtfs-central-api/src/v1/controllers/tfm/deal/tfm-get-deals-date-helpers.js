@@ -1,4 +1,4 @@
-const { parse, getTime, startOfDay, endOfDay } = require('date-fns');
+import { parse, getTime, startOfDay, endOfDay } from 'date-fns';
 
 // date format that the endpoint will receive
 const DATE_INPUT_FORMAT = 'dd-MM-yyyy';
@@ -27,9 +27,4 @@ const dayStartAndEndTimestamps = (dateString) => {
   };
 };
 
-module.exports = {
-  TIMESTAMP_FIELDS,
-  isTimestampField,
-  DATE_INPUT_FORMAT,
-  dayStartAndEndTimestamps,
-};
+export { TIMESTAMP_FIELDS, isTimestampField, DATE_INPUT_FORMAT, dayStartAndEndTimestamps };

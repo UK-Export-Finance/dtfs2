@@ -57,7 +57,7 @@ describe(`POST ${getUrl()}`, () => {
     const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportId: 999 };
 
     // Act
-    const response = await testApi.post(payload).to(getUrl());
+    const response = (await testApi.post(payload).to(getUrl())) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -65,7 +65,7 @@ describe(`POST ${getUrl()}`, () => {
 
   it("responds with a 201 (Created) with a valid payload and sets the report status to 'PENDING_RECONCILIATION'", async () => {
     // Act
-    const response = await testApi.post(aValidPayload()).to(getUrl());
+    const response = (await testApi.post(aValidPayload()).to(getUrl())) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Created);
@@ -85,7 +85,7 @@ describe(`POST ${getUrl()}`, () => {
     const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
 
     // Act
-    const response = await testApi.post(payload).to(getUrl());
+    const response = (await testApi.post(payload).to(getUrl())) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Created);
@@ -105,7 +105,7 @@ describe(`POST ${getUrl()}`, () => {
     const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
 
     // Act
-    const response = await testApi.post(payload).to(getUrl());
+    const response = (await testApi.post(payload).to(getUrl())) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Created);
@@ -118,7 +118,7 @@ describe(`POST ${getUrl()}`, () => {
 
   it('creates an entry in the AzureFileInfo table', async () => {
     // Act
-    const response = await testApi.post(aValidPayload()).to(getUrl());
+    const response = (await testApi.post(aValidPayload()).to(getUrl())) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Created);
@@ -139,7 +139,7 @@ describe(`POST ${getUrl()}`, () => {
     const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
 
     // Act
-    const response = await testApi.post(payload).to(getUrl());
+    const response = (await testApi.post(payload).to(getUrl())) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Created);
@@ -165,7 +165,7 @@ describe(`POST ${getUrl()}`, () => {
     const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
 
     // Act
-    const response = await testApi.post(payload).to(getUrl());
+    const response = (await testApi.post(payload).to(getUrl())) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Created);
@@ -198,7 +198,7 @@ describe(`POST ${getUrl()}`, () => {
     const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
 
     // Act
-    const response = await testApi.post(payload).to(getUrl());
+    const response = (await testApi.post(payload).to(getUrl())) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Created);

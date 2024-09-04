@@ -1,6 +1,6 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const wipeDB = require('../../wipeDB');
-const { testApi } = require('../../test-api');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import * as wipeDB from '../../wipeDB';
+import { testApi } from '../../test-api';
 
 const newUser = {
   username: 'maker1@ukexportfinance.gov.uk',

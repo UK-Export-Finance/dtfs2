@@ -1,5 +1,5 @@
-const validator = require('validator');
-const { REGEX } = require('../../../constants');
+import validator from 'validator';
+import { REGEX } from '../../../constants';
 
 /**
  * @typedef {import('./utilisation-data-validator.types').UtilisationDataValidatorError} UtilisationDataValidatorError
@@ -157,7 +157,7 @@ const validateBaseCurrency = (baseCurrency, index) => validateCurrencyValue(base
  */
 const validatePaymentExchangeRate = (paymentCurrencyExchangeRate, index) => validateExchangeRate(paymentCurrencyExchangeRate, index, 'Payment exchange rate');
 
-module.exports = {
+export {
   validateUkefId,
   validateExporter,
   validateBaseCurrency,

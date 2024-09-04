@@ -1,9 +1,9 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { findOneDeal } = require('./get-gef-deal.controller');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { findOneDeal } from './get-gef-deal.controller';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
-const addComment = async (_id, commentType, comment) => {
+export const addComment = async (_id, commentType, comment) => {
   if (ObjectId.isValid(_id)) {
     // get the deals collection
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
@@ -32,9 +32,8 @@ const addComment = async (_id, commentType, comment) => {
   }
   return { status: 400, message: 'Invalid Deal Id' };
 };
-exports.addDealComment = addComment;
 
-exports.addUnderwriterCommentToGefDeal = async (req, res) => {
+export const addUnderwriterCommentToGefDeal = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const dealId = req.params.id;
 

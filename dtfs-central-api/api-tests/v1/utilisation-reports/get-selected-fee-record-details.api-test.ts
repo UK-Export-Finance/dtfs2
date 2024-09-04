@@ -80,7 +80,7 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId), { feeRecordIds: [45] });
+    const response = (await testApi.get(getUrl(reportId), { feeRecordIds: [45] })) as CustomResponse;
 
     // Assert
     expect(response.status).toEqual(200);
@@ -126,7 +126,7 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId), { feeRecordIds: [47] });
+    const response = (await testApi.get(getUrl(reportId), { feeRecordIds: [47] })) as CustomResponse;
 
     // Assert
     expect(response.status).toEqual(200);

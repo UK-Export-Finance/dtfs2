@@ -1,7 +1,7 @@
-const { getNextReportPeriodForBankSchedule } = require('@ukef/dtfs2-common');
-const { findOneBank } = require('./get-bank.controller');
+import { getNextReportPeriodForBankSchedule } from '@ukef/dtfs2-common';
+import { findOneBank } from './get-bank.controller';
 
-exports.getNextReportPeriodByBankId = async (req, res) => {
+export const getNextReportPeriodByBankId = async (req, res) => {
   try {
     const bank = await findOneBank(req.params.bankId);
 

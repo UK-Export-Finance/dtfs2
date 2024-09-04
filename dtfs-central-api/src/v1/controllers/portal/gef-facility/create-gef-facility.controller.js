@@ -1,7 +1,7 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { findOneDeal } = require('../gef-deal/get-gef-deal.controller');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
+import { findOneDeal } from '../gef-deal/get-gef-deal.controller';
 
 const createFacility = async (newFacility) => {
   const facility = newFacility;
@@ -15,7 +15,7 @@ const createFacility = async (newFacility) => {
   return { _id: insertedId };
 };
 
-exports.createFacilityPost = async (req, res) => {
+export const createFacilityPost = async (req, res) => {
   const facility = req.body;
 
   return findOneDeal(facility.dealId, async (deal) => {

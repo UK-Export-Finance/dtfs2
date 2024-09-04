@@ -1,9 +1,10 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
 const facilitiesCollection = MONGO_DB_COLLECTIONS.FACILITIES;
-const findAllGefFacilitiesByDealId = async (dealId) => {
+
+export const findAllGefFacilitiesByDealId = async (dealId) => {
   if (ObjectId.isValid(dealId)) {
     const collection = await db.getCollection(facilitiesCollection);
     const facilities = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
@@ -12,9 +13,7 @@ const findAllGefFacilitiesByDealId = async (dealId) => {
   return { status: 400, message: 'Invalid Deal Id' };
 };
 
-exports.findAllGefFacilitiesByDealId = findAllGefFacilitiesByDealId;
-
-exports.findAllGet = async (req, res) => {
+export const findAllGet = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const facilities = await findAllGefFacilitiesByDealId(req.params.id);
     return res.status(200).send(facilities);
@@ -23,7 +22,7 @@ exports.findAllGet = async (req, res) => {
   return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
 };
 
-exports.findAllFacilities = async (req, res) => {
+export const findAllFacilities = async (req, res) => {
   const collection = await db.getCollection(facilitiesCollection);
   // GEF facilities only
   const facilities = await collection.find({ $or: [{ type: { $eq: 'Cash' } }, { type: { $eq: 'Contingent' } }] }).toArray();

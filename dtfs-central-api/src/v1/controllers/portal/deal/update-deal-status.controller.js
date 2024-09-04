@@ -1,9 +1,9 @@
-const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
-const { findOneDeal } = require('./get-deal.controller');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+import { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import $ from 'mongo-dot-notation';
+import { findOneDeal } from './get-deal.controller';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
 const updateDealStatus = async ({ dealId, status, existingDeal, auditDetails }) => {
   const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
@@ -31,8 +31,7 @@ const updateDealStatus = async ({ dealId, status, existingDeal, auditDetails }) 
 
   return findAndUpdateResponse.value;
 };
-
-exports.updateDealStatusPut = async (req, res) => {
+export const updateDealStatusPut = async (req, res) => {
   const {
     params: { id: dealId },
     body: { status, auditDetails },

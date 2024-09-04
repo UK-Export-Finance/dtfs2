@@ -1,8 +1,8 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
-const findOneDeal = async (_id, callback) => {
+export const findOneDeal = async (_id, callback) => {
   if (ObjectId.isValid(_id)) {
     const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
 
@@ -16,9 +16,8 @@ const findOneDeal = async (_id, callback) => {
   }
   return { status: 400, message: 'Invalid Deal Id' };
 };
-exports.findOneDeal = findOneDeal;
 
-exports.findOneDealGet = async (req, res) => {
+export const findOneDealGet = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const deal = await findOneDeal(req.params.id);
 

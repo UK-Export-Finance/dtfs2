@@ -1,10 +1,10 @@
-const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { findOneDeal } = require('../deal/get-deal.controller');
-const { updateDeal } = require('../deal/update-deal.controller');
-const { isNumber } = require('../../../../helpers');
+import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
+import { findOneDeal } from '../deal/get-deal.controller';
+import { updateDeal } from '../deal/update-deal.controller';
+import { isNumber } from '../../../../helpers';
 
 const createFacilities = async (facilities, dealId, auditDetails) => {
   try {
@@ -58,7 +58,7 @@ const createFacilities = async (facilities, dealId, auditDetails) => {
   }
 };
 
-exports.createMultipleFacilitiesPost = async (req, res) => {
+export const createMultipleFacilitiesPost = async (req, res) => {
   const { facilities, dealId, user, auditDetails } = req.body;
 
   if (!user) {

@@ -1,18 +1,18 @@
-const { param } = require('express-validator');
-const { ObjectId } = require('mongodb');
-const { HttpStatusCode } = require('axios');
-const { isValidIsoMonth, isValidIsoYear, API_ERROR_CODE } = require('@ukef/dtfs2-common');
+import { param } from 'express-validator';
+import { ObjectId } from 'mongodb';
+import { HttpStatusCode } from 'axios';
+import { isValidIsoMonth, isValidIsoYear, API_ERROR_CODE } from '@ukef/dtfs2-common';
 
-const bankIdValidation = param('bankId').isString().matches(/^\d+$/).withMessage('The bank id provided should be a string of numbers');
+const bankIdValidationValue = param('bankId').isString().matches(/^\d+$/).withMessage('The bank id provided should be a string of numbers');
 
-exports.bankIdValidation = [bankIdValidation];
+export const bankIdValidation = [bankIdValidationValue];
 
 /**
  * Validator for a path parameter which is a mongo id
  * @param {string} paramName
  * @returns {import('express').RequestHandler}
  */
-const mongoIdValidation = (paramName) => (req, res, next) => {
+export const mongoIdValidation = (paramName) => (req, res, next) => {
   const pathParam = req.params[paramName];
   if (ObjectId.isValid(pathParam)) {
     return next();
@@ -23,14 +23,12 @@ const mongoIdValidation = (paramName) => (req, res, next) => {
   });
 };
 
-exports.mongoIdValidation = mongoIdValidation;
-
 /**
  * Validator for a path parameter which is an sql integer id
  * @param {string} paramName - The parameter name
  * @returns {import('express').RequestHandler}
  */
-const sqlIdValidation = (paramName) => (req, res, next) => {
+export const sqlIdValidation = (paramName) => (req, res, next) => {
   const pathParam = req.params[paramName];
   if (/^\d+$/.test(pathParam)) {
     return next();
@@ -41,14 +39,12 @@ const sqlIdValidation = (paramName) => (req, res, next) => {
   });
 };
 
-exports.sqlIdValidation = sqlIdValidation;
-
 /**
  * Validates that specified route or query parameters are strings in ISO month format 'yyyy-MM'
  * @param {string | string[]} fields - the field name(s) to validate
  * @return {import('express-validator').ValidationChain[]}
  */
-exports.isoMonthValidation = (fields) => [
+export const isoMonthValidation = (fields) => [
   param(fields)
     .custom(isValidIsoMonth)
     .withMessage((value, { path }) => `'${path}' parameter must be an ISO month string (format 'yyyy-MM')`),
@@ -59,6 +55,4 @@ exports.isoMonthValidation = (fields) => [
  * @param {string} paramName - The parameter name
  * @returns {import('express-validator').ValidationChain}
  */
-const yearValidation = (paramName) => param(paramName).custom(isValidIsoYear).withMessage(`Invalid '${paramName}' path param provided`);
-
-exports.yearValidation = yearValidation;
+export const yearValidation = (paramName) => param(paramName).custom(isValidIsoYear).withMessage(`Invalid '${paramName}' path param provided`);

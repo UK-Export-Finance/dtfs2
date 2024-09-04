@@ -1,6 +1,6 @@
-const dotenv = require('dotenv');
-const checkApiKey = require('../../../../../src/v1/routes/middleware/headers/check-api-key');
-const { mockReq, mockRes, mockNext } = require('../../../mocks');
+import dotenv from 'dotenv';
+import checkApiKey from '../../../../../src/v1/routes/middleware/headers/check-api-key';
+import { mockReq, mockRes, mockNext } from '../../../mocks';
 
 dotenv.config();
 

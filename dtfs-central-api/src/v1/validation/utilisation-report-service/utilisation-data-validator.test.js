@@ -1,4 +1,4 @@
-const {
+import {
   validateUkefId,
   validateExporter,
   validateBaseCurrency,
@@ -10,7 +10,7 @@ const {
   validateMonthlyFeesPaidCurrency,
   validatePaymentCurrency,
   validatePaymentExchangeRate,
-} = require('./utilisation-data-validator');
+} from './utilisation-data-validator';
 
 describe('utilisation-data-validator', () => {
   describe('validateUkefId', () => {

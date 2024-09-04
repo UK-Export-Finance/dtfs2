@@ -1,4 +1,4 @@
-const getObjectPropertyValueFromStringPath = require('./getObjectPropertyValueFromStringPath');
+import getObjectPropertyValueFromStringPath from './getObjectPropertyValueFromStringPath';
 
 describe('getObjectPropertyValueFromStringPath', () => {
   it('should return a property in object from the given string path', () => {

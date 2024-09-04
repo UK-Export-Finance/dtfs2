@@ -1,15 +1,15 @@
-const { validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { getUnixTime } = require('date-fns');
-const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
+import { validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { getUnixTime } from 'date-fns';
+import { ObjectId } from 'mongodb';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
 
-const { findOneDeal } = require('./get-gef-deal.controller');
-const { updateDeal } = require('./update-deal.controller');
-const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
-const { updateFacility } = require('../gef-facility/update-facility.controller');
-const { isNumber } = require('../../../../helpers');
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../../constants');
+import { findOneDeal } from './get-gef-deal.controller';
+import { updateDeal } from './update-deal.controller';
+import { findAllGefFacilitiesByDealId } from '../gef-facility/get-facilities.controller';
+import { updateFacility } from '../gef-facility/update-facility.controller';
+import { isNumber } from '../../../../helpers';
+import { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } from '../../../../constants';
 
 /**
  * canResubmitIssuedFacilities - changes flags to false
@@ -206,11 +206,4 @@ const generateMINActivities = async (req, res) => {
   }
 };
 
-module.exports = {
-  generateMINActivities,
-  ukefSubmissionPortalActivity,
-  facilityChangePortalActivity,
-  portalActivityGenerator,
-  getUserInfo,
-  updateChangedToIssued,
-};
+export { generateMINActivities, ukefSubmissionPortalActivity, facilityChangePortalActivity, portalActivityGenerator, getUserInfo, updateChangedToIssued };

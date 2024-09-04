@@ -1,5 +1,5 @@
-const { isNonEmptyString } = require('@ukef/dtfs2-common');
-const { DEALS } = require('../constants');
+import { isNonEmptyString } from '@ukef/dtfs2-common';
+import { DEALS } from '../constants';
 
 const getBSSProperty = (propertyPath) => {
   if (isNonEmptyString(propertyPath)) {
@@ -24,7 +24,4 @@ const mapDataModel = (deal, propertyPath) => {
   return propertyPath;
 };
 
-module.exports = {
-  getBSSProperty,
-  mapDataModel,
-};
+export { getBSSProperty, mapDataModel };

@@ -1,11 +1,11 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const escapeStringRegexp = require('escape-string-regexp');
-const { isValid, format } = require('date-fns');
-const { getDateFromSearchString } = require('../../../../helpers/getDateFromSearchString');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { DEALS } = require('../../../../constants');
-const { isTimestampField, dayStartAndEndTimestamps } = require('./tfm-get-deals-date-helpers');
-const { getBSSProperty } = require('../../../../mapping/mapDataModel');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import escapeStringRegexp from 'escape-string-regexp';
+import { isValid, format } from 'date-fns';
+import { getDateFromSearchString } from '../../../../helpers/getDateFromSearchString';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
+import { DEALS } from '../../../../constants';
+import { isTimestampField, dayStartAndEndTimestamps } from './tfm-get-deals-date-helpers';
+import { getBSSProperty } from '../../../../mapping/mapDataModel';
 
 const findDeals = async (queryParameters) => {
   const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
@@ -165,7 +165,7 @@ const findDeals = async (queryParameters) => {
   return { deals, pagination };
 };
 
-exports.findDealsGet = async (req, res) => {
+export const findDealsGet = async (req, res) => {
   const queryParameters = { ...req.query, fieldQueries: req.query?.byField };
 
   const { deals, pagination } = await findDeals(queryParameters);

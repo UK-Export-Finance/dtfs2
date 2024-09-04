@@ -1,14 +1,14 @@
-const { ObjectId } = require('mongodb');
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const wipeDB = require('../../wipeDB');
-const { FACILITIES } = require('../../../src/constants');
-const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
+import { ObjectId } from 'mongodb';
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { generateParsedMockAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
+import { MONGO_DB_COLLECTIONS, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import * as wipeDB from '../../wipeDB';
+import { FACILITIES } from '../../../src/constants';
+import { withValidateAuditDetailsTests } from '../../helpers/with-validate-audit-details.api-tests';
 
-const { testApi } = require('../../test-api');
+import { testApi } from '../../test-api';
 
-const { APPLICATION } = require('../../mocks/gef/gef-applications');
+import { APPLICATION } from '../../mocks/gef/gef-applications';
 
 const baseUrl = '/v1/portal/gef/facilities';
 const applicationBaseUrl = '/v1/portal/gef/deals';

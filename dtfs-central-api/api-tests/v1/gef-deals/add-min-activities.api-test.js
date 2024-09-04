@@ -1,30 +1,29 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, ROLES, FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const { format, fromUnixTime } = require('date-fns');
-const { ObjectId } = require('mongodb');
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { MONGO_DB_COLLECTIONS, ROLES, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { format, fromUnixTime } from 'date-fns';
+import { ObjectId } from 'mongodb';
 
-const {
+import {
   ukefSubmissionPortalActivity,
   facilityChangePortalActivity,
   portalActivityGenerator,
   getUserInfo,
   updateChangedToIssued,
-} = require('../../../src/v1/controllers/portal/gef-deal/add-min-activities.controller');
+} from '../../../src/v1/controllers/portal/gef-deal/add-min-activities.controller';
 
-const { mongoDbClient: db } = require('../../../src/drivers/db-client');
+import { mongoDbClient as db } from '../../../src/drivers/db-client';
 
-const { APPLICATION } = require('../../mocks/gef/gef-applications');
-const { mockFacilities } = require('../../mocks/gef/gef-facilities');
-const { DEALS } = require('../../../src/constants');
-const { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE } = require('../../../src/constants');
+import { APPLICATION } from '../../mocks/gef/gef-applications';
+import { mockFacilities } from '../../mocks/gef/gef-facilities';
+import { PORTAL_ACTIVITY_LABEL, PORTAL_ACTIVITY_TYPE, DEALS } from '../../../src/constants';
+
+import * as wipeDB from '../../wipeDB';
+
+import { testApi } from '../../test-api';
+import { aPortalUser } from '../../mocks/test-users/portal-user';
 
 const MOCK_APPLICATION = APPLICATION[0];
 const MOCK_APPLICATION_FACILITIES = APPLICATION[1];
-
-const wipeDB = require('../../wipeDB');
-
-const { testApi } = require('../../test-api');
-const { aPortalUser } = require('../../mocks/test-users/portal-user');
 
 const baseUrl = '/v1/portal/gef/facilities';
 const applicationBaseUrl = '/v1/portal/gef/deals';

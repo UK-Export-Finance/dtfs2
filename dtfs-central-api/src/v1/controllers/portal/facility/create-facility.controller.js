@@ -1,10 +1,10 @@
-const { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const getCreateFacilityErrors = require('../../../validation/create-facility');
-const { findOneDeal } = require('../deal/get-deal.controller');
-const { addFacilityIdToDeal } = require('../deal/update-deal.controller');
+import { validateAuditDetails, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
+import getCreateFacilityErrors from '../../../validation/create-facility';
+import { findOneDeal } from '../deal/get-deal.controller';
+import { addFacilityIdToDeal } from '../deal/update-deal.controller';
 
 const createFacility = async (facility, user, routePath, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
@@ -28,7 +28,7 @@ const createFacility = async (facility, user, routePath, auditDetails) => {
   return { _id: insertedId };
 };
 
-exports.createFacilityPost = async (req, res) => {
+export const createFacilityPost = async (req, res) => {
   const { facility, user, auditDetails } = req.body;
 
   if (!user) {

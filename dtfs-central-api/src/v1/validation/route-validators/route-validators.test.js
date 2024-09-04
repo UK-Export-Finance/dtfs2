@@ -1,6 +1,6 @@
-const { validationResult } = require('express-validator');
-const httpMocks = require('node-mocks-http');
-const { isoMonthValidation } = require('./route-validators');
+import { validationResult } from 'express-validator';
+import httpMocks from 'node-mocks-http';
+import { isoMonthValidation } from './route-validators';
 
 describe('route-validators', () => {
   describe('isoMonthValidation', () => {

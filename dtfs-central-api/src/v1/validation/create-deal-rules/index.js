@@ -1,10 +1,10 @@
-const bankInternalRefName = require('./bank-supply-contract-id');
-const additionalRefName = require('./bank-supply-contract-name');
-const makerObject = require('./maker-object');
+import bankInternalRefName from './bank-supply-contract-id';
+import additionalRefName from './bank-supply-contract-name';
+import makerObject from './maker-object';
 
 const rules = [bankInternalRefName, additionalRefName, makerObject];
 
-module.exports = (deal) => {
+const dealRules = (deal) => {
   let errorList = {};
 
   for (let i = 0; i < rules.length; i += 1) {
@@ -13,3 +13,5 @@ module.exports = (deal) => {
 
   return errorList;
 };
+
+export default dealRules;

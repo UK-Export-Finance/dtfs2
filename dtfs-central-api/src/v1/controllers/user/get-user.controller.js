@@ -1,8 +1,8 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { ObjectId } = require('mongodb');
-const { mongoDbClient: db } = require('../../../drivers/db-client');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { ObjectId } from 'mongodb';
+import { mongoDbClient as db } from '../../../drivers/db-client';
 
-const findOneUser = async (_id) => {
+export const findOneUser = async (_id) => {
   if (ObjectId.isValid(_id)) {
     const usersCollection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
@@ -12,9 +12,8 @@ const findOneUser = async (_id) => {
   }
   return { status: 400, message: 'Invalid User Id' };
 };
-exports.findOneUser = findOneUser;
 
-exports.findOneUserGet = async (req, res) => {
+export const findOneUserGet = async (req, res) => {
   if (ObjectId.isValid(req.params.id)) {
     const user = await findOneUser(req.params.id);
 
@@ -45,14 +44,14 @@ const sanitizeUser = (user) => ({
 
 const sanitizeUsers = (users) => users.map(sanitizeUser);
 
-const list = async (callback) => {
+const listCallback = async (callback) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   collection.find().toArray(callback);
 };
 
-exports.list = (req, res, next) => {
-  list((error, users) => {
+export const list = (req, res, next) => {
+  listCallback((error, users) => {
     if (error) {
       next(error);
     } else {

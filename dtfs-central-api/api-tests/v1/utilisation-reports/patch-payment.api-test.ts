@@ -74,7 +74,7 @@ describe(`PATCH ${BASE_URL}`, () => {
 
   it('returns a 404 when the payment with the supplied id does not exist', async () => {
     // Act
-    const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, paymentId + 1));
+    const response = (await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, paymentId + 1))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -87,7 +87,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('Payment', differentPayment);
 
     // Act
-    const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, differentPaymentId));
+    const response = (await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, differentPaymentId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -105,7 +105,7 @@ describe(`PATCH ${BASE_URL}`, () => {
       await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
       // Act
-      const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, paymentId));
+      const response = (await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, paymentId))) as Response;
 
       // Assert
       expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -114,7 +114,7 @@ describe(`PATCH ${BASE_URL}`, () => {
 
   it('returns a 200 when the payment can be edited', async () => {
     // Act
-    const response = await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, paymentId));
+    const response = (await testApi.patch(aPatchPaymentRequestBody()).to(getUrl(reportId, paymentId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -138,7 +138,7 @@ describe(`PATCH ${BASE_URL}`, () => {
     };
 
     // Act
-    const response = await testApi.patch(requestBody).to(getUrl(reportId, paymentId));
+    const response = (await testApi.patch(requestBody).to(getUrl(reportId, paymentId))) as Response;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -203,7 +203,7 @@ describe(`PATCH ${BASE_URL}`, () => {
 
     // Act
     const oldFeeRecords = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([1, 2]) });
-    const response = await testApi.patch(requestBody).to(getUrl(reportId, paymentId));
+    const response = (await testApi.patch(requestBody).to(getUrl(reportId, paymentId))) as Response;
     const newFeeRecords = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([1, 2]) });
 
     // Assert
@@ -254,7 +254,7 @@ describe(`PATCH ${BASE_URL}`, () => {
 
     // Act
     const oldFeeRecords = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([1, 2]) });
-    const response = await testApi.patch(requestBody).to(getUrl(reportId, paymentId));
+    const response = (await testApi.patch(requestBody).to(getUrl(reportId, paymentId))) as Response;
     const newFeeRecords = await SqlDbHelper.manager.findBy(FeeRecordEntity, { id: In([1, 2]) });
 
     // Assert

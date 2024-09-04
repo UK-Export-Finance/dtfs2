@@ -1,4 +1,4 @@
-const { DEALS } = require('../../../src/constants');
+import { DEALS } from '../../../src/constants';
 
 const baseApplication = {
   dealType: DEALS.DEAL_TYPE.GEF,
@@ -26,6 +26,4 @@ const APPLICATION = [
   },
 ];
 
-module.exports = {
-  APPLICATION,
-};
+export { APPLICATION };

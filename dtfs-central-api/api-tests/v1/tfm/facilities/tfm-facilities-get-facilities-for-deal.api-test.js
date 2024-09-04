@@ -1,12 +1,12 @@
-const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
-const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const wipeDB = require('../../../wipeDB');
-const { testApi } = require('../../../test-api');
-const { DEALS } = require('../../../../src/constants');
-const { MOCK_DEAL } = require('../../mocks/mock-data');
-const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
+import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { generateParsedMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
+import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
+import { MONGO_DB_COLLECTIONS, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import * as wipeDB from '../../../wipeDB';
+import { testApi } from '../../../test-api';
+import { DEALS } from '../../../../src/constants';
+import { MOCK_DEAL } from '../../mocks/mock-data';
+import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
 
 const newDeal = {
   dealType: DEALS.DEAL_TYPE.GEF,

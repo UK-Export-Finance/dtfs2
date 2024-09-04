@@ -1,18 +1,17 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
-const { InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
-const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } = require('@ukef/dtfs2-common/change-stream');
-const { ObjectId } = require('mongodb');
-const $ = require('mongo-dot-notation');
-const { mongoDbClient: db } = require('../../../../drivers/db-client');
-const { findOneDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
-const tfmController = require('./tfm-get-deal.controller');
-const { TfmFacilitiesRepo } = require('../../../../repositories/tfm-facilities-repo');
+import { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
+import { ObjectId } from 'mongodb';
+import $ from 'mongo-dot-notation';
+import { mongoDbClient as db } from '../../../../drivers/db-client';
+import { findOneDeal, findOneGefDeal } from '../../portal/deal/get-deal.controller';
+import * as tfmController from './tfm-get-deal.controller';
+import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
-const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
-const { findAllGefFacilitiesByDealId } = require('../../portal/gef-facility/get-facilities.controller');
+import { findAllFacilitiesByDealId } from '../../portal/facility/get-facilities.controller';
+import { findAllGefFacilitiesByDealId } from '../../portal/gef-facility/get-facilities.controller';
 
-const DEFAULTS = require('../../../defaults');
-const { DEALS } = require('../../../../constants');
+import DEFAULTS from '../../../defaults';
+import { DEALS } from '../../../../constants';
 
 const withoutId = (obj) => {
   const { _id, ...cleanedObject } = obj;
@@ -113,7 +112,7 @@ const submitDeal = async (deal, auditDetails) => {
   return updatedDeal;
 };
 
-exports.submitDealPut = async (req, res) => {
+export const submitDealPut = async (req, res) => {
   const { dealId, dealType, auditDetails } = req.body;
 
   if (!ObjectId.isValid(dealId)) {

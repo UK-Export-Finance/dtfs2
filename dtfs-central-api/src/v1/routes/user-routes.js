@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
+
+import * as getUserController from '../controllers/user/get-user.controller';
+import * as createUserController from '../controllers/user/create-user.controller';
 
 const userRouter = express.Router();
-
-const getUserController = require('../controllers/user/get-user.controller');
-const createUserController = require('../controllers/user/create-user.controller');
 
 /**
  * @openapi
@@ -63,4 +63,4 @@ userRouter.route('/:id').get(getUserController.findOneUserGet);
 
 userRouter.route('/').get(getUserController.list);
 
-module.exports = userRouter;
+export default userRouter;

@@ -1,13 +1,13 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const wipeDB = require('../../wipeDB');
-const aDeal = require('../deal-builder');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import * as wipeDB from '../../wipeDB';
+import aDeal from '../deal-builder';
 
-const { testApi } = require('../../test-api');
-const { expectAddedFields } = require('./expectAddedFields');
-const { DEALS } = require('../../../src/constants');
-const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
-const { createDeal } = require('../../helpers/create-deal');
-const { createFacility } = require('../../helpers/create-facility');
+import { testApi } from '../../test-api';
+import { expectAddedFields } from './expectAddedFields';
+import { DEALS } from '../../../src/constants';
+import { MOCK_PORTAL_USER } from '../../mocks/test-users/mock-portal-user';
+import { createDeal } from '../../helpers/create-deal';
+import { createFacility } from '../../helpers/create-facility';
 
 const newDeal = aDeal({
   dealType: DEALS.DEAL_TYPE.BSS_EWCS,

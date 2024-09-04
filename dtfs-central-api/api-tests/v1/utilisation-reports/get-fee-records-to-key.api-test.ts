@@ -104,7 +104,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a 404 when no report with the supplied id can be found', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId + 1));
+    const response = (await testApi.get(getUrl(reportId + 1))) as CustomResponse;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -117,7 +117,7 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', reportWithDifferentBankId);
 
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(2));
+    const response = (await testApi.get(getUrl(2))) as CustomResponse;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.NotFound);
@@ -125,7 +125,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a 200 with a valid report id', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId));
+    const response = (await testApi.get(getUrl(reportId))) as CustomResponse;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -133,7 +133,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a body containing the report id', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId));
+    const response = (await testApi.get(getUrl(reportId))) as CustomResponse;
 
     // Assert
     expect(response.body.reportId).toBe(reportId);
@@ -141,7 +141,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a body containing the session bank', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId));
+    const response = (await testApi.get(getUrl(reportId))) as CustomResponse;
 
     // Assert
     expect(response.body.bank).toEqual({ id: bankId, name: bankName });
@@ -149,7 +149,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a body containing the report period', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId));
+    const response = (await testApi.get(getUrl(reportId))) as CustomResponse;
 
     // Assert
     expect(response.body.reportPeriod).toEqual(reportPeriod);
@@ -157,7 +157,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a body containing the fee records to key', async () => {
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId));
+    const response = (await testApi.get(getUrl(reportId))) as CustomResponse;
 
     // Assert
     expect(response.body.feeRecords).toEqual<FeeRecordToKey[]>([
@@ -197,7 +197,7 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
     // Act
-    const response: CustomResponse = await testApi.get(getUrl(reportId));
+    const response = (await testApi.get(getUrl(reportId))) as CustomResponse;
 
     // Assert
     expect(response.body.feeRecords).toEqual([]);

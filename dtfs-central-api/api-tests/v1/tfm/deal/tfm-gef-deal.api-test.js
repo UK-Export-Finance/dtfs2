@@ -1,11 +1,11 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const wipeDB = require('../../../wipeDB');
-const { testApi } = require('../../../test-api');
-const { DEALS } = require('../../../../src/constants');
-const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
-const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
+import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { generateParsedMockAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
+import * as wipeDB from '../../../wipeDB';
+import { testApi } from '../../../test-api';
+import { DEALS } from '../../../../src/constants';
+import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
+import { MOCK_TFM_USER } from '../../../mocks/test-users/mock-tfm-user';
 
 const newDeal = {
   dealType: DEALS.DEAL_TYPE.GEF,

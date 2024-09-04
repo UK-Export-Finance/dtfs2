@@ -1,38 +1,39 @@
-const express = require('express');
+import express from 'express';
+
+import * as createDealController from '../controllers/portal/deal/create-deal.controller';
+import * as getDealController from '../controllers/portal/deal/get-deal.controller';
+import * as updateDealController from '../controllers/portal/deal/update-deal.controller';
+import * as updateDealStatusController from '../controllers/portal/deal/update-deal-status.controller';
+import * as deleteDealController from '../controllers/portal/deal/delete-deal.controller';
+import * as addDealCommentController from '../controllers/portal/deal/add-deal-comment.controller';
+
+import * as createFacilityController from '../controllers/portal/facility/create-facility.controller';
+import * as createMultipleFacilitiesController from '../controllers/portal/facility/create-multiple-facilities.controller';
+import * as getFacilityController from '../controllers/portal/facility/get-facility.controller';
+import * as getFacilitiesController from '../controllers/portal/facility/get-facilities.controller';
+import * as updateFacilityController from '../controllers/portal/facility/update-facility.controller';
+import * as deleteFacilityController from '../controllers/portal/facility/delete-facility.controller';
+import * as updateFacilityStatusController from '../controllers/portal/facility/update-facility-status.controller';
+
+import * as createGefDealController from '../controllers/portal/gef-deal/create-gef-deal.controller';
+import * as getGefDealController from '../controllers/portal/gef-deal/get-gef-deal.controller';
+import * as updateGefDealController from '../controllers/portal/gef-deal/update-deal.controller';
+import * as putGefDealStatusController from '../controllers/portal/gef-deal/put-gef-deal.status.controller';
+import * as addCommentToGefDeal from '../controllers/portal/gef-deal/add-underwriter-comment-gef.controller';
+import * as gefActivityController from '../controllers/portal/gef-deal/add-min-activities.controller';
+
+import * as getGefFacilitiesController from '../controllers/portal/gef-facility/get-facilities.controller';
+import * as createGefFacilityController from '../controllers/portal/gef-facility/create-gef-facility.controller';
+import * as updateGefFacilityController from '../controllers/portal/gef-facility/update-facility.controller';
+
+import * as durableFunctionsController from '../controllers/durable-functions/durable-functions.controller';
+import * as cronJobsController from '../controllers/cron-jobs/cron-jobs.controller';
+
+import * as mandatoryCriteria from '../controllers/portal/mandatory-criteria/mandatory-criteria.controller';
+
+import { ROUTES } from '../../constants';
 
 const portalRouter = express.Router();
-const createDealController = require('../controllers/portal/deal/create-deal.controller');
-const getDealController = require('../controllers/portal/deal/get-deal.controller');
-const updateDealController = require('../controllers/portal/deal/update-deal.controller');
-const updateDealStatusController = require('../controllers/portal/deal/update-deal-status.controller');
-const deleteDealController = require('../controllers/portal/deal/delete-deal.controller');
-const addDealCommentController = require('../controllers/portal/deal/add-deal-comment.controller');
-
-const createFacilityController = require('../controllers/portal/facility/create-facility.controller');
-const createMultipleFacilitiesController = require('../controllers/portal/facility/create-multiple-facilities.controller');
-const getFacilityController = require('../controllers/portal/facility/get-facility.controller');
-const getFacilitiesController = require('../controllers/portal/facility/get-facilities.controller');
-const updateFacilityController = require('../controllers/portal/facility/update-facility.controller');
-const deleteFacilityController = require('../controllers/portal/facility/delete-facility.controller');
-const updateFacilityStatusController = require('../controllers/portal/facility/update-facility-status.controller');
-
-const createGefDealController = require('../controllers/portal/gef-deal/create-gef-deal.controller');
-const getGefDealController = require('../controllers/portal/gef-deal/get-gef-deal.controller');
-const updateGefDealController = require('../controllers/portal/gef-deal/update-deal.controller');
-const putGefDealStatusController = require('../controllers/portal/gef-deal/put-gef-deal.status.controller');
-const addCommentToGefDeal = require('../controllers/portal/gef-deal/add-underwriter-comment-gef.controller');
-const gefActivityController = require('../controllers/portal/gef-deal/add-min-activities.controller');
-
-const getGefFacilitiesController = require('../controllers/portal/gef-facility/get-facilities.controller');
-const createGefFacilityController = require('../controllers/portal/gef-facility/create-gef-facility.controller');
-const updateGefFacilityController = require('../controllers/portal/gef-facility/update-facility.controller');
-
-const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
-const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
-
-const mandatoryCriteria = require('../controllers/portal/mandatory-criteria/mandatory-criteria.controller');
-
-const { ROUTES } = require('../../constants');
 
 portalRouter.use((req, res, next) => {
   req.routePath = ROUTES.PORTAL_ROUTE;
@@ -836,4 +837,4 @@ portalRouter.route('/cron-jobs').delete(cronJobsController.deleteAllEstoreLogs);
 portalRouter.route('/gef/mandatory-criteria/latest').get(mandatoryCriteria.getLatestGefMandatoryCriteria);
 portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCriteria.getGefMandatoryCriteriaByVersion);
 
-module.exports = portalRouter;
+export default portalRouter;

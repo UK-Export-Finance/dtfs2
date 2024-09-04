@@ -1,5 +1,5 @@
-const { parse, getTime, startOfDay, endOfDay } = require('date-fns');
-const { TIMESTAMP_FIELDS, isTimestampField, DATE_INPUT_FORMAT, dayStartAndEndTimestamps } = require('./tfm-get-deals-date-helpers');
+import { parse, getTime, startOfDay, endOfDay } from 'date-fns';
+import { TIMESTAMP_FIELDS, isTimestampField, DATE_INPUT_FORMAT, dayStartAndEndTimestamps } from './tfm-get-deals-date-helpers';
 
 describe('tfm get deals controller - date helpers', () => {
   describe('DATE_INPUT_FORMAT', () => {

@@ -1,5 +1,5 @@
-const limiter = require('express-rate-limit');
-const { InvalidEnvironmentVariableError } = require('../../../../errors');
+import limiter from 'express-rate-limit';
+import { InvalidEnvironmentVariableError } from '../../../../errors';
 
 const ONE_MINUTE_IN_MILLISECONDS = 60 * 1000;
 
@@ -44,4 +44,4 @@ const createRateLimit = () => {
   });
 };
 
-module.exports = createRateLimit;
+export default createRateLimit;

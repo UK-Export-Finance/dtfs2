@@ -1,7 +1,7 @@
-const { isNonEmptyString, FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const { orderNumber } = require('../../../utils/error-list-order-number');
+import { isNonEmptyString, FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { orderNumber } from '../../../utils/error-list-order-number';
 
-module.exports = (facility, errorList) => {
+const facilityType = (facility, errorList) => {
   const newErrorList = { ...errorList };
   const type = facility?.type;
 
@@ -23,3 +23,5 @@ module.exports = (facility, errorList) => {
 
   return newErrorList;
 };
+
+export default facilityType;
