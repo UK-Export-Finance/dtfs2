@@ -25,6 +25,7 @@ describe('emailService', () => {
   describe('sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam', () => {
     it('should send utilisation report notification email to all emails belonging to UKEF GEF reporting team', async () => {
       // Arrange
+      process.env.TFM_UI_URL = 'https://www.ukexportfinance.gov.uk';
       process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT = '["email1@ukexportfinance.gov.uk", "email2@ukexportfinance.gov.uk"]';
 
       // Act
@@ -35,15 +36,18 @@ describe('emailService', () => {
       expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION, 'email1@ukexportfinance.gov.uk', {
         bankName: 'My Bank',
         reportPeriod: 'June 2026',
+        tfmHomepageUrl: 'https://www.ukexportfinance.gov.uk',
       });
       expect(sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.UTILISATION_REPORT_NOTIFICATION, 'email2@ukexportfinance.gov.uk', {
         bankName: 'My Bank',
         reportPeriod: 'June 2026',
+        tfmHomepageUrl: 'https://www.ukexportfinance.gov.uk',
       });
     });
 
     it('should throw an error if email recipients not provided in correct format', async () => {
       // Arrange
+      process.env.TFM_UI_URL = 'https://www.ukexportfinance.gov.uk';
       process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT = 'email1@ukexportfinance.gov.uk,email2@ukexportfinance.gov.uk';
 
       // Act + Assert
@@ -53,7 +57,18 @@ describe('emailService', () => {
 
     it('should throw an error if email recipients not provided', async () => {
       // Arrange
+      process.env.TFM_UI_URL = 'https://www.ukexportfinance.gov.uk';
       delete process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT;
+
+      // Act + Assert
+      await expect(sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam('My Bank', 'June 2026')).rejects.toThrow();
+      expect(sendEmail).toHaveBeenCalledTimes(0);
+    });
+
+    it('should throw an error if TFM_UI_URL is undefined', async () => {
+      // Arrange
+      delete process.env.TFM_UI_URL;
+      process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT = '["email1@ukexportfinance.gov.uk"]';
 
       // Act + Assert
       await expect(sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam('My Bank', 'June 2026')).rejects.toThrow();
