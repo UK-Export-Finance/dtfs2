@@ -78,6 +78,15 @@ jobs:
       - name: Repository
         uses: actions/checkout@v4
 
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.node }}
+
+      - name: Dependencies
+        working-directory: ./
+        run: npm ci
+
       - name: Codacy
         uses: codacy/codacy-analysis-cli-action@master
         with:
