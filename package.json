@@ -61,10 +61,8 @@
     ]
   },
   "dependencies": {
-    "@ukef/dtfs2-common": "1.0.0",
     "axios": "^1.7.2",
     "express": "^4.19.2",
-    "mongodb": "4.17.2",
     "release-please": "^16.10.2"
   },
   "devDependencies": {

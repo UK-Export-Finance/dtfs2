@@ -1,4 +1,4 @@
-exports.orderNumber = (errorList) => {
+export const orderNumber = (errorList) => {
   const hasErrors = Object.keys(errorList).length > 0;
 
   if (hasErrors) {

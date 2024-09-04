@@ -13,7 +13,7 @@ describe(`POST ${URL}`, () => {
     };
 
     // Act
-    const response = await testApi.post(requestBody).to(URL);
+    const response = (await testApi.post(requestBody).to(URL)) as Request;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.Ok);
@@ -24,7 +24,7 @@ describe(`POST ${URL}`, () => {
     const requestBody = {};
 
     // Act
-    const response = await testApi.post(requestBody).to(URL);
+    const response = (await testApi.post(requestBody).to(URL)) as Request;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);
@@ -37,7 +37,7 @@ describe(`POST ${URL}`, () => {
     };
 
     // Act
-    const response = await testApi.post(requestBody).to(URL);
+    const response = (await testApi.post(requestBody).to(URL)) as Request;
 
     // Assert
     expect(response.status).toBe(HttpStatusCode.BadRequest);

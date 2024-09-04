@@ -18,9 +18,4 @@ const mockRes = () => {
 
 const mockNext = jest.fn();
 
-module.exports = {
-  mockReq,
-  mockRes,
-  mockNext,
-  mockReqWithCsrf,
-};
+export { mockReq, mockRes, mockNext, mockReqWithCsrf };

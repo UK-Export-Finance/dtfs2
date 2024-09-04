@@ -27,9 +27,4 @@ const SORT_BY = {
   DESCENDING: 'descending',
 };
 
-module.exports = {
-  DEAL_TYPE,
-  DEAL_STATUS,
-  SUBMISSION_TYPE,
-  SORT_BY,
-};
+export { DEAL_TYPE, DEAL_STATUS, SUBMISSION_TYPE, SORT_BY };

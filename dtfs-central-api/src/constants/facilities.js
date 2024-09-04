@@ -9,7 +9,4 @@ const SORT_BY = {
   DESCENDING: 'descending',
 };
 
-module.exports = {
-  FACILITY_PAYMENT_TYPE,
-  SORT_BY,
-};
+export { FACILITY_PAYMENT_TYPE, SORT_BY };

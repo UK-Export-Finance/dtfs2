@@ -5,7 +5,4 @@ const expectMongoId = (obj) => ({
 
 const expectMongoIds = (list) => list.map(expectMongoId);
 
-module.exports = {
-  expectMongoId,
-  expectMongoIds,
-};
+export { expectMongoId, expectMongoIds };
