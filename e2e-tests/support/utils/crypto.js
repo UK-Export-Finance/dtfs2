@@ -3,9 +3,9 @@ const { sign } = require('jws');
 /**
  * issueValidJWT
  * Issue a valid JWT
- * @param {Object} user
- * @param {String} sessionIdentifier
- * @returns {String} JWT
+ * @param {object} user
+ * @param {string} sessionIdentifier
+ * @returns {string} JWT
  */
 const issueValidJWT = (user, sessionIdentifier, maxAge) => {
   const { _id, username, teams, firstName, lastName } = user;
