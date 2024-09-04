@@ -34,20 +34,8 @@ describe('dealCancellationEnabled', () => {
       isTfmDealCancellationFeatureFlagEnabledSpy.mockReturnValue(false);
     });
 
-    it('should return false if the deal type is MIA', () => {
-      const result = dealCancellationEnabled(DEAL_SUBMISSION_TYPE.MIA);
-
-      expect(result).toEqual(false);
-    });
-
-    it('should return false if the deal type is MIN', () => {
-      const result = dealCancellationEnabled(DEAL_SUBMISSION_TYPE.MIN);
-
-      expect(result).toEqual(false);
-    });
-
-    it('should return false if the deal type is AIN', () => {
-      const result = dealCancellationEnabled(DEAL_SUBMISSION_TYPE.AIN);
+    it.each([DEAL_SUBMISSION_TYPE.MIA, DEAL_SUBMISSION_TYPE.MIN, DEAL_SUBMISSION_TYPE.AIN])('should return false if the deal type is %s', (type) => {
+      const result = dealCancellationEnabled(type);
 
       expect(result).toEqual(false);
     });
