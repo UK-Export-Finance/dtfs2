@@ -8,6 +8,7 @@ import {
   validatePostKeyingDataPayload,
   validatePutKeyingDataMarkAsPayload,
   validatePostRemoveFeesFromPaymentGroupPayload,
+  validatePostReportDataValidationPayload,
   validatePostAddFeesToAnExistingPaymentGroupPayload,
 } from './middleware/payload-validation';
 import { getUtilisationReportById } from '../controllers/utilisation-report-service/get-utilisation-report.controller';
@@ -16,7 +17,7 @@ import {
   postUploadUtilisationReportPayloadValidator,
 } from '../controllers/utilisation-report-service/post-upload-utilisation-report.controller';
 import { getUtilisationReportsReconciliationSummary } from '../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller';
-import * as putUtilisationReportStatusController from '../controllers/utilisation-report-service/put-utilisation-report-status.controller';
+import putUtilisationReportStatusController from '../controllers/utilisation-report-service/put-utilisation-report-status.controller';
 import { getUtilisationReportReconciliationDetailsById } from '../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller';
 import { getSelectedFeeRecordDetails } from '../controllers/utilisation-report-service/get-selected-fee-records-details.controller';
 import { postPayment } from '../controllers/utilisation-report-service/post-payment.controller';
@@ -28,6 +29,7 @@ import { patchPayment } from '../controllers/utilisation-report-service/patch-pa
 import { putKeyingDataMarkAsDone } from '../controllers/utilisation-report-service/put-keying-data-mark-as-done.controller';
 import { putKeyingDataMarkAsToDo } from '../controllers/utilisation-report-service/put-keying-data-mark-as-to-do.controller';
 import { postRemoveFeesFromPaymentGroup } from '../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller';
+import { postReportDataValidation } from '../controllers/utilisation-report-service/post-report-data-validation.controller';
 import { postAddFeesToAnExistingPaymentGroup } from '../controllers/utilisation-report-service/post-add-fees-to-an-existing-payment-group.controller';
 
 const utilisationReportsRouter = express.Router();
@@ -64,6 +66,42 @@ const utilisationReportsRouter = express.Router();
  *         description: Server conflict
  */
 utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValidator, postUploadUtilisationReport);
+
+/**
+ * @openapi
+ * /utilisation-reports/report-data-validation:
+ *   post:
+ *     summary: Validate utilisation report data
+ *     tags: [Utilisation Report]
+ *     description: Validate utilisation report data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reportData:
+ *                 $ref: '#/definitions/RawReportDataWithCellLocations'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - type: object
+ *                   properties:
+ *                     csvValidationErrors:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/definitions/CsvValidationError'
+ *       500:
+ *         description: Internal server error
+ *       400:
+ *         description: Invalid payload
+ */
+utilisationReportsRouter.route('/report-data-validation').post(validatePostReportDataValidationPayload, postReportDataValidation);
 
 /**
  * @openapi
