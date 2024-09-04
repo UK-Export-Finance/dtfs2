@@ -131,8 +131,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       errorSummary().contains('Enter a cover end date');
 
       if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateError();
-        errorSummary().contains('Select if there is an end date for this facility');
+        aboutFacilityUnissued.isUsingFacilityEndDateError().contains('Select if there is an end date for this facility');
       }
 
       // entering date in the past for issue date
