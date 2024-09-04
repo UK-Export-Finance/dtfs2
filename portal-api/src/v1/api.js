@@ -287,7 +287,7 @@ const validateUtilisationReportData = async (reportData) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to validate utilisation report data', error);
+    console.error('Unable to validate utilisation report data %o', error);
     throw error;
   }
 };
@@ -316,7 +316,7 @@ const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to save utilisation report', error);
+    console.error('Unable to save utilisation report %o', error);
     throw error;
   }
 };
