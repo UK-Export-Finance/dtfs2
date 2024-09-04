@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { EstoreRepo } from '../repositories/estore/estore-repo';
 import { FacilityFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
@@ -69,7 +68,7 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
     console.info('Facility %s directory has been created for deal %s', facilityIdentifiers, dealIdentifier);
 
     // Step 2: Update `cron-job-logs`
-    await EstoreRepo.updateByDealId(new ObjectId(dealId), {
+    await EstoreRepo.updateByDealId(dealId, {
       'cron.facility': {
         status: ESTORE_CRON_STATUS.COMPLETED,
         timestamp: getNowAsEpoch(),
@@ -81,7 +80,7 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
     console.error('eStore facility directory creation has failed for deal %s %o', dealIdentifier, response);
 
     // Update `cron-job-logs`
-    await EstoreRepo.updateByDealId(new ObjectId(dealId), {
+    await EstoreRepo.updateByDealId(dealId, {
       'cron.facility': {
         response,
         status: ESTORE_CRON_STATUS.FAILED,

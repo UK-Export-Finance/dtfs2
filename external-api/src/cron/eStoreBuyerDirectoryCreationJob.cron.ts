@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { EstoreRepo } from '../repositories/estore/estore-repo';
 import { BuyerFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
@@ -35,8 +34,10 @@ const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
  *   .catch((error) => console.error('Job failed', error));
  */
 export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promise<void> => {
+  const invalidParams = !eStoreData.dealId || !eStoreData?.siteId || !eStoreData?.exporterName || !eStoreData?.buyerName || !eStoreData.dealIdentifier;
+
   // Argument validation
-  if (!eStoreData.dealId || !eStoreData?.siteId || !eStoreData?.exporterName || !eStoreData?.buyerName || !eStoreData.dealIdentifier) {
+  if (invalidParams) {
     console.error('Invalid arguments provided for eStore buyer directory creation');
     return;
   }
@@ -56,7 +57,7 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
     console.info('Attempting to create a buyer directory %s for deal %s', buyerName, dealIdentifier);
 
     // Step 2: Update `cron-job-logs`
-    await EstoreRepo.updateByDealId(new ObjectId(dealId), {
+    await EstoreRepo.updateByDealId(dealId, {
       'cron.buyer': {
         status: ESTORE_CRON_STATUS.COMPLETED,
         timestamp: getNowAsEpoch(),
@@ -69,7 +70,7 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
     console.error('eStore buyer directory creation has failed for deal %s %o', dealIdentifier, response);
 
     // Update `cron-job-logs`
-    await EstoreRepo.updateByDealId(new ObjectId(dealId), {
+    await EstoreRepo.updateByDealId(dealId, {
       'cron.buyer': {
         response,
         status: ESTORE_CRON_STATUS.FAILED,
