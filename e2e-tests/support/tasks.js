@@ -54,7 +54,7 @@ module.exports = {
      * getUserFromDbByEmail
      * Get a user from the DB by email
      * @param {string} email
-     * @returns {object} User
+     * @returns {Promise<object>} User
      */
     const getUserFromDbByEmail = async (email) => {
       const users = await getUsersCollection();
@@ -65,7 +65,7 @@ module.exports = {
      * getUserFromDbByUsername
      * Get a user from the DB by username
      * @param {string} username
-     * @returns {object} User
+     * @returns {Promise<object>} User
      */
     const getUserFromDbByUsername = async (username) => {
       const users = await getUsersCollection();
@@ -76,7 +76,7 @@ module.exports = {
      * getTfmUserFromDbByUsername
      * Get a TFM user from the DB by username
      * @param {string} username
-     * @returns {object} User
+     * @returns {Promise<object>} User
      */
     const getTfmUserFromDbByUsername = async (username) => {
       const tfmUsers = await getTfmUsersCollection();
@@ -91,7 +91,7 @@ module.exports = {
      * Override a portal user's sign in token with a valid token, by username.
      * @param {string} username
      * @param {string} newSignInToken
-     * @returns {object} Updated user
+     * @returns {Promise<object>} Updated user
      */
     const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
@@ -109,7 +109,7 @@ module.exports = {
      * Override a portal user's sign in token with multiple sign in tokens.
      * @param {string} username
      * @param {Array} newSignInTokens
-     * @returns {object} Updated user
+     * @returns {Promise<object>} Updated user
      */
     const overridePortalUserSignInTokensByUsername = async ({ username, newSignInTokens }) => {
       const signInTokens = newSignInTokens.map((newSignInToken) => {
@@ -130,7 +130,7 @@ module.exports = {
      * Override a TFM user's session ID/identifier
      * @param {string} username
      * @param {string} sessionIdentifier
-     * @returns {object} Updated user
+     * @returns {Promise<object>} Updated user
      */
     const overrideTfmUserSessionId = async ({ username, sessionIdentifier }) => {
       const tfmUsers = await getTfmUsersCollection();
@@ -144,7 +144,7 @@ module.exports = {
      * @param {object} tfmUser: New session identifier value
      * @param {string} userToken: TFM token string value
      * @param {number} maxAge: Session age
-     * @returns {boolean}
+     * @returns {Promise<boolean>}
      */
     const overrideRedisUserSession = async ({ sessionIdentifier, tfmUser, userToken, maxAge }) => {
       const maxAgeInMilliseconds = maxAge * 1000;
@@ -175,7 +175,7 @@ module.exports = {
      * resetPortalUserStatusAndNumberOfSignInLinks
      * Reset a portal user's status and sign ins by username.
      * @param {string} username
-     * @returns {object} Updated user
+     * @returns {Promise<object>} Updated user
      */
     const resetPortalUserStatusAndNumberOfSignInLinks = async (username) => {
       const users = await getUsersCollection();
@@ -288,7 +288,7 @@ module.exports = {
      * disablePortalUserByUsername
      * Disable a portal user by username.
      * @param {string} username
-     * @returns {object} Updated user
+     * @returns {Promise<object>} Updated user
      */
     const disablePortalUserByUsername = async (username) => {
       const users = await getUsersCollection();
