@@ -81,11 +81,13 @@ jobs:
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: '16'
 
       - name: Dependencies
-        working-directory: ./
         run: npm ci
+
+      - name: List Installed Node Modules
+        run: ls -la node_modules
 
       - name: Codacy
         uses: codacy/codacy-analysis-cli-action@master
