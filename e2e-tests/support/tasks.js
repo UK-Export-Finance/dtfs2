@@ -24,12 +24,12 @@ module.exports = {
   /**
    * createTasks
    * Create tasks that can be executed when running E2E tests.
-   * @param {String} dbName: Database name
-   * @param {String} dbConnectionString: Database connection string
-   * @param {String} redisHost: Redis host address
-   * @param {String} redisPort: Redis port number
-   * @param {String} redisKey: Redis key
-   * @returns {Object} Various tasks
+   * @param {string} dbName: Database name
+   * @param {string} dbConnectionString: Database connection string
+   * @param {string} redisHost: Redis host address
+   * @param {string} redisPort: Redis port number
+   * @param {string} redisKey: Redis key
+   * @returns {object} Various tasks
    */
   createTasks: ({ dbName, dbConnectionString, redisHost, redisPort, redisKey }) => {
     const redisConnectionOptions = { redisHost, redisPort, redisKey };
@@ -53,8 +53,8 @@ module.exports = {
     /**
      * getUserFromDbByEmail
      * Get a user from the DB by email
-     * @param {String} email
-     * @returns {Object} User
+     * @param {string} email
+     * @returns {object} User
      */
     const getUserFromDbByEmail = async (email) => {
       const users = await getUsersCollection();
@@ -64,8 +64,8 @@ module.exports = {
     /**
      * getUserFromDbByUsername
      * Get a user from the DB by username
-     * @param {String} username
-     * @returns {Object} User
+     * @param {string} username
+     * @returns {object} User
      */
     const getUserFromDbByUsername = async (username) => {
       const users = await getUsersCollection();
@@ -75,8 +75,8 @@ module.exports = {
     /**
      * getTfmUserFromDbByUsername
      * Get a TFM user from the DB by username
-     * @param {String} username
-     * @returns {Object} User
+     * @param {string} username
+     * @returns {object} User
      */
     const getTfmUserFromDbByUsername = async (username) => {
       const tfmUsers = await getTfmUsersCollection();
@@ -89,9 +89,9 @@ module.exports = {
     /**
      * overridePortalUserSignInTokenWithValidTokenByUsername
      * Override a portal user's sign in token with a valid token, by username.
-     * @param {String} username
-     * @param {String} newSignInToken
-     * @returns {Object} Updated user
+     * @param {string} username
+     * @param {string} newSignInToken
+     * @returns {object} Updated user
      */
     const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
@@ -107,9 +107,9 @@ module.exports = {
     /**
      * overridePortalUserSignInTokensByUsername
      * Override a portal user's sign in token with multiple sign in tokens.
-     * @param {String} username
+     * @param {string} username
      * @param {Array} newSignInTokens
-     * @returns {Object} Updated user
+     * @returns {object} Updated user
      */
     const overridePortalUserSignInTokensByUsername = async ({ username, newSignInTokens }) => {
       const signInTokens = newSignInTokens.map((newSignInToken) => {
@@ -128,9 +128,9 @@ module.exports = {
     /**
      * overrideTfmUserSessionId
      * Override a TFM user's session ID/identifier
-     * @param {String} username
-     * @param {String} sessionIdentifier
-     * @returns {Object} Updated user
+     * @param {string} username
+     * @param {string} sessionIdentifier
+     * @returns {object} Updated user
      */
     const overrideTfmUserSessionId = async ({ username, sessionIdentifier }) => {
       const tfmUsers = await getTfmUsersCollection();
@@ -140,11 +140,11 @@ module.exports = {
     /**
      * overrideRedisUserSession
      * Override a redis user session.
-     * @param {String} sessionIdentifier: Redis session identifier
-     * @param {Object} tfmUser: New session identifier value
-     * @param {String} userToken: TFM token string value
-     * @param {Number} maxAge: Session age
-     * @returns {Boolean}
+     * @param {string} sessionIdentifier: Redis session identifier
+     * @param {object} tfmUser: New session identifier value
+     * @param {string} userToken: TFM token string value
+     * @param {number} maxAge: Session age
+     * @returns {boolean}
      */
     const overrideRedisUserSession = async ({ sessionIdentifier, tfmUser, userToken, maxAge }) => {
       const maxAgeInMilliseconds = maxAge * 1000;
@@ -174,8 +174,8 @@ module.exports = {
     /**
      * resetPortalUserStatusAndNumberOfSignInLinks
      * Reset a portal user's status and sign ins by username.
-     * @param {String} username
-     * @returns {Object} Updated user
+     * @param {string} username
+     * @returns {object} Updated user
      */
     const resetPortalUserStatusAndNumberOfSignInLinks = async (username) => {
       const users = await getUsersCollection();
@@ -287,8 +287,8 @@ module.exports = {
     /**
      * disablePortalUserByUsername
      * Disable a portal user by username.
-     * @param {String} username
-     * @returns {Object} Updated user
+     * @param {string} username
+     * @returns {object} Updated user
      */
     const disablePortalUserByUsername = async (username) => {
       const users = await getUsersCollection();
