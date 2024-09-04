@@ -4,7 +4,7 @@ const today = new Date();
 const todayDay = format(today, 'dd');
 const todayMonth = format(today, 'MM');
 const todayYear = format(today, 'yyyy');
-const todayTaskFormat = format(today, 'dd MMM yyyy');
+const todayFullString = format(today, 'dd MMM yyyy');
 
 // to test cannot be issued in past
 const fourDaysAgo = sub(today, { days: 4 });
@@ -68,6 +68,8 @@ const threeMonthsOneDay = add(today, { months: 3, days: 1 });
 const threeMonthsOneDayDay = format(threeMonthsOneDay, 'dd');
 const threeMonthsOneDayMonth = format(threeMonthsOneDay, 'MM');
 const threeMonthsOneDayYear = format(threeMonthsOneDay, 'yyyy');
+const threeMonthsOneDayFullString = format(threeMonthsOneDay, 'dd MMM yyyy');
+const threeMonthsOneDayFullMonthString = format(threeMonthsOneDay, 'd MMMM yyyy');
 
 const twentyEight = add(today, { days: 28 });
 const twentyEightDay = format(twentyEight, 'dd');
@@ -196,6 +198,8 @@ module.exports = {
   threeMonthsOneDayMonth,
   threeMonthsOneDayYear,
   sixYearsOneDay,
+  threeMonthsOneDayFullString,
+  threeMonthsOneDayFullMonthString,
   sixYearsOneDayDay,
   sixYearsOneDayMonth,
   sixYearsOneDayYear,
@@ -223,7 +227,7 @@ module.exports = {
   todayUnixMonth,
   todayUnixYear,
   threeDaysAgoPlusMonth,
-  todayTaskFormat,
+  todayFullString,
   todayFormattedFull,
   todayFormatted,
   todayFormattedShort,

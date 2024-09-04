@@ -270,6 +270,16 @@ authRouter
   );
 
 authRouter
+  .route('/banks/:bankId/utilisation-reports/report-data-validation')
+  .post(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    handleExpressValidatorResult,
+    validateUserAndBankIdMatch,
+    utilisationReportControllers.validateUtilisationReportData,
+  );
+
+authRouter
   .route('/banks/:bankId/utilisation-reports/last-uploaded')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),

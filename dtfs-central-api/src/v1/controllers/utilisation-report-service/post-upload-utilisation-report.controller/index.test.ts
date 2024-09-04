@@ -2,7 +2,7 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
-import { ApiError, MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { MOCK_AZURE_FILE_INFO, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { postUploadUtilisationReport, postUploadUtilisationReportPayloadValidator, PostUploadUtilisationReportRequestBody } from '.';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { TransactionFailedError } from '../../../../errors';
@@ -12,12 +12,6 @@ import { aUtilisationReportRawCsvData } from '../../../../../test-helpers';
 jest.mock('../../../../helpers');
 
 console.error = jest.fn();
-
-class TestApiError extends ApiError {
-  constructor({ message, status }: { message: string; status: number }) {
-    super({ message, status });
-  }
-}
 
 describe('post-upload-utilisation-report controller', () => {
   const userId = new ObjectId().toString();
@@ -122,10 +116,7 @@ describe('post-upload-utilisation-report controller', () => {
 
       const errorMessage = 'An error message';
       const errorStatus = HttpStatusCode.BadRequest;
-      const testApiError = new TestApiError({
-        message: errorMessage,
-        status: errorStatus,
-      });
+      const testApiError = new TestApiError(errorStatus, errorMessage);
 
       jest.mocked(executeWithSqlTransaction).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
 
