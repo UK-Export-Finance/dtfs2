@@ -1,9 +1,4 @@
-import {
-  UTILISATION_REPORT_HEADERS,
-  UtilisationReportDataValidationError,
-  UtilisationReportCsvCellData,
-  UtilisationReportCsvRowData,
-} from '@ukef/dtfs2-common';
+import { UTILISATION_REPORT_HEADERS, UtilisationReportDataValidationError, UtilisationReportCsvRowData } from '@ukef/dtfs2-common';
 import {
   generateUkefFacilityIdError,
   generateBaseCurrencyError,
@@ -82,7 +77,7 @@ export const validateUtilisationReportCsvHeaders = (
  * @returns An array of errors if there are any
  */
 export const validateUtilisationReportCsvCellData = (
-  csvData: Record<string, UtilisationReportCsvCellData>[],
+  csvData: UtilisationReportCsvRowData[],
   availableHeaders: string[],
 ): UtilisationReportDataValidationError[] => {
   const cellValidations = [
