@@ -1,5 +1,3 @@
-const dateConstants = require('../../../../../e2e-fixtures/dateConstants');
-
 const amendmentsPage = {
   amendmentInProgressBar: () => cy.get('[data-cy="amendment--in-progress-bar"]'),
   amendmentInProgressBarLink: () => cy.get('[data-cy="amendment--in-progress-bar-link"]'),
@@ -36,17 +34,14 @@ const amendmentsPage = {
   amendmentFacilityEndDateDayInput: () => cy.get('[data-cy="amendment--facility-end-date-day"]'),
   amendmentFacilityEndDateMonthInput: () => cy.get('[data-cy="amendment--facility-end-date-month"]'),
   amendmentFacilityEndDateYearInput: () => cy.get('[data-cy="amendment--facility-end-date-year"]'),
+  amendmentCurrentFacilityEndDate: () => cy.get('[data-cy="amendment--current-facility-end-date"]'),
+  amendmentFacilityEndDateDetails: () => cy.get('[data-cy="amendment--facility-end-date-details"]'),
 
-  navigateThroughFacilityEndDateAmendmentPages: () => {
-    cy.url().should('contain', 'is-using-facility-end-date');
-    amendmentsPage.isUsingFacilityEndDateYes().click();
-    cy.clickContinueButton();
-    cy.url().should('contain', 'facility-end-date');
-    amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(dateConstants.todayDay);
-    amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.todayYear);
-    cy.clickContinueButton();
-  },
+  amendmentBankReviewDateDayInput: () => cy.get('[data-cy="amendment--bank-review-date-day"]'),
+  amendmentBankReviewDateMonthInput: () => cy.get('[data-cy="amendment--bank-review-date-month"]'),
+  amendmentBankReviewDateYearInput: () => cy.get('[data-cy="amendment--bank-review-date-year"]'),
+  amendmentCurrentBankReviewDate: () => cy.get('[data-cy="amendment--current-bank-review-date"]'),
+  amendmentBankReviewDateDetails: () => cy.get('[data-cy="amendment--bank-review-date-details"]'),
 
   addAmendmentButton: () => cy.get('[data-cy="amendment--add-amendment-button"]'),
   amendmentSendToBankButton: () => cy.get('[data-cy="amendment--send-to-bank-button"]'),
@@ -72,7 +67,11 @@ const amendmentsPage = {
   amendmentAnswerEffectiveDate: () => cy.get('[data-cy="amendment--effective-date-response"]'),
   amendmentAnswerCoverEndDate: () => cy.get('[data-cy="amendment--cover-end-date-response"]'),
   amendmentAnswerIsUsingFacilityEndDate: () => cy.get('[data-cy="amendment--is-using-facility-end-date-response"]'),
+  amendmentAnswerIsUsingFacilityEndDateChangeLink: () => cy.get('[data-cy="amendment--is-using-facility-end-date-link"]'),
   amendmentAnswerFacilityEndDate: () => cy.get('[data-cy="amendment--facility-end-date-response"]'),
+  amendmentAnswerFacilityEndDateChangeLink: () => cy.get('[data-cy="amendment--facility-end-date-link"]'),
+  amendmentAnswerBankReviewDate: () => cy.get('[data-cy="amendment--bank-review-date-response"]'),
+  amendmentAnswerBankReviewDateChangeLink: () => cy.get('[data-cy="amendment--bank-review-date-link"]'),
   amendmentAnswerFacilityValue: () => cy.get('[data-cy="amendment--facility-value-response"]'),
 
   amendmentDetails: {

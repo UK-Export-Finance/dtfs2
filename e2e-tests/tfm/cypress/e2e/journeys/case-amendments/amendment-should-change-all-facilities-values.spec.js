@@ -6,8 +6,6 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import facilitiesPage from '../../pages/facilitiesPage';
 
-const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
-
 context('Amendments all facilities table - should show amendment value and coverEndDate', () => {
   let dealId;
   const dealFacilities = [];
@@ -83,10 +81,6 @@ context('Amendments all facilities table - should show amendment value and cover
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.tomorrowMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.tomorrowYear);
     cy.clickContinueButton();
-
-    if (tfmFacilityEndDateEnabled) {
-      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
-    }
 
     cy.url().should('contain', 'check-answers');
     cy.clickContinueButton();

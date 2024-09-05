@@ -4,9 +4,7 @@ import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
-
-const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
+import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../e2e-fixtures';
 
 context('Amendments - Cover End Date', () => {
   let dealId;
@@ -26,6 +24,12 @@ context('Amendments - Cover End Date', () => {
     });
   });
 
+  beforeEach(() => {
+    cy.login(PIM_USER_1);
+    const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+  });
+
   after(() => {
     cy.deleteDeals(dealId, ADMIN);
     dealFacilities.forEach((facility) => {
@@ -34,10 +38,6 @@ context('Amendments - Cover End Date', () => {
   });
 
   it('should take you to `Enter the new cover end date` page', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.addAmendmentButton().should('exist');
     amendmentsPage.addAmendmentButton().contains('Add an amendment request');
@@ -64,10 +64,6 @@ context('Amendments - Cover End Date', () => {
   });
 
   it('should NOT allow users to enter the same cover end date or with wrong year format', () => {
-    cy.login(PIM_USER_1);
-    const facilityId = dealFacilities[0]._id;
-    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
     facilityPage.facilityTabAmendments().click();
     cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
@@ -109,79 +105,44 @@ context('Amendments - Cover End Date', () => {
     errorSummary().contains('The year for the amendment cover end date must include 4 numbers');
   });
 
-  if (tfmFacilityEndDateEnabled) {
-    it('should continue to the `Has the bank provided a facility end date` page if the cover end date is valid and the feature flag is enabled', () => {
-      cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
-      cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+  it('should continue to the `Check answers` page if the cover end date is valid and only the cover end date is to be changed', () => {
+    facilityPage.facilityTabAmendments().click();
+    cy.clickContinueButton();
+    cy.url().should('contain', 'request-date');
+    cy.clickContinueButton();
+    cy.url().should('contain', 'request-approval');
+    cy.clickContinueButton();
+    cy.url().should('contain', 'amendment-options');
+    cy.clickContinueButton();
+    cy.url().should('contain', 'cover-end-date');
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.clickContinueButton();
 
-      facilityPage.facilityTabAmendments().click();
-      cy.clickContinueButton();
-      cy.url().should('contain', 'request-date');
-      cy.clickContinueButton();
-      cy.url().should('contain', 'request-approval');
-      cy.clickContinueButton();
-      cy.url().should('contain', 'amendment-options');
-      cy.clickContinueButton();
-      cy.url().should('contain', 'cover-end-date');
-      amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.todayDay);
-      amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
-      cy.clickContinueButton();
+    cy.url().should('contain', 'check-answers');
 
-      cy.url().should('contain', 'is-using-facility-end-date');
-    });
-  }
+    amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
+    amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'Yes');
+    amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.todayDay);
+  });
 
-  if (!tfmFacilityEndDateEnabled) {
-    it('should continue to the `Check answers` page if the cover end date is valid, only the cover end date is to be changed and the facility end date FF is disabled', () => {
-      cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
-      cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+  it('should continue to the `Enter the facility value` page if the cover end date is valid and the facility value also needs changing', () => {
+    facilityPage.facilityTabAmendments().click();
+    cy.clickContinueButton();
+    cy.url().should('contain', 'request-date');
+    cy.clickContinueButton();
+    cy.url().should('contain', 'request-approval');
+    cy.clickContinueButton();
+    cy.url().should('contain', 'amendment-options');
+    amendmentsPage.amendmentFacilityValueCheckbox().click();
+    cy.clickContinueButton();
+    cy.url().should('contain', 'cover-end-date');
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.todayDay);
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.clickContinueButton();
 
-      facilityPage.facilityTabAmendments().click();
-      cy.clickContinueButton();
-      cy.url().should('contain', 'request-date');
-      cy.clickContinueButton();
-      cy.url().should('contain', 'request-approval');
-      cy.clickContinueButton();
-      cy.url().should('contain', 'amendment-options');
-      cy.clickContinueButton();
-      cy.url().should('contain', 'cover-end-date');
-      amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.todayDay);
-      amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
-      cy.clickContinueButton();
-
-      cy.url().should('contain', 'check-answers');
-
-      amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
-      amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'Yes');
-      amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.todayDay);
-      amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('not.exist');
-    });
-
-    it('should continue to the `Enter the facility value` page if the cover end date is valid, the facility value also needs changing and the facility end date FF is disabled', () => {
-      cy.login(PIM_USER_1);
-      const facilityId = dealFacilities[0]._id;
-      cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
-
-      facilityPage.facilityTabAmendments().click();
-      cy.clickContinueButton();
-      cy.url().should('contain', 'request-date');
-      cy.clickContinueButton();
-      cy.url().should('contain', 'request-approval');
-      cy.clickContinueButton();
-      cy.url().should('contain', 'amendment-options');
-      amendmentsPage.amendmentFacilityValueCheckbox().click();
-      cy.clickContinueButton();
-      cy.url().should('contain', 'cover-end-date');
-      amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.todayDay);
-      amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
-      cy.clickContinueButton();
-
-      cy.url().should('contain', 'facility-value');
-    });
-  }
+    cy.url().should('contain', 'facility-value');
+  });
 });

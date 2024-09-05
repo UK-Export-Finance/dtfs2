@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import caseSubNavigation from '../../partials/caseSubNavigation';
+import { caseSubNavigation } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
@@ -7,8 +7,6 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITING_SUPPORT_1, UNDERWRITER_MANAGER_1, UNDERWRITER_1, RISK_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 import { DISPLAY_USER_TEAMS } from '../../../fixtures/constants';
-
-const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 
 const completeTask = (completeTaskParams) => {
   const { userId, groupId, taskId } = completeTaskParams;
@@ -105,10 +103,6 @@ context('Amendments tasks - manual amendment tasks', () => {
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
     cy.clickContinueButton();
 
-    if (tfmFacilityEndDateEnabled) {
-      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
-    }
-
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
@@ -197,8 +191,8 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.filterRadioAllTasks().click();
 
     pages.tasksPage.tasks.row(1, 1).assignedTo().first().contains(`${PIM_USER_1.firstName} ${PIM_USER_1.lastName}`);
-    pages.tasksPage.tasks.row(1, 1).dateStarted().first().contains(dateConstants.todayTaskFormat);
-    pages.tasksPage.tasks.row(1, 1).dateCompleted().first().contains(dateConstants.todayTaskFormat);
+    pages.tasksPage.tasks.row(1, 1).dateStarted().first().contains(dateConstants.todayFullString);
+    pages.tasksPage.tasks.row(1, 1).dateCompleted().first().contains(dateConstants.todayFullString);
     pages.tasksPage.tasks.row(1, 1).status().first().contains('Done');
 
     pages.tasksPage.tasks.row(1, 2).status().contains('To do');

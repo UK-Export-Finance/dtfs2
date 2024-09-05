@@ -80,7 +80,7 @@
     %}
     {{- optionsWithHTML.push(defaultCoverEndDate) | reject() }}
 
-    {% if isTfmFacilityEndDateFeatureFlagEnabled %}
+    {% if showFacilityEndDate %}
       {% set defaultIsUsingFacilityEndDate =
         {
           key:{ text: 'Bank provided a facility end date' },

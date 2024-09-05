@@ -9,8 +9,6 @@ import pages from '../../pages';
 import { commonTestUnderwriterTasksAssignedToUser } from '../../common-tests/assessmentTasksAssignedTo';
 import { TASKS } from '../../../fixtures/constants';
 
-const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
-
 context('Amendments underwriting - add lead underwriter', () => {
   describe('Amendments add lead underwriter', () => {
     let dealId;
@@ -74,10 +72,6 @@ context('Amendments underwriting - add lead underwriter', () => {
       amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
       cy.clickContinueButton();
-
-      if (tfmFacilityEndDateEnabled) {
-        amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
-      }
 
       cy.url().should('contain', 'facility-value');
       amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
