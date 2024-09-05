@@ -1,6 +1,6 @@
 import { add } from 'date-fns';
 import relative from '../../relativeURL';
-import caseSubNavigation from '../../partials/caseSubNavigation';
+import { caseSubNavigation } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../pages/caseDealPage';
