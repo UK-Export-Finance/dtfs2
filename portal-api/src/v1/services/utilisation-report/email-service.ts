@@ -22,7 +22,7 @@ const getUkefGefReportingEmailRecipients = () => {
  * @returns The TFM UI URL.
  * @throws {InvalidEnvironmentVariableError} If the TFM_UI_URL environment variable is not defined or is empty.
  */
-const getTfmUiUrl = () => {
+export const getTfmUiUrl = (): string => {
   const tfmUiUrl = process.env.TFM_UI_URL;
   if (!tfmUiUrl) {
     throw new InvalidEnvironmentVariableError('TFM_UI_URL environment variable is not defined or is empty');
@@ -35,7 +35,6 @@ const getTfmUiUrl = () => {
  * Sends notification email to UKEF GEF reporting email recipients that a utilisation report has been submitted
  * @param bankName - name of the bank
  * @param reportPeriod - period for which the report covers as a string, eg. June 2023
- * @param tfmHomepageUrl - URL for the TFM homepage
  */
 export const sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam = async (bankName: string, reportPeriod: string) => {
   const tfmHomepageUrl = getTfmUiUrl();

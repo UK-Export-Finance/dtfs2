@@ -1,5 +1,7 @@
+import { InvalidEnvironmentVariableError } from '@ukef/dtfs2-common';
 import { BankResponse } from '../../api-response-types';
 import {
+  getTfmUiUrl,
   sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam,
   sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam,
 } from './email-service';
@@ -65,13 +67,13 @@ describe('emailService', () => {
       expect(sendEmail).toHaveBeenCalledTimes(0);
     });
 
-    it('should throw an error if TFM_UI_URL is undefined', async () => {
+    it('should throw an InvalidEnvironmentVariable error if TFM_UI_URL is undefined', async () => {
       // Arrange
       delete process.env.TFM_UI_URL;
       process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT = '["email1@ukexportfinance.gov.uk"]';
 
       // Act + Assert
-      await expect(sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam('My Bank', 'June 2026')).rejects.toThrow();
+      await expect(sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam('My Bank', 'June 2026')).rejects.toThrow(InvalidEnvironmentVariableError);
       expect(sendEmail).toHaveBeenCalledTimes(0);
     });
   });
@@ -106,6 +108,28 @@ describe('emailService', () => {
         reportSubmittedBy: 'first last',
         reportSubmittedDate: '2 May 2024 at 5:26 pm',
       });
+    });
+  });
+
+  describe('getTfmUiUrl', () => {
+    it('should throw an InvalidEnvironmentVariable error if TFM_UI_URL is undefined', () => {
+      // Arrange
+      delete process.env.TFM_UI_URL;
+
+      // Act + Assert
+      expect(() => getTfmUiUrl()).toThrow(InvalidEnvironmentVariableError);
+    });
+
+    it('should return TFM_UI_URL when defined', () => {
+      // Arrange
+      const tfmUiUrl = 'https://www.ukexportfinance.gov.uk';
+      process.env.TFM_UI_URL = 'https://www.ukexportfinance.gov.uk';
+
+      // Act
+      const result = getTfmUiUrl();
+
+      // Assert
+      expect(result).toEqual(tfmUiUrl);
     });
   });
 });
