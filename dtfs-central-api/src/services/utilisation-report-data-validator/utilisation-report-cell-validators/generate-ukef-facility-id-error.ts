@@ -1,6 +1,6 @@
 import { UKEF_FACILITY_ID_REGEX } from '../../../constants/regex';
 import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
-import { FacilityUtilisationDataRepo } from '../../../repositories/facility-utilisation-data-repo';
+import { TfmFacilitiesRepo } from '../../../repositories/tfm-facilities-repo';
 
 /**
  * Generate and return an error for the facility id cell if value is invalid
@@ -29,9 +29,9 @@ export const generateUkefFacilityIdError: UtilisationReportCellValidationErrorGe
     };
   }
 
-  const facilityUtilisationDataExists = await FacilityUtilisationDataRepo.existsById(facilityIdCellData.value);
+  const ukefFacilityIdExists = await TfmFacilitiesRepo.ukefFacilityIdExists(facilityIdCellData.value);
 
-  if (!facilityUtilisationDataExists) {
+  if (!ukefFacilityIdExists) {
     return {
       errorMessage: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
       column: facilityIdCellData?.column,

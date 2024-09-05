@@ -133,7 +133,6 @@ export const NODE_TASKS = {
   INSERT_PAYMENTS_INTO_DB: 'insertPaymentsIntoDb',
   REMOVE_ALL_PAYMENTS_FROM_DB: 'removeAllPaymentsFromDb',
   REMOVE_ALL_FEE_RECORDS_FROM_DB: 'removeAllFeeRecordsFromDb',
-  INSERT_FACILITY_UTILISATION_DATA_INTO_DB: 'insertFacilityUtilisationDataIntoDb',
   DELETE_ALL_FROM_SQL_DB: 'deleteAllFromSqlDb',
   INSERT_TFM_FACILITIES_INTO_DB: 'insertManyTfmFacilities',
   DELETE_ALL_TFM_FACILITIES_FROM_DB: 'deleteAllTfmFacilities',

@@ -159,14 +159,6 @@ module.exports = {
     const removeAllFeeRecordsFromDb = async () => await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
 
     /**
-     * Inserts one or more facility utilisation data entities into the SQL database
-     * @param {FacilityUtilisationDataEntity | FacilityUtilisationDataEntity[]} facilityUtilisationData - The facility utilisation data
-     * @returns The inserted entity
-     */
-    const insertFacilityUtilisationDataIntoDb = async (facilityUtilisationData) =>
-      await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
-
-    /**
      * Deletes all data from the SQL database
      */
     const deleteAllFromSqlDb = async () =>
@@ -307,7 +299,6 @@ module.exports = {
       insertPaymentsIntoDb,
       removeAllPaymentsFromDb,
       removeAllFeeRecordsFromDb,
-      insertFacilityUtilisationDataIntoDb,
       deleteAllFromSqlDb,
     };
   },

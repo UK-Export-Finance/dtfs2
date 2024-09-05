@@ -1,14 +1,14 @@
 import { when } from 'jest-when';
 import { generateUkefFacilityIdError } from './generate-ukef-facility-id-error';
-import { FacilityUtilisationDataRepo } from '../../../repositories/facility-utilisation-data-repo';
+import { TfmFacilitiesRepo } from '../../../repositories/tfm-facilities-repo';
 
 describe('generateUkefFacilityIdError', () => {
   const testExporterName = 'test exporter';
 
-  const facilityUtilisationDataExistsSpy = jest.spyOn(FacilityUtilisationDataRepo, 'existsById');
+  const facilityIdExistsSpy = jest.spyOn(TfmFacilitiesRepo, 'ukefFacilityIdExists');
 
   beforeEach(() => {
-    facilityUtilisationDataExistsSpy.mockResolvedValue(true);
+    facilityIdExistsSpy.mockResolvedValue(true);
   });
 
   afterEach(() => {
@@ -59,7 +59,7 @@ describe('generateUkefFacilityIdError', () => {
     expect(ukefFacilityIdError).toEqual(expectedError);
   });
 
-  it('returns an error when the value could not be found in the facility utilisation data table', async () => {
+  it('returns an error when the value could not be found in the TFM facilities collection', async () => {
     // Arrange
     const validFacilityId = {
       value: '12345678',
@@ -74,7 +74,7 @@ describe('generateUkefFacilityIdError', () => {
       exporter: testExporterName,
     };
 
-    when(facilityUtilisationDataExistsSpy).calledWith('12345678').mockResolvedValue(false);
+    when(facilityIdExistsSpy).calledWith('12345678').mockResolvedValue(false);
 
     // Act
     const ukefFacilityIdError = await generateUkefFacilityIdError(validFacilityId, testExporterName);

@@ -1,8 +1,9 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'supertest';
-import { FacilityUtilisationDataEntityMockBuilder, UTILISATION_REPORT_HEADERS, UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, TfmFacility, UTILISATION_REPORT_HEADERS, UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
-import { SqlDbHelper } from '../../sql-db-helper';
+import { mongoDbClient } from '../../../src/drivers/db-client';
+import { aFacility, aTfmFacility } from '../../../test-helpers';
 
 interface SuccessResponse extends Response {
   body: {
@@ -63,14 +64,16 @@ describe(`POST ${URL}`, () => {
       });
 
       beforeEach(async () => {
-        await SqlDbHelper.deleteAll();
+        const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+        await tfmFacilitiesCollection.deleteMany({});
       });
 
       afterAll(async () => {
-        await SqlDbHelper.deleteAll();
+        const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+        await tfmFacilitiesCollection.deleteMany({});
       });
 
-      it('returns the "facility ID not recognised" error when the supplied facility id does not exist in the FacilityUtilisationData table', async () => {
+      it('returns the "facility ID not recognised" error when the supplied facility id does not exist in the TFM facilities collection', async () => {
         // Arrange
         const requestBody = getRequestBody();
 
@@ -82,12 +85,20 @@ describe(`POST ${URL}`, () => {
         expect(errorMessages).toContain(expectedError);
       });
 
-      it('does not return the "facility ID not recognised" error when the facility id does exist in the FacilityUtilisationData table', async () => {
+      it('does not return the "facility ID not recognised" error when the facility id does exist in the TFM facilities collection', async () => {
         // Arrange
         const requestBody = getRequestBody();
 
-        const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(ukefFacilityId).build();
-        await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
+        const tfmFacility: TfmFacility = {
+          ...aTfmFacility(),
+          facilitySnapshot: {
+            ...aFacility(),
+            ukefFacilityId,
+          },
+        };
+
+        const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+        await tfmFacilitiesCollection.insertOne(tfmFacility);
 
         // Act
         const response: SuccessResponse = await testApi.post(requestBody).to(URL);

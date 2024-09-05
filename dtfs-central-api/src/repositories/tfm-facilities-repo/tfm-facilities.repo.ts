@@ -263,4 +263,15 @@ export class TfmFacilitiesRepo {
       'facilitySnapshot.ukefFacilityId': { $eq: ukefFacilityId },
     });
   }
+
+  /**
+   * Checks whether or not a document exists which has the matching UKEF facility ID
+   * @param ukefFacilityId - The UKEF facility ID
+   * @returns Whether a not a document with that id exists
+   */
+  public static async ukefFacilityIdExists(ukefFacilityId: string): Promise<boolean> {
+    const collection = await this.getCollection();
+    const numberOfFoundDocuments = await collection.count({ 'facilitySnapshot.ukefFacilityId': { $eq: ukefFacilityId } });
+    return numberOfFoundDocuments > 0;
+  }
 }
