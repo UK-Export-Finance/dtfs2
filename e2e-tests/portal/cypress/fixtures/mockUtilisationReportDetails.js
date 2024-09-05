@@ -86,7 +86,7 @@ const upToDateReportDetails = generateUpToDateReportDetails();
 
 const tfmFacilityForReport = {
   facilitySnapshot: {
-    ukefFacilityId: '', // this is taken from the fixtures 'valid-<...>.xlsx' files
+    ukefFacilityId: '20001371', // this is taken from the fixtures 'valid-utilisation-report-<...>.xlsx' files
   },
 };
 
