@@ -10,6 +10,7 @@ context('Confirmation', () => {
 
   after(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
   });
 
   describe('After logging in, submitting a file and clicking the confirm and send button', () => {

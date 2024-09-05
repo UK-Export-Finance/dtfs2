@@ -37,7 +37,7 @@ describe('generateUkefFacilityIdError', () => {
     expect(ukefFacilityIdError).toEqual(expectedError);
   });
 
-  it('returns an error when the value is not a valid UKEF Facility ID', async () => {
+  it('returns an error when the value is not an 8 to 10 digit string', async () => {
     // Arrange
     const invalidFacilityId = {
       value: '1234567',

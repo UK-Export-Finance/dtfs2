@@ -54,7 +54,7 @@ describe(`POST ${URL}`, () => {
       expect(response.status).toBe(HttpStatusCode.Ok);
     });
 
-    describe('and when the UKEF facility ID is valid', () => {
+    describe('and when the UKEF facility ID is an 8 to 10 digit string', () => {
       const expectedError = 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.';
 
       const ukefFacilityId = '123456789';
