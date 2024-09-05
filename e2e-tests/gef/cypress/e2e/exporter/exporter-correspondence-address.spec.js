@@ -20,11 +20,11 @@ context('Incomplete exporter section - application details page', () => {
     it('creates the application', () => {
       dashboardPage.createNewSubmission().click();
       dashboardPage.gefSubmission().click();
-      dashboardPage.continueButton().click();
+      cy.clickContinueButton();
       dashboardPage.mandatoryCriteriaYes().click();
-      dashboardPage.continueButton().click();
+      cy.clickContinueButton();
       dashboardPage.internalRefName().type('A');
-      dashboardPage.continueButton().click();
+      cy.clickContinueButton();
       cy.url().then((thisUrl) => {
         url = thisUrl;
         // get dealId from last split
@@ -36,9 +36,9 @@ context('Incomplete exporter section - application details page', () => {
       cy.visit(url);
       applicationDetails.exporterDetailsLink().click();
       companiesHouse.regNumberField().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
-      companiesHouse.continueButton().click();
+      cy.clickContinueButton();
       exportersAddress.noRadioButton().click();
-      exportersAddress.continueButton().click();
+      cy.clickContinueButton();
       aboutExporter.microRadioButton().click();
       aboutExporter.probabilityOfDefaultInput().type('10');
       aboutExporter.isFinancingIncreasingRadioYes().click();
@@ -122,12 +122,12 @@ context('Incomplete exporter section - application details page', () => {
 
       exportersAddress.yesRadioButton().click();
       exportersAddress.correspondenceAddress().type('SW1A 2AA');
-      exportersAddress.continueButton().click();
+      cy.clickContinueButton();
 
       selectExportersCorAddress.selectAddress().select('0');
-      selectExportersCorAddress.continueButton().click();
+      cy.clickContinueButton();
 
-      exportersAddress.saveAndReturn().click();
+      cy.clickSaveAndReturnButton();
     });
 
     it('link for correspondence address should be changed and redirect to correspondence address page', () => {
