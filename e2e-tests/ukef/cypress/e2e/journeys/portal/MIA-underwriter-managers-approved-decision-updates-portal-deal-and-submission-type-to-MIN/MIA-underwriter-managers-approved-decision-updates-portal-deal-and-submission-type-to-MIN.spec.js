@@ -121,6 +121,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     tfmPartials.caseSubNavigation.underwritingLink().click();
     tfmPages.managersDecisionPage.addDecisionLink().click({ force: true });
+
     const MOCK_COMMENTS = 'e2e test comment';
 
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
