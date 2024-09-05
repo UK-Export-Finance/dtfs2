@@ -63,17 +63,17 @@ constant at the top of the `index.ts` file.
 Follow these steps to run the migration script:
 
 1. Ensure the required environment variables are set in the `utils/.env` file.
-See the
-["Required Environment Variables" section](#required-environment-variables)
-for details.
+   See the
+   ["Required Environment Variables" section](#required-environment-variables)
+   for details.
 2. Update the report period constant at the top of `index.ts` if necessary.
 3. Prepare your JSON input file with the required structure. See the
-["JSON Input File Structure" section](#json-input-file-structure) for details.
+   ["JSON Input File Structure" section](#json-input-file-structure) for details.
 4. Update the JSON input file path constant (`JSON_FILE_PATH`) with the
-correct path.
+   correct path.
 5. Run the script from the `utils` directory using the script command:
 
-    `npm run migrate-acbs-utilisation-data-to-tfm`
+   `npm run migrate-acbs-utilisation-data-to-tfm`
 
 6. Check the console output for any error messages or successful completion of
-the migration.
+   the migration.

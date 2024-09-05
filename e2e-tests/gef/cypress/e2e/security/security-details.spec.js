@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { cancelButton, errorSummary, form, mainHeading, submitButton } from '../partials';
 import securityDetails from '../pages/security-details';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -26,18 +27,18 @@ context('Security Details Page', () => {
   describe('Visiting page as cash facility', () => {
     it('displays the correct elements', () => {
       securityDetails.visit(dealId);
-      securityDetails.mainHeading();
-      securityDetails.form();
+      mainHeading();
+      form();
       securityDetails.exporterSecurity();
       securityDetails.facilitySecurity();
-      securityDetails.continueButton();
-      securityDetails.cancelButton();
+      submitButton();
+      cancelButton();
     });
 
     it('shows error message when security details have been entered', () => {
       securityDetails.visit(dealId);
-      securityDetails.continueButton().click();
-      securityDetails.errorSummary();
+      cy.clickSubmitButton();
+      errorSummary();
       securityDetails.exporterSecurityError();
       securityDetails.facilitySecurityError();
     });
@@ -48,8 +49,8 @@ context('Security Details Page', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type(longString);
       securityDetails.facilitySecurity().type(longString);
-      securityDetails.continueButton().click();
-      securityDetails.errorSummary();
+      cy.clickSubmitButton();
+      errorSummary();
       securityDetails.exporterSecurityError();
       securityDetails.facilitySecurityError();
     });
@@ -60,8 +61,8 @@ context('Security Details Page', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type(invalidString);
       securityDetails.facilitySecurity().type(invalidString);
-      securityDetails.continueButton().click();
-      securityDetails.errorSummary();
+      cy.clickSubmitButton();
+      errorSummary();
       securityDetails.exporterSecurityError();
       securityDetails.facilitySecurityError();
     });
@@ -70,13 +71,13 @@ context('Security Details Page', () => {
       securityDetails.visit(dealId);
       securityDetails.exporterSecurity().type('Valid security details');
       securityDetails.facilitySecurity().type('Valid security details');
-      securityDetails.continueButton().click();
+      cy.clickSubmitButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
 
     it('redirects user to application page when clicking on `Return to application` button', () => {
       securityDetails.visit(dealId);
-      securityDetails.cancelButton().click();
+      cy.clickCancelButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
   });

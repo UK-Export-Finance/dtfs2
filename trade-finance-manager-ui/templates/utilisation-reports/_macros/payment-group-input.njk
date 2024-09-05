@@ -6,17 +6,17 @@
   {% set errorMessage = params.errorMessage %}
 
   {% if errorMessage %}
-    <div class="govuk-form-group--error" data-cy="available-payment-groups-error-wrapper">
+    <div class="govuk-form-group--error" data-cy="payment-groups-error-wrapper">
   {% endif %}
-  <div class="govuk-form-group" data-cy="payment-group-radio-input">
+  <div class="govuk-form-group" id="payment-groups" data-cy="payment-groups">
     <fieldset class="govuk-fieldset">
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l govuk-!-margin-bottom-0">
-        <h2 class="govuk-fieldset__legend--m  govuk-!-margin-top-0" data-cy="payment-group-radio-input-heading">
+        <h2 class="govuk-fieldset__legend--m  govuk-!-margin-top-0" data-cy="payment-groups-heading">
           {{ legendText }}
         </h2>
       </legend>
       {% if errorMessage %}
-        <p class="govuk-error-message" data-cy="available-payment-groups-inline-error-wrapper">
+        <p class="govuk-error-message" data-cy="payment-groups-inline-error-wrapper">
           <span class="govuk-visually-hidden">Error: </span>{{ errorMessage }}
         </p>
       {% endif %}

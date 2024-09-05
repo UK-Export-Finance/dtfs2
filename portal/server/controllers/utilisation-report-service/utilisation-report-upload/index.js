@@ -1,7 +1,6 @@
 const { format, startOfMonth, addMonths } = require('date-fns');
 const { getFormattedReportPeriodWithLongMonth } = require('@ukef/dtfs2-common');
 const { extractCsvData, removeCellAddressesFromArray } = require('../../../utils/csv-utils');
-const { validateCsvData } = require('./utilisation-report-validator');
 const { getUploadErrors } = require('./utilisation-report-upload-errors');
 const { getDueReportPeriodsByBankId, getReportDueDate } = require('./utilisation-report-status');
 const api = require('../../../api');
@@ -117,7 +116,7 @@ const postUtilisationReportUpload = async (req, res) => {
     }
 
     // File is valid so we can start processing and validating its data
-    const { csvJson, fileBuffer, error } = await extractCsvData(req.file); // do we here catch some errors and return generic something went wrong here?
+    const { csvJson, fileBuffer, error } = await extractCsvData(req.file);
     if (error) {
       const extractDataErrorSummary = [
         {
@@ -132,7 +131,8 @@ const postUtilisationReportUpload = async (req, res) => {
       return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportPeriods);
     }
 
-    const csvValidationErrors = validateCsvData(csvJson);
+    const { csvValidationErrors } = await api.generateValidationErrorsForUtilisationReportData(csvJson, bankId, userToken);
+
     if (csvValidationErrors.length > 0) {
       const errorSummary = [
         {

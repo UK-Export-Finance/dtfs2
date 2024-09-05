@@ -113,7 +113,7 @@ exports.getAllGET = async (req, res) => {
     if (doc && doc.length) {
       doc.forEach((facility) => {
         facilities.push({
-          status: facilitiesStatus(facility),
+          status: facilitiesStatus(facility, existingDeal.version),
           details: facility,
           validation: facilitiesValidation(facility, existingDeal.version),
         });

@@ -6,12 +6,15 @@ import { AddToAnExistingPaymentViewModel } from '../../../types/view-models';
 import { SelectedFeeRecordsDetailsResponseBody } from '../../../api-response-types';
 import { aTfmSessionUser } from '../../../../test-helpers';
 import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../helpers';
+import { getLinkToPremiumPaymentsTab } from './get-link-to-premium-payments-tab';
 
 jest.mock('../../../api');
+jest.mock('./get-link-to-premium-payments-tab');
 
 console.error = jest.fn();
 
 describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
+  const reportId = '123';
   const userToken = 'user-token';
   const requestSession = {
     userToken,
@@ -27,7 +30,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
       jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
@@ -43,7 +46,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
 
@@ -63,7 +66,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
 
@@ -83,7 +86,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
       const selectedFeeRecordDetailsResponse: SelectedFeeRecordsDetailsResponseBody = {
@@ -140,7 +143,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
       const selectedFeeRecordDetailsResponse: SelectedFeeRecordsDetailsResponseBody = {
@@ -181,10 +184,10 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       await addToAnExistingPayment(req, res);
 
       // Assert
-      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).availablePaymentsHeading).toEqual(
+      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).paymentsHeading).toEqual(
         'Which payment or group of payments do you want to add the reported fees to?',
       );
-      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).availablePaymentGroups).toEqual([
+      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).paymentGroups).toEqual([
         {
           radioId: 'paymentIds-1,2',
           payments: [
@@ -200,7 +203,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
       jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
@@ -212,11 +215,63 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       expect((res._getRenderData() as AddToAnExistingPaymentViewModel).reportId).toEqual('123');
     });
 
+    it('should set the back link href', async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId },
+        body: {
+          'feeRecordIds-1,22-reportedPaymentsCurrency-USD-status-TO_DO': 'on',
+          'feeRecordIds-333-reportedPaymentsCurrency-USD-status-TO_DO': 'on',
+        },
+      });
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue({
+        ...aSelectedFeeRecordsDetails(),
+        feeRecords: [
+          { ...aSelectedFeeRecordDetails(), id: 1 },
+          { ...aSelectedFeeRecordDetails(), id: 22 },
+          { ...aSelectedFeeRecordDetails(), id: 333 },
+        ],
+      });
+
+      const expectedBackLinkHref = 'back-link-href';
+      jest.mocked(getLinkToPremiumPaymentsTab).mockReturnValue(expectedBackLinkHref);
+
+      // Act
+      await addToAnExistingPayment(req, res);
+
+      // Assert
+      expect(getLinkToPremiumPaymentsTab).toHaveBeenCalledWith(reportId, [1, 22, 333]);
+      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).backLinkHref).toEqual(expectedBackLinkHref);
+    });
+
+    it('should set the selected fee record checkbox ids', async () => {
+      // Arrange
+      const { req, res } = httpMocks.createMocks({
+        session: requestSession,
+        params: { reportId },
+        body: {
+          'feeRecordIds-1,22-reportedPaymentsCurrency-USD-status-TO_DO': 'on',
+          'feeRecordIds-333-reportedPaymentsCurrency-USD-status-TO_DO': 'on',
+        },
+      });
+      jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue(aSelectedFeeRecordsDetails());
+
+      // Act
+      await addToAnExistingPayment(req, res);
+
+      // Assert
+      expect((res._getRenderData() as AddToAnExistingPaymentViewModel).selectedFeeRecordCheckboxIds).toEqual([
+        'feeRecordIds-1,22-reportedPaymentsCurrency-USD-status-TO_DO',
+        'feeRecordIds-333-reportedPaymentsCurrency-USD-status-TO_DO',
+      ]);
+    });
+
     it('should set data sort values for reported fee column to order by currency alphabetically then value', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
       jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue({
@@ -272,7 +327,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
       jest.mocked(api.getSelectedFeeRecordsDetailsWithAvailablePaymentGroups).mockResolvedValue({
@@ -328,7 +383,7 @@ describe('controllers/utilisation-reports/add-to-an-existing-payment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
-        params: { reportId: '123' },
+        params: { reportId },
         body: requestBodyForPostFromAddPaymentPage,
       });
 

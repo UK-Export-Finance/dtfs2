@@ -47,8 +47,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     cy.reload();
 
     feeRecords.forEach(({ id, facilityId }) => {
-      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(id).should('exist');
-      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(id).should('contain', facilityId);
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('exist');
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('contain', facilityId);
     });
   });
 
@@ -70,11 +70,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
     const [visibleFeeRecord, ...removedFeeRecords] = feeRecords;
 
-    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(visibleFeeRecord.id).should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(visibleFeeRecord.id).should('contain', visibleFeeRecord.facilityId);
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(visibleFeeRecord.id).should('exist');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(visibleFeeRecord.id).should('contain', visibleFeeRecord.facilityId);
 
     removedFeeRecords.forEach(({ id }) => {
-      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(id).should('not.exist');
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('not.exist');
     });
   });
 
@@ -96,14 +96,14 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
     const [firstVisibleFeeRecord, secondVisibleFeeRecord, ...removedFeeRecords] = feeRecords;
 
-    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(firstVisibleFeeRecord.id).should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(firstVisibleFeeRecord.id).should('contain', firstVisibleFeeRecord.facilityId);
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(firstVisibleFeeRecord.id).should('exist');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(firstVisibleFeeRecord.id).should('contain', firstVisibleFeeRecord.facilityId);
 
-    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(secondVisibleFeeRecord.id).should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(secondVisibleFeeRecord.id).should('contain', secondVisibleFeeRecord.facilityId);
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(secondVisibleFeeRecord.id).should('exist');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(secondVisibleFeeRecord.id).should('contain', secondVisibleFeeRecord.facilityId);
 
     removedFeeRecords.forEach(({ id }) => {
-      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(id).should('not.exist');
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('not.exist');
     });
   });
 
@@ -151,8 +151,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     cy.reload();
 
     allFeeRecords.forEach(({ id, facilityId }) => {
-      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(id).should('exist');
-      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(id).should('contain', facilityId);
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('exist');
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('contain', facilityId);
     });
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(paymentId).should('exist');
@@ -161,12 +161,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
 
     toDoFeeRecords.forEach(({ id }) => {
-      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(id).should('not.exist');
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('not.exist');
     });
 
     groupedFeeRecords.forEach(({ id, facilityId }) => {
-      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(id).should('exist');
-      pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(id).should('contain', facilityId);
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('exist');
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('contain', facilityId);
     });
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(paymentId).should('exist');
