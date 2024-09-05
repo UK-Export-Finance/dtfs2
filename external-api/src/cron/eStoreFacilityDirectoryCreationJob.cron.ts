@@ -35,57 +35,61 @@ const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
  *   .catch((error) => console.error('Job failed', error));
  */
 export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Promise<void> => {
-  // Argument validation
-  if (
-    !eStoreData?.dealId ||
-    !eStoreData?.siteId ||
-    !eStoreData?.facilityIdentifiers ||
-    !eStoreData?.exporterName ||
-    !eStoreData?.buyerName ||
-    !eStoreData?.dealIdentifier
-  ) {
-    console.error('Invalid arguments provided for eStore facility directory creation');
-    return;
-  }
+  try {
+    // Argument validation
+    if (
+      !eStoreData?.dealId ||
+      !eStoreData?.siteId ||
+      !eStoreData?.facilityIdentifiers ||
+      !eStoreData?.exporterName ||
+      !eStoreData?.buyerName ||
+      !eStoreData?.dealIdentifier
+    ) {
+      console.error('Invalid arguments provided for eStore facility directory creation');
+      return;
+    }
 
-  const { dealId, siteId, facilityIdentifiers, exporterName, buyerName, dealIdentifier } = eStoreData;
+    const { dealId, siteId, facilityIdentifiers, exporterName, buyerName, dealIdentifier } = eStoreData;
 
-  console.info('Attempting to create a facility directory %s for deal %s', facilityIdentifiers, dealIdentifier);
+    console.info('Attempting to create a facility directory %s for deal %s', facilityIdentifiers, dealIdentifier);
 
-  // Step 1: Create the facility directory
-  const response: FacilityFolderResponse[] | EstoreErrorResponse[] = await Promise.all(
-    facilityIdentifiers.map((facilityIdentifier: number) =>
-      createFacilityFolder(siteId, dealIdentifier, {
-        facilityIdentifier,
-        buyerName,
-        exporterName,
-      }),
-    ),
-  );
+    // Step 1: Create the facility directory
+    const response: FacilityFolderResponse[] | EstoreErrorResponse[] = await Promise.all(
+      facilityIdentifiers.map((facilityIdentifier: number) =>
+        createFacilityFolder(siteId, dealIdentifier, {
+          facilityIdentifier,
+          buyerName,
+          exporterName,
+        }),
+      ),
+    );
 
-  // Validate each and every response status code
-  if (response.every((facility) => ACCEPTABLE_STATUSES.includes(facility?.status))) {
-    console.info('Facility %s directory has been created for deal %s', facilityIdentifiers, dealIdentifier);
+    // Validate each and every response status code
+    if (response.every((facility) => ACCEPTABLE_STATUSES.includes(facility?.status))) {
+      console.info('Facility %s directory has been created for deal %s', facilityIdentifiers, dealIdentifier);
 
-    // Step 2: Update `cron-job-logs`
-    await EstoreRepo.updateByDealId(dealId, {
-      'cron.facility': {
-        status: ESTORE_CRON_STATUS.COMPLETED,
-        timestamp: getNowAsEpoch(),
-      },
-    });
+      // Step 2: Update `cron-job-logs`
+      await EstoreRepo.updateByDealId(dealId, {
+        'cron.facility': {
+          status: ESTORE_CRON_STATUS.COMPLETED,
+          timestamp: getNowAsEpoch(),
+        },
+      });
 
-    // Step 3: Initiate document upload
-  } else {
-    console.error('eStore facility directory creation has failed for deal %s %o', dealIdentifier, response);
-
+      // Step 3: Initiate document upload
+    } else {
+      throw new Error(`eStore facility directory creation has failed for deal ${dealIdentifier} ${JSON.stringify(response)}`);
+    }
+  } catch (error) {
     // Update `cron-job-logs`
-    await EstoreRepo.updateByDealId(dealId, {
+    await EstoreRepo.updateByDealId(eStoreData?.dealId, {
       'cron.facility': {
-        response,
+        error: String(error),
         status: ESTORE_CRON_STATUS.FAILED,
         timestamp: getNowAsEpoch(),
       },
     });
+
+    console.error('❌ eStore facility directory creation has failed for deal %s %o', eStoreData?.dealId, error);
   }
 };

@@ -32,52 +32,54 @@ const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
  *   .catch((error) => console.error('Job failed', error));
  */
 export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<void> => {
-  const invalidParams = !eStoreData?.dealId || !eStoreData?.facilityIdentifiers || !eStoreData.dealIdentifier;
+  try {
+    const invalidParams = !eStoreData?.dealId || !eStoreData?.facilityIdentifiers || !eStoreData.dealIdentifier;
 
-  // Argument validation
-  if (invalidParams) {
-    console.error('Invalid arguments provided for eStore facility term store creation');
-    return;
-  }
+    // Argument validation
+    if (invalidParams) {
+      console.error('Invalid arguments provided for eStore facility term store creation');
+      return;
+    }
 
-  // Facilities existence check for addition to term store
-  if (eStoreData?.facilityIdentifiers?.length) {
-    const { dealId, facilityIdentifiers, dealIdentifier } = eStoreData;
+    // Facilities existence check for addition to term store
+    if (eStoreData?.facilityIdentifiers?.length) {
+      const { dealId, facilityIdentifiers, dealIdentifier } = eStoreData;
 
-    console.info('Adding facilities to term store for deal %s', dealIdentifier);
+      console.info('Adding facilities to term store for deal %s', dealIdentifier);
 
-    // Step 1: Add to term store
-    const response: TermStoreResponse[] | EstoreErrorResponse[] = await Promise.all(
-      facilityIdentifiers.map((facilityId: number) => addFacilityToTermStore({ facilityId })),
-    );
+      // Step 1: Add to term store
+      const response: TermStoreResponse[] | EstoreErrorResponse[] = await Promise.all(
+        facilityIdentifiers.map((facilityId: number) => addFacilityToTermStore({ id: facilityId })),
+      );
 
-    // Validate each and every response status code
-    if (response.every((term) => ACCEPTABLE_STATUSES.includes(term?.status))) {
-      console.info('Facilities have been added to term store for deal %s', dealIdentifier);
+      // Validate each and every response status code
+      if (response.every((term) => ACCEPTABLE_STATUSES.includes(term?.status))) {
+        console.info('Facilities have been added to term store for deal %s', dealIdentifier);
 
-      // Step 2: Update `cron-job-logs`
-      await EstoreRepo.updateByDealId(dealId, {
-        $set: {
+        // Step 2: Update `cron-job-logs`
+        await EstoreRepo.updateByDealId(dealId, {
           'cron.term': {
             status: ESTORE_CRON_STATUS.COMPLETED,
             timestamp: getNowAsEpoch(),
           },
-        },
-      });
+        });
 
-      // Step 3: Initiate buyer directory creation
-      await eStoreBuyerDirectoryCreationJob(eStoreData);
-    } else {
-      console.error('Facilities have not been added to term store for deal %s %o', dealIdentifier, response);
-
-      // Update `cron-job-logs`
-      await EstoreRepo.updateByDealId(dealId, {
-        'cron.term': {
-          response,
-          status: ESTORE_CRON_STATUS.FAILED,
-          timestamp: getNowAsEpoch(),
-        },
-      });
+        // Step 3: Initiate buyer directory creation
+        await eStoreBuyerDirectoryCreationJob(eStoreData);
+      } else {
+        throw new Error(`Facilities have not been added to term store for deal ${dealIdentifier} ${JSON.stringify(response)}`);
+      }
     }
+  } catch (error) {
+    // Update `cron-job-logs`
+    await EstoreRepo.updateByDealId(eStoreData?.dealId, {
+      'cron.term': {
+        error: String(error),
+        status: ESTORE_CRON_STATUS.FAILED,
+        timestamp: getNowAsEpoch(),
+      },
+    });
+
+    console.error('❌ eStore term store creation has failed for deal %s %o', eStoreData?.dealId, error);
   }
 };

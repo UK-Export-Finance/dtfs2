@@ -45,7 +45,7 @@ export interface EstoreSite {
  * @property {number} facilityId - Unique identifier for the term store.
  */
 export interface EstoreTermStore {
-  readonly facilityId: number;
+  readonly id: number;
 }
 
 /**
@@ -55,7 +55,7 @@ export interface EstoreTermStore {
  * @extends EstoreSite
  * @property {string} buyerName - Name of the buyer.
  */
-export interface EstoreBuyer extends EstoreSite {
+export interface EstoreBuyer {
   readonly buyerName: string;
 }
 
@@ -68,7 +68,7 @@ export interface EstoreBuyer extends EstoreSite {
  * @property {string} destinationMarket - Destination market for the deal.
  * @property {string} riskMarket - Risk market for the deal.
  */
-export interface EstoreDealFolder extends EstoreBuyer {
+export interface EstoreDealFolder extends EstoreSite, EstoreBuyer {
   readonly dealIdentifier: string;
   readonly destinationMarket: string;
   readonly riskMarket: string;
@@ -81,7 +81,7 @@ export interface EstoreDealFolder extends EstoreBuyer {
  * @extends EstoreBuyer
  * @property {string} facilityIdentifier - Unique identifier for the facility.
  */
-export interface EstoreFacilityFolder extends EstoreBuyer {
+export interface EstoreFacilityFolder extends EstoreSite, EstoreBuyer {
   readonly facilityIdentifier: number;
 }
 

@@ -1,4 +1,4 @@
-import { Document, InsertOneResult, UpdateResult, WithId } from 'mongodb';
+import { Document, InsertOneResult, UpdateResult, WithId, ObjectId } from 'mongodb';
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { getCollection } from '../../database';
 
@@ -83,6 +83,33 @@ export class EstoreRepo {
       return collection.updateOne({ 'payload.dealId': { $eq: dealId } }, { $set: document });
     } catch (error) {
       console.error('An error occurred while updating %s collection.', MONGO_DB_COLLECTIONS.CRON_JOB_LOGS);
+      return false;
+    }
+  }
+
+  /**
+   * Updates a document in the TFM_DEALS collection based on the provided deal ID.
+   *
+   * @param {string} dealId - The unique identifier for the deal.
+   * @param {Document} document - The update filter containing the fields to be updated.
+   *
+   * @returns {Promise<UpdateResult | boolean>} - A promise that resolves to the result of the update operation, or `false` if an error occurs.
+   *
+   * @example
+   * const dealId = '507f1f77bcf86cd799439011';
+   * const document = { status: 'updated' };
+   *
+   * EstoreRepo.updateTfmDealByDealId(dealId, document)
+   *   .then((result) => console.log('Update successful', result))
+   *   .catch((error) => console.error('Update failed', error));
+   */
+  public static async updateTfmDealByDealId(dealId: string, document: Document): Promise<UpdateResult | boolean> {
+    try {
+      const collection = await getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
+
+      return collection.updateOne({ _id: { $eq: new ObjectId(dealId) } }, { $set: document });
+    } catch (error) {
+      console.error('An error occurred while updating %s collection.', MONGO_DB_COLLECTIONS.TFM_DEALS);
       return false;
     }
   }

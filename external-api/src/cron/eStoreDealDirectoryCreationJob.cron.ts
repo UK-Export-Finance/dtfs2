@@ -37,58 +37,62 @@ const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
  *   .catch((error) => console.error('Job failed', error));
  */
 export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promise<void> => {
-  // Argument validation
-  const invalidParams =
-    !eStoreData?.dealId ||
-    !eStoreData?.siteId ||
-    !eStoreData?.exporterName ||
-    !eStoreData?.buyerName ||
-    !eStoreData?.dealIdentifier ||
-    !eStoreData?.destinationMarket ||
-    !eStoreData?.riskMarket;
+  try {
+    // Argument validation
+    const invalidParams =
+      !eStoreData?.dealId ||
+      !eStoreData?.siteId ||
+      !eStoreData?.exporterName ||
+      !eStoreData?.buyerName ||
+      !eStoreData?.dealIdentifier ||
+      !eStoreData?.destinationMarket ||
+      !eStoreData?.riskMarket;
 
-  if (invalidParams) {
-    console.error('Invalid arguments provided for eStore deal directory creation');
-    return;
-  }
+    if (invalidParams) {
+      console.error('Invalid arguments provided for eStore deal directory creation');
+      return;
+    }
 
-  const { dealId, siteId, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = eStoreData;
+    const { dealId, siteId, exporterName, buyerName, dealIdentifier, destinationMarket, riskMarket } = eStoreData;
 
-  console.info('Attempting to create a deal directory for deal %s', dealIdentifier);
-
-  // Step 1: Create the deal directory
-  const response: DealFolderResponse | EstoreErrorResponse = await createDealFolder(siteId, {
-    exporterName,
-    buyerName,
-    dealIdentifier,
-    destinationMarket,
-    riskMarket,
-  });
-
-  // Validate response
-  if (ACCEPTABLE_STATUSES.includes(response?.status)) {
     console.info('Attempting to create a deal directory for deal %s', dealIdentifier);
 
-    // Step 2: Update `cron-job-logs`
-    await EstoreRepo.updateByDealId(dealId, {
-      'cron.deal': {
-        status: ESTORE_CRON_STATUS.COMPLETED,
-        timestamp: getNowAsEpoch(),
-      },
+    // Step 1: Create the deal directory
+    const response: DealFolderResponse | EstoreErrorResponse = await createDealFolder(siteId, {
+      exporterName,
+      buyerName,
+      dealIdentifier,
+      destinationMarket,
+      riskMarket,
     });
 
-    // Step 3: Initiate facility directory creation
-    await eStoreFacilityDirectoryCreationJob(eStoreData);
-  } else {
-    console.error('eStore deal directory creation has failed for deal %s %o', dealIdentifier, response);
+    // Validate response
+    if (ACCEPTABLE_STATUSES.includes(response?.status)) {
+      console.info('Attempting to create a deal directory for deal %s', dealIdentifier);
 
+      // Step 2: Update `cron-job-logs`
+      await EstoreRepo.updateByDealId(dealId, {
+        'cron.deal': {
+          status: ESTORE_CRON_STATUS.COMPLETED,
+          timestamp: getNowAsEpoch(),
+        },
+      });
+
+      // Step 3: Initiate facility directory creation
+      await eStoreFacilityDirectoryCreationJob(eStoreData);
+    } else {
+      throw new Error(`eStore deal directory creation has failed for deal ${dealIdentifier} ${JSON.stringify(response)}`);
+    }
+  } catch (error) {
     // Update `cron-job-logs`
-    await EstoreRepo.updateByDealId(dealId, {
+    await EstoreRepo.updateByDealId(eStoreData?.dealId, {
       'cron.deal': {
-        response,
+        error: String(error),
         status: ESTORE_CRON_STATUS.FAILED,
         timestamp: getNowAsEpoch(),
       },
     });
+
+    console.error('❌ eStore deal directory creation has failed for deal %s %o', eStoreData?.dealId, error);
   }
 };

@@ -112,14 +112,14 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
  * Makes a POST request to the eStore API.
  *
  * @param {string} endpoint - The endpoint to call.
- * @param {Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[]}
+ * @param {Estore | EstoreSite[] | EstoreTermStore[] | EstoreBuyer[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[]}
  * data - The data to send in the request.
  * @param {number} timeout - The timeout for the request.
  * @returns {Promise<EstoreResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
 const postToEstore = async (
   endpoint: string,
-  data: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
+  data: Estore | EstoreSite[] | EstoreTermStore[] | EstoreBuyer[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
   timeout = 0,
 ): Promise<EstoreResponse | EstoreErrorResponse> => {
   try {
