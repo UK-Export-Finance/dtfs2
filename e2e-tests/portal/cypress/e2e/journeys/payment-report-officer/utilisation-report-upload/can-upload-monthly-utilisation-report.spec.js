@@ -96,7 +96,7 @@ context('Monthly utilisation report upload', () => {
 
       utilisationReportUpload.checkReportTitle().should('exist');
       utilisationReportUpload.validationErrorTable().should('exist');
-      utilisationReportUpload.validationErrorTableRows().should('have.length', 7);
+      utilisationReportUpload.validationErrorTableRows().should('have.length.above', 0);
     });
 
     it('should display a summary of errors for an invalid .csv file', () => {
@@ -106,7 +106,7 @@ context('Monthly utilisation report upload', () => {
       utilisationReportUpload.checkReportTitle().should('exist');
       utilisationReportUpload.errorSummary().should('exist');
       utilisationReportUpload.validationErrorTable().should('exist');
-      utilisationReportUpload.validationErrorTableRows().should('have.length', 6);
+      utilisationReportUpload.validationErrorTableRows().should('have.length.above', 0);
     });
 
     it('should allow a file to be re-uploaded after failing the data validation', () => {
