@@ -1,6 +1,14 @@
 import relative from '../../relativeURL';
 import CONSTANTS from '../../../fixtures/constants';
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
+import {
+  today,
+  threeDaysDay,
+  threeDaysMonth,
+  threeDaysYear,
+  threeMonthsOneDayDay,
+  threeMonthsOneDayYear,
+  threeMonthsOneDayMonth,
+} from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
@@ -61,18 +69,18 @@ if (facilityEndDateEnabled) {
         cy.visit(unissuedFacilitiesUrl);
         unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-        aboutFacilityUnissued.issueDateDay().type(dateConstants.threeDaysDay);
-        aboutFacilityUnissued.issueDateMonth().type(dateConstants.threeDaysMonth);
-        aboutFacilityUnissued.issueDateYear().type(dateConstants.threeDaysYear);
+        aboutFacilityUnissued.issueDateDay().type(threeDaysDay);
+        aboutFacilityUnissued.issueDateMonth().type(threeDaysMonth);
+        aboutFacilityUnissued.issueDateYear().type(threeDaysYear);
 
         aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-        aboutFacilityUnissued.coverStartDateDay().type(dateConstants.threeDaysDay);
-        aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.threeDaysMonth);
-        aboutFacilityUnissued.coverStartDateYear().type(dateConstants.threeDaysYear);
+        aboutFacilityUnissued.coverStartDateDay().type(threeDaysDay);
+        aboutFacilityUnissued.coverStartDateMonth().type(threeDaysMonth);
+        aboutFacilityUnissued.coverStartDateYear().type(threeDaysYear);
 
-        aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
-        aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
-        aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+        aboutFacilityUnissued.coverEndDateDay().type(threeMonthsOneDayDay);
+        aboutFacilityUnissued.coverEndDateMonth().type(threeMonthsOneDayMonth);
+        aboutFacilityUnissued.coverEndDateYear().type(threeMonthsOneDayYear);
 
         aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
 
@@ -98,7 +106,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should redirect user to the unissued facility page when clicking continue', () => {
-        cy.fillInBankReviewDate(dateConstants.today);
+        cy.fillInBankReviewDate(today);
 
         bankReviewDate.continueButton().click();
 
@@ -106,7 +114,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should redirect user to the unissued facility page when clicking save and return', () => {
-        cy.fillInBankReviewDate(dateConstants.today);
+        cy.fillInBankReviewDate(today);
 
         bankReviewDate.saveAndReturnButton().click();
 
@@ -141,14 +149,14 @@ if (facilityEndDateEnabled) {
       });
 
       it('should redirect user to the application details page when clicking continue', () => {
-        cy.fillInBankReviewDate(dateConstants.today);
+        cy.fillInBankReviewDate(today);
         bankReviewDate.continueButton().click();
 
         cy.url().should('eq', applicationDetailsUrl);
       });
 
       it('should redirect user to the application details page when clicking save and return', () => {
-        cy.fillInBankReviewDate(dateConstants.today);
+        cy.fillInBankReviewDate(today);
 
         bankReviewDate.saveAndReturnButton().click();
 

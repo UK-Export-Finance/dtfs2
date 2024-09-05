@@ -9,12 +9,11 @@ import { getCoverStartDateOrStartOfToday } from '../../utils/get-cover-start-dat
 import { BankReviewDateViewModel } from '../../types/view-models/bank-review-date-view-model';
 import { Facility } from '../../types/facility';
 
-type BankReviewDateParams = { dealId: string; facilityId: string };
 type BankReviewDatePostBody = { 'bank-review-date-day': string; 'bank-review-date-month': string; 'bank-review-date-year': string };
 
 type PostBankReviewDateRequest = CustomExpressRequest<{
   reqBody: BankReviewDatePostBody;
-  params: BankReviewDateParams;
+  params: { dealId: string; facilityId: string };
   query: { saveAndReturn: string; status: string | undefined };
 }>;
 
@@ -55,6 +54,7 @@ const updateBankReviewDateIfChanged = async (existingFacility: Facility, bankRev
   const applicationUpdate = {
     editorId: user._id,
   };
+
   await api.updateApplication({ dealId: existingFacility.dealId, application: applicationUpdate, userToken });
 };
 

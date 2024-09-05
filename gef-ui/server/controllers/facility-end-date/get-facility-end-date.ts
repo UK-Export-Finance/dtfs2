@@ -6,9 +6,7 @@ import { FacilityEndDateViewModel } from '../../types/view-models/facility-end-d
 import { asLoggedInUserSession } from '../../utils/express-session';
 import { Facility } from '../../types/facility';
 
-type FacilityEndDateParams = { dealId: string; facilityId: string };
-
-type GetFacilityEndDateRequest = CustomExpressRequest<{ params: FacilityEndDateParams; query: { status: string | undefined } }>;
+type GetFacilityEndDateRequest = CustomExpressRequest<{ params: { dealId: string; facilityId: string }; query: { status: string | undefined } }>;
 
 type GetFacilityEndDateParams = {
   req: GetFacilityEndDateRequest;

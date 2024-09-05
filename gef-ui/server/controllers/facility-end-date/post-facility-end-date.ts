@@ -9,12 +9,11 @@ import { FacilityEndDateViewModel } from '../../types/view-models/facility-end-d
 import { getCoverStartDateOrStartOfToday } from '../../utils/get-cover-start-date-or-start-of-today';
 import { Facility } from '../../types/facility';
 
-type FacilityEndDateParams = { dealId: string; facilityId: string };
 type FacilityEndDatePostBody = { 'facility-end-date-day': string; 'facility-end-date-month': string; 'facility-end-date-year': string };
 
 type PostFacilityEndDateRequest = CustomExpressRequest<{
   reqBody: FacilityEndDatePostBody;
-  params: FacilityEndDateParams;
+  params: { dealId: string; facilityId: string };
   query: { saveAndReturn: string; status: string | undefined };
 }>;
 

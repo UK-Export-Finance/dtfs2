@@ -233,11 +233,13 @@ const postChangeUnissuedFacility = async (req, res) => {
     const bankReviewDateRedirectUri = `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/bank-review-date`;
     const unissuedFacilitiesRedirectUri = `/gef/application-details/${dealId}/unissued-facilities`;
 
-    if (isUsingFacilityEndDate === undefined) {
+    if (!isFacilityEndDateEnabled) {
       return res.redirect(unissuedFacilitiesRedirectUri);
     }
 
-    return res.redirect(isUsingFacilityEndDate ? facilityEndDateRedirectUri : bankReviewDateRedirectUri);
+    const redirectUri = isUsingFacilityEndDate ? facilityEndDateRedirectUri : bankReviewDateRedirectUri;
+
+    return res.redirect(redirectUri);
   } catch (error) {
     console.error('Cannot update unissued facility %o', error);
     return res.render('partials/problem-with-service.njk');
@@ -261,6 +263,8 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
   try {
     const { details } = await api.getFacility({ facilityId, userToken });
     const deal = await api.getApplication({ dealId, userToken });
+
+    const isFacilityEndDateEnabled = isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version));
 
     const { issueDate, coverStartDate, coverEndDate, aboutFacilityErrors, errorsObject, isUsingFacilityEndDate } = await facilityValidation({
       body,
@@ -291,7 +295,7 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
         dealId: errorsObject.dealId,
         facilityId: errorsObject.facilityId,
         status: errorsObject.status,
-        isFacilityEndDateEnabled: isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)),
+        isFacilityEndDateEnabled,
         isUsingFacilityEndDate: isUsingFacilityEndDateAsString,
       });
     }
@@ -332,11 +336,13 @@ const postChangeUnissuedFacilityPreview = async (req, res) => {
     const bankReviewDateRedirectUri = `/gef/application-details/${dealId}/unissued-facilities/${facilityId}/bank-review-date/change`;
     const aboutFacilityRedirectUri = `/gef/application-details/${dealId}`;
 
-    if (isUsingFacilityEndDate === undefined) {
+    if (!isFacilityEndDateEnabled) {
       return res.redirect(aboutFacilityRedirectUri);
     }
 
-    return res.redirect(isUsingFacilityEndDate ? facilityEndDateRedirectUri : bankReviewDateRedirectUri);
+    const redirectUri = isUsingFacilityEndDate ? facilityEndDateRedirectUri : bankReviewDateRedirectUri;
+
+    return res.redirect(redirectUri);
   } catch (error) {
     console.error('Cannot update unissued facility from application preview %o', error);
     return res.render('partials/problem-with-service.njk');

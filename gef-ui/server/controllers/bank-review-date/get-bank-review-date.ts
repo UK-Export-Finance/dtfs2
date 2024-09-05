@@ -6,9 +6,7 @@ import { BankReviewDateViewModel } from '../../types/view-models/bank-review-dat
 import { asLoggedInUserSession } from '../../utils/express-session';
 import { Facility } from '../../types/facility';
 
-type BankReviewDateParams = { dealId: string; facilityId: string };
-
-type GetBankReviewDateRequest = CustomExpressRequest<{ params: BankReviewDateParams; query: { status: string | undefined } }>;
+type GetBankReviewDateRequest = CustomExpressRequest<{ params: { dealId: string; facilityId: string }; query: { status: string | undefined } }>;
 
 type HandleGetBankReviewDateParams = {
   req: GetBankReviewDateRequest;
@@ -22,11 +20,7 @@ type HandleGetBankReviewDateParams = {
  * @param status - the query parameter status
  * @returns view model for the bank review date template
  */
-const getBankReviewDateViewModel = (facility: Facility, previousPage: string, status: string | undefined): BankReviewDateViewModel => {
-  if (typeof facility.dealId !== 'string' || typeof facility._id !== 'string') {
-    throw new Error('Invalid facility or deal id provided');
-  }
-
+const getBankReviewDateViewModel = (facility: Facility, previousPage: string, status?: string): BankReviewDateViewModel => {
   const bankReviewDateViewModel: BankReviewDateViewModel = {
     dealId: facility.dealId,
     facilityId: facility._id,
@@ -60,7 +54,8 @@ const getBankReviewDate = async ({ req, res, previousPage }: HandleGetBankReview
     const { details: facility } = await api.getFacility({ facilityId, userToken });
     const deal = await api.getApplication({ dealId, userToken });
 
-    const shouldRedirectFromPage = !isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || facility.isUsingFacilityEndDate !== false;
+    const dealVersion = parseDealVersion(deal.version);
+    const shouldRedirectFromPage = !isFacilityEndDateEnabledOnGefVersion(parseDealVersion(dealVersion)) || facility.isUsingFacilityEndDate !== false;
 
     if (shouldRedirectFromPage) {
       return res.redirect(previousPage);
