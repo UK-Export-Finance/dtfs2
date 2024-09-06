@@ -1,10 +1,5 @@
 /* eslint-disable no-undef */
 const aboutExporter = {
-  errorSummary: () => cy.get('[data-cy="error-summary"]'),
-  backLink: () => cy.get('[data-cy="back-link"]'),
-  headingCaption: () => cy.get('[data-cy="heading-caption"]'),
-  mainHeading: () => cy.get('[data-cy="main-heading"]'),
-  form: () => cy.get('[data-cy="form"]'),
   industryTitle: () => cy.get('[data-cy="industry-title"]'),
   industry: () => cy.get('[data-cy="industry"]'),
   industries: () => cy.get('[data-cy="industries"]'),
@@ -19,7 +14,6 @@ const aboutExporter = {
   isFinancingIncreasingRadioNo: () => cy.get('[data-cy="is-financing-increasing-radio-no"]'),
   isFinancingIncreasingError: () => cy.get('[data-cy="is-financing-increasing-error"]'),
   doneButton: () => cy.get('[data-cy="done-button"]'),
-  saveAndReturnButton: () => cy.get('[data-cy="save-and-return-button"]'),
 };
 
 export default aboutExporter;

@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import caseSubNavigation from '../../partials/caseSubNavigation';
+import { caseSubNavigation } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
