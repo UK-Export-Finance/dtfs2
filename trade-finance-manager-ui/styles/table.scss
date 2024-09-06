@@ -160,6 +160,7 @@ table.premium-payments-table {
 
 table.utilisation-report-reconciliation-table {
   table-layout: fixed;
+  width: calc(100% - 1px);
 
   .ukef-width-one-tenth {
     width: 10%;
