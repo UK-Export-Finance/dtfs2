@@ -11,29 +11,29 @@ const { issueJwtAndUpdateUser } = require('./issue-jwt-and-update-user');
  * 4) Issue a JWT and update TFM user data.
  * 7) Get redirect URL
  * 8) Return user data, token and redirect URL.
- * @param {Object} pkceCodes: PKCE Codes object
- * @param {Object} authCodeRequest: Auth code request
- * @param {String} code: authZ code
- * @param {String} state: MSAL state guid
- * @returns {Promise<Object>} TFM user, token and redirect URL.
+ * @param {object} pkceCodes PKCE Codes object
+ * @param {object} authCodeRequest Auth code request
+ * @param {string} code authZ code
+ * @param {string} state MSAL state guid
+ * @returns {Promise<object>} TFM user, token and redirect URL.
  */
 const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) => {
   try {
-    if (pkceCodes && authCodeRequest && code && state) {
-      console.info('TFM auth service - processing SSO redirect');
-
-      const entraUser = await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
-
-      const user = await tfmUser.getOrCreate(entraUser);
-
-      const token = await issueJwtAndUpdateUser(user);
-
-      const redirectUrl = authProvider.loginRedirectUrl(state);
-
-      return { tfmUser: user, token, redirectUrl };
+    if (!pkceCodes || !authCodeRequest || !code || !state) {
+      return {};
     }
 
-    return {};
+    console.info('TFM auth service - processing SSO redirect');
+
+    const entraUser = await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
+
+    const user = await tfmUser.getOrCreate(entraUser);
+
+    const token = await issueJwtAndUpdateUser(user);
+
+    const redirectUrl = authProvider.loginRedirectUrl(state);
+
+    return { tfmUser: user, token, redirectUrl };
   } catch (error) {
     console.error('TFM auth service - Error processing SSO redirect: %s', error);
 
