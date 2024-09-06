@@ -4,9 +4,9 @@ const { DATE } = require('../../../../constants');
 
 /**
  * Map Entra user data
- * @param {Object} entraUser: Entra user data
- * @param {Object} tfmUser: Optional TFM user object.
- * @returns {Object} Mapped user data
+ * @param {object} entraUser Entra user data
+ * @param {object} tfmUser Optional TFM user object.
+ * @returns {object} Mapped user data
  */
 const mapEntraUserData = (entraUser, tfmUser) => {
   const claims = entraUser.idTokenClaims;
