@@ -7,7 +7,7 @@ const tfmUser = require('./tfm-user');
  * - If a user is found from the provided Entra user and has canProceed=true, update the TFM user and return.
  * - If a user is found, but has canProceed=false, throw an error.
  * - If a user is not found, create a new TFM user from the provided Entra user data.
- * @param {import('src/types/auth/azure-user-info-response-account').AzureUserInfoResponseAccount} entraUser: Entra user data
+ * @param {import('src/types/auth/azure-user-info-response-account').AzureUserInfoResponseAccount} entraUser Entra user data
  * @returns {Promise<import('src/types/db-models/tfm-users').TfmUser>} New or existing TFM user
  */
 const getOrCreate = async (entraUser) => {
