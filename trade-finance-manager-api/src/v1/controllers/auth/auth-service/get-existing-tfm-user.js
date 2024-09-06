@@ -8,7 +8,7 @@ const userController = require('../../user/user.controller');
  * @returns {Promise<import('src/types/auth/get-user-response').GetUserResponse | {}>}
  */
 const get = async (entraUser) => {
-  if (!entraUser || !entraUser.idTokenClaims) {
+  if (!entraUser?.idTokenClaims) {
     return {};
   }
 
