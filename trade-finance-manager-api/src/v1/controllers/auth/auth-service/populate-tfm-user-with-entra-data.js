@@ -4,7 +4,7 @@ const mapEntraUserData = require('./map-entra-user-data');
  * populateTfmUserWithEntraData
  * Populate TFM user data with Entra user data.
  * @param {import('src/types/auth/get-user-response').GetUserResponse} getUserResponse status and user info
- * @param {Object} entraUser: Entra user data
+ * @param {object} entraUser Entra user data
  * @returns {import('src/types/auth/get-user-response').GetUserResponse}
  */
 const populateTfmUserWithEntraData = (getUserResponse, entraUser) => {
