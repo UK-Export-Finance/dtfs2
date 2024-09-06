@@ -133,7 +133,7 @@ if (facilityEndDateEnabled) {
         facilityEndDate.facilityEndDateDay().clear().type('abcd');
         cy.clickContinueButton();
 
-        facilityEndDate.errorSummary();
+        errorSummary();
         facilityEndDate.facilityEndDateError();
       });
 
