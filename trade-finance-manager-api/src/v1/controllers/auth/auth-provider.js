@@ -182,7 +182,7 @@ class AuthProvider {
   /**
    * loginRedirectUrl
    * Get a redirect URL to use after logging in.
-   * @param {String} inputString
+   * @param {String} inputString This string is a base64 encoded JSON object, that should contain a redirectTo url
    * @returns {String} Redirect URL.
    */
   loginRedirectUrl(inputString) {
