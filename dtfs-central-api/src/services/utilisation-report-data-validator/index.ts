@@ -115,7 +115,9 @@ export const validateUtilisationReportCsvCellData = async (
     }),
   );
 
-  return allErrors.flat().filter((error): error is UtilisationReportDataValidationError => error !== null);
+  const allNonNullErrors = allErrors.flat().filter((error): error is UtilisationReportDataValidationError => error !== null);
+
+  return allNonNullErrors;
 };
 
 /**
