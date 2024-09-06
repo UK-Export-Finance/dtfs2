@@ -8,8 +8,6 @@ const applicationDetails = {
   bankRefName: () => cy.get('[data-cy="bank-reference"]'),
   editRefNameLink: () => cy.get('[data-cy="edit-refname-link"]'),
   abandonLink: () => cy.get('[data-cy="abandon-link"]'),
-  captionHeading: () => cy.get('[data-cy="heading-caption"]'),
-  mainHeading: () => cy.get('[data-cy="main-heading"]'),
   exporterHeading: () => cy.get('[data-cy="exporter-heading"]'),
   exporterStatus: () => cy.get('[data-cy="exporter-status"]'),
   exporterDetailsLink: () => cy.get('[data-cy="exporter-details-link"]'),
@@ -97,7 +95,6 @@ const applicationDetails = {
     cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__actions'),
 
   submitHeading: () => cy.get('[data-cy="submit-heading"]'),
-  submitButton: () => cy.get('[data-cy="submit-button"]'),
   submitValidationText: () => cy.get('[data-cy="submit-validation-text"]'),
   supportingInfoList: () => cy.get('[data-cy="supportingInfo-summary-list"]'),
 

@@ -59,7 +59,7 @@ context('About Facility Page', () => {
       applicationDetails.addContingentFacilityButton().click();
 
       facilities.hasBeenIssuedRadioYesRadioButton().click();
-      facilities.continueButton().click();
+      cy.clickContinueButton();
 
       aboutFacility.facilityName();
       aboutFacility.isUsingFacilityEndDateYes().should('not.exist');

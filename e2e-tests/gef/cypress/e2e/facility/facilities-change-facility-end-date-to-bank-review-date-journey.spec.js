@@ -2,7 +2,6 @@ import relative from '../relativeURL';
 import aboutFacility from '../pages/about-facility';
 import bankReviewDate from '../pages/bank-review-date';
 import facilityEndDate from '../pages/facility-end-date';
-import providedFacility from '../pages/provided-facility';
 import { tomorrowDay, tomorrowMonth, tomorrowYear, todayDay, todayMonth, todayYear, tomorrow } from '../../../../e2e-fixtures/dateConstants';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -53,37 +52,37 @@ context('Changing between facility end date and bank review date', () => {
       aboutFacility.coverEndDateMonth().clear().type(todayMonth);
       aboutFacility.coverEndDateYear().clear().type(nextYear);
       aboutFacility.isUsingFacilityEndDateNo().click();
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
       cy.fillInBankReviewDate(tomorrow);
-      bankReviewDate.continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
-      providedFacility.backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-      bankReviewDate.backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.isUsingFacilityEndDateYes().click();
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
       facilityEndDate.facilityEndDateDay().clear().type(tomorrowDay);
       facilityEndDate.facilityEndDateMonth().clear().type(tomorrowMonth);
       facilityEndDate.facilityEndDateYear().clear().type(tomorrowYear);
-      facilityEndDate.continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
-      providedFacility.backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
-      facilityEndDate.backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.isUsingFacilityEndDateNo().click();
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
       bankReviewDate.bankReviewDateDay().should('have.value', '');
@@ -91,17 +90,17 @@ context('Changing between facility end date and bank review date', () => {
       bankReviewDate.bankReviewDateYear().should('have.value', '');
 
       cy.fillInBankReviewDate(tomorrow);
-      bankReviewDate.continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
-      providedFacility.backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-      bankReviewDate.backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.isUsingFacilityEndDateYes().click();
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
       facilityEndDate.facilityEndDateDay().should('have.value', '');
@@ -111,7 +110,7 @@ context('Changing between facility end date and bank review date', () => {
       facilityEndDate.facilityEndDateDay().clear().type(tomorrowDay);
       facilityEndDate.facilityEndDateMonth().clear().type(tomorrowMonth);
       facilityEndDate.facilityEndDateYear().clear().type(tomorrowYear);
-      facilityEndDate.continueButton().click();
+      cy.clickContinueButton();
     });
   }
 });

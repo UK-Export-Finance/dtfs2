@@ -1,12 +1,6 @@
-import { Response, NextFunction } from 'express';
+import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { AzureFileInfo, Unknown, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import {
-  validateReportId,
-  validateUtilisationReportData,
-  validateFileInfo,
-  validateReportUser,
-} from '../../../validation/utilisation-report-service/utilisation-report-validator';
+import { AzureFileInfo, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { UtilisationReportRawCsvData } from '../../../../types/utilisation-reports';
@@ -18,34 +12,6 @@ export type PostUploadUtilisationReportRequestBody = {
   fileInfo: AzureFileInfo;
   reportData: UtilisationReportRawCsvData[];
   user: { _id: string };
-};
-
-type PreValidationPostUploadUtilisationReportRequest = CustomExpressRequest<{
-  reqBody: Unknown<PostUploadUtilisationReportRequestBody>;
-}>;
-
-/**
- * Validates the payload for the utilisation report upload request
- * @param req - The request object
- * @param res - The response object
- * @param next - The next function
- */
-export const postUploadUtilisationReportPayloadValidator = (req: PreValidationPostUploadUtilisationReportRequest, res: Response, next: NextFunction) => {
-  const { reportId, fileInfo, reportData, user } = req.body;
-
-  const validationErrors = [
-    validateReportId(reportId),
-    ...validateFileInfo(fileInfo),
-    ...validateUtilisationReportData(reportData),
-    ...validateReportUser(user),
-  ].filter(Boolean);
-
-  if (validationErrors.length > 0) {
-    console.error('Failed to save utilisation report - validation errors: %O', validationErrors);
-    return res.status(HttpStatusCode.BadRequest).send(validationErrors);
-  }
-
-  return next();
 };
 
 type PostUploadUtilisationReportRequest = CustomExpressRequest<{
