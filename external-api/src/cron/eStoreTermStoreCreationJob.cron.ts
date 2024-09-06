@@ -1,7 +1,8 @@
 import { HttpStatusCode } from 'axios';
 import { EstoreRepo } from '../repositories/estore/estore-repo';
 import { TermStoreResponse, EstoreErrorResponse, Estore } from '../interfaces';
-import { ESTORE_CRON_STATUS } from '../constants';
+import { cron } from '../helpers/cron';
+import { ENDPOINT, ESTORE_CRON_STATUS } from '../constants';
 import { addFacilityToTermStore } from '../v1/controllers/estore/eStoreApi';
 import { getNowAsEpoch } from '../helpers/date';
 import { eStoreBuyerDirectoryCreationJob } from './eStoreBuyerDirectoryCreationJob.cron';
@@ -47,7 +48,13 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
 
       console.info('Adding facilities to term store for deal %s', dealIdentifier);
 
-      // Step 1: Add to term store
+      // Initiate the CRON job
+      cron({
+        data: eStoreData,
+        category: ENDPOINT.TERM,
+      });
+
+      // Add to term store
       const response: TermStoreResponse[] | EstoreErrorResponse[] = await Promise.all(
         facilityIdentifiers.map((facilityId: number) => addFacilityToTermStore({ id: facilityId })),
       );
@@ -56,7 +63,7 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
       if (response.every((term) => ACCEPTABLE_STATUSES.includes(term?.status))) {
         console.info('Facilities have been added to term store for deal %s', dealIdentifier);
 
-        // Step 2: Update `cron-job-logs`
+        // Update `cron-job-logs`
         await EstoreRepo.updateByDealId(dealId, {
           'cron.term': {
             status: ESTORE_CRON_STATUS.COMPLETED,
@@ -64,7 +71,14 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
           },
         });
 
-        // Step 3: Initiate buyer directory creation
+        // Stop the CRON job
+        cron({
+          data: eStoreData,
+          category: ENDPOINT.TERM,
+          kill: true,
+        });
+
+        // Initiate buyer directory creation
         await eStoreBuyerDirectoryCreationJob(eStoreData);
       } else {
         throw new Error(`Facilities have not been added to term store for deal ${dealIdentifier} ${JSON.stringify(response)}`);
@@ -78,6 +92,13 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
         status: ESTORE_CRON_STATUS.FAILED,
         timestamp: getNowAsEpoch(),
       },
+    });
+
+    // Stop the CRON job
+    cron({
+      data: eStoreData,
+      category: ENDPOINT.TERM,
+      kill: true,
     });
 
     console.error('❌ eStore term store creation has failed for deal %s %o', eStoreData?.dealId, error);

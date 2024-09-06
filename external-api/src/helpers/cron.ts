@@ -1,8 +1,15 @@
 import dotenv from 'dotenv';
 import { CronJob } from 'cron';
 import { Estore, EstoreCronJob } from '../interfaces';
+import { ENDPOINT } from '../constants';
 import { Category } from './types/estore';
-import { eStoreSiteCreationCron } from '../cron/eStoreSiteCreationJob.cron';
+import {
+  eStoreSiteCreationCronJob,
+  eStoreTermStoreCreationJob,
+  eStoreBuyerDirectoryCreationJob,
+  eStoreDealDirectoryCreationJob,
+  eStoreFacilityDirectoryCreationJob,
+} from '../cron';
 
 dotenv.config();
 
@@ -14,8 +21,21 @@ const jobs = new Map();
  * @param eStoreData - The eStore data.
  * @returns A promise that resolves when the cron job is completed.
  */
-const onTick = async (eStoreData: Estore) => {
-  await eStoreSiteCreationCron(eStoreData);
+const onTick = async (eStoreData: Estore, category: Category) => {
+  switch (category) {
+    case ENDPOINT.SITE:
+      return eStoreSiteCreationCronJob(eStoreData);
+    case ENDPOINT.TERM:
+      return eStoreTermStoreCreationJob(eStoreData);
+    case ENDPOINT.BUYER:
+      return eStoreBuyerDirectoryCreationJob(eStoreData);
+    case ENDPOINT.DEAL:
+      return eStoreDealDirectoryCreationJob(eStoreData);
+    case ENDPOINT.FACILITY:
+      return eStoreFacilityDirectoryCreationJob(eStoreData);
+    default:
+      return undefined;
+  }
 };
 
 /**
@@ -83,7 +103,7 @@ export const cron = (eStoreCronJob: EstoreCronJob): boolean => {
 
   const cronJob = new CronJob(
     String(ESTORE_CRON_MANAGER_SCHEDULE), // Cron schedule
-    () => onTick(data),
+    () => onTick(data, category),
     () => onComplete(data, category),
     false, // Start the job
     TZ, // Timezone

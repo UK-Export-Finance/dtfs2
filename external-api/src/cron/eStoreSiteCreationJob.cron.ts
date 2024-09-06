@@ -28,11 +28,11 @@ import { getNowAsEpoch } from '../helpers/date';
  *   dealId: '507f1f77bcf86cd799439011'
  * };
  *
- * eStoreSiteCreationCron(eStoreData)
+ * eStoreSiteCreationCronJob(eStoreData)
  *   .then(() => console.log('Cron job completed successfully'))
  *   .catch((error) => console.error('Cron job failed', error));
  */
-export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> => {
+export const eStoreSiteCreationCronJob = async (eStoreData: Estore): Promise<void> => {
   try {
     const data = cloneDeep(eStoreData);
     const now = new Date().toISOString();
@@ -47,16 +47,16 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
 
     const { dealId, exporterName, dealIdentifier } = eStoreData;
 
-    // Step 1: Initiate the CRON job
+    // Initiate the CRON job
     cron({
       data: eStoreData,
       category: ENDPOINT.SITE,
     });
 
-    // Step 2: Site existence check
+    // Site existence check
     const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(exporterName);
 
-    // Step 3: Site has been created
+    // Site has been created
     if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
       console.info('⚡ CRON: eStore site %s has been created successfully for deal %s %s', siteExistsResponse.data.siteId, dealIdentifier, now);
 
@@ -78,7 +78,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
         'tfm.estore.siteName': siteExistsResponse.data.siteId,
       });
 
-      // Stop CRON job
+      // Stop the CRON job
       cron({
         data: eStoreData,
         category: ENDPOINT.SITE,
@@ -88,7 +88,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
       // Add facility IDs to term store and create the buyer folder
       await eStoreTermStoreCreationJob(data);
     } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
-      // Step 3: Site is still being provisioned
+      // Site is still being provisioned
       console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s %s', siteExistsResponse.data.siteId, dealIdentifier, now);
 
       // Update status
@@ -102,15 +102,7 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
         'cron.site.id': siteExistsResponse?.data?.siteId,
       });
     } else {
-      // Step 3: Site creation has failed
-
-      // Stop CRON job
-      cron({
-        data: eStoreData,
-        category: ENDPOINT.SITE,
-        kill: true,
-      });
-
+      // Site creation has failed
       throw new Error(`eStore site creation has failed for deal ${dealIdentifier} ${JSON.stringify(siteExistsResponse)}`);
     }
   } catch (error) {
@@ -122,6 +114,13 @@ export const eStoreSiteCreationCron = async (eStoreData: Estore): Promise<void> 
         timestamp: getNowAsEpoch(),
       },
       'cron.site.status': ESTORE_CRON_STATUS.FAILED,
+    });
+
+    // Stop the CRON job
+    cron({
+      data: eStoreData,
+      category: ENDPOINT.SITE,
+      kill: true,
     });
 
     console.error('❌ eStore site creation has failed for deal %s %o', eStoreData?.dealId, error);

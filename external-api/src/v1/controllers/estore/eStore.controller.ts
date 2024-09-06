@@ -7,7 +7,7 @@ import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interf
 import { EstoreRequest } from '../../../helpers/types/estore';
 import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
 import { areValidUkefIds, objectIsEmpty } from '../../../helpers';
-import { eStoreTermStoreCreationJob, eStoreSiteCreationCron } from '../../../cron';
+import { eStoreTermStoreCreationJob, eStoreSiteCreationCronJob } from '../../../cron';
 import { createExporterSite, siteExists } from './eStoreApi';
 import { getNowAsEpoch } from '../../../helpers/date';
 
@@ -146,7 +146,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
       console.info('Attempting to create a new CRON job for deal %s', eStoreData.dealIdentifier);
       res.status(HttpStatusCode.Created).send({ status: HttpStatusCode.Created, message: 'eStore job accepted' });
 
-      // Step 1: Add CRON job to the collection
+      // Add CRON job to the collection
       const inserted = await EstoreRepo.insertOne({
         payload: eStoreData,
         timestamp: getNowAsEpoch(),
@@ -165,7 +165,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
 
       const { insertedId: _id } = inserted as InsertOneResult;
 
-      // Step 2: Site exists check
+      // Site exists check
       console.info('Initiating eStore site existence check for exporter %s', eStoreData.exporterName);
       const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(eStoreData.exporterName);
 
@@ -173,7 +173,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
       const provisioning = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING;
       const absent = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.NOT_FOUND;
 
-      // Step 3: Site already exists in eStore
+      // Site already exists in eStore
       if (created) {
         /**
          * Update record-set with the site name.
@@ -199,7 +199,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
         await eStoreTermStoreCreationJob(eStoreData);
       } else if (absent || provisioning) {
         let siteCreationResponse: SiteExistsResponse | EstoreErrorResponse;
-        // Step 3: Site does not exists in eStore
+        // Site does not exists in eStore
 
         // Create a new eStore site
         if (provisioning) {
@@ -217,7 +217,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
          * has been initiated.
          */
         if (siteCreationResponse?.data?.siteId) {
-          await eStoreSiteCreationCron(eStoreData);
+          await eStoreSiteCreationCronJob(eStoreData);
         } else {
           console.error('eStore site creation failed for deal %s %o', eStoreData.dealIdentifier, siteCreationResponse?.data);
 

@@ -1,7 +1,8 @@
 import { HttpStatusCode } from 'axios';
 import { EstoreRepo } from '../repositories/estore/estore-repo';
 import { BuyerFolderResponse, EstoreErrorResponse, Estore } from '../interfaces';
-import { ESTORE_CRON_STATUS } from '../constants';
+import { cron } from '../helpers/cron';
+import { ENDPOINT, ESTORE_CRON_STATUS } from '../constants';
 import { createBuyerFolder } from '../v1/controllers/estore/eStoreApi';
 import { getNowAsEpoch } from '../helpers/date';
 import { eStoreDealDirectoryCreationJob } from './eStoreDealDirectoryCreationJob.cron';
@@ -47,7 +48,13 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
 
     console.info('Attempting to create a buyer directory %s for deal %s', buyerName, dealIdentifier);
 
-    // Step 1: Create the buyer directory
+    // Initiate the CRON job
+    cron({
+      data: eStoreData,
+      category: ENDPOINT.BUYER,
+    });
+
+    // Create the buyer directory
     const response: BuyerFolderResponse | EstoreErrorResponse = await createBuyerFolder(siteId, {
       buyerName,
     });
@@ -56,7 +63,7 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
     if (ACCEPTABLE_STATUSES.includes(response?.status)) {
       console.info('Attempting to create a buyer directory %s for deal %s', buyerName, dealIdentifier);
 
-      // Step 2: Update `cron-job-logs`
+      // Update `cron-job-logs`
       await EstoreRepo.updateByDealId(dealId, {
         'cron.buyer': {
           status: ESTORE_CRON_STATUS.COMPLETED,
@@ -64,7 +71,14 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
         },
       });
 
-      // Step 3: Initiate deal directory creation
+      // Stop the CRON job
+      cron({
+        data: eStoreData,
+        category: ENDPOINT.BUYER,
+        kill: true,
+      });
+
+      // Initiate deal directory creation
       await eStoreDealDirectoryCreationJob(eStoreData);
     } else {
       throw new Error(`eStore buyer directory creation has failed for deal ${dealIdentifier} ${JSON.stringify(response)}`);
@@ -77,6 +91,13 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
         status: ESTORE_CRON_STATUS.FAILED,
         timestamp: getNowAsEpoch(),
       },
+    });
+
+    // Stop the CRON job
+    cron({
+      data: eStoreData,
+      category: ENDPOINT.BUYER,
+      kill: true,
     });
 
     console.error('❌ eStore buyer directory creation has failed for deal %s %o', eStoreData?.dealId, error);
