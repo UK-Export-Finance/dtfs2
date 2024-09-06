@@ -19,23 +19,22 @@ const getOrCreate = async (entraUser) => {
     if (getUserResponse?.found) {
       console.info('TFM auth service - found an existing user');
 
-      if (getUserResponse.canProceed) {
-        console.info('TFM auth service - updating user');
-
-        await tfmUser.update(getUserResponse.user._id, entraUser);
-
-        return getUserResponse.user;
+      if (!getUserResponse.canProceed) {
+        console.info('TFM auth service - user cannot proceed');
+        throw new Error('TFM auth service - user cannot proceed');
       }
+      console.info('TFM auth service - updating user');
 
-      console.info('TFM auth service - user cannot proceed');
-      throw new Error('TFM auth service - user cannot proceed');
-    } else {
-      console.info('TFM auth service - no existing TFM user found. Creating a new TFM user');
+      await tfmUser.update(getUserResponse.user._id, entraUser);
 
-      const createdUser = await tfmUser.create(entraUser);
-
-      return createdUser;
+      return getUserResponse.user;
     }
+
+    console.info('TFM auth service - no existing TFM user found. Creating a new TFM user');
+
+    const createdUser = await tfmUser.create(entraUser);
+
+    return createdUser;
   } catch (error) {
     console.error('TFM auth service - Getting or creating a TFM user %s', error);
 
