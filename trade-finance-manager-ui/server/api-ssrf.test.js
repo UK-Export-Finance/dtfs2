@@ -431,4 +431,40 @@ describe('API is protected against SSRF attacks', () => {
       expect(response.data).toEqual(mockResponse);
     });
   });
+
+  describe('updateDealCancellation', () => {
+    const mockData = {};
+    const mockResponse = 'Mock deal cancellation';
+    beforeAll(() => {
+      mockAxios.reset();
+      const url = /^.*\/v1\/deals\/.*\/cancellation$/;
+      mockAxios.onPut(url).reply(200, mockResponse);
+    });
+
+    it('Returns an error when a url traversal is supplied', async () => {
+      const urlTraversal = '../../../etc/stealpassword';
+      const expectedResponse = { status: 400, data: 'Invalid deal id' };
+
+      const response = await api.updateDealCancellation(urlTraversal, mockData, 'mock token');
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Returns an error when a local IP is supplied', async () => {
+      const localIp = '127.0.0.1';
+      const expectedResponse = { status: 400, data: 'Invalid deal id' };
+
+      const response = await api.updateDealCancellation(localIp, mockData, 'mock token');
+
+      expect(response).toMatchObject(expectedResponse);
+    });
+
+    it('Makes an axios request when the deal id is valid', async () => {
+      const validDealId = '5ce819935e539c343f141ece';
+
+      const response = await api.updateDealCancellation(validDealId, mockData, 'mock token');
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
 });
