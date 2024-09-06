@@ -64,24 +64,24 @@ if (facilityEndDateEnabled) {
     });
 
     describe('Visiting from unissued facilities page', () => {
-      const unissuedFacilitiesUrl = relative(`/gef/application-details/${dealId}/unissued-facilities`);
+      const getUnissuedFacilitiesUrl = () => relative(`/gef/application-details/${dealId}/unissued-facilities`);
 
       beforeEach(() => {
-        cy.visit(unissuedFacilitiesUrl);
+        cy.visit(getUnissuedFacilitiesUrl());
         unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-        aboutFacilityUnissued.issueDateDay().type(threeDaysDay);
-        aboutFacilityUnissued.issueDateMonth().type(threeDaysMonth);
-        aboutFacilityUnissued.issueDateYear().type(threeDaysYear);
+        aboutFacilityUnissued.issueDateDay().clear().type(threeDaysDay);
+        aboutFacilityUnissued.issueDateMonth().clear().type(threeDaysMonth);
+        aboutFacilityUnissued.issueDateYear().clear().type(threeDaysYear);
 
         aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-        aboutFacilityUnissued.coverStartDateDay().type(threeDaysDay);
-        aboutFacilityUnissued.coverStartDateMonth().type(threeDaysMonth);
-        aboutFacilityUnissued.coverStartDateYear().type(threeDaysYear);
+        aboutFacilityUnissued.coverStartDateDay().clear().type(threeDaysDay);
+        aboutFacilityUnissued.coverStartDateMonth().clear().type(threeDaysMonth);
+        aboutFacilityUnissued.coverStartDateYear().clear().type(threeDaysYear);
 
-        aboutFacilityUnissued.coverEndDateDay().type(threeMonthsOneDayDay);
-        aboutFacilityUnissued.coverEndDateMonth().type(threeMonthsOneDayMonth);
-        aboutFacilityUnissued.coverEndDateYear().type(threeMonthsOneDayYear);
+        aboutFacilityUnissued.coverEndDateDay().clear().type(threeMonthsOneDayDay);
+        aboutFacilityUnissued.coverEndDateMonth().clear().type(threeMonthsOneDayMonth);
+        aboutFacilityUnissued.coverEndDateYear().clear().type(threeMonthsOneDayYear);
 
         aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
 
@@ -111,7 +111,7 @@ if (facilityEndDateEnabled) {
 
         cy.clickContinueButton();
 
-        cy.url().should('eq', unissuedFacilitiesUrl);
+        cy.url().should('eq', getUnissuedFacilitiesUrl());
       });
 
       it('should redirect user to the unissued facility page when clicking save and return', () => {
@@ -119,15 +119,15 @@ if (facilityEndDateEnabled) {
 
         cy.clickSaveAndReturnButton();
 
-        cy.url().should('eq', unissuedFacilitiesUrl);
+        cy.url().should('eq', getUnissuedFacilitiesUrl());
       });
     });
 
     describe('Visiting from application preview page', () => {
-      const applicationDetailsUrl = relative(`/gef/application-details/${dealId}`);
+      const getApplicationDetailsUrl = () => relative(`/gef/application-details/${dealId}`);
 
       beforeEach(() => {
-        cy.visit(applicationDetailsUrl);
+        cy.visit(getApplicationDetailsUrl());
         applicationPreview.facilitySummaryListTable(4).bankReviewDateAction().click();
       });
 
@@ -153,7 +153,7 @@ if (facilityEndDateEnabled) {
         cy.fillInBankReviewDate(today);
         cy.clickContinueButton();
 
-        cy.url().should('eq', applicationDetailsUrl);
+        cy.url().should('eq', getApplicationDetailsUrl());
       });
 
       it('should redirect user to the application details page when clicking save and return', () => {
@@ -161,7 +161,7 @@ if (facilityEndDateEnabled) {
 
         cy.clickSaveAndReturnButton();
 
-        cy.url().should('eq', applicationDetailsUrl);
+        cy.url().should('eq', getApplicationDetailsUrl());
       });
     });
   });

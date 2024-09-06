@@ -200,7 +200,7 @@ context('Bank Review Date Page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
       bankReviewDate.bankReviewDateDay().should('have.value', twoYears.getDate());
       bankReviewDate.bankReviewDateMonth().should('have.value', twoYears.getMonth() + 1);
-      bankReviewDate.bankReviewDateYear().should('have.value', twoYears.getFullYear() + 1);
+      bankReviewDate.bankReviewDateYear().should('have.value', twoYears.getFullYear());
     });
 
     it('redirects to the About Facility page when using facility end date ', () => {
