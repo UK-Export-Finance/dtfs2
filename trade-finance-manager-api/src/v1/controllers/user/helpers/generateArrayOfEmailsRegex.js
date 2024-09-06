@@ -3,8 +3,8 @@ const escapeStringRegexp = require('escape-string-regexp');
 /**
  * regex
  * Email regex.
- * @param {String} email
- * @returns {Object} Regular expression
+ * @param {string} email
+ * @returns {RegExp} Regular expression
  */
 const regex = (email) => new RegExp(`^${escapeStringRegexp(email)}$`, 'i');
 
@@ -12,8 +12,8 @@ const regex = (email) => new RegExp(`^${escapeStringRegexp(email)}$`, 'i');
  * generateArrayOfEmailsRegex
  * Generate an array of emails as regular expressions.
  * This is used to find users with matching emails.
- * @param {Array} emails
- * @returns {Array} Emails as regular expressions.
+ * @param {string[]} emails
+ * @returns {RegExp[]} Emails as regular expressions.
  */
 const generateArrayOfEmailsRegex = (emails) => {
   const mapped = emails.map((email) => regex(email));
