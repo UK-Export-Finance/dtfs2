@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
+import { MAX_REQUEST_SIZE } from '@ukef/dtfs2-common';
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
 
 import { ROUTES } from './constants';
@@ -21,8 +22,8 @@ export const generateApp = (): Express => {
   app.use(security);
   app.use(healthcheck);
   app.use(checkApiKey);
-  // added limit for larger payloads - 500kb
-  app.use(express.json({ limit: '500kb' }));
+  // added limit for larger payloads
+  app.use(express.json({ limit: MAX_REQUEST_SIZE }));
   app.use(compression());
   app.use(removeCsrfToken);
   app.use(createRateLimit());

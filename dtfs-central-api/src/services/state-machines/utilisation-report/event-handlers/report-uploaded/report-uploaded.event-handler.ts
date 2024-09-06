@@ -20,6 +20,15 @@ type ReportUploadedEventPayload = {
   transactionEntityManager: EntityManager;
 };
 
+/**
+ * Creates a new facility utilisation data entity if an entity with the
+ * supplied facility id does not already exist
+ * @param facilityId - The facility id
+ * @param reportPeriod - The report period
+ * @param requestSource - The request source
+ * @param entityManager - The entity manager
+ * @returns The new facility utilisation data entity
+ */
 const createFacilityUtilisationDataEntityIfNotExists = async (
   facilityId: string,
   reportPeriod: ReportPeriod,
@@ -32,6 +41,8 @@ const createFacilityUtilisationDataEntityIfNotExists = async (
   }
   return FacilityUtilisationDataEntity.createWithoutUtilisationAndFixedFee({ id: facilityId, reportPeriod, requestSource });
 };
+
+const CHUNK_SIZE_FOR_BATCH_SAVING = 100;
 
 export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<'REPORT_UPLOADED', ReportUploadedEventPayload>;
 
@@ -72,6 +83,7 @@ export const handleUtilisationReportReportUploadedEvent = async (
   await transactionEntityManager.save(
     FacilityUtilisationDataEntity,
     facilityUtilisationDataEntities.filter((entity): entity is FacilityUtilisationDataEntity => entity !== null),
+    { chunk: CHUNK_SIZE_FOR_BATCH_SAVING },
   );
 
   const feeRecordEntities: FeeRecordEntity[] = reportCsvData.map((dataEntry) =>
@@ -81,7 +93,7 @@ export const handleUtilisationReportReportUploadedEvent = async (
       report,
     }),
   );
-  await transactionEntityManager.save(FeeRecordEntity, feeRecordEntities, { chunk: 100 });
+  await transactionEntityManager.save(FeeRecordEntity, feeRecordEntities, { chunk: CHUNK_SIZE_FOR_BATCH_SAVING });
   report.updateWithFeeRecords({
     feeRecords: feeRecordEntities,
   });

@@ -17,11 +17,11 @@ context('Incomplete exporter section - application details page', () => {
     it('creates the application', () => {
       dashboardPage.createNewSubmission().click();
       dashboardPage.gefSubmission().click();
-      dashboardPage.continueButton().click();
+      cy.clickContinueButton();
       dashboardPage.mandatoryCriteriaYes().click();
-      dashboardPage.continueButton().click();
+      cy.clickContinueButton();
       dashboardPage.internalRefName().type('A');
-      dashboardPage.continueButton().click();
+      cy.clickContinueButton();
       cy.url().then((thisUrl) => {
         url = thisUrl;
         // get dealId from last split
@@ -33,9 +33,9 @@ context('Incomplete exporter section - application details page', () => {
       cy.visit(url);
       applicationDetails.exporterDetailsLink().click();
       companiesHouse.regNumberField().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
-      companiesHouse.continueButton().click();
+      cy.clickContinueButton();
       exportersAddress.noRadioButton().click();
-      exportersAddress.continueButton().click();
+      cy.clickContinueButton();
       // exits without saving, to ensure does not bug and hide fields
       dashboardPage.dashboardHome().click();
     });

@@ -157,3 +157,24 @@ table.premium-payments-table {
     list-style-type: none;
   }
 }
+
+table.utilisation-report-reconciliation-table {
+  table-layout: fixed;
+
+  .ukef-width-one-tenth {
+    width: 10%;
+  }
+
+  .ukef-width-one-quarter {
+    width: 25%;
+  }
+
+  @media (max-width:65em) {
+    width: 55em;
+
+    .govuk-table__header,
+    .govuk-table__cell {
+      white-space: normal;
+    }
+  }
+}
