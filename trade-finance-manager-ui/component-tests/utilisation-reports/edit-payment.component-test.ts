@@ -4,7 +4,7 @@ import { EditPaymentViewModel } from '../../server/types/view-models';
 import { RECONCILIATION_FOR_REPORT_TABS } from '../../server/constants/reconciliation-for-report-tabs';
 
 const page = '../templates/utilisation-reports/edit-payment.njk';
-const render = pageRenderer(page);
+const render = pageRenderer<EditPaymentViewModel>(page);
 
 describe(page, () => {
   it('should render the page heading with the caption', () => {
