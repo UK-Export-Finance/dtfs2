@@ -155,11 +155,11 @@ export class FeeRecordPaymentGroupSeeder {
 
     if (this.status === FEE_RECORD_STATUS.RECONCILED) {
       const pdcReconcileUser = await MongoDbDataLoader.getPdcReconcileUserOrFail();
-      this.feeRecords.forEach((feeRecord) => {
+      for (const feeRecord of this.feeRecords) {
         feeRecord.updateLastUpdatedBy({ platform: 'TFM', userId: pdcReconcileUser._id.toString() });
-        feeRecord.dateReconciled = faker.date.recent({ days: 15 }); // eslint-disable-line no-param-reassign
-        feeRecord.reconciledByUserId = pdcReconcileUser._id.toString(); // eslint-disable-line no-param-reassign
-      });
+        feeRecord.dateReconciled = faker.date.recent({ days: 15 });
+        feeRecord.reconciledByUserId = pdcReconcileUser._id.toString();
+      }
     }
 
     const payments = paymentAmounts.map(mapAmountToPayment);
