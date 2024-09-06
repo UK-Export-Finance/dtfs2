@@ -1,15 +1,16 @@
 import { InvalidEnvironmentVariableError } from '@ukef/dtfs2-common';
 import { BankResponse } from '../../api-response-types';
-import {
-  getTfmUiUrl,
-  sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam,
-  sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam,
-} from './email-service';
 import * as emailService from './email-service';
 import sendEmail from '../../email';
 import { getBankById } from '../../api';
 import { EMAIL_TEMPLATE_IDS } from '../../../constants';
 import { aBank } from '../../../../test-helpers/test-data/banks';
+
+const {
+  getTfmUiUrl,
+  sendUtilisationReportUploadConfirmationEmailToBankPaymentOfficerTeam,
+  sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam,
+} = emailService;
 
 console.error = jest.fn();
 console.info = jest.fn();
@@ -73,17 +74,14 @@ describe('emailService', () => {
       // Arrange
       process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT = '["email1@ukexportfinance.gov.uk"]';
 
-      const mockGetTfmUiUrl = jest.fn().mockImplementation(() => {
+      const getTfmUiUrlSpy = jest.spyOn(emailService, 'getTfmUiUrl').mockImplementation(() => {
         throw new InvalidEnvironmentVariableError('Invalid TFM_UI_URL');
       });
-      const getTfmUiUrlSpy = jest.spyOn(emailService, 'getTfmUiUrl').mockImplementation(mockGetTfmUiUrl);
 
       // Act + Assert
       await expect(sendUtilisationReportUploadNotificationEmailToUkefGefReportingTeam('My Bank', 'June 2026')).rejects.toThrow(InvalidEnvironmentVariableError);
-      expect(mockGetTfmUiUrl).toHaveBeenCalledTimes(1);
+      expect(getTfmUiUrlSpy).toHaveBeenCalledTimes(1);
       expect(sendEmail).toHaveBeenCalledTimes(0);
-
-      getTfmUiUrlSpy.mockClear();
     });
   });
 
