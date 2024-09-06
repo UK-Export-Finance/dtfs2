@@ -84,6 +84,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   });
 
   it('should allow the user to navigate to the edit payment page from the payment details table', () => {
+    cy.visit(`/utilisation-reports/${reportId}#payment-details`);
+
     pages.utilisationReportPage.paymentDetailsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=payment-details`));
@@ -100,6 +102,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   });
 
   it('should return to the payment details page when the back link is clicked after accessing the edit payment page from the payment details table', () => {
+    cy.visit(`/utilisation-reports/${reportId}#payment-details`);
+
     pages.utilisationReportPage.paymentDetailsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=payment-details`));
@@ -290,6 +294,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   });
 
   it('should return to the payment details page when the payment is edited after accessing the edit payment page from the payment details table', () => {
+    cy.visit(`/utilisation-reports/${reportId}#payment-details`);
+
     pages.utilisationReportPage.paymentDetailsTab.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=payment-details`));
