@@ -11,7 +11,7 @@
   {% if userCanEdit and groupStatus !== 'READY_TO_KEY' and groupStatus !== 'RECONCILED' %}
     <a
       href="/utilisation-reports/{{ reportId }}/edit-payment/{{ payment.id }}?redirectTab=payment-details"
-      data-cy="payment-details-tab-edit-payment-link--paymentId-{{ paymentReceived.id }}">
+      data-cy="payment-details-tab-edit-payment-link--paymentId-{{ payment.id }}">
       {{ payment.amount.formattedCurrencyAndAmount }}
     </a>
   {% else %}
