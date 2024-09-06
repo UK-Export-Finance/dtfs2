@@ -3,12 +3,12 @@
  * Map a one property from Entra or TFM data,
  * Depending on if a value is found from the provided property names.
  * Otherwise, the provided defaultCopy is returned.
- * @param {Object} entraUserIdTokenClaims: Entra claims for the user.
- * @param {String} entraPropertyName Entra property name to use.
- * @param {Object} tfmUser: Optional TFM user object.
- * @param {String} tfmPropertyName: TFM property name to use.
- * @param {String} defaultCopy: Default copy to return if no name/value is found.
- * @returns {String}
+ * @param {object} entraUserIdTokenClaims Entra claims for the user.
+ * @param {string} entraPropertyName Entra property name to use.
+ * @param {object} tfmUser Optional TFM user object.
+ * @param {string} tfmPropertyName TFM property name to use.
+ * @param {string} defaultCopy Default copy to return if no name/value is found.
+ * @returns {string}
  */
 const mapProperty = ({ entraUserIdTokenClaims = {}, entraPropertyName = '', tfmUser = {}, tfmPropertyName = '', defaultCopy = '' }) =>
   entraUserIdTokenClaims[entraPropertyName] || tfmUser[tfmPropertyName] || defaultCopy;
@@ -16,9 +16,9 @@ const mapProperty = ({ entraUserIdTokenClaims = {}, entraPropertyName = '', tfmU
 /**
  * mapFirstAndLastName
  * Map first and last name properties via mapName.
- * @param {Object} entraUserIdTokenClaims: Entra claims for the user.
- * @param {Object} tfmUser: TFM user object.
- * @returns {Object} Object with firstName and lastName
+ * @param {object} entraUserIdTokenClaims Entra claims for the user.
+ * @param {object} tfmUser TFM user object.
+ * @returns {object} Object with firstName and lastName
  */
 const mapFirstAndLastName = (entraUserIdTokenClaims, tfmUser) => ({
   firstName: mapProperty({
