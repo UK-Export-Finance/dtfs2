@@ -102,7 +102,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}`));
+    cy.url().should('eq', relative(`/utilisation-reports/${report.id}#premium-payments`));
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(firstPayment.id).should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
@@ -134,7 +134,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}`));
+    cy.url().should('eq', relative(`/utilisation-reports/${report.id}#premium-payments`));
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(firstPayment.id).should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
