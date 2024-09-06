@@ -19,7 +19,7 @@ export const getFeeRecordPaymentEntityGroups = (feeRecords: FeeRecordEntity[]): 
     const prefix = 'paymentIds';
     const paymentIdsSortedAscending = payments
       .map(({ id }) => id)
-      .toSorted((id1, id2) => id1 - id2)
+      .toSorted((firstId, secondId) => firstId - secondId)
       .join('-');
     return `${prefix}-${paymentIdsSortedAscending}`;
   };

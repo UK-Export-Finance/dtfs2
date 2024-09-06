@@ -20,7 +20,10 @@ export const getFeeRecordPaymentEntityGroupStatus = (group: FeeRecordPaymentEnti
     return status;
   }
 
-  if (allStatusesInGroup.size === 2 && allStatusesInGroup.has(FEE_RECORD_STATUS.READY_TO_KEY) && allStatusesInGroup.has(FEE_RECORD_STATUS.RECONCILED)) {
+  const feeRecordsAreReadyToKey =
+    allStatusesInGroup.size === 2 && allStatusesInGroup.has(FEE_RECORD_STATUS.READY_TO_KEY) && allStatusesInGroup.has(FEE_RECORD_STATUS.RECONCILED);
+
+  if (feeRecordsAreReadyToKey) {
     return FEE_RECORD_STATUS.READY_TO_KEY;
   }
 
