@@ -5,7 +5,7 @@ const applicationSubmission = require('../../../../gef/cypress/e2e/pages/applica
 const dashboardPage = require('../../../../gef/cypress/e2e/pages/dashboard-page');
 const companiesHouse = require('../../../../gef/cypress/e2e/pages/companies-house');
 const exporterAddress = require('../../../../gef/cypress/e2e/pages/exporters-address');
-const eligibleAutomaticCover = require('../../../../gef/cypress/e2e/pages/eligible-automatic-cover');
+const eligibleAutomaticCover = require('../../../../gef/cypress/e2e/pages/ineligible-automatic-cover');
 const aboutExporter = require('../../../../gef/cypress/e2e/pages/about-exporter');
 const facilities = require('../../../../gef/cypress/e2e/pages/facilities');
 const aboutFacility = require('../../../../gef/cypress/e2e/pages/about-facility');
@@ -19,7 +19,9 @@ const MOCK_USERS = require('../../../../e2e-fixtures/index');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-const createGefApplicationReadyForCheck = () => {
+/** * Create a BSS/EWCS deal via the UI with a "ready for check" status */
+
+const createGefDealReadyForCheck = () => {
   login(BANK1_MAKER1);
 
   // Navigate to create a new GEF submission
@@ -104,4 +106,4 @@ const createGefApplicationReadyForCheck = () => {
   applicationSubmission.backToDashboardLink().click();
 };
 
-module.exports = createGefApplicationReadyForCheck;
+module.exports = createGefDealReadyForCheck;
