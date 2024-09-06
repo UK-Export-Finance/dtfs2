@@ -90,14 +90,14 @@
         data-module="govuk-button"
         type="submit"
         data-cy="save-changes-button"/>
-        {{ govukButton({
-      text: "Delete payment",
-      classes: "govuk-button--warning",
-      href: ["/utilisation-reports/", reportId, "/edit-payment/", paymentId, "/confirm-delete"] | join,
-      attributes: {
-        "data-cy": "delete-payment-button"
-      }
-    }) }}
+      {{ govukButton({
+        text: "Delete payment",
+        classes: "govuk-button--warning",
+        href: ["/utilisation-reports/", reportId, "/edit-payment/", paymentId, "/confirm-delete?redirectTab=", redirectTab] | join,
+        attributes: {
+          "data-cy": "delete-payment-button"
+        }
+      }) }}
       <a href="{{ backLinkHref }}" data-cy="cancel-edit-payment-link">Cancel</a>
     </div>
   </form>

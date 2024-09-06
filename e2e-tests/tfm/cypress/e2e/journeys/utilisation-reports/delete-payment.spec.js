@@ -68,7 +68,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     pages.utilisationReportEditPaymentPage.clickDeletePaymentButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${payment.id}/confirm-delete`));
+    cy.url().should('eq', relative(`/utilisation-reports/${report.id}/edit-payment/${payment.id}/confirm-delete?redirectTab=premium-payments`));
 
     pages.utilisationReportConfirmDeletePaymentPage.selectNoRadio();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();

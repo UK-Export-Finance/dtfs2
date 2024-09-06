@@ -119,11 +119,14 @@ describe(page, () => {
       ...anEditPaymentViewModel(),
       reportId: '12',
       paymentId: '34',
+      redirectTab: RECONCILIATION_FOR_REPORT_TABS.PREMIUM_PAYMENTS,
     };
     const wrapper = render(viewModel);
 
     wrapper.expectElement('a[data-cy="delete-payment-button"]').toExist();
-    wrapper.expectWarningButton('a[data-cy="delete-payment-button"]').toLinkTo('/utilisation-reports/12/edit-payment/34/confirm-delete', 'Delete payment');
+    wrapper
+      .expectWarningButton('a[data-cy="delete-payment-button"]')
+      .toLinkTo('/utilisation-reports/12/edit-payment/34/confirm-delete?redirectTab=premium-payments', 'Delete payment');
   });
 
   it('should render selection actions within the fee record details table', () => {

@@ -161,12 +161,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
     pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`));
 
     getFeeRecordCheckbox(1).check();
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`));
 
     cy.visit(`/utilisation-reports/${reportId}`);
     cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
