@@ -18,7 +18,9 @@ const MOCK_USERS = require('../../../../e2e-fixtures/index');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-const createBssApplicationReadyForCheck = () => {
+/** * Create a BSS/EWCS deal via the UI with a "ready for check" status */
+
+const createBssDealReadyForCheck = () => {
   // Log in as BANK1_MAKER1
   login(BANK1_MAKER1);
 
@@ -110,4 +112,4 @@ const createBssApplicationReadyForCheck = () => {
   contractReadyForReview.readyForCheckersApproval().click();
 };
 
-module.exports = createBssApplicationReadyForCheck;
+module.exports = createBssDealReadyForCheck;
