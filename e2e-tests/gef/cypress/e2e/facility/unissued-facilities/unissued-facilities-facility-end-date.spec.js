@@ -44,6 +44,12 @@ if (facilityEndDateEnabled) {
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
                 cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
               );
+              cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+              );
+              cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+              );
               cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
             });
           });
@@ -126,7 +132,7 @@ if (facilityEndDateEnabled) {
     describe('Visiting from application preview page', () => {
       beforeEach(() => {
         cy.visit(relative(`/gef/application-details/${dealId}`));
-        applicationPreview.facilitySummaryListTable(4).facilityEndDateAction().click();
+        applicationPreview.facilitySummaryListTable(6).facilityEndDateAction().click();
       });
 
       it('should redirect user to the about unissued facility page when clicking back link', () => {

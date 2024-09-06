@@ -52,6 +52,12 @@ if (facilityEndDateEnabled) {
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
                 cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
               );
+              cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+              );
+              cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
+                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+              );
               cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
             });
           });
@@ -98,9 +104,17 @@ if (facilityEndDateEnabled) {
         cy.url().should('eq', aboutUnissuedFacilityUrl);
       });
 
-      it('should display an error message when the date is entered incorrectly', () => {
+      it('should display an error message when the date is entered incorrectly & click continue', () => {
         bankReviewDate.bankReviewDateDay().clear().type('abcd');
         cy.clickContinueButton();
+
+        errorSummary();
+        bankReviewDate.bankReviewDateError();
+      });
+
+      it('should display an error message when the date is entered incorrectly & click save and return', () => {
+        bankReviewDate.bankReviewDateDay().clear().type('abcd');
+        cy.clickSaveAndReturnButton();
 
         errorSummary();
         bankReviewDate.bankReviewDateError();
@@ -128,7 +142,7 @@ if (facilityEndDateEnabled) {
 
       beforeEach(() => {
         cy.visit(getApplicationDetailsUrl());
-        applicationPreview.facilitySummaryListTable(4).bankReviewDateAction().click();
+        applicationPreview.facilitySummaryListTable(6).bankReviewDateAction().click();
       });
 
       it('should redirect user to the about unissued facility page when clicking back link', () => {
@@ -141,9 +155,17 @@ if (facilityEndDateEnabled) {
         cy.url().should('eq', facilityOneChangeUnissuedFacilityUrl);
       });
 
-      it('should display an error message when the date is entered incorrectly', () => {
+      it('should display an error message when the date is entered incorrectly & click continue', () => {
         bankReviewDate.bankReviewDateDay().clear().type('abcd');
         cy.clickContinueButton();
+
+        errorSummary();
+        bankReviewDate.bankReviewDateError();
+      });
+
+      it('should display an error message when the date is entered incorrectly & click saveAndReturn', () => {
+        bankReviewDate.bankReviewDateDay().clear().type('abcd');
+        cy.clickSaveAndReturnButton();
 
         errorSummary();
         bankReviewDate.bankReviewDateError();
