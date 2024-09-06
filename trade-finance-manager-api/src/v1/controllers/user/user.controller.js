@@ -111,7 +111,7 @@ exports.createUser = async (user, auditDetails) => {
  * @param {object} update to make to the user
  * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - logged in user
  * @param {(error: string | null, updatedUser: object) => void} callback
- * @returns {Promise<Void>}
+ * @returns {Promise<void>}
  */
 exports.updateUser = async (_id, update, sessionUser, callback = () => {}) => {
   try {
@@ -140,7 +140,7 @@ exports.updateUser = async (_id, update, sessionUser, callback = () => {}) => {
  * updateLastLoginAndResetSignInData
  * Update a user's "last login" and reset sign in data.
  * @param {object} user
- * @param {String} sessionIdentifier
+ * @param {string} sessionIdentifier
  * @param {Function} callback: Callback function. defaults to an empty function.
  * @returns {Promise<Function>} Callback function
  */
