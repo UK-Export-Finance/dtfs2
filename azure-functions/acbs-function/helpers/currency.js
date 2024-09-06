@@ -1,6 +1,6 @@
 const stripCommas = (value) => String(value).replace(/,/g, '');
 /**
- * @description Rounds a number to 2 decimal places.
+ * Rounds a number to 2 decimal places.
  * Number cooersion is as per the built in Number function,
  * with the exception of removing commas from strings before parsing.
  * @param {unknown} value value to round to 2 decimal places

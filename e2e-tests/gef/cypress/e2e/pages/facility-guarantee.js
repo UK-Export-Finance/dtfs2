@@ -1,10 +1,5 @@
 /* eslint-disable no-undef */
 const facilityGuarantee = {
-  errorSummary: () => cy.get('[data-cy="error-summary"]'),
-  backLink: () => cy.get('[data-cy="back-link"]'),
-  headingCaption: () => cy.get('[data-cy="heading-caption"]'),
-  mainHeading: () => cy.get('[data-cy="main-heading"]'),
-
   feeTypeInAdvanceInput: () => cy.get('[data-cy="fee-type-in-advance"]'),
   feeTypeInArrearsInput: () => cy.get('[data-cy="fee-type-in-arrears"]'),
   feeTypeAtMaturityInput: () => cy.get('[data-cy="fee-type-at-maturity"]'),

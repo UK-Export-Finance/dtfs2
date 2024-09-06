@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { backLink, continueButton, errorSummary, headingCaption, mainHeading, form, saveAndReturnButton } from '../partials';
 import aboutFacility from '../pages/about-facility';
 import bankReviewDate from '../pages/bank-review-date';
 import facilityEndDate from '../pages/facility-end-date';
@@ -49,11 +50,11 @@ context('About Facility Page', () => {
 
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.backLink();
-      aboutFacility.headingCaption();
-      aboutFacility.mainHeading().contains('cash');
-      aboutFacility.mainHeading().should('not.contain', 'contingent');
-      aboutFacility.form();
+      backLink();
+      headingCaption();
+      mainHeading().contains('cash');
+      mainHeading().should('not.contain', 'contingent');
+      form();
       aboutFacility.facilityName();
       aboutFacility.facilityNameLabel().contains('cash');
       aboutFacility.shouldCoverStartOnSubmissionYes();
@@ -69,21 +70,21 @@ context('About Facility Page', () => {
         aboutFacility.isUsingFacilityEndDateYes().should('not.exist');
         aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
       }
-      aboutFacility.continueButton();
-      aboutFacility.saveAndReturnButton();
+      continueButton();
+      saveAndReturnButton();
       aboutFacility.monthsOfCover().should('not.exist');
     });
 
     it('redirects user to `Has your bank already issued` page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}`));
     });
 
     it('validates form when clicking on Continue', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.continueButton().click();
-      aboutFacility.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       aboutFacility.facilityNameError();
       aboutFacility.shouldCoverStartOnSubmissionError();
       aboutFacility.coverEndDateError();
@@ -94,7 +95,7 @@ context('About Facility Page', () => {
 
     it('redirects user to application page when clicking on `save and return` button', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
     });
 
@@ -110,7 +111,7 @@ context('About Facility Page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
       aboutFacility.coverStartDate();
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
       aboutFacility.coverStartDateError();
     });
 
@@ -124,9 +125,9 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateDay().type(`${now.getDate()}-`);
       aboutFacility.coverEndDateMonth().type(now.getMonth() + 1);
       aboutFacility.coverEndDateYear().type(now.getFullYear());
-      aboutFacility.continueButton().click();
-      aboutFacility.errorSummary().contains('The day for the cover start date must include 1 or 2 numbers');
-      aboutFacility.errorSummary().contains('The day for the cover end date must include 1 or 2 numbers');
+      cy.clickContinueButton();
+      errorSummary().contains('The day for the cover start date must include 1 or 2 numbers');
+      errorSummary().contains('The day for the cover end date must include 1 or 2 numbers');
       aboutFacility.coverStartDateError().contains('The day for the cover start date must include 1 or 2 numbers');
       aboutFacility.coverEndDateError().contains('The day for the cover end date must include 1 or 2 numbers');
 
@@ -134,9 +135,9 @@ context('About Facility Page', () => {
       aboutFacility.coverStartDateYear().type('-');
       aboutFacility.coverEndDateDay().clear().type(now.getDate());
       aboutFacility.coverEndDateYear().type('2');
-      aboutFacility.continueButton().click();
-      aboutFacility.errorSummary().contains('The year for the cover start date must include 4 numbers');
-      aboutFacility.errorSummary().contains('The year for the cover end date must include 4 numbers');
+      cy.clickContinueButton();
+      errorSummary().contains('The year for the cover start date must include 4 numbers');
+      errorSummary().contains('The year for the cover end date must include 4 numbers');
       aboutFacility.coverStartDateError().contains('The year for the cover start date must include 4 numbers');
       aboutFacility.coverEndDateError().contains('The year for the cover end date must include 4 numbers');
     });
@@ -157,7 +158,7 @@ context('About Facility Page', () => {
         .clear()
         .type(now.getMonth() + 1);
       aboutFacility.coverEndDateYear().clear().type(now.getFullYear());
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
       aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
     });
 
@@ -171,7 +172,7 @@ context('About Facility Page', () => {
         .clear()
         .type(now.getMonth() + 1);
       aboutFacility.coverEndDateYear().clear().type(now.getFullYear());
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
       aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
     });
 
@@ -185,7 +186,7 @@ context('About Facility Page', () => {
         .clear()
         .type(yesterday.getMonth() + 1);
       aboutFacility.coverEndDateYear().clear().type(yesterday.getFullYear());
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
       aboutFacility.coverEndDateError().contains('Cover end date cannot be before cover start date');
     });
 
@@ -202,7 +203,7 @@ context('About Facility Page', () => {
         aboutFacility.coverEndDateYear().clear().type(dateConstants.twoDaysYear);
         aboutFacility.isUsingFacilityEndDateYes().click();
 
-        aboutFacility.continueButton().click();
+        cy.clickContinueButton();
 
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
       });
@@ -213,7 +214,7 @@ context('About Facility Page', () => {
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.tomorrowMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.tomorrowYear);
 
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
 
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
@@ -221,7 +222,7 @@ context('About Facility Page', () => {
         aboutFacility.coverStartDateMonth().clear().type(dateConstants.tomorrowMonth);
         aboutFacility.coverStartDateYear().clear().type(dateConstants.tomorrowYear);
 
-        aboutFacility.continueButton().click();
+        cy.clickContinueButton();
 
         facilityEndDate.facilityEndDateDay().should('have.value', '');
         facilityEndDate.facilityEndDateMonth().should('have.value', '');
@@ -240,7 +241,7 @@ context('About Facility Page', () => {
         aboutFacility.coverEndDateYear().clear().type(dateConstants.twoDaysYear);
         aboutFacility.isUsingFacilityEndDateNo().click();
 
-        aboutFacility.continueButton().click();
+        cy.clickContinueButton();
 
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
       });
@@ -251,7 +252,7 @@ context('About Facility Page', () => {
         bankReviewDate.bankReviewDateMonth().clear().type(dateConstants.tomorrowMonth);
         bankReviewDate.bankReviewDateYear().clear().type(dateConstants.tomorrowYear);
 
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
 
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
@@ -259,7 +260,7 @@ context('About Facility Page', () => {
         aboutFacility.coverStartDateMonth().clear().type(dateConstants.tomorrowMonth);
         aboutFacility.coverStartDateYear().clear().type(dateConstants.tomorrowYear);
 
-        aboutFacility.continueButton().click();
+        cy.clickContinueButton();
 
         bankReviewDate.bankReviewDateDay().should('have.value', '');
         bankReviewDate.bankReviewDateMonth().should('have.value', '');
@@ -277,7 +278,7 @@ context('About Facility Page', () => {
         aboutFacility.coverEndDateMonth().clear().type(dateConstants.tomorrowMonth);
         aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
 
-        aboutFacility.continueButton().click();
+        cy.clickContinueButton();
 
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
       });
@@ -296,8 +297,8 @@ context('About Facility Page', () => {
       if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes().click();
       }
-      aboutFacility.continueButton().click();
-      aboutFacility.errorSummary().should('not.exist');
+      cy.clickContinueButton();
+      errorSummary().should('not.exist');
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.facilityName().should('have.value', 'Name');
@@ -310,14 +311,14 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateYear().should('have.value', dateConstants.tomorrowYear);
       if (application.version >= 1) {
         aboutFacility.isUsingFacilityEndDateYes().should('be.checked');
-        aboutFacility.isUsingFacilityEndDateNo().should('be.not.checked');
+        aboutFacility.isUsingFacilityEndDateNo().should('not.be.checked');
         aboutFacility.isUsingFacilityEndDateNo().click();
 
-        aboutFacility.continueButton().click();
+        cy.clickContinueButton();
 
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
         aboutFacility.isUsingFacilityEndDateNo().should('be.checked');
-        aboutFacility.isUsingFacilityEndDateYes().should('be.not.checked');
+        aboutFacility.isUsingFacilityEndDateYes().should('not.be.checked');
       }
     });
   });
@@ -333,11 +334,11 @@ context('About Facility Page', () => {
 
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.backLink();
-      aboutFacility.headingCaption();
-      aboutFacility.mainHeading().contains('cash');
-      aboutFacility.mainHeading().should('not.contain', 'contingent');
-      aboutFacility.form();
+      backLink();
+      headingCaption();
+      mainHeading().contains('cash');
+      mainHeading().should('not.contain', 'contingent');
+      form();
       aboutFacility.facilityNameLabel().contains('cash');
       aboutFacility.shouldCoverStartOnSubmissionYes().should('not.exist');
       aboutFacility.shouldCoverStartOnSubmissionNo().should('not.exist');
@@ -352,8 +353,8 @@ context('About Facility Page', () => {
         aboutFacility.isUsingFacilityEndDateYes().should('not.exist');
         aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
       }
-      aboutFacility.continueButton();
-      aboutFacility.saveAndReturnButton();
+      continueButton();
+      saveAndReturnButton();
       aboutFacility.monthsOfCover();
     });
 
@@ -363,8 +364,8 @@ context('About Facility Page', () => {
       if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes().click();
       }
-      aboutFacility.continueButton().click();
-      aboutFacility.errorSummary().should('not.exist');
+      cy.clickContinueButton();
+      errorSummary().should('not.exist');
       aboutFacility.facilityNameError().should('not.exist');
     });
 
@@ -372,12 +373,12 @@ context('About Facility Page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.monthsOfCover().clear();
       aboutFacility.monthsOfCover().type('ab');
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
       aboutFacility.monthsOfCoverError();
 
       aboutFacility.monthsOfCover().clear();
       aboutFacility.monthsOfCover().type('-100');
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
       aboutFacility.monthsOfCoverError();
     });
   });
@@ -393,11 +394,11 @@ context('About Facility Page', () => {
 
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.backLink();
-      aboutFacility.headingCaption();
-      aboutFacility.mainHeading().contains('contingent');
-      aboutFacility.mainHeading().should('not.contain', 'cash');
-      aboutFacility.form();
+      backLink();
+      headingCaption();
+      mainHeading().contains('contingent');
+      mainHeading().should('not.contain', 'cash');
+      form();
       aboutFacility.facilityName();
       aboutFacility.facilityNameLabel().contains('contingent');
       aboutFacility.shouldCoverStartOnSubmissionYes();
@@ -406,7 +407,7 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateDay();
       aboutFacility.coverEndDateMonth();
       aboutFacility.coverEndDateYear();
-      aboutFacility.continueButton();
+      continueButton();
       if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes();
         aboutFacility.isUsingFacilityEndDateNo();
@@ -414,7 +415,7 @@ context('About Facility Page', () => {
         aboutFacility.isUsingFacilityEndDateYes().should('not.exist');
         aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
       }
-      aboutFacility.saveAndReturnButton();
+      saveAndReturnButton();
       aboutFacility.monthsOfCover().should('not.exist');
     });
   });
@@ -430,11 +431,11 @@ context('About Facility Page', () => {
 
     it('displays the correct elements', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.backLink();
-      aboutFacility.headingCaption();
-      aboutFacility.mainHeading().contains('contingent');
-      aboutFacility.mainHeading().should('not.contain', 'cash');
-      aboutFacility.form();
+      backLink();
+      headingCaption();
+      mainHeading().contains('contingent');
+      mainHeading().should('not.contain', 'cash');
+      form();
       aboutFacility.facilityNameLabel().contains('contingent');
       aboutFacility.shouldCoverStartOnSubmissionYes().should('not.exist');
       aboutFacility.shouldCoverStartOnSubmissionNo().should('not.exist');
@@ -442,7 +443,7 @@ context('About Facility Page', () => {
       aboutFacility.coverEndDateDay().should('not.exist');
       aboutFacility.coverEndDateMonth().should('not.exist');
       aboutFacility.coverEndDateYear().should('not.exist');
-      aboutFacility.continueButton();
+      continueButton();
       if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes();
         aboutFacility.isUsingFacilityEndDateNo();
@@ -450,7 +451,7 @@ context('About Facility Page', () => {
         aboutFacility.isUsingFacilityEndDateYes().should('not.exist');
         aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
       }
-      aboutFacility.saveAndReturnButton();
+      saveAndReturnButton();
       aboutFacility.monthsOfCover();
     });
   });

@@ -1,15 +1,34 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
-const { isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
+
+/**
+ * Gets the next page url based on the current state of the facility
+ * @param {boolean} changeFacilityValue if the facility value is to be changed
+ * @param {boolean} showFacilityEndDatePage if the facility end date page should be shown
+ * @param {string} baseUrl the base url to create the next page url
+ * @returns {string} next page url
+ */
+const getNextPageUrl = ({ changeFacilityValue, showFacilityEndDatePage, baseUrl }) => {
+  if (showFacilityEndDatePage) {
+    return `${baseUrl}/is-using-facility-end-date`;
+  }
+
+  if (changeFacilityValue) {
+    return `${baseUrl}/facility-value`;
+  }
+
+  return `${baseUrl}/check-answers`;
+};
 
 const getAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
   const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
 
-  if (status !== 200) {
+  if (status !== HttpStatusCode.Ok) {
     return res.redirect('/not-found');
   }
 
@@ -50,7 +69,7 @@ const postAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
-  const { dealId } = amendment;
+  const { dealId, changeFacilityValue } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
   const { data: latestAmendmentCoverEndDate } = await api.getLatestCompletedAmendmentDate(facilityId, userToken);
 
@@ -77,28 +96,29 @@ const postAmendCoverEndDate = async (req, res) => {
     });
   }
 
+  const baseUrl = `/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}`;
+  const fallbackUrl = `/case/${dealId}/facility/${facilityId}#amendments`;
+
   try {
     let formatCurrentCoverEndDate = currentCoverEndDate;
     // convert the current end date to EPOCH format
     formatCurrentCoverEndDate = getUnixTime(new Date(formatCurrentCoverEndDate).setHours(2, 2, 2, 2));
+
     const payload = { coverEndDate, currentCoverEndDate: formatCurrentCoverEndDate };
+
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);
 
-    if (status === 200) {
-      if (isTfmFacilityEndDateFeatureFlagEnabled()) {
-        return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
-      }
-      if (amendment.changeFacilityValue) {
-        return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
-      }
-      return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
+    if (status !== HttpStatusCode.Ok) {
+      throw new Error('Error updating amendment with cover end date');
     }
-    console.error('Unable to update the cover end date');
-    return res.redirect(`/case/${dealId}/facility/${facilityId}#amendments`);
+
+    const showFacilityEndDatePage = isTfmFacilityEndDateFeatureFlagEnabled() && facility.facilitySnapshot.isGef;
+
+    return res.redirect(getNextPageUrl({ changeFacilityValue, showFacilityEndDatePage, baseUrl }));
   } catch (error) {
     console.error('There was a problem adding the cover end date %o', error);
-    return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}#amendments`);
+    return res.redirect(fallbackUrl);
   }
 };
 
-module.exports = { getAmendCoverEndDate, postAmendCoverEndDate };
+module.exports = { getAmendCoverEndDate, postAmendCoverEndDate, getNextPageUrl };

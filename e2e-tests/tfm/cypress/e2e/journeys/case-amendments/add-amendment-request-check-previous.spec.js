@@ -6,8 +6,6 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import pages from '../../pages';
 
-const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
-
 context('Amendments - should not allow amendments to have same coverEndDate/value if previously submitted', () => {
   let dealId;
   const dealFacilities = [];
@@ -77,10 +75,6 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.tomorrowYear);
     amendmentsPage.continueAmendment().click();
 
-    if (tfmFacilityEndDateEnabled) {
-      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
-    }
-
     cy.url().should('contain', 'facility-value');
 
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
@@ -135,10 +129,6 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.threeDaysMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeDaysYear);
     amendmentsPage.continueAmendment().click();
-
-    if (tfmFacilityEndDateEnabled) {
-      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
-    }
 
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
@@ -245,10 +235,6 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeYearsYear);
     amendmentsPage.continueAmendment().click();
 
-    if (tfmFacilityEndDateEnabled) {
-      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
-    }
-
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('1234');
 
@@ -346,10 +332,6 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.threeDaysMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeDaysYear);
     amendmentsPage.continueAmendment().click();
-
-    if (tfmFacilityEndDateEnabled) {
-      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
-    }
 
     cy.url().should('contain', 'facility-value');
 

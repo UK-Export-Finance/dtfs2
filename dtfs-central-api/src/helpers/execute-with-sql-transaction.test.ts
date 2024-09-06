@@ -1,17 +1,9 @@
 import { QueryRunner } from 'typeorm';
 import { HttpStatusCode } from 'axios';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
+import { TestApiError } from '@ukef/dtfs2-common';
 import { executeWithSqlTransaction } from './execute-with-sql-transaction';
-import { ApiError, TransactionFailedError } from '../errors';
-
-class TestApiError extends ApiError {
-  constructor({ message, status }: { message: string; status: number }) {
-    super({
-      message,
-      status,
-    });
-  }
-}
+import { TransactionFailedError } from '../errors';
 
 describe('executeWithSqlTransaction', () => {
   const mockConnect = jest.fn();
@@ -144,10 +136,7 @@ describe('executeWithSqlTransaction', () => {
 
   it("throws a specific 'TransactionFailedError' if the supplied function throws an 'ApiError'", async () => {
     // Arrange
-    const customError = new TestApiError({
-      message: 'Some error message',
-      status: HttpStatusCode.BadRequest,
-    });
+    const customError = new TestApiError(HttpStatusCode.BadRequest);
 
     const functionToExecute = jest.fn().mockRejectedValue(customError);
 
