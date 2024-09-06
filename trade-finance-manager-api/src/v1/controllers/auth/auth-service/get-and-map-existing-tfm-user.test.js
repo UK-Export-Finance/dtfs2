@@ -19,7 +19,7 @@ describe('auth-service/get-and-map-existing-tfm-user', () => {
   });
 
   describe('when an Entra user is not provided', () => {
-    it('should return an  empty object', async () => {
+    it('should return an empty object', async () => {
       const result = await existingTfmUser.getAndMap();
 
       expect(result).toEqual({});
