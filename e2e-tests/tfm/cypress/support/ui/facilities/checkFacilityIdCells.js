@@ -1,4 +1,4 @@
-const facilitiesPage = require('../../e2e/pages/facilitiesPage');
+const facilitiesPage = require('../../../e2e/pages/facilitiesPage');
 
 module.exports = ({ firstFacilityId, increment, numberToCheck }) => {
   let expectedFacilityId = Number(firstFacilityId);

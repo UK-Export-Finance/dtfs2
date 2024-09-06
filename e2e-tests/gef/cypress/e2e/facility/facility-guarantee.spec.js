@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { backLink, errorSummary } from '../partials';
 import facilityGuarantee from '../pages/facility-guarantee';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -43,7 +44,7 @@ context('Facility Guarantee Page', () => {
 
     it('redirects user to `facility value` page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-guarantee`));
-      facilityGuarantee.backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
     });
 
@@ -51,13 +52,13 @@ context('Facility Guarantee Page', () => {
       cy.visit(
         relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee?status=change`),
       );
-      facilityGuarantee.backLink().should('not.exist');
+      backLink().should('not.exist');
     });
 
     it('displays errors when the fee type and day count are not selected', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/facility-guarantee`));
       facilityGuarantee.doneButton().click();
-      facilityGuarantee.errorSummary();
+      errorSummary();
       facilityGuarantee.feeTypeInputErrorMessage();
       facilityGuarantee.dayCountBasisInputErrorMessage();
     });
@@ -80,7 +81,7 @@ context('Facility Guarantee Page', () => {
       facilityGuarantee.feeFrequencySemiAnnuallyInput();
       facilityGuarantee.dayCountBasis365Input().click();
       facilityGuarantee.doneButton().click();
-      facilityGuarantee.errorSummary();
+      errorSummary();
       facilityGuarantee.feeFrequencyInputErrorMessage();
     });
 

@@ -1,4 +1,4 @@
-const { CURRENCY, AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { CURRENCY, AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const amendmentController = require('../../../src/v1/controllers/amendment.controller');
 const externalApis = require('../../../src/v1/api');
 const MOCK_GEF_AIN_DEAL = require('../../../src/v1/__mocks__/mock-TFM-deal-AIN-submitted');
@@ -72,7 +72,7 @@ describe('update amendment-tfm on amendment completion', () => {
   });
 
   describe('createAmendmentTFMObject', () => {
-    describe('when TFM Facility end date feature flag disabled', () => {
+    describe('when TFM Facility end date feature flag is disabled', () => {
       beforeEach(() => {
         jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(false);
       });
@@ -142,7 +142,7 @@ describe('update amendment-tfm on amendment completion', () => {
       });
     });
 
-    describe('when TFM Facility end date feature flag enabled', () => {
+    describe('when TFM Facility end date feature flag is enabled', () => {
       beforeEach(() => {
         jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
       });
@@ -293,6 +293,35 @@ describe('update amendment-tfm on amendment completion', () => {
 
         expect(result).toEqual(expected);
       });
+
+      it.each([FACILITY_TYPE.BOND, FACILITY_TYPE.LOAN])(
+        'should create tfm object excluding facility end date data when the facility is from a non GEF deal type (%s)',
+        async (typeOfNonGefDealToTest) => {
+          const nonGefFacility = { facilitySnapshot: { ...mockFacility.facilitySnapshot, type: typeOfNonGefDealToTest } };
+
+          externalApis.getFacilityExposurePeriod = jest.fn().mockResolvedValue({ exposurePeriodInMonths: 5 });
+          externalApis.getLatestCompletedAmendmentFacilityEndDate = jest.fn().mockResolvedValue(facilityEndDateChange);
+          externalApis.findOneFacility = jest.fn().mockResolvedValue(nonGefFacility);
+
+          const result = await amendmentController.createAmendmentTFMObject(mockAmendment.amendmentId, mockAmendment.facilityId);
+
+          const expected = {
+            amendmentExposurePeriodInMonths: 5,
+            coverEndDate: unixTime,
+            exposure: {
+              exposure: '4,000.00',
+              timestamp: expect.any(Number),
+              ukefExposureValue: 4000,
+            },
+            value: {
+              currency: CURRENCY.GBP,
+              value: 5000,
+            },
+          };
+
+          expect(result).toEqual(expected);
+        },
+      );
     });
   });
 });
