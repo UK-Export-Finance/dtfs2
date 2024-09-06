@@ -3,11 +3,23 @@ import { Currency, CurrencyAndAmount } from '@ukef/dtfs2-common';
 import { getEditPaymentViewModel, getEditPaymentViewModelWithFormValues } from './edit-payment-helper';
 import { aPaymentDetailsWithFeeRecordsResponseBody, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { GetPaymentDetailsWithFeeRecordsResponseBody } from '../../../api-response-types';
+import { RECONCILIATION_FOR_REPORT_TABS } from '../../../constants/reconciliation-for-report-tabs';
 import { PaymentErrorsViewModel, SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL } from './payment-form-helpers';
+import { getReconciliationForReportHref } from './get-reconciliation-for-report-href';
+
+jest.mock('./get-reconciliation-for-report-href');
 
 describe('edit-payment-helper', () => {
+  beforeEach(() => {
+    jest.mocked(getReconciliationForReportHref).mockReturnValue('/utilisation-reports/1');
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   describe('getEditPaymentViewModel', () => {
     const reportId = '12';
     const paymentId = '34';
@@ -366,6 +378,31 @@ describe('edit-payment-helper', () => {
 
       // Assert
       expect(viewModel.formValues.paymentReference).toBe(reference);
+    });
+
+    it('sets the view model redirectTab to the supplied redirectTab', () => {
+      // Arrange
+      const redirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
+
+      // Act
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, undefined, redirectTab);
+
+      // Assert
+      expect(viewModel.redirectTab).toEqual(redirectTab);
+    });
+
+    it('sets the back link to the reconciliation for report href using the supplied redirectTab', () => {
+      // Arrange
+      const redirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
+
+      jest.mocked(getReconciliationForReportHref).mockReturnValue('/utilisation-reports/123#keying-sheet');
+
+      // Act
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, undefined, redirectTab);
+
+      // Assert
+      expect(viewModel.backLinkHref).toEqual('/utilisation-reports/123#keying-sheet');
+      expect(getReconciliationForReportHref).toHaveBeenCalledWith(reportId, redirectTab);
     });
   });
 
@@ -831,6 +868,31 @@ describe('edit-payment-helper', () => {
 
       // Assert
       expect(viewModel.formValues.paymentReference).toBe('Some payment reference');
+    });
+
+    it('sets the view model redirectTab to the supplied redirectTab', () => {
+      // Arrange
+      const redirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
+
+      // Act
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, undefined, redirectTab);
+
+      // Assert
+      expect(viewModel.redirectTab).toEqual(redirectTab);
+    });
+
+    it('sets the back link to the reconciliation for report href using the supplied redirectTab', () => {
+      // Arrange
+      const redirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
+
+      jest.mocked(getReconciliationForReportHref).mockReturnValue('/utilisation-reports/123#keying-sheet');
+
+      // Act
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, undefined, redirectTab);
+
+      // Assert
+      expect(viewModel.backLinkHref).toEqual('/utilisation-reports/123#keying-sheet');
+      expect(getReconciliationForReportHref).toHaveBeenCalledWith(reportId, redirectTab);
     });
 
     function aValidEditPaymentFormValuesObject(): EditPaymentFormValues {

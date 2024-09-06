@@ -9,7 +9,9 @@
   {% set dateReconciled = paymentDetails.dateReconciled or "-" %}
   {% set paymentAmountHtml %}
   {% if userCanEdit and groupStatus !== 'READY_TO_KEY' and groupStatus !== 'RECONCILED' %}
-    <a href="/utilisation-reports/{{ reportId }}/edit-payment/{{ payment.id }}">
+    <a
+      href="/utilisation-reports/{{ reportId }}/edit-payment/{{ payment.id }}?redirectTab=payment-details"
+      data-cy="payment-details-tab-edit-payment-link--paymentId-{{ paymentReceived.id }}">
       {{ payment.amount.formattedCurrencyAndAmount }}
     </a>
   {% else %}

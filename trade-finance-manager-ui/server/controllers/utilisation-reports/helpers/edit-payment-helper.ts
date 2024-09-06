@@ -6,6 +6,8 @@ import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { EditPaymentViewModel, FeeRecordDetailsCheckboxId, EditPaymentErrorsViewModel } from '../../../types/view-models';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL } from './payment-form-helpers';
 import { EditPaymentsTableCheckboxId } from '../../../types/edit-payments-table-checkbox-id';
+import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
+import { getReconciliationForReportHref } from './get-reconciliation-for-report-href';
 
 const mapToEditPaymentFeeRecords = (
   feeRecords: FeeRecord[],
@@ -67,6 +69,7 @@ export const getEditPaymentViewModel = (
   paymentId: string,
   isCheckboxChecked: (checkboxId: string) => boolean,
   errors: EditPaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
+  redirectTab: ReconciliationForReportTab | undefined = undefined,
 ): EditPaymentViewModel => ({
   reportId,
   paymentId,
@@ -77,6 +80,8 @@ export const getEditPaymentViewModel = (
   totalReportedPayments: getFormattedCurrencyAndAmount(editPaymentResponse.totalReportedPayments),
   formValues: mapToEditPaymentFormValues(editPaymentResponse.payment),
   errors,
+  backLinkHref: getReconciliationForReportHref(reportId, redirectTab),
+  redirectTab,
 });
 
 /**
@@ -92,6 +97,7 @@ export const getEditPaymentViewModelWithFormValues = (
   isCheckboxChecked: (checkboxId: EditPaymentsTableCheckboxId) => boolean,
   formValues: EditPaymentFormValues,
   errors: EditPaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
+  redirectTab: ReconciliationForReportTab | undefined = undefined,
 ): EditPaymentViewModel => ({
   reportId,
   paymentId,
@@ -102,4 +108,6 @@ export const getEditPaymentViewModelWithFormValues = (
   totalReportedPayments: getFormattedCurrencyAndAmount(editPaymentResponse.totalReportedPayments),
   formValues,
   errors,
+  backLinkHref: getReconciliationForReportHref(reportId, redirectTab),
+  redirectTab,
 });

@@ -1,5 +1,7 @@
-const { pageRenderer } = require('../pageRenderer');
-const { anEditPaymentViewModel } = require('../../test-helpers');
+import { pageRenderer } from '../pageRenderer';
+import { anEditPaymentViewModel } from '../../test-helpers';
+import { EditPaymentViewModel } from '../../server/types/view-models';
+import { RECONCILIATION_FOR_REPORT_TABS } from '../../server/constants/reconciliation-for-report-tabs';
 
 const page = '../templates/utilisation-reports/edit-payment.njk';
 const render = pageRenderer(page);
@@ -9,7 +11,7 @@ describe(page, () => {
     const bankName = 'Test bank';
     const formattedReportPeriod = 'January 2024';
 
-    const viewModel = {
+    const viewModel: EditPaymentViewModel = {
       ...anEditPaymentViewModel(),
       bank: { id: '123', name: bankName },
       formattedReportPeriod,
@@ -49,7 +51,7 @@ describe(page, () => {
   });
 
   it('should initialise the amount received with the supplied payment amount', () => {
-    const viewModel = anEditPaymentViewModel();
+    const viewModel: EditPaymentViewModel = anEditPaymentViewModel();
     viewModel.formValues.paymentAmount = '5 million';
     const wrapper = render(viewModel);
 
@@ -57,7 +59,7 @@ describe(page, () => {
   });
 
   it('should display error message when there is an error with the amount received', () => {
-    const viewModel = anEditPaymentViewModel();
+    const viewModel: EditPaymentViewModel = anEditPaymentViewModel();
     viewModel.errors.paymentAmountErrorMessage = 'That is not a valid amount';
     const wrapper = render(viewModel);
 
@@ -65,7 +67,7 @@ describe(page, () => {
   });
 
   it('should initialise the payment date with the supplied payment date', () => {
-    const viewModel = anEditPaymentViewModel();
+    const viewModel: EditPaymentViewModel = anEditPaymentViewModel();
     viewModel.formValues.paymentDate = {
       day: '12',
       month: '13',
@@ -79,7 +81,7 @@ describe(page, () => {
   });
 
   it('should display error message when there is an error with the payment date', () => {
-    const viewModel = anEditPaymentViewModel();
+    const viewModel: EditPaymentViewModel = anEditPaymentViewModel();
     viewModel.errors.paymentDateError = { message: 'That is not a valid date', dayError: true, monthError: false, yearError: true };
     const wrapper = render(viewModel);
 
@@ -87,7 +89,7 @@ describe(page, () => {
   });
 
   it('should add error state to date fields with error', () => {
-    const viewModel = anEditPaymentViewModel();
+    const viewModel: EditPaymentViewModel = anEditPaymentViewModel();
     viewModel.errors.paymentDateError = { message: 'That is not a valid date', dayError: true, monthError: false, yearError: true };
     const wrapper = render(viewModel);
 
@@ -97,7 +99,7 @@ describe(page, () => {
   });
 
   it('should initialise the payment reference with the supplied value', () => {
-    const viewModel = anEditPaymentViewModel();
+    const viewModel: EditPaymentViewModel = anEditPaymentViewModel();
     viewModel.formValues.paymentReference = 'transaction';
     const wrapper = render(viewModel);
 
@@ -105,28 +107,15 @@ describe(page, () => {
   });
 
   it('should display error message when there is an error with the payment reference', () => {
-    const viewModel = anEditPaymentViewModel();
+    const viewModel: EditPaymentViewModel = anEditPaymentViewModel();
     viewModel.errors.paymentReferenceErrorMessage = 'That is far too long';
     const wrapper = render(viewModel);
 
     wrapper.expectText('[id="paymentReference-error"]').toContain('That is far too long');
   });
 
-  it('should render the save changes button which links to the edit payment url', () => {
-    const viewModel = {
-      ...anEditPaymentViewModel(),
-      reportId: '12',
-      paymentId: '34',
-    };
-    const wrapper = render(viewModel);
-
-    const saveChangesButtonSelector = 'input[data-cy="save-changes-button"]';
-    wrapper.expectInput(saveChangesButtonSelector).toHaveValue('Save changes');
-    wrapper.expectElement(saveChangesButtonSelector).toHaveAttribute('formaction', '/utilisation-reports/12/edit-payment/34');
-  });
-
   it('should render the delete payment button which links to the confirm delete payment url', () => {
-    const viewModel = {
+    const viewModel: EditPaymentViewModel = {
       ...anEditPaymentViewModel(),
       reportId: '12',
       paymentId: '34',
@@ -137,28 +126,45 @@ describe(page, () => {
     wrapper.expectWarningButton('a[data-cy="delete-payment-button"]').toLinkTo('/utilisation-reports/12/edit-payment/34/confirm-delete', 'Delete payment');
   });
 
-  it('should render the cancel link which links to the premium payments table', () => {
-    const viewModel = {
-      ...anEditPaymentViewModel(),
-      reportId: '12',
-    };
-    const wrapper = render(viewModel);
-
-    wrapper.expectLink('a[data-cy="cancel-edit-payment-link"]').toLinkTo('/utilisation-reports/12', 'Cancel');
-  });
-
   it('should render selection actions within the fee record details table', () => {
-    const viewModel = anEditPaymentViewModel();
+    const viewModel: EditPaymentViewModel = anEditPaymentViewModel();
     const wrapper = render(viewModel);
 
     wrapper.expectElement(`[data-cy="remove-selected-fees-button"]`).toExist();
   });
 
   it('should render the remove selected fee records error', () => {
-    const viewModel = anEditPaymentViewModel();
+    const viewModel: EditPaymentViewModel = anEditPaymentViewModel();
     viewModel.errors.removeSelectedFeesErrorMessage = "No you can't remove that one!";
     const wrapper = render(viewModel);
 
     wrapper.expectText(`[data-cy="fee-record-details-table"]`).toContain("Error: No you can't remove that one!");
+  });
+
+  it.each(Object.values(RECONCILIATION_FOR_REPORT_TABS))(
+    'should render the save changes button which linked to the edit payment url with redirectTab query set to %s',
+    (redirectTab) => {
+      const viewModel: EditPaymentViewModel = {
+        ...anEditPaymentViewModel(),
+        reportId: '12',
+        paymentId: '34',
+        redirectTab,
+      };
+      const wrapper = render(viewModel);
+
+      const saveChangesButtonSelector = 'input[data-cy="save-changes-button"]';
+      wrapper.expectInput(saveChangesButtonSelector).toHaveValue('Save changes');
+      wrapper.expectElement(saveChangesButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/12/edit-payment/34?redirectTab=${redirectTab}`);
+    },
+  );
+
+  it('should render the cancel link which links to the same page as the back link', () => {
+    const viewModel: EditPaymentViewModel = {
+      ...anEditPaymentViewModel(),
+      backLinkHref: '/utilisation-reports/123#keying-sheet',
+    };
+    const wrapper = render(viewModel);
+
+    wrapper.expectLink('a[data-cy="cancel-edit-payment-link"]').toLinkTo('/utilisation-reports/123#keying-sheet', 'Cancel');
   });
 });

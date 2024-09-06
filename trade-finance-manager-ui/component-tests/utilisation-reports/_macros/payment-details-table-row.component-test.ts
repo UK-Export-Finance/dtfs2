@@ -1,7 +1,8 @@
 import difference from 'lodash.difference';
 import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
-import { PaymentDetailsPaymentViewModel, PaymentDetailsViewModel } from '../../../server/types/view-models';
 import { componentRenderer } from '../../componentRenderer';
+import { PaymentDetailsPaymentViewModel, PaymentDetailsViewModel } from '../../../server/types/view-models';
+import { RECONCILIATION_FOR_REPORT_TABS } from '../../../server/constants/reconciliation-for-report-tabs';
 
 const component = '../templates/utilisation-reports/_macros/payment-details-table-row.njk';
 const render = componentRenderer(component, true);
@@ -107,7 +108,7 @@ describe(component, () => {
     );
 
     it.each(difference(Object.values(FEE_RECORD_STATUS), [FEE_RECORD_STATUS.READY_TO_KEY, FEE_RECORD_STATUS.RECONCILED]))(
-      'renders the payment amount as a link to the edit payment page when the fee record status is %s',
+      `renders the payment amount as a link to the edit payment page when the fee record status is %s with redirectTab set to ${RECONCILIATION_FOR_REPORT_TABS.PAYMENT_DETAILS}`,
       (status) => {
         const paymentDetailsRow: PaymentDetailsTableRow = {
           ...aPaymentDetailsTableRow(),
@@ -121,7 +122,9 @@ describe(component, () => {
         const wrapper = getWrapper({ reportId: 12, paymentDetailsRow, userCanEdit });
 
         wrapper.expectElement('tr td:contains(a)').toExist();
-        wrapper.expectLink('td a').toLinkTo('/utilisation-reports/12/edit-payment/24', 'GBP 123.45');
+        wrapper
+          .expectLink('td a')
+          .toLinkTo(`/utilisation-reports/12/edit-payment/24?redirectTab=${RECONCILIATION_FOR_REPORT_TABS.PAYMENT_DETAILS}`, 'GBP 123.45');
       },
     );
   });

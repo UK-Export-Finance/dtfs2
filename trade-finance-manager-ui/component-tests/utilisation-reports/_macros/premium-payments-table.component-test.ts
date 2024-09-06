@@ -1,9 +1,9 @@
-const difference = require('lodash/difference');
-const { FEE_RECORD_STATUS } = require('@ukef/dtfs2-common');
-const { componentRenderer } = require('../../componentRenderer');
-const { aFeeRecordPaymentGroup, aFeeRecordViewModelItem } = require('../../../test-helpers');
-
-jest.mock('../../../server/api');
+import difference from 'lodash.difference';
+import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { componentRenderer } from '../../componentRenderer';
+import { aFeeRecordPaymentGroup, aFeeRecordViewModelItem } from '../../../test-helpers';
+import { FeeRecordPaymentGroupViewModelItem } from '../../../server/types/view-models';
+import { RECONCILIATION_FOR_REPORT_TABS } from '../../../server/constants/reconciliation-for-report-tabs';
 
 const component = '../templates/utilisation-reports/_macros/premium-payments-table.njk';
 const tableSelector = '[data-cy="premium-payments-table"]';
@@ -11,10 +11,7 @@ const tableSelector = '[data-cy="premium-payments-table"]';
 const render = componentRenderer(component);
 
 describe(component, () => {
-  /**
-   * @type {() => import('../../../server/types/view-models').FeeRecordPaymentGroupViewModelItem[]}
-   */
-  const aFeeRecordPaymentGroupList = () => [
+  const aFeeRecordPaymentGroupList = (): FeeRecordPaymentGroupViewModelItem[] => [
     {
       ...aFeeRecordPaymentGroup(),
       feeRecords: [
@@ -36,8 +33,15 @@ describe(component, () => {
         formattedCurrencyAndAmount: undefined,
         dataSortValue: 0,
       },
+      totalReportedPayments: {
+        formattedCurrencyAndAmount: undefined,
+        dataSortValue: 0,
+      },
       status: FEE_RECORD_STATUS.TO_DO,
       displayStatus: 'TO DO',
+      checkboxId: 'feeRecordIds-1,2-reportedPaymentsCurrency-GBP-status-TO_DO',
+      isChecked: false,
+      checkboxAriaLabel: '',
     },
   ];
 
@@ -87,7 +91,7 @@ describe(component, () => {
   it.each(['Reported fees', 'Reported payments', 'Payments received'])("should not make the '%s' column header sortable", (tableHeader) => {
     const wrapper = getWrapper();
 
-    wrapper.expectElement(`${tableSelector} thead th:contains("${tableHeader}")`).toHaveAttribute('aria-sort', undefined);
+    wrapper.expectElement(`${tableSelector} thead th:contains("${tableHeader}")`).notToHaveAttribute('aria-sort');
   });
 
   it("should set the 'Total reported payments' column to sortable with 'aria-sort' set to 'ascending'", () => {
@@ -111,7 +115,7 @@ describe(component, () => {
   it("should not set the total payments received column header to sortable if 'enablePaymentsReceivedSorting' is set to false", () => {
     const wrapper = render({ feeRecordPaymentGroups: aFeeRecordPaymentGroupList(), enablePaymentsReceivedSorting: false });
 
-    wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).toHaveAttribute('aria-sort', undefined);
+    wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).notToHaveAttribute('aria-sort');
   });
 
   it('should render the select all checkbox in the table headings row when userCanEdit is true', () => {
@@ -125,7 +129,7 @@ describe(component, () => {
   });
 
   it('should render message informing there are no matched records when no fee record groups', () => {
-    const feeRecordPaymentGroups = [];
+    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [];
 
     const wrapper = render({ feeRecordPaymentGroups });
 
@@ -327,7 +331,7 @@ describe(component, () => {
   const FEE_RECORD_STATUSES_WHERE_PAYMENTS_RECEIVED_SHOULD_BE_LINKS = [FEE_RECORD_STATUS.MATCH, FEE_RECORD_STATUS.DOES_NOT_MATCH];
 
   it.each(FEE_RECORD_STATUSES_WHERE_PAYMENTS_RECEIVED_SHOULD_BE_LINKS)(
-    "should render the payments received as links to the edit payment page when userCanEdit is true and the fee record status is '%s'",
+    `should render the payments received as links to the edit payment page when userCanEdit is true and the fee record status is '%s' with redirectTab query set to ${RECONCILIATION_FOR_REPORT_TABS.PREMIUM_PAYMENTS}`,
     (status) => {
       const feeRecordId = 1;
       const feeRecordItems = [{ ...aFeeRecordViewModelItem(), id: feeRecordId }];
@@ -354,7 +358,10 @@ describe(component, () => {
       paymentsReceived.forEach((payment) => {
         wrapper
           .expectLink(`${rowSelector} td a:contains(${payment.formattedCurrencyAndAmount})`)
-          .toLinkTo(`/utilisation-reports/${reportId}/edit-payment/${payment.id}`, payment.formattedCurrencyAndAmount);
+          .toLinkTo(
+            `/utilisation-reports/${reportId}/edit-payment/${payment.id}?redirectTab=${RECONCILIATION_FOR_REPORT_TABS.PREMIUM_PAYMENTS}`,
+            payment.formattedCurrencyAndAmount,
+          );
       });
     },
   );
@@ -583,7 +590,7 @@ describe(component, () => {
     const checkboxElement = wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`);
 
     checkboxElement.toExist();
-    checkboxElement.toHaveAttribute('checked', undefined);
+    checkboxElement.notToHaveAttribute('checked');
   });
 
   it('should set aria-labels for checkboxes', () => {

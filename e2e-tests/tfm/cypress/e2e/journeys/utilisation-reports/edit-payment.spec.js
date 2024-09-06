@@ -83,6 +83,26 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
   });
 
+  it('should return to the premium payments page when the back link is clicked after accessing the edit payment page from the premium payments table', () => {
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`));
+
+    pages.utilisationReportEditPaymentPage.clickBackLink();
+
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
+  });
+
+  it('should return to the payment details page when the back link is clicked after accessing the edit payment page from the payment details table', () => {
+    pages.utilisationReportPage.paymentDetailsTab.clickPaymentLink(paymentId);
+
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=payment-details`));
+
+    pages.utilisationReportEditPaymentPage.clickBackLink();
+
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}#payment-details`));
+  });
+
   it('should display the payment currency as a fixed value next to the payment amount', () => {
     pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
@@ -248,5 +268,31 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
     cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
+  });
+
+  it('should return to the premium payments page when the payment is edited after accessing the edit payment page from the premium payments table', () => {
+    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`));
+
+    cy.getInputByLabelText('Amount received').clear();
+    cy.getInputByLabelText('Amount received').type('200');
+
+    pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
+  });
+
+  it('should return to the payment details page when the payment is edited after accessing the edit payment page from the payment details table', () => {
+    pages.utilisationReportPage.paymentDetailsTab.clickPaymentLink(paymentId);
+
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=payment-details`));
+
+    cy.getInputByLabelText('Amount received').clear();
+    cy.getInputByLabelText('Amount received').type('200');
+
+    pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}#payment-details`));
   });
 });

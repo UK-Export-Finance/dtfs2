@@ -6,6 +6,7 @@ import { PostEditPaymentRequest, getEditPayment, postEditPayment } from '.';
 import api from '../../../api';
 import { aPaymentDetailsWithFeeRecordsResponseBody, aTfmSessionUser, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL, EditPaymentFormRequestBody } from '../helpers';
+import { RECONCILIATION_FOR_REPORT_TABS } from '../../../constants/reconciliation-for-report-tabs';
 import { EditPaymentViewModel } from '../../../types/view-models/edit-payment-view-model';
 import { ErrorSummaryViewModel, SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
 import { EditPaymentFormValues, ParsedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
@@ -599,15 +600,16 @@ describe('controllers/utilisation-reports/edit-payment', () => {
         expect(api.editPayment).toHaveBeenCalledWith(reportId, paymentId, expectedParsedFormValues, user, userToken);
       });
 
-      it('redirects to /utilisation-reports/:reportId', async () => {
+      it('redirects to the reconciliation for report page', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
+        req.query.redirectTab = RECONCILIATION_FOR_REPORT_TABS.PAYMENT_DETAILS;
 
         // Act
         await postEditPayment(req, res);
 
         // Assert
-        expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}`);
+        expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}#${RECONCILIATION_FOR_REPORT_TABS.PAYMENT_DETAILS}`);
       });
 
       function aPostEditPaymentRequestBody(): EditPaymentFormRequestBody {

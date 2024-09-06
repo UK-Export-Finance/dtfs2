@@ -2,7 +2,7 @@ const utilisationReportPage = {
   bankReportsNavLink: () => cy.get('a[data-cy="bank-reports-nav-link"]'),
   keyingSheetTabLink: () => cy.get('a[data-cy="bank-report-tab-keying-sheet"]'),
   premiumPaymentsTab: {
-    getPaymentLink: (paymentId) => cy.get(`a[data-cy="edit-payment-link--paymentId-${paymentId}"]`),
+    getPaymentLink: (paymentId) => cy.get(`a[data-cy="premium-payments-tab-edit-payment-link--paymentId-${paymentId}"]`),
     clickPaymentLink: (paymentId) => cy.get(`a[data-cy="edit-payment-link--paymentId-${paymentId}"]`).click(),
     getFacilityIdFilterInput: () => cy.getInputByLabelText('Filter by facility ID'),
     submitFacilityIdFilter: () => cy.get('button[data-cy="facility-filter-submit-button"]').click(),
@@ -26,6 +26,9 @@ const utilisationReportPage = {
       cy.get(`[data-cy="keying-sheet-row-${feeRecordId}"] td[data-cy="principal-balance-adjustment--increase"]`),
     principalBalanceAdjustmentDecrease: (feeRecordId) =>
       cy.get(`[data-cy="keying-sheet-row-${feeRecordId}"] td[data-cy="principal-balance-adjustment--decrease"]`),
+  },
+  paymentDetailsTab: {
+    clickPaymentLink: (paymentId) => cy.get(`a[data-cy="payment-details-tab-edit-payment-link--paymentId-${paymentId}"]`).click(),
   },
 };
 
