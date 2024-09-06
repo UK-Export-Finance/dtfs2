@@ -32,7 +32,7 @@ const getFacilityEndDateViewModel = (facility: Facility, previousPage: string, s
     status,
   };
 
-  if (typeof facility.facilityEndDate === 'string') {
+  if (facility.facilityEndDate) {
     const facilityEndDate = parseISO(facility.facilityEndDate);
     facilityEndDateViewModel.facilityEndDate = {
       day: String(getDate(facilityEndDate)),

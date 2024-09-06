@@ -28,7 +28,7 @@ const getBankReviewDateViewModel = (facility: Facility, previousPage: string, st
     status,
   };
 
-  if (typeof facility.bankReviewDate === 'string') {
+  if (facility.bankReviewDate) {
     const bankReviewDate = parseISO(facility.bankReviewDate);
     bankReviewDateViewModel.bankReviewDate = {
       day: String(getDate(bankReviewDate)),

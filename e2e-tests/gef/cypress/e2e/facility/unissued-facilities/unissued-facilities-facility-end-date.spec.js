@@ -86,9 +86,17 @@ if (facilityEndDateEnabled) {
         cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about`));
       });
 
-      it('should display error messages', () => {
+      it('should display error messages when clicking continue', () => {
         facilityEndDate.facilityEndDateDay().clear().type('abcd');
         cy.clickContinueButton();
+
+        errorSummary();
+        facilityEndDate.facilityEndDateError();
+      });
+
+      it('should display error messages when clicking save and return', () => {
+        facilityEndDate.facilityEndDateDay().clear().type('abcd');
+        cy.clickSaveAndReturnButton();
 
         errorSummary();
         facilityEndDate.facilityEndDateError();
@@ -129,9 +137,17 @@ if (facilityEndDateEnabled) {
         cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
       });
 
-      it('should display error messages', () => {
+      it('should display error messages when clicking continue', () => {
         facilityEndDate.facilityEndDateDay().clear().type('abcd');
         cy.clickContinueButton();
+
+        errorSummary();
+        facilityEndDate.facilityEndDateError();
+      });
+
+      it('should display error messages when clicking save and return', () => {
+        facilityEndDate.facilityEndDateDay().clear().type('abcd');
+        cy.clickSaveAndReturnButton();
 
         errorSummary();
         facilityEndDate.facilityEndDateError();
@@ -150,6 +166,16 @@ if (facilityEndDateEnabled) {
         facilityEndDate.facilityEndDateDay().clear().type(dateConstants.todayDay);
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.todayMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.todayYear);
+
+        cy.clickSaveAndReturnButton();
+
+        cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
+      });
+
+      it('should store values when returning to the page', () => {
+        facilityEndDate.facilityEndDateDay().should('have.value', dateConstants.today.getDate());
+        facilityEndDate.facilityEndDateMonth().should('have.value', dateConstants.today.getMonth() + 1);
+        facilityEndDate.facilityEndDateYear().should('have.value', dateConstants.today.getFullYear());
 
         cy.clickSaveAndReturnButton();
 
