@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { HEADERS } = require('@ukef/dtfs2-common');
+const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
@@ -267,6 +267,33 @@ const submitDeal = async (dealType, dealId, auditDetails) => {
     console.error('submitDeal: Failed to submit deal %o', error);
     return { status: error?.code || 500, data: 'Error when submitting deal' };
   }
+};
+
+/**
+ * @param {object} params
+ * @param {string} params.dealId - deal cancellation to update
+ * @param {Partial<import('@ukef/dtfs2-common').TfmDealCancellation>} params.dealCancellationUpdate - deal cancellation update to make
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
+ * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellation>>} updated deal cancellation on success
+ */
+const updateDealCancellation = async ({ dealId, dealCancellationUpdate, auditDetails }) => {
+  const isValidDealId = isValidMongoId(dealId);
+
+  if (!isValidDealId) {
+    throw new InvalidDealIdError(dealId);
+  }
+
+  const response = await axios({
+    method: 'put',
+    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/cancellation`,
+    headers: headers.central,
+    data: {
+      dealCancellationUpdate,
+      auditDetails,
+    },
+  });
+
+  return response.data;
 };
 
 const findOneFacility = async (facilityId) => {
@@ -1572,6 +1599,7 @@ module.exports = {
   getCompanyInfo,
   findUser,
   findUserById,
+  updateDealCancellation,
   findPortalUserById,
   updateUserTasks,
   findOneTeam,

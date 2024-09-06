@@ -2,6 +2,7 @@ const express = require('express');
 const dealSubmit = require('../controllers/deal.submit.controller');
 const amendmentController = require('../controllers/amendment.controller');
 const dealController = require('../controllers/deal.controller');
+const dealCancellationController = require('../controllers/deal-cancellation.controller');
 const dealUnderwriterManagersDecisionController = require('../controllers/deal-underwriter-managers-decision.controller');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
@@ -75,6 +76,10 @@ dealsAuthRouter
   .route('/deals/:dealId')
   .get(validation.dealIdValidation, handleExpressValidatorResult, dealController.getDeal)
   .put(validation.dealIdValidation, handleExpressValidatorResult, dealController.updateDeal);
+
+dealsAuthRouter
+  .route('/deals/:dealId/cancellation')
+  .put(validation.dealIdValidation, handleExpressValidatorResult, dealCancellationController.updateDealCancellation);
 
 dealsAuthRouter
   .route('/deals/:dealId/amendments/:status?/:type?')
