@@ -17,8 +17,8 @@ const { mapUserData } = require('./helpers/mapUserData.helper');
  * Find a TFM user by id
  * Throw an error if user id parameter is not valid.
  * @param {string} _id
- * @param {(error: string | null, user: object) => void} callback
- * @returns {Promise<Void>}
+ * @param {(error: unknown | null, user: object) => void} callback
+ * @returns {Promise<void>}
  */
 exports.findOne = async (_id, callback) => {
   if (!ObjectId.isValid(_id)) {
@@ -37,7 +37,7 @@ exports.findOne = async (_id, callback) => {
  * - More than 1 matching user found.
  * - Unexpected DB response.
  * @param {Array} emails
- * @returns {Promise<import('src/types/auth/get-user-response').GetUserResponse>} - result status and maybe user object
+ * @returns {Promise<import('src/types/auth/get-user-response').GetUserResponse>} result status and maybe user object
  */
 exports.findByEmails = async (emails) => {
   try {
@@ -54,7 +54,7 @@ exports.findByEmails = async (emails) => {
     return getUserResponse;
   } catch (error) {
     console.error('Error getting TFM user by emails - Unexpected DB response %O', error);
-    throw new Error('Error getting TFM user by emails - Unexpected DB response %O', error);
+    throw new Error(`Error getting TFM user by emails - Unexpected DB response`, { cause: error });
   }
 };
 
@@ -132,14 +132,14 @@ exports.updateUser = async (_id, update, sessionUser, callback = () => {}) => {
     callback();
   } catch (error) {
     console.error('Error Updating TFM user %s', error);
-    throw new Error('Error Updating TFM user %s', error);
+    throw new Error(`Error Updating TFM user`, { cause: error });
   }
 };
 
 /**
  * updateLastLoginAndResetSignInData
  * Update a user's "last login" and reset sign in data.
- * @param {Object} user
+ * @param {object} user
  * @param {String} sessionIdentifier
  * @param {Function} callback: Callback function. defaults to an empty function.
  * @returns {Promise<Function>} Callback function
@@ -166,7 +166,7 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
     callback();
   } catch (error) {
     console.error('Error Updating TFM user - last login, reset sign in data %s', error);
-    throw new Error('Error Updating TFM user - last login, reset sign in data %s', error);
+    throw new Error('Error Updating TFM user - last login, reset sign in data', { cause: error });
   }
 };
 
