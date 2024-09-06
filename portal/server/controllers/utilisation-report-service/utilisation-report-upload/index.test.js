@@ -3,14 +3,15 @@ const { MOCK_PORTAL_SESSION_USER } = require('../../../test-mocks/mock-portal-se
 const { postUtilisationReportUpload } = require('.');
 const { getUploadErrors } = require('./utilisation-report-upload-errors');
 const { getDueReportPeriodsByBankId } = require('./utilisation-report-status');
-const { validateCsvData } = require('./utilisation-report-validator');
 const { extractCsvData } = require('../../../utils/csv-utils');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
+const api = require('../../../api');
 
 jest.mock('./utilisation-report-upload-errors');
 jest.mock('./utilisation-report-status');
 jest.mock('../../../utils/csv-utils');
-jest.mock('./utilisation-report-validator');
+jest.mock('./utilisation-report-filename-validator');
+jest.mock('../../../api');
 
 describe('controllers/utilisation-report-service/utilisation-report-upload', () => {
   afterEach(() => {
@@ -121,7 +122,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
           errorMessage: 'Error',
         },
       ];
-      jest.mocked(validateCsvData).mockReturnValueOnce(csvValidationErrors);
+      jest.mocked(api.generateValidationErrorsForUtilisationReportData).mockReturnValueOnce({ csvValidationErrors });
 
       // Act
       await postUtilisationReportUpload(req, res);
@@ -152,7 +153,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
         error: false,
       });
 
-      jest.mocked(validateCsvData).mockReturnValueOnce([]);
+      jest.mocked(api.generateValidationErrorsForUtilisationReportData).mockReturnValueOnce({ csvValidationErrors: [] });
 
       // Act
       await postUtilisationReportUpload(req, res);

@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { form } from '../partials';
 import mandatoryCriteria from '../pages/mandatory-criteria';
 import nameApplication from '../pages/name-application';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
@@ -13,7 +14,7 @@ context('Name Application Page - Add element to page', () => {
     cy.saveSession();
     cy.visit(relative('/gef/mandatory-criteria'));
     mandatoryCriteria.trueRadio().click();
-    mandatoryCriteria.form().submit();
+    form().submit();
   });
 
   it("should not add added element's data to page", () => {
@@ -22,7 +23,7 @@ context('Name Application Page - Add element to page', () => {
     // adds extra populated text input element to page
     cy.insertElement('name-application-form');
 
-    nameApplication.form().submit();
+    form().submit();
 
     // gets url and gets dealId from url
     cy.url().then((url) => {
