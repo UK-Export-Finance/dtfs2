@@ -114,6 +114,7 @@ describe('mapFacility', () => {
 
     const expected = {
       _id: mockFacility._id,
+      isGef: false,
       dealId: mockFacility.dealId,
       ukefFacilityId: mockFacility.ukefFacilityId,
       type: expectedType,

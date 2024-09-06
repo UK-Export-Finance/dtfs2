@@ -1,4 +1,4 @@
-const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { FACILITY_TYPE, MAPPED_FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const mapFacilityType = require('./mapFacilityType');
 const CONSTANTS = require('../../../../constants');
 
@@ -29,7 +29,7 @@ describe('mapFacilityType', () => {
 
       const result = mapFacilityType(mockLoanFacility);
 
-      expect(result).toEqual('Loan');
+      expect(result).toEqual(MAPPED_FACILITY_TYPE.LOAN);
     });
   });
 
@@ -44,8 +44,7 @@ describe('mapFacilityType', () => {
 
       const result = mapFacilityType(mockCashFacility);
 
-      const expected = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CASH} facility`;
-      expect(result).toEqual(expected);
+      expect(result).toEqual(MAPPED_FACILITY_TYPE.CASH);
     });
   });
 
@@ -60,9 +59,7 @@ describe('mapFacilityType', () => {
 
       const result = mapFacilityType(mockContingentFacility);
 
-      const expected = `${CONSTANTS.FACILITIES.FACILITY_PRODUCT_NAME.CONTINGENT} facility`;
-
-      expect(result).toEqual(expected);
+      expect(result).toEqual(MAPPED_FACILITY_TYPE.CONTINGENT);
     });
   });
 

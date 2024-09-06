@@ -1,4 +1,5 @@
 import relative from '../../relativeURL';
+import { submitButton } from '../../partials';
 import applicationDetails from '../../pages/application-details';
 import automaticCover from '../../pages/automatic-cover';
 import applicationSubmission from '../../pages/application-submission';
@@ -6,7 +7,6 @@ import manualInclusion from '../../pages/manual-inclusion-questionnaire';
 import securityDetails from '../../pages/security-details';
 import { BANK1_MAKER1, BANK1_MAKER_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import applicationPreview from '../../pages/application-preview';
-import returnToMaker from '../../pages/return-to-maker';
 
 context('Create application as MAKER, edit as MAKER_CHECKER, submit application to UKEF as MAKER_CHECKER', () => {
   const dealIds = [];
@@ -41,7 +41,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       // Deny EC
       automaticCover.falseRadioButton(19).click();
 
-      automaticCover.saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       // login as maker_checker to add a file only and then complete as maker
       cy.login(BANK1_MAKER_CHECKER1);
@@ -54,21 +54,21 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       securityDetails.visit(dealIds[2]);
       securityDetails.exporterSecurity().type('test');
       securityDetails.facilitySecurity().type('test2');
-      securityDetails.continueButton().click();
+      cy.clickSubmitButton();
 
       cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       // submit the deal
-      applicationDetails.submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.commentsField().type('DTFS2-4698 Comments from original maker');
-      applicationSubmission.submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 
       // login as a maker_checker and ensure that cannot return or submit to ukef
       cy.login(BANK1_MAKER_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       applicationPreview.returnButton().should('not.exist');
-      returnToMaker.submitButton().should('not.exist');
+      submitButton().should('not.exist');
     });
   });
 });

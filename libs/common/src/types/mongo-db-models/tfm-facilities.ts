@@ -3,6 +3,7 @@ import { UnixTimestamp } from '../date';
 import { AmendmentStatus } from '../amendment-status';
 import { Currency } from '../currency';
 import { Facility } from './facility';
+import { AnyObject } from '../any-object';
 
 type SubmittedByUser = {
   _id: ObjectId;
@@ -102,7 +103,7 @@ export type TfmFacilityAmendment = {
   tasks?: {
     groupTitle: string;
     id: number;
-    groupTasks: Record<string, unknown>[];
+    groupTasks: AnyObject[];
   }[];
   leadUnderwriter?: {
     _id: ObjectId | 'Unassigned';
