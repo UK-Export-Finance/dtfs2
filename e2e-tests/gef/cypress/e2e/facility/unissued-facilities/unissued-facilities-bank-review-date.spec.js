@@ -1,4 +1,5 @@
 import relative from '../../relativeURL';
+import { errorSummary } from '../../partials';
 import CONSTANTS from '../../../fixtures/constants';
 import {
   today,
@@ -84,14 +85,14 @@ if (facilityEndDateEnabled) {
 
         aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
 
-        aboutFacilityUnissued.continueButton().click();
+        cy.clickContinueButton();
       });
 
       it('should redirect user to the about unissued facility page when clicking back link', () => {
         const facilityOneBankReviewDateUrl = relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/bank-review-date`);
         cy.url().should('eq', facilityOneBankReviewDateUrl);
 
-        bankReviewDate.backLink().click();
+        cy.clickBackLink();
 
         const aboutUnissuedFacilityUrl = relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about`);
         cy.url().should('eq', aboutUnissuedFacilityUrl);
@@ -99,16 +100,16 @@ if (facilityEndDateEnabled) {
 
       it('should display an error message when the date is entered incorrectly', () => {
         bankReviewDate.bankReviewDateDay().clear().type('abcd');
-        bankReviewDate.continueButton().click();
+        cy.clickContinueButton();
 
-        bankReviewDate.errorSummary();
+        errorSummary();
         bankReviewDate.bankReviewDateError();
       });
 
       it('should redirect user to the unissued facility page when clicking continue', () => {
         cy.fillInBankReviewDate(today);
 
-        bankReviewDate.continueButton().click();
+        cy.clickContinueButton();
 
         cy.url().should('eq', unissuedFacilitiesUrl);
       });
@@ -116,7 +117,7 @@ if (facilityEndDateEnabled) {
       it('should redirect user to the unissued facility page when clicking save and return', () => {
         cy.fillInBankReviewDate(today);
 
-        bankReviewDate.saveAndReturnButton().click();
+        cy.clickSaveAndReturnButton();
 
         cy.url().should('eq', unissuedFacilitiesUrl);
       });
@@ -134,7 +135,7 @@ if (facilityEndDateEnabled) {
         const facilityOneChangeBankReviewDateUrl = relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/bank-review-date/change`);
         cy.url().should('eq', facilityOneChangeBankReviewDateUrl);
 
-        bankReviewDate.backLink().click();
+        cy.clickBackLink();
 
         const facilityOneChangeUnissuedFacilityUrl = relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`);
         cy.url().should('eq', facilityOneChangeUnissuedFacilityUrl);
@@ -142,15 +143,15 @@ if (facilityEndDateEnabled) {
 
       it('should display an error message when the date is entered incorrectly', () => {
         bankReviewDate.bankReviewDateDay().clear().type('abcd');
-        bankReviewDate.continueButton().click();
+        cy.clickContinueButton();
 
-        bankReviewDate.errorSummary();
+        errorSummary();
         bankReviewDate.bankReviewDateError();
       });
 
       it('should redirect user to the application details page when clicking continue', () => {
         cy.fillInBankReviewDate(today);
-        bankReviewDate.continueButton().click();
+        cy.clickContinueButton();
 
         cy.url().should('eq', applicationDetailsUrl);
       });
@@ -158,7 +159,7 @@ if (facilityEndDateEnabled) {
       it('should redirect user to the application details page when clicking save and return', () => {
         cy.fillInBankReviewDate(today);
 
-        bankReviewDate.saveAndReturnButton().click();
+        cy.clickSaveAndReturnButton();
 
         cy.url().should('eq', applicationDetailsUrl);
       });

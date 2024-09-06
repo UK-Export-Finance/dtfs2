@@ -15,7 +15,6 @@ import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
 import facilityEndDate from '../../pages/facility-end-date';
-import bankReviewDate from '../../pages/bank-review-date';
 import applicationSubmission from '../../pages/application-submission';
 import statusBanner from '../../pages/application-status-banner';
 
@@ -299,7 +298,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
 
       if (facilityEndDateEnabled) {
         cy.fillInBankReviewDate(dateConstants.threeMonths);
-        bankReviewDate.continueButton().click();
+        cy.clickContinueButton();
       }
 
       unissuedFacilityTable.rows().should('have.length', 0);
@@ -411,7 +410,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
 
       if (facilityEndDateEnabled) {
         cy.fillInBankReviewDate(dateConstants.threeMonths);
-        bankReviewDate.continueButton().click();
+        cy.clickContinueButton();
       }
 
       // checks that name has been updated

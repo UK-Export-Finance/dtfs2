@@ -16,7 +16,6 @@ import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facilit
 import applicationSubmission from '../../pages/application-submission';
 import statusBanner from '../../pages/application-status-banner';
 import facilityEndDate from '../../pages/facility-end-date';
-import bankReviewDate from '../../pages/bank-review-date';
 
 let dealId;
 let token;
@@ -349,7 +348,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
       if (facilityEndDateEnabled) {
         cy.fillInBankReviewDate(dateConstants.threeMonths);
-        bankReviewDate.continueButton().click();
+        cy.clickContinueButton();
       }
 
       unissuedFacilityTable.rows().should('have.length', 0);

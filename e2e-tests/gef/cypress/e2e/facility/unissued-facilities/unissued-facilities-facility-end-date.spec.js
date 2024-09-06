@@ -1,4 +1,5 @@
 import relative from '../../relativeURL';
+import { errorSummary } from '../../partials';
 import CONSTANTS from '../../../fixtures/constants';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN } from '../../../fixtures/mocks/mock-deals';
@@ -74,22 +75,22 @@ if (facilityEndDateEnabled) {
 
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
-        aboutFacilityUnissued.continueButton().click();
+        cy.clickContinueButton();
       });
 
       it('should redirect user to the about unissued facility page when clicking back link', () => {
         cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/facility-end-date`));
 
-        facilityEndDate.backLink().click();
+        cy.clickBackLink();
 
         cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about`));
       });
 
       it('should display error messages', () => {
         facilityEndDate.facilityEndDateDay().clear().type('abcd');
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
 
-        facilityEndDate.errorSummary();
+        errorSummary();
         facilityEndDate.facilityEndDateError();
       });
 
@@ -98,7 +99,7 @@ if (facilityEndDateEnabled) {
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.todayMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.todayYear);
 
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
 
         cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       });
@@ -108,7 +109,7 @@ if (facilityEndDateEnabled) {
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.todayMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.todayYear);
 
-        facilityEndDate.saveAndReturnButton().click();
+        cy.clickSaveAndReturnButton();
 
         cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       });
@@ -123,14 +124,14 @@ if (facilityEndDateEnabled) {
       it('should redirect user to the about unissued facility page when clicking back link', () => {
         cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/facility-end-date/change`));
 
-        facilityEndDate.backLink().click();
+        cy.clickBackLink();
 
         cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
       });
 
       it('should display error messages', () => {
         facilityEndDate.facilityEndDateDay().clear().type('abcd');
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
 
         facilityEndDate.errorSummary();
         facilityEndDate.facilityEndDateError();
@@ -140,7 +141,7 @@ if (facilityEndDateEnabled) {
         facilityEndDate.facilityEndDateDay().clear().type(dateConstants.todayDay);
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.todayMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.todayYear);
-        facilityEndDate.continueButton().click();
+        cy.clickContinueButton();
 
         cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
       });
@@ -150,7 +151,7 @@ if (facilityEndDateEnabled) {
         facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.todayMonth);
         facilityEndDate.facilityEndDateYear().clear().type(dateConstants.todayYear);
 
-        facilityEndDate.saveAndReturnButton().click();
+        cy.clickSaveAndReturnButton();
 
         cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
       });

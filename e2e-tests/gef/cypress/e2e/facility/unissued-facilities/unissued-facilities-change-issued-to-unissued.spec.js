@@ -16,7 +16,6 @@ import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal
 import statusBanner from '../../pages/application-status-banner';
 import facilities from '../../pages/facilities';
 import facilityEndDate from '../../pages/facility-end-date';
-import bankReviewDate from '../../pages/bank-review-date';
 
 let dealId;
 let token;
@@ -155,7 +154,7 @@ context('Change issued facilities back to unissued (changed to issued facilities
 
       if (facilityEndDateEnabled) {
         cy.fillInBankReviewDate(dateConstants.threeMonths);
-        bankReviewDate.continueButton().click();
+        cy.clickContinueButton();
       }
 
       unissuedFacilityTable.rows().should('have.length', 0);
