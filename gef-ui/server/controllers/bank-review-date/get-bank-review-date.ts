@@ -55,7 +55,7 @@ const getBankReviewDate = async ({ req, res, previousPage }: HandleGetBankReview
     const deal = await api.getApplication({ dealId, userToken });
 
     const dealVersion = parseDealVersion(deal.version);
-    const shouldRedirectFromPage = !isFacilityEndDateEnabledOnGefVersion(parseDealVersion(dealVersion)) || facility.isUsingFacilityEndDate !== false;
+    const shouldRedirectFromPage = !isFacilityEndDateEnabledOnGefVersion(dealVersion) || facility.isUsingFacilityEndDate !== false;
 
     if (shouldRedirectFromPage) {
       return res.redirect(previousPage);
