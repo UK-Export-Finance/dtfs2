@@ -11,7 +11,7 @@ class AuthProvider {
 
   /**
    * MS Auth layer client setup.
-   * @return {Object} MS Auth layer client application.
+   * @return {object} MS Auth layer client application.
    */
   getMsalInstance() {
     return new msal.ConfidentialClientApplication(this.msalConfig);
@@ -19,8 +19,8 @@ class AuthProvider {
 
   /**
    * Starts login url setup, for first leg of auth code flow
-   * @param {Boolean} [skipAuthorityMetadataCache=false]: Flag to avoid cache, used mostly for testing
-   * @return {Promise<Object>} PKCE codes, auth code request, login URL.
+   * @param {boolean} [skipAuthorityMetadataCache=false] Flag to avoid cache, used mostly for testing
+   * @return {Promise<object>} PKCE codes, auth code request, login URL.
    */
   async getLoginUrl({ skipAuthorityMetadataCache = false } = {}) {
     // create a GUID for csrf
@@ -74,11 +74,11 @@ class AuthProvider {
 
   /**
    * Prepares the auth code request parameters and initiates the first leg of auth code flow
-   * @param {String} csrfToken: CSRF token
-   * @param {Object} authCodeUrlRequestParams: Parameters for requesting an auth code url
-   * @param {Object} authCodeRequestParams: Parameters for requesting tokens using auth code
-   * @param {Object} msalInstance: MSAL instance
-   * @return {Promise<Object>} PKCE codes, auth code request, login URL.
+   * @param {string} csrfToken: CSRF token
+   * @param {object} authCodeUrlRequestParams: Parameters for requesting an auth code url
+   * @param {object} authCodeRequestParams: Parameters for requesting tokens using auth code
+   * @param {object} msalInstance: MSAL instance
+   * @return {Promise<object>} PKCE codes, auth code request, login URL.
    */
   async getAuthCodeUrl({ csrfToken, authCodeUrlRequestParams, authCodeRequestParams, msalInstance }) {
     try {
@@ -144,11 +144,11 @@ class AuthProvider {
    * Modified Microsoft example, to meet out minimal needs.
    * OpendId tokenResponse is enough for us (UKEF), it has all claims (aka fields) required for user data.
    * We don't save Authorisation code because we don't need Access token.
-   * @param {Object} pkceCode: PKCE Code object
-   * @param {Object} origAuthCodeRequest: Original auth code request
-   * @param {String} code: authZ code
-   * @param {Object} req: Request object
-   * @returns {Promise<Object>}
+   * @param {object} pkceCode: PKCE Code object
+   * @param {object} origAuthCodeRequest: Original auth code request
+   * @param {string} code: authZ code
+   * @param {object} req: Request object
+   * @returns {Promise<object>}
    */
   async handleRedirect(pkceCode, origAuthCodeRequest, code) {
     try {
@@ -182,8 +182,8 @@ class AuthProvider {
   /**
    * loginRedirectUrl
    * Get a redirect URL to use after logging in.
-   * @param {String} inputString This string is a base64 encoded JSON object, that should contain a redirectTo url
-   * @returns {String} Redirect URL.
+   * @param {string} inputString This string is a base64 encoded JSON object, that should contain a redirectTo url
+   * @returns {string} Redirect URL.
    */
   loginRedirectUrl(inputString) {
     const state = JSON.parse(this.cryptoProvider.base64Decode(inputString));
@@ -197,7 +197,7 @@ class AuthProvider {
    * @param req: Express request object
    * @param res: Express response object
    * @param next: Express next function
-   * @return {String} Log out URL
+   * @return {string} Log out URL
    */
   getLogoutUrl() {
     /**
@@ -211,7 +211,7 @@ class AuthProvider {
   /**
    * getAuthorityMetadata
    * Retrieves OIDC metadata from the openid endpoint
-   * @returns {Promise<Object>} OIDC metadata
+   * @returns {Promise<object>} OIDC metadata
    */
   async getAuthorityMetadata() {
     try {
