@@ -20,7 +20,7 @@ const get = async (entraUser) => {
 
     // verified_primary_email is always array.
     let emails = claims.verified_primary_email;
-    // verified_primary_email is always array.
+    // verified_secondary_email is always array.
     if (claims.verified_secondary_email) {
       emails = [...emails, ...claims.verified_secondary_email];
     }
