@@ -23,12 +23,13 @@ const getUkefGefReportingEmailRecipients = () => {
  * @throws {InvalidEnvironmentVariableError} If the TFM_UI_URL environment variable is not defined or is empty.
  */
 export const getTfmUiUrl = (): string => {
-  const tfmUiUrl = process.env.TFM_UI_URL;
-  if (!tfmUiUrl) {
+  const { TFM_UI_URL } = process.env;
+
+  if (!TFM_UI_URL) {
     throw new InvalidEnvironmentVariableError('TFM_UI_URL environment variable is not defined or is empty');
   }
 
-  return tfmUiUrl;
+  return TFM_UI_URL;
 };
 
 /**
