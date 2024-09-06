@@ -131,7 +131,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`));
 
     getFeeRecordRow(feeRecordIdToRemove).should('not.exist');
     otherFeeRecordIds.forEach((feeRecordId) => {
