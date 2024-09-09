@@ -5,11 +5,14 @@ import { EstoreRepo } from '../../../repositories/estore/estore-repo';
 import { getCollection } from '../../../database';
 import { Estore, SiteExistsResponse, EstoreErrorResponse } from '../../../interfaces';
 import { EstoreRequest } from '../../../helpers/types/estore';
-import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS } from '../../../constants';
+import { ESTORE_SITE_STATUS, ESTORE_CRON_STATUS, EMAIL_TEMPLATES } from '../../../constants';
 import { areValidUkefIds, objectIsEmpty } from '../../../helpers';
 import { eStoreTermStoreCreationJob, eStoreSiteCreationCronJob } from '../../../cron';
 import { createExporterSite, siteExists } from './eStoreApi';
 import { getNowAsEpoch } from '../../../helpers/date';
+import { sendEmail } from '../email.controller';
+
+const { UKEF_INTERNAL_NOTIFICATION } = process.env;
 
 /**
  * Handles the creation of an eStore site.
@@ -253,6 +256,13 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
     return res.status(HttpStatusCode.Created).send();
   } catch (error: unknown) {
     console.error('❌ Unable to create eStore directories %o', error);
+
+    // Dispatch an alert
+    await sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, String(UKEF_INTERNAL_NOTIFICATION), {
+      dealIdentifier: req?.body?.dealIdentifier,
+    });
+
+    // Return `500` status code
     return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, message: 'Unable to create eStore directories' });
   }
 };

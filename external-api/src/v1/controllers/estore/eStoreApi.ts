@@ -19,8 +19,7 @@ import {
   TermStoreResponse,
   EstoreErrorResponse,
 } from '../../../interfaces';
-import { sendEmail } from '../email.controller';
-import { EMAIL_TEMPLATES, ESTORE_CRON_STATUS, ENDPOINT } from '../../../constants';
+import { ESTORE_CRON_STATUS, ENDPOINT } from '../../../constants';
 import { validUkefId, isValidExporterName, isValidSiteId } from '../../../helpers';
 import { estoreInternalServerError } from '../../../helpers/errors/estore-internal-server-error';
 
@@ -29,7 +28,7 @@ dotenv.config();
 const oneMinute = 1000 * 60; // 60 seconds timeout to handle medium timeouts
 const twoMinutes = 1000 * 120; // 120 seconds timeout to handle long timeouts
 
-const { APIM_ESTORE_URL, APIM_ESTORE_KEY, APIM_ESTORE_VALUE, UKEF_INTERNAL_NOTIFICATION } = process.env;
+const { APIM_ESTORE_URL, APIM_ESTORE_KEY, APIM_ESTORE_VALUE } = process.env;
 const headers = {
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_ESTORE_KEY)]: APIM_ESTORE_VALUE,
@@ -136,7 +135,6 @@ const postToEstore = async (
     };
   } catch (error: unknown) {
     console.error('❌ Error calling eStore endpoint %s %o, email has been dispatched.', endpoint, error);
-    await sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, String(UKEF_INTERNAL_NOTIFICATION), data);
     return estoreInternalServerError(error);
   }
 };

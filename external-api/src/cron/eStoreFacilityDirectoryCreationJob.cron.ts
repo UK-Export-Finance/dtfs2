@@ -72,8 +72,21 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
       ),
     );
 
+    /**
+     * When all facilities directories have been created with status
+     * code `200` and `201`.
+     */
+    const allFacilitiesCreated = responses.every((facility) => ACCEPTABLE_STATUSES.includes(facility?.status));
+
+    /**
+     * When either one or more than one facility directory creation has failed.
+     * This can be due to deal directory creation still in progress which will
+     * return `400` or due to any other unknown reason.
+     */
+    const someFacilitiesFailed = responses.some((response) => response?.status === Number(HttpStatusCode.BadRequest));
+
     // Validate each and every response status code
-    if (responses.every((facility) => ACCEPTABLE_STATUSES.includes(facility?.status))) {
+    if (allFacilitiesCreated) {
       console.info('Facility %s directory has been created for deal %s', facilityIdentifiers, dealIdentifier);
 
       // Update `cron-job-logs`
@@ -92,7 +105,7 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
       });
 
       // Initiate document upload
-    } else if (responses.some((response) => response?.status === Number(HttpStatusCode.BadRequest))) {
+    } else if (someFacilitiesFailed) {
       // Deal directory creation is still being provisioned
       console.info('⚡ CRON: eStore deal directory %s creation is still in progress for deal %s', dealIdentifier, dealIdentifier);
 
