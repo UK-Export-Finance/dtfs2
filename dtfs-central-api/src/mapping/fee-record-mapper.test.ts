@@ -1,5 +1,6 @@
-import { CURRENCY, Currency, FeeRecordEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { CURRENCY, Currency, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { mapFeeRecordEntityToFeeRecord, mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from './fee-record-mapper';
+import { aUtilisationReport } from '../../test-helpers';
 
 describe('fee record mapper', () => {
   describe('mapFeeRecordEntityToReportedFees', () => {
@@ -215,8 +216,4 @@ describe('fee record mapper', () => {
       });
     });
   });
-
-  function aUtilisationReport(): UtilisationReportEntity {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-  }
 });
