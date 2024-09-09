@@ -9,8 +9,8 @@ const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY ?? '', 'base64').toStri
 /**
  * Generates a valid JSON Web Token (JWT) for a user with two-factor authentication (2FA).
  *
- * @param user - The user object containing necessary information for token generation.
- * @param sessionIdentifier - The session identifier associated with the user's session.
+ * @param user The user object containing necessary information for token generation.
+ * @param sessionIdentifier The session identifier associated with the user's session.
  * @returns A signed JWT representing the user's authenticated 2FA session.
  */
 const issueValid2faJWT = (user: PortalUser, sessionIdentifier: string): string => {
@@ -31,7 +31,7 @@ const issueValid2faJWT = (user: PortalUser, sessionIdentifier: string): string =
  * Creates a user session for a successfully logged-in user, updating the session identifier in the database
  * and generating a valid JWT token for two-factor authentication (2FA).
  *
- * @param  user - The user object representing the successfully logged-in user.
+ * @param  user The user object representing the successfully logged-in user.
  * @returns  A promise that resolves to a string containing the JWT token with "Bearer" prefix,
  *                           representing the user's authenticated 2FA session.
  * @throws  Throws an error if there is a failure in creating the user session.
