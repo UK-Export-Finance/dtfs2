@@ -5,36 +5,38 @@ import { updateDealCancellation, UpdateDealCancellationRequest } from './deal-ca
 
 jest.mock('../api');
 
+const dealCancellationUpdate = {
+  reason: 'test reason',
+  bankRequestDate: 1794418807,
+  effectiveFrom: 1794418808,
+};
+
+const mockDealId = new ObjectId();
+const mockUserId = new ObjectId();
+
 describe('controllers - deal cancellation', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
 
-  const mockDealId = new ObjectId();
-
   describe('PUT - updateDealCancellation', () => {
-    const requestBody = {
-      reason: 'deal cancellation reason',
-      bankRequestDate: 1794418807,
-      effectiveFrom: 1794418808,
-    };
-
-    it('should call api.updateDealCancellation', async () => {
+    it('should call api.updateDealCancellation with the correct parameters', async () => {
       jest.mocked(api.updateDealCancellation).mockResolvedValue({});
 
       // Arrange
       const { req, res } = httpMocks.createMocks<UpdateDealCancellationRequest>({
-        params: { dealId: mockDealId.toString() },
-        body: requestBody,
+        params: { dealId: mockDealId },
+        body: dealCancellationUpdate,
+        user: { _id: mockUserId },
       });
-      const auditDetails = { id: new ObjectId(), userType: 'tfm' };
+      const auditDetails = { id: mockUserId, userType: 'tfm' };
 
       // Act
       await updateDealCancellation(req, res);
 
       // Assert
       expect(api.updateDealCancellation).toHaveBeenCalledTimes(1);
-      expect(api.updateDealCancellation).toHaveBeenCalledWith(mockDealId, requestBody, auditDetails);
+      expect(api.updateDealCancellation).toHaveBeenCalledWith({ dealId: mockDealId, dealCancellationUpdate, auditDetails });
     });
   });
 });
