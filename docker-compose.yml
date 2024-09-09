@@ -239,6 +239,7 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - PORTAL_UI_URL
+      - TFM_UI_URL=http://localhost:5003
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
       - TZ=Europe/London
