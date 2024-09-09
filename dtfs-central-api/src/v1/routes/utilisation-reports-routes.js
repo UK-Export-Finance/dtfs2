@@ -8,12 +8,12 @@ const {
   validatePostKeyingDataPayload,
   validatePutKeyingDataMarkAsPayload,
   validatePostRemoveFeesFromPaymentGroupPayload,
+  validatePostReportDataValidationPayload,
+  validatePostAddFeesToAnExistingPaymentGroupPayload,
+  validatePostUploadUtilisationReportPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
-const {
-  postUploadUtilisationReport,
-  postUploadUtilisationReportPayloadValidator,
-} = require('../controllers/utilisation-report-service/post-upload-utilisation-report.controller');
+const { postUploadUtilisationReport } = require('../controllers/utilisation-report-service/post-upload-utilisation-report.controller');
 const {
   getUtilisationReportsReconciliationSummary,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
@@ -31,6 +31,8 @@ const { patchPayment } = require('../controllers/utilisation-report-service/patc
 const { putKeyingDataMarkAsDone } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-done.controller');
 const { putKeyingDataMarkAsToDo } = require('../controllers/utilisation-report-service/put-keying-data-mark-as-to-do.controller');
 const { postRemoveFeesFromPaymentGroup } = require('../controllers/utilisation-report-service/post-remove-fees-from-payment-group.controller');
+const { postReportDataValidation } = require('../controllers/utilisation-report-service/post-report-data-validation.controller');
+const { postAddFeesToAnExistingPaymentGroup } = require('../controllers/utilisation-report-service/post-add-fees-to-an-existing-payment-group.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -65,7 +67,79 @@ const utilisationReportsRouter = express.Router();
  *       409:
  *         description: Server conflict
  */
-utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValidator, postUploadUtilisationReport);
+utilisationReportsRouter.route('/').post(validatePostUploadUtilisationReportPayload, postUploadUtilisationReport);
+
+/**
+ * @openapi
+ * /utilisation-reports/report-data-validation:
+ *   post:
+ *     summary: Validate utilisation report data
+ *     tags: [Utilisation Report]
+ *     description: Validate utilisation report data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reportData:
+ *                 $ref: '#/definitions/RawReportDataWithCellLocations'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - type: object
+ *                   properties:
+ *                     csvValidationErrors:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/definitions/CsvValidationError'
+ *       500:
+ *         description: Internal server error
+ *       400:
+ *         description: Invalid payload
+ */
+utilisationReportsRouter.route('/report-data-validation').post(validatePostReportDataValidationPayload, postReportDataValidation);
+
+/**
+ * @openapi
+ * /utilisation-reports/report-data-validation:
+ *   post:
+ *     summary: Validate utilisation report data
+ *     tags: [Utilisation Report]
+ *     description: Validate utilisation report data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reportData:
+ *                 $ref: '#/definitions/RawReportDataWithCellLocations'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - type: object
+ *                   properties:
+ *                     csvValidationErrors:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/definitions/CsvValidationError'
+ *       500:
+ *         description: Internal server error
+ *       400:
+ *         description: Invalid payload
+ */
+utilisationReportsRouter.route('/report-data-validation').post(validatePostReportDataValidationPayload, postReportDataValidation);
 
 /**
  * @openapi
@@ -591,6 +665,56 @@ utilisationReportsRouter
     handleExpressValidatorResult,
     validatePostRemoveFeesFromPaymentGroupPayload,
     postRemoveFeesFromPaymentGroup,
+  );
+
+/**
+ * @openapi
+ * /utilisation-reports/:reportId/add-to-an-existing-payment:
+ *   post:
+ *     summary: Add the provided fee record ids to the provided payment ids
+ *     tags: [Utilisation Report]
+ *     description: Add the provided fee record ids to the provided payment ids
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feeRecordIds:
+ *                 description: The ids of the selected fee records
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *               paymentIds:
+ *                 description: The ids of the payments
+ *                 type: array
+ *                 items:
+ *                   type: number
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/:reportId/add-to-an-existing-payment')
+  .post(
+    validation.sqlIdValidation('reportId'),
+    handleExpressValidatorResult,
+    validatePostAddFeesToAnExistingPaymentGroupPayload,
+    postAddFeesToAnExistingPaymentGroup,
   );
 
 module.exports = utilisationReportsRouter;

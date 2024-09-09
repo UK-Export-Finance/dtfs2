@@ -1,10 +1,11 @@
 import { Response } from 'express';
-import { getDate, getMonth, getYear, isSameDay, parseISO, startOfDay } from 'date-fns';
-import { CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
+import { getDate, getMonth, getYear, isSameDay, parseISO } from 'date-fns';
+import { AnyObject, CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
 import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
 import * as api from '../../services/api';
 import { validateAndParseBankReviewDate } from './validation';
 import { asLoggedInUserSession } from '../../utils/express-session';
+import { getCoverStartDateOrStartOfToday } from '../../utils/get-cover-start-date-or-start-of-today';
 
 type BankReviewDateParams = { dealId: string; facilityId: string };
 type BankReviewDatePostBody = { 'bank-review-date-day': string; 'bank-review-date-month': string; 'bank-review-date-year': string };
@@ -25,8 +26,8 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
   } = req;
 
   try {
-    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
-    const deal = (await api.getApplication({ dealId, userToken })) as Record<string, unknown> & { version?: number };
+    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: AnyObject };
+    const deal = (await api.getApplication({ dealId, userToken })) as AnyObject & { version?: number };
 
     if (!isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || facility.isUsingFacilityEndDate !== false) {
       return res.redirect(`/gef/application-details/${dealId}`);
@@ -54,18 +55,6 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
   }
 };
 
-const getCoverStartDateOrStartOfToday = (facility: Record<string, unknown>) => {
-  if (typeof facility.coverStartDate === 'string') {
-    return startOfDay(parseISO(facility.coverStartDate));
-  }
-
-  if (!facility.coverStartDate) {
-    return startOfDay(new Date());
-  }
-
-  throw new Error('Invalid coverStartDate');
-};
-
 export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Response) => {
   try {
     const {
@@ -81,7 +70,7 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
-    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: Record<string, unknown> };
+    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: AnyObject };
 
     const bankReviewDateErrorsAndDate = validateAndParseBankReviewDate(
       {
@@ -92,7 +81,7 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
       getCoverStartDateOrStartOfToday(facility),
     );
 
-    if (bankReviewDateErrorsAndDate.errors) {
+    if ('errors' in bankReviewDateErrorsAndDate) {
       return res.render('partials/bank-review-date.njk', {
         errors: validationErrorHandler(bankReviewDateErrorsAndDate.errors),
         dealId,

@@ -49,7 +49,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
         });
     });
 
-    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
 
     cy.wrap(visibleBanks).each((bank) => {
       const reportPeriod = getPreviousReportPeriodForBankScheduleByMonth(bank.utilisationReportPeriodSchedule, SUBMISSION_MONTH);
@@ -60,12 +60,14 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .withBankId(BANK_ID)
           .withReportPeriod(reportPeriod)
           .build();
+        cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [reportToReconcile]);
+
         const paymentMatchingFeeRecordOneAndTwo = PaymentEntityMockBuilder.forCurrency('GBP')
           .withAmount(450)
           .withDateReceived(new Date('2023-02-02'))
           .withReference('REF01234')
           .build();
-        const feeRecordOne = FeeRecordEntityMockBuilder.forReport(undefined)
+        const feeRecordOne = FeeRecordEntityMockBuilder.forReport(reportToReconcile)
           .withId(FEE_RECORD_ID_ONE)
           .withFacilityId(FACILITY_ID_ONE)
           .withExporter('Exporter 1')
@@ -76,7 +78,8 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .withStatus('MATCH')
           .withPayments([paymentMatchingFeeRecordOneAndTwo])
           .build();
-        const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(undefined)
+
+        const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(reportToReconcile)
           .withId(FEE_RECORD_ID_TWO)
           .withFacilityId(FACILITY_ID_TWO)
           .withExporter('Exporter 2')
@@ -87,8 +90,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
           .withStatus('MATCH')
           .withPayments([paymentMatchingFeeRecordOneAndTwo])
           .build();
-        reportToReconcile.feeRecords = [feeRecordOne, feeRecordTwo];
-        cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [reportToReconcile]);
+        cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
       } else {
         const mockUtilisationReport = UtilisationReportEntityMockBuilder.forStatus('REPORT_NOT_RECEIVED')
           .withId(bank.id)

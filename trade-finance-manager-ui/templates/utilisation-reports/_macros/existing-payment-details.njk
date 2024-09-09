@@ -1,0 +1,12 @@
+{% macro render(params) %}
+  {% set payment = params.payment %}
+
+  <div class="govuk-label {{ 'govuk-!-margin-bottom-2' if not payment.reference }}" data-cy="payment-{{ payment.id }}-currency-and-amount">
+    {{ payment.formattedCurrencyAndAmount }}
+  </div>
+  {% if payment.reference %}
+    <div class="govuk-hint" data-cy="payment-{{ payment.id }}-item-hint">
+      Payment reference: {{ payment.reference }}
+    </div>
+  {% endif %}      
+{% endmacro %}

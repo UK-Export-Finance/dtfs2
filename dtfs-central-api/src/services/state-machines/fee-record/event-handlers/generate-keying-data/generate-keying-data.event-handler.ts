@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, ReportPeriod } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
-import { calculatePrincipalBalanceAdjustment, calculateFixedFeeAdjustment } from '../helpers';
+import { calculatePrincipalBalanceAdjustment, calculateFixedFeeAdjustment, updateFacilityUtilisationData } from '../helpers';
 
 type GenerateKeyingDataEventPayload = {
   transactionEntityManager: EntityManager;
@@ -12,6 +12,16 @@ type GenerateKeyingDataEventPayload = {
 
 export type FeeRecordGenerateKeyingDataEvent = BaseFeeRecordEvent<'GENERATE_KEYING_DATA', GenerateKeyingDataEventPayload>;
 
+/**
+ * Handler for the generate keying data event
+ * @param feeRecord - The fee record
+ * @param param - The payload
+ * @param param.transactionEntityManager - The transaction entity manager
+ * @param param.isFinalFeeRecordForFacility - Whether or not the fee record is the final fee record for a facility
+ * @param param.reportPeriod - The report period
+ * @param param.requestSource - The request source
+ * @returns The modified fee record
+ */
 export const handleFeeRecordGenerateKeyingDataEvent = async (
   feeRecord: FeeRecordEntity,
   { transactionEntityManager, isFinalFeeRecordForFacility, reportPeriod, requestSource }: GenerateKeyingDataEventPayload,
@@ -31,7 +41,16 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     principalBalanceAdjustment,
     requestSource,
   });
-  return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
+  await transactionEntityManager.save(FeeRecordEntity, feeRecord);
+
+  await updateFacilityUtilisationData(feeRecord.facilityUtilisationData, {
+    reportPeriod,
+    utilisation: feeRecord.facilityUtilisation,
+    requestSource,
+    entityManager: transactionEntityManager,
+  });
+
+  return feeRecord;
 };
 
 function getStatusToUpdateTo(feesPaidToUkefForThePeriod: number, fixedFeeAdjustment: number = 0, principalBalanceAdjustment: number = 0): FeeRecordStatus {

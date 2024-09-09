@@ -676,7 +676,7 @@ const getLatestCompletedAmendmentFacilityEndDate = async (facilityId, token) => 
 
     return { status: 200, data: response.data };
   } catch (error) {
-    console.error('Unable to get the latest completed facilityEndDate amendment %o', error);
+    console.error('Unable to get the latest completed facility end date amendment %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get latest completed facility end date amendment' };
   }
 };
@@ -999,6 +999,24 @@ const getAllBanks = async (userToken) => {
 };
 
 /**
+ * Fetches all banks with their available report years
+ * @param {string} userToken - token to validate session
+ * @returns {Promise<import('./api-response-types').BankWithReportingYearsResponseBody[]>}
+ */
+const getAllBanksWithReportingYears = async (userToken) => {
+  try {
+    const { data } = await axios.get(`${TFM_API_URL}/v1/banks?includeReportingYears=true`, {
+      headers: generateHeaders(userToken),
+    });
+
+    return data;
+  } catch (error) {
+    console.error('Failed to get banks with reporting years', error);
+    throw error;
+  }
+};
+
+/**
  * Fetches all submitted reports by bank ID and year
  * @param {string} userToken - token to validate session
  * @param {string} bankId - the bank ID
@@ -1218,6 +1236,28 @@ const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, 
   });
 };
 
+/**
+ * Adds the supplied fee records to an existing payment
+ * @param {string} reportId - The report id
+ * @param {number[]} feeRecordIds - The list of fee record ids to add to the payment
+ * @param {number[]} paymentIds - The list of payment ids for the fee records to be added to
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user adding the payment
+ * @param {string} userToken - The user token
+ */
+const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, user, userToken) => {
+  const response = await axios({
+    method: 'post',
+    url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/add-to-an-existing-payment`,
+    headers: generateHeaders(userToken),
+    data: {
+      feeRecordIds,
+      paymentIds,
+      user,
+    },
+  });
+  return response.data;
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1261,6 +1301,7 @@ module.exports = {
   updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
   getAllBanks,
+  getAllBanksWithReportingYears,
   getSelectedFeeRecordsDetailsWithAvailablePaymentGroups,
   getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups,
   getReportSummariesByBankAndYear,
@@ -1274,4 +1315,5 @@ module.exports = {
   deletePaymentById,
   editPayment,
   removeFeesFromPayment,
+  addFeesToAnExistingPayment,
 };

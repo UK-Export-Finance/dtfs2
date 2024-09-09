@@ -18,7 +18,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
   const FEE_RECORD_ID_TWO = '22';
   const PAYMENT_CURRENCY = 'GBP';
 
-  before(() => {
+  const resetTolerances = () => {
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENT_MATCHING_TOLERANCES_FROM_DB);
     cy.task(NODE_TASKS.INSERT_PAYMENT_MATCHING_TOLERANCES_INTO_DB, [
       PaymentMatchingToleranceEntityMockBuilder.forCurrency('GBP').withThreshold(GBP_TOLERANCE).withIsActive(true).withId(1).build(),
@@ -26,21 +26,24 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       PaymentMatchingToleranceEntityMockBuilder.forCurrency('JPY').withThreshold(0).withIsActive(true).withId(3).build(),
       PaymentMatchingToleranceEntityMockBuilder.forCurrency('USD').withThreshold(0).withIsActive(true).withId(4).build(),
     ]);
-  });
+  };
 
   beforeEach(() => {
-    cy.task(NODE_TASKS.REMOVE_ALL_UTILISATION_REPORTS_FROM_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    resetTolerances();
 
     const report = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.PENDING_RECONCILIATION)
       .withId(REPORT_ID)
       .withBankId(BANK_ID)
       .build();
+    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
+
     const payment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY)
       .withAmount(60)
       .withDateReceived(new Date('2023-02-02'))
       .withReference('REF01234')
       .build();
-    const feeRecordOne = FeeRecordEntityMockBuilder.forReport(undefined)
+    const feeRecordOne = FeeRecordEntityMockBuilder.forReport(report)
       .withId(FEE_RECORD_ID_ONE)
       .withFacilityId('11111111')
       .withExporter('Exporter 1')
@@ -51,7 +54,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       .withStatus('DOES_NOT_MATCH')
       .withPayments([payment])
       .build();
-    const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(undefined)
+    const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(report)
       .withId(FEE_RECORD_ID_TWO)
       .withFacilityId('22222222')
       .withExporter('Exporter 2')
@@ -62,17 +65,17 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
       .withStatus('DOES_NOT_MATCH')
       .withPayments([payment])
       .build();
-    report.feeRecords = [feeRecordOne, feeRecordTwo];
-
-    cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
+    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
 
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
-    cy.get(
-      `[type="checkbox"][id="feeRecordIds-${FEE_RECORD_ID_ONE},${FEE_RECORD_ID_TWO}-reportedPaymentsCurrency-${PAYMENT_CURRENCY}-status-${FEE_RECORD_STATUS.DOES_NOT_MATCH}"]`,
-    ).check();
+
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+      .checkbox([FEE_RECORD_ID_ONE, FEE_RECORD_ID_TWO], PAYMENT_CURRENCY, FEE_RECORD_STATUS.DOES_NOT_MATCH)
+      .click();
+
     cy.get('[type="submit"]').contains('Add a payment').click();
   });
 
@@ -134,7 +137,12 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     cy.contains('button', 'Continue').click();
 
     cy.contains('Premium payments').should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.getPremiumPaymentsTableRow(FEE_RECORD_ID_ONE).should('contain', 'MATCH');
+    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
+      .status(FEE_RECORD_ID_ONE)
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal(FEE_RECORD_STATUS.MATCH);
+      });
   });
 
   it('submits form and reloads the page with no values when user submits form with valid values and user selects yes to adding another payment', () => {

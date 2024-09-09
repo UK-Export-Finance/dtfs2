@@ -9,12 +9,9 @@ const coverStartDate = {
   coverStartDateMonth: () => cy.get('[data-cy="ukef-cover-start-date-month"]'),
   coverStartDateYear: () => cy.get('[data-cy="ukef-cover-start-date-year"]'),
 
-  errorSummary: () => cy.get('[data-cy="error-summary"]'),
   errorInput: () => cy.get('[data-cy="ukefCoverStartDateInput-error"]'),
 
   coverStartDateSuccess: () => cy.get('[data-cy="confirm-cover-start-success"]'),
-
-  continueButton: () => cy.get('[data-cy="continue-button"]'),
 };
 
 export default coverStartDate;

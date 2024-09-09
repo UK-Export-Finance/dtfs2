@@ -1,4 +1,4 @@
-import { isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS } from '@ukef/dtfs2-common';
+import { isTfmFacilityEndDateFeatureFlagEnabled, MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import { MOCK_AMENDMENT_COVERENDDATE_CHANGE, MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE } from '../../../test-mocks/amendment-test-mocks';
@@ -8,6 +8,7 @@ const res = mockRes();
 
 api.getAmendmentById = jest.fn();
 api.updateAmendment = jest.fn();
+api.getFacility = jest.fn();
 
 const user = {
   _id: '12345678',
@@ -16,6 +17,10 @@ const user = {
   lastName: 'Bloggs',
   teams: [TEAM_IDS.PIM],
   email: 'test@localhost',
+};
+
+const gefFacility = {
+  facilitySnapshot: { isGef: true, type: MAPPED_FACILITY_TYPE.CASH },
 };
 
 const session = { user, userToken: 'mockToken' };
@@ -41,6 +46,7 @@ describe('amendmentIsUsingFacilityEndDate routes', () => {
     it('should render the template with errors if no value is provided', async () => {
       api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
       api.updateAmendment.mockResolvedValueOnce({ status: 200 });
+      api.getFacility.mockResolvedValueOnce(gefFacility);
 
       const req = {
         params: {
@@ -78,6 +84,7 @@ describe('amendmentIsUsingFacilityEndDate routes', () => {
     it('should redirect to the facility end date page when true is selected and there are no errors', async () => {
       api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
       api.updateAmendment.mockResolvedValueOnce({ status: 200 });
+      api.getFacility.mockResolvedValueOnce(gefFacility);
 
       const req = {
         params: {
@@ -96,32 +103,10 @@ describe('amendmentIsUsingFacilityEndDate routes', () => {
       expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-end-date`);
     });
 
-    it('should redirect to the update facility value page when false is selected, the facility value also needs updating and there are no errors', async () => {
-      // TODO DTFS2-7222: This will instead redirect to the bank review page
-      api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE });
-      api.updateAmendment.mockResolvedValueOnce({ status: 200 });
-
-      const req = {
-        params: {
-          _id: dealId,
-          amendmentId,
-          facilityId,
-        },
-        body: {
-          isUsingFacilityEndDate: 'No',
-        },
-        session,
-      };
-
-      await postAmendmentIsUsingFacilityEndDate(req, res);
-
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/facility-value`);
-    });
-
-    it('should redirect to the check answers page when false is selected, only the cover date is to be updated and there are no errors', async () => {
-      // TODO DTFS2-7222: This will instead redirect to the bank review page
+    it('should redirect to the bank review date page when false is selected and there are no errors', async () => {
       api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_COVERENDDATE_CHANGE });
       api.updateAmendment.mockResolvedValueOnce({ status: 200 });
+      api.getFacility.mockResolvedValueOnce(gefFacility);
 
       const req = {
         params: {
@@ -137,12 +122,13 @@ describe('amendmentIsUsingFacilityEndDate routes', () => {
 
       await postAmendmentIsUsingFacilityEndDate(req, res);
 
-      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/check-answers`);
+      expect(res.redirect).toHaveBeenCalledWith(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/bank-review-date`);
     });
 
     it("should redirect to the amendments summary page if there's an error updating the amendment", async () => {
       api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: MOCK_AMENDMENT_FACILITYVALUE_AND_COVERENDDATE_CHANGE });
       api.updateAmendment.mockResolvedValueOnce({ status: 400 });
+      api.getFacility.mockResolvedValueOnce(gefFacility);
 
       const req = {
         params: {

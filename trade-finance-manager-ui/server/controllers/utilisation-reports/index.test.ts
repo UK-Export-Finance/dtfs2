@@ -88,7 +88,7 @@ describe('controllers/utilisation-reports', () => {
       await getUtilisationReports(req, res);
 
       // Assert
-      expect(isTfmPaymentReconciliationFeatureFlagEnabledSpy).toHaveBeenCalledTimes(1);
+      expect(isTfmPaymentReconciliationFeatureFlagEnabledSpy).toHaveBeenCalled();
       expect(res._getRenderView()).toEqual(`utilisation-reports/utilisation-reports-manual-reconciliation.njk`);
     });
 
@@ -112,7 +112,7 @@ describe('controllers/utilisation-reports', () => {
       await getUtilisationReports(req, res);
 
       // Assert
-      expect(isTfmPaymentReconciliationFeatureFlagEnabledSpy).toHaveBeenCalledTimes(1);
+      expect(isTfmPaymentReconciliationFeatureFlagEnabledSpy).toHaveBeenCalled();
       expect(res._getRenderView()).toEqual(`utilisation-reports/utilisation-reports.njk`);
     });
   });

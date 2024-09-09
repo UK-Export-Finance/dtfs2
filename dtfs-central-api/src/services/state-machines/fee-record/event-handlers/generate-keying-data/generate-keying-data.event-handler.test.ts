@@ -9,13 +9,14 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
-import { aReportPeriod } from '../../../../../../test-helpers/test-data';
-import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment } from '../helpers';
+import { aReportPeriod } from '../../../../../../test-helpers';
+import { calculateFixedFeeAdjustment, calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData } from '../helpers';
 
 jest.mock<unknown>('../helpers', () => ({
   ...jest.requireActual('../helpers'),
   calculateFixedFeeAdjustment: jest.fn(),
   calculatePrincipalBalanceAdjustment: jest.fn(),
+  updateFacilityUtilisationData: jest.fn(),
 }));
 
 describe('handleFeeRecordGenerateKeyingDataEvent', () => {
@@ -35,6 +36,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
   beforeEach(() => {
     jest.mocked(calculateFixedFeeAdjustment).mockResolvedValue(10);
     jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(20);
+    jest.mocked(updateFacilityUtilisationData).mockResolvedValue(aFacilityUtilisationDataEntity());
   });
 
   afterEach(() => {
@@ -263,6 +265,35 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       // Assert
       expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
     });
+
+    it('updates the facility utilisation data entity attached to the fee record', async () => {
+      // Arrange
+      const facilityUtilisationDataEntity = FacilityUtilisationDataEntityMockBuilder.forId('11111111').build();
+      const feeRecord = aMatchingFeeRecord();
+      feeRecord.facilityUtilisationData = facilityUtilisationDataEntity;
+      feeRecord.facilityUtilisation = 9876543.21;
+
+      const reportPeriod: ReportPeriod = {
+        start: { month: 4, year: 2024 },
+        end: { month: 5, year: 2025 },
+      };
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod,
+        requestSource,
+      });
+
+      // Assert
+      expect(updateFacilityUtilisationData).toHaveBeenCalledWith(facilityUtilisationDataEntity, {
+        reportPeriod,
+        utilisation: 9876543.21,
+        requestSource,
+        entityManager: mockEntityManager,
+      });
+    });
   });
 
   describe('when isFinalFeeRecordForFacility is set to false', () => {
@@ -398,9 +429,29 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       // Assert
       expect(feeRecord.lastUpdatedByTfmUserId).toBe(userId);
     });
+
+    it('does not update the facility utilisation data entity attached to the fee record', async () => {
+      // Arrange
+      const feeRecord = aMatchingFeeRecord();
+
+      // Act
+      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        isFinalFeeRecordForFacility,
+        reportPeriod: aReportPeriod(),
+        requestSource,
+      });
+
+      // Assert
+      expect(updateFacilityUtilisationData).not.toHaveBeenCalled();
+    });
   });
 
   function aReconciliationInProgressReport() {
     return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  }
+
+  function aFacilityUtilisationDataEntity() {
+    return FacilityUtilisationDataEntityMockBuilder.forId('12345678').build();
   }
 });

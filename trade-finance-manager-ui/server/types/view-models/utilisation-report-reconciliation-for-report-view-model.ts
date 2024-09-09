@@ -48,6 +48,30 @@ export type KeyingSheetViewModel = {
   isChecked: boolean;
 }[];
 
+export type PaymentDetailsPaymentViewModel = {
+  id: number;
+  amount: {
+    formattedCurrencyAndAmount: CurrencyAndAmountString;
+    dataSortValue: number;
+  };
+  reference: string | undefined;
+  dateReceived: {
+    formattedDateReceived: string;
+    dataSortValue: number;
+  };
+};
+
+export type PaymentDetailsViewModel = {
+  feeRecordPaymentGroupStatus: FeeRecordStatus;
+  payment: PaymentDetailsPaymentViewModel;
+  feeRecords: {
+    facilityId: string;
+    exporter: string;
+  }[];
+  reconciledBy?: string;
+  dateReconciled?: string;
+}[];
+
 export type FeeRecordPaymentGroupViewModelItem = {
   feeRecords: FeeRecordViewModelItem[];
   totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
@@ -66,8 +90,9 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   reportId: string;
   enablePaymentsReceivedSorting: boolean;
   feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[];
-  premiumPaymentFormError: ErrorSummaryViewModel | undefined;
-  facilityIdQueryError: ErrorSummaryViewModel | undefined;
+  tableDataError?: ErrorSummaryViewModel;
+  filterError?: ErrorSummaryViewModel;
   facilityIdQuery?: string;
   keyingSheet: KeyingSheetViewModel;
+  paymentDetails: PaymentDetailsViewModel;
 };

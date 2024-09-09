@@ -7,6 +7,7 @@ import {
   getSubmissionMonthForReportPeriod,
   getFormattedReportPeriodWithShortMonth,
   getPreviousReportPeriodForBankScheduleByMonth,
+  isEqualReportPeriod,
 } from './report-period';
 import { OneIndexedMonth, BankReportPeriodSchedule, ReportPeriod } from '../types';
 
@@ -378,6 +379,44 @@ describe('report-period utils', () => {
 
       // Assert
       expect(response).toEqual('Mar 2023 to May 2023');
+    });
+  });
+
+  describe('isEqualReportPeriod', () => {
+    it('returns true when the two supplied report periods are equal', () => {
+      // Arrange
+      const reportPeriod1: ReportPeriod = {
+        start: { month: 1, year: 2024 },
+        end: { month: 1, year: 2024 },
+      };
+      const reportPeriod2: ReportPeriod = {
+        start: { month: 1, year: 2024 },
+        end: { month: 1, year: 2024 },
+      };
+
+      // Act
+      const result = isEqualReportPeriod(reportPeriod1, reportPeriod2);
+
+      // Assert
+      expect(result).toBe(true);
+    });
+
+    it('returns false when the two supplied report periods are not equal', () => {
+      // Arrange
+      const reportPeriod1: ReportPeriod = {
+        start: { month: 1, year: 2024 },
+        end: { month: 1, year: 2024 },
+      };
+      const reportPeriod2: ReportPeriod = {
+        start: { month: 2, year: 2025 },
+        end: { month: 2, year: 2025 },
+      };
+
+      // Act
+      const result = isEqualReportPeriod(reportPeriod1, reportPeriod2);
+
+      // Assert
+      expect(result).toBe(false);
     });
   });
 });

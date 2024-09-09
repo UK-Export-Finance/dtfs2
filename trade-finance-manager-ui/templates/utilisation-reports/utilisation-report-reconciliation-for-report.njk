@@ -4,6 +4,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% import "./_macros/premium-payments-table.njk" as premiumPaymentsTable %}
 {% import "./_macros/keying-sheet-table.njk" as keyingSheetTable %}
+{% import "./_macros/payment-details-table.njk" as paymentDetailsTable %}
 
 {% extends "index.njk" %}
 
@@ -14,10 +15,10 @@
 {% endblock %}
 
 {% set premiumPaymentsHtml %}
-  {% if premiumPaymentFormError or facilityIdQueryError %}
+  {% if tableDataError or filterError %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: [premiumPaymentFormError, facilityIdQueryError],
+      errorList: [tableDataError, filterError],
       attributes: {
         'data-cy': 'error-summary'
       }
@@ -49,8 +50,8 @@
               id: "facility-id-filter",
               name: "facilityIdQuery",
               value: facilityIdQuery,
-              errorMessage: facilityIdQueryError and {
-                text: facilityIdQueryError.text
+              errorMessage: filterError and {
+                text: filterError.text
               },
               attributes: {'data-cy': 'facility-filter-input'}
             }) }}
@@ -78,7 +79,7 @@
       </div>
     </div>
 
-  {% if premiumPaymentFormError %}
+  {% if tableDataError %}
     <div class="govuk-form-group--error">
   {% endif %}
   {% if userCanEdit %}
@@ -110,7 +111,7 @@
   {% if userCanEdit %}
     </form>
   {% endif %}
-  {% if premiumPaymentFormError %}
+  {% if tableDataError %}
     </div>
   {% endif %}
 {% endset %}
@@ -152,7 +153,24 @@
 {% endset %}
 
 {% set paymentDetailsHtml %}
-  <div></div>
+  <h2 class="govuk-heading-l" data-cy="payment-details-heading">Payment details</h2>
+
+  {% if paymentDetails.length === 0 %}
+    <p class="govuk-body">Payment details will be displayed when payments have been entered on the premium payments tab.</p>
+  {% else %}
+    {{ govukButton({
+      text: "Show filter",
+      classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2",
+      id: "payment-details-show-filter-button",
+      attributes: {'data-cy': 'payment-details-show-filter-button'}
+    }) }}
+
+    {{ paymentDetailsTable.render({
+      reportId: reportId,
+      paymentDetails: paymentDetails,
+      userCanEdit: userCanEdit
+    }) }}
+  {% endif %}
 {% endset %}
 
 {% set utilisationHtml %}

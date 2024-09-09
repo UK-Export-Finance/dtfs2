@@ -1,7 +1,7 @@
 import { CURRENCY, Currency, isNonEmptyString } from '@ukef/dtfs2-common';
 import { isBefore, isValid, parseISO, startOfDay } from 'date-fns';
 import { REGEX } from '../../../constants';
-import { PaymentErrorsViewModel, PaymentDateErrorViewModel, ErrorSummaryViewModel } from '../../../types/view-models';
+import { PaymentErrorsViewModel, PaymentDateErrorViewModel, ErrorSummaryViewModel, AddToAnExistingPaymentErrorsViewModel } from '../../../types/view-models';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
@@ -195,3 +195,14 @@ export const validateAddPaymentRequestFormValues = (formValues: AddPaymentFormVa
 
 export const validateEditPaymentRequestFormValues = (formValues: EditPaymentFormValues): PaymentErrorsViewModel =>
   validateCommonPaymentRequestFormValues(formValues);
+
+export const validateAddToAnExistingPaymentRequestFormValues = (paymentRadioIds: number[]): AddToAnExistingPaymentErrorsViewModel => {
+  const errorSummary: ErrorSummaryViewModel[] = [];
+
+  const paymentGroupErrorMessage = paymentRadioIds.length > 0 ? undefined : 'Select a payment to add the fee or fees to';
+  if (paymentGroupErrorMessage) {
+    errorSummary.push({ text: paymentGroupErrorMessage, href: '#payment-groups' });
+  }
+
+  return { errorSummary, paymentGroupErrorMessage };
+};

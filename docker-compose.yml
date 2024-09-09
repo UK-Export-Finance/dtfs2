@@ -19,16 +19,29 @@ services:
       - '1433:1433'
     volumes:
       - ./dtfs-sql-volume-dtfs-submissions:/data/db
+    healthcheck:
+      test: ['CMD', '/opt/mssql-tools18/bin/sqlcmd', '-C -S', 'localhost', '-U', 'sa', '-P', MSSQL_SA_PASSWORD, '-Q', 'SELECT 1;']
+      retries: 3
+      interval: 60s
+      timeout: 10s
+      start_period: 60s
 
   dtfs-mongo:
-    image: mongo:5.0.5
+    build:
+      context: ./mongodb
+      dockerfile: Dockerfile
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     ports:
-      - '27017-27019:27017-27019'
+      - "27017:27017"
+    healthcheck:
+      test: test $$(echo "rs.initiate().ok || rs.status().ok" | mongo -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet) -eq 1
+      interval: 10s
+      start_period: 30s
+    command: "--bind_ip_all --keyFile /mongo-keyfile --replSet rs0"
     volumes:
       - ./dtfs-mongo-volume-dtfs-submissions:/data/db
 
@@ -98,7 +111,7 @@ services:
       - EXTERNAL_API_KEY
       - TFM_API_URL=http://trade-finance-manager-api:5004
       - EXTERNAL_API_URL=http://external-api:5002
-      - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
+      - UKEF_TFM_API_SYSTEM_KEY
       - ESTORE_URL
       - REDIS_HOSTNAME=redis
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
@@ -243,6 +256,7 @@ services:
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
       - PORTAL_UI_URL
+      - TFM_UI_URL=http://localhost:5003
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
       - TZ=Europe/London
@@ -254,7 +268,14 @@ services:
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
       - UTILISATION_REPORT_DUE_EMAIL_SCHEDULE
       - UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE
+      - SQL_DB_HOST
+      - SQL_DB_PORT
+      - SQL_DB_USERNAME
+      - SQL_DB_PASSWORD
+      - SQL_DB_NAME
+      - SQL_DB_LOGGING_ENABLED
       - CHANGE_STREAM_ENABLED
+      - DELETION_AUDIT_LOGS_TTL_SECONDS
       - GEF_DEAL_VERSION
 
   external-api:

@@ -8,6 +8,7 @@ describe(page, () => {
 
   const dealId = '61e54dd5b578247e14575882';
   const facilityId = '666862d9140a08222cbd69e7';
+  const previousPage = 'gef/previous-page';
 
   const aFacilityEndDateError = (message, refs) => {
     const fieldErrors = {
@@ -31,6 +32,7 @@ describe(page, () => {
   const params = {
     dealId,
     facilityId,
+    previousPage,
   };
 
   beforeEach(() => {
@@ -47,7 +49,7 @@ describe(page, () => {
   });
 
   it(`renders the 'Back to previous page' link if the status is not 'change'`, () => {
-    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(`/gef/application-details/${dealId}/facilities/${facilityId}/about-facility`, 'Back');
+    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(previousPage, 'Back');
   });
 
   it(`only renders the error summary if there are errors`, () => {

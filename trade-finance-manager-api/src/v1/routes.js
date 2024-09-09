@@ -159,7 +159,7 @@ authRouter
   .route('/utilisation-reports/:reportId/payment')
   .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postPayment);
 
-authRouter.route('/banks').get(banksController.getAllBanks);
+authRouter.route('/banks').get(banksController.getBanks);
 
 authRouter
   .route('/bank/:bankId/utilisation-reports/reconciliation-summary-by-year/:year')
@@ -201,5 +201,9 @@ authRouter
     handleExpressValidatorResult,
     utilisationReportsController.postRemoveFeesFromPayment,
   );
+
+authRouter
+  .route('/utilisation-reports/:reportId/add-to-an-existing-payment')
+  .post(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.postFeesToAnExistingPayment);
 
 module.exports = { authRouter, openRouter };

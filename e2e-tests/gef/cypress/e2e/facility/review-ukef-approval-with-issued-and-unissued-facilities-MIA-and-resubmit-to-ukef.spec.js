@@ -11,6 +11,7 @@ import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO_NULL_MIA, MOCK_FACILITY_THREE, MOC
 
 import { toTitleCase } from '../../fixtures/helpers';
 
+import { continueButton, errorSummary, submitButton } from '../partials';
 import applicationPreview from '../pages/application-preview';
 import unissuedFacilityTable from '../pages/unissued-facilities';
 import aboutFacilityUnissued from '../pages/unissued-facilities-about-facility';
@@ -18,7 +19,7 @@ import applicationSubmission from '../pages/application-submission';
 import statusBanner from '../pages/application-status-banner';
 import coverStartDate from '../pages/cover-start-date';
 import applicationDetails from '../pages/application-details';
-import returnToMaker from '../pages/return-to-maker';
+import facilityEndDate from '../pages/facility-end-date';
 import applicationActivities from '../pages/application-activities';
 
 const { format } = require('date-fns');
@@ -150,12 +151,12 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
     it('clicking yes, accept and proceed takes you to cover-start-date page', () => {
       applicationPreview.ukefReviewLink().click();
       // shows error message do not click yes radio button
-      applicationPreview.reviewDecisionContinue().click();
-      applicationPreview.errorSummary().contains('Select yes if you want to accept the conditions and proceed with UKEF cover.');
+      cy.clickContinueButton();
+      errorSummary().contains('Select yes if you want to accept the conditions and proceed with UKEF cover.');
       applicationPreview.reviewDecisionError('Select yes if you want to accept the conditions and proceed with UKEF cover.');
 
       applicationPreview.reviewDecisionTrue().click();
-      applicationPreview.reviewDecisionContinue().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/cover-start-date`));
 
       coverStartDate.rows().should('have.length', issuedFacilities.length);
@@ -179,10 +180,10 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.coverStartDateYear().clear();
       coverStartDate.coverStartDateYear().type(dateConstants.todayYear);
 
-      coverStartDate.continueButton().click();
+      cy.clickContinueButton();
 
       coverStartDate.coverStartDateSuccess().contains('All cover start dates confirmed for issued facilities');
-      coverStartDate.continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
       unissuedFacilityTable.rows().contains(format(dateConstants.threeMonths, 'dd MMM yyyy'));
@@ -206,9 +207,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.coverStartDateYear().clear();
       coverStartDate.coverStartDateYear().type(dateConstants.threeDaysYear);
 
-      coverStartDate.continueButton().click();
+      cy.clickContinueButton();
 
-      coverStartDate.errorSummary().contains('Cover date cannot be in the past');
+      errorSummary().contains('Cover date cannot be in the past');
       coverStartDate.coverStartDateNo().click();
       coverStartDate.errorInput().contains('Cover date cannot be in the past');
     });
@@ -226,9 +227,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       coverStartDate.coverStartDateYear().clear();
       coverStartDate.coverStartDateYear().type(dateConstants.threeMonthsOneDayYear);
 
-      coverStartDate.continueButton().click();
+      cy.clickContinueButton();
 
-      coverStartDate.errorSummary().contains('Cover date must be within 3 months');
+      errorSummary().contains('Cover date must be within 3 months');
       coverStartDate.coverStartDateNo().click();
       coverStartDate.errorInput().contains('Cover date must be within 3 months');
     });
@@ -255,11 +256,18 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      aboutFacilityUnissued.continueButton().click();
+      cy.clickContinueButton();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        cy.clickContinueButton();
+      }
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
-      unissuedFacilityTable.continueButton().should('not.exist');
+      continueButton().should('not.exist');
       // to go back to application preview page
       unissuedFacilityTable.updateFacilitiesLater().click();
     });
@@ -272,7 +280,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       applicationSubmission
         .submissionText()
         .contains(`Someone at your bank must check your ${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} before they can submit it to UKEF.`);
-      applicationSubmission.submitButton().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
       applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
@@ -357,10 +365,10 @@ context('Return to maker', () => {
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
-      applicationPreview.submitButton().should('exist');
+      submitButton().should('exist');
       applicationPreview.returnButton().should('exist');
       applicationPreview.returnButton().click();
-      returnToMaker.submitButton().click();
+      cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
     });
   });
@@ -463,8 +471,8 @@ context('Return to maker', () => {
     });
 
     it('should be able to submit to checker after making changes', () => {
-      applicationDetails.submitButton().click();
-      applicationSubmission.submitButton().click();
+      cy.clickSubmitButton();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)} submitted for checking at your bank`);
     });
   });
@@ -494,10 +502,10 @@ context('Submit to UKEF', () => {
     });
 
     it('submit to ukef and it should change to MIN (from MIA)', () => {
-      applicationPreview.submitButton().should('exist');
-      applicationPreview.submitButton().click();
+      submitButton().should('exist');
+      cy.clickSubmitButton();
       applicationSubmission.confirmSubmissionCheckbox().click();
-      applicationSubmission.submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle().contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIN)} submitted to UKEF`);
       // check that correct text is displayed under confirmation panel
       applicationSubmission.confirmationText().contains("We'll send you a confirmation email shortly, once we've acknowledged your inclusion notice.");

@@ -3,18 +3,33 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
-{% import "./_macros/payment-group-radio-input-group.njk" as paymentGroupRadioInputGroup %}
+{% import "./_macros/payment-group-input.njk" as paymentGroupInput %}
 {% extends "index.njk" %}
-{% set backLink = {"href": '/utilisation-reports/' + reportId} %}
-{% block pageTitle %}Add to an existing payment{% endblock %}
+{% set backLink = { "href": backLinkHref } %}
+{% set pageHeading = "Add reported fee" + ("s" if reportedFeeDetails.feeRecords | length > 1 else "") + " to an existing payment" %}
+{% block pageTitle %}
+  {% if errors.errorSummary | length %}Error - {% endif %}
+  {{ pageHeading }}
+{% endblock %}
 {% block content %}
+  {% if errors.errorSummary | length %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors.errorSummary,
+        attributes: {
+        'data-cy': 'error-summary'
+        }
+    }) }}
+  {% endif %}
+
   <div class="govuk-grid-row govuk-!-padding-top-7">
-    <div class="govuk-grid-column-one-half">
-      <span class="govuk-caption-l" data-cy="add-to-an-existing-payment-heading-caption">{{ bank.name }},
+    <div class="govuk-grid-column-full">
+      <span class="govuk-caption-l"  data-cy="add-to-an-existing-payment-heading-caption">{{ bank.name }},
       {{ formattedReportPeriod }}</span>
-      <h1 class="govuk-heading-l">Add to an existing payment</h1>
+      <h1 class="govuk-heading-l">{{ pageHeading }}</h1>
     </div>
   </div>
+
   {{ feeRecordDetailsTable.render({
     captionText: "Selected reported fees details",
     feeRecords: reportedFeeDetails.feeRecords,
@@ -25,11 +40,26 @@
     }
   }) }}
 
-  {{ paymentGroupRadioInputGroup.render({
-    legendText: availablePaymentsHeading,
-    paymentGroups: availablePaymentGroups
-  }) }}
+  <form method="post">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    <input type="hidden" name="addToAnExistingPaymentFormSubmission" value="true"/>
+    {% for id in selectedFeeRecordCheckboxIds %}<input type="hidden" name={{ id }} value="on"/>{% endfor %}
 
-  {# TODO FN-1749: Add 'Continue' and 'Cancel' buttons and associated submission logic. #}
+    {{ paymentGroupInput.render({
+      legendText: paymentsHeading,
+      paymentGroups: paymentGroups,
+      errorMessage: errors.paymentGroupErrorMessage
+    }) }}
+
+    <div class="govuk-button-group">
+      {{ govukButton({
+        "text": "Continue",
+        attributes: {
+          "data-cy": "continue-button"
+        }
+      }) }}
+      <a class="govuk-link" href="{{ backLinkHref }}" id="cancel-link" data-cy="cancel-link">Cancel</a>
+    </div>
+  </form>
 {% endblock %}
 {% block sub_content %}{% endblock %}

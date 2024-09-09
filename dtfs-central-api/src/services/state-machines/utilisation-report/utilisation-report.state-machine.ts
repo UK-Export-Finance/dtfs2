@@ -13,9 +13,13 @@ import {
   handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent,
   handleUtilisationReportMarkFeeRecordsAsReconciledEvent,
   handleUtilisationReportRemoveFeesFromPaymentGroupEvent,
+  handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent,
 } from './event-handlers';
 import { UtilisationReportEvent } from './event/utilisation-report.event';
 
+/**
+ * The utilisation report state machine class
+ */
 export class UtilisationReportStateMachine {
   private readonly report: UtilisationReportEntity | null;
 
@@ -23,10 +27,21 @@ export class UtilisationReportStateMachine {
     this.report = report;
   }
 
+  /**
+   * Creates a state machine for the supplied report
+   * @param report - The report to create a state machine for
+   * @returns The state machine
+   */
   public static forReport(report: UtilisationReportEntity): UtilisationReportStateMachine {
     return new UtilisationReportStateMachine(report);
   }
 
+  /**
+   * Creates a state machine for the report with the supplied id
+   * @param id - The report id
+   * @returns The state machine
+   * @throws {NotFoundError} If a report with the supplied id cannot be found
+   */
   public static async forReportId(id: number): Promise<UtilisationReportStateMachine> {
     const report = await UtilisationReportRepo.findOneBy({ id });
     if (!report) {
@@ -35,11 +50,22 @@ export class UtilisationReportStateMachine {
     return new UtilisationReportStateMachine(report);
   }
 
+  /**
+   * Creates a state machine for the report with the supplied bank id and report period
+   * @param bankId - The bank id
+   * @param reportPeriod - The report period
+   * @returns The state machine
+   */
   public static async forBankIdAndReportPeriod(bankId: string, reportPeriod: ReportPeriod): Promise<UtilisationReportStateMachine> {
     const report = await UtilisationReportRepo.findOneByBankIdAndReportPeriod(bankId, reportPeriod);
     return new UtilisationReportStateMachine(report);
   }
 
+  /**
+   * Handles an invalid transition event
+   * @param param - The event
+   * @param param.type - The event type
+   */
   private handleInvalidTransition = ({ type: eventType }: UtilisationReportEvent): never => {
     const entityName = UtilisationReportEntity.name;
 
@@ -60,6 +86,8 @@ export class UtilisationReportStateMachine {
 
   /**
    * Implements the 'Utilisation Reports' state machine detailed in '/doc/state-machines.md'.
+   * @param event - The event
+   * @returns The modified report
    */
   public async handleEvent(event: UtilisationReportEvent): Promise<UtilisationReportEntity> {
     switch (this.report?.status) {
@@ -104,6 +132,8 @@ export class UtilisationReportStateMachine {
             return handleUtilisationReportMarkFeeRecordsAsReconciledEvent(this.report, event.payload);
           case 'REMOVE_FEES_FROM_PAYMENT_GROUP':
             return handleUtilisationReportRemoveFeesFromPaymentGroupEvent(this.report, event.payload);
+          case 'ADD_FEES_TO_AN_EXISTING_PAYMENT_GROUP':
+            return handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent(this.report, event.payload);
           default:
             return this.handleInvalidTransition(event);
         }

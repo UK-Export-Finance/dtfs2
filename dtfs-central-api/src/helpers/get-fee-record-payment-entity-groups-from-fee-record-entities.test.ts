@@ -1,5 +1,6 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
 import { getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from './get-fee-record-payment-entity-groups-from-fee-record-entities';
+import { aUtilisationReport } from '../../test-helpers';
 
 describe('get-fee-record-payment-entity-groups-from-fee-record-entities.helper', () => {
   describe('getFeeRecordPaymentEntityGroupsFromFeeRecordEntities', () => {
@@ -76,9 +77,5 @@ describe('get-fee-record-payment-entity-groups-from-fee-record-entities.helper',
       expect(groups[1].feeRecords).toEqual(secondFeeRecords);
       expect(groups[1].payments).toEqual(secondPayments);
     });
-
-    function aUtilisationReport(): UtilisationReportEntity {
-      return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    }
   });
 });

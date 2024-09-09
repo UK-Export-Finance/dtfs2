@@ -9,18 +9,18 @@ import { FacilityType } from '../facility-type';
 type FacilityEndDateProperties =
   | {
       isUsingFacilityEndDate: true;
-      bankReviewDate: Date | null;
-      facilityEndDate?: null;
+      facilityEndDate?: Date | null;
+      bankReviewDate?: null;
     }
   | {
       isUsingFacilityEndDate: false;
-      bankReviewDate?: null;
-      facilityEndDate?: Date | null;
+      facilityEndDate?: null;
+      bankReviewDate?: Date | null;
     }
   | {
       isUsingFacilityEndDate?: null;
-      bankReviewDate?: null;
       facilityEndDate?: null;
+      bankReviewDate?: null;
     };
 
 /**
@@ -62,4 +62,8 @@ export type Facility = {
   hasBeenIssuedAndAcknowledged: boolean | null;
   canResubmitIssuedFacilities: boolean | null;
   unissuedToIssuedByMaker: object;
+  // Legacy data from migrating old GEF Facilities into DTFS
+  dataMigration?: {
+    drupalFacilityId: string;
+  };
 } & FacilityEndDateProperties;

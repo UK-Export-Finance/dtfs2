@@ -1,17 +1,9 @@
 import { QueryRunner } from 'typeorm';
 import { HttpStatusCode } from 'axios';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
+import { TestApiError } from '@ukef/dtfs2-common';
 import { executeWithSqlTransaction } from './execute-with-sql-transaction';
-import { ApiError, TransactionFailedError } from '../errors';
-
-class TestApiError extends ApiError {
-  constructor({ message, status }: { message: string; status: number }) {
-    super({
-      message,
-      status,
-    });
-  }
-}
+import { TransactionFailedError } from '../errors';
 
 describe('executeWithSqlTransaction', () => {
   const mockConnect = jest.fn();
@@ -125,25 +117,31 @@ describe('executeWithSqlTransaction', () => {
     expect(mockRelease).toHaveBeenCalled();
   });
 
-  it("throws a generic 'TransactionFailedError' if the supplied function throws a generic error", async () => {
+  it("throws a generic 'TransactionFailedError' if the supplied function throws an unexpected error", async () => {
     // Arrange
-    const functionToExecute = jest.fn().mockRejectedValue(new Error('Some error'));
+    const functionToExecute = jest.fn().mockRejectedValue('Some rejected value');
 
     // Act / Assert
-    await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(new TransactionFailedError());
+    await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(TransactionFailedError.forUnknownError());
+  });
+
+  it("throws a specific 'TransactionFailedError' if the supplied function throws an 'Error'", async () => {
+    // Arrange
+    const error = new Error('Some error');
+    const functionToExecute = jest.fn().mockRejectedValue(error);
+
+    // Act / Assert
+    await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(TransactionFailedError.forError(error));
   });
 
   it("throws a specific 'TransactionFailedError' if the supplied function throws an 'ApiError'", async () => {
     // Arrange
-    const customError = new TestApiError({
-      message: 'Some error message',
-      status: HttpStatusCode.BadRequest,
-    });
+    const customError = new TestApiError(HttpStatusCode.BadRequest);
 
     const functionToExecute = jest.fn().mockRejectedValue(customError);
 
     // Act / Assert
-    await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(new TransactionFailedError(customError));
+    await expect(executeWithSqlTransaction(functionToExecute)).rejects.toThrow(TransactionFailedError.forApiError(customError));
   });
 
   it('returns the return value of the supplied function', async () => {

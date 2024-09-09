@@ -9,10 +9,13 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_FACILITY_ONE } from '../../../fixtures/mocks/mock-facilities';
+
+import { mainHeading } from '../../partials';
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
 import statusBanner from '../../pages/application-status-banner';
+import facilityEndDate from '../../pages/facility-end-date';
 
 let dealId;
 let token;
@@ -55,7 +58,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
       applicationPreview.submitButtonPostApproval().should('not.exist');
-      applicationPreview.mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
+      mainHeading().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
       applicationPreview.automaticCoverSummaryList().contains('Yes - submit as an automatic inclusion notice');
       applicationPreview.automaticCoverCriteria().should('exist');
     });
@@ -71,13 +74,13 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
     it('clicking back or update later takes you back to application preview', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
-      unissuedFacilityTable.backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
 
       applicationPreview.unissuedFacilitiesReviewLink().click();
       // ensures that nothing has changed
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
 
@@ -92,7 +95,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      aboutFacilityUnissued.mainHeading().contains("Tell us you've issued this facility");
+      mainHeading().contains("Tell us you've issued this facility");
       aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
       aboutFacilityUnissued.facilityName().should('have.value', MOCK_FACILITY_ONE.name);
 
@@ -109,7 +112,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
 
       if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.be.checked');
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
         aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
       }
     });
@@ -141,7 +144,14 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
       // Changing cover start date to issuance date
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
-      aboutFacilityUnissued.continueButton().click();
+      cy.clickContinueButton();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        cy.clickContinueButton();
+      }
 
       // Success banner
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');

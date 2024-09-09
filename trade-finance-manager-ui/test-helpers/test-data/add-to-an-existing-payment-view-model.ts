@@ -1,6 +1,6 @@
 import { PRIMARY_NAVIGATION_KEYS } from '../../server/constants';
 import { AddToAnExistingPaymentViewModel } from '../../server/types/view-models';
-import { anAvailablePaymentGroupsViewModel } from './available-payment-groups-view-model';
+import { aPaymentGroupInputsViewModel } from './payment-group-inputs-view-model';
 import { aTfmSessionUser } from './tfm-session-user';
 
 export const anAddToAnExistingPaymentViewModel = (): AddToAnExistingPaymentViewModel => ({
@@ -9,6 +9,7 @@ export const anAddToAnExistingPaymentViewModel = (): AddToAnExistingPaymentViewM
   reportId: '12',
   bank: { name: 'Test bank ' },
   formattedReportPeriod: 'Some reporting period',
+  selectedFeeRecordCheckboxIds: ['feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO'],
   reportedFeeDetails: {
     totalReportedPayments: 'GBP 200',
     feeRecords: [
@@ -21,6 +22,10 @@ export const anAddToAnExistingPaymentViewModel = (): AddToAnExistingPaymentViewM
       },
     ],
   },
-  availablePaymentsHeading: 'Available payments',
-  availablePaymentGroups: anAvailablePaymentGroupsViewModel(),
+  paymentsHeading: 'Payments',
+  paymentGroups: aPaymentGroupInputsViewModel(),
+  errors: {
+    errorSummary: [],
+  },
+  backLinkHref: '/utilisation-reports/12?selectedFeeRecordIds=456',
 });

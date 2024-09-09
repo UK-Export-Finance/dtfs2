@@ -1,5 +1,7 @@
 import * as api from './commands/api';
 
+import './commands/click-events';
+
 Cypress.Commands.add('saveSession', require('./commands/saveSession'));
 
 Cypress.Commands.add('login', require('./commands/portal/login'));
