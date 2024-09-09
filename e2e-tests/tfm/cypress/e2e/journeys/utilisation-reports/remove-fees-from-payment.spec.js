@@ -82,7 +82,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
-    cy.visit(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
+    cy.visit(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`);
   });
 
   it('should display errors when form submitted with invalid fee selections and persist the selected fees and inputted values', () => {
