@@ -9,8 +9,8 @@ const loginService = require('./loginService');
  * 2) Did we reached redirect loop maximum, if yes show error
  * 3) Get login URL from TFM-API
  * 4) Redirect user to login URL (SSO Authority login page)
- * @param {object} req: Express request
- * @param {object} res: Express response
+ * @param {Express.Request} req Express request
+ * @param {Express.Response} res Express response
  * @returns {Promise<object>} Express response with redirect or error.
  */
 const getLogin = async (req, res) => {
@@ -47,12 +47,12 @@ const getLogin = async (req, res) => {
 /**
  * handleSsoRedirect
  * Because of security restrictions we need to handle 2 POST calls in same URL.
- * 1) Step1 - POST is from SSO Authority we don't have session cookie and will prepare local form that will autosubmit.
- * 2) Step2 - POST is from our form and now we have session cookie and can verify SSO authority data.
+ * 1) Step 1 - POST is from SSO Authority we don't have session cookie and will prepare local form that will autosubmit.
+ * 2) Step 2 - POST is from our form and now we have session cookie and can verify SSO authority data.
  * 3) Send SSO authority data to TFM-API for verification and login.
  * 4) Redirect user to original location, most likely /.
- * @param {object} req: Express request
- * @param {object} res: Express response
+ * @param {Express.Request} req Express request
+ * @param {Express.Response} res Express response
  * @returns {Promise<object>} Express response with redirect or error.
  */
 const handleSsoRedirect = async (req, res) => {
@@ -100,8 +100,8 @@ const handleSsoRedirect = async (req, res) => {
  * Delete local session and redirect to SSO authority logout page.
  * 1) Get logout url from TFM-API.
  * 2) Destroy TFM-UI user login session and redirect to SSO authority logout form.
- * @param {object} req: Express request
- * @param {object} res: Express response
+ * @param {Express.Request} req Express request
+ * @param {Express.Response} res Express response
  * @returns {Promise<object>} Express response with redirect or error.
  */
 const logout = async (req, res) => {
