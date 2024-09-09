@@ -1,10 +1,10 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { TestApiError, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { DeletePaymentRequest, deletePayment } from '.';
-import { aTfmSessionUser } from '../../../../../test-helpers';
+import { aTfmSessionUser, aUtilisationReport } from '../../../../../test-helpers';
 import { DeletePaymentPayload } from '../../../routes/middleware/payload-validation/validate-delete-payment-payload';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
@@ -188,9 +188,5 @@ describe('delete-payment.controller', () => {
       // Assert
       expect(res._getData()).toBe(`Failed to delete payment with id ${paymentId}`);
     });
-
-    function aUtilisationReport(): UtilisationReportEntity {
-      return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    }
   });
 });
