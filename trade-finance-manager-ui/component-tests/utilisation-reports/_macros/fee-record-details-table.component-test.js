@@ -1,3 +1,4 @@
+const { RECONCILIATION_FOR_REPORT_TABS } = require('../../../server/constants/reconciliation-for-report-tabs');
 const { componentRenderer } = require('../../componentRenderer');
 
 const component = '../templates/utilisation-reports/_macros/fee-record-details-table.njk';
@@ -262,7 +263,10 @@ describe(component, () => {
     wrapper.expectInput(saveChangesButtonSelector).toHaveValue('Remove selected fees');
     wrapper
       .expectElement(saveChangesButtonSelector)
-      .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/edit-payment/${paymentId}/remove-selected-fees`);
+      .toHaveAttribute(
+        'formaction',
+        `/utilisation-reports/${reportId}/edit-payment/${paymentId}/remove-selected-fees?redirectTab=${RECONCILIATION_FOR_REPORT_TABS.PREMIUM_PAYMENTS}`,
+      );
   });
 
   it('does not render the "remove selected fees" button when enableSelectingFeeRecords is set to false', async () => {

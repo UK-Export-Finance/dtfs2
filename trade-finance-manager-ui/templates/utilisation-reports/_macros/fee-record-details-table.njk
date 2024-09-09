@@ -79,7 +79,7 @@
     <input type="hidden" name="totalSelectableFeeRecords" value="{{ feeRecords.length }}">
     <input
       class="govuk-button govuk-button--secondary govuk-!-margin-right-3 govuk-!-margin-bottom-1"
-      formaction="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentId }}/remove-selected-fees"
+      formaction="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentId }}/remove-selected-fees?redirectTab=premium-payments"
       value="Remove selected fees"
       data-module="govuk-button"
       type="submit"
