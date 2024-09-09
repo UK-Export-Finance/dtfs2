@@ -161,9 +161,11 @@ table.premium-payments-table {
 table.utilisation-report-reconciliation-table {
   table-layout: fixed;
   /* 
-   * Column widths are percentage-based, totalling 100%, but sum to 1440.02px,
-   * slightly exceeding the 1440px maximum scrollable pane width. To fix,
-   * reduce table width by 1px. The column widths will adapt automatically as
+   * Column widths are percentage-based, totalling 100%, but when translated into pixels,
+   * they sum to 1440.02px, slightly exceeding the 1440px maximum scrollable pane width
+   * which wraps the table.
+   * This causes a scroll bar to appear when it shouldn't.
+   * To fix, we reduce table width by 1px. The column widths will adapt automatically as
    * they are percentage-based.
    */
   width: calc(100% - 1px);
