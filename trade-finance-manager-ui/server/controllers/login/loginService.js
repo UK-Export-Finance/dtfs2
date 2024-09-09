@@ -5,8 +5,8 @@ const { SSO } = require('../../constants');
  * Verify referrer, allow empty referrer for localhost.
  * 1) If host is localhost then referrer will be missing, no need to check it
  * 2) Return error message if referrer is missing or it is not from SSO authority
- * @param {Object} req: Express request
- * @returns {Boolean|String} False or error message.
+ * @param {Express.Request} req Express request
+ * @returns {boolean|string} False or error message.
  */
 const verifyReferrerForExternalSsoPost = (req) => {
   const hostnameWithoutPort = req.get('host').split(':')[0];
@@ -28,8 +28,8 @@ const verifyReferrerForExternalSsoPost = (req) => {
 /**
  * verifyBodyForExternalSsoPost
  * Verify SSO input parameters, allow limited/safe number of characters.
- * @param {Object} req: Express request
- * @returns {Boolean|String} False or error message.
+ * @param {Express.Request} req Express request
+ * @returns {boolean|string} False or error message.
  */
 const verifyBodyForExternalSsoPost = (templateParams) => {
   const paramsWithNotAllowedCharacters = Object.entries(templateParams).filter(([, value]) => /^[0-9a-zA-Z-_.]*$/.test(value) === false);
@@ -46,9 +46,9 @@ const verifyBodyForExternalSsoPost = (templateParams) => {
  * 1) Verify referrer.
  * 2) Verify Post body to have safe parameters.
  * 3) Return page with form acceptExternalSsoPostForm that will autosubmit.
- * @param {Object} req: Express request
- * @param {Object} res: Express response
- * @returns {Object} response with rendered sso/accept-external-sso-post.njk.
+ * @param {Express.Request} req Express request
+ * @param {Express.Response} res Express response
+ * @returns {object} response with rendered sso/accept-external-sso-post.njk.
  */
 const acceptExternalSsoPost = (req, res) => {
   const { code, client_info: clientInfo, state, session_state: sessionState } = req.body;
