@@ -1,7 +1,7 @@
 /**
  * Destroys a user's session and redirects them to the start page.
- * @param {Object} req
- * @param {Object} res
+ * @param {Express.Request} req Express request
+ * @param {Express.Response} res Express response
  * @returns {void}
  */
 function destroySessionAndRedirectToStart(req, res) {
