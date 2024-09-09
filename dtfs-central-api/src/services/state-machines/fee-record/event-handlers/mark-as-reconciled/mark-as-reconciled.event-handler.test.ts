@@ -23,7 +23,7 @@ describe('handleFeeRecordMarkAsReconciledEvent', () => {
     userId,
   };
 
-  const mockDate = new Date('2024-01-01');
+  const mockDate = new Date();
 
   beforeEach(() => {
     jest.useFakeTimers();

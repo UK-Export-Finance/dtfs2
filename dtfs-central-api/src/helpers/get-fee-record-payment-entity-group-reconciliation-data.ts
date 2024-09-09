@@ -27,14 +27,16 @@ export const getFeeRecordPaymentEntityGroupReconciliationData = async (
     return {};
   }
 
-  if (reconciledFeeRecords.some(({ dateReconciled }) => dateReconciled === null)) {
+  const anyReconciledFeeRecordIsMissingDateReconciled = reconciledFeeRecords.some(({ dateReconciled }) => dateReconciled === null);
+
+  if (anyReconciledFeeRecordIsMissingDateReconciled) {
     throw new Error(`Fee records at the '${FEE_RECORD_STATUS.RECONCILED}' status cannot have a null 'dateReconciled' property`);
   }
 
   const feeRecordsSortedByDateReconciledDescending = orderBy(reconciledFeeRecords, [(feeRecord) => feeRecord.dateReconciled!.getTime()], ['desc']);
   const mostRecentlyReconciledFeeRecord = feeRecordsSortedByDateReconciledDescending.at(0);
+
   if (!mostRecentlyReconciledFeeRecord) {
-    // Based on all the above checks, this error should never be reached, hence not being documented
     throw new Error('Something went wrong when sorting the fee records to get the most recently reconciled fee record');
   }
 

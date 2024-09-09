@@ -1,6 +1,15 @@
 import { FeeRecordEntity, PaymentEntity } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentEntityGroup } from '../types/fee-record-payment-entity-group';
 
+export const getPaymentIdKeyFromPaymentEntities = (payments: PaymentEntity[]) => {
+  const prefix = 'paymentIds';
+  const paymentIdsSortedAscending = payments
+    .map(({ id }) => id)
+    .toSorted((firstId, secondId) => firstId - secondId)
+    .join('-');
+  return `${prefix}-${paymentIdsSortedAscending}`;
+};
+
 /**
  * Gets the fee record payment entity groups from a list of fee records
  * @param feeRecords - The fee records
@@ -14,15 +23,6 @@ export const getFeeRecordPaymentEntityGroups = (feeRecords: FeeRecordEntity[]): 
       key += 1;
     }
   }
-
-  const getPaymentIdKeyFromPaymentEntities = (payments: PaymentEntity[]) => {
-    const prefix = 'paymentIds';
-    const paymentIdsSortedAscending = payments
-      .map(({ id }) => id)
-      .toSorted((firstId, secondId) => firstId - secondId)
-      .join('-');
-    return `${prefix}-${paymentIdsSortedAscending}`;
-  };
 
   const keyGenerator = generateUniqueKey();
 

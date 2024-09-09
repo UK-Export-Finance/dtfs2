@@ -1,5 +1,22 @@
 import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { getFeeRecordPaymentEntityGroups } from './get-fee-record-payment-entity-groups';
+import { getFeeRecordPaymentEntityGroups, getPaymentIdKeyFromPaymentEntities } from './get-fee-record-payment-entity-groups';
+
+describe('getPaymentIdKeyFromPaymentEntities', () => {
+  it('should concatenate payment ids in ascending order after payment id prefix', () => {
+    // Arrange
+    const payments = [
+      PaymentEntityMockBuilder.forCurrency('GBP').withId(67).build(),
+      PaymentEntityMockBuilder.forCurrency('GBP').withId(7).build(),
+      PaymentEntityMockBuilder.forCurrency('GBP').withId(13).build(),
+    ];
+
+    // Act
+    const result = getPaymentIdKeyFromPaymentEntities(payments);
+
+    // Assert
+    expect(result).toEqual(`paymentIds-${payments[1].id}-${payments[2].id}-${payments[0].id}`);
+  });
+});
 
 describe('getFeeRecordPaymentEntityGroups', () => {
   it('should return all the fee records as individual groups when there are no payments', () => {
