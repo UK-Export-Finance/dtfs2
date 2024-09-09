@@ -230,9 +230,9 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     amendmentsPage.continueAmendment().click();
     cy.url().should('contain', 'cover-end-date');
 
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.threeDaysDay);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.threeDaysMonth);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeDaysYear);
+    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.threeYearsDay);
+    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.threeYearsMonth);
+    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.threeYearsYear);
     amendmentsPage.continueAmendment().click();
 
     cy.url().should('contain', 'facility-value');
@@ -335,7 +335,7 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
 
     cy.url().should('contain', 'facility-value');
 
-    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('12345');
+    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('1234');
 
     amendmentsPage.continueAmendment().click();
 

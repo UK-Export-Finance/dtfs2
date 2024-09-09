@@ -1,6 +1,6 @@
-import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity } from '../../sql-db-entities';
-import { PaymentEntity } from '../../sql-db-entities/payment';
+import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, FacilityUtilisationDataEntity, PaymentEntity } from '../../sql-db-entities';
 import { Currency, FeeRecordStatus } from '../../types';
+import { FacilityUtilisationDataEntityMockBuilder } from './facility-utilisation-data.entity.mock-builder';
 
 export class FeeRecordEntityMockBuilder {
   private readonly feeRecord: FeeRecordEntity;
@@ -18,7 +18,8 @@ export class FeeRecordEntityMockBuilder {
     };
 
     data.id = 1;
-    data.facilityId = '123456789';
+    data.facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId('12345678').build();
+    data.facilityId = '12345678';
     data.report = report;
     data.exporter = 'test exporter';
     data.baseCurrency = 'GBP';
@@ -46,6 +47,13 @@ export class FeeRecordEntityMockBuilder {
 
   public withFacilityId(facilityId: string): FeeRecordEntityMockBuilder {
     this.feeRecord.facilityId = facilityId;
+    this.feeRecord.facilityUtilisationData.id = facilityId;
+    return this;
+  }
+
+  public withFacilityUtilisationData(facilityUtilisationData: FacilityUtilisationDataEntity): FeeRecordEntityMockBuilder {
+    this.feeRecord.facilityUtilisationData = facilityUtilisationData;
+    this.feeRecord.facilityId = facilityUtilisationData.id;
     return this;
   }
 

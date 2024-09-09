@@ -6,6 +6,7 @@ const $ = require('mongo-dot-notation');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findOneDeal, findOneGefDeal } = require('../../portal/deal/get-deal.controller');
 const tfmController = require('./tfm-get-deal.controller');
+const { TfmFacilitiesRepo } = require('../../../../repositories/tfm-facilities-repo');
 
 const { findAllFacilitiesByDealId } = require('../../portal/facility/get-facilities.controller');
 const { findAllGefFacilitiesByDealId } = require('../../portal/gef-facility/get-facilities.controller');
@@ -75,31 +76,23 @@ const createFacilitiesSnapshot = async (deal, auditDetails) => {
       dealFacilities = await findAllGefFacilitiesByDealId(dealId);
     }
 
-    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
-
     const submissionCount = getSubmissionCount(deal);
 
     const tfmInit = submissionCount === 1 ? { tfm: DEFAULTS.FACILITY_TFM } : null;
 
     if (dealFacilities) {
       const updatedFacilities = Promise.all(
-        dealFacilities.map(async (facility) =>
-          collection.findOneAndUpdate(
-            {
-              _id: { $eq: ObjectId(facility._id) },
-            },
-            $.flatten({
-              facilitySnapshot: facility,
-              ...tfmInit,
-              auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-            }),
-            {
-              returnNewDocument: true,
-              returnDocument: 'after',
-              upsert: true,
-            },
-          ),
-        ),
+        dealFacilities.map(async (facility) => {
+          const update = $.flatten({
+            facilitySnapshot: facility,
+            ...tfmInit,
+            auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+          });
+          return await TfmFacilitiesRepo.findOneByIdAndUpdate(facility._id, update, {
+            returnDocument: 'after',
+            upsert: true,
+          });
+        }),
       );
 
       return updatedFacilities;

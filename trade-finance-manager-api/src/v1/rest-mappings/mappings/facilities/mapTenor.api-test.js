@@ -1,5 +1,6 @@
 const mapTenor = require('./mapTenor');
 const { FACILITY_TYPE } = require('../../../../constants/facilities');
+const { AMENDMENT_STATUS } = require('../../../../constants/deals');
 
 describe('mapTenor()', () => {
   const coverEndDateUnix = 1658403289;
@@ -91,6 +92,7 @@ describe('mapTenor()', () => {
 
   it('should return tenor from GEF amendment when completed amendment exists', () => {
     mockGefFacility.amendments[0] = {
+      status: AMENDMENT_STATUS.COMPLETED,
       tfm: {
         ...mockAmendmentDateResponse,
       },

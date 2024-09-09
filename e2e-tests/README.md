@@ -32,9 +32,11 @@ npm run start
 ### **Running the E2E tests using the GUI**
 
 To run a suite the tests using the Cypress GUI (graphical user interface), where you see the tests happen real-time on a browser window, use:
+
 ```shell
 npx cypress open --project ./{service name}
 ```
+
 e.g. `npx cypress open --project ./gef`
 
 This mode is helpful for live debugging.

@@ -1,6 +1,7 @@
 const { format, fromUnixTime, set } = require('date-fns');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const { formatYear } = require('../../../../utils/date');
+const { AMENDMENT_STATUS } = require('../../../../constants/deals');
 
 describe('mapCoverEndDate', () => {
   it('should return formatted cover end date', () => {
@@ -93,6 +94,7 @@ describe('mapCoverEndDate', () => {
       const mockFacility = {
         amendments: [
           {
+            status: AMENDMENT_STATUS.COMPLETED,
             tfm: {
               coverEndDate: coverEndDateUnix,
             },

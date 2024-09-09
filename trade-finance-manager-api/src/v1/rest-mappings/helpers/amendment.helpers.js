@@ -1,7 +1,9 @@
 const { CURRENCY } = require('@ukef/dtfs2-common');
+const { orderBy } = require('lodash');
 const { formattedNumber } = require('../../../utils/number');
 const { decimalsCount, roundNumber } = require('../../helpers/number');
 const isValidFacility = require('./isValidFacility.helper');
+const { AMENDMENT_STATUS } = require('../../../constants/deals');
 
 // returns the formatted amendment value and currency (without conversion)
 const amendmentChangeValueExportCurrency = (amendment) => {
@@ -62,21 +64,67 @@ const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
   return null;
 };
 
-// returns tfm object from latest amendment if it exists or null
+/**
+ * @typedef {object} LatestCompletedAmendment
+ * @property {{ currency: import('@ukef/dtfs2-common').Currency, value: number }} [value]
+ * @property {import('@ukef/dtfs2-common').UnixTimestamp} [coverEndDate]
+ * @property {number} [amendmentExposurePeriodInMonths]
+ * @property {{ exposure: number, timestamp: import('@ukef/dtfs2-common').UnixTimestamp }} [exposure]
+ */
+
+/**
+ * Get the latest completed amendment values
+ * @param {Record<string, unknown>[]} amendments
+ * @returns {LatestCompletedAmendment}
+ */
 const findLatestCompletedAmendment = (amendments) => {
   if (!amendments) {
-    return null;
-  }
-  // array reversed to get the latest amendment
-  const amendmentsReversed = [...amendments].reverse();
-  // reversed array checked for first tfm object and is returned
-  const tfmAmendmentObject = amendmentsReversed.find((amendment) => amendment.tfm);
-
-  if (tfmAmendmentObject) {
-    return tfmAmendmentObject.tfm;
+    return {};
   }
 
-  return null;
+  const completedAmendments = amendments.filter(({ status }) => status === AMENDMENT_STATUS.COMPLETED);
+  const sortedAmendments = orderBy(completedAmendments, ['updatedAt', 'version'], ['desc', 'asc']);
+
+  /**
+   * The amended coverEndDate can come both from 'amendment' or
+   * 'amendment.tfm'. Preference is given to the value coming from
+   * 'amendment.tfm', but it is set to the value from 'amendment'
+   * if any amendment 'tfm' object does not contain a coverEndDate
+   */
+  let amendmentTfmCoverEndDate;
+  let amendmentCoverEndDate;
+
+  /**
+   * @type {LatestCompletedAmendment}
+   */
+  const latestAmendmentValues = sortedAmendments.reduce((updatedFields, amendment) => {
+    if (!amendment.tfm) {
+      return updatedFields;
+    }
+
+    const existingUpdatedFields = { ...updatedFields };
+
+    if (!updatedFields.value) {
+      existingUpdatedFields.value = amendment.tfm.value;
+    }
+    if (!updatedFields.amendmentExposurePeriodInMonths) {
+      existingUpdatedFields.amendmentExposurePeriodInMonths = amendment.tfm.amendmentExposurePeriodInMonths;
+    }
+    if (!updatedFields.exposure) {
+      existingUpdatedFields.exposure = amendment.tfm.exposure;
+    }
+
+    if (!amendmentTfmCoverEndDate) {
+      amendmentTfmCoverEndDate = amendment.tfm.coverEndDate;
+    }
+    if (!amendmentCoverEndDate) {
+      amendmentCoverEndDate = amendment.coverEndDate;
+    }
+
+    return existingUpdatedFields;
+  }, {});
+  latestAmendmentValues.coverEndDate = amendmentTfmCoverEndDate ?? amendmentCoverEndDate;
+  return latestAmendmentValues;
 };
 
 // calculates the value for total exposure to return for a single amendment

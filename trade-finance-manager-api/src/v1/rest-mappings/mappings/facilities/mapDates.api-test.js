@@ -3,6 +3,7 @@ const mapDates = require('./mapDates');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const mapTenorDate = require('./mapTenorDate');
 const { FACILITIES } = require('../../../../constants');
+const { AMENDMENT_STATUS } = require('../../../../constants/deals');
 
 describe('mapDates', () => {
   const mockCoverEndDate = {
@@ -114,6 +115,7 @@ describe('mapDates', () => {
 
     mockFacility.amendments = [
       {
+        status: AMENDMENT_STATUS.COMPLETED,
         tfm: {
           coverEndDate: coverEndDateUnix,
           amendmentExposurePeriodInMonths: amendmentTenorPeriod,

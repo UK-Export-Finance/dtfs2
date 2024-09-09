@@ -7,6 +7,8 @@ import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 
+console.error = jest.fn();
+
 const getUrl = (id: string) => `/v1/utilisation-reports/${id}`;
 
 type UtilisationReportResponse = GetUtilisationReportResponse & {

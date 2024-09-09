@@ -9,10 +9,10 @@ const mapFacilityValue = (currencyId, value, facility) => {
     // if there are amendments in facility
     if (facility?.amendments?.length) {
       const { exchangeRate } = facilityTfm;
-      const latestAmendmentTFM = findLatestCompletedAmendment(facility.amendments);
+      const { value: latestAmendmentValue } = findLatestCompletedAmendment(facility.amendments);
       // if latest completed amendment contains value
-      if (latestAmendmentTFM?.value) {
-        const valueInGBP = calculateNewFacilityValue(exchangeRate, latestAmendmentTFM.value);
+      if (latestAmendmentValue) {
+        const valueInGBP = calculateNewFacilityValue(exchangeRate, latestAmendmentValue);
         return `${CURRENCY.GBP} ${formattedNumber(valueInGBP)}`;
       }
     }

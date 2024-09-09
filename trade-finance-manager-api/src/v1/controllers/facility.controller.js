@@ -45,7 +45,7 @@ const getFacilities = async (req, res) => {
         facility.ukefFacilityId = '-';
       }
 
-      const latestCompletedAmendment = findLatestCompletedAmendment(dbFacility?.amendments);
+      const { value: latestAmendmentValue, coverEndDate: latestAmendmentCoverEndDate } = findLatestCompletedAmendment(dbFacility?.amendments);
       let facilityCoverEndDate = '';
       let facilityCoverEndDateEpoch = '';
 
@@ -58,18 +58,17 @@ const getFacilities = async (req, res) => {
       let facilityCurrencyAndValue = `${facility.currency} ${commaNumber(facility.value)}`;
       let facilityValue = parseInt(facility.value, 10);
 
-      if (latestCompletedAmendment?.value) {
-        const { value, currency } = latestCompletedAmendment.value;
+      if (latestAmendmentValue) {
+        const { value, currency } = latestAmendmentValue;
         const formattedFacilityValue = formatFacilityValue(value);
         facilityCurrencyAndValue = `${currency} ${commaNumber(formattedFacilityValue)}`;
         facilityValue = parseInt(value, 10);
       }
 
-      if (latestCompletedAmendment?.coverEndDate) {
-        const { coverEndDate } = latestCompletedAmendment;
+      if (latestAmendmentCoverEndDate) {
         // * 1000 to convert to ms epoch time format so can be correctly formatted by template
-        facilityCoverEndDate = format(new Date(coverEndDate * 1000), 'dd MMM yyyy');
-        facilityCoverEndDateEpoch = coverEndDate;
+        facilityCoverEndDate = format(new Date(latestAmendmentCoverEndDate * 1000), 'dd MMM yyyy');
+        facilityCoverEndDateEpoch = latestAmendmentCoverEndDate;
       }
 
       facility.coverEndDate = facilityCoverEndDate;

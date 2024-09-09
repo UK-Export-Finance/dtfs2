@@ -1,6 +1,7 @@
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const mapFacilityValue = require('./mapFacilityValue');
 const { formattedNumber } = require('../../../../utils/number');
+const { AMENDMENT_STATUS } = require('../../../../constants/deals');
 
 describe('mapFacilityValue', () => {
   describe('when no facility provided', () => {
@@ -81,12 +82,16 @@ describe('mapFacilityValue', () => {
     it('should add amendment facility value when amendment complete', () => {
       const amendmentValue = 2000;
 
-      mockFacility.amendments[0].tfm = {
-        value: {
-          value: amendmentValue,
-          currency: CURRENCY.GBP,
+      mockFacility.amendments[0] = {
+        status: AMENDMENT_STATUS.COMPLETED,
+        tfm: {
+          value: {
+            value: amendmentValue,
+            currency: CURRENCY.GBP,
+          },
         },
       };
+
       const result = mapFacilityValue(mockFacility.currency.id, mockFacility.value, mockFacility);
 
       const expected = `${CURRENCY.GBP} ${formattedNumber(amendmentValue)}`;

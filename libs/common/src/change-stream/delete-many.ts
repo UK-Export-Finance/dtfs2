@@ -1,7 +1,7 @@
 import 'dotenv/config.js';
-import type { Filter, TransactionOptions, WithoutId } from 'mongodb';
+import { DeleteResult, Filter, ObjectId, TransactionOptions, WithoutId } from 'mongodb';
 import { add } from 'date-fns';
-import type { AuditDetails, DeletionAuditLog, MongoDbCollectionName } from '../types';
+import { AuditDetails, DbModel, DeletionAuditLog, MongoDbCollectionName } from '../types';
 import { MongoDbClient } from '../mongo-db-client';
 import { generateAuditDatabaseRecordFromAuditDetails } from './generate-audit-database-record';
 import { changeStreamConfig } from './config';
@@ -9,9 +9,9 @@ import { DocumentNotFoundError, WriteConcernError } from '../errors';
 
 const { DELETION_AUDIT_LOGS_TTL_SECONDS } = changeStreamConfig;
 
-type DeleteManyParams = {
-  filter: Filter<any>;
-  collectionName: MongoDbCollectionName;
+type DeleteManyParams<CollectionName extends MongoDbCollectionName> = {
+  filter: Filter<WithoutId<DbModel<CollectionName>>>;
+  collectionName: CollectionName;
   db: MongoDbClient;
   auditDetails: AuditDetails;
 };
@@ -20,7 +20,12 @@ type DeleteManyParams = {
  * @throws {DocumentNotFoundError} - if there are no documents matching the filter to delete
  * @throws {WriteConcernError} - if either the deletion-audit-log insertion or document deletion operations are not acknowledged
  */
-const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetails }: DeleteManyParams) => {
+const deleteManyWithAuditLogs = async <CollectionName extends MongoDbCollectionName>({
+  filter,
+  collectionName,
+  db,
+  auditDetails,
+}: DeleteManyParams<CollectionName>): Promise<DeleteResult> => {
   const client = await db.getClient();
   const session = client.startSession();
 
@@ -29,9 +34,15 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
       readConcern: { level: 'snapshot' },
       writeConcern: { w: 'majority' },
     };
+
+    let transactionDeleteResult: DeleteResult = { deletedCount: 0, acknowledged: false };
     await session.withTransaction(async () => {
       const collection = await db.getCollection(collectionName);
-      const documentsToDeleteIds = (await collection.find(filter, { projection: { _id: true }, session }).toArray()).map(({ _id }) => _id);
+      const documentsToDeleteIds = await collection
+        .find(filter, { session })
+        .project<{ _id: ObjectId }>({ _id: 1 })
+        .map(({ _id }) => _id)
+        .toArray();
 
       if (!documentsToDeleteIds.length) {
         throw new DocumentNotFoundError();
@@ -50,11 +61,16 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
         throw new WriteConcernError();
       }
 
-      const deleteResult = await collection.deleteMany({ _id: { $in: documentsToDeleteIds } }, { session });
+      const deleteManyFilter = {
+        _id: { $in: documentsToDeleteIds },
+      } as unknown as Filter<WithoutId<DbModel<CollectionName>>>;
+      const deleteResult = await collection.deleteMany(deleteManyFilter, { session });
       if (!(deleteResult.acknowledged && deleteResult.deletedCount === documentsToDeleteIds.length)) {
         throw new WriteConcernError();
       }
+      transactionDeleteResult = { ...deleteResult };
     }, transactionOptions);
+    return transactionDeleteResult;
   } catch (error) {
     console.error(`Failed to delete many from collection ${collectionName} with filter ${JSON.stringify(filter)}, rolling back changes.`);
     throw error;
@@ -68,17 +84,20 @@ const deleteManyWithAuditLogs = async ({ filter, collectionName, db, auditDetail
  * @throws {DocumentNotFoundError} - if there are no documents matching the filter to delete
  * @throws {WriteConcernError} - if either the deletion-audit-log insertion or document deletion operations are not acknowledged
  */
-export const deleteMany = async ({ filter, collectionName, db, auditDetails }: DeleteManyParams): Promise<{ acknowledged: boolean }> => {
+export const deleteMany = async <CollectionName extends MongoDbCollectionName>({
+  filter,
+  collectionName,
+  db,
+  auditDetails,
+}: DeleteManyParams<CollectionName>): Promise<DeleteResult> => {
   if (process.env.CHANGE_STREAM_ENABLED === 'true') {
-    await deleteManyWithAuditLogs({
+    return await deleteManyWithAuditLogs({
       filter,
       collectionName,
       db,
       auditDetails,
     });
-
-    return { acknowledged: true };
   }
   const collection = await db.getCollection(collectionName);
-  return collection.deleteMany(filter);
+  return await collection.deleteMany(filter);
 };

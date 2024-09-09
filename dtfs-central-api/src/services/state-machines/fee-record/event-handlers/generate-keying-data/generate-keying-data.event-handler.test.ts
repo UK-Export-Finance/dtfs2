@@ -1,5 +1,12 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  DbRequestSource,
+  FacilityUtilisationDataEntityMockBuilder,
+  FEE_RECORD_STATUS,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { handleFeeRecordGenerateKeyingDataEvent } from './generate-keying-data.event-handler';
 
 describe('handleFeeRecordGenerateKeyingDataEvent', () => {
@@ -124,9 +131,11 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       expect(feeRecord.premiumAccrualBalanceAdjustment).toBe(10);
     });
 
-    it('sets the fee record principalBalanceAdjustment to 10', async () => {
+    it('sets the fee record principalBalanceAdjustment to the difference between the fee record utilisation and the facility utilisation data utilisation', async () => {
       // Arrange
       const feeRecord = aMatchingFeeRecord();
+      feeRecord.facilityUtilisation = 3000;
+      feeRecord.facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(feeRecord.facilityId).withUtilisation(2000).build();
 
       // Act
       await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
@@ -136,7 +145,7 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       });
 
       // Assert
-      expect(feeRecord.principalBalanceAdjustment).toBe(10);
+      expect(feeRecord.principalBalanceAdjustment).toBe(1000);
     });
   });
 

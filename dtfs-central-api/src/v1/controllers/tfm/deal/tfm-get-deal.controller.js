@@ -1,7 +1,8 @@
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const CONSTANTS = require('../../../../constants');
+const { TfmFacilitiesRepo } = require('../../../../repositories/tfm-facilities-repo');
 
 const findOneDeal = async (_id, callback) => {
   if (!ObjectId.isValid(_id)) {
@@ -9,7 +10,6 @@ const findOneDeal = async (_id, callback) => {
   }
 
   const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
-  const facilitiesCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
 
   const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
   let returnDeal = deal;
@@ -27,13 +27,7 @@ const findOneDeal = async (_id, callback) => {
         const mappedDeal = deal.dealSnapshot;
         const mappedBonds = [];
         const mappedLoans = [];
-        const facilities = await facilitiesCollection
-          .find({
-            _id: {
-              $in: facilityIds,
-            },
-          })
-          .toArray();
+        const facilities = await TfmFacilitiesRepo.findByIds(facilityIds);
 
         facilityIds.forEach((id) => {
           const { facilitySnapshot } = facilities.find((f) => f._id.toHexString() === id.toHexString());

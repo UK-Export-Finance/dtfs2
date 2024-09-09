@@ -1,5 +1,6 @@
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const amendmentHelpers = require('./amendment.helpers');
+const { AMENDMENT_STATUS } = require('../../../constants/deals');
 
 describe('amendmentChangeValueExportCurrency()', () => {
   const amendment = { currency: CURRENCY.GBP };
@@ -155,9 +156,16 @@ describe('calculateAmendmentTotalExposure()', () => {
   });
 
   it('should return exposure value when amendment completed', () => {
-    mockFacility.amendments[0].tfm = {
-      value: { ...mockAmendmentValueResponse },
-    };
+    mockFacility.amendments = [
+      {
+        updatedAt: new Date('2023-12-12').getTime(),
+        version: 0,
+        status: AMENDMENT_STATUS.COMPLETED,
+        tfm: {
+          value: { ...mockAmendmentValueResponse },
+        },
+      },
+    ];
     const result = amendmentHelpers.calculateAmendmentTotalExposure(mockFacility);
     const expected = mockAmendmentValueResponse.value * (mockFacility.facilitySnapshot.coverPercentage / 100);
     expect(result).toEqual(expected);
@@ -165,27 +173,66 @@ describe('calculateAmendmentTotalExposure()', () => {
 });
 
 describe('findLatestCompletedAmendment()', () => {
-  it('should return last tfm object in array of amendments', () => {
+  const anAmendmentTfmExposureObject = () => ({
+    exposure: 1,
+    timestamp: new Date().getTime(),
+  });
+
+  const anAmendmentTfmObject = () => ({
+    value: 1000,
+    amendmentExposurePeriodInMonths: 12,
+    exposure: anAmendmentTfmExposureObject(),
+    coverEndDate: new Date().getTime(),
+  });
+
+  const updatedAtTimestamp = timestampGenerator();
+
+  const anAmendmentWithStatus = (status) => ({
+    status,
+    updatedAt: updatedAtTimestamp.next().value,
+    version: 0,
+    tfm: anAmendmentTfmObject(),
+  });
+
+  it('should return an empty object if there are no completed amendments', () => {
+    // Arrange
     const amendments = [
-      { tfm: { value: 2000 } },
-      {
-        value: 2000,
-      },
-      {
-        tfm: { value: 5000 },
-      },
+      { ...anAmendmentWithStatus(AMENDMENT_STATUS.IN_PROGRESS) },
+      { ...anAmendmentWithStatus(AMENDMENT_STATUS.IN_PROGRESS) },
+      { ...anAmendmentWithStatus(AMENDMENT_STATUS.IN_PROGRESS) },
     ];
 
-    const response = amendmentHelpers.findLatestCompletedAmendment(amendments);
-    const expected = { value: 5000 };
+    // Act
+    const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
 
-    expect(response).toEqual(expected);
+    // Assert
+    expect(result).toEqual({});
   });
 
-  it('should return null if no tfm objects in array', () => {
-    const amendments = [{ value: 2000 }, { value: 2000 }, { value: 5000 }];
+  it('sets the tfm related fields to the latest completed amendment with a defined tfm object', () => {
+    // Arrange
+    const latestAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 3000, coverEndDate: new Date('2023-12-12').getTime() };
+    const anotherAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 1000, coverEndDate: null };
+    const amendments = [
+      { ...anAmendmentWithStatus(AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject },
+      { ...anAmendmentWithStatus(AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject },
+      { ...anAmendmentWithStatus(AMENDMENT_STATUS.COMPLETED), tfm: latestAmendmentTfmObject },
+      { ...anAmendmentWithStatus(AMENDMENT_STATUS.COMPLETED), tfm: null },
+    ];
 
-    const response = amendmentHelpers.findLatestCompletedAmendment(amendments);
-    expect(response).toBeNull();
+    // Act
+    const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+
+    // Assert
+
+    expect(result).toEqual(latestAmendmentTfmObject);
   });
+
+  function* timestampGenerator() {
+    let timestamp = new Date().getTime();
+    while (true) {
+      yield timestamp;
+      timestamp += 10000; // add 10 seconds
+    }
+  }
 });
