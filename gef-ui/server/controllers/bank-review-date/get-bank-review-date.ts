@@ -6,7 +6,7 @@ import { BankReviewDateViewModel } from '../../types/view-models/bank-review-dat
 import { asLoggedInUserSession } from '../../utils/express-session';
 import { Facility } from '../../types/facility';
 
-type GetBankReviewDateRequest = CustomExpressRequest<{ params: { dealId: string; facilityId: string }; query: { status: string | undefined } }>;
+export type GetBankReviewDateRequest = CustomExpressRequest<{ params: { dealId: string; facilityId: string }; query: { status: string | undefined } }>;
 
 type HandleGetBankReviewDateParams = {
   req: GetBankReviewDateRequest;
@@ -43,7 +43,7 @@ const getBankReviewDateViewModel = (facility: Facility, previousPage: string, st
 /**
  * Handle get bank review date requests
  */
-const getBankReviewDate = async ({ req, res, previousPage }: HandleGetBankReviewDateParams) => {
+export const getBankReviewDate = async ({ req, res, previousPage }: HandleGetBankReviewDateParams) => {
   const {
     params: { dealId, facilityId },
     query: { status },

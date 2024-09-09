@@ -1,12 +1,11 @@
 import httpMocks from 'node-mocks-http';
-import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS, aPortalSessionUser } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getPreviousReports } from '.';
 import { PRIMARY_NAV_KEY } from '../../../constants';
 import { PreviousUtilisationReportsResponseBody } from '../../../api-response-types';
 import * as mapper from './helpers/previous-reports-view-model-mapper';
 import { PreviousReportsViewModel } from '../../../types/view-models/previous-reports';
-import { aPortalSessionUser } from '../../../../test-helpers/test-data/portal-session-user';
 
 describe('previous-reports controller', () => {
   describe('getPreviousReports', () => {
