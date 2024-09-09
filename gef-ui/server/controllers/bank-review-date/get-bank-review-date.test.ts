@@ -33,48 +33,6 @@ const getHttpMocks = (status?: string) =>
   });
 
 describe('getBankReviewDate', () => {
-  it('redirects to the previous page when dealVersion is 0', async () => {
-    // Arrange
-    const { req: mockReq, res: mockRes } = getHttpMocks();
-
-    getApplicationMock.mockResolvedValueOnce({ version: 0 });
-    getFacilityMock.mockResolvedValueOnce({ details: { isUsingFacilityEndDate: false } });
-
-    // Act
-    await getBankReviewDate({ req: mockReq, res: mockRes, previousPage });
-
-    // Assert
-    expect(mockRes._getRedirectUrl()).toEqual(previousPage);
-  });
-
-  it('redirects to the previous page when isUsingFacilityEndDate is null', async () => {
-    // Arrange
-    const { req: mockReq, res: mockRes } = getHttpMocks();
-
-    getApplicationMock.mockResolvedValueOnce({ version: 1 });
-    getFacilityMock.mockResolvedValueOnce({ details: { isUsingFacilityEndDate: null } });
-
-    // Act
-    await getBankReviewDate({ req: mockReq, res: mockRes, previousPage });
-
-    // Assert
-    expect(mockRes._getRedirectUrl()).toEqual(previousPage);
-  });
-
-  it('redirects to the previous page when isUsingFacilityEndDate is true', async () => {
-    // Arrange
-    const { req: mockReq, res: mockRes } = getHttpMocks();
-
-    getApplicationMock.mockResolvedValueOnce({ version: 1 });
-    getFacilityMock.mockResolvedValueOnce({ details: { isUsingFacilityEndDate: true } });
-
-    // Act
-    await getBankReviewDate({ req: mockReq, res: mockRes, previousPage });
-
-    // Assert
-    expect(mockRes._getRedirectUrl()).toEqual(previousPage);
-  });
-
   describe('when deal is version 1 and isUsingFacilityEndDate is false', () => {
     beforeEach(() => {
       getApplicationMock.mockResolvedValueOnce({ version: 1 });
@@ -128,11 +86,54 @@ describe('getBankReviewDate', () => {
     });
   });
 
+  it('redirects to the previous page when dealVersion is 0', async () => {
+    // Arrange
+    const { req: mockReq, res: mockRes } = getHttpMocks();
+
+    getApplicationMock.mockResolvedValueOnce({ version: 0 });
+    getFacilityMock.mockResolvedValueOnce({ details: { isUsingFacilityEndDate: false } });
+
+    // Act
+    await getBankReviewDate({ req: mockReq, res: mockRes, previousPage });
+
+    // Assert
+    expect(mockRes._getRedirectUrl()).toEqual(previousPage);
+  });
+
+  it('redirects to the previous page when isUsingFacilityEndDate is null', async () => {
+    // Arrange
+    const { req: mockReq, res: mockRes } = getHttpMocks();
+
+    getApplicationMock.mockResolvedValueOnce({ version: 1 });
+    getFacilityMock.mockResolvedValueOnce({ details: { isUsingFacilityEndDate: null } });
+
+    // Act
+    await getBankReviewDate({ req: mockReq, res: mockRes, previousPage });
+
+    // Assert
+    expect(mockRes._getRedirectUrl()).toEqual(previousPage);
+  });
+
+  it('redirects to the previous page when isUsingFacilityEndDate is true', async () => {
+    // Arrange
+    const { req: mockReq, res: mockRes } = getHttpMocks();
+
+    getApplicationMock.mockResolvedValueOnce({ version: 1 });
+    getFacilityMock.mockResolvedValueOnce({ details: { isUsingFacilityEndDate: true } });
+
+    // Act
+    await getBankReviewDate({ req: mockReq, res: mockRes, previousPage });
+
+    // Assert
+    expect(mockRes._getRedirectUrl()).toEqual(previousPage);
+  });
+
   it('renders problem with the service page when an error is thrown', async () => {
     // Arrange
     const { req: mockReq, res: mockRes } = getHttpMocks();
 
     getApplicationMock.mockRejectedValueOnce(new Error('An error occurred'));
+    getFacilityMock.mockRejectedValueOnce(new Error('An error occurred'));
 
     // Act
     await getBankReviewDate({ req: mockReq, res: mockRes, previousPage });

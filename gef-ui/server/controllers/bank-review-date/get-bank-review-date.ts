@@ -20,7 +20,7 @@ type HandleGetBankReviewDateParams = {
  * @param status - the query parameter status
  * @returns view model for the bank review date template
  */
-const getBankReviewDateViewModel = (facility: Facility, previousPage: string, status?: string): BankReviewDateViewModel => {
+export const getBankReviewDateViewModel = (facility: Facility, previousPage: string, status?: string): BankReviewDateViewModel => {
   const bankReviewDateViewModel: BankReviewDateViewModel = {
     dealId: facility.dealId,
     facilityId: facility._id,
