@@ -13,6 +13,11 @@ const mapDates = require('./mapDates');
 const mapUkefExposureValue = require('./mapUkefExposureValue');
 const mapFacilityValueExportCurrency = require('./mapFacilityValueExportCurrency');
 
+/**
+ * Maps existing facility to the facility used in TFM API.
+ * Note: This implimentation is called where it modifies the facility snapshot
+ * to have values not consistent with the facility snapshot in the database.
+ */
 const mapFacility = (f, facilityTfm, dealDetails, facilityFull) => {
   // Ensure facility is valid
   if (!f) {
@@ -36,6 +41,7 @@ const mapFacility = (f, facilityTfm, dealDetails, facilityFull) => {
 
   const mapped = {
     _id: facility._id,
+    isGef: false,
     dealId: facility.dealId,
     ukefFacilityId: facility.ukefFacilityId,
 

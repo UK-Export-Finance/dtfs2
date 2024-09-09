@@ -107,6 +107,6 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
         requestSource,
       });
     });
-    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, createdFacilityUtilisationDataEntities);
+    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, createdFacilityUtilisationDataEntities, { chunk: 100 });
   });
 });

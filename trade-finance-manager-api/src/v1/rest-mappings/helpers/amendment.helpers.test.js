@@ -256,7 +256,7 @@ describe('findLatestCompletedAmendment()', () => {
     });
   });
 
-  describe('when Facility end date feature flag enabled', () => {
+  describe('when Facility end date feature flag is enabled', () => {
     beforeAll(() => {
       jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
     });

@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { ApiError, Currency } from '@ukef/dtfs2-common';
+import { Currency, TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostPaymentRequest, postPayment } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
@@ -12,12 +12,6 @@ import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 jest.mock('./helpers');
 
 console.error = jest.fn();
-
-class TestApiError extends ApiError {
-  constructor(status?: number, message?: string) {
-    super({ status: status ?? 500, message: message ?? '' });
-  }
-}
 
 describe('post-payment.controller', () => {
   describe('postPayment', () => {
@@ -95,7 +89,7 @@ describe('post-payment.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      const errorStatus = 404;
+      const errorStatus = HttpStatusCode.NotFound;
       jest.mocked(addPaymentToUtilisationReport).mockRejectedValue(new TestApiError(errorStatus, undefined));
 
       // Act
@@ -123,7 +117,7 @@ describe('post-payment.controller', () => {
       expect(res._getData()).toBe(`Failed to add a new payment: ${errorMessage}`);
     });
 
-    it("responds with a '500' if an unknown error occurs", async () => {
+    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
       // Arrange
       const req = httpMocks.createRequest<PostPaymentRequest>({
         params: aValidRequestQuery(),

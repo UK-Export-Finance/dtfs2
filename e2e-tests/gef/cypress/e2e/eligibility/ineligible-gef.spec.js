@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { mainHeading, backLink } from '../partials';
 import ineligibleGef from '../pages/ineligible-gef';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -14,15 +15,15 @@ context('Ineligible GEF Page', () => {
 
   describe('Visiting page', () => {
     it('displays the correct elements', () => {
-      ineligibleGef.mainHeading();
+      mainHeading();
       ineligibleGef.content();
-      ineligibleGef.backLink();
+      backLink();
     });
   });
 
   describe('Clicking on Back Button', () => {
     it('redirects user to the applications and notices page', () => {
-      ineligibleGef.backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
   });

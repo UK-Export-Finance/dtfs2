@@ -31,11 +31,11 @@ context('Exporters Address Page - Add element to page', () => {
 
     // adds populated text element to form
     cy.insertElement('separate-correspondence-form');
-    exportersAddress.continueButton().click();
+    cy.clickContinueButton();
 
     selectExportersCorAddress.selectAddress().select('0');
-    selectExportersCorAddress.continueButton().click();
-    selectExportersCorAddress.continueButton().click();
+    cy.clickContinueButton();
+    cy.clickContinueButton();
 
     cy.getApplicationById(dealId).then((deal) => {
       // checks extra field has not been added to the exporter correspondenceAddress object

@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { ApiError, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { aTfmSessionUser } from '../../../../../test-helpers';
@@ -14,12 +14,6 @@ jest.mock('../../../../helpers');
 jest.mock('../../../../services/state-machines/utilisation-report/utilisation-report.state-machine');
 
 console.error = jest.fn();
-
-class TestApiError extends ApiError {
-  constructor(status?: number, message?: string) {
-    super({ status: status ?? 500, message: message ?? '' });
-  }
-}
 
 describe('put-keying-data-mark-as-to-do.controller', () => {
   describe('putKeyingDataMarkAsToDo', () => {
@@ -94,7 +88,7 @@ describe('put-keying-data-mark-as-to-do.controller', () => {
       expect(res._getData()).toBe(`Failed to mark keying data with fee record ids ${feeRecordId} from report with id ${reportId} as TO DO: ${errorMessage}`);
     });
 
-    it("responds with a '500' if an unknown error occurs", async () => {
+    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
       // Arrange
       const req = httpMocks.createRequest<PutKeyingDataMarkToDoRequest>({
         params: aValidRequestQuery(),
