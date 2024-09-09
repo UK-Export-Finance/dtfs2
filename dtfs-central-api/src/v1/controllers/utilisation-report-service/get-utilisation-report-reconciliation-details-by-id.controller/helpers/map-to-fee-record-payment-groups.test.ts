@@ -1,5 +1,6 @@
 import { when } from 'jest-when';
 import {
+  CURRENCY,
   Currency,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
@@ -215,16 +216,35 @@ describe('mapToFeeRecordPaymentGroups', () => {
 
     it('sets the totalReportedPayments to the total of the fee record reported payments', async () => {
       // Arrange
+      const testValues = {
+        feeRecordOne: {
+          feesPaidToUkefForThePeriod: 100,
+          paymentCurrency: CURRENCY.GBP,
+          feesPaidToUkefForThePeriodCurrency: CURRENCY.GBP,
+        },
+        feeRecordTwo: {
+          feesPaidToUkefForThePeriod: 400,
+          paymentCurrency: CURRENCY.GBP,
+          feesPaidToUkefForThePeriodCurrency: CURRENCY.JPY,
+          paymentExchangeRate: 2,
+        },
+        // Fee record one has it's fees paid currency matching the payment currency so reported fee is just 100
+        // Fee record two has it's fees paid in a different currency to payment currency so we should convert
+        // So fee record two's reported fee = 400 / 2 = 200
+        // So the total = 100 + 200 = 300
+        expectedTotalReportedPaymentAmount: 300,
+      };
+
       const feeRecordOne = FeeRecordEntityMockBuilder.forReport(utilisationReport())
-        .withFeesPaidToUkefForThePeriod(100)
-        .withFeesPaidToUkefForThePeriodCurrency('GBP')
-        .withPaymentCurrency('GBP')
+        .withFeesPaidToUkefForThePeriod(testValues.feeRecordOne.feesPaidToUkefForThePeriod)
+        .withFeesPaidToUkefForThePeriodCurrency(testValues.feeRecordOne.feesPaidToUkefForThePeriodCurrency)
+        .withPaymentCurrency(testValues.feeRecordOne.paymentCurrency)
         .build();
       const feeRecordTwo = FeeRecordEntityMockBuilder.forReport(utilisationReport())
-        .withFeesPaidToUkefForThePeriod(400)
-        .withFeesPaidToUkefForThePeriodCurrency('JPY')
-        .withPaymentCurrency('GBP')
-        .withPaymentExchangeRate(2)
+        .withFeesPaidToUkefForThePeriod(testValues.feeRecordTwo.feesPaidToUkefForThePeriod)
+        .withFeesPaidToUkefForThePeriodCurrency(testValues.feeRecordTwo.feesPaidToUkefForThePeriodCurrency)
+        .withPaymentCurrency(testValues.feeRecordTwo.paymentCurrency)
+        .withPaymentExchangeRate(testValues.feeRecordTwo.paymentExchangeRate)
         .build();
       const group: FeeRecordPaymentEntityGroup = {
         feeRecords: [feeRecordOne, feeRecordTwo],
@@ -235,9 +255,7 @@ describe('mapToFeeRecordPaymentGroups', () => {
       const result = await mapToFeeRecordPaymentGroups([group]);
 
       // Assert
-      // 100 + 400 / 2 = 100 + 200 = 300
-      const expectedTotalReportedPaymentAmount = 300;
-      expect(result[0].totalReportedPayments).toEqual({ currency: 'GBP', amount: expectedTotalReportedPaymentAmount });
+      expect(result[0].totalReportedPayments).toEqual({ currency: 'GBP', amount: testValues.expectedTotalReportedPaymentAmount });
     });
 
     it('returns the group with as many paymentsReceived as there are payments in the supplied group', async () => {
