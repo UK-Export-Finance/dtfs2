@@ -6,4 +6,5 @@ module.exports = {
   coverageReporters: ['text', 'text-summary'],
   testMatch: ['**/*.test.{js,ts}', '**/*.component-test.{js,ts}'],
   modulePathIgnorePatterns: ['prototype'],
+  testEnvironment: 'jsdom',
 };
