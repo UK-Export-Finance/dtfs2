@@ -431,11 +431,11 @@ const getAuthLogoutUrl = async (token) => {
 /**
  * processSsoRedirect
  * Process SSO redirect via TFM API
- * @param {Object} pkceCodes: PKCE Codes object
- * @param {Object} authCodeUrlRequest: Auth code URL request
- * @param {Object} authCodeRequest: Auth code request
- * @param {String} code: authZ code
- * @param {String} state: MSAL state guid
+ * @param {Object} pkceCodes PKCE Codes object
+ * @param {Object} authCodeUrlRequest Auth code URL request
+ * @param {Object} authCodeRequest Auth code request
+ * @param {String} code authZ code
+ * @param {String} state MSAL state guid
  * @returns {Promise<Object>}
  */
 const processSsoRedirect = async ({ pkceCodes, authCodeUrlRequest, authCodeRequest, code, state }) => {

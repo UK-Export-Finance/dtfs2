@@ -24,11 +24,11 @@ module.exports = {
   /**
    * createTasks
    * Create tasks that can be executed when running E2E tests.
-   * @param {string} dbName: Database name
-   * @param {string} dbConnectionString: Database connection string
-   * @param {string} redisHost: Redis host address
-   * @param {string} redisPort: Redis port number
-   * @param {string} redisKey: Redis key
+   * @param {string} dbName Database name
+   * @param {string} dbConnectionString Database connection string
+   * @param {string} redisHost Redis host address
+   * @param {string} redisPort Redis port number
+   * @param {string} redisKey Redis key
    * @returns {object} Various tasks
    */
   createTasks: ({ dbName, dbConnectionString, redisHost, redisPort, redisKey }) => {
@@ -140,10 +140,10 @@ module.exports = {
     /**
      * overrideRedisUserSession
      * Override a redis user session.
-     * @param {string} sessionIdentifier: Redis session identifier
-     * @param {object} tfmUser: New session identifier value
-     * @param {string} userToken: TFM token string value
-     * @param {number} maxAge: Session age
+     * @param {string} sessionIdentifier Redis session identifier
+     * @param {object} tfmUser New session identifier value
+     * @param {string} userToken TFM token string value
+     * @param {number} maxAge Session age
      * @returns {Promise<boolean>}
      */
     const overrideRedisUserSession = async ({ sessionIdentifier, tfmUser, userToken, maxAge }) => {

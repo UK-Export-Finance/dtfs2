@@ -58,10 +58,10 @@ export const createLoggedInUserSession = async (user: PortalUser): Promise<strin
  * Creates a user session for a successfully logged-in user, updating the session identifier in the database
  * and generating a valid JWT token for two-factor authentication (2FA).
  *
- * @param  user - The user object representing the successfully logged-in user.
- * @returns  A promise that resolves to a string containing the JWT token with "Bearer" prefix,
- *                           representing the user's authenticated 2FA session.
- * @throws  Throws an error if there is a failure in creating the user session.
+ * @param  user The user object representing the successfully logged-in user.
+ * @returns {Promise<string|false>} A promise that resolves to a string containing the JWT token with "Bearer" prefix,
+ *                                    representing the user's authenticated 2FA session.
+ * @throws Throws an error if there is a failure in creating the user session.
  */
 export const createLoggedInTfmUserSession = async (user: TfmUser) => {
   try {
