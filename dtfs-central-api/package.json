@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@ukef/dtfs2-common": "1.0.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "big.js": "^6.2.1",
     "compression": "^1.7.4",
     "date-fns": "^2.30.0",
