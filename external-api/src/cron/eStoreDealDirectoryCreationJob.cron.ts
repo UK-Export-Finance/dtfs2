@@ -94,6 +94,17 @@ export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promis
 
       // Initiate facility directory creation
       await eStoreFacilityDirectoryCreationJob(eStoreData);
+    } else if (response?.status === Number(HttpStatusCode.BadRequest)) {
+      // Buyer directory creation still in progress
+      console.info('⚡ CRON: eStore buyer directory %s creation is still in progress for deal %s', buyerName, dealIdentifier);
+
+      // Update status
+      await EstoreRepo.updateByDealId(dealId, {
+        'cron.deal': {
+          status: ESTORE_CRON_STATUS.RUNNING,
+          timestamp: getNowAsEpoch(),
+        },
+      });
     } else {
       throw new Error(`eStore deal directory creation has failed for deal ${dealIdentifier} ${JSON.stringify(response)}`);
     }

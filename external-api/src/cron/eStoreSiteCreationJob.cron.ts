@@ -35,7 +35,6 @@ import { getNowAsEpoch } from '../helpers/date';
 export const eStoreSiteCreationCronJob = async (eStoreData: Estore): Promise<void> => {
   try {
     const data = cloneDeep(eStoreData);
-    const now = new Date().toISOString();
 
     const invalidParams = !eStoreData?.dealId || !eStoreData?.exporterName || !eStoreData.dealIdentifier;
 
@@ -58,7 +57,7 @@ export const eStoreSiteCreationCronJob = async (eStoreData: Estore): Promise<voi
 
     // Site has been created
     if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
-      console.info('⚡ CRON: eStore site %s has been created successfully for deal %s %s', siteExistsResponse.data.siteId, dealIdentifier, now);
+      console.info('⚡ CRON: eStore site %s has been created successfully for deal %s', siteExistsResponse.data.siteId, dealIdentifier);
 
       data.siteId = String(siteExistsResponse.data.siteId);
 
@@ -89,7 +88,7 @@ export const eStoreSiteCreationCronJob = async (eStoreData: Estore): Promise<voi
       await eStoreTermStoreCreationJob(data);
     } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
       // Site is still being provisioned
-      console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s %s', siteExistsResponse.data.siteId, dealIdentifier, now);
+      console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s', siteExistsResponse.data.siteId, dealIdentifier);
 
       // Update status
       await EstoreRepo.updateByDealId(dealId, {

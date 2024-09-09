@@ -61,7 +61,7 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
     });
 
     // Create the facility directory
-    const response: FacilityFolderResponse[] | EstoreErrorResponse[] = await Promise.all(
+    const responses: FacilityFolderResponse[] | EstoreErrorResponse[] = await Promise.all(
       facilityIdentifiers.map((facilityIdentifier: number) =>
         createFacilityFolder(siteId, dealIdentifier, {
           facilityIdentifier,
@@ -72,7 +72,7 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
     );
 
     // Validate each and every response status code
-    if (response.every((facility) => ACCEPTABLE_STATUSES.includes(facility?.status))) {
+    if (responses.every((facility) => ACCEPTABLE_STATUSES.includes(facility?.status))) {
       console.info('Facility %s directory has been created for deal %s', facilityIdentifiers, dealIdentifier);
 
       // Update `cron-job-logs`
@@ -91,8 +91,19 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
       });
 
       // Initiate document upload
+    } else if (responses.some((response) => response?.status === Number(HttpStatusCode.BadRequest))) {
+      // Deal directory creation is still being provisioned
+      console.info('⚡ CRON: eStore deal directory %s creation is still in progress for deal %s', dealIdentifier, dealIdentifier);
+
+      // Update status
+      await EstoreRepo.updateByDealId(dealId, {
+        'cron.facility': {
+          status: ESTORE_CRON_STATUS.RUNNING,
+          timestamp: getNowAsEpoch(),
+        },
+      });
     } else {
-      throw new Error(`eStore facility directory creation has failed for deal ${dealIdentifier} ${JSON.stringify(response)}`);
+      throw new Error(`eStore facility directory creation has failed for deal ${dealIdentifier} ${JSON.stringify(responses)}`);
     }
   } catch (error) {
     // Update `cron-job-logs`
