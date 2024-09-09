@@ -736,7 +736,6 @@ describe('controllers - case', () => {
           allAmendments: expect.any(Array),
           amendmentsInProgress: expect.any(Array),
           amendments: expect.any(Array),
-          isTfmFacilityEndDateFeatureFlagEnabled: false,
           showFacilityEndDate: false,
         });
       });
