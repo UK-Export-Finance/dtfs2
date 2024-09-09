@@ -11,7 +11,7 @@ import { Facility } from '../../types/facility';
 
 type BankReviewDatePostBody = { 'bank-review-date-day': string; 'bank-review-date-month': string; 'bank-review-date-year': string };
 
-type PostBankReviewDateRequest = CustomExpressRequest<{
+export type PostBankReviewDateRequest = CustomExpressRequest<{
   reqBody: BankReviewDatePostBody;
   params: { dealId: string; facilityId: string };
   query: { saveAndReturn: string; status: string | undefined };
@@ -34,8 +34,13 @@ type PostBankReviewDateParams = {
  * @param existingFacility the current facility from the api
  * @param bankReviewDate the new bank review date
  * @param session the user session
+ * @protected this function is exported for unit testing only. If it is used elsewhere it should be moved to a suitable commonised helper file
  */
-const updateBankReviewDateIfChanged = async (existingFacility: Facility, bankReviewDate: Date, { userToken, user }: LoggedInUserSession): Promise<void> => {
+export const updateBankReviewDateIfChanged = async (
+  existingFacility: Facility,
+  bankReviewDate: Date,
+  { userToken, user }: LoggedInUserSession,
+): Promise<void> => {
   const bankReviewDateNeedsUpdating =
     typeof existingFacility.bankReviewDate !== 'string' || !isSameDay(parseISO(existingFacility.bankReviewDate), bankReviewDate);
 
@@ -60,8 +65,9 @@ const updateBankReviewDateIfChanged = async (existingFacility: Facility, bankRev
 
 /**
  * Handle the bank review date request
+ * @protected this function is exported for unit testing only
  */
-const postBankReviewDate = async ({ req, res, uris }: PostBankReviewDateParams) => {
+export const postBankReviewDate = async ({ req, res, uris }: PostBankReviewDateParams) => {
   try {
     const {
       params: { dealId, facilityId },

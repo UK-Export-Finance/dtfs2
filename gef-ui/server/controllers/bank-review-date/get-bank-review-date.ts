@@ -19,6 +19,7 @@ type HandleGetBankReviewDateParams = {
  * @param previousPage - the previous page url
  * @param status - the query parameter status
  * @returns view model for the bank review date template
+ * @protected this function is exported for unit testing only
  */
 export const getBankReviewDateViewModel = (facility: Facility, previousPage: string, status?: string): BankReviewDateViewModel => {
   const bankReviewDateViewModel: BankReviewDateViewModel = {
@@ -42,6 +43,7 @@ export const getBankReviewDateViewModel = (facility: Facility, previousPage: str
 
 /**
  * Handle get bank review date requests
+ * @protected this function is exported for unit testing only
  */
 export const getBankReviewDate = async ({ req, res, previousPage }: HandleGetBankReviewDateParams) => {
   const {

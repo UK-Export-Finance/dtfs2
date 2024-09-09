@@ -33,6 +33,10 @@ const getHttpMocks = (status?: string) =>
   });
 
 describe('getBankReviewDate', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
   describe('when deal is version 1 and isUsingFacilityEndDate is false', () => {
     beforeEach(() => {
       getApplicationMock.mockResolvedValueOnce({ version: 1 });
