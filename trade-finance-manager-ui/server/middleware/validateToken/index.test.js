@@ -6,8 +6,8 @@ jest.mock('../../api');
 const MockRequest = () => {
   const req = {};
   req.session = {
-    destroy: jest.fn((f) => {
-      f();
+    destroy: jest.fn((callback) => {
+      callback();
     }),
   };
   return req;
