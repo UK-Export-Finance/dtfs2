@@ -94,7 +94,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
       console.error('❌ Invalid eStore payload %o', eStoreData);
 
       // CRON job log update
-      await EstoreRepo.updateByDealId(eStoreData?.dealId, {
+      await EstoreRepo.updateByDealId(dealId, {
         cron: {
           site: {
             status: ESTORE_CRON_STATUS.FAILED,
@@ -182,7 +182,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
          * Update record-set with the site name.
          * Update `cron-job-logs`
          */
-        await EstoreRepo.updateByDealId(eStoreData?.dealId, {
+        await EstoreRepo.updateByDealId(dealId, {
           'cron.site.create': {
             status: ESTORE_CRON_STATUS.COMPLETED,
             response: siteExistsResponse.data.status,
@@ -225,7 +225,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
           console.error('eStore site creation failed for deal %s %o', dealIdentifier, siteCreationResponse?.data);
 
           // CRON job log update
-          await EstoreRepo.updateByDealId(eStoreData?.dealId, {
+          await EstoreRepo.updateByDealId(dealId, {
             'cron.site.create': {
               response: siteCreationResponse?.data,
               status: ESTORE_CRON_STATUS.FAILED,
