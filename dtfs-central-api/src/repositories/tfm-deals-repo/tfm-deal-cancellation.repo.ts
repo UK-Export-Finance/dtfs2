@@ -8,27 +8,11 @@ export class TfmDealCancellationRepo {
   }
 
   /**
-   * Finds the Tfm deal by by dealId
-   * @param dealId - The deal id
-   * @returns the found Tfm deal object
-   */
-  public static async findTfmDealById(dealId: string | ObjectId): Promise<Document> {
-    const dealCollection = await this.getCollection();
-    const matchingDeal = await dealCollection.findOne({ _id: { $eq: new ObjectId(dealId) } });
-
-    if (!matchingDeal) {
-      throw new DealNotFoundError(dealId.toString());
-    }
-
-    return matchingDeal;
-  }
-
-  /**
    * Finds the cancellation by dealId
    * @param dealId - The deal id
    * @returns the found deal cancellation
    */
-  public static async findCancellationByDealId(dealId: string | ObjectId): Promise<TfmDealCancellation> {
+  public static async findDealCancellationByDealId(dealId: string | ObjectId): Promise<Document> {
     const dealCollection = await this.getCollection();
     const matchingDeal = await dealCollection.findOne({ _id: { $eq: new ObjectId(dealId) } });
 

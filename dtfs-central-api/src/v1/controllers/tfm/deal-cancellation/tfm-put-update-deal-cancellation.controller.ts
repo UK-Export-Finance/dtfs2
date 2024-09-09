@@ -27,8 +27,8 @@ export const updateTfmDealCancellation = async (req: UpdateTfmDealCancellationRe
       }),
     );
 
-    const updatedDealCancellation = await TfmDealCancellationRepo.findTfmDealById(dealId);
-    return res.status(HttpStatusCode.Ok).json(updatedDealCancellation);
+    const dealCancellation = await TfmDealCancellationRepo.findDealCancellationByDealId(dealId);
+    return res.status(HttpStatusCode.Ok).json(dealCancellation);
   } catch (error) {
     console.error('Error updating deal cancellation:', error);
     if (error instanceof ApiError) {
