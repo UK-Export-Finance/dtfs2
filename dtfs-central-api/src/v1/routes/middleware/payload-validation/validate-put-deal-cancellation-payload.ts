@@ -3,15 +3,11 @@ import { AuditDetailsSchema } from './schemas';
 import { createValidationMiddlewareForSchema } from './create-validation-middleware-for-schema.ts';
 
 const PutDealCancellationSchema = z.object({
-  payload: z
+  dealCancellationUpdate: z
     .object({
-      tfm: z.object({
-        cancellation: z.object({
-          reason: z.string(),
-          bankRequestDate: z.number(),
-          effectiveFrom: z.number(),
-        }),
-      }),
+      reason: z.string(),
+      bankRequestDate: z.number(),
+      effectiveFrom: z.number(),
     })
     .partial(),
   auditDetails: AuditDetailsSchema,

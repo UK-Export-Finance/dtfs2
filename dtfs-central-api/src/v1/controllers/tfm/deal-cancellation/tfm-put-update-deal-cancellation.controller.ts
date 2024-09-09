@@ -1,6 +1,5 @@
 import { Response } from 'express';
 import { flatten } from 'mongo-dot-notation';
-import { getUnixTime } from 'date-fns';
 import { HttpStatusCode } from 'axios';
 import { ApiError, ApiErrorResponseBody, AUDIT_USER_TYPES, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
@@ -14,18 +13,16 @@ type UpdateTfmDealCancellationRequest = CustomExpressRequest<{
 type UpdateTfmDealCancellationResponse = Response<ApiErrorResponseBody | Document | null>;
 
 export const updateTfmDealCancellation = async (req: UpdateTfmDealCancellationRequest, res: UpdateTfmDealCancellationResponse) => {
-  const { payload, auditDetails } = req.body;
+  const { dealCancellationUpdate, auditDetails } = req.body;
   const { dealId } = req.params;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
 
-    const dealCancellationUpdate = { ...payload, updatedAt: getUnixTime(new Date()) };
-
     await TfmDealCancellationRepo.updateOneDealWithCancellation(
       dealId,
       flatten({
-        'tfm.cancellation$': dealCancellationUpdate,
+        'tfm.cancellation': dealCancellationUpdate,
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       }),
     );
