@@ -55,8 +55,11 @@ export const eStoreSiteCreationCronJob = async (eStoreData: Estore): Promise<voi
     // Site existence check
     const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(exporterName);
 
+    const siteCreated = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED;
+    const sitePending = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING;
+
     // Site has been created
-    if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED) {
+    if (siteCreated) {
       console.info('⚡ CRON: eStore site %s has been created successfully for deal %s', siteExistsResponse.data.siteId, dealIdentifier);
 
       data.siteId = String(siteExistsResponse.data.siteId);
@@ -86,7 +89,7 @@ export const eStoreSiteCreationCronJob = async (eStoreData: Estore): Promise<voi
 
       // Add facility IDs to term store and create the buyer folder
       await eStoreTermStoreCreationJob(data);
-    } else if (siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING) {
+    } else if (sitePending) {
       // Site is still being provisioned
       console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s', siteExistsResponse.data.siteId, dealIdentifier);
 

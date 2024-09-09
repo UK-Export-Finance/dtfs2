@@ -59,8 +59,10 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
       buyerName,
     });
 
+    const buyerDirectoryCreated = ACCEPTABLE_STATUSES.includes(response?.status);
+
     // Validate response
-    if (ACCEPTABLE_STATUSES.includes(response?.status)) {
+    if (buyerDirectoryCreated) {
       console.info('Attempting to create a buyer directory %s for deal %s', buyerName, dealIdentifier);
 
       // Update `cron-job-logs`

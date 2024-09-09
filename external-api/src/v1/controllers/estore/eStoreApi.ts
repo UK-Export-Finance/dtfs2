@@ -123,7 +123,13 @@ const postToEstore = async (
 ): Promise<EstoreResponse | EstoreErrorResponse> => {
   try {
     console.info('Invoking eStore endpoint %s with payload %o', endpoint, data);
-    const response: EstoreResponse = await post(`${APIM_ESTORE_URL}${endpoint}`, data, { headers, timeout });
+    const response: EstoreResponse = await post(`${APIM_ESTORE_URL}${endpoint}`, data, {
+      validateStatus(status) {
+        return customValidateStatus(status);
+      },
+      headers,
+      timeout,
+    });
 
     if (!response) {
       throw new Error('❌ Invalid post to estore response received');
@@ -134,7 +140,7 @@ const postToEstore = async (
       data: response.data,
     };
   } catch (error: unknown) {
-    console.error('❌ Error calling eStore endpoint %s %o, email has been dispatched.', endpoint, error);
+    console.error('❌ Error calling eStore endpoint %s %o', endpoint, error);
     return estoreInternalServerError(error);
   }
 };

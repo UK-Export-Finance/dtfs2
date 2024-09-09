@@ -106,7 +106,6 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
 
       // Initiate document upload
     } else if (someFacilitiesFailed) {
-      // Deal directory creation is still being provisioned
       console.info('⚡ CRON: eStore deal directory %s creation is still in progress for deal %s', dealIdentifier, dealIdentifier);
 
       // Update status

@@ -73,8 +73,13 @@ export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promis
       riskMarket,
     });
 
+    const dealDirectoryCreated = ACCEPTABLE_STATUSES.includes(response?.status);
+
+    // Buyer directory creation still in progress
+    const dealDirectoryPending = response?.status === Number(HttpStatusCode.BadRequest);
+
     // Validate response
-    if (ACCEPTABLE_STATUSES.includes(response?.status)) {
+    if (dealDirectoryCreated) {
       console.info('Attempting to create a deal directory for deal %s', dealIdentifier);
 
       // Update `cron-job-logs`
@@ -94,8 +99,7 @@ export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promis
 
       // Initiate facility directory creation
       await eStoreFacilityDirectoryCreationJob(eStoreData);
-    } else if (response?.status === Number(HttpStatusCode.BadRequest)) {
-      // Buyer directory creation still in progress
+    } else if (dealDirectoryPending) {
       console.info('⚡ CRON: eStore buyer directory %s creation is still in progress for deal %s', buyerName, dealIdentifier);
 
       // Update status
