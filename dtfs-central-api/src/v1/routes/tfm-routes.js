@@ -2,7 +2,11 @@ const express = require('express');
 
 const tfmRouter = express.Router();
 
-const { validatePutFacilityAmendmentPayload, validatePostFacilityAmendmentPayload } = require('./middleware/payload-validation');
+const {
+  validatePutFacilityAmendmentPayload,
+  validatePostFacilityAmendmentPayload,
+  validatePutDealCancellationPayload,
+} = require('./middleware/payload-validation');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 
@@ -17,6 +21,7 @@ const tfmUpdateFacilityController = require('../controllers/tfm/facility/tfm-upd
 const tfmGetAmendmentController = require('../controllers/tfm/amendments/tfm-get-amendments.controller');
 const tfmPutAmendmentController = require('../controllers/tfm/amendments/tfm-put-amendments.controller');
 const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-post-amendments.controller');
+const tfmPutUpdateDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-put-update-deal-cancellation.controller');
 
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
@@ -528,6 +533,22 @@ tfmRouter
     handleExpressValidatorResult,
     validatePutFacilityAmendmentPayload,
     tfmPutAmendmentController.updateTfmAmendment,
+  );
+
+/**
+ * @openapi
+ * /tfm/deals/:id/cancellation:
+ *
+ *       404:
+ *         description: Not found
+ */
+tfmRouter
+  .route('/deals/:dealId/cancellation')
+  .put(
+    validation.mongoIdValidation('dealId'),
+    handleExpressValidatorResult,
+    validatePutDealCancellationPayload,
+    tfmPutUpdateDealCancellationController.updateTfmDealCancellation,
   );
 
 /**
