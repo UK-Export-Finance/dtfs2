@@ -1,0 +1,70 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Cancellation - Reason for cancelling
+{%- endblock %}
+
+{% set headingHtml %}
+
+<h1 class="govuk-label-wrapper">
+  <span class="govuk-caption-l">Cancel deal {{ ukefDealId }}</span>
+  <label class="govuk-label govuk-label--l" for="reason-for-cancelling">
+    Reason for cancelling deal (optional)
+  </label>
+</h1>
+
+{% endset %}
+
+{% block sub_content %}
+  {{ govukBackLink({
+      text: "Back",
+      href: "/case" + dealId,
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukCharacterCount({
+        name: "reason-for-cancelling",
+        id: "reason-for-cancelling",
+        maxlength: 1200,
+        label: {
+          html: headingHtml
+        },
+        hint: {
+          text: "This is only for UKEF records."
+        }
+      }) }}
+
+        <div class="govuk-button-group govuk-!-margin-top-4">
+          {{ govukButton({
+            text: "Continue",
+            attributes: { "data-cy": "continue-button" }
+            })
+          }}
+          <a class="govuk-link" href="/case/{{ dealId }}/underwriting" data-cy="cancel-button">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
