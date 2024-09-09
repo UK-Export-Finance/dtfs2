@@ -32,9 +32,9 @@
       <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-0" data-cy="amendment--facility-end-date-heading">Enter the new facility end date</h1>
     </legend>
 
-    <dl class="govuk-body govuk-!-margin-bottom-4" data-cy="amendment--current-facility-end-date">
+    <dl class="govuk-body govuk-!-margin-bottom-4">
       <dt class="govuk-body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Current facility end date</dt>
-      <dd>{{ ( currentFacilityEndDate if currentFacilityEndDate else "Not provided") }}</dd>
+      <dd data-cy="amendment--current-facility-end-date">{{ ( currentFacilityEndDate if currentFacilityEndDate else "Not provided") }}</dd>
     </dl>
 
     {{ govukDateInput({

@@ -638,6 +638,7 @@ jobs:
       name: ${{ needs.setup.outputs.environment }}
     env:
       FF_TFM_FACILITY_END_DATE_ENABLED: "false"
+      GEF_DEAL_VERSION: 0
     runs-on: ubuntu-latest
 
     strategy:

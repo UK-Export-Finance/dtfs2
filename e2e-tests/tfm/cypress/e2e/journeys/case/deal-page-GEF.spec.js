@@ -1,9 +1,9 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
-import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_AIN } from '../../../fixtures/mock-gef-deals';
+import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIA } from '../../../fixtures/mock-gef-deals';
 import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
-import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
+import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../e2e-fixtures';
 import { DEAL_TYPE } from '../../../fixtures/constants';
 import facilityPage from '../../pages/facilityPage';
 
@@ -64,7 +64,7 @@ context('User can view a GEF MIA case deal', () => {
       const facilityId = dealFacilities._id;
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
-      facilityRow.facilityEndDate().contains('-');
+      facilityRow.facilityCoverEndDate().contains('-');
     });
 
     it('clicking `Facility ID` link should take user to facility details page', () => {
@@ -163,7 +163,7 @@ context('User can view a GEF AIN case deal', () => {
       const facilityId = dealFacilities._id;
       const facilityRow = pages.caseDealPage.dealFacilitiesTable.row(facilityId);
 
-      facilityRow.facilityEndDate().contains('-');
+      facilityRow.facilityCoverEndDate().contains('-');
     });
 
     it('clicking `Facility ID` link should take user to facility details page', () => {

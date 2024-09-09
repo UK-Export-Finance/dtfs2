@@ -3,7 +3,7 @@ import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
+import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../e2e-fixtures';
 
 context('User can view a case deal', () => {
   let dealId;
@@ -73,8 +73,8 @@ context('User can view a case deal', () => {
       // formats to correct format in table
       const coverEndDate = format(coverEndDateRaw, 'd MMMM yyyy');
 
-      facilityRow.facilityEndDate().contains(coverEndDate);
-      facilityRow.facilityEndDate().should('not.contain', '(expected)');
+      facilityRow.facilityCoverEndDate().contains(coverEndDate);
+      facilityRow.facilityCoverEndDate().should('not.contain', '(expected)');
     });
 
     it('clicking `Facility ID` link should take user to facility details page', () => {

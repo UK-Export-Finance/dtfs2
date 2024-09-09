@@ -1,9 +1,14 @@
-import { AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
 import { getTask } from '../helpers';
 import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
+}));
 
 const res = mockRes();
 
@@ -21,6 +26,10 @@ const SESSION = {
 };
 
 describe('controllers - case', () => {
+  beforeEach(() => {
+    jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
+  });
+
   describe('GET case deal', () => {
     describe('when deal exists', () => {
       const mockDeal = {
@@ -595,6 +604,7 @@ describe('controllers - case', () => {
         _id: '61f6ac5b02fade01b1e8efef',
         facilitySnapshot: {
           _id: '61f6ac5b02fade01b1e8efef',
+          isGef: false,
           dealId: '12345678',
           mock: true,
           value: 'GBP 1,000,000.00',
@@ -645,6 +655,59 @@ describe('controllers - case', () => {
         api.getAmendmentsByDealId = () => Promise.resolve({ status: 200, data: [mockAmendment] });
       });
 
+      describe('showFacilityEndDate', () => {
+        describe.each([
+          {
+            facilityFeatureFlagValue: true,
+            isGefValue: true,
+            expectedValue: true,
+          },
+          {
+            facilityFeatureFlagValue: true,
+            isGefValue: false,
+            expectedValue: false,
+          },
+          {
+            facilityFeatureFlagValue: false,
+            isGefValue: true,
+            expectedValue: false,
+          },
+          {
+            facilityFeatureFlagValue: false,
+            isGefValue: false,
+            expectedValue: false,
+          },
+        ])('when the facility end date feature flag is $facilityFeatureFlagValue', ({ facilityFeatureFlagValue, isGefValue, expectedValue }) => {
+          beforeEach(() => {
+            jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(facilityFeatureFlagValue);
+          });
+
+          describe(`when the facility is ${isGefValue}`, () => {
+            beforeEach(() => {
+              api.getFacility = () => Promise.resolve({ ...mockFacility, facilitySnapshot: { ...mockFacility.facilitySnapshot, isGef: isGefValue } });
+            });
+
+            it(`should render with the showFacilityEndDate parameter as ${expectedValue}`, async () => {
+              const req = {
+                params: {
+                  facilityId: mockFacility._id,
+                },
+                session: SESSION,
+              };
+
+              await caseController.getCaseFacility(req, res);
+
+              expect(res.render).toHaveBeenCalledWith(
+                'case/facility/facility.njk',
+                expect.objectContaining({
+                  showFacilityEndDate: expectedValue,
+                }),
+              );
+            });
+          });
+        });
+      });
+
       it('should render deal template with data', async () => {
         const req = {
           params: {
@@ -673,7 +736,7 @@ describe('controllers - case', () => {
           allAmendments: expect.any(Array),
           amendmentsInProgress: expect.any(Array),
           amendments: expect.any(Array),
-          isTfmFacilityEndDateFeatureFlagEnabled: true,
+          showFacilityEndDate: false,
         });
       });
     });

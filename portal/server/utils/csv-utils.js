@@ -111,6 +111,14 @@ const parseXlsxToCsvArrays = (worksheet) => {
   return { csvData: csvData.join('\n'), csvDataWithCellAddresses };
 };
 
+/**
+ * Extracts csv data with cell addresses from xlsx based csv file
+ * @param {string[]} csvDataWithCellAddresses - Array of comma separated lines of csv file, with values followed by cell location
+ * @returns {Record<string, { value: string | null; column: string; row: string }>} The data from the file with
+ * - The header of the column as the key
+ * - The contents of the cell as value
+ * - The location data of the cell within the spreadsheet (column is using alphabet, rows are numbers as strings)
+ */
 const xlsxBasedCsvToJsonPromise = async (csvDataWithCellAddresses) => {
   const csvStream = new Readable({
     read() {

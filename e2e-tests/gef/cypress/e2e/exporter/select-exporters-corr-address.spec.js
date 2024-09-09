@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { backLink, errorSummary, headingCaption, mainHeading, form, continueButton } from '../partials';
 import exportersAddress from '../pages/exporters-address';
 import selectExportersCorAddress from '../pages/select-exporters-corr-address';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
@@ -24,25 +25,25 @@ context('Select Exporters Correspondence Address Page', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/exporters-address`));
     exportersAddress.yesRadioButton().click();
     exportersAddress.correspondenceAddress().type('E1 6JE');
-    exportersAddress.continueButton().click();
+    cy.clickContinueButton();
   });
 
   describe('Visiting page', () => {
     it('displays the correct elements', () => {
-      selectExportersCorAddress.backLink();
-      selectExportersCorAddress.headingCaption();
-      selectExportersCorAddress.mainHeading();
+      backLink();
+      headingCaption();
+      mainHeading();
       selectExportersCorAddress.postcodeTitle();
       selectExportersCorAddress.postcode();
-      selectExportersCorAddress.form();
+      form();
       selectExportersCorAddress.selectAddress();
       selectExportersCorAddress.cantFindAddress();
-      selectExportersCorAddress.continueButton();
+      continueButton();
       selectExportersCorAddress.changeLink();
     });
 
     it('redirects user to exporters address page when clicking on `Back` Link', () => {
-      selectExportersCorAddress.backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/exporters-address`));
     });
 
@@ -59,14 +60,14 @@ context('Select Exporters Correspondence Address Page', () => {
 
   describe('Clicking on Continue button', () => {
     it('shows error message if no address has been selected from dropdown', () => {
-      selectExportersCorAddress.continueButton().click();
-      selectExportersCorAddress.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       selectExportersCorAddress.selectAddressError();
     });
 
     it('redirects user to enter exporters correspondence address page if they select an address', () => {
       selectExportersCorAddress.selectAddress().select('0');
-      selectExportersCorAddress.continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/enter-exporters-correspondence-address`));
     });
   });

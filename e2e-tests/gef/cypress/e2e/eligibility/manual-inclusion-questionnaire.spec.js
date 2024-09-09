@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { cancelLink, continueButton, errorSummary, headingCaption, mainHeading } from '../partials';
 import manualInclusion from '../pages/manual-inclusion-questionnaire';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -38,13 +39,13 @@ context('manual inclusion Page', () => {
     });
 
     it('displays the correct elements', () => {
-      manualInclusion.headingCaption();
-      manualInclusion.mainHeading();
+      headingCaption();
+      mainHeading();
       manualInclusion.templateLinkDocx();
       manualInclusion.templateLinkPdf();
       manualInclusion.fileUploadComponent();
-      manualInclusion.continueButton();
-      manualInclusion.cancelLink();
+      continueButton();
+      cancelLink();
     });
 
     it('displays the correct text for questionnaire download', () => {
@@ -82,8 +83,8 @@ context('manual inclusion Page', () => {
     });
 
     it('does not allow continue if no files are uploaded', () => {
-      manualInclusion.continueButton().click();
-      manualInclusion.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
     });
 
     it('does not allow a file of an incorrect type', () => {
@@ -92,7 +93,7 @@ context('manual inclusion Page', () => {
     });
 
     it('displays the application page when pressing Cancel', () => {
-      manualInclusion.cancelLink().click();
+      cy.clickCancelLink();
       cy.url().should('eq', relative(`/gef/application-details/${id}`));
     });
   });
