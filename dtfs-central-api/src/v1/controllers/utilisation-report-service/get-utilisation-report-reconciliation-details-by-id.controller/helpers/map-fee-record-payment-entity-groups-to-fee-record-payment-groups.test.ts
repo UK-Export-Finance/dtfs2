@@ -1,14 +1,7 @@
-import {
-  Currency,
-  FEE_RECORD_STATUS,
-  FeeRecordEntityMockBuilder,
-  FeeRecordStatus,
-  PaymentEntityMockBuilder,
-  UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, FeeRecordStatus, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
 import { mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups } from './map-fee-record-payment-entity-groups-to-fee-record-payment-groups';
 import { FeeRecordPaymentEntityGroup } from '../../../../../helpers';
+import { aUtilisationReport } from '../../../../../../test-helpers';
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
   describe('mapFeeRecordPaymentEntityGroupsToFeeRecordPaymentGroups', () => {
@@ -213,9 +206,5 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         expect(result[0].totalPaymentsReceived).toEqual({ currency: 'GBP', amount: 500 });
       });
     });
-
-    function aUtilisationReport(): UtilisationReportEntity {
-      return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    }
   });
 });

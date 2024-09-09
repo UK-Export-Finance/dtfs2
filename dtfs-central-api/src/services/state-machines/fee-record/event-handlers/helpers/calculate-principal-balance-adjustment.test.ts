@@ -1,5 +1,6 @@
-import { FacilityUtilisationDataEntityMockBuilder, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FacilityUtilisationDataEntityMockBuilder, FeeRecordEntityMockBuilder } from '@ukef/dtfs2-common';
 import { calculatePrincipalBalanceAdjustment } from './calculate-principal-balance-adjustment';
+import { aUtilisationReport } from '../../../../../../test-helpers';
 
 describe('calculatePrincipalBalanceAdjustment', () => {
   const aFeeRecordEntityWithFacilityUtilisation = (facilityUtilisation: number) =>
@@ -37,8 +38,4 @@ describe('calculatePrincipalBalanceAdjustment', () => {
       expect(result).toBe(expectedDifference);
     },
   );
-
-  function aUtilisationReport() {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-  }
 });
