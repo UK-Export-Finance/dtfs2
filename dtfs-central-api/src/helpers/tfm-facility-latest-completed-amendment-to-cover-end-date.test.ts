@@ -1,8 +1,8 @@
 import { TfmFacility, TfmFacilityAmendment } from '@ukef/dtfs2-common';
-import { getLatestCompletedAmendmentCoverEndDate } from './tfm-facilities-helpers';
+import { getLatestCompletedAmendmentCoverEndDate } from './tfm-facility-latest-completed-amendment-to-cover-end-date';
 import { aTfmFacility, aTfmFacilityAmendment } from '../../test-helpers';
 
-describe('tfm-facilities-helpers', () => {
+describe('tfm-facility-latest-completed-amendment-to-cover-end-date', () => {
   describe('getLatestCompletedAmendmentCoverEndDate', () => {
     it('returns undefined when the supplied tfm facility amendments are undefined', () => {
       // Arrange
