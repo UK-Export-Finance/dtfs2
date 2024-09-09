@@ -1,4 +1,4 @@
-import { ClientSession, Collection, ObjectId, WithoutId } from 'mongodb';
+import { Collection, ObjectId, WithoutId } from 'mongodb';
 import { when } from 'jest-when';
 import { MongoDbClient } from '../../mongo-db-client';
 import { AuditDatabaseRecord, DeletionAuditLog, MongoDbCollectionName } from '../../types';
@@ -75,68 +75,11 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
         });
       });
 
-      describe('when deleting the document is not acknowledged', () => {
-        beforeEach(() => {
-          when(deleteManyMock)
-            // @ts-ignore
-            .calledWith(
-              { _id: { $in: expect.arrayContaining(getDeletedDocumentIds().map((id) => new ObjectId(id))) as ObjectId[] } },
-              {
-                session: expect.any(ClientSession) as ClientSession,
-              },
-            )
-            // @ts-ignore
-            .mockResolvedValueOnce({
-              acknowledged: false,
-            });
-        });
-
-        itDoesNotUpdateTheDatabase();
-      });
-
-      describe('when the number of documents deleted does not match the expected number', () => {
-        beforeEach(() => {
-          when(deleteManyMock)
-            // @ts-ignore
-            .calledWith(
-              { _id: { $in: expect.arrayContaining(getDeletedDocumentIds().map((id) => new ObjectId(id))) as ObjectId[] } },
-              {
-                session: expect.any(ClientSession) as ClientSession,
-              },
-            )
-            // @ts-ignore
-            .mockResolvedValueOnce({
-              acknowledged: true,
-              deletedCount: 0,
-            });
-        });
-
-        itDoesNotUpdateTheDatabase();
-      });
-
-      describe('when deleting the document throws an error', () => {
-        beforeEach(() => {
-          when(deleteManyMock)
-            // @ts-ignore
-            .calledWith(
-              { _id: { $in: expect.arrayContaining(getDeletedDocumentIds().map((id) => new ObjectId(id))) as ObjectId[] } },
-              {
-                session: expect.any(ClientSession) as ClientSession,
-              },
-            )
-            .mockImplementationOnce(() => {
-              throw new Error();
-            });
-        });
-
-        itDoesNotUpdateTheDatabase();
-      });
-
       describe('when inserting the deletion log is not acknowledged', () => {
         beforeEach(() => {
           when(insertManyMock)
-            // @ts-ignore
             .calledWith(
+              // @ts-ignore
               expect.arrayContaining(
                 getDeletedDocumentIds().map((id) => ({
                   collectionName,
@@ -145,7 +88,6 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
                   expireAt: expect.any(Date) as Date,
                 })),
               ) as WithoutId<DeletionAuditLog>[],
-              { session: expect.any(ClientSession) as ClientSession },
             )
             // @ts-ignore
             .mockResolvedValueOnce({
@@ -159,8 +101,8 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
       describe('when inserting the deletion log throws an error', () => {
         beforeEach(() => {
           when(insertManyMock)
-            // @ts-ignore
             .calledWith(
+              // @ts-ignore
               expect.arrayContaining(
                 getDeletedDocumentIds().map((id) => ({
                   collectionName,
@@ -169,7 +111,6 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
                   expireAt: expect.any(Date) as Date,
                 })),
               ) as WithoutId<DeletionAuditLog>[],
-              { session: expect.any(ClientSession) as ClientSession },
             )
             .mockImplementationOnce(() => {
               throw new Error();

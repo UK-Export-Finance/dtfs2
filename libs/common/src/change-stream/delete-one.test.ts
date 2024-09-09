@@ -6,17 +6,6 @@ import { MONGO_DB_COLLECTIONS } from '../constants';
 import { generateMockNoUserLoggedInAuditDatabaseRecord } from './test-helpers';
 import { deleteOne } from './delete-one';
 
-const mockSession = {
-  withTransaction: jest.fn((callback: () => void) => {
-    callback();
-  }),
-  endSession: jest.fn(),
-};
-
-const mockClient = {
-  startSession: jest.fn(() => mockSession),
-};
-
 const mockGetCollection = jest.fn();
 
 const mockDeleteOne = jest.fn();
@@ -30,7 +19,6 @@ const mockDeletionsCollection = {
 };
 
 const mockDb = {
-  getClient: jest.fn(() => mockClient),
   getCollection: mockGetCollection,
 } as unknown as MongoDbClient;
 
@@ -71,15 +59,12 @@ describe('deleteOne', () => {
           auditDetails: generateNoUserLoggedInAuditDetails(),
         });
 
-        expect(mockDeletionsCollection.insertOne).toHaveBeenCalledWith(
-          {
-            collectionName: 'users',
-            deletedDocumentId: documentId,
-            auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
-            expireAt: expect.any(Date) as Date,
-          },
-          { session: mockSession },
-        );
+        expect(mockDeletionsCollection.insertOne).toHaveBeenCalledWith({
+          collectionName: 'users',
+          deletedDocumentId: documentId,
+          auditRecord: generateMockNoUserLoggedInAuditDatabaseRecord(),
+          expireAt: expect.any(Date) as Date,
+        });
       });
 
       it('deletes the requested document', async () => {
@@ -90,18 +75,8 @@ describe('deleteOne', () => {
           auditDetails: generateNoUserLoggedInAuditDetails(),
         });
 
-        expect(mockUsersCollection.deleteOne).toHaveBeenCalledWith({ _id: { $eq: documentId } }, { session: mockSession });
-      });
-
-      it('ends the session', async () => {
-        await deleteOne({
-          db: mockDb,
-          documentId,
-          collectionName: 'users',
-          auditDetails: generateNoUserLoggedInAuditDetails(),
-        });
-
-        expect(mockSession.endSession).toHaveBeenCalledTimes(1);
+        expect(mockUsersCollection.deleteOne).toHaveBeenCalledWith({ _id: { $eq: documentId } });
+        expect(mockUsersCollection.deleteOne).toHaveBeenCalledTimes(1);
       });
     });
   });

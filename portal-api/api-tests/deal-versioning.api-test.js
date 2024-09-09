@@ -1,18 +1,16 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('./database-helper');
-
 const app = require('../src/createApp');
 const testUserCache = require('./api-test-users');
 const { MAKER, ADMIN } = require('../src/v1/roles/roles');
-
 const { as } = require('./api')(app);
 const { expectMongoId } = require('./expectMongoIds');
-
 const CONSTANTS = require('../src/constants');
 const { FACILITY_TYPE } = require('../src/v1/gef/enums');
 
 const mockEligibilityCriteria = require('./fixtures/gef/eligibilityCriteria');
+const mockMandatoryCriteria = require('./fixtures/gef/mandatoryCriteriaVersioned');
 
 const expectedEligibilityCriteriaAuditRecord = {
   ...generateParsedMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
@@ -24,6 +22,7 @@ const gefFacilitiesUrl = '/v1/gef/facilities';
 
 // NOTE: to maintain backwards compatibility we shouldn't change this from version 2.1
 const mockEligibilityCriteriaVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 2.1);
+const mockMandatoryCriteriaVersion = mockMandatoryCriteria.find((criteria) => criteria.version === 2);
 
 const originalEnv = { ...process.env };
 
@@ -35,7 +34,7 @@ const generateVersion0ApplicationToSubmit = () => ({
   additionalRefName: 'Team 1',
   exporter: {},
   createdAt: '2021-01-01T00:00',
-  mandatoryVersionId: 33,
+  mandatoryVersionId: 2,
   status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
   updatedAt: null,
   submissionCount: 0,
@@ -64,7 +63,7 @@ const generateVersion0ApplicationResponse = (makerId) => ({
   checkerId: null,
   portalActivities: [],
   eligibility: {
-    version: expect.any(Number),
+    version: 2.1,
     _id: expect.any(String),
     product: expect.any(String),
     createdAt: expect.any(Number),
@@ -140,8 +139,14 @@ describe('GEF deal versioning', () => {
   });
 
   beforeEach(async () => {
-    await databaseHelper.wipe([MONGO_DB_COLLECTIONS.DEALS, MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA]);
+    await databaseHelper.wipe([
+      MONGO_DB_COLLECTIONS.DEALS,
+      MONGO_DB_COLLECTIONS.FACILITIES,
+      MONGO_DB_COLLECTIONS.GEF_ELIGIBILITY_CRITERIA,
+      MONGO_DB_COLLECTIONS.GEF_MANDATORY_CRITERIA_VERSIONED,
+    ]);
     await as(anAdmin).post(mockEligibilityCriteriaVersion).to('/v1/gef/eligibility-criteria');
+    await as(anAdmin).post(mockMandatoryCriteriaVersion).to('/v1/gef/mandatory-criteria-versioned');
   });
 
   describe(`when GEF_DEAL_VERSION set to '0'`, () => {
