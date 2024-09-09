@@ -130,20 +130,20 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid IDs' });
     }
 
-    if (!ObjectId.isValid(eStoreData.dealId)) {
+    if (!ObjectId.isValid(dealId)) {
       console.error('Invalid eStore deal ObjectId');
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid deal ObjectId' });
     }
 
     // Returns the document from `cron-job-logs` collection if exists
-    const cronJobExist = await EstoreRepo.findByDealId(eStoreData.dealId);
+    const cronJobExist = await EstoreRepo.findByDealId(dealId);
 
     if (!cronJobExist) {
       /**
        * Send `201` status code back to avoid
        * `TFM-API` awaiting.
        */
-      console.info('Attempting to create a new CRON job for deal %s', eStoreData.dealIdentifier);
+      console.info('Attempting to create a new CRON job for deal %s', dealIdentifier);
       res.status(HttpStatusCode.Created).send({ status: HttpStatusCode.Created, message: 'eStore job accepted' });
 
       // Add CRON job to the collection
@@ -166,8 +166,8 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
       const { insertedId: _id } = inserted as InsertOneResult;
 
       // Site exists check
-      console.info('Initiating eStore site existence check for exporter %s', eStoreData.exporterName);
-      const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(eStoreData.exporterName);
+      console.info('Initiating eStore site existence check for exporter %s', exporterName);
+      const siteExistsResponse: SiteExistsResponse | EstoreErrorResponse = await siteExists(exporterName);
 
       const created = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.CREATED;
       const provisioning = siteExistsResponse?.data?.status === ESTORE_SITE_STATUS.PROVISIONING;
@@ -190,7 +190,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
         });
 
         // Update `tfm-deals`
-        await tfmDeals.updateOne({ _id: { $eq: new ObjectId(eStoreData.dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
+        await tfmDeals.updateOne({ _id: { $eq: new ObjectId(dealId) } }, { $set: { 'tfm.estore.siteName': siteExistsResponse.data.siteId } });
 
         // Update object
         eStoreData.siteId = String(siteExistsResponse.data.siteId);
@@ -204,11 +204,11 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
         // Create a new eStore site
         if (provisioning) {
           // When site status is provisioning
-          console.info('eStore site creation in progress for deal %s', eStoreData.dealIdentifier);
+          console.info('eStore site creation in progress for deal %s', dealIdentifier);
           siteCreationResponse = siteExistsResponse;
         } else {
-          console.info('eStore site creation initiated for exporter %s with deal %s', eStoreData.exporterName, eStoreData.dealIdentifier);
-          siteCreationResponse = await createExporterSite({ exporterName: eStoreData.exporterName });
+          console.info('eStore site creation initiated for exporter %s with deal %s', exporterName, dealIdentifier);
+          siteCreationResponse = await createExporterSite({ exporterName });
         }
 
         /**
@@ -219,7 +219,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
         if (siteCreationResponse?.data?.siteId) {
           await eStoreSiteCreationCronJob(eStoreData);
         } else {
-          console.error('eStore site creation failed for deal %s %o', eStoreData.dealIdentifier, siteCreationResponse?.data);
+          console.error('eStore site creation failed for deal %s %o', dealIdentifier, siteCreationResponse?.data);
 
           // CRON job log update
           await EstoreRepo.updateByDealId(eStoreData?.dealId, {
@@ -232,10 +232,10 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
           });
         }
       } else {
-        console.error('❌ eStore site exist check failed for deal %s %o', eStoreData.dealIdentifier, siteExistsResponse);
+        console.error('❌ eStore site exist check failed for deal %s %o', dealIdentifier, siteExistsResponse);
 
         // CRON job log update
-        await EstoreRepo.updateByDealId(eStoreData?.dealId, {
+        await EstoreRepo.updateByDealId(dealId, {
           'cron.site.create': {
             status: ESTORE_CRON_STATUS.FAILED,
             response: siteExistsResponse?.data,
@@ -246,7 +246,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
       }
     } else {
       // When CRON job already exists for provided deal id.
-      console.info('eStore CRON job exists for deal %s', eStoreData.dealIdentifier);
+      console.info('eStore CRON job exists for deal %s', dealIdentifier);
       res.status(HttpStatusCode.Accepted).send({ status: HttpStatusCode.Accepted, message: 'eStore job in queue' });
     }
 

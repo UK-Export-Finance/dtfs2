@@ -60,7 +60,9 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
       );
 
       // Validate each and every response status code
-      if (response.every((term) => ACCEPTABLE_STATUSES.includes(term?.status))) {
+      const allTermStoresCreated = response.every((term) => ACCEPTABLE_STATUSES.includes(term?.status));
+
+      if (allTermStoresCreated) {
         console.info('Facilities have been added to term store for deal %s', dealIdentifier);
 
         // Update `cron-job-logs`

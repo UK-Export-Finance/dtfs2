@@ -78,8 +78,9 @@ export interface EstoreDealFolder extends EstoreSite, EstoreBuyer {
  * Represents a facility folder within the eStore, identified by a facility identifier.
  *
  * @interface EstoreFacilityFolder
+ * @extends EstoreSite
  * @extends EstoreBuyer
- * @property {string} facilityIdentifier - Unique identifier for the facility.
+ * @property {number} facilityIdentifier - Unique identifier for the facility.
  */
 export interface EstoreFacilityFolder extends EstoreSite, EstoreBuyer {
   readonly facilityIdentifier: number;
