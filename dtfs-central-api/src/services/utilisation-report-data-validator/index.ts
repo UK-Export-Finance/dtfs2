@@ -99,7 +99,7 @@ export const validateUtilisationReportCsvCellData = async (
     generatePaymentExchangeRateError,
   ];
 
-  const allErrors = await Promise.all(
+  const errors = await Promise.all(
     csvData.map(async (csvRow) => {
       const cellErrorPromises = cellValidations.map(({ header, errorGenerator }) => {
         if (!availableHeaders.includes(header)) {
@@ -115,9 +115,8 @@ export const validateUtilisationReportCsvCellData = async (
     }),
   );
 
-  const allNonNullErrors = allErrors.flat().filter((error): error is UtilisationReportDataValidationError => error !== null);
-
-  return allNonNullErrors;
+  // Filter out null errors so that we don't return any null elements in the response array
+  return errors.flat().filter((error): error is UtilisationReportDataValidationError => error !== null);
 };
 
 /**

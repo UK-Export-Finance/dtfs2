@@ -265,9 +265,9 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Checks whether or not a document exists which has the matching UKEF facility ID
+   * Checks whether or not a facility exists which has a matching UKEF facility ID
    * @param ukefFacilityId - The UKEF facility ID
-   * @returns Whether a not a document with that id exists
+   * @returns Whether a not a facility with that UKEF facility ID exists
    */
   public static async ukefFacilityIdExists(ukefFacilityId: string): Promise<boolean> {
     const collection = await this.getCollection();
