@@ -4,7 +4,7 @@ import { ApiError, CustomExpressRequest, TfmDealCancellation } from '@ukef/dtfs2
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../api';
 
-type UpdateDealCancellationRequest = CustomExpressRequest<{
+export type UpdateDealCancellationRequest = CustomExpressRequest<{
   params: {
     dealId: string;
   };
