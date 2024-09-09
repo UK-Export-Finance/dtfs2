@@ -5,7 +5,7 @@ import { Currency } from '../../types';
 describe('FeeRecordEntity', () => {
   const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS).build();
 
-  const mockDate = new Date('2024-01-01');
+  const mockDate = new Date();
 
   beforeAll(() => {
     jest.useFakeTimers();

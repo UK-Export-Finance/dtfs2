@@ -231,10 +231,6 @@ export const getFormattedReconciledByUser = (reconciledByUser: { firstName: stri
 
 /**
  * Formats the date reconciled
- *
- * The "aaaaa'm'" selection is so we can format the date to use
- * lowercase 'AM' or 'PM' and comes from the below link.
- * {@link https://stackoverflow.com/questions/60728212/how-do-you-format-a-datetime-to-am-pm-without-periods-when-using-date-fns-vers}
  * @param dateReconciled - The date reconciled
  * @returns The formatted date
  * @example
@@ -251,6 +247,8 @@ export const getFormattedDateReconciled = (dateReconciled: IsoDateTimeStamp | un
  * @returns The payment details view model
  */
 export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaymentGroups: FeeRecordPaymentGroup[]): PaymentDetailsViewModel => {
+  // Flatten the groups to a list of payments with the date reconciled of the group existing on
+  // the payment which can be used to determine the sort orders for the columns with custom sorting
   const allPaymentsWithDateReconciled = feeRecordPaymentGroups.reduce(
     (payments, { paymentsReceived, dateReconciled }) => {
       if (!paymentsReceived) {
@@ -262,16 +260,22 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
     [] as (Payment & { dateReconciled?: IsoDateTimeStamp })[],
   );
 
+  // Construct sort value maps for the columns that have custom sorting that the table component cannot
+  // infer just from column values
+  // Construct sort value map for the payment amounts
   const paymentIdToAmountDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
     allPaymentsWithDateReconciled.map(({ id, amount, currency }) => ({ key: id, currency, amount })),
   );
+  // Construct sort value map for the date the payments were received
   const paymentIdToDateReceivedDataSortValueMap: { [key: number]: number } = getKeyToDateSortValueMap(
     allPaymentsWithDateReconciled.map(({ id, dateReceived }) => ({ key: id, date: dateReceived })),
   );
+  // Construct sort value map for the date the payments were reconciled
   const paymentIdToDateReconciledDataSortValueMap = getKeyToDateSortValueMap(
     allPaymentsWithDateReconciled.map(({ id, dateReconciled }) => ({ key: id, date: dateReconciled })),
   );
 
+  // Construct and return payment details view models for each payment in each group
   return feeRecordPaymentGroups.reduce(
     (paymentDetails, { feeRecords, paymentsReceived, status: feeRecordPaymentGroupStatus, reconciledByUser, dateReconciled }) => {
       if (!paymentsReceived) {
