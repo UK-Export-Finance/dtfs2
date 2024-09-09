@@ -1,6 +1,7 @@
-import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, FeeRecordEntityMockBuilder } from '@ukef/dtfs2-common';
 import { getFeeRecordPaymentEntityGroupStatus } from './get-fee-record-payment-entity-group-status';
 import { FeeRecordPaymentEntityGroup } from '../types/fee-record-payment-entity-group';
+import { aUtilisationReport } from '../../test-helpers';
 
 describe('getFeeRecordPaymentEntityGroupStatus', () => {
   it('throws an error when the group has an empty list of fee records', () => {
@@ -17,9 +18,9 @@ describe('getFeeRecordPaymentEntityGroupStatus', () => {
   it.each(Object.values(FEE_RECORD_STATUS))('returns the group status when each fee record in the group has status %s', (status) => {
     // Arrange
     const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(status).build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(status).build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(status).build(),
+      FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build(),
+      FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build(),
+      FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build(),
     ];
     const group: FeeRecordPaymentEntityGroup = { feeRecords, payments: [] };
 
@@ -33,9 +34,9 @@ describe('getFeeRecordPaymentEntityGroupStatus', () => {
   it(`returns the status ${FEE_RECORD_STATUS.READY_TO_KEY} when the fee records in the group have both the ${FEE_RECORD_STATUS.READY_TO_KEY} and ${FEE_RECORD_STATUS.RECONCILED} status`, () => {
     // Arrange
     const feeRecords = [
-      FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build(),
-      FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.RECONCILED).build(),
+      FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build(),
+      FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build(),
+      FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.RECONCILED).build(),
     ];
     const group: FeeRecordPaymentEntityGroup = { feeRecords, payments: [] };
 
@@ -51,9 +52,9 @@ describe('getFeeRecordPaymentEntityGroupStatus', () => {
     (status) => {
       // Arrange
       const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(status).build(),
-        FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(status).build(),
-        FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build(),
+        FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build(),
+        FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(status).build(),
+        FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build(),
       ];
       const group: FeeRecordPaymentEntityGroup = { feeRecords, payments: [] };
 
@@ -63,8 +64,4 @@ describe('getFeeRecordPaymentEntityGroupStatus', () => {
       );
     },
   );
-
-  function utilisationReport(): UtilisationReportEntity {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-  }
 });

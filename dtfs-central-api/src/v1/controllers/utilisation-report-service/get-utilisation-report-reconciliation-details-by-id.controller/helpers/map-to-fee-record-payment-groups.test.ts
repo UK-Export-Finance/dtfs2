@@ -214,7 +214,7 @@ describe('mapToFeeRecordPaymentGroups', () => {
       expect(result[0].feeRecords).toHaveLength(2);
     });
 
-    it('sets the totalReportedPayments to the total of the fee record reported payments', async () => {
+    it('sets the totalReportedPayments to the sum of the fee record reported payments', async () => {
       // Arrange
       const testValues = {
         feeRecordOne: {
@@ -255,6 +255,7 @@ describe('mapToFeeRecordPaymentGroups', () => {
       const result = await mapToFeeRecordPaymentGroups([group]);
 
       // Assert
+      expect(result.length).toEqual(0);
       expect(result[0].totalReportedPayments).toEqual({ currency: 'GBP', amount: testValues.expectedTotalReportedPaymentAmount });
     });
 
