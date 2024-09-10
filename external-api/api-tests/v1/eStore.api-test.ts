@@ -1,6 +1,5 @@
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
-import { ObjectId } from 'mongodb';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 import { UKEF_ID, ESTORE_CRON_STATUS } from '../../src/constants';
@@ -143,7 +142,7 @@ describe('/estore', () => {
 
       // Look up for the deal ID in the collection
       expect(mockFindOne).toHaveBeenCalledTimes(1);
-      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: new ObjectId(payload.dealId) } });
+      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: payload.dealId } });
 
       // Insert a new entry in the collection
       expect(mockInsertOne).toHaveBeenCalledTimes(1);
@@ -166,7 +165,7 @@ describe('/estore', () => {
       await post(payload).to('/estore');
 
       // Look up for the deal ID in the collection
-      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: new ObjectId(payload.dealId) } });
+      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: payload.dealId } });
 
       // Insert a new entry in the collection
       expect(mockInsertOne).not.toHaveBeenCalled();
