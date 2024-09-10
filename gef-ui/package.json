@@ -50,7 +50,7 @@
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.1",
     "dotenv": "16.0.3",
-    "express": "^4.19.2",
+    "express": "^4.20.0",
     "express-fileupload": "^1.5.0",
     "express-rate-limit": "^6.11.2",
     "express-session": "1.17.3",
