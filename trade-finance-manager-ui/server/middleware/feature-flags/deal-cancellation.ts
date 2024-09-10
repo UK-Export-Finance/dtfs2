@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common/';
+import { isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
 
 /**
  * Middleware to check if the deal cancellation feature flag is enabled

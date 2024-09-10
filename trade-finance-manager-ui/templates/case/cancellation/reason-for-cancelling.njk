@@ -1,4 +1,5 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
@@ -22,7 +23,7 @@
 {% block sub_content %}
   {{ govukBackLink({
       text: "Back",
-      href: "/case" + dealId,
+      href: "/case/" + dealId + "/deal",
       attributes: {
         'data-cy': 'back-link'
       }
@@ -47,12 +48,22 @@
         {{ govukCharacterCount({
         name: "reason-for-cancelling",
         id: "reason-for-cancelling",
+        value: reasonForCancelling,
         maxlength: 1200,
         label: {
           html: headingHtml
         },
         hint: {
           text: "This is only for UKEF records."
+        },
+        attributes: {
+          "data-cy": "reason-for-cancelling-text-box"
+        },
+        errorMessage: errors and errors.reasonForCancellingErrorMessage and {
+          text: errors.reasonForCancellingErrorMessage,
+          attributes: {
+            'data-cy': 'reason-for-cancelling-inline-error'
+          }
         }
       }) }}
 
@@ -62,7 +73,7 @@
             attributes: { "data-cy": "continue-button" }
             })
           }}
-          <a class="govuk-link" href="/case/{{ dealId }}/underwriting" data-cy="cancel-button">Cancel</a>
+          <a class="govuk-link" href="/case/{{ dealId }}/deal" data-cy="cancel-link">Cancel</a>
         </div>
       </form>
     </div>
