@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
-import { TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { TestApiError, UtilisationReportEntityMockBuilder, UtilisationReportPremiumPaymentsTabFilters } from '@ukef/dtfs2-common';
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import { getUtilisationReportReconciliationDetails } from './helpers';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
@@ -15,13 +15,13 @@ console.error = jest.fn();
 describe('get-utilisation-report-reconciliation-details-by-id.controller', () => {
   describe('getUtilisationReportReconciliationDetailsById', () => {
     const reportId = 1;
-    const getHttpMocks = (facilityIdQuery: string | undefined = undefined) =>
+    const getHttpMocks = (premiumPaymentsTabFilters?: UtilisationReportPremiumPaymentsTabFilters) =>
       httpMocks.createMocks<GetUtilisationReportReconciliationDetailsByIdRequest>({
         params: {
           reportId,
         },
         query: {
-          facilityIdQuery,
+          premiumPaymentsTabFilters,
         },
       });
 
@@ -95,10 +95,12 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, undefined);
     });
 
-    it('fetches details filtering by facility id query and responds with 200 when there is a facility id query provided', async () => {
+    it('fetches details filtering by premium payments tab facility id value and responds with 200 when there is a facility id value provided', async () => {
       // Arrange
-      const query = '1234';
-      const { req, res } = getHttpMocks(query);
+      const premiumPaymentsTabFilters = {
+        facilityId: '1234',
+      };
+      const { req, res } = getHttpMocks(premiumPaymentsTabFilters);
 
       const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
       when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);
@@ -116,10 +118,12 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, '1234');
     });
 
-    it('fetches details filtering without filtering and responds with 200 when there is an invalid facility id query', async () => {
+    it('fetches details filtering without filtering and responds with 200 when there is an invalid premium payments tab facility id filter value', async () => {
       // Arrange
-      const query = '123';
-      const { req, res } = getHttpMocks(query);
+      const premiumPaymentsTabFilters = {
+        facilityId: '123',
+      };
+      const { req, res } = getHttpMocks(premiumPaymentsTabFilters);
 
       const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
       when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);

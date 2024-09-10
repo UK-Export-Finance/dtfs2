@@ -1,3 +1,4 @@
+import { UtilisationReportPremiumPaymentsTabFilters } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
@@ -12,7 +13,7 @@ export type GetUtilisationReportReconciliationDetailsByIdRequest = CustomExpress
     reportId: string;
   };
   query: {
-    facilityIdQuery?: string;
+    premiumPaymentsTabFilters?: UtilisationReportPremiumPaymentsTabFilters;
   };
 }>;
 
@@ -20,10 +21,12 @@ type ResponseBody = UtilisationReportReconciliationDetails | string;
 
 export const getUtilisationReportReconciliationDetailsById = async (req: GetUtilisationReportReconciliationDetailsByIdRequest, res: Response<ResponseBody>) => {
   const { reportId } = req.params;
-  const { facilityIdQuery } = req.query;
+  const { premiumPaymentsTabFilters } = req.query;
+
+  const facilityId = premiumPaymentsTabFilters?.facilityId;
 
   try {
-    const facilityIdFilter = facilityIdQuery && REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityIdQuery) ? facilityIdQuery : undefined;
+    const facilityIdFilter = facilityId && REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityId) ? facilityId : undefined;
 
     const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsWithPayments(Number(reportId));
     if (!utilisationReport) {

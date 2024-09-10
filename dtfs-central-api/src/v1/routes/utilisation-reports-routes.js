@@ -242,6 +242,18 @@ utilisationReportsRouter.route('/set-status').put(putUtilisationReportStatusCont
  *     summary: Get the reconciliation details for the utilisation report by the report id
  *     tags: [Utilisation Report]
  *     description: Gets the reconciliation details for the utilisation report by the report id
+ *     parameters:
+ *       - in: path
+ *         name: reportId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the report to get the fee records for
+ *       - in: query
+ *         name: premiumPaymentsTabFilters
+ *         schema:
+ *           type: object
+ *           $ref: '#/definitions/UtilisationReportPremiumPaymentsTabFilters'
  *     responses:
  *       200:
  *         description: OK

@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth, UtilisationReportPremiumPaymentsTabFilters } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -59,9 +59,14 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       req.originalUrl,
     );
 
+    const premiumPaymentsTabFilters: UtilisationReportPremiumPaymentsTabFilters = {
+      facilityId: facilityIdQueryString,
+    };
+
+    // TODO FN-2311: Can we get a separate set of payment groups for the PP tab with the filter applied, keep an unfiltered set for PD tab.
     const { feeRecordPaymentGroups, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
-      facilityIdQueryString,
+      premiumPaymentsTabFilters,
       userToken,
     );
 

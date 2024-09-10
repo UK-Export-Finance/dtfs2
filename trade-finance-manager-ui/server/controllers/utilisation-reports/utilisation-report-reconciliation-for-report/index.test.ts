@@ -46,13 +46,17 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Arrange
       const { req, res } = getHttpMocks();
 
+      const premiumPaymentsTabFilters = {
+        facilityId: facilityIdQuery,
+      };
+
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockRejectedValue(new Error('Some error'));
 
       // Act
       await getUtilisationReportReconciliationByReportId(req, res);
 
       // Assert
-      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, facilityIdQuery, userToken);
+      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsTabFilters, userToken);
       expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user });
     });
@@ -133,13 +137,17 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         },
       ];
 
+      const premiumPaymentsTabFilters = {
+        facilityId: facilityIdQuery,
+      };
+
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
 
       // Act
       await getUtilisationReportReconciliationByReportId(req, res);
 
       // Assert
-      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, facilityIdQuery, userToken);
+      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsTabFilters, userToken);
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       expect(res._getRenderData()).toEqual<UtilisationReportReconciliationForReportViewModel>({
         user: MOCK_TFM_SESSION_USER,

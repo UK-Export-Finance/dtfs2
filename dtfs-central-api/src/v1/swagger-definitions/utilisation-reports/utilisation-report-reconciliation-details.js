@@ -67,4 +67,9 @@
  *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecordPaymentGroup'
  *       keyingSheet:
  *         $ref: '#/definitions/KeyingSheet'
+ *   UtilisationReportPremiumPaymentsTabFilters:
+ *     type: object
+ *     properties:
+ *       facilityId:
+ *         type: string
  */

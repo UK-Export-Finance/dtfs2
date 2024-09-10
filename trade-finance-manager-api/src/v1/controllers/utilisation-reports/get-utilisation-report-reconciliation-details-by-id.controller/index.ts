@@ -1,3 +1,4 @@
+import { UtilisationReportPremiumPaymentsTabFilters } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { AxiosError, HttpStatusCode } from 'axios';
 import api from '../../../api';
@@ -9,7 +10,7 @@ export type GetUtilisationReportReconciliationDetailsByIdRequest = CustomExpress
     reportId: string;
   };
   query: {
-    facilityIdQuery?: string;
+    premiumPaymentsTabFilters?: UtilisationReportPremiumPaymentsTabFilters;
   };
 }>;
 
@@ -19,8 +20,8 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
   const { reportId } = req.params;
 
   try {
-    const { facilityIdQuery } = req.query;
-    const utilisationReportReconciliationDetails = await api.getUtilisationReportReconciliationDetailsById(reportId, facilityIdQuery);
+    const { premiumPaymentsTabFilters } = req.query;
+    const utilisationReportReconciliationDetails = await api.getUtilisationReportReconciliationDetailsById(reportId, premiumPaymentsTabFilters);
 
     return res.status(HttpStatusCode.Ok).send(utilisationReportReconciliationDetails);
   } catch (error) {
