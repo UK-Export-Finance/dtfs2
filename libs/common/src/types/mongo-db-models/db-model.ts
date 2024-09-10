@@ -7,7 +7,7 @@ import { TfmTeam } from './tfm-teams';
 import { DeletionAuditLog } from './deletion-audit-logs';
 import { TfmFacility } from './tfm-facilities';
 import { Facility } from './facility';
-import { TfmDeal } from './tfm-deals';
+import { TfmDeal } from './tfm-deal';
 import { Deal } from './deal';
 
 /**

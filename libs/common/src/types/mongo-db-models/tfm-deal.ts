@@ -1,12 +1,7 @@
 import { ObjectId } from 'mongodb';
-import { AuditDatabaseRecord } from '../audit-database-record';
+import { TfmDealCancellation } from '../tfm-deal-cancellation';
 import { Deal } from './deal';
-
-export type TfmDealCancellation = {
-  reason: string;
-  bankRequestDate: number;
-  effectiveFrom: number;
-};
+import { AuditDatabaseRecord } from '../audit-database-record';
 
 /**
  * Type of the mongo db "tfm-deals" collection
