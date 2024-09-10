@@ -1,4 +1,4 @@
-const { format, fromUnixTime, getUnixTime } = require('date-fns');
+const { format, fromUnixTime } = require('date-fns');
 const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { getTask, showAmendmentButton, ukefDecisionRejected } = require('../helpers');
@@ -37,15 +37,6 @@ const getCaseDeal = async (req, res) => {
   const hasAmendmentInProgress = amendmentsInProgress.length > 0;
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-  }
-
-  const cancellationUpdate = { reason: 'test reason', bankRequestDate: getUnixTime(new Date()), effectiveFrom: getUnixTime(new Date()) };
-
-  try {
-    const response = await api.updateDealCancellation(dealId, cancellationUpdate, userToken);
-    console.log({ response });
-  } catch (error) {
-    console.error('error here yooo', error);
   }
 
   return res.render('case/deal/deal.njk', {

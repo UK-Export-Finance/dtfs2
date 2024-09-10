@@ -61,7 +61,7 @@ describe('controllers - deal cancellation', () => {
 
     it('should throw an error when there is an API error', async () => {
       const testErrorStatus = 404;
-      const testApiErrorMessage = 'test api error meessage';
+      const testApiErrorMessage = 'test api error message';
       jest.mocked(api.updateDealCancellation).mockRejectedValue(new TestApiError(testErrorStatus, testApiErrorMessage));
 
       // Arrange
