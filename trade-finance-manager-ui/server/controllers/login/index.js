@@ -62,6 +62,7 @@ const handleSsoRedirect = async (req, res) => {
     if (!body.formId) {
       return loginService.acceptExternalSsoPost(req, res);
     }
+
     if (!session?.auth?.pkceCodes) {
       console.error('SSO login session details are missing. Start login from beginning.');
       return res.redirect('/');
