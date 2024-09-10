@@ -96,7 +96,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`));
 
-    pages.utilisationReportEditPaymentPage.clickBackLink();
+    cy.clickBackLink();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
   });
@@ -108,7 +108,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=payment-details`));
 
-    pages.utilisationReportEditPaymentPage.clickBackLink();
+    cy.clickBackLink();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}#payment-details`));
   });
