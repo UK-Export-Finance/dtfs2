@@ -346,6 +346,11 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
       cy.clickContinueButton();
 
+      if (facilityEndDateEnabled) {
+        cy.fillInBankReviewDate(dateConstants.threeMonths);
+        cy.clickContinueButton();
+      }
+
       unissuedFacilityTable.rows().should('have.length', 0);
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');
       continueButton().should('exist');

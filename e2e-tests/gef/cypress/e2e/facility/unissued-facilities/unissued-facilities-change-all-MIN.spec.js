@@ -296,6 +296,11 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
 
       cy.clickContinueButton();
 
+      if (facilityEndDateEnabled) {
+        cy.fillInBankReviewDate(dateConstants.threeMonths);
+        cy.clickContinueButton();
+      }
+
       unissuedFacilityTable.rows().should('have.length', 0);
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');
       continueButton().should('exist');
@@ -402,6 +407,11 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       }
 
       cy.clickContinueButton();
+
+      if (facilityEndDateEnabled) {
+        cy.fillInBankReviewDate(dateConstants.threeMonths);
+        cy.clickContinueButton();
+      }
 
       // checks that name has been updated
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(`${MOCK_FACILITY_ONE.name}name`);

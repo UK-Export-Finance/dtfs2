@@ -1,4 +1,4 @@
-import { PortalSessionBank } from '@ukef/dtfs2-common';
+import { PortalSessionBank } from '../types/portal-session-data/portal-session-bank';
 import { aMonthlyBankReportPeriodSchedule } from './bank-report-period-schedule';
 
 export const aBank = (): PortalSessionBank => ({
