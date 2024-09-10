@@ -1,11 +1,11 @@
-import { clickEvents } from '../../../e2e/partials';
+import { backLink } from '../../../e2e/partials';
 
 /**
  * clickBackLink
  * Click the back link.
  */
 const clickBackLink = () => {
-  clickEvents.backLink().click();
+  backLink().click();
 };
 
 export default clickBackLink;

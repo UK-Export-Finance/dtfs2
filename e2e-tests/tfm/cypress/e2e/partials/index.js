@@ -3,7 +3,6 @@ const caseSummary = require('./caseSummary');
 const header = require('./header');
 const underwritingSubNav = require('./underwritingSubNav');
 const primaryNavigation = require('./primaryNavigation');
-const clickEvents = require('./clickEvents');
 
 module.exports = {
   caseSubNavigation,
@@ -11,5 +10,5 @@ module.exports = {
   header,
   underwritingSubNav,
   primaryNavigation,
-  clickEvents,
+  backLink: () => cy.get('[data-cy="back-link"]'),
 };
