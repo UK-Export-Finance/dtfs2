@@ -1,4 +1,4 @@
-import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { CURRENCY, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentGroupViewModelItem } from '../server/types/view-models';
 
 export const aFeeRecordPaymentGroupViewModelItem = (): FeeRecordPaymentGroupViewModelItem => ({
@@ -22,7 +22,7 @@ export const aFeeRecordPaymentGroupViewModelItem = (): FeeRecordPaymentGroupView
   },
   status: FEE_RECORD_STATUS.TO_DO,
   displayStatus: 'TO DO',
-  checkboxId: 'feeRecordIds-1-reportedPaymentsCurrency-GBP-status-TO_DO',
+  checkboxId: `feeRecordIds-1-reportedPaymentsCurrency-${CURRENCY.GBP}-status-${FEE_RECORD_STATUS.TO_DO}`,
   isChecked: false,
   checkboxAriaLabel: '',
 });
