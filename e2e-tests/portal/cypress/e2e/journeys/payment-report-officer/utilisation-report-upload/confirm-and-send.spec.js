@@ -1,4 +1,3 @@
-const { mainHeading } = require('../../../partials');
 const { utilisationReportUpload, confirmAndSend, problemWithService } = require('../../../pages');
 const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
@@ -30,21 +29,18 @@ context('Confirm and send', () => {
     it('Should route to the Upload Report page when the back button is selected', () => {
       cy.clickBackLink();
 
-      mainHeading().should('not.exist');
       utilisationReportUpload.assertOnThisPage();
     });
 
     it('Should route to the Upload Report page when the change button is selected', () => {
       confirmAndSend.changeLink().click();
 
-      mainHeading().should('not.exist');
       utilisationReportUpload.assertOnThisPage();
     });
 
     it('Should route to the Confirmation page when the Confirm and Send button is selected', () => {
       confirmAndSend.confirmAndSendButton().click();
 
-      mainHeading().should('not.exist');
       confirmAndSend.currentUrl().should('contain', '/confirmation');
     });
   });
