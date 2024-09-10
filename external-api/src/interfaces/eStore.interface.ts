@@ -1,6 +1,20 @@
-// Input
-
 import { Category } from '../helpers/types/estore';
+
+/**
+ * Represents a document stored in Azure, including its type, name, location, and parent identifier.
+ *
+ * @interface AzureDocument
+ * @property {string} documentType - The type of the document.
+ * @property {string} fileName - The name of the file.
+ * @property {string} fileLocationPath - The location path of the file in Azure storage.
+ * @property {string} parentId - The identifier of the parent entity to which this document belongs.
+ */
+export interface AzureDocument {
+  readonly documentType: string;
+  readonly fileName: string;
+  readonly fileLocationPath: string;
+  readonly parentId: string;
+}
 
 /**
  * Represents the main structure for an eStore, including deal, site, and various identifiers.
@@ -9,7 +23,7 @@ import { Category } from '../helpers/types/estore';
  * @property {string} dealId - Unique identifier for the deal.
  * @property {string} siteId - Unique identifier for the site.
  * @property {number[]} facilityIdentifiers - Array of identifiers for facilities.
- * @property {string[]} supportingInformation - Array of supporting information strings.
+ * @property {AzureDocument[]} supportingInformation - Array of supporting information documents.
  * @property {string} exporterName - Name of the exporter.
  * @property {string} buyerName - Name of the buyer.
  * @property {string} dealIdentifier - Unique identifier for the deal.
@@ -20,7 +34,7 @@ export interface Estore {
   dealId: string;
   siteId: string;
   facilityIdentifiers: number[];
-  supportingInformation: string[];
+  supportingInformation: AzureDocument[];
   exporterName: string;
   buyerName: string;
   dealIdentifier: string;
@@ -87,19 +101,14 @@ export interface EstoreFacilityFolder extends EstoreSite, EstoreBuyer {
 }
 
 /**
- * Defines the structure for documents within the eStore, including type, name, and location.
+ * Represents a document in the eStore, extending the AzureDocument interface to include the buyer's name.
  *
- * @interface EstoreDealFiles
+ * @interface EstoreDocument
+ * @extends AzureDocument
  * @property {string} buyerName - Name of the buyer.
- * @property {string} documentType - Type of the document.
- * @property {string} fileName - Name of the file.
- * @property {string} fileLocationPath - Path to the file location.
  */
-export interface EstoreDealFiles {
+export interface EstoreDocument extends AzureDocument {
   readonly buyerName: string;
-  readonly documentType: string;
-  readonly fileName: string;
-  readonly fileLocationPath: string;
 }
 
 /**
@@ -215,16 +224,17 @@ export interface FacilityFolderResponse {
 /**
  * Represents the response for a document upload operation within the eStore.
  *
- * @interface UploadDocumentsResponse
+ * @interface DocumentCreationResponse
  * @extends EstoreResponse
  * @property {string} data.fileUpload - Status of the file upload.
  * @property {string} data.error - Error message, if any.
  */
-export interface UploadDocumentsResponse {
+export interface DocumentCreationResponse {
   readonly status: number;
   readonly data: {
     fileUpload?: string;
     error?: string;
+    message?: unknown;
   };
 }
 

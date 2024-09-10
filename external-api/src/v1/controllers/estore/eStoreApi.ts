@@ -7,7 +7,7 @@ import {
   EstoreBuyer,
   EstoreDealFolder,
   EstoreFacilityFolder,
-  EstoreDealFiles,
+  EstoreDocument,
   EstoreTermStore,
   EstoreResponse,
   SiteCreationResponse,
@@ -15,7 +15,7 @@ import {
   BuyerFolderResponse,
   DealFolderResponse,
   FacilityFolderResponse,
-  UploadDocumentsResponse,
+  DocumentCreationResponse,
   TermStoreResponse,
   EstoreErrorResponse,
 } from '../../../interfaces';
@@ -111,14 +111,14 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
  * Makes a POST request to the eStore API.
  *
  * @param {string} endpoint - The endpoint to call.
- * @param {Estore | EstoreSite[] | EstoreTermStore[] | EstoreBuyer[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[]}
+ * @param {Estore | EstoreSite[] | EstoreTermStore[] | EstoreBuyer[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDocument[]}
  * data - The data to send in the request.
  * @param {number} timeout - The timeout for the request.
  * @returns {Promise<EstoreResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
 const postToEstore = async (
   endpoint: string,
-  data: Estore | EstoreSite[] | EstoreTermStore[] | EstoreBuyer[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
+  data: Estore | EstoreSite[] | EstoreTermStore[] | EstoreBuyer[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDocument[],
   timeout = 0,
 ): Promise<EstoreResponse | EstoreErrorResponse> => {
   try {
@@ -263,14 +263,14 @@ export const createFacilityFolder = async (
  *
  * @param {string} siteId - The ID of the site where the documents will be uploaded.
  * @param {string} dealIdentifier - The identifier of the deal.
- * @param {EstoreDealFiles} file - The file to upload.
+ * @param {EstoreDocument} file - The file to upload.
  * @returns {Promise<UploadDocumentsResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
 export const uploadSupportingDocuments = async (
   siteId: string,
   dealIdentifier: string,
-  file: EstoreDealFiles,
-): Promise<UploadDocumentsResponse | EstoreErrorResponse> => {
+  file: EstoreDocument,
+): Promise<DocumentCreationResponse | EstoreErrorResponse> => {
   try {
     if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
       console.error('Invalid site or deal ID %s %s', siteId, dealIdentifier);

@@ -10,29 +10,25 @@ import { eStoreDealDirectoryCreationJob } from './eStoreDealDirectoryCreationJob
 const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
 /**
- * Executes the eStore buyer directory creation job.
+ * The `eStoreBuyerDirectoryCreationJob` function is responsible for creating a buyer directory
+ * for a given eStore data object. It validates the input parameters, initiates a CRON job, and
+ * attempts to create a buyer directory with the provided eStore data.
  *
- * This job performs the following tasks:
- * 1. Checks if a buyer name is provided in the eStore data.
- * 2. Creates a buyer directory using the provided buyer name and site ID.
- * 3. Updates the cron job logs based on the success or failure of the directory creation.
- *
- * @param {Estore} eStoreData - The eStore data containing information about the deal, exporter, and buyer.
+ * @param {Estore} eStoreData - The eStore data object containing information about the deal, site, and buyer.
  *
  * @returns {Promise<void>} - A promise that resolves when the job is complete.
  *
  * @example
  * const eStoreData = {
- *   dealIdentifier: '12345',
- *   siteId: '507f1f77bcf86cd799439012',
- *   exporterName: 'Exporter Inc.',
- *   buyerName: 'Buyer Inc.',
- *   dealId: '507f1f77bcf86cd799439011'
+ *   dealId: '507f1f77bcf86cd799439011',
+ *   siteId: 'site123',
+ *   buyerName: 'Buyer LLC',
+ *   dealIdentifier: 'deal123',
  * };
  *
  * eStoreBuyerDirectoryCreationJob(eStoreData)
- *   .then(() => console.log('Job completed successfully'))
- *   .catch((error) => console.error('Job failed', error));
+ *   .then(() => console.log('Buyer directory creation job completed'))
+ *   .catch((error) => console.error('Buyer directory creation job failed', error));
  */
 export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promise<void> => {
   try {
@@ -40,7 +36,7 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
 
     // Argument validation
     if (invalidParams) {
-      console.error('Invalid arguments provided for eStore buyer directory creation');
+      console.error('⚠️ Invalid arguments provided for eStore buyer directory creation');
       return;
     }
 
@@ -63,7 +59,7 @@ export const eStoreBuyerDirectoryCreationJob = async (eStoreData: Estore): Promi
 
     // Validate response
     if (buyerDirectoryCreated) {
-      console.info('Attempting to create a buyer directory %s for deal %s', buyerName, dealIdentifier);
+      console.info('✅ Buyer directory %s has been created for deal %s', buyerName, dealIdentifier);
 
       // Update `cron-job-logs`
       await EstoreRepo.updateByDealId(dealId, {

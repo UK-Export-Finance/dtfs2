@@ -8,29 +8,24 @@ import { siteExists } from '../v1/controllers/estore/eStoreApi';
 import { getNowAsEpoch } from '../helpers/date';
 
 /**
- * Executes the eStore site creation cron job.
+ * The `eStoreSiteCreationCronJob` function is responsible for creating a site for a given eStore data object.
+ * It validates the input parameters, initiates a CRON job, checks if the site already exists, and updates the
+ * relevant records in the database.
  *
- * This job performs the following tasks:
- * 1. Initiates the CRON job for site creation.
- * 2. Checks if the site already exists for the provided exporter name.
- * 3. If the site has been created, updates the cron job logs and TFM deals collections, and stops the CRON job.
- * 4. If the site is in provisioning status, it will handle accordingly (not shown in the excerpt).
- * 5. Adds facility IDs to the term store and creates the buyer folder if the site creation is successful.
+ * @param {Estore} eStoreData - The eStore data object containing information about the deal, exporter, and site.
  *
- * @param {Estore} eStoreData - The eStore data containing information about the deal, exporter, and other relevant details.
- *
- * @returns {Promise<void>} - A promise that resolves when the cron job is complete.
+ * @returns {Promise<void>} - A promise that resolves when the job is complete.
  *
  * @example
  * const eStoreData = {
- *   dealIdentifier: '12345',
+ *   dealId: '507f1f77bcf86cd799439011',
  *   exporterName: 'Exporter Inc.',
- *   dealId: '507f1f77bcf86cd799439011'
+ *   dealIdentifier: 'deal123',
  * };
  *
  * eStoreSiteCreationCronJob(eStoreData)
- *   .then(() => console.log('Cron job completed successfully'))
- *   .catch((error) => console.error('Cron job failed', error));
+ *   .then(() => console.log('Site creation job completed'))
+ *   .catch((error) => console.error('Site creation job failed', error));
  */
 export const eStoreSiteCreationCronJob = async (eStoreData: Estore): Promise<void> => {
   try {
@@ -40,7 +35,7 @@ export const eStoreSiteCreationCronJob = async (eStoreData: Estore): Promise<voi
 
     // Argument validation
     if (invalidParams) {
-      console.error('Invalid arguments provided for eStore site creation');
+      console.error('⚠️ Invalid arguments provided for eStore site creation');
       return;
     }
 
@@ -60,7 +55,7 @@ export const eStoreSiteCreationCronJob = async (eStoreData: Estore): Promise<voi
 
     // Site has been created
     if (siteCreated) {
-      console.info('⚡ CRON: eStore site %s has been created successfully for deal %s', siteExistsResponse.data.siteId, dealIdentifier);
+      console.info('✅ eStore site %s has been created successfully for deal %s', siteExistsResponse.data.siteId, dealIdentifier);
 
       data.siteId = String(siteExistsResponse.data.siteId);
 
@@ -91,7 +86,7 @@ export const eStoreSiteCreationCronJob = async (eStoreData: Estore): Promise<voi
       await eStoreTermStoreCreationJob(data);
     } else if (sitePending) {
       // Site is still being provisioned
-      console.info('⚡ CRON: eStore site creation %s is still in progress for deal %s', siteExistsResponse.data.siteId, dealIdentifier);
+      console.info('⚡ eStore site creation %s is still in progress for deal %s', siteExistsResponse.data.siteId, dealIdentifier);
 
       // Update status
       await EstoreRepo.updateByDealId(dealId, {

@@ -10,32 +10,28 @@ import { eStoreFacilityDirectoryCreationJob } from './eStoreFacilityDirectoryCre
 const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
 /**
- * Executes the eStore deal directory creation job.
+ * The `eStoreDealDirectoryCreationJob` function is responsible for creating a deal directory
+ * for a given eStore data object. It validates the input parameters, initiates a CRON job, and
+ * attempts to create a deal directory with the provided eStore data.
  *
- * This job performs the following tasks:
- * 1. Checks if an exporter name is provided in the eStore data.
- * 2. Creates a deal directory using the provided exporter name and other deal details.
- * 3. Updates the cron job logs based on the success or failure of the directory creation.
- * 4. Initiates the facility directory creation job if the deal directory creation is successful.
- *
- * @param {Estore} eStoreData - The eStore data containing information about the deal, exporter, and buyer.
+ * @param {Estore} eStoreData - The eStore data object containing information about the deal, site, exporter, buyer, and markets.
  *
  * @returns {Promise<void>} - A promise that resolves when the job is complete.
  *
  * @example
  * const eStoreData = {
- *   dealIdentifier: '12345',
- *   siteId: '507f1f77bcf86cd799439012',
- *   exporterName: 'Exporter Inc.',
- *   buyerName: 'Buyer Inc.',
  *   dealId: '507f1f77bcf86cd799439011',
- *   destinationMarket: 'UK',
- *   riskMarket: 'High'
+ *   siteId: 'site123',
+ *   exporterName: 'Exporter Inc.',
+ *   buyerName: 'Buyer LLC',
+ *   dealIdentifier: 'deal123',
+ *   destinationMarket: 'Market A',
+ *   riskMarket: 'Market B',
  * };
  *
  * eStoreDealDirectoryCreationJob(eStoreData)
- *   .then(() => console.log('Job completed successfully'))
- *   .catch((error) => console.error('Job failed', error));
+ *   .then(() => console.log('Deal directory creation job completed'))
+ *   .catch((error) => console.error('Deal directory creation job failed', error));
  */
 export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promise<void> => {
   try {
@@ -50,7 +46,7 @@ export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promis
       !eStoreData?.riskMarket;
 
     if (invalidParams) {
-      console.error('Invalid arguments provided for eStore deal directory creation');
+      console.error('⚠️ Invalid arguments provided for eStore deal directory creation');
       return;
     }
 
@@ -100,7 +96,7 @@ export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promis
       // Initiate facility directory creation
       await eStoreFacilityDirectoryCreationJob(eStoreData);
     } else if (dealDirectoryPending) {
-      console.info('⚡ CRON: eStore buyer directory %s creation is still in progress for deal %s', buyerName, dealIdentifier);
+      console.info('⚡ eStore deal directory %s creation is still in progress for deal %s', dealIdentifier, dealIdentifier);
 
       // Update status
       await EstoreRepo.updateByDealId(dealId, {

@@ -15,38 +15,42 @@ import { sendEmail } from '../email.controller';
 const { UKEF_INTERNAL_NOTIFICATION } = process.env;
 
 /**
- * Handles the creation of an eStore site.
- *
- * This function performs the following tasks:
- * 1. Validates the request body to ensure it is not empty.
- * 2. Retrieves the necessary collections from the database.
- * 3. Extracts and structures the eStore data from the request body.
- * 4. Validates the eStore payload to ensure all required fields are present and correctly formatted.
- * 5. Invokes various APIM eStore endpoints
- * 6. Returns appropriate HTTP status cod
+ * The `create` function handles the creation of an eStore site. It validates the request body,
+ * ensures the creation of a new CRON job, and performs various checks on the provided data.
+ * If the request body is invalid, it returns a 400 Bad Request response. Otherwise, it processes
+ * the eStore data and updates the CRON job log accordingly.
  *
  * @param {EstoreRequest} req - The request object containing the eStore data.
- * @param {Response} res - The response object used to send the HTTP response.
+ * @param {Response} res - The response object to send the result.
  *
- * @returns {Promise<Response>} - A promise that resolves to the HTTP response.
- *
- * @throws {Error} - Throws an error if there is an issue with database operations or if the request body is invalid.
+ * @returns {Promise<Response>} - A promise that resolves to the response object.
  *
  * @example
  * const req = {
  *   body: {
  *     dealId: '507f1f77bcf86cd799439011',
- *     siteId: '507f1f77bcf86cd799439012',
+ *     siteId: 'site123',
  *     facilityIdentifiers: [1, 2, 3],
- *     supportingInformation: 'Some info',
+ *     supportingInformation: [{
+ *        "documentType": "Exporter_questionnaire",
+ *        "fileName": "test.docx",
+ *        "fileLocationPath": "directory/",
+ *        "parentId": "abc"
+ *     }],
  *     exporterName: 'Exporter Inc.',
- *     buyerName: 'Buyer Inc.',
- *     dealIdentifier: '12345',
- *     destinationMarket: 'UK',
- *     riskMarket: 'High'
- *   }
+ *     buyerName: 'Buyer LLC',
+ *     dealIdentifier: 'deal123',
+ *     destinationMarket: 'Market A',
+ *     riskMarket: 'Market B',
+ *   },
+ * };
+ * const res = {
+ *   status: (code) => ({ send: (data) => console.log(code, data) }),
  * };
  *
+ * create(req, res)
+ *   .then((response) => console.log('Response:', response))
+ *   .catch((error) => console.error('Error:', error));
  */
 export const create = async (req: EstoreRequest, res: Response): Promise<Response> => {
   try {
@@ -121,6 +125,11 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
             response: ' Invalid eStore payload',
             timestamp: getNowAsEpoch(),
           },
+          document: {
+            status: ESTORE_CRON_STATUS.FAILED,
+            response: ' Invalid eStore payload',
+            timestamp: getNowAsEpoch(),
+          },
         },
       });
 
@@ -159,6 +168,7 @@ export const create = async (req: EstoreRequest, res: Response): Promise<Respons
           buyer: { status: ESTORE_CRON_STATUS.PENDING },
           deal: { status: ESTORE_CRON_STATUS.PENDING },
           facility: { status: ESTORE_CRON_STATUS.PENDING },
+          document: { status: ESTORE_CRON_STATUS.PENDING },
         },
       });
 

@@ -10,27 +10,24 @@ import { eStoreBuyerDirectoryCreationJob } from './eStoreBuyerDirectoryCreationJ
 const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
 /**
- * Executes the eStore term store creation job.
+ * The `eStoreTermStoreCreationJob` function is responsible for adding facilities to the term store
+ * for a given eStore data object. It validates the input parameters, initiates a CRON job, and
+ * attempts to add each facility to the term store.
  *
- * This job performs the following tasks:
- * 1. Checks for the existence of facilities in the provided eStore data
- * 2. Attempts to add them to the term store for the provided facilities.
- *
- * @param {Estore} eStoreData - The eStore data containing information about the deal, facilities, and buyer.
+ * @param {Estore} eStoreData - The eStore data object containing information about the deal and facilities.
  *
  * @returns {Promise<void>} - A promise that resolves when the job is complete.
  *
  * @example
  * const eStoreData = {
- *   dealIdentifier: '12345',
+ *   dealId: '507f1f77bcf86cd799439011',
  *   facilityIdentifiers: [1, 2, 3],
- *   buyerName: 'Buyer Inc.',
- *   dealId: '507f1f77bcf86cd799439011'
+ *   dealIdentifier: 'deal123',
  * };
  *
  * eStoreTermStoreCreationJob(eStoreData)
- *   .then(() => console.log('Job completed successfully'))
- *   .catch((error) => console.error('Job failed', error));
+ *   .then(() => console.log('Term store creation job completed'))
+ *   .catch((error) => console.error('Term store creation job failed', error));
  */
 export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<void> => {
   try {
@@ -38,7 +35,7 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
 
     // Argument validation
     if (invalidParams) {
-      console.error('Invalid arguments provided for eStore facility term store creation');
+      console.error('⚠️ Invalid arguments provided for eStore facility term store creation');
       return;
     }
 
@@ -63,7 +60,7 @@ export const eStoreTermStoreCreationJob = async (eStoreData: Estore): Promise<vo
       const allTermStoresCreated = response.every((term) => ACCEPTABLE_STATUSES.includes(term?.status));
 
       if (allTermStoresCreated) {
-        console.info('Facilities have been added to term store for deal %s', dealIdentifier);
+        console.info('✅ Facilities have been added to term store for deal %s', dealIdentifier);
 
         // Update `cron-job-logs`
         await EstoreRepo.updateByDealId(dealId, {
