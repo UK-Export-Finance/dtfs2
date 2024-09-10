@@ -8,6 +8,35 @@ import { getNowAsEpoch } from '../helpers/date';
 
 const ACCEPTABLE_STATUSES = [HttpStatusCode.Ok, HttpStatusCode.Created];
 
+/**
+ * The `eStoreDocumentsCreationJob` function is responsible for uploading supporting documents
+ * to the eStore for a given eStore data object. It validates the input parameters, initiates a CRON job,
+ * and attempts to upload each supporting document. If the request body is invalid, it logs an error and returns.
+ *
+ * @param {Estore} eStoreData - The eStore data object containing information about the deal, site, buyer, and supporting documents.
+ *
+ * @returns {Promise<void>} - A promise that resolves when the job is complete.
+ *
+ * @example
+ * const eStoreData = {
+ *   dealId: '507f1f77bcf86cd799439011',
+ *   siteId: 'site123',
+ *   buyerName: 'Buyer LLC',
+ *   supportingInformation: [
+ *     {
+ *       documentType: 'pdf',
+ *       fileName: 'document1.pdf',
+ *       fileLocationPath: '/path/to/document1.pdf',
+ *       parentId: 'parent123',
+ *     },
+ *   ],
+ *   dealIdentifier: 'deal123',
+ * };
+ *
+ * eStoreDocumentsCreationJob(eStoreData)
+ *   .then(() => console.log('Documents creation job completed'))
+ *   .catch((error) => console.error('Documents creation job failed', error));
+ */
 export const eStoreDocumentsCreationJob = async (eStoreData: Estore): Promise<void> => {
   try {
     const invalidParams =

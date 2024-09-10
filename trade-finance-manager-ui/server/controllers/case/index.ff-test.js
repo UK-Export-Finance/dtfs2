@@ -10,9 +10,9 @@ jest.mock('@ukef/dtfs2-common', () => ({
 
 const res = mockRes();
 
-const TOKEN = 'test-token';
+const token = 'test-token';
 
-const SESSION = {
+const session = {
   user: {
     _id: '12345678',
     username: 'testUser',
@@ -20,7 +20,7 @@ const SESSION = {
     lastName: 'Bloggs',
     teams: ['TEAM1'],
   },
-  userToken: TOKEN,
+  userToken: token,
 };
 
 describe('controllers - case', () => {
@@ -90,7 +90,7 @@ describe('controllers - case', () => {
           params: {
             facilityId: mockFacility._id,
           },
-          session: SESSION,
+          session,
         };
 
         await caseController.getCaseFacility(req, res);
@@ -103,7 +103,7 @@ describe('controllers - case', () => {
           activePrimaryNavigation: 'manage work',
           activeSubNavigation: 'facility',
           facilityId: req.params.facilityId,
-          user: SESSION.user,
+          user: session.user,
           showAmendmentButton: false,
           showContinueAmendmentButton: false,
           amendmentId: '626bae8c43c01e02076352e1',
