@@ -61,6 +61,10 @@ const mapToEditPaymentFormValues = (payment: Payment): EditPaymentFormValues => 
  * Maps the payment details response body to the edit payment view model
  * @param editPaymentResponse - The GET payment details response body
  * @param reportId - The report id
+ * @param paymentId - The payment id
+ * @param isCheckboxChecked - Function to check if a checkbox is checked
+ * @param redirectTab - Optional reconciliation for report redirect tab
+ * @param errors - Optional errors view model
  * @returns The edit payment view model
  */
 export const getEditPaymentViewModel = (
@@ -88,6 +92,11 @@ export const getEditPaymentViewModel = (
  * Maps the payment details response body to the edit payment view model
  * @param editPaymentResponse - The GET payment details response body
  * @param reportId - The report id
+ * @param paymentId - The payment id
+ * @param isCheckboxChecked - Function to check if a checkbox is checked
+ * @param formValues - The form values for editing payment
+ * @param redirectTab - Optional reconciliation for report redirect tab
+ * @param errors - Optional errors view model
  * @returns The edit payment view model
  */
 export const getEditPaymentViewModelWithFormValues = (
