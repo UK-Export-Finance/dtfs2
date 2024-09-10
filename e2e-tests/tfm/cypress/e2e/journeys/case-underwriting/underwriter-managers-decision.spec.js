@@ -226,9 +226,14 @@ context("Case Underwriting - Underwriter Manager's decision - Submit Form", () =
 
     cy.assertText(pages.managersDecisionPage.decisionMadeBy(), expectedName);
 
-    const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' });
+    pages.managersDecisionPage
+      .decisionDateTime()
+      .invoke('text')
+      .then((text) => {
+        const todayFormatted = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: '2-digit' });
 
-    cy.assertText(pages.managersDecisionPage.decisionDateTime(), expectedDate);
+        expect(text.trim()).contains(todayFormatted);
+      });
 
     cy.assertText(pages.managersDecisionPage.conditions(), "Approval comment. Div contents &lt;img src = 'data:abc' /&gt;");
 
