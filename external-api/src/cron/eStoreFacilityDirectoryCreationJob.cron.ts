@@ -44,7 +44,7 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
 
     // Argument validation
     if (invalidParams) {
-      console.error('Invalid arguments provided for eStore facility directory creation');
+      console.error('⚠️Invalid arguments provided for eStore facility directory creation');
       return;
     }
 
@@ -84,7 +84,7 @@ export const eStoreFacilityDirectoryCreationJob = async (eStoreData: Estore): Pr
 
     // Validate each and every response status code
     if (allFacilitiesCreated) {
-      console.info('Facility %s directory has been created for deal %s', facilityIdentifiers, dealIdentifier);
+      console.info('✅ Facility %s directory has been created for deal %s', facilityIdentifiers, dealIdentifier);
 
       // Update `cron-job-logs`
       await EstoreRepo.updateByDealId(dealId, {

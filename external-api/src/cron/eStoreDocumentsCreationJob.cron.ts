@@ -15,7 +15,7 @@ export const eStoreDocumentsCreationJob = async (eStoreData: Estore): Promise<vo
 
     // Argument validation
     if (invalidParams) {
-      console.error('Invalid arguments provided for eStore supporting documents creation');
+      console.error('⚠️ Invalid arguments provided for eStore supporting documents creation');
       return;
     }
 
@@ -23,7 +23,7 @@ export const eStoreDocumentsCreationJob = async (eStoreData: Estore): Promise<vo
 
     // No documents to be uploaded
     if (!supportingInformation.length) {
-      console.info('%i supporting documents for deal %s', supportingInformation.length, dealIdentifier);
+      console.info('✅ %i supporting documents for deal %s', supportingInformation.length, dealIdentifier);
 
       // Update `cron-job-logs`
       await EstoreRepo.updateByDealId(dealId, {
@@ -66,7 +66,7 @@ export const eStoreDocumentsCreationJob = async (eStoreData: Estore): Promise<vo
 
     // Validate each and every response status code
     if (allDocumentsCreated) {
-      console.info('All %i supporting documents have been created for deal %s', supportingInformation.length, dealIdentifier);
+      console.info('✅ All %i supporting documents have been created for deal %s', supportingInformation.length, dealIdentifier);
 
       // Update `cron-job-logs`
       await EstoreRepo.updateByDealId(dealId, {

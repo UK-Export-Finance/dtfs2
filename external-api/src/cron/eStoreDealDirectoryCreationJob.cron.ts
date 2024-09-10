@@ -76,7 +76,7 @@ export const eStoreDealDirectoryCreationJob = async (eStoreData: Estore): Promis
 
     // Validate response
     if (dealDirectoryCreated) {
-      console.info('Attempting to create a deal directory for deal %s', dealIdentifier);
+      console.info('✅ eStore deal directory %s has been created for deal %s', dealIdentifier, dealIdentifier);
 
       // Update `cron-job-logs`
       await EstoreRepo.updateByDealId(dealId, {
