@@ -9,17 +9,7 @@ import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL } from './payment-form-helpers';
 import { getReconciliationForReportHref } from './get-reconciliation-for-report-href';
 
-jest.mock('./get-reconciliation-for-report-href');
-
 describe('edit-payment-helper', () => {
-  beforeEach(() => {
-    jest.mocked(getReconciliationForReportHref).mockReturnValue('/utilisation-reports/1');
-  });
-
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
   describe('getEditPaymentViewModel', () => {
     const reportId = '12';
     const paymentId = '34';
@@ -395,14 +385,13 @@ describe('edit-payment-helper', () => {
       // Arrange
       const redirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
 
-      jest.mocked(getReconciliationForReportHref).mockReturnValue('/utilisation-reports/123#keying-sheet');
+      const backLinkHref = getReconciliationForReportHref(reportId, redirectTab);
 
       // Act
       const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, redirectTab);
 
       // Assert
-      expect(viewModel.backLinkHref).toEqual('/utilisation-reports/123#keying-sheet');
-      expect(getReconciliationForReportHref).toHaveBeenCalledWith(reportId, redirectTab);
+      expect(viewModel.backLinkHref).toEqual(backLinkHref);
     });
   });
 
@@ -904,14 +893,13 @@ describe('edit-payment-helper', () => {
       // Arrange
       const keyingSheetRedirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
 
-      jest.mocked(getReconciliationForReportHref).mockReturnValue('/utilisation-reports/123#keying-sheet');
+      const backLinkHref = getReconciliationForReportHref(reportId, keyingSheetRedirectTab);
 
       // Act
       const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, keyingSheetRedirectTab);
 
       // Assert
-      expect(viewModel.backLinkHref).toEqual('/utilisation-reports/123#keying-sheet');
-      expect(getReconciliationForReportHref).toHaveBeenCalledWith(reportId, keyingSheetRedirectTab);
+      expect(viewModel.backLinkHref).toEqual(backLinkHref);
     });
 
     function aValidEditPaymentFormValuesObject(): EditPaymentFormValues {
