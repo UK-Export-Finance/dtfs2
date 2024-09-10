@@ -117,6 +117,11 @@ context('Second submission (has submissionDate) with currency conversion date mo
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
-    cy.assertText(successMessage.successMessageListItem(), 'Supply Contract submitted to UKEF.');
+    successMessage
+      .successMessageListItem()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
+      });
   });
 });

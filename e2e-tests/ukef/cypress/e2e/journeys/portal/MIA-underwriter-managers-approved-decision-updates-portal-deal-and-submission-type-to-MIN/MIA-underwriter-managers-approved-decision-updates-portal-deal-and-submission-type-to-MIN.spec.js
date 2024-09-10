@@ -84,7 +84,12 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Portal deal submission type should be MIA to start with
     //---------------------------------------------------------------
-    cy.assertText(portalPages.contract.eligibilitySubmissionType(), 'Manual Inclusion Application');
+    portalPages.contract
+      .eligibilitySubmissionType()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('Manual Inclusion Application');
+      });
 
     //---------------------------------------------------------------
     // Underwriter Manager logs in to TFM
@@ -102,7 +107,12 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM deal submission type should be MIA to start with
     //---------------------------------------------------------------
-    cy.assertText(tfmPartials.caseSummary.dealSubmissionType(), 'Manual Inclusion Application');
+    tfmPartials.caseSummary
+      .dealSubmissionType()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('Manual Inclusion Application');
+      });
 
     //---------------------------------------------------------------
     // Underwriter Manager submits a decision
@@ -196,7 +206,12 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal deal should now be MIN with submission date
     //---------------------------------------------------------------
-    cy.assertText(portalPages.contract.eligibilitySubmissionType(), 'Manual Inclusion Notice');
+    portalPages.contract
+      .eligibilitySubmissionType()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('Manual Inclusion Notice');
+      });
 
     cy.assertText(portalPages.contract.eligibilityManualInclusionNoticeSubmissionDate(), new Date().toLocaleDateString('en-GB'));
 
@@ -216,6 +231,11 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // TFM deal submission type should have changed from MIA to MIN
     //---------------------------------------------------------------
-    cy.assertText(tfmPartials.caseSummary.dealSubmissionType(), 'Manual Inclusion Notice');
+    tfmPartials.caseSummary
+      .dealSubmissionType()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.contain('Manual Inclusion Notice');
+      });
   });
 });

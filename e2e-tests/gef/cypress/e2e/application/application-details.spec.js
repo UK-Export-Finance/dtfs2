@@ -64,7 +64,7 @@ context('Application Details Page', () => {
       applicationDetails.applicationDetailsPage();
       headingCaption();
 
-      cy.assertText(applicationDetails.mainHeading(), 'Application Details');
+      cy.assertText(mainHeading(), 'Application Details');
     });
 
     it('shows an abandon button with correct aria-label', () => {
@@ -165,7 +165,7 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submission type heading', () => {
-      cy.assertText(applicationDetails.mainHeading(), 'Application Details');
+      cy.assertText(mainHeading(), 'Application Details');
     });
 
     it('displays the correct exporter elements', () => {

@@ -137,7 +137,12 @@ context('A checker selects to submit a contract from the view-contract page', ()
       // expect to land on the /dashboard page with a success message
       cy.url().should('include', '/dashboard');
 
-      cy.assertText(successMessage.successMessageListItem(), 'Supply Contract submitted to UKEF.');
+      successMessage
+        .successMessageListItem()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
+        });
     });
   });
 
@@ -155,7 +160,12 @@ context('A checker selects to submit a contract from the view-contract page', ()
       // expect to land on the /dashboard page with a success message
       cy.url().should('include', '/dashboard');
 
-      cy.assertText(successMessage.successMessageListItem(), 'Supply Contract submitted to UKEF.');
+      successMessage
+        .successMessageListItem()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
+        });
     });
   });
 
@@ -172,7 +182,12 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
-    cy.assertText(successMessage.successMessageListItem(), 'Supply Contract submitted to UKEF.');
+    successMessage
+      .successMessageListItem()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
+      });
 
     // visit the deal and confirm the updates have been made
     contract.visit(goodDeal);

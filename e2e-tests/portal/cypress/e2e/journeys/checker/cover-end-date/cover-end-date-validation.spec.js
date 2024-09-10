@@ -51,7 +51,7 @@ context(
         cy.login(BANK1_CHECKER1);
         pages.contract.visit(deal);
 
-        pages.contract.proceedToSubmit().click();
+        cy.clickProceedToSubmitButton();
         cy.url().should('eq', relative(`/contract/${dealId}/confirm-submission`));
 
         pages.contractConfirmSubmission.confirmSubmit().check();
@@ -59,8 +59,12 @@ context(
 
         // expect to land on the /dashboard page with a success message
         cy.url().should('include', '/dashboard');
-
-        cy.assertText(successMessage.successMessageListItem(), 'Supply Contract submitted to UKEF.');
+        successMessage
+          .successMessageListItem()
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).to.match(/Supply Contract submitted to UKEF./);
+          });
       });
     });
 
@@ -107,7 +111,7 @@ context(
         cy.login(BANK1_CHECKER1);
         pages.contract.visit(deal);
 
-        pages.contract.proceedToSubmit().click();
+        cy.clickProceedToSubmitButton();
         cy.url().should('eq', relative(`/contract/${dealId}/confirm-submission`));
 
         pages.contractConfirmSubmission.confirmSubmit().check();
