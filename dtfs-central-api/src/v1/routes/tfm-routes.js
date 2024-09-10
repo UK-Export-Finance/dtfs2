@@ -538,7 +538,35 @@ tfmRouter
 /**
  * @openapi
  * /tfm/deals/:id/cancellation:
- *
+ *   put:
+ *     summary: Updates tfm deal cancellation object
+ *     tags: [TFM, deals, cancellation]
+ *     description: Updates cancellation object on the deals tfm object
+ *     parameters:
+ *       - in: path
+ *         name: dealId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the deal to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reason:
+ *                 type: string
+ *               bankRequestDate:
+ *                 type: number
+ *                 example: 1725977352
+ *                effectiveFrom:
+ *                 type: number
+ *                 example: 1725977352
+ *     responses:
+ *       200:
+ *         description: OK
  *       404:
  *         description: Not found
  */
