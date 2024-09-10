@@ -13,7 +13,14 @@ const payload: Estore = {
   dealId: '6597dffeb5ef5ff4267e5044',
   siteId: 'ukef',
   facilityIdentifiers: [1234567890, 1234567891],
-  supportingInformation: ['test'],
+  supportingInformation: [
+    {
+      documentType: 'test',
+      fileName: 'test.docx',
+      fileLocationPath: 'directory/',
+      parentId: 'abc',
+    },
+  ],
   exporterName: 'testName',
   buyerName: 'testBuyer',
   dealIdentifier: '1234567890',
