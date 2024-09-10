@@ -34,11 +34,7 @@ export const getFeeRecordPaymentEntityGroupReconciliationData = async (
   }
 
   const feeRecordsSortedByDateReconciledDescending = orderBy(reconciledFeeRecords, [(feeRecord) => feeRecord.dateReconciled!.getTime()], ['desc']);
-  const mostRecentlyReconciledFeeRecord = feeRecordsSortedByDateReconciledDescending.at(0);
-
-  if (!mostRecentlyReconciledFeeRecord) {
-    throw new Error('Something went wrong when sorting the fee records to get the most recently reconciled fee record');
-  }
+  const mostRecentlyReconciledFeeRecord = feeRecordsSortedByDateReconciledDescending.at(0)!;
 
   const { dateReconciled, reconciledByUserId } = mostRecentlyReconciledFeeRecord;
 

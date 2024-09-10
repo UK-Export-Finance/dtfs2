@@ -1,5 +1,5 @@
 export { isNumber } from './isNumber';
-export { feeRecordCsvRowToSqlEntity } from './fee-record-helpers';
+export { feeRecordCsvRowToSqlEntity } from './fee-record-csv-row-mapper';
 export { executeWithSqlTransaction } from './execute-with-sql-transaction';
 export { calculateTotalCurrencyAndAmount } from './calculate-total-currency-and-amount';
 export { feeRecordsAndPaymentsMatch } from './fee-record-matching';
