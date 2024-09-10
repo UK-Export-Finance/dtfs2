@@ -410,6 +410,7 @@ describe('edit-payment-helper', () => {
     const reportId = '12';
     const paymentId = '34';
     const isCheckboxChecked = () => false;
+    const redirectTab = RECONCILIATION_FOR_REPORT_TABS.PREMIUM_PAYMENTS;
 
     it('sets the view model reportId the supplied reportId', () => {
       // Arrange
@@ -422,6 +423,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -440,6 +442,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -464,6 +467,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -488,6 +492,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -512,6 +517,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -538,6 +544,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -562,6 +569,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -587,6 +595,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -612,6 +621,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -644,6 +654,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -676,6 +687,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -701,6 +713,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -732,6 +745,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         mockIsCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -757,6 +771,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -778,6 +793,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         paymentErrors,
       );
 
@@ -813,6 +829,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         formValues,
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -838,6 +855,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         formValues,
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -863,6 +881,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         formValues,
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -872,27 +891,27 @@ describe('edit-payment-helper', () => {
 
     it('sets the view model redirectTab to the supplied redirectTab', () => {
       // Arrange
-      const redirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
+      const keyingSheetRedirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
 
       // Act
-      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, redirectTab);
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, keyingSheetRedirectTab);
 
       // Assert
-      expect(viewModel.redirectTab).toEqual(redirectTab);
+      expect(viewModel.redirectTab).toEqual(keyingSheetRedirectTab);
     });
 
     it('sets the back link to the reconciliation for report href using the supplied redirectTab', () => {
       // Arrange
-      const redirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
+      const keyingSheetRedirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
 
       jest.mocked(getReconciliationForReportHref).mockReturnValue('/utilisation-reports/123#keying-sheet');
 
       // Act
-      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, redirectTab);
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, keyingSheetRedirectTab);
 
       // Assert
       expect(viewModel.backLinkHref).toEqual('/utilisation-reports/123#keying-sheet');
-      expect(getReconciliationForReportHref).toHaveBeenCalledWith(reportId, redirectTab);
+      expect(getReconciliationForReportHref).toHaveBeenCalledWith(reportId, keyingSheetRedirectTab);
     });
 
     function aValidEditPaymentFormValuesObject(): EditPaymentFormValues {

@@ -44,8 +44,8 @@ export const getEditPayment = async (req: GetEditPaymentRequest, res: Response) 
         paymentId,
         isCheckboxChecked,
         formValues,
-        errors,
         redirectTab,
+        errors,
       );
       return renderEditPaymentPage(res, editPaymentViewModel);
     }
@@ -92,8 +92,8 @@ export const postEditPayment = async (req: PostEditPaymentRequest, res: Response
       paymentId,
       isCheckboxChecked,
       formValues,
-      editPaymentErrors,
       redirectTab,
+      editPaymentErrors,
     );
     return renderEditPaymentPage(res, editPaymentViewModel);
   } catch (error) {

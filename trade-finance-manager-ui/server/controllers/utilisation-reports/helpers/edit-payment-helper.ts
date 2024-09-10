@@ -96,8 +96,8 @@ export const getEditPaymentViewModelWithFormValues = (
   paymentId: string,
   isCheckboxChecked: (checkboxId: EditPaymentsTableCheckboxId) => boolean,
   formValues: EditPaymentFormValues,
+  redirectTab?: ReconciliationForReportTab,
   errors: EditPaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
-  redirectTab: ReconciliationForReportTab | undefined = undefined,
 ): EditPaymentViewModel => ({
   reportId,
   paymentId,
