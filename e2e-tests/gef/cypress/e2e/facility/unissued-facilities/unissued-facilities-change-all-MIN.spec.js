@@ -367,7 +367,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
         applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().click();
 
         aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
-        aboutFacilityUnissued.continueButton().click();
+        cy.clickContinueButton();
 
         cy.visit(relative(`/gef/application-details/${dealId}`));
 
@@ -382,7 +382,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
         applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().click();
 
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
-        aboutFacilityUnissued.continueButton().click();
+        cy.clickContinueButton();
 
         cy.visit(relative(`/gef/application-details/${dealId}`));
 
