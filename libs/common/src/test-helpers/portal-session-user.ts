@@ -1,4 +1,4 @@
-import { PortalSessionUser } from '@ukef/dtfs2-common';
+import { PortalSessionUser } from '../types/portal-session-data/portal-session-user';
 import { aBank } from './bank';
 
 export const aPortalSessionUser = (): PortalSessionUser => ({
