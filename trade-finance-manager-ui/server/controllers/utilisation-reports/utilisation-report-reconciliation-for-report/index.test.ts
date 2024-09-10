@@ -91,6 +91,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
             paymentsReceived: [{ id: 1, currency: 'GBP', amount: 100, dateReceived: new Date('2024-01-01').toISOString() }],
             totalPaymentsReceived: { currency: 'GBP', amount: 100 },
             status: FEE_RECORD_STATUS.MATCH,
+            reconciledByUser: undefined,
+            dateReconciled: undefined,
           },
         ],
       };
@@ -134,6 +136,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           },
           feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
           feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.MATCH,
+          reconciledBy: '-',
+          dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
         },
       ];
 
