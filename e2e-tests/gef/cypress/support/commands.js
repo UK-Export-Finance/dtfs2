@@ -1,4 +1,6 @@
 import * as api from './commands/api';
+import { fillInBankReviewDate } from './commands/fillInBankReviewDate';
+
 import './commands/click-events';
 
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
@@ -37,3 +39,5 @@ Cypress.Commands.add('submitDealToTfm', api.submitDealToTfm);
 Cypress.Commands.add('addUnderwriterCommentToTfm', api.addUnderwriterCommentToTfm);
 Cypress.Commands.add('insertVersion0Deal', require('./commands/insertVersion0Deal'));
 Cypress.Commands.add('insertVersion0Facility', require('./commands/insertVersion0Facility'));
+
+Cypress.Commands.add('fillInBankReviewDate', fillInBankReviewDate);

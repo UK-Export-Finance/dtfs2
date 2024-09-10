@@ -194,6 +194,17 @@ describe('facility end date routes', () => {
           expect(response.headers.location).toBe(saveAndReturnRedirectUrl);
         });
 
+        it('does not update the database if the facility end date is blank', async () => {
+          // Arrange
+          const body = { 'facility-end-date-year': '', 'facility-end-date-month': '', 'facility-end-date-day': '' };
+
+          // Act
+          await makeRequest(body);
+
+          // Assert
+          expect(api.updateFacility).toHaveBeenCalledTimes(0);
+        });
+
         it('redirects if the request body is valid', async () => {
           // Arrange
           const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };

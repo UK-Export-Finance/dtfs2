@@ -1,13 +1,7 @@
 import { difference } from 'lodash';
-import {
-  Currency,
-  FEE_RECORD_STATUS,
-  FeeRecordEntityMockBuilder,
-  KeyingSheetRowStatus,
-  PaymentEntityMockBuilder,
-  UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+import { Currency, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, KeyingSheetRowStatus, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
 import { mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments, mapPaymentEntityToKeyingSheetFeePayment } from './keying-sheet-mapping';
+import { aUtilisationReport } from '../../test-helpers';
 
 describe('keying sheet mapping', () => {
   describe('mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments', () => {
@@ -130,8 +124,4 @@ describe('keying sheet mapping', () => {
       expect(feePayment.dateReceived).toEqual(new Date('2024-05-06'));
     });
   });
-
-  function aUtilisationReport() {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-  }
 });

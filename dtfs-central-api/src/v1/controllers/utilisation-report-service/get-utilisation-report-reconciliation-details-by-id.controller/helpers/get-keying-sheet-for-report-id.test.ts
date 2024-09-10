@@ -8,10 +8,10 @@ import {
   FeeRecordStatus,
   KEYING_SHEET_ROW_STATUS,
   PaymentEntityMockBuilder,
-  UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
+import { aUtilisationReport } from '../../../../../../test-helpers';
 
 jest.mock('@ukef/dtfs2-common/sql-db-connection', () => ({
   SqlDbDataSource: {
@@ -435,9 +435,5 @@ describe('getKeyingSheetForReportId', () => {
       data.paymentId = payment.id;
     }
     return data;
-  }
-
-  function aUtilisationReport() {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
   }
 });
