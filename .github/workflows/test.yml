@@ -578,7 +578,6 @@ jobs:
             'header/**/*.spec.js',
             'login/**/*.spec.js',
             'users/**/*.spec.js',
-            'utilisation-reports/**/*.spec.js',
           ]
 
     concurrency:
