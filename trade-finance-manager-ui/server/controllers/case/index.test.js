@@ -27,7 +27,7 @@ const SESSION = {
 
 describe('controllers - case', () => {
   beforeEach(() => {
-    jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
+    jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(false);
   });
 
   describe('GET case deal', () => {
@@ -708,7 +708,7 @@ describe('controllers - case', () => {
         });
       });
 
-      it('should render deal template with data', async () => {
+      it('should render facility template with data', async () => {
         const req = {
           params: {
             facilityId: mockFacility._id,
