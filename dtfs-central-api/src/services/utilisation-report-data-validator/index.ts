@@ -116,7 +116,9 @@ export const validateUtilisationReportCsvCellData = async (
   );
 
   // Filter out null errors so that we don't return any null elements in the response array
-  return errors.flat().filter((error): error is UtilisationReportDataValidationError => error !== null);
+  const errorsWithNullValuesFilteredOut = errors.flat().filter((error): error is UtilisationReportDataValidationError => error !== null);
+
+  return errorsWithNullValuesFilteredOut;
 };
 
 /**
