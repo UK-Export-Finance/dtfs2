@@ -29,11 +29,6 @@ const DEAL_STATUS = {
   WITHDRAWN: 'Withdrawn',
 };
 
-const DEAL_TYPE = {
-  GEF: 'GEF',
-  BSS_EWCS: 'BSS/EWCS',
-};
-
 const BOOLEAN = {
   YES: 'Yes',
   NO: 'No',
@@ -69,7 +64,6 @@ module.exports = {
   ROLES,
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
-  DEAL_TYPE,
   FACILITY_TYPE,
   BOOLEAN,
   STAGE,

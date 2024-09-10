@@ -248,9 +248,7 @@ context('About Facility Page', () => {
 
       it('wipes the bank review date value when updating the cover start date', () => {
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-        bankReviewDate.bankReviewDateDay().clear().type(dateConstants.tomorrowDay);
-        bankReviewDate.bankReviewDateMonth().clear().type(dateConstants.tomorrowMonth);
-        bankReviewDate.bankReviewDateYear().clear().type(dateConstants.tomorrowYear);
+        cy.fillInBankReviewDate(dateConstants.tomorrow);
 
         cy.clickContinueButton();
 

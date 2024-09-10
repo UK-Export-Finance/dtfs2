@@ -1,28 +1,21 @@
 import { Response } from 'express';
-import { getDate, getMonth, getYear, isSameDay, parseISO } from 'date-fns';
-import { AnyObject, CustomExpressRequest, isFacilityEndDateEnabledOnGefVersion, parseDealVersion } from '@ukef/dtfs2-common';
+import { isSameDay, parseISO } from 'date-fns';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
 import * as api from '../../services/api';
 import { validateAndParseFacilityEndDate } from './validation';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../utils/express-session';
 import { FacilityEndDateViewModel } from '../../types/view-models/facility-end-date-view-model';
 import { getCoverStartDateOrStartOfToday } from '../../utils/get-cover-start-date-or-start-of-today';
+import { Facility } from '../../types/facility';
 
-type FacilityEndDateParams = { dealId: string; facilityId: string };
 type FacilityEndDatePostBody = { 'facility-end-date-day': string; 'facility-end-date-month': string; 'facility-end-date-year': string };
 
-type GetFacilityEndDateRequest = CustomExpressRequest<{ params: FacilityEndDateParams; query: { status: string | undefined } }>;
 type PostFacilityEndDateRequest = CustomExpressRequest<{
   reqBody: FacilityEndDatePostBody;
-  params: FacilityEndDateParams;
+  params: { dealId: string; facilityId: string };
   query: { saveAndReturn: string; status: string | undefined };
 }>;
-
-type HandleGetFacilityEndDateParams = {
-  req: GetFacilityEndDateRequest;
-  res: Response;
-  previousPage: string;
-};
 
 type PostRequestUris = {
   nextPage: string;
@@ -36,70 +29,20 @@ type HandlePostFacilityEndDateParams = {
   uris: PostRequestUris;
 };
 
-const getFacilityEndDateViewModel = (facility: AnyObject, previousPage: string, status: string | undefined): FacilityEndDateViewModel => {
-  if (typeof facility.dealId !== 'string' || typeof facility._id !== 'string') {
-    throw new Error('Invalid facility or deal id provided');
-  }
-
-  const facilityEndDateViewModel: FacilityEndDateViewModel = {
-    dealId: facility.dealId,
-    facilityId: facility._id,
-    previousPage,
-    status,
-  };
-
-  if (typeof facility.facilityEndDate === 'string') {
-    const facilityEndDate = parseISO(facility.facilityEndDate);
-    facilityEndDateViewModel.facilityEndDate = {
-      day: String(getDate(facilityEndDate)),
-      month: String(getMonth(facilityEndDate) + 1),
-      year: String(getYear(facilityEndDate)),
-    };
-  }
-
-  return facilityEndDateViewModel;
-};
-
-const handleGetFacilityEndDate = async ({ req, res, previousPage }: HandleGetFacilityEndDateParams) => {
-  const {
-    params: { dealId, facilityId },
-    query: { status },
-    session: { userToken },
-  } = req;
-
-  try {
-    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: AnyObject };
-    const deal = (await api.getApplication({ dealId, userToken })) as AnyObject & { version?: number };
-
-    const shouldRedirectFromPage = !isFacilityEndDateEnabledOnGefVersion(parseDealVersion(deal.version)) || !facility.isUsingFacilityEndDate;
-
-    if (shouldRedirectFromPage) {
-      return res.redirect(previousPage);
-    }
-
-    return res.render('partials/facility-end-date.njk', getFacilityEndDateViewModel(facility, previousPage, status));
-  } catch (error) {
-    console.error(error);
-    return res.render('partials/problem-with-service.njk');
-  }
-};
-
-export const getFacilityEndDateFromUnissuedFacilitiesPage = async (req: GetFacilityEndDateRequest, res: Response) =>
-  handleGetFacilityEndDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/unissued-facilities/${req.params.facilityId}/about` });
-
-export const getFacilityEndDateFromApplicationPreviewPage = async (req: GetFacilityEndDateRequest, res: Response) =>
-  handleGetFacilityEndDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/unissued-facilities/${req.params.facilityId}/change` });
-
-export const getFacilityEndDateFromApplicationDetailsPage = async (req: GetFacilityEndDateRequest, res: Response) =>
-  handleGetFacilityEndDate({ req, res, previousPage: `/gef/application-details/${req.params.dealId}/facilities/${req.params.facilityId}/about-facility` });
-
-const updateFacilityEndDateIfChanged = async (existingFacility: AnyObject, facilityEndDate: Date, { userToken, user }: LoggedInUserSession): Promise<void> => {
+/**
+ * Update the facility end date if it has changed
+ * @param existingFacility the current facility from the api
+ * @param facilityEndDate the new facility end date
+ * @param session the user session
+ */
+const updateFacilityEndDateIfChanged = async (existingFacility: Facility, facilityEndDate: Date, { userToken, user }: LoggedInUserSession): Promise<void> => {
   const facilityEndDateNeedsUpdating =
     typeof existingFacility.facilityEndDate !== 'string' || !isSameDay(parseISO(existingFacility.facilityEndDate), facilityEndDate);
 
   if (!facilityEndDateNeedsUpdating) {
     return;
   }
+
   await api.updateFacility({
     facilityId: existingFacility._id,
     payload: {
@@ -114,7 +57,10 @@ const updateFacilityEndDateIfChanged = async (existingFacility: AnyObject, facil
   await api.updateApplication({ dealId: existingFacility.dealId, application: applicationUpdate, userToken });
 };
 
-const handlePostFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityEndDateParams) => {
+/**
+ * handle post facility end date request
+ */
+const postFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityEndDateParams) => {
   try {
     const {
       params: { dealId, facilityId },
@@ -131,7 +77,7 @@ const handlePostFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityE
       return res.redirect(uris.saveAndReturn);
     }
 
-    const { details: facility } = (await api.getFacility({ facilityId, userToken })) as { details: AnyObject };
+    const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     const facilityEndDateErrorsAndDate = validateAndParseFacilityEndDate(
       {
@@ -171,8 +117,11 @@ const handlePostFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityE
   }
 };
 
+/**
+ * Controller for post bank review date from application preview page
+ */
 export const postFacilityEndDateFromApplicationPreviewPage = async (req: PostFacilityEndDateRequest, res: Response) =>
-  handlePostFacilityEndDate({
+  postFacilityEndDate({
     req,
     res,
     uris: {
@@ -182,8 +131,11 @@ export const postFacilityEndDateFromApplicationPreviewPage = async (req: PostFac
     },
   });
 
+/**
+ * Controller for post bank review date from unissued facilities page
+ */
 export const postFacilityEndDateFromUnissuedFacilitiesPage = async (req: PostFacilityEndDateRequest, res: Response) =>
-  handlePostFacilityEndDate({
+  postFacilityEndDate({
     req,
     res,
     uris: {
@@ -193,8 +145,11 @@ export const postFacilityEndDateFromUnissuedFacilitiesPage = async (req: PostFac
     },
   });
 
+/**
+ * Controller for post bank review date from application details page
+ */
 export const postFacilityEndDateFromApplicationDetailsPage = async (req: PostFacilityEndDateRequest, res: Response) =>
-  handlePostFacilityEndDate({
+  postFacilityEndDate({
     req,
     res,
     uris: {

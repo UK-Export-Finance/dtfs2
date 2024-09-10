@@ -1,4 +1,4 @@
-import { BankReportPeriodSchedule } from '@ukef/dtfs2-common';
+import { BankReportPeriodSchedule } from '../types';
 
 export const aMonthlyBankReportPeriodSchedule = (): BankReportPeriodSchedule => [
   { startMonth: 1, endMonth: 1 },
