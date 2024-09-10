@@ -1234,29 +1234,17 @@ const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, us
  * @param {string} dealId - The deal ID
  * @param {Partial<import('@ukef/dtfs2-common').TfmDealCancellation>} cancellationUpdate - The deal cancellation update object
  * @param {string} userToken - The user token
- * @returns {Promise<void>}
+ * @returns {Partial<import('@ukef/dtfs2-common').TfmDealCancellation>} - The deal cancellation update object
  */
 const updateDealCancellation = async (dealId, cancellationUpdate, userToken) => {
-  try {
-    const isValidDealId = isValidMongoId(dealId);
+  const response = await axios({
+    method: 'put',
+    url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation`,
+    headers: generateHeaders(userToken),
+    data: cancellationUpdate,
+  });
 
-    if (!isValidDealId) {
-      console.error('updateDealCancellation: Invalid deal id provided %s', dealId);
-      return { status: 400, data: 'Invalid deal id' };
-    }
-
-    const response = await axios({
-      method: 'put',
-      url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation`,
-      headers: generateHeaders(userToken),
-      data: cancellationUpdate,
-    });
-
-    return response.data;
-  } catch (error) {
-    console.error('Unable to update deal cancellation %o', error);
-    return { status: error?.response?.status || 500, data: 'Failed to update the deal cancellation' };
-  }
+  return response.data;
 };
 
 module.exports = {
