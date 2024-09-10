@@ -44,6 +44,9 @@ export const createRandomFeeRecordForReport = (report: UtilisationReportEntity, 
   feeRecord.fixedFeeAdjustment = null;
   feeRecord.principalBalanceAdjustment = null;
 
+  feeRecord.reconciledByUserId = null;
+  feeRecord.dateReconciled = null;
+
   feeRecord.updateLastUpdatedBy({ platform: 'SYSTEM' });
 
   return feeRecord;

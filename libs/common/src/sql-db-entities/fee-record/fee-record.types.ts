@@ -24,12 +24,21 @@ export type UpdateWithStatusParams = {
 };
 
 export type UpdateWithKeyingDataParams = {
-  status: FeeRecordStatus;
+  status: Extract<FeeRecordStatus, 'READY_TO_KEY' | 'RECONCILED'>;
   fixedFeeAdjustment: number;
   principalBalanceAdjustment: number;
   requestSource: DbRequestSource;
 };
 
 export type RemoveAllPaymentsParams = {
+  requestSource: DbRequestSource;
+};
+
+export type MarkAsReconciledParams = {
+  reconciledByUserId: string;
+  requestSource: DbRequestSource;
+};
+
+export type MarkAsReadyToKeyParams = {
   requestSource: DbRequestSource;
 };
