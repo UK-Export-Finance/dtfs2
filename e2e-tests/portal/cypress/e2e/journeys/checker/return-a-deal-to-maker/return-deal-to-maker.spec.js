@@ -63,7 +63,12 @@ context('A checker selects to return a deal to maker from the view-contract page
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
-    cy.assertText(successMessage.successMessageListItem(), 'Supply Contract returned to maker.');
+    successMessage
+      .successMessageListItem()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.match(/Supply Contract returned to maker./);
+      });
 
     // visit the deal and confirm the updates have been made
     contract.visit(deal);

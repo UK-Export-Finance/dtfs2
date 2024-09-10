@@ -84,7 +84,12 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
 
-    cy.assertText(successMessage.successMessageListItem(), 'Supply Contract abandoned.');
+    successMessage
+      .successMessageListItem()
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.match(/Supply Contract abandoned./);
+      });
 
     // visit the deal and confirm the updates have been made
     contract.visit(deal);

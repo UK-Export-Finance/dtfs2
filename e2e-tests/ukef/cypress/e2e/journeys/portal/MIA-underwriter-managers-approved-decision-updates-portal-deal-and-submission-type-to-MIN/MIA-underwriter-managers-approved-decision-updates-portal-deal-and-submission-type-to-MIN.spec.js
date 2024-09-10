@@ -213,7 +213,14 @@ context('Portal to TFM deal submission', () => {
         expect(text.trim()).to.contain('Manual Inclusion Notice');
       });
 
-    cy.assertText(portalPages.contract.eligibilityManualInclusionNoticeSubmissionDate(), new Date().toLocaleDateString('en-GB'));
+    portalPages.contract
+      .eligibilityManualInclusionNoticeSubmissionDate()
+      .invoke('text')
+      .then((text) => {
+        const todayFormatted = new Date().toLocaleDateString('en-GB');
+
+        expect(text.trim()).to.contain(todayFormatted);
+      });
 
     //---------------------------------------------------------------
     // Go back to TFM

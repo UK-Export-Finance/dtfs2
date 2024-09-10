@@ -225,7 +225,12 @@ context('A maker selects to submit a contract for review from the view-contract 
       // expect to land on the /dashboard page with a success message
       cy.url().should('include', '/dashboard');
 
-      cy.assertText(successMessage.successMessageListItem(), 'Supply Contract submitted for review.');
+      successMessage
+        .successMessageListItem()
+        .invoke('text')
+        .then((text) => {
+          expect(text.trim()).to.match(/Supply Contract submitted for review./);
+        });
 
       // visit the deal and confirm the updates have been made
       contract.visit(deal);
