@@ -1,7 +1,7 @@
 const Chance = require('chance');
 const { DEAL_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../constants');
-const { MOCK_MAKER, MOCK_CHECKER } = require('./mock_users');
+const { MOCK_MAKER, MOCK_CHECKER } = require('./mock-users');
 
 const chance = new Chance();
 
