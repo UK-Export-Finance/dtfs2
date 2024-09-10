@@ -1,5 +1,7 @@
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
+import { HttpStatusCode } from 'axios';
+import { TestApiError } from '@ukef/dtfs2-common';
 import api from '../api';
 import { updateDealCancellation, UpdateDealCancellationRequest } from './deal-cancellation.controller';
 
@@ -21,7 +23,7 @@ describe('controllers - deal cancellation', () => {
 
   describe('PUT - updateDealCancellation', () => {
     it('should call api.updateDealCancellation with the correct parameters', async () => {
-      jest.mocked(api.updateDealCancellation).mockResolvedValue({});
+      jest.mocked(api.updateDealCancellation);
 
       // Arrange
       const { req, res } = httpMocks.createMocks<UpdateDealCancellationRequest>({
@@ -37,6 +39,62 @@ describe('controllers - deal cancellation', () => {
       // Assert
       expect(api.updateDealCancellation).toHaveBeenCalledTimes(1);
       expect(api.updateDealCancellation).toHaveBeenCalledWith({ dealId: mockDealId, dealCancellationUpdate, auditDetails });
+    });
+
+    it('should return the deal cancellation on success', async () => {
+      jest.mocked(api.updateDealCancellation).mockResolvedValue(dealCancellationUpdate);
+
+      // Arrange
+      const { req, res } = httpMocks.createMocks<UpdateDealCancellationRequest>({
+        params: { dealId: mockDealId },
+        body: dealCancellationUpdate,
+        user: { _id: mockUserId },
+      });
+
+      // Act
+      await updateDealCancellation(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      expect(res._getData()).toEqual(expect.objectContaining(dealCancellationUpdate));
+    });
+
+    it('should throw an error when there is an API error', async () => {
+      const testErrorStatus = 404;
+      const testApiErrorMessage = 'test api error meessage';
+      jest.mocked(api.updateDealCancellation).mockRejectedValue(new TestApiError(testErrorStatus, testApiErrorMessage));
+
+      // Arrange
+      const { req, res } = httpMocks.createMocks<UpdateDealCancellationRequest>({
+        params: { dealId: mockDealId },
+        body: dealCancellationUpdate,
+        user: { _id: mockUserId },
+      });
+
+      // Act
+      await updateDealCancellation(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toBe(testErrorStatus);
+      expect(res._getData()).toEqual(expect.objectContaining({ message: `Failed to update deal cancellation: ${testApiErrorMessage}` }));
+    });
+
+    it('should throw an error when there is a general error', async () => {
+      jest.mocked(api.updateDealCancellation).mockRejectedValue(new Error('Some error'));
+
+      // Arrange
+      const { req, res } = httpMocks.createMocks<UpdateDealCancellationRequest>({
+        params: { dealId: mockDealId },
+        body: dealCancellationUpdate,
+        user: { _id: mockUserId },
+      });
+
+      // Act
+      await updateDealCancellation(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+      expect(res._getData()).toEqual(expect.objectContaining({ message: 'Failed to update deal cancellation' }));
     });
   });
 });
