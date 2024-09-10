@@ -255,7 +255,7 @@ describe('mapToFeeRecordPaymentGroups', () => {
       const result = await mapToFeeRecordPaymentGroups([group]);
 
       // Assert
-      expect(result.length).toEqual(0);
+      expect(result.length).toEqual(1);
       expect(result[0].totalReportedPayments).toEqual({ currency: 'GBP', amount: testValues.expectedTotalReportedPaymentAmount });
     });
 
