@@ -2,7 +2,7 @@ import relative from '../relativeURL';
 import aboutFacility from '../pages/about-facility';
 import bankReviewDate from '../pages/bank-review-date';
 import facilityEndDate from '../pages/facility-end-date';
-import { tomorrowDay, tomorrowMonth, tomorrowYear, todayDay, todayMonth, todayYear } from '../../../../e2e-fixtures/dateConstants';
+import { tomorrowDay, tomorrowMonth, tomorrowYear, todayDay, todayMonth, todayYear, tomorrow } from '../../../../e2e-fixtures/dateConstants';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];
@@ -55,9 +55,7 @@ context('Changing between facility end date and bank review date', () => {
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-      bankReviewDate.bankReviewDateDay().clear().type(tomorrowDay);
-      bankReviewDate.bankReviewDateMonth().clear().type(tomorrowMonth);
-      bankReviewDate.bankReviewDateYear().clear().type(tomorrowYear);
+      cy.fillInBankReviewDate(tomorrow);
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
@@ -91,9 +89,7 @@ context('Changing between facility end date and bank review date', () => {
       bankReviewDate.bankReviewDateMonth().should('have.value', '');
       bankReviewDate.bankReviewDateYear().should('have.value', '');
 
-      bankReviewDate.bankReviewDateDay().type(tomorrowDay);
-      bankReviewDate.bankReviewDateMonth().type(tomorrowMonth);
-      bankReviewDate.bankReviewDateYear().type(tomorrowYear);
+      cy.fillInBankReviewDate(tomorrow);
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));

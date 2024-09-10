@@ -53,6 +53,12 @@ const cloneApplication = async ({ payload, userToken }) => {
   }
 };
 
+/**
+ * @param {object} param
+ * @param {string} param.dealId
+ * @param {string} param.userToken
+ * @returns {Promise<import('../types/deal').Deal}>}
+ */
 const getApplication = async ({ dealId, userToken }) => {
   if (!isValidMongoId(dealId)) {
     console.error('getApplication: API call failed for dealId %s', dealId);
@@ -137,6 +143,12 @@ const createFacility = async ({ payload, userToken }) => {
   }
 };
 
+/**
+ * @param {object} param
+ * @param {string} param.facilityId
+ * @param {string} param.userToken
+ * @returns {Promise<{ details: import('../types/facility').Facility }>}
+ */
 const getFacility = async ({ facilityId, userToken }) => {
   if (!isValidMongoId(facilityId)) {
     console.error('getFacility: API call failed for facilityId %s', facilityId);

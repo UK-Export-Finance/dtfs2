@@ -1488,6 +1488,7 @@ jobs:
                 EXTERNAL_API_URL="http://$EXTERNAL_API_URL" \
                 DTFS_CENTRAL_API_URL="http://$dtfs_central_api_url" \
                 TFM_API_URL="http://$tfm_api_url" \
+                TFM_UI_URL="${{ secrets.TFM_UI_URL }}" \
                 UKEF_GEF_REPORTING_EMAIL_RECIPIENT="${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}"
 
   trade-finance-manager-api:
