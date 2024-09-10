@@ -1,4 +1,4 @@
-import { submitButton } from '../../../e2e/relativeURL';
+import { submitButton } from '../../../e2e/partials';
 
 /**
  * clickSubmitButton
