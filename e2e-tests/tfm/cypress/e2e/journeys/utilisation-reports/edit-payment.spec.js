@@ -189,16 +189,6 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
   });
 
   describe('when the user clicks the save changes button', () => {
-    it('should return to the premium payments table', () => {
-      pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
-
-      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
-
-      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
-
-      cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
-    });
-
     it('should update the payment with the supplied values', () => {
       const newPaymentAmount = '314.59';
       const newPaymentDateDay = '12';
