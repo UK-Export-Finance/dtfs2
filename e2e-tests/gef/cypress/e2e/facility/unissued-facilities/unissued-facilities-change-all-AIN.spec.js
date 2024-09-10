@@ -410,10 +410,15 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
     });
 
     if (facilityEndDateEnabled) {
-      it('cannot submit facility without bank review date', () => {
-        applicationPreview.submitButtonPostApproval();
+      it('can submit facility when facility end date has been provided', () => {
+        const facilityEndDateFormatted = format(dateConstants.threeMonths, 'd MMMM yyyy');
 
-        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
+        applicationPreview.facilitySummaryListTable(3).facilityEndDateValue().contains(facilityEndDateFormatted);
+
+        applicationPreview.submitButtonPostApproval();
+      });
+
+      it('cannot submit facility without bank review date', () => {
         applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().click();
 
         aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
@@ -427,8 +432,20 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
         applicationPreview.submitButtonPostApproval().should('not.exist');
       });
 
+      it('can submit facility when bank review date has been provided', () => {
+        const bankReviewDateFormatted = format(dateConstants.threeMonths, 'd MMMM yyyy');
+
+        applicationPreview.facilitySummaryListTable(3).bankReviewDateAction().click();
+        cy.fillInBankReviewDate(dateConstants.threeMonths);
+
+        cy.clickContinueButton();
+
+        applicationPreview.facilitySummaryListTable(3).bankReviewDateValue().contains(bankReviewDateFormatted);
+
+        applicationPreview.submitButtonPostApproval();
+      });
+
       it('cannot submit facility without facility end date', () => {
-        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('No');
         applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().click();
 
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
