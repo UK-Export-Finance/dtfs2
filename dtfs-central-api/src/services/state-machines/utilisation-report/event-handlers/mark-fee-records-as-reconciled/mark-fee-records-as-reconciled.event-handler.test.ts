@@ -58,6 +58,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
       requestSource,
       feeRecordsToReconcile: [feeRecordOne, feeRecordTwo],
       transactionEntityManager: mockEntityManager,
+      reconciledByUserId: 'abc123',
     });
 
     // Assert
@@ -67,6 +68,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
       type: 'MARK_AS_RECONCILED',
       payload: {
         transactionEntityManager: mockEntityManager,
+        reconciledByUserId: 'abc123',
         requestSource,
       },
     });
@@ -75,6 +77,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
       type: 'MARK_AS_RECONCILED',
       payload: {
         transactionEntityManager: mockEntityManager,
+        reconciledByUserId: 'abc123',
         requestSource,
       },
     });
@@ -98,6 +101,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
       requestSource,
       feeRecordsToReconcile: [feeRecordOne, feeRecordTwo],
       transactionEntityManager: mockEntityManager,
+      reconciledByUserId: 'abc123',
     });
 
     // Assert
@@ -131,6 +135,7 @@ describe('handleUtilisationReportMarkFeeRecordsAsReconciledEvent', () => {
       requestSource,
       feeRecordsToReconcile: [feeRecordOne, feeRecordTwo],
       transactionEntityManager: mockEntityManager,
+      reconciledByUserId: 'abc123',
     });
 
     // Assert

@@ -1,7 +1,8 @@
 import Big from 'big.js';
 import { FeeRecordEntity } from '@ukef/dtfs2-common';
 import { orderBy } from 'lodash';
-import { FeeRecordPaymentEntityGroup, getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../../helpers';
+import { getFeeRecordPaymentEntityGroups } from '../../../../../helpers';
+import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 
 export type KeyingSheetFeePaymentShare = {
   feeRecordId: number;
@@ -105,7 +106,7 @@ const getFeePaymentsForFeeRecordPaymentEntityGroup = ({ feeRecords, payments }: 
  * @returns The fee payments
  */
 export const getKeyingSheetFeePaymentSharesForFeeRecords = (matchFeeRecordsWithPayments: FeeRecordEntity[]): KeyingSheetFeePaymentShare[] => {
-  const matchFeeRecordPaymentGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(matchFeeRecordsWithPayments);
+  const matchFeeRecordPaymentGroups = getFeeRecordPaymentEntityGroups(matchFeeRecordsWithPayments);
   return matchFeeRecordPaymentGroups.reduce(
     (acc, entityGroup) => [...acc, ...getFeePaymentsForFeeRecordPaymentEntityGroup(entityGroup)],
     [] as KeyingSheetFeePaymentShare[],
