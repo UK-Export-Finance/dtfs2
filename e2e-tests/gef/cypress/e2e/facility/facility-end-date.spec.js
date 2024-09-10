@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { backLink, headingCaption, continueButton, errorSummary, saveAndReturnButton } from '../partials';
 import facilityEndDate from '../pages/facility-end-date';
 import aboutFacility from '../pages/about-facility';
 import {
@@ -58,24 +59,24 @@ context('Facility End Date Page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
       aboutFacility.isUsingFacilityEndDateYes().click();
-      aboutFacility.saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      facilityEndDate.backLink();
-      facilityEndDate.headingCaption();
+      backLink();
+      headingCaption();
       facilityEndDate.facilityEndDateDay();
       facilityEndDate.facilityEndDateMonth();
       facilityEndDate.facilityEndDateYear();
       facilityEndDate.facilityEndDateDetails();
-      facilityEndDate.continueButton();
-      facilityEndDate.saveAndReturnButton();
+      continueButton();
+      saveAndReturnButton();
     });
 
     it('redirects the user to `About this facility` page when clicking on back link', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      facilityEndDate.backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
     });
@@ -83,14 +84,14 @@ context('Facility End Date Page', () => {
     it('validates the form when clicking on Continue', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      facilityEndDate.continueButton().click();
-      facilityEndDate.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       facilityEndDate.facilityEndDateError();
     });
 
     it('redirects user to application page when clicking on `save and return` button', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
-      facilityEndDate.saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
     });
 
@@ -99,8 +100,8 @@ context('Facility End Date Page', () => {
 
       facilityEndDate.facilityEndDateDay().clear().type(todayDay);
       facilityEndDate.facilityEndDateMonth().clear();
-      facilityEndDate.saveAndReturnButton().click();
-      facilityEndDate.errorSummary();
+      cy.clickSaveAndReturnButton();
+      errorSummary();
       facilityEndDate.facilityEndDateError();
     });
 
@@ -111,7 +112,7 @@ context('Facility End Date Page', () => {
       facilityEndDate.facilityEndDateMonth().clear().type(todayMonth);
       facilityEndDate.facilityEndDateYear().clear().type(nextYear);
 
-      facilityEndDate.saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
     });
@@ -128,7 +129,7 @@ context('Facility End Date Page', () => {
       aboutFacility.coverEndDateYear().clear().type(nextYear);
       aboutFacility.isUsingFacilityEndDateYes().click();
 
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
@@ -138,16 +139,16 @@ context('Facility End Date Page', () => {
       facilityEndDate.facilityEndDateMonth().clear().type(todayMonth);
       facilityEndDate.facilityEndDateYear().clear().type(todayYear);
 
-      facilityEndDate.continueButton().click();
-      facilityEndDate.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       facilityEndDate.facilityEndDateError();
 
       facilityEndDate.facilityEndDateDay().clear().type(tomorrowDay);
       facilityEndDate.facilityEndDateMonth().clear().type(tomorrowMonth);
       facilityEndDate.facilityEndDateYear().clear().type(tomorrowYear);
 
-      facilityEndDate.continueButton().click();
-      facilityEndDate.errorSummary().should('not.exist');
+      cy.clickContinueButton();
+      errorSummary().should('not.exist');
     });
 
     it('when cover start date is not given, it validates facility end date is after today', () => {
@@ -159,23 +160,23 @@ context('Facility End Date Page', () => {
       aboutFacility.coverEndDateYear().clear().type(nextYear);
       aboutFacility.isUsingFacilityEndDateYes().click();
 
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
       facilityEndDate.facilityEndDateDay().clear().type(yesterdayDay);
       facilityEndDate.facilityEndDateMonth().clear().type(yesterdayMonth);
       facilityEndDate.facilityEndDateYear().clear().type(yesterdayYear);
 
-      facilityEndDate.continueButton().click();
-      facilityEndDate.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       facilityEndDate.facilityEndDateError();
 
       facilityEndDate.facilityEndDateDay().clear().type(todayDay);
       facilityEndDate.facilityEndDateMonth().clear().type(todayMonth);
       facilityEndDate.facilityEndDateYear().clear().type(todayYear);
 
-      facilityEndDate.continueButton().click();
-      facilityEndDate.errorSummary().should('not.exist');
+      cy.clickContinueButton();
+      errorSummary().should('not.exist');
     });
 
     it('validates facility end date is less than 6 years in the future', () => {
@@ -194,8 +195,8 @@ context('Facility End Date Page', () => {
         .clear()
         .type(now.getFullYear() + 7);
 
-      facilityEndDate.continueButton().click();
-      facilityEndDate.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       facilityEndDate.facilityEndDateError();
     });
 
@@ -206,7 +207,7 @@ context('Facility End Date Page', () => {
       facilityEndDate.facilityEndDateMonth().clear().type(todayMonth);
       facilityEndDate.facilityEndDateYear().clear().type(nextYear);
 
-      facilityEndDate.continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
     });
@@ -218,7 +219,7 @@ context('Facility End Date Page', () => {
       facilityEndDate.facilityEndDateMonth().clear().type(todayMonth);
       facilityEndDate.facilityEndDateYear().clear().type(nextYear);
 
-      facilityEndDate.continueButton().click();
+      cy.clickContinueButton();
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
       facilityEndDate.facilityEndDateDay().should('have.value', now.getDate());
@@ -234,17 +235,17 @@ context('Facility End Date Page', () => {
       aboutFacility.coverEndDateMonth().clear().type(todayMonth);
       aboutFacility.coverEndDateYear().clear().type(nextYear);
       aboutFacility.isUsingFacilityEndDateNo().click();
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
     });
   } else {
-    it('redirects to application details page', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
+    it('redirects to about facility page', () => {
+      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
     });
   }
 });

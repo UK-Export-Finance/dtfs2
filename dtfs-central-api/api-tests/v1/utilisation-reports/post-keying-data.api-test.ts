@@ -5,7 +5,9 @@ import {
   FacilityUtilisationDataEntityMockBuilder,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
+  FeeRecordPaymentJoinTableEntity,
   FeeRecordStatus,
+  PaymentEntityMockBuilder,
   ReportPeriod,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
@@ -16,7 +18,7 @@ import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
-import { aPortalUser, aTfmUser, aTfmSessionUser, aTfmFacility, aFacility } from '../../../test-helpers/test-data';
+import { aPortalUser, aTfmUser, aTfmSessionUser, aTfmFacility, aFacility } from '../../../test-helpers';
 
 console.error = jest.fn();
 
@@ -125,6 +127,7 @@ describe(`POST ${BASE_URL}`, () => {
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+    await insertMatchingPaymentsForFeeRecords(feeRecords);
 
     await insertTfmFacilityWithUkefFacilityId('11111111', '22222222');
 
@@ -143,6 +146,7 @@ describe(`POST ${BASE_URL}`, () => {
     const facilityId = '11111111';
     report.feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withPayments([]).withStatus('MATCH').build()];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+    await insertMatchingPaymentsForFeeRecords(report.feeRecords);
 
     await insertTfmFacilityWithUkefFacilityId(facilityId);
 
@@ -161,6 +165,7 @@ describe(`POST ${BASE_URL}`, () => {
     const facilityId = '11111111';
     report.feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(facilityId).withPayments([]).withStatus('MATCH').build()];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+    await insertMatchingPaymentsForFeeRecords(report.feeRecords);
 
     await insertTfmFacilityWithUkefFacilityId(facilityId);
 
@@ -184,6 +189,7 @@ describe(`POST ${BASE_URL}`, () => {
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+    await insertMatchingPaymentsForFeeRecords(feeRecords);
 
     await insertTfmFacilityWithUkefFacilityId(facilityId);
 
@@ -219,6 +225,7 @@ describe(`POST ${BASE_URL}`, () => {
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+    await insertMatchingPaymentsForFeeRecords(feeRecords);
 
     await insertTfmFacilityWithUkefFacilityId(facilityId);
 
@@ -262,6 +269,7 @@ describe(`POST ${BASE_URL}`, () => {
     ];
     report.feeRecords = feeRecords;
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+    await insertMatchingPaymentsForFeeRecords(feeRecords);
 
     await insertTfmFacilityWithUkefFacilityId(firstFacilityId, secondFacilityId);
 
@@ -279,6 +287,32 @@ describe(`POST ${BASE_URL}`, () => {
     expect(allFeeRecords.find(({ id }) => id === 2)!.status).toBe<FeeRecordStatus>('READY_TO_KEY');
     expect(allFeeRecords.find(({ id }) => id === 3)!.status).toBe<FeeRecordStatus>('READY_TO_KEY');
     expect(allFeeRecords.find(({ id }) => id === 4)!.status).toBe<FeeRecordStatus>('READY_TO_KEY');
+  });
+
+  it('populates the fee record payment join table paymentAmountUsedForFeeRecord column', async () => {
+    // Arrange
+    const report = anUploadedReconciliationInProgressUtilisationReport();
+    const firstFacilityId = '11111111';
+    const feeRecords = [FeeRecordEntityMockBuilder.forReport(report).withId(1).withFacilityId(firstFacilityId).withStatus('MATCH').build()];
+    report.feeRecords = feeRecords;
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+    await insertMatchingPaymentsForFeeRecords(feeRecords);
+
+    await insertTfmFacilityWithUkefFacilityId(firstFacilityId);
+
+    const requestBody = aValidRequestBody();
+
+    // Act
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
+
+    // Assert
+    expect(response.status).toBe(HttpStatusCode.Ok);
+
+    const joinTableEntities = await SqlDbHelper.manager.find(FeeRecordPaymentJoinTableEntity, {});
+    expect(joinTableEntities).toHaveLength(1);
+    expect(joinTableEntities[0].feeRecordId).toBe(1);
+    expect(joinTableEntities[0].paymentId).toBe(1);
+    expect(joinTableEntities[0].paymentAmountUsedForFeeRecord).not.toBeNull();
   });
 
   describe('when there are multiple fee records with the same facility id', () => {
@@ -316,8 +350,8 @@ describe(`POST ${BASE_URL}`, () => {
         FeeRecordEntityMockBuilder.forReport(report).withId(3).withFacilityId(facilityId).withStatus('MATCH').build(),
       ];
       report.feeRecords = feeRecordsAtMatchStatus;
-
       await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+      await insertMatchingPaymentsForFeeRecords(feeRecordsAtMatchStatus);
 
       // Act
       const response1 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
@@ -361,13 +395,14 @@ describe(`POST ${BASE_URL}`, () => {
         const report = anUploadedReconciliationInProgressUtilisationReport();
         report.reportPeriod = currentReportPeriod;
 
-        const feeRecordsForFacility = [
-          FeeRecordEntityMockBuilder.forReport(report)
-            .withId(toDoFeeRecordId)
-            .withFacilityUtilisation(currentUtilisation)
-            .withFacilityId(facilityId)
-            .withStatus('TO_DO')
-            .build(),
+        const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
+          .withStatus('TO_DO')
+          .withId(toDoFeeRecordId)
+          .withFacilityUtilisation(currentUtilisation)
+          .withFacilityId(facilityId)
+          .build();
+
+        const matchFeeRecords = [
           FeeRecordEntityMockBuilder.forReport(report)
             .withId(2)
             .withFacilityId(facilityId)
@@ -382,8 +417,11 @@ describe(`POST ${BASE_URL}`, () => {
             .build(),
         ];
 
+        const feeRecordsForFacility = [toDoFeeRecord, ...matchFeeRecords];
+
         report.feeRecords = feeRecordsForFacility;
         await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+        await insertMatchingPaymentsForFeeRecords(matchFeeRecords);
 
         const response1 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
 
@@ -398,6 +436,7 @@ describe(`POST ${BASE_URL}`, () => {
         const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: 'TO_DO' });
         existingToDoFeeRecord.status = 'MATCH';
         await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
+        await insertMatchingPaymentsForFeeRecords([existingToDoFeeRecord]);
 
         // Act
         const response = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
@@ -415,6 +454,7 @@ describe(`POST ${BASE_URL}`, () => {
         const existingToDoFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: toDoFeeRecordId, status: 'TO_DO' });
         existingToDoFeeRecord.status = 'MATCH';
         await SqlDbHelper.saveNewEntry('FeeRecord', existingToDoFeeRecord);
+        await insertMatchingPaymentsForFeeRecords([existingToDoFeeRecord]);
 
         // Act
         const response = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
@@ -428,4 +468,14 @@ describe(`POST ${BASE_URL}`, () => {
       });
     });
   });
+
+  async function insertMatchingPaymentsForFeeRecords(feeRecordEntities: FeeRecordEntity[]): Promise<void> {
+    let paymentId = 0;
+    const payments = feeRecordEntities.map((feeRecord) => {
+      paymentId += 1;
+      const paymentAmount = feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency();
+      return PaymentEntityMockBuilder.forCurrency(feeRecord.paymentCurrency).withId(paymentId).withAmount(paymentAmount).withFeeRecords([feeRecord]).build();
+    });
+    await SqlDbHelper.saveNewEntries('Payment', payments);
+  }
 });

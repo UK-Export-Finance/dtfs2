@@ -1,30 +1,17 @@
+import { DayMonthYearInput } from '@ukef/dtfs2-common';
 import { getDaysInMonth, set, startOfDay } from 'date-fns';
 import Joi from 'joi';
-import { DayMonthYear } from '../types/date';
+import { ValidationError } from '../types/validation-error';
+import { ErrorsOrDate } from '../types/errors-or-date';
 
 type ValidationOptions = {
   errRef: string;
   variableDisplayName: string;
 };
 
-type ValidationError = {
-  errRef: string;
-  errMsg: string;
-  subFieldErrorRefs?: string[];
-};
-
-type ErrorsOrDate =
-  | {
-      errors: null;
-      date: Date;
-    }
-  | {
-      errors: ValidationError[];
-    };
-
 const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYear, { errRef, variableDisplayName }: ValidationOptions): ValidationError[] => {
+const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, { errRef, variableDisplayName }: ValidationOptions): ValidationError[] => {
   const dateIsBlank = !(day || month || year);
   const dateIsFullyComplete = Boolean(day && month && year);
 
@@ -72,7 +59,7 @@ const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYear, { errRe
   return [];
 };
 
-const validateAllFieldsAreNumbers = ({ day, month, year }: DayMonthYear, { errRef, variableDisplayName }: ValidationOptions): ValidationError[] => {
+const validateAllFieldsAreNumbers = ({ day, month, year }: DayMonthYearInput, { errRef, variableDisplayName }: ValidationOptions): ValidationError[] => {
   const oneOrTwoDigitSchema = Joi.string().min(1).max(2).pattern(/^\d+$/);
   const fourDigitSchema = Joi.string().length(4).pattern(/^\d+$/).required();
 
@@ -97,7 +84,7 @@ const validateAllFieldsAreNumbers = ({ day, month, year }: DayMonthYear, { errRe
   return errors;
 };
 
-const validateAllFieldsAreValid = ({ day, month, year }: DayMonthYear, { errRef, variableDisplayName }: ValidationOptions): ValidationError[] => {
+const validateAllFieldsAreValid = ({ day, month, year }: DayMonthYearInput, { errRef, variableDisplayName }: ValidationOptions): ValidationError[] => {
   const variableDisplayNameWithCapital = capitalizeFirstLetter(variableDisplayName);
 
   const daysInMonth = getDaysInMonth(
@@ -128,7 +115,7 @@ const validateAllFieldsAreValid = ({ day, month, year }: DayMonthYear, { errRef,
   return errors;
 };
 
-export const validateAndParseDayMonthYear = ({ day, month, year }: DayMonthYear, { errRef, variableDisplayName }: ValidationOptions): ErrorsOrDate => {
+export const validateAndParseDayMonthYear = ({ day, month, year }: DayMonthYearInput, { errRef, variableDisplayName }: ValidationOptions): ErrorsOrDate => {
   const validateAllFieldsArePresentErrors = validateAllFieldsArePresent({ day, month, year }, { errRef, variableDisplayName });
   if (validateAllFieldsArePresentErrors.length) {
     return { errors: validateAllFieldsArePresentErrors };
@@ -145,7 +132,6 @@ export const validateAndParseDayMonthYear = ({ day, month, year }: DayMonthYear,
   }
 
   return {
-    errors: null,
     date: startOfDay(
       set(new Date(), {
         year: Number(year),

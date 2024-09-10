@@ -1,6 +1,22 @@
 const CONSTANTS = require('./constants');
 
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
+/**
+ * Gets facility end date properties if enabled on default deal version
+ */
+const getFacilityEndDateProperties = () => {
+  if (facilityEndDateEnabled) {
+    return {
+      isUsingFacilityEndDate: true,
+      facilityEndDate: new Date(1830297600000),
+    };
+  }
+  return {};
+};
+
 exports.MOCK_FACILITY_ONE = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: false,
   name: 'Facility one',
@@ -18,9 +34,7 @@ exports.MOCK_FACILITY_ONE = {
     'Other',
   ],
   detailsOther: 'Other',
-  currency: {
-    id: 'GBP',
-  },
+  currency: { id: 'GBP' },
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,
@@ -39,6 +53,7 @@ exports.MOCK_FACILITY_ONE = {
 };
 
 exports.MOCK_FACILITY_TWO = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: true,
   name: 'Facility two',
@@ -75,6 +90,7 @@ exports.MOCK_FACILITY_TWO = {
 };
 
 exports.MOCK_FACILITY_TWO_NULL_MIA = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: true,
   name: 'Facility two',
@@ -111,6 +127,7 @@ exports.MOCK_FACILITY_TWO_NULL_MIA = {
 };
 
 exports.MOCK_FACILITY_THREE = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CONTINGENT,
   hasBeenIssued: false,
   name: 'Facility three',
@@ -147,6 +164,7 @@ exports.MOCK_FACILITY_THREE = {
 };
 
 exports.MOCK_FACILITY_FOUR = {
+  ...getFacilityEndDateProperties(),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: false,
   name: 'Facility four',

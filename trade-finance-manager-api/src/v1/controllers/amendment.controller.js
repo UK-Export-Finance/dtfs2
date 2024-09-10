@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_QUERIES } = require('@ukef/dtfs2-common');
+const isGefFacility = require('../rest-mappings/helpers/isGefFacility');
 const api = require('../api');
 const acbs = require('./acbs.controller');
 const { amendIssuedFacility } = require('./amend-issued-facility');
@@ -16,7 +17,8 @@ const {
   canSendToAcbs,
   calculateAcbsUkefExposure,
   addLatestAmendmentValue,
-  addLatestAmendmentDates,
+  addLatestAmendmentCoverEndDate,
+  addLatestAmendmentFacilityEndDate,
 } = require('../helpers/amendment.helpers');
 const CONSTANTS = require('../../constants');
 
@@ -87,16 +89,19 @@ const createAmendmentTFMObject = async (amendmentId, facilityId, auditDetails) =
     // gets latest amendment value and dates
     const latestValueResponse = await api.getLatestCompletedAmendmentValue(facilityId);
     const latestCoverEndDateResponse = await api.getLatestCompletedAmendmentDate(facilityId);
-
-    let latestFacilityEndDateResponse;
-    if (isTfmFacilityEndDateFeatureFlagEnabled()) {
-      latestFacilityEndDateResponse = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId);
-    }
+    const facility = await api.findOneFacility(facilityId);
 
     let tfmToAdd = {};
     // populates array with latest value/exposure and date/tenor values
     tfmToAdd = await addLatestAmendmentValue(tfmToAdd, latestValueResponse, facilityId);
-    tfmToAdd = await addLatestAmendmentDates(tfmToAdd, latestCoverEndDateResponse, latestFacilityEndDateResponse, facilityId);
+    tfmToAdd = await addLatestAmendmentCoverEndDate(tfmToAdd, latestCoverEndDateResponse, facilityId);
+
+    let latestFacilityEndDateResponse;
+    const isFacilityEndDateEnabled = isTfmFacilityEndDateFeatureFlagEnabled() && isGefFacility(facility.facilitySnapshot.type);
+    if (isFacilityEndDateEnabled) {
+      latestFacilityEndDateResponse = await api.getLatestCompletedAmendmentFacilityEndDate(facilityId);
+      tfmToAdd = await addLatestAmendmentFacilityEndDate(tfmToAdd, latestFacilityEndDateResponse);
+    }
 
     const payload = {
       tfm: tfmToAdd,

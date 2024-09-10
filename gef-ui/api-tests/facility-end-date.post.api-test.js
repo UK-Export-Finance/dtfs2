@@ -25,6 +25,17 @@ describe('facility end date routes', () => {
     resetAllWhenMocks();
     await storage.flush();
     jest.clearAllMocks();
+
+    when(api.getFacility)
+      .calledWith({ facilityId, userToken: expect.anything() })
+      .mockResolvedValueOnce({
+        details: {
+          _id: facilityId,
+          dealId,
+          isUsingFacilityEndDate: true,
+          coverStartDate: '2024-07-15T00:00:00.000Z',
+        },
+      });
   });
 
   afterAll(async () => {
@@ -33,34 +44,42 @@ describe('facility end date routes', () => {
     await storage.flush();
   });
 
-  describe('POST /application-details/:dealId/facilities/:facilityId/facility-end-date', () => {
-    beforeEach(() => {
-      when(api.getFacility)
-        .calledWith({ facilityId, userToken: expect.anything() })
-        .mockResolvedValueOnce({
-          details: {
-            isUsingFacilityEndDate: null,
-            coverStartDate: '2024-07-15T00:00:00.000Z',
-          },
-        });
-    });
+  const describeCases = [
+    {
+      url: `/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date`,
+      description: 'POST /application-details/:dealId/unissued-facilities/:facilityId/facility-end-date',
+      nextPageUrl: `/gef/application-details/${dealId}/unissued-facilities`,
+      saveAndReturnRedirectUrl: `/gef/application-details/${dealId}/unissued-facilities`,
+    },
+    {
+      url: `/application-details/${dealId}/unissued-facilities/${facilityId}/facility-end-date/change`,
+      description: 'POST /application-details/:dealId/unissued-facilities/:facilityId/facility-end-date/change',
+      nextPageUrl: `/gef/application-details/${dealId}`,
+      saveAndReturnRedirectUrl: `/gef/application-details/${dealId}`,
+    },
+    {
+      url: `/application-details/${dealId}/facilities/${facilityId}/facility-end-date`,
+      description: 'POST /application-details/:dealId/facilities/:facilityId/facility-end-date',
+      nextPageUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`,
+      saveAndReturnRedirectUrl: `/gef/application-details/${dealId}`,
+    },
+  ];
 
+  describe.each(describeCases)('$description', ({ url, nextPageUrl, saveAndReturnRedirectUrl }) => {
     describe('with saveAndReturn false', () => {
       withRoleValidationApiTests({
         makeRequestWithHeaders: (headers) =>
-          postFacilityEndDateWithHeaders({
-            body: { 'facility-end-date-year': '2024', 'facility-end-date-month': '8', 'facility-end-date-day': '12' },
-            headers,
-          }),
+          post({ 'facility-end-date-year': '2024', 'facility-end-date-month': '8', 'facility-end-date-day': '12' }, headers).to(url),
         whitelistedRoles: [MAKER],
         successCode: HttpStatusCode.Found,
         successHeaders: {
-          location: `/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`,
+          location: nextPageUrl,
         },
       });
 
       describe('when the user is a maker', () => {
         let sessionCookie;
+        const makeRequest = (body) => post(body, { Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] }).to(url);
 
         beforeEach(async () => {
           ({ sessionCookie } = await storage.saveUserSession([MAKER]));
@@ -71,23 +90,23 @@ describe('facility end date routes', () => {
           const body = { 'facility-end-date-year': '2023', 'facility-end-date-month': '8', 'facility-end-date-day': '12' };
 
           // Act
-          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
+          const response = await makeRequest(body);
 
           // Assert
           expect(response.status).toBe(HttpStatusCode.Ok);
           expect(api.updateFacility).toHaveBeenCalledTimes(0);
         });
 
-        it('redirects to provided facility page if the request body is valid', async () => {
+        it('redirects if the request body is valid', async () => {
           // Arrange
           const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
 
           // Act
-          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
+          const response = await makeRequest(body);
 
           // Assert
           expect(response.status).toBe(HttpStatusCode.Found);
-          expect(response.headers.location).toBe(`/gef/application-details/${dealId}/facilities/${facilityId}/provided-facility`);
+          expect(response.headers.location).toBe(nextPageUrl);
         });
 
         it('updates the facility if request body is valid', async () => {
@@ -100,7 +119,7 @@ describe('facility end date routes', () => {
           };
 
           // Act
-          await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
+          await makeRequest(body);
 
           // Assert
           expect(api.updateFacility).toHaveBeenCalledWith({
@@ -117,7 +136,7 @@ describe('facility end date routes', () => {
           const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
 
           // Act
-          await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie });
+          await makeRequest(body);
 
           // Assert
           expect(api.updateApplication).toHaveBeenCalledWith({
@@ -132,22 +151,20 @@ describe('facility end date routes', () => {
     });
 
     describe('with saveAndReturn true', () => {
+      const saveAndReturnUrl = `${url}?saveAndReturn=true`;
       withRoleValidationApiTests({
         makeRequestWithHeaders: (headers) =>
-          postFacilityEndDateWithHeaders({
-            body: { 'facility-end-date-year': '2024', 'facility-end-date-month': '8', 'facility-end-date-day': '12' },
-            headers,
-            saveAndReturn: true,
-          }),
+          post({ 'facility-end-date-year': '2024', 'facility-end-date-month': '8', 'facility-end-date-day': '12' }, headers).to(saveAndReturnUrl),
         whitelistedRoles: [MAKER],
         successCode: HttpStatusCode.Found,
         successHeaders: {
-          location: `/gef/application-details/${dealId}`,
+          location: saveAndReturnRedirectUrl,
         },
       });
 
       describe('when the user is a maker', () => {
         let sessionCookie;
+        const makeRequest = (body) => post(body, { Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] }).to(saveAndReturnUrl);
 
         beforeEach(async () => {
           ({ sessionCookie } = await storage.saveUserSession([MAKER]));
@@ -158,35 +175,46 @@ describe('facility end date routes', () => {
           const body = { 'facility-end-date-year': '2023', 'facility-end-date-month': '8', 'facility-end-date-day': '12' };
 
           // Act
-          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+          const response = await makeRequest(body);
 
           // Assert
           expect(response.status).toBe(HttpStatusCode.Ok);
           expect(api.updateFacility).toHaveBeenCalledTimes(0);
         });
 
-        it('redirects to application details page if the facility end date is blank', async () => {
+        it('redirects if the facility end date is blank', async () => {
           // Arrange
           const body = { 'facility-end-date-year': '', 'facility-end-date-month': '', 'facility-end-date-day': '' };
 
           // Act
-          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+          const response = await makeRequest(body);
 
           // Assert
           expect(response.status).toBe(HttpStatusCode.Found);
-          expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
+          expect(response.headers.location).toBe(saveAndReturnRedirectUrl);
         });
 
-        it('redirects to application details page if the request body is valid', async () => {
+        it('does not update the database if the facility end date is blank', async () => {
+          // Arrange
+          const body = { 'facility-end-date-year': '', 'facility-end-date-month': '', 'facility-end-date-day': '' };
+
+          // Act
+          await makeRequest(body);
+
+          // Assert
+          expect(api.updateFacility).toHaveBeenCalledTimes(0);
+        });
+
+        it('redirects if the request body is valid', async () => {
           // Arrange
           const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
 
           // Act
-          const response = await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+          const response = await makeRequest(body);
 
           // Assert
           expect(response.status).toBe(HttpStatusCode.Found);
-          expect(response.headers.location).toBe(`/gef/application-details/${dealId}`);
+          expect(response.headers.location).toBe(saveAndReturnRedirectUrl);
         });
 
         it('updates the facility if request body is valid', async () => {
@@ -199,7 +227,7 @@ describe('facility end date routes', () => {
           };
 
           // Act
-          await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+          await makeRequest(body);
 
           // Assert
           expect(api.updateFacility).toHaveBeenCalledWith({
@@ -216,7 +244,7 @@ describe('facility end date routes', () => {
           const body = { 'facility-end-date-year': '2024', 'facility-end-date-month': '08', 'facility-end-date-day': '12' };
 
           // Act
-          await postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn: true });
+          await makeRequest(body);
 
           // Assert
           expect(api.updateApplication).toHaveBeenCalledWith({
@@ -231,17 +259,3 @@ describe('facility end date routes', () => {
     });
   });
 });
-
-function postFacilityEndDateWithHeaders({ body, headers, saveAndReturn = false }) {
-  return post(body, headers).to(`/application-details/${dealId}/facilities/${facilityId}/facility-end-date${saveAndReturn ? '?saveAndReturn=true' : ''}`);
-}
-
-function postFacilityEndDateWithBodyAndSessionCookie({ body, sessionCookie, saveAndReturn = false }) {
-  return postFacilityEndDateWithHeaders({
-    body,
-    headers: {
-      Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
-    },
-    saveAndReturn,
-  });
-}

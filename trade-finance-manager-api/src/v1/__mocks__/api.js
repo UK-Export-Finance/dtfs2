@@ -234,7 +234,7 @@ module.exports = {
     return Promise.resolve(mockResponse);
   }),
   getBankHolidays: jest.fn(() => Promise.resolve(MOCK_BANK_HOLIDAYS)),
-  getAllBanks: jest.fn(() => Promise.resolve([])),
+  getBanks: jest.fn(() => Promise.resolve([])),
   getUtilisationReportsReconciliationSummary: jest.fn(),
   getUtilisationReportById: jest.fn(() => Promise.resolve(MOCK_UTILISATION_REPORT)),
   updateUtilisationReportStatus: jest.fn(),
@@ -249,4 +249,5 @@ module.exports = {
   editPayment: jest.fn(),
   removeFeesFromPayment: jest.fn(),
   getSelectedFeeRecordsDetails: jest.fn(),
+  addFeesToAnExistingPayment: jest.fn(),
 };

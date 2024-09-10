@@ -40,16 +40,16 @@ context('About Facility Page', () => {
       aboutFacility.isUsingFacilityEndDateNo().should('not.exist');
     });
 
-    it('redirects to application details page when visiting facility end date page', () => {
+    it('redirects to about facility page when visiting facility end date page', () => {
       cy.visit(relative(`/gef/application-details/${version0DealId}/facilities/${version0FacilityId}/facility-end-date`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/facilities/${version0FacilityId}/about-facility`));
     });
 
-    it('redirects to application details page when visiting bank review date page', () => {
+    it('redirects to the about facility page when visiting bank review date page', () => {
       cy.visit(relative(`/gef/application-details/${version0DealId}/facilities/${version0FacilityId}/bank-review-date`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}`));
+      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/facilities/${version0FacilityId}/about-facility`));
     });
   });
 
@@ -59,7 +59,7 @@ context('About Facility Page', () => {
       applicationDetails.addContingentFacilityButton().click();
 
       facilities.hasBeenIssuedRadioYesRadioButton().click();
-      facilities.continueButton().click();
+      cy.clickContinueButton();
 
       aboutFacility.facilityName();
       aboutFacility.isUsingFacilityEndDateYes().should('not.exist');

@@ -1,11 +1,6 @@
 import { isValid, parseISO } from 'date-fns';
 import z from 'zod';
-
-type DayMonthYearInput = {
-  day: string;
-  month: string;
-  year: string;
-};
+import { DayMonthYearInput } from '../types';
 
 type ValueAndFieldRefs = {
   value: string;
@@ -27,6 +22,7 @@ type ErrorOrDate =
     }
   | {
       error: ValidationError;
+      parsedDate: undefined;
     };
 
 const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -188,17 +184,19 @@ export const applyStandardValidationAndParseDateInput = (inputtedDate: DayMonthY
     year: `${valueRef}-year`,
   };
 
-  const allFieldsPresentError = validateAllFieldsArePresent(inputtedDate, valueName, valueAndFieldRefs);
+  const trimmedInputtedDate = { day: inputtedDate.day.trim(), month: inputtedDate.month.trim(), year: inputtedDate.year.trim() };
+
+  const allFieldsPresentError = validateAllFieldsArePresent(trimmedInputtedDate, valueName, valueAndFieldRefs);
   if (allFieldsPresentError) {
-    return { error: allFieldsPresentError };
+    return { error: allFieldsPresentError, parsedDate: undefined };
   }
 
-  const eachFieldValidError = validateEachFieldIsValid(inputtedDate, valueName, valueAndFieldRefs);
+  const eachFieldValidError = validateEachFieldIsValid(trimmedInputtedDate, valueName, valueAndFieldRefs);
   if (eachFieldValidError) {
-    return { error: eachFieldValidError };
+    return { error: eachFieldValidError, parsedDate: undefined };
   }
 
-  const parsedDate = parseDate(inputtedDate);
+  const parsedDate = parseDate(trimmedInputtedDate);
   const capitalisedValueName = capitalizeFirstLetter(valueName);
   if (!isValid(parsedDate)) {
     return {
@@ -207,6 +205,7 @@ export const applyStandardValidationAndParseDateInput = (inputtedDate: DayMonthY
         ref: valueAndFieldRefs.value,
         fieldRefs: [valueAndFieldRefs.day, valueAndFieldRefs.month, valueAndFieldRefs.year],
       },
+      parsedDate: undefined,
     };
   }
 

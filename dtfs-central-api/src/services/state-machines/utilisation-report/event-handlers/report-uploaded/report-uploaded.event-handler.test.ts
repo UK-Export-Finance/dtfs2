@@ -11,7 +11,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportReportUploadedEvent } from './report-uploaded.event-handler';
 import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
-import { aUtilisationReportRawCsvData } from '../../../../../../test-helpers/test-data';
+import { aUtilisationReportRawCsvData } from '../../../../../../test-helpers';
 
 describe('handleUtilisationReportReportUploadedEvent', () => {
   const mockSave = jest.fn();
@@ -107,6 +107,6 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
         requestSource,
       });
     });
-    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, createdFacilityUtilisationDataEntities);
+    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, createdFacilityUtilisationDataEntities, { chunk: 100 });
   });
 });

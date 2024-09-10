@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { Facility, FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { aFacility } from '../../../test-helpers/test-data';
+import { aFacility } from '../../../test-helpers';
 
 export const mockFacilities: Facility[] = [
   {

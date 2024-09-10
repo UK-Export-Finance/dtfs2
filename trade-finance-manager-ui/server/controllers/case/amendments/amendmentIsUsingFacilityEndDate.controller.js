@@ -1,36 +1,34 @@
-const { isTfmFacilityEndDateFeatureFlagEnabled, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 const { isUsingFacilityEndDateValidation } = require('./validation/amendmentIsUsingFacilityEndDate.validate');
 
 const getNextPage = (status, changeFacilityValue, isUsingFacilityEndDate, baseUrl, fallbackUrl) => {
-  if (status !== 200) {
+  if (status !== HttpStatusCode.Ok) {
     console.error('Unable to update is using facility end date');
     return fallbackUrl;
   }
-  if (isUsingFacilityEndDate) {
-    return `${baseUrl}/facility-end-date`;
-  }
-  if (changeFacilityValue) {
-    return `${baseUrl}/facility-value`;
-  }
-  return `${baseUrl}/check-answers`;
+  return isUsingFacilityEndDate ? `${baseUrl}/facility-end-date` : `${baseUrl}/bank-review-date`;
 };
 
 const getAmendmentIsUsingFacilityEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
   const { data: amendment, status } = await api.getAmendmentById(facilityId, amendmentId, userToken);
+  const { dealId, isUsingFacilityEndDate } = amendment;
+  const facility = await api.getFacility(facilityId, userToken);
 
-  if (status !== 200) {
+  if (status !== HttpStatusCode.Ok) {
     return res.redirect('/not-found');
   }
 
-  if (!amendment.changeCoverEndDate || !isTfmFacilityEndDateFeatureFlagEnabled()) {
+  const isFacilityEndDateEnabled = isTfmFacilityEndDateFeatureFlagEnabled() && facility.facilitySnapshot.isGef;
+
+  if (!amendment.changeCoverEndDate || !isFacilityEndDateEnabled) {
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
   }
 
   const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
-  const { dealId, isUsingFacilityEndDate } = amendment;
 
   return res.render('case/amendments/amendment-is-using-facility-end-date.njk', {
     dealId,
@@ -59,11 +57,14 @@ const postAmendmentIsUsingFacilityEndDate = async (req, res) => {
   const { dealId, changeFacilityValue } = amendment;
   const { isUsingFacilityEndDate } = req.body;
   const isUsingFacilityEndDateValue = getBooleanFromIsUsingFacilityEndDate(isUsingFacilityEndDate);
+  const facility = await api.getFacility(facilityId, userToken);
 
   const { errors } = isUsingFacilityEndDateValidation(isUsingFacilityEndDate);
 
   if (errors.errorSummary?.length) {
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isTfmFacilityEndDateFeatureFlagEnabled();
+    const isFacilityEndDateEnabled = isTfmFacilityEndDateFeatureFlagEnabled() && facility.facilitySnapshot.isGef;
+
+    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isFacilityEndDateEnabled;
     return res.render('case/amendments/amendment-is-using-facility-end-date.njk', {
       errors,
       dealId,

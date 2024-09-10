@@ -1,10 +1,10 @@
 import { add, isAfter, isBefore, startOfDay } from 'date-fns';
 import { uniq } from 'lodash';
-import { FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
+import { DayMonthYearInput, FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
 import { validateAndParseDayMonthYear } from '../../utils/day-month-year-validation';
-import { DayMonthYear } from '../../types/date';
+import { ErrorsOrDate } from '../../types/errors-or-date';
 
-export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYear, coverStartDate: Date) => {
+export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYearInput, coverStartDate: Date): ErrorsOrDate => {
   const errRef = 'facilityEndDate';
 
   const formattingErrorsOrDate = validateAndParseDayMonthYear(dayMonthYear, {
@@ -12,7 +12,7 @@ export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYear, cove
     variableDisplayName: 'facility end date',
   });
 
-  if (formattingErrorsOrDate.errors) {
+  if ('errors' in formattingErrorsOrDate) {
     return {
       errors: [
         {
@@ -53,5 +53,5 @@ export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYear, cove
     };
   }
 
-  return { errors: null, date: facilityEndDate };
+  return { date: facilityEndDate };
 };

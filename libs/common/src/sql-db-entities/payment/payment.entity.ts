@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Currency } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
-import { CreatePaymentParams, UpdatePaymentParams } from './payment.types';
+import { UpdateWithAdditionalFeeRecordsParams, CreatePaymentParams, UpdatePaymentParams } from './payment.types';
 import { FeeRecordEntity } from '../fee-record';
 import { MonetaryColumn } from '../custom-columns';
 
@@ -43,6 +43,17 @@ export class PaymentEntity extends AuditableBaseEntity {
   })
   feeRecords!: FeeRecordEntity[];
 
+  /**
+   * Creates an instance of the entity
+   * @param param - The parameters to create the entity with
+   * @param param.currency - The currency
+   * @param param.amount - The amount
+   * @param param.dateReceived - The date received
+   * @param param.reference - The reference
+   * @param param.feeRecords - The fee records
+   * @param param.requestSource - The request source
+   * @returns The created entity
+   */
   static create({ currency, amount, dateReceived, reference, feeRecords, requestSource }: CreatePaymentParams): PaymentEntity {
     const payment = new PaymentEntity();
     payment.currency = currency;
@@ -54,10 +65,35 @@ export class PaymentEntity extends AuditableBaseEntity {
     return payment;
   }
 
+  /**
+   * Updates the payment entity
+   * @param param - The parameters to update the payment with
+   * @param param.amount - The amount
+   * @param param.dateReceived - The date received
+   * @param param.reference - The reference
+   * @param param.requestSource - The request source
+   */
   public update({ amount, dateReceived, reference, requestSource }: UpdatePaymentParams): void {
     this.amount = amount;
     this.dateReceived = dateReceived;
     this.reference = reference;
+    this.updateLastUpdatedBy(requestSource);
+  }
+
+  /**
+   * Updates the payment with additional fee records
+   * @param param - The parameters to update the payment with
+   * @param param.additionalFeeRecords - The additional fee records
+   * @param param.requestSource - The request source
+   */
+  public updateWithAdditionalFeeRecords({ additionalFeeRecords, requestSource }: UpdateWithAdditionalFeeRecordsParams): void {
+    const existingIds = new Set(this.feeRecords.map((record) => record.id));
+    const duplicateIds = additionalFeeRecords.filter((record) => existingIds.has(record.id));
+    if (duplicateIds.length > 0) {
+      throw new Error(`Fee record(s) with id(s) ${duplicateIds.map((record) => record.id).join(', ')} are already attached to this payment.`);
+    }
+
+    this.feeRecords = [...this.feeRecords, ...additionalFeeRecords];
     this.updateLastUpdatedBy(requestSource);
   }
 }

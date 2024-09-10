@@ -110,7 +110,7 @@ describe('handleUtilisationReportRemoveFeesFromPaymentGroupEvent', () => {
       expectedOtherFeeRecordsInGroup.forEach(({ id }) => {
         const eventHandler = eventHandlers[id];
         expect(eventHandler).toHaveBeenCalledWith({
-          type: 'OTHER_FEE_REMOVED_FROM_GROUP',
+          type: 'OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP',
           payload: {
             transactionEntityManager: mockEntityManager,
             feeRecordsAndPaymentsMatch,

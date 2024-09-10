@@ -10,11 +10,13 @@ import { MOCK_APPLICATION_MIN } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
 
+import { mainHeading, continueButton, errorSummary } from '../../partials';
 import applicationPreview from '../../pages/application-preview';
 import unissuedFacilityTable from '../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
 import applicationSubmission from '../../pages/application-submission';
 import statusBanner from '../../pages/application-status-banner';
+import facilityEndDate from '../../pages/facility-end-date';
 
 let dealId;
 let token;
@@ -68,7 +70,7 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       statusBanner.applicationBanner().should('exist');
-      unissuedFacilityTable.backLink().click();
+      cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
 
@@ -82,7 +84,7 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      aboutFacilityUnissued.mainHeading().contains("Tell us you've issued this facility");
+      mainHeading().contains("Tell us you've issued this facility");
       aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
       aboutFacilityUnissued.facilityName().should('have.value', MOCK_FACILITY_ONE.name);
 
@@ -97,22 +99,10 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
 
       if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.be.checked');
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
         aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
       }
     });
-
-    if (facilityEndDateEnabled) {
-      it('should display an error if not selected if there is a facility end date ', () => {
-        applicationPreview.unissuedFacilitiesReviewLink().click();
-        unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-
-        aboutFacilityUnissued.continueButton().click();
-
-        aboutFacilityUnissued.errorSummary().contains('Select if there is an end date for this facility');
-        aboutFacilityUnissued.isUsingFacilityEndDateError();
-      });
-    }
 
     it('should be able to update facility and then go back to application preview page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
@@ -135,9 +125,9 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      aboutFacilityUnissued.continueButton().click();
+      cy.clickContinueButton();
 
-      aboutFacilityUnissued.errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
 
       aboutFacilityUnissued.issueDateDay().clear().type(dateConstants.todayDay);
@@ -152,11 +142,18 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       aboutFacilityUnissued.coverEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
       aboutFacilityUnissued.coverEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
       aboutFacilityUnissued.coverEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
-      aboutFacilityUnissued.continueButton().click();
+      cy.clickContinueButton();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        cy.clickContinueButton();
+      }
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
-      unissuedFacilityTable.continueButton().should('not.exist');
+      continueButton().should('not.exist');
       // to go back to application preview page
       unissuedFacilityTable.updateFacilitiesLater().click();
     });
@@ -246,9 +243,9 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeYearsDay);
       aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeYearsMonth);
       aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeYearsYear);
-      aboutFacilityUnissued.continueButton().click();
+      cy.clickContinueButton();
 
-      aboutFacilityUnissued.errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
 
       aboutFacilityUnissued.issueDateDay().clear().type(dateConstants.threeDaysDay);
@@ -268,7 +265,14 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
 
-      aboutFacilityUnissued.continueButton().click();
+      cy.clickContinueButton();
+
+      if (facilityEndDateEnabled) {
+        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
+        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
+        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        cy.clickContinueButton();
+      }
     });
 
     it('change links should appear for facility four and three should be unissued still', () => {
@@ -315,7 +319,7 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       // ensures that can submit even with 1 unissued left still
       applicationPreview.submitButtonPostApproval().click();
       applicationSubmission.submissionText().contains('Someone at your bank must check your update before they can submit it to UKEF');
-      applicationSubmission.submitButton().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/submit`));
       applicationSubmission.confirmationPanelTitleFacilities().contains('Issued facilities submitted for checking at your bank');

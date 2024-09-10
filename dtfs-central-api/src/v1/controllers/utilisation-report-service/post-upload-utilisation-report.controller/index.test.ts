@@ -2,22 +2,16 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
-import { ApiError, MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { postUploadUtilisationReport, postUploadUtilisationReportPayloadValidator, PostUploadUtilisationReportRequestBody } from '.';
+import { MOCK_AZURE_FILE_INFO, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { postUploadUtilisationReport, PostUploadUtilisationReportRequestBody } from '.';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { TransactionFailedError } from '../../../../errors';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
-import { aUtilisationReportRawCsvData } from '../../../../../test-helpers/test-data';
+import { aUtilisationReportRawCsvData } from '../../../../../test-helpers';
 
 jest.mock('../../../../helpers');
 
 console.error = jest.fn();
-
-class TestApiError extends ApiError {
-  constructor({ message, status }: { message: string; status: number }) {
-    super({ message, status });
-  }
-}
 
 describe('post-upload-utilisation-report controller', () => {
   const userId = new ObjectId().toString();
@@ -41,59 +35,6 @@ describe('post-upload-utilisation-report controller', () => {
         user: options?.user ?? validPostUploadUtilisationReportRequestBody.user,
       },
     });
-
-  describe('postUploadUtilisationReportPayloadValidator', () => {
-    const mockNext = jest.fn();
-
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-
-    it('calls the next function when there are no validation errors', () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-
-      // Act
-      postUploadUtilisationReportPayloadValidator(req, res, mockNext);
-
-      // Assert
-      expect(mockNext).toHaveBeenCalled();
-      expect(res._isEndCalled()).toBe(false);
-    });
-
-    const propertyNamesWithInvalidValues = [
-      {
-        propertyName: 'reportId',
-        value: '20',
-      },
-      {
-        propertyName: 'fileInfo',
-        value: {},
-      },
-      {
-        propertyName: 'reportData',
-        value: {},
-      },
-      {
-        propertyName: 'user',
-        value: 'abc123',
-      },
-    ] as const;
-
-    it.each(propertyNamesWithInvalidValues)("responds with an error if the '$propertyName' property is invalid", ({ propertyName, value }) => {
-      // Arrange
-      const { req, res } = getHttpMocks({
-        [propertyName]: value,
-      });
-
-      // Act
-      postUploadUtilisationReportPayloadValidator(req, res, mockNext);
-
-      // Assert
-      expect(mockNext).not.toHaveBeenCalled();
-      expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    });
-  });
 
   describe('postUploadUtilisationReport', () => {
     const mockEntityManager = {
@@ -122,10 +63,7 @@ describe('post-upload-utilisation-report controller', () => {
 
       const errorMessage = 'An error message';
       const errorStatus = HttpStatusCode.BadRequest;
-      const testApiError = new TestApiError({
-        message: errorMessage,
-        status: errorStatus,
-      });
+      const testApiError = new TestApiError(errorStatus, errorMessage);
 
       jest.mocked(executeWithSqlTransaction).mockRejectedValue(TransactionFailedError.forApiError(testApiError));
 

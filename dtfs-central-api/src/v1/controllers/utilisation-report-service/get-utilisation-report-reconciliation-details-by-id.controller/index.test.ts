@@ -1,22 +1,16 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
-import { ApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import { getUtilisationReportReconciliationDetails } from './helpers';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
-import { aReportPeriod } from '../../../../../test-helpers/test-data/report-period';
+import { aReportPeriod } from '../../../../../test-helpers';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 
 jest.mock('./helpers');
 
 console.error = jest.fn();
-
-class TestApiError extends ApiError {
-  constructor(status?: number, message?: string) {
-    super({ status: status ?? 500, message: message ?? '' });
-  }
-}
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller', () => {
   describe('getUtilisationReportReconciliationDetailsById', () => {

@@ -12,9 +12,10 @@ import {
   handleFeeRecordMarkAsReconciledEvent,
   handleFeeRecordMarkAsReadyToKeyEvent,
   handleFeeRecordRemoveFromPaymentGroupEvent,
-  handleFeeRecordOtherFeeRemovedFromGroupEvent,
+  handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent,
+  handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent,
 } from './event-handlers';
-import { aReportPeriod } from '../../../../test-helpers/test-data';
+import { aReportPeriod } from '../../../../test-helpers';
 
 jest.mock('./event-handlers');
 
@@ -146,13 +147,13 @@ describe('FeeRecordStateMachine', () => {
       expect(handleFeeRecordRemoveFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
     });
 
-    it(`handles the '${FEE_RECORD_EVENT_TYPE.OTHER_FEE_REMOVED_FROM_GROUP}' event`, async () => {
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP}' event`, async () => {
       // Arrange
       const stateMachine = FeeRecordStateMachine.forFeeRecord(MATCH_FEE_RECORD);
 
       // Act
       await stateMachine.handleEvent({
-        type: 'OTHER_FEE_REMOVED_FROM_GROUP',
+        type: 'OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP',
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
@@ -161,7 +162,7 @@ describe('FeeRecordStateMachine', () => {
       });
 
       // Assert
-      expect(handleFeeRecordOtherFeeRemovedFromGroupEvent).toHaveBeenCalledTimes(1);
+      expect(handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
     });
 
     const VALID_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [
@@ -169,7 +170,7 @@ describe('FeeRecordStateMachine', () => {
       'PAYMENT_EDITED',
       'GENERATE_KEYING_DATA',
       'REMOVE_FROM_PAYMENT_GROUP',
-      'OTHER_FEE_REMOVED_FROM_GROUP',
+      'OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP',
     ];
     const INVALID_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_MATCH_FEE_RECORD_EVENT_TYPES);
 
@@ -263,13 +264,13 @@ describe('FeeRecordStateMachine', () => {
       expect(handleFeeRecordRemoveFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
     });
 
-    it(`handles the '${FEE_RECORD_EVENT_TYPE.OTHER_FEE_REMOVED_FROM_GROUP}' event`, async () => {
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP}' event`, async () => {
       // Arrange
       const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
 
       // Act
       await stateMachine.handleEvent({
-        type: 'OTHER_FEE_REMOVED_FROM_GROUP',
+        type: 'OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP',
         payload: {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
@@ -278,7 +279,25 @@ describe('FeeRecordStateMachine', () => {
       });
 
       // Assert
-      expect(handleFeeRecordOtherFeeRemovedFromGroupEvent).toHaveBeenCalledTimes(1);
+      expect(handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent).toHaveBeenCalledTimes(1);
+    });
+
+    it(`handles the '${FEE_RECORD_EVENT_TYPE.OTHER_FEE_ADDED_TO_PAYMENT_GROUP}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(DOES_NOT_MATCH_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: 'OTHER_FEE_ADDED_TO_PAYMENT_GROUP',
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          feeRecordsAndPaymentsMatch: true,
+          requestSource: { platform: 'TFM', userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent).toHaveBeenCalledTimes(1);
     });
 
     const VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [
@@ -286,7 +305,8 @@ describe('FeeRecordStateMachine', () => {
       'PAYMENT_DELETED',
       'PAYMENT_EDITED',
       'REMOVE_FROM_PAYMENT_GROUP',
-      'OTHER_FEE_REMOVED_FROM_GROUP',
+      'OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP',
+      'OTHER_FEE_ADDED_TO_PAYMENT_GROUP',
     ];
 
     const INVALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_DOES_NOT_MATCH_FEE_RECORD_EVENT_TYPES);

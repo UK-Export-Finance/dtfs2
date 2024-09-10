@@ -26,15 +26,15 @@
 <form method="POST" autocomplete="off">
   <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
-  <fieldset class="govuk-fieldset" role="group" aria-describedby="coverEndDate-hint">
+  <fieldset class="govuk-fieldset" role="group" aria-describedby="facilityEndDate-hint">
 
     <legend class="govuk-fieldset__legend">
       <h1 class="govuk-heading-l govuk-!-margin-top-4 govuk-!-margin-bottom-0" data-cy="amendment--facility-end-date-heading">Enter the new facility end date</h1>
     </legend>
 
-    <dl class="govuk-body govuk-!-margin-bottom-4" data-cy="amendment--current-facility-end-date">
+    <dl class="govuk-body govuk-!-margin-bottom-4">
       <dt class="govuk-body govuk-!-margin-bottom-0 govuk-!-font-weight-bold">Current facility end date</dt>
-      <dd>{{ ( currentFacilityEndDate if currentFacilityEndDate else "Not provided") }}</dd>
+      <dd data-cy="amendment--current-facility-end-date">{{ ( currentFacilityEndDate if currentFacilityEndDate else "Not provided") }}</dd>
     </dl>
 
     {{ govukDateInput({
@@ -57,7 +57,7 @@
           label: "Day",
           classes: (error and 'facility-end-date-day' in error.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
           name: "day",
-          value: facilityEndDateDay,
+          value: dayInput,
           attributes: {
             'data-cy': "amendment--facility-end-date-day"
           }
@@ -66,7 +66,7 @@
           label: "Month",
           classes: (error and 'facility-end-date-month' in error.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
           name: "month",
-          value: facilityEndDateMonth,
+          value: monthInput,
           attributes: {
             'data-cy': "amendment--facility-end-date-month"
           }
@@ -75,7 +75,7 @@
           label: "Year",
           classes: (error and 'facility-end-date-year' in error.fields) and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
           name: "year",
-          value: facilityEndDateYear,
+          value: yearInput,
           attributes: {
             'data-cy': "amendment--facility-end-date-year"
           }

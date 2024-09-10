@@ -1,10 +1,10 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { PaymentEntityMockBuilder, FeeRecordEntityMockBuilder, ApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { PaymentEntityMockBuilder, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { PostRemoveFeesFromPaymentGroupRequest, postRemoveFeesFromPaymentGroup } from '.';
 import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
-import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';
+import { aTfmSessionUser } from '../../../../../test-helpers';
 import { removeFeesFromPaymentGroup } from './helpers';
 import { PostRemoveFeesFromPaymentGroupPayload } from '../../../routes/middleware/payload-validation/validate-post-remove-fees-from-payment-group-payload';
 import { PaymentRepo } from '../../../../repositories/payment-repo';
@@ -12,12 +12,6 @@ import { PaymentRepo } from '../../../../repositories/payment-repo';
 jest.mock('./helpers');
 
 console.error = jest.fn();
-
-class TestApiError extends ApiError {
-  constructor(status?: number, message?: string) {
-    super({ status: status ?? 500, message: message ?? '' });
-  }
-}
 
 describe('post-remove-fees-from-payment-group.controller', () => {
   describe('postRemoveFeesFromPaymentGroup', () => {
@@ -161,7 +155,7 @@ describe('post-remove-fees-from-payment-group.controller', () => {
       expect(res._getData()).toBe(`Failed to remove fees from payment with id ${paymentId}: ${errorMessage}`);
     });
 
-    it("responds with a '500' if an unknown error occurs", async () => {
+    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
       // Arrange
       const req = httpMocks.createRequest<PostRemoveFeesFromPaymentGroupRequest>({
         params: aValidRequestQuery(),

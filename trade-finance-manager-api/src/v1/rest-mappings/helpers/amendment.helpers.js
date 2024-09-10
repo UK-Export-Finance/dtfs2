@@ -1,5 +1,5 @@
-const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
-const { orderBy } = require('lodash');
+const { CURRENCY, AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { orderBy, cloneDeep } = require('lodash');
 const { formattedNumber } = require('../../../utils/number');
 const { decimalsCount, roundNumber } = require('../../helpers/number');
 const isValidFacility = require('./isValidFacility.helper');
@@ -69,18 +69,20 @@ const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
  * @property {import('@ukef/dtfs2-common').UnixTimestamp} [coverEndDate]
  * @property {number} [amendmentExposurePeriodInMonths]
  * @property {{ exposure: number, timestamp: import('@ukef/dtfs2-common').UnixTimestamp }} [exposure]
+ * @property {boolean} [isUsingFacilityEndDate]
+ * @property {Date} [facilityEndDate]
+ * @property {Date} [bankReviewDate]
  */
 
 /**
  * Get the latest completed amendment values
- * @param {Record<string, unknown>[]} amendments
+ * @param {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} amendments
  * @returns {LatestCompletedAmendment}
  */
 const findLatestCompletedAmendment = (amendments) => {
   if (!amendments) {
     return {};
   }
-
   const completedAmendments = amendments.filter(({ status }) => status === AMENDMENT_STATUS.COMPLETED);
   const sortedAmendments = orderBy(completedAmendments, ['updatedAt', 'version'], ['desc', 'asc']);
 
@@ -100,17 +102,25 @@ const findLatestCompletedAmendment = (amendments) => {
     if (!amendment.tfm) {
       return updatedFields;
     }
-
-    const existingUpdatedFields = { ...updatedFields };
+    const existingUpdatedFields = cloneDeep(updatedFields);
 
     if (!updatedFields.value) {
       existingUpdatedFields.value = amendment.tfm.value;
     }
+
     if (!updatedFields.amendmentExposurePeriodInMonths) {
       existingUpdatedFields.amendmentExposurePeriodInMonths = amendment.tfm.amendmentExposurePeriodInMonths;
     }
     if (!updatedFields.exposure) {
       existingUpdatedFields.exposure = amendment.tfm.exposure;
+    }
+
+    if (isTfmFacilityEndDateFeatureFlagEnabled()) {
+      if (updatedFields?.isUsingFacilityEndDate === null || updatedFields?.isUsingFacilityEndDate === undefined) {
+        existingUpdatedFields.isUsingFacilityEndDate = amendment.tfm.isUsingFacilityEndDate;
+        existingUpdatedFields.facilityEndDate = amendment.tfm.facilityEndDate;
+        existingUpdatedFields.bankReviewDate = amendment.tfm.bankReviewDate;
+      }
     }
 
     if (!amendmentTfmCoverEndDate) {
@@ -122,6 +132,7 @@ const findLatestCompletedAmendment = (amendments) => {
 
     return existingUpdatedFields;
   }, {});
+
   latestAmendmentValues.coverEndDate = amendmentTfmCoverEndDate ?? amendmentCoverEndDate;
   return latestAmendmentValues;
 };
