@@ -68,8 +68,8 @@ export const getEditPaymentViewModel = (
   reportId: string,
   paymentId: string,
   isCheckboxChecked: (checkboxId: string) => boolean,
+  redirectTab?: ReconciliationForReportTab,
   errors: EditPaymentErrorsViewModel = EMPTY_PAYMENT_ERRORS_VIEW_MODEL,
-  redirectTab: ReconciliationForReportTab | undefined = undefined,
 ): EditPaymentViewModel => ({
   reportId,
   paymentId,

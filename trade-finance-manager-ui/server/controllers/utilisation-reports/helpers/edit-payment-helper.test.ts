@@ -385,7 +385,7 @@ describe('edit-payment-helper', () => {
       const redirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
 
       // Act
-      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, undefined, redirectTab);
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, redirectTab);
 
       // Assert
       expect(viewModel.redirectTab).toEqual(redirectTab);
@@ -398,7 +398,7 @@ describe('edit-payment-helper', () => {
       jest.mocked(getReconciliationForReportHref).mockReturnValue('/utilisation-reports/123#keying-sheet');
 
       // Act
-      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, undefined, redirectTab);
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, redirectTab);
 
       // Assert
       expect(viewModel.backLinkHref).toEqual('/utilisation-reports/123#keying-sheet');
@@ -875,7 +875,7 @@ describe('edit-payment-helper', () => {
       const redirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
 
       // Act
-      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, undefined, redirectTab);
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, redirectTab);
 
       // Assert
       expect(viewModel.redirectTab).toEqual(redirectTab);
@@ -888,7 +888,7 @@ describe('edit-payment-helper', () => {
       jest.mocked(getReconciliationForReportHref).mockReturnValue('/utilisation-reports/123#keying-sheet');
 
       // Act
-      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, undefined, redirectTab);
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, redirectTab);
 
       // Assert
       expect(viewModel.backLinkHref).toEqual('/utilisation-reports/123#keying-sheet');

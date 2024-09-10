@@ -50,7 +50,7 @@ export const getEditPayment = async (req: GetEditPaymentRequest, res: Response) 
       return renderEditPaymentPage(res, editPaymentViewModel);
     }
 
-    const editPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId, isCheckboxChecked, errors, redirectTab);
+    const editPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId, isCheckboxChecked, redirectTab, errors);
     return renderEditPaymentPage(res, editPaymentViewModel);
   } catch (error) {
     console.error('Error updating utilisation report status:', error);
