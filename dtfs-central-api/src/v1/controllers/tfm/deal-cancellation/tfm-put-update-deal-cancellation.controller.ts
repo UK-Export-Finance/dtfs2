@@ -3,6 +3,7 @@ import { flatten } from 'mongo-dot-notation';
 import { HttpStatusCode } from 'axios';
 import { ApiError, ApiErrorResponseBody, AUDIT_USER_TYPES, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
+import { UpdateResult } from 'mongodb';
 import { TfmDealCancellationRepo } from '../../../../repositories/tfm-deals-repo';
 import { PutDealCancellationPayload } from '../../../routes/middleware/payload-validation';
 
@@ -10,7 +11,7 @@ type UpdateTfmDealCancellationRequest = CustomExpressRequest<{
   reqBody: PutDealCancellationPayload;
 }>;
 
-type UpdateTfmDealCancellationResponse = Response<ApiErrorResponseBody | Document | null>;
+type UpdateTfmDealCancellationResponse = Response<ApiErrorResponseBody | UpdateResult>;
 
 export const updateTfmDealCancellation = async (req: UpdateTfmDealCancellationRequest, res: UpdateTfmDealCancellationResponse) => {
   const { dealCancellationUpdate, auditDetails } = req.body;
@@ -19,7 +20,7 @@ export const updateTfmDealCancellation = async (req: UpdateTfmDealCancellationRe
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
 
-    await TfmDealCancellationRepo.updateOneDealWithCancellation(
+    const updateResult = await TfmDealCancellationRepo.updateOneDealCancellation(
       dealId,
       flatten({
         'tfm.cancellation': dealCancellationUpdate,
@@ -27,8 +28,7 @@ export const updateTfmDealCancellation = async (req: UpdateTfmDealCancellationRe
       }),
     );
 
-    const dealCancellation = await TfmDealCancellationRepo.findDealCancellationByDealId(dealId);
-    return res.status(HttpStatusCode.Ok).json(dealCancellation);
+    return res.status(HttpStatusCode.Ok).json(updateResult);
   } catch (error) {
     console.error('Error updating deal cancellation:', error);
     if (error instanceof ApiError) {

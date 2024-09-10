@@ -1,4 +1,4 @@
-import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { DealNotFoundError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
 import { mongoDbClient as db } from '../../drivers/db-client';
@@ -21,7 +21,6 @@ describe('tfm-deals-cancellation-repo', () => {
   describe('findDealCancellationByDealId', () => {
     beforeEach(() => {
       findOneMock.mockResolvedValue(mockDealObject);
-      getCollectionMock.mockResolvedValue({});
 
       getCollectionMock.mockResolvedValue({
         findOne: findOneMock,
@@ -38,6 +37,16 @@ describe('tfm-deals-cancellation-repo', () => {
       expect(findOneMock).toHaveBeenCalled();
     });
 
+    it('returns an error if no matching result is found', async () => {
+      // Arrange
+      findOneMock.mockResolvedValue(undefined);
+
+      getCollectionMock.mockResolvedValue({ findOne: findOneMock });
+
+      // Assert
+      await expect(TfmDealCancellationRepo.findDealCancellationByDealId(dealId)).rejects.toThrow(new DealNotFoundError(dealId.toString()));
+    });
+
     it('returns the found deal cancellation', async () => {
       // Act
       const result = await TfmDealCancellationRepo.findDealCancellationByDealId(dealId);
@@ -47,14 +56,13 @@ describe('tfm-deals-cancellation-repo', () => {
     });
   });
 
-  describe('updateOneDealWithCancellation', () => {
+  describe('updateOneDealCancellation', () => {
+    const mockUpdateResult = { matchedCount: 1 };
+
     beforeEach(() => {
-      findOneMock.mockResolvedValue(mockDealObject);
-      updateOneMock.mockResolvedValue({});
-      getCollectionMock.mockResolvedValue({});
+      updateOneMock.mockResolvedValue(mockUpdateResult);
 
       getCollectionMock.mockResolvedValue({
-        findOne: findOneMock,
         updateOne: updateOneMock,
       });
       jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
@@ -62,22 +70,42 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('calls the DB with the correct collection name', async () => {
       // Act
-      await TfmDealCancellationRepo.updateOneDealWithCancellation(dealId, mockDealCancellationObject);
+      await TfmDealCancellationRepo.updateOneDealCancellation(dealId, mockDealCancellationObject);
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_DEALS);
-      expect(findOneMock).toHaveBeenCalled();
       expect(updateOneMock).toHaveBeenCalled();
+    });
+
+    it('returns an error if no matching result is found', async () => {
+      // Arrange
+      const mockFailedUpdateResult = { matchedCount: 0 };
+
+      updateOneMock.mockResolvedValue(mockFailedUpdateResult);
+
+      getCollectionMock.mockResolvedValue({ updateOne: updateOneMock });
+
+      // Assert
+      await expect(TfmDealCancellationRepo.updateOneDealCancellation(dealId, mockDealCancellationObject)).rejects.toThrow(
+        new DealNotFoundError(dealId.toString()),
+      );
     });
 
     it('calls updateOne with the expected parameters', async () => {
       // Act
-      await TfmDealCancellationRepo.updateOneDealWithCancellation(dealId, mockDealCancellationObject);
+      await TfmDealCancellationRepo.updateOneDealCancellation(dealId, mockDealCancellationObject);
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_DEALS);
-      expect(findOneMock).toHaveBeenCalled();
-      expect(updateOneMock).toHaveBeenCalledWith({ _id: { $eq: dealId } }, mockDealCancellationObject);
+      expect(updateOneMock).toHaveBeenCalledWith(expect.objectContaining({ _id: { $eq: new ObjectId(dealId) } }), mockDealCancellationObject);
+    });
+
+    it('returns the deal cancellation update', async () => {
+      // Act
+      const result = await TfmDealCancellationRepo.updateOneDealCancellation(dealId, mockDealCancellationObject);
+
+      // Assert
+      expect(result).toEqual(mockUpdateResult);
     });
   });
 });

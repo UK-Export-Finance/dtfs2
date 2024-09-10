@@ -1,5 +1,5 @@
-import { Collection, Document, ObjectId, UpdateFilter, UpdateResult, WithoutId } from 'mongodb';
-import { DealNotFoundError, TfmDeal, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { Collection, ObjectId, UpdateFilter, UpdateResult, WithoutId } from 'mongodb';
+import { DEAL_SUBMISSION_TYPE, DealNotFoundError, TfmDeal, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { mongoDbClient } from '../../drivers/db-client';
 
 export class TfmDealCancellationRepo {
@@ -12,9 +12,12 @@ export class TfmDealCancellationRepo {
    * @param dealId - The deal id
    * @returns the found deal cancellation
    */
-  public static async findDealCancellationByDealId(dealId: string | ObjectId): Promise<Document> {
+  public static async findDealCancellationByDealId(dealId: string | ObjectId): Promise<TfmDealCancellation> {
     const dealCollection = await this.getCollection();
-    const matchingDeal = await dealCollection.findOne({ _id: { $eq: new ObjectId(dealId) } });
+    const matchingDeal = await dealCollection.findOne({
+      _id: { $eq: new ObjectId(dealId) },
+      'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
+    });
 
     if (!matchingDeal) {
       throw new DealNotFoundError(dealId.toString());
@@ -29,20 +32,22 @@ export class TfmDealCancellationRepo {
    * @param update - The deal cancellation update to apply
    * @returns The update result
    */
-  public static async updateOneDealWithCancellation(dealId: string | ObjectId, update: UpdateFilter<TfmDealCancellation>): Promise<UpdateResult> {
+  public static async updateOneDealCancellation(dealId: string | ObjectId, update: UpdateFilter<TfmDealCancellation>): Promise<UpdateResult> {
     const dealCollection = await this.getCollection();
 
-    const matchingDeal = await dealCollection.findOne({ _id: { $eq: new ObjectId(dealId) } });
-
-    if (!matchingDeal) {
-      throw new DealNotFoundError(dealId.toString());
-    }
-
-    return await dealCollection.updateOne(
+    const updateResult = await dealCollection.updateOne(
       {
         _id: { $eq: new ObjectId(dealId) },
+        'tfm.stage': { $ne: 'Cancelled' },
+        'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
       },
       update,
     );
+
+    if (updateResult.matchedCount === 0) {
+      throw new DealNotFoundError(dealId.toString());
+    }
+
+    return updateResult;
   }
 }
