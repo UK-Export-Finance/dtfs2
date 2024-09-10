@@ -56,6 +56,8 @@ export class FeeRecordEntityMockBuilder {
     data.payments = [];
     data.fixedFeeAdjustment = null;
     data.principalBalanceAdjustment = null;
+    data.reconciledByUserId = null;
+    data.dateReconciled = null;
     data.updateLastUpdatedBy(requestSource);
     return new FeeRecordEntityMockBuilder(data);
   }
@@ -144,6 +146,16 @@ export class FeeRecordEntityMockBuilder {
 
   public withPrincipalBalanceAdjustment(principalBalanceAdjustment: number | null): FeeRecordEntityMockBuilder {
     this.feeRecord.principalBalanceAdjustment = principalBalanceAdjustment;
+    return this;
+  }
+
+  public withReconciledByUserId(reconciledByUserId: string | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.reconciledByUserId = reconciledByUserId;
+    return this;
+  }
+
+  public withDateReconciled(dateReconciled: Date | null): FeeRecordEntityMockBuilder {
+    this.feeRecord.dateReconciled = dateReconciled;
     return this;
   }
 

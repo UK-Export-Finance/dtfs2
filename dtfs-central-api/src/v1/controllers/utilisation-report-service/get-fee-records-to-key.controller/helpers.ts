@@ -1,6 +1,6 @@
 import { CurrencyAndAmount, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { FeeRecordToKey } from '../../../../types/fee-records';
-import { getFeeRecordPaymentEntityGroupsFromFeeRecordEntities } from '../../../../helpers';
+import { getFeeRecordPaymentEntityGroups } from '../../../../helpers';
 import { mapFeeRecordEntityToReportedFees, mapFeeRecordEntityToReportedPayments } from '../../../../mapping/fee-record-mapper';
 
 const mapToFeeRecordToKey = (feeRecordEntity: FeeRecordEntity, paymentsReceived: CurrencyAndAmount[]): FeeRecordToKey => {
@@ -29,7 +29,7 @@ export const mapToFeeRecordsToKey = (feeRecordEntities: FeeRecordEntity[]): FeeR
     throw new Error("All fee records must have 'MATCH' status to get fee records to key");
   }
 
-  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroupsFromFeeRecordEntities(feeRecordEntities);
+  const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroups(feeRecordEntities);
 
   return feeRecordPaymentEntityGroups.reduce((feeRecordsToKey, group) => {
     const { feeRecords, payments } = group;
