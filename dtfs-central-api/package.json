@@ -28,11 +28,12 @@
     "start": "npx ts-node src/index.ts",
     "type-check": "tsc --noEmit --pretty",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "@ukef/dtfs2-common": "1.0.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "big.js": "^6.2.1",
     "compression": "^1.7.4",
     "date-fns": "^2.30.0",

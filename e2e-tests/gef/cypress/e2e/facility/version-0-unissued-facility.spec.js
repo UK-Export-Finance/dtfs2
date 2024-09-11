@@ -37,32 +37,48 @@ context('About unissued facility page', () => {
   });
 
   describe('issuing an unissued facility', () => {
-    it('does not display the facility end date questions when initially issuing the facility', () => {
-      cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/about`));
+    describe('when visiting from the unissued facility page', () => {
+      it('does not display the facility end date questions on about facility page', () => {
+        cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/about`));
 
-      aboutFacilityUnissued.facilityName();
-      aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.exist');
-      aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.exist');
+        aboutFacilityUnissued.facilityName();
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.exist');
+        aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.exist');
+      });
+
+      it('redirects to about unissued facility page when visiting facility end date page', () => {
+        cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/facility-end-date`));
+
+        cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/about`));
+      });
+
+      it('redirects to about unissued facility page when visiting bank review date page from unissued facility page', () => {
+        cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/bank-review-date`));
+
+        cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/about`));
+      });
     });
 
-    it('does not display the facility end date questions when changing the values', () => {
-      cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/change`));
+    describe('when changing values from application details page', () => {
+      it('does not display the facility end date questions when changing the values', () => {
+        cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/change`));
 
-      aboutFacilityUnissued.facilityName();
-      aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.exist');
-      aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.exist');
-    });
+        aboutFacilityUnissued.facilityName();
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('not.exist');
+        aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.exist');
+      });
 
-    it('redirects to application details page when visiting facility end date page from initially issuing', () => {
-      cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/facility-end-date`));
+      it('redirects to change unissued facility page when visiting facility end date page when changing the values', () => {
+        cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/facility-end-date/change`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/about`));
-    });
+        cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/change`));
+      });
 
-    it('redirects to application details page when visiting facility end date page when changing the values', () => {
-      cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/facility-end-date/change`));
+      it('redirects to change unissued facility page when visiting bank review date page when changing the values', () => {
+        cy.visit(relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/bank-review-date/change`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/change`));
+        cy.url().should('eq', relative(`/gef/application-details/${version0DealId}/unissued-facilities/${version0FacilityId}/change`));
+      });
     });
   });
 });

@@ -9,7 +9,7 @@
 export const ENDPOINT = {
   SITE: 'sites',
   TERM: 'terms/facilities',
-  BUYER: 'buyer',
+  BUYER: 'buyers',
   DEAL: 'deals',
   FACILITY: 'facilities',
   DOCUMENT: 'documents',

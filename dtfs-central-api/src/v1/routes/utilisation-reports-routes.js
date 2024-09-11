@@ -10,12 +10,10 @@ import {
   validatePostRemoveFeesFromPaymentGroupPayload,
   validatePostReportDataValidationPayload,
   validatePostAddFeesToAnExistingPaymentGroupPayload,
+  validatePostUploadUtilisationReportPayload,
 } from './middleware/payload-validation';
 import { getUtilisationReportById } from '../controllers/utilisation-report-service/get-utilisation-report.controller';
-import {
-  postUploadUtilisationReport,
-  postUploadUtilisationReportPayloadValidator,
-} from '../controllers/utilisation-report-service/post-upload-utilisation-report.controller';
+import { postUploadUtilisationReport } from '../controllers/utilisation-report-service/post-upload-utilisation-report.controller';
 import { getUtilisationReportsReconciliationSummary } from '../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller';
 import putUtilisationReportStatusController from '../controllers/utilisation-report-service/put-utilisation-report-status.controller';
 import { getUtilisationReportReconciliationDetailsById } from '../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller';
@@ -65,7 +63,43 @@ const utilisationReportsRouter = express.Router();
  *       409:
  *         description: Server conflict
  */
-utilisationReportsRouter.route('/').post(postUploadUtilisationReportPayloadValidator, postUploadUtilisationReport);
+utilisationReportsRouter.route('/').post(validatePostUploadUtilisationReportPayload, postUploadUtilisationReport);
+
+/**
+ * @openapi
+ * /utilisation-reports/report-data-validation:
+ *   post:
+ *     summary: Validate utilisation report data
+ *     tags: [Utilisation Report]
+ *     description: Validate utilisation report data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reportData:
+ *                 $ref: '#/definitions/RawReportDataWithCellLocations'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - type: object
+ *                   properties:
+ *                     csvValidationErrors:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/definitions/CsvValidationError'
+ *       500:
+ *         description: Internal server error
+ *       400:
+ *         description: Invalid payload
+ */
+utilisationReportsRouter.route('/report-data-validation').post(validatePostReportDataValidationPayload, postReportDataValidation);
 
 /**
  * @openapi

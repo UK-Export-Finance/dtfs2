@@ -30,7 +30,8 @@
     "start": "npx ts-node server/index.ts",
     "type-check": "tsc --noEmit --pretty",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
@@ -38,7 +39,7 @@
     "@types/lodash": "^4.17.4",
     "@ukef/dtfs2-common": "1.0.0",
     "ajv": "^8.16.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "chance": "^1.1.11",
     "cheerio": "^1.0.0-rc.12",
     "chokidar": "^3.6.0",
@@ -108,7 +109,7 @@
     "terser-webpack-plugin": "^5.3.10",
     "ts-jest": "^29.1.4",
     "typescript": "^5.4.5",
-    "webpack": "^5.91.0",
+    "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.10.0"
   },

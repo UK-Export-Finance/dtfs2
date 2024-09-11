@@ -1,5 +1,11 @@
 import { HttpStatusCode } from 'axios';
-import { FeeRecordEntity, FeeRecordEntityMockBuilder, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import {
+  FEE_RECORD_STATUS,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { aTfmSessionUser } from '../../../test-helpers';
@@ -38,7 +44,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const response = (await testApi.put(requestBody).to(getUrl(1))) as Response;
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('returns a 400 when the request does not contain a user', async () => {
@@ -51,7 +57,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const response = (await testApi.put(requestBody).to(getUrl(1))) as Response;
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('returns a 404 when no report with the supplied id can be found', async () => {
@@ -65,7 +71,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const response = (await testApi.put(requestBody).to(getUrl(1))) as Response;
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 404 when there is a report but without the requested fee record', async () => {
@@ -83,7 +89,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const response = (await testApi.put(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 200 if the request body is valid', async () => {
@@ -103,14 +109,19 @@ describe(`PUT ${BASE_URL}`, () => {
     const { status } = (await testApi.put(requestBody).to(getUrl(reportId))) as Response;
 
     // Assert
-    expect(status).toBe(200);
+    expect(status).toEqual(200);
   });
 
-  it('sets fee record status to READY_TO_KEY', async () => {
+  it('sets fee record status to READY_TO_KEY, reconciledByUserId to null and dateReconciled to null', async () => {
     // Arrange
     const reportId = 1;
     const report = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus('RECONCILED').build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report)
+      .withId(1)
+      .withStatus(FEE_RECORD_STATUS.RECONCILED)
+      .withReconciledByUserId('abc123')
+      .withDateReconciled(new Date('2024'))
+      .build();
     report.feeRecords = [feeRecord];
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
@@ -123,8 +134,10 @@ describe(`PUT ${BASE_URL}`, () => {
     await testApi.put(requestBody).to(getUrl(reportId));
 
     // Assert
-    const updatedFeeRecord = await SqlDbHelper.manager.findOneBy(FeeRecordEntity, { id: 1 });
-    expect(updatedFeeRecord?.status).toEqual('READY_TO_KEY');
+    const updatedFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: 1 });
+    expect(updatedFeeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
+    expect(updatedFeeRecord.reconciledByUserId).toBeNull();
+    expect(updatedFeeRecord.dateReconciled).toBeNull();
   });
 
   it('sets the report status to RECONCILIATION_IN_PROGRESS if it was RECONCILIATION_COMPLETED', async () => {

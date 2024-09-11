@@ -5,11 +5,16 @@ import { getBankNameById } from '../../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../../errors';
 import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
 import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
+import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
+import { getFeeRecordPaymentEntityGroups } from '../../../../../helpers';
+import * as filterFeeRecordsModule from './filter-fee-record-payment-entity-groups-by-facility-id';
 
 console.error = jest.fn();
 
 jest.mock('../../../../../repositories/banks-repo');
+jest.mock('../../../../../helpers');
 jest.mock('./get-keying-sheet-for-report-id');
+jest.mock('./map-to-fee-record-payment-groups');
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
   describe('getUtilisationReportReconciliationDetails', () => {
@@ -17,10 +22,24 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
     const bankId = '123';
 
+    const filterFeeRecordSpy = jest.spyOn(filterFeeRecordsModule, 'filterFeeRecordPaymentEntityGroupsByFacilityId');
+
     beforeEach(() => {
       jest.resetAllMocks();
       jest.mocked(getBankNameById).mockRejectedValue('Some error');
       jest.mocked(getKeyingSheetForReportId).mockRejectedValue('Some error');
+      jest.mocked(getFeeRecordPaymentEntityGroups).mockImplementation(() => {
+        throw new Error('Some error');
+      });
+      jest.mocked(mapToFeeRecordPaymentGroups).mockRejectedValue('Some error');
+
+      when(getKeyingSheetForReportId).calledWith(reportId, []).mockResolvedValue([]);
+      when(getFeeRecordPaymentEntityGroups).calledWith([]).mockReturnValue([]);
+      when(mapToFeeRecordPaymentGroups).calledWith([]).mockResolvedValue([]);
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
     });
 
     it.each(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS))(
@@ -67,7 +86,6 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
       const bankName = 'Test bank';
       when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
-      when(getKeyingSheetForReportId).calledWith(reportId, []).mockResolvedValue([]);
 
       // Act
       const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, undefined);
@@ -86,6 +104,50 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         feeRecordPaymentGroups: [],
         keyingSheet: [],
       });
+    });
+
+    it('filters the fee record payment groups by the facility id when the facility id is a string', async () => {
+      // Arrange
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+        .withId(reportId)
+        .withBankId(bankId)
+        .withDateUploaded(new Date())
+        .withFeeRecords([])
+        .build();
+
+      filterFeeRecordSpy.mockReturnValue([]);
+
+      const bankName = 'Test bank';
+      when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
+
+      const facilityIdFilter = 'some filter';
+
+      // Act
+      await getUtilisationReportReconciliationDetails(uploadedReport, facilityIdFilter);
+
+      // Assert
+      expect(filterFeeRecordSpy).toHaveBeenCalledWith([], facilityIdFilter);
+    });
+
+    it('does not filter the fee record payment groups by the facility id when the facility id is undefined', async () => {
+      // Arrange
+      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+        .withId(reportId)
+        .withBankId(bankId)
+        .withDateUploaded(new Date())
+        .withFeeRecords([])
+        .build();
+
+      const bankName = 'Test bank';
+      when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
+
+      const facilityIdFilter = undefined;
+
+      // Act
+      await getUtilisationReportReconciliationDetails(uploadedReport, facilityIdFilter);
+
+      // Assert
+      expect(filterFeeRecordSpy).not.toHaveBeenCalled();
     });
   });
 });

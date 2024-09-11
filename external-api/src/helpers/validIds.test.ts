@@ -5,7 +5,14 @@ const eStoreData = {
   dealId: '6597dffeb5ef5ff4267e5044',
   siteId: '1234567890',
   facilityIdentifiers: [1234567890, 1234567890],
-  supportingInformation: ['1234567890', '1234567890'],
+  supportingInformation: [
+    {
+      documentType: 'test',
+      fileName: 'test.docx',
+      fileLocationPath: 'directory/',
+      parentId: 'abc',
+    },
+  ],
   exporterName: 'Test',
   buyerName: 'Test',
   dealIdentifier: '1234567890',

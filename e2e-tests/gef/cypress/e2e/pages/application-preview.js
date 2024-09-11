@@ -3,7 +3,6 @@ const cyGetFacilitySummaryListValue = (tableNum, actionSelector) =>
   cyGetFacilitySummaryListChild(tableNum, actionSelector).parent().parent().find('.govuk-summary-list__value');
 
 const applicationPreview = {
-  backLink: () => cy.get('[data-cy="back-link"]'),
   bankReference: () => cy.get('[data-cy="bank-reference"]'),
 
   comments: () => cy.get('[data-cy="latest-comment"]'),
@@ -16,7 +15,6 @@ const applicationPreview = {
   reviewDecisionTrue: () => cy.get('[data-cy="review-decision-true"]'),
   reviewDecisionContinue: () => cy.get('[data-cy="continue-button"]'),
   reviewDecisionError: () => cy.get('[data-cy="decision-error"]'),
-  errorSummary: () => cy.get('[data-cy="error-summary"]'),
 
   miaStageChecker: () => cy.get('[data-cy="update-mia-stage"]'),
 
@@ -30,8 +28,6 @@ const applicationPreview = {
   updatedUnissuedFacilitiesList: () => cy.get('[data-cy="unissued-to-issued-facilities-list"]'),
 
   applicationPreviewPage: () => cy.get('[data-cy="application-preview-page"]'),
-  captionHeading: () => cy.get('[data-cy="heading-caption"]'),
-  mainHeading: () => cy.get('[data-cy="main-heading"]'),
 
   exporterHeading: () => cy.get('[data-cy="exporter-heading'),
   exporterSummaryList: () => cy.get('[data-cy="exporter-summary-list'),
@@ -89,7 +85,6 @@ const applicationPreview = {
     cy.get('[data-cy="supportingInfo-summary-list"]').eq(tableNum).find('.govuk-summary-list__row').eq(rowNum).find('.govuk-summary-list__actions'),
 
   submitHeading: () => cy.get('[data-cy="submit-heading"]'),
-  submitButton: () => cy.get('[data-cy="submit-button"]'),
   submitButtonPostApproval: () => cy.get('[data-cy="submit-ukef-approved-application-to-checker"]'),
   returnButton: () => cy.get('[data-cy="return-button"]'),
 };

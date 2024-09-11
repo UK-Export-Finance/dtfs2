@@ -1,19 +1,5 @@
 import { isMongoId } from 'validator';
-import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
 import { REGEX } from '../../../constants';
-import {
-  validateUkefId,
-  validateExporter,
-  validateBaseCurrency,
-  validateFacilityUtilisation,
-  validateTotalFeesAccrued,
-  validateTotalFeesAccruedCurrency,
-  validateTotalFeesAccruedExchangeRate,
-  validateMonthlyFeesPaid,
-  validateMonthlyFeesPaidCurrency,
-  validatePaymentCurrency,
-  validatePaymentExchangeRate,
-} from './utilisation-data-validator';
 
 /**
  * Validate the ID of a utilisation report
@@ -101,58 +87,6 @@ const validateFileInfo = (fileInfo) => {
 };
 
 /**
- * Validates the utilisation report data. Returns an array of error messages.
- * @param {unknown} utilisationReportData - array of json objects representing utilisation report data.
- * @returns {import('./utilisation-data-validator.types').UtilisationDataValidatorError[]} - Array of error objects.
- */
-const validateUtilisationReportData = (utilisationReportData) => {
-  if (!Array.isArray(utilisationReportData)) {
-    const errors = ['utilisationReportData must be an array'];
-    return errors;
-  }
-
-  const errors = utilisationReportData.flatMap((utilisationReportDataEntry, index) => {
-    const facilityIdValidationError = validateUkefId(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID], index);
-    const exporterValidationError = validateExporter(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.EXPORTER], index);
-    const baseCurrencyValidationError = validateBaseCurrency(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY], index);
-    const facilityUtilisationValidationError = validateFacilityUtilisation(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION], index);
-    const totalFeesAccruedValidationError = validateTotalFeesAccrued(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED], index);
-    const totalFeesAccruedCurrencyValidationError = validateTotalFeesAccruedCurrency(
-      utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY],
-      index,
-    );
-    const totalFeesAccruedExchangeRateValidationError = validateTotalFeesAccruedExchangeRate(
-      utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE],
-      index,
-    );
-    const monthlyFeesPaidValidationError = validateMonthlyFeesPaid(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD], index);
-    const monthlyFeesPaidCurrencyValidationError = validateMonthlyFeesPaidCurrency(
-      utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
-      index,
-    );
-    const paymentCurrencyValidationError = validatePaymentCurrency(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY], index);
-    const paymentExchangeRateValidationError = validatePaymentExchangeRate(utilisationReportDataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE], index);
-
-    const validationErrors = [
-      facilityIdValidationError,
-      exporterValidationError,
-      baseCurrencyValidationError,
-      facilityUtilisationValidationError,
-      totalFeesAccruedValidationError,
-      totalFeesAccruedCurrencyValidationError,
-      totalFeesAccruedExchangeRateValidationError,
-      monthlyFeesPaidValidationError,
-      monthlyFeesPaidCurrencyValidationError,
-      paymentCurrencyValidationError,
-      paymentExchangeRateValidationError,
-    ].filter((error) => error);
-
-    return validationErrors;
-  });
-  return errors;
-};
-
-/**
  * Validates the user associated with a utilisation report
  * @param {unknown} user - the user
  * @returns {string[]} - an array of errors or an empty array if valid.
@@ -180,4 +114,4 @@ const validateReportUser = (user) => {
   return errors;
 };
 
-export { validateReportId, validateUtilisationReportData, validateMonth, validateYear, validateFileInfo, validateReportUser };
+export { validateReportId, validateMonth, validateYear, validateFileInfo, validateReportUser };

@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { validateMonth, validateYear, validateFileInfo, validateUtilisationReportData, validateReportUser } from './utilisation-report-validator';
+import { validateMonth, validateYear, validateFileInfo, validateReportUser } from './utilisation-report-validator';
 
 describe('utilisation-report-validator', () => {
   describe('validateMonth', () => {
@@ -105,51 +105,6 @@ describe('utilisation-report-validator', () => {
       expect(validationErrors).toContain('Full path from file info is required');
       expect(validationErrors).toContain('Url from file info is required');
       expect(validationErrors).toContain('Mimetype from file info is required');
-    });
-  });
-
-  describe('validateUtilisationReportData', () => {
-    it('returns an empty array when no errors are found', async () => {
-      const validCsvData = [
-        {
-          'ukef facility id': '24738147',
-          'facility utilisation': 100000,
-        },
-        {
-          'ukef facility id': '27483617',
-          'facility utilisation': 200000,
-        },
-      ];
-      const validationError = validateUtilisationReportData(validCsvData);
-
-      expect(validationError).toEqual([]);
-    });
-
-    it('returns an error array of length 1 if the report data is not an array', async () => {
-      // Arrange
-      const invalidCsvData = {};
-
-      // Act
-      const validationErrors = validateUtilisationReportData(invalidCsvData);
-
-      // Assert
-      expect(validationErrors).toHaveLength(1);
-    });
-
-    it('returns an array of errors if the report has any errors', async () => {
-      const invalidCsvData = [
-        {
-          'ukef facility id': 'abc',
-          'facility utilisation': 100000,
-        },
-        {
-          'ukef facility id': '27483617',
-          'facility utilisation': {},
-        },
-      ];
-      const validationError = validateUtilisationReportData(invalidCsvData);
-
-      expect(validationError.length).toBeGreaterThan(0);
     });
   });
 
