@@ -3,10 +3,18 @@ import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency, FeeRecordStatus } from '../../types';
 import { AuditableBaseEntity } from '../base-entities';
-import { CreateFeeRecordParams, RemoveAllPaymentsParams, UpdateWithKeyingDataParams, UpdateWithStatusParams } from './fee-record.types';
+import {
+  CreateFeeRecordParams,
+  MarkAsReadyToKeyParams,
+  MarkAsReconciledParams,
+  RemoveAllPaymentsParams,
+  UpdateWithKeyingDataParams,
+  UpdateWithStatusParams,
+} from './fee-record.types';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
 import { PaymentEntity } from '../payment';
 import { FacilityUtilisationDataEntity } from '../facility-utilisation-data';
+import { FEE_RECORD_STATUS } from '../../constants';
 
 @Entity('FeeRecord')
 export class FeeRecordEntity extends AuditableBaseEntity {
@@ -132,7 +140,25 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   @MonetaryColumn({ nullable: true })
   principalBalanceAdjustment!: number | null;
 
-  // TODO FN-1726 - when we have a status on this entity we should make this method name specific to the initial status
+  /**
+   * The user who reconciled the fee record
+   */
+  @Column({ type: 'nvarchar', length: 255, nullable: true })
+  reconciledByUserId!: string | null;
+
+  /**
+   * The date the fee record was reconciled
+   */
+  @Column({ type: 'datetime2', nullable: true })
+  dateReconciled!: Date | null;
+
+  /**
+   * Creates a fee record
+   *
+   * TODO FN-1726 - when we have a status on this entity we should make this method name specific to the initial status
+   * @param param - The parameters required to create a fee record
+   * @returns The fee record
+   */
   static create({
     facilityId,
     exporter,
@@ -167,6 +193,8 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.payments = [];
     feeRecord.fixedFeeAdjustment = null;
     feeRecord.principalBalanceAdjustment = null;
+    feeRecord.reconciledByUserId = null;
+    feeRecord.dateReconciled = null;
     return feeRecord;
   }
 
@@ -194,6 +222,10 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   public updateWithStatus({ status, requestSource }: UpdateWithStatusParams): void {
     this.status = status;
     this.updateLastUpdatedBy(requestSource);
+
+    if (status === FEE_RECORD_STATUS.RECONCILED) {
+      this.dateReconciled = new Date();
+    }
   }
 
   /**
@@ -209,6 +241,10 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     this.fixedFeeAdjustment = fixedFeeAdjustment;
     this.principalBalanceAdjustment = principalBalanceAdjustment;
     this.updateLastUpdatedBy(requestSource);
+
+    if (status === FEE_RECORD_STATUS.RECONCILED) {
+      this.dateReconciled = new Date();
+    }
   }
 
   /**
@@ -220,5 +256,30 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     this.payments = [];
     this.status = 'TO_DO';
     this.updateLastUpdatedBy(requestSource);
+  }
+
+  /**
+   * Marks the fee record as reconciled
+   * @param param - The update parameters
+   * @param param.reconciledByUserId - The id of the user who marked the fee record as reconciled
+   * @param param.requestSource - The request source making the update
+   */
+  public markAsReconciled({ reconciledByUserId, requestSource }: MarkAsReconciledParams): void {
+    this.reconciledByUserId = reconciledByUserId;
+    this.updateLastUpdatedBy(requestSource);
+    this.dateReconciled = new Date();
+    this.status = FEE_RECORD_STATUS.RECONCILED;
+  }
+
+  /**
+   * Marks the fee record as ready to key
+   * @param param - The update parameters
+   * @param param.requestSource - The request source making the update
+   */
+  public markAsReadyToKey({ requestSource }: MarkAsReadyToKeyParams): void {
+    this.updateLastUpdatedBy(requestSource);
+    this.reconciledByUserId = null;
+    this.dateReconciled = null;
+    this.status = FEE_RECORD_STATUS.READY_TO_KEY;
   }
 }

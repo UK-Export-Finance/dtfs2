@@ -338,6 +338,7 @@ describe('FeeRecordStateMachine', () => {
         type: 'MARK_AS_RECONCILED',
         payload: {
           transactionEntityManager: {} as unknown as EntityManager,
+          reconciledByUserId: 'abc123',
           requestSource: { platform: 'TFM', userId: 'abc123' },
         },
       });

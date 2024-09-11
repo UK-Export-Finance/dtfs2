@@ -1,9 +1,9 @@
 import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { feeRecordCsvRowToSqlEntity } from './fee-record.helper';
+import { feeRecordCsvRowToSqlEntity } from './fee-record-csv-row-mapper';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
 import { aUtilisationReportRawCsvData } from '../../test-helpers';
 
-describe('fee-record.helper', () => {
+describe('fee-record-helpers', () => {
   describe('feeRecordCsvRowToSqlEntity', () => {
     const mockDate = new Date('2024-01');
 

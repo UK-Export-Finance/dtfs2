@@ -30,7 +30,8 @@
     "start": "npx ts-node server/index.ts",
     "type-check": "tsc --noEmit --pretty",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",

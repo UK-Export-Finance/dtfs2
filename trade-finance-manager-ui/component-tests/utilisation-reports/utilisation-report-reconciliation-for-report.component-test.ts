@@ -234,6 +234,8 @@ describe(page, () => {
           },
           feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
           feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH,
+          reconciledBy: '-',
+          dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
         },
       ],
     });
