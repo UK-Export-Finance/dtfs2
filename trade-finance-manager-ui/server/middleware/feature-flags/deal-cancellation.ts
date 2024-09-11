@@ -6,7 +6,7 @@ import { isTfmDealCancellationFeatureFlagEnabled } from '@ukef/dtfs2-common';
  */
 export const validateDealCancellationEnabled: RequestHandler = (_req, res, next) => {
   if (!isTfmDealCancellationFeatureFlagEnabled()) {
-    return res.redirect(404, '/not-found');
+    return res.redirect('/not-found');
   }
 
   return next();
