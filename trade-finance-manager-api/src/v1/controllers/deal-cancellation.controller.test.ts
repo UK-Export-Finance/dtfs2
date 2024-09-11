@@ -13,6 +13,14 @@ const dealCancellationUpdate = {
   effectiveFrom: 1794418808,
 };
 
+const mockUpdateResult = {
+  acknowledged: true,
+  modifiedCount: 1,
+  upsertedId: new ObjectId(),
+  upsertedCount: 0,
+  matchedCount: 1,
+};
+
 const mockDealId = new ObjectId();
 const mockUserId = new ObjectId();
 
@@ -42,7 +50,7 @@ describe('controllers - deal cancellation', () => {
     });
 
     it('should return the deal cancellation on success', async () => {
-      jest.mocked(api.updateDealCancellation).mockResolvedValue(dealCancellationUpdate);
+      jest.mocked(api.updateDealCancellation).mockResolvedValue(mockUpdateResult);
 
       // Arrange
       const { req, res } = httpMocks.createMocks<UpdateDealCancellationRequest>({

@@ -16,13 +16,13 @@ export const updateDealCancellation = async (req: UpdateDealCancellationRequest,
   const { dealId } = req.params;
 
   try {
-    const dealCancellation: UpdateResult = api.updateDealCancellation({
+    const dealCancellationResponse: Promise<UpdateResult> = api.updateDealCancellation({
       dealId,
       dealCancellationUpdate: req.body,
       auditDetails: generateTfmAuditDetails(req.user._id),
     });
 
-    return res.status(HttpStatusCode.Ok).send(dealCancellation);
+    return res.status(HttpStatusCode.Ok).send(dealCancellationResponse);
   } catch (error) {
     const errorMessage = 'Failed to update deal cancellation';
     console.error(errorMessage, error);
