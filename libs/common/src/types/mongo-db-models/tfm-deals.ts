@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { TfmDealCancellation } from '../tfm-deal-cancellation';
-import { Deal } from './deal';
+import { Deal } from './deals';
 import { AuditDatabaseRecord } from '../audit-database-record';
 
 /**

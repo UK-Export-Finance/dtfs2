@@ -8,7 +8,7 @@ import { DeletionAuditLog } from './deletion-audit-logs';
 import { TfmFacility } from './tfm-facilities';
 import { Facility } from './facility';
 import { TfmDeal } from './tfm-deals';
-import { Deal } from './deal';
+import { Deal } from './deals';
 
 /**
  * This type gets the type of the MongoDB model
