@@ -53,7 +53,7 @@ context('First submission with currency conversion date more than 30 days in the
 
     contract.visit(deal);
     contract.aboutSupplierDetailsStatus().should((status) => expect(status).to.contain(SECTION_STATUS.INCOMPLETE));
-    contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     // submit with checkbox checked
     contractConfirmSubmission.confirmSubmit().check();
@@ -108,7 +108,7 @@ context('Second submission (has submissionDate) with currency conversion date mo
 
     contract.visit(deal);
     contract.aboutSupplierDetailsStatus().should((status) => expect(status).to.contain(SECTION_STATUS.COMPLETED));
-    contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     // submit with checkbox checked
     contractConfirmSubmission.confirmSubmit().check();

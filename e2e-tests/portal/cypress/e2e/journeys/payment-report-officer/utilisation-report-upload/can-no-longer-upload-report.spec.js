@@ -1,4 +1,5 @@
-const { utilisationReportUpload, problemWithService } = require('../../../pages');
+const { continueButton } = require('../../../partials');
+const { problemWithService } = require('../../../pages');
 const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
 const { upToDateReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
@@ -24,6 +25,6 @@ context('Utilisation report upload', () => {
 
     problemWithService.heading().should('not.exist');
 
-    utilisationReportUpload.continueButton().should('not.exist');
+    continueButton().should('not.exist');
   });
 });

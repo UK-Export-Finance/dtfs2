@@ -33,12 +33,12 @@ context('Red Line eligibility checking (`before you start` page)', () => {
     it('should display validation error', () => {
       cy.createBSSSubmission(BANK1_MAKER1);
 
-      pages.beforeYouStart.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative('/before-you-start'));
       cy.title().should('eq', `Mandatory criteria${pages.defaults.pageTitleAppend}`);
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+      partials.errorSummaryLinks().should('have.length', 1);
     });
   });
 
@@ -46,7 +46,7 @@ context('Red Line eligibility checking (`before you start` page)', () => {
     cy.createBSSSubmission(BANK1_MAKER1);
 
     pages.beforeYouStart.false().click();
-    pages.beforeYouStart.submit().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/unable-to-proceed'));
 
@@ -58,7 +58,7 @@ context('Red Line eligibility checking (`before you start` page)', () => {
     cy.createBSSSubmission(BANK1_MAKER1);
 
     pages.beforeYouStart.false().click();
-    pages.beforeYouStart.submit().click();
+    cy.clickSubmitButton();
 
     pages.unableToProceed.goToHomepage().click();
     cy.url().should('eq', relative('/dashboard/deals/0'));
@@ -68,7 +68,7 @@ context('Red Line eligibility checking (`before you start` page)', () => {
     cy.createBSSSubmission(BANK1_MAKER1);
 
     pages.beforeYouStart.true().click();
-    pages.beforeYouStart.submit().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/before-you-start/bank-deal'));
   });

@@ -19,7 +19,7 @@ const MOCK_DEAL = {
 
 const goToPage = (deal) => {
   cy.loginGoToDealPage(BANK1_MAKER1, deal);
-  pages.contract.addLoanButton().click();
+  cy.clickAddLoanButton();
 };
 
 const assertVisibleRequestedCoverStartDateInputs = () => {
@@ -60,22 +60,22 @@ context('Loan Guarantee Details', () => {
       cy.url().should('include', '/loan/');
       cy.url().should('include', '/guarantee-details');
 
-      pages.loanGuaranteeDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/loan/');
       cy.url().should('include', '/financial-details');
 
-      pages.loanFinancialDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/dates-repayments');
-      pages.loanDatesRepayments.submit().click();
+      cy.clickSubmitButton();
       cy.url().should('include', '/check-your-answers');
 
       partials.taskListHeader.itemLink('loan-guarantee-details').click();
 
       cy.url().should('include', '/guarantee-details');
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+      partials.errorSummaryLinks().should('have.length', 1);
       pages.loanGuaranteeDetails.facilityStageErrorMessage().should('be.visible');
     });
   });
@@ -102,11 +102,11 @@ context('Loan Guarantee Details', () => {
       goToPage(deal);
 
       pages.loanGuaranteeDetails.facilityStageConditionalInput().click();
-      pages.loanGuaranteeDetails.submit().click();
+      cy.clickSubmitButton();
 
       partials.taskListHeader.itemLink('loan-guarantee-details').click();
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+      partials.errorSummaryLinks().should('have.length', 1);
 
       pages.loanGuaranteeDetails.facilityStageConditionalInput().should('be.checked');
       pages.loanGuaranteeDetails.conditionalNameInput().should('be.visible');
@@ -122,11 +122,11 @@ context('Loan Guarantee Details', () => {
 
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
 
-      pages.loanGuaranteeDetails.submit().click();
+      cy.clickSubmitButton();
 
       partials.taskListHeader.itemLink('loan-guarantee-details').click();
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 2);
+      partials.errorSummaryLinks().should('have.length', 2);
 
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().should('be.checked');
 
@@ -141,7 +141,7 @@ context('Loan Guarantee Details', () => {
       partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
         const loanId = loanIdHiddenInput[0].value;
 
-        pages.loanGuaranteeDetails.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
@@ -168,13 +168,13 @@ context('Loan Guarantee Details', () => {
       pages.loanGuaranteeDetails.coverEndDateMonthInput().clear().type('08-');
       pages.loanGuaranteeDetails.coverEndDateYearInput().clear().type('2023-');
 
-      pages.loanGuaranteeDetails.submit().click();
+      cy.clickSubmitButton();
 
       partials.taskListHeader.itemLink('loan-guarantee-details').click();
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 3);
-      partials.errorSummary.errorSummaryLinks().contains('The year for the Cover End Date must include 4 numbers');
-      partials.errorSummary.errorSummaryLinks().contains('The year for the requested Cover Start Date must include 4 numbers');
+      partials.errorSummaryLinks().should('have.length', 3);
+      partials.errorSummaryLinks().contains('The year for the Cover End Date must include 4 numbers');
+      partials.errorSummaryLinks().contains('The year for the requested Cover Start Date must include 4 numbers');
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The year for the Cover End Date must include 4 numbers');
       pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The year for the requested Cover Start Date must include 4 numbers');
 
@@ -186,13 +186,13 @@ context('Loan Guarantee Details', () => {
       pages.loanGuaranteeDetails.coverEndDateMonthInput().clear().type(' ');
       pages.loanGuaranteeDetails.coverEndDateYearInput().clear().type(' ');
 
-      pages.loanGuaranteeDetails.submit().click();
+      cy.clickSubmitButton();
 
       partials.taskListHeader.itemLink('loan-guarantee-details').click();
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 3);
-      partials.errorSummary.errorSummaryLinks().contains('The year for the requested Cover Start Date must include 4 numbers');
-      partials.errorSummary.errorSummaryLinks().contains('The year for the Cover End Date must include 4 numbers');
+      partials.errorSummaryLinks().should('have.length', 3);
+      partials.errorSummaryLinks().contains('The year for the requested Cover Start Date must include 4 numbers');
+      partials.errorSummaryLinks().contains('The year for the Cover End Date must include 4 numbers');
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The year for the Cover End Date must include 4 numbers');
       pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The year for the requested Cover Start Date must include 4 numbers');
 
@@ -204,13 +204,13 @@ context('Loan Guarantee Details', () => {
       pages.loanGuaranteeDetails.coverEndDateMonthInput().clear().type('05');
       pages.loanGuaranteeDetails.coverEndDateYearInput().clear().type('2025');
 
-      pages.loanGuaranteeDetails.submit().click();
+      cy.clickSubmitButton();
 
       partials.taskListHeader.itemLink('loan-guarantee-details').click();
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 3);
-      partials.errorSummary.errorSummaryLinks().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
-      partials.errorSummary.errorSummaryLinks().contains('The day for the cover end date must only include 1 or 2 numbers');
+      partials.errorSummaryLinks().should('have.length', 3);
+      partials.errorSummaryLinks().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
+      partials.errorSummaryLinks().contains('The day for the cover end date must only include 1 or 2 numbers');
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The day for the cover end date must only include 1 or 2 numbers');
       pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
 
@@ -222,13 +222,13 @@ context('Loan Guarantee Details', () => {
       pages.loanGuaranteeDetails.coverEndDateMonthInput().clear().type('05-');
       pages.loanGuaranteeDetails.coverEndDateYearInput().clear().type('2025');
 
-      pages.loanGuaranteeDetails.submit().click();
+      cy.clickSubmitButton();
 
       partials.taskListHeader.itemLink('loan-guarantee-details').click();
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 3);
-      partials.errorSummary.errorSummaryLinks().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
-      partials.errorSummary.errorSummaryLinks().contains('The month for the cover end date must only include 1 or 2 numbers');
+      partials.errorSummaryLinks().should('have.length', 3);
+      partials.errorSummaryLinks().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
+      partials.errorSummaryLinks().contains('The month for the cover end date must only include 1 or 2 numbers');
       pages.loanGuaranteeDetails.coverEndDateErrorMessage().contains('The month for the cover end date must only include 1 or 2 numbers');
       pages.loanGuaranteeDetails.requestedCoverStartDateErrorMessage().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
 
@@ -243,7 +243,7 @@ context('Loan Guarantee Details', () => {
       partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
         const loanId = loanIdHiddenInput[0].value;
 
-        pages.loanGuaranteeDetails.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 
@@ -258,7 +258,7 @@ context('Loan Guarantee Details', () => {
 
     // Facility stage = Conditional
     fillLoanForm.guaranteeDetails.facilityStageConditional();
-    pages.loanGuaranteeDetails.submit().click();
+    cy.clickSubmitButton();
 
     partials.taskListHeader.itemLink('loan-guarantee-details').click();
     assertLoanFormValues.guaranteeDetails.facilityStageConditional();
@@ -268,7 +268,7 @@ context('Loan Guarantee Details', () => {
 
     // assert that name value is retained
     pages.loanGuaranteeDetails.unconditionalNameInput().should('have.value', LOAN_FORM_VALUES.GUARANTEE_DETAILS.name);
-    pages.loanGuaranteeDetails.submit().click();
+    cy.clickSubmitButton();
 
     partials.taskListHeader.itemLink('loan-guarantee-details').click();
     assertLoanFormValues.guaranteeDetails.facilityStageUnconditional();
@@ -283,7 +283,7 @@ context('Loan Guarantee Details', () => {
       partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
         const loanId = loanIdHiddenInput[0].value;
 
-        pages.loanGuaranteeDetails.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
 
         cy.url().should('not.include', '/guarantee-details');
         cy.url().should('include', '/contract');

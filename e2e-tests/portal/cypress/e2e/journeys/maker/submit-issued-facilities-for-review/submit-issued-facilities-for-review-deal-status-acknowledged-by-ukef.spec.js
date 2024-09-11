@@ -194,8 +194,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${incompleteIssueFacilityBondId}/issue-facility`));
 
     pages.bondIssueFacility.name().type('1234');
-    pages.bondIssueFacility.submit().click();
-    pages.bondIssueFacility.cancelButton().click();
+    cy.clickSubmitButton();
+    cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
@@ -214,8 +214,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${incompleteIssueFacilityLoanId}/issue-facility`));
 
     pages.loanIssueFacility.disbursementAmount().type('1234');
-    pages.loanIssueFacility.submit().click();
-    pages.loanIssueFacility.cancelButton().click();
+    cy.clickSubmitButton();
+    cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
@@ -273,7 +273,7 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     // Maker submit's deal for review
     //---------------------------------------------------------------
     pages.contract.proceedToReview().should('not.be.disabled');
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
 
     pages.contractReadyForReview.comments().type('Issued a bond');
     pages.contractReadyForReview.readyForCheckersApproval().click();

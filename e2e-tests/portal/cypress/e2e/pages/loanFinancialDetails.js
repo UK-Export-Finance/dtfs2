@@ -36,9 +36,6 @@ const page = {
 
   guaranteeFeePayableByBankInput: () => cy.get('[data-cy="guarantee-fee-payable-by-bank"]'),
   ukefExposureInput: () => cy.get('[data-cy="ukef-exposure"]'),
-
-  submit: () => cy.get('[data-cy="submit-button"]'),
-  saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
 };
 
 module.exports = page;

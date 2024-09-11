@@ -1,5 +1,5 @@
-const { contract, eligibilityCriteria, eligibilityDocumentation, defaults } = require('../../pages');
-const { errorSummary, taskListHeader } = require('../../partials');
+const { contract, eligibilityCriteria, defaults } = require('../../pages');
+const { errorSummaryLinks, taskListHeader } = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
@@ -41,7 +41,7 @@ context('Eligibility Criteria', () => {
 
     taskListHeader.itemLink('eligibility-criteria').click();
 
-    errorSummary.errorSummaryLinks().should('have.length', criteriaCount - 1);
+    errorSummaryLinks().should('have.length', criteriaCount - 1);
   });
 
   it('should toggle display of criteria 11 extra info if criteria 11 is true/false', () => {
@@ -111,7 +111,7 @@ context('Eligibility Criteria', () => {
   });
 
   it('should redirect to supporting docs page when all criteria answered and display submission type on deal page', () => {
-    eligibilityCriteria.saveGoBackButton().click();
+    cy.clickSaveGoBackButton();
     contract.eligibilitySubmissionType().should('not.exist');
 
     contract.eligibilityCriteriaLink().click();
@@ -122,7 +122,7 @@ context('Eligibility Criteria', () => {
     cy.url().should('include', '/eligibility/supporting-documentation');
 
     // Check if MIA/AIN notice is on deal page.
-    eligibilityDocumentation.saveGoBackButton().click();
+    cy.clickSaveGoBackButton();
     contract.eligibilitySubmissionType().should('be.visible');
   });
 });

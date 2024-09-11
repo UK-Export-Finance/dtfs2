@@ -45,7 +45,7 @@ context.skip('A TFM checker submits a deal', () => {
   it('TFM Checker submits a deal; UKEF deal and facility IDs are displayed', () => {
     cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
-    pages.contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     pages.contractConfirmSubmission.confirmSubmit().check();
     // Need to pass deal to trigger submission to TFM post UKEFID generation

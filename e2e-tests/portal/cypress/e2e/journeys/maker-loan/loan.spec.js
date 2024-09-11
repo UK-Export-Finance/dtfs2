@@ -42,7 +42,7 @@ context('Add a Loan to a Deal', () => {
 
     pages.loanPreview.submissionDetails().should('be.visible');
 
-    pages.loanPreview.saveGoBackButton().click();
+    cy.clickSaveGoBackButton();
   });
 
   it('should show relevant details on application details page', () => {
@@ -56,7 +56,7 @@ context('Add a Loan to a Deal', () => {
 
     partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
       const loanId = loanIdHiddenInput[0].value;
-      pages.loanPreview.saveGoBackButton().click();
+      cy.clickSaveGoBackButton();
 
       // checks that edit name link and delete link contain name as has been set
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
@@ -67,17 +67,17 @@ context('Add a Loan to a Deal', () => {
 
   it('should populate Deal page with the submitted loan, with `Completed` status and link to `Loan Guarantee Details` page', () => {
     cy.loginGoToDealPage(BANK1_MAKER1, deal);
-    pages.contract.addLoanButton().click();
+    cy.clickAddLoanButton();
     fillLoanForm.unconditionalWithCurrencySameAsSupplyContractCurrency();
     fillLoanForm.datesRepayments.inAdvanceAnnually();
-    pages.loanDatesRepayments.submit().click();
+    cy.clickSubmitButton();
 
     // get loanId, go back to Deal page
     // assert that some inputted Loan data is displayed in the table
     partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
       const loanId = loanIdHiddenInput[0].value;
 
-      pages.loanPreview.saveGoBackButton().click();
+      cy.clickSaveGoBackButton();
       cy.url().should('eq', relative(`/contract/${deal._id}`));
 
       const row = pages.contract.loansTransactionsTable.row(loanId);
@@ -105,21 +105,21 @@ context('Add a Loan to a Deal', () => {
   describe('when a user submits Loan forms without completing required fields', () => {
     it('loan should display all validation errors in `Loan Preview` page and `Incomplete` status in Deal page', () => {
       cy.loginGoToDealPage(BANK1_MAKER1, deal);
-      pages.contract.addLoanButton().click();
+      cy.clickAddLoanButton();
 
-      pages.loanGuaranteeDetails.submit().click();
-      pages.loanFinancialDetails.submit().click();
-      pages.loanDatesRepayments.submit().click();
+      cy.clickSubmitButton();
+      cy.clickSubmitButton();
+      cy.clickSubmitButton();
       cy.url().should('include', '/check-your-answers');
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 7);
+      partials.errorSummaryLinks().should('have.length', 7);
 
       // get loanId, go back to Deal page
       // assert Loan status
       partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
         const loanId = loanIdHiddenInput[0].value;
 
-        pages.loanPreview.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
         cy.url().should('include', '/contract');
         cy.url().should('not.include', '/loan');
 
