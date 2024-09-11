@@ -49,22 +49,12 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().should('contain', 'Change');
 
-      pages.underwritingPricingAndRiskPage
-        .exporterTableRatingValue()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Good (BB-)');
-        });
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), 'Good (BB-)');
     });
 
     it('after submitting a rating, editing the rating has default value and new rating displays in `pricing and risk` page', () => {
       // check value previously submitted
-      pages.underwritingPricingAndRiskPage
-        .exporterTableRatingValue()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Good (BB-)');
-        });
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), 'Good (BB-)');
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
@@ -78,12 +68,7 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
       // check new value displays in `pricing and risk` page
-      pages.underwritingPricingAndRiskPage
-        .exporterTableRatingValue()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Acceptable (B+)');
-        });
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), 'Acceptable (B+)');
     });
   });
 

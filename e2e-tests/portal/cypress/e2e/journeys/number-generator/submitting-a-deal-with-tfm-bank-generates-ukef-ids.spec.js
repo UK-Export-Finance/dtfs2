@@ -53,19 +53,9 @@ context.skip('A TFM checker submits a deal', () => {
 
     pages.contract.visit(deal);
 
-    pages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Acknowledged');
-      });
+    cy.assertText(pages.contract.status(), 'Acknowledged');
 
-    pages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Submitted');
-      });
+    cy.assertText(pages.contract.previousStatus(), 'Submitted');
 
     // IDs are generated via external API. We cannot check the actual ID.
     // We can only check that the ID values are not empty.

@@ -34,13 +34,10 @@ context('about-supply-contract', () => {
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
     contract.visit(deal);
+
     // check the status is displaying correctly
-    contract
-      .aboutSupplierDetailsStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
+
     contract.aboutSupplierDetailsLink().click();
 
     contractAboutSupplier.supplierType().select('Exporter');
@@ -102,12 +99,7 @@ context('about-supply-contract', () => {
 
     contractAboutSupplier.saveAndGoBack().click();
 
-    contract
-      .aboutSupplierDetailsStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
 
     // check that the preview page renders the Submission Details component
     contractAboutPreview.visit(deal);
