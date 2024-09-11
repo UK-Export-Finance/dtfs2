@@ -59,7 +59,7 @@ describe('controllers - deal cancellation', () => {
       expect(res._getData()).toEqual(expect.objectContaining(dealCancellationUpdate));
     });
 
-    it('should throw an error when there is an API error', async () => {
+    it('should return an error when there is an API error', async () => {
       const testErrorStatus = 404;
       const testApiErrorMessage = 'test api error message';
       jest.mocked(api.updateDealCancellation).mockRejectedValue(new TestApiError(testErrorStatus, testApiErrorMessage));
@@ -79,7 +79,7 @@ describe('controllers - deal cancellation', () => {
       expect(res._getData()).toEqual(expect.objectContaining({ message: `Failed to update deal cancellation: ${testApiErrorMessage}` }));
     });
 
-    it('should throw an error when there is a general error', async () => {
+    it('should return an error when there is a general error', async () => {
       jest.mocked(api.updateDealCancellation).mockRejectedValue(new Error('Some error'));
 
       // Arrange

@@ -7,4 +7,4 @@ export * from './users';
 export * from './deletion-audit-logs';
 export * from './tfm-facilities';
 export * from './facility';
-export * from './tfm-deal';
+export * from './tfm-deals';

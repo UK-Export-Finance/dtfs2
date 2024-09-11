@@ -1234,7 +1234,6 @@ const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, us
  * @param {string} dealId - The deal ID
  * @param {Partial<import('@ukef/dtfs2-common').TfmDealCancellation>} cancellationUpdate - The deal cancellation update object
  * @param {string} userToken - The user token
- * @returns {Partial<import('@ukef/dtfs2-common').TfmDealCancellation>} - The deal cancellation update object
  */
 const updateDealCancellation = async (dealId, cancellationUpdate, userToken) => {
   const response = await axios({

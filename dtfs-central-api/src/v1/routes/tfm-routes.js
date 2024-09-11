@@ -561,7 +561,7 @@ tfmRouter
  *               bankRequestDate:
  *                 type: number
  *                 example: 1725977352
- *                effectiveFrom:
+ *               effectiveFrom:
  *                 type: number
  *                 example: 1725977352
  *     responses:
