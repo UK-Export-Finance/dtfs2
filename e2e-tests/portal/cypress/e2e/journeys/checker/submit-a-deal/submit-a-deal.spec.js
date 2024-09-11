@@ -55,7 +55,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
     contract.visit(goodDeal);
-    contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     // cancel
     contractConfirmSubmission.cancel().click();
@@ -68,7 +68,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
     contract.visit(goodDeal);
-    contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     // submit without checking the checkbox
     contractConfirmSubmission.acceptAndSubmit().click();
@@ -79,19 +79,15 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // expect the deal status to be unchanged
     contract.visit(goodDeal);
-    contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Ready for Checker's approval");
-      });
+
+    cy.assertText(contract.status(), "Ready for Checker's approval");
   });
 
   it('If the deal has NOT yet been submitted and the deal contains a loan with a cover start date that is now in the past, an error should be generated.', () => {
     // log in, visit a deal, submit
     cy.login(BANK1_CHECKER1);
     contract.visit(badDealInvalidLoanCoverStartDate);
-    contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     // submit with checkbox checked
     contractConfirmSubmission.confirmSubmit().check();
@@ -103,19 +99,15 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // expect the deal status to be unchanged
     contract.visit(badDealInvalidLoanCoverStartDate);
-    contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Ready for Checker's approval");
-      });
+
+    cy.assertText(contract.status(), "Ready for Checker's approval");
   });
 
   it('If the deal has NOT yet been submitted and the deal contains a Bond with a cover start date that is now in the past, an error should be generated.', () => {
     // log in, visit a deal, submit
     cy.login(BANK1_CHECKER1);
     contract.visit(badDealInvalidBondCoverStartDate);
-    contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     // submit with checkbox checked
     contractConfirmSubmission.confirmSubmit().check();
@@ -127,12 +119,8 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // expect the deal status to be unchanged
     contract.visit(badDealInvalidBondCoverStartDate);
-    contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Ready for Checker's approval");
-      });
+
+    cy.assertText(contract.status(), "Ready for Checker's approval");
   });
 
   describe('If a deal has been previously submitted and the deal contains a Bond with a cover start date that is now in the past', () => {
@@ -140,7 +128,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
       // log in, visit a deal, submit
       cy.login(BANK1_CHECKER1);
       contract.visit(dealBondCoverStartDateInThePast);
-      contract.proceedToSubmit().click();
+      cy.clickProceedToSubmitButton();
 
       // submit with checkbox checked
       contractConfirmSubmission.confirmSubmit().check();
@@ -148,6 +136,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
       // expect to land on the /dashboard page with a success message
       cy.url().should('include', '/dashboard');
+
       successMessage
         .successMessageListItem()
         .invoke('text')
@@ -162,7 +151,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
       // log in, visit a deal, submit
       cy.login(BANK1_CHECKER1);
       contract.visit(dealLoanCoverStartDateInThePast);
-      contract.proceedToSubmit().click();
+      cy.clickProceedToSubmitButton();
 
       // submit with checkbox checked
       contractConfirmSubmission.confirmSubmit().check();
@@ -170,6 +159,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
       // expect to land on the /dashboard page with a success message
       cy.url().should('include', '/dashboard');
+
       successMessage
         .successMessageListItem()
         .invoke('text')
@@ -183,7 +173,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
     contract.visit(goodDeal);
-    contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     // submit with checkbox checked
     contractConfirmSubmission.confirmSubmit().check();
@@ -191,6 +181,7 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
+
     successMessage
       .successMessageListItem()
       .invoke('text')
@@ -200,17 +191,9 @@ context('A checker selects to submit a contract from the view-contract page', ()
 
     // visit the deal and confirm the updates have been made
     contract.visit(goodDeal);
-    contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Acknowledged');
-      });
-    contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Submitted');
-      });
+
+    cy.assertText(contract.status(), 'Acknowledged');
+
+    cy.assertText(contract.previousStatus(), 'Submitted');
   });
 });

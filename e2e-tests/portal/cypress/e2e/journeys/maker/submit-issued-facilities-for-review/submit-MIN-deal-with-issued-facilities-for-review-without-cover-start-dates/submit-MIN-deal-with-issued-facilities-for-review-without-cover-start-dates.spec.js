@@ -71,7 +71,7 @@ context('Maker fills in bond & loan issue facility forms without requested cover
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     // submit deal for review
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
 
     pages.contractReadyForReview.comments().type('Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
@@ -82,21 +82,9 @@ context('Maker fills in bond & loan issue facility forms without requested cover
     pages.contract.visit(deal);
 
     // expect bond requested cover start date to default to issued date
-    bondRow
-      .requestedCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        const expected = ISSUED_BOND_DATE_VALUE.toLocaleDateString('en-GB');
-        expect(text.trim()).to.equal(expected);
-      });
+    cy.assertText(bondRow.requestedCoverStartDate(), ISSUED_BOND_DATE_VALUE.toLocaleDateString('en-GB'));
 
     // expect loan requested cover start date to default to issued date
-    loanRow
-      .requestedCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        const expected = ISSUED_LOAN_DATE_VALUE.toLocaleDateString('en-GB');
-        expect(text.trim()).to.equal(expected);
-      });
+    cy.assertText(loanRow.requestedCoverStartDate(), ISSUED_LOAN_DATE_VALUE.toLocaleDateString('en-GB'));
   });
 });

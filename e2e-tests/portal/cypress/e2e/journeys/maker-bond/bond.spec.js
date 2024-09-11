@@ -47,7 +47,7 @@ context('Add a Bond to a Deal', () => {
     partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
       const bondId = bondIdHiddenInput[0].value;
 
-      pages.bondDetails.saveGoBackButton().click();
+      cy.clickSaveGoBackButton();
 
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
       bondRow.uniqueNumberLink().contains(DETAILS.name);
@@ -63,20 +63,20 @@ context('Add a Bond to a Deal', () => {
         bankDealId: MOCK_DEAL.bankInternalRefName,
         bankDealName: MOCK_DEAL.additionalRefName,
       });
-      pages.contract.addBondButton().click();
-      pages.bondDetails.submit().click();
-      pages.bondFinancialDetails.submit().click();
+      cy.clickAddBondButton();
+      cy.clickSubmitButton();
+      cy.clickSubmitButton();
 
       partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
-        pages.bondFeeDetails.submit().click();
+        cy.clickSubmitButton();
 
         cy.url().should('include', '/contract');
         cy.url().should('include', '/bond/');
         cy.url().should('include', '/check-your-answers');
         cy.title().should('eq', `Check your answers - Bond - ${bondId}${pages.defaults.pageTitleAppend}`);
         const TOTAL_REQUIRED_FORM_FIELDS = 8;
-        partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+        partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
       });
     });
   });
@@ -85,25 +85,22 @@ context('Add a Bond to a Deal', () => {
     it('bond should display `Incomplete` status in Deal page', () => {
       cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
 
       // get bondId, go back to Deal page
       partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
-        pages.bondDetails.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
         cy.url().should('eq', relative(`/contract/${deal._id}`));
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row
-          .bondStatus()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal('Incomplete');
-          });
-        row.uniqueNumberLink().contains('Bond’s reference number not entered');
-        row.deleteLink().contains('Delete bond');
+        cy.assertText(row.bondStatus(), 'Incomplete');
+
+        cy.assertText(row.uniqueNumberLink(), 'Bond’s reference number not entered');
+
+        cy.assertText(row.deleteLink(), 'Delete bond');
       });
     });
 
@@ -115,23 +112,23 @@ context('Add a Bond to a Deal', () => {
           bankDealId: MOCK_DEAL.bankInternalRefName,
           bankDealName: MOCK_DEAL.additionalRefName,
         });
-        pages.contract.addBondButton().click();
-        pages.bondDetails.submit().click();
-        pages.bondFinancialDetails.submit().click();
-        pages.bondFeeDetails.submit().click();
+        cy.clickAddBondButton();
+        cy.clickSubmitButton();
+        cy.clickSubmitButton();
+        cy.clickSubmitButton();
 
         cy.url().should('include', '/contract');
         cy.url().should('include', '/bond/');
         cy.url().should('include', '/check-your-answers');
 
         partials.taskListHeader.itemLink('bond-details').click();
-        partials.errorSummary.errorSummaryLinks().should('have.length', 2);
+        partials.errorSummaryLinks().should('have.length', 2);
 
         partials.taskListHeader.itemLink('financial-details').click();
-        partials.errorSummary.errorSummaryLinks().should('have.length', 4);
+        partials.errorSummaryLinks().should('have.length', 4);
 
         partials.taskListHeader.itemLink('fee-details').click();
-        partials.errorSummary.errorSummaryLinks().should('have.length', 2);
+        partials.errorSummaryLinks().should('have.length', 2);
 
         partials.taskListHeader.checkYourAnswersLink().should('be.visible');
         partials.taskListHeader.checkYourAnswersLink().click();
@@ -163,35 +160,13 @@ context('Add a Bond to a Deal', () => {
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
-      partials.taskListHeader
-        .itemStatus('bond-details')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
-
-      partials.taskListHeader
-        .itemStatus('financial-details')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
-
-      partials.taskListHeader
-        .itemStatus('fee-details')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('bond-details'), 'Completed');
+      cy.assertText(partials.taskListHeader.itemStatus('financial-details'), 'Completed');
+      cy.assertText(partials.taskListHeader.itemStatus('fee-details'), 'Completed');
 
       partials.taskListHeader.checkYourAnswersLink().should('be.visible');
 
-      partials.taskListHeader
-        .checkYourAnswersLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Check your answers');
-        });
+      cy.assertText(partials.taskListHeader.checkYourAnswersLink(), 'Check your answers');
     });
 
     it('should populate Deal page with the submitted bond, display `Completed` status and link to `Bond Details` page', () => {
@@ -204,56 +179,28 @@ context('Add a Bond to a Deal', () => {
       partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
-        pages.bondPreview.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
         cy.url().should('eq', relative(`/contract/${deal._id}`));
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row
-          .uniqueNumberLink()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.name);
-          });
+        cy.assertText(row.uniqueNumberLink(), BOND_FORM_VALUES.DETAILS.name);
 
-        row
-          .bondStatus()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal('Completed');
-          });
+        cy.assertText(row.bondStatus(), 'Completed');
 
-        row
-          .facilityValue()
-          .invoke('text')
-          .then((text) => {
-            const expectedValue = `${deal.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`;
-            expect(text.trim()).equal(expectedValue);
-          });
+        cy.assertText(row.facilityValue(), `${deal.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
 
-        row
-          .facilityStage()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal('Issued');
-          });
+        cy.assertText(row.facilityStage(), 'Issued');
 
-        row
-          .requestedCoverStartDate()
-          .invoke('text')
-          .then((text) => {
-            const coverStartDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
+        cy.assertText(
+          row.requestedCoverStartDate(),
+          `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`,
+        );
 
-            expect(text.trim()).equal(coverStartDate);
-          });
-
-        row
-          .coverEndDate()
-          .invoke('text')
-          .then((text) => {
-            const expectedDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
-            expect(text.trim()).equal(expectedDate);
-          });
+        cy.assertText(
+          row.coverEndDate(),
+          `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`,
+        );
 
         // assert that clicking the `unique number` link progresses to the Bond Details page
         row.uniqueNumberLink().click();
@@ -270,7 +217,7 @@ context('Add a Bond to a Deal', () => {
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
-      pages.bondPreview.saveGoBackButton().click();
+      cy.clickSaveGoBackButton();
 
       cy.url().should('not.include', '/check-your-answers');
       cy.url().should('include', '/contract');

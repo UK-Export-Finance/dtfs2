@@ -162,12 +162,7 @@ context('Exporter Party URN - User can add, edit, confirm and submit URN to the 
         pages.exporterPage.saveButton().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
-        pages.exporterPage
-          .uniqueRef()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal(partyUrn);
-          });
+        cy.assertText(pages.exporterPage.uniqueRef(), partyUrn);
 
         pages.partiesPage.exporterEditLink().click();
         pages.exporterPage

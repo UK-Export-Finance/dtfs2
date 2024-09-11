@@ -43,19 +43,9 @@ context('User can view a case deal', () => {
   });
 
   it('should render case summary fields', () => {
-    partials.caseSummary
-      .dealSubmissionType()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(MOCK_DEAL_AIN.submissionType);
-      });
+    cy.assertText(partials.caseSummary.dealSubmissionType(), MOCK_DEAL_AIN.submissionType);
 
-    partials.caseSummary
-      .exporterName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(MOCK_DEAL_AIN.exporter.companyName);
-      });
+    cy.assertText(partials.caseSummary.exporterName(), MOCK_DEAL_AIN.exporter.companyName);
   });
 
   describe('Bank security section', () => {

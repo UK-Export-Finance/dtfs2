@@ -1,5 +1,4 @@
 const page = {
-  mainHeading: () => cy.get('[data-cy="main-heading"]'),
   bodyText: () => cy.get('[data-cy="paragraph"]'),
   sideNavigationItemByYear: (year) => cy.get(`[data-cy="side-navigation-${year}"]`),
   sideNavigationItems: () => cy.get('[data-cy^="side-navigation-"]'),

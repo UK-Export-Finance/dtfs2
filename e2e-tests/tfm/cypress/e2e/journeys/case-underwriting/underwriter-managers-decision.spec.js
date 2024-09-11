@@ -218,22 +218,13 @@ context("Case Underwriting - Underwriter Manager's decision - Submit Form", () =
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     // assert values are displayed in decision page
-    pages.managersDecisionPage
-      .decisionStatusTag()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Approved (with conditions)');
-      });
 
-    pages.managersDecisionPage
-      .decisionMadeBy()
-      .invoke('text')
-      .then((text) => {
-        const { firstName, lastName } = UNDERWRITER_MANAGER_1;
-        const userFullName = `${firstName} ${lastName}`;
+    cy.assertText(pages.managersDecisionPage.decisionStatusTag(), 'Approved (with conditions)');
 
-        expect(text.trim()).to.equal(userFullName);
-      });
+    const { firstName, lastName } = UNDERWRITER_MANAGER_1;
+    const expectedName = `${firstName} ${lastName}`;
+
+    cy.assertText(pages.managersDecisionPage.decisionMadeBy(), expectedName);
 
     pages.managersDecisionPage
       .decisionDateTime()
@@ -244,28 +235,11 @@ context("Case Underwriting - Underwriter Manager's decision - Submit Form", () =
         expect(text.trim()).contains(todayFormatted);
       });
 
-    pages.managersDecisionPage
-      .conditions()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Approval comment. Div contents &lt;img src = 'data:abc' /&gt;");
-      });
+    cy.assertText(pages.managersDecisionPage.conditions(), "Approval comment. Div contents &lt;img src = 'data:abc' /&gt;");
 
-    pages.managersDecisionPage
-      .internalComments()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Internal comment. Div contents &lt;img src = 'data:abc' /&gt;");
-      });
+    cy.assertText(pages.managersDecisionPage.internalComments(), "Internal comment. Div contents &lt;img src = 'data:abc' /&gt;");
 
-    // deal stage
-    partials.caseSummary
-      .ukefDealStage()
-      .invoke('text')
-      .then((text) => {
-        // text formatting is slightly different to the submitted form value
-        expect(text.trim()).to.equal('Approved (with conditions)');
-      });
+    cy.assertText(partials.caseSummary.ukefDealStage(), 'Approved (with conditions)');
   });
 });
 

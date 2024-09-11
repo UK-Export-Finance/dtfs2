@@ -162,12 +162,7 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
         pages.indemnifierPage.saveButton().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
-        pages.indemnifierPage
-          .uniqueRef()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal(partyUrn);
-          });
+        cy.assertText(pages.indemnifierPage.uniqueRef(), partyUrn);
 
         pages.partiesPage.indemnifierEditLink().click();
         pages.indemnifierPage
