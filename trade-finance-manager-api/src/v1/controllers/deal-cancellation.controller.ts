@@ -2,6 +2,7 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { ApiError, CustomExpressRequest, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { UpdateResult } from 'mongodb';
 import api from '../api';
 
 export type UpdateDealCancellationRequest = CustomExpressRequest<{
@@ -15,7 +16,7 @@ export const updateDealCancellation = async (req: UpdateDealCancellationRequest,
   const { dealId } = req.params;
 
   try {
-    const dealCancellation: Partial<TfmDealCancellation> = await api.updateDealCancellation({
+    const dealCancellation: UpdateResult = api.updateDealCancellation({
       dealId,
       dealCancellationUpdate: req.body,
       auditDetails: generateTfmAuditDetails(req.user._id),

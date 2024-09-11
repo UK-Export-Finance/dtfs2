@@ -274,7 +274,7 @@ const submitDeal = async (dealType, dealId, auditDetails) => {
  * @param {string} params.dealId - deal cancellation to update
  * @param {Partial<import('@ukef/dtfs2-common').TfmDealCancellation>} params.dealCancellationUpdate - deal cancellation update to make
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
- * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellation>>} updated deal cancellation on success
+ * @returns {import('mongodb').UpdateResult} update result object
  */
 const updateDealCancellation = async ({ dealId, dealCancellationUpdate, auditDetails }) => {
   const isValidDealId = isValidMongoId(dealId);
