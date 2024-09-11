@@ -1,6 +1,6 @@
 import { FeeRecordEntityMockBuilder, PaymentEntity, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
 import { filterFeeRecordPaymentEntityGroupsByFacilityId } from './filter-fee-record-payment-entity-groups-by-facility-id';
-import { FeeRecordPaymentEntityGroup } from '../../../../../helpers';
+import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 import { aUtilisationReport, getSqlIdGenerator } from '../../../../../../test-helpers';
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
