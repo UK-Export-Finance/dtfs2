@@ -127,26 +127,10 @@ context('Bond Financial Details', () => {
     fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
 
     cy.clickSubmitButton();
-    partials.taskListHeader
-      .itemStatus('financial-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
 
-    partials.taskListHeader
-      .itemStatus('bond-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
-
-    partials.taskListHeader
-      .itemStatus('fee-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('financial-details'), 'Completed');
+    cy.assertText(partials.taskListHeader.itemStatus('bond-details'), 'Incomplete');
+    cy.assertText(partials.taskListHeader.itemStatus('fee-details'), 'Incomplete');
   });
 
   describe('When a user submits the `Bond Financial Details` form', () => {
@@ -258,13 +242,8 @@ context('Bond Financial Details', () => {
         cy.url().should('eq', relative(`/contract/${deal._id}`));
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
-        row
-          .facilityValue()
-          .invoke('text')
-          .then((text) => {
-            const expectedValue = `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`;
-            expect(text.trim()).equal(expectedValue);
-          });
+
+        cy.assertText(row.facilityValue(), `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
       });
     });
   });

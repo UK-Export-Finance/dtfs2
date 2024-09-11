@@ -133,21 +133,13 @@ context('Loan Dates and Repayments', () => {
       cy.clickSubmitButton();
       cy.url().should('include', '/check-your-answers');
 
-      partials.taskListHeader
-        .itemStatus('dates-and-repayments')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('dates-and-repayments'), 'Completed');
+
       partials.taskListHeader.itemLink('dates-and-repayments').click();
 
       cy.url().should('include', '/dates-repayments');
-      partials.taskListHeader
-        .itemStatus('dates-and-repayments')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+
+      cy.assertText(partials.taskListHeader.itemStatus('dates-and-repayments'), 'Completed');
     });
   });
 

@@ -111,51 +111,21 @@ context('Clone a deal', () => {
       cy.url().should('include', '/contract/');
 
       // confirm new supply contract ID
-      pages.contract
-        .bankInternalRefName()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal(`${deal.bankInternalRefName}-cloned`);
-        });
+      cy.assertText(pages.contract.bankInternalRefName(), `${deal.bankInternalRefName}-cloned`);
 
       // confirm new supply contract name
-      pages.contract
-        .additionalRefName()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal(`Copy of ${deal.additionalRefName}-cloned`);
-        });
+      cy.assertText(pages.contract.additionalRefName(), `Copy of ${deal.additionalRefName}-cloned`);
 
       // confirm deal status and previous status are wiped
-      pages.contract
-        .status()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Draft');
-        });
+      cy.assertText(pages.contract.status(), 'Draft');
 
-      pages.contract
-        .previousStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('-');
-        });
+      cy.assertText(pages.contract.previousStatus(), '-');
 
       // confirm About the Supply Contract is retained
-      pages.contract
-        .aboutSupplierDetailsStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(pages.contract.aboutSupplierDetailsStatus(), 'Completed');
 
       // confirm Eligibility is now marked as 'Not started'
-      pages.contract
-        .eligibilityStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Not started');
-        });
+      cy.assertText(pages.contract.eligibilityStatus(), 'Not started');
 
       // confirm bond statuses are 'Incomplete'
       pages.contract.bondTransactionsTableRows().each((bondTableRow) => {

@@ -155,12 +155,8 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.clickSubmitButton();
 
     // Fee details
-    partials.taskListHeader
-      .itemStatus('loan-financial-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('loan-financial-details'), 'Incomplete');
+
     fillLoanForm.datesRepayments.inAdvanceAnnually();
     cy.clickSubmitButton();
 

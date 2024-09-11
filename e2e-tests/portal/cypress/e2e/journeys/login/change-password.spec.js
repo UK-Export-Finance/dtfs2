@@ -98,6 +98,7 @@ context('Admin user creates a new user; the new user sets their password and the
 
       // Expect failure
       cy.url().should('match', /change-password/);
+
       changePassword
         .passwordError()
         .invoke('text')
@@ -115,12 +116,8 @@ context('Admin user creates a new user; the new user sets their password and the
 
       // Expect failure
       cy.url().should('match', /change-password/);
-      changePassword
-        .currentPasswordError()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.contain('Current password is not correct.');
-        });
+
+      cy.assertText(changePassword.currentPasswordError(), 'Error: Current password is not correct.');
 
       // Try changing it to a password that is too short
       changePassword.currentPassword().type('AbC!2345');
@@ -181,6 +178,7 @@ context('Admin user creates a new user; the new user sets their password and the
 
       // expect failure
       cy.url().should('match', /change-password/);
+
       changePassword
         .passwordError()
         .invoke('text')

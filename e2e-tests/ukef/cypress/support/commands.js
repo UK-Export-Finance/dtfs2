@@ -5,6 +5,9 @@ import './commands/click-events';
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
+// Assert an element has some exact text
+Cypress.Commands.add('assertText', require('./utils/assertText'));
+
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
 

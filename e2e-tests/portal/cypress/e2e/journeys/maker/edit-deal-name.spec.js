@@ -44,11 +44,6 @@ context('Edit deal name', () => {
     editDealName.additionalRefName().type('{selectall}{backspace}mock');
     cy.clickSubmitButton();
 
-    contract
-      .additionalRefName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('mock');
-      });
+    cy.assertText(contract.additionalRefName(), 'mock');
   });
 });

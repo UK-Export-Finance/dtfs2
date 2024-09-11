@@ -96,14 +96,11 @@ context('Add a Bond to a Deal', () => {
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row
-          .bondStatus()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal('Incomplete');
-          });
-        row.uniqueNumberLink().contains('Bond’s reference number not entered');
-        row.deleteLink().contains('Delete bond');
+        cy.assertText(row.bondStatus(), 'Incomplete');
+
+        cy.assertText(row.uniqueNumberLink(), 'Bond’s reference number not entered');
+
+        cy.assertText(row.deleteLink(), 'Delete bond');
       });
     });
 
@@ -163,35 +160,13 @@ context('Add a Bond to a Deal', () => {
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
-      partials.taskListHeader
-        .itemStatus('bond-details')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
-
-      partials.taskListHeader
-        .itemStatus('financial-details')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
-
-      partials.taskListHeader
-        .itemStatus('fee-details')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('bond-details'), 'Completed');
+      cy.assertText(partials.taskListHeader.itemStatus('financial-details'), 'Completed');
+      cy.assertText(partials.taskListHeader.itemStatus('fee-details'), 'Completed');
 
       partials.taskListHeader.checkYourAnswersLink().should('be.visible');
 
-      partials.taskListHeader
-        .checkYourAnswersLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Check your answers');
-        });
+      cy.assertText(partials.taskListHeader.checkYourAnswersLink(), 'Check your answers');
     });
 
     it('should populate Deal page with the submitted bond, display `Completed` status and link to `Bond Details` page', () => {
@@ -209,51 +184,23 @@ context('Add a Bond to a Deal', () => {
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
-        row
-          .uniqueNumberLink()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal(BOND_FORM_VALUES.DETAILS.name);
-          });
+        cy.assertText(row.uniqueNumberLink(), BOND_FORM_VALUES.DETAILS.name);
 
-        row
-          .bondStatus()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal('Completed');
-          });
+        cy.assertText(row.bondStatus(), 'Completed');
 
-        row
-          .facilityValue()
-          .invoke('text')
-          .then((text) => {
-            const expectedValue = `${deal.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`;
-            expect(text.trim()).equal(expectedValue);
-          });
+        cy.assertText(row.facilityValue(), `${deal.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
 
-        row
-          .facilityStage()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal('Issued');
-          });
+        cy.assertText(row.facilityStage(), 'Issued');
 
-        row
-          .requestedCoverStartDate()
-          .invoke('text')
-          .then((text) => {
-            const coverStartDate = `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`;
+        cy.assertText(
+          row.requestedCoverStartDate(),
+          `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}/${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}`,
+        );
 
-            expect(text.trim()).equal(coverStartDate);
-          });
-
-        row
-          .coverEndDate()
-          .invoke('text')
-          .then((text) => {
-            const expectedDate = `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`;
-            expect(text.trim()).equal(expectedDate);
-          });
+        cy.assertText(
+          row.coverEndDate(),
+          `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}/${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}/${BOND_FORM_VALUES.DETAILS.coverEndDateYear}`,
+        );
 
         // assert that clicking the `unique number` link progresses to the Bond Details page
         row.uniqueNumberLink().click();

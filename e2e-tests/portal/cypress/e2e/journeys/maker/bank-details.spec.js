@@ -49,18 +49,14 @@ context('Create deal', () => {
     // confirm that we're on the newly created deal '/contract/XYZ'
     cy.url().should('include', '/contract/');
 
-    // confirm deal is in the correct starting state..
-    contract.aboutSupplierDetailsStatus().should((status) => expect(status).to.contain('Not started'));
+    // confirm deal is in the correct starting state
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Not started');
 
-    contract.eligibilityStatus().should((status) => expect(status).to.contain('Not started'));
+    cy.assertText(contract.eligibilityStatus(), 'Not started');
 
     // confirm that the data we've entered appears on the preview page
     contract.checkDealDetailsTab().click();
-    contractCheckDealDetails
-      .header()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Supply Contract name: TESTING');
-      });
+
+    cy.assertText(contractCheckDealDetails.header(), 'Supply Contract name: TESTING');
   });
 });

@@ -102,12 +102,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
 
       pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
 
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-        .status(FEE_RECORD_ID_ONE)
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(FEE_RECORD_STATUS.MATCH);
-        });
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
     });
   });
 
@@ -159,12 +154,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
 
       pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
 
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-        .status(FEE_RECORD_ID_ONE)
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(FEE_RECORD_STATUS.MATCH);
-        });
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
     });
 
     it('should display an error message when there are multiple payments to choose from and none have been selected', () => {
@@ -186,12 +176,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(PAYMENT_ID_ONE).should('contain', 'GBP 450.00');
 
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-      .status(FEE_RECORD_ID_ONE)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(FEE_RECORD_STATUS.MATCH);
-      });
+    cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
   });
 
   describe('when user navigates away', () => {

@@ -78,12 +78,8 @@ context('Portal to TFM deal submission', () => {
     // portal deal status should be updated
     //---------------------------------------------------------------
     portalPages.contract.visit(deal);
-    portalPages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('In progress by UKEF');
-      });
+
+    cy.assertText(portalPages.contract.status(), 'In progress by UKEF');
 
     //---------------------------------------------------------------
     // Portal deal submission type should be MIA to start with
@@ -143,19 +139,9 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Portal deal status should be updated
     //---------------------------------------------------------------
-    portalPages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('In progress by UKEF');
-      });
+    cy.assertText(portalPages.contract.previousStatus(), 'In progress by UKEF');
 
-    portalPages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Accepted by UKEF (with conditions)');
-      });
+    cy.assertText(portalPages.contract.status(), 'Accepted by UKEF (with conditions)');
 
     //---------------------------------------------------------------
     // portal maker goes back into the deal
@@ -214,12 +200,8 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
 
     portalPages.contract.visit(deal);
-    portalPages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Acknowledged');
-      });
+
+    cy.assertText(portalPages.contract.status(), 'Acknowledged');
 
     //---------------------------------------------------------------
     // portal deal should now be MIN with submission date

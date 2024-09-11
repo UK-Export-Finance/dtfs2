@@ -127,12 +127,7 @@ context('Delete a Loan', () => {
 
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
-    partials.successMessage
-      .successMessageListItem()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`Loan #${loanToDeleteId} has been deleted`);
-      });
+    cy.assertText(partials.successMessage.successMessageListItem(), `Loan #${loanToDeleteId} has been deleted`);
 
     pages.contract.loansTransactionsTableRows().should('have.length', 2);
   });

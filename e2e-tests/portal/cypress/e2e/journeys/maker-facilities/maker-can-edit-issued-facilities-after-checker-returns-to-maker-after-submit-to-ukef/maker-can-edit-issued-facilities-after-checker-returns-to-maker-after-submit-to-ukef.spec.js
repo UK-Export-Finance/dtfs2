@@ -48,12 +48,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
     cy.login(BANK1_MAKER1);
     pages.contract.visit(deal);
 
-    pages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Further Maker's input required");
-      });
+    cy.assertText(pages.contract.status(), "Further Maker's input required");
 
     /**
      * Proceed to review button should not be visible
@@ -74,19 +69,9 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       bondRow.uniqueNumberLink().should('not.exist');
       bondRow.uniqueNumber().should('be.visible');
 
-      bondRow
-        .bondStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal("Maker's input required");
-        });
+      cy.assertText(bondRow.bondStatus(), "Maker's input required");
 
-      bondRow
-        .issueFacilityLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Facility issued');
-        });
+      cy.assertText(bondRow.issueFacilityLink(), 'Facility issued');
 
       bondRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
@@ -126,19 +111,9 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
       loanRow.nameLink().should('not.exist');
       loanRow.name().should('be.visible');
 
-      loanRow
-        .loanStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal("Maker's input required");
-        });
+      cy.assertText(loanRow.loanStatus(), "Maker's input required");
 
-      loanRow
-        .issueFacilityLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Facility issued');
-        });
+      cy.assertText(loanRow.issueFacilityLink(), 'Facility issued');
 
       loanRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));

@@ -103,38 +103,18 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     const originalBondCoverStartDate = new Date(parseInt(issuedSubmittedBond.requestedCoverStartDate, 10));
 
-    issuedSubmittedBondRow
-      .requestedCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(originalBondCoverStartDate.toLocaleDateString('en-GB'));
-      });
+    cy.assertText(issuedSubmittedBondRow.requestedCoverStartDate(), originalBondCoverStartDate.toLocaleDateString('en-GB'));
 
     const originalLoanCoverStartDate = new Date(parseInt(unconditionalSubmittedLoan.requestedCoverStartDate, 10));
 
-    unconditionalSubmittedLoanRow
-      .requestedCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(originalLoanCoverStartDate.toLocaleDateString('en-GB'));
-      });
+    cy.assertText(unconditionalSubmittedLoanRow.requestedCoverStartDate(), originalLoanCoverStartDate.toLocaleDateString('en-GB'));
 
     //---------------------------------------------------------------
     // facility tables should display 'Confirm start date',
     // not 'Start date confirmed'
     //---------------------------------------------------------------
-    issuedSubmittedBondRow
-      .changeOrConfirmCoverStartDateLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Confirm start date');
-      });
+    cy.assertText(issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink(), 'Confirm start date');
 
-    unconditionalSubmittedLoanRow
-      .changeOrConfirmCoverStartDateLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Confirm start date');
-      });
+    cy.assertText(unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink(), 'Confirm start date');
   });
 });

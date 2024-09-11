@@ -133,12 +133,7 @@ context('Loan Financial Details', () => {
     fillLoanForm.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
     cy.clickSubmitButton();
 
-    partials.taskListHeader
-      .itemStatus('loan-financial-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('loan-financial-details'), 'Completed');
 
     partials.taskListHeader.itemLink('loan-financial-details').click();
 

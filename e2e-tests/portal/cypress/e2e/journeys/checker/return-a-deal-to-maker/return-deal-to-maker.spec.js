@@ -62,6 +62,7 @@ context('A checker selects to return a deal to maker from the view-contract page
 
     // expect to land on the /dashboard page with a success message
     cy.url().should('include', '/dashboard');
+
     successMessage
       .successMessageListItem()
       .invoke('text')
@@ -71,34 +72,16 @@ context('A checker selects to return a deal to maker from the view-contract page
 
     // visit the deal and confirm the updates have been made
     contract.visit(deal);
-    contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Further Maker's input required");
-      });
-    contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Ready for Checker's approval");
-      });
+
+    cy.assertText(contract.status(), "Further Maker's input required");
+
+    cy.assertText(contract.previousStatus(), "Ready for Checker's approval");
 
     // visit the comments page and prove that the comment has been added
     contract.commentsTab().click();
-    contractComments
-      .row(0)
-      .comment()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('to you');
-      });
-    contractComments
-      .row(0)
-      .commentorName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
-      });
+
+    cy.assertText(contractComments.row(0).comment(), 'to you');
+
+    cy.assertText(contractComments.row(0).commentorName(), `${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
   });
 });

@@ -91,26 +91,10 @@ context('Bond Fee Details', () => {
     fillBondForm.feeDetails();
 
     cy.clickSubmitButton();
-    partials.taskListHeader
-      .itemStatus('fee-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
 
-    partials.taskListHeader
-      .itemStatus('bond-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
-
-    partials.taskListHeader
-      .itemStatus('financial-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('fee-details'), 'Completed');
+    cy.assertText(partials.taskListHeader.itemStatus('bond-details'), 'Incomplete');
+    cy.assertText(partials.taskListHeader.itemStatus('financial-details'), 'Incomplete');
   });
 
   it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {
