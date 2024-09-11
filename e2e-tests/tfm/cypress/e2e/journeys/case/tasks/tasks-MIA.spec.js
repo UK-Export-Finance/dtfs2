@@ -1,5 +1,5 @@
 import relative from '../../../relativeURL';
-import partials from '../../../partials';
+import { caseSummary, caseSubNavigation } from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
 import * as MOCK_USERS from '../../../../../../e2e-fixtures';
@@ -48,7 +48,7 @@ context('Case tasks - MIA deal', () => {
   });
 
   it('should render all MIA task groups and tasks', () => {
-    partials.caseSubNavigation.tasksLink().click();
+    caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     pages.tasksPage.filterRadioAllTasks().click();
@@ -61,7 +61,7 @@ context('Case tasks - MIA deal', () => {
   });
 
   it('user can assign a task to themselves, change status and then unassign', () => {
-    partials.caseSubNavigation.tasksLink().click();
+    caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     //---------------------------------------------------------------
@@ -130,35 +130,35 @@ context('Case tasks - MIA deal', () => {
   });
 
   it('starting the first task in the first group updates the deal stage from `Application` to `In progress`', () => {
-    partials.caseSubNavigation.tasksLink().click();
+    caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     pages.tasksPage.filterRadioAllTasks().click();
 
     // check initial deal stage
-    cy.assertText(partials.caseSummary.ukefDealStage(), 'Application');
+    cy.assertText(caseSummary.ukefDealStage(), 'Application');
 
     submitTaskInProgress(1, 1, userId);
 
-    cy.assertText(partials.caseSummary.ukefDealStage(), 'In progress');
+    cy.assertText(caseSummary.ukefDealStage(), 'In progress');
   });
 
   it('immediately completing the first task in the first group updates the deal stage from `Application` to `In progress`', () => {
-    partials.caseSubNavigation.tasksLink().click();
+    caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     pages.tasksPage.filterRadioAllTasks().click();
 
     // check initial deal stage
-    cy.assertText(partials.caseSummary.ukefDealStage(), 'Application');
+    cy.assertText(caseSummary.ukefDealStage(), 'Application');
 
     submitTaskComplete(1, 1, userId);
 
-    cy.assertText(partials.caseSummary.ukefDealStage(), 'In progress');
+    cy.assertText(caseSummary.ukefDealStage(), 'In progress');
   });
 
   it('should not allow you to click on task if not in the right group`', () => {
-    partials.caseSubNavigation.tasksLink().click();
+    caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     //---------------------------------------------------------------
@@ -192,7 +192,7 @@ context('Case tasks - MIA deal', () => {
     // task should be open for correct user
     cy.login(MOCK_USERS.UNDERWRITING_SUPPORT_1);
     cy.visit(relative(`/case/${dealId}/deal`));
-    partials.caseSubNavigation.tasksLink().click();
+    caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
     pages.tasksPage.filterRadioAllTasks().click();
     thirdTask.link().should('exist');
