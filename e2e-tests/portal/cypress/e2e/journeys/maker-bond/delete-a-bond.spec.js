@@ -138,12 +138,7 @@ context('Delete a Bond', () => {
 
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
-    partials.successMessage
-      .successMessageListItem()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`Bond #${bondToDeleteId} has been deleted`);
-      });
+    cy.assertText(partials.successMessage.successMessageListItem(), `Bond #${bondToDeleteId} has been deleted`);
 
     pages.contract.bondTransactionsTableRows().should('have.length', 2);
   });

@@ -89,26 +89,11 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Unissued');
-        });
+      cy.assertText(bondRow.facilityStage(), 'Unissued');
 
-      bondRow
-        .bondStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Not started');
-        });
+      cy.assertText(bondRow.bondStatus(), 'Not started');
 
-      bondRow
-        .issueFacilityLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Issue facility');
-        });
+      cy.assertText(bondRow.issueFacilityLink(), 'Issue facility');
 
       bondRow
         .issueFacilityLink()
@@ -125,26 +110,11 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Conditional');
-        });
+      cy.assertText(loanRow.facilityStage(), 'Conditional');
 
-      loanRow
-        .loanStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Not started');
-        });
+      cy.assertText(loanRow.loanStatus(), 'Not started');
 
-      loanRow
-        .issueFacilityLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Issue facility');
-        });
+      cy.assertText(loanRow.issueFacilityLink(), 'Issue facility');
 
       loanRow
         .issueFacilityLink()
@@ -166,19 +136,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Bond facility link and status should be updated
     //---------------------------------------------------------------
-    firstBondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
-
-    firstBondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+    cy.assertText(firstBondRow.issueFacilityLink(), 'Facility issued');
+    cy.assertText(firstBondRow.bondStatus(), 'Completed');
 
     //---------------------------------------------------------------
     // makers completes third Bond Issue Facility form
@@ -192,19 +151,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Bond facility link and status should be updated
     //---------------------------------------------------------------
-    thirdBondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
-
-    thirdBondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+    cy.assertText(thirdBondRow.issueFacilityLink(), 'Facility issued');
+    cy.assertText(thirdBondRow.bondStatus(), 'Completed');
 
     //---------------------------------------------------------------
     // makers completes one Loan Issue Facility form
@@ -218,19 +166,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Loan facility link and status should be updated
     //---------------------------------------------------------------
-    firstLoanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
-
-    firstLoanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+    cy.assertText(firstLoanRow.issueFacilityLink(), 'Facility issued');
+    cy.assertText(firstLoanRow.loanStatus(), 'Completed');
 
     //---------------------------------------------------------------
     // makers completes third Loan Issue Facility form
@@ -244,19 +181,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Loan facility link and status should be updated
     //---------------------------------------------------------------
-    thirdLoanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
-
-    thirdLoanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+    cy.assertText(thirdLoanRow.issueFacilityLink(), 'Facility issued');
+    cy.assertText(thirdLoanRow.loanStatus(), 'Completed');
   });
 
   it('Maker start a bond and a loan and does not finish the whole journey', () => {
@@ -277,19 +203,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     // - status should not be updated
     // - link remains the same
     //---------------------------------------------------------------
-    incompleteIssueFacilityBondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issue facility');
-      });
-
-    incompleteIssueFacilityBondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Incomplete');
-      });
+    cy.assertText(incompleteIssueFacilityBondRow.issueFacilityLink(), 'Issue facility');
+    cy.assertText(incompleteIssueFacilityBondRow.bondStatus(), 'Incomplete');
 
     //---------------------------------------------------------------
     // Maker starts, but does not finish, a different Issue Facility form (Loan)
@@ -308,19 +223,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     // - status should not be updated
     // - link remains the same
     //---------------------------------------------------------------
-    incompleteIssueFacilityLoanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issue facility');
-      });
-
-    incompleteIssueFacilityLoanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Incomplete');
-      });
+    cy.assertText(incompleteIssueFacilityLoanRow.issueFacilityLink(), 'Issue facility');
+    cy.assertText(incompleteIssueFacilityLoanRow.loanStatus(), 'Incomplete');
   });
 
   it('Maker is unable to submit the application', () => {
@@ -344,19 +248,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Bond facility link and status should be updated
     //---------------------------------------------------------------
-    incompleteIssueFacilityBondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
-
-    incompleteIssueFacilityBondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+    cy.assertText(incompleteIssueFacilityBondRow.issueFacilityLink(), 'Facility issued');
+    cy.assertText(incompleteIssueFacilityBondRow.bondStatus(), 'Completed');
 
     //---------------------------------------------------------------
     // Maker resumes the incomplete Issue Facility form (Loan)
@@ -371,19 +264,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     // Bond facility link and status should be updated
     //---------------------------------------------------------------
-    incompleteIssueFacilityLoanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
-
-    incompleteIssueFacilityLoanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+    cy.assertText(incompleteIssueFacilityLoanRow.issueFacilityLink(), 'Facility issued');
+    cy.assertText(incompleteIssueFacilityLoanRow.loanStatus(), 'Completed');
   });
 
   it('Maker is now able to submit the application', () => {
@@ -403,19 +285,8 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     //---------------------------------------------------------------
     pages.contract.visit(deal);
 
-    pages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Ready for Checker's approval");
-      });
-
-    pages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Acknowledged');
-      });
+    cy.assertText(pages.contract.status(), "Ready for Checker's approval");
+    cy.assertText(pages.contract.previousStatus(), 'Acknowledged');
   });
 
   it('Verify facility stage, status and link post submission to the checker', () => {
@@ -425,26 +296,11 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
     // - stage
     // - issue facility link/text
     //---------------------------------------------------------------
-    firstBondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Ready for check');
-      });
+    cy.assertText(firstBondRow.bondStatus(), 'Ready for check');
 
-    firstBondRow
-      .facilityStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issued');
-      });
+    cy.assertText(firstBondRow.facilityStage(), 'Issued');
 
-    firstBondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+    cy.assertText(firstBondRow.issueFacilityLink(), 'Facility issued');
 
     firstBondRow
       .issueFacilityLink()
@@ -453,26 +309,11 @@ context('A maker can issue and submit issued bond and loan facilities with a dea
         expect(href).to.equal(`/contract/${dealId}/submission-details#bond-${firstBondId}`);
       });
 
-    firstLoanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Ready for check');
-      });
+    cy.assertText(firstLoanRow.loanStatus(), 'Ready for check');
 
-    firstLoanRow
-      .facilityStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Unconditional');
-      });
+    cy.assertText(firstLoanRow.facilityStage(), 'Unconditional');
 
-    firstLoanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+    cy.assertText(firstLoanRow.issueFacilityLink(), 'Facility issued');
 
     firstLoanRow
       .issueFacilityLink()

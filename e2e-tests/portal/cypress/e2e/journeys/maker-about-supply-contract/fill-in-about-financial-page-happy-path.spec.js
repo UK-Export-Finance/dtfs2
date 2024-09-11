@@ -44,20 +44,11 @@ context('about-supply-contract', () => {
     contractAboutPreview.visit(deal);
     contractAboutPreview.submissionDetails().should('be.visible');
 
-    partials.taskListHeader
-      .itemStatus('financial-information')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('financial-information'), 'Completed');
 
     // since we've cleared all validation at this point the section should show as completed on the deal page
     contract.visit(deal);
-    contract
-      .aboutSupplierDetailsStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Completed');
   });
 });

@@ -39,10 +39,10 @@ const commonDealItems = {
   ukefDecision: [],
   ukefDecisionAccepted: false,
   exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] },
-  exporterStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
-  eligibilityCriteriaStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
-  facilitiesStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
-  supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  exporterStatus: { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED },
+  eligibilityCriteriaStatus: { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED },
+  facilitiesStatus: { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED },
+  supportingInfoStatus: { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED },
   canSubmit: false,
   checkerCanSubmit: false,
 };
@@ -586,10 +586,10 @@ const RES_MOCK_AIN_APPLICATION_CHECKER = () => {
       },
     ],
   };
-  res.exporterStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
-  res.eligibilityCriteriaStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
-  res.facilitiesStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
-  res.supportingInfoStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
+  res.exporterStatus = { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED };
+  res.eligibilityCriteriaStatus = { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED };
+  res.facilitiesStatus = { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED };
+  res.supportingInfoStatus = { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED };
   res.canSubmit = false;
   res.checkerCanSubmit = false;
 
