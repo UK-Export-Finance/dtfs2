@@ -1,12 +1,13 @@
 import { load } from 'cheerio';
+import { AnyObject } from '@ukef/dtfs2-common';
 import { assertions } from './assertions';
 import configureNunjucks from '../server/nunjucks-configuration';
 
 const nunjucks = configureNunjucks({});
 
 export const componentRenderer =
-  (componentLocation: string, renderTableContainer = false) =>
-  <TParams extends object>(params: TParams) => {
+  <TParams extends AnyObject>(componentLocation: string, renderTableContainer = false) =>
+  (params: TParams) => {
     let fakePage;
 
     if (renderTableContainer) {

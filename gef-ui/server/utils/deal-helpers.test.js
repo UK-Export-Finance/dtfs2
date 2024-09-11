@@ -2,9 +2,9 @@ import CONSTANTS from '../constants';
 
 import { isNotice, isUkefReviewAvailable, isUkefReviewPositive, makerCanReSubmit, isDealNotice } from './deal-helpers';
 
-import { MOCK_AIN_APPLICATION, MOCK_BASIC_DEAL, MOCK_AIN_APPLICATION_UNISSUED_ONLY } from './mocks/mock_applications';
+import { MOCK_AIN_APPLICATION, MOCK_BASIC_DEAL, MOCK_AIN_APPLICATION_UNISSUED_ONLY } from './mocks/mock-applications';
 
-import { MOCK_REQUEST } from './mocks/mock_requests';
+import { MOCK_REQUEST } from './mocks/mock-requests';
 
 describe('isNotice()', () => {
   it('Should return TRUE for any `Notice` submission type i.e. MIN or AIN', () => {

@@ -3,9 +3,11 @@ import { Currency, CurrencyAndAmount } from '@ukef/dtfs2-common';
 import { getEditPaymentViewModel, getEditPaymentViewModelWithFormValues } from './edit-payment-helper';
 import { aPaymentDetailsWithFeeRecordsResponseBody, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { GetPaymentDetailsWithFeeRecordsResponseBody } from '../../../api-response-types';
+import { RECONCILIATION_FOR_REPORT_TABS } from '../../../constants/reconciliation-for-report-tabs';
 import { PaymentErrorsViewModel, SortedAndFormattedCurrencyAndAmount } from '../../../types/view-models';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { EMPTY_PAYMENT_ERRORS_VIEW_MODEL } from './payment-form-helpers';
+import { getReconciliationForReportHref } from './get-reconciliation-for-report-href';
 
 describe('edit-payment-helper', () => {
   describe('getEditPaymentViewModel', () => {
@@ -367,12 +369,37 @@ describe('edit-payment-helper', () => {
       // Assert
       expect(viewModel.formValues.paymentReference).toBe(reference);
     });
+
+    it('sets the view model redirectTab to the supplied redirectTab', () => {
+      // Arrange
+      const redirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
+
+      // Act
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, redirectTab);
+
+      // Assert
+      expect(viewModel.redirectTab).toEqual(redirectTab);
+    });
+
+    it('sets the back link to the reconciliation for report href using the supplied redirectTab', () => {
+      // Arrange
+      const redirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
+
+      const backLinkHref = getReconciliationForReportHref(reportId, redirectTab);
+
+      // Act
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, redirectTab);
+
+      // Assert
+      expect(viewModel.backLinkHref).toEqual(backLinkHref);
+    });
   });
 
   describe('getEditPaymentViewModelWithFormValues', () => {
     const reportId = '12';
     const paymentId = '34';
     const isCheckboxChecked = () => false;
+    const redirectTab = RECONCILIATION_FOR_REPORT_TABS.PREMIUM_PAYMENTS;
 
     it('sets the view model reportId the supplied reportId', () => {
       // Arrange
@@ -385,6 +412,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -403,6 +431,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -427,6 +456,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -451,6 +481,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -475,6 +506,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -501,6 +533,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -525,6 +558,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -550,6 +584,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -575,6 +610,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -607,6 +643,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -639,6 +676,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -664,6 +702,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -695,6 +734,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         mockIsCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -720,6 +760,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -741,6 +782,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         aValidEditPaymentFormValuesObject(),
+        redirectTab,
         paymentErrors,
       );
 
@@ -776,6 +818,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         formValues,
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -801,6 +844,7 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         formValues,
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
@@ -826,11 +870,36 @@ describe('edit-payment-helper', () => {
         paymentId,
         isCheckboxChecked,
         formValues,
+        redirectTab,
         aPaymentErrorsViewModel(),
       );
 
       // Assert
       expect(viewModel.formValues.paymentReference).toBe('Some payment reference');
+    });
+
+    it('sets the view model redirectTab to the supplied redirectTab', () => {
+      // Arrange
+      const keyingSheetRedirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
+
+      // Act
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, keyingSheetRedirectTab);
+
+      // Assert
+      expect(viewModel.redirectTab).toEqual(keyingSheetRedirectTab);
+    });
+
+    it('sets the back link to the reconciliation for report href using the supplied redirectTab', () => {
+      // Arrange
+      const keyingSheetRedirectTab = RECONCILIATION_FOR_REPORT_TABS.KEYING_SHEET;
+
+      const backLinkHref = getReconciliationForReportHref(reportId, keyingSheetRedirectTab);
+
+      // Act
+      const viewModel = getEditPaymentViewModel(aPaymentDetailsWithFeeRecordsResponseBody(), reportId, paymentId, isCheckboxChecked, keyingSheetRedirectTab);
+
+      // Assert
+      expect(viewModel.backLinkHref).toEqual(backLinkHref);
     });
 
     function aValidEditPaymentFormValuesObject(): EditPaymentFormValues {
