@@ -96,20 +96,12 @@ context('Facility page', () => {
     // check that a couple of case summary elements have data
     // (no need to check all in E2E test)
     partials.caseSummary.ukefDealId().should('be.visible');
-    partials.caseSummary
-      .ukefDealId()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(MOCK_DEAL_AIN.details.ukefDealId);
-      });
+
+    cy.assertText(partials.caseSummary.ukefDealId(), MOCK_DEAL_AIN.details.ukefDealId);
 
     partials.caseSummary.exporterName().should('be.visible');
-    partials.caseSummary
-      .exporterName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(MOCK_DEAL_AIN.exporter.companyName);
-      });
+
+    cy.assertText(partials.caseSummary.exporterName(), MOCK_DEAL_AIN.exporter.companyName);
   });
 
   it('performs a search query based on Facility ID', () => {

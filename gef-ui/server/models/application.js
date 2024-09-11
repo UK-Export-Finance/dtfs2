@@ -82,12 +82,14 @@ const isNoticeAndCanResubmit = (application) =>
  * checks if AIN or MIN (notice)
  * checks submission count is above 0
  * checks status is changes required and if any facilities have been issued
+ * checks facilities have been completed
  */
 const applicationCanResubmitAsNotice = (application) =>
   (application.submissionType === DEAL_SUBMISSION_TYPE.AIN || application.submissionType === DEAL_SUBMISSION_TYPE.MIN) &&
   application.submissionCount > 0 &&
   [DEAL_STATUS.CHANGES_REQUIRED].includes(application.status) &&
-  facilitiesChangedToIssuedAsArray(application).length > 0;
+  facilitiesChangedToIssuedAsArray(application).length > 0 &&
+  application.facilitiesStatus.code === DEAL_STATUS.COMPLETED;
 
 // Can only submit when all section statuses are set to complete
 // and the application is in Draft or CHANGES_REQUIRED

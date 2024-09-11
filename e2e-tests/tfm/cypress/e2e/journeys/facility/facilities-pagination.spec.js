@@ -88,23 +88,14 @@ context('User can navigate through a paginated table of facilities using the pag
     pages.facilitiesPage.searchFormSubmitButton().click();
 
     cy.url().should('eq', relative('/facilities/0?search=Company%201'));
-    pages.facilitiesPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${expectedNumberOfMatches} results for "${searchString}"`);
-      });
+
+    cy.assertText(pages.facilitiesPage.heading(), `${expectedNumberOfMatches} results for "${searchString}"`);
     cy.checkFacilityIdCells({ firstFacilityId: '10000001', increment: 2, numberToCheck: 20 });
     cy.checkFacilitiesTableRowsTotal(20);
 
     pages.facilitiesPage.pagination.next().click();
 
-    pages.facilitiesPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${expectedNumberOfMatches} results for "${searchString}"`);
-      });
+    cy.assertText(pages.facilitiesPage.heading(), `${expectedNumberOfMatches} results for "${searchString}"`);
     cy.checkFacilityIdCells({ firstFacilityId: '10000041', increment: 2, numberToCheck: 10 });
     cy.checkFacilitiesTableRowsTotal(11);
   });
