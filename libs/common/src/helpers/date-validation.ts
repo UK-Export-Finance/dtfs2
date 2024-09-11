@@ -1,11 +1,6 @@
 import { isValid, parseISO } from 'date-fns';
 import z from 'zod';
-
-export type DayMonthYearInput = {
-  day: string;
-  month: string;
-  year: string;
-};
+import { DayMonthYearInput } from '../types';
 
 type ValueAndFieldRefs = {
   value: string;

@@ -1,4 +1,5 @@
 const Chance = require('chance');
+const { DEAL_TYPE } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../constants');
 const { MOCK_MAKER, MOCK_CHECKER } = require('./mock_users');
 
@@ -8,7 +9,7 @@ const commonDealItems = {
   _id: '61a7710b2ae62b0013dae687',
   userId: '619bae3467cc7c002069fc1e',
   exporterId: '61a7710b2ae62b0013dae686',
-  dealType: CONSTANTS.DEAL_TYPE.GEF,
+  dealType: DEAL_TYPE.GEF,
   maker: MOCK_MAKER,
   checker: MOCK_CHECKER,
   bank: { id: '9' },
@@ -38,10 +39,10 @@ const commonDealItems = {
   ukefDecision: [],
   ukefDecisionAccepted: false,
   exporter: { status: CONSTANTS.DEAL_STATUS.COMPLETED, details: [], validation: [] },
-  exporterStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
-  eligibilityCriteriaStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
-  facilitiesStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
-  supportingInfoStatus: { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' },
+  exporterStatus: { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED },
+  eligibilityCriteriaStatus: { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED },
+  facilitiesStatus: { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED },
+  supportingInfoStatus: { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED },
   canSubmit: false,
   checkerCanSubmit: false,
 };
@@ -480,7 +481,7 @@ const RES_MOCK_AIN_APPLICATION_CHECKER = () => {
   const res = {};
 
   res._id = '61a7710b2ae62b0013dae687';
-  res.dealType = CONSTANTS.DEAL_TYPE.GEF;
+  res.dealType = DEAL_TYPE.GEF;
   res.userId = '619bae3467cc7c002069fc1e';
   res.maker = MOCK_MAKER;
   res.checker = MOCK_CHECKER;
@@ -585,10 +586,10 @@ const RES_MOCK_AIN_APPLICATION_CHECKER = () => {
       },
     ],
   };
-  res.exporterStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
-  res.eligibilityCriteriaStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
-  res.facilitiesStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
-  res.supportingInfoStatus = { text: 'Completed', class: 'govuk-tag--green', code: 'COMPLETED' };
+  res.exporterStatus = { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED };
+  res.eligibilityCriteriaStatus = { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED };
+  res.facilitiesStatus = { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED };
+  res.supportingInfoStatus = { text: CONSTANTS.DEAL_STATUS.COMPLETED, class: 'govuk-tag--green', code: CONSTANTS.DEAL_STATUS.COMPLETED };
   res.canSubmit = false;
   res.checkerCanSubmit = false;
 

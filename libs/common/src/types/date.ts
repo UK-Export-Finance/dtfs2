@@ -54,3 +54,12 @@ export type IsoDayStamp = string;
  * ISO 8601 year string in format 'yyyy'
  */
 export type IsoYearStamp = string;
+
+/**
+ * Date input from user, before validation
+ */
+export type DayMonthYearInput = {
+  day: string;
+  month: string;
+  year: string;
+};

@@ -70,26 +70,9 @@ context('A maker should not be able to submit the deal if it has atleast one `In
       const bondId = bond._id;
       const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-      bondRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Unissued');
-        });
-
-      bondRow
-        .bondStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Not started');
-        });
-
-      bondRow
-        .issueFacilityLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Issue facility');
-        });
+      cy.assertText(bondRow.facilityStage(), 'Unissued');
+      cy.assertText(bondRow.bondStatus(), 'Not started');
+      cy.assertText(bondRow.issueFacilityLink(), 'Issue facility');
 
       bondRow
         .issueFacilityLink()
@@ -106,26 +89,9 @@ context('A maker should not be able to submit the deal if it has atleast one `In
       const loanId = loan._id;
       const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-      loanRow
-        .facilityStage()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Conditional');
-        });
-
-      loanRow
-        .loanStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Not started');
-        });
-
-      loanRow
-        .issueFacilityLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Issue facility');
-        });
+      cy.assertText(loanRow.facilityStage(), 'Conditional');
+      cy.assertText(loanRow.loanStatus(), 'Not started');
+      cy.assertText(loanRow.issueFacilityLink(), 'Issue facility');
 
       loanRow
         .issueFacilityLink()
@@ -147,19 +113,9 @@ context('A maker should not be able to submit the deal if it has atleast one `In
     //---------------------------------------------------------------
     // Bond facility link and status should be updated
     //---------------------------------------------------------------
-    firstBondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
 
-    firstBondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+    cy.assertText(firstBondRow.issueFacilityLink(), 'Facility issued');
+    cy.assertText(firstBondRow.bondStatus(), 'Completed');
 
     //---------------------------------------------------------------
     // makers completes third Bond Issue Facility form
@@ -173,19 +129,9 @@ context('A maker should not be able to submit the deal if it has atleast one `In
     //---------------------------------------------------------------
     // Bond facility link and status should be updated
     //---------------------------------------------------------------
-    thirdBondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
 
-    thirdBondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+    cy.assertText(thirdBondRow.issueFacilityLink(), 'Facility issued');
+    cy.assertText(thirdBondRow.bondStatus(), 'Completed');
 
     //---------------------------------------------------------------
     // makers completes one Loan Issue Facility form
@@ -199,19 +145,9 @@ context('A maker should not be able to submit the deal if it has atleast one `In
     //---------------------------------------------------------------
     // Loan facility link and status should be updated
     //---------------------------------------------------------------
-    firstLoanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
 
-    firstLoanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+    cy.assertText(firstLoanRow.issueFacilityLink(), 'Facility issued');
+    cy.assertText(firstLoanRow.loanStatus(), 'Completed');
 
     //---------------------------------------------------------------
     // makers completes third Loan Issue Facility form
@@ -225,19 +161,9 @@ context('A maker should not be able to submit the deal if it has atleast one `In
     //---------------------------------------------------------------
     // Loan facility link and status should be updated
     //---------------------------------------------------------------
-    thirdLoanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
 
-    thirdLoanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+    cy.assertText(thirdLoanRow.issueFacilityLink(), 'Facility issued');
+    cy.assertText(thirdLoanRow.loanStatus(), 'Completed');
   });
 
   it('Maker start a bond and a loan and does not finish the whole journey', () => {
@@ -260,19 +186,9 @@ context('A maker should not be able to submit the deal if it has atleast one `In
     // - status should not be updated
     // - link remains the same
     //---------------------------------------------------------------
-    incompleteIssueFacilityBondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issue facility');
-      });
 
-    incompleteIssueFacilityBondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Incomplete');
-      });
+    cy.assertText(incompleteIssueFacilityBondRow.issueFacilityLink(), 'Issue facility');
+    cy.assertText(incompleteIssueFacilityBondRow.bondStatus(), 'Incomplete');
 
     //---------------------------------------------------------------
     // Maker starts, but does not finish, a different Issue Facility form (Loan)
@@ -293,19 +209,9 @@ context('A maker should not be able to submit the deal if it has atleast one `In
     // - status should not be updated
     // - link remains the same
     //---------------------------------------------------------------
-    incompleteIssueFacilityLoanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issue facility');
-      });
 
-    incompleteIssueFacilityLoanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Incomplete');
-      });
+    cy.assertText(incompleteIssueFacilityLoanRow.issueFacilityLink(), 'Issue facility');
+    cy.assertText(incompleteIssueFacilityLoanRow.loanStatus(), 'Incomplete');
   });
 
   it('Maker is unable to submit the application', () => {

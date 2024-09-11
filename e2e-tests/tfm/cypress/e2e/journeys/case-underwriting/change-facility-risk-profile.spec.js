@@ -151,12 +151,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
     const facilityRow = pages.underwritingPricingAndRiskPage.facilityTable(facilityId);
 
     // assert initial Risk Profile value
-    facilityRow
-      .riskProfile()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Flat');
-      });
+    cy.assertText(facilityRow.riskProfile(), 'Flat');
 
     facilityRow.changeRiskProfileLink().click({ force: true });
 
@@ -167,11 +162,6 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     // assert new Risk Profile value
-    facilityRow
-      .riskProfile()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Variable');
-      });
+    cy.assertText(facilityRow.riskProfile(), 'Variable');
   });
 });

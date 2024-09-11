@@ -74,12 +74,7 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
       pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('45');
       pages.underwritingProbabilityOfDefaultPage.closeLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
-      pages.underwritingPricingAndRiskPage
-        .exporterTableProbabilityOfDefault()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Less than 14.1%');
-        });
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault(), 'Less than 14.1%');
     });
 
     it('should display validation error if value is not a number, below 0.01, above 14.09 or more than 2 decimal places', () => {
@@ -114,12 +109,8 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
       cy.clickSubmitButton();
 
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
-      pages.underwritingPricingAndRiskPage
-        .exporterTableProbabilityOfDefault()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Less than 10.5%');
-        });
+
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault(), 'Less than 10.5%');
     });
   });
 });

@@ -5,6 +5,9 @@ import './ui';
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
+// Assert an element has some exact text
+Cypress.Commands.add('assertText', require('./utils/assertText'));
+
 Cypress.Commands.add('getInputByLabelText', require('./utils/getInputByLabelText'));
 
 // commands used to interact directly with Deal API

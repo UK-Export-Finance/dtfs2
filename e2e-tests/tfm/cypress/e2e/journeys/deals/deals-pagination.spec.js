@@ -87,23 +87,16 @@ context('User can navigate through a paginated table of deals using the paginati
     cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/deals/0?search=Company%201'));
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${expectedNumberOfMatches} results for "${searchString}"`);
-      });
+
+    cy.assertText(pages.dealsPage.heading(), `${expectedNumberOfMatches} results for "${searchString}"`);
+
     cy.checkDealIdCells({ firstDealId: '10000001', increment: 2, numberToCheck: 20 });
     cy.checkDealsTableRowsTotal(20);
 
     pages.dealsPage.pagination.next().click();
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${expectedNumberOfMatches} results for "${searchString}"`);
-      });
+    cy.assertText(pages.dealsPage.heading(), `${expectedNumberOfMatches} results for "${searchString}"`);
+
     cy.checkDealIdCells({ firstDealId: '10000041', increment: 2, numberToCheck: 10 });
     cy.checkDealsTableRowsTotal(11);
   });

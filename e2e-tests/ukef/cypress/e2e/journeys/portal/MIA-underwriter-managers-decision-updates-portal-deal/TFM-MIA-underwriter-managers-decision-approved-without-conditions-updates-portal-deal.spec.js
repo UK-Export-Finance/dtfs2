@@ -106,18 +106,8 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Portal deal status should be updated
     //---------------------------------------------------------------
-    portalPages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('In progress by UKEF');
-      });
+    cy.assertText(portalPages.contract.previousStatus(), 'In progress by UKEF');
 
-    portalPages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Accepted by UKEF (without conditions)');
-      });
+    cy.assertText(portalPages.contract.status(), 'Accepted by UKEF (without conditions)');
   });
 });

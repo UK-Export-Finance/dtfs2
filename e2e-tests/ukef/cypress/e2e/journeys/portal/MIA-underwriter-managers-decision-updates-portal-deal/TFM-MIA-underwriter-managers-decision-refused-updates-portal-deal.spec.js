@@ -106,37 +106,17 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Portal deal status should be updated
     //---------------------------------------------------------------
-    portalPages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('In progress by UKEF');
-      });
+    cy.assertText(portalPages.contract.previousStatus(), 'In progress by UKEF');
 
-    portalPages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Rejected by UKEF');
-      });
+    cy.assertText(portalPages.contract.status(), 'Rejected by UKEF');
 
     //---------------------------------------------------------------
     // Portal deal comments/conditions should be displayed
     //---------------------------------------------------------------
     portalPages.contract.commentsTab().click();
 
-    portalPartials.ukefComments.comments
-      .title()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Reason for rejection:');
-      });
+    cy.assertText(portalPartials.ukefComments.comments.title(), 'Reason for rejection:');
 
-    portalPartials.ukefComments.comments
-      .text()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(MOCK_COMMENTS);
-      });
+    cy.assertText(portalPartials.ukefComments.comments.text(), MOCK_COMMENTS);
   });
 });

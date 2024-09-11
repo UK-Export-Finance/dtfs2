@@ -43,19 +43,9 @@ context('User can view a GEF MIA case deal', () => {
   });
 
   it('should render case summary fields', () => {
-    caseSummary
-      .dealSubmissionType()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(MOCK_APPLICATION_MIA.submissionType);
-      });
+    cy.assertText(caseSummary.dealSubmissionType(), MOCK_APPLICATION_MIA.submissionType);
 
-    caseSummary
-      .exporterName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(MOCK_APPLICATION_MIA.exporter.companyName);
-      });
+    cy.assertText(caseSummary.exporterName(), MOCK_APPLICATION_MIA.exporter.companyName);
   });
 
   describe('Bank security section', () => {
@@ -152,19 +142,9 @@ context('User can view a GEF AIN case deal', () => {
   });
 
   it('should render case summary fields', () => {
-    caseSummary
-      .dealSubmissionType()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(MOCK_APPLICATION_AIN.submissionType);
-      });
+    cy.assertText(caseSummary.dealSubmissionType(), MOCK_APPLICATION_AIN.submissionType);
 
-    caseSummary
-      .exporterName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(MOCK_APPLICATION_AIN.exporter.companyName);
-      });
+    cy.assertText(caseSummary.exporterName(), MOCK_APPLICATION_AIN.exporter.companyName);
   });
 
   describe('Bank security section', () => {
