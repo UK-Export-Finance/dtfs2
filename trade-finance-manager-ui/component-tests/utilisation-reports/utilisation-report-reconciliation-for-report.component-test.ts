@@ -6,7 +6,7 @@ import { UtilisationReportReconciliationForReportViewModel } from '../../server/
 import { TfmSessionUser } from '../../server/types/tfm-session-user';
 
 const page = '../templates/utilisation-reports/utilisation-report-reconciliation-for-report.njk';
-const render = pageRenderer(page);
+const render = pageRenderer<UtilisationReportReconciliationForReportViewModel>(page);
 
 describe(page, () => {
   const aPdcReconcileUser = (): TfmSessionUser => ({ ...aTfmSessionUser(), teams: ['PDC_RECONCILE'] });

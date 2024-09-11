@@ -26,6 +26,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
   const feeRecordIds = [1, 2];
 
+  const editPaymentUrl = `/utilisation-reports/${reportId}/edit-payment/${paymentId}`;
+
   const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
     .withId(reportId)
     .withBankId('961')
@@ -82,7 +84,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
-    cy.visit(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
+    cy.visit(`${editPaymentUrl}?redirectTab=premium-payments`);
   });
 
   it('should display errors when form submitted with invalid fee selections and persist the selected fees and inputted values', () => {
@@ -131,7 +133,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+    cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
     getFeeRecordRow(feeRecordIdToRemove).should('not.exist');
     otherFeeRecordIds.forEach((feeRecordId) => {
@@ -161,12 +163,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
     pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+    cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
     getFeeRecordCheckbox(1).check();
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+    cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
     cy.visit(`/utilisation-reports/${reportId}`);
     cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');

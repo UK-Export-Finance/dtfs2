@@ -10,4 +10,5 @@ module.exports = {
   header,
   underwritingSubNav,
   primaryNavigation,
+  backLink: () => cy.get('[data-cy="back-link"]'),
 };
