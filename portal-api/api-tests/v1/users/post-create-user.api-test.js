@@ -90,7 +90,7 @@ describe('a user', () => {
     });
 
     describe('it creates the user', () => {
-      it('it creates the user if all provided data is valid', async () => {
+      it('creates the user if all provided data is valid', async () => {
         await createUser(MOCK_USER);
         const { status, body } = await as(aNonAdmin).get(BASE_URL);
 
@@ -116,7 +116,7 @@ describe('a user', () => {
         );
       });
 
-      it('it creates the user if the user creation request has the read-only role repeated', async () => {
+      it('creates the user if the user creation request has the read-only role repeated', async () => {
         const newUser = {
           ...MOCK_USER,
           roles: [READ_ONLY, READ_ONLY],
@@ -129,7 +129,7 @@ describe('a user', () => {
         expect(body.users.find((user) => user.username === MOCK_USER.username).roles).toStrictEqual([READ_ONLY, READ_ONLY]);
       });
 
-      it('it creates the user if the user creation request has the read-only role only', async () => {
+      it('creates the user if the user creation request has the read-only role only', async () => {
         const newUser = {
           ...MOCK_USER,
           roles: [READ_ONLY],
