@@ -25,6 +25,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
   const paymentReference = 'A payment reference';
 
+  const editPaymentUrl = `/utilisation-reports/${reportId}/edit-payment/${paymentId}`;
+
   const clearFormValues = () => {
     cy.getInputByLabelText('Amount received').clear();
     cy.getInputByLabelText('Day').clear();
@@ -77,176 +79,240 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     cy.visit(`/utilisation-reports/${reportId}`);
   });
 
-  it('should allow the user to navigate to the edit payment page', () => {
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+  describe('when navigating to the edit payment page', () => {
+    it('should allow the user to navigate from the premium payments table', () => {
+      pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
+    });
+
+    it('should allow the user to navigate from the payment details table', () => {
+      cy.visit(`/utilisation-reports/${reportId}#payment-details`);
+
+      pages.utilisationReportPage.paymentDetailsTab.clickPaymentLink(paymentId);
+
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=payment-details`));
+    });
   });
 
-  it('should display the payment currency as a fixed value next to the payment amount', () => {
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+  describe('when clicking the back link on the edit payment page', () => {
+    it('should return to the premium payments page when accessed from premium payments table', () => {
+      pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
-    cy.get('[data-cy="payment-currency-prefix"]').should('have.text', paymentCurrency);
+      cy.clickBackLink();
+
+      cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
+    });
+
+    it('should return to the payment details page when accessed from payment details table', () => {
+      cy.visit(`/utilisation-reports/${reportId}#payment-details`);
+
+      pages.utilisationReportPage.paymentDetailsTab.clickPaymentLink(paymentId);
+
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=payment-details`));
+
+      cy.clickBackLink();
+
+      cy.url().should('eq', relative(`/utilisation-reports/${reportId}#payment-details`));
+    });
   });
 
-  it('should populate the edit payment form values with the current payment values', () => {
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+  describe('when displaying the edit payment form', () => {
+    it('should display the payment currency as a fixed value next to the payment amount', () => {
+      pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
-    cy.getInputByLabelText('Amount received').should('have.value', paymentAmount.toString());
-    cy.getInputByLabelText('Day').should('have.value', paymentDateDay);
-    cy.getInputByLabelText('Month').should('have.value', paymentDateMonth);
-    cy.getInputByLabelText('Year').should('have.value', paymentDateYear);
-    cy.getInputByLabelText('Payment reference (optional)').should('have.value', paymentReference);
+      cy.get('[data-cy="payment-currency-prefix"]').should('have.text', paymentCurrency);
+    });
+
+    it('should populate the form values with the current payment values', () => {
+      pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
+
+      cy.getInputByLabelText('Amount received').should('have.value', paymentAmount.toString());
+      cy.getInputByLabelText('Day').should('have.value', paymentDateDay);
+      cy.getInputByLabelText('Month').should('have.value', paymentDateMonth);
+      cy.getInputByLabelText('Year').should('have.value', paymentDateYear);
+      cy.getInputByLabelText('Payment reference (optional)').should('have.value', paymentReference);
+    });
   });
 
-  it('should display errors when form submitted with invalid values and persist the selected fees and inputted values', () => {
-    cy.task(NODE_TASKS.REMOVE_ALL_FEE_RECORDS_FROM_DB);
-    cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+  describe('when submitting the form with invalid values', () => {
+    it('should display errors and persist the selected fees and inputted values', () => {
+      cy.task(NODE_TASKS.REMOVE_ALL_FEE_RECORDS_FROM_DB);
+      cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
 
-    const payment = aPaymentWithAmount(200);
-    const feeRecord = aFeeRecordWithIdAmountStatusAndPayments(123, 70, FEE_RECORD_STATUS.DOES_NOT_MATCH, [payment]);
-    const anotherFeeRecord = aFeeRecordWithIdAmountStatusAndPayments(124, 7, FEE_RECORD_STATUS.DOES_NOT_MATCH, [payment]);
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord, anotherFeeRecord]);
+      const payment = aPaymentWithAmount(200);
+      const feeRecord = aFeeRecordWithIdAmountStatusAndPayments(123, 70, FEE_RECORD_STATUS.DOES_NOT_MATCH, [payment]);
+      const anotherFeeRecord = aFeeRecordWithIdAmountStatusAndPayments(124, 7, FEE_RECORD_STATUS.DOES_NOT_MATCH, [payment]);
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord, anotherFeeRecord]);
 
-    const getFeeRecordCheckbox = (feeRecordId) => cy.get(`[type="checkbox"][id="feeRecordId-${feeRecordId}"]`);
+      const getFeeRecordCheckbox = (feeRecordId) => cy.get(`[type="checkbox"][id="feeRecordId-${feeRecordId}"]`);
 
-    cy.reload();
+      cy.reload();
 
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+      pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
-    clearFormValues();
+      clearFormValues();
 
-    getFeeRecordCheckbox(feeRecord.id).check();
+      getFeeRecordCheckbox(feeRecord.id).check();
 
-    cy.getInputByLabelText('Amount received').type('nonsense');
-    cy.getInputByLabelText('Day').type('nonsense');
-    cy.getInputByLabelText('Month').type('nonsense');
-    cy.getInputByLabelText('Year').type('nonsense');
-    cy.getInputByLabelText('Payment reference (optional)').type('This is valid');
+      cy.getInputByLabelText('Amount received').type('nonsense');
+      cy.getInputByLabelText('Day').type('nonsense');
+      cy.getInputByLabelText('Month').type('nonsense');
+      cy.getInputByLabelText('Year').type('nonsense');
+      cy.getInputByLabelText('Payment reference (optional)').type('This is valid');
 
-    pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
-    getFeeRecordCheckbox(feeRecord.id).should('be.checked');
-    getFeeRecordCheckbox(anotherFeeRecord.id).should('not.be.checked');
+      getFeeRecordCheckbox(feeRecord.id).should('be.checked');
+      getFeeRecordCheckbox(anotherFeeRecord.id).should('not.be.checked');
 
-    cy.get('a').should('contain', 'Enter a valid amount received');
-    cy.get('a').should('contain', 'The date payment received must be a real date');
+      cy.get('a').should('contain', 'Enter a valid amount received');
+      cy.get('a').should('contain', 'The date payment received must be a real date');
 
-    cy.get('form').should('contain', 'Enter a valid amount received');
-    cy.get('form').should('contain', 'The date payment received must be a real date');
+      cy.get('form').should('contain', 'Enter a valid amount received');
+      cy.get('form').should('contain', 'The date payment received must be a real date');
 
-    cy.getInputByLabelText('Amount received').should('have.value', 'nonsense');
-    cy.getInputByLabelText('Day').should('have.value', 'nonsense');
-    cy.getInputByLabelText('Month').should('have.value', 'nonsense');
-    cy.getInputByLabelText('Year').should('have.value', 'nonsense');
-    cy.getInputByLabelText('Payment reference (optional)').should('have.value', 'This is valid');
+      cy.getInputByLabelText('Amount received').should('have.value', 'nonsense');
+      cy.getInputByLabelText('Day').should('have.value', 'nonsense');
+      cy.getInputByLabelText('Month').should('have.value', 'nonsense');
+      cy.getInputByLabelText('Year').should('have.value', 'nonsense');
+      cy.getInputByLabelText('Payment reference (optional)').should('have.value', 'This is valid');
+    });
   });
 
-  it('should return to the premium payments table after the user clicks the save changes button', () => {
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+  describe('when the user clicks the save changes button', () => {
+    it('should update the payment with the supplied values', () => {
+      const newPaymentAmount = '314.59';
+      const newPaymentDateDay = '12';
+      const newPaymentDateMonth = '2';
+      const newPaymentDateYear = '2021';
+      const newPaymentReference = 'New payment reference';
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+      pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
-    pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
+      cy.getInputByLabelText('Amount received').should('have.value', paymentAmount.toString());
+      cy.getInputByLabelText('Day').should('have.value', paymentDateDay);
+      cy.getInputByLabelText('Month').should('have.value', paymentDateMonth);
+      cy.getInputByLabelText('Year').should('have.value', paymentDateYear);
+      cy.getInputByLabelText('Payment reference (optional)').should('have.value', paymentReference);
+
+      clearFormValues();
+
+      cy.getInputByLabelText('Amount received').type(newPaymentAmount.toString());
+      cy.getInputByLabelText('Day').type(newPaymentDateDay);
+      cy.getInputByLabelText('Month').type(newPaymentDateMonth);
+      cy.getInputByLabelText('Year').type(newPaymentDateYear);
+      cy.getInputByLabelText('Payment reference (optional)').type(newPaymentReference);
+
+      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+
+      cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
+
+      pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
+
+      cy.getInputByLabelText('Amount received').should('have.value', newPaymentAmount.toString());
+      cy.getInputByLabelText('Day').should('have.value', newPaymentDateDay);
+      cy.getInputByLabelText('Month').should('have.value', newPaymentDateMonth);
+      cy.getInputByLabelText('Year').should('have.value', newPaymentDateYear);
+      cy.getInputByLabelText('Payment reference (optional)').should('have.value', newPaymentReference);
+    });
   });
 
-  it('should update the payment with the supplied values after clicking the save changes button', () => {
-    const newPaymentAmount = '314.59';
-    const newPaymentDateDay = '12';
-    const newPaymentDateMonth = '2';
-    const newPaymentDateYear = '2021';
-    const newPaymentReference = 'New payment reference';
+  describe('when changing the payment amount', () => {
+    it(`should set the fee record status to '${FEE_RECORD_STATUS.DOES_NOT_MATCH}' if the new amount does not match the fee record amount`, () => {
+      cy.task(NODE_TASKS.REMOVE_ALL_FEE_RECORDS_FROM_DB);
+      cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
 
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+      const payment = aPaymentWithAmount(200);
+      const feeRecord = aFeeRecordWithIdAmountStatusAndPayments(123, 200, FEE_RECORD_STATUS.MATCH, [payment]);
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+      cy.reload();
 
-    cy.getInputByLabelText('Amount received').should('have.value', paymentAmount.toString());
-    cy.getInputByLabelText('Day').should('have.value', paymentDateDay);
-    cy.getInputByLabelText('Month').should('have.value', paymentDateMonth);
-    cy.getInputByLabelText('Year').should('have.value', paymentDateYear);
-    cy.getInputByLabelText('Payment reference (optional)').should('have.value', paymentReference);
+      cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
+      pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
-    clearFormValues();
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
-    cy.getInputByLabelText('Amount received').type(newPaymentAmount.toString());
-    cy.getInputByLabelText('Day').type(newPaymentDateDay);
-    cy.getInputByLabelText('Month').type(newPaymentDateMonth);
-    cy.getInputByLabelText('Year').type(newPaymentDateYear);
-    cy.getInputByLabelText('Payment reference (optional)').type(newPaymentReference);
+      cy.getInputByLabelText('Amount received').should('have.value', '200');
+      cy.getInputByLabelText('Amount received').clear();
+      cy.getInputByLabelText('Amount received').type('100');
 
-    pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
+      cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
+      cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
+    });
 
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+    it(`should set the fee record status to '${FEE_RECORD_STATUS.MATCH}' if the new amount matches the fee record amount`, () => {
+      cy.task(NODE_TASKS.REMOVE_ALL_FEE_RECORDS_FROM_DB);
+      cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+      const payment = aPaymentWithAmount(100);
+      const feeRecord = aFeeRecordWithIdAmountStatusAndPayments(123, 200, FEE_RECORD_STATUS.DOES_NOT_MATCH, [payment]);
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
 
-    cy.getInputByLabelText('Amount received').should('have.value', newPaymentAmount.toString());
-    cy.getInputByLabelText('Day').should('have.value', newPaymentDateDay);
-    cy.getInputByLabelText('Month').should('have.value', newPaymentDateMonth);
-    cy.getInputByLabelText('Year').should('have.value', newPaymentDateYear);
-    cy.getInputByLabelText('Payment reference (optional)').should('have.value', newPaymentReference);
+      cy.reload();
+
+      cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
+
+      pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
+
+      cy.getInputByLabelText('Amount received').should('have.value', '100');
+      cy.getInputByLabelText('Amount received').clear();
+      cy.getInputByLabelText('Amount received').type('200');
+
+      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+
+      cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
+      cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('not.exist');
+      cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
+    });
   });
 
-  it(`should set the fee record status to '${FEE_RECORD_STATUS.DOES_NOT_MATCH}' if the new payment amount does not match the fee record amount`, () => {
-    cy.task(NODE_TASKS.REMOVE_ALL_FEE_RECORDS_FROM_DB);
-    cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+  describe('when a payment is edited after accessing the edit payment page from the premium payments table', () => {
+    it('should return to the premium payments page', () => {
+      pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
-    const payment = aPaymentWithAmount(200);
-    const feeRecord = aFeeRecordWithIdAmountStatusAndPayments(123, 200, FEE_RECORD_STATUS.MATCH, [payment]);
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
-    cy.reload();
+      cy.getInputByLabelText('Amount received').clear();
+      cy.getInputByLabelText('Amount received').type('200');
 
-    cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
-
-    cy.getInputByLabelText('Amount received').should('have.value', '200');
-    cy.getInputByLabelText('Amount received').clear();
-    cy.getInputByLabelText('Amount received').type('100');
-
-    pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
-
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
-    cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
+      cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
+    });
   });
 
-  it(`should set the fee record status to '${FEE_RECORD_STATUS.MATCH}' if the new payment amount matches the fee record amount`, () => {
-    cy.task(NODE_TASKS.REMOVE_ALL_FEE_RECORDS_FROM_DB);
-    cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
+  describe('when a payment is edited after accessing the edit payment page from the payment details table', () => {
+    it('should return to the payment details page', () => {
+      cy.visit(`/utilisation-reports/${reportId}#payment-details`);
 
-    const payment = aPaymentWithAmount(100);
-    const feeRecord = aFeeRecordWithIdAmountStatusAndPayments(123, 200, FEE_RECORD_STATUS.DOES_NOT_MATCH, [payment]);
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
+      pages.utilisationReportPage.paymentDetailsTab.clickPaymentLink(paymentId);
 
-    cy.reload();
+      cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=payment-details`));
 
-    cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');
+      cy.getInputByLabelText('Amount received').clear();
+      cy.getInputByLabelText('Amount received').type('200');
 
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
-
-    cy.getInputByLabelText('Amount received').should('have.value', '100');
-    cy.getInputByLabelText('Amount received').clear();
-    cy.getInputByLabelText('Amount received').type('200');
-
-    pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
-
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
-    cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('not.exist');
-    cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
+      cy.url().should('eq', relative(`/utilisation-reports/${reportId}#payment-details`));
+    });
   });
 });

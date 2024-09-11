@@ -7,7 +7,7 @@ import {
   EstoreBuyer,
   EstoreDealFolder,
   EstoreFacilityFolder,
-  EstoreDealFiles,
+  EstoreDocument,
   EstoreTermStore,
   EstoreResponse,
   SiteCreationResponse,
@@ -15,12 +15,11 @@ import {
   BuyerFolderResponse,
   DealFolderResponse,
   FacilityFolderResponse,
-  UploadDocumentsResponse,
+  DocumentCreationResponse,
   TermStoreResponse,
   EstoreErrorResponse,
 } from '../../../interfaces';
-import { sendEmail } from '../email.controller';
-import { EMAIL_TEMPLATES, ESTORE_CRON_STATUS, ENDPOINT } from '../../../constants';
+import { ESTORE_CRON_STATUS, ENDPOINT } from '../../../constants';
 import { validUkefId, isValidExporterName, isValidSiteId } from '../../../helpers';
 import { estoreInternalServerError } from '../../../helpers/errors/estore-internal-server-error';
 
@@ -29,7 +28,7 @@ dotenv.config();
 const oneMinute = 1000 * 60; // 60 seconds timeout to handle medium timeouts
 const twoMinutes = 1000 * 120; // 120 seconds timeout to handle long timeouts
 
-const { APIM_ESTORE_URL, APIM_ESTORE_KEY, APIM_ESTORE_VALUE, UKEF_INTERNAL_NOTIFICATION } = process.env;
+const { APIM_ESTORE_URL, APIM_ESTORE_KEY, APIM_ESTORE_VALUE } = process.env;
 const headers = {
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_ESTORE_KEY)]: APIM_ESTORE_VALUE,
@@ -112,19 +111,25 @@ export const siteExists = async (exporterName: string): Promise<SiteExistsRespon
  * Makes a POST request to the eStore API.
  *
  * @param {string} endpoint - The endpoint to call.
- * @param {Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[]}
+ * @param {Estore | EstoreSite[] | EstoreTermStore[] | EstoreBuyer[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDocument[]}
  * data - The data to send in the request.
  * @param {number} timeout - The timeout for the request.
  * @returns {Promise<EstoreResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
 const postToEstore = async (
   endpoint: string,
-  data: Estore | EstoreSite[] | EstoreBuyer[] | EstoreTermStore[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDealFiles[],
+  data: Estore | EstoreSite[] | EstoreTermStore[] | EstoreBuyer[] | EstoreDealFolder | EstoreFacilityFolder[] | EstoreDocument[],
   timeout = 0,
 ): Promise<EstoreResponse | EstoreErrorResponse> => {
   try {
     console.info('Invoking eStore endpoint %s with payload %o', endpoint, data);
-    const response: EstoreResponse = await post(`${APIM_ESTORE_URL}${endpoint}`, data, { headers, timeout });
+    const response: EstoreResponse = await post(`${APIM_ESTORE_URL}${endpoint}`, data, {
+      validateStatus(status) {
+        return customValidateStatus(status);
+      },
+      headers,
+      timeout,
+    });
 
     if (!response) {
       throw new Error('❌ Invalid post to estore response received');
@@ -135,8 +140,7 @@ const postToEstore = async (
       data: response.data,
     };
   } catch (error: unknown) {
-    console.error('❌ Error calling eStore endpoint %s %o, email has been dispatched.', endpoint, error);
-    await sendEmail(EMAIL_TEMPLATES.ESTORE_FAILED, String(UKEF_INTERNAL_NOTIFICATION), data);
+    console.error('❌ Error calling eStore endpoint %s %o', endpoint, error);
     return estoreInternalServerError(error);
   }
 };
@@ -259,14 +263,14 @@ export const createFacilityFolder = async (
  *
  * @param {string} siteId - The ID of the site where the documents will be uploaded.
  * @param {string} dealIdentifier - The identifier of the deal.
- * @param {EstoreDealFiles} file - The file to upload.
+ * @param {EstoreDocument} file - The file to upload.
  * @returns {Promise<UploadDocumentsResponse | EstoreErrorResponse>} A promise that resolves to a response object indicating the status of the operation.
  */
 export const uploadSupportingDocuments = async (
   siteId: string,
   dealIdentifier: string,
-  file: EstoreDealFiles,
-): Promise<UploadDocumentsResponse | EstoreErrorResponse> => {
+  file: EstoreDocument,
+): Promise<DocumentCreationResponse | EstoreErrorResponse> => {
   try {
     if (!isValidSiteId(siteId) || !validUkefId(dealIdentifier)) {
       console.error('Invalid site or deal ID %s %s', siteId, dealIdentifier);

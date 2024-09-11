@@ -1,10 +1,10 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { ApiError, UtilisationReportEntity, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { EntityManager } from 'typeorm';
 import { DeletePaymentRequest, deletePayment } from '.';
-import { aTfmSessionUser } from '../../../../../test-helpers';
+import { aTfmSessionUser, aUtilisationReport } from '../../../../../test-helpers';
 import { DeletePaymentPayload } from '../../../routes/middleware/payload-validation/validate-delete-payment-payload';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
@@ -14,12 +14,6 @@ jest.mock('../../../../helpers');
 jest.mock('../../../../services/state-machines/utilisation-report/utilisation-report.state-machine');
 
 console.error = jest.fn();
-
-class TestApiError extends ApiError {
-  constructor(status?: number, message?: string) {
-    super({ status: status ?? 500, message: message ?? '' });
-  }
-}
 
 describe('delete-payment.controller', () => {
   describe('deletePayment', () => {
@@ -161,7 +155,7 @@ describe('delete-payment.controller', () => {
       expect(res._getData()).toBe(`Failed to delete payment with id ${paymentId}: ${errorMessage}`);
     });
 
-    it("responds with a '500' if an unknown error occurs", async () => {
+    it(`responds with a ${HttpStatusCode.InternalServerError} if an unknown error occurs`, async () => {
       // Arrange
       const req = httpMocks.createRequest<DeletePaymentRequest>({
         params: aValidRequestQuery(),
@@ -194,9 +188,5 @@ describe('delete-payment.controller', () => {
       // Assert
       expect(res._getData()).toBe(`Failed to delete payment with id ${paymentId}`);
     });
-
-    function aUtilisationReport(): UtilisationReportEntity {
-      return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    }
   });
 });

@@ -1,6 +1,6 @@
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const gefApplicationDetails = require('../../../../../gef/cypress/e2e/pages/application-details');
+const { headingCaption } = require('../../../../../gef/cypress/e2e/partials');
 const gefProblemWithService = require('../../../../../gef/cypress/e2e/pages/login/sign-in-link');
 const BssEwcsApplicationDetails = require('../../pages/contract');
 const BssEwcsProblemWithService = require('../../pages/login/sign-in-link');
@@ -32,7 +32,7 @@ context('Should get problem with service page when visiting BSS/EWCS with GEF de
 
     it('Ensure GEF application exist', () => {
       cy.visit(relative(`/gef/application-details/${gefDealId}`));
-      gefApplicationDetails.captionHeading().should('exist');
+      headingCaption().should('exist');
     });
 
     it('Ensure BSS/EWCS application exist', () => {

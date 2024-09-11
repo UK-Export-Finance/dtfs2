@@ -4,6 +4,7 @@ import api from '../../../api';
 import { ConfirmDeletePaymentViewModel } from '../../../types/view-models';
 import { aPayment, aPaymentDetailsWithoutFeeRecordsResponseBody, aTfmSessionUser } from '../../../../test-helpers';
 import { GetPaymentDetailsWithoutFeeRecordsResponseBody } from '../../../api-response-types';
+import { RECONCILIATION_FOR_REPORT_TABS } from '../../../constants/reconciliation-for-report-tabs';
 
 console.error = jest.fn();
 
@@ -202,12 +203,13 @@ describe('controllers/utilisation-reports/confirm-delete-payment', () => {
       it('redirects to the edit payment url with the same report id and payment id specified in the request params', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
+        req.query.redirectTab = RECONCILIATION_FOR_REPORT_TABS.PREMIUM_PAYMENTS;
 
         // Act
         await postConfirmDeletePayment(req, res);
 
         // Assert
-        expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
+        expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`);
       });
     });
 

@@ -1,6 +1,6 @@
 import relative from '../../relativeURL';
+import { submitButton } from '../../partials';
 import applicationDetails from '../../pages/application-details';
-import automaticCover from '../../pages/automatic-cover';
 import applicationSubmission from '../../pages/application-submission';
 import { BANK1_MAKER1, BANK1_MAKER_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import applicationPreview from '../../pages/application-preview';
@@ -37,12 +37,12 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
       // Make the deal an Automatic Inclusion Application
       applicationDetails.automaticCoverDetailsLink().click();
       cy.automaticEligibilityCriteria();
-      automaticCover.saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       // submit the deal
-      applicationDetails.submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.commentsField().type('DTFS2-4698 Comments from original maker');
-      applicationSubmission.submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 
       // login as a MAKER_CHECKER and return to the maker with a comment.
@@ -50,7 +50,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       applicationPreview.returnButton().click();
       returnToMaker.comment().type('nope');
-      returnToMaker.submitButton().click();
+      cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
@@ -66,11 +66,11 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
 
       // it allows the MAKER_CHECKER to submit to be checked at the bank
       // submit the application to be checked again
-      applicationDetails.submitButton().click();
+      cy.clickSubmitButton();
 
       // it allows the maker to optionally add additional comments
       applicationSubmission.commentsField().type('Hello');
-      applicationSubmission.submitButton().click();
+      cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 
       // it changes the status to Ready for Checker's approval
@@ -79,7 +79,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
       statusBanner.bannerStatus().contains("Ready for Checker's approval");
 
       // the ability to return the application or submit to ukef should not be visible
-      applicationPreview.submitButton().should('not.exist');
+      submitButton().should('not.exist');
       applicationPreview.returnButton().should('not.exist');
     });
   });

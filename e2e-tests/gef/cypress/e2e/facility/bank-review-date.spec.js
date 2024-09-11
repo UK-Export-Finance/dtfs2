@@ -1,4 +1,5 @@
 import relative from '../relativeURL';
+import { backLink, headingCaption, continueButton, saveAndReturnButton, errorSummary } from '../partials';
 import bankReviewDate from '../pages/bank-review-date';
 import aboutFacility from '../pages/about-facility';
 import {
@@ -9,9 +10,10 @@ import {
   todayDay,
   todayMonth,
   todayYear,
-  yesterdayDay,
-  yesterdayMonth,
-  yesterdayYear,
+  twoYears,
+  tomorrow,
+  yesterday,
+  sixYearsOneDay,
 } from '../../../../e2e-fixtures/dateConstants';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -58,24 +60,24 @@ context('Bank Review Date Page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
       aboutFacility.isUsingFacilityEndDateNo().click();
-      aboutFacility.saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.backLink();
-      bankReviewDate.headingCaption();
+      backLink();
+      headingCaption();
       bankReviewDate.bankReviewDateDay();
       bankReviewDate.bankReviewDateMonth();
       bankReviewDate.bankReviewDateYear();
       bankReviewDate.bankReviewDateDetails();
-      bankReviewDate.continueButton();
-      bankReviewDate.saveAndReturnButton();
+      continueButton();
+      saveAndReturnButton();
     });
 
     it('redirects the user to `About this facility` page when clicking on back link', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.backLink().click();
+      cy.clickBackLink();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
     });
@@ -83,14 +85,14 @@ context('Bank Review Date Page', () => {
     it('validates the form when clicking on Continue', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.continueButton().click();
-      bankReviewDate.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       bankReviewDate.bankReviewDateError();
     });
 
     it('redirects user to application page when clicking on `save and return` button', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-      bankReviewDate.saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
     });
 
@@ -99,19 +101,17 @@ context('Bank Review Date Page', () => {
 
       bankReviewDate.bankReviewDateDay().clear().type(todayDay);
       bankReviewDate.bankReviewDateMonth().clear();
-      bankReviewDate.saveAndReturnButton().click();
-      bankReviewDate.errorSummary();
+      cy.clickSaveAndReturnButton();
+      errorSummary();
       bankReviewDate.bankReviewDateError();
     });
 
     it('redirects user to application page when clicking on `save and return` button and form has been successfully filled in', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.bankReviewDateDay().clear().type(todayDay);
-      bankReviewDate.bankReviewDateMonth().clear().type(todayMonth);
-      bankReviewDate.bankReviewDateYear().clear().type(nextYear);
+      cy.fillInBankReviewDate(twoYears);
 
-      bankReviewDate.saveAndReturnButton().click();
+      cy.clickSaveAndReturnButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
     });
@@ -128,26 +128,22 @@ context('Bank Review Date Page', () => {
       aboutFacility.coverEndDateYear().clear().type(nextYear);
       aboutFacility.isUsingFacilityEndDateNo().click();
 
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.bankReviewDateDay().clear().type(todayDay);
-      bankReviewDate.bankReviewDateMonth().clear().type(todayMonth);
-      bankReviewDate.bankReviewDateYear().clear().type(todayYear);
+      cy.fillInBankReviewDate(today);
 
-      bankReviewDate.continueButton().click();
-      bankReviewDate.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       bankReviewDate.bankReviewDateError();
 
-      bankReviewDate.bankReviewDateDay().clear().type(tomorrowDay);
-      bankReviewDate.bankReviewDateMonth().clear().type(tomorrowMonth);
-      bankReviewDate.bankReviewDateYear().clear().type(tomorrowYear);
+      cy.fillInBankReviewDate(tomorrow);
 
-      bankReviewDate.continueButton().click();
-      bankReviewDate.errorSummary().should('not.exist');
+      cy.clickContinueButton();
+      errorSummary().should('not.exist');
     });
 
     it('when cover start date is not given, it validates bank review date is after today', () => {
@@ -159,54 +155,37 @@ context('Bank Review Date Page', () => {
       aboutFacility.coverEndDateYear().clear().type(nextYear);
       aboutFacility.isUsingFacilityEndDateNo().click();
 
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.bankReviewDateDay().clear().type(yesterdayDay);
-      bankReviewDate.bankReviewDateMonth().clear().type(yesterdayMonth);
-      bankReviewDate.bankReviewDateYear().clear().type(yesterdayYear);
+      cy.fillInBankReviewDate(yesterday);
 
-      bankReviewDate.continueButton().click();
-      bankReviewDate.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       bankReviewDate.bankReviewDateError();
 
-      bankReviewDate.bankReviewDateDay().clear().type(todayDay);
-      bankReviewDate.bankReviewDateMonth().clear().type(todayMonth);
-      bankReviewDate.bankReviewDateYear().clear().type(todayYear);
+      cy.fillInBankReviewDate(today);
 
-      bankReviewDate.continueButton().click();
-      bankReviewDate.errorSummary().should('not.exist');
+      cy.clickContinueButton();
+      errorSummary().should('not.exist');
     });
 
     it('validates bank review date is less than 6 years in the future', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate
-        .bankReviewDateDay()
-        .clear()
-        .type(today.getDate() + 1);
-      bankReviewDate
-        .bankReviewDateMonth()
-        .clear()
-        .type(today.getMonth() + 1);
-      bankReviewDate
-        .bankReviewDateYear()
-        .clear()
-        .type(today.getFullYear() + 7);
+      cy.fillInBankReviewDate(sixYearsOneDay);
 
-      bankReviewDate.continueButton().click();
-      bankReviewDate.errorSummary();
+      cy.clickContinueButton();
+      errorSummary();
       bankReviewDate.bankReviewDateError();
     });
 
     it('redirects the user to `provided facility` page when form has been successfully filled in', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.bankReviewDateDay().clear().type(todayDay);
-      bankReviewDate.bankReviewDateMonth().clear().type(todayMonth);
-      bankReviewDate.bankReviewDateYear().clear().type(nextYear);
+      cy.fillInBankReviewDate(twoYears);
 
-      bankReviewDate.continueButton().click();
+      cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
     });
@@ -214,19 +193,17 @@ context('Bank Review Date Page', () => {
     it('stores the inputted values', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.bankReviewDateDay().clear().type(todayDay);
-      bankReviewDate.bankReviewDateMonth().clear().type(todayMonth);
-      bankReviewDate.bankReviewDateYear().clear().type(nextYear);
+      cy.fillInBankReviewDate(twoYears);
 
-      bankReviewDate.continueButton().click();
+      cy.clickContinueButton();
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-      bankReviewDate.bankReviewDateDay().should('have.value', today.getDate());
-      bankReviewDate.bankReviewDateMonth().should('have.value', today.getMonth() + 1);
-      bankReviewDate.bankReviewDateYear().should('have.value', today.getFullYear() + 1);
+      bankReviewDate.bankReviewDateDay().should('have.value', twoYears.getDate());
+      bankReviewDate.bankReviewDateMonth().should('have.value', twoYears.getMonth() + 1);
+      bankReviewDate.bankReviewDateYear().should('have.value', twoYears.getFullYear());
     });
 
-    it('redirects to the Application Details page when using facility end date ', () => {
+    it('redirects to the About Facility page when using facility end date ', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.facilityName().clear().type('Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
@@ -234,17 +211,17 @@ context('Bank Review Date Page', () => {
       aboutFacility.coverEndDateMonth().clear().type(todayMonth);
       aboutFacility.coverEndDateYear().clear().type(nextYear);
       aboutFacility.isUsingFacilityEndDateYes().click();
-      aboutFacility.continueButton().click();
+      cy.clickContinueButton();
 
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
     });
   } else {
-    it('redirects to application details page', () => {
+    it('redirects to about facility page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
+      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
     });
   }
 });

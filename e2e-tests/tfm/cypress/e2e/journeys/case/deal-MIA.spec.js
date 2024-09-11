@@ -3,7 +3,8 @@ import relative from '../../relativeURL';
 import pages from '../../pages';
 import partials from '../../partials';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
-import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
+import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../e2e-fixtures';
+import { DATE_FORMATS } from '../../../fixtures/constants';
 
 context('User can view a case deal', () => {
   let dealId;
@@ -43,19 +44,9 @@ context('User can view a case deal', () => {
   });
 
   it('should render case summary fields', () => {
-    partials.caseSummary
-      .dealSubmissionType()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(MOCK_DEAL_MIA.submissionType);
-      });
+    cy.assertText(partials.caseSummary.dealSubmissionType(), MOCK_DEAL_MIA.submissionType);
 
-    partials.caseSummary
-      .exporterName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(MOCK_DEAL_MIA.exporter.companyName);
-      });
+    cy.assertText(partials.caseSummary.exporterName(), MOCK_DEAL_MIA.exporter.companyName);
   });
 
   describe('Bank security section', () => {
@@ -81,10 +72,10 @@ context('User can view a case deal', () => {
         dealFacilities[0]['coverEndDate-day'],
       );
       // formats to correct format in table
-      const coverEndDate = format(coverEndDateRaw, 'dd MMMM yyyy');
+      const coverEndDate = format(coverEndDateRaw, DATE_FORMATS.FULL);
 
-      facilityRow.facilityEndDate().contains(coverEndDate);
-      facilityRow.facilityEndDate().contains('(expected)');
+      facilityRow.facilityCoverEndDate().contains(coverEndDate);
+      facilityRow.facilityCoverEndDate().contains('(expected)');
     });
 
     it('clicking `Facility ID` link should take user to facility details page', () => {

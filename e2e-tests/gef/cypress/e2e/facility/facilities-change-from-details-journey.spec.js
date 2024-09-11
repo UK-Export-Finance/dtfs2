@@ -1,15 +1,10 @@
 import relative from '../relativeURL';
 import applicationDetails from '../pages/application-details';
-import facilities from '../pages/facilities';
 import aboutFacility from '../pages/about-facility';
-import providedFacility from '../pages/provided-facility';
-import facilityValue from '../pages/facility-value';
-import facilityCurrency from '../pages/facility-currency';
 import facilityGuarantee from '../pages/facility-guarantee';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import bankReviewDate from '../pages/bank-review-date';
 import facilityEndDate from '../pages/facility-end-date';
-import { todayDay, todayMonth, todayYear } from '../../../../e2e-fixtures/dateConstants';
+import { todayDay, todayMonth, todayYear, today } from '../../../../e2e-fixtures/dateConstants';
 
 const applications = [];
 let token;
@@ -52,7 +47,7 @@ context('Changing facility details from application-details page should take you
     it('should take you to about-facility page from hasBeenIssued page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}`));
       applicationDetails.facilitySummaryListTable(0).hasBeenIssuedAction().click();
-      facilities.continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/about-facility`));
     });
 
@@ -60,7 +55,7 @@ context('Changing facility details from application-details page should take you
       it('should take you to provided-facility page from about-facility page', () => {
         cy.visit(relative(`/gef/application-details/${application.id}`));
         applicationDetails.facilitySummaryListTable(0).nameAction().click();
-        aboutFacility.continueButton().click();
+        cy.clickContinueButton();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));
       });
     } else {
@@ -68,7 +63,7 @@ context('Changing facility details from application-details page should take you
         cy.visit(relative(`/gef/application-details/${application.id}`));
         applicationDetails.facilitySummaryListTable(0).nameAction().click();
         aboutFacility.isUsingFacilityEndDateNo().click();
-        aboutFacility.continueButton().click();
+        cy.clickContinueButton();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/bank-review-date`));
       });
 
@@ -77,10 +72,8 @@ context('Changing facility details from application-details page should take you
 
         applicationDetails.facilitySummaryListTable(0).bankReviewDateAction().click();
 
-        bankReviewDate.bankReviewDateDay().type(todayDay);
-        bankReviewDate.bankReviewDateMonth().type(todayMonth);
-        bankReviewDate.bankReviewDateYear().type(todayYear);
-        bankReviewDate.continueButton().click();
+        cy.fillInBankReviewDate(today);
+        cy.clickContinueButton();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));
       });
 
@@ -88,7 +81,7 @@ context('Changing facility details from application-details page should take you
         cy.visit(relative(`/gef/application-details/${application.id}`));
         applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().click();
         aboutFacility.isUsingFacilityEndDateYes().click();
-        aboutFacility.continueButton().click();
+        cy.clickContinueButton();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/facility-end-date`));
       });
 
@@ -100,7 +93,7 @@ context('Changing facility details from application-details page should take you
         facilityEndDate.facilityEndDateDay().type(todayDay);
         facilityEndDate.facilityEndDateMonth().type(todayMonth);
         facilityEndDate.facilityEndDateYear().type(Number(todayYear) + 1);
-        bankReviewDate.continueButton().click();
+        cy.clickContinueButton();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));
       });
     }
@@ -108,21 +101,21 @@ context('Changing facility details from application-details page should take you
     it('should take you to facility-currency page from provided-facility page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}`));
       applicationDetails.facilitySummaryListTable(0).facilityProvidedOnAction().click();
-      providedFacility.continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/facility-currency`));
     });
 
     it('should take you to facility-value page from facility-currency page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}`));
       applicationDetails.facilitySummaryListTable(0).valueAction().click();
-      facilityCurrency.continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/facility-value?status=change`));
     });
 
     it('should take you to facility-guarantee page from facility-value page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}`));
       applicationDetails.facilitySummaryListTable(0).coverPercentageAction().click();
-      facilityValue.continueButton().click();
+      cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/facility-guarantee`));
     });
 

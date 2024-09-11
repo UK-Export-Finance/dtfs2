@@ -7,8 +7,6 @@ import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
 import caseDealPage from '../../pages/caseDealPage';
 
-const tfmFacilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
-
 context('Amendments changes displayed - multiple single change amendments', () => {
   let dealId;
   const dealFacilities = [];
@@ -73,10 +71,6 @@ context('Amendments changes displayed - multiple single change amendments', () =
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.twoMonthsYear);
     amendmentsPage.continueAmendment().click();
 
-    if (tfmFacilityEndDateEnabled) {
-      amendmentsPage.navigateThroughFacilityEndDateAmendmentPages();
-    }
-
     cy.url().should('contain', 'check-answers');
     amendmentsPage.continueAmendment().click();
   });
@@ -130,7 +124,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().should('not.contain', '23 months');
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityEndDate().contains(dateConstants.twoMonthsFormattedTable);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.twoMonthsFormattedTable);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);

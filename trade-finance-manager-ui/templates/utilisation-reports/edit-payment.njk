@@ -6,7 +6,7 @@
 {% import "./_macros/fee-record-details-table.njk" as feeRecordDetailsTable %}
 {% import "./_macros/payment-date-input.njk" as paymentDateInput %}
 {% extends "index.njk" %}
-{% set backLink = {"href": '/utilisation-reports/' + reportId} %}
+{% set backLink = {"href": backLinkHref} %}
 {% block pageTitle %}
   {% if errors.errorSummary | length %}Error - {% endif %}
   Edit payment
@@ -37,7 +37,8 @@
       reportId: reportId,
       paymentId: paymentId,
       csrfToken: csrfToken,
-      errorMessage: errors.removeSelectedFeesErrorMessage
+      errorMessage: errors.removeSelectedFeesErrorMessage,
+      redirectTab: redirectTab
     }) }}
     <h2 class="govuk-heading-m govuk-!-margin-top-6">
       Payment details
@@ -85,20 +86,20 @@
     <div class="govuk-button-group">
       <input
         class="govuk-button govuk-!-margin-right-3"
-        formaction="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentId }}"
+        formaction="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentId }}?redirectTab={{ redirectTab }}"
         value="Save changes"
         data-module="govuk-button"
         type="submit"
         data-cy="save-changes-button"/>
-        {{ govukButton({
-      text: "Delete payment",
-      classes: "govuk-button--warning",
-      href: ["/utilisation-reports/", reportId, "/edit-payment/", paymentId, "/confirm-delete"] | join,
-      attributes: {
-        "data-cy": "delete-payment-button"
-      }
-    }) }}
-      <a href="/utilisation-reports/{{ reportId }}" data-cy="cancel-edit-payment-link">Cancel</a>
+      {{ govukButton({
+        text: "Delete payment",
+        classes: "govuk-button--warning",
+        href: ["/utilisation-reports/", reportId, "/edit-payment/", paymentId, "/confirm-delete?redirectTab=", redirectTab] | join,
+        attributes: {
+          "data-cy": "delete-payment-button"
+        }
+      }) }}
+      <a href="{{ backLinkHref }}" data-cy="cancel-edit-payment-link">Cancel</a>
     </div>
   </form>
 {% endblock %}

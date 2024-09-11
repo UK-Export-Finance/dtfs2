@@ -1,5 +1,6 @@
+const { DEAL_TYPE } = require('@ukef/dtfs2-common');
 const { validationErrorHandler, stringToBoolean } = require('../../utils/helpers');
-const { DEAL_SUBMISSION_TYPE, DEAL_TYPE } = require('../../constants');
+const { DEAL_SUBMISSION_TYPE } = require('../../constants');
 const { getValidationErrors, deriveCoverType } = require('./helpers');
 
 const api = require('../../services/api');
