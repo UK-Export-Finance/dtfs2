@@ -42,10 +42,11 @@
     "type-check": "tsc --noEmit --pretty",
     "typeorm": "typeorm-ts-node-commonjs",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
-    "unit-test-dev": "jest --verbose --config=unit.jest.config.js"
+    "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
+    "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "big.js": "^6.2.1",
     "date-fns": "^3.3.1",
     "date-fns-tz": "^2.0.1",

@@ -1,12 +1,6 @@
-import {
-  Currency,
-  FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
-  PaymentEntity,
-  PaymentEntityMockBuilder,
-  UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+import { Currency, FeeRecordEntity, FeeRecordEntityMockBuilder, PaymentEntity, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
 import { KeyingSheetFeePaymentShare, getKeyingSheetFeePaymentSharesForFeeRecords } from './get-keying-sheet-fee-payment-shares-for-fee-records';
+import { aUtilisationReport } from '../../../../../../test-helpers';
 
 describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
   describe('when there is one fee record linked to one payment', () => {
@@ -402,8 +396,4 @@ describe('getKeyingSheetFeePaymentSharesForFeeRecords', () => {
       expect(result).toHaveLength(0);
     });
   });
-
-  function aUtilisationReport() {
-    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-  }
 });

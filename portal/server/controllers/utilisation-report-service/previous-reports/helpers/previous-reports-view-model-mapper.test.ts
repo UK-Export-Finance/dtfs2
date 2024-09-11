@@ -1,8 +1,7 @@
-import { UtilisationReportReconciliationStatus } from '@ukef/dtfs2-common';
+import { UtilisationReportReconciliationStatus, aPortalSessionUser } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '../../../../api-response-types';
 import { mapToPreviousReportsViewModel } from './previous-reports-view-model-mapper';
-import { aPortalSessionUser } from '../../../../../test-helpers/test-data/portal-session-user';
 import { aUtilisationReportResponse } from '../../../../../test-helpers/test-data/utilisation-report';
 
 describe('previous-reports-view-model-mapper', () => {

@@ -1,6 +1,5 @@
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
-import { ObjectId } from 'mongodb';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 import { UKEF_ID, ESTORE_CRON_STATUS } from '../../src/constants';
@@ -14,7 +13,14 @@ const payload: Estore = {
   dealId: '6597dffeb5ef5ff4267e5044',
   siteId: 'ukef',
   facilityIdentifiers: [1234567890, 1234567891],
-  supportingInformation: ['test'],
+  supportingInformation: [
+    {
+      documentType: 'test',
+      fileName: 'test.docx',
+      fileLocationPath: 'directory/',
+      parentId: 'abc',
+    },
+  ],
   exporterName: 'testName',
   buyerName: 'testBuyer',
   dealIdentifier: '1234567890',
@@ -143,7 +149,7 @@ describe('/estore', () => {
 
       // Look up for the deal ID in the collection
       expect(mockFindOne).toHaveBeenCalledTimes(1);
-      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: new ObjectId(payload.dealId) } });
+      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: payload.dealId } });
 
       // Insert a new entry in the collection
       expect(mockInsertOne).toHaveBeenCalledTimes(1);
@@ -156,6 +162,7 @@ describe('/estore', () => {
           buyer: { status: ESTORE_CRON_STATUS.PENDING },
           deal: { status: ESTORE_CRON_STATUS.PENDING },
           facility: { status: ESTORE_CRON_STATUS.PENDING },
+          document: { status: ESTORE_CRON_STATUS.PENDING },
         },
       });
     });
@@ -166,7 +173,7 @@ describe('/estore', () => {
       await post(payload).to('/estore');
 
       // Look up for the deal ID in the collection
-      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: new ObjectId(payload.dealId) } });
+      expect(mockFindOne).toHaveBeenCalledWith({ 'payload.dealId': { $eq: payload.dealId } });
 
       // Insert a new entry in the collection
       expect(mockInsertOne).not.toHaveBeenCalled();

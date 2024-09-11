@@ -4,6 +4,7 @@ import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
 
 type MarkAsReconciledEventPayload = {
   transactionEntityManager: EntityManager;
+  reconciledByUserId: string;
   requestSource: DbRequestSource;
 };
 
@@ -19,8 +20,8 @@ export type FeeRecordMarkAsReconciledEvent = BaseFeeRecordEvent<'MARK_AS_RECONCI
  */
 export const handleFeeRecordMarkAsReconciledEvent = async (
   feeRecord: FeeRecordEntity,
-  { transactionEntityManager, requestSource }: MarkAsReconciledEventPayload,
+  { transactionEntityManager, reconciledByUserId, requestSource }: MarkAsReconciledEventPayload,
 ): Promise<FeeRecordEntity> => {
-  feeRecord.updateWithStatus({ status: 'RECONCILED', requestSource });
+  feeRecord.markAsReconciled({ reconciledByUserId, requestSource });
   return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
 };

@@ -5,6 +5,10 @@ import { seedUtilisationReports } from './utilisation-report';
 import { seedFeeRecordPaymentGroups } from './fee-record-payment-group';
 import { mongoDbClient } from './mongo-db-client';
 
+/**
+ * Clears the database
+ * @param dataSource - The SQL data source
+ */
 const clearDatabase = async (dataSource: DataSource): Promise<void> => {
   await dataSource.manager.delete(PaymentEntity, {});
   await dataSource.manager.delete(FeeRecordEntity, {});
@@ -13,11 +17,18 @@ const clearDatabase = async (dataSource: DataSource): Promise<void> => {
   await dataSource.manager.delete(FacilityUtilisationDataEntity, {});
 };
 
+/**
+ * Seeds data
+ * @param dataSource - The SQL data source
+ */
 const seedData = async (dataSource: DataSource): Promise<void> => {
   await seedUtilisationReports(dataSource);
   await seedFeeRecordPaymentGroups(dataSource);
 };
 
+/**
+ * Runs the seeder
+ */
 const run = async (): Promise<void> => {
   const dataSource = await SqlDbDataSource.initialize();
   try {
