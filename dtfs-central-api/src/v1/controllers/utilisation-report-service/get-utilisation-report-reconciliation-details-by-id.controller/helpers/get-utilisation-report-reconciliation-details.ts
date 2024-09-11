@@ -15,6 +15,7 @@ import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
  * @throws {Error} If the report has not been uploaded
  * @throws {NotFoundError} If a bank cannot be found with the matching bank id
  */
+// TODO FN-2311: Can we take in our nice filter group for the PP tab instead of just the facilityId field?
 export const getUtilisationReportReconciliationDetails = async (
   utilisationReport: UtilisationReportEntity,
   facilityIdFilter: string | undefined,
@@ -34,9 +35,11 @@ export const getUtilisationReportReconciliationDetails = async (
 
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroups(feeRecords);
 
-  const feeRecordPaymentGroups = await mapToFeeRecordPaymentGroups(
-    facilityIdFilter ? filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityIdFilter) : feeRecordPaymentEntityGroups,
-  );
+  const unfilteredFeeRecordPaymentGroups = await mapToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
+
+  const premiumPaymentsFeeRecordPaymentGroups = facilityIdFilter
+    ? await mapToFeeRecordPaymentGroups(filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityIdFilter))
+    : unfilteredFeeRecordPaymentGroups;
 
   return {
     reportId: id,
@@ -47,7 +50,8 @@ export const getUtilisationReportReconciliationDetails = async (
     status,
     reportPeriod,
     dateUploaded,
-    feeRecordPaymentGroups,
+    premiumPaymentsFeeRecordPaymentGroups,
+    unfilteredFeeRecordPaymentGroups,
     keyingSheet,
   };
 };

@@ -101,7 +101,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         status: 'PENDING_RECONCILIATION',
         reportPeriod,
         dateUploaded,
-        feeRecordPaymentGroups: [],
+        premiumPaymentsFeeRecordPaymentGroups: [],
+        unfilteredFeeRecordPaymentGroups: [],
         keyingSheet: [],
       });
     });

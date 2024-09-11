@@ -26,6 +26,7 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
   const facilityId = premiumPaymentsTabFilters?.facilityId;
 
   try {
+    // TODO FN-2311: Can we pull out this filter extraction into its own helper method? Provide it with the full filters object for the PP tab, returns an object of the extracted/parsed filters.
     const facilityIdFilter = facilityId && REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityId) ? facilityId : undefined;
 
     const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsWithPayments(Number(reportId));

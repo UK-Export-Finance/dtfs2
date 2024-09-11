@@ -63,22 +63,21 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       facilityId: facilityIdQueryString,
     };
 
-    // TODO FN-2311: Can we get a separate set of payment groups for the PP tab with the filter applied, keep an unfiltered set for PD tab.
-    const { feeRecordPaymentGroups, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
-      reportId,
-      premiumPaymentsTabFilters,
-      userToken,
-    );
+    const { premiumPaymentsFeeRecordPaymentGroups, unfilteredFeeRecordPaymentGroups, reportPeriod, bank, keyingSheet } =
+      await api.getUtilisationReportReconciliationDetailsById(reportId, premiumPaymentsTabFilters, userToken);
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
-    const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(feeRecordPaymentGroups);
+    const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(premiumPaymentsFeeRecordPaymentGroups);
 
-    const feeRecordPaymentGroupViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
+    const feeRecordPaymentGroupViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(
+      premiumPaymentsFeeRecordPaymentGroups,
+      isCheckboxChecked,
+    );
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
-    const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(feeRecordPaymentGroups);
+    const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(unfilteredFeeRecordPaymentGroups);
 
     return renderUtilisationReportReconciliationForReport(res, {
       user,
