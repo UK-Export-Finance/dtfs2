@@ -72,8 +72,8 @@ module.exports = {
       files: ['*.ts'],
       // extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended-type-checked', 'plugin:prettier/recommended'],
       extends: ['plugin:@typescript-eslint/recommended-type-checked', 'plugin:prettier/recommended'],
-      // plugins: ['@typescript-eslint'],
-      // parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint'],
+      parser: '@typescript-eslint/parser',
       parserOptions: {
         ...baseParserOptions,
         project: './tsconfig.eslint.json',
