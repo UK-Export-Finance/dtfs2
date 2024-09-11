@@ -20,7 +20,7 @@ const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, chang
     amendmentsPage.addAmendmentButton().contains('Add an amendment request');
     amendmentsPage.addAmendmentButton().click();
   } else {
-    amendmentsPage.continueAmendmentButton().click();
+    cy.clickContinueButton();
   }
 
   cy.url().should('contain', 'request-date');
