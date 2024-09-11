@@ -30,22 +30,22 @@ context('Bond form - Submit bond with created element on page', () => {
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
     pages.contract.visit(deal);
 
-    pages.contract.addBondButton().click();
+    cy.clickAddBondButton();
 
     fillBondForm.details.facilityStageIssued();
     // inserts text element into form
     cy.insertElement('bond-form');
-    pages.bondDetails.submit().click();
+    cy.clickSubmitButton();
 
     fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
     // inserts text element into form
     cy.insertElement('bond-financial-details-form');
-    pages.bondFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     fillBondForm.feeDetails();
     // insert text element into form
     cy.insertElement('bond-fee-form');
-    pages.bondFeeDetails.submit().click();
+    cy.clickSubmitButton();
 
     // gets deal
     cy.getDeal(deal._id, BANK1_MAKER1).then((updatedDeal) => {

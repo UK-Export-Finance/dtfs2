@@ -123,7 +123,7 @@ context('Delete a Loan', () => {
     loanToDeleteRow.deleteLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanToDeleteId}/delete`));
 
-    pages.loanDelete.submit().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative(`/contract/${dealId}`));
 

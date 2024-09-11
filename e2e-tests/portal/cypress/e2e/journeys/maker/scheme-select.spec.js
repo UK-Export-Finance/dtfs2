@@ -17,7 +17,7 @@ context('Select a scheme', () => {
     cy.url().should('eq', relative('/select-scheme'));
     cy.title().should('eq', `What scheme do you want to apply for?${pages.defaults.pageTitleAppend}`);
 
-    partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummaryLinks().should('have.length', 1);
     pages.selectScheme.schemeError('Select which scheme you want to apply for');
   });
 

@@ -1,15 +1,14 @@
-const pages = require('../../e2e/pages');
 const fillBondForm = require('../../e2e/journeys/maker-bond/fill-bond-forms');
 
 module.exports = () => {
-  pages.contract.addBondButton().click();
+  cy.clickAddBondButton();
 
   fillBondForm.details.facilityStageIssued();
-  pages.bondDetails.submit().click();
+  cy.clickSubmitButton();
 
   fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
-  pages.bondFinancialDetails.submit().click();
+  cy.clickSubmitButton();
 
   fillBondForm.feeDetails();
-  pages.bondFeeDetails.submit().click();
+  cy.clickSubmitButton();
 };

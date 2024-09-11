@@ -71,7 +71,7 @@ context('Maker fills in bond & loan issue facility forms without requested cover
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     // submit deal for review
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
 
     pages.contractReadyForReview.comments().type('Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();

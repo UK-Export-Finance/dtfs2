@@ -49,7 +49,7 @@ context('Dashboard Facilities - Name link', () => {
     contract.bondTransactionsTable.row(facilityId).uniqueNumberLink().click();
     bondDetails.facilityStageIssuedInput().click();
     bondDetails.nameInput().type('Test');
-    bondDetails.saveGoBackButton().click();
+    cy.clickSaveGoBackButton();
     // checks name is set
     dashboardFacilities.visit();
     cy.get(`[data-cy="facility__name--link--${facilityId}"]`).contains('Test');

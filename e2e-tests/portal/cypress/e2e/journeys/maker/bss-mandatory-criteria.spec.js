@@ -42,13 +42,13 @@ context('BSS Mandatory criteria: Check deal details page', () => {
     cy.url().should('include', '/clone/before-you-start');
 
     pages.beforeYouStart.true().click();
-    pages.beforeYouStart.submit().click();
+    cy.clickSubmitButton();
 
     cy.url().should('include', '/contract');
     cy.url().should('include', '/clone');
     pages.cloneDeal.cloneTransactionsInput().click();
 
-    pages.cloneDeal.submit().click();
+    cy.clickSubmitButton();
 
     cy.url().should('include', '/dashboard/');
 

@@ -31,19 +31,19 @@ context('Ensure proceed to review button is only visible once facilities are in 
     pages.contract.proceedToReview().should('not.exist');
 
     // Add bond
-    pages.contract.addBondButton().click();
+    cy.clickAddBondButton();
 
     // Bond details
     fillBondForm.details.facilityStageUnissued();
-    pages.bondFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Financial details
     fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
-    pages.bondFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Fee details
     fillBondForm.feeDetails();
-    pages.bondFeeDetails.submit().click();
+    cy.clickSubmitButton();
   });
 
   it('Add an un-issued (conditional) loan', () => {
@@ -54,19 +54,19 @@ context('Ensure proceed to review button is only visible once facilities are in 
     pages.contract.visit(deal);
 
     // Add loan
-    pages.contract.addLoanButton().click();
+    cy.clickAddLoanButton();
 
     // Loan details
     fillLoanForm.guaranteeDetails.facilityStageConditional();
-    pages.loanFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Financial details
     fillLoanForm.financialDetails.currencySameAsSupplyContractCurrency();
-    pages.loanFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Fee details
     fillLoanForm.datesRepayments.inAdvanceAnnually();
-    pages.loanFinancialDetails.submit().click();
+    cy.clickSubmitButton();
   });
 
   it('Ensure proceed to review button is visible', () => {
@@ -88,19 +88,19 @@ context('Ensure proceed to review button is only visible once facilities are in 
     pages.contract.visit(deal);
 
     // Add bond
-    pages.contract.addBondButton().click();
+    cy.clickAddBondButton();
 
     // Bond details
     fillBondForm.details.facilityStageIssued();
-    pages.bondFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Financial details
     fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
-    pages.bondFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Fee details
     fillBondForm.feeDetails();
-    pages.bondFeeDetails.submit().click();
+    cy.clickSubmitButton();
   });
 
   it('Add an issued (unconditional) loan', () => {
@@ -111,19 +111,19 @@ context('Ensure proceed to review button is only visible once facilities are in 
     pages.contract.visit(deal);
 
     // Add loan
-    pages.contract.addLoanButton().click();
+    cy.clickAddLoanButton();
 
     // Loan details
     fillLoanForm.guaranteeDetails.facilityStageUnconditional();
-    pages.loanFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Financial details
     fillLoanForm.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
-    pages.loanFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Fee details
     fillLoanForm.datesRepayments.inAdvanceAnnually();
-    pages.loanFinancialDetails.submit().click();
+    cy.clickSubmitButton();
   });
 
   it('Ensure proceed to review button is visible', () => {
@@ -145,20 +145,20 @@ context('Ensure proceed to review button is only visible once facilities are in 
     pages.contract.visit(deal);
 
     // Add loan
-    pages.contract.addLoanButton().click();
+    cy.clickAddLoanButton();
 
     // Loan details
     fillLoanForm.guaranteeDetails.facilityStageUnconditional();
-    pages.loanFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Financial details - Do not fill in
-    pages.loanFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Fee details
     cy.assertText(partials.taskListHeader.itemStatus('loan-financial-details'), 'Incomplete');
 
     fillLoanForm.datesRepayments.inAdvanceAnnually();
-    pages.loanFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Navigate to the deal in question
     pages.contract.visit(deal);

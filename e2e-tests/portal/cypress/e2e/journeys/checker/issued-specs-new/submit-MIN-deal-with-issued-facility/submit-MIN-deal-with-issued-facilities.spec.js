@@ -74,7 +74,7 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     cy.assertText(loanRow.loanStatus(), 'Completed');
 
     // submit deal for review
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
 
     pages.contractReadyForReview.comments().type('Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
@@ -90,7 +90,7 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
 
     cy.assertText(loanRow.loanStatus(), 'Ready for check');
 
-    pages.contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     pages.contractConfirmSubmission.confirmSubmit().check();
     pages.contractConfirmSubmission.acceptAndSubmit().click();

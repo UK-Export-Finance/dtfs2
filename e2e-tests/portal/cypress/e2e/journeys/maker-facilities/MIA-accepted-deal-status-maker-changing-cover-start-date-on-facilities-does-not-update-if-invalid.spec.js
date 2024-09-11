@@ -69,14 +69,14 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE.getDate());
     pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE.getMonth() + 1);
     pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE.getFullYear());
-    pages.facilityConfirmCoverStartDate.submit().click();
+    cy.clickSubmitButton();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');
 
     //---------------------------------------------------------------
     // go back to the deal page
     //---------------------------------------------------------------
-    pages.facilityConfirmCoverStartDate.cancelButton().click();
+    cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------
@@ -87,14 +87,14 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE.getDate());
     pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE.getMonth() + 1);
     pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE.getFullYear());
-    pages.facilityConfirmCoverStartDate.submit().click();
+    cy.clickSubmitButton();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');
 
     //---------------------------------------------------------------
     // go back to the deal page
     //---------------------------------------------------------------
-    pages.facilityConfirmCoverStartDate.cancelButton().click();
+    cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     //---------------------------------------------------------------

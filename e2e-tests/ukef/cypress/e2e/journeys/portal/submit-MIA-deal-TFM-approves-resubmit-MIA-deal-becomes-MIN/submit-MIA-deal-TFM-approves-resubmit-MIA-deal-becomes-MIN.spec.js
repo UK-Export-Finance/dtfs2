@@ -146,12 +146,12 @@ context('Portal to TFM deal submission', () => {
     const bondRow = portalPages.contract.bondTransactionsTable.row(bondId);
     bondRow.changeOrConfirmCoverStartDateLink().click();
     portalPages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
-    portalPages.facilityConfirmCoverStartDate.submit().click();
+    cy.clickSubmitButton();
 
     const loanRow = portalPages.contract.loansTransactionsTable.row(loanId);
     loanRow.changeOrConfirmCoverStartDateLink().click();
     portalPages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
-    portalPages.facilityConfirmCoverStartDate.submit().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // portal BANK1_MAKER1 submits deal for review

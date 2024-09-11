@@ -16,7 +16,7 @@ describe(page, () => {
   });
 
   it('should render page heading', () => {
-    wrapper.expectText('[data-cy="confirm-and-send-main-heading"]').toRead('File successfully validated');
+    wrapper.expectText('[data-cy="main-heading"]').toRead('File successfully validated');
   });
 
   it('should render paragraph', () => {
