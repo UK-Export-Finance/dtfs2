@@ -49,7 +49,7 @@ describe('controllers - deal cancellation', () => {
       expect(api.updateDealCancellation).toHaveBeenCalledWith({ dealId: mockDealId, dealCancellationUpdate, auditDetails });
     });
 
-    it('should return the deal cancellation on success', async () => {
+    it('should return the deal update object on success', async () => {
       jest.mocked(api.updateDealCancellation).mockResolvedValue(mockUpdateResult);
 
       // Arrange
@@ -64,7 +64,7 @@ describe('controllers - deal cancellation', () => {
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._getData()).toEqual(expect.objectContaining(dealCancellationUpdate));
+      expect(res._getData()).toEqual(expect.objectContaining(mockUpdateResult));
     });
 
     it('should return an error when there is an API error', async () => {
