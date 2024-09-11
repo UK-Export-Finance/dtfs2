@@ -57,12 +57,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     const bondId = dealFacilities.bonds[0]._id;
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-    bondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issue facility');
-      });
+    cy.assertText(bondRow.issueFacilityLink(), 'Issue facility');
 
     bondRow.issueFacilityLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
@@ -71,12 +66,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     // expect issue facility link text to be changed
-    bondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+    cy.assertText(bondRow.issueFacilityLink(), 'Facility issued');
 
     // maker should still be able to navigate to Issue Facility form
     bondRow
@@ -98,12 +88,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     // expect issue facility link text to be changed
-    loanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+    cy.assertText(loanRow.issueFacilityLink(), 'Facility issued');
 
     // maker should still be able to navigate to Issue Facility form
     loanRow
@@ -127,35 +112,14 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     pages.contract.visit(deal);
 
     // expect the deal status to be updated
-    pages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Ready for Checker's approval");
-      });
-
-    pages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Accepted by UKEF (with conditions)');
-      });
+    cy.assertText(pages.contract.status(), "Ready for Checker's approval");
+    cy.assertText(pages.contract.previousStatus(), 'Accepted by UKEF (with conditions)');
 
     // expect the bond status to be updated
-    bondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Ready for check');
-      });
+    cy.assertText(bondRow.bondStatus(), 'Ready for check');
 
     // expect bond issue facility link text to be changed
-    bondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+    cy.assertText(bondRow.issueFacilityLink(), 'Facility issued');
 
     // maker should now not be able to navigate to Issue Facility form
     bondRow
@@ -168,20 +132,10 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     bondRow.deleteLink().should('not.exist');
 
     // expect the loan status to be updated
-    loanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Ready for check');
-      });
+    cy.assertText(loanRow.loanStatus(), 'Ready for check');
 
     // expect loan issue facility link text to be changed
-    loanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+    cy.assertText(loanRow.issueFacilityLink(), 'Facility issued');
 
     // maker should not be able to navigate to Issue Facility form
     loanRow

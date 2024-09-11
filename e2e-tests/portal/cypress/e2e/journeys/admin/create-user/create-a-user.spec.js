@@ -245,13 +245,8 @@ context('Admin user creates a new user', () => {
       createUser.createUser().click();
 
       cy.url().should('eq', relative('/admin/users/'));
-      users
-        .row(validUser)
-        .roles()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(READ_ONLY);
-        });
+
+      cy.assertText(users.row(validUser).roles(), READ_ONLY);
     });
 
     it('should unselect other roles if the read-only role is selected', () => {

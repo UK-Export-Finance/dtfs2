@@ -217,12 +217,8 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
 
       pages.bondIssueFacility.submit().click();
       cy.url().should('eq', relative(`/contract/${dealId}`));
-      bondRow
-        .issueFacilityLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Facility issued');
-        });
+
+      cy.assertText(bondRow.issueFacilityLink(), 'Facility issued');
 
       bondRow.issueFacilityLink().click();
       pages.bondIssueFacility.requestedCoverStartDateDayInput().clear().type(day);
@@ -231,12 +227,8 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
 
       pages.bondIssueFacility.submit().click();
       cy.url().should('eq', relative(`/contract/${dealId}`));
-      bondRow
-        .issueFacilityLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Facility issued');
-        });
+
+      cy.assertText(bondRow.issueFacilityLink(), 'Facility issued');
     });
   });
 
@@ -267,12 +259,8 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
 
       pages.loanIssueFacility.submit().click();
       cy.url().should('eq', relative(`/contract/${dealId}`));
-      loanRow
-        .issueFacilityLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Facility issued');
-        });
+
+      cy.assertText(loanRow.issueFacilityLink(), 'Facility issued');
 
       // cover starts beyond 3 months from submission
       loanRow.issueFacilityLink().click();
@@ -283,12 +271,8 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
 
       pages.loanIssueFacility.submit().click();
       cy.url().should('eq', relative(`/contract/${dealId}`));
-      loanRow
-        .issueFacilityLink()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Facility issued');
-        });
+
+      cy.assertText(loanRow.issueFacilityLink(), 'Facility issued');
     });
   });
 });

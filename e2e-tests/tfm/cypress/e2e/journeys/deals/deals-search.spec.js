@@ -120,73 +120,21 @@ context('User can view and filter multiple deals', () => {
     const TOTAL_DEALS = ALL_SUBMITTED_DEALS.length;
     pages.dealsPage.dealsTableRows().should('have.length', TOTAL_DEALS);
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('All deals');
-      });
+    cy.assertText(pages.dealsPage.heading(), 'All deals');
 
     // test that one deal has correct fields displayed
-    const firstDeal = ALL_SUBMITTED_DEALS[0];
-    const row = pages.dealsPage.dealsTable.row(firstDeal._id);
+    const { _id, dealSnapshot, tfm } = ALL_SUBMITTED_DEALS[0];
 
-    row
-      .dealLinkText()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(firstDeal.dealSnapshot.details.ukefDealId);
-      });
+    const row = pages.dealsPage.dealsTable.row(_id);
 
-    row
-      .product()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(firstDeal.tfm.product);
-      });
-
-    row
-      .submissionType()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(firstDeal.dealSnapshot.submissionType);
-      });
-
-    row
-      .exporterName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(firstDeal.dealSnapshot.exporter.companyName);
-      });
-
-    row
-      .buyerName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(firstDeal.dealSnapshot.submissionDetails['buyer-name']);
-      });
-
-    row
-      .bank()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(firstDeal.dealSnapshot.bank.name);
-      });
-
-    row
-      .stage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(firstDeal.tfm.stage);
-      });
-
-    const todayFormatted = format(new Date(), 'd MMM yyyy');
-    row
-      .dateReceived()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.contain(todayFormatted);
-      });
+    cy.assertText(row.dealLinkText(), dealSnapshot.details.ukefDealId);
+    cy.assertText(row.product(), tfm.product);
+    cy.assertText(row.submissionType(), dealSnapshot.submissionType);
+    cy.assertText(row.exporterName(), dealSnapshot.exporter.companyName);
+    cy.assertText(row.buyerName(), dealSnapshot.submissionDetails['buyer-name']);
+    cy.assertText(row.bank(), dealSnapshot.bank.name);
+    cy.assertText(row.stage(), tfm.stage);
+    cy.assertText(row.dateReceived(), format(new Date(), 'd MMM yyyy'));
   });
 
   it('search/filter by ukefDealId - BSS/EWCS', () => {
@@ -206,19 +154,9 @@ context('User can view and filter multiple deals', () => {
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
 
     if (expectedResultsLength === 1) {
-      pages.dealsPage
-        .heading()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(`${expectedResultsLength} result for "${searchString}"`);
-        });
+      cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} result for "${searchString}"`);
     } else {
-      pages.dealsPage
-        .heading()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(`${expectedResultsLength} results for "${searchString}"`);
-        });
+      cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} result for "${searchString}"`);
     }
   });
 
@@ -234,12 +172,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${expectedResultsLength} result for "${searchString}"`);
-      });
+    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} result for "${searchString}"`);
   });
 
   it('search/filter by bank name', () => {
@@ -252,12 +185,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', dealsWithMakerUkefTestBank.length);
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${dealsWithMakerUkefTestBank.length} results for "${searchString}"`);
-      });
+    cy.assertText(pages.dealsPage.heading(), `${dealsWithMakerUkefTestBank.length} results for "${searchString}"`);
   });
 
   it('search/filter by supplier name', () => {
@@ -268,12 +196,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`1 result for "${searchString}"`);
-      });
+    cy.assertText(pages.dealsPage.heading(), `1 result for "${searchString}"`);
   });
 
   it('search/filter by submission type', () => {
@@ -284,12 +207,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`1 result for "${searchString}"`);
-      });
+    cy.assertText(pages.dealsPage.heading(), `1 result for "${searchString}"`);
   });
 
   it('search/filter by buyer name', () => {
@@ -300,12 +218,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`1 result for "${searchString}"`);
-      });
+    cy.assertText(pages.dealsPage.heading(), `1 result for "${searchString}"`);
   });
 
   it('search/filter by deal stage', () => {
@@ -323,12 +236,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`1 result for "${searchString}"`);
-      });
+    cy.assertText(pages.dealsPage.heading(), `1 result for "${searchString}"`);
   });
 
   it('search/filter by bond productCode', () => {
@@ -352,12 +260,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${expectedResultsLength} results for "${searchString}"`);
-      });
+    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} results for "${searchString}"`);
   });
 
   it('search/filter by loan productCode', () => {
@@ -370,12 +273,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${expectedResultsLength} result for "${searchString}"`);
-      });
+    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} result for "${searchString}"`);
   });
 
   it('search/filter by date received in DD/MM/YYYY format', () => {
@@ -392,12 +290,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${expectedResultsLength} results for "${searchString}"`);
-      });
+    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} results for "${searchString}"`);
   });
 
   it('search/filter by date received in DD-MM-YYYY format', () => {
@@ -414,12 +307,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${expectedResultsLength} results for "${searchString}"`);
-      });
+    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} results for "${searchString}"`);
   });
 
   it('updates heading text and does not render any deals when no results are found', () => {
@@ -432,12 +320,7 @@ context('User can view and filter multiple deals', () => {
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
 
-    pages.dealsPage
-      .heading()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(`${expectedResultsLength} results for "${searchString}"`);
-      });
+    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} results for "${searchString}"`);
   });
 
   it('after a search has been performed, clicking `All deals` nav item returns all deals ', () => {
