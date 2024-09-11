@@ -1,25 +1,25 @@
-import { ObjectId } from 'mongodb';
-import { AUDIT_USER_TYPES_REQUIRING_ID, AuditDetails, Deal, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
-import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
-import { withValidateAuditDetailsTests } from '../../../helpers/with-validate-audit-details.api-tests';
-import wipeDB from '../../../wipeDB';
-import { testApi } from '../../../test-api';
-import { DEALS } from '../../../../src/constants';
-import aDeal from '../../deal-builder';
-import { createDeal } from '../../../helpers/create-deal';
-import { aPortalUser, aTfmUser } from '../../../../test-helpers';
-import { MOCK_PORTAL_USER } from '../../../mocks/test-users/mock-portal-user';
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES_REQUIRING_ID } = require('@ukef/dtfs2-common');
+const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
+const { ObjectId } = require('mongodb');
+const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
+const wipeDB = require('../../../wipeDB');
+const { testApi } = require('../../../test-api');
+const { DEALS } = require('../../../../src/constants');
+const aDeal = require('../../deal-builder');
+const { createDeal } = require('../../../helpers/create-deal');
+const { aPortalUser, aTfmUser } = require('../../../../test-helpers');
+const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 console.error = jest.fn();
 
 describe('PUT TFM deal cancellation', () => {
   let dealId;
-  let dealCancellationUrl: string;
-  let tfmAuditDetails: AuditDetails;
+  let dealCancellationUrl;
+  let tfmAuditDetails;
   let tfmUserId;
 
-  const newDeal: Deal = aDeal({
+  const newDeal = aDeal({
     dealType: DEALS.DEAL_TYPE.BSS_EWCS,
     submissionType: DEALS.SUBMISSION_TYPE.AIN,
   });
@@ -67,7 +67,7 @@ describe('PUT TFM deal cancellation', () => {
     });
 
     it('should update an deal with the deal cancellation based on dealId', async () => {
-      const { status, body } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
+      const { status, body: bodyPutResponse } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
 
       const expected = {
         acknowledged: true,
@@ -76,12 +76,12 @@ describe('PUT TFM deal cancellation', () => {
         upsertedCount: 0,
         matchedCount: 1,
       };
-      expect(body).toEqual(expected);
+      expect(bodyPutResponse).toEqual(expected);
       expect(status).toEqual(200);
     });
 
     it('should return 404 if dealId is valid but NOT associated to a record', async () => {
-      const validButNonExistentDealId = new ObjectId().toString();
+      const validButNonExistentDealId = new ObjectId();
 
       const { status } = await testApi
         .put({ dealCancellationUpdate, auditDetails: tfmAuditDetails })
