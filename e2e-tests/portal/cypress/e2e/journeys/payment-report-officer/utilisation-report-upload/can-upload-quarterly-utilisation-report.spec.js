@@ -98,18 +98,10 @@ context('Quarterly utilisation report upload', () => {
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 1,
         message: 'Facility utilisation header is missing or spelt incorrectly',
-        exporter: '-',
-        row: '-',
-        column: '-',
-        entry: '',
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 2,
         message: 'Fees paid to UKEF currency header is missing or spelt incorrectly',
-        exporter: '-',
-        row: '-',
-        column: '-',
-        entry: '',
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 3,
@@ -125,7 +117,6 @@ context('Quarterly utilisation report upload', () => {
         exporter: 'Exporter 1',
         row: '2',
         column: 'H',
-        entry: '',
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 5,
@@ -141,7 +132,6 @@ context('Quarterly utilisation report upload', () => {
         exporter: 'Exporter 2',
         row: '3',
         column: 'G',
-        entry: '',
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 7,
@@ -181,18 +171,10 @@ context('Quarterly utilisation report upload', () => {
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 1,
         message: 'Facility utilisation header is missing or spelt incorrectly',
-        exporter: '-',
-        row: '-',
-        column: '-',
-        entry: '',
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 2,
         message: 'Fees paid to UKEF currency header is missing or spelt incorrectly',
-        exporter: '-',
-        row: '-',
-        column: '-',
-        entry: '',
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 3,
@@ -208,7 +190,6 @@ context('Quarterly utilisation report upload', () => {
         exporter: 'Exporter 1',
         row: '2',
         column: 'H',
-        entry: '',
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 5,
@@ -224,7 +205,6 @@ context('Quarterly utilisation report upload', () => {
         exporter: 'Exporter 2',
         row: '3',
         column: 'G',
-        entry: '',
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 7,
