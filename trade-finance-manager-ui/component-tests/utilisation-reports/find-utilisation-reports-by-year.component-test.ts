@@ -8,7 +8,7 @@ import {
 } from '../../server/types/view-models';
 
 const page = '../templates/utilisation-reports/find-utilisation-reports-by-year.njk';
-const render = pageRenderer(page);
+const render = pageRenderer<FindUtilisationReportsByYearViewModel>(page);
 
 const bankItems: FindUtilisationReportsByYearBankViewModel[] = [
   { value: '961', text: 'Barclays', attributes: {} },
@@ -18,7 +18,7 @@ const bankItems: FindUtilisationReportsByYearBankViewModel[] = [
 
 describe(page, () => {
   const getWrapper = ({ bankError, bankReportingYearsDataLists, yearError, errorSummary }: Partial<FindUtilisationReportsByYearViewModel> = {}) =>
-    render<FindUtilisationReportsByYearViewModel>({
+    render({
       user: MOCK_TFM_SESSION_USER,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       bankItems,

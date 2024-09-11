@@ -2,9 +2,9 @@ import CONSTANTS from '../constants';
 
 import { isNotice, isUkefReviewAvailable, isUkefReviewPositive, makerCanReSubmit, isDealNotice } from './deal-helpers';
 
-import { MOCK_AIN_APPLICATION, MOCK_BASIC_DEAL, MOCK_AIN_APPLICATION_UNISSUED_ONLY } from './mocks/mock_applications';
+import { MOCK_AIN_APPLICATION, MOCK_BASIC_DEAL, MOCK_AIN_APPLICATION_UNISSUED_ONLY } from './mocks/mock-applications';
 
-import { MOCK_REQUEST } from './mocks/mock_requests';
+import { MOCK_REQUEST } from './mocks/mock-requests';
 
 describe('isNotice()', () => {
   it('Should return TRUE for any `Notice` submission type i.e. MIN or AIN', () => {
@@ -81,21 +81,37 @@ describe('isUkefReviewPositive()', () => {
 });
 
 describe('makerCanReSubmit', () => {
-  it('Should return FALSE since the deal status is READY_FOR_APPROVAL', () => {
+  it('Should return false when the deal status is READY_FOR_APPROVAL', () => {
     MOCK_BASIC_DEAL.status = CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL;
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_BASIC_DEAL)).toEqual(false);
   });
-  it('Should return TRUE as the deal status has been changed to UKEF_APPROVED_WITH_CONDITIONS and ukefDecisionAccepted is true', () => {
+
+  it('Should return true when the deal status has been changed to UKEF_APPROVED_WITH_CONDITIONS and ukefDecisionAccepted is true', () => {
     const mockDeal = MOCK_BASIC_DEAL;
     mockDeal.status = CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
     mockDeal.ukefDecisionAccepted = true;
     expect(makerCanReSubmit(MOCK_REQUEST, mockDeal)).toEqual(true);
   });
-  it('Should return TRUE as the deal has changed facilities, is AIN and has status UKEF_ACKNOWLEDGED', () => {
+
+  it('Should return true when the deal has changed facilities, is AIN and has status UKEF_ACKNOWLEDGED', () => {
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_AIN_APPLICATION)).toEqual(true);
   });
-  it('Should return FALSE as the deal does not have changed facilities, is AIN and has status UKEF_ACKNOWLEDGED', () => {
+
+  it('Should return false when the deal does not have changed facilities, is AIN and has status UKEF_ACKNOWLEDGED', () => {
     expect(makerCanReSubmit(MOCK_REQUEST, MOCK_AIN_APPLICATION_UNISSUED_ONLY)).toEqual(false);
+  });
+
+  it('Should return false when the facilities are in progress', () => {
+    const application = {
+      ...MOCK_AIN_APPLICATION,
+      facilitiesStatus: {
+        code: CONSTANTS.DEAL_STATUS.IN_PROGRESS,
+      },
+    };
+
+    const result = makerCanReSubmit(MOCK_REQUEST, application);
+
+    expect(result).toEqual(false);
   });
 });
 

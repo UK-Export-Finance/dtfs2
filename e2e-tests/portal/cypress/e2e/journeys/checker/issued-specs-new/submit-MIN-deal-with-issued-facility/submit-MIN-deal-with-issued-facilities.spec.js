@@ -68,22 +68,13 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     fillAndSubmitIssueLoanFacilityForm();
 
     // check facility statuses are correct
-    bondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
 
-    loanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Completed');
-      });
+    cy.assertText(bondRow.bondStatus(), 'Completed');
+
+    cy.assertText(loanRow.loanStatus(), 'Completed');
 
     // submit deal for review
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
 
     pages.contractReadyForReview.comments().type('Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
@@ -95,72 +86,36 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     pages.contract.visit(deal);
 
     // check facility statuses have changed
-    bondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Ready for check');
-      });
+    cy.assertText(bondRow.bondStatus(), 'Ready for check');
 
-    loanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Ready for check');
-      });
+    cy.assertText(loanRow.loanStatus(), 'Ready for check');
 
-    pages.contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     pages.contractConfirmSubmission.confirmSubmit().check();
     pages.contractConfirmSubmission.acceptAndSubmit().click();
 
     //---------------------------------------------------------------
-    // deal status should be updated to `Submitted`
+    // deal status should be updated to `Acknowledged`
     //---------------------------------------------------------------
     pages.contract.visit(deal);
 
-    pages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        // Status is submitted until TFM background process has created UKEF IDs
-        expect(text.trim()).to.equal('Acknowledged');
-      });
+    cy.assertText(pages.contract.status(), 'Acknowledged');
 
     //---------------------------------------------------------------
-    // facility statuses should be updated to `Submitted`
+    // facility statuses should be updated to `Acknowledged`
     //---------------------------------------------------------------
 
-    bondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Acknowledged');
-      });
+    cy.assertText(bondRow.bondStatus(), 'Acknowledged');
 
-    loanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Acknowledged');
-      });
+    cy.assertText(loanRow.loanStatus(), 'Acknowledged');
 
     //---------------------------------------------------------------
     // Checker can only review issue facility details
     //---------------------------------------------------------------
-    bondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+    cy.assertText(bondRow.issueFacilityLink(), 'Facility issued');
 
-    loanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+    cy.assertText(loanRow.issueFacilityLink(), 'Facility issued');
 
     bondRow.issueFacilityLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/submission-details#bond-${bondId}`));
