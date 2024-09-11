@@ -57,7 +57,7 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
     // insert populated text field on form
     cy.insertElement('issue-bond-form');
 
-    pages.bondIssueFacility.submit().click();
+    cy.clickSubmitButton();
 
     cy.getFacility(deal._id, bondId, BANK1_MAKER1).then((bond) => {
       // check bond does not contain inserted field

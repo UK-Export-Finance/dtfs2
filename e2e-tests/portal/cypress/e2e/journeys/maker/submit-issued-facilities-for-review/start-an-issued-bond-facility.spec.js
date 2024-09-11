@@ -41,44 +41,25 @@ context("A maker is informed of a bond's status before submitting an issued bond
     const bondId = dealFacilities.bonds[0]._id;
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-    bondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Not started');
-      });
+    cy.assertText(bondRow.bondStatus(), 'Not started');
+    cy.assertText(bondRow.issueFacilityLink(), 'Issue facility');
 
-    bondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issue facility');
-      });
     bondRow.issueFacilityLink().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
 
     // don't fill anything in. Submit and go back to deal page
-    pages.bondIssueFacility.submit().click();
+    cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
 
-    pages.bondIssueFacility.cancelButton().click();
+    cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     // assert bond status has changed
-    bondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+
+    cy.assertText(bondRow.bondStatus(), 'Incomplete');
 
     // assert `Issue facility link` text has not changed
-    bondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issue facility');
-      });
+    cy.assertText(bondRow.issueFacilityLink(), 'Issue facility');
   });
 });

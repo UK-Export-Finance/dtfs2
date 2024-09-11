@@ -1,13 +1,7 @@
 import { difference } from 'lodash';
-import {
-  CURRENCY,
-  FEE_RECORD_STATUS,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
-  UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+import { CURRENCY, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
 import { mapToFeeRecordsToKey } from './helpers';
+import { aUtilisationReport } from '../../../../../test-helpers';
 
 describe('get-fee-records-to-key.controller helpers', () => {
   describe('mapToFeeRecordsToKey', () => {
@@ -238,11 +232,9 @@ describe('get-fee-records-to-key.controller helpers', () => {
 
       const payments = [PaymentEntityMockBuilder.forCurrency(paymentCurrency).build()];
 
-      const utilisationReport = aUtilisationReport();
-
       const amount = 100;
       const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
           .withStatus('MATCH')
           .withFeesPaidToUkefForThePeriod(amount)
           .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -277,11 +269,9 @@ describe('get-fee-records-to-key.controller helpers', () => {
         PaymentEntityMockBuilder.forCurrency(paymentCurrency).withAmount(thirdPaymentAmount).build(),
       ];
 
-      const utilisationReport = aUtilisationReport();
-
       const amount = 100;
       const feeRecords = [
-        FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        FeeRecordEntityMockBuilder.forReport(aUtilisationReport())
           .withStatus('MATCH')
           .withFeesPaidToUkefForThePeriod(amount)
           .withFeesPaidToUkefForThePeriodCurrency(paymentCurrency)
@@ -309,9 +299,5 @@ describe('get-fee-records-to-key.controller helpers', () => {
         amount: thirdPaymentAmount,
       });
     });
-
-    function aUtilisationReport(): UtilisationReportEntity {
-      return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
-    }
   });
 });

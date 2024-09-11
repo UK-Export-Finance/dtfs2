@@ -162,12 +162,7 @@ context('Buyer Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.buyerPage.saveButton().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
-        pages.buyerPage
-          .uniqueRef()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal(partyUrn);
-          });
+        cy.assertText(pages.buyerPage.uniqueRef(), partyUrn);
 
         pages.partiesPage.buyerEditLink().click();
         pages.buyerPage

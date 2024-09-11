@@ -17,7 +17,7 @@ context('Bank details - Submit form with inserted element on page', () => {
     // insert element into form
     cy.insertElement('before-you-start-form');
 
-    bankDetails.submit().click();
+    cy.clickSubmitButton();
 
     // get dealId from url
     cy.url().then((url) => {

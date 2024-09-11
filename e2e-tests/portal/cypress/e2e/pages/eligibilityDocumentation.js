@@ -7,7 +7,6 @@ const page = {
   questionnaireFileUploadedRemove: () => cy.get('[data-cy="exporterQuestionnaire-file-uploaded-remove"]'),
   fieldErrorMessage: (fieldname) => cy.get(`[data-cy="${fieldname}"] .govuk-error-message`),
   saveButton: () => cy.get('[data-cy="save-button"]'),
-  saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
   downloadMIQuestionaireLinkDoc: () => cy.get('[data-cy="download-q-link-docx"]'),
   downloadMIQuestionaireLinkPdf: () => cy.get('[data-cy="download-q-link-pdf"]'),
   securityText: () => cy.get('[data-cy="security-text"]'),

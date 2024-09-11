@@ -136,21 +136,11 @@ context('Case tasks - MIA deal', () => {
     pages.tasksPage.filterRadioAllTasks().click();
 
     // check initial deal stage
-    partials.caseSummary
-      .ukefDealStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Application');
-      });
+    cy.assertText(partials.caseSummary.ukefDealStage(), 'Application');
 
     submitTaskInProgress(1, 1, userId);
 
-    partials.caseSummary
-      .ukefDealStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('In progress');
-      });
+    cy.assertText(partials.caseSummary.ukefDealStage(), 'In progress');
   });
 
   it('immediately completing the first task in the first group updates the deal stage from `Application` to `In progress`', () => {
@@ -160,21 +150,11 @@ context('Case tasks - MIA deal', () => {
     pages.tasksPage.filterRadioAllTasks().click();
 
     // check initial deal stage
-    partials.caseSummary
-      .ukefDealStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Application');
-      });
+    cy.assertText(partials.caseSummary.ukefDealStage(), 'Application');
 
     submitTaskComplete(1, 1, userId);
 
-    partials.caseSummary
-      .ukefDealStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('In progress');
-      });
+    cy.assertText(partials.caseSummary.ukefDealStage(), 'In progress');
   });
 
   it('should not allow you to click on task if not in the right group`', () => {

@@ -14,11 +14,11 @@ context('Create deal', () => {
       bankDetails.bankDealId().clear();
       bankDetails.bankDealName().clear();
 
-      bankDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative('/before-you-start/bank-deal'));
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_FORM_FIELDS);
+      partials.errorSummaryLinks().should('have.length', TOTAL_FORM_FIELDS);
     });
   });
 
@@ -44,23 +44,19 @@ context('Create deal', () => {
     // complete 'before you start' form fields
     bankDetails.bankDealId().type('TEST1234');
     bankDetails.bankDealName().type('TESTING');
-    bankDetails.submit().click();
+    cy.clickSubmitButton();
 
     // confirm that we're on the newly created deal '/contract/XYZ'
     cy.url().should('include', '/contract/');
 
-    // confirm deal is in the correct starting state..
-    contract.aboutSupplierDetailsStatus().should((status) => expect(status).to.contain('Not started'));
+    // confirm deal is in the correct starting state
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Not started');
 
-    contract.eligibilityStatus().should((status) => expect(status).to.contain('Not started'));
+    cy.assertText(contract.eligibilityStatus(), 'Not started');
 
     // confirm that the data we've entered appears on the preview page
     contract.checkDealDetailsTab().click();
-    contractCheckDealDetails
-      .header()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Supply Contract name: TESTING');
-      });
+
+    cy.assertText(contractCheckDealDetails.header(), 'Supply Contract name: TESTING');
   });
 });

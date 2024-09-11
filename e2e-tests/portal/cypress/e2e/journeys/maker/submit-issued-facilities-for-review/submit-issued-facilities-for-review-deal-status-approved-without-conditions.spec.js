@@ -57,12 +57,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     const bondId = dealFacilities.bonds[0]._id;
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-    bondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issue facility');
-      });
+    cy.assertText(bondRow.issueFacilityLink(), 'Issue facility');
 
     bondRow
       .issueFacilityLink()
@@ -78,24 +73,14 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     // expect issue facility link text to be changed
-    bondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+    cy.assertText(bondRow.issueFacilityLink(), 'Facility issued');
 
     pages.contract.proceedToReview().should('not.be.disabled');
 
     const loanId = dealFacilities.loans[0]._id;
     const loanRow = pages.contract.loansTransactionsTable.row(loanId);
 
-    loanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issue facility');
-      });
+    cy.assertText(loanRow.issueFacilityLink(), 'Issue facility');
 
     loanRow
       .issueFacilityLink()
@@ -111,17 +96,12 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
     // expect issue facility link text to be changed
-    loanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+    cy.assertText(loanRow.issueFacilityLink(), 'Facility issued');
 
     pages.contract.proceedToReview().should('not.be.disabled');
 
     // submit deal for review
-    pages.contract.proceedToReview().click();
+    cy.clickProceedToReviewButton();
 
     pages.contractReadyForReview.comments().type('Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
@@ -132,35 +112,14 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     pages.contract.visit(deal);
 
     // expect the deal status to be updated
-    pages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Ready for Checker's approval");
-      });
-
-    pages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Accepted by UKEF (without conditions)');
-      });
+    cy.assertText(pages.contract.status(), "Ready for Checker's approval");
+    cy.assertText(pages.contract.previousStatus(), 'Accepted by UKEF (without conditions)');
 
     // expect the bond status to be updated
-    bondRow
-      .bondStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Ready for check');
-      });
+    cy.assertText(bondRow.bondStatus(), 'Ready for check');
 
     // expect bond issue facility link text to be changed
-    bondRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+    cy.assertText(bondRow.issueFacilityLink(), 'Facility issued');
 
     bondRow
       .issueFacilityLink()
@@ -170,20 +129,10 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
       });
 
     // expect the loan status to be updated
-    loanRow
-      .loanStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Ready for check');
-      });
+    cy.assertText(loanRow.loanStatus(), 'Ready for check');
 
     // expect loan issue facility link text to be changed
-    loanRow
-      .issueFacilityLink()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Facility issued');
-      });
+    cy.assertText(loanRow.issueFacilityLink(), 'Facility issued');
 
     loanRow
       .issueFacilityLink()

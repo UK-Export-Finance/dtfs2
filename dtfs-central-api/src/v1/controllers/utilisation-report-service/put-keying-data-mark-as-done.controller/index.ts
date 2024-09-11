@@ -29,6 +29,7 @@ export const putKeyingDataMarkAsDone = async (req: PutKeyingDataMarkDoneRequest,
           payload: {
             transactionEntityManager,
             feeRecordsToReconcile: selectedFeeRecords,
+            reconciledByUserId: user._id.toString(),
             requestSource: {
               platform: 'TFM',
               userId: user._id.toString(),
