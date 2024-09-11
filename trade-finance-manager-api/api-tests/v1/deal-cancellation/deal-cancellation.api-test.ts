@@ -7,7 +7,7 @@ import { MOCK_TFM_SESSION_USER } from '../../../src/v1/__mocks__/mock-tfm-sessio
 
 const { as, put } = createApi(app);
 
-describe('/v1/tfm/deals/:id/cancellation', () => {
+describe('/v1/deals/:id/cancellation', () => {
   const validId = new ObjectId().toString();
 
   const payload = {
@@ -15,8 +15,8 @@ describe('/v1/tfm/deals/:id/cancellation', () => {
     auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id),
   };
 
-  describe('PUT /v1/tfm/deals/:id/cancellation', () => {
-    const getTfmDealCancellationUpdateUrl = ({ id }: { id: string }) => `/v1/tfm/deals/${id}/cancellation`;
+  describe('PUT /v1/deals/:id/cancellation', () => {
+    const getTfmDealCancellationUpdateUrl = ({ id }: { id: string }) => `/v1/deals/${id}/cancellation`;
 
     it('returns a 401 response when user is not authenticated', async () => {
       // Arrange
