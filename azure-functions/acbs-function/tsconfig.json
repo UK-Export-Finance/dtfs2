@@ -101,6 +101,6 @@
   "ts-node": {
     "files": true
   },
-  "include": ["**/*.ts", "jest.common.config.js"],
+  "include": ["**/*.ts"],
   "exclude": ["./node_modules/*", "node_modules"]
 }
