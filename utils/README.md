@@ -4,7 +4,9 @@ This section contains utility scripts and data for various purposes.
 
 ## Data Migration :arrows_counterclockwise:
 
-The `data-migration` directory contains scripts designed to facilitate the migration of data from Portal V1 to Portal V2. For detailed instructions and usage, please refer to the [data-migration/README.md](data-migration/README.md) file.
+The `data-migration` directory contains scripts designed to facilitate the
+migration of data from Portal V1 to Portal V2. For detailed instructions and
+usage, please refer to the [data-migration/README.md](data-migration/README.md) file.
 
 ## Data seeding
 
@@ -16,40 +18,51 @@ Running `npm run load` will run `mock-data-loader`, `sql-db-seeder` and then fin
 
 ### Mock Data Loader :page_with_curl:
 
-The `mock-data-loader` directory contains mock data that can be used for local development and in non-production environments.
+The `mock-data-loader` directory contains mock data that can be used for local
+development and in non-production environments.
 
-This script is also used in various e2e-tests to set up users and banks that can be used for testing.
+This script is also used in various e2e-tests to set up users
+and banks that can be used for testing.
 
-The script doesn't create any facilities, and wipes all existing mongo data, so if you want to reset your database without any facilities, then you can run this command directly (i.e. not as part of `npm run load` which will create facilities).
+The script doesn't create any facilities, and wipes all
+existing mongo data, so if you want to reset your database
+without any facilities, then you can run this command directly
+(i.e. not as part of `npm run load` which will create facilities).
+
+Use the following NPM script from the project root
+to perform following operations:
 
 You can run mock data loader directly using
 
-```shell
-npm run mock-data-loader
-```
-
-or as part of the all-purpose
+- Clearing all the collections.
+- Insert mock data to the following collections:
+  - Portal
+  - TFM
+  - Users (both TFM and Portal)
+  - Banks
+  - Mandatory criteria
+  - Eligibility criteria
 
 ```shell
 npm run load
 ```
 
-command.
+## SQL DB Seeder
 
-### SQL DB Seeder
+The `sql-db-seeder` directory contains a script which seeds random data
+into the MSSQL database for utilisation reports.
 
-The `sql-db-seeder` directory contains a script which seeds random data into the MSSQL database for utilisation reports.
-
-You can run the SQL seeder directly using
+You can run the following command to initiate MSSQL seeder directly
 
 ```shell
 npm run db:seed
 ```
 
-or as part of the all-purpose
+If you wish to intiate a mock data loader for both Mongo and MSSQL, one can call
+the following script from `utils` directory.
 
 ```shell
-npm run load
+npm run load:sql
 ```
 
 command.
