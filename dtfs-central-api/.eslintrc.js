@@ -44,7 +44,8 @@ const baseRules = {
 };
 
 module.exports = {
-  extends: ['airbnb-base', 'plugin:prettier/recommended'],
+  // extends: ['airbnb-base', 'plugin:prettier/recommended'],
+  extends: [],
   env: {
     jest: true,
     browser: true,
