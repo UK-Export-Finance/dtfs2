@@ -539,8 +539,8 @@ tfmRouter
  * @openapi
  * /tfm/deals/:id/cancellation:
  *   put:
- *     summary: Updates tfm deal cancellation object
- *     tags: [TFM, deals, cancellation]
+ *     summary: Updates tfm deal cancellation object on MIN and AIN deal types
+ *     tags: [TFM, deals, cancellation, data fix]
  *     description: Updates cancellation object on the deals tfm object
  *     parameters:
  *       - in: path
