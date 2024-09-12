@@ -5,6 +5,8 @@
 {% import "./_macros/premium-payments-table.njk" as premiumPaymentsTable %}
 {% import "./_macros/keying-sheet-table.njk" as keyingSheetTable %}
 {% import "./_macros/payment-details-table.njk" as paymentDetailsTable %}
+{% import './_macros/payment-details-filters-panel.njk' as paymentDetailsFiltersPanel %}
+{% import './_macros/payment-details-filters-action-bar.njk' as paymentDetailsFiltersActionBar %}
 
 {% extends "index.njk" %}
 
@@ -158,18 +160,45 @@
   {% if paymentDetails.length === 0 %}
     <p class="govuk-body">Payment details will be displayed when payments have been entered on the premium payments tab.</p>
   {% else %}
-    {{ govukButton({
-      text: "Show filter",
-      classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2",
-      id: "payment-details-show-filter-button",
-      attributes: {'data-cy': 'payment-details-show-filter-button'}
-    }) }}
+    {# TODO FN-2311: Add this filter to the component tests. #}
+    <div class="moj-filter-layout">
 
-    {{ paymentDetailsTable.render({
-      reportId: reportId,
-      paymentDetails: paymentDetails,
-      userCanEdit: userCanEdit
-    }) }}
+      {{ paymentDetailsFiltersPanel.render({
+        filters: filters,
+        selectedFilters: selectedFilters,
+        keyword: keyword,
+        csrfToken: csrfToken
+      }) }}
+
+      {{ govukButton({
+        text: "Show filter",
+        classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2",
+        id: "payment-details-show-filter-button",
+        attributes: {'data-cy': 'payment-details-show-filter-button'}
+      }) }}
+
+      <div class="moj-filter-layout__content">
+
+        {{ paymentDetailsFiltersActionBar.render({
+          selectedFilters: selectedFilters,
+          csrfToken: csrfToken
+        }) }}
+
+        <div class="moj-scrollable-pane">
+        <div class="moj-scrollable-pane__wrapper">
+
+          {{ paymentDetailsTable.render({
+            reportId: reportId,
+            paymentDetails: paymentDetails,
+            userCanEdit: userCanEdit
+          }) }}
+
+        </div>
+        </div>
+
+      </div>
+
+    </div>
   {% endif %}
 {% endset %}
 

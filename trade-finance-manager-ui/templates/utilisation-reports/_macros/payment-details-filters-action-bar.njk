@@ -1,0 +1,38 @@
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{# TODO FN-2311: Add component tests for this macro. #}
+
+{% macro render(params) %}
+  {% set selectedFilters = params.selectedFilters %}
+
+  <div class="moj-action-bar" data-cy="payment-details-filters-action-bar">
+
+    <div class="govuk-grid-row govuk-!-margin-right-0 govuk-!-margin-left-0">
+      <div class="govuk-grid-column-one-half govuk-!-padding-left-0">
+        <div class="moj-action-bar__filter"></div>
+      </div>
+    </div>
+
+    {% if selectedFilters.length %}
+      <ul class="govuk-!-padding-left-0" data-cy="payment-details-main-container-selected-filters">
+        {% for filter in selectedFilters %}
+          {% for filterItem in filter.items %}
+            <li class="main-container-selected-filter-list-item">
+              <a
+                class="govuk-link govuk-button--secondary moj-filter__tag"
+                href="{{ filterItem.href }}"
+                data-cy="payment-details-main-container-selected-filter-{{ filterItem.formattedValue }}"
+              >
+                <span class="govuk-visually-hidden">Remove this filter</span>
+                {{ filterItem.text }}
+              </a>
+            </li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+  </div>
+
+{% endmacro %}
