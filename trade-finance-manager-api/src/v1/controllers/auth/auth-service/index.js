@@ -15,7 +15,7 @@ const { issueJwtAndUpdateUser } = require('./issue-jwt-and-update-user');
  * @param {object} authCodeRequest Auth code request
  * @param {string} code authZ code
  * @param {string} state MSAL state, containing a base64 encoded JSON object of state passed to Microsoft prior to redirect
- * @returns {Promise<object | {}>} TFM user, token and redirect URL or empty object
+ * @returns {Promise<object | {} | unknown>} TFM user, token and redirect URL or empty object
  */
 const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) => {
   try {
