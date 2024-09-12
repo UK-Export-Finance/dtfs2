@@ -1,10 +1,10 @@
 import { Collection, ObjectId, UpdateFilter, UpdateResult, WithoutId } from 'mongodb';
-import { DEAL_SUBMISSION_TYPE, DealNotFoundError, TFM_DEAL_STAGE, TfmDeal, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { DEAL_SUBMISSION_TYPE, DealNotFoundError, MONGO_DB_COLLECTIONS, TFM_DEAL_STAGE, TfmDeal, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { mongoDbClient } from '../../drivers/db-client';
 
 export class TfmDealCancellationRepo {
   private static async getCollection(): Promise<Collection<WithoutId<TfmDeal>>> {
-    return await mongoDbClient.getCollection('tfm-deals');
+    return await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
   }
 
   /**
@@ -44,7 +44,7 @@ export class TfmDealCancellationRepo {
       update,
     );
 
-    if (updateResult.matchedCount === 0) {
+    if (!updateResult?.matchedCount) {
       throw new DealNotFoundError(dealId.toString());
     }
 
