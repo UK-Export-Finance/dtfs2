@@ -26,7 +26,7 @@ const getLogin = async (req, res) => {
     console.error('TFM-UI - stopping redirect loop in sso getLogin');
     const errorMessage = `Detected login redirect issue - please wait for ${
       SSO.REDIRECT_COUNTER.TIME_PERIOD / 1000
-    } seconds or contact us using details bellow.`;
+    } seconds or contact us using details below.`;
     return res.status(500).render('_partials/problem-with-service.njk', { error: { message: errorMessage } });
   }
 
@@ -40,7 +40,7 @@ const getLogin = async (req, res) => {
   }
 
   console.error('TFM-UI - Login url generation failed. TFM-API response: %O', apiResponse);
-  const errorMessage = `Login url generation failed - please try later or contact us using details bellow`;
+  const errorMessage = `Login url generation failed - please try later or contact us using details below`;
   return res.status(500).render('_partials/problem-with-service.njk', { error: { message: errorMessage } });
 };
 
@@ -90,7 +90,7 @@ const handleSsoRedirect = async (req, res) => {
     console.error('TFM-UI - login failed in TFM-API, redirect to /');
     return res.redirect('/');
   } catch (error) {
-    const errorMessage = error.message || `Login process failed - try again or contact us using details bellow.`;
+    const errorMessage = error.message || `Login process failed - try again or contact us using details below.`;
     console.error('TFM-UI - login failed, error %O', error);
     return res.status(500).render('_partials/problem-with-service.njk', { error: { message: errorMessage } });
   }
