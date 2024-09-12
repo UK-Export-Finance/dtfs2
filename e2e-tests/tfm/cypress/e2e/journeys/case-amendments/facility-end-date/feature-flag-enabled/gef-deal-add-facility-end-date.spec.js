@@ -1,4 +1,5 @@
 import relative from '../../../../relativeURL';
+import { errorSummary } from '../../../../partials';
 import facilityPage from '../../../../pages/facilityPage';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../../e2e-fixtures';
 import { MOCK_FACILITY_ONE } from '../../../../../fixtures/mock-gef-facilities';
@@ -57,7 +58,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       amendmentsPage.isUsingFacilityEndDateNo().should('not.be.checked');
 
       cy.clickContinueButton();
-      amendmentsPage.errorSummary().contains('Select if the bank has provided an end date for this facility');
+      errorSummary().contains('Select if the bank has provided an end date for this facility');
 
       amendmentsPage.isUsingFacilityEndDateYes().click();
       cy.clickContinueButton();
@@ -77,7 +78,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.sixYearsOneDayYear);
 
       cy.clickContinueButton();
-      amendmentsPage.errorSummary().contains('Facility end date cannot be greater than 6 years in the future');
+      errorSummary().contains('Facility end date cannot be greater than 6 years in the future');
     });
 
     it('should continue to the facility value page if the facility end date is valid and the facility value also needs changing', () => {
