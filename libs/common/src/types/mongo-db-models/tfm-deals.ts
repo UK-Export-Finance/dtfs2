@@ -13,5 +13,6 @@ export type TfmDeal = {
   _id: ObjectId;
   dealSnapshot: Deal;
   tfm: { cancellation: TfmDealCancellation };
-  auditRecord: AuditDatabaseRecord;
+  // Audit records may not exist on a deal if it has not been modified after Audit Logs is released
+  auditRecord?: AuditDatabaseRecord;
 };
