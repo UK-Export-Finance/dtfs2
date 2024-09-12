@@ -64,9 +64,9 @@ const handler = async (payload) => {
 
     return {
       status,
-      dataSent: acbsFacilityGuaranteeInput,
       submittedToACBS,
       receivedFromACBS: getNowAsIsoString(),
+      dataSent: acbsFacilityGuaranteeInput,
       ...data,
     };
   } catch (error) {
