@@ -5,8 +5,8 @@ import { UtilisationReportReconciliationDetails } from '../../../../types/utilis
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { NotFoundError, ApiError } from '../../../../errors';
 import { getUtilisationReportReconciliationDetails } from './helpers';
-import { REGEX } from '../../../../constants';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { parsePremiumPaymentsTabFilters } from './helpers/parse-filters';
 
 export type GetUtilisationReportReconciliationDetailsByIdRequest = CustomExpressRequest<{
   params: {
@@ -23,18 +23,15 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
   const { reportId } = req.params;
   const { premiumPaymentsTabFilters } = req.query;
 
-  const facilityId = premiumPaymentsTabFilters?.facilityId;
-
   try {
-    // TODO FN-2311: Can we pull out this filter extraction into its own helper method? Provide it with the full filters object for the PP tab, returns an object of the extracted/parsed filters.
-    const facilityIdFilter = facilityId && REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityId) ? facilityId : undefined;
-
     const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsWithPayments(Number(reportId));
     if (!utilisationReport) {
       throw new NotFoundError(`Failed to find a report with id '${reportId}'`);
     }
 
-    const utilisationReportReconciliationDetails = await getUtilisationReportReconciliationDetails(utilisationReport, facilityIdFilter);
+    const premiumPaymentsTabParsedFilters = parsePremiumPaymentsTabFilters(premiumPaymentsTabFilters);
+
+    const utilisationReportReconciliationDetails = await getUtilisationReportReconciliationDetails(utilisationReport, premiumPaymentsTabParsedFilters);
 
     return res.status(HttpStatusCode.Ok).send(utilisationReportReconciliationDetails);
   } catch (error) {

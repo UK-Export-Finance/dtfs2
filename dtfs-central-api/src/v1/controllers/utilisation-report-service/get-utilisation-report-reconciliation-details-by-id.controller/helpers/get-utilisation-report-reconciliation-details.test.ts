@@ -47,9 +47,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       async (status) => {
         // Arrange
         const report = UtilisationReportEntityMockBuilder.forStatus(status).withId(reportId).withDateUploaded(null).build();
+        const premiumPaymentsTabFilters = {};
 
         // Act / Assert
-        await expect(getUtilisationReportReconciliationDetails(report, undefined)).rejects.toThrow(
+        await expect(getUtilisationReportReconciliationDetails(report, premiumPaymentsTabFilters)).rejects.toThrow(
           new Error(`Report with id '${reportId}' has not been uploaded`),
         );
         expect(getBankNameById).not.toHaveBeenCalled();
@@ -60,10 +61,12 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       // Arrange
       const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
 
+      const premiumPaymentsTabFilters = {};
+
       when(getBankNameById).calledWith(bankId).mockResolvedValue(undefined);
 
       // Act / Assert
-      await expect(getUtilisationReportReconciliationDetails(uploadedReport, undefined)).rejects.toThrow(
+      await expect(getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsTabFilters)).rejects.toThrow(
         new NotFoundError(`Failed to find a bank with id '${bankId}'`),
       );
       expect(getBankNameById).toHaveBeenCalledWith(bankId);
@@ -84,11 +87,13 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         .withFeeRecords([])
         .build();
 
+      const premiumPaymentsTabFilters = {};
+
       const bankName = 'Test bank';
       when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
 
       // Act
-      const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, undefined);
+      const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsTabFilters);
 
       // Assert
       expect(getBankNameById).toHaveBeenCalledWith(bankId);
@@ -107,48 +112,53 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       });
     });
 
-    it('filters the fee record payment groups by the facility id when the facility id is a string', async () => {
-      // Arrange
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
-        .withId(reportId)
-        .withBankId(bankId)
-        .withDateUploaded(new Date())
-        .withFeeRecords([])
-        .build();
+    describe('premium payment tab filtering', () => {
+      it('filters the fee record payment groups by the facility id when the facility id is a string', async () => {
+        // Arrange
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+          .withId(reportId)
+          .withBankId(bankId)
+          .withDateUploaded(new Date())
+          .withFeeRecords([])
+          .build();
 
-      filterFeeRecordSpy.mockReturnValue([]);
+        filterFeeRecordSpy.mockReturnValue([]);
 
-      const bankName = 'Test bank';
-      when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
+        const bankName = 'Test bank';
+        when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
 
-      const facilityIdFilter = 'some filter';
+        const facilityId = 'some filter';
+        const premiumPaymentsTabFilters = {
+          facilityId,
+        };
 
-      // Act
-      await getUtilisationReportReconciliationDetails(uploadedReport, facilityIdFilter);
+        // Act
+        await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsTabFilters);
 
-      // Assert
-      expect(filterFeeRecordSpy).toHaveBeenCalledWith([], facilityIdFilter);
-    });
+        // Assert
+        expect(filterFeeRecordSpy).toHaveBeenCalledWith([], facilityId);
+      });
 
-    it('does not filter the fee record payment groups by the facility id when the facility id is undefined', async () => {
-      // Arrange
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
-        .withId(reportId)
-        .withBankId(bankId)
-        .withDateUploaded(new Date())
-        .withFeeRecords([])
-        .build();
+      it('does not filter the fee record payment groups by the facility id when the facility id is undefined', async () => {
+        // Arrange
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+          .withId(reportId)
+          .withBankId(bankId)
+          .withDateUploaded(new Date())
+          .withFeeRecords([])
+          .build();
 
-      const bankName = 'Test bank';
-      when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
+        const bankName = 'Test bank';
+        when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
 
-      const facilityIdFilter = undefined;
+        const premiumPaymentsTabFilters = {};
 
-      // Act
-      await getUtilisationReportReconciliationDetails(uploadedReport, facilityIdFilter);
+        // Act
+        await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsTabFilters);
 
-      // Assert
-      expect(filterFeeRecordSpy).not.toHaveBeenCalled();
+        // Assert
+        expect(filterFeeRecordSpy).not.toHaveBeenCalled();
+      });
     });
   });
 });

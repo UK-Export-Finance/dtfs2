@@ -75,7 +75,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       expect(res._getData()).toBe(`Failed to get utilisation report reconciliation for report with id '${reportId}'`);
     });
 
-    it('fetches details and responds with 200 when there is no query provided', async () => {
+    it('fetches details and responds with 200 when there are no filters provided', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -85,6 +85,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       const reportDetails = aUtilisationReportReconciliationDetails();
       jest.mocked(getUtilisationReportReconciliationDetails).mockResolvedValue(reportDetails);
 
+      const expectedPremiumPaymentsTabParsedFilters = {};
+
       // Act
       await getUtilisationReportReconciliationDetailsById(req, res);
 
@@ -92,7 +94,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(res._getData()).toBe(reportDetails);
       expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledTimes(1);
-      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, undefined);
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, expectedPremiumPaymentsTabParsedFilters);
     });
 
     it('fetches details filtering by premium payments tab facility id value and responds with 200 when there is a facility id value provided', async () => {
@@ -108,28 +110,9 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       const reportDetails = aUtilisationReportReconciliationDetails();
       jest.mocked(getUtilisationReportReconciliationDetails).mockResolvedValue(reportDetails);
 
-      // Act
-      await getUtilisationReportReconciliationDetailsById(req, res);
-
-      // Assert
-      expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._getData()).toBe(reportDetails);
-      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledTimes(1);
-      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, '1234');
-    });
-
-    it('fetches details filtering without filtering and responds with 200 when there is an invalid premium payments tab facility id filter value', async () => {
-      // Arrange
-      const premiumPaymentsTabFilters = {
-        facilityId: '123',
+      const expectedPremiumPaymentsTabParsedFilters = {
+        facilityId: '1234',
       };
-      const { req, res } = getHttpMocks(premiumPaymentsTabFilters);
-
-      const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
-      when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);
-
-      const reportDetails = aUtilisationReportReconciliationDetails();
-      jest.mocked(getUtilisationReportReconciliationDetails).mockResolvedValue(reportDetails);
 
       // Act
       await getUtilisationReportReconciliationDetailsById(req, res);
@@ -138,7 +121,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
       expect(res._getData()).toBe(reportDetails);
       expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledTimes(1);
-      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, undefined);
+      expect(getUtilisationReportReconciliationDetails).toHaveBeenCalledWith(utilisationReport, expectedPremiumPaymentsTabParsedFilters);
     });
 
     function aUtilisationReportReconciliationDetails(): UtilisationReportReconciliationDetails {
