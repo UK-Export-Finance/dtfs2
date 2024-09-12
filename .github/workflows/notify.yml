@@ -2,7 +2,7 @@ name: Notify
 on:
   push:
     branches:
-      - release-2.3
+      - release-*
 
 env:
   environment: dev
@@ -61,7 +61,7 @@ jobs:
                         "type": "TextBlock",
                         "size": "Medium",
                         "weight": "Bolder",
-                        "text": "Commit to release-2.3 branch"
+                        "text": "Commit to ${{ github.event.workflow_run.head_branch }} branch"
                       },
                       {
                         "type": "FactSet",
