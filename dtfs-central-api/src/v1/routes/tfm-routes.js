@@ -569,6 +569,8 @@ tfmRouter
  *         description: OK
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 tfmRouter
   .route('/deals/:dealId/cancellation')
