@@ -100,30 +100,34 @@ describe('controllers - case', () => {
         expect(dealCancellationEnabled).toHaveBeenCalledTimes(1);
       });
 
-      it('should render the template with the deal cancellation value when it is true', async () => {
-        jest.mocked(dealCancellationEnabled).mockReturnValueOnce(true);
+      describe('when deal cancellation is enabled', () => {
+        it('should render the template with showDealCancelButton=true', async () => {
+          jest.mocked(dealCancellationEnabled).mockReturnValueOnce(true);
 
-        await caseController.getCaseDeal(req, res);
+          await caseController.getCaseDeal(req, res);
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/deal/deal.njk',
-          expect.objectContaining({
-            showDealCancelButton: true,
-          }),
-        );
+          expect(res.render).toHaveBeenCalledWith(
+            'case/deal/deal.njk',
+            expect.objectContaining({
+              showDealCancelButton: true,
+            }),
+          );
+        });
       });
 
-      it('should render the template with the deal cancellation value when it is false', async () => {
-        jest.mocked(dealCancellationEnabled).mockReturnValueOnce(false);
+      describe('when deal cancellation is disabled', () => {
+        it('should render the template with showDealCancelButton=false', async () => {
+          jest.mocked(dealCancellationEnabled).mockReturnValueOnce(false);
 
-        await caseController.getCaseDeal(req, res);
+          await caseController.getCaseDeal(req, res);
 
-        expect(res.render).toHaveBeenCalledWith(
-          'case/deal/deal.njk',
-          expect.objectContaining({
-            showDealCancelButton: false,
-          }),
-        );
+          expect(res.render).toHaveBeenCalledWith(
+            'case/deal/deal.njk',
+            expect.objectContaining({
+              showDealCancelButton: false,
+            }),
+          );
+        });
       });
     });
 
