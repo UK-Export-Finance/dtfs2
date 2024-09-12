@@ -98,7 +98,7 @@ describe('generateUkefFacilityIdError', () => {
     expect(ukefFacilityIdError).toBeNull();
   });
 
-  it('returns the correct column and row when an error is found', () => {
+  it('returns the correct column and row when an error is found', async () => {
     // Arrange
     const invalidFacilityIdWithDifferentRowAndColumn = {
       value: '1234567',
