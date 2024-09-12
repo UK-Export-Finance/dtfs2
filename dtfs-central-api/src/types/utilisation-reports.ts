@@ -80,7 +80,8 @@ export type UtilisationReportReconciliationDetails = {
   status: UtilisationReportReconciliationStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: Date;
-  feeRecordPaymentGroups: FeeRecordPaymentGroup[];
+  premiumPaymentsFeeRecordPaymentGroups: FeeRecordPaymentGroup[];
+  unfilteredFeeRecordPaymentGroups: FeeRecordPaymentGroup[];
   keyingSheet: KeyingSheet;
 };
 

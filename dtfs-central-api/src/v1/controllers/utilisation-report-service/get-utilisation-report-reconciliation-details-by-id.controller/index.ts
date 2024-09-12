@@ -1,18 +1,19 @@
+import { UtilisationReportPremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { NotFoundError, ApiError } from '../../../../errors';
 import { getUtilisationReportReconciliationDetails } from './helpers';
-import { REGEX } from '../../../../constants';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
+import { parsePremiumPaymentsFilters } from './helpers/parse-filters';
 
 export type GetUtilisationReportReconciliationDetailsByIdRequest = CustomExpressRequest<{
   params: {
     reportId: string;
   };
   query: {
-    facilityIdQuery?: string;
+    premiumPaymentsFilters?: UtilisationReportPremiumPaymentsFilters;
   };
 }>;
 
@@ -20,17 +21,17 @@ type ResponseBody = UtilisationReportReconciliationDetails | string;
 
 export const getUtilisationReportReconciliationDetailsById = async (req: GetUtilisationReportReconciliationDetailsByIdRequest, res: Response<ResponseBody>) => {
   const { reportId } = req.params;
-  const { facilityIdQuery } = req.query;
+  const { premiumPaymentsFilters } = req.query;
 
   try {
-    const facilityIdFilter = facilityIdQuery && REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityIdQuery) ? facilityIdQuery : undefined;
-
     const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsWithPayments(Number(reportId));
     if (!utilisationReport) {
       throw new NotFoundError(`Failed to find a report with id '${reportId}'`);
     }
 
-    const utilisationReportReconciliationDetails = await getUtilisationReportReconciliationDetails(utilisationReport, facilityIdFilter);
+    const premiumPaymentsTabParsedFilters = parsePremiumPaymentsFilters(premiumPaymentsFilters);
+
+    const utilisationReportReconciliationDetails = await getUtilisationReportReconciliationDetails(utilisationReport, premiumPaymentsTabParsedFilters);
 
     return res.status(HttpStatusCode.Ok).send(utilisationReportReconciliationDetails);
   } catch (error) {

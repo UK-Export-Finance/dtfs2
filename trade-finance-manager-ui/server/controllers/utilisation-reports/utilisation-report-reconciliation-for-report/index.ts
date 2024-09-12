@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth, UtilisationReportPremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -59,21 +59,25 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       req.originalUrl,
     );
 
-    const { feeRecordPaymentGroups, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
-      reportId,
-      facilityIdQueryString,
-      userToken,
-    );
+    const premiumPaymentsTabFilters: UtilisationReportPremiumPaymentsFilters = {
+      facilityId: facilityIdQueryString,
+    };
+
+    const { premiumPaymentsFeeRecordPaymentGroups, unfilteredFeeRecordPaymentGroups, reportPeriod, bank, keyingSheet } =
+      await api.getUtilisationReportReconciliationDetailsById(reportId, premiumPaymentsTabFilters, userToken);
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
-    const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(feeRecordPaymentGroups);
+    const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(premiumPaymentsFeeRecordPaymentGroups);
 
-    const feeRecordPaymentGroupViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
+    const feeRecordPaymentGroupViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(
+      premiumPaymentsFeeRecordPaymentGroups,
+      isCheckboxChecked,
+    );
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
-    const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(feeRecordPaymentGroups);
+    const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(unfilteredFeeRecordPaymentGroups);
 
     return renderUtilisationReportReconciliationForReport(res, {
       user,

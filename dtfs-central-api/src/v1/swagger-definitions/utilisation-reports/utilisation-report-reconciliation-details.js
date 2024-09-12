@@ -77,10 +77,19 @@
  *       dateUploaded:
  *         type: string
  *         format: date-time
- *       feeRecordPaymentGroups:
+ *       premiumPaymentsFeeRecordPaymentGroups:
+ *         type: array
+ *         items:
+ *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecordPaymentGroup'
+ *       unfilteredFeeRecordPaymentGroups:
  *         type: array
  *         items:
  *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecordPaymentGroup'
  *       keyingSheet:
  *         $ref: '#/definitions/KeyingSheet'
+ *   UtilisationReportPremiumPaymentsFilters:
+ *     type: object
+ *     properties:
+ *       facilityId:
+ *         type: string
  */
