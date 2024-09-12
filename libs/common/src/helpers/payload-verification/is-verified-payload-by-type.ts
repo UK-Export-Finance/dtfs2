@@ -1,47 +1,56 @@
 import { IsVerifiedPayloadByTypeParams } from '../../types/payload-verification';
+/**
+ * @deprecated
+ * @param {string[]} errorResult - List of errors
+ * @returns {boolean} - Returns false if there are errors, otherwise true
+ * @description - Logs the error list and returns false if there are errors, otherwise true
+ */
+const handleErrorListAndReturnResult = (errorResult: string[]) => {
+  if (errorResult.length) {
+    console.error('Payload verification error:\n%s', errorResult.join('\n'));
+    return false;
+  }
+  return true;
+};
 
 /**
  * @deprecated prefer IsVerifiedPayloadByZod
+ * @description This function is legacy code used to verify a payload by a template.
+ * It is not recommended to use this function as it is not as rigorous as the Zod schema validation.
+ * It has several odd behaviours, limitations, and is generally not as extendable as the replacement.
  */
 export const isVerifiedPayloadByType = ({ payload, template }: IsVerifiedPayloadByTypeParams) => {
   if (!payload || !template || !Object.keys(payload).length || !Object.keys(template).length) {
-    console.error('Payload verification error - no data');
-    return false;
+    return handleErrorListAndReturnResult(['no data']);
   }
 
   const payloadKeys = Object.keys(payload);
   const templateKeys = Object.keys(template);
 
+  const errorList: string[] = [];
+
   // 1. Properties key validation
-  const missingProperties = templateKeys.filter((x) => !payloadKeys.includes(x));
-
-  // 2. Ensure no additional properties
-  const extraProperties = payloadKeys.filter((x) => !templateKeys.includes(x));
-
-  // 3. Properties data type validation
-  const propertiesDataTypeMatch = payloadKeys.every((key) => {
-    const payloadKeyDataType = typeof payload[key];
-    const templateKeyDataType = template[key];
-    const keysHaveMatchingTypes = payloadKeyDataType.toLowerCase() === templateKeyDataType?.toLowerCase();
-
-    if (!keysHaveMatchingTypes) {
-      console.error(
-        `Payload verification error - type mismatch for field "${key}": payload type "${payloadKeyDataType}", template type "${templateKeyDataType}"`,
-      );
+  templateKeys.forEach((templateKey) => {
+    if (!payloadKeys.includes(templateKey)) {
+      errorList.push(`missing property: ${templateKey}`);
     }
-
-    return keysHaveMatchingTypes;
   });
 
-  if (missingProperties.length) {
-    console.error('Payload verification error - missing properties %s', missingProperties);
-  }
-  if (extraProperties.length) {
-    console.error('Payload verification error - extra properties %s', extraProperties);
-  }
-  if (!propertiesDataTypeMatch) {
-    console.error('Payload verification error - field type mismatch');
-  }
-  // Compound comparison condition
-  return !missingProperties.length && !extraProperties.length && propertiesDataTypeMatch;
+  payloadKeys.forEach((payloadKey) => {
+    // 2. Ensure no additional properties
+    if (!templateKeys.includes(payloadKey)) {
+      errorList.push(`extra property: ${payloadKey}`);
+      return;
+    }
+
+    // 3. Properties data type validation
+    const payloadKeyDataType = typeof payload[payloadKey];
+    const templateKeyDataType = template[payloadKey];
+    const keysHaveMatchingTypes = payloadKeyDataType.toLowerCase() === templateKeyDataType?.toLowerCase();
+    if (!keysHaveMatchingTypes) {
+      errorList.push(`type mismatch: ${payloadKey} (expected ${templateKeyDataType}, got ${payloadKeyDataType})`);
+    }
+  });
+
+  return handleErrorListAndReturnResult(errorList);
 };
