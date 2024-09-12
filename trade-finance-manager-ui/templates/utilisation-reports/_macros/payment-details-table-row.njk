@@ -5,11 +5,13 @@
   {% set groupStatus = paymentDetails.feeRecordPaymentGroupStatus %}
   {% set payment = paymentDetails.payment %}
   {% set feeRecords = paymentDetails.feeRecords %}
-  {% set reconciledBy = paymentDetails.reconciledBy or "-" %}
-  {% set dateReconciled = paymentDetails.dateReconciled or "-" %}
+  {% set reconciledBy = paymentDetails.reconciledBy %}
+  {% set dateReconciled = paymentDetails.dateReconciled %}
   {% set paymentAmountHtml %}
   {% if userCanEdit and groupStatus !== 'READY_TO_KEY' and groupStatus !== 'RECONCILED' %}
-    <a href="/utilisation-reports/{{ reportId }}/edit-payment/{{ payment.id }}">
+    <a
+      href="/utilisation-reports/{{ reportId }}/edit-payment/{{ payment.id }}?redirectTab=payment-details"
+      data-cy="payment-details-tab-edit-payment-link--paymentId-{{ payment.id }}">
       {{ payment.amount.formattedCurrencyAndAmount }}
     </a>
   {% else %}
@@ -28,7 +30,7 @@
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}">{{ feeRecord.exporter }}</td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ payment.dateReceived.dataSortValue }}">{{ payment.dateReceived.formattedDateReceived if isFirstLineOfRow }}</td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ reconciledBy }}" data-cy="reconciledBy">{{ reconciledBy if isFirstLineOfRow }}</td>
-      <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ dateReconciled }}" data-cy="dateReconciled">{{ dateReconciled if isFirstLineOfRow }}</td>
+      <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ dateReconciled.dataSortValue }}" data-cy="dateReconciled">{{ dateReconciled.formattedDateReconciled if isFirstLineOfRow }}</td>
     </tr>
   {% endfor %}
 {% endmacro %}

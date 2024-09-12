@@ -28,7 +28,7 @@ context('Edit deal name', () => {
     cy.title().should('eq', `Change name - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
     editDealName.additionalRefName().should('have.value', deal.additionalRefName);
     editDealName.additionalRefName().type('{selectall}{backspace}');
-    editDealName.submit().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative(`/contract/${deal._id}/edit-name`));
 
@@ -42,13 +42,8 @@ context('Edit deal name', () => {
     contract.editDealName().click();
 
     editDealName.additionalRefName().type('{selectall}{backspace}mock');
-    editDealName.submit().click();
+    cy.clickSubmitButton();
 
-    contract
-      .additionalRefName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('mock');
-      });
+    cy.assertText(contract.additionalRefName(), 'mock');
   });
 });

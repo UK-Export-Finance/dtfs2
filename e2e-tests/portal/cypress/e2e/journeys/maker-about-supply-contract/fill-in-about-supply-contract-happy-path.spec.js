@@ -35,13 +35,10 @@ context('about-supply-contract', () => {
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
     contract.visit(deal);
+
     // check the status is displaying correctly
-    contract
-      .aboutSupplierDetailsStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Not started');
-      });
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Not started');
+
     contract.aboutSupplierDetailsLink().click();
 
     cy.title().should('eq', `Supplier information - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
@@ -85,22 +82,12 @@ context('about-supply-contract', () => {
     contractAboutSupplier.saveAndGoBack().click();
 
     // the deal page should reflect the partially-complete nature of the section
-    contract
-      .aboutSupplierDetailsStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
 
     // check that the preview page renders the Submission Details component
     contractAboutPreview.visit(deal);
     contractAboutPreview.submissionDetails().should('be.visible');
 
-    partials.taskListHeader
-      .itemStatus('supplier-and-counter-indemnifier/guarantor')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('supplier-and-counter-indemnifier/guarantor'), 'Completed');
   });
 });

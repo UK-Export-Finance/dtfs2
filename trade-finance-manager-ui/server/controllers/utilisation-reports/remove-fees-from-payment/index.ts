@@ -5,15 +5,20 @@ import { RemoveFeesFromPaymentFormRequestBody } from '../../../helpers/remove-fe
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { extractEditPaymentFormValues } from '../helpers';
+import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
 
 export type RemoveFeesFromPaymentRequest = CustomExpressRequest<{
   reqBody: RemoveFeesFromPaymentFormRequestBody;
+  query: {
+    redirectTab?: ReconciliationForReportTab;
+  };
 }>;
 
 export const postRemoveFeesFromPayment = async (req: RemoveFeesFromPaymentRequest, res: Response) => {
   try {
     const { user, userToken } = asUserSession(req.session);
     const { reportId, paymentId } = req.params;
+    const { redirectTab } = req.query;
 
     req.session.editPaymentFormValues = extractEditPaymentFormValues(req.body);
 
@@ -22,7 +27,7 @@ export const postRemoveFeesFromPayment = async (req: RemoveFeesFromPaymentReques
 
     await api.removeFeesFromPayment(reportId, paymentId, selectedFeeRecordIds, user, userToken);
 
-    return res.redirect(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
+    return res.redirect(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=${redirectTab}`);
   } catch (error) {
     console.error('Failed to remove fees from payment', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });

@@ -19,7 +19,7 @@ describe('/feedback', () => {
   };
 
   describe('POST /v1/feedback', () => {
-    it('it successfully sends feedback form', async () => {
+    it('successfully sends feedback form', async () => {
       const { status } = await post(feedbackFormBody).to('/v1/feedback');
       expect(status).toEqual(200);
     });

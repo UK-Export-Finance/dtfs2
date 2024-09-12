@@ -18,7 +18,7 @@ export const fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate = 
   pages.loanIssueFacility.disbursementAmount().type(DISBURSEMENT_AMOUNT_VALUE);
   pages.loanIssueFacility.name().type('5678');
 
-  pages.loanIssueFacility.submit().click();
+  cy.clickSubmitButton();
 };
 
 export const fillAndSubmitIssueLoanFacilityForm = () => {
@@ -48,5 +48,5 @@ export const fillAndSubmitIssueLoanFacilityForm = () => {
   pages.loanIssueFacility.disbursementAmount().type(DISBURSEMENT_AMOUNT_VALUE);
   pages.loanIssueFacility.name().type('5678');
 
-  pages.loanIssueFacility.submit().click();
+  cy.clickSubmitButton();
 };

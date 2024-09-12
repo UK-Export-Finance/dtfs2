@@ -1,5 +1,5 @@
 import { MAKER } from '../../constants/roles';
-import { MOCK_AIN_APPLICATION_UNISSUED_ONLY, MOCK_MIA_APPLICATION_UNISSUED_ONLY } from '../../utils/mocks/mock_applications';
+import { MOCK_AIN_APPLICATION_UNISSUED_ONLY, MOCK_MIA_APPLICATION_UNISSUED_ONLY } from '../../utils/mocks/mock-applications';
 import { canUpdateUnissuedFacilitiesCheck } from './canUpdateUnissuedFacilitiesCheck';
 import { NON_MAKER_ROLES } from '../../../test-helpers/common-role-lists';
 
