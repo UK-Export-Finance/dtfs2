@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
-import { TestApiError, UtilisationReportEntityMockBuilder, UtilisationReportPremiumPaymentsTabFilters } from '@ukef/dtfs2-common';
+import { TestApiError, UtilisationReportEntityMockBuilder, UtilisationReportPremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import { getUtilisationReportReconciliationDetails } from './helpers';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
@@ -15,13 +15,13 @@ console.error = jest.fn();
 describe('get-utilisation-report-reconciliation-details-by-id.controller', () => {
   describe('getUtilisationReportReconciliationDetailsById', () => {
     const reportId = 1;
-    const getHttpMocks = (premiumPaymentsTabFilters?: UtilisationReportPremiumPaymentsTabFilters) =>
+    const getHttpMocks = (premiumPaymentsFilters?: UtilisationReportPremiumPaymentsFilters) =>
       httpMocks.createMocks<GetUtilisationReportReconciliationDetailsByIdRequest>({
         params: {
           reportId,
         },
         query: {
-          premiumPaymentsTabFilters,
+          premiumPaymentsFilters,
         },
       });
 
@@ -99,10 +99,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
 
     it('fetches details filtering by premium payments tab facility id value and responds with 200 when there is a facility id value provided', async () => {
       // Arrange
-      const premiumPaymentsTabFilters = {
+      const premiumPaymentsFilters = {
         facilityId: '1234',
       };
-      const { req, res } = getHttpMocks(premiumPaymentsTabFilters);
+      const { req, res } = getHttpMocks(premiumPaymentsFilters);
 
       const utilisationReport = UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').withId(reportId).build();
       when(utilisationReportRepoFindSpy).calledWith(reportId).mockResolvedValue(utilisationReport);

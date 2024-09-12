@@ -47,10 +47,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       async (status) => {
         // Arrange
         const report = UtilisationReportEntityMockBuilder.forStatus(status).withId(reportId).withDateUploaded(null).build();
-        const premiumPaymentsTabFilters = {};
+        const premiumPaymentsFilters = {};
 
         // Act / Assert
-        await expect(getUtilisationReportReconciliationDetails(report, premiumPaymentsTabFilters)).rejects.toThrow(
+        await expect(getUtilisationReportReconciliationDetails(report, premiumPaymentsFilters)).rejects.toThrow(
           new Error(`Report with id '${reportId}' has not been uploaded`),
         );
         expect(getBankNameById).not.toHaveBeenCalled();
@@ -61,12 +61,12 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       // Arrange
       const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
 
-      const premiumPaymentsTabFilters = {};
+      const premiumPaymentsFilters = {};
 
       when(getBankNameById).calledWith(bankId).mockResolvedValue(undefined);
 
       // Act / Assert
-      await expect(getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsTabFilters)).rejects.toThrow(
+      await expect(getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters)).rejects.toThrow(
         new NotFoundError(`Failed to find a bank with id '${bankId}'`),
       );
       expect(getBankNameById).toHaveBeenCalledWith(bankId);
@@ -87,13 +87,13 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         .withFeeRecords([])
         .build();
 
-      const premiumPaymentsTabFilters = {};
+      const premiumPaymentsFilters = {};
 
       const bankName = 'Test bank';
       when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
 
       // Act
-      const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsTabFilters);
+      const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters);
 
       // Assert
       expect(getBankNameById).toHaveBeenCalledWith(bankId);
@@ -128,12 +128,12 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
 
         const facilityId = 'some filter';
-        const premiumPaymentsTabFilters = {
+        const premiumPaymentsFilters = {
           facilityId,
         };
 
         // Act
-        await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsTabFilters);
+        await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters);
 
         // Assert
         expect(filterFeeRecordSpy).toHaveBeenCalledWith([], facilityId);
@@ -151,10 +151,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const bankName = 'Test bank';
         when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
 
-        const premiumPaymentsTabFilters = {};
+        const premiumPaymentsFilters = {};
 
         // Act
-        await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsTabFilters);
+        await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters);
 
         // Assert
         expect(filterFeeRecordSpy).not.toHaveBeenCalled();

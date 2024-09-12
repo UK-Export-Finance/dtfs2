@@ -250,10 +250,10 @@ utilisationReportsRouter.route('/set-status').put(putUtilisationReportStatusCont
  *         required: true
  *         description: the id for the report to get the fee records for
  *       - in: query
- *         name: premiumPaymentsTabFilters
+ *         name: premiumPaymentsFilters
  *         schema:
  *           type: object
- *           $ref: '#/definitions/UtilisationReportPremiumPaymentsTabFilters'
+ *           $ref: '#/definitions/UtilisationReportPremiumPaymentsFilters'
  *     responses:
  *       200:
  *         description: OK

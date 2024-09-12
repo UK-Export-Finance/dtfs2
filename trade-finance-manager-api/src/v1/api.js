@@ -1295,14 +1295,14 @@ const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
 /**
  * Gets the utilisation report reconciliation details by report id
  * @param {string} reportId - The report id
- * @param {import('@ukef/dtfs2-common').UtilisationReportPremiumPaymentsTabFilters)} premiumPaymentsTabFilters - Filters to apply to the premium payments tab
+ * @param {import('@ukef/dtfs2-common').UtilisationReportPremiumPaymentsFilters)} premiumPaymentsFilters - Filters to apply to the premium payments tab
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
-const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPaymentsTabFilters) => {
+const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPaymentsFilters) => {
   const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
     headers: headers.central,
     params: {
-      premiumPaymentsTabFilters,
+      premiumPaymentsFilters,
     },
   });
 

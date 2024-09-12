@@ -45,10 +45,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
     it('fetches report with the premium payments tab filters query param when provided', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
-      const premiumPaymentsTabFilters = {
+      const premiumPaymentsFilters = {
         facilityId: '1234',
       };
-      req.query = { premiumPaymentsTabFilters };
+      req.query = { premiumPaymentsFilters };
 
       apiGetUtilisationReportReconciliationDetailsByIdSpy.mockResolvedValue(utilisationReportReconciliationDetailsResponse);
 
@@ -56,7 +56,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsTabFilters);
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsFilters);
     });
 
     it('responds with the specific axios error code when the api throws an error', async () => {

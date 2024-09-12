@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth, UtilisationReportPremiumPaymentsTabFilters } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth, UtilisationReportPremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -59,7 +59,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       req.originalUrl,
     );
 
-    const premiumPaymentsTabFilters: UtilisationReportPremiumPaymentsTabFilters = {
+    const premiumPaymentsTabFilters: UtilisationReportPremiumPaymentsFilters = {
       facilityId: facilityIdQueryString,
     };
 
