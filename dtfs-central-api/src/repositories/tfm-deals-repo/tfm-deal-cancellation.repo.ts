@@ -1,5 +1,5 @@
 import { Collection, ObjectId, UpdateFilter, UpdateResult, WithoutId } from 'mongodb';
-import { DEAL_SUBMISSION_TYPE, DealNotFoundError, TfmDeal, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { DEAL_SUBMISSION_TYPE, DealNotFoundError, TFM_DEAL_STAGE, TfmDeal, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { mongoDbClient } from '../../drivers/db-client';
 
 export class TfmDealCancellationRepo {
@@ -38,7 +38,7 @@ export class TfmDealCancellationRepo {
     const updateResult = await dealCollection.updateOne(
       {
         _id: { $eq: new ObjectId(dealId) },
-        'tfm.stage': { $ne: 'Cancelled' },
+        'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
         'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
       },
       update,

@@ -13,7 +13,7 @@ const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user
 
 console.error = jest.fn();
 
-describe('PUT TFM deal cancellation', () => {
+describe('/v1/tfm/deals/:dealId/cancellation', () => {
   let dealId;
   let dealCancellationUrl;
   let tfmAuditDetails;
