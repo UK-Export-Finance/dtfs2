@@ -2,7 +2,7 @@ import { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
-import { getTask } from '../helpers';
+import { dealCancellationEnabled, getTask } from '../helpers';
 import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
 
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -10,12 +10,12 @@ jest.mock('@ukef/dtfs2-common', () => ({
   isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
 }));
 
-const res = mockRes();
-
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  isTfmDealCancellationFeatureFlagEnabled: jest.fn(),
+jest.mock('../helpers', () => ({
+  ...jest.requireActual('../helpers'),
+  dealCancellationEnabled: jest.fn().mockReturnValue(false),
 }));
+
+const res = mockRes();
 
 const token = 'test-token';
 
@@ -32,11 +32,14 @@ const session = {
 
 describe('controllers - case', () => {
   beforeEach(() => {
+    jest.clearAllMocks();
     jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(false);
   });
 
   describe('GET case deal', () => {
     describe('when deal exists', () => {
+      let req;
+
       const mockDeal = {
         _id: '61f6ac5b02fade01b1e8efef',
         dealSnapshot: {
@@ -65,16 +68,16 @@ describe('controllers - case', () => {
             status: 200,
             data: mockAmendments,
           });
-      });
 
-      it('should render deal template with data', async () => {
-        const req = {
+        req = {
           params: {
             _id: mockDeal._id,
           },
           session,
         };
+      });
 
+      it('should render deal template with data', async () => {
         await caseController.getCaseDeal(req, res);
 
         expect(res.render).toHaveBeenCalledWith('case/deal/deal.njk', {
@@ -84,10 +87,43 @@ describe('controllers - case', () => {
           activeSubNavigation: 'deal',
           dealId: req.params._id,
           user: session.user,
+          showDealCancelButton: false,
           hasAmendmentInProgress: true,
           amendments: mockAmendments,
           amendmentsInProgress: mockAmendments,
         });
+      });
+
+      it('should check whether deal cancellation is enabled', async () => {
+        await caseController.getCaseDeal(req, res);
+
+        expect(dealCancellationEnabled).toHaveBeenCalledTimes(1);
+      });
+
+      it('should render the template with the deal cancellation value when it is true', async () => {
+        jest.mocked(dealCancellationEnabled).mockReturnValueOnce(true);
+
+        await caseController.getCaseDeal(req, res);
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/deal/deal.njk',
+          expect.objectContaining({
+            showDealCancelButton: true,
+          }),
+        );
+      });
+
+      it('should render the template with the deal cancellation value when it is false', async () => {
+        jest.mocked(dealCancellationEnabled).mockReturnValueOnce(false);
+
+        await caseController.getCaseDeal(req, res);
+
+        expect(res.render).toHaveBeenCalledWith(
+          'case/deal/deal.njk',
+          expect.objectContaining({
+            showDealCancelButton: false,
+          }),
+        );
       });
     });
 

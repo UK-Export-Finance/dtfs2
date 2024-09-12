@@ -1,7 +1,7 @@
 const { format, fromUnixTime } = require('date-fns');
 const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
-const { getTask, showAmendmentButton, ukefDecisionRejected } = require('../helpers');
+const { getTask, showAmendmentButton, ukefDecisionRejected, dealCancellationEnabled } = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
@@ -9,7 +9,6 @@ const { filterTasks } = require('../helpers/tasks.helper');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../helpers/amendments.helper');
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
-const { dealCancellationEnabled } = require('../../helpers/deal-cancellation-enabled');
 
 const {
   DEAL,
@@ -39,6 +38,8 @@ const getCaseDeal = async (req, res) => {
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
+
+  console.log('here');
 
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,

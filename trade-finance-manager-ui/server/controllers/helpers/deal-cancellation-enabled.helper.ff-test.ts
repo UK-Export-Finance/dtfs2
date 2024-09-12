@@ -1,5 +1,5 @@
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { dealCancellationEnabled } from './deal-cancellation-enabled';
+import { dealCancellationEnabled } from './deal-cancellation-enabled.helper';
 
 describe('dealCancellationEnabled', () => {
   describe('when `FF_TFM_FACILITY_END_DATE_ENABLED` is set to false', () => {
