@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { getTask, showAmendmentButton, ukefDecisionRejected, dealCancellationEnabled } = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
@@ -9,6 +9,7 @@ const { filterTasks } = require('../helpers/tasks.helper');
 const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../helpers/amendments.helper');
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
+const { asUserSession } = require('../../helpers/express-session');
 
 const {
   DEAL,
@@ -20,6 +21,8 @@ const {
 const getCaseDeal = async (req, res) => {
   const dealId = req.params._id;
   const { userToken } = req.session;
+
+  const { user } = asUserSession(req.session);
 
   const deal = await api.getDeal(dealId, userToken);
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
@@ -49,7 +52,7 @@ const getCaseDeal = async (req, res) => {
     amendments,
     amendmentsInProgress,
     hasAmendmentInProgress,
-    showDealCancelButton: dealCancellationEnabled(deal.dealSnapshot.submissionType),
+    showDealCancelButton: dealCancellationEnabled(deal.dealSnapshot.submissionType, user),
   });
 };
 
