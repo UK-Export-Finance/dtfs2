@@ -17,18 +17,21 @@ const { to2Decimals } = require('../../helpers/currency');
 const facilityGuaranteeAmend = (amendment) => {
   try {
     const { amount, facilityGuaranteeDates } = amendment;
-    const record = {};
+    let record = {};
 
     if (!amount && !facilityGuaranteeDates?.guaranteeExpiryDate) {
       throw new Error('Invalid argument set provided');
     }
 
     if (amount) {
-      record.guaranteedLimit = to2Decimals(amount);
+      record = { ...record, guaranteedLimit: to2Decimals(amount) };
     }
 
     if (facilityGuaranteeDates?.guaranteeExpiryDate) {
-      record.expirationDate = facilityGuaranteeDates.guaranteeExpiryDate;
+      record = {
+        ...record,
+        expirationDate: facilityGuaranteeDates.guaranteeExpiryDate,
+      };
     }
 
     // Return amended FGR
