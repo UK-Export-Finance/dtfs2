@@ -13,6 +13,11 @@ type UpdateTfmDealCancellationRequest = CustomExpressRequest<{
 
 type UpdateTfmDealCancellationResponse = Response<ApiErrorResponseBody | UpdateResult>;
 
+/**
+ * Updates the TFM deal cancellation object
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const updateTfmDealCancellation = async (req: UpdateTfmDealCancellationRequest, res: UpdateTfmDealCancellationResponse) => {
   const { dealCancellationUpdate, auditDetails } = req.body;
   const { dealId } = req.params;

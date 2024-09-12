@@ -1231,6 +1231,7 @@ const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, us
 };
 
 /**
+ * Updates the deal cancellation object on a TFM MIN or AIN deal
  * @param {string} dealId - The deal ID
  * @param {Partial<import('@ukef/dtfs2-common').TfmDealCancellation>} cancellationUpdate - The deal cancellation update object
  * @param {string} userToken - The user token

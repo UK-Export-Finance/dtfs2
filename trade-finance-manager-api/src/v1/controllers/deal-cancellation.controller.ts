@@ -11,6 +11,11 @@ export type UpdateDealCancellationRequest = CustomExpressRequest<{
   reqBody: TfmDealCancellation;
 }>;
 
+/**
+ * Updates the TFM deal cancellation object
+ * @param req - The request object
+ * @param res - The response object
+ */
 export const updateDealCancellation = async (req: UpdateDealCancellationRequest, res: Response) => {
   const { dealId } = req.params;
 
