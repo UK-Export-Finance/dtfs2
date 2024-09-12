@@ -1,3 +1,4 @@
+const { RECONCILIATION_FOR_REPORT_TABS } = require('../../../server/constants/reconciliation-for-report-tabs');
 const { componentRenderer } = require('../../componentRenderer');
 
 const component = '../templates/utilisation-reports/_macros/fee-record-details-table.njk';
@@ -30,7 +31,7 @@ describe(component, () => {
   const reportId = '7';
   const paymentId = '77';
 
-  const getWrapper = ({ captionText, feeRecords, totalReportedPayments, enableSelectingFeeRecords, errorMessage, overrides } = {}) =>
+  const getWrapper = ({ captionText, feeRecords, totalReportedPayments, enableSelectingFeeRecords, errorMessage, overrides, redirectTab } = {}) =>
     render({
       reportId,
       paymentId,
@@ -40,6 +41,7 @@ describe(component, () => {
       enableSelectingFeeRecords: enableSelectingFeeRecords ?? true,
       errorMessage,
       overrides: overrides ?? {},
+      redirectTab,
     });
 
   const tableSelector = 'table[data-cy="fee-record-details-table"]';
@@ -255,14 +257,18 @@ describe(component, () => {
   });
 
   it('renders the "remove selected fees" button when enableSelectingFeeRecords is set to true', async () => {
-    const wrapper = getWrapper({ enableSelectingFeeRecords: true });
+    const redirectTab = RECONCILIATION_FOR_REPORT_TABS.PAYMENT_DETAILS;
+    const wrapper = getWrapper({
+      enableSelectingFeeRecords: true,
+      redirectTab,
+    });
 
     const saveChangesButtonSelector = 'input[data-cy="remove-selected-fees-button"]';
     wrapper.expectElement(saveChangesButtonSelector).toExist();
     wrapper.expectInput(saveChangesButtonSelector).toHaveValue('Remove selected fees');
     wrapper
       .expectElement(saveChangesButtonSelector)
-      .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/edit-payment/${paymentId}/remove-selected-fees`);
+      .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/edit-payment/${paymentId}/remove-selected-fees?redirectTab=${redirectTab}`);
   });
 
   it('does not render the "remove selected fees" button when enableSelectingFeeRecords is set to false', async () => {

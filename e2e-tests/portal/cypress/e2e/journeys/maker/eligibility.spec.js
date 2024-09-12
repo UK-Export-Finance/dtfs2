@@ -1,4 +1,4 @@
-const { contract, eligibilityCriteria, eligibilityDocumentation, eligibilityPreview } = require('../../pages');
+const { contract, eligibilityCriteria, eligibilityDocumentation } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
@@ -47,7 +47,7 @@ context('Eligibility', () => {
       //---------------------------------------------------------------
       // go back to deal page, check Eligibility status is `completed`
       //---------------------------------------------------------------
-      eligibilityPreview.saveGoBackButton().click();
+      cy.clickSaveGoBackButton();
 
       cy.url().should('not.include', '/eligibility');
 

@@ -78,9 +78,9 @@ context('A checker selects to return a deal (with some issued facilities) to mak
     cy.assertText(unconditionalLoanRow.loanStatus(), 'Completed');
 
     // return the deal to maker
-    pages.contract.returnToMaker().click();
+    cy.clickReturnToMakerButton();
     pages.contractReturnToMaker.comments().type('Nope!');
-    pages.contractReturnToMaker.returnToMaker().click();
+    cy.clickReturnToMakerButton();
     cy.url().should('include', '/dashboard');
 
     // view the deal

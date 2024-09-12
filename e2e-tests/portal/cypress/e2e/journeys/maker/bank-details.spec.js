@@ -14,11 +14,11 @@ context('Create deal', () => {
       bankDetails.bankDealId().clear();
       bankDetails.bankDealName().clear();
 
-      bankDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative('/before-you-start/bank-deal'));
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_FORM_FIELDS);
+      partials.errorSummaryLinks().should('have.length', TOTAL_FORM_FIELDS);
     });
   });
 
@@ -44,7 +44,7 @@ context('Create deal', () => {
     // complete 'before you start' form fields
     bankDetails.bankDealId().type('TEST1234');
     bankDetails.bankDealName().type('TESTING');
-    bankDetails.submit().click();
+    cy.clickSubmitButton();
 
     // confirm that we're on the newly created deal '/contract/XYZ'
     cy.url().should('include', '/contract/');

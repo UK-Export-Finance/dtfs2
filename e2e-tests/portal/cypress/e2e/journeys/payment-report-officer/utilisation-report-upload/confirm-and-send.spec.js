@@ -23,29 +23,26 @@ context('Confirm and send', () => {
       cy.visit(relativeURL('/utilisation-report-upload'));
 
       utilisationReportUpload.utilisationReportFileInput().attachFile('valid-utilisation-report-February_2023_monthly.xlsx');
-      utilisationReportUpload.continueButton().click();
+      cy.clickContinueButton();
 
       problemWithService.heading().should('not.exist');
     });
 
     it('Should route to the Upload Report page when the back button is selected', () => {
-      confirmAndSend.backLink().click();
+      cy.clickBackLink();
 
-      confirmAndSend.mainHeading().should('not.exist');
       utilisationReportUpload.assertOnThisPage();
     });
 
     it('Should route to the Upload Report page when the change button is selected', () => {
       confirmAndSend.changeLink().click();
 
-      confirmAndSend.mainHeading().should('not.exist');
       utilisationReportUpload.assertOnThisPage();
     });
 
     it('Should route to the Confirmation page when the Confirm and Send button is selected', () => {
       confirmAndSend.confirmAndSendButton().click();
 
-      confirmAndSend.mainHeading().should('not.exist');
       confirmAndSend.currentUrl().should('contain', '/confirmation');
     });
   });

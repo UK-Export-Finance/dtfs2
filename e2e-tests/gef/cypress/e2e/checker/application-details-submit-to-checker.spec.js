@@ -95,7 +95,7 @@ context('Application Details Submission', () => {
       applicationDetails.abandonLink().should('not.exist');
     });
 
-    it('it shows the latest comment with the firstname and lastname', () => {
+    it('shows the latest comment with the firstname and lastname', () => {
       applicationDetails.comments().contains(`Comments from ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
       applicationDetails.comments().contains('test');
     });
