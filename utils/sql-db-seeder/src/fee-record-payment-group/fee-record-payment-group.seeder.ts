@@ -6,6 +6,7 @@ import {
   PaymentEntity,
   FacilityUtilisationDataEntity,
   FEE_RECORD_STATUS,
+  ReportPeriod,
 } from '@ukef/dtfs2-common';
 import { DataSource } from 'typeorm';
 import Big from 'big.js';
@@ -31,29 +32,39 @@ export class FeeRecordPaymentGroupSeeder {
 
   private readonly feeRecords: FeeRecordEntity[] = [];
 
+  private readonly utilisationDataReportPeriod: ReportPeriod;
+
   private readonly reportIsManuallyReconciled: boolean = false;
 
-  private constructor(report: UtilisationReportEntity, status: FeeRecordStatus, paymentCurrency: Currency | null, reportIsManuallyReconciled: boolean | null) {
+  private constructor(
+    report: UtilisationReportEntity,
+    utilisationDataReportPeriod: ReportPeriod,
+    status: FeeRecordStatus,
+    paymentCurrency: Currency | null,
+    reportIsManuallyReconciled: boolean | null,
+  ) {
     this.status = status;
     this.report = report;
     this.paymentCurrency = paymentCurrency;
     this.reportIsManuallyReconciled = reportIsManuallyReconciled ?? false;
+    this.utilisationDataReportPeriod = utilisationDataReportPeriod;
   }
 
   public static forReportStatusAndPaymentCurrency(
     report: UtilisationReportEntity,
+    utilisationDataReportPeriod: ReportPeriod,
     status: Exclude<FeeRecordStatus, 'TO_DO'>,
     paymentCurrency: Currency,
   ): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, status, paymentCurrency, null);
+    return new FeeRecordPaymentGroupSeeder(report, utilisationDataReportPeriod, status, paymentCurrency, null);
   }
 
-  public static forReport(report: UtilisationReportEntity): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, 'TO_DO', null, null);
+  public static forReport(report: UtilisationReportEntity, utilisationDataReportPeriod: ReportPeriod): FeeRecordPaymentGroupSeeder {
+    return new FeeRecordPaymentGroupSeeder(report, utilisationDataReportPeriod, 'TO_DO', null, null);
   }
 
   public static forManuallyCompletedReport(report: UtilisationReportEntity): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, 'RECONCILED', null, true);
+    return new FeeRecordPaymentGroupSeeder(report, report.reportPeriod, 'RECONCILED', null, true);
   }
 
   public addOneRandomFeeRecord(overrides: AddRandomFeeRecordOverrides = {}): FeeRecordPaymentGroupSeeder {
@@ -92,7 +103,7 @@ export class FeeRecordPaymentGroupSeeder {
   }
 
   private async saveFacilityUtilisationData(dataSource: DataSource): Promise<void> {
-    for (const { facilityId, facilityUtilisation, report } of this.feeRecords) {
+    for (const { facilityId, facilityUtilisation } of this.feeRecords) {
       const facilityUtilisationDataExists = await dataSource.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityId });
       if (facilityUtilisationDataExists) {
         // eslint-disable-next-line no-continue
@@ -100,7 +111,7 @@ export class FeeRecordPaymentGroupSeeder {
       }
       const facilityUtilisationData = new FacilityUtilisationDataEntity();
       facilityUtilisationData.id = facilityId;
-      facilityUtilisationData.reportPeriod = report.reportPeriod;
+      facilityUtilisationData.reportPeriod = this.utilisationDataReportPeriod;
       facilityUtilisationData.utilisation = facilityUtilisation * faker.number.float({ min: 0.8, max: 1.2 });
       facilityUtilisationData.updateLastUpdatedBy({ platform: 'SYSTEM' });
       await dataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);

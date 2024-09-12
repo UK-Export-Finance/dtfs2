@@ -1,30 +1,43 @@
-import { WithoutId } from 'mongodb';
+import { ObjectId, WithoutId } from 'mongodb';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { Facility, TfmFacility } from '@ukef/dtfs2-common';
 import { FacilityClient, mongoDbClient, TfmFacilityClient } from './database-client';
-import { generateRandomTfmFacilityForFacility, getSqlFacilityIds, getValidGefDealIdGenerator } from './helpers';
-import { aFacilityWithoutDealId } from './mock-data';
+import { generateRandomTfmFacilityForFacility, getSqlFacilityIds, getPortalUserIdOrFail } from './helpers';
+import { aDeal, aFacility, aTfmDeal } from './mock-data';
+import { DealClient } from './database-client/deal-client';
+import { TfmDealClient } from './database-client/tfm-deal-client';
 
 const run = async () => {
   const dataSource = await SqlDbDataSource.initialize();
 
   await FacilityClient.init();
   await TfmFacilityClient.init();
+  await DealClient.init();
+  await TfmDealClient.init();
+
+  const ukefDealId = '0011223344';
+
+  const dealId = new ObjectId();
+
+  const portalUserId = await getPortalUserIdOrFail();
 
   try {
     const facilityIdsToInsert = await getSqlFacilityIds(dataSource);
 
-    const validGefDealIdGenerator = await getValidGefDealIdGenerator();
-
     const facilities = facilityIdsToInsert.map((ukefFacilityId) => ({
-      ...aFacilityWithoutDealId(),
+      ...aFacility(new ObjectId(), dealId, portalUserId),
       ukefFacilityId,
-      dealId: validGefDealIdGenerator(),
     })) as Facility[];
     await Promise.all(facilities.map((facility) => FacilityClient.insertIfNotExists(facility)));
 
-    const tfmFacilities: WithoutId<TfmFacility>[] = facilities.map(generateRandomTfmFacilityForFacility);
+    const tfmFacilities: WithoutId<TfmFacility>[] = facilities.map((facility) => generateRandomTfmFacilityForFacility(facility, portalUserId));
     await Promise.all(tfmFacilities.map((tfmFacility) => TfmFacilityClient.insertIfNotExists(tfmFacility)));
+
+    const deal = aDeal(ukefDealId, dealId, portalUserId);
+    await DealClient.insertIfNotExists(deal);
+
+    const tfmDeal = { ...aTfmDeal(dealId, portalUserId, deal) };
+    await TfmDealClient.insertIfNotExists(tfmDeal);
   } catch (error) {
     console.error('Failed to create tfm facilities:', error);
   } finally {

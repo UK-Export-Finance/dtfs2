@@ -122,4 +122,5 @@ export type TfmFacility = {
   _id: ObjectId;
   facilitySnapshot: Facility;
   amendments?: TfmFacilityAmendment[];
+  tfm: object;
 };
