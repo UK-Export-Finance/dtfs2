@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import partials from '../../partials';
+import { caseSubNavigation, caseSummary, errorSummaryItems } from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import MOCK_DEAL from '../../../fixtures/deal-AIN';
@@ -28,7 +28,7 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to underwriter managers decision page
-    partials.caseSubNavigation.underwritingLink().click();
+    caseSubNavigation.underwritingLink().click();
   });
 
   after(() => {
@@ -47,16 +47,16 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to underwriter managers decision page
-    partials.caseSubNavigation.underwritingLink().click();
+    caseSubNavigation.underwritingLink().click();
 
     pages.underwritingPage.addUnderwriterManagerDecisionButton().should('not.exist');
   });
 
   it('submitting an empty form displays validation errors', () => {
     pages.underwritingPage.addUnderwriterManagerDecisionButton().click({ force: true });
-    pages.managersDecisionPage.submitButton().click();
+    cy.clickSubmitButton();
 
-    pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
+    errorSummaryItems().should('have.length', 1);
     pages.managersDecisionPage.decisionRadioInputValidationError().should('be.visible');
     pages.managersDecisionPage.decisionRadioInputValidationError().should('contain.text', 'Select if you approve or decline');
   });
@@ -70,9 +70,9 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
 
       pages.managersDecisionPage.commentsInputInternal().typeWithoutDelay('a'.repeat(8001));
 
-      pages.managersDecisionPage.submitButton().click();
+      cy.clickSubmitButton();
 
-      pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
+      errorSummaryItems().should('have.length', 1);
       pages.managersDecisionPage.commentsInputInternalValidationError().should('be.visible');
       pages.managersDecisionPage.commentsInputInternalValidationError().should('contain.text', 'Comments must be 8000 characters or fewer');
     });
@@ -91,13 +91,13 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
     });
 
     it('should throw validation error if no comment provided and persists radio selection', () => {
-      pages.managersDecisionPage.submitButton().click();
+      cy.clickSubmitButton();
 
       // radio should be selected
       pages.managersDecisionPage.decisionRadioInputApproveWithConditions().should('be.checked');
 
       // assert errors are displayed
-      pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
+      errorSummaryItems().should('have.length', 1);
       pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('be.visible');
       pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('contain.text', 'Enter conditions');
     });
@@ -105,9 +105,9 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
     it('should throw validation error if approval comment is too long', () => {
       pages.managersDecisionPage.commentsInputApproveWithConditions().typeWithoutDelay('a'.repeat(8001));
 
-      pages.managersDecisionPage.submitButton().click();
+      cy.clickSubmitButton();
 
-      pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
+      errorSummaryItems().should('have.length', 1);
       pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('be.visible');
       pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('contain.text', 'Conditions must be 8000 characters or fewer');
     });
@@ -115,9 +115,9 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
     it('should throw validation error if approval comment is whitespace', () => {
       pages.managersDecisionPage.commentsInputApproveWithConditions().type('      ');
 
-      pages.managersDecisionPage.submitButton().click();
+      cy.clickSubmitButton();
 
-      pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
+      errorSummaryItems().should('have.length', 1);
       pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('be.visible');
       pages.managersDecisionPage.commentsInputApproveWithConditionsValidationError().should('contain.text', 'Enter conditions');
     });
@@ -137,13 +137,13 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
     });
 
     it('should throw validation error if no comment provided and persists radio selection', () => {
-      pages.managersDecisionPage.submitButton().click();
+      cy.clickSubmitButton();
 
       // radio should be selected
       pages.managersDecisionPage.decisionRadioInputDecline().should('be.checked');
 
       // assert errors are displayed
-      pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
+      errorSummaryItems().should('have.length', 1);
       pages.managersDecisionPage.commentsInputDeclineValidationError().should('be.visible');
       pages.managersDecisionPage.commentsInputDeclineValidationError().should('contain.text', 'Enter reasons');
     });
@@ -151,9 +151,9 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
     it('should throw validation error if decline comment is too long', () => {
       pages.managersDecisionPage.commentsInputDecline().typeWithoutDelay('a'.repeat(8001));
 
-      pages.managersDecisionPage.submitButton().click();
+      cy.clickSubmitButton();
 
-      pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
+      errorSummaryItems().should('have.length', 1);
       pages.managersDecisionPage.commentsInputDeclineValidationError().should('be.visible');
       pages.managersDecisionPage.commentsInputDeclineValidationError().should('contain.text', 'Reasons must be 8000 characters or fewer');
     });
@@ -161,9 +161,9 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
     it('should throw validation error if decline comment is whitespace', () => {
       pages.managersDecisionPage.commentsInputDecline().type('      ');
 
-      pages.managersDecisionPage.submitButton().click();
+      cy.clickSubmitButton();
 
-      pages.managersDecisionPage.errorSummaryItems().should('have.length', 1);
+      errorSummaryItems().should('have.length', 1);
       pages.managersDecisionPage.commentsInputDeclineValidationError().should('be.visible');
       pages.managersDecisionPage.commentsInputDeclineValidationError().should('contain.text', 'Enter reasons');
     });
@@ -193,7 +193,7 @@ context("Case Underwriting - Underwriter Manager's decision - Submit Form", () =
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to underwriter managers decision page
-    partials.caseSubNavigation.underwritingLink().click();
+    caseSubNavigation.underwritingLink().click();
   });
 
   after(() => {
@@ -214,7 +214,7 @@ context("Case Underwriting - Underwriter Manager's decision - Submit Form", () =
     pages.managersDecisionPage.commentsInputApproveWithConditions().type(MOCK_COMMENTS);
     pages.managersDecisionPage.commentsInputInternal().type(MOCK_INTERNAL_COMMENTS);
 
-    pages.managersDecisionPage.submitButton().click();
+    cy.clickSubmitButton();
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
     // assert values are displayed in decision page
@@ -239,7 +239,7 @@ context("Case Underwriting - Underwriter Manager's decision - Submit Form", () =
 
     cy.assertText(pages.managersDecisionPage.internalComments(), "Internal comment. Div contents &lt;img src = 'data:abc' /&gt;");
 
-    cy.assertText(partials.caseSummary.ukefDealStage(), 'Approved (with conditions)');
+    cy.assertText(caseSummary.ukefDealStage(), 'Approved (with conditions)');
   });
 });
 
@@ -266,7 +266,7 @@ context("Case Underwriting - Underwriter Manager's decision AIN", () => {
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to underwriter managers decision page
-    partials.caseSubNavigation.underwritingLink().click();
+    caseSubNavigation.underwritingLink().click();
   });
 
   after(() => {

@@ -1,4 +1,5 @@
 import 'cypress-file-upload';
+import './click-events';
 
 import './commands/click-events';
 

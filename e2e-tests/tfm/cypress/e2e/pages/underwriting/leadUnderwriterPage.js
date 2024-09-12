@@ -7,9 +7,6 @@ const leadUnderwriterPage = {
   assignedToSelectInputOption: () => cy.get('[data-cy="assigned-to-select-input"] option'),
   assignedToSelectInputSelectedOption: () => cy.get('[data-cy="assigned-to-select-input"]').first().find('option:selected'),
 
-  submitButton: () => cy.get('[data-cy="submit-button"]'),
-  cancelLink: () => cy.get('[data-cy="cancel-link"]'),
-
   // submitted values
   leadUnderwriterSummaryList: () => cy.get('[data-cy="lead-underwriter-summary-list"]'),
   leadUnderwriterEmail: () => cy.get('[data-cy="lead-underwriter-email"]'),

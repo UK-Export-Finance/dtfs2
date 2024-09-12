@@ -94,7 +94,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     // assign a different underwriter
     pages.taskPage.assignedToSelectInput().select(underwriterUserId);
 
-    pages.leadUnderwriterPage.submitButton().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
@@ -123,7 +123,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     // assign a different underwriter manager
     pages.taskPage.assignedToSelectInput().select(underwriterManager2UserId);
 
-    pages.leadUnderwriterPage.submitButton().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
@@ -145,7 +145,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     // assign to yourself
     pages.taskPage.assignedToSelectInput().select(underwriterManager1UserId);
 
-    pages.leadUnderwriterPage.submitButton().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
@@ -156,7 +156,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
     cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter/assign`));
 
-    pages.leadUnderwriterPage.cancelLink().click();
+    cy.clickCancelLink();
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
 

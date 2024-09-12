@@ -19,7 +19,7 @@ const assignTaskToSomeoneElseInMyTeam = (dealId, differentUserInSameTeam) =>
       pages.taskPage.taskStatusRadioInputInProgress().click();
 
       // submit form
-      pages.taskPage.submitButton().click();
+      cy.clickSubmitButton();
 
       // should now be back on the tasks page
       cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -78,7 +78,7 @@ context('Case tasks - AIN deal', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
     pages.tasksPage.filterRadioYourTeam().click();
-    pages.tasksPage.filterSubmitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // first task should have status `To do` and link
@@ -105,7 +105,7 @@ context('Case tasks - AIN deal', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
     pages.tasksPage.filterRadioYourTeam().click();
-    pages.tasksPage.filterSubmitButton().click();
+    cy.clickSubmitButton();
 
     // assign first task
     let firstTask = pages.tasksPage.tasks.row(1, 1);
@@ -113,10 +113,10 @@ context('Case tasks - AIN deal', () => {
 
     pages.taskPage.assignedToSelectInput().select(userId);
     pages.taskPage.taskStatusRadioInputInProgress().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     pages.tasksPage.filterRadioAllTasks().click();
-    pages.tasksPage.filterSubmitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // first task should have status `In progress`
@@ -146,7 +146,7 @@ context('Case tasks - AIN deal', () => {
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
     pages.tasksPage.filterRadioYourTeam().click();
-    pages.tasksPage.filterSubmitButton().click();
+    cy.clickSubmitButton();
 
     // assign first task and mark as done
     let firstTask = pages.tasksPage.tasks.row(1, 1);
@@ -154,10 +154,10 @@ context('Case tasks - AIN deal', () => {
 
     pages.taskPage.assignedToSelectInput().select(userId);
     pages.taskPage.taskStatusRadioInputDone().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     pages.tasksPage.filterRadioAllTasks().click();
-    pages.tasksPage.filterSubmitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // first task should have status `Done`
@@ -181,10 +181,10 @@ context('Case tasks - AIN deal', () => {
 
     pages.taskPage.assignedToSelectInput().select(userId);
     pages.taskPage.taskStatusRadioInputInProgress().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     pages.tasksPage.filterRadioAllTasks().click();
-    pages.tasksPage.filterSubmitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // second task should have status 'In progress' and link
@@ -202,7 +202,7 @@ context('Case tasks - AIN deal', () => {
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     pages.tasksPage.filterRadioYourTeam().click();
-    pages.tasksPage.filterSubmitButton().click();
+    cy.clickSubmitButton();
     let firstTask = pages.tasksPage.tasks.row(1, 1);
     firstTask.link().click();
 
@@ -212,7 +212,7 @@ context('Case tasks - AIN deal', () => {
       const { firstName, lastName } = userObj;
 
       pages.tasksPage.filterRadioYourTeam().click();
-      pages.tasksPage.filterSubmitButton().click();
+      cy.clickSubmitButton();
 
       //---------------------------------------------------------------
       // updated task displays correct assignee and status in the task page
@@ -231,7 +231,7 @@ context('Case tasks - AIN deal', () => {
 
       partials.caseSubNavigation.tasksLink().click();
       pages.tasksPage.filterRadioYourTeam().click();
-      pages.tasksPage.filterSubmitButton().click();
+      cy.clickSubmitButton();
 
       cy.assertText(firstTask.assignedTo(), differentUserInSameTeamFullName);
 
@@ -244,7 +244,7 @@ context('Case tasks - AIN deal', () => {
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     pages.tasksPage.filterRadioYourTeam().click();
-    pages.tasksPage.filterSubmitButton().click();
+    cy.clickSubmitButton();
 
     const firstTask = pages.tasksPage.tasks.row(1, 1);
     firstTask.link().click();
@@ -252,10 +252,10 @@ context('Case tasks - AIN deal', () => {
     // make sure the task is unassigned to start with
     pages.taskPage.assignedToSelectInput().select('Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     pages.tasksPage.filterRadioYourTeam().click();
-    pages.tasksPage.filterSubmitButton().click();
+    cy.clickSubmitButton();
     firstTask.link().click();
 
     // check default values
@@ -274,7 +274,7 @@ context('Case tasks - AIN deal', () => {
     // task form values should have the default values
     //---------------------------------------------------------------
     pages.tasksPage.filterRadioYourTeam().click();
-    pages.tasksPage.filterSubmitButton().click();
+    cy.clickSubmitButton();
     firstTask.link().click();
     pages.taskPage.assignedToSelectInput().invoke('val').should('eq', 'Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
@@ -295,7 +295,7 @@ context('Case tasks - AIN deal', () => {
       cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
       pages.tasksPage.filterRadioYourTeam().click();
-      pages.tasksPage.filterSubmitButton().click();
+      cy.clickSubmitButton();
 
       // all default AIN tasks are assigned to the test users team
       pages.tasksPage.tasksTableRows().should('have.length', TOTAL_DEFAULT_AIN_TASKS);
@@ -308,7 +308,7 @@ context('Case tasks - AIN deal', () => {
 
       assignTaskToSomeoneElseInMyTeam(dealId, differentUserInSameTeam).then(() => {
         pages.tasksPage.filterRadioYourTeam().click();
-        pages.tasksPage.filterSubmitButton().click();
+        cy.clickSubmitButton();
 
         //---------------------------------------------------------------
         // team tasks length should remain the same
@@ -323,7 +323,7 @@ context('Case tasks - AIN deal', () => {
 
       partials.caseSubNavigation.tasksLink().click();
       pages.tasksPage.filterRadioYourTeam().click();
-      pages.tasksPage.filterSubmitButton().click();
+      cy.clickSubmitButton();
 
       pages.tasksPage.tasksTableRows().should('have.length', 0);
     });
@@ -333,7 +333,7 @@ context('Case tasks - AIN deal', () => {
       cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
       pages.tasksPage.filterRadioAllTasks().click();
-      pages.tasksPage.filterSubmitButton().click();
+      cy.clickSubmitButton();
       pages.tasksPage.tasksTableRows().should('have.length', TOTAL_DEFAULT_AIN_TASKS);
     });
 
@@ -342,7 +342,7 @@ context('Case tasks - AIN deal', () => {
       cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
       pages.tasksPage.filterRadioYourTasks().click();
-      pages.tasksPage.filterSubmitButton().click();
+      cy.clickSubmitButton();
 
       //---------------------------------------------------------------
       // list of tasks in `assigned to me` should be empty
@@ -357,7 +357,7 @@ context('Case tasks - AIN deal', () => {
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     pages.tasksPage.filterRadioYourTeam().click();
-    pages.tasksPage.filterSubmitButton().click();
+    cy.clickSubmitButton();
 
     let firstTask = pages.tasksPage.tasks.row(1, 1);
 
@@ -375,13 +375,13 @@ context('Case tasks - AIN deal', () => {
 
     pages.taskPage.assignedToSelectInput().select(userId);
     pages.taskPage.taskStatusRadioInputDone().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // dates should be updated
     //---------------------------------------------------------------
     pages.tasksPage.filterRadioYourTeam().click();
-    pages.tasksPage.filterSubmitButton().click();
+    cy.clickSubmitButton();
 
     firstTask = pages.tasksPage.tasks.row(1, 1);
 

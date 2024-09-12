@@ -1,4 +1,5 @@
 const partial = {
+  container: () => cy.get('[data-cy="case-summary"]'),
   ukefDealId: () => cy.get('[data-cy="ukef-deal-id"]'),
   exporterName: () => cy.get('[data-cy="exporter-name"]'),
   contractValue: () => cy.get('[data-cy="contract-value"]'),

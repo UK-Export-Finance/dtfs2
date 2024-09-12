@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import { caseSubNavigation } from '../../partials';
+import { caseSubNavigation, errorSummaryItems } from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
@@ -117,7 +117,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${facilityId}/risk-profile`));
 
-    pages.facilityRiskProfilePage.cancelLink().click();
+    cy.clickCancelLink();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
   });
@@ -134,9 +134,9 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     facilityRow.changeRiskProfileLink().click({ force: true });
 
-    pages.facilityRiskProfilePage.submitButton().click();
+    cy.clickSubmitButton();
 
-    pages.facilityRiskProfilePage.errorSummaryItems().should('have.length', 1);
+    errorSummaryItems().should('have.length', 1);
     pages.facilityRiskProfilePage.riskProfileRadioInputValidationError().should('exist');
   });
 
@@ -157,7 +157,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
 
     // submit form
     pages.facilityRiskProfilePage.riskProfileRadioInputVariable().click();
-    pages.facilityRiskProfilePage.submitButton().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
