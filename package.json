@@ -32,7 +32,7 @@
     "lint:all": "npm run lint --workspaces --if-present",
     "lint:fix:all": "npm run lint --workspaces --if-present -- --fix",
     "load": "(cd utils && npm run load)",
-    "prepare": "husky install",
+    "prepare": "husky",
     "prettier:all": "npm run prettier --workspaces --if-present",
     "prettier:fix:all": "npm run prettier:fix --workspaces --if-present",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color **/*",
