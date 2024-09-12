@@ -84,10 +84,27 @@ const generateUpToDateReportDetails = () => {
 
 const upToDateReportDetails = generateUpToDateReportDetails();
 
+/**
+ * There are multiple reports in the fixtures which require an existing facility with matching
+ * UKEF facility ID to test the valid upload journey.
+ * The UKEF facility ID for the below facility is used in the following fixtures files:
+ * - valid-utilisation-report-February_2023_monthly.xlsx
+ * - valid-utilisation-report-February_2024_quarterly.xlsx
+ * - valid-utilisation-report-next_week.xlsx
+ * - valid-utilisation-report-November_2023_quarterly.xlsx
+ * - valid-utilisation-report-September_2023_monthly.xlsx
+ */
+const tfmFacilityForReport = {
+  facilitySnapshot: {
+    ukefFacilityId: '20001371',
+  },
+};
+
 module.exports = {
   previousReportDetails,
   february2023ReportDetails,
   march2023ReportDetails,
   upToDateReportDetails,
   december2023ToFebruary2024ReportDetails,
+  tfmFacilityForReport,
 };

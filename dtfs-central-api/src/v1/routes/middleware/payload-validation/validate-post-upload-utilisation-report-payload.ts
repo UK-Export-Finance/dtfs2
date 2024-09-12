@@ -15,7 +15,7 @@ export type PreValidationPostUploadUtilisationReportRequest = CustomExpressReque
  * @param data - The report data
  * @returns Array of validation errors
  */
-export const getReportDataErrors = (data: Record<string, string | null>[]) => {
+export const getReportDataErrors = async (data: Record<string, string | null>[]) => {
   const reportDataMapped = data.map((reportDataRow, rowIndex) => {
     return Object.keys(reportDataRow).reduce((rowData, key) => {
       // We add two to the index to get the row to account for zero-indexing and the header row
@@ -23,7 +23,8 @@ export const getReportDataErrors = (data: Record<string, string | null>[]) => {
     }, {} as UtilisationReportCsvRowData);
   });
 
-  return validateUtilisationReportCsvData(reportDataMapped).map(({ errorMessage, value, row }) => ({ errorMessage, value, row }));
+  const validationErrors = await validateUtilisationReportCsvData(reportDataMapped);
+  return validationErrors.map(({ errorMessage, value, row }) => ({ errorMessage, value, row }));
 };
 
 /**
@@ -32,7 +33,7 @@ export const getReportDataErrors = (data: Record<string, string | null>[]) => {
  * @param res - The response object
  * @param next - The next function
  */
-export const validatePostUploadUtilisationReportPayload = (req: PreValidationPostUploadUtilisationReportRequest, res: Response, next: NextFunction) => {
+export const validatePostUploadUtilisationReportPayload = async (req: PreValidationPostUploadUtilisationReportRequest, res: Response, next: NextFunction) => {
   const { reportId, fileInfo, reportData, user } = req.body;
 
   const reportDataSchema = z.array(z.record(z.string(), z.string().nullable()));
@@ -42,7 +43,7 @@ export const validatePostUploadUtilisationReportPayload = (req: PreValidationPos
     return res.status(HttpStatusCode.BadRequest).send('Failed to save utilisation report - report data structure invalid');
   }
 
-  const reportDataErrors = getReportDataErrors(data);
+  const reportDataErrors = await getReportDataErrors(data);
 
   const validationErrors = [validateReportId(reportId), ...validateFileInfo(fileInfo), ...reportDataErrors, ...validateReportUser(user)].filter(Boolean);
 

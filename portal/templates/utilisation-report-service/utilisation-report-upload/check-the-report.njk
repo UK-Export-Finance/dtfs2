@@ -37,29 +37,29 @@
                 <tbody class="govuk-table__body">
                     {% for item in validationErrors %}
                         <tr class="govuk-table__row" data-cy="validation-errors-table-row">
-                            <td class="govuk-table__cell">
+                            <td class="govuk-table__cell" data-cy="exporter-{{ loop.index }}">
                                 {% if item.exporter !== null and item.exporter !== undefined %}
                                     {{ item.exporter }}
                                 {% else %}
                                     -
                                 {% endif %}
                             </td>
-                            <td class="govuk-table__cell">
+                            <td class="govuk-table__cell" data-cy="row-{{ loop.index }}">
                                 {% if item.row !== null and item.row !== undefined %}
                                     {{ item.row }}
                                 {% else %}
                                     -
                                 {% endif %}
                             </td>
-                            <td class="govuk-table__cell">
+                            <td class="govuk-table__cell" data-cy="column-{{ loop.index }}">
                                 {% if item.column !== null and item.column !== undefined %}
                                     {{ item.column }}
                                 {% else %}
                                     -
                                 {% endif %}
                             </td>
-                            <td class="govuk-table__cell">{{ item.value }}</td>
-                            <td class="govuk-table__cell">
+                            <td class="govuk-table__cell" data-cy="value-{{ loop.index }}">{{ item.value }}</td>
+                            <td class="govuk-table__cell" data-cy="message-{{ loop.index }}">
                                 <span class="govuk-error-message govuk-!-margin-bottom-0">{{ item.errorMessage }}</span>
                             </td>
                         </tr>

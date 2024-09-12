@@ -11,7 +11,7 @@ jest.mock('../../../../services/utilisation-report-data-validator');
 
 describe('validate-post-upload-utilisation-report-payload', () => {
   beforeEach(() => {
-    jest.mocked(validateUtilisationReportCsvData).mockReturnValue([]);
+    jest.mocked(validateUtilisationReportCsvData).mockResolvedValue([]);
   });
 
   afterEach(() => {
@@ -19,13 +19,13 @@ describe('validate-post-upload-utilisation-report-payload', () => {
   });
 
   describe('getReportDataErrors', () => {
-    it('should map data into cell data row format before validation', () => {
+    it('should map data into cell data row format before validation', async () => {
       const data: Record<string, string | null>[] = [
         { 'first row first header': 'first value', 'first row second header': 'second value' },
         { 'other row header': null },
       ];
 
-      getReportDataErrors(data);
+      await getReportDataErrors(data);
 
       expect(validateUtilisationReportCsvData).toHaveBeenCalledTimes(1);
       expect(validateUtilisationReportCsvData).toHaveBeenCalledWith([
@@ -34,10 +34,10 @@ describe('validate-post-upload-utilisation-report-payload', () => {
       ]);
     });
 
-    it('should map errors into reduced object without exporter before returning', () => {
+    it('should map errors into reduced object without exporter before returning', async () => {
       const data: Record<string, string | null>[] = [];
 
-      jest.mocked(validateUtilisationReportCsvData).mockReturnValue([
+      jest.mocked(validateUtilisationReportCsvData).mockResolvedValue([
         {
           errorMessage: 'that is not right',
           column: null,
@@ -47,7 +47,7 @@ describe('validate-post-upload-utilisation-report-payload', () => {
         },
       ]);
 
-      const errors = getReportDataErrors(data);
+      const errors = await getReportDataErrors(data);
 
       expect(errors).toEqual([{ errorMessage: 'that is not right', row: 2, value: 'some value' }]);
     });
@@ -75,7 +75,7 @@ describe('validate-post-upload-utilisation-report-payload', () => {
         },
       });
 
-    it('calls the next function when there are no validation errors', () => {
+    it('calls the next function when there are no validation errors', async () => {
       // Arrange
       const { req, res } = getHttpMocks({
         reportId: 1,
@@ -85,10 +85,10 @@ describe('validate-post-upload-utilisation-report-payload', () => {
           _id: userId,
         },
       });
-      jest.mocked(validateUtilisationReportCsvData).mockReturnValue([]);
+      jest.mocked(validateUtilisationReportCsvData).mockResolvedValue([]);
 
       // Act
-      validatePostUploadUtilisationReportPayload(req, res, mockNext);
+      await validatePostUploadUtilisationReportPayload(req, res, mockNext);
 
       // Assert
       expect(mockNext).toHaveBeenCalled();
@@ -110,14 +110,14 @@ describe('validate-post-upload-utilisation-report-payload', () => {
       },
     ] as const;
 
-    it.each(propertyNamesWithInvalidValues)("responds with an error if the '$propertyName' property is invalid", ({ propertyName, value }) => {
+    it.each(propertyNamesWithInvalidValues)("responds with an error if the '$propertyName' property is invalid", async ({ propertyName, value }) => {
       // Arrange
       const { req, res } = getHttpMocks({
         [propertyName]: value,
       });
 
       // Act
-      validatePostUploadUtilisationReportPayload(req, res, mockNext);
+      await validatePostUploadUtilisationReportPayload(req, res, mockNext);
 
       // Assert
       expect(mockNext).not.toHaveBeenCalled();
@@ -131,21 +131,21 @@ describe('validate-post-upload-utilisation-report-payload', () => {
       ${'object'}                      | ${{}}
       ${'string'}                      | ${'some data'}
       ${'item properties not strings'} | ${[{ key: {} }]}
-    `('responds with an error if the reportData is invalid (case: $condition)', ({ value }: { value: unknown }) => {
+    `('responds with an error if the reportData is invalid (case: $condition)', async ({ value }: { value: unknown }) => {
       // Arrange
       const { req, res } = getHttpMocks({
         reportData: value,
       });
 
       // Act
-      validatePostUploadUtilisationReportPayload(req, res, mockNext);
+      await validatePostUploadUtilisationReportPayload(req, res, mockNext);
 
       // Assert
       expect(mockNext).not.toHaveBeenCalled();
       expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
     });
 
-    it('responds with an error if the reportData contains validation errors', () => {
+    it('responds with an error if the reportData contains validation errors', async () => {
       // Arrange
       const { req, res } = getHttpMocks({
         reportData: [{ 'a header': 'a value' }],
@@ -153,10 +153,10 @@ describe('validate-post-upload-utilisation-report-payload', () => {
 
       jest
         .mocked(validateUtilisationReportCsvData)
-        .mockReturnValue([{ errorMessage: 'That is not valid report data', value: '300', row: 3, column: null, exporter: null }]);
+        .mockResolvedValue([{ errorMessage: 'That is not valid report data', value: '300', row: 3, column: null, exporter: null }]);
 
       // Act
-      validatePostUploadUtilisationReportPayload(req, res, mockNext);
+      await validatePostUploadUtilisationReportPayload(req, res, mockNext);
 
       // Assert
       expect(mockNext).not.toHaveBeenCalled();

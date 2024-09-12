@@ -60,24 +60,31 @@ describe('utilisation-report-validator', () => {
       ${UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD}          | ${'Fees paid to UKEF for the period'}
       ${UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY} | ${'Fees paid to UKEF currency'}
     `('returns an error if $header header is missing', ({ header, errorPrefix }: { header: string; errorPrefix: string }) => {
+      // Arrange
       const csvData = aCsvRowDataWithAllRequiredHeadings();
       delete csvData[header];
 
+      // Act
       const { missingHeaderErrors } = validateUtilisationReportCsvHeaders(csvData);
 
+      // Assert
       expect(missingHeaderErrors.length).toBe(1);
       expect(missingHeaderErrors[0].errorMessage).toBe(`${errorPrefix} header is missing or spelt incorrectly`);
     });
 
     it('returns no errors when no headers are missing', () => {
+      // Arrange
       const csvData = aCsvRowDataWithAllRequiredHeadings();
 
+      // Act
       const { missingHeaderErrors } = validateUtilisationReportCsvHeaders(csvData);
 
+      // Assert
       expect(missingHeaderErrors.length).toBe(0);
     });
 
     it('returns multiple errors if multiple headers are missing', () => {
+      // Arrange
       const csvData = aCsvRowDataWithAllRequiredHeadings();
       delete csvData[UTILISATION_REPORT_HEADERS.BASE_CURRENCY];
       delete csvData[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY];
@@ -85,8 +92,10 @@ describe('utilisation-report-validator', () => {
       // This field is facility utilisation but with a typo
       csvData['faculty utilisation'] = { value: '800000', row: 1, column: 'A' };
 
+      // Act
       const { missingHeaderErrors } = validateUtilisationReportCsvHeaders(csvData);
 
+      // Assert
       expect(missingHeaderErrors.length).toBe(3);
     });
   });
@@ -95,7 +104,8 @@ describe('utilisation-report-validator', () => {
     // This test mocks out all the function from utilisation-report-cell-validators.js and
     // tests that if headers are available then the respective cell validator function is called on that data
 
-    it('calls the generate error functions for headers that are present', () => {
+    it('calls the generate error functions for headers that are present', async () => {
+      // Arrange
       const csvData = [
         {
           'ukef facility id': { value: '20001371', column: 'B', row: 1 },
@@ -107,18 +117,24 @@ describe('utilisation-report-validator', () => {
 
       const availableHeaders = [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID, UTILISATION_REPORT_HEADERS.BASE_CURRENCY];
 
-      validateUtilisationReportCsvCellData(csvData, availableHeaders);
+      // Act
+      await validateUtilisationReportCsvCellData(csvData, availableHeaders);
+
+      // Assert
       expect(generateUkefFacilityIdError).toHaveBeenCalledWith(csvData[0]['ukef facility id'], 'test exporter');
       expect(generateBaseCurrencyError).toHaveBeenCalledWith(csvData[0]['base currency'], 'test exporter');
       expect(generateFacilityUtilisationError).not.toHaveBeenCalled();
     });
 
-    it('calls the generate payment currency and exchange rate error functions even if no headers are present', () => {
+    it('calls the generate payment currency and exchange rate error functions even if no headers are present', async () => {
+      // Arrange
       const csvData = [{}];
       const availableHeaders: string[] = [];
 
-      validateUtilisationReportCsvCellData(csvData, availableHeaders);
+      // Act
+      await validateUtilisationReportCsvCellData(csvData, availableHeaders);
 
+      // Assert
       expect(generatePaymentCurrencyError).toHaveBeenCalled();
       expect(generatePaymentExchangeRateError).toHaveBeenCalled();
     });
