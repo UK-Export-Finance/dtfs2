@@ -70,7 +70,7 @@ const handler = async (payload) => {
       ...data,
     };
   } catch (error) {
-    console.error('Unable to create facility guarantee record %o', error);
+    console.error('Unable to amend facility guarantee record %o', error);
     throw new Error(`Unable to create facility guarantee record ${error}`);
   }
 };
