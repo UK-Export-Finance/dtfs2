@@ -123,7 +123,6 @@ exports.updateUser = async (_id, update, sessionUser, callback = () => {}) => {
 
     const userUpdate = {
       ...update,
-
       auditRecord: sessionUser?._id ? generateTfmUserAuditDatabaseRecord(sessionUser._id) : generateNoUserLoggedInAuditDatabaseRecord(),
     };
 
