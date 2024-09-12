@@ -3,7 +3,7 @@ import { AnyObject } from '@ukef/dtfs2-common';
 import { mongoDbClient } from './mongo-db-client';
 
 // This should be replaced by a more complete Deal type should one get created
-type Deal = AnyObject & { ukefDealId: string };
+export type Deal = AnyObject & { ukefDealId: string };
 
 export class DealClient {
   private static collection?: Collection<WithoutId<Deal>>;

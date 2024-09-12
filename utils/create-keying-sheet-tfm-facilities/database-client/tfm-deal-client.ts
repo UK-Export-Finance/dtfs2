@@ -3,7 +3,7 @@ import { AnyObject } from '@ukef/dtfs2-common';
 import { mongoDbClient } from './mongo-db-client';
 
 // This should be replaced by a more complete TfmDeal type should one get created
-type TfmDeal = AnyObject & { dealSnapshot: AnyObject & { ukefDealId: string } };
+export type TfmDeal = AnyObject & { dealSnapshot: AnyObject & { ukefDealId: string } };
 
 export class TfmDealClient {
   private static collection?: Collection<WithoutId<TfmDeal>>;

@@ -4,6 +4,7 @@ import { AmendmentStatus } from '../amendment-status';
 import { Currency } from '../currency';
 import { Facility } from './facility';
 import { AnyObject } from '../any-object';
+import { AuditDatabaseRecord } from '../audit-database-record';
 
 type SubmittedByUser = {
   _id: ObjectId;
@@ -123,4 +124,5 @@ export type TfmFacility = {
   facilitySnapshot: Facility;
   amendments?: TfmFacilityAmendment[];
   tfm: object;
+  auditRecord: AuditDatabaseRecord;
 };

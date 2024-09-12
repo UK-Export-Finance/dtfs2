@@ -1,5 +1,5 @@
-import { AnyObject } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
+import { TfmDeal, Deal } from '../database-client';
 
 /**
  * Creates an active tfm deal that can be used for utilisation reporting testing.
@@ -10,7 +10,7 @@ import { ObjectId } from 'mongodb';
  * @param dealSnapshot - a deal
  * @returns a tfm deal
  */
-export const aTfmDeal = (dealId: ObjectId, portalUserId: ObjectId, dealSnapshot: AnyObject) => ({
+export const aTfmDeal = (dealId: ObjectId, portalUserId: ObjectId, dealSnapshot: Deal): TfmDeal => ({
   _id: dealId,
   dealSnapshot,
   tfm: {

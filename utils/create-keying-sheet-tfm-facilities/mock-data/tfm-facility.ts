@@ -1,4 +1,4 @@
-import { Facility } from '@ukef/dtfs2-common';
+import { Facility, TfmFacility } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 
 /**
@@ -10,7 +10,7 @@ import { ObjectId } from 'mongodb';
  * @param portalUserId - id of a portal user
  * @returns a tfm facility
  */
-export const aTfmFacility = (facilityId: ObjectId, facilitySnapshot: Facility, portalUserId: ObjectId) => ({
+export const aTfmFacility = (facilityId: ObjectId, facilitySnapshot: Facility, portalUserId: ObjectId): TfmFacility => ({
   _id: facilityId,
   facilitySnapshot,
   tfm: {

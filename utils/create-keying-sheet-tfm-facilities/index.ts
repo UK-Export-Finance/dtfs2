@@ -1,11 +1,9 @@
 import { ObjectId, WithoutId } from 'mongodb';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { Facility, TfmFacility } from '@ukef/dtfs2-common';
-import { FacilityClient, mongoDbClient, TfmFacilityClient } from './database-client';
+import { FacilityClient, mongoDbClient, TfmFacilityClient, DealClient, TfmDealClient } from './database-client';
 import { generateRandomTfmFacilityForFacility, getSqlFacilityIds, getPortalUserIdOrFail } from './helpers';
 import { aDeal, aFacility, aTfmDeal } from './mock-data';
-import { DealClient } from './database-client/deal-client';
-import { TfmDealClient } from './database-client/tfm-deal-client';
 
 const run = async () => {
   const dataSource = await SqlDbDataSource.initialize();

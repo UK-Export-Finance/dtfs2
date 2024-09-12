@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { Deal } from '../database-client';
 
 /**
  * Creates an active deal that can be used for utilisation reporting testing.
@@ -9,7 +10,7 @@ import { ObjectId } from 'mongodb';
  * @param portalUserId - id of a portal user
  * @returns a deal
  */
-export const aDeal = (ukefDealId: string, dealId: ObjectId, portalUserId: ObjectId) => ({
+export const aDeal = (ukefDealId: string, dealId: ObjectId, portalUserId: ObjectId): Deal => ({
   _id: dealId,
   dealType: 'GEF',
   version: 1,
