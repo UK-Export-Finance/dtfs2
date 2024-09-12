@@ -3,6 +3,8 @@ import { UtilisationReportDataValidationError, UtilisationReportCsvCellData, Uti
 export type UtilisationReportCellValidationErrorGenerator = (
   cellData: UtilisationReportCsvCellData | undefined,
   exporterName?: string | null,
-) => UtilisationReportDataValidationError | null;
+) => UtilisationReportDataValidationError | null | Promise<UtilisationReportDataValidationError | null>;
 
-export type UtilisationReportRowValidationErrorGenerator = (rowData: UtilisationReportCsvRowData) => UtilisationReportDataValidationError | null;
+export type UtilisationReportRowValidationErrorGenerator = (
+  rowData: UtilisationReportCsvRowData,
+) => UtilisationReportDataValidationError | null | Promise<UtilisationReportDataValidationError | null>;
