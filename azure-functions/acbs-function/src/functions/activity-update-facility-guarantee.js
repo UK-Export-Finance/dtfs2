@@ -61,7 +61,7 @@ const handler = async (payload) => {
         ),
       );
     }
-// to remove
+
     return {
       status,
       submittedToACBS,
