@@ -42,28 +42,28 @@
     <div class="govuk-grid-column-one-half">
       <form method="POST" autocomplete="off">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-
+        
         {{ govukCharacterCount({
-        name: "reason-for-cancelling",
-        id: "reason-for-cancelling",
-        value: reasonForCancelling,
-        maxlength: 1200,
-        label: {
-          html: headingHtml
-        },
-        hint: {
-          text: "This is only for UKEF records."
-        },
-        attributes: {
-          "data-cy": "reason-for-cancelling-text-box"
-        },
-        errorMessage: errors and errors.reasonForCancellingErrorMessage and {
-          text: errors.reasonForCancellingErrorMessage,
+          name: "reason-for-cancelling",
+          id: "reason-for-cancelling",
+          value: reasonForCancelling,
+          maxlength: 1200,
+          label: {
+            html: headingHtml
+          },
+          hint: {
+            text: "This is only for UKEF records."
+          },
           attributes: {
-            'data-cy': 'reason-for-cancelling-inline-error'
+            "data-cy": "reason-for-cancelling-text-box"
+          },
+          errorMessage: errors and errors.reasonForCancellingErrorMessage and {
+            text: errors.reasonForCancellingErrorMessage,
+            attributes: {
+              'data-cy': 'reason-for-cancelling-inline-error'
+            }
           }
-        }
-      }) }}
+        }) }}
 
         <div class="govuk-button-group govuk-!-margin-top-4">
           {{ govukButton({

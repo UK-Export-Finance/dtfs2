@@ -12,7 +12,7 @@ const featureFlagsSchema = z.object({
    */
   FF_TFM_PAYMENT_RECONCILIATION_ENABLED: featureFlagOptions,
   FF_TFM_FACILITY_END_DATE_ENABLED: featureFlagOptions,
-  FF_TFM_DEAL_CANCELLATION: featureFlagOptions,
+  FF_TFM_DEAL_CANCELLATION_ENABLED: featureFlagOptions,
 });
 
 export type FeatureFlag = keyof z.infer<typeof featureFlagsSchema>;
@@ -25,4 +25,4 @@ const isFeatureFlagEnabled = (featureFlag: FeatureFlag) => (): boolean => {
 export const isTfmPaymentReconciliationFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_PAYMENT_RECONCILIATION_ENABLED');
 
 export const isTfmFacilityEndDateFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_FACILITY_END_DATE_ENABLED');
-export const isTfmDealCancellationFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_DEAL_CANCELLATION');
+export const isTfmDealCancellationFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_DEAL_CANCELLATION_ENABLED');

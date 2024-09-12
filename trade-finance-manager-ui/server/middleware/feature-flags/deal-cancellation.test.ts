@@ -7,7 +7,7 @@ describe('validateDealCancellationEnabled', () => {
     jest.resetAllMocks();
   });
 
-  describe('when deal cancellation enabled', () => {
+  describe('when deal cancellation is enabled', () => {
     beforeEach(() => {
       jest.spyOn(dtfsCommon, 'isTfmDealCancellationFeatureFlagEnabled').mockReturnValueOnce(true);
     });
@@ -36,7 +36,7 @@ describe('validateDealCancellationEnabled', () => {
     });
   });
 
-  describe('when deal cancellation disabled', () => {
+  describe('when deal cancellation is disabled', () => {
     beforeEach(() => {
       jest.spyOn(dtfsCommon, 'isTfmDealCancellationFeatureFlagEnabled').mockReturnValueOnce(false);
     });
