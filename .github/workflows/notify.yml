@@ -2,12 +2,12 @@ name: Notify
 on:
   push:
     branches:
-      - main
+      - release-2.3
 
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
-  MICROSOFT_TEAMS_WEBHOOK: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK  }}
+  microsoft_teams_webhook: ${{ secrets.MICROSOFT_TEAMS_WEBHOOK }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -25,6 +25,7 @@ jobs:
         run: echo "Timezone set to ${{ env.timezone }}"
 
   notify-teams:
+    needs: setup
     runs-on: ubuntu-latest
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -60,7 +61,7 @@ jobs:
                         "type": "TextBlock",
                         "size": "Medium",
                         "weight": "Bolder",
-                        "text": "Commit to DTFS main"
+                        "text": "Commit to release-2.3 branch"
                       },
                       {
                         "type": "FactSet",
@@ -77,4 +78,4 @@ jobs:
                   }
                 }
             ]
-          }' "${MICROSOFT_TEAMS_WEBHOOK}"
+          }' "${{ env.microsoft_teams_webhook }}"
