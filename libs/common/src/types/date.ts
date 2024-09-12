@@ -45,8 +45,6 @@ export type IsoMonthStamp = string;
  */
 export type UnixTimestampString = string;
 
-export type UnixTimestampNumber = number;
-
 /**
  * ISO 8601 day string in format 'yyyy-MM-dd'
  */

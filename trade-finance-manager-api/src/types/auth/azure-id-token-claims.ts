@@ -1,11 +1,11 @@
-import { UnixTimestampNumber } from '@ukef/dtfs2-common';
+import { UnixTimestamp } from '@ukef/dtfs2-common';
 
 export type AzureIdTokenClaims = {
   aud: string;
   iss: string;
-  iat: UnixTimestampNumber;
-  nbf: UnixTimestampNumber;
-  exp: UnixTimestampNumber;
+  iat: UnixTimestamp;
+  nbf: UnixTimestamp;
+  exp: UnixTimestamp;
   email: string;
   family_name: string | null;
   given_name: string | null;
