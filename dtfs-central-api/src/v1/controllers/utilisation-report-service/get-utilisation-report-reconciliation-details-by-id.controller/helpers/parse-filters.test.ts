@@ -10,9 +10,31 @@ describe('parsePremiumPaymentsTabFilters', () => {
     const premiumPaymentsTabParsedFilters = parsePremiumPaymentsTabFilters(premiumPaymentsTabFilters);
 
     // Assert
-    expect(premiumPaymentsTabParsedFilters).toBe(expectedParsedFilters);
+    expect(premiumPaymentsTabParsedFilters).toEqual(expectedParsedFilters);
   });
 
-  // TODO FN-2311: Add additional test: If invalid facilityId value.
-  // TODO FN-2311: Add additional test: If valid facilityId value.
+  it('returns an object with undefined facilityId when an invalid facilityId is provided', () => {
+    // Arrange
+    const premiumPaymentsTabFilters = { facilityId: 'invalid-facility-id' };
+    const expectedParsedFilters = { facilityId: undefined };
+
+    // Act
+    const premiumPaymentsTabParsedFilters = parsePremiumPaymentsTabFilters(premiumPaymentsTabFilters);
+
+    // Assert
+    expect(premiumPaymentsTabParsedFilters).toEqual(expectedParsedFilters);
+  });
+
+  it('returns an object with valid facilityId when a valid facilityId is provided', () => {
+    // Arrange
+    const validFacilityId = '123456789';
+    const premiumPaymentsTabFilters = { facilityId: validFacilityId };
+    const expectedParsedFilters = { facilityId: validFacilityId };
+
+    // Act
+    const premiumPaymentsTabParsedFilters = parsePremiumPaymentsTabFilters(premiumPaymentsTabFilters);
+
+    // Assert
+    expect(premiumPaymentsTabParsedFilters).toEqual(expectedParsedFilters);
+  });
 });
