@@ -49,5 +49,5 @@ export const postReasonForCancelling = (req: PostReasonForCancellingRequest, res
     return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);
   }
 
-  return res.redirect(`/case/${_id}/cancellation`);
+  return res.redirect(`/case/${_id}/cancellation/bank-request-date`);
 };

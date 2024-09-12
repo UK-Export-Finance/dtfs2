@@ -124,7 +124,7 @@ describe('postReasonForCancelling', () => {
       });
     });
 
-    it('redirects to the deal cancellation page', () => {
+    it('redirects to the bank request date page', () => {
       // Arrange
       const { req, res } = createMocks<PostReasonForCancellingRequest>({
         params: { _id: dealId },
@@ -140,7 +140,7 @@ describe('postReasonForCancelling', () => {
       // Act
       postReasonForCancelling(req, res);
 
-      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/cancellation`);
+      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/cancellation/bank-request-date`);
     });
   });
 });

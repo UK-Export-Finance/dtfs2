@@ -173,6 +173,6 @@ router.post('/:_id/underwriting/managers-decision/edit', underwritingController.
 
 router.get('/:_id/documents', caseController.getCaseDocuments);
 
-router.use('/:_id/cancellation', cancellationRouter);
+router.use('/', cancellationRouter);
 
 module.exports = router;

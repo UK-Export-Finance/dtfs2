@@ -8,5 +8,5 @@ export const cancellationRouter = Router();
 
 cancellationRouter.use(validateDealCancellationEnabled, validateUserTeam([TEAM_IDS.PIM]));
 
-cancellationRouter.get('/reason', getReasonForCancelling);
-cancellationRouter.post('/reason', postReasonForCancelling);
+cancellationRouter.get('/:_id/cancellation/reason', getReasonForCancelling);
+cancellationRouter.post('/:_id/cancellation/reason', postReasonForCancelling);
