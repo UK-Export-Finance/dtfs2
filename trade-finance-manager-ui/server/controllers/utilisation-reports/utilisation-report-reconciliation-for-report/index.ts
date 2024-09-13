@@ -4,7 +4,7 @@ import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import {
-  mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupsViewModelItems,
+  mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems,
   mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
 } from '../helpers';
@@ -73,7 +73,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(premiumPayments);
 
-    const premiumPaymentsViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupsViewModelItems(premiumPayments, isCheckboxChecked);
+    const premiumPaymentsViewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(premiumPayments, isCheckboxChecked);
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 

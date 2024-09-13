@@ -75,7 +75,7 @@ export type PaymentDetailsViewModel = {
   };
 }[];
 
-export type FeeRecordPaymentGroupViewModelItem = {
+export type PremiumPaymentsViewModelItem = {
   feeRecords: FeeRecordViewModelItem[];
   totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
   paymentsReceived: PaymentViewModelItem[] | undefined;
@@ -95,7 +95,7 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   tableDataError?: ErrorSummaryViewModel;
   filterError?: ErrorSummaryViewModel;
   enablePaymentsReceivedSorting: boolean;
-  premiumPayments: FeeRecordPaymentGroupViewModelItem[];
+  premiumPayments: PremiumPaymentsViewModelItem[];
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
 };

@@ -1,9 +1,9 @@
 import difference from 'lodash.difference';
 import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import { componentRenderer } from '../../componentRenderer';
-import { aFeeRecordPaymentGroupViewModelItem, aFeeRecordViewModelItem } from '../../../test-helpers';
+import { aPremiumPaymentsViewModelItem, aFeeRecordViewModelItem } from '../../../test-helpers';
 import {
-  FeeRecordPaymentGroupViewModelItem,
+  PremiumPaymentsViewModelItem,
   FeeRecordViewModelItem,
   PaymentViewModelItem,
   SortedAndFormattedCurrencyAndAmount,
@@ -17,16 +17,16 @@ const tableSelector = '[data-cy="premium-payments-table"]';
 type ComponentRendererParams = {
   reportId: number;
   userCanEdit: boolean;
-  feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[];
+  premiumPayments: PremiumPaymentsViewModelItem[];
   enablePaymentsReceivedSorting: boolean;
 };
 
 const render = componentRenderer<ComponentRendererParams>(component);
 
 describe(component, () => {
-  const aFeeRecordPaymentGroupList = (): FeeRecordPaymentGroupViewModelItem[] => [
+  const aPremiumPaymentsViewModelList = (): PremiumPaymentsViewModelItem[] => [
     {
-      ...aFeeRecordPaymentGroupViewModelItem(),
+      ...aPremiumPaymentsViewModelItem(),
       feeRecords: [
         {
           ...aFeeRecordViewModelItem(),
@@ -61,7 +61,7 @@ describe(component, () => {
   const defaultRendererParams = (): ComponentRendererParams => ({
     userCanEdit: true,
     reportId: 1,
-    feeRecordPaymentGroups: aFeeRecordPaymentGroupList(),
+    premiumPayments: aPremiumPaymentsViewModelList(),
     enablePaymentsReceivedSorting: true,
   });
 
@@ -84,7 +84,7 @@ describe(component, () => {
   });
 
   it('should render table headings without the checkbox column when userCanEdit is false', () => {
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, feeRecordPaymentGroups: aFeeRecordPaymentGroupList() });
+    const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, premiumPayments: aPremiumPaymentsViewModelList() });
 
     wrapper.expectElement(`${tableSelector} thead th`).toHaveCount(8);
     wrapper.expectElement(`${tableSelector} thead th:contains("Facility ID")`).toExist();
@@ -126,13 +126,13 @@ describe(component, () => {
   });
 
   it("should set the 'Total payments received' column header to sortable if 'enablePaymentsReceivedSorting' is set to true", () => {
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups: aFeeRecordPaymentGroupList(), enablePaymentsReceivedSorting: true });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments: aPremiumPaymentsViewModelList(), enablePaymentsReceivedSorting: true });
 
     wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).toHaveAttribute('aria-sort', 'none');
   });
 
   it("should not set the total payments received column header to sortable if 'enablePaymentsReceivedSorting' is set to false", () => {
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups: aFeeRecordPaymentGroupList(), enablePaymentsReceivedSorting: false });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments: aPremiumPaymentsViewModelList(), enablePaymentsReceivedSorting: false });
 
     wrapper.expectElement(`${tableSelector} thead th:contains("Total payments received")`).notToHaveAttribute('aria-sort');
   });
@@ -148,9 +148,9 @@ describe(component, () => {
   });
 
   it('should render message informing there are no matched records when no fee record groups', () => {
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [];
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
     wrapper.expectElement('[data-cy="no-matched-facilities-message"]').toExist();
     wrapper.expectText('[data-cy="no-matched-facilities-message"]').toContain('Your search matched no facilities');
@@ -158,14 +158,14 @@ describe(component, () => {
   });
 
   it('should not render message informing there are no matched records when at least one fee record group is returned', () => {
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: [aFeeRecordViewModelItem()],
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
     wrapper.expectElement('[data-cy="no-matched-facilities-message"]').notToExist();
     wrapper.expectText('html').notToContain('Your search matched no facilities');
@@ -175,18 +175,18 @@ describe(component, () => {
   it('should render a row for each fee record defined in each fee record payment group', () => {
     const feeRecordIds = [1, 2, 3];
     const feeRecordItems: FeeRecordViewModelItem[] = feeRecordIds.map((id) => ({ ...aFeeRecordViewModelItem(), id }));
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: [feeRecordItems[0], feeRecordItems[1]],
       },
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: [feeRecordItems[2]],
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
     wrapper.expectElement(`tr`).toHaveCount(feeRecordIds.length + 1); // including table header
     feeRecordIds.forEach((id) => {
@@ -199,14 +199,14 @@ describe(component, () => {
     const feeRecordId = 1;
     const facilityId = '31459265';
     const feeRecordItem: FeeRecordViewModelItem = { ...aFeeRecordViewModelItem(), id: feeRecordId, facilityId };
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: [feeRecordItem],
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
     const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} th:contains("${facilityId}")`).toExist();
@@ -216,14 +216,14 @@ describe(component, () => {
     const feeRecordId = 1;
     const exporter = 'Some exporter';
     const feeRecordItem: FeeRecordViewModelItem = { ...aFeeRecordViewModelItem(), id: feeRecordId, exporter };
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: [feeRecordItem],
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
     const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} td:contains("${exporter}")`).toExist();
@@ -233,14 +233,14 @@ describe(component, () => {
     const feeRecordId = 1;
     const reportedFees = 'EUR 12345.67';
     const feeRecordItem: FeeRecordViewModelItem = { ...aFeeRecordViewModelItem(), id: feeRecordId, reportedFees };
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: [feeRecordItem],
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
     const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} td:contains("${reportedFees}")`).toExist();
@@ -251,14 +251,14 @@ describe(component, () => {
     const feeRecordId = 1;
     const reportedPayments = 'GBP 76543.21';
     const feeRecordItem: FeeRecordViewModelItem = { ...aFeeRecordViewModelItem(), id: feeRecordId, reportedPayments };
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: [feeRecordItem],
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
     const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} td:contains("${reportedPayments}")`).toExist();
@@ -273,15 +273,15 @@ describe(component, () => {
       formattedCurrencyAndAmount: 'EUR 123.45',
       dataSortValue: 0,
     };
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: feeRecordItems,
         totalReportedPayments,
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
@@ -304,15 +304,15 @@ describe(component, () => {
     const feeRecordItems = feeRecordIds.map((id) => ({ ...aFeeRecordViewModelItem(), id }));
 
     const paymentsReceived: PaymentViewModelItem[] = [{ id: 1, formattedCurrencyAndAmount: 'GBP 100.00' }];
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: feeRecordItems,
         paymentsReceived,
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
@@ -337,15 +337,15 @@ describe(component, () => {
       { id: 2, formattedCurrencyAndAmount: 'GBP 200.00' },
       { id: 3, formattedCurrencyAndAmount: 'GBP 300.00' },
     ];
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: feeRecordItems,
         paymentsReceived,
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
     const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} td > ul.payments-list > li`).toHaveCount(paymentsReceived.length);
@@ -364,9 +364,9 @@ describe(component, () => {
         { id: 2, formattedCurrencyAndAmount: 'GBP 200.00' },
       ];
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+      const premiumPayments: PremiumPaymentsViewModelItem[] = [
         {
-          ...aFeeRecordPaymentGroupViewModelItem(),
+          ...aPremiumPaymentsViewModelItem(),
           feeRecords: feeRecordItems,
           status,
           paymentsReceived,
@@ -375,7 +375,7 @@ describe(component, () => {
 
       const reportId = 12;
 
-      const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, reportId, feeRecordPaymentGroups });
+      const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, reportId, premiumPayments });
 
       const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
@@ -400,16 +400,16 @@ describe(component, () => {
         { formattedCurrencyAndAmount: 'GBP 200.00', id: 2 },
       ];
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+      const premiumPayments: PremiumPaymentsViewModelItem[] = [
         {
-          ...aFeeRecordPaymentGroupViewModelItem(),
+          ...aPremiumPaymentsViewModelItem(),
           feeRecords: feeRecordItems,
           status,
           paymentsReceived,
         },
       ];
 
-      const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+      const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
       const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
@@ -430,9 +430,9 @@ describe(component, () => {
         { formattedCurrencyAndAmount: 'GBP 200.00', id: 2 },
       ];
 
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+      const premiumPayments: PremiumPaymentsViewModelItem[] = [
         {
-          ...aFeeRecordPaymentGroupViewModelItem(),
+          ...aPremiumPaymentsViewModelItem(),
           feeRecords: feeRecordItems,
           status,
           paymentsReceived,
@@ -441,7 +441,7 @@ describe(component, () => {
 
       const reportId = 12;
 
-      const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, reportId, feeRecordPaymentGroups });
+      const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, reportId, premiumPayments });
 
       const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
       paymentsReceived.forEach((payment) => {
@@ -456,15 +456,15 @@ describe(component, () => {
     const feeRecordItems = [{ ...aFeeRecordViewModelItem(), id: feeRecordId }];
 
     const paymentsReceived = undefined;
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: feeRecordItems,
         paymentsReceived,
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
     const rowSelector = `[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`;
     wrapper.expectElement(`${rowSelector} td:has(ul.payments-list)`).notToExist();
@@ -478,15 +478,15 @@ describe(component, () => {
       formattedCurrencyAndAmount: 'EUR 123.45',
       dataSortValue: 0,
     };
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: feeRecordItems,
         totalPaymentsReceived,
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), premiumPayments });
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
@@ -510,14 +510,14 @@ describe(component, () => {
     'should render the checkbox when userCanEdit is true and the fee record status is %s',
     (feeRecordStatus) => {
       const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-1-reportedPaymentsCurrency-GBP-status-${feeRecordStatus}`;
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+      const premiumPayments: PremiumPaymentsViewModelItem[] = [
         {
-          ...aFeeRecordPaymentGroupViewModelItem(),
+          ...aPremiumPaymentsViewModelItem(),
           status: feeRecordStatus,
           checkboxId,
         },
       ];
-      const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
+      const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, premiumPayments });
 
       wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).toExist();
     },
@@ -527,28 +527,28 @@ describe(component, () => {
     'should not render the checkbox when userCanEdit is true and the fee record status is %s',
     (feeRecordStatus) => {
       const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
-      const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+      const premiumPayments: PremiumPaymentsViewModelItem[] = [
         {
-          ...aFeeRecordPaymentGroupViewModelItem(),
+          ...aPremiumPaymentsViewModelItem(),
           status: feeRecordStatus,
           checkboxId,
         },
       ];
-      const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
+      const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, premiumPayments });
 
       wrapper.expectElement(`input#${checkboxId}[type="checkbox"]`).notToExist();
     },
   );
 
   it('should not render any checkboxes when userCanEdit is false', () => {
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = Object.values(FEE_RECORD_STATUS).map((status) => ({
-      ...aFeeRecordPaymentGroupViewModelItem(),
+    const premiumPayments: PremiumPaymentsViewModelItem[] = Object.values(FEE_RECORD_STATUS).map((status) => ({
+      ...aPremiumPaymentsViewModelItem(),
       status,
       checkboxId: `feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-${status}`,
     }));
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), userCanEdit: false, premiumPayments });
 
-    feeRecordPaymentGroups.forEach((group) => {
+    premiumPayments.forEach((group) => {
       wrapper.expectElement(`input#${group.checkboxId}[type="checkbox"]`).notToExist();
     });
   });
@@ -558,15 +558,15 @@ describe(component, () => {
     const feeRecordItems = feeRecordIds.map((id) => ({ ...aFeeRecordViewModelItem(), id }));
 
     const checkboxId: PremiumPaymentsTableCheckboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         feeRecords: feeRecordItems,
         checkboxId,
       },
     ];
 
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, premiumPayments });
 
     const [firstRowId, ...otherIds] = feeRecordIds;
 
@@ -582,15 +582,15 @@ describe(component, () => {
 
   it("should render a checked checkbox id when the 'isChecked' property is set to true", () => {
     const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         status: FEE_RECORD_STATUS.TO_DO,
         checkboxId,
         isChecked: true,
       },
     ];
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, premiumPayments });
 
     const checkboxElement = wrapper.expectElement(`input[id="${checkboxId}"][type="checkbox"]`);
 
@@ -600,15 +600,15 @@ describe(component, () => {
 
   it("should render an unchecked checkbox id when the 'isChecked' property is set to false", () => {
     const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         status: FEE_RECORD_STATUS.TO_DO,
         checkboxId,
         isChecked: false,
       },
     ];
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, premiumPayments });
 
     const checkboxElement = wrapper.expectElement(`input[id="${checkboxId}"][type="checkbox"]`);
 
@@ -618,15 +618,15 @@ describe(component, () => {
 
   it('should set aria-labels for checkboxes', () => {
     const checkboxId = 'feeRecordIds-1,2,3-reportedPaymentsCurrency-GBP-status-TO_DO';
-    const feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[] = [
+    const premiumPayments: PremiumPaymentsViewModelItem[] = [
       {
-        ...aFeeRecordPaymentGroupViewModelItem(),
+        ...aPremiumPaymentsViewModelItem(),
         status: FEE_RECORD_STATUS.TO_DO,
         checkboxAriaLabel: 'select me!',
         checkboxId,
       },
     ];
-    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, feeRecordPaymentGroups });
+    const wrapper = render({ ...defaultRendererParams(), userCanEdit: true, premiumPayments });
 
     wrapper.expectElement(`input[id="${checkboxId}"][type="checkbox"]`).toHaveAttribute('aria-label', 'select me!');
   });

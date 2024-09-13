@@ -7,7 +7,7 @@ import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { aFeeRecordPaymentGroup, aUtilisationReportReconciliationDetailsResponse, aPayment, aFeeRecord } from '../../../../test-helpers';
 import { FeeRecordPaymentGroup, UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
-import { FeeRecordPaymentGroupViewModelItem, PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
+import { PremiumPaymentsViewModelItem, PaymentDetailsViewModel, UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
@@ -100,7 +100,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       };
       const formattedReportPeriod = 'January 2024';
 
-      const feeRecordPaymentGroupViewModel: FeeRecordPaymentGroupViewModelItem[] = [
+      const premiumPayments: PremiumPaymentsViewModelItem[] = [
         {
           feeRecords: [
             {
@@ -162,7 +162,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         formattedReportPeriod,
         enablePaymentsReceivedSorting: true,
         reportId: '1',
-        premiumPayments: feeRecordPaymentGroupViewModel,
+        premiumPayments,
         facilityIdQuery,
         keyingSheet: [],
         paymentDetails: paymentDetailsViewModel,
