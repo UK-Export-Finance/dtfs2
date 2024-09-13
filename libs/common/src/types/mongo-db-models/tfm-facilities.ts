@@ -124,5 +124,5 @@ export type TfmFacility = {
   facilitySnapshot: Facility;
   amendments?: TfmFacilityAmendment[];
   tfm: object;
-  auditRecord: AuditDatabaseRecord;
+  auditRecord?: AuditDatabaseRecord;
 };

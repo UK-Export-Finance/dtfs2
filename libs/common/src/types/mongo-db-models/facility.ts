@@ -67,5 +67,5 @@ export type Facility = {
   dataMigration?: {
     drupalFacilityId: string;
   };
-  auditRecord: AuditDatabaseRecord;
+  auditRecord?: AuditDatabaseRecord;
 } & FacilityEndDateProperties;
