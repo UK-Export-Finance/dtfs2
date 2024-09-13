@@ -170,13 +170,6 @@
         csrfToken: csrfToken
       }) }}
 
-      {{ govukButton({
-        text: "Show filter",
-        classes: "govuk-button govuk-button--secondary govuk-!-margin-left-2",
-        id: "payment-details-show-filter-button",
-        attributes: {'data-cy': 'payment-details-show-filter-button'}
-      }) }}
-
       <div class="moj-filter-layout__content">
 
         {{ paymentDetailsFiltersActionBar.render({
@@ -185,15 +178,17 @@
         }) }}
 
         <div class="moj-scrollable-pane">
-        <div class="moj-scrollable-pane__wrapper">
 
-          {{ paymentDetailsTable.render({
-            reportId: reportId,
-            paymentDetails: paymentDetails,
-            userCanEdit: userCanEdit
-          }) }}
+          <div class="moj-scrollable-pane__wrapper">
 
-        </div>
+            {{ paymentDetailsTable.render({
+              reportId: reportId,
+              paymentDetails: paymentDetails,
+              userCanEdit: userCanEdit
+            }) }}
+
+          </div>
+
         </div>
 
       </div>
