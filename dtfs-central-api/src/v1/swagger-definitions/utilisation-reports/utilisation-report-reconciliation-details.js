@@ -77,11 +77,11 @@
  *       dateUploaded:
  *         type: string
  *         format: date-time
- *       premiumPaymentsFeeRecordPaymentGroups:
+ *       premiumPayments:
  *         type: array
  *         items:
  *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecordPaymentGroup'
- *       unfilteredFeeRecordPaymentGroups:
+ *       paymentDetails:
  *         type: array
  *         items:
  *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecordPaymentGroup'

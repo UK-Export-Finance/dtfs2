@@ -35,12 +35,12 @@ export const getUtilisationReportReconciliationDetails = async (
 
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroups(feeRecords);
 
-  const unfilteredFeeRecordPaymentGroups = await mapToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
+  const paymentDetails = await mapToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
 
   const { facilityId } = premiumPaymentsFilters;
-  const premiumPaymentsFeeRecordPaymentGroups = facilityId
+  const premiumPayments = facilityId
     ? await mapToFeeRecordPaymentGroups(filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityId))
-    : unfilteredFeeRecordPaymentGroups;
+    : paymentDetails;
 
   return {
     reportId: id,
@@ -51,8 +51,8 @@ export const getUtilisationReportReconciliationDetails = async (
     status,
     reportPeriod,
     dateUploaded,
-    premiumPaymentsFeeRecordPaymentGroups,
-    unfilteredFeeRecordPaymentGroups,
+    premiumPayments,
+    paymentDetails,
     keyingSheet,
   };
 };

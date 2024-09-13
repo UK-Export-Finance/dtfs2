@@ -63,21 +63,21 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       facilityId: facilityIdQueryString,
     };
 
-    const { premiumPaymentsFeeRecordPaymentGroups, unfilteredFeeRecordPaymentGroups, reportPeriod, bank, keyingSheet } =
-      await api.getUtilisationReportReconciliationDetailsById(reportId, premiumPaymentsTabFilters, userToken);
+    const { premiumPayments, paymentDetails, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
+      reportId,
+      premiumPaymentsTabFilters,
+      userToken,
+    );
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
-    const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(premiumPaymentsFeeRecordPaymentGroups);
+    const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(premiumPayments);
 
-    const feeRecordPaymentGroupViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(
-      premiumPaymentsFeeRecordPaymentGroups,
-      isCheckboxChecked,
-    );
+    const feeRecordPaymentGroupViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(premiumPayments, isCheckboxChecked);
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
-    const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(unfilteredFeeRecordPaymentGroups);
+    const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(paymentDetails);
 
     return renderUtilisationReportReconciliationForReport(res, {
       user,

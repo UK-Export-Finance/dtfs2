@@ -134,8 +134,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
         status: 'PENDING_RECONCILIATION',
         reportPeriod: aReportPeriod(),
         dateUploaded: new Date(),
-        premiumPaymentsFeeRecordPaymentGroups: [],
-        unfilteredFeeRecordPaymentGroups: [],
+        premiumPayments: [],
+        paymentDetails: [],
         keyingSheet: [],
       };
     }
