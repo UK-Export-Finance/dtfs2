@@ -75,7 +75,7 @@ describe('postReasonForCancelling', () => {
           userToken: 'a user token',
         },
         body: {
-          'reason-for-cancelling': reasonForCancelling,
+          reason: reasonForCancelling,
         },
       });
 
@@ -96,7 +96,7 @@ describe('postReasonForCancelling', () => {
           userToken: 'a user token',
         },
         body: {
-          'reason-for-cancelling': reasonForCancelling,
+          reason: reasonForCancelling,
         },
       });
 
@@ -133,7 +133,7 @@ describe('postReasonForCancelling', () => {
           userToken: 'a user token',
         },
         body: {
-          'reason-for-cancelling': 'reasonForCancelling',
+          reason: 'reasonForCancelling',
         },
       });
 
