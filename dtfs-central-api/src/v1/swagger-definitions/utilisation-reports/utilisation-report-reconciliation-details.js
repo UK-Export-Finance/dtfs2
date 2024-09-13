@@ -87,7 +87,7 @@
  *           $ref: '#/definitions/UtilisationReportReconciliationDetailsFeeRecordPaymentGroup'
  *       keyingSheet:
  *         $ref: '#/definitions/KeyingSheet'
- *   UtilisationReportPremiumPaymentsFilters:
+ *   PremiumPaymentsFilters:
  *     type: object
  *     properties:
  *       facilityId:

@@ -1,4 +1,4 @@
-import { UtilisationReportPremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
@@ -13,7 +13,7 @@ export type GetUtilisationReportReconciliationDetailsByIdRequest = CustomExpress
     reportId: string;
   };
   query: {
-    premiumPaymentsFilters?: UtilisationReportPremiumPaymentsFilters;
+    premiumPaymentsFilters?: PremiumPaymentsFilters;
   };
 }>;
 

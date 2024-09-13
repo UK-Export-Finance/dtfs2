@@ -1,4 +1,4 @@
-import { UtilisationReportEntity, UtilisationReportPremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { NotFoundError } from '../../../../../errors';
 import { getBankNameById } from '../../../../../repositories/banks-repo';
 import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
@@ -18,7 +18,7 @@ import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
  */
 export const getUtilisationReportReconciliationDetails = async (
   utilisationReport: UtilisationReportEntity,
-  premiumPaymentsFilters: UtilisationReportPremiumPaymentsFilters,
+  premiumPaymentsFilters: PremiumPaymentsFilters,
 ): Promise<UtilisationReportReconciliationDetails> => {
   const { id, bankId, feeRecords, dateUploaded, status, reportPeriod } = utilisationReport;
 

@@ -1295,7 +1295,7 @@ const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
 /**
  * Gets the utilisation report reconciliation details by report id
  * @param {string} reportId - The report id
- * @param {import('@ukef/dtfs2-common').UtilisationReportPremiumPaymentsFilters)} premiumPaymentsFilters - Filters to apply to the premium payments tab
+ * @param {import('@ukef/dtfs2-common').PremiumPaymentsFilters)} premiumPaymentsFilters - Filters to apply to the premium payments tab
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
 const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPaymentsFilters) => {
