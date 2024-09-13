@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http';
-import * as dtfsCommon from '@ukef/dtfs2-common';
+import * as featureFlags from '../../helpers/is-feature-flag-enabled';
 import { validateDealCancellationEnabled } from './deal-cancellation';
 
 describe('validateDealCancellationEnabled', () => {
@@ -9,7 +9,7 @@ describe('validateDealCancellationEnabled', () => {
 
   describe('when deal cancellation is enabled', () => {
     beforeEach(() => {
-      jest.spyOn(dtfsCommon, 'isTfmDealCancellationFeatureFlagEnabled').mockReturnValueOnce(true);
+      jest.spyOn(featureFlags, 'isTfmDealCancellationFeatureFlagEnabled').mockReturnValueOnce(true);
     });
 
     it('calls next', () => {
@@ -38,7 +38,7 @@ describe('validateDealCancellationEnabled', () => {
 
   describe('when deal cancellation is disabled', () => {
     beforeEach(() => {
-      jest.spyOn(dtfsCommon, 'isTfmDealCancellationFeatureFlagEnabled').mockReturnValueOnce(false);
+      jest.spyOn(featureFlags, 'isTfmDealCancellationFeatureFlagEnabled').mockReturnValueOnce(false);
     });
 
     it('does not call next when deal cancellation is enabled', () => {

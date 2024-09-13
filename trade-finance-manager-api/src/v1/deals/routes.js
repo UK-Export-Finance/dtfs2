@@ -1,4 +1,5 @@
 const express = require('express');
+const { validateDealCancellationEnabled } = require('@ukef/dtfs2-common');
 const dealSubmit = require('../controllers/deal.submit.controller');
 const amendmentController = require('../controllers/amendment.controller');
 const dealController = require('../controllers/deal.controller');
@@ -79,7 +80,7 @@ dealsAuthRouter
 
 dealsAuthRouter
   .route('/deals/:dealId/cancellation')
-  .put(validation.dealIdValidation, handleExpressValidatorResult, dealCancellationController.updateDealCancellation);
+  .put(validation.dealIdValidation, handleExpressValidatorResult, validateDealCancellationEnabled, dealCancellationController.updateDealCancellation);
 
 dealsAuthRouter
   .route('/deals/:dealId/amendments/:status?/:type?')

@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { isTfmDealCancellationFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { isTfmDealCancellationFeatureFlagEnabled } from '../../helpers';
 
 /**
  * Middleware to check if the deal cancellation feature flag is enabled
