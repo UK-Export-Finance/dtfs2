@@ -11,7 +11,13 @@ import { subMonths } from 'date-fns';
 import { FeeRecordPaymentGroupSeeder } from './fee-record-payment-group.seeder';
 import { MongoDbDataLoader } from '../mongo-db-client';
 
-const getPreviousReportPeriod = (reportingSchedule: BankReportPeriodSchedule, reportPeriod: ReportPeriod): ReportPeriod => {
+/**
+ * Get the report period preceding the one given based on the reporting schedule
+ * @param reportingSchedule - the reporting schedule
+ * @param reportPeriod - the report period we would like to get the preceding period for
+ * @returns The preceding report period
+ */
+const getPrecedingReportPeriod = (reportingSchedule: BankReportPeriodSchedule, reportPeriod: ReportPeriod): ReportPeriod => {
   const startOfReportPeriod = getDateFromMonthAndYear(reportPeriod.start);
   const dateInPreviousReportingPeriod = subMonths(startOfReportPeriod, 1);
   return getPreviousReportPeriodForBankScheduleByMonth(reportingSchedule, toIsoMonthStamp(dateInPreviousReportingPeriod));
@@ -23,7 +29,7 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
 
   const pendingReconciliationReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, { status: 'PENDING_RECONCILIATION' });
   const pendingReconciliationBank = await MongoDbDataLoader.getBankByIdOrFail(pendingReconciliationReport.bankId);
-  const pendingReconciliationPreviousReportPeriod = getPreviousReportPeriod(
+  const pendingReconciliationPreviousReportPeriod = getPrecedingReportPeriod(
     pendingReconciliationBank.utilisationReportPeriodSchedule,
     pendingReconciliationReport.reportPeriod,
   );
@@ -34,7 +40,7 @@ export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
 
   const reconciliationInProgressReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, { status: 'RECONCILIATION_IN_PROGRESS' });
   const reconciliationInProgressBank = await MongoDbDataLoader.getBankByIdOrFail(reconciliationInProgressReport.bankId);
-  const reconciliationInProgressPreviousReportPeriod = getPreviousReportPeriod(
+  const reconciliationInProgressPreviousReportPeriod = getPrecedingReportPeriod(
     reconciliationInProgressBank.utilisationReportPeriodSchedule,
     reconciliationInProgressReport.reportPeriod,
   );
