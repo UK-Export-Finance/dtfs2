@@ -3,11 +3,10 @@ import { parsePremiumPaymentsFilters } from './parse-filters';
 describe('parsePremiumPaymentsFilters', () => {
   it('returns an empty object when premiumPaymentsFilters is undefined', () => {
     // Arrange
-    const premiumPaymentsFilters = undefined;
     const expected = {};
 
     // Act
-    const premiumPaymentsTabParsedFilters = parsePremiumPaymentsFilters(premiumPaymentsFilters);
+    const premiumPaymentsTabParsedFilters = parsePremiumPaymentsFilters();
 
     // Assert
     expect(premiumPaymentsTabParsedFilters).toEqual(expected);
