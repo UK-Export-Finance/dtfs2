@@ -2,7 +2,7 @@ import { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
-import { dealCancellationEnabled, getTask } from '../helpers';
+import { getTask, isDealCancellationEnabled } from '../helpers';
 import mapAssignToSelectOptions from '../../helpers/map-assign-to-select-options';
 
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -97,12 +97,12 @@ describe('controllers - case', () => {
       it('should check whether deal cancellation is enabled', async () => {
         await caseController.getCaseDeal(req, res);
 
-        expect(dealCancellationEnabled).toHaveBeenCalledTimes(1);
+        expect(isDealCancellationEnabled).toHaveBeenCalledTimes(1);
       });
 
       describe('when deal cancellation is enabled', () => {
         it('should render the template with showDealCancelButton=true', async () => {
-          jest.mocked(dealCancellationEnabled).mockReturnValueOnce(true);
+          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
 
           await caseController.getCaseDeal(req, res);
 
@@ -117,7 +117,7 @@ describe('controllers - case', () => {
 
       describe('when deal cancellation is disabled', () => {
         it('should render the template with showDealCancelButton=false', async () => {
-          jest.mocked(dealCancellationEnabled).mockReturnValueOnce(false);
+          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(false);
 
           await caseController.getCaseDeal(req, res);
 
