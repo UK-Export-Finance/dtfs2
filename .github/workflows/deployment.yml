@@ -57,7 +57,7 @@ on:
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: ${{  github.event.workflow_run.head_branch == 'release-*' && 'dev' || github.event.workflow_run.head_branch }}
+  ENVIRONMENT: ${{ github.event.workflow_run.head_branch == 'release-*' && 'staging' || github.event.workflow_run.head_branch }}
   TIMEZONE: 'Europe/London'
   # Base artifact
   FROM: latest
