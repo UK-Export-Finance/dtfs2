@@ -43,7 +43,7 @@
     "crypto": "^1.0.1",
     "date-fns": "^2.30.0",
     "dotenv": "16.0.3",
-    "express": "^4.19.2",
+    "express": "^4.21.0",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
     "express-validator": "7.0.1",
