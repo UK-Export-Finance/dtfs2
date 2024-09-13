@@ -1,5 +1,3 @@
-const { to2Decimals } = require('../../../helpers/currency');
-
 /**
  * Returns facility's amount
  * @param {object} facility Facility object
@@ -20,7 +18,9 @@ const getMaximumLiability = (facility, overallAmount = false) => {
     facilityValue = amount;
   }
 
-  return to2Decimals(facilityValue);
+  const liability = typeof facilityValue === 'string' ? facilityValue.replace(/,/g, '') : facilityValue;
+
+  return Number(Number(liability).toFixed(2));
 };
 
 module.exports = getMaximumLiability;
