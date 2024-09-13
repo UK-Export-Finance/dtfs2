@@ -1,12 +1,7 @@
-import { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
-
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
-}));
 
 const res = mockRes();
 
@@ -23,11 +18,7 @@ const session = {
   userToken: token,
 };
 
-describe('controllers - case', () => {
-  beforeEach(() => {
-    jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
-  });
-
+describe('controllers - case when `FF_TFM_FACILITY_END_DATE_ENABLED` is set to true', () => {
   describe('GET case facility', () => {
     describe('when facility exists', () => {
       const mockFacility = {
