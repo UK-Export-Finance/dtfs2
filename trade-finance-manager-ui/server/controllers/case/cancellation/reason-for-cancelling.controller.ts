@@ -6,10 +6,13 @@ import { ReasonForCancellingViewModel } from '../../../types/view-models';
 import { validateReasonForCancelling } from './validation/validate-reason-for-cancelling';
 
 export type GetReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string } }>;
-export type PostReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string }; reqBody: { 'reason-for-cancelling': string | undefined } }>;
+export type PostReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string }; reqBody: { reason: string } }>;
 
 /**
  * controller to get the reason for cancelling page
+ *
+ * @param req - The express request
+ * @param res - The express response
  */
 export const getReasonForCancelling = (req: GetReasonForCancellingRequest, res: Response) => {
   const { _id } = req.params;
@@ -26,10 +29,13 @@ export const getReasonForCancelling = (req: GetReasonForCancellingRequest, res: 
 
 /**
  * controller to update the reason for cancelling
+ *
+ * @param req - The express request
+ * @param res - The express response
  */
 export const postReasonForCancelling = (req: PostReasonForCancellingRequest, res: Response) => {
   const { _id } = req.params;
-  const { 'reason-for-cancelling': reason } = req.body;
+  const { reason } = req.body;
   const { user } = asUserSession(req.session);
 
   const validationErrors = validateReasonForCancelling(reason);

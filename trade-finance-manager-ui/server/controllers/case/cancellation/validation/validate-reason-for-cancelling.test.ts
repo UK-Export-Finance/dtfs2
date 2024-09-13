@@ -1,19 +1,16 @@
+import { MAX_CHARACTER_COUNT } from '@ukef/dtfs2-common';
 import { ReasonForCancellingErrorsViewModel } from '../../../../types/view-models';
 import { validateReasonForCancelling } from './validate-reason-for-cancelling';
 
 describe('validateReasonForCancelling', () => {
   const errorFreeReasons = [
     {
-      description: 'undefined',
-      reason: undefined,
-    },
-    {
       description: 'an empty string',
       reason: '',
     },
     {
-      description: 'a 1200 characters',
-      reason: new Array(1201).join('x'),
+      description: `${MAX_CHARACTER_COUNT} characters`,
+      reason: new Array(Number(MAX_CHARACTER_COUNT) + 1).join('x'),
     },
   ];
 
@@ -29,9 +26,9 @@ describe('validateReasonForCancelling', () => {
     expect(result).toEqual(expected);
   });
 
-  it('returns an error when the reason is 1201 characters', () => {
+  it(`returns an error when the reason is more that ${MAX_CHARACTER_COUNT} characters`, () => {
     // Arrange
-    const reason = new Array(1202).join('x');
+    const reason = new Array(Number(MAX_CHARACTER_COUNT) + 2).join('x');
 
     // Act
     const result = validateReasonForCancelling(reason);
