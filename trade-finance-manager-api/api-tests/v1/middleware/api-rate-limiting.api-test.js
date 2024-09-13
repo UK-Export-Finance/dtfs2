@@ -2,18 +2,18 @@ require('dotenv').config();
 const { generateApp } = require('../../../src/generateApp');
 const { createApi } = require('../../api');
 
-const app = generateApp();
-const { as } = createApi(app);
-
 describe('api rate limiting', () => {
   const rateLimit = 2;
 
   let originalRateLimitThreshold;
+  let as;
   let sendRequestTimes;
 
   beforeEach(() => {
     originalRateLimitThreshold = process.env.RATE_LIMIT_THRESHOLD;
     process.env.RATE_LIMIT_THRESHOLD = rateLimit.toString();
+    const app = generateApp();
+    ({ as } = createApi(app));
     sendRequestTimes = (numberOfRequestsToSend) =>
       Promise.allSettled(Array.from({ length: numberOfRequestsToSend }, () => as(null).put(null).to('/v1/deals/submit')));
   });

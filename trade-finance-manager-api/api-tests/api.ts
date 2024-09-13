@@ -7,11 +7,17 @@ dotenv.config();
 
 const { TFM_API_KEY } = process.env;
 
-const getHeaders = (token?: string): IncomingHttpHeaders => ({
-  'content-type': 'application/json',
-  'x-api-key': TFM_API_KEY,
-  Authorization: token,
-});
+const getHeaders = (token?: string): IncomingHttpHeaders => {
+  const headers: IncomingHttpHeaders = {
+    'content-type': 'application/json',
+    'x-api-key': TFM_API_KEY,
+  };
+  if (token) {
+    headers.Authorization = token;
+  }
+
+  return headers;
+};
 
 export type TokenUser = {
   token: string | undefined;
