@@ -23,6 +23,21 @@ const getPrecedingReportPeriod = (reportingSchedule: BankReportPeriodSchedule, r
   return getPreviousReportPeriodForBankScheduleByMonth(reportingSchedule, toIsoMonthStamp(dateInPreviousReportingPeriod));
 };
 
+/**
+ * Seeds lots of fee records and payments in different statuses.
+ * The utilisation report seeding should be run first to seed the reports.
+ *
+ * - For the manually reconciled report, seeds manually reconciled fee records
+ * with no payments.
+ * - For the pending reconciliation, seeds fee records awaiting reconciliation.
+ * - For the reconciliation in progress report seeds many fee records and
+ *  payments, in different possible group configurations.
+ *
+ * As part of seeding the fee records, also seeds utilisation data for the
+ * previous report period for each added fee record, which makes keying sheet
+ * generation possible.
+ * @param dataSource - The sql db data source
+ */
 export const seedFeeRecordPaymentGroups = async (dataSource: DataSource) => {
   const manuallyCompletedReport = await dataSource.manager.findOneByOrFail(UtilisationReportEntity, { status: 'RECONCILIATION_COMPLETED' });
   await FeeRecordPaymentGroupSeeder.forManuallyCompletedReport(manuallyCompletedReport).addManyRandomFeeRecords(50).save(dataSource);
