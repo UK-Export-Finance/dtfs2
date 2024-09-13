@@ -6,5 +6,5 @@ export default (opts) => {
   pages.landingPage.visit();
   pages.landingPage.email().type(username);
   pages.landingPage.password().type(password);
-  pages.landingPage.submitButton().click();
+  cy.clickSubmitButton();
 };

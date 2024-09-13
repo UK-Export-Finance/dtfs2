@@ -14,7 +14,7 @@
       titleText: "There is a problem",
       errorList: errors.errorSummary,
       attributes: {
-        'data-cy': 'amendment--error-summary'
+        'data-cy': 'error-summary'
       },
       classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
     }) }}
@@ -158,11 +158,11 @@
           {% if isEditable %}
             {{ govukButton({
               text: "Submit",
-              attributes: { "data-cy": "amendment--continue-button" }
+              attributes: { "data-cy": "continue-button" }
               })
             }}
           {% endif %}
-          <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="amendment--cancel-button">Cancel</a>
+          <a class="govuk-link" href="/case/{{ dealId }}/facility/{{ facilityId }}#amendments" data-cy="cancel-link">Cancel</a>
         </div>
       </form>
     </div>

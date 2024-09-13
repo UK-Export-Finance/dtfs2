@@ -1,5 +1,4 @@
 const buyerPartyPage = {
-  errorSummary: () => cy.get('[data-cy="error-summary"]'),
   urnInput: (index) => cy.get(`[data-cy="urn-input-${index}"]`),
   urnError: (index) => cy.get(`[data-cy="partyUrn--inline-error-${index}"]`),
   heading: () => cy.get('[data-cy="edit-heading"]'),

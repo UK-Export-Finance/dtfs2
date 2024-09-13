@@ -57,7 +57,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       amendmentsPage.isUsingFacilityEndDateNo().should('not.be.checked');
 
       amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'facility-end-date');
       amendmentsPage.amendmentCurrentFacilityEndDate().should('have.text', '01 January 2023');
@@ -66,7 +66,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(dateConstants.todayDay);
       amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(dateConstants.todayMonth);
       amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'check-answers');
       amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'Yes');
@@ -75,7 +75,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
       amendmentsPage.amendmentAnswerIsUsingFacilityEndDateChangeLink().click();
       amendmentsPage.isUsingFacilityEndDateNo().check();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'bank-review-date');
       amendmentsPage.amendmentCurrentBankReviewDate().should('have.text', 'Not provided');
@@ -84,14 +84,14 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.threeMonthsOneDayDay);
       amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.threeMonthsOneDayMonth);
       amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.threeMonthsOneDayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'check-answers');
       amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'No');
       amendmentsPage.amendmentAnswerBankReviewDate().should('have.text', dateConstants.threeMonthsOneDayFullString);
       amendmentsPage.amendmentAnswerFacilityEndDate().should('not.exist');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.visit(relative(`/case/${dealId}/facility/${facility._id}`));
       facilityPage.facilityIsUsingFacilityEndDate().should('have.text', 'No');

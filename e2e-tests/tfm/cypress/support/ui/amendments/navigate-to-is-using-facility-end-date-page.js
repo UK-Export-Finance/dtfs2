@@ -20,24 +20,24 @@ const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, chang
     amendmentsPage.addAmendmentButton().contains('Add an amendment request');
     amendmentsPage.addAmendmentButton().click();
   } else {
-    amendmentsPage.continueAmendmentButton().click();
+    cy.clickContinueButton();
   }
 
   cy.url().should('contain', 'request-date');
   amendmentsPage.amendmentRequestDayInput().clear().type(todayDay);
   amendmentsPage.amendmentRequestMonthInput().clear().type(todayMonth);
   amendmentsPage.amendmentRequestYearInput().clear().type(todayYear);
-  amendmentsPage.continueAmendment().click();
+  cy.clickContinueButton();
 
   cy.url().should('contain', 'request-approval');
   amendmentsPage.amendmentRequestApprovalNo().check();
-  amendmentsPage.continueAmendment().click();
+  cy.clickContinueButton();
 
   cy.url().should('contain', 'amendment-effective-date');
   amendmentsPage.amendmentEffectiveDayInput().clear().type(todayDay);
   amendmentsPage.amendmentEffectiveMonthInput().clear().type(todayMonth);
   amendmentsPage.amendmentEffectiveYearInput().clear().type(todayYear);
-  amendmentsPage.continueAmendment().click();
+  cy.clickContinueButton();
 
   cy.url().should('contain', 'amendment-options');
   amendmentsPage.amendmentFacilityValueCheckbox().uncheck();
@@ -45,13 +45,13 @@ const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, chang
     amendmentsPage.amendmentFacilityValueCheckbox().check();
   }
   amendmentsPage.amendmentCoverEndDateCheckbox().check();
-  amendmentsPage.continueAmendment().click();
+  cy.clickContinueButton();
 
   cy.url().should('contain', 'cover-end-date');
   amendmentsPage.amendmentCoverEndDateDayInput().clear().type(format(newCoverEndDate, 'd'));
   amendmentsPage.amendmentCoverEndDateMonthInput().clear().type(format(newCoverEndDate, 'M'));
   amendmentsPage.amendmentCoverEndDateYearInput().clear().type(format(newCoverEndDate, 'yyyy'));
-  amendmentsPage.continueAmendment().click();
+  cy.clickContinueButton();
 
   cy.url().should('contain', 'is-using-facility-end-date');
 };

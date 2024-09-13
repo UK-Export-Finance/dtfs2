@@ -21,7 +21,6 @@ const tasksPage = {
   filterRadioYourTasks: () => cy.get('[data-cy="task-radio-button-your-tasks"]'),
   filterRadioYourTeam: () => cy.get('[data-cy="task-radio-button-your-team"]'),
   filterRadioAllTasks: () => cy.get('[data-cy="task-radio-button-all"]'),
-  filterSubmitButton: () => cy.get('[data-cy="submit-button"]'),
 };
 
 module.exports = tasksPage;
