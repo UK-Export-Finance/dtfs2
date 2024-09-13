@@ -62,38 +62,32 @@ const sendMiaAcknowledgement = async (deal) => {
   // get the email address for PIM user
   const { email: pimEmail } = await api.findOneTeam(CONSTANTS.TEAMS.PIM.id);
 
-  let templateId;
-  let emailVariables;
-  let emailResponse;
-  let bankResponse;
-  let pimEmailResponse;
-
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-    templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_MIA_RECEIVED;
+    const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.BSS_DEAL_MIA_RECEIVED;
 
-    emailVariables = generateMiaConfirmationEmailVars(deal);
+    const emailVariables = generateMiaConfirmationEmailVars(deal);
 
     // send an email to the maker
-    emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, deal);
+    const emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, deal);
     // send a copy of the email to the bank's general email address
-    bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
+    const bankResponse = await Promise.all(bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal)));
     // send a copy of the email to PIM
-    pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
+    const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
 
     return { emailResponse, bankResponse, pimEmailResponse };
   }
 
   if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-    templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_MIA_RECEIVED;
+    const templateId = CONSTANTS.EMAIL_TEMPLATE_IDS.GEF_DEAL_MIA_RECEIVED;
 
-    emailVariables = generateMiaConfirmationEmailVars(deal);
+    const emailVariables = generateMiaConfirmationEmailVars(deal);
 
     // send an email to the maker
-    emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, deal);
+    const emailResponse = await sendTfmEmail(templateId, sendToEmailAddress, emailVariables, deal);
     // send a copy of the email to the bank's general email address
-    bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
+    const bankResponse = await Promise.all(bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal)));
     // send a copy of the email to PIM
-    pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
+    const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
 
     return { emailResponse, bankResponse, pimEmailResponse };
   }
@@ -148,7 +142,7 @@ const sendAinMinAcknowledgement = async (deal) => {
       // send a copy of the email to PIM
       const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
       // send a copy of the email to the bank's general email address
-      const bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
+      const bankResponse = await Promise.all(bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal)));
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }
 
@@ -163,7 +157,7 @@ const sendAinMinAcknowledgement = async (deal) => {
       // send a copy of the email to PIM
       const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
       // send a copy of the email to the bank's general email address
-      const bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
+      const bankResponse = await Promise.all(bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal)));
 
       return { makerEmailResponse, pimEmailResponse, bankResponse };
     }
