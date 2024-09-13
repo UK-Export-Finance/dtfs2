@@ -4,5 +4,5 @@ module.exports = (opts) => {
   const { username, password } = opts;
   tfmPages.landingPage.email().type(username);
   tfmPages.landingPage.password().type(password);
-  tfmPages.landingPage.submitButton().click();
+  cy.clickSubmitButton();
 };

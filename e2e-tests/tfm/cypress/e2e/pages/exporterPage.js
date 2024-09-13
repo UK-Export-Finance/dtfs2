@@ -1,5 +1,4 @@
 const exporterPartyPage = {
-  errorSummary: () => cy.get('[data-cy="error-summary"]'),
   urnInput: () => cy.get('[data-cy="urn-input"]'),
   urnError: () => cy.get('[data-cy="partyUrn--inline-error"]'),
   heading: () => cy.get('[data-cy="edit-heading"]'),

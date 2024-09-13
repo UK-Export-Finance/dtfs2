@@ -91,7 +91,7 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.managersDecisionPage.decisionRadioInputDecline().click();
     tfmPages.managersDecisionPage.commentsInputDecline().type(MOCK_COMMENTS);
-    tfmPages.managersDecisionPage.submitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // Go back to Portal

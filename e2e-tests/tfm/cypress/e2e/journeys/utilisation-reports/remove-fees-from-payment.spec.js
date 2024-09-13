@@ -6,6 +6,7 @@ import {
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
+import { errorSummary } from '../../partials';
 import pages from '../../pages';
 import { PDC_TEAMS } from '../../../fixtures/teams';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
@@ -89,7 +90,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
   it('should display errors when form submitted with invalid fee selections and persist the selected fees and inputted values', () => {
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
-    pages.utilisationReportEditPaymentPage.errorSummary().contains('Select fee or fees to remove from the payment');
+    errorSummary().contains('Select fee or fees to remove from the payment');
 
     clearFormValues();
 
@@ -105,7 +106,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
-    pages.utilisationReportEditPaymentPage.errorSummary().contains('You cannot remove all the fees. Delete the payment instead.');
+    errorSummary().contains('You cannot remove all the fees. Delete the payment instead.');
     feeRecordIds.forEach((feeRecordId) => {
       getFeeRecordCheckbox(feeRecordId).should('be.checked');
     });

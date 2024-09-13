@@ -12,7 +12,6 @@ const partiesPage = {
   bondIssuerEditLink: () => cy.get('[data-cy="bond-issuer-area"] [data-cy="edit-party-link"]'),
   bondBeneficiaryEditLink: () => cy.get('[data-cy="bond-beneficiary-area"] [data-cy="edit-party-link"]'),
   partyUrnSummaryTable: () => cy.get('[data-cy="party-urn-summary-table"]'),
-  backLink: () => cy.get('[data-cy="back-link"]'),
   nonExistentHeading: () => cy.get('[data-cy="partyurn-non-existent-heading"]'),
   bondIssuerFacilitiesTable: {
     row: (facilityId) => {
