@@ -1,5 +1,6 @@
 import { add } from 'date-fns';
 import relative from '../../relativeURL';
+import { errorSummary } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../pages/caseDealPage';
@@ -81,71 +82,71 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentRequestYearInput().clear().focused().type('22');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
-      amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+      errorSummary().contains('The year for the amendment request date must include 4 numbers');
       amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
 
       amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
       amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentRequestYearInput().clear().focused().type('2O22');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
-      amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+      errorSummary().contains('The year for the amendment request date must include 4 numbers');
       amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
 
       amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
       amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentRequestYearInput().clear().focused().type('20 22');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
-      amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+      errorSummary().contains('The year for the amendment request date must include 4 numbers');
       amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
 
       amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
       amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentRequestYearInput().clear().focused().type('2 22');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
-      amendmentsPage.errorSummary().contains('The year for the amendment request date must include 4 numbers');
+      errorSummary().contains('The year for the amendment request date must include 4 numbers');
       amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
 
       amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
       amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'request-approval');
       // automatic approval
       amendmentsPage.amendmentRequestApprovalNo().click();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-effective-date');
 
       amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
       amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentEffectiveYearInput().clear().focused().type('22');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
-      amendmentsPage.errorSummary().contains('The year for the effective date must include 4 numbers');
+      errorSummary().contains('The year for the effective date must include 4 numbers');
       amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
 
       amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
       amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentEffectiveYearInput().clear().focused().type('2O22');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
-      amendmentsPage.errorSummary().contains('The year for the effective date must include 4 numbers');
+      errorSummary().contains('The year for the effective date must include 4 numbers');
       amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
 
       amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.fourDaysAgoDay);
       amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.fourDaysAgoMonth);
       amendmentsPage.amendmentEffectiveYearInput().clear().focused().type(dateConstants.fourDaysAgoYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
@@ -156,18 +157,18 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentFacilityValueCheckbox().click();
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'cover-end-date');
       amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.twoMonthsDay);
       amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.twoMonthsMonth);
       amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.twoMonthsYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'facility-value');
       amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
       amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'check-answers');
     });
 
@@ -177,21 +178,21 @@ context('Amendments - automatic approval journey', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.continueAmendmentButton().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'request-date');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'request-approval');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-effective-date');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'cover-end-date');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'facility-value');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'check-answers');
 
       amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
@@ -200,7 +201,7 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.twoMonthsFormatted);
       amendmentsPage.amendmentAnswerFacilityValue().should('contain', 'GBP 123.00');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       amendmentsPage.addAmendmentButton().should('exist');
       amendmentsPage.addAmendmentButton().contains('Add an amendment request');
     });
@@ -306,18 +307,18 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
       amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'request-approval');
       // automatic approval
       amendmentsPage.amendmentRequestApprovalNo().click();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-effective-date');
 
       amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.fourDaysAgoDay);
       amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.fourDaysAgoMonth);
       amendmentsPage.amendmentEffectiveYearInput().clear().focused().type(dateConstants.fourDaysAgoYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
@@ -327,13 +328,13 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentCoverEndDateCheckbox().click();
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'cover-end-date');
       amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.twoMonthsDay);
       amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.twoMonthsMonth);
       amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.twoMonthsYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'check-answers');
     });
@@ -344,19 +345,19 @@ context('Amendments - automatic approval journey', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.continueAmendmentButton().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'request-date');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'request-approval');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-effective-date');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'cover-end-date');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'check-answers');
       amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
@@ -364,7 +365,7 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentAnswerEffectiveDate().should('contain', dateConstants.fourDaysAgoDay);
       amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.twoMonthsFormatted);
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       amendmentsPage.addAmendmentButton().should('exist');
       amendmentsPage.addAmendmentButton().contains('Add an amendment request');
     });
@@ -468,18 +469,18 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
       amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'request-approval');
       // automatic approval
       amendmentsPage.amendmentRequestApprovalNo().click();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-effective-date');
 
       amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.fourDaysAgoDay);
       amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.fourDaysAgoMonth);
       amendmentsPage.amendmentEffectiveYearInput().clear().focused().type(dateConstants.fourDaysAgoYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
@@ -489,13 +490,13 @@ context('Amendments - automatic approval journey', () => {
       amendmentsPage.amendmentFacilityValueCheckbox().click();
       amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'facility-value');
       amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
       amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'check-answers');
     });
 
@@ -505,26 +506,26 @@ context('Amendments - automatic approval journey', () => {
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.continueAmendmentButton().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'request-date');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'request-approval');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-effective-date');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'facility-value');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'check-answers');
 
       amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
       amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'No');
       amendmentsPage.amendmentAnswerFacilityValue().should('contain', 'GBP 123.00');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       amendmentsPage.addAmendmentButton().should('exist');
       amendmentsPage.addAmendmentButton().contains('Add an amendment request');
     });

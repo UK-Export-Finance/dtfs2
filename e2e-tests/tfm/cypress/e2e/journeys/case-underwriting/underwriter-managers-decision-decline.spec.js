@@ -49,7 +49,7 @@ context('Case Underwriting - Pricing and risk', () => {
     pages.managersDecisionPage.commentsInputDecline().should('be.visible');
     pages.managersDecisionPage.commentsInputDecline().type(MOCK_COMMENTS);
     pages.managersDecisionPage.commentsInputInternal().type(MOCK_INTERNAL_COMMENTS);
-    pages.managersDecisionPage.submitButton().click();
+    cy.clickSubmitButton();
 
     cy.assertText(pages.managersDecisionPage.decisionStatusTag(), 'Declined');
 

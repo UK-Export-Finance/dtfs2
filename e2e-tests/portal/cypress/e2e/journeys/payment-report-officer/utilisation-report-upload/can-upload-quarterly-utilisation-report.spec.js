@@ -2,18 +2,21 @@ const { errorSummary, mainHeading } = require('../../../partials');
 const { utilisationReportUpload } = require('../../../pages');
 const { NODE_TASKS, BANK2_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
-const { december2023ToFebruary2024ReportDetails } = require('../../../../fixtures/mockUtilisationReportDetails');
+const { december2023ToFebruary2024ReportDetails, tfmFacilityForReport } = require('../../../../fixtures/mockUtilisationReportDetails');
 
 context('Quarterly utilisation report upload', () => {
   beforeEach(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [december2023ToFebruary2024ReportDetails]);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [tfmFacilityForReport]);
+
     cy.login(BANK2_PAYMENT_REPORT_OFFICER1);
     cy.visit(relativeURL('/utilisation-report-upload'));
   });
 
   after(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
   });
 
   describe('Submitting a file to the utilisation report upload', () => {
@@ -91,7 +94,70 @@ context('Quarterly utilisation report upload', () => {
 
       utilisationReportUpload.checkReportTitle().should('exist');
       utilisationReportUpload.validationErrorTable().should('exist');
-      utilisationReportUpload.validationErrorTableRows().should('have.length', 7);
+      utilisationReportUpload.validationErrorTableRows().should('have.length', 9);
+
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 1,
+        message: 'Facility utilisation header is missing or spelt incorrectly',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 2,
+        message: 'Fees paid to UKEF currency header is missing or spelt incorrectly',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 3,
+        message: 'UKEF facility ID must be an 8 to 10 digit number',
+        exporter: 'Exporter 1',
+        row: '2',
+        column: 'B',
+        entry: '20001371123',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 4,
+        message: 'Fees paid to UKEF for the period must have an entry',
+        exporter: 'Exporter 1',
+        row: '2',
+        column: 'H',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 5,
+        message: 'UKEF facility ID must be an 8 to 10 digit number',
+        exporter: 'Exporter 2',
+        row: '3',
+        column: 'B',
+        entry: 'aw',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 6,
+        message: 'Total fees accrued for the period must have an entry',
+        exporter: 'Exporter 2',
+        row: '3',
+        column: 'G',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 7,
+        message: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+        exporter: 'Fish Exporter',
+        row: '4',
+        column: 'B',
+        entry: '20001499',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 8,
+        message: 'Total fees accrued for the period must be a number with a maximum of two decimal places',
+        exporter: 'Fish Exporter',
+        row: '4',
+        column: 'G',
+        entry: '124.758',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 9,
+        message: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+        exporter: 'Potato Exporter',
+        row: '5',
+        column: 'B',
+        entry: '20001507',
+      });
     });
 
     it('should display a summary of errors for an invalid .csv file', () => {
@@ -101,7 +167,62 @@ context('Quarterly utilisation report upload', () => {
       utilisationReportUpload.checkReportTitle().should('exist');
       errorSummary().should('exist');
       utilisationReportUpload.validationErrorTable().should('exist');
-      utilisationReportUpload.validationErrorTableRows().should('have.length', 6);
+      utilisationReportUpload.validationErrorTableRows().should('have.length', 8);
+
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 1,
+        message: 'Facility utilisation header is missing or spelt incorrectly',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 2,
+        message: 'Fees paid to UKEF currency header is missing or spelt incorrectly',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 3,
+        message: 'UKEF facility ID must be an 8 to 10 digit number',
+        exporter: 'Exporter 1',
+        row: '2',
+        column: 'B',
+        entry: '20001371123',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 4,
+        message: 'Fees paid to UKEF for the period must have an entry',
+        exporter: 'Exporter 1',
+        row: '2',
+        column: 'H',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 5,
+        message: 'UKEF facility ID must be an 8 to 10 digit number',
+        exporter: 'Exporter 2',
+        row: '3',
+        column: 'B',
+        entry: 'aw',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 6,
+        message: 'Total fees accrued for the period must have an entry',
+        exporter: 'Exporter 2',
+        row: '3',
+        column: 'G',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 7,
+        message: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+        exporter: 'Fish Exporter',
+        row: '4',
+        column: 'B',
+        entry: '20001499',
+      });
+      cy.assertValidationErrorTableRowContains({
+        tableRowIndex: 8,
+        message: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+        exporter: 'Potato Exporter',
+        row: '5',
+        column: 'B',
+        entry: '20001507',
+      });
     });
 
     it('should allow a file to be re-uploaded after failing the data validation', () => {

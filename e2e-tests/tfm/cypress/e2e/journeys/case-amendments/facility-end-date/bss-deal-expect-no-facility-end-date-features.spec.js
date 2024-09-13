@@ -52,21 +52,21 @@ context('Amendments - BSS/EWCS deal does not display any Facility end date pages
     amendmentsPage.amendmentRequestDayInput().clear().type(dateConstants.todayDay);
     amendmentsPage.amendmentRequestMonthInput().clear().type(dateConstants.todayMonth);
     amendmentsPage.amendmentRequestYearInput().clear().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
     amendmentsPage.amendmentRequestApprovalYes().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'amendment-options');
     amendmentsPage.amendmentCoverEndDateCheckbox().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'cover-end-date');
     amendmentsPage.amendmentCoverEndDateDayInput().clear().type(dateConstants.todayDay);
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().type(dateConstants.todayMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'check-answers');
 

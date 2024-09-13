@@ -68,7 +68,7 @@ context('PDC_RECONCILE users can search for reports by bank and year', () => {
 
     pages.searchUtilisationReportsFormPage.bankRadioButton(BANK_WITH_REPORTS_ID).click();
     pages.searchUtilisationReportsFormPage.yearInput().type('2024');
-    pages.searchUtilisationReportsFormPage.continueButton().click();
+    cy.clickContinueButton();
 
     pages.searchUtilisationReportsResultsPage.heading().should('exist');
     pages.searchUtilisationReportsResultsPage.table().should('exist');
@@ -79,7 +79,7 @@ context('PDC_RECONCILE users can search for reports by bank and year', () => {
 
     pages.searchUtilisationReportsFormPage.bankRadioButton(BANK_WITHOUT_REPORTS_ID).click();
     pages.searchUtilisationReportsFormPage.yearInput().type('2024');
-    pages.searchUtilisationReportsFormPage.continueButton().click();
+    cy.clickContinueButton();
 
     pages.searchUtilisationReportsResultsPage.heading().should('exist');
     pages.searchUtilisationReportsResultsPage.noReportsText().should('exist');
