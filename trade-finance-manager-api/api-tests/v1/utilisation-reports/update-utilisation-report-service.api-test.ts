@@ -1,13 +1,13 @@
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
-import createApi from '../../api';
-import testUserCache from '../../api-test-users';
+import { createApi, TokenUser } from '../../api';
+import * as testUserCache from '../../api-test-users';
 
 const { as } = createApi(app);
 
 describe('/v1/utilisation-reports/set-status', () => {
   const url = '/v1/utilisation-reports/set-status';
-  let tokenUser: unknown;
+  let tokenUser: TokenUser;
 
   beforeEach(async () => {
     tokenUser = await testUserCache.initialise(app);

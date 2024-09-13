@@ -1,6 +1,8 @@
 const app = require('../../../src/createApp');
-const { as } = require('../../api')(app);
+const { createApi } = require('../../api');
 const testUserCache = require('../../api-test-users');
+
+const { as } = createApi(app);
 
 describe('/feedback', () => {
   const allFeedbackFields = {

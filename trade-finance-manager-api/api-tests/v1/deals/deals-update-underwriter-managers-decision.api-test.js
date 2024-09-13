@@ -2,7 +2,7 @@ const { AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { when } = require('jest-when');
 const app = require('../../../src/createApp');
-const { as } = require('../../api')(app);
+const { createApi } = require('../../api');
 const testUserCache = require('../../api-test-users');
 const api = require('../../../src/v1/api');
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
@@ -12,6 +12,8 @@ const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN
 const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIN-second-submit-facilities-unissued-to-issued');
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit-facilities-unissued-to-issued');
+
+const { as } = createApi(app);
 
 describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
   const PIM_EMAIL = 'pim-test@ukexportfinance.com';

@@ -2,9 +2,11 @@ const { ObjectId } = require('mongodb');
 const { withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const app = require('../../../src/createApp');
-const { as } = require('../../api')(app);
+const { createApi } = require('../../api');
 const testUserCache = require('../../api-test-users');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
+
+const { as } = createApi(app);
 
 describe('user controller', () => {
   let userId = '';

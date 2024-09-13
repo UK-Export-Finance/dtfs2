@@ -1,7 +1,9 @@
 const app = require('../../../src/createApp');
-const { as } = require('../../api')(app);
+const { createApi } = require('../../api');
 const testUserCache = require('../../api-test-users');
 const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-users');
+
+const { as } = createApi(app);
 
 const submitDeal = async (deal) => {
   const user = await testUserCache.initialise(app);

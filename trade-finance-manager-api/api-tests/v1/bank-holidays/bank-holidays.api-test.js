@@ -1,6 +1,8 @@
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
-const { as } = require('../../api')(app);
+const { createApi } = require('../../api');
+
+const { as } = createApi(app);
 
 describe('/v1/bank-holidays', () => {
   describe('GET /v1/bank-holidays', () => {

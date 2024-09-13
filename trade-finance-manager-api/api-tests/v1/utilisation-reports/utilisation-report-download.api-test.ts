@@ -1,8 +1,8 @@
-import testUserCache from '../../api-test-users';
+import * as testUserCache from '../../api-test-users';
 import app from '../../../src/createApp';
-import api from '../../api';
+import { createApi } from '../../api';
 
-const { as, get } = api(app);
+const { as, get } = createApi(app);
 
 describe('/v1/utilisation-reports/:id/download', () => {
   describe('GET /v1/utilisation-reports/:id/download', () => {

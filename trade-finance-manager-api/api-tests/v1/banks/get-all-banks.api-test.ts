@@ -1,8 +1,8 @@
 import { Response } from 'supertest';
 import { Bank } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
-import testUserCache from '../../api-test-users';
-import createApi from '../../api';
+import * as testUserCache from '../../api-test-users';
+import { createApi } from '../../api';
 
 const { as } = createApi(app);
 

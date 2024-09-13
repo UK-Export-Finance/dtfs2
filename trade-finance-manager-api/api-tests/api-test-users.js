@@ -1,4 +1,4 @@
-const api = require('./api');
+const { createApi } = require('./api');
 const MOCK_USERS = require('../src/v1/__mocks__/mock-users');
 
 const loginTestUser = async (post, user) => {
@@ -12,7 +12,7 @@ const loginTestUser = async (post, user) => {
 };
 
 module.exports.initialise = async (app) => {
-  const { post } = api(app).as();
+  const { post } = createApi(app).as();
 
   const mockUser = MOCK_USERS[0];
 
