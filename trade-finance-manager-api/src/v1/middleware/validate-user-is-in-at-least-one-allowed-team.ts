@@ -3,7 +3,7 @@ import { HttpStatusCode } from 'axios';
 import { RequestHandler } from 'express';
 
 /**
- * Creates a middleware that returns a 401 error if the current user is not part of
+ * Creates a middleware that returns a 403 error if the current user is not part of
  * at least one of the allowed teams, and calls the next handler otherwise.
  */
 export const validateUserHasAtLeastOneAllowedTeam =
