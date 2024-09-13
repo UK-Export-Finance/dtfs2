@@ -12,7 +12,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
 
 jest.mock('../helpers', () => ({
   ...jest.requireActual('../helpers'),
-  dealCancellationEnabled: jest.fn().mockReturnValue(false),
+  isDealCancellationEnabled: jest.fn().mockReturnValue(false),
 }));
 
 const res = mockRes();

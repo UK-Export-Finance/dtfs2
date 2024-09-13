@@ -1,5 +1,3 @@
-import { ObjectId } from 'mongodb';
-
 const Chance = require('chance');
 
 const { pageRenderer } = require('../../pageRenderer');
@@ -195,7 +193,7 @@ describe(`${page} cancel deal button`, () => {
   let wrapper;
 
   describe(`when showDealCancelButton is true`, () => {
-    const dealId = new ObjectId().toString();
+    const dealId = '123';
 
     beforeEach(() => {
       params.showDealCancelButton = true;
