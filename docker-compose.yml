@@ -122,6 +122,7 @@ services:
       - CONTACT_US_EMAIL_ADDRESS
       - FF_TFM_PAYMENT_RECONCILIATION_ENABLED
       - FF_TFM_FACILITY_END_DATE_ENABLED
+      - FF_TFM_DEAL_CANCELLATION
 
   trade-finance-manager-api:
     build:

@@ -1,4 +1,5 @@
 import relative from '../../relativeURL';
+import { cancelLink, continueButton } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
@@ -48,12 +49,12 @@ context('Amendments underwriting - add lead underwriter', () => {
       amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
       amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'request-approval');
       // manual approval
       amendmentsPage.amendmentRequestApprovalYes().click();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
@@ -64,21 +65,21 @@ context('Amendments underwriting - add lead underwriter', () => {
       amendmentsPage.amendmentFacilityValueCheckbox().click();
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'cover-end-date');
 
       amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
       amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
       amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'facility-value');
       amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
       amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'check-answers');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
     });
 
     it('should take you to assign amendment underwriter page as underwriter manager when adding a lead underwriter', () => {
@@ -99,8 +100,8 @@ context('Amendments underwriting - add lead underwriter', () => {
       pages.amendmentsPage.assignedToSelectInputOption();
       pages.amendmentsPage.assignedToSelectInputSelectedOption();
 
-      pages.amendmentsPage.assignLeadUnderwriterSaveButton();
-      pages.amendmentsPage.assignLeadUnderwriterCancelLink();
+      continueButton();
+      cancelLink();
     });
 
     it('should still show add lead underwriter button if press cancel on assign page', () => {
@@ -111,7 +112,7 @@ context('Amendments underwriting - add lead underwriter', () => {
 
       pages.underwritingPage.amendmentAddLeadUnderwriterLink().click({ force: true });
 
-      pages.amendmentsPage.assignLeadUnderwriterCancelLink().click();
+      cy.clickCancelLink();
 
       pages.underwritingPage.amendmentAddLeadUnderwriterLink().contains('Add underwriter');
     });
@@ -131,7 +132,7 @@ context('Amendments underwriting - add lead underwriter', () => {
       cy.url().should('contain', '/lead-underwriter');
 
       // Lead Underwriter will be assigned on save, because select input was auto selected to current user.
-      pages.amendmentsPage.assignLeadUnderwriterSaveButton(0).click();
+      cy.clickContinueButton();
 
       pages.underwritingPage.amendmentAddLeadUnderwriterLink().should('not.exist');
 
@@ -166,7 +167,7 @@ context('Amendments underwriting - add lead underwriter', () => {
 
       pages.underwritingPage.amendmentLeadUnderwriterSelectInput().select(`${UNDERWRITER_1.firstName} ${UNDERWRITER_1.lastName}`);
 
-      pages.amendmentsPage.assignLeadUnderwriterSaveButton(0).click();
+      cy.clickContinueButton();
 
       // Assert active lead underwritter, better to use name because all emails are same.
       pages.underwritingPage.amendmentLeadUnderwriterFullName().contains(`${UNDERWRITER_1.firstName} ${UNDERWRITER_1.lastName}`);
@@ -183,7 +184,7 @@ context('Amendments underwriting - add lead underwriter', () => {
 
       pages.underwritingPage.amendmentLeadUnderwriterSelectInput().select(TASKS.UNASSIGNED);
 
-      pages.amendmentsPage.assignLeadUnderwriterSaveButton(0).click();
+      cy.clickContinueButton();
 
       pages.underwritingPage.amendmentLeadUnderwriterFullName().should('not.exist');
       pages.underwritingPage.amendmentAddLeadUnderwriterLink().contains('Add underwriter');

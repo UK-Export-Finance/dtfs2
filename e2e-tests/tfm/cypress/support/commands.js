@@ -1,3 +1,4 @@
+import './click-events';
 import './trade-finance-manager-api';
 import './ui';
 
