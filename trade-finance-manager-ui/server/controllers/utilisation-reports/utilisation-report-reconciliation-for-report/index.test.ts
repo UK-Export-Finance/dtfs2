@@ -162,7 +162,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         formattedReportPeriod,
         enablePaymentsReceivedSorting: true,
         reportId: '1',
-        feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
+        premiumPayments: feeRecordPaymentGroupViewModel,
         facilityIdQuery,
         keyingSheet: [],
         paymentDetails: paymentDetailsViewModel,
@@ -197,7 +197,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.tableDataError).toBeDefined();
       expect(viewModel.tableDataError?.href).toBe('#premium-payments-table');
       expect(viewModel.tableDataError?.text).toBe('Select a fee or fees with the same status');
-      expect(viewModel.feeRecordPaymentGroups[0].isChecked).toBe(true);
+      expect(viewModel.premiumPayments[0].isChecked).toBe(true);
     });
 
     it("renders the page with 'enablePaymentsReceivedSorting' set to true if at least one fee record has a non-null 'paymentsReceived'", async () => {
@@ -354,9 +354,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
       // Assert
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.feeRecordPaymentGroups[0].isChecked).toBe(true);
-      expect(viewModel.feeRecordPaymentGroups[1].isChecked).toBe(true);
-      expect(viewModel.feeRecordPaymentGroups[2].isChecked).toBe(false);
+      expect(viewModel.premiumPayments[0].isChecked).toBe(true);
+      expect(viewModel.premiumPayments[1].isChecked).toBe(true);
+      expect(viewModel.premiumPayments[2].isChecked).toBe(false);
     });
 
     it('clears redirect session data', async () => {

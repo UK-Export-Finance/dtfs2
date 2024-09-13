@@ -91,11 +91,11 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   bank: SessionBank;
   formattedReportPeriod: string;
   reportId: string;
-  enablePaymentsReceivedSorting: boolean;
-  feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[];
+  facilityIdQuery?: string;
   tableDataError?: ErrorSummaryViewModel;
   filterError?: ErrorSummaryViewModel;
-  facilityIdQuery?: string;
+  enablePaymentsReceivedSorting: boolean;
+  premiumPayments: FeeRecordPaymentGroupViewModelItem[];
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
 };

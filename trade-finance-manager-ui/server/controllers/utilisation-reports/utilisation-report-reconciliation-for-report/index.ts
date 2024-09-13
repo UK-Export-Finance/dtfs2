@@ -4,7 +4,7 @@ import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import {
-  mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems,
+  mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupsViewModelItems,
   mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
 } from '../helpers';
@@ -73,7 +73,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(premiumPayments);
 
-    const feeRecordPaymentGroupViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(premiumPayments, isCheckboxChecked);
+    const premiumPaymentsViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupsViewModelItems(premiumPayments, isCheckboxChecked);
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
@@ -85,11 +85,11 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       bank,
       formattedReportPeriod,
       reportId,
-      enablePaymentsReceivedSorting,
-      feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
+      facilityIdQuery: facilityIdQueryString,
       tableDataError,
       filterError,
-      facilityIdQuery: facilityIdQueryString,
+      enablePaymentsReceivedSorting,
+      premiumPayments: premiumPaymentsViewModel,
       keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,
     });
