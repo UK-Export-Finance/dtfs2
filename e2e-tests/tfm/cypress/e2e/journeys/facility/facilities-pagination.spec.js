@@ -85,7 +85,7 @@ context('User can navigate through a paginated table of facilities using the pag
     const searchString = 'Company 1';
     const expectedNumberOfMatches = Math.ceil(numberOfFacilities / 2);
     pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/facilities/0?search=Company%201'));
 
@@ -113,7 +113,7 @@ context('User can navigate through a paginated table of facilities using the pag
     cy.visit('/facilities/2');
     const searchString = 'Company 1';
     pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/facilities/0?search=Company%201'));
     cy.checkFacilityIdCells({ firstFacilityId: '10000001', increment: 2, numberToCheck: 20 });
