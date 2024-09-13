@@ -205,11 +205,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const { req, res } = getHttpMocks();
 
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [
-        {
-          ...aFeeRecordPaymentGroup(),
-          paymentsReceived: null,
-          totalPaymentsReceived: null,
-        },
+        aFeeRecordPaymentGroupWithoutReceivedPayments(),
         {
           ...aFeeRecordPaymentGroup(),
           paymentsReceived: [{ ...aPayment(), id: 1, currency: 'GBP', amount: 100 }],
@@ -237,18 +233,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const feeRecordPaymentGroups = [
-        {
-          ...aFeeRecordPaymentGroup(),
-          paymentsReceived: null,
-          totalPaymentsReceived: null,
-        },
-        {
-          ...aFeeRecordPaymentGroup(),
-          paymentsReceived: null,
-          totalPaymentsReceived: null,
-        },
-      ];
+      const feeRecordPaymentGroups = [aFeeRecordPaymentGroupWithoutReceivedPayments(), aFeeRecordPaymentGroupWithoutReceivedPayments()];
       const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
         ...aUtilisationReportReconciliationDetailsResponse(),
         premiumPayments: feeRecordPaymentGroups,
@@ -280,18 +265,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         originalUrl,
       });
 
-      const feeRecordPaymentGroups = [
-        {
-          ...aFeeRecordPaymentGroup(),
-          paymentsReceived: null,
-          totalPaymentsReceived: null,
-        },
-        {
-          ...aFeeRecordPaymentGroup(),
-          paymentsReceived: null,
-          totalPaymentsReceived: null,
-        },
-      ];
+      const feeRecordPaymentGroups = [aFeeRecordPaymentGroupWithoutReceivedPayments(), aFeeRecordPaymentGroupWithoutReceivedPayments()];
       const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
         ...aUtilisationReportReconciliationDetailsResponse(),
         premiumPayments: feeRecordPaymentGroups,
@@ -380,5 +354,13 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(req.session.checkedCheckboxIds).toBeUndefined();
       expect(req.session.generateKeyingDataErrorKey).toBeUndefined();
     });
+
+    function aFeeRecordPaymentGroupWithoutReceivedPayments(): FeeRecordPaymentGroup {
+      return {
+        ...aFeeRecordPaymentGroup(),
+        paymentsReceived: null,
+        totalPaymentsReceived: null,
+      };
+    }
   });
 });
