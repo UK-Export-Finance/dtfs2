@@ -35,7 +35,7 @@ describe('send-deal-submit-emails - GEF', () => {
       email: 'mock@testing.com',
       template: {},
     },
-    bankResponse: [],
+    bankResponses: [],
   };
   const emailAcknowledgementMIA = {
     emailResponse: {

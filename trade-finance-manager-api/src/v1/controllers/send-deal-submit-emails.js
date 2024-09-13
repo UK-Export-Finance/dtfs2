@@ -157,9 +157,9 @@ const sendAinMinAcknowledgement = async (deal) => {
       // send a copy of the email to PIM
       const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
       // send a copy of the email to the bank's general email address
-      const bankResponse = await Promise.all(bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal)));
+      const bankResponses = await Promise.all(bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal)));
 
-      return { makerEmailResponse, pimEmailResponse, bankResponse };
+      return { makerEmailResponse, pimEmailResponse, bankResponses };
     }
   } catch (error) {
     console.error('TFM-API - Error sending AIN/MIN acknowledgement email %o', error);
