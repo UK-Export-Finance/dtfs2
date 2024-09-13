@@ -42,7 +42,7 @@ const getCaseDeal = async (req, res) => {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
-  const dealSubmissionType = deal.dealSnapshot.submissionType;
+  const { submissionType } = deal.dealSnapshot;
 
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
@@ -54,7 +54,7 @@ const getCaseDeal = async (req, res) => {
     amendments,
     amendmentsInProgress,
     hasAmendmentInProgress,
-    showDealCancelButton: isDealCancellationEnabled(dealSubmissionType, user),
+    showDealCancelButton: isDealCancellationEnabled(submissionType, user),
   });
 };
 
