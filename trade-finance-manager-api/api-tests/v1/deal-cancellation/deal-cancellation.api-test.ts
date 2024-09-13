@@ -41,7 +41,7 @@ describe('/v1/deals/:id/cancellation', () => {
       expect(response.status).toEqual(400);
     });
 
-    it.only('puts the deal cancellation for an authenticated user', async () => {
+    it('puts the deal cancellation for an authenticated user', async () => {
       // Arrange
       const tokenUser = await testUserCache.initialise(app);
       const url = getTfmDealCancellationUpdateUrl({ id: validId });
@@ -50,6 +50,7 @@ describe('/v1/deals/:id/cancellation', () => {
       const response = await as(tokenUser).put(payload).to(url);
 
       // Assert
+      expect(response.body).not.toBeNull();
       expect(response.status).toEqual(200);
     });
   });
