@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled, TEAM_IDS } = require('@ukef/dtfs2-common');
+const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { getTask, showAmendmentButton, ukefDecisionRejected, dealCancellationEnabled } = require('../helpers');
 const { formattedNumber } = require('../../helpers/number');
@@ -42,6 +42,8 @@ const getCaseDeal = async (req, res) => {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
+  const dealSubmissionType = deal.dealSnapshot.submissionType;
+
   return res.render('case/deal/deal.njk', {
     deal: deal.dealSnapshot,
     tfm: deal.tfm,
@@ -52,7 +54,7 @@ const getCaseDeal = async (req, res) => {
     amendments,
     amendmentsInProgress,
     hasAmendmentInProgress,
-    showDealCancelButton: dealCancellationEnabled(deal.dealSnapshot.submissionType, user),
+    showDealCancelButton: dealCancellationEnabled(dealSubmissionType, user),
   });
 };
 
