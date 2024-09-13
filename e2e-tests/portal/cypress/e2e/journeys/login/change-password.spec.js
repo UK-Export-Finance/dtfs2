@@ -1,4 +1,4 @@
-const { header, users, createUser, userProfile, changePassword, landingPage } = require('../../pages');
+const { header, users, createUser, changePassword, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
 
 const MOCK_USERS = require('../../../../../e2e-fixtures');
@@ -59,7 +59,7 @@ context('Admin user creates a new user; the new user sets their password and the
       header.profile().click();
 
       // Cancel and go back
-      userProfile.cancel().click();
+      cy.clickCancelButton();
       cy.url().should('include', '/dashboard');
     });
 
@@ -71,11 +71,11 @@ context('Admin user creates a new user; the new user sets their password and the
       header.profile().click();
 
       // Goto change password screen
-      userProfile.changePassword().click();
+      cy.clickSubmitButton();
       cy.url().should('include', '/user/');
 
       // Go back to the profile page
-      changePassword.cancel().click();
+      cy.clickCancelButton();
       cy.url().should('include', '/user/');
     });
 
@@ -88,16 +88,17 @@ context('Admin user creates a new user; the new user sets their password and the
       cy.url().should('include', '/user/');
 
       // Change password
-      userProfile.changePassword().click();
+      cy.clickSubmitButton();
 
       // Input
       changePassword.currentPassword().type(userToCreate.password);
       changePassword.password().type('fail');
       changePassword.confirmPassword().type('fail');
-      changePassword.submit().click();
+      cy.clickSubmitButton();
 
       // Expect failure
       cy.url().should('match', /change-password/);
+
       changePassword
         .passwordError()
         .invoke('text')
@@ -111,22 +112,18 @@ context('Admin user creates a new user; the new user sets their password and the
       changePassword.currentPassword().type('wrongPassword');
       changePassword.password().type('P4ssPl£ase');
       changePassword.confirmPassword().type('P4ssPl£ase');
-      changePassword.submit().click();
+      cy.clickSubmitButton();
 
       // Expect failure
       cy.url().should('match', /change-password/);
-      changePassword
-        .currentPasswordError()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.contain('Current password is not correct.');
-        });
+
+      cy.assertText(changePassword.currentPasswordError(), 'Error: Current password is not correct.');
 
       // Try changing it to a password that is too short
       changePassword.currentPassword().type('AbC!2345');
       changePassword.password().type(' ');
       changePassword.confirmPassword().type(' ');
-      changePassword.submit().click();
+      cy.clickSubmitButton();
 
       changePassword
         .passwordError()
@@ -141,12 +138,12 @@ context('Admin user creates a new user; the new user sets their password and the
     it('should change the password', () => {
       cy.login(userToCreate);
       header.profile().click();
-      userProfile.changePassword().click();
+      cy.clickSubmitButton();
       // try to change to a legit password
       changePassword.currentPassword().type(userToCreate.password);
       changePassword.password().type('P4ssPl£ase');
       changePassword.confirmPassword().type('P4ssPl£ase');
-      changePassword.submit().click();
+      cy.clickSubmitButton();
     });
 
     it('should allow users to log in using the new credentials', () => {
@@ -168,7 +165,7 @@ context('Admin user creates a new user; the new user sets their password and the
         password: 'P4ssPl£ase',
       });
       header.profile().click();
-      userProfile.changePassword().click();
+      cy.clickSubmitButton();
 
       changePassword.currentPassword().should('exist');
       changePassword.password().should('exist');
@@ -177,10 +174,11 @@ context('Admin user creates a new user; the new user sets their password and the
       changePassword.currentPassword().type('P4ssPl£ase');
       changePassword.password().type('AbC!2345');
       changePassword.confirmPassword().type('AbC!2345');
-      changePassword.submit().click();
+      cy.clickSubmitButton();
 
       // expect failure
       cy.url().should('match', /change-password/);
+
       changePassword
         .passwordError()
         .invoke('text')

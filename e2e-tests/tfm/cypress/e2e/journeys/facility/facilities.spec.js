@@ -3,7 +3,7 @@ import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import partials from '../../partials';
+import { caseSummary } from '../../partials';
 import pages from '../../pages';
 
 context('Facility page', () => {
@@ -95,21 +95,13 @@ context('Facility page', () => {
     cy.visit(relative(`/case/${dealOne._id}/facility/${facilityId}`));
     // check that a couple of case summary elements have data
     // (no need to check all in E2E test)
-    partials.caseSummary.ukefDealId().should('be.visible');
-    partials.caseSummary
-      .ukefDealId()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(MOCK_DEAL_AIN.details.ukefDealId);
-      });
+    caseSummary.ukefDealId().should('be.visible');
 
-    partials.caseSummary.exporterName().should('be.visible');
-    partials.caseSummary
-      .exporterName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(MOCK_DEAL_AIN.exporter.companyName);
-      });
+    cy.assertText(caseSummary.ukefDealId(), MOCK_DEAL_AIN.details.ukefDealId);
+
+    caseSummary.exporterName().should('be.visible');
+
+    cy.assertText(caseSummary.exporterName(), MOCK_DEAL_AIN.exporter.companyName);
   });
 
   it('performs a search query based on Facility ID', () => {
@@ -117,7 +109,7 @@ context('Facility page', () => {
     cy.url().should('eq', relative('/facilities/0'));
     const searchString = '1000000';
     pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.clickSubmitButton();
 
     cy.checkFacilitiesTableRowsTotal(4);
   });
@@ -128,7 +120,7 @@ context('Facility page', () => {
     const searchString = MOCK_DEAL_AIN.exporter.companyName;
 
     pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.clickSubmitButton();
 
     cy.checkFacilitiesTableRowsTotal(2);
   });
@@ -139,7 +131,7 @@ context('Facility page', () => {
     const searchString = MOCK_DEAL_MIA.exporter.companyName;
 
     pages.facilitiesPage.searchFormInput().type(searchString);
-    pages.facilitiesPage.searchFormSubmitButton().click();
+    cy.clickSubmitButton();
 
     cy.checkFacilitiesTableRowsTotal(2);
   });

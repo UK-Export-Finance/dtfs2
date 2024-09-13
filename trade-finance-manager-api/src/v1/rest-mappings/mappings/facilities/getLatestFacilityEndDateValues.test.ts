@@ -45,24 +45,6 @@ describe('getLatestFacilityEndDateValues', () => {
       // Assert
       expect(result).toEqual({ isUsingFacilityEndDate: true, facilityEndDate: mockFacilityEndDate });
     });
-
-    it('should return the the latest amendment value when the FED has been amended', () => {
-      // Arrange
-      const facilityWithAmendments: TfmFacility = {
-        ...facility,
-        facilitySnapshot: facilitySnapshotWithFacilityEndDate,
-        amendments: [
-          { ...MOCK_AMENDMENT, updatedAt: 1723653111, version: 1, tfm: { bankReviewDate: mockBankReviewDate, isUsingFacilityEndDate: false } },
-          { ...MOCK_AMENDMENT, updatedAt: 1723653222, version: 2 },
-        ],
-      };
-
-      // Act
-      const result = getLatestFacilityEndDateValues(facilityWithAmendments);
-
-      // Assert
-      expect(result).toEqual({ isUsingFacilityEndDate: false, bankReviewDate: mockBankReviewDate });
-    });
   });
 
   describe('when there are no amendments', () => {

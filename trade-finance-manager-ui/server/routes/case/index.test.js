@@ -9,6 +9,10 @@ import activityController from '../../controllers/case/activity';
 import amendmentsController from '../../controllers/case/amendments';
 import { validateUserTeam } from '../../middleware';
 
+jest.mock('./cancellation', () => ({
+  cancellationRouter: jest.fn(),
+}));
+
 jest.mock('../../middleware', () => ({
   validateUserTeam: jest.fn(),
 }));

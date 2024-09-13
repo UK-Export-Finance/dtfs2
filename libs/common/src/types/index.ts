@@ -20,5 +20,6 @@ export * from './amendment-status';
 export * from './api-error-response-body';
 export * from './api-error-code';
 export * from './facility-type';
+export * from './deal-type';
 export * from './any-object';
 export * from './tfm-deal-cancellation';

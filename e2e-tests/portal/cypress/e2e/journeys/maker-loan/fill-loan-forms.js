@@ -47,19 +47,19 @@ const financialDetails = {
 
 const unconditionalWithCurrencySameAsSupplyContractCurrency = () => {
   guaranteeDetails.facilityStageUnconditional();
-  pages.loanGuaranteeDetails.submit().click();
+  cy.clickSubmitButton();
 
   financialDetails.currencySameAsSupplyContractCurrency();
   pages.loanFinancialDetails.disbursementAmountInput().type(LOAN_FORM_VALUES.FINANCIAL_DETAILS.disbursementAmount);
-  pages.loanFinancialDetails.submit().click();
+  cy.clickSubmitButton();
 };
 
 const unconditionalWithCurrencyNotTheSameAsSupplyContractCurrency = () => {
   guaranteeDetails.facilityStageUnconditional();
-  pages.loanGuaranteeDetails.submit().click();
+  cy.clickSubmitButton();
 
   financialDetails.currencyNotTheSameAsSupplyContractCurrency();
-  pages.loanFinancialDetails.submit().click();
+  cy.clickSubmitButton();
 };
 
 const datesRepayments = {

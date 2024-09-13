@@ -152,6 +152,11 @@ context('Change issued facilities back to unissued (changed to issued facilities
 
       cy.clickContinueButton();
 
+      if (facilityEndDateEnabled) {
+        cy.fillInBankReviewDate(dateConstants.threeMonths);
+        cy.clickContinueButton();
+      }
+
       unissuedFacilityTable.rows().should('have.length', 0);
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');
       continueButton().should('exist');

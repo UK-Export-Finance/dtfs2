@@ -1,4 +1,5 @@
 import relative from '../../../relativeURL';
+import { errorSummary } from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
@@ -67,9 +68,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.partiesPage.agentEditLink().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
 
-        pages.partiesPage.backLink().should('exist');
-
-        pages.partiesPage.backLink().click();
+        cy.clickBackLink();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
       });
 
@@ -80,7 +79,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a unique reference number');
+        errorSummary().contains('Enter a unique reference number');
         pages.agentPage.urnError().contains('Enter a unique reference number');
 
         pages.agentPage.agentUniqueRefInput().clear();
@@ -89,42 +88,42 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.agentPage.agentUniqueRefInput().clear().type('12');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.agentPage.agentUniqueRefInput().clear().type('ABC123');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.agentPage.agentUniqueRefInput().clear().type('"!£!"£!"£!"£');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.agentPage.agentUniqueRefInput().clear().type('1234!');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.agentPage.agentUniqueRefInput().clear().type(' ');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.agentPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
       });
 
@@ -162,12 +161,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.agentPage.saveButton().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
-        pages.agentPage
-          .agentUniqueRef()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal(partyUrn);
-          });
+        cy.assertText(pages.agentPage.agentUniqueRef(), partyUrn);
 
         pages.partiesPage.agentEditLink().click();
         pages.agentPage
@@ -193,26 +187,19 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.agentPage.saveButton().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
-        pages.agentPage
-          .agentUniqueRef()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal(partyUrn);
-          });
-        pages.agentPage
-          .agentCommissionRate()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal('1.234');
-          });
+        cy.assertText(pages.agentPage.agentUniqueRef(), partyUrn);
+
+        cy.assertText(pages.agentPage.agentCommissionRate(), '1.234');
 
         pages.partiesPage.agentEditLink().click();
+
         pages.agentPage
           .agentUniqueRefInput()
           .invoke('val')
           .then((value) => {
             expect(value.trim()).equal(partyUrn);
           });
+
         pages.agentPage
           .agentCommissionRateInput()
           .invoke('val')

@@ -1,4 +1,5 @@
 import relative from '../../../relativeURL';
+import { errorSummary } from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
@@ -67,9 +68,7 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
         pages.partiesPage.indemnifierEditLink().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
 
-        pages.partiesPage.backLink().should('exist');
-
-        pages.partiesPage.backLink().click();
+        cy.clickBackLink();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
       });
 
@@ -80,7 +79,7 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
         pages.indemnifierPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.indemnifierPage.errorSummary().contains('Enter a unique reference number');
+        errorSummary().contains('Enter a unique reference number');
         pages.indemnifierPage.urnError().contains('Enter a unique reference number');
 
         pages.indemnifierPage.urnInput().clear();
@@ -89,42 +88,42 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
         pages.indemnifierPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.indemnifierPage.urnInput().clear().type('12');
         pages.indemnifierPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.indemnifierPage.urnInput().clear().type('ABC123');
         pages.indemnifierPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.indemnifierPage.urnInput().clear().type('"!£!"£!"£!"£');
         pages.indemnifierPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.indemnifierPage.urnInput().clear().type('1234!');
         pages.indemnifierPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
 
         pages.indemnifierPage.urnInput().clear().type(' ');
         pages.indemnifierPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.indemnifierPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
       });
 
@@ -162,12 +161,7 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
         pages.indemnifierPage.saveButton().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
-        pages.indemnifierPage
-          .uniqueRef()
-          .invoke('text')
-          .then((text) => {
-            expect(text.trim()).equal(partyUrn);
-          });
+        cy.assertText(pages.indemnifierPage.uniqueRef(), partyUrn);
 
         pages.partiesPage.indemnifierEditLink().click();
         pages.indemnifierPage

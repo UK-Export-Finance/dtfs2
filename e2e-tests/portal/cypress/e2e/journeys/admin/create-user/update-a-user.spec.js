@@ -54,13 +54,7 @@ context('Admin user updates an existing user', () => {
 
       editUser.save().click();
 
-      users
-        .row(userToUpdate)
-        .roles()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(newRole);
-        });
+      cy.assertText(users.row(userToUpdate).roles(), newRole);
     });
 
     it('changing their trusted status should display the new status on the user dashboard', () => {

@@ -346,6 +346,11 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
       cy.clickContinueButton();
 
+      if (facilityEndDateEnabled) {
+        cy.fillInBankReviewDate(dateConstants.threeMonths);
+        cy.clickContinueButton();
+      }
+
       unissuedFacilityTable.rows().should('have.length', 0);
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');
       continueButton().should('exist');
@@ -403,6 +408,57 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
         applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
     });
+
+    if (facilityEndDateEnabled) {
+      it('can submit facility when facility end date has been provided', () => {
+        const facilityEndDateFormatted = format(dateConstants.threeMonths, 'd MMMM yyyy');
+
+        applicationPreview.facilitySummaryListTable(3).facilityEndDateValue().contains(facilityEndDateFormatted);
+
+        applicationPreview.submitButtonPostApproval();
+      });
+
+      it('cannot submit facility without bank review date', () => {
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().click();
+
+        aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
+        cy.clickContinueButton();
+
+        cy.visit(relative(`/gef/application-details/${dealId}`));
+
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('No');
+        applicationPreview.facilitySummaryListTable(3).bankReviewDateValue().contains('Required');
+
+        applicationPreview.submitButtonPostApproval().should('not.exist');
+      });
+
+      it('can submit facility when bank review date has been provided', () => {
+        const bankReviewDateFormatted = format(dateConstants.threeMonths, 'd MMMM yyyy');
+
+        applicationPreview.facilitySummaryListTable(3).bankReviewDateAction().click();
+        cy.fillInBankReviewDate(dateConstants.threeMonths);
+
+        cy.clickContinueButton();
+
+        applicationPreview.facilitySummaryListTable(3).bankReviewDateValue().contains(bankReviewDateFormatted);
+
+        applicationPreview.submitButtonPostApproval();
+      });
+
+      it('cannot submit facility without facility end date', () => {
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().click();
+
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+        cy.clickContinueButton();
+
+        cy.visit(relative(`/gef/application-details/${dealId}`));
+
+        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
+        applicationPreview.facilitySummaryListTable(3).facilityEndDateValue().contains('Required');
+
+        applicationPreview.submitButtonPostApproval().should('not.exist');
+      });
+    }
 
     // checks that can edit changed facility
     it('clicking change should take you to about facility page with different url', () => {

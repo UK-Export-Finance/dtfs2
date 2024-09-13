@@ -4,6 +4,7 @@ import api from '../../../api';
 import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-user';
 import { RemoveFeesFromPaymentFormRequestBody } from '../../../helpers/remove-fees-from-payment-helper';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
+import { RECONCILIATION_FOR_REPORT_TABS } from '../../../constants/reconciliation-for-report-tabs';
 
 jest.mock('../../../api');
 
@@ -56,10 +57,13 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
 
       const reportId = '1';
       const paymentId = '2';
+      const redirectTab = RECONCILIATION_FOR_REPORT_TABS.PREMIUM_PAYMENTS;
+
       const { req, res } = httpMocks.createMocks({
         session: requestSession,
         params: { reportId, paymentId },
         body: requestBody,
+        query: { redirectTab },
       });
 
       // Act
@@ -73,7 +77,7 @@ describe('controllers/utilisation-reports/remove-fees-from-payment', () => {
           month: '8',
         },
       };
-      expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
+      expect(res._getRedirectUrl()).toBe(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=premium-payments`);
       expect(res._isEndCalled()).toBe(true);
       expect(req.session.editPaymentFormValues).toEqual(expectedEditPaymentFormValues);
     });

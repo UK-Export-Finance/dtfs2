@@ -1,7 +1,4 @@
-export type ViewModelErrors = {
-  errorSummary: { text: string; href: string }[];
-  fieldErrors: Record<string, { text: string }>;
-};
+import { ViewModelErrors } from './view-model-errors';
 
 export type FacilityEndDateViewModel = {
   dealId: string;

@@ -42,12 +42,6 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
         expect(children.length).equal(0);
       });
 
-    contractComments
-      .row(0)
-      .comment()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('<script>alert("XSS")</script>');
-      });
+    cy.assertText(contractComments.row(0).comment(), '<script>alert("XSS")</script>');
   });
 });

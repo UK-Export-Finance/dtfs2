@@ -13,11 +13,6 @@ context('Dashboard Transactions', () => {
     dashboardFacilities.visit();
     cy.title().should('eq', `Facilities${defaults.pageTitleAppend}`);
 
-    dashboardFacilities
-      .totalItems()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('(0 items)');
-      });
+    cy.assertText(dashboardFacilities.totalItems(), '(0 items)');
   });
 });

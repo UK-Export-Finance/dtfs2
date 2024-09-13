@@ -70,18 +70,9 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.visit(deal);
     portalPages.contract.eligibilitySubmissionType().contains('Manual Inclusion Application');
 
-    portalPages.contract
-      .submissionDateTableHeader()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Submission date');
-      });
-    portalPages.contract
-      .submissionDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('-');
-      });
+    cy.assertText(portalPages.contract.submissionDateTableHeader(), 'Submission date');
+
+    cy.assertText(portalPages.contract.submissionDate(), '-');
 
     //---------------------------------------------------------------
     // portal checker submits deal to ukef
@@ -89,12 +80,7 @@ context('Portal to TFM deal submission', () => {
     cy.login(BANK1_CHECKER1);
     portalPages.contract.visit(deal);
 
-    portalPages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal("Ready for Checker's approval");
-      });
+    cy.assertText(portalPages.contract.status(), "Ready for Checker's approval");
 
     portalPages.contract.proceedToSubmit().click();
 
@@ -109,19 +95,9 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     portalPages.contract.visit(deal);
 
-    portalPages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('In progress by UKEF');
-      });
+    cy.assertText(portalPages.contract.status(), 'In progress by UKEF');
 
-    portalPages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Submitted');
-      });
+    cy.assertText(portalPages.contract.previousStatus(), 'Submitted');
 
     //---------------------------------------------------------------
     // portal submission type remains the same
@@ -131,19 +107,9 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal submission date should be updated
     //---------------------------------------------------------------
-    portalPages.contract
-      .submissionDateTableHeader()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Submission date');
-      });
+    cy.assertText(portalPages.contract.submissionDateTableHeader(), 'Submission date');
 
-    portalPages.contract
-      .submissionDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(todayFormatted);
-      });
+    cy.assertText(portalPages.contract.submissionDate(), todayFormatted);
 
     //---------------------------------------------------------------
     // TFM Underwriter manager approves the deal
@@ -165,7 +131,7 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithoutConditions().click();
 
-    tfmPages.managersDecisionPage.submitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // portal BANK1_MAKER1 confirms no need to change cover start dates
@@ -180,12 +146,12 @@ context('Portal to TFM deal submission', () => {
     const bondRow = portalPages.contract.bondTransactionsTable.row(bondId);
     bondRow.changeOrConfirmCoverStartDateLink().click();
     portalPages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
-    portalPages.facilityConfirmCoverStartDate.submit().click();
+    cy.clickSubmitButton();
 
     const loanRow = portalPages.contract.loansTransactionsTable.row(loanId);
     loanRow.changeOrConfirmCoverStartDateLink().click();
     portalPages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().click();
-    portalPages.facilityConfirmCoverStartDate.submit().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // portal BANK1_MAKER1 submits deal for review
@@ -224,19 +190,9 @@ context('Portal to TFM deal submission', () => {
 
     portalPages.contract.eligibilitySubmissionType().contains('Manual Inclusion Notice');
 
-    portalPages.contract
-      .submissionDateTableHeader()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('MIA Submission date');
-      });
+    cy.assertText(portalPages.contract.submissionDateTableHeader(), 'MIA Submission date');
 
-    portalPages.contract
-      .submissionDate()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(todayFormatted);
-      });
+    cy.assertText(portalPages.contract.submissionDate(), todayFormatted);
 
     portalPages.contract.eligibilityManualInclusionNoticeSubmissionDate().contains(todayFormatted);
   });
