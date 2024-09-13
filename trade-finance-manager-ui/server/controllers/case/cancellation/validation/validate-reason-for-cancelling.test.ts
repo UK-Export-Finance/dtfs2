@@ -35,8 +35,8 @@ describe('validateReasonForCancelling', () => {
 
     // Assert
     const expected: ReasonForCancellingErrorsViewModel = {
-      errorSummary: [{ text: 'Reason for cancelling must be 1200 characters or less', href: 'reason-for-cancelling' }],
-      reasonForCancellingErrorMessage: 'Reason for cancelling must be 1200 characters or less',
+      errorSummary: [{ text: `Reason for cancelling must be ${MAX_CHARACTER_COUNT} characters or less`, href: 'reason-for-cancelling' }],
+      reasonForCancellingErrorMessage: `Reason for cancelling must be ${MAX_CHARACTER_COUNT} characters or less`,
     };
     expect(result).toEqual(expected);
   });
