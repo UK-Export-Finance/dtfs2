@@ -1,10 +1,10 @@
 import { Response } from 'express';
-import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth, UtilisationReportPremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import {
-  mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems,
+  mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems,
   mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
 } from '../helpers';
@@ -59,25 +59,25 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       req.originalUrl,
     );
 
-    const premiumPaymentsTabFilters: UtilisationReportPremiumPaymentsFilters = {
+    const premiumPaymentsTabFilters: PremiumPaymentsFilters = {
       facilityId: facilityIdQueryString,
     };
 
-    const { premiumPaymentsFeeRecordPaymentGroups, unfilteredFeeRecordPaymentGroups, reportPeriod, bank, keyingSheet } =
-      await api.getUtilisationReportReconciliationDetailsById(reportId, premiumPaymentsTabFilters, userToken);
+    const { premiumPayments, paymentDetails, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
+      reportId,
+      premiumPaymentsTabFilters,
+      userToken,
+    );
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
-    const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(premiumPaymentsFeeRecordPaymentGroups);
+    const enablePaymentsReceivedSorting = feeRecordPaymentGroupsHaveAtLeastOnePaymentReceived(premiumPayments);
 
-    const feeRecordPaymentGroupViewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(
-      premiumPaymentsFeeRecordPaymentGroups,
-      isCheckboxChecked,
-    );
+    const premiumPaymentsViewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(premiumPayments, isCheckboxChecked);
 
     const keyingSheetViewModel = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
 
-    const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(unfilteredFeeRecordPaymentGroups);
+    const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(paymentDetails);
 
     return renderUtilisationReportReconciliationForReport(res, {
       user,
@@ -85,11 +85,11 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       bank,
       formattedReportPeriod,
       reportId,
-      enablePaymentsReceivedSorting,
-      feeRecordPaymentGroups: feeRecordPaymentGroupViewModel,
+      facilityIdQuery: facilityIdQueryString,
       tableDataError,
       filterError,
-      facilityIdQuery: facilityIdQueryString,
+      enablePaymentsReceivedSorting,
+      premiumPayments: premiumPaymentsViewModel,
       keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,
     });

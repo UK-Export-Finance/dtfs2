@@ -28,9 +28,9 @@ describe(page, () => {
     bank,
     formattedReportPeriod,
     reportId: reportId.toString(),
-    feeRecordPaymentGroups: [],
-    enablePaymentsReceivedSorting: false,
     facilityIdQuery,
+    enablePaymentsReceivedSorting: false,
+    premiumPayments: [],
     keyingSheet: [],
     paymentDetails: [],
   };

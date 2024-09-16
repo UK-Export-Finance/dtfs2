@@ -103,8 +103,8 @@ describe(`GET ${BASE_URL}`, () => {
       status: 'RECONCILIATION_IN_PROGRESS',
       reportPeriod: reconciliationInProgressReport.reportPeriod,
       dateUploaded: reconciliationInProgressReport.dateUploaded!.toISOString(),
-      premiumPaymentsFeeRecordPaymentGroups: [],
-      unfilteredFeeRecordPaymentGroups: [],
+      premiumPayments: [],
+      paymentDetails: [],
       keyingSheet: [],
     });
   });

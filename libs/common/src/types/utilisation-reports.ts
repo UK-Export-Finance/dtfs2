@@ -41,6 +41,6 @@ export type UtilisationReportDataValidationError = {
   exporter?: string | null;
 };
 
-export type UtilisationReportPremiumPaymentsFilters = {
+export type PremiumPaymentsFilters = {
   facilityId?: string;
 };

@@ -1,4 +1,4 @@
-import { UtilisationReportEntity, UtilisationReportPremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { NotFoundError } from '../../../../../errors';
 import { getBankNameById } from '../../../../../repositories/banks-repo';
 import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
@@ -18,7 +18,7 @@ import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
  */
 export const getUtilisationReportReconciliationDetails = async (
   utilisationReport: UtilisationReportEntity,
-  premiumPaymentsFilters: UtilisationReportPremiumPaymentsFilters,
+  premiumPaymentsFilters: PremiumPaymentsFilters,
 ): Promise<UtilisationReportReconciliationDetails> => {
   const { id, bankId, feeRecords, dateUploaded, status, reportPeriod } = utilisationReport;
 
@@ -35,12 +35,17 @@ export const getUtilisationReportReconciliationDetails = async (
 
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroups(feeRecords);
 
-  const unfilteredFeeRecordPaymentGroups = await mapToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
+  const paymentDetails = await mapToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
 
   const { facilityId } = premiumPaymentsFilters;
-  const premiumPaymentsFeeRecordPaymentGroups = facilityId
-    ? await mapToFeeRecordPaymentGroups(filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityId))
-    : unfilteredFeeRecordPaymentGroups;
+
+  let premiumPayments = paymentDetails;
+
+  if (facilityId) {
+    const filteredFeeRecords = filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityId);
+
+    premiumPayments = await mapToFeeRecordPaymentGroups(filteredFeeRecords);
+  }
 
   return {
     reportId: id,
@@ -51,8 +56,8 @@ export const getUtilisationReportReconciliationDetails = async (
     status,
     reportPeriod,
     dateUploaded,
-    premiumPaymentsFeeRecordPaymentGroups,
-    unfilteredFeeRecordPaymentGroups,
+    premiumPayments,
+    paymentDetails,
     keyingSheet,
   };
 };

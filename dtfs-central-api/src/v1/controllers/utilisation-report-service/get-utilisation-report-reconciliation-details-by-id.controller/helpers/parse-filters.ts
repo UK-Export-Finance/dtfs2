@@ -1,4 +1,4 @@
-import { UtilisationReportPremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { REGEX } from '../../../../../constants';
 
 /**
@@ -7,14 +7,18 @@ import { REGEX } from '../../../../../constants';
  * @param premiumPaymentsFilters.facilityId - The facility ID filter
  * @returns The parsed filters for the premium payments tab
  */
-export const parsePremiumPaymentsFilters = (premiumPaymentsFilters?: UtilisationReportPremiumPaymentsFilters): UtilisationReportPremiumPaymentsFilters => {
+export const parsePremiumPaymentsFilters = (premiumPaymentsFilters?: PremiumPaymentsFilters): PremiumPaymentsFilters => {
   if (!premiumPaymentsFilters) {
     return {};
   }
 
   const { facilityId } = premiumPaymentsFilters;
 
-  const facilityIdFilter = facilityId && REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityId) ? facilityId : undefined;
+  let facilityIdFilter;
+
+  if (facilityId && REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityId)) {
+    facilityIdFilter = facilityId;
+  }
 
   return {
     facilityId: facilityIdFilter,

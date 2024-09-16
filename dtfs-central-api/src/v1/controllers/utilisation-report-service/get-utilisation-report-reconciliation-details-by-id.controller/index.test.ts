@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
-import { TestApiError, UtilisationReportEntityMockBuilder, UtilisationReportPremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { TestApiError, UtilisationReportEntityMockBuilder, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import { getUtilisationReportReconciliationDetails } from './helpers';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
@@ -15,7 +15,7 @@ console.error = jest.fn();
 describe('get-utilisation-report-reconciliation-details-by-id.controller', () => {
   describe('getUtilisationReportReconciliationDetailsById', () => {
     const reportId = 1;
-    const getHttpMocks = (premiumPaymentsFilters?: UtilisationReportPremiumPaymentsFilters) =>
+    const getHttpMocks = (premiumPaymentsFilters?: PremiumPaymentsFilters) =>
       httpMocks.createMocks<GetUtilisationReportReconciliationDetailsByIdRequest>({
         params: {
           reportId,
@@ -134,8 +134,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
         status: 'PENDING_RECONCILIATION',
         reportPeriod: aReportPeriod(),
         dateUploaded: new Date(),
-        premiumPaymentsFeeRecordPaymentGroups: [],
-        unfilteredFeeRecordPaymentGroups: [],
+        premiumPayments: [],
+        paymentDetails: [],
         keyingSheet: [],
       };
     }
