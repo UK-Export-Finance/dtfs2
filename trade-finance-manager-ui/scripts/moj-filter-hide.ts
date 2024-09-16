@@ -31,9 +31,6 @@ new (window as any).MOJFrontend.FilterToggleButton({
     showText: 'Show filters',
     hideText: 'Hide filters',
     classes: 'govuk-button--secondary',
-    attributes: {
-      'data-cy': `${params.filteredTableId}-filters-toggle-button`,
-    },
   },
   filter: {
     container: $(filterSelector),
