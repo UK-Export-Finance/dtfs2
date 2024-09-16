@@ -23,7 +23,9 @@ export const getFeeRecordPaymentEntityGroupReconciliationData = async (
 
   const reconciledFeeRecords = group.feeRecords.filter(({ status }) => status === FEE_RECORD_STATUS.RECONCILED);
 
-  if (reconciledFeeRecords.length !== group.feeRecords.length) {
+  const allFeeRecordsAreReconciled = group.feeRecords.length === reconciledFeeRecords.length;
+
+  if (!allFeeRecordsAreReconciled) {
     return {};
   }
 
