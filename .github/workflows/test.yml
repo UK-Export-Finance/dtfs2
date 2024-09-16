@@ -764,6 +764,7 @@ jobs:
             './gef/cypress/e2e/security/**/*.spec.js',
             './gef/cypress/e2e/ukef/**/*.spec.js',
             './gef/cypress/e2e/upload/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/**/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/add-bank-decision/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/add-underwriter-decision/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
