@@ -26,7 +26,7 @@ tags `src` attribute.
     to JS (and placed in the `public/` directory referenced above) and you want
     to use this compiled (JS) version here.
     - For example, we may add the following script tag to
-    `your-service/templates/index.njk`: `<script 
+    `your-service/templates/index.njk`: `<script
     src="/assets/js/your-script.js" type="text/javascript" integrity=""
     crossorigin="anonymous"></script>`
     (note that we’ll add a value for the integrity attribute below).
@@ -57,5 +57,5 @@ corresponding script tag in the relevant `njk` template.
       `
       - And the output from the above command is `sha512-QLv...`
       - Our updated script tag would be: `<script
-      src="/assets/js/your-script.js" type="text/javascript" 
+      src="/assets/js/your-script.js" type="text/javascript"
       integrity="sha512-QLv..." crossorigin="anonymous"></script>`
