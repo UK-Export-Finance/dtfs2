@@ -25,4 +25,5 @@ const isFeatureFlagEnabled = (featureFlag: FeatureFlag) => (): boolean => {
 export const isTfmPaymentReconciliationFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_PAYMENT_RECONCILIATION_ENABLED');
 
 export const isTfmFacilityEndDateFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_FACILITY_END_DATE_ENABLED');
+
 export const isTfmDealCancellationFeatureFlagEnabled = isFeatureFlagEnabled('FF_TFM_DEAL_CANCELLATION_ENABLED');
