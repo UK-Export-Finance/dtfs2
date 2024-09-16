@@ -12,7 +12,7 @@ context('User can navigate through a paginated table of facilities using the pag
   });
 
   beforeEach(() => {
-    cy.login(T1_USER_1);
+    cy.login({ user: T1_USER_1 });
     cy.visit('/facilities');
 
     cy.url().should('eq', relative('/facilities/0'));

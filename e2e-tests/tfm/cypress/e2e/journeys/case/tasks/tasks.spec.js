@@ -54,7 +54,7 @@ context('Case tasks - AIN deal', () => {
 
       cy.submitDeal(dealId, dealType, T1_USER_1);
 
-      cy.login(MOCK_USERS.BUSINESS_SUPPORT_USER_1);
+      cy.login({ user: MOCK_USERS.BUSINESS_SUPPORT_USER_1 });
       cy.visit(relative(`/case/${dealId}/deal`));
     });
   });
@@ -356,7 +356,7 @@ context('Case tasks - AIN deal', () => {
     });
 
     it('a user in a team that does not have any assigned tasks should not see any task assigned to their team', () => {
-      cy.login(MOCK_USERS.T1_USER_1);
+      cy.login({ user: MOCK_USERS.T1_USER_1 });
       cy.visit(relative(`/case/${dealId}/deal`));
 
       partials.caseSubNavigation.tasksLink().click();

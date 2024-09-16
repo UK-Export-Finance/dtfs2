@@ -47,7 +47,7 @@ context('User login', () => {
     beforeEach(() => {
       cy.clearCookie('dtfs-session');
 
-      cy.login(T1_USER_1);
+      cy.login({ user: T1_USER_1 });
     });
 
     it('should redirect to /deals/0', () => {
@@ -75,7 +75,7 @@ context('User login', () => {
     it('should be able to login again as different user', () => {
       partials.header.signOutLink().should('exist');
 
-      cy.login(PIM_USER_1);
+      cy.login({ user: PIM_USER_1 });
 
       cy.url().should('eq', relative('/deals/0'));
 

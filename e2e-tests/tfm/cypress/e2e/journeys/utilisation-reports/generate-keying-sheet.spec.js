@@ -73,7 +73,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [CURRENT_PERIOD_UTILISATION_REPORT]);
 
     pages.landingPage.visit();
-    cy.login(USERS.PDC_RECONCILE);
+    cy.login({ user: USERS.PDC_RECONCILE });
   });
 
   it('can generate keying data when only one fee record for a facility is at MATCH status but does not generate the fixed fee adjustment or principal balance adjustment', () => {

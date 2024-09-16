@@ -48,7 +48,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     });
 
     beforeEach(() => {
-      cy.login(PIM_USER_1);
+      cy.login({ user: PIM_USER_1 });
       cy.visit(relative(`/case/${dealId}/facility/${facility._id}`));
     });
 

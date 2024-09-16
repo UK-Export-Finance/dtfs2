@@ -32,7 +32,7 @@ context('Amendments all facilities table - should show amendment value and cover
   it('should show facility value and coverEndDate for original facility', () => {
     const facilityId = dealFacilities[0]._id;
 
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities/0'));
 
@@ -42,7 +42,7 @@ context('Amendments all facilities table - should show amendment value and cover
   });
 
   it('should submit an automatic amendment request for coverEndDate', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -87,7 +87,7 @@ context('Amendments all facilities table - should show amendment value and cover
   });
 
   it('should submit an automatic amendment request for facilityValue', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -132,7 +132,7 @@ context('Amendments all facilities table - should show amendment value and cover
   it('should show facility value and coverEndDate from amendments in all facilities table', () => {
     const facilityId = dealFacilities[0]._id;
 
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities/0'));
 

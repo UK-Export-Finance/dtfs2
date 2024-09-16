@@ -68,7 +68,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecordOne, feeRecordTwo]);
 
     pages.landingPage.visit();
-    cy.login(USERS.PDC_RECONCILE);
+    cy.login({ user: USERS.PDC_RECONCILE });
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
 

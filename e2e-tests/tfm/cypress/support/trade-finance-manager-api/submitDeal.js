@@ -14,7 +14,7 @@ const submitDeal = (dealId, dealType, user) => {
 
   const isSessionForAPI = true;
 
-  cy.login(user, isSessionForAPI)
+  cy.login({ user, isSessionForAPI })
     .then((token) => submitDealAfterUkefIds(dealId, dealType, BANK1_CHECKER1_WITH_MOCK_ID, token))
     .then((deal) => {
       cy.wrap(deal).as(ALIAS_KEY.SUBMIT_DEAL);

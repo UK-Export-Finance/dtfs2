@@ -70,7 +70,7 @@ context('Case tasks - MIA deal - all tasks', () => {
 
       cy.submitDeal(dealId, dealType, BUSINESS_SUPPORT_USER_1);
 
-      cy.login(BUSINESS_SUPPORT_USER_1);
+      cy.login({ user: BUSINESS_SUPPORT_USER_1 });
       cy.visit(relative(`/case/${dealId}/deal`));
     });
   });
@@ -209,7 +209,7 @@ context('Case tasks - MIA deal - all tasks', () => {
       const taskId = index + 1;
 
       if (taskId === 3) {
-        cy.login(UNDERWRITING_SUPPORT_1);
+        cy.login({ user: UNDERWRITING_SUPPORT_1 });
         cy.visit(relative(`/case/${dealId}/deal`));
         partials.caseSubNavigation.tasksLink().click();
         pages.tasksPage.filterRadioAllTasks().click();
@@ -221,7 +221,7 @@ context('Case tasks - MIA deal - all tasks', () => {
       }
 
       if (taskId === 4) {
-        cy.login(UNDERWRITING_SUPPORT_1);
+        cy.login({ user: UNDERWRITING_SUPPORT_1 });
         cy.visit(relative(`/case/${dealId}/deal`));
         partials.caseSubNavigation.tasksLink().click();
         pages.tasksPage.filterRadioAllTasks().click();
@@ -233,7 +233,7 @@ context('Case tasks - MIA deal - all tasks', () => {
       }
 
       if (taskId === 5) {
-        cy.login(UNDERWRITER_MANAGER_1);
+        cy.login({ user: UNDERWRITER_MANAGER_1 });
         cy.visit(relative(`/case/${dealId}/deal`));
         partials.caseSubNavigation.tasksLink().click();
         pages.tasksPage.filterRadioAllTasks().click();
@@ -252,7 +252,7 @@ context('Case tasks - MIA deal - all tasks', () => {
 
     // Complete all tasks in 'Adverse history check' group
     cy.wrap(group2Tasks).each((_, index) => {
-      cy.login(UNDERWRITER_1);
+      cy.login({ user: UNDERWRITER_1 });
       cy.visit(relative(`/case/${dealId}/deal`));
       partials.caseSubNavigation.tasksLink().click();
       pages.tasksPage.filterRadioAllTasks().click();
@@ -287,7 +287,7 @@ context('Case tasks - MIA deal - all tasks', () => {
     startAndCompleteFirstUnderwritingTask();
     startAndCompleteSecondUnderwritingTask();
 
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.login({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
     partials.caseSubNavigation.tasksLink().click();
     pages.tasksPage.filterRadioAllTasks().click();
@@ -297,7 +297,7 @@ context('Case tasks - MIA deal - all tasks', () => {
       const taskId = index + 1;
 
       if (taskId === 3) {
-        cy.login(RISK_MANAGER_1);
+        cy.login({ user: RISK_MANAGER_1 });
         cy.visit(relative(`/case/${dealId}/deal`));
         partials.caseSubNavigation.tasksLink().click();
         pages.tasksPage.filterRadioAllTasks().click();
@@ -308,7 +308,7 @@ context('Case tasks - MIA deal - all tasks', () => {
       }
 
       if (taskId === 4) {
-        cy.login(UNDERWRITER_MANAGER_1);
+        cy.login({ user: UNDERWRITER_MANAGER_1 });
         cy.visit(relative(`/case/${dealId}/deal`));
         partials.caseSubNavigation.tasksLink().click();
         pages.tasksPage.filterRadioAllTasks().click();

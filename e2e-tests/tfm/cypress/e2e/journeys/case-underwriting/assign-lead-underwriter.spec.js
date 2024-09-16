@@ -49,7 +49,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   });
 
   it('should show unassigned on lead underwriter section on underwriting page when not UW or UW_MANAGER', () => {
-    cy.login(T1_USER_1);
+    cy.login({ user: T1_USER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to lead underwriter page
@@ -62,13 +62,13 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   });
 
   it('a user that is NOT in UNDERWRITER_MANAGERS or UNDERWRITERS team cannot manually navigate to assign-lead-underwriter page', () => {
-    cy.login(T1_USER_1);
+    cy.login({ user: T1_USER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter/assign`));
     cy.url().should('eq', relative('/not-found'));
   });
 
   it('a user that is NOT in UNDERWRITER_MANAGERS or UNDERWRITERS team should NOT see `Assign lead underwriter` link', () => {
-    cy.login(T1_USER_1);
+    cy.login({ user: T1_USER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
@@ -77,7 +77,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   });
 
   it('underwriter manager can assign an underwriter as the lead underwriter. Submitted lead underwriter details are displayed after submit', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.login({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.assignLeadUnderwriterButton().should('exist');
@@ -117,7 +117,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   });
 
   it('underwriter manager can assign an underwriter manager as the lead underwriter', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.login({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     // go to lead underwriter assign page/form
@@ -134,7 +134,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   });
 
   it('underwriter manager can assign to themselves/someone else after already submitting', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.login({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     // go to lead underwriter assign page/form
@@ -158,7 +158,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   });
 
   it('clicking cancel link in `assign` form takes user back to lead underwriter page', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.login({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter/assign`));
 
     pages.leadUnderwriterPage.cancelLink().click();
@@ -166,7 +166,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
   });
 
   it('assigns all MIA tasks in group 2 and 3 to the lead underwriter', () => {
-    cy.login(UNDERWRITER_1);
+    cy.login({ user: UNDERWRITER_1 });
 
     cy.visit(relative(`/case/${dealId}/tasks`));
     pages.tasksPage.filterRadioAllTasks().click();

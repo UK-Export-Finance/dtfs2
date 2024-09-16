@@ -34,7 +34,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
   });
 
   it('should show confirmed on deal stage as no amendment in progress and no amendment in progress bar', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.tasksLink().click();
@@ -91,7 +91,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
   });
 
   it('should submit an amendment request', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -138,7 +138,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
   });
 
   it('should submit an second amendment request', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     const facilityId = dealFacilities[1]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -175,7 +175,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
   });
 
   it('should show amendment in progress on tasks page and show amendment in progress bar', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.tasksLink().click();
@@ -201,7 +201,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
   });
 
   it('should show amendment in progress on deal/facility page and show amendment in progress bar', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.dealLink().click();
@@ -222,7 +222,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
   });
 
   it('should show amendment in progress on parties page and show amendment in progress bar', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.partiesLink().click();
@@ -234,7 +234,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
   });
 
   it('should show amendment in progress on documents page and show amendment in progress bar', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.documentsLink().click();
@@ -246,7 +246,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
   });
 
   it('should show amendment in progress on activities page and show amendment in progress bar', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.activityLink().click();
@@ -265,7 +265,7 @@ context('Amendments deal stage - amendment in progress and in progress amendment
   });
 
   it('should show amendment in progress on underwriting page and show amendment in progress bar', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
 
     partials.caseSubNavigation.underwritingLink().click();

@@ -31,7 +31,7 @@ context('Amendments - Effective date', () => {
   });
 
   it('should continue to the `What date will the amendment be effective from?` page', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -53,7 +53,7 @@ context('Amendments - Effective date', () => {
   });
 
   it('should return errors when clicking continue on blank inputs', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -80,7 +80,7 @@ context('Amendments - Effective date', () => {
   });
 
   it('should return errors when entering year in wrong format', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -138,7 +138,7 @@ context('Amendments - Effective date', () => {
   });
 
   it('should continue to the `What would the bank like to change?` page', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 

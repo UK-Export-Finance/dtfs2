@@ -69,7 +69,7 @@ context('PDC_RECONCILE users can route to the payments page for a bank', () => {
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [mockUtilisationReport]);
 
     pages.landingPage.visit();
-    cy.login(USERS.PDC_RECONCILE);
+    cy.login({ user: USERS.PDC_RECONCILE });
 
     pages.utilisationReportsSummaryPage.visit();
   });

@@ -58,7 +58,7 @@ context('PDC_RECONCILE users can search for reports by bank and year', () => {
     });
 
     pages.landingPage.visit();
-    cy.login(USERS.PDC_RECONCILE);
+    cy.login({ user: USERS.PDC_RECONCILE });
 
     pages.searchUtilisationReportsFormPage.visit();
   });

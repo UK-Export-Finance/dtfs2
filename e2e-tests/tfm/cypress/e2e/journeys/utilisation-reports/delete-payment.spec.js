@@ -47,7 +47,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     cy.task(NODE_TASKS.REMOVE_ALL_PAYMENTS_FROM_DB);
 
     pages.landingPage.visit();
-    cy.login(USERS.PDC_RECONCILE);
+    cy.login({ user: USERS.PDC_RECONCILE });
   });
 
   it('navigates back to the edit-payment page when the No button is selected on the confirm delete payment page', () => {

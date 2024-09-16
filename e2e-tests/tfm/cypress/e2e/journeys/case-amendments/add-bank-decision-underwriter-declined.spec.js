@@ -35,7 +35,7 @@ context('Amendments underwriting - add banks decision - declined by underwriter'
   });
 
   it('should submit an amendment request', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -82,7 +82,7 @@ context('Amendments underwriting - add banks decision - declined by underwriter'
   });
 
   it('should take you to `Add underwriter decision - Facility value` page if a decision has been made for Cover End Date', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.login({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -96,7 +96,7 @@ context('Amendments underwriting - add banks decision - declined by underwriter'
   });
 
   it('should take you to `Add conditions, reasons and comments` page if a decision has been made for Facility Value and Cover End Date', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.login({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -126,7 +126,7 @@ context('Amendments underwriting - add banks decision - declined by underwriter'
   });
 
   it('should take you to `Add conditions, reasons and comments` summary page', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.login({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
@@ -160,7 +160,7 @@ context('Amendments underwriting - add banks decision - declined by underwriter'
   });
 
   it('should show not applicable badge for banks decision on amendments page since declined by underwriter', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/underwriting`));
 
     caseSubNavigation.dealLink().click();

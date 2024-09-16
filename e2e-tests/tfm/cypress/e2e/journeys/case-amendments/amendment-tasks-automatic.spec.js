@@ -39,7 +39,7 @@ context('Amendments tasks - automatic amendment tasks', () => {
   });
 
   it('should submit an automatic amendment request', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -93,7 +93,7 @@ context('Amendments tasks - automatic amendment tasks', () => {
   });
 
   it('should open task links with correct amendment tasks with correct status and titles', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -113,7 +113,7 @@ context('Amendments tasks - automatic amendment tasks', () => {
   });
 
   it('should not allow you to assign, change the status to in progress and done if user in wrong group', () => {
-    cy.login(UNDERWRITER_MANAGER_1);
+    cy.login({ user: UNDERWRITER_MANAGER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -123,7 +123,7 @@ context('Amendments tasks - automatic amendment tasks', () => {
   });
 
   it('should allow you to assign, change the status to in progress and done', () => {
-    cy.login(PIM_USER_1);
+    cy.login({ user: PIM_USER_1 });
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));

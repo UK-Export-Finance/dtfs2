@@ -33,14 +33,14 @@ context('Amendments underwriting page', () => {
     });
 
     it('should not show amendments on underwriting page as not yet started', () => {
-      cy.login(T1_USER_1);
+      cy.login({ user: T1_USER_1 });
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPage.amendmentHeading().should('not.exist');
     });
 
     it('should submit an amendment request', () => {
-      cy.login(PIM_USER_1);
+      cy.login({ user: PIM_USER_1 });
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -88,7 +88,7 @@ context('Amendments underwriting page', () => {
 
     it('should shows amendment on underwriting page as non-PIM and non-underwriter manager with no links to add', () => {
       // should be unassigned as nothing added and t1_user is not underwriter manager
-      cy.login(T1_USER_1);
+      cy.login({ user: T1_USER_1 });
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       const { ukefFacilityId } = dealFacilities[0];
@@ -104,7 +104,7 @@ context('Amendments underwriting page', () => {
     });
 
     it('should show amendment on underwriting page with correct assign links as underwriter manager', () => {
-      cy.login(UNDERWRITER_MANAGER_1);
+      cy.login({ user: UNDERWRITER_MANAGER_1 });
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       const { ukefFacilityId } = dealFacilities[0];
@@ -120,7 +120,7 @@ context('Amendments underwriting page', () => {
     });
 
     it('should show amendment on underwriting page as PIM with no links to add', () => {
-      cy.login(PIM_USER_1);
+      cy.login({ user: PIM_USER_1 });
       cy.visit(relative(`/case/${dealId}/underwriting`));
 
       const { ukefFacilityId } = dealFacilities[0];
