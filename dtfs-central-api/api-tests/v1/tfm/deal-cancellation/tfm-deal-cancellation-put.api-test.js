@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES_REQUIRING_ID } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES_REQUIRING_ID, isTfmDealCancellationFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const { ObjectId } = require('mongodb');
@@ -12,6 +12,11 @@ const { aPortalUser, aTfmUser } = require('../../../../test-helpers');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 console.error = jest.fn();
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isTfmDealCancellationFeatureFlagEnabled: jest.fn(),
+}));
 
 describe('/v1/tfm/deals/:dealId/cancellation', () => {
   let dealId;
@@ -66,35 +71,65 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
       validUserTypes: [AUDIT_USER_TYPES_REQUIRING_ID.TFM],
     });
 
-    it('should update an deal with the deal cancellation based on dealId', async () => {
-      const { status, body: bodyPutResponse } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
+    // describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
+    //   beforeEach(() => {
+    //     jest.mocked(isTfmDealCancellationFeatureFlagEnabled).mockReturnValue(false);
+    //   });
+    //
+    //   afterAll(() => {
+    //     jest.resetAllMocks();
+    //   });
+    //
+    //   it('should return 404 if valid deal id', async () => {
+    //     const { status, body: bodyPutResponse } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
+    //
+    //     const expected = {
+    //       acknowledged: true,
+    //       modifiedCount: 1,
+    //       upsertedId: null,
+    //       upsertedCount: 0,
+    //       matchedCount: 1,
+    //     };
+    //     expect(bodyPutResponse).toEqual(expected);
+    //     expect(status).toEqual(200);
+    //   });
+    // });
 
-      const expected = {
-        acknowledged: true,
-        modifiedCount: 1,
-        upsertedId: null,
-        upsertedCount: 0,
-        matchedCount: 1,
-      };
-      expect(bodyPutResponse).toEqual(expected);
-      expect(status).toEqual(200);
-    });
+    describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
+      beforeEach(() => {
+        jest.mocked(isTfmDealCancellationFeatureFlagEnabled).mockReturnValue(true);
+      });
 
-    it('should return 404 if dealId is valid but NOT associated to a record', async () => {
-      const validButNonExistentDealId = new ObjectId();
+      it('should update an deal with the deal cancellation based on dealId', async () => {
+        const { status, body: bodyPutResponse } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
 
-      const { status } = await testApi
-        .put({ dealCancellationUpdate, auditDetails: tfmAuditDetails })
-        .to(`/v1/tfm/deals/${validButNonExistentDealId}/cancellation`);
+        const expected = {
+          acknowledged: true,
+          modifiedCount: 1,
+          upsertedId: null,
+          upsertedCount: 0,
+          matchedCount: 1,
+        };
+        expect(bodyPutResponse).toEqual(expected);
+        expect(status).toEqual(200);
+      });
 
-      expect(status).toEqual(404);
-    });
+      it('should return 404 if dealId is valid but NOT associated to a record', async () => {
+        const validButNonExistentDealId = new ObjectId();
 
-    it('should return 400 if invalid dealId', async () => {
-      const invalidDealId = '1234';
+        const { status } = await testApi
+          .put({ dealCancellationUpdate, auditDetails: tfmAuditDetails })
+          .to(`/v1/tfm/deals/${validButNonExistentDealId}/cancellation`);
 
-      const { status } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(`/v1/tfm/deals/${invalidDealId}/cancellation`);
-      expect(status).toEqual(400);
+        expect(status).toEqual(404);
+      });
+
+      it('should return 400 if invalid dealId', async () => {
+        const invalidDealId = '1234';
+
+        const { status } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(`/v1/tfm/deals/${invalidDealId}/cancellation`);
+        expect(status).toEqual(400);
+      });
     });
   });
 });
