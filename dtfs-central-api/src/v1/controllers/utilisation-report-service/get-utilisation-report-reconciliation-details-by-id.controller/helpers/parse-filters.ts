@@ -14,7 +14,11 @@ export const parsePremiumPaymentsFilters = (premiumPaymentsFilters?: PremiumPaym
 
   const { facilityId } = premiumPaymentsFilters;
 
-  const facilityIdFilter = facilityId && REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityId) ? facilityId : undefined;
+  let facilityIdFilter;
+
+  if (facilityId && REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityId)) {
+    facilityIdFilter = facilityId;
+  }
 
   return {
     facilityId: facilityIdFilter,
