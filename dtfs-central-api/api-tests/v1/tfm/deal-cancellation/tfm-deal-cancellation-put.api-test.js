@@ -71,29 +71,29 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
       validUserTypes: [AUDIT_USER_TYPES_REQUIRING_ID.TFM],
     });
 
-    // describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
-    //   beforeEach(() => {
-    //     jest.mocked(isTfmDealCancellationFeatureFlagEnabled).mockReturnValue(false);
-    //   });
-    //
-    //   afterAll(() => {
-    //     jest.resetAllMocks();
-    //   });
-    //
-    //   it('should return 404 if valid deal id', async () => {
-    //     const { status, body: bodyPutResponse } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
-    //
-    //     const expected = {
-    //       acknowledged: true,
-    //       modifiedCount: 1,
-    //       upsertedId: null,
-    //       upsertedCount: 0,
-    //       matchedCount: 1,
-    //     };
-    //     expect(bodyPutResponse).toEqual(expected);
-    //     expect(status).toEqual(200);
-    //   });
-    // });
+    describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
+      beforeEach(() => {
+        jest.mocked(isTfmDealCancellationFeatureFlagEnabled).mockReturnValue(false);
+      });
+
+      afterAll(() => {
+        jest.resetAllMocks();
+      });
+
+      it('should return 404 if valid deal id', async () => {
+        const { status, body: bodyPutResponse } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
+
+        const expected = {
+          acknowledged: true,
+          modifiedCount: 1,
+          upsertedId: null,
+          upsertedCount: 0,
+          matchedCount: 1,
+        };
+        expect(bodyPutResponse).toEqual(expected);
+        expect(status).toEqual(200);
+      });
+    });
 
     describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
       beforeEach(() => {
