@@ -180,15 +180,15 @@ class AuthProvider {
   }
 
   /**
-   * loginRedirectUrl
+   * getLoginRedirectUrlFromState
    * Get a redirect URL to use after logging in.
-   * @param {string} inputString This string is a base64 encoded JSON object, that should contain a redirectTo url
+   * @param {import('src/types/auth/msal-state-unparsed').MsalStateUnparsed} state This string is a base64 encoded JSON object, that should contain a redirectTo url
    * @returns {string} Redirect URL.
    */
-  loginRedirectUrl(inputString) {
-    const state = JSON.parse(this.cryptoProvider.base64Decode(inputString));
+  getLoginRedirectUrlFromState(state) {
+    const { redirectTo } = JSON.parse(this.cryptoProvider.base64Decode(state));
 
-    return state.redirectTo;
+    return redirectTo;
   }
 
   /**
