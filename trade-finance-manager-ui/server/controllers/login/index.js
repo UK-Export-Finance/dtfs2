@@ -106,14 +106,23 @@ const handleSsoRedirect = async (req, res) => {
  * @returns {Promise<object>} Express response with redirect or error.
  */
 const logout = async (req, res) => {
-  const apiResponse = await api.getAuthLogoutUrl(req.session.userToken);
+  try {
+    const apiResponse = await api.getAuthLogoutUrl(req.session.userToken);
+    if (!apiResponse?.logoutUrl) {
+      throw new Error('TFM-UI - No logout url was returned from TFM-API');
+    }
 
-  if (apiResponse.logoutUrl) {
     return req.session.destroy(() => res.redirect(apiResponse.logoutUrl));
+  } catch (error) {
+    console.error('TFM-UI - logout failed, error %O', error);
+    /**
+     * If no logoutUrl is provided, or the getAuthLogoutUrl API call fails,
+     * the user may remain authenticated and not be prompted to sign-in the next time they use the app.
+     * As a result, we throw an error, which is handled as a 500 error in the UI.
+     * https://learn.microsoft.com/en-gb/entra/identity-platform/v2-protocols-oidc#send-a-sign-out-request
+     */
+    throw new Error('TFM-UI - logout failed');
   }
-
-  console.error('TFM-UI - logout failed in TFM-API, redirect to /');
-  return res.redirect('/');
 };
 
 module.exports = { getLogin, logout, handleSsoRedirect };
