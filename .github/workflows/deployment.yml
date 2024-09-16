@@ -57,8 +57,8 @@ on:
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: ${{  github.event.workflow_run.head_branch == 'release-*' && 'dev' || github.event.workflow_run.head_branch }}
-  TIMEZONE: 'Europe/London'
+  ENVIRONMENT: ${{ github.event.workflow_run.head_branch }}
+  TIMEZONE: ${{ vars.TIMEZONE }}
   # Base artifact
   FROM: latest
 
@@ -73,7 +73,11 @@ jobs:
       timezone: ${{ env.TIMEZONE }}
     steps:
       - name: Environment 🧪
-        run: echo "Environment set to ${{ env.ENVIRONMENT }}"
+        run: |
+          if [[ "${{ env.ENVIRONMENT }}" == *release* ]];
+            echo "::set-output name=environment::staging"
+          fi
+          echo "Environment set to ${{ env.ENVIRONMENT }}"
 
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
