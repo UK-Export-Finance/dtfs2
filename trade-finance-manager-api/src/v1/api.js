@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { HEADERS, InvalidDealIdError, ApiError } = require('@ukef/dtfs2-common');
+const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
