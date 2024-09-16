@@ -30,6 +30,7 @@ export const updateDealCancellation = async (req: UpdateDealCancellationRequest,
   } catch (error) {
     const errorMessage = 'Failed to update deal cancellation';
     console.error(errorMessage, error);
+
     if (error instanceof ApiError) {
       return res.status(error.status).send({
         status: error.status,
@@ -37,6 +38,7 @@ export const updateDealCancellation = async (req: UpdateDealCancellationRequest,
         code: error.code,
       });
     }
+
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
       message: errorMessage,

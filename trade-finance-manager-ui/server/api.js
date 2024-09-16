@@ -1238,12 +1238,17 @@ const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, us
  * @returns {Promise<void>}
  */
 const updateDealCancellation = async (dealId, cancellationUpdate, userToken) => {
-  await axios({
-    method: 'put',
-    url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation`,
-    headers: generateHeaders(userToken),
-    data: cancellationUpdate,
-  });
+  try {
+    await axios({
+      method: 'put',
+      url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation`,
+      headers: generateHeaders(userToken),
+      data: cancellationUpdate,
+    });
+  } catch (error) {
+    console.error('Failed to update deal cancellation', error);
+    throw error;
+  }
 };
 
 module.exports = {

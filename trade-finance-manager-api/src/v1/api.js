@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
+const { HEADERS, InvalidDealIdError, ApiError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
 require('dotenv').config();
@@ -278,23 +278,28 @@ const submitDeal = async (dealType, dealId, auditDetails) => {
  * @returns {Promise<import('mongodb').UpdateResult>} update result object
  */
 const updateDealCancellation = async ({ dealId, dealCancellationUpdate, auditDetails }) => {
-  const isValidDealId = isValidMongoId(dealId);
+  try {
+    const isValidDealId = isValidMongoId(dealId);
 
-  if (!isValidDealId) {
-    throw new InvalidDealIdError(dealId);
+    if (!isValidDealId) {
+      throw new InvalidDealIdError(dealId);
+    }
+
+    const response = await axios({
+      method: 'put',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/cancellation`,
+      headers: headers.central,
+      data: {
+        dealCancellationUpdate,
+        auditDetails,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
-
-  const response = await axios({
-    method: 'put',
-    url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/cancellation`,
-    headers: headers.central,
-    data: {
-      dealCancellationUpdate,
-      auditDetails,
-    },
-  });
-
-  return response.data;
 };
 
 const findOneFacility = async (facilityId) => {
