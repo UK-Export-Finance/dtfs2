@@ -1,7 +1,6 @@
+{% from "moj/components/filter/macro.njk" import mojFilter %}
 {% from 'govuk/components/input/macro.njk' import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-
-{# TODO FN-2311: Add component tests for this macro. #}
 
 {% macro render(params) %}
   {% set filters = params.filters %}
@@ -17,7 +16,10 @@
           classes: "govuk-fieldset__legend--m"
         }
       },
-      items: filters.currency
+      items: filters.currency,
+      attributes: {
+        'data-cy': 'payment-details--filter-currency'
+      }
     }) }}
   {% endif %}
 
@@ -29,11 +31,11 @@
       text: 'Payment reference',
       classes: 'govuk-label--m',
       attributes: {
-        'data-cy': 'payment-details-filter-payment-reference-label'
+        'data-cy': 'payment-details--filter-payment-reference-label'
       }
     },
     attributes: {
-      'data-cy': 'payment-details-filter-payment-reference-input'
+      'data-cy': 'payment-details--filter-payment-reference-input'
     }
   }) }}
 
@@ -45,11 +47,11 @@
       text: 'Facility ID',
       classes: 'govuk-label--m',
       attributes: {
-        'data-cy': 'payment-details-filter-facility-id-label'
+        'data-cy': 'payment-details--filter-facility-id-label'
       }
     },
     attributes: {
-      'data-cy': 'payment-details-filter-facility-id-input'
+      'data-cy': 'payment-details--filter-facility-id-input'
     }
   }) }}
 

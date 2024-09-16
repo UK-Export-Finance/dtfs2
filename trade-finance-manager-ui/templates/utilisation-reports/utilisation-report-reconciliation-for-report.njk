@@ -160,7 +160,6 @@
   {% if paymentDetails.length === 0 %}
     <p class="govuk-body">Payment details will be displayed when payments have been entered on the premium payments tab.</p>
   {% else %}
-    {# TODO FN-2311: Add this filter to the component tests. #}
     <div class="moj-filter-layout">
 
       {{ paymentDetailsFiltersPanel.render({

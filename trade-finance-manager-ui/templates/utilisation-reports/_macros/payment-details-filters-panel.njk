@@ -1,7 +1,5 @@
-{% from 'moj/components/filter/macro.njk' import mojFilter %}
-{% import './payment-details-filters-form.njk' as paymentDetailsFiltersForm %}
-
-{# TODO FN-2311: Add component tests for this macro. #}
+{% from "moj/components/filter/macro.njk" import mojFilter %}
+{% import "./payment-details-filters-form.njk" as paymentDetailsFiltersForm %}
 
 {% macro render(params) %}
   {% set filters = params.filters %}
@@ -19,11 +17,10 @@
 
   <div class="moj-filter-layout__filter" data-filtered-table-id="payment-details" data-cy="payment-details--filters-panel">
 
-    <form method="GET" data-cy="payment-details-filter-form">
+    <form method="GET" data-cy="payment-details--filter-form">
 
       {% if selectedFilters.length %}
 
-        {# TODO FN-2311: Change clearLink.href to link to the page without any filters passed as query params. #}
         {{ mojFilter({
           heading: {
             text: 'Filter'
@@ -34,12 +31,12 @@
             },
             clearLink: {
               text: 'Clear filters',
-              href: 'clear-all-filters'
+              href: '#payment-details'
             },
             categories: selectedFilters
           },
           attributes: {
-            'data-cy': 'payment-details-filters-container'
+            'data-cy': 'payment-details--filters-container'
           },
           optionsHtml: filterOptionsHtml
         }) }}
@@ -51,7 +48,7 @@
             text: 'Filter'
           },
           attributes: {
-            'data-cy': 'payment-details-filters-container'
+            'data-cy': 'payment-details--filters-container'
           },
           optionsHtml: filterOptionsHtml
         }) }}
