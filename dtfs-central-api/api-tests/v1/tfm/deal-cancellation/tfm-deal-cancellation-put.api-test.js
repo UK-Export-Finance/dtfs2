@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES_REQUIRING_ID, isTfmDealCancellationFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES_REQUIRING_ID } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const { ObjectId } = require('mongodb');
@@ -13,9 +13,11 @@ const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user
 
 console.error = jest.fn();
 
+const isTfmDealCancellationFeatureFlagEnabledMock = jest.fn();
+
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
-  isTfmDealCancellationFeatureFlagEnabled: jest.fn(),
+  isTfmDealCancellationFeatureFlagEnabled: isTfmDealCancellationFeatureFlagEnabledMock,
 }));
 
 describe('/v1/tfm/deals/:dealId/cancellation', () => {
@@ -73,7 +75,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
 
     describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
       beforeEach(() => {
-        jest.mocked(isTfmDealCancellationFeatureFlagEnabled).mockReturnValue(false);
+        jest.mocked(isTfmDealCancellationFeatureFlagEnabledMock).mockReturnValue(false);
       });
 
       afterAll(() => {
@@ -97,7 +99,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
 
     describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
       beforeEach(() => {
-        jest.mocked(isTfmDealCancellationFeatureFlagEnabled).mockReturnValue(true);
+        jest.mocked(isTfmDealCancellationFeatureFlagEnabledMock).mockReturnValue(true);
       });
 
       it('should update an deal with the deal cancellation based on dealId', async () => {
