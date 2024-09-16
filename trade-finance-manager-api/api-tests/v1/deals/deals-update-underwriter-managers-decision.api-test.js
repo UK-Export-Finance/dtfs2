@@ -3,7 +3,7 @@ const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { when } = require('jest-when');
 const app = require('../../../src/createApp');
 const { createApi } = require('../../api');
-const testUserCache = require('../../api-test-users');
+const { initialiseTestUsers } = require('../../api-test-users');
 const api = require('../../../src/v1/api');
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const { DEAL_TYPE, SUBMISSION_TYPE, DEAL_STAGE_TFM, PORTAL_DEAL_STATUS, DEAL_COMMENT_TYPE_PORTAL } = require('../../../src/constants/deals');
@@ -41,7 +41,7 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
 
   beforeEach(async () => {
     resetMocks();
-    tokenUser = await testUserCache.initialise(app);
+    tokenUser = await initialiseTestUsers(app);
     when(api.findOneTeam).calledWith(TEAMS.PIM.id).mockResolvedValueOnce({ email: PIM_EMAIL });
   });
 

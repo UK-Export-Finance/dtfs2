@@ -1,7 +1,7 @@
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const app = require('../../../src/createApp');
 const { createApi } = require('../../api');
-const testUserCache = require('../../api-test-users');
+const { initialiseTestUsers } = require('../../api-test-users');
 const MOCK_DEAL_MIA_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-MIA-submitted');
 const MOCK_MIA_TASKS = require('../../../src/v1/__mocks__/mock-MIA-tasks');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
@@ -38,7 +38,7 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
   let tokenUser;
 
   beforeAll(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    tokenUser = await initialiseTestUsers(app);
   });
 
   withClientAuthenticationTests({

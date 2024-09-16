@@ -2,6 +2,7 @@ import { AnyObject } from '@ukef/dtfs2-common';
 import request from 'supertest';
 import dotenv from 'dotenv';
 import { IncomingHttpHeaders } from 'http';
+import { MockUser } from './types/mock-user';
 
 dotenv.config();
 
@@ -19,17 +20,13 @@ const getHeaders = (token?: string): IncomingHttpHeaders => {
   return headers;
 };
 
-export type TokenUser = {
-  token: string | undefined;
-};
-
 type File = {
   fieldname: string;
   filepath: string;
 };
 
 export const createApi = (app: unknown) => ({
-  as: (user: TokenUser) => {
+  as: (user: MockUser) => {
     const token = user?.token ? user.token : '';
 
     return {

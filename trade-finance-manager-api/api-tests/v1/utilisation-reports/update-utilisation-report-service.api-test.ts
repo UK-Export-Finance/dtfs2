@@ -1,16 +1,17 @@
 import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '@ukef/dtfs2-common';
 import app from '../../../src/createApp';
-import { createApi, TokenUser } from '../../api';
-import * as testUserCache from '../../api-test-users';
+import { createApi } from '../../api';
+import { initialiseTestUsers } from '../../api-test-users';
+import { MockUser } from '../../types/mock-user';
 
 const { as } = createApi(app);
 
 describe('/v1/utilisation-reports/set-status', () => {
   const url = '/v1/utilisation-reports/set-status';
-  let tokenUser: TokenUser;
+  let tokenUser: MockUser;
 
   beforeEach(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    tokenUser = await initialiseTestUsers(app);
   });
 
   it('should return a 400 status code if the body does not contain the expected payload', async () => {

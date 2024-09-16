@@ -3,7 +3,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 
 const app = require('../../../src/createApp');
 const { createApi } = require('../../api');
-const testUserCache = require('../../api-test-users');
+const { initialiseTestUsers } = require('../../api-test-users');
 const api = require('../../../src/v1/api');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
@@ -23,7 +23,7 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
 
   const VALID_URL_TO_UPDATE_LEAD_UNDERWRITER = `/v1/deals/${VALID_DEAL_ID}/underwriting/lead-underwriter`;
   beforeAll(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    tokenUser = await initialiseTestUsers(app);
   });
 
   beforeEach(() => {

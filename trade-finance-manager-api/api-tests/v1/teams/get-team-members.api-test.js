@@ -1,7 +1,7 @@
 const { when } = require('jest-when');
 const app = require('../../../src/createApp');
 const { createApi } = require('../../api');
-const testUserCache = require('../../api-test-users');
+const { initialiseTestUsers } = require('../../api-test-users');
 const api = require('../../../src/v1/api');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { TEAMS } = require('../../../src/constants');
@@ -14,7 +14,7 @@ describe('GET /teams/:teamId/members', () => {
   let tokenUser;
 
   beforeAll(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    tokenUser = await initialiseTestUsers(app);
   });
 
   afterAll(() => {

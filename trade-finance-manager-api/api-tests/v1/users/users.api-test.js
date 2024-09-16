@@ -3,7 +3,7 @@ const { withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-he
 const { generateMockTfmUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const app = require('../../../src/createApp');
 const { createApi } = require('../../api');
-const testUserCache = require('../../api-test-users');
+const { initialiseTestUsers } = require('../../api-test-users');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 
 const { as } = createApi(app);
@@ -13,7 +13,7 @@ describe('user controller', () => {
   let tokenUser;
 
   beforeEach(async () => {
-    tokenUser = await testUserCache.initialise(app);
+    tokenUser = await initialiseTestUsers(app);
   });
 
   afterAll(() => {
