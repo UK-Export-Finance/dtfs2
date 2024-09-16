@@ -1,9 +1,9 @@
-const pages = require('../../pages');
-const partials = require('../../partials');
-const fillBondForm = require('../maker-bond/fill-bond-forms');
-const fillLoanForm = require('../maker-loan/fill-loan-forms');
-const MOCK_USERS = require('../../../../../e2e-fixtures');
-const dealWithNoFacilities = require('./submit-issued-facilities-for-review/dealWithNoFacilities');
+const pages = require('../../../pages');
+const partials = require('../../../partials');
+const fillBondForm = require('../../maker-bond/fill-bond-forms');
+const fillLoanForm = require('../../maker-loan/fill-loan-forms');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
+const dealWithNoFacilities = require('../submit-issued-facilities-for-review/dealWithNoFacilities');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
