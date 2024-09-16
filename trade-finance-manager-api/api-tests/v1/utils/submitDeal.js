@@ -6,7 +6,8 @@ const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-use
 const { as } = createApi(app);
 
 const submitDeal = async (deal) => {
-  const user = await initialiseTestUsers(app);
+  const testUsers = await initialiseTestUsers(app);
+  const user = testUsers().one();
 
   return as(user).put(deal).to('/v1/deals/submit');
 };

@@ -16,7 +16,8 @@ describe('/feedback', () => {
   };
 
   const postFeedback = async (body) => {
-    const user = await initialiseTestUsers(app);
+    const testUsers = await initialiseTestUsers(app);
+    const user = testUsers().one();
     const response = await as(user).post(body).to('/v1/feedback');
     return response;
   };

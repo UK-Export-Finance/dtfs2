@@ -38,7 +38,8 @@ describe('PUT /deals/:dealId/tasks/:groupId/:taskId', () => {
   let tokenUser;
 
   beforeAll(async () => {
-    tokenUser = await initialiseTestUsers(app);
+    const testUsers = await initialiseTestUsers(app);
+    tokenUser = testUsers().one();
   });
 
   withClientAuthenticationTests({

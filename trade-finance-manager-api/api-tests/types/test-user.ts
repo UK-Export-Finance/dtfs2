@@ -1,7 +1,10 @@
 import { TeamId } from '@ukef/dtfs2-common';
 
-export type MockUser = {
-  _id: string;
+/**
+ * Users returned by the test user fluent builder
+ */
+export type TestUser = {
+  _id?: string;
   username: string;
   password: string;
   email: string;

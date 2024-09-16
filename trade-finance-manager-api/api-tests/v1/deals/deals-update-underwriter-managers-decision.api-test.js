@@ -41,7 +41,8 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
 
   beforeEach(async () => {
     resetMocks();
-    tokenUser = await initialiseTestUsers(app);
+    const testUsers = await initialiseTestUsers(app);
+    tokenUser = testUsers().one();
     when(api.findOneTeam).calledWith(TEAMS.PIM.id).mockResolvedValueOnce({ email: PIM_EMAIL });
   });
 

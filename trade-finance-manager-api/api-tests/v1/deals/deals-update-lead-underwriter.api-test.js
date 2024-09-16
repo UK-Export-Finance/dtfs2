@@ -23,7 +23,8 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
 
   const VALID_URL_TO_UPDATE_LEAD_UNDERWRITER = `/v1/deals/${VALID_DEAL_ID}/underwriting/lead-underwriter`;
   beforeAll(async () => {
-    tokenUser = await initialiseTestUsers(app);
+    const testUsers = await initialiseTestUsers(app);
+    tokenUser = testUsers().one();
   });
 
   beforeEach(() => {

@@ -13,7 +13,8 @@ describe('user controller', () => {
   let tokenUser;
 
   beforeEach(async () => {
-    tokenUser = await initialiseTestUsers(app);
+    const testUsers = await initialiseTestUsers(app);
+    tokenUser = testUsers().one();
   });
 
   afterAll(() => {

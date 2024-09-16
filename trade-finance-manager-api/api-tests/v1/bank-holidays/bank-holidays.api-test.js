@@ -8,7 +8,8 @@ describe('/v1/bank-holidays', () => {
   describe('GET /v1/bank-holidays', () => {
     it('gets bank holidays for authenticated user', async () => {
       // Arrange
-      const user = await initialiseTestUsers(app);
+      const testUsers = await initialiseTestUsers(app);
+      const user = testUsers().one();
 
       // Act
       const { status, body } = await as(user).get('/v1/bank-holidays');

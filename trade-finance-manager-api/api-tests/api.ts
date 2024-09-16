@@ -1,12 +1,71 @@
 import { AnyObject } from '@ukef/dtfs2-common';
-import request from 'supertest';
+import request, { Response } from 'supertest';
 import dotenv from 'dotenv';
 import { IncomingHttpHeaders } from 'http';
-import { MockUser } from './types/mock-user';
+import { TestUser } from './types/test-user';
 
 dotenv.config();
 
 const { TFM_API_KEY } = process.env;
+
+type File = {
+  fieldname: string;
+  filepath: string;
+};
+
+export type TestRequestWithoutHeaders = (data: AnyObject) => {
+  to: (url: string) => Promise<Response>;
+};
+
+type TestGetWithHeaders = (
+  url: string,
+  {
+    headers,
+    query,
+  }?: {
+    headers: IncomingHttpHeaders | undefined;
+    query: AnyObject | undefined;
+  },
+) => Promise<Response>;
+
+type TestPutWithHeaders = (
+  url: string,
+  data: AnyObject,
+  {
+    headers,
+  }?: {
+    headers: IncomingHttpHeaders | undefined;
+  },
+) => Promise<Response>;
+
+type TestPostEach = (list: AnyObject[]) => {
+  to: (url: string) => Promise<Response[]>;
+};
+
+type TestPutMultipartForm = (
+  data: AnyObject,
+  files?: File[],
+) => {
+  to: (url: string) => Promise<Response>;
+};
+
+type TestGetWithoutHeaders = (url: string) => Promise<Response>;
+
+export type TestAs = (user: TestUser) => {
+  post: TestRequestWithoutHeaders;
+  postEach: TestPostEach;
+  put: TestRequestWithoutHeaders;
+  putMultipartForm: TestPutMultipartForm;
+  get: TestGetWithoutHeaders;
+  remove: TestRequestWithoutHeaders;
+};
+
+type TestApi = {
+  as: TestAs;
+  post: TestRequestWithoutHeaders;
+  get: TestGetWithHeaders;
+  put: TestPutWithHeaders;
+};
 
 const getHeaders = (token?: string): IncomingHttpHeaders => {
   const headers: IncomingHttpHeaders = {
@@ -20,13 +79,8 @@ const getHeaders = (token?: string): IncomingHttpHeaders => {
   return headers;
 };
 
-type File = {
-  fieldname: string;
-  filepath: string;
-};
-
-export const createApi = (app: unknown) => ({
-  as: (user: MockUser) => {
+export const createApi = (app: unknown): TestApi => ({
+  as: (user: TestUser) => {
     const token = user?.token ? user.token : '';
 
     return {

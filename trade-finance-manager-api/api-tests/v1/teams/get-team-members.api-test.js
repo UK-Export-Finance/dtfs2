@@ -14,7 +14,8 @@ describe('GET /teams/:teamId/members', () => {
   let tokenUser;
 
   beforeAll(async () => {
-    tokenUser = await initialiseTestUsers(app);
+    const testUsers = await initialiseTestUsers(app);
+    tokenUser = testUsers().one();
   });
 
   afterAll(() => {
