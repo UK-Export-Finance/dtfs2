@@ -145,6 +145,7 @@ env:
   CONTACT_US_EMAIL_ADDRESS: ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
   FF_TFM_PAYMENT_RECONCILIATION_ENABLED: ${{ vars.FF_TFM_PAYMENT_RECONCILIATION_ENABLED }}
   FF_TFM_FACILITY_END_DATE_ENABLED: ${{ vars.FF_TFM_FACILITY_END_DATE_ENABLED }}
+  FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
   GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
 
 jobs:
@@ -346,6 +347,7 @@ jobs:
       # Various feature flags
       FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
+      FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -718,6 +720,7 @@ jobs:
       # Various feature flags
       FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
+      FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}

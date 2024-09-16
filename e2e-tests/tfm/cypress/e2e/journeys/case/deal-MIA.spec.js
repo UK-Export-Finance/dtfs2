@@ -1,7 +1,7 @@
 import format from 'date-fns/format';
 import relative from '../../relativeURL';
 import pages from '../../pages';
-import partials from '../../partials';
+import { caseSummary, caseSubNavigation } from '../../partials';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../e2e-fixtures';
 import { DATE_FORMATS } from '../../../fixtures/constants';
@@ -37,16 +37,16 @@ context('User can view a case deal', () => {
   });
 
   it('should render case deal components', () => {
-    pages.caseDealPage.caseSummary().should('exist');
-    pages.caseDealPage.caseSubNavigation().should('exist');
+    caseSummary.container().should('exist');
+    caseSubNavigation.container().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
   });
 
   it('should render case summary fields', () => {
-    cy.assertText(partials.caseSummary.dealSubmissionType(), MOCK_DEAL_MIA.submissionType);
+    cy.assertText(caseSummary.dealSubmissionType(), MOCK_DEAL_MIA.submissionType);
 
-    cy.assertText(partials.caseSummary.exporterName(), MOCK_DEAL_MIA.exporter.companyName);
+    cy.assertText(caseSummary.exporterName(), MOCK_DEAL_MIA.exporter.companyName);
   });
 
   describe('Bank security section', () => {

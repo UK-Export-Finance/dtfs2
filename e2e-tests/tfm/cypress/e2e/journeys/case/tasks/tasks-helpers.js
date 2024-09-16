@@ -24,7 +24,7 @@ const submitTaskInProgress = (groupId, taskId, userId) => {
 
   pages.taskPage.assignedToSelectInput().select(userId);
   pages.taskPage.taskStatusRadioInputInProgress().click();
-  pages.taskPage.submitButton().click();
+  cy.clickSubmitButton();
 };
 
 const submitTaskComplete = (groupId, taskId, userId) => {
@@ -33,7 +33,7 @@ const submitTaskComplete = (groupId, taskId, userId) => {
 
   pages.taskPage.assignedToSelectInput().select(userId);
   pages.taskPage.taskStatusRadioInputDone().click();
-  pages.taskPage.submitButton().click();
+  cy.clickSubmitButton();
 };
 
 const assertCannotClickPreviousTask = (currentGroupId, currentTaskId) => {

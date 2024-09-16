@@ -324,7 +324,7 @@ describe(baseUrl, () => {
       expect(body.maker.lastLogin).toBeUndefined();
     });
 
-    it('it tells me the Bank Internal Ref Name is null', async () => {
+    it('tells me the Bank Internal Ref Name is null', async () => {
       const removeName = {
         ...mockApplications[0],
         bankInternalRefName: null,
@@ -342,7 +342,7 @@ describe(baseUrl, () => {
       ]);
     });
 
-    it('it tells me the Bank Internal Ref Name is an empty string', async () => {
+    it('tells me the Bank Internal Ref Name is an empty string', async () => {
       const removeName = {
         ...mockApplications[0],
         bankInternalRefName: '',

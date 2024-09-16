@@ -1,11 +1,11 @@
 import relative from '../../relativeURL';
+import { errorSummary, header } from '../../partials';
 import pages from '../../pages';
-import partials from '../../partials';
 
 context('User submit feedback on TFM', () => {
   it('feedback should contain correct components and text', () => {
     pages.landingPage.visit();
-    partials.header.betaBannerHref().should('have.attr', 'target', '_blank');
+    header.betaBannerHref().should('have.attr', 'target', '_blank');
 
     pages.feedbackPage.visit();
 
@@ -39,7 +39,7 @@ context('User submit feedback on TFM', () => {
 
     pages.feedbackPage.emailAddress().type('a');
 
-    pages.feedbackPage.submitButton().click();
+    cy.clickSubmitButton();
 
     pages.feedbackPage.roleErrorMessage().contains('Enter your role');
     pages.feedbackPage.teamErrorMessage().contains('Enter which team you work for');
@@ -48,12 +48,12 @@ context('User submit feedback on TFM', () => {
     pages.feedbackPage.satisfiedErrorMessage().contains('Select a rating for how satisfied you are with the service');
     pages.feedbackPage.emailAddressErrorMessage().contains('Enter an email address in the correct format, like name@example.com');
 
-    pages.feedbackPage.errorSummary().contains('Enter your role');
-    pages.feedbackPage.errorSummary().contains('Enter which team you work for');
-    pages.feedbackPage.errorSummary().contains('Enter your reason for using this service today');
-    pages.feedbackPage.errorSummary().contains('Select a rating for how easy the service is to use');
-    pages.feedbackPage.errorSummary().contains('Select a rating for how satisfied you are with the service');
-    pages.feedbackPage.errorSummary().contains('Enter an email address in the correct format, like name@example.com');
+    errorSummary().contains('Enter your role');
+    errorSummary().contains('Enter which team you work for');
+    errorSummary().contains('Enter your reason for using this service today');
+    errorSummary().contains('Select a rating for how easy the service is to use');
+    errorSummary().contains('Select a rating for how satisfied you are with the service');
+    errorSummary().contains('Enter an email address in the correct format, like name@example.com');
   });
 
   it('feedback should submit without errors and with correct thank you page', () => {
@@ -67,7 +67,7 @@ context('User submit feedback on TFM', () => {
     pages.feedbackPage.howCanWeImprove().type('test');
     pages.feedbackPage.emailAddress().clear();
 
-    pages.feedbackPage.submitButton().click();
+    cy.clickSubmitButton();
 
     cy.url().should('eq', relative('/thank-you-feedback'));
 
