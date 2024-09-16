@@ -3,18 +3,18 @@ import { ReasonForCancellingErrorsViewModel } from '../../../../types/view-model
 import { validateReasonForCancelling } from './validate-reason-for-cancelling';
 
 describe('validateReasonForCancelling', () => {
-  const errorFreeReasons = [
+  const validReasons = [
     {
       description: 'an empty string',
       reason: '',
     },
     {
       description: `${MAX_CHARACTER_COUNT} characters`,
-      reason: new Array(Number(MAX_CHARACTER_COUNT) + 1).join('x'),
+      reason: 'x'.repeat(MAX_CHARACTER_COUNT),
     },
   ];
 
-  it.each(errorFreeReasons)('returns no errors when the reason is $description', ({ reason }) => {
+  it.each(validReasons)('returns no errors when the reason is $description', ({ reason }) => {
     // Act
     const result = validateReasonForCancelling(reason);
 
@@ -28,7 +28,7 @@ describe('validateReasonForCancelling', () => {
 
   it(`returns an error when the reason is more that ${MAX_CHARACTER_COUNT} characters`, () => {
     // Arrange
-    const reason = new Array(Number(MAX_CHARACTER_COUNT) + 2).join('x');
+    const reason = 'x'.repeat(MAX_CHARACTER_COUNT + 1);
 
     // Act
     const result = validateReasonForCancelling(reason);
