@@ -1,7 +1,7 @@
-import relative from '../relativeURL';
-import { backLink, headingCaption, continueButton, errorSummary, saveAndReturnButton } from '../partials';
-import facilityEndDate from '../pages/facility-end-date';
-import aboutFacility from '../pages/about-facility';
+import relative from '../../relativeURL';
+import { backLink, headingCaption, continueButton, errorSummary, saveAndReturnButton } from '../../partials';
+import facilityEndDate from '../../pages/facility-end-date';
+import aboutFacility from '../../pages/about-facility';
 import {
   tomorrowDay,
   tomorrowMonth,
@@ -12,8 +12,8 @@ import {
   yesterdayDay,
   yesterdayMonth,
   yesterdayYear,
-} from '../../../../e2e-fixtures/dateConstants';
-import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
+} from '../../../../../e2e-fixtures/dateConstants';
+import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];
 let token;
