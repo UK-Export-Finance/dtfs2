@@ -62,7 +62,7 @@ describe('validateDealCancellationEnabled', () => {
       // Act
       validateDealCancellationEnabled(req, res, next);
 
-      expect(res._getRedirectUrl()).toEqual('/not-found');
+      expect(res.statusCode).toEqual(404);
     });
   });
 });
