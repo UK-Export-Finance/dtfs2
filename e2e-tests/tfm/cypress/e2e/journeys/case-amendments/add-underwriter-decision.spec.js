@@ -1,4 +1,5 @@
 import relative from '../../relativeURL';
+import { continueButton, errorSummary } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
@@ -49,12 +50,12 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
     amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
     // manual approval
     amendmentsPage.amendmentRequestApprovalYes().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'amendment-options');
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
@@ -65,21 +66,21 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentFacilityValueCheckbox().click();
     amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
     amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
     amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
     amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
     amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
     amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
   });
 
   it('should take you to `Add underwriter decision - Cover End Date` page', () => {
@@ -109,8 +110,8 @@ context('Amendments underwriting - add underwriter decision', () => {
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().click({ force: true });
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
-    amendmentsPage.continueAmendment().click();
-    amendmentsPage.errorSummary().contains('Select your decision for the cover end date');
+    cy.clickContinueButton();
+    errorSummary().contains('Select your decision for the cover end date');
   });
 
   it('should take you to `Add underwriter decision - Facility value` page if a decision has been made for Cover End Date', () => {
@@ -122,7 +123,7 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputDecline().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/facility-value/managers-decision');
   });
@@ -136,11 +137,11 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/facility-value/managers-decision');
-    amendmentsPage.continueAmendment().click();
-    amendmentsPage.errorSummary().contains('Select your decision for the facility value');
+    cy.clickContinueButton();
+    errorSummary().contains('Select your decision for the facility value');
   });
 
   it('should take you to `Add conditions, reasons and comments` page if a decision has been made for Facility Value and Cover End Date', () => {
@@ -152,11 +153,11 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/facility-value/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions');
 
     amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.DECLINED);
@@ -171,7 +172,7 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentsManagersDecisionReasons().should('be.visible');
     amendmentsPage.amendmentsManagersDecisionComments().should('be.visible');
 
-    amendmentsPage.continueAmendment().should('be.visible');
+    continueButton().should('be.visible');
   });
 
   it('should take you to `Add conditions, reasons and comments` summary page if no errors', () => {
@@ -183,17 +184,17 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/facility-value/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions');
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     // testing errors if conditions and decline boxes not filled
-    amendmentsPage.errorSummary().contains('Enter the conditions for the approval');
-    amendmentsPage.errorSummary().contains('Enter the reasons for declining the change');
+    errorSummary().contains('Enter the conditions for the approval');
+    errorSummary().contains('Enter the reasons for declining the change');
 
     amendmentsPage.errorMessage().contains('Enter the conditions for the approval');
     amendmentsPage.errorMessage().contains('Enter the reasons for declining the change');
@@ -229,7 +230,7 @@ context('Amendments underwriting - add underwriter decision', () => {
       .focused()
       .type('This is a comment visible only to UKEF staff <input type="text" name="state" value="INPUT_FROM_USER"> <h1>html text </h1>');
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions/summary');
     amendmentsPage.amendmentSendToBankButton().should('be.visible');
 
@@ -251,14 +252,14 @@ context('Amendments underwriting - add underwriter decision', () => {
 
     cy.url().should('contain', '/cover-end-date/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputDecline().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
     cy.url().should('contain', '/facility-value/managers-decision');
     amendmentsPage.underWriterManagerDecisionRadioInputApproveWithConditions().should('be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions');
 
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions/summary');
 
     amendmentsPage.amendmentSendToBankButton().click();
