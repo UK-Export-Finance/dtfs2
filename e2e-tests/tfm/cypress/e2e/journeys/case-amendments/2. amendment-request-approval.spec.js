@@ -1,4 +1,5 @@
 import relative from '../../relativeURL';
+import { errorSummary } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
@@ -41,10 +42,10 @@ context('Amendments - Request approval', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
   });
 
@@ -54,17 +55,17 @@ context('Amendments - Request approval', () => {
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.continueAmendmentButton().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
 
-    amendmentsPage.errorSummary().contains('Select yes if the amendment request needs UKEF approval');
+    errorSummary().contains('Select yes if the amendment request needs UKEF approval');
     amendmentsPage.errorMessage().contains('Select yes if the amendment request needs UKEF approval');
   });
 
@@ -74,16 +75,16 @@ context('Amendments - Request approval', () => {
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.continueAmendmentButton().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
     amendmentsPage.amendmentRequestApprovalYes().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'amendment-options');
   });
 
@@ -93,16 +94,16 @@ context('Amendments - Request approval', () => {
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.continueAmendmentButton().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
     amendmentsPage.amendmentRequestApprovalNo().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'amendment-effective-date');
   });
 });

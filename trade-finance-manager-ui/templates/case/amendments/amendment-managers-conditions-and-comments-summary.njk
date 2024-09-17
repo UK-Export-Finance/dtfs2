@@ -16,7 +16,7 @@
         titleText: "There is a problem",
         errorList: errors.errorSummary,
         attributes: {
-          'data-cy': 'amendment--error-summary'
+          'data-cy': 'error-summary'
         },
         classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
       }) }}
@@ -144,7 +144,7 @@
               })
             }}
           {% endif %}
-          <a class="govuk-link" href="/case/{{ amendment.dealId }}/underwriting" data-cy="amendment--cancel-button">Cancel</a>
+          <a class="govuk-link" href="/case/{{ amendment.dealId }}/underwriting" data-cy="cancel-link">Cancel</a>
         </div>
       </form>
     </div>

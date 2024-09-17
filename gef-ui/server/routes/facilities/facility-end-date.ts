@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
-import { getFacilityEndDateFromApplicationDetailsPage, postFacilityEndDateFromApplicationDetailsPage } from '../../controllers/facility-end-date/index';
+import { getFacilityEndDateFromApplicationDetailsPage } from '../../controllers/facility-end-date/get-facility-end-date';
+import { postFacilityEndDateFromApplicationDetailsPage } from '../../controllers/facility-end-date/post-facility-end-date';
 import { validateRole, validateToken, validateBank } from '../../middleware';
 import { MAKER } from '../../constants/roles';
 

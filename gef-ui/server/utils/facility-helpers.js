@@ -43,7 +43,7 @@ const summaryIssuedUnchanged = (params) => {
  * if changes required add to application type and status
  * */
 const areUnissuedFacilitiesPresent = (application) => {
-  const acceptableStatuses = [
+  const ACCEPTABLE_STATUSES = [
     CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
@@ -54,7 +54,7 @@ const areUnissuedFacilitiesPresent = (application) => {
   if (!acceptableApplicationType.includes(application.submissionType)) {
     return false;
   }
-  if (!acceptableStatuses.includes(application.status)) {
+  if (!ACCEPTABLE_STATUSES.includes(application.status)) {
     return false;
   }
   /**

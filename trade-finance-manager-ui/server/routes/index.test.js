@@ -11,6 +11,9 @@ import footerRoutes from './footer';
 
 const { validateUser, validateToken } = require('../middleware');
 
+const mockCaseRoutes = jest.fn();
+jest.mock('./case', () => mockCaseRoutes);
+
 describe('routes index', () => {
   beforeEach(() => {
     require('./index'); // eslint-disable-line global-require

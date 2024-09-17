@@ -23,7 +23,6 @@ const amendmentsPage = {
   amendmentCoverEndDateCheckbox: () => cy.get('[data-cy="amendment--coverEndDate-checkbox"]'),
   amendmentFacilityValueCheckbox: () => cy.get('[data-cy="amendment--facilityValue-checkbox"]'),
 
-  errorSummary: () => cy.get('[data-cy="amendment--error-summary"]'),
   errorMessage: () => cy.get('[data-cy="amendment--inline-error"]'),
 
   amendmentRequestApprovalYes: () => cy.get('[data-cy="amendment--request-approval-yes"]'),
@@ -45,10 +44,7 @@ const amendmentsPage = {
   amendmentBankReviewDateDetails: () => cy.get('[data-cy="amendment--bank-review-date-details"]'),
 
   addAmendmentButton: () => cy.get('[data-cy="amendment--add-amendment-button"]'),
-  continueAmendmentButton: () => cy.get('[data-cy="amendment--continue-amendment-button"]'),
-  continueAmendment: () => cy.get('[data-cy="amendment--continue-button"]'),
   amendmentSendToBankButton: () => cy.get('[data-cy="amendment--send-to-bank-button"]'),
-  cancelLink: () => cy.get('[data-cy="amendment--cancel-button"]'),
 
   leadUnderwriterHeading: () => cy.get('[data-cy="amendment-assign-lead-underwriter-heading"]'),
 
@@ -65,9 +61,6 @@ const amendmentsPage = {
   underWriterManagerDecisionRadioInputDecline: () => cy.get('[data-cy="amendment--decline-radio-button"]'),
 
   underWriterManagerDecisionRadioInputValidationError: () => cy.get('[data-cy="decision-input-error"]'),
-
-  assignLeadUnderwriterSaveButton: () => cy.get('[data-cy="amendment--continue-button"]'),
-  assignLeadUnderwriterCancelLink: () => cy.get('[data-cy="cancel-link"]'),
 
   amendmentAnswerBankRequestDate: () => cy.get('[data-cy="amendment--bank-request-date-response"]'),
   amendmentAnswerRequireApproval: () => cy.get('[data-cy="amendment--require-approval-response"]'),

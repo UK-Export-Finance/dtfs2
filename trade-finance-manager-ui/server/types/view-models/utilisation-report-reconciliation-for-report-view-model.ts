@@ -68,11 +68,14 @@ export type PaymentDetailsViewModel = {
     facilityId: string;
     exporter: string;
   }[];
-  reconciledBy?: string;
-  dateReconciled?: string;
+  reconciledBy: string;
+  dateReconciled: {
+    formattedDateReconciled: string;
+    dataSortValue: number;
+  };
 }[];
 
-export type FeeRecordPaymentGroupViewModelItem = {
+export type PremiumPaymentsViewModelItem = {
   feeRecords: FeeRecordViewModelItem[];
   totalReportedPayments: SortedAndFormattedCurrencyAndAmount;
   paymentsReceived: PaymentViewModelItem[] | undefined;
@@ -88,11 +91,11 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   bank: SessionBank;
   formattedReportPeriod: string;
   reportId: string;
-  enablePaymentsReceivedSorting: boolean;
-  feeRecordPaymentGroups: FeeRecordPaymentGroupViewModelItem[];
+  facilityIdQuery?: string;
   tableDataError?: ErrorSummaryViewModel;
   filterError?: ErrorSummaryViewModel;
-  facilityIdQuery?: string;
+  enablePaymentsReceivedSorting: boolean;
+  premiumPayments: PremiumPaymentsViewModelItem[];
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
 };

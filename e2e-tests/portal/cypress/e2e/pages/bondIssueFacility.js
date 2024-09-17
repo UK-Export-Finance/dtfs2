@@ -14,9 +14,6 @@ const page = {
   coverEndDateError: () => cy.get('[data-cy="coverEndDate-error-message"]'),
 
   name: () => cy.get('[data-cy="name"]'),
-
-  submit: () => cy.get('[data-cy="submit-button"]'),
-  cancelButton: () => cy.get('[data-cy="cancel-button"]'),
 };
 
 module.exports = page;

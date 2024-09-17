@@ -15,9 +15,6 @@ const page = {
 
   disbursementAmount: () => cy.get('[data-cy="disbursement-amount"]'),
   name: () => cy.get('[data-cy="name"]'),
-
-  submit: () => cy.get('[data-cy="submit-button"]'),
-  cancelButton: () => cy.get('[data-cy="cancel-button"]'),
 };
 
 module.exports = page;

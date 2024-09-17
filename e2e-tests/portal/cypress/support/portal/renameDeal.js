@@ -7,5 +7,5 @@ module.exports = (opts) => {
   pages.contract.editDealName().click();
 
   pages.editDealName.additionalRefName().type(`{selectall}{backspace}${newName}`);
-  pages.editDealName.submit().click();
+  cy.clickSubmitButton();
 };

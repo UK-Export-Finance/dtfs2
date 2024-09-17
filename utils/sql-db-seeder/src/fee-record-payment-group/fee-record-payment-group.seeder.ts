@@ -1,4 +1,12 @@
-import { FeeRecordStatus, UtilisationReportEntity, Currency, FeeRecordEntity, PaymentEntity, FacilityUtilisationDataEntity } from '@ukef/dtfs2-common';
+import {
+  FeeRecordStatus,
+  UtilisationReportEntity,
+  Currency,
+  FeeRecordEntity,
+  PaymentEntity,
+  FacilityUtilisationDataEntity,
+  FEE_RECORD_STATUS,
+} from '@ukef/dtfs2-common';
 import { DataSource } from 'typeorm';
 import Big from 'big.js';
 import { faker } from '@faker-js/faker';
@@ -7,6 +15,7 @@ import {
   createRandomFeeRecordForReport,
   splitAmountIntoRandomAmounts,
 } from './fee-record-payment-group.helpers';
+import { MongoDbDataLoader } from '../mongo-db-client';
 
 type AddRandomFeeRecordOverrides = {
   facilityId?: string;
@@ -116,7 +125,7 @@ export class FeeRecordPaymentGroupSeeder {
   public async addPaymentsAndSave(numberOfPayments: number, dataSource: DataSource): Promise<void> {
     await this.saveFacilityUtilisationData(dataSource);
 
-    if (this.status === 'TO_DO') {
+    if (this.status === FEE_RECORD_STATUS.TO_DO) {
       throw new Error("Cannot add payments to fee records with 'TO_DO' status");
     }
     if (!this.paymentCurrency) {
@@ -138,10 +147,19 @@ export class FeeRecordPaymentGroupSeeder {
         requestSource: { platform: 'SYSTEM' },
       });
 
-    if (this.status === 'DOES_NOT_MATCH') {
+    if (this.status === FEE_RECORD_STATUS.DOES_NOT_MATCH) {
       const payments = paymentAmounts.map((amount) => Number((amount * 0.8).toFixed(2))).map(mapAmountToPayment);
       await dataSource.manager.save(PaymentEntity, payments);
       return;
+    }
+
+    if (this.status === FEE_RECORD_STATUS.RECONCILED && !this.reportIsManuallyReconciled) {
+      const pdcReconcileUser = await MongoDbDataLoader.getPdcReconcileUserOrFail();
+      for (const feeRecord of this.feeRecords) {
+        feeRecord.updateLastUpdatedBy({ platform: 'TFM', userId: pdcReconcileUser._id.toString() });
+        feeRecord.dateReconciled = faker.date.recent({ days: 15 });
+        feeRecord.reconciledByUserId = pdcReconcileUser._id.toString();
+      }
     }
 
     const payments = paymentAmounts.map(mapAmountToPayment);

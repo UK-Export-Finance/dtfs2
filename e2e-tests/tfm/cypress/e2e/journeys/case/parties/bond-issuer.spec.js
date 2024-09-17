@@ -1,4 +1,5 @@
 import relative from '../../../relativeURL';
+import { errorSummary } from '../../../partials';
 import pages from '../../../pages';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
@@ -67,9 +68,7 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
         pages.partiesPage.bondIssuerEditLink().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
 
-        pages.partiesPage.backLink().should('exist');
-
-        pages.partiesPage.backLink().click();
+        cy.clickBackLink();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
       });
 
@@ -81,64 +80,64 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
         pages.bondIssuerPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
 
         pages.bondIssuerPage.urnInput(1).clear();
         pages.bondIssuerPage.urnInput(2).clear();
-        pages.bondIssuerPage.urnInput(1).type('test');
-        pages.bondIssuerPage.urnInput(2).type('test');
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(1), 'test');
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(2), 'test');
 
         pages.bondIssuerPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
 
-        pages.bondIssuerPage.urnInput(1).clear().type('12');
-        pages.bondIssuerPage.urnInput(2).clear().type('12');
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(1).clear(), '12');
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(2).clear(), '12');
         pages.bondIssuerPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
 
-        pages.bondIssuerPage.urnInput(1).clear().type('ABC123');
-        pages.bondIssuerPage.urnInput(2).clear().type('ABC123');
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(1).clear(), 'ABC123');
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(2).clear(), 'ABC123');
         pages.bondIssuerPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
 
-        pages.bondIssuerPage.urnInput(1).clear().type('"!£!"£!"£!"£');
-        pages.bondIssuerPage.urnInput(2).clear().type('"!£!"£!"£!"£');
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(1).clear(), '"!£!"£!"£!"£');
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(2).clear(), '"!£!"£!"£!"£');
         pages.bondIssuerPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
 
-        pages.bondIssuerPage.urnInput(1).clear().type('1234!');
-        pages.bondIssuerPage.urnInput(2).clear().type('1234!');
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(1).clear(), '1234!');
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(2).clear(), '1234!');
         pages.bondIssuerPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
 
-        pages.bondIssuerPage.urnInput(1).clear().type(' ');
-        pages.bondIssuerPage.urnInput(2).clear().type(' ');
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(1).clear(), ' ');
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(2).clear(), ' ');
         pages.bondIssuerPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.bondIssuerPage.errorSummary().contains('Enter a minimum of 3 numbers');
+        errorSummary().contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(1).contains('Enter a minimum of 3 numbers');
         pages.bondIssuerPage.urnError(2).contains('Enter a minimum of 3 numbers');
       });
@@ -148,8 +147,8 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
 
         pages.bondIssuerPage.urnInput(1).clear();
         pages.bondIssuerPage.urnInput(2).clear();
-        pages.bondIssuerPage.urnInput(1).type(mockUrn[0]);
-        pages.bondIssuerPage.urnInput(2).type(mockUrn[1]);
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(1), mockUrn[0]);
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(2), mockUrn[1]);
 
         pages.bondIssuerPage.saveButton().click();
 
@@ -161,8 +160,8 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
 
         pages.bondIssuerPage.urnInput(1).clear();
         pages.bondIssuerPage.urnInput(2).clear();
-        pages.bondIssuerPage.urnInput(1).type(mockUrn[0]);
-        pages.bondIssuerPage.urnInput(2).type(partyUrn[0]);
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(1), mockUrn[0]);
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(2), partyUrn[0]);
 
         pages.bondIssuerPage.saveButton().click();
 
@@ -174,8 +173,8 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
 
         pages.bondIssuerPage.urnInput(1).clear();
         pages.bondIssuerPage.urnInput(2).clear();
-        pages.bondIssuerPage.urnInput(1).type(partyUrn[0]);
-        pages.bondIssuerPage.urnInput(2).type(partyUrn[1]);
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(1), partyUrn[0]);
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(2), partyUrn[1]);
 
         pages.bondIssuerPage.saveButton().click();
 
@@ -188,8 +187,8 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
 
         pages.bondIssuerPage.urnInput(1).clear();
         pages.bondIssuerPage.urnInput(2).clear();
-        pages.bondIssuerPage.urnInput(1).type(partyUrn[0]);
-        pages.bondIssuerPage.urnInput(2).type(partyUrn[1]);
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(1), partyUrn[0]);
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(2), partyUrn[1]);
 
         pages.bondIssuerPage.saveButton().click();
 
@@ -208,8 +207,8 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
         pages.partiesPage.bondIssuerEditLink().click();
         pages.bondIssuerPage.urnInput(1).clear();
         pages.bondIssuerPage.urnInput(2).clear();
-        pages.bondIssuerPage.urnInput(1).type(partyUrn[0]);
-        pages.bondIssuerPage.urnInput(2).type(partyUrn[1]);
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(1), partyUrn[0]);
+        cy.keyboardInput(pages.bondIssuerPage.urnInput(2), partyUrn[1]);
 
         pages.bondIssuerPage.saveButton().click();
         pages.bondIssuerPage.saveButton().click();
@@ -220,7 +219,7 @@ context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM
       function submitExporterUrn(urn) {
         pages.partiesPage.exporterEditLink().click();
         pages.exporterPage.urnInput().clear();
-        pages.exporterPage.urnInput().type(urn);
+        cy.keyboardInput(pages.exporterPage.urnInput(), urn);
         pages.exporterPage.saveButton().click();
         pages.exporterPage.saveButton().click();
       }

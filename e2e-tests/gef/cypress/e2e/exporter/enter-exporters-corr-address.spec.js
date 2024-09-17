@@ -55,7 +55,7 @@ context('Enter Exporters Correspondence Address Page', () => {
     it('redirects user to select exporters address page when clicking on `Back` Link', () => {
       cy.visit(relative(`/gef/application-details/${dealIds[0].id}/exporters-address`));
       exportersAddress.yesRadioButton().click();
-      exportersAddress.correspondenceAddress().type(POSTCODE.INVALID);
+      cy.keyboardInput(exportersAddress.correspondenceAddress(), POSTCODE.INVALID);
       cy.clickContinueButton();
       exportersAddress.postcodeError();
       exportersAddress.manualAddressEntryLink().click();
@@ -109,11 +109,11 @@ context('Enter Exporters Correspondence Address Page', () => {
 
     describe('if form has been filled in correctly', () => {
       it('takes user to about export page ', () => {
-        enterExportersCorAddress.addressLine1().type('Line 1');
-        enterExportersCorAddress.addressLine2().type('Line 2');
-        enterExportersCorAddress.addressLine3().type('Line 3');
-        enterExportersCorAddress.locality().type('Locality');
-        enterExportersCorAddress.postcode().type('Postcode');
+        cy.keyboardInput(enterExportersCorAddress.addressLine1(), 'Line 1');
+        cy.keyboardInput(enterExportersCorAddress.addressLine2(), 'Line 2');
+        cy.keyboardInput(enterExportersCorAddress.addressLine3(), 'Line 3');
+        cy.keyboardInput(enterExportersCorAddress.locality(), 'Locality');
+        cy.keyboardInput(enterExportersCorAddress.postcode(), 'Postcode');
         cy.clickContinueButton();
         cy.url().should('eq', relative(`/gef/application-details/${dealIds[0].id}/about-exporter`));
       });

@@ -1,4 +1,5 @@
 import relative from '../../relativeURL';
+import { errorSummary } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import amendmentsPage from '../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
@@ -41,14 +42,14 @@ context('Amendments - Facility value', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-    amendmentsPage.continueAmendment().click();
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
     amendmentsPage.amendmentRequestApprovalYes().click();
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'amendment-options');
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
     amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
@@ -56,7 +57,7 @@ context('Amendments - Facility value', () => {
     amendmentsPage.amendmentFacilityValueCheckbox().click();
     amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
     amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'facility-value');
   });
 
@@ -66,18 +67,18 @@ context('Amendments - Facility value', () => {
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.continueAmendmentButton().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'amendment-options');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-    amendmentsPage.amendmentFacilityValueInput().clear().focused().type(12345);
-    amendmentsPage.continueAmendment().click();
-    amendmentsPage.errorSummary().contains('The new facility value cannot be the same as the current facility value');
+    cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), 12345);
+    cy.clickContinueButton();
+    errorSummary().contains('The new facility value cannot be the same as the current facility value');
   });
 
   it('should NOT allow users to enter the characters that are not numbers', () => {
@@ -86,18 +87,18 @@ context('Amendments - Facility value', () => {
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.continueAmendmentButton().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'amendment-options');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('1234A23');
-    amendmentsPage.continueAmendment().click();
-    amendmentsPage.errorSummary().contains('The new facility value must be a number');
+    cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), '1234A23');
+    cy.clickContinueButton();
+    errorSummary().contains('The new facility value must be a number');
   });
 
   it('should continue to `Check your answers` page if the facility value is valid', () => {
@@ -106,17 +107,17 @@ context('Amendments - Facility value', () => {
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.continueAmendmentButton().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'amendment-options');
-    amendmentsPage.continueAmendment().click();
+    cy.clickContinueButton();
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
-    amendmentsPage.continueAmendment().click();
+    cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), '123');
+    cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
 
     amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);

@@ -21,9 +21,6 @@ const page = {
   coverEndDateMonthInput: () => cy.get('[data-cy="coverEndDate-month"]'),
   coverEndDateYearInput: () => cy.get('[data-cy="coverEndDate-year"]'),
   coverEndDateErrorMessage: () => cy.get('[data-cy="coverEndDate-error-message"]'),
-
-  submit: () => cy.get('[data-cy="submit-button"]'),
-  saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
 };
 
 module.exports = page;

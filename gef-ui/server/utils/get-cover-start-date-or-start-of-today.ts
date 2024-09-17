@@ -1,14 +1,10 @@
 import { parseISO, startOfDay } from 'date-fns';
-import { AnyObject } from '@ukef/dtfs2-common';
+import { Facility } from '../types/facility';
 
-export const getCoverStartDateOrStartOfToday = (facility: AnyObject): Date => {
-  if (typeof facility.coverStartDate === 'string') {
+export const getCoverStartDateOrStartOfToday = (facility: Facility): Date => {
+  if (facility.coverStartDate) {
     return startOfDay(parseISO(facility.coverStartDate));
   }
 
-  if (!facility.coverStartDate) {
-    return startOfDay(new Date());
-  }
-
-  throw new Error('Invalid coverStartDate');
+  return startOfDay(new Date());
 };

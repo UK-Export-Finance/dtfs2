@@ -57,8 +57,8 @@ context('Submit AIN deal and check portalActivities', () => {
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
       securityDetails.visit(dealId);
-      securityDetails.exporterSecurity().type('test');
-      securityDetails.facilitySecurity().type('test2');
+      cy.keyboardInput(securityDetails.exporterSecurity(), 'test');
+      cy.keyboardInput(securityDetails.facilitySecurity(), 'test2');
       cy.clickSubmitButton();
 
       cy.clickSubmitButton();

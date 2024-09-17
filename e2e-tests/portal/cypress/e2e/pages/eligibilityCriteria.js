@@ -17,7 +17,6 @@ const page = {
   eligibilityAgent: (criteria) => cy.get(`[data-cy="eligibility-agent-details-criteria-${criteria}"]`),
   agentsCountry: () => cy.get('[data-cy="agent-country"]'),
   nextPageButton: () => cy.get('[data-cy="next-page"]'),
-  saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
 };
 
 module.exports = page;

@@ -104,10 +104,13 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
   });
 
   it('should display errors when form submitted with invalid values', () => {
-    cy.getInputByLabelText('Amount received').type('100');
-    cy.getInputByLabelText('Day').type('56');
-    cy.getInputByLabelText('Month').type('12');
-    cy.getInputByLabelText('Year').type('2023');
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '100');
+
+    cy.keyboardInput(cy.getInputByLabelText('Day'), '56');
+
+    cy.keyboardInput(cy.getInputByLabelText('Month'), '12');
+
+    cy.keyboardInput(cy.getInputByLabelText('Year'), '2023');
 
     cy.contains('button', 'Continue').click();
 
@@ -127,30 +130,31 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
   it('submits form and redirects to premium payments page when user submits form with valid values and user selects no to adding another payment', () => {
     cy.getInputByLabelText('GBP').click();
+
     // 391 = (100 / 2) + (200 / 0.5) - 60 + a little extra under the tolerance
-    cy.getInputByLabelText('Amount received').type('391');
-    cy.getInputByLabelText('Day').type('12');
-    cy.getInputByLabelText('Month').type('12');
-    cy.getInputByLabelText('Year').type('2023');
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '391');
+
+    cy.keyboardInput(cy.getInputByLabelText('Day'), '12');
+
+    cy.keyboardInput(cy.getInputByLabelText('Month'), '12');
+
+    cy.keyboardInput(cy.getInputByLabelText('Year'), '2023');
+
     cy.getInputByLabelText('No').click();
 
     cy.contains('button', 'Continue').click();
 
     cy.contains('Premium payments').should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-      .status(FEE_RECORD_ID_ONE)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal(FEE_RECORD_STATUS.MATCH);
-      });
+
+    cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.status(FEE_RECORD_ID_ONE), FEE_RECORD_STATUS.MATCH);
   });
 
   it('submits form and reloads the page with no values when user submits form with valid values and user selects yes to adding another payment', () => {
     cy.getInputByLabelText('GBP').click();
-    cy.getInputByLabelText('Amount received').type('100');
-    cy.getInputByLabelText('Day').type('12');
-    cy.getInputByLabelText('Month').type('12');
-    cy.getInputByLabelText('Year').type('2023');
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '100');
+    cy.keyboardInput(cy.getInputByLabelText('Day'), '12');
+    cy.keyboardInput(cy.getInputByLabelText('Month'), '12');
+    cy.keyboardInput(cy.getInputByLabelText('Year'), '2023');
     cy.getInputByLabelText('Yes').click();
 
     cy.contains('button', 'Continue').click();

@@ -5,8 +5,8 @@ import { MAKER } from '../../constants/roles';
 
 const { isNotice } = require('../../utils/deal-helpers');
 
-const { RES_MOCK_AIN_APPLICATION_CHECKER } = require('../../utils/mocks/mock_applications');
-const { MOCK_ISSUED_FACILITY } = require('../../utils/mocks/mock_facilities');
+const { RES_MOCK_AIN_APPLICATION_CHECKER } = require('../../utils/mocks/mock-applications');
+const { MOCK_ISSUED_FACILITY } = require('../../utils/mocks/mock-facilities');
 
 jest.mock('../../services/api');
 

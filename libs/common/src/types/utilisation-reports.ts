@@ -40,3 +40,7 @@ export type UtilisationReportDataValidationError = {
   value?: string | null;
   exporter?: string | null;
 };
+
+export type PremiumPaymentsFilters = {
+  facilityId?: string;
+};

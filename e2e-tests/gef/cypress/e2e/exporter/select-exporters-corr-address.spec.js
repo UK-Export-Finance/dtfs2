@@ -24,7 +24,7 @@ context('Select Exporters Correspondence Address Page', () => {
     cy.saveSession();
     cy.visit(relative(`/gef/application-details/${dealId}/exporters-address`));
     exportersAddress.yesRadioButton().click();
-    exportersAddress.correspondenceAddress().type('E1 6JE');
+    cy.keyboardInput(exportersAddress.correspondenceAddress(), 'E1 6JE');
     cy.clickContinueButton();
   });
 

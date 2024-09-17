@@ -52,8 +52,8 @@ context('Submit to UKEF as MIA', () => {
       statusBanner.bannerDateCreated().contains(todayFormattedShort);
 
       securityDetails.visit(dealId);
-      securityDetails.exporterSecurity().type('test');
-      securityDetails.facilitySecurity().type('test');
+      cy.keyboardInput(securityDetails.exporterSecurity(), 'test');
+      cy.keyboardInput(securityDetails.facilitySecurity(), 'test');
       cy.clickSubmitButton();
       securityDetails.visit(dealId);
       cy.clickCancelButton();
