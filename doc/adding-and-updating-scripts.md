@@ -47,14 +47,13 @@ integrity attribute in the script tag where they are included.
 
 1. Use the following command (or similar) to generate a new integrity hash for
 the compiled script: `echo "sha512-$(openssl dgst -sha512 -binary <
-/path/to/public/js/yourScriptHere.js | openssl base64 -A)"`
+ /path/to/public/js/yourCompiledScriptHere.js | openssl base64 -A)"`
 2. Copy this output and update the integrity attribute value in the
 corresponding script tag in the relevant `njk` template.
     - For example:
       - If the script tag is currently: `<script
       src="/assets/js/your-script.js" type="text/javascript"
-      integrity="sha512-3UQ..." crossorigin="anonymous"></script>
-      `
+      integrity="sha512-3UQ..." crossorigin="anonymous"></script>`
       - And the output from the above command is `sha512-QLv...`
       - Our updated script tag would be: `<script
       src="/assets/js/your-script.js" type="text/javascript"
