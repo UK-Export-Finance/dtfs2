@@ -164,6 +164,35 @@ context('Monthly utilisation report upload', () => {
       });
     });
 
+    describe('when the base currency and facility utilisation values do not match for the same facility id', () => {
+      it('should display a summary of errors', () => {
+        utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-matching-utilisation-report-February_2023_monthly.csv');
+        cy.clickContinueButton();
+
+        utilisationReportUpload.checkReportTitle().should('exist');
+        errorSummary().should('exist');
+        utilisationReportUpload.validationErrorTable().should('exist');
+        utilisationReportUpload.validationErrorTableRows().should('have.length', 2);
+
+        cy.assertValidationErrorTableRowContains({
+          tableRowIndex: 1,
+          message: 'The currency does not match the other records for this facility. Enter the correct currency.',
+          exporter: 'Valid GEF',
+          row: '3',
+          column: 'D',
+          entry: 'USD',
+        });
+        cy.assertValidationErrorTableRowContains({
+          tableRowIndex: 2,
+          message: 'The utilisation does not match the other records for this facility. Enter the correct utilisation.',
+          exporter: 'Valid GEF',
+          row: '3',
+          column: 'F',
+          entry: '1589319.23',
+        });
+      });
+    });
+
     it('should display a summary of errors for an invalid .csv file', () => {
       utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023_monthly.csv');
       cy.clickContinueButton();
