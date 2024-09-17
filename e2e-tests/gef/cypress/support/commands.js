@@ -5,6 +5,8 @@ import './commands/click-events';
 
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
+Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
+
 Cypress.Commands.add('assertText', require('./utils/assertText'));
 
 Cypress.Commands.add('login', require('./commands/portal/login'));

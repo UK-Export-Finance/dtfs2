@@ -23,7 +23,7 @@ context('Incomplete exporter section - application details page', () => {
       cy.clickContinueButton();
       dashboardPage.mandatoryCriteriaYes().click();
       cy.clickContinueButton();
-      dashboardPage.internalRefName().type('A');
+      cy.keyboardInput(dashboardPage.internalRefName(), 'A');
       cy.clickContinueButton();
       cy.url().then((thisUrl) => {
         url = thisUrl;
@@ -35,12 +35,12 @@ context('Incomplete exporter section - application details page', () => {
     it('completes the exporter section', () => {
       cy.visit(url);
       applicationDetails.exporterDetailsLink().click();
-      companiesHouse.regNumberField().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
+      cy.keyboardInput(companiesHouse.regNumberField(), MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
       cy.clickContinueButton();
       exportersAddress.noRadioButton().click();
       cy.clickContinueButton();
       aboutExporter.microRadioButton().click();
-      aboutExporter.probabilityOfDefaultInput().type('10');
+      cy.keyboardInput(aboutExporter.probabilityOfDefaultInput(), '10');
       aboutExporter.isFinancingIncreasingRadioYes().click();
       aboutExporter.doneButton().click();
     });
@@ -121,7 +121,7 @@ context('Incomplete exporter section - application details page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/exporters-address`));
 
       exportersAddress.yesRadioButton().click();
-      exportersAddress.correspondenceAddress().type('SW1A 2AA');
+      cy.keyboardInput(exportersAddress.correspondenceAddress(), 'SW1A 2AA');
       cy.clickContinueButton();
 
       selectExportersCorAddress.selectAddress().select('0');

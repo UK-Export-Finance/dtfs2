@@ -118,18 +118,18 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.todayMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.todayYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoYearsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoYearsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoYearsYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoYearsDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoYearsMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoYearsYear);
 
-      aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeYearsDay);
-      aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeYearsMonth);
-      aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeYearsYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeYearsDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeYearsMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeYearsYear);
 
       if (facilityEndDateEnabled) {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
@@ -137,9 +137,9 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       cy.clickContinueButton();
 
       if (facilityEndDateEnabled) {
-        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeYearsDay);
-        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeYearsMonth);
-        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeYearsYear);
+        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.threeYearsDay);
+        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.threeYearsMonth);
+        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.threeYearsYear);
         cy.clickContinueButton();
       }
 
@@ -221,17 +221,17 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       // to change to issued from preview page by clicking change on issued row
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().click();
       aboutFacilityUnissued.facilityName().clear();
-      aboutFacilityUnissued.facilityName().type(`${MOCK_FACILITY_FOUR.name}name`);
+      cy.keyboardInput(aboutFacilityUnissued.facilityName(), `${MOCK_FACILITY_FOUR.name}name`);
 
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.todayMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.todayYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
 
-      aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeYearsDay);
-      aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeYearsMonth);
-      aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeYearsYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeYearsDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeYearsMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeYearsYear);
 
       if (facilityEndDateEnabled) {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
@@ -240,9 +240,9 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       cy.clickContinueButton();
 
       if (facilityEndDateEnabled) {
-        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
-        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
-        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
+        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.threeMonthsOneDayDay);
+        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
+        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.threeMonthsOneDayYear);
         cy.clickContinueButton();
       }
     });

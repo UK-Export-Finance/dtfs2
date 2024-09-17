@@ -52,15 +52,15 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
 
       cy.login(BANK1_MAKER1);
       securityDetails.visit(dealIds[2]);
-      securityDetails.exporterSecurity().type('test');
-      securityDetails.facilitySecurity().type('test2');
+      cy.keyboardInput(securityDetails.exporterSecurity(), 'test');
+      cy.keyboardInput(securityDetails.facilitySecurity(), 'test2');
       cy.clickSubmitButton();
 
       cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       // submit the deal
       cy.clickSubmitButton();
-      applicationSubmission.commentsField().type('DTFS2-4698 Comments from original maker');
+      cy.keyboardInput(applicationSubmission.commentsField(), 'DTFS2-4698 Comments from original maker');
       cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 

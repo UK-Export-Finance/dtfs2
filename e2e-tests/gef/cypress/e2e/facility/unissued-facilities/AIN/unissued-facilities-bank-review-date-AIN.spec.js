@@ -76,18 +76,18 @@ if (facilityEndDateEnabled) {
         cy.visit(getUnissuedFacilitiesUrl());
         unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-        aboutFacilityUnissued.issueDateDay().clear().type(threeDaysDay);
-        aboutFacilityUnissued.issueDateMonth().clear().type(threeDaysMonth);
-        aboutFacilityUnissued.issueDateYear().clear().type(threeDaysYear);
+        cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDaysDay);
+        cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDaysMonth);
+        cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDaysYear);
 
         aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-        aboutFacilityUnissued.coverStartDateDay().clear().type(threeDaysDay);
-        aboutFacilityUnissued.coverStartDateMonth().clear().type(threeDaysMonth);
-        aboutFacilityUnissued.coverStartDateYear().clear().type(threeDaysYear);
+        cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDaysDay);
+        cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDaysMonth);
+        cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDaysYear);
 
-        aboutFacilityUnissued.coverEndDateDay().clear().type(threeMonthsOneDayDay);
-        aboutFacilityUnissued.coverEndDateMonth().clear().type(threeMonthsOneDayMonth);
-        aboutFacilityUnissued.coverEndDateYear().clear().type(threeMonthsOneDayYear);
+        cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), threeMonthsOneDayDay);
+        cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), threeMonthsOneDayMonth);
+        cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), threeMonthsOneDayYear);
 
         aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
 
@@ -105,7 +105,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should display an error message when the date is entered incorrectly & click continue', () => {
-        bankReviewDate.bankReviewDateDay().clear().type('abcd');
+        cy.keyboardInput(bankReviewDate.bankReviewDateDay(), 'abcd');
         cy.clickContinueButton();
 
         errorSummary();
@@ -113,7 +113,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should display an error message when the date is entered incorrectly & click save and return', () => {
-        bankReviewDate.bankReviewDateDay().clear().type('abcd');
+        cy.keyboardInput(bankReviewDate.bankReviewDateDay(), 'abcd');
         cy.clickSaveAndReturnButton();
 
         errorSummary();
@@ -156,7 +156,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should display an error message when the date is entered incorrectly & click continue', () => {
-        bankReviewDate.bankReviewDateDay().clear().type('abcd');
+        cy.keyboardInput(bankReviewDate.bankReviewDateDay(), 'abcd');
         cy.clickContinueButton();
 
         errorSummary();
@@ -164,7 +164,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should display an error message when the date is entered incorrectly & click saveAndReturn', () => {
-        bankReviewDate.bankReviewDateDay().clear().type('abcd');
+        cy.keyboardInput(bankReviewDate.bankReviewDateDay(), 'abcd');
         cy.clickSaveAndReturnButton();
 
         errorSummary();
