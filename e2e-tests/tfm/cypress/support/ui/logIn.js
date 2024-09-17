@@ -4,7 +4,7 @@ export default (opts) => {
   const { username, password } = opts;
 
   pages.landingPage.visit();
-  pages.landingPage.email().type(username);
-  pages.landingPage.password().type(password);
+  cy.keyboardInput(pages.landingPage.email(), username);
+  cy.keyboardInput(pages.landingPage.password(), password);
   cy.clickSubmitButton();
 };

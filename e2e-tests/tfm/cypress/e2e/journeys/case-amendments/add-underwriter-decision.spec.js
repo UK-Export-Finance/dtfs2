@@ -47,9 +47,9 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -69,14 +69,14 @@ context('Amendments underwriting - add underwriter decision', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
+    cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), '123');
 
     cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
@@ -210,25 +210,20 @@ context('Amendments underwriting - add underwriter decision', () => {
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS);
     amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('have.class', 'govuk-tag--green');
 
-    amendmentsPage
-      .amendmentsManagersDecisionConditions()
-      .clear()
-      .focused()
-      .type(
-        'This is a list of conditions <script>(\'hello world\')</script> <embed type="text/html" src="snippet.html" width="500" height="200"> <h1>html text </h1>',
-      );
-    amendmentsPage
-      .amendmentsManagersDecisionReasons()
-      .clear()
-      .focused()
-      .type(
-        'This is the reason for declining the amendment <img src=x onerror=console.log(\'img\')/> <object data="snippet.html" width="500" height="200"></object><h1>html text </h1>',
-      );
-    amendmentsPage
-      .amendmentsManagersDecisionComments()
-      .clear()
-      .focused()
-      .type('This is a comment visible only to UKEF staff <input type="text" name="state" value="INPUT_FROM_USER"> <h1>html text </h1>');
+    cy.keyboardInput(
+      amendmentsPage.amendmentsManagersDecisionConditions(),
+      'This is a list of conditions <script>(\'hello world\')</script> <embed type="text/html" src="snippet.html" width="500" height="200"> <h1>html text </h1>',
+    );
+
+    cy.keyboardInput(
+      amendmentsPage.amendmentsManagersDecisionReasons(),
+      'This is the reason for declining the amendment <img src=x onerror=console.log(\'img\')/> <object data="snippet.html" width="500" height="200"></object><h1>html text </h1>',
+    );
+
+    cy.keyboardInput(
+      amendmentsPage.amendmentsManagersDecisionComments(),
+      'This is a comment visible only to UKEF staff <input type="text" name="state" value="INPUT_FROM_USER"> <h1>html text </h1>',
+    );
 
     cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions/summary');

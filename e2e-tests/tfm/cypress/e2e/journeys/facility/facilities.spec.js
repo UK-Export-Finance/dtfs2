@@ -108,7 +108,7 @@ context('Facility page', () => {
     cy.visit(relative('/facilities'));
     cy.url().should('eq', relative('/facilities/0'));
     const searchString = '1000000';
-    pages.facilitiesPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.facilitiesPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     cy.checkFacilitiesTableRowsTotal(4);
@@ -119,7 +119,7 @@ context('Facility page', () => {
     cy.url().should('eq', relative('/facilities/0'));
     const searchString = MOCK_DEAL_AIN.exporter.companyName;
 
-    pages.facilitiesPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.facilitiesPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     cy.checkFacilitiesTableRowsTotal(2);
@@ -130,7 +130,7 @@ context('Facility page', () => {
     cy.url().should('eq', relative('/facilities/0'));
     const searchString = MOCK_DEAL_MIA.exporter.companyName;
 
-    pages.facilitiesPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.facilitiesPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     cy.checkFacilitiesTableRowsTotal(2);

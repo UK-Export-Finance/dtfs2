@@ -70,14 +70,14 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
     });
 
     it('should return to pricing & risk page without updating value if cancel', () => {
-      pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput().clear().type('45');
+      cy.keyboardInput(pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput(), '45');
       pages.underwritingLossGivenDefaultPage.closeLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
       cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault(), '50%');
     });
 
     it('should update LGD', () => {
-      pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput().clear().type('45');
+      cy.keyboardInput(pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput(), '45');
       cy.clickSubmitButton();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
       cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault(), '45%');
