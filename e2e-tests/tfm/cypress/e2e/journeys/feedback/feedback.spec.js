@@ -37,7 +37,7 @@ context('User submit feedback on TFM', () => {
   it('feedback should give errors if incorrectly filled up', () => {
     pages.feedbackPage.visit();
 
-    pages.feedbackPage.emailAddress().type('a');
+    cy.keyboardInput(pages.feedbackPage.emailAddress(), 'a');
 
     cy.clickSubmitButton();
 
@@ -59,12 +59,12 @@ context('User submit feedback on TFM', () => {
   it('feedback should submit without errors and with correct thank you page', () => {
     pages.feedbackPage.visit();
 
-    pages.feedbackPage.role().type('test');
-    pages.feedbackPage.team().type('test');
-    pages.feedbackPage.whyUsingService().type('test');
+    cy.keyboardInput(pages.feedbackPage.role(), 'test');
+    cy.keyboardInput(pages.feedbackPage.team(), 'test');
+    cy.keyboardInput(pages.feedbackPage.whyUsingService(), 'test');
     pages.feedbackPage.easyToUseSelection().click();
     pages.feedbackPage.satisfiedSelection().click();
-    pages.feedbackPage.howCanWeImprove().type('test');
+    cy.keyboardInput(pages.feedbackPage.howCanWeImprove(), 'test');
     pages.feedbackPage.emailAddress().clear();
 
     cy.clickSubmitButton();

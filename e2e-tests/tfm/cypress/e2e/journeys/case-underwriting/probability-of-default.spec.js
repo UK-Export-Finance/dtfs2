@@ -71,41 +71,41 @@ context('Case Underwriting - Pricing and risk - Probability of default', () => {
     });
 
     it('should return to pricing & risk page without updating value if cancel', () => {
-      pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('45');
+      cy.keyboardInput(pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput(), '45');
       pages.underwritingProbabilityOfDefaultPage.closeLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
       cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableProbabilityOfDefault(), 'Less than 14.1%');
     });
 
     it('should display validation error if value is not a number, below 0.01, above 14.09 or more than 2 decimal places', () => {
-      pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('15');
+      cy.keyboardInput(pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput(), '15');
       cy.clickSubmitButton();
       errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
       pages.underwritingProbabilityOfDefaultPage.errorMessage().contains('You must enter a percentage between 0.01% to 14.09%');
 
-      pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('14.1');
+      cy.keyboardInput(pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput(), '14.1');
       cy.clickSubmitButton();
       errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
       pages.underwritingProbabilityOfDefaultPage.errorMessage().contains('You must enter a percentage between 0.01% to 14.09%');
 
-      pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('12.123');
+      cy.keyboardInput(pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput(), '12.123');
       cy.clickSubmitButton();
       errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
       pages.underwritingProbabilityOfDefaultPage.errorMessage().contains('You must enter a percentage between 0.01% to 14.09%');
 
-      pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('0');
+      cy.keyboardInput(pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput(), '0');
       cy.clickSubmitButton();
       errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
       pages.underwritingProbabilityOfDefaultPage.errorMessage().contains('You must enter a percentage between 0.01% to 14.09%');
 
-      pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('abc');
+      cy.keyboardInput(pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput(), 'abc');
       cy.clickSubmitButton();
       errorSummary().contains('You must enter a percentage between 0.01% to 14.09%');
       pages.underwritingProbabilityOfDefaultPage.errorMessage().contains('You must enter a percentage between 0.01% to 14.09%');
     });
 
     it('should update Probability of default if between 0.01 and 14.09', () => {
-      pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput().clear().type('10.5');
+      cy.keyboardInput(pages.underwritingProbabilityOfDefaultPage.probabilityOfDefaultInput(), '10.5');
       cy.clickSubmitButton();
 
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));

@@ -148,7 +148,7 @@ context('User can view and filter multiple deals', () => {
 
     const expectedResultsLength = bssDealsWithUkefDealId.length;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
@@ -167,7 +167,7 @@ context('User can view and filter multiple deals', () => {
 
     const expectedResultsLength = 1;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
@@ -178,7 +178,7 @@ context('User can view and filter multiple deals', () => {
   it('search/filter by bank name', () => {
     const searchString = 'UKEF test bank';
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     const dealsWithMakerUkefTestBank = ALL_SUBMITTED_DEALS.filter((deal) => deal.dealSnapshot.bank.name.includes(searchString));
@@ -191,7 +191,7 @@ context('User can view and filter multiple deals', () => {
   it('search/filter by supplier name', () => {
     const searchString = DEAL_WITH_TEST_SUPPLIER_NAME.submissionDetails['supplier-name'];
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
@@ -202,7 +202,7 @@ context('User can view and filter multiple deals', () => {
   it('search/filter by submission type', () => {
     const searchString = DEAL_WITH_TEST_MIN_SUBMISSION_TYPE.submissionType;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
@@ -213,7 +213,7 @@ context('User can view and filter multiple deals', () => {
   it('search/filter by buyer name', () => {
     const searchString = DEAL_WITH_TEST_BUYER_NAME.submissionDetails['buyer-name'];
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
@@ -231,7 +231,7 @@ context('User can view and filter multiple deals', () => {
 
     const searchString = submittedMiaDeal.tfm.stage;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
@@ -255,7 +255,7 @@ context('User can view and filter multiple deals', () => {
 
     const expectedResultsLength = dealsWithBonds.length;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
@@ -268,7 +268,7 @@ context('User can view and filter multiple deals', () => {
 
     const expectedResultsLength = 1;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
@@ -285,7 +285,7 @@ context('User can view and filter multiple deals', () => {
     // all deals in this test are submitted at the same time.
     const expectedResultsLength = ALL_SUBMITTED_DEALS.length;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
@@ -302,7 +302,7 @@ context('User can view and filter multiple deals', () => {
     // all deals in this test are submitted at the same time.
     const expectedResultsLength = ALL_SUBMITTED_DEALS.length;
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
@@ -313,7 +313,7 @@ context('User can view and filter multiple deals', () => {
   it('updates heading text and does not render any deals when no results are found', () => {
     const searchString = 'bingo';
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     const expectedResultsLength = 0;
@@ -326,7 +326,7 @@ context('User can view and filter multiple deals', () => {
   it('after a search has been performed, clicking `All deals` nav item returns all deals ', () => {
     const searchString = DEAL_WITH_TEST_BUYER_NAME.submissionDetails['buyer-name'];
 
-    pages.dealsPage.searchFormInput().type(searchString);
+    cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
     pages.dealsPage.dealsTableRows().should('have.length', 1);
