@@ -9,15 +9,13 @@ context('Only allow authorised users to access admin pages', () => {
   });
 
   describe('Access a deal', () => {
-    let deal;
-
     before(() => {
       cy.deleteDeals(ADMIN);
       cy.createBssDeal({});
     });
 
     it('allows read only user with all bank access to view deal', () => {
-      cy.loginGoToDealPage(ADMIN, deal);
+      cy.loginGoToDealPage(ADMIN);
       cy.url().should('eq', relative(`/dashboard/deals/0`));
     });
   });

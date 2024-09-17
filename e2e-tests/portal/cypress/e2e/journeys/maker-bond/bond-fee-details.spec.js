@@ -6,18 +6,8 @@ const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
-const MOCK_DEAL = {
-  bankInternalRefName: 'someDealId',
-  additionalRefName: 'someDealName',
-  submissionDetails: {
-    supplyContractCurrency: {
-      id: 'GBP',
-    },
-  },
-};
-
-const goToBondFeeDetailsPage = (deal) => {
-  cy.loginGoToDealPage(BANK1_MAKER1, deal);
+const goToBondFeeDetailsPage = () => {
+  cy.loginGoToDealPage(BANK1_MAKER1);
 
   pages.contract.addBondButton().click();
   partials.taskListHeader.itemLink('fee-details').click();
@@ -25,18 +15,15 @@ const goToBondFeeDetailsPage = (deal) => {
 };
 
 context('Bond Fee Details', () => {
-  let deal;
-
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+
+    cy.createBssDeal({});
   });
 
   describe('when submitting an empty form and navigating back to `Bond Fee Details` page', () => {
     it('should display validation errors for all required fields', () => {
-      goToBondFeeDetailsPage(deal);
+      goToBondFeeDetailsPage();
       cy.title().should('eq', `Bond Fee Details${pages.defaults.pageTitleAppend}`);
 
       pages.bondFeeDetails.submit().click();
@@ -55,7 +42,7 @@ context('Bond Fee Details', () => {
 
   describe('after submitting one form field and navigating back to `Bond Fee Details` page', () => {
     it('should display validation errors for all required fields (including nested radio group)', () => {
-      goToBondFeeDetailsPage(deal);
+      goToBondFeeDetailsPage();
 
       pages.bondFeeDetails.feeTypeInAdvanceInput().click();
 
@@ -74,7 +61,7 @@ context('Bond Fee Details', () => {
   });
 
   it('should display the correct title for bond fee details', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     pages.contract.addBondButton().click();
     partials.taskListHeader.itemLink('fee-details').click();
@@ -83,7 +70,7 @@ context('Bond Fee Details', () => {
   });
 
   it('form submit of all required fields should render a `completed` status tag only for `Bond Fee Details` in task list header', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     pages.contract.addBondButton().click();
     partials.taskListHeader.itemLink('fee-details').click();
@@ -114,7 +101,7 @@ context('Bond Fee Details', () => {
   });
 
   it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {
-    goToBondFeeDetailsPage(deal);
+    goToBondFeeDetailsPage();
 
     fillBondForm.feeDetails();
     pages.bondFeeDetails.submit().click();
@@ -131,7 +118,7 @@ context('Bond Fee Details', () => {
 
   describe('when a user selects that the Fee Type is `At maturity`', () => {
     it('should NOT render `Fee frequency` radio buttons', () => {
-      goToBondFeeDetailsPage(deal);
+      goToBondFeeDetailsPage();
 
       pages.bondFeeDetails.feeTypeAtMaturityInput().click();
 
@@ -141,7 +128,7 @@ context('Bond Fee Details', () => {
 
   describe('When a user clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Bond Fee Details` page', () => {
-      goToBondFeeDetailsPage(deal);
+      goToBondFeeDetailsPage();
 
       fillBondForm.feeDetails();
 

@@ -7,18 +7,8 @@ const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
-const MOCK_DEAL = {
-  bankInternalRefName: 'someDealId',
-  additionalRefName: 'someDealName',
-  submissionDetails: {
-    supplyContractCurrency: {
-      id: 'GBP',
-    },
-  },
-};
-
-const goToPageWithUnconditionalFacilityStage = (deal) => {
-  cy.loginGoToDealPage(BANK1_MAKER1, deal);
+const goToPageWithUnconditionalFacilityStage = () => {
+  cy.loginGoToDealPage(BANK1_MAKER1);
   pages.contract.addLoanButton().click();
 
   pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
@@ -28,8 +18,8 @@ const goToPageWithUnconditionalFacilityStage = (deal) => {
   cy.url().should('include', '/financial-details');
 };
 
-const goToPage = (deal) => {
-  cy.loginGoToDealPage(BANK1_MAKER1, deal);
+const goToPage = () => {
+  cy.loginGoToDealPage(BANK1_MAKER1);
   pages.contract.addLoanButton().click();
   partials.taskListHeader.itemLink('loan-financial-details').click();
 
@@ -38,18 +28,15 @@ const goToPage = (deal) => {
 };
 
 context('Loan Financial Details', () => {
-  let deal;
-
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+
+    cy.createBssDeal({});
   });
 
   describe('Loan financial details title', () => {
     it('should contain the correct title', () => {
-      goToPageWithUnconditionalFacilityStage(deal);
+      goToPageWithUnconditionalFacilityStage();
 
       pages.loanFinancialDetails.title().contains('Add loan financial details');
     });
@@ -57,7 +44,7 @@ context('Loan Financial Details', () => {
 
   describe('when submitting an empty form', () => {
     it('should progress to `Loan Dates and Repayments` page and after proceeding to `Loan Preview` page, should render validation errors in `Loan Financial Details` page', () => {
-      goToPageWithUnconditionalFacilityStage(deal);
+      goToPageWithUnconditionalFacilityStage();
 
       partials.errorSummary.errorSummaryLinks().should('have.length', 0);
       pages.loanFinancialDetails.submit().click();
@@ -78,7 +65,7 @@ context('Loan Financial Details', () => {
   });
 
   it('should only render the disbursementAmount field when the facilityStage is `Unconditional`', () => {
-    goToPageWithUnconditionalFacilityStage(deal);
+    goToPageWithUnconditionalFacilityStage();
 
     pages.loanFinancialDetails.disbursementAmountInput().should('be.visible');
 
@@ -93,7 +80,7 @@ context('Loan Financial Details', () => {
 
   describe('when user selects the currency is NOT the same as Supply Contract currency', () => {
     it('should render additional form fields', () => {
-      goToPage(deal);
+      goToPage();
       pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputNo().click();
 
       pages.loanFinancialDetails.currencyInput().should('be.visible');
@@ -106,7 +93,7 @@ context('Loan Financial Details', () => {
     });
 
     it('should render additional form fields and validation errors when returning to the page', () => {
-      goToPage(deal);
+      goToPage();
       pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputNo().click();
       pages.loanFinancialDetails.submit().click();
 
@@ -128,7 +115,7 @@ context('Loan Financial Details', () => {
   });
 
   it('should prepopulate form inputs from submitted data and render a `completed` status tag in task list header', () => {
-    goToPageWithUnconditionalFacilityStage(deal);
+    goToPageWithUnconditionalFacilityStage();
 
     fillLoanForm.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
     pages.loanFinancialDetails.submit().click();
@@ -147,7 +134,7 @@ context('Loan Financial Details', () => {
 
   describe('when changing the `interestMarginFee` field', () => {
     it('should dynamically update the `Guarantee Fee Payable By Bank` value on blur', () => {
-      goToPageWithUnconditionalFacilityStage(deal);
+      goToPageWithUnconditionalFacilityStage();
 
       let interestMarginFee = '20';
       pages.loanFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
@@ -163,7 +150,7 @@ context('Loan Financial Details', () => {
 
   describe('when changing the `value` or `coveredPercentage` field', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
-      goToPage(deal);
+      goToPage();
 
       pages.loanFinancialDetails.ukefExposureInput().invoke('attr', 'placeholder').should('eq', '0.00');
 
@@ -185,7 +172,7 @@ context('Loan Financial Details', () => {
 
   describe('When a user clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Loan Financial Details` page', () => {
-      goToPageWithUnconditionalFacilityStage(deal);
+      goToPageWithUnconditionalFacilityStage();
 
       fillLoanForm.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
 

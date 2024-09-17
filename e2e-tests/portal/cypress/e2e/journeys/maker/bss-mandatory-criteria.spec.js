@@ -29,7 +29,7 @@ context('BSS Mandatory criteria: Check deal details page', () => {
   });
 
   it('should render the mandatory criteria checklist when a deal is cloned', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
     pages.contract.cloneDealLink().contains('Clone');
     pages.contract
       .cloneDealLink()

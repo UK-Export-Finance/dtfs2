@@ -1,6 +1,6 @@
 const pages = require('../../e2e/pages');
 
-module.exports = (user, deal) => {
+module.exports = (user) => {
   cy.login(user);
-  pages.dashboardDeals.visit(deal);
+  pages.dashboardDeals.rowIndex.link(1).click();
 };
