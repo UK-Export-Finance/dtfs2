@@ -42,9 +42,9 @@ context('Amendments - Facility value', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -76,7 +76,7 @@ context('Amendments - Facility value', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-    amendmentsPage.amendmentFacilityValueInput().clear().focused().type(12345);
+    cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), 12345);
     cy.clickContinueButton();
     errorSummary().contains('The new facility value cannot be the same as the current facility value');
   });
@@ -96,7 +96,7 @@ context('Amendments - Facility value', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('1234A23');
+    cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), '1234A23');
     cy.clickContinueButton();
     errorSummary().contains('The new facility value must be a number');
   });
@@ -116,7 +116,7 @@ context('Amendments - Facility value', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
+    cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), '123');
     cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
 

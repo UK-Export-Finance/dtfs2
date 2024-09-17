@@ -42,9 +42,9 @@ context('Amendments - Effective date', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
 
@@ -64,9 +64,9 @@ context('Amendments - Effective date', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
 
@@ -91,9 +91,9 @@ context('Amendments - Effective date', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
 
@@ -101,36 +101,36 @@ context('Amendments - Effective date', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'amendment-effective-date');
 
-    amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentEffectiveYearInput().clear().focused().type('22');
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), '22');
 
     cy.clickContinueButton();
 
     errorSummary().contains('The year for the effective date must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
 
-    amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentEffectiveYearInput().clear().focused().type('2O22');
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), '2O22');
 
     cy.clickContinueButton();
 
     errorSummary().contains('The year for the effective date must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
 
-    amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentEffectiveYearInput().clear().focused().type('20 22');
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), '20 22');
 
     cy.clickContinueButton();
 
     errorSummary().contains('The year for the effective date must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
 
-    amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentEffectiveYearInput().clear().focused().type('2 22');
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), '2 22');
 
     cy.clickContinueButton();
 
@@ -149,9 +149,9 @@ context('Amendments - Effective date', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
 
@@ -159,9 +159,9 @@ context('Amendments - Effective date', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'amendment-effective-date');
 
-    amendmentsPage.amendmentEffectiveDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentEffectiveMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentEffectiveYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), dateConstants.todayYear);
 
     cy.clickContinueButton();
     cy.url().should('contain', 'amendment-options');

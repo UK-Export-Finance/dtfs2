@@ -5,6 +5,8 @@ import './ui';
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
+Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
+
 // Assert an element has some exact text
 Cypress.Commands.add('assertText', require('./utils/assertText'));
 

@@ -45,9 +45,9 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -67,14 +67,14 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
+    cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), '123');
 
     cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
@@ -142,9 +142,9 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions');
 
-    amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions');
-    amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment');
-    amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff');
+    cy.keyboardInput(amendmentsPage.amendmentsManagersDecisionConditions(), 'This is a list of conditions');
+    cy.keyboardInput(amendmentsPage.amendmentsManagersDecisionReasons(), 'This is the reason for declining the amendment');
+    cy.keyboardInput(amendmentsPage.amendmentsManagersDecisionComments(), 'This is a comment visible only to UKEF staff');
 
     cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions/summary');
@@ -185,36 +185,36 @@ context('Amendments underwriting - add banks decision - withdraw', () => {
     amendmentsPage.amendmentBankDecisionReceivedDateHeading().contains('What date did UKEF receive the bank’s decision?');
     amendmentsPage.amendmentBankDecisionReceivedDateHint().contains('For example, 31 3 1980');
 
-    amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
-    amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('05');
-    amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('22');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '05');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '22');
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
-    amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('05');
-    amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('2 022');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '05');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2 022');
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
-    amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('05');
-    amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('2 22');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '05');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2 22');
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
-    amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('06');
-    amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('2022');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '06');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2022');
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/check-answers');
@@ -345,9 +345,9 @@ context('Amendments underwriting - add banks decision - change from proceed to w
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -367,14 +367,14 @@ context('Amendments underwriting - add banks decision - change from proceed to w
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
     amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-    amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
+    cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), '123');
 
     cy.clickContinueButton();
     cy.url().should('contain', 'check-answers');
@@ -442,9 +442,9 @@ context('Amendments underwriting - add banks decision - change from proceed to w
     cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions');
 
-    amendmentsPage.amendmentsManagersDecisionConditions().clear().focused().type('This is a list of conditions');
-    amendmentsPage.amendmentsManagersDecisionReasons().clear().focused().type('This is the reason for declining the amendment');
-    amendmentsPage.amendmentsManagersDecisionComments().clear().focused().type('This is a comment visible only to UKEF staff');
+    cy.keyboardInput(amendmentsPage.amendmentsManagersDecisionConditions(), 'This is a list of conditions');
+    cy.keyboardInput(amendmentsPage.amendmentsManagersDecisionReasons(), 'This is the reason for declining the amendment');
+    cy.keyboardInput(amendmentsPage.amendmentsManagersDecisionComments(), 'This is a comment visible only to UKEF staff');
 
     cy.clickContinueButton();
     cy.url().should('contain', '/managers-conditions/summary');
@@ -473,15 +473,15 @@ context('Amendments underwriting - add banks decision - change from proceed to w
 
     cy.url().should('contain', '/banks-decision/received-date');
 
-    amendmentsPage.amendmentBankDecisionReceivedDateDay().clear().focused().type('05');
-    amendmentsPage.amendmentBankDecisionReceivedDateMonth().clear().focused().type('06');
-    amendmentsPage.amendmentBankDecisionReceivedDateYear().clear().focused().type('2022');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '06');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2022');
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/effective-date');
-    amendmentsPage.amendmentBankDecisionEffectiveDateDay().clear().focused().type('05');
-    amendmentsPage.amendmentBankDecisionEffectiveDateMonth().clear().focused().type('06');
-    amendmentsPage.amendmentBankDecisionEffectiveDateYear().clear().focused().type('2022');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateDay(), '05');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateMonth(), '06');
+    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateYear(), '2022');
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/check-answers');

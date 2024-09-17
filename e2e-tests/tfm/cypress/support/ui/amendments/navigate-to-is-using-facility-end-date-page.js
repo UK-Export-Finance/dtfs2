@@ -24,9 +24,9 @@ const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, chang
   }
 
   cy.url().should('contain', 'request-date');
-  amendmentsPage.amendmentRequestDayInput().clear().type(todayDay);
-  amendmentsPage.amendmentRequestMonthInput().clear().type(todayMonth);
-  amendmentsPage.amendmentRequestYearInput().clear().type(todayYear);
+  cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), todayDay);
+  cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), todayMonth);
+  cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), todayYear);
   cy.clickContinueButton();
 
   cy.url().should('contain', 'request-approval');
@@ -34,9 +34,9 @@ const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, chang
   cy.clickContinueButton();
 
   cy.url().should('contain', 'amendment-effective-date');
-  amendmentsPage.amendmentEffectiveDayInput().clear().type(todayDay);
-  amendmentsPage.amendmentEffectiveMonthInput().clear().type(todayMonth);
-  amendmentsPage.amendmentEffectiveYearInput().clear().type(todayYear);
+  cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), todayDay);
+  cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), todayMonth);
+  cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), todayYear);
   cy.clickContinueButton();
 
   cy.url().should('contain', 'amendment-options');
@@ -48,9 +48,9 @@ const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, chang
   cy.clickContinueButton();
 
   cy.url().should('contain', 'cover-end-date');
-  amendmentsPage.amendmentCoverEndDateDayInput().clear().type(format(newCoverEndDate, 'd'));
-  amendmentsPage.amendmentCoverEndDateMonthInput().clear().type(format(newCoverEndDate, 'M'));
-  amendmentsPage.amendmentCoverEndDateYearInput().clear().type(format(newCoverEndDate, 'yyyy'));
+  cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), format(newCoverEndDate, 'd'));
+  cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), format(newCoverEndDate, 'M'));
+  cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), format(newCoverEndDate, 'yyyy'));
   cy.clickContinueButton();
 
   cy.url().should('contain', 'is-using-facility-end-date');

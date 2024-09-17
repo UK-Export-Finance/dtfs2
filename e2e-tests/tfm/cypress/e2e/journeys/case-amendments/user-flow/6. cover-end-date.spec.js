@@ -44,9 +44,9 @@ context('Amendments - Cover End Date', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -74,33 +74,33 @@ context('Amendments - Cover End Date', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
     amendmentsPage.amendmentCurrentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.oneMonthDay);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.oneMonthMonth);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.oneMonthYear);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.oneMonthDay);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.oneMonthMonth);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.oneMonthYear);
     cy.clickContinueButton();
     errorSummary().contains('The new cover end date cannot be the same as the current cover end date');
 
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(20);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(10);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(22);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), 20);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), 10);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), 22);
     cy.clickContinueButton();
     errorSummary().contains('The year for the amendment cover end date must include 4 numbers');
 
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(20);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(10);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type('2O22');
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), 20);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), 10);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), '2O22');
     cy.clickContinueButton();
     errorSummary().contains('The year for the amendment cover end date must include 4 numbers');
 
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(20);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(10);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type('20 22');
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), 20);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), 10);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), '20 22');
     cy.clickContinueButton();
     errorSummary().contains('The year for the amendment cover end date must include 4 numbers');
 
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(20);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(10);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type('2 22');
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), 20);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), 10);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), '2 22');
     cy.clickContinueButton();
     errorSummary().contains('The year for the amendment cover end date must include 4 numbers');
   });
@@ -115,9 +115,9 @@ context('Amendments - Cover End Date', () => {
     cy.url().should('contain', 'amendment-options');
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'check-answers');
@@ -138,9 +138,9 @@ context('Amendments - Cover End Date', () => {
     amendmentsPage.amendmentFacilityValueCheckbox().click();
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
-    amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');

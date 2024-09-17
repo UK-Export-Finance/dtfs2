@@ -74,9 +74,9 @@ context('Amendments - Request date', () => {
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.addAmendmentButton().click();
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type('01');
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type('01');
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type('2020');
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), '01');
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), '01');
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), '2020');
 
     cy.clickContinueButton();
 
@@ -93,9 +93,9 @@ context('Amendments - Request date', () => {
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.addAmendmentButton().click();
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.threeMonthsDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.threeMonthsMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.threeMonthsYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.threeMonthsDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.threeMonthsMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.threeMonthsYear);
 
     cy.clickContinueButton();
 
@@ -112,36 +112,36 @@ context('Amendments - Request date', () => {
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.addAmendmentButton().click();
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type('22');
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), '22');
 
     cy.clickContinueButton();
 
     errorSummary().contains('The year for the amendment request date must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type('2O22');
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), '2O22');
 
     cy.clickContinueButton();
 
     errorSummary().contains('The year for the amendment request date must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type('20 22');
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), '20 22');
 
     cy.clickContinueButton();
 
     errorSummary().contains('The year for the amendment request date must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type('2 22');
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), '2 22');
 
     cy.clickContinueButton();
 
@@ -171,9 +171,9 @@ context('Amendments - Request date', () => {
     facilityPage.facilityTabAmendments().click();
     amendmentsPage.addAmendmentButton().click();
 
-    amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-    amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-    amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
 
     cy.clickContinueButton();
 
