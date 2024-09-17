@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import { HttpStatusCode } from 'axios';
 import { isTfmDealCancellationFeatureFlagEnabled } from '../../helpers';
 
 /**
@@ -6,7 +7,7 @@ import { isTfmDealCancellationFeatureFlagEnabled } from '../../helpers';
  */
 export const validateDealCancellationEnabled: RequestHandler = (_req, res, next) => {
   if (!isTfmDealCancellationFeatureFlagEnabled()) {
-    return res.sendStatus(404);
+    return res.sendStatus(HttpStatusCode.NotFound);
   }
 
   return next();

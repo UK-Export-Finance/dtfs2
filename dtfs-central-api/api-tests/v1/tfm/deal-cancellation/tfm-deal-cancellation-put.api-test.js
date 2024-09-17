@@ -13,12 +13,7 @@ const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user
 
 console.error = jest.fn();
 
-const isTfmDealCancellationFeatureFlagEnabledMock = jest.fn();
-
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  isTfmDealCancellationFeatureFlagEnabled: isTfmDealCancellationFeatureFlagEnabledMock,
-}));
+const originalProcessEnv = { ...process.env };
 
 describe('/v1/tfm/deals/:dealId/cancellation', () => {
   let dealId;
@@ -59,23 +54,14 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
   });
 
   afterEach(async () => {
+    process.env = { ...originalProcessEnv };
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS]);
   });
 
   describe('PUT /v1/tfm/deals/:dealId/cancellation', () => {
-    withMongoIdPathParameterValidationTests({
-      baseUrl: '/v1/tfm/deals/:dealId/cancellation',
-      makeRequest: (url) => testApi.put({}).to(url),
-    });
-
-    withValidateAuditDetailsTests({
-      makeRequest: async (auditDetails) => await testApi.put({ auditDetails, dealCancellationUpdate }).to(dealCancellationUrl),
-      validUserTypes: [AUDIT_USER_TYPES_REQUIRING_ID.TFM],
-    });
-
     describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
       beforeEach(() => {
-        jest.mocked(isTfmDealCancellationFeatureFlagEnabledMock).mockReturnValue(false);
+        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'false';
       });
 
       afterAll(() => {
@@ -83,26 +69,28 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
       });
 
       it('should return 404 if valid deal id', async () => {
-        const { status, body: bodyPutResponse } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
+        const { status } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
 
-        const expected = {
-          acknowledged: true,
-          modifiedCount: 1,
-          upsertedId: null,
-          upsertedCount: 0,
-          matchedCount: 1,
-        };
-        expect(bodyPutResponse).toEqual(expected);
-        expect(status).toEqual(200);
+        expect(status).toEqual(404);
       });
     });
 
     describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
       beforeEach(() => {
-        jest.mocked(isTfmDealCancellationFeatureFlagEnabledMock).mockReturnValue(true);
+        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'true';
       });
 
-      it('should update an deal with the deal cancellation based on dealId', async () => {
+      withMongoIdPathParameterValidationTests({
+        baseUrl: '/v1/tfm/deals/:dealId/cancellation',
+        makeRequest: (url) => testApi.put({}).to(url),
+      });
+
+      withValidateAuditDetailsTests({
+        makeRequest: async (auditDetails) => await testApi.put({ auditDetails, dealCancellationUpdate }).to(dealCancellationUrl),
+        validUserTypes: [AUDIT_USER_TYPES_REQUIRING_ID.TFM],
+      });
+
+      it('should update a deal with the deal cancellation based on dealId', async () => {
         const { status, body: bodyPutResponse } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
 
         const expected = {

@@ -1,30 +1,24 @@
-import { ObjectId } from 'mongodb';
+import { AnyObject } from '@ukef/dtfs2-common';
+import { ObjectId, UpdateResult } from 'mongodb';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import createApi from '../../api';
 import app from '../../../src/createApp';
 import testUserCache from '../../api-test-users';
 import { MOCK_TFM_SESSION_USER } from '../../../src/v1/__mocks__/mock-tfm-session-user.ts';
 
-const updateDealCancellationMock = jest.fn();
-const isTfmDealCancellationFeatureFlagEnabledMock = jest.fn();
+const updateDealCancellationMock = jest.fn() as jest.Mock<Promise<UpdateResult>>;
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('../../../src/v1/api', () => ({
-  ...jest.requireActual('../../../src/v1/api'),
-  updateDealCancellation: () => updateDealCancellationMock,
+  ...jest.requireActual<AnyObject>('../../../src/v1/api'),
+  updateDealCancellation: () => updateDealCancellationMock(),
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  isTfmDealCancellationFeatureFlagEnabled: () => isTfmDealCancellationFeatureFlagEnabledMock,
-}));
-
+const originalProcessEnv = { ...process.env };
 const { as, put } = createApi(app);
 
 const validId = new ObjectId().toString();
 
-const mockUpdateResult = {
+const mockUpdateResult: UpdateResult = {
   acknowledged: true,
   modifiedCount: 1,
   matchedCount: 1,
@@ -46,20 +40,21 @@ describe('/v1/deals/:id/cancellation', () => {
 
     afterAll(() => {
       jest.restoreAllMocks();
+      process.env = originalProcessEnv;
     });
 
     const getTfmDealCancellationUpdateUrl = ({ id }: { id: string }) => `/v1/deals/${id}/cancellation`;
 
     describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
       beforeEach(() => {
-        jest.mocked(isTfmDealCancellationFeatureFlagEnabledMock).mockReturnValue(false);
+        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'false';
       });
 
       afterAll(() => {
         jest.resetAllMocks();
       });
 
-      it.only('returns a 404 response for an authenticated user with a valid id path', async () => {
+      it('returns a 404 response for an authenticated user with a valid id path', async () => {
         // Arrange
         const tokenUser = await testUserCache.initialise(app);
         const url = getTfmDealCancellationUpdateUrl({ id: validId });
@@ -74,7 +69,7 @@ describe('/v1/deals/:id/cancellation', () => {
 
     describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is enabled', () => {
       beforeEach(() => {
-        jest.mocked(isTfmDealCancellationFeatureFlagEnabledMock).mockReturnValue(true);
+        process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'true';
       });
 
       afterAll(() => {

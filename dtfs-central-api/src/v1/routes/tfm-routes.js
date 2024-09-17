@@ -576,10 +576,10 @@ tfmRouter
 tfmRouter
   .route('/deals/:dealId/cancellation')
   .put(
+    validateDealCancellationEnabled,
     validation.mongoIdValidation('dealId'),
     handleExpressValidatorResult,
     validatePutDealCancellationPayload,
-    validateDealCancellationEnabled,
     tfmPutUpdateDealCancellationController.updateTfmDealCancellation,
   );
 

@@ -80,7 +80,7 @@ dealsAuthRouter
 
 dealsAuthRouter
   .route('/deals/:dealId/cancellation')
-  .put(validation.dealIdValidation, handleExpressValidatorResult, validateDealCancellationEnabled, dealCancellationController.updateDealCancellation);
+  .put(validateDealCancellationEnabled, validation.dealIdValidation, handleExpressValidatorResult, dealCancellationController.updateDealCancellation);
 
 dealsAuthRouter
   .route('/deals/:dealId/amendments/:status?/:type?')
