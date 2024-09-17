@@ -1,5 +1,11 @@
 import $ from 'jquery';
 
+declare global {
+  interface Window {
+    MOJFrontend: any;
+  }
+}
+
 type FilterVisibility = 'SHOWN' | 'HIDDEN';
 
 const filterSelector = '.moj-filter-layout__filter';
@@ -23,7 +29,7 @@ if (cachedShownStatus) {
 const startHidden = cachedShownStatus === 'HIDDEN';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, no-new
-new (window as any).MOJFrontend.FilterToggleButton({
+new window.MOJFrontend.FilterToggleButton({
   bigModeMediaQuery: '(min-width: 48.063em)',
   startHidden,
   toggleButton: {
