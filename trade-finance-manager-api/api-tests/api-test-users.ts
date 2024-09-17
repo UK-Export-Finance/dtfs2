@@ -17,22 +17,18 @@ let notYetInitialised = true;
 /**
  * Fluent builder to get a user
  */
-const fluentBuilder = () => {
-  let users = [...loadedUsers];
-
-  return {
-    all: () => users,
-    one: () => users[0],
-    withTeam: (team: TeamId) => {
-      users = users.filter((user) => user.teams.includes(team));
-      return fluentBuilder;
-    },
-    withoutTeam: (team: TeamId) => {
-      users = users.filter((user) => !user.teams.includes(team));
-      return fluentBuilder;
-    },
-  };
-};
+const fluentBuilder = (users: TestUser[]) => ({
+  all: () => users,
+  one: () => users[0],
+  withTeam: (team: TeamId) => {
+    const filteredUsers = users.filter((user) => user.teams.includes(team));
+    return fluentBuilder(filteredUsers);
+  },
+  withoutTeam: (team: TeamId) => {
+    const filteredUsers = users.filter((user) => !user.teams.includes(team));
+    return fluentBuilder(filteredUsers);
+  },
+});
 
 /**
  * Log in test user
@@ -129,5 +125,5 @@ export const initialiseTestUsers = async (app: unknown) => {
     notYetInitialised = false;
   }
 
-  return fluentBuilder;
+  return () => fluentBuilder(loadedUsers);
 };
