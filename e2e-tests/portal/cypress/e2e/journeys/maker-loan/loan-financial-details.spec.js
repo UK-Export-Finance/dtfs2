@@ -147,6 +147,9 @@ context('Loan Financial Details', () => {
       let interestMarginFee = '20';
       pages.loanFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
       cy.keyboardInput(pages.loanFinancialDetails.interestMarginFeeInput(), interestMarginFee);
+
+      pages.loanFinancialDetails.interestMarginFeeInput().blur();
+
       pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
 
       pages.loanFinancialDetails.interestMarginFeeInput().clear();
@@ -167,6 +170,8 @@ context('Loan Financial Details', () => {
 
       cy.keyboardInput(pages.loanFinancialDetails.facilityValueInput(), value);
       cy.keyboardInput(pages.loanFinancialDetails.coveredPercentageInput(), coveredPercentage);
+
+      pages.loanFinancialDetails.coveredPercentageInput().blur();
 
       pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
 

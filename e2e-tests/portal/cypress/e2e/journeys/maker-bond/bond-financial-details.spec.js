@@ -75,7 +75,11 @@ context('Bond Financial Details', () => {
 
       let riskMarginFee = '20';
       pages.bondFinancialDetails.guaranteeFeePayableByBankInput().invoke('attr', 'placeholder').should('eq', '0');
+
       cy.keyboardInput(pages.bondFinancialDetails.riskMarginFeeInput(), riskMarginFee);
+
+      pages.bondFinancialDetails.riskMarginFeeInput().blur();
+
       pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(riskMarginFee));
 
       pages.bondFinancialDetails.riskMarginFeeInput().clear();
@@ -99,6 +103,8 @@ context('Bond Financial Details', () => {
 
       cy.keyboardInput(pages.bondFinancialDetails.facilityValueInput(), value);
       cy.keyboardInput(pages.bondFinancialDetails.coveredPercentageInput(), coveredPercentage);
+
+      pages.bondFinancialDetails.coveredPercentageInput().blur();
 
       pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
 
