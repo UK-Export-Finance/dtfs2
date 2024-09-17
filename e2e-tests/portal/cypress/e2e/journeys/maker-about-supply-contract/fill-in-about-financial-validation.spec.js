@@ -108,9 +108,9 @@ context('about-buyer', () => {
 
     contractAboutFinancial.visit(deal);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day()`{selectall}{backspace}${dateTooFarInThePast.getDate()}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `{selectall}{backspace}${dateTooFarInThePast.getDate()}`);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month()`{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);
 
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `{selectall}{backspace}${dateTooFarInThePast.getFullYear()}`);
 

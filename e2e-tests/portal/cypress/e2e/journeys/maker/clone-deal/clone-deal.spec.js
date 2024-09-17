@@ -94,8 +94,8 @@ context('Clone a deal', () => {
     it('should progress to the dashboard page, display a success message, render correct cloned id/name and statuses for each facility', () => {
       goToCloneDealPage(deal);
 
-      cy.keyboardInput(pages.cloneDeal.bankInternalRefNameInput(), '-cloned');
-      cy.keyboardInput(pages.cloneDeal.additionalRefNameInput(), '-cloned');
+      cy.keyboardInput(pages.cloneDeal.bankInternalRefNameInput(), `${deal.bankInternalRefName}-cloned`);
+      cy.keyboardInput(pages.cloneDeal.additionalRefNameInput(), `${deal.bankInternalRefName}-cloned`);
       pages.cloneDeal.cloneTransactionsInput().click();
 
       cy.clickSubmitButton();
