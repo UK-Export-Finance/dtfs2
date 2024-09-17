@@ -1,6 +1,6 @@
+const { LONDON_TIMEZONE } = require('@ukef/dtfs2-common');
 const { getTfmRolesFromEntraGroups } = require('../../../helpers/get-tfm-roles-from-entra-groups');
 const { mapFirstAndLastName } = require('./map-first-and-last-name');
-const { DATE } = require('../../../../constants');
 
 /**
  * Map Entra user data
@@ -18,7 +18,7 @@ const mapEntraUserData = (entraUser, tfmUser) => {
     email,
     username: email,
     teams: getTfmRolesFromEntraGroups(groups),
-    timezone: DATE.LONDON_TIMEZONE,
+    timezone: LONDON_TIMEZONE,
     ...mapFirstAndLastName(claims, tfmUser),
   };
 

@@ -1,5 +1,4 @@
 const FACILITIES = require('./facilities');
-const DATE = require('./date');
 const DEALS = require('./deals');
 const { TEAMS, TEAM_IDS } = require('./teams');
 const TASKS = require('./tasks');
@@ -13,7 +12,6 @@ const { FILESHARES } = require('./fileshares');
 
 module.exports = {
   FACILITIES,
-  DATE,
   DEALS,
   TEAMS,
   TEAM_IDS,
