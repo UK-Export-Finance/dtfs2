@@ -1,26 +1,26 @@
-import relative from '../relativeURL';
+import relative from '../../relativeURL';
 
-import CONSTANTS from '../../fixtures/constants';
+import CONSTANTS from '../../../fixtures/constants';
 
-import dateConstants from '../../../../e2e-fixtures/dateConstants';
+import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 
-import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
 
-import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO_NULL_MIA, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../fixtures/mocks/mock-facilities';
+import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO_NULL_MIA, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
 
-import { toTitleCase } from '../../fixtures/helpers';
+import { toTitleCase } from '../../../fixtures/helpers';
 
-import { continueButton, errorSummary, submitButton } from '../partials';
-import applicationPreview from '../pages/application-preview';
-import unissuedFacilityTable from '../pages/unissued-facilities';
-import aboutFacilityUnissued from '../pages/unissued-facilities-about-facility';
-import applicationSubmission from '../pages/application-submission';
-import statusBanner from '../pages/application-status-banner';
-import coverStartDate from '../pages/cover-start-date';
-import applicationDetails from '../pages/application-details';
-import facilityEndDate from '../pages/facility-end-date';
-import applicationActivities from '../pages/application-activities';
+import { continueButton, errorSummary, submitButton } from '../../partials';
+import applicationPreview from '../../pages/application-preview';
+import unissuedFacilityTable from '../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
+import applicationSubmission from '../../pages/application-submission';
+import statusBanner from '../../pages/application-status-banner';
+import coverStartDate from '../../pages/cover-start-date';
+import applicationDetails from '../../pages/application-details';
+import facilityEndDate from '../../pages/facility-end-date';
+import applicationActivities from '../../pages/application-activities';
 
 const { format } = require('date-fns');
 

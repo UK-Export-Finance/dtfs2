@@ -1,14 +1,14 @@
-import relative from '../relativeURL';
-import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
+import relative from '../../relativeURL';
+import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
-import aboutFacilityUnissued from '../pages/unissued-facilities-about-facility';
-import { DEAL_STATUS } from '../../fixtures/constants';
+import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
+import { DEAL_STATUS } from '../../../fixtures/constants';
 
 /**
  * NOTE: These tests check the backwards compatibility with in-flight version 0 deals.
  * A migration may need to be run on production if this test is updated.
  */
-context('About unissued facility page', () => {
+context('About unissued facility page - version 0 deal', () => {
   let version0DealId;
   let version0FacilityId;
 
