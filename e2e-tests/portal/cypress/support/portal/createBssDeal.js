@@ -41,7 +41,7 @@ const createBssDeal = ({ readyForCheck = false, unissuedFacilities = false }) =>
 
   // Select True before starting the application
   beforeYouStart.true().click();
-  beforeYouStart.submit().click();
+  cy.clickSubmitButton();
 
   // Fill in bank deal id, bank name
   bankDetails.bankDealId().type('123', { delay: 0 });
