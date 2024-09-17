@@ -1,6 +1,6 @@
-import relative from '../../relativeURL';
-import { errorSummary } from '../../partials';
-import CONSTANTS from '../../../fixtures/constants';
+import relative from '../../../relativeURL';
+import { errorSummary } from '../../../partials';
+import CONSTANTS from '../../../../fixtures/constants';
 import {
   today,
   threeDaysDay,
@@ -9,19 +9,19 @@ import {
   threeMonthsOneDayDay,
   threeMonthsOneDayYear,
   threeMonthsOneDayMonth,
-} from '../../../../../e2e-fixtures/dateConstants';
-import { MOCK_APPLICATION_AIN } from '../../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
-import unissuedFacilityTable from '../../pages/unissued-facilities';
-import applicationPreview from '../../pages/application-preview';
-import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
-import bankReviewDate from '../../pages/bank-review-date';
+} from '../../../../../../e2e-fixtures/dateConstants';
+import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
+import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../../fixtures/mocks/mock-facilities';
+import unissuedFacilityTable from '../../../pages/unissued-facilities';
+import applicationPreview from '../../../pages/application-preview';
+import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
+import bankReviewDate from '../../../pages/bank-review-date';
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
 if (facilityEndDateEnabled) {
-  context('Unissued Facilities - bank review date page', () => {
+  context('Unissued Facilities AIN - bank review date page', () => {
     let dealId;
     let token;
     let facilityOneId;
