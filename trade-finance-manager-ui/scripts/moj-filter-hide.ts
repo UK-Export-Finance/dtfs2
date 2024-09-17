@@ -1,3 +1,6 @@
+/* eslint-disable no-new */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import $ from 'jquery';
 
 declare global {
@@ -28,7 +31,7 @@ if (cachedShownStatus) {
 // Initially display filters, but hide them if they were previously hidden
 const startHidden = cachedShownStatus === 'HIDDEN';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, no-new
+// sonarignore:rule=constructor-for-side-effects
 new window.MOJFrontend.FilterToggleButton({
   bigModeMediaQuery: '(min-width: 48.063em)',
   startHidden,
