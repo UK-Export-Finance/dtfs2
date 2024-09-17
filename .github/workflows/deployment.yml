@@ -86,8 +86,8 @@ jobs:
   database:
     name: MSSQL 🗄️
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    environment: ${{ needs.setup.outputs.environment }}
     needs: [setup]
+    environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:
       SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}

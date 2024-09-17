@@ -1,7 +1,7 @@
-const { contract, eligibilityCriteria, eligibilityDocumentation } = require('../../pages');
-const { taskListHeader } = require('../../partials');
+const { contract, eligibilityCriteria, eligibilityDocumentation } = require('../../../pages');
+const { taskListHeader } = require('../../../partials');
 
-const MOCK_USERS = require('../../../../../e2e-fixtures');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 

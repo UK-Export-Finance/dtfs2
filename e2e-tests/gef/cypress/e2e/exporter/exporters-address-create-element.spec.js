@@ -27,7 +27,7 @@ context('Exporters Address Page - Add element to page', () => {
 
   it("should not add added element's data to exporter correspondence address", () => {
     exportersAddress.yesRadioButton().click();
-    exportersAddress.correspondenceAddress().type(POSTCODE.VALID);
+    cy.keyboardInput(exportersAddress.correspondenceAddress(), POSTCODE.VALID);
 
     // adds populated text element to form
     cy.insertElement('separate-correspondence-form');
