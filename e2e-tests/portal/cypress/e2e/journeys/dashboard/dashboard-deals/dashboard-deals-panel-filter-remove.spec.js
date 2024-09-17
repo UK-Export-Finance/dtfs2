@@ -2,7 +2,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { dashboardDeals } = require('../../../pages');
 const { dashboardFilters } = require('../../../partials');
-const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT } = require('../fixtures');
+const { GEF_DEAL_DRAFT } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -15,7 +15,7 @@ context('Dashboard Deals - panel selected filters - remove a filter', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
+    cy.createBssDeal({ readyForCheck: true }).then((deal) => {
       ALL_DEALS.push(deal);
     });
 

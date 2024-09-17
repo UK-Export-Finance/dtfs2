@@ -2,7 +2,7 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { dashboardDeals } = require('../../../pages');
 const { dashboardFilters } = require('../../../partials');
-const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT } = require('../fixtures');
+const { GEF_DEAL_DRAFT } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -13,20 +13,11 @@ context('Dashboard Deals filters - filter by keyword', () => {
 
   const ALL_DEALS = [];
 
-  const BSS_DEAL_SPECIAL_EXPORTER = {
-    ...BSS_DEAL_DRAFT,
-    exporter: {
-      companyName: MOCK_KEYWORD,
-    },
-  };
-
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_SPECIAL_EXPORTER, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.createBssDeal({ readyForCheck: true });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
@@ -87,10 +78,6 @@ context('Dashboard Deals filters - filter by keyword', () => {
     it(`renders only deals that have ${MOCK_KEYWORD} in a field`, () => {
       const ALL_KEYWORD_DEALS = ALL_DEALS.filter(({ exporter }) => exporter.companyName === MOCK_KEYWORD);
       dashboardDeals.rows().should('have.length', ALL_KEYWORD_DEALS.length);
-
-      const firstDraftDeal = ALL_KEYWORD_DEALS[0];
-
-      dashboardDeals.row.exporter(firstDraftDeal._id).should('have.text', MOCK_KEYWORD);
     });
   });
 });

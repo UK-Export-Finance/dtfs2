@@ -1,6 +1,5 @@
 const pages = require('../../pages');
 const partials = require('../../partials');
-const dealFullyCompleted = require('./fixtures/dealFullyCompleted');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
@@ -9,7 +8,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 context('BSS Mandatory criteria: Check deal details page', () => {
   let deal;
   beforeEach(() => {
-    cy.insertOneDeal(dealFullyCompleted, BANK1_MAKER1).then((insertedDeal) => {
+    cy.createBssDeal({ readyForCheck: true }).then((insertedDeal) => {
       deal = insertedDeal;
     });
   });

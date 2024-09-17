@@ -2,7 +2,6 @@ const { contract, contractDelete, defaults } = require('../../pages');
 const { successMessage } = require('../../partials');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -10,10 +9,9 @@ context('A maker selects to abandon a contract from the view-contract page', () 
   let deal;
 
   before(() => {
-    const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.status)[0];
-
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(aDealInStatus('Draft'), BANK1_MAKER1).then((insertedDeal) => {
+
+    cy.createBssDeal({ readyForCheck: true }).then((insertedDeal) => {
       deal = insertedDeal;
     });
   });

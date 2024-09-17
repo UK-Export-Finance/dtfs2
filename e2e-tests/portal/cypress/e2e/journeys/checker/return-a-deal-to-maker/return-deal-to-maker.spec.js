@@ -2,20 +2,15 @@ const { contract, contractReturnToMaker, contractComments } = require('../../../
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
-const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
-const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
+const { ADMIN, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
   let deal;
 
   before(() => {
-    const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.status)[0];
-
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(aDealInStatus("Ready for Checker's approval"), BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+    cy.createBssDeal({ readyForChecker: true });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {

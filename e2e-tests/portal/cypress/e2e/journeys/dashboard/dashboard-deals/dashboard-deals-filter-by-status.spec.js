@@ -4,7 +4,7 @@ const CONSTANTS = require('../../../../fixtures/constants');
 const CONTENT_STRINGS = require('../../../../fixtures/content-strings');
 const { dashboardDeals } = require('../../../pages');
 const { dashboardFilters } = require('../../../partials');
-const { BSS_DEAL_READY_FOR_CHECK, GEF_DEAL_DRAFT } = require('../fixtures');
+const { GEF_DEAL_DRAFT } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -17,9 +17,7 @@ context('Dashboard Deals filters - filter by status', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_READY_FOR_CHECK, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.createBssDeal({});
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);

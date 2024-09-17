@@ -2,7 +2,6 @@ const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { header, dashboardDeals } = require('../../../pages');
 const { dashboardSubNavigation, dashboardFilters } = require('../../../partials');
-const { BSS_DEAL_MIA } = require('../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -11,7 +10,7 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_MIA, BANK1_MAKER1);
+    cy.createBssDeal({ readyForCheck: true });
   });
 
   before(() => {

@@ -23,7 +23,7 @@ context('Add a Bond to a Deal', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+    cy.createBssDeal({ readyForCheck: true }).then((insertedDeal) => {
       deal = insertedDeal;
     });
   });

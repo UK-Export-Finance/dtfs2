@@ -2,7 +2,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { dashboardFacilities } = require('../../../pages');
 const { dashboardFilters, dashboardSubNavigation } = require('../../../partials');
-const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT, GEF_FACILITY_CASH, GEF_FACILITY_CONTINGENT } = require('../fixtures');
+const { GEF_DEAL_DRAFT, GEF_FACILITY_CASH, GEF_FACILITY_CONTINGENT } = require('../fixtures');
 
 const { BANK1_MAKER1, BANK1_CHECKER1, ADMIN } = MOCK_USERS;
 
@@ -15,7 +15,9 @@ context('Dashboard Deals filters', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1);
+    cy.createBssDeal({ readyForCheck: true }).then((deal) => {
+      ALL_FACILITIES.push(deal._id);
+    });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       const { _id: dealId } = deal;
