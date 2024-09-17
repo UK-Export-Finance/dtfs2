@@ -41,12 +41,6 @@ const handler = async (payload) => {
 
     const { facilityIdentifier, acbsFacilityGuaranteeInput } = payload;
 
-    // As both fields on the payload are optional,
-    // we need to check if the payload is not empty
-    if (Object.keys(acbsFacilityGuaranteeInput).length === 0) {
-      throw new Error('Invalid facility guarantee update payload');
-    }
-
     // Call create guarantee API
     const submittedToACBS = getNowAsIsoString();
     const { status, data } = await api.updateFacilityGuarantee(facilityIdentifier, acbsFacilityGuaranteeInput);

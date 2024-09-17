@@ -41,12 +41,6 @@ const handler = async (payload) => {
 
     const { facilityIdentifier, acbsFacilityCovenantInput } = payload;
 
-    // As both fields on the payload are optional,
-    // we need to check if the payload is not empty
-    if (Object.keys(acbsFacilityCovenantInput).length === 0) {
-      throw new Error('Invalid facility covenant update payload');
-    }
-
     // Call update covenant API
     const submittedToACBS = getNowAsIsoString();
     const { status, data } = await api.updateFacilityCovenant(facilityIdentifier, acbsFacilityCovenantInput);
