@@ -20,7 +20,7 @@ const insertElement = (divId) => {
     // adds element to div so is part of the form
     div.appendChild(textInput);
     // types text into the field
-    cy.get('[data-cy="intruder"]').type('input text');
+    cy.keyboardInput(cy.get('[data-cy="intruder"]'), 'input text');
   });
 };
 

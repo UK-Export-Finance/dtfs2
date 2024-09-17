@@ -1,8 +1,8 @@
-const { contract, contractDelete, defaults } = require('../../pages');
-const { successMessage } = require('../../partials');
-const relative = require('../../relativeURL');
-const MOCK_USERS = require('../../../../../e2e-fixtures');
-const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
+const { contract, contractDelete, defaults } = require('../../../pages');
+const { successMessage } = require('../../../partials');
+const relative = require('../../../relativeURL');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
+const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
