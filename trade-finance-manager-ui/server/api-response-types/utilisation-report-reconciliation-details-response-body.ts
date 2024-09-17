@@ -50,6 +50,7 @@ export type UtilisationReportReconciliationDetailsResponseBody = {
   status: UtilisationReportReconciliationStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: IsoDateTimeStamp;
-  feeRecordPaymentGroups: FeeRecordPaymentGroup[];
+  premiumPayments: FeeRecordPaymentGroup[];
+  paymentDetails: FeeRecordPaymentGroup[];
   keyingSheet: KeyingSheet;
 };
