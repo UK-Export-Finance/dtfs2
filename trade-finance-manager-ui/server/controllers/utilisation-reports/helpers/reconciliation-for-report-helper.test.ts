@@ -3,7 +3,7 @@ import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common
 import {
   getFormattedDateReconciled,
   getFormattedReconciledByUser,
-  mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems,
+  mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems,
   mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
 } from './reconciliation-for-report-helper';
@@ -11,7 +11,7 @@ import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment 
 import { aFeeRecordPaymentGroup, aFeeRecord, aPayment } from '../../../../test-helpers';
 
 describe('reconciliation-for-report-helper', () => {
-  describe('mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems', () => {
+  describe('mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems', () => {
     const DEFAULT_IS_CHECKBOX_SELECTED = () => false;
 
     it('maps the group feeRecords id to the view model feeRecords id', () => {
@@ -30,7 +30,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -55,7 +55,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -80,7 +80,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -107,7 +107,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -134,7 +134,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -161,7 +161,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].feeRecords[0].reportedPayments).toEqual('EUR 100.00');
@@ -184,7 +184,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -206,7 +206,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(4);
@@ -221,7 +221,7 @@ describe('reconciliation-for-report-helper', () => {
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), paymentsReceived: null }];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -241,7 +241,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].paymentsReceived).toHaveLength(1);
@@ -260,7 +260,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].paymentsReceived).toHaveLength(1);
@@ -277,7 +277,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -297,7 +297,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -319,7 +319,7 @@ describe('reconciliation-for-report-helper', () => {
       ];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(4);
@@ -335,7 +335,7 @@ describe('reconciliation-for-report-helper', () => {
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), status }];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel).toHaveLength(1);
@@ -355,7 +355,7 @@ describe('reconciliation-for-report-helper', () => {
         const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), status: feeRecordStatus }];
 
         // Act
-        const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+        const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
         // Assert
         expect(viewModel[0].displayStatus).toEqual(feeRecordDisplayStatus);
@@ -394,7 +394,7 @@ describe('reconciliation-for-report-helper', () => {
       const checkboxId = `feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${firstFeeRecordReportedPaymentsCurrency}-status-${groupStatus}`;
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].checkboxId).toEqual(checkboxId);
@@ -421,7 +421,7 @@ describe('reconciliation-for-report-helper', () => {
       when(isCheckboxChecked).calledWith([feeRecordId]).mockReturnValue(true);
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
 
       // Assert
       expect(viewModel[0].isChecked).toEqual(true);
@@ -449,7 +449,7 @@ describe('reconciliation-for-report-helper', () => {
       when(isCheckboxChecked).calledWith([nonMatchingFeeRecordId]).mockReturnValue(true);
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, isCheckboxChecked);
 
       // Assert
       expect(viewModel[0].isChecked).toEqual(false);
@@ -472,7 +472,7 @@ describe('reconciliation-for-report-helper', () => {
       const feeRecordPaymentGroups: FeeRecordPaymentGroup[] = [{ ...aFeeRecordPaymentGroup(), feeRecords }];
 
       // Act
-      const viewModel = mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
+      const viewModel = mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems(feeRecordPaymentGroups, DEFAULT_IS_CHECKBOX_SELECTED);
 
       // Assert
       expect(viewModel[0].checkboxAriaLabel).toEqual('Select 123 456');
