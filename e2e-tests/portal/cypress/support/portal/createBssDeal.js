@@ -37,7 +37,7 @@ const createBssDeal = ({ readyForCheck = false, unissuedFacilities = false }) =>
 
   // Select BSS scheme
   selectScheme.bss().click();
-  selectScheme.continue().click();
+  cy.clickContinueButton();
 
   // Select True before starting the application
   beforeYouStart.true().click();
@@ -46,14 +46,13 @@ const createBssDeal = ({ readyForCheck = false, unissuedFacilities = false }) =>
   // Fill in bank deal id, bank name
   bankDetails.bankDealId().type('123', { delay: 0 });
   bankDetails.bankDealName().type('BssDeal', { delay: 0 });
-  bankDetails.submit().click();
+  cy.clickSubmitButton();
 
   if (readyForCheck) {
     // Select Supplier Details Link
     contract.aboutSupplierDetailsLink().click();
 
     // Fill in details about supplier
-    // pages.contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.supplierType().select(submissionDetails['supplier-type']);
     contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type('12345678', { delay: 0 });
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
@@ -95,20 +94,20 @@ const createBssDeal = ({ readyForCheck = false, unissuedFacilities = false }) =>
 
     eligibilityPreview.saveGoBackButton().click();
 
-    contract.addBondButton().click();
+    cy.clickAddBondButton();
 
     // Fill in bond details
     bondDetails.bondTypeInput().select('Advance payment guarantee');
     bondDetails.facilityStageUnissuedInput().click();
     bondDetails.ukefGuaranteeInMonthsInput().type('12', { delay: 0 });
-    bondDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Fill in bond financial details
     bondFinancialDetails.facilityValueInput().type('100000', { delay: 0 });
     bondFinancialDetails.currencySameAsSupplyContractCurrencyYesInput().click();
     bondFinancialDetails.riskMarginFeeInput().type('10', { delay: 0 });
     bondFinancialDetails.coveredPercentageInput().type('80', { delay: 0 });
-    bondFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     // Fill in bond fee details
     bondFeeDetails.feeTypeAtMaturityInput().click();

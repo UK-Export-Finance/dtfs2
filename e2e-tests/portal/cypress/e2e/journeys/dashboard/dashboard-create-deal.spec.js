@@ -54,7 +54,7 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
         dashboard.createNewSubmission().click();
 
         selectScheme.gef().click();
-        selectScheme.continue().click();
+        cy.clickContinueButton();
         cy.url().should('eq', relative('/gef/mandatory-criteria'));
       });
     });
@@ -108,7 +108,7 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
         dashboard.createNewSubmission().click();
 
         selectScheme.gef().click();
-        selectScheme.continue().click();
+        cy.clickContinueButton();
         cy.url().should('eq', relative('/gef/mandatory-criteria'));
       });
     });
