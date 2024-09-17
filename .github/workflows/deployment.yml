@@ -54,8 +54,7 @@ on:
       - staging
       - prod
       - release-*
-    branches-ignore:
-      - release-please*
+      - '!release-please*'
 
 env:
   PRODUCT: dtfs
