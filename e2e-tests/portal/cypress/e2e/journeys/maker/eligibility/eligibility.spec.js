@@ -1,6 +1,6 @@
-const { contract, eligibilityCriteria, eligibilityDocumentation } = require('../../pages');
-const partials = require('../../partials');
-const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { contract, eligibilityCriteria, eligibilityDocumentation } = require('../../../pages');
+const partials = require('../../../partials');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
