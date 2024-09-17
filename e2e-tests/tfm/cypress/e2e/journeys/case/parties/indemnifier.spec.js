@@ -83,7 +83,7 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
         pages.indemnifierPage.urnError().contains('Enter a unique reference number');
 
         pages.indemnifierPage.urnInput().clear();
-        pages.indemnifierPage.urnInput().type('test');
+        cy.keyboardInput(pages.indemnifierPage.urnInput(), 'test');
 
         pages.indemnifierPage.saveButton().click();
 
@@ -91,35 +91,35 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.indemnifierPage.urnInput().clear().type('12');
+        cy.keyboardInput(pages.indemnifierPage.urnInput(), '12');
         pages.indemnifierPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.indemnifierPage.urnInput().clear().type('ABC123');
+        cy.keyboardInput(pages.indemnifierPage.urnInput(), 'ABC123');
         pages.indemnifierPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.indemnifierPage.urnInput().clear().type('"!£!"£!"£!"£');
+        cy.keyboardInput(pages.indemnifierPage.urnInput(), '"!£!"£!"£!"£');
         pages.indemnifierPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.indemnifierPage.urnInput().clear().type('1234!');
+        cy.keyboardInput(pages.indemnifierPage.urnInput(), '1234!');
         pages.indemnifierPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.indemnifierPage.urnInput().clear().type(' ');
+        cy.keyboardInput(pages.indemnifierPage.urnInput(), ' ');
         pages.indemnifierPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
@@ -130,7 +130,7 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
       it('should re-direct to non-existent party urn page', () => {
         pages.partiesPage.indemnifierEditLink().click();
         pages.indemnifierPage.urnInput().clear();
-        pages.indemnifierPage.urnInput().type(mockUrn);
+        cy.keyboardInput(pages.indemnifierPage.urnInput(), mockUrn);
 
         pages.indemnifierPage.saveButton().click();
 
@@ -140,7 +140,7 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
       it('should re-direct to summary page', () => {
         pages.partiesPage.indemnifierEditLink().click();
         pages.indemnifierPage.urnInput().clear();
-        pages.indemnifierPage.urnInput().type(partyUrn);
+        cy.keyboardInput(pages.indemnifierPage.urnInput(), partyUrn);
 
         pages.indemnifierPage.saveButton().click();
 
@@ -151,7 +151,7 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
       it('should submit the party URN to TFM', () => {
         pages.partiesPage.indemnifierEditLink().click();
         pages.indemnifierPage.urnInput().clear();
-        pages.indemnifierPage.urnInput().type(partyUrn);
+        cy.keyboardInput(pages.indemnifierPage.urnInput(), partyUrn);
 
         pages.indemnifierPage.saveButton().click();
 

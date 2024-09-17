@@ -105,7 +105,7 @@ context('Case Underwriting - Pricing and risk', () => {
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().type('abc1');
+      cy.keyboardInput(pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther(), 'abc1');
       cy.clickSubmitButton();
 
       errorSummaryItems().should('have.length', 1);
@@ -153,7 +153,7 @@ context('Case Underwriting - Pricing and risk', () => {
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
 
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().type(MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+      cy.keyboardInput(pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
       cy.clickSubmitButton();
 
       cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);

@@ -163,11 +163,15 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       getFeeRecordCheckbox(feeRecord.id).check();
 
-      cy.getInputByLabelText('Amount received').type('nonsense');
-      cy.getInputByLabelText('Day').type('nonsense');
-      cy.getInputByLabelText('Month').type('nonsense');
-      cy.getInputByLabelText('Year').type('nonsense');
-      cy.getInputByLabelText('Payment reference (optional)').type('This is valid');
+      cy.keyboardInput(cy.getInputByLabelText('Amount received'), 'nonsense');
+
+      cy.keyboardInput(cy.getInputByLabelText('Day'), 'nonsense');
+
+      cy.keyboardInput(cy.getInputByLabelText('Month'), 'nonsense');
+
+      cy.keyboardInput(cy.getInputByLabelText('Year'), 'nonsense');
+
+      cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), 'This is valid');
 
       pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
@@ -208,11 +212,15 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       clearFormValues();
 
-      cy.getInputByLabelText('Amount received').type(newPaymentAmount.toString());
-      cy.getInputByLabelText('Day').type(newPaymentDateDay);
-      cy.getInputByLabelText('Month').type(newPaymentDateMonth);
-      cy.getInputByLabelText('Year').type(newPaymentDateYear);
-      cy.getInputByLabelText('Payment reference (optional)').type(newPaymentReference);
+      cy.keyboardInput(cy.getInputByLabelText('Amount received'), newPaymentAmount.toString());
+
+      cy.keyboardInput(cy.getInputByLabelText('Day'), newPaymentDateDay);
+
+      cy.keyboardInput(cy.getInputByLabelText('Month'), newPaymentDateMonth);
+
+      cy.keyboardInput(cy.getInputByLabelText('Year'), newPaymentDateYear);
+
+      cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), newPaymentReference);
 
       pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
@@ -247,8 +255,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
       cy.getInputByLabelText('Amount received').should('have.value', '200');
-      cy.getInputByLabelText('Amount received').clear();
-      cy.getInputByLabelText('Amount received').type('100');
+
+      cy.keyboardInput(cy.getInputByLabelText('Amount received'), '100');
 
       pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
@@ -273,8 +281,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
       cy.getInputByLabelText('Amount received').should('have.value', '100');
-      cy.getInputByLabelText('Amount received').clear();
-      cy.getInputByLabelText('Amount received').type('200');
+
+      cy.keyboardInput(cy.getInputByLabelText('Amount received'), '200');
 
       pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
@@ -290,8 +298,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
-      cy.getInputByLabelText('Amount received').clear();
-      cy.getInputByLabelText('Amount received').type('200');
+      cy.keyboardInput(cy.getInputByLabelText('Amount received'), '200');
 
       pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
@@ -307,8 +314,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=payment-details`));
 
-      cy.getInputByLabelText('Amount received').clear();
-      cy.getInputByLabelText('Amount received').type('200');
+      cy.keyboardInput(cy.getInputByLabelText('Amount received'), '200');
 
       pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
 
