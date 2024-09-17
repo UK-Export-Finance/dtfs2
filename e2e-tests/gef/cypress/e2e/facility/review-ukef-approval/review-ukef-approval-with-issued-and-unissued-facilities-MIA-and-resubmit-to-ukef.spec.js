@@ -19,7 +19,6 @@ import applicationSubmission from '../../pages/application-submission';
 import statusBanner from '../../pages/application-status-banner';
 import coverStartDate from '../../pages/cover-start-date';
 import applicationDetails from '../../pages/application-details';
-import facilityEndDate from '../../pages/facility-end-date';
 import applicationActivities from '../../pages/application-activities';
 
 const { format } = require('date-fns');
@@ -173,12 +172,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      coverStartDate.coverStartDateDay().clear();
-      coverStartDate.coverStartDateDay().type(dateConstants.todayDay);
-      coverStartDate.coverStartDateMonth().clear();
-      coverStartDate.coverStartDateMonth().type(dateConstants.todayMonth);
-      coverStartDate.coverStartDateYear().clear();
-      coverStartDate.coverStartDateYear().type(dateConstants.todayYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.todayYear);
 
       cy.clickContinueButton();
 
@@ -200,12 +196,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      coverStartDate.coverStartDateDay().clear();
-      coverStartDate.coverStartDateDay().type(dateConstants.threeDaysDay);
-      coverStartDate.coverStartDateMonth().clear();
-      coverStartDate.coverStartDateMonth().type(dateConstants.threeDaysMonth);
-      coverStartDate.coverStartDateYear().clear();
-      coverStartDate.coverStartDateYear().type(dateConstants.threeDaysYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.threeDaysDay);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.threeDaysMonth);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.threeDaysYear);
 
       cy.clickContinueButton();
 
@@ -220,12 +213,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      coverStartDate.coverStartDateDay().clear();
-      coverStartDate.coverStartDateDay().type(dateConstants.threeMonthsOneDayDay);
-      coverStartDate.coverStartDateMonth().clear();
-      coverStartDate.coverStartDateMonth().type(dateConstants.threeMonthsOneDayMonth);
-      coverStartDate.coverStartDateYear().clear();
-      coverStartDate.coverStartDateYear().type(dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.threeMonthsOneDayYear);
 
       cy.clickContinueButton();
 
@@ -238,19 +228,19 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.todayMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.todayYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoMonthsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoMonthsYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoMonthsDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoMonthsMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoMonthsYear);
 
-      aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
-      aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
-      aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
       if (facilityEndDateEnabled) {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
@@ -259,9 +249,6 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       cy.clickContinueButton();
 
       if (facilityEndDateEnabled) {
-        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
-        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
-        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
         cy.clickContinueButton();
       }
 

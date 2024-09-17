@@ -49,7 +49,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       // submit the deal
       cy.clickSubmitButton();
-      applicationSubmission.commentsField().type('DTFS2-4698 Comments from original maker');
+      cy.keyboardInput(applicationSubmission.commentsField(), 'DTFS2-4698 Comments from original maker');
       cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 

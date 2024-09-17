@@ -20,7 +20,7 @@ context('Incomplete exporter section - application details page', () => {
       cy.clickContinueButton();
       dashboardPage.mandatoryCriteriaYes().click();
       cy.clickContinueButton();
-      dashboardPage.internalRefName().type('A');
+      cy.keyboardInput(dashboardPage.internalRefName(), 'A');
       cy.clickContinueButton();
       cy.url().then((thisUrl) => {
         url = thisUrl;
@@ -32,7 +32,7 @@ context('Incomplete exporter section - application details page', () => {
     it('add the exporter', () => {
       cy.visit(url);
       applicationDetails.exporterDetailsLink().click();
-      companiesHouse.regNumberField().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
+      cy.keyboardInput(companiesHouse.regNumberField(), MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
       cy.clickContinueButton();
       exportersAddress.noRadioButton().click();
       cy.clickContinueButton();

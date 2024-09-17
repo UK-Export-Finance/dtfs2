@@ -46,11 +46,11 @@ context('Changing between facility end date and bank review date', () => {
   if (facilityEndDateEnabled) {
     it('should wipe the values when changing between facility end date and bank review date', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.facilityName().clear().type('Name');
+      cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
-      aboutFacility.coverEndDateDay().clear().type(todayDay);
-      aboutFacility.coverEndDateMonth().clear().type(todayMonth);
-      aboutFacility.coverEndDateYear().clear().type(nextYear);
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), todayDay);
+      cy.keyboardInput(aboutFacility.coverEndDateMonth(), todayMonth);
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), nextYear);
       aboutFacility.isUsingFacilityEndDateNo().click();
       cy.clickContinueButton();
 
@@ -69,9 +69,9 @@ context('Changing between facility end date and bank review date', () => {
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
-      facilityEndDate.facilityEndDateDay().clear().type(tomorrowDay);
-      facilityEndDate.facilityEndDateMonth().clear().type(tomorrowMonth);
-      facilityEndDate.facilityEndDateYear().clear().type(tomorrowYear);
+      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), tomorrowDay);
+      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), tomorrowMonth);
+      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), tomorrowYear);
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
@@ -107,9 +107,9 @@ context('Changing between facility end date and bank review date', () => {
       facilityEndDate.facilityEndDateMonth().should('have.value', '');
       facilityEndDate.facilityEndDateYear().should('have.value', '');
 
-      facilityEndDate.facilityEndDateDay().clear().type(tomorrowDay);
-      facilityEndDate.facilityEndDateMonth().clear().type(tomorrowMonth);
-      facilityEndDate.facilityEndDateYear().clear().type(tomorrowYear);
+      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), tomorrowDay);
+      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), tomorrowMonth);
+      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), tomorrowYear);
       cy.clickContinueButton();
     });
   }
