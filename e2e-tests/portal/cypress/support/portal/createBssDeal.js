@@ -22,29 +22,33 @@ const MOCK_USERS = require('../../../../e2e-fixtures/index');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-/** * Create a BSS/EWCS deal via the UI with a "ready for check" status */
+/**
+ * Create a BSS/EWCS deal via the UI.
+ * @param {Boolean} readyForCheck: Conditionally complete all "maker" required forms
+ * @param {Boolean} unissuedFacilities: TBD
+ */
 
 const createBssDeal = ({ readyForCheck = false, unissuedFacilities = false }) => {
+  // Log in as BANK1_MAKER1
+  login(BANK1_MAKER1);
+
+  // Navigate to create a new BSS deal
+  dashboard.createNewSubmission().click();
+
+  // Select BSS scheme
+  selectScheme.bss().click();
+  selectScheme.continue().click();
+
+  // Select True before starting the application
+  beforeYouStart.true().click();
+  beforeYouStart.submit().click();
+
+  // Fill in bank deal id, bank name
+  bankDetails.bankDealId().type('123', { delay: 0 });
+  bankDetails.bankDealName().type('BssDeal', { delay: 0 });
+  bankDetails.submit().click();
+
   if (readyForCheck) {
-    // Log in as BANK1_MAKER1
-    login(BANK1_MAKER1);
-
-    // Navigate to create a new BSS deal
-    dashboard.createNewSubmission().click();
-
-    // Select BSS scheme
-    selectScheme.bss().click();
-    selectScheme.continue().click();
-
-    // Select True before starting the application
-    beforeYouStart.true().click();
-    beforeYouStart.submit().click();
-
-    // Fill in bank deal id, bank name
-    bankDetails.bankDealId().type('123', { delay: 0 });
-    bankDetails.bankDealName().type('BssDeal', { delay: 0 });
-    bankDetails.submit().click();
-
     // Select Supplier Details Link
     contract.aboutSupplierDetailsLink().click();
 
@@ -117,6 +121,7 @@ const createBssDeal = ({ readyForCheck = false, unissuedFacilities = false }) =>
     contractReadyForReview.comments().type('Ready for checkers approval', { delay: 0 });
     contractReadyForReview.readyForCheckersApproval().click();
   }
+
   if (unissuedFacilities) {
     // created
   }
