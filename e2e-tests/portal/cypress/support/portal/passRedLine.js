@@ -4,5 +4,5 @@ module.exports = (opts) => {
   cy.createBSSSubmission(opts);
 
   pages.beforeYouStart.true().click();
-  pages.beforeYouStart.submit().click();
+  cy.clickSubmitButton();
 };

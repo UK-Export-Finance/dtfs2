@@ -56,12 +56,19 @@ export type UtilisationReportRawCsvData = {
   [HeaderKey in UtilisationReportHeader]: HeaderKey extends `${string}currency` ? Currency : string;
 };
 
+export type FeeRecordReconciledByUser = {
+  firstName: string;
+  lastName: string;
+};
+
 export type FeeRecordPaymentGroup = {
   feeRecords: FeeRecord[];
   totalReportedPayments: CurrencyAndAmount;
   paymentsReceived: Payment[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
   status: FeeRecordStatus;
+  reconciledByUser?: FeeRecordReconciledByUser;
+  dateReconciled?: Date;
 };
 
 export type UtilisationReportReconciliationDetails = {
@@ -73,7 +80,8 @@ export type UtilisationReportReconciliationDetails = {
   status: UtilisationReportReconciliationStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: Date;
-  feeRecordPaymentGroups: FeeRecordPaymentGroup[];
+  premiumPayments: FeeRecordPaymentGroup[];
+  paymentDetails: FeeRecordPaymentGroup[];
   keyingSheet: KeyingSheet;
 };
 

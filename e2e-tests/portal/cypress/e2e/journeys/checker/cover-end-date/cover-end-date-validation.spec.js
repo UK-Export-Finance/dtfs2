@@ -51,7 +51,7 @@ context(
         cy.login(BANK1_CHECKER1);
         pages.contract.visit(deal);
 
-        pages.contract.proceedToSubmit().click();
+        cy.clickProceedToSubmitButton();
         cy.url().should('eq', relative(`/contract/${dealId}/confirm-submission`));
 
         pages.contractConfirmSubmission.confirmSubmit().check();
@@ -111,7 +111,7 @@ context(
         cy.login(BANK1_CHECKER1);
         pages.contract.visit(deal);
 
-        pages.contract.proceedToSubmit().click();
+        cy.clickProceedToSubmitButton();
         cy.url().should('eq', relative(`/contract/${dealId}/confirm-submission`));
 
         pages.contractConfirmSubmission.confirmSubmit().check();

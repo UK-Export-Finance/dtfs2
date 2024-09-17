@@ -57,7 +57,7 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
     // insert populated text field on form
     cy.insertElement('issue-bond-form');
 
-    pages.bondIssueFacility.submit().click();
+    cy.clickSubmitButton();
 
     // TODO: need to
     // 1) create a new command to get the deal ID from the URL

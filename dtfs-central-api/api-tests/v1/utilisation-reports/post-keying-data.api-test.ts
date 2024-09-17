@@ -3,6 +3,7 @@ import { IsNull, Not } from 'typeorm';
 import {
   FacilityUtilisationDataEntity,
   FacilityUtilisationDataEntityMockBuilder,
+  FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   FeeRecordPaymentJoinTableEntity,
@@ -98,7 +99,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.BadRequest);
+    expect(response.status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it('returns a 404 (Not Found) when there are no fee records at the MATCH state attached to the report with the supplied id', async () => {
@@ -115,7 +116,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('returns a 200 (Ok) when request has a valid body and there are fee records at the MATCH status', async () => {
@@ -137,7 +138,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
   it('returns a 200 when request has a valid body and the report is in state PENDING_RECONCILIATION with zero payment fee records at the MATCH status', async () => {
@@ -156,7 +157,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
   });
 
   it('updates report status to RECONCILIATION_IN_PROGRESS when request has a valid body and the report is in state PENDING_RECONCILIATION with zero payment fee records at the MATCH status', async () => {
@@ -199,12 +200,12 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
 
     const updatedReport = await SqlDbHelper.manager.findOneByOrFail(UtilisationReportEntity, { id: reportId });
-    expect(updatedReport.lastUpdatedByIsSystemUser).toBe(false);
+    expect(updatedReport.lastUpdatedByIsSystemUser).toEqual(false);
     expect(updatedReport.lastUpdatedByPortalUserId).toBeNull();
-    expect(updatedReport.lastUpdatedByTfmUserId).toBe(tfmUserId);
+    expect(updatedReport.lastUpdatedByTfmUserId).toEqual(tfmUserId);
   });
 
   it('updates each of the MATCH fee record audit fields and does not update the non MATCH fee record audit fields', async () => {
@@ -235,7 +236,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
 
     const [notUpdatedFeeRecords, ...updatedFeeRecords] = await Promise.all([
       SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: 1 }),
@@ -243,14 +244,14 @@ describe(`POST ${BASE_URL}`, () => {
       SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: 3 }),
     ]);
 
-    expect(notUpdatedFeeRecords.lastUpdatedByIsSystemUser).toBe(false);
-    expect(notUpdatedFeeRecords.lastUpdatedByPortalUserId).toBe(portalUserId);
+    expect(notUpdatedFeeRecords.lastUpdatedByIsSystemUser).toEqual(false);
+    expect(notUpdatedFeeRecords.lastUpdatedByPortalUserId).toEqual(portalUserId);
     expect(notUpdatedFeeRecords.lastUpdatedByTfmUserId).toBeNull();
 
     updatedFeeRecords.forEach((feeRecord) => {
-      expect(feeRecord.lastUpdatedByIsSystemUser).toBe(false);
+      expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
-      expect(feeRecord.lastUpdatedByTfmUserId).toBe(tfmUserId);
+      expect(feeRecord.lastUpdatedByTfmUserId).toEqual(tfmUserId);
     });
   });
 
@@ -279,7 +280,7 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
 
     const allFeeRecords = await SqlDbHelper.manager.find(FeeRecordEntity, {});
     expect(allFeeRecords).toHaveLength(feeRecords.length);
@@ -306,12 +307,12 @@ describe(`POST ${BASE_URL}`, () => {
     const response = await testApi.post(requestBody).to(getUrl(reportId));
 
     // Assert
-    expect(response.status).toBe(HttpStatusCode.Ok);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
 
     const joinTableEntities = await SqlDbHelper.manager.find(FeeRecordPaymentJoinTableEntity, {});
     expect(joinTableEntities).toHaveLength(1);
-    expect(joinTableEntities[0].feeRecordId).toBe(1);
-    expect(joinTableEntities[0].paymentId).toBe(1);
+    expect(joinTableEntities[0].feeRecordId).toEqual(1);
+    expect(joinTableEntities[0].paymentId).toEqual(1);
     expect(joinTableEntities[0].paymentAmountUsedForFeeRecord).not.toBeNull();
   });
 
@@ -357,7 +358,7 @@ describe(`POST ${BASE_URL}`, () => {
       const response1 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
 
       // Assert
-      expect(response1.status).toBe(HttpStatusCode.Ok);
+      expect(response1.status).toEqual(HttpStatusCode.Ok);
       expect(await getReadyToKeyFeeRecordsWithNullKeyingData()).toHaveLength(2);
       expect(await getReadyToKeyFeeRecordsWithNonNullKeyingData()).toHaveLength(1);
     });
@@ -379,8 +380,8 @@ describe(`POST ${BASE_URL}`, () => {
 
       const assertFacilityUtilisationDataHasNotChanged = async () => {
         const facilityUtilisationData = await SqlDbHelper.manager.findOneByOrFail(FacilityUtilisationDataEntity, { id: facilityId });
-        expect(facilityUtilisationData.fixedFee).toBe(previousFixedFee);
-        expect(facilityUtilisationData.utilisation).toBe(previousUtilisation);
+        expect(facilityUtilisationData.fixedFee).toEqual(previousFixedFee);
+        expect(facilityUtilisationData.utilisation).toEqual(previousUtilisation);
         expect(facilityUtilisationData.reportPeriod).toEqual(previousReportPeriod);
       };
 
@@ -425,7 +426,7 @@ describe(`POST ${BASE_URL}`, () => {
 
         const response1 = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
 
-        expect(response1.status).toBe(HttpStatusCode.Ok);
+        expect(response1.status).toEqual(HttpStatusCode.Ok);
         expect(await getReadyToKeyFeeRecordsWithNullKeyingData()).toHaveLength(2);
         expect(await getReadyToKeyFeeRecordsWithNonNullKeyingData()).toHaveLength(0);
         await assertFacilityUtilisationDataHasNotChanged();
@@ -442,11 +443,11 @@ describe(`POST ${BASE_URL}`, () => {
         const response = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
 
         // Assert
-        expect(response.status).toBe(HttpStatusCode.Ok);
+        expect(response.status).toEqual(HttpStatusCode.Ok);
         expect(await getReadyToKeyFeeRecordsWithNullKeyingData()).toHaveLength(2);
         const feeRecordWithKeyingData = await getReadyToKeyFeeRecordsWithNonNullKeyingData();
         expect(feeRecordWithKeyingData).toHaveLength(1);
-        expect(feeRecordWithKeyingData[0].id).toBe(toDoFeeRecordId);
+        expect(feeRecordWithKeyingData[0].id).toEqual(toDoFeeRecordId);
       });
 
       it('updates the facility utilisation data table once all fee records for the facility have been moved to READY_TO_KEY', async () => {
@@ -460,11 +461,38 @@ describe(`POST ${BASE_URL}`, () => {
         const response = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
 
         // Assert
-        expect(response.status).toBe(HttpStatusCode.Ok);
+        expect(response.status).toEqual(HttpStatusCode.Ok);
         const facilityUtilisationData = await SqlDbHelper.manager.findOneByOrFail(FacilityUtilisationDataEntity, { id: facilityId });
-        expect(facilityUtilisationData.utilisation).toBe(currentUtilisation);
-        expect(facilityUtilisationData.fixedFee).not.toBe(previousFixedFee);
+        expect(facilityUtilisationData.utilisation).toEqual(currentUtilisation);
+        expect(facilityUtilisationData.fixedFee).not.toEqual(previousFixedFee);
         expect(facilityUtilisationData.reportPeriod).toEqual(currentReportPeriod);
+      });
+    });
+
+    describe('and when one of the fee records can be auto-reconciled', () => {
+      it(`sets the fee record status to ${FEE_RECORD_STATUS.RECONCILED} and sets the dateReconciled field`, async () => {
+        // Arrange
+        const report = anUploadedReconciliationInProgressUtilisationReport();
+
+        const feeRecordToAutoReconcile = FeeRecordEntityMockBuilder.forReport(report)
+          .withId(12)
+          .withFeesPaidToUkefForThePeriod(0)
+          .withStatus(FEE_RECORD_STATUS.MATCH)
+          .build();
+        const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(24).withStatus(FEE_RECORD_STATUS.TO_DO).build();
+
+        report.feeRecords = [feeRecordToAutoReconcile, toDoFeeRecord];
+        await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+        // Act
+        const response = await testApi.post(aValidRequestBody()).to(getUrl(reportId));
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.Ok);
+
+        const modifiedFeeRecord = await SqlDbHelper.manager.findOneByOrFail(FeeRecordEntity, { id: 12 });
+        expect(modifiedFeeRecord.status).toEqual(FEE_RECORD_STATUS.RECONCILED);
+        expect(modifiedFeeRecord.dateReconciled).not.toBeNull();
       });
     });
   });

@@ -9,7 +9,7 @@ const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 const goToBondFeeDetailsPage = () => {
   cy.loginGoToDealPage(BANK1_MAKER1);
 
-  pages.contract.addBondButton().click();
+  cy.clickAddBondButton();
   partials.taskListHeader.itemLink('fee-details').click();
   cy.url().should('include', '/fee-details');
 };
@@ -26,14 +26,14 @@ context('Bond Fee Details', () => {
       goToBondFeeDetailsPage();
       cy.title().should('eq', `Bond Fee Details${pages.defaults.pageTitleAppend}`);
 
-      pages.bondFeeDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/check-your-answers');
       partials.taskListHeader.itemLink('fee-details').click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+      partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
       pages.bondFeeDetails.feeTypeInputErrorMessage().should('be.visible');
       pages.bondFeeDetails.dayCountBasisInputErrorMessage().should('be.visible');
@@ -46,14 +46,14 @@ context('Bond Fee Details', () => {
 
       pages.bondFeeDetails.feeTypeInAdvanceInput().click();
 
-      pages.bondFeeDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/check-your-answers');
       partials.taskListHeader.itemLink('fee-details').click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 2;
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+      partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
       pages.bondFeeDetails.feeFrequencyInputErrorMessage().should('be.visible');
       pages.bondFeeDetails.dayCountBasisInputErrorMessage().should('be.visible');
@@ -63,7 +63,7 @@ context('Bond Fee Details', () => {
   it('should display the correct title for bond fee details', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
-    pages.contract.addBondButton().click();
+    cy.clickAddBondButton();
     partials.taskListHeader.itemLink('fee-details').click();
 
     pages.bondFeeDetails.title().contains('Add fee details');
@@ -72,39 +72,23 @@ context('Bond Fee Details', () => {
   it('form submit of all required fields should render a `completed` status tag only for `Bond Fee Details` in task list header', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
-    pages.contract.addBondButton().click();
+    cy.clickAddBondButton();
     partials.taskListHeader.itemLink('fee-details').click();
 
     fillBondForm.feeDetails();
 
-    pages.bondFeeDetails.submit().click();
-    partials.taskListHeader
-      .itemStatus('fee-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+    cy.clickSubmitButton();
 
-    partials.taskListHeader
-      .itemStatus('bond-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
-
-    partials.taskListHeader
-      .itemStatus('financial-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('fee-details'), 'Completed');
+    cy.assertText(partials.taskListHeader.itemStatus('bond-details'), 'Incomplete');
+    cy.assertText(partials.taskListHeader.itemStatus('financial-details'), 'Incomplete');
   });
 
   it('form submit should progress to the `Bond Preview` page and prepopulate submitted form fields when returning back to `Bond Fee Details` page', () => {
     goToBondFeeDetailsPage();
 
     fillBondForm.feeDetails();
-    pages.bondFeeDetails.submit().click();
+    cy.clickSubmitButton();
 
     cy.url().should('include', '/contract');
     cy.url().should('include', '/bond/');
@@ -135,7 +119,7 @@ context('Bond Fee Details', () => {
       partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
-        pages.bondFeeDetails.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
 
         cy.url().should('not.include', '/fee-details');
         cy.url().should('include', '/contract');

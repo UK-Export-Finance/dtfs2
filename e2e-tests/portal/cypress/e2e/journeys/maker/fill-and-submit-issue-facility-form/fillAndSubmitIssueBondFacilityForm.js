@@ -16,7 +16,7 @@ export const fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate = 
 
   pages.bondIssueFacility.name().type('1234');
 
-  pages.bondIssueFacility.submit().click();
+  cy.clickSubmitButton();
 };
 
 export const fillAndSubmitIssueBondFacilityForm = () => {
@@ -44,5 +44,5 @@ export const fillAndSubmitIssueBondFacilityForm = () => {
 
   pages.bondIssueFacility.name().type('1234');
 
-  pages.bondIssueFacility.submit().click();
+  cy.clickSubmitButton();
 };

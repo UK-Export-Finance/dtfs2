@@ -25,12 +25,7 @@ context('Dashboard deals pagination', () => {
     dashboardDeals.rows().should('have.length', 20);
 
     // test pagination
-    dashboardDeals
-      .totalItems()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('(21 items)');
-      });
+    cy.assertText(dashboardDeals.totalItems(), '(21 items)');
 
     dashboardDeals.first().should('not.exist');
     dashboardDeals.previous().should('not.exist');
@@ -44,12 +39,7 @@ context('Dashboard deals pagination', () => {
     dashboardDeals.rows().should('have.length', 1);
 
     // test pagination
-    dashboardDeals
-      .totalItems()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('(21 items)');
-      });
+    cy.assertText(dashboardDeals.totalItems(), '(21 items)');
 
     dashboardDeals.first().should('exist');
     dashboardDeals.previous().should('exist');

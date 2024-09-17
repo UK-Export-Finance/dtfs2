@@ -21,7 +21,7 @@ context('Feedback - create element and check if inserted into feedback', () => {
 
     cy.insertElement('feedback-form');
 
-    feedbackPage.submitButton().click();
+    cy.clickSubmitButton();
 
     cy.getAllFeedback(ADMIN).then((feedback) => {
       const feedbackLength = feedback.length;

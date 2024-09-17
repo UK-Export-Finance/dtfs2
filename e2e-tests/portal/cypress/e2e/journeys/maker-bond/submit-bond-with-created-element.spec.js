@@ -1,4 +1,3 @@
-const pages = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const fillBondForm = require('./fill-bond-forms');
 
@@ -17,20 +16,22 @@ context('Bond form - Submit bond with created element on page', () => {
     // navigate to the about-buyer page
     cy.loginGoToDealPage(BANK1_MAKER1);
 
+    cy.clickAddBondButton();
+
     fillBondForm.details.facilityStageIssued();
     // inserts text element into form
     cy.insertElement('bond-form');
-    pages.bondDetails.submit().click();
+    cy.clickSubmitButton();
 
     fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
     // inserts text element into form
     cy.insertElement('bond-financial-details-form');
-    pages.bondFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
     fillBondForm.feeDetails();
     // insert text element into form
     cy.insertElement('bond-fee-form');
-    pages.bondFeeDetails.submit().click();
+    cy.clickSubmitButton();
 
     // TODO: need to
     // 1) create a new command to get the deal ID from the URL

@@ -1,8 +1,6 @@
 const feedbackPage = {
   visit: () => cy.visit('/feedback'),
 
-  errorSummary: () => cy.get('[data-cy="error-summary"]'),
-
   feedBackPageHeading: () => cy.get('[data-cy="heading"]'),
   role: () => cy.get('[data-cy="role"]'),
   roleHeading: () => cy.get('[data-cy="role-heading"]'),
@@ -26,7 +24,6 @@ const feedbackPage = {
   emailAddressHeading: () => cy.get('[data-cy="email-address-heading"]'),
   emailAddressHint: () => cy.get('[data-cy="email-address-hint"]'),
   emailAddressErrorMessage: () => cy.get('[data-cy="email-address-error-message"]'),
-  submitButton: () => cy.get('[data-cy="submit-button"]'),
 
   // thank you page
   thankYouPageHeading: () => cy.get('[data-cy="thank-you-heading"]'),

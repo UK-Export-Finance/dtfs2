@@ -7,7 +7,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const goToPage = () => {
   cy.loginGoToDealPage(BANK1_MAKER1);
-  pages.contract.addLoanButton().click();
+  cy.clickAddLoanButton();
   partials.taskListHeader.itemLink('dates-and-repayments').click();
 
   cy.url().should('include', '/loan/');
@@ -15,7 +15,7 @@ const goToPage = () => {
 };
 
 const assertNoValidationErrors = () => {
-  partials.errorSummary.errorSummaryLinks().should('have.length', 0);
+  partials.errorSummaryLinks().should('have.length', 0);
   pages.loanDatesRepayments.premiumTypeInputErrorMessage().should('not.exist');
   pages.loanDatesRepayments.premiumFrequencyInputErrorMessage().should('not.exist');
   pages.loanDatesRepayments.dayCountBasisInputErrorMessage().should('not.exist');
@@ -40,7 +40,7 @@ context('Loan Dates and Repayments', () => {
     it('should progress to `Loan Preview` page, should render validation errors in `Loan Dates and Repayments` page', () => {
       goToPage();
       assertNoValidationErrors();
-      pages.loanDatesRepayments.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/loan/');
       cy.url().should('include', '/check-your-answers');
@@ -48,7 +48,7 @@ context('Loan Dates and Repayments', () => {
       partials.taskListHeader.itemLink('dates-and-repayments').click();
       cy.url().should('include', '/dates-repayments');
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 2);
+      partials.errorSummaryLinks().should('have.length', 2);
       pages.loanDatesRepayments.premiumTypeInputErrorMessage().should('be.visible');
       pages.loanDatesRepayments.dayCountBasisInputErrorMessage().should('be.visible');
     });
@@ -59,7 +59,7 @@ context('Loan Dates and Repayments', () => {
       goToPage();
       pages.loanDatesRepayments.premiumTypeAtMaturityInput().click();
       pages.loanDatesRepayments.premiumFrequencyAnnuallyInput().should('not.be.visible');
-      pages.loanDatesRepayments.submit().click();
+      cy.clickSubmitButton();
       cy.url().should('include', '/check-your-answers');
 
       partials.taskListHeader.itemLink('dates-and-repayments').click();
@@ -81,11 +81,11 @@ context('Loan Dates and Repayments', () => {
 
       pages.loanDatesRepayments.premiumTypeInAdvanceInput().click();
 
-      pages.loanDatesRepayments.submit().click();
+      cy.clickSubmitButton();
       cy.url().should('include', '/check-your-answers');
 
       partials.taskListHeader.itemLink('dates-and-repayments').click();
-      partials.errorSummary.errorSummaryLinks().should('have.length', 2);
+      partials.errorSummaryLinks().should('have.length', 2);
 
       pages.loanDatesRepayments.premiumTypeInputErrorMessage().should('not.exist');
       pages.loanDatesRepayments.premiumFrequencyInputErrorMessage().should('be.visible');
@@ -96,7 +96,7 @@ context('Loan Dates and Repayments', () => {
     it('should prepopulate correct values when returning to the page', () => {
       goToPage();
       fillLoanForm.datesRepayments.inAdvanceAnnually();
-      pages.loanDatesRepayments.submit().click();
+      cy.clickSubmitButton();
 
       partials.taskListHeader.itemLink('dates-and-repayments').click();
       pages.loanDatesRepayments.premiumTypeInAdvanceInput().should('be.checked');
@@ -104,7 +104,7 @@ context('Loan Dates and Repayments', () => {
       assertNoValidationErrors();
 
       fillLoanForm.datesRepayments.inArrearQuarterly();
-      pages.loanDatesRepayments.submit().click();
+      cy.clickSubmitButton();
 
       partials.taskListHeader.itemLink('dates-and-repayments').click();
       pages.loanDatesRepayments.premiumTypeInArrearInput().should('be.checked');
@@ -117,24 +117,16 @@ context('Loan Dates and Repayments', () => {
     it('should display a completed status tag in task list header', () => {
       goToPage();
       fillLoanForm.datesRepayments.inAdvanceAnnually();
-      pages.loanDatesRepayments.submit().click();
+      cy.clickSubmitButton();
       cy.url().should('include', '/check-your-answers');
 
-      partials.taskListHeader
-        .itemStatus('dates-and-repayments')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('dates-and-repayments'), 'Completed');
+
       partials.taskListHeader.itemLink('dates-and-repayments').click();
 
       cy.url().should('include', '/dates-repayments');
-      partials.taskListHeader
-        .itemStatus('dates-and-repayments')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+
+      cy.assertText(partials.taskListHeader.itemStatus('dates-and-repayments'), 'Completed');
     });
   });
 
@@ -144,7 +136,7 @@ context('Loan Dates and Repayments', () => {
       fillLoanForm.datesRepayments.inAdvanceAnnually();
       partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
         const loanId = loanIdHiddenInput[0].value;
-        pages.loanDatesRepayments.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
 
         const row = pages.contract.loansTransactionsTable.row(loanId);
 

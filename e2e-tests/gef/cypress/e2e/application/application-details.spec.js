@@ -63,11 +63,8 @@ context('Application Details Page', () => {
     it('displays the correct headings', () => {
       applicationDetails.applicationDetailsPage();
       headingCaption();
-      mainHeading()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Application Details');
-        });
+
+      cy.assertText(mainHeading(), 'Application Details');
     });
 
     it('shows an abandon button with correct aria-label', () => {
@@ -168,11 +165,7 @@ context('Application Details Page', () => {
     });
 
     it('displays the correct submission type heading', () => {
-      mainHeading()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Application Details');
-        });
+      cy.assertText(mainHeading(), 'Application Details');
     });
 
     it('displays the correct exporter elements', () => {

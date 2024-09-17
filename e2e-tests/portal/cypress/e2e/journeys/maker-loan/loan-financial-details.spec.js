@@ -9,10 +9,10 @@ const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 const goToPageWithUnconditionalFacilityStage = () => {
   cy.loginGoToDealPage(BANK1_MAKER1);
-  pages.contract.addLoanButton().click();
+  cy.clickAddLoanButton();
 
   pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
-  pages.loanGuaranteeDetails.submit().click();
+  cy.clickSubmitButton();
 
   cy.url().should('include', '/loan/');
   cy.url().should('include', '/financial-details');
@@ -20,7 +20,7 @@ const goToPageWithUnconditionalFacilityStage = () => {
 
 const goToPage = () => {
   cy.loginGoToDealPage(BANK1_MAKER1);
-  pages.contract.addLoanButton().click();
+  cy.clickAddLoanButton();
   partials.taskListHeader.itemLink('loan-financial-details').click();
 
   cy.url().should('include', '/loan/');
@@ -46,16 +46,16 @@ context('Loan Financial Details', () => {
     it('should progress to `Loan Dates and Repayments` page and after proceeding to `Loan Preview` page, should render validation errors in `Loan Financial Details` page', () => {
       goToPageWithUnconditionalFacilityStage();
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 0);
-      pages.loanFinancialDetails.submit().click();
+      partials.errorSummaryLinks().should('have.length', 0);
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/loan/');
       cy.url().should('include', '/dates-repayments');
-      pages.loanDatesRepayments.submit().click();
+      cy.clickSubmitButton();
       cy.url().should('include', '/check-your-answers');
       partials.taskListHeader.itemLink('loan-financial-details').click();
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 5);
+      partials.errorSummaryLinks().should('have.length', 5);
       pages.loanFinancialDetails.facilityValueInputErrorMessage().should('be.visible');
       pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputErrorMessage().should('be.visible');
       pages.loanFinancialDetails.disbursementAmountInputErrorMessage().should('be.visible');
@@ -71,7 +71,7 @@ context('Loan Financial Details', () => {
 
     partials.taskListHeader.itemLink('loan-guarantee-details').click();
     pages.loanGuaranteeDetails.facilityStageConditionalInput().click();
-    pages.loanGuaranteeDetails.submit().click();
+    cy.clickSubmitButton();
 
     cy.url().should('include', '/financial-details');
 
@@ -95,14 +95,14 @@ context('Loan Financial Details', () => {
     it('should render additional form fields and validation errors when returning to the page', () => {
       goToPage();
       pages.loanFinancialDetails.currencySameAsSupplyContractCurrencyInputNo().click();
-      pages.loanFinancialDetails.submit().click();
+      cy.clickSubmitButton();
 
       partials.taskListHeader.itemLink('loan-financial-details').click();
       cy.url().should('include', '/financial-details');
 
       const TOTAL_REQUIRED_FORM_FIELDS = 6;
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+      partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
       pages.loanFinancialDetails.facilityValueInputErrorMessage().should('be.visible');
       pages.loanFinancialDetails.interestMarginFeeInputErrorMessage().should('be.visible');
@@ -118,14 +118,9 @@ context('Loan Financial Details', () => {
     goToPageWithUnconditionalFacilityStage();
 
     fillLoanForm.financialDetails.currencyNotTheSameAsSupplyContractCurrency();
-    pages.loanFinancialDetails.submit().click();
+    cy.clickSubmitButton();
 
-    partials.taskListHeader
-      .itemStatus('loan-financial-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('loan-financial-details'), 'Completed');
 
     partials.taskListHeader.itemLink('loan-financial-details').click();
 
@@ -179,7 +174,7 @@ context('Loan Financial Details', () => {
       partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
         const loanId = loanIdHiddenInput[0].value;
 
-        pages.loanFinancialDetails.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
 
         cy.url().should('not.include', '/financial-details');
         cy.url().should('include', '/contract');

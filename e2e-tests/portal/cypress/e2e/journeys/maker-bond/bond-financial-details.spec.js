@@ -11,7 +11,7 @@ const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 const goToBondFinancialDetailsPage = () => {
   cy.loginGoToDealPage(BANK1_MAKER1);
 
-  pages.contract.addBondButton().click();
+  cy.clickAddBondButton();
   partials.taskListHeader.itemLink('financial-details').click();
   cy.url().should('include', '/contract');
   cy.url().should('include', '/bond/');
@@ -29,20 +29,20 @@ context('Bond Financial Details', () => {
     it('should render validation errors for all required fields', () => {
       cy.loginGoToDealPage(BANK1_MAKER1);
 
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
       cy.url().should('include', '/financial-details');
       cy.title().should('eq', `Bond Financial Details${pages.defaults.pageTitleAppend}`);
 
       pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(BOND_FORM_VALUES.FINANCIAL_DETAILS.minimumRiskMarginFee);
-      pages.bondFinancialDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/fee-details');
       partials.taskListHeader.itemLink('financial-details').click();
 
       const TOTAL_REQUIRED_FORM_FIELDS = 4;
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+      partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
       pages.bondFinancialDetails.facilityValueInputErrorMessage().should('be.visible');
       pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyInputErrorMessage().should('be.visible');
@@ -55,7 +55,7 @@ context('Bond Financial Details', () => {
     it('should dynamically update the `Guarantee Fee Payable By Bank` value on blur', () => {
       cy.loginGoToDealPage(BANK1_MAKER1);
 
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
 
       let riskMarginFee = '20';
@@ -74,7 +74,7 @@ context('Bond Financial Details', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
       cy.loginGoToDealPage(BANK1_MAKER1);
 
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
 
       pages.bondFinancialDetails.ukefExposureInput().invoke('attr', 'placeholder').should('eq', '0.00');
@@ -98,7 +98,7 @@ context('Bond Financial Details', () => {
   it('should display the correct title for bond financial details', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
-    pages.contract.addBondButton().click();
+    cy.clickAddBondButton();
     partials.taskListHeader.itemLink('financial-details').click();
 
     pages.bondFinancialDetails.title().contains('Add financial details');
@@ -107,44 +107,28 @@ context('Bond Financial Details', () => {
   it('form submit of all required fields should render a `completed` status tag only for `Bond Financial Details` in task list header', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
-    pages.contract.addBondButton().click();
+    cy.clickAddBondButton();
     partials.taskListHeader.itemLink('financial-details').click();
 
     fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
 
-    pages.bondFinancialDetails.submit().click();
-    partials.taskListHeader
-      .itemStatus('financial-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Completed');
-      });
+    cy.clickSubmitButton();
 
-    partials.taskListHeader
-      .itemStatus('bond-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
-
-    partials.taskListHeader
-      .itemStatus('fee-details')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('Incomplete');
-      });
+    cy.assertText(partials.taskListHeader.itemStatus('financial-details'), 'Completed');
+    cy.assertText(partials.taskListHeader.itemStatus('bond-details'), 'Incomplete');
+    cy.assertText(partials.taskListHeader.itemStatus('fee-details'), 'Incomplete');
   });
 
   describe('When a user submits the `Bond Financial Details` form', () => {
     it('should progress to `Bond Fee Details` page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {
       cy.loginGoToDealPage(BANK1_MAKER1);
 
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
       cy.url().should('include', '/financial-details');
 
       fillBondForm.financialDetails.currencySameAsSupplyContractCurrency();
-      pages.bondFinancialDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/contract');
       cy.url().should('include', '/bond/');
@@ -172,7 +156,7 @@ context('Bond Financial Details', () => {
     it('form submit should progress to `Bond Fee Details` page and prepopulate submitted form fields when returning back to `Bond Financial Details` page', () => {
       goToBondFinancialDetailsPage();
       fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
-      pages.bondFinancialDetails.submit().click();
+      cy.clickSubmitButton();
 
       cy.url().should('include', '/contract');
       cy.url().should('include', '/bond/');
@@ -188,14 +172,14 @@ context('Bond Financial Details', () => {
       it('should render validation errors for required fields and `currency is NOT the same` required fields', () => {
         goToBondFinancialDetailsPage();
         pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
-        pages.bondFinancialDetails.submit().click();
+        cy.clickSubmitButton();
 
         partials.taskListHeader.itemLink('financial-details').click();
         cy.url().should('include', '/financial-details');
 
         const TOTAL_REQUIRED_FORM_FIELDS = 6;
 
-        partials.errorSummary.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
+        partials.errorSummaryLinks().should('have.length', TOTAL_REQUIRED_FORM_FIELDS);
 
         pages.bondFinancialDetails.facilityValueInputErrorMessage().should('be.visible');
         pages.bondFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible');
@@ -208,20 +192,20 @@ context('Bond Financial Details', () => {
         pages.bondFinancialDetails.conversionRateDateDayInput().type('22-');
         pages.bondFinancialDetails.conversionRateDateMonthInput().type('02');
         pages.bondFinancialDetails.conversionRateDateYearInput().type('2022');
-        pages.bondFinancialDetails.submit().click();
+        cy.clickSubmitButton();
         partials.taskListHeader.itemLink('financial-details').click();
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The day for the conversion rate must include 1 or 2 numbers');
 
         pages.bondFinancialDetails.conversionRateDateDayInput().clear().type('22');
         pages.bondFinancialDetails.conversionRateDateMonthInput().clear().type('022');
-        pages.bondFinancialDetails.submit().click();
+        cy.clickSubmitButton();
         partials.taskListHeader.itemLink('financial-details').click();
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The month for the conversion rate must include 1 or 2 numbers');
 
         pages.bondFinancialDetails.conversionRateDateDayInput().clear().type('22');
         pages.bondFinancialDetails.conversionRateDateMonthInput().clear().type('02');
         pages.bondFinancialDetails.conversionRateDateYearInput().clear().type('2O22');
-        pages.bondFinancialDetails.submit().click();
+        cy.clickSubmitButton();
         partials.taskListHeader.itemLink('financial-details').click();
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The year for the conversion rate must include 4 numbers');
       });
@@ -239,18 +223,13 @@ context('Bond Financial Details', () => {
       partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
-        pages.bondFinancialDetails.submit().click();
-        pages.bondFeeDetails.saveGoBackButton().click();
+        cy.clickSubmitButton();
+        cy.clickSaveGoBackButton();
         cy.url().should('include', '/contract');
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
-        row
-          .facilityValue()
-          .invoke('text')
-          .then((text) => {
-            const expectedValue = `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`;
-            expect(text.trim()).equal(expectedValue);
-          });
+
+        cy.assertText(row.facilityValue(), `${BOND_FORM_VALUES.FINANCIAL_DETAILS.currency.value} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
       });
     });
   });
@@ -260,7 +239,7 @@ context('Bond Financial Details', () => {
       const fillAndSubmitRiskMarginFee = (value) => {
         pages.bondFinancialDetails.riskMarginFeeInput().clear();
         pages.bondFinancialDetails.riskMarginFeeInput().type(value);
-        pages.bondFinancialDetails.submit().click();
+        cy.clickSubmitButton();
       };
 
       const goBackToFinancialDetails = () => {
@@ -269,7 +248,7 @@ context('Bond Financial Details', () => {
       };
 
       const assertValidationError = () => {
-        partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+        partials.errorSummaryLinks().should('have.length', 1);
         pages.bondFinancialDetails.riskMarginFeeInputErrorMessage().should('be.visible');
       };
 
@@ -299,7 +278,7 @@ context('Bond Financial Details', () => {
       const fillAndSubmitCoveredPercentage = (value) => {
         pages.bondFinancialDetails.coveredPercentageInput().clear();
         pages.bondFinancialDetails.coveredPercentageInput().type(value);
-        pages.bondFinancialDetails.submit().click();
+        cy.clickSubmitButton();
       };
 
       const goBackToFinancialDetails = () => {
@@ -314,7 +293,7 @@ context('Bond Financial Details', () => {
         fillAndSubmitCoveredPercentage('12.34567');
         goBackToFinancialDetails();
 
-        partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+        partials.errorSummaryLinks().should('have.length', 1);
         pages.bondFinancialDetails.coveredPercentageInputErrorMessage().should('be.visible');
       });
     });
@@ -324,7 +303,7 @@ context('Bond Financial Details', () => {
     const fillAndSubmitMinimumRiskMarginFee = (value) => {
       pages.bondFinancialDetails.minimumRiskMarginFeeInput().clear();
       pages.bondFinancialDetails.minimumRiskMarginFeeInput().type(value);
-      pages.bondFinancialDetails.submit().click();
+      cy.clickSubmitButton();
     };
 
     const goBackToFinancialDetails = () => {
@@ -339,7 +318,7 @@ context('Bond Financial Details', () => {
       fillAndSubmitMinimumRiskMarginFee('12.345');
       goBackToFinancialDetails();
 
-      partials.errorSummary.errorSummaryLinks().should('have.length', 1);
+      partials.errorSummaryLinks().should('have.length', 1);
       pages.bondFinancialDetails.minimumRiskMarginFeeInputErrorMessage().should('be.visible');
     });
   });
@@ -348,7 +327,7 @@ context('Bond Financial Details', () => {
     it('should save the form data, return to Deal page and repopulate form fields when returning back to `Bond Financial Details` page', () => {
       cy.loginGoToDealPage(BANK1_MAKER1);
 
-      pages.contract.addBondButton().click();
+      cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
       cy.url().should('include', '/financial-details');
 
@@ -357,7 +336,7 @@ context('Bond Financial Details', () => {
       partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
         const bondId = bondIdHiddenInput[0].value;
 
-        pages.bondFinancialDetails.saveGoBackButton().click();
+        cy.clickSaveGoBackButton();
 
         cy.url().should('not.include', '/financial-details');
         cy.url().should('include', '/contract');

@@ -1,8 +1,12 @@
+import './click-events';
 import './trade-finance-manager-api';
 import './ui';
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
+
+// Assert an element has some exact text
+Cypress.Commands.add('assertText', require('./utils/assertText'));
 
 Cypress.Commands.add('getInputByLabelText', require('./utils/getInputByLabelText'));
 

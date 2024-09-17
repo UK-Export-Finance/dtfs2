@@ -87,12 +87,7 @@ context('View dashboard deals as a checker', () => {
     // should only see 2 deals - ready for check and in Bank 1
     const EXPECTED_DEALS = BANK1_DEALS.filter((deal) => deal.status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
 
-    dashboardDeals
-      .totalItems()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(`(${EXPECTED_DEALS.length} items)`);
-      });
+    cy.assertText(dashboardDeals.totalItems(), `(${EXPECTED_DEALS.length} items)`);
 
     //---------------------------------------------------------------
     // first deal should be the most recently updated (with our test data - GEF)
@@ -102,35 +97,15 @@ context('View dashboard deals as a checker', () => {
 
     cy.get('table tr').eq(1).find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
 
-    exporter(gefDealId)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(gefDeal.exporter.companyName);
-      });
+    cy.assertText(exporter(gefDealId), gefDeal.exporter.companyName);
 
-    bankRef(gefDealId)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(gefDeal.bankInternalRefName);
-      });
+    cy.assertText(bankRef(gefDealId), gefDeal.bankInternalRefName);
 
-    product(gefDealId)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(gefDeal.dealType);
-      });
+    cy.assertText(product(gefDealId), gefDeal.dealType);
 
-    type(gefDealId)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal('-');
-      });
+    cy.assertText(type(gefDealId), '-');
 
-    status(gefDealId)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(gefDeal.status);
-      });
+    cy.assertText(status(gefDealId), gefDeal.status);
 
     updated(gefDealId)
       .invoke('text')
@@ -151,35 +126,15 @@ context('View dashboard deals as a checker', () => {
 
     cy.get('@secondRow').find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
 
-    exporter(bssDealId)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(bssDeal.exporter.companyName);
-      });
+    cy.assertText(exporter(bssDealId), bssDeal.exporter.companyName);
 
-    bankRef(bssDealId)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(bssDeal.bankInternalRefName);
-      });
+    cy.assertText(bankRef(bssDealId), bssDeal.bankInternalRefName);
 
-    product(bssDealId)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(bssDeal.dealType);
-      });
+    cy.assertText(product(bssDealId), bssDeal.dealType);
 
-    type(bssDealId)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(bssDeal.submissionType);
-      });
+    cy.assertText(type(bssDealId), bssDeal.submissionType);
 
-    status(bssDealId)
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(bssDeal.status);
-      });
+    cy.assertText(status(bssDealId), bssDeal.status);
 
     updated(bssDealId)
       .invoke('text')

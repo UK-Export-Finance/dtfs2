@@ -1,4 +1,4 @@
-const { contract, eligibilityCriteria, eligibilityDocumentation, eligibilityPreview } = require('../../pages');
+const { contract, eligibilityCriteria, eligibilityDocumentation } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
@@ -27,12 +27,7 @@ context('Eligibility', () => {
       //---------------------------------------------------------------
       // check that first eligibility form/page - Criteria has `completed` status
       //---------------------------------------------------------------
-      partials.taskListHeader
-        .itemStatus('eligibility-criteria')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('eligibility-criteria'), 'Completed');
 
       //---------------------------------------------------------------
       // complete and submit second eligibility form/page - Documentation
@@ -45,33 +40,18 @@ context('Eligibility', () => {
       //---------------------------------------------------------------
       // check that all eligibility form/pages have `completed` status
       //---------------------------------------------------------------
-      partials.taskListHeader
-        .itemStatus('supporting-documentation')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('supporting-documentation'), 'Completed');
 
-      partials.taskListHeader
-        .itemStatus('eligibility-criteria')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('eligibility-criteria'), 'Completed');
 
       //---------------------------------------------------------------
       // go back to deal page, check Eligibility status is `completed`
       //---------------------------------------------------------------
-      eligibilityPreview.saveGoBackButton().click();
+      cy.clickSaveGoBackButton();
 
       cy.url().should('not.include', '/eligibility');
 
-      contract
-        .eligibilityStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(contract.eligibilityStatus(), 'Completed');
 
       //---------------------------------------------------------------
       // go back to first Eligibility form/page
@@ -83,51 +63,21 @@ context('Eligibility', () => {
       contract.eligibilityCriteriaLink().click();
       cy.url().should('include', '/criteria');
 
-      partials.taskListHeader
-        .itemStatus('supporting-documentation')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('supporting-documentation'), 'Completed');
 
-      partials.taskListHeader
-        .itemStatus('eligibility-criteria')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('eligibility-criteria'), 'Completed');
 
       partials.taskListHeader.itemLink('supporting-documentation').click();
 
-      partials.taskListHeader
-        .itemStatus('supporting-documentation')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('supporting-documentation'), 'Completed');
 
-      partials.taskListHeader
-        .itemStatus('eligibility-criteria')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('eligibility-criteria'), 'Completed');
 
       partials.taskListHeader.checkYourAnswersLink().click();
 
-      partials.taskListHeader
-        .itemStatus('supporting-documentation')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('supporting-documentation'), 'Completed');
 
-      partials.taskListHeader
-        .itemStatus('eligibility-criteria')
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).equal('Completed');
-        });
+      cy.assertText(partials.taskListHeader.itemStatus('eligibility-criteria'), 'Completed');
     });
   });
 });

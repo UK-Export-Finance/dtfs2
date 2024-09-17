@@ -32,7 +32,6 @@ const page = {
   abandonLink: () => cy.get('[data-cy="AbandonLink"]'),
   proceedToReview: () => cy.get('[data-cy="ProceedToReview"]'),
   proceedToSubmit: () => cy.get('[data-cy="ProceedToSubmit"]'),
-  returnToMaker: () => cy.get('[data-cy="ReturnToMaker"]'),
   eligibilitySubmissionType: () => cy.get('[data-cy="eligibility-submission-type"]'),
   eligibilityManualInclusionNoticeSubmissionDate: () => cy.get('[data-cy="manual-inclusion-notice-submission-date"]'),
   bondTransactionsTableRows: () => cy.get('[data-cy="bond-transactions-table"] tbody tr'),

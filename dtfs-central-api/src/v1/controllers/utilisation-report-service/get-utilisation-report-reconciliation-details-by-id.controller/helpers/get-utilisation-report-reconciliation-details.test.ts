@@ -5,11 +5,16 @@ import { getBankNameById } from '../../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../../errors';
 import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
 import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
+import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
+import { getFeeRecordPaymentEntityGroups } from '../../../../../helpers';
+import * as filterFeeRecordsModule from './filter-fee-record-payment-entity-groups-by-facility-id';
 
 console.error = jest.fn();
 
 jest.mock('../../../../../repositories/banks-repo');
+jest.mock('../../../../../helpers');
 jest.mock('./get-keying-sheet-for-report-id');
+jest.mock('./map-to-fee-record-payment-groups');
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
   describe('getUtilisationReportReconciliationDetails', () => {
@@ -17,10 +22,24 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
     const bankId = '123';
 
+    const filterFeeRecordSpy = jest.spyOn(filterFeeRecordsModule, 'filterFeeRecordPaymentEntityGroupsByFacilityId');
+
     beforeEach(() => {
       jest.resetAllMocks();
       jest.mocked(getBankNameById).mockRejectedValue('Some error');
       jest.mocked(getKeyingSheetForReportId).mockRejectedValue('Some error');
+      jest.mocked(getFeeRecordPaymentEntityGroups).mockImplementation(() => {
+        throw new Error('Some error');
+      });
+      jest.mocked(mapToFeeRecordPaymentGroups).mockRejectedValue('Some error');
+
+      when(getKeyingSheetForReportId).calledWith(reportId, []).mockResolvedValue([]);
+      when(getFeeRecordPaymentEntityGroups).calledWith([]).mockReturnValue([]);
+      when(mapToFeeRecordPaymentGroups).calledWith([]).mockResolvedValue([]);
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
     });
 
     it.each(Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS))(
@@ -28,9 +47,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       async (status) => {
         // Arrange
         const report = UtilisationReportEntityMockBuilder.forStatus(status).withId(reportId).withDateUploaded(null).build();
+        const premiumPaymentsFilters = {};
 
         // Act / Assert
-        await expect(getUtilisationReportReconciliationDetails(report, undefined)).rejects.toThrow(
+        await expect(getUtilisationReportReconciliationDetails(report, premiumPaymentsFilters)).rejects.toThrow(
           new Error(`Report with id '${reportId}' has not been uploaded`),
         );
         expect(getBankNameById).not.toHaveBeenCalled();
@@ -41,10 +61,12 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       // Arrange
       const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
 
+      const premiumPaymentsFilters = {};
+
       when(getBankNameById).calledWith(bankId).mockResolvedValue(undefined);
 
       // Act / Assert
-      await expect(getUtilisationReportReconciliationDetails(uploadedReport, undefined)).rejects.toThrow(
+      await expect(getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters)).rejects.toThrow(
         new NotFoundError(`Failed to find a bank with id '${bankId}'`),
       );
       expect(getBankNameById).toHaveBeenCalledWith(bankId);
@@ -65,12 +87,13 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         .withFeeRecords([])
         .build();
 
+      const premiumPaymentsFilters = {};
+
       const bankName = 'Test bank';
       when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
-      when(getKeyingSheetForReportId).calledWith(reportId, []).mockResolvedValue([]);
 
       // Act
-      const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, undefined);
+      const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters);
 
       // Assert
       expect(getBankNameById).toHaveBeenCalledWith(bankId);
@@ -83,8 +106,58 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         status: 'PENDING_RECONCILIATION',
         reportPeriod,
         dateUploaded,
-        feeRecordPaymentGroups: [],
+        premiumPayments: [],
+        paymentDetails: [],
         keyingSheet: [],
+      });
+    });
+
+    describe('premium payment tab filtering', () => {
+      it('filters the fee record payment groups by the facility id when the facility id is a string', async () => {
+        // Arrange
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+          .withId(reportId)
+          .withBankId(bankId)
+          .withDateUploaded(new Date())
+          .withFeeRecords([])
+          .build();
+
+        filterFeeRecordSpy.mockReturnValue([]);
+
+        const bankName = 'Test bank';
+        when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
+
+        const facilityId = 'some filter';
+        const premiumPaymentsFilters = {
+          facilityId,
+        };
+
+        // Act
+        await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters);
+
+        // Assert
+        expect(filterFeeRecordSpy).toHaveBeenCalledWith([], facilityId);
+      });
+
+      it('does not filter the fee record payment groups by the facility id when the facility id is undefined', async () => {
+        // Arrange
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
+          .withId(reportId)
+          .withBankId(bankId)
+          .withDateUploaded(new Date())
+          .withFeeRecords([])
+          .build();
+
+        const bankName = 'Test bank';
+        when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
+
+        const premiumPaymentsFilters = {};
+
+        // Act
+        await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters);
+
+        // Assert
+        expect(filterFeeRecordSpy).not.toHaveBeenCalled();
       });
     });
   });
