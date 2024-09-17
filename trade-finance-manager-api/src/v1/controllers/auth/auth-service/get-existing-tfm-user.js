@@ -18,12 +18,8 @@ const get = async (entraUser) => {
     /** @constant {import('src/types/auth/azure-user-info-response-account').AzureIdTokenClaims} Entra claims */
     const claims = entraUser.idTokenClaims;
 
-    // verified_primary_email is always array.
-    let emails = claims.verified_primary_email;
-    // verified_secondary_email is always array.
-    if (claims.verified_secondary_email) {
-      emails = [...emails, ...claims.verified_secondary_email];
-    }
+    // verified_primary_email and verified_secondary_email are always an array.
+    const emails = [...claims.verified_primary_email, ...claims.verified_secondary_email];
 
     const getUserResponse = await userController.findByEmails(emails);
 
