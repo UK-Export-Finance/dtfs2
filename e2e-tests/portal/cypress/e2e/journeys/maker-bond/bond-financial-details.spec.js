@@ -84,7 +84,11 @@ context('Bond Financial Details', () => {
 
       pages.bondFinancialDetails.riskMarginFeeInput().clear();
       riskMarginFee = '9.09';
+
       cy.keyboardInput(pages.bondFinancialDetails.riskMarginFeeInput(), riskMarginFee);
+
+      pages.bondFinancialDetails.riskMarginFeeInput().blur();
+
       pages.bondFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(riskMarginFee));
     });
   });

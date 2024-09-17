@@ -155,6 +155,9 @@ context('Loan Financial Details', () => {
       pages.loanFinancialDetails.interestMarginFeeInput().clear();
       interestMarginFee = '9.09';
       cy.keyboardInput(pages.loanFinancialDetails.interestMarginFeeInput(), interestMarginFee);
+
+      pages.loanFinancialDetails.interestMarginFeeInput().blur();
+
       pages.loanFinancialDetails.guaranteeFeePayableByBankInput().should('have.value', calculateExpectedGuaranteeFee(interestMarginFee));
     });
   });
