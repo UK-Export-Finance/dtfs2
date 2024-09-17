@@ -9,7 +9,7 @@
 
   {% if filters.currency %}
     {{ govukRadios({
-      name: "currency",
+      name: "paymentDetailsCurrency",
       fieldset: {
         legend: {
           text: "Currency",
@@ -24,8 +24,8 @@
   {% endif %}
 
   {{ govukInput({
-    id: 'paymentReference',
-    name: 'paymentReference',
+    id: 'paymentDetailsPaymentReference',
+    name: 'paymentDetailsPaymentReference',
     value: paymentReference,
     label: {
       text: 'Payment reference',
@@ -40,8 +40,8 @@
   }) }}
 
   {{ govukInput({
-    id: 'facilityId',
-    name: 'facilityId',
+    id: 'paymentDetailsFacilityId',
+    name: 'paymentDetailsFacilityId',
     value: facilityId,
     label: {
       text: 'Facility ID',

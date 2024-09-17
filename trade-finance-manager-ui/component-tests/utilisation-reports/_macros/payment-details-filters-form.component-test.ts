@@ -13,6 +13,8 @@ describe(component, () => {
   };
 
   describe('Currency filter', () => {
+    const containerSelector = '[data-cy="payment-details--filter-currency"]';
+
     it('should render currency radio buttons when currency filter is provided', () => {
       const params = {
         ...defaultParams,
@@ -27,7 +29,7 @@ describe(component, () => {
 
       const wrapper = render(params);
 
-      wrapper.expectElement('[data-cy="payment-details--filter-currency"]').toExist();
+      wrapper.expectElement(containerSelector).toExist();
       wrapper.expectElement('[data-cy="payment-details--filter-currency-input-GBP"]').toExist();
       wrapper.expectElement('[data-cy="payment-details--filter-currency-input-USD"]').toExist();
       wrapper.expectElement('[data-cy="payment-details--filter-currency-input-EUR"]').toExist();
@@ -38,7 +40,7 @@ describe(component, () => {
 
       const wrapper = render(params);
 
-      wrapper.expectElement('[data-cy="payment-details--filter-currency"]').notToExist();
+      wrapper.expectElement(containerSelector).notToExist();
     });
   });
 
@@ -62,7 +64,7 @@ describe(component, () => {
     it('should set correct id for payment reference input', () => {
       const wrapper = render(defaultParams);
 
-      wrapper.expectElement(inputSelector).toHaveAttribute('id', 'paymentReference');
+      wrapper.expectElement(inputSelector).toHaveAttribute('id', 'paymentDetailsPaymentReference');
     });
 
     it('should have correct label for payment reference input', () => {
@@ -92,7 +94,7 @@ describe(component, () => {
     it('should set correct id for facility ID input', () => {
       const wrapper = render(defaultParams);
 
-      wrapper.expectElement(inputSelector).toHaveAttribute('id', 'facilityId');
+      wrapper.expectElement(inputSelector).toHaveAttribute('id', 'paymentDetailsFacilityId');
     });
 
     it('should have correct label for facility ID input', () => {
