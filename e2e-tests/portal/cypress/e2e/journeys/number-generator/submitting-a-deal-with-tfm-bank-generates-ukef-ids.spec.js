@@ -45,7 +45,7 @@ context.skip('A TFM checker submits a deal', () => {
   it('TFM Checker submits a deal; UKEF deal and facility IDs are displayed', () => {
     cy.login(BANK1_CHECKER1);
     pages.contract.visit(deal);
-    pages.contract.proceedToSubmit().click();
+    cy.clickProceedToSubmitButton();
 
     pages.contractConfirmSubmission.confirmSubmit().check();
     // Need to pass deal to trigger submission to TFM post UKEFID generation
@@ -53,19 +53,9 @@ context.skip('A TFM checker submits a deal', () => {
 
     pages.contract.visit(deal);
 
-    pages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Acknowledged');
-      });
+    cy.assertText(pages.contract.status(), 'Acknowledged');
 
-    pages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Submitted');
-      });
+    cy.assertText(pages.contract.previousStatus(), 'Submitted');
 
     // IDs are generated via external API. We cannot check the actual ID.
     // We can only check that the ID values are not empty.

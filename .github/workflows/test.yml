@@ -145,6 +145,7 @@ env:
   CONTACT_US_EMAIL_ADDRESS: ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
   FF_TFM_PAYMENT_RECONCILIATION_ENABLED: ${{ vars.FF_TFM_PAYMENT_RECONCILIATION_ENABLED }}
   FF_TFM_FACILITY_END_DATE_ENABLED: ${{ vars.FF_TFM_FACILITY_END_DATE_ENABLED }}
+  FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
   GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
 
 jobs:
@@ -346,6 +347,7 @@ jobs:
       # Various feature flags
       FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
+      FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -501,7 +503,11 @@ jobs:
             'eligibility/**/*.spec.js',
             'exporter/**/*.spec.js',
             'external/**/*.spec.js',
-            'facility/**/*.spec.js',
+            'facility/pre-submission/*.spec.js',
+            'facility/review-ukef-approval/*.spec.js',
+            'facility/version-0/*.spec.js',
+            'facility/unissued-facilities/AIN/*.spec.js',
+            'facility/unissued-facilities/MIN/*.spec.js',
             'maker/**/*.spec.js',
             'scenarios/**/*.spec.js',
             'security/**/*.spec.js',
@@ -713,6 +719,7 @@ jobs:
       # Various feature flags
       FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
+      FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -732,7 +739,11 @@ jobs:
             './gef/cypress/e2e/eligibility/**/*.spec.js',
             './gef/cypress/e2e/exporter/**/*.spec.js',
             './gef/cypress/e2e/external/**/*.spec.js',
-            './gef/cypress/e2e/facility/**/*.spec.js',
+            './gef/cypress/e2e/facility/pre-submission/*.spec.js',
+            './gef/cypress/e2e/facility/review-ukef-approval/*.spec.js',
+            './gef/cypress/e2e/facility/version-0/*.spec.js',
+            './gef/cypress/e2e/facility/unissued-facilities/AIN/*.spec.js',
+            './gef/cypress/e2e/facility/unissued-facilities/MIN/*.spec.js',
             './gef/cypress/e2e/maker/**/*.spec.js',
             './gef/cypress/e2e/scenarios/**/*.spec.js',
             './gef/cypress/e2e/security/**/*.spec.js',

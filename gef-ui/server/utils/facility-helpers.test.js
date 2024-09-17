@@ -24,11 +24,11 @@ import {
   MOCK_AIN_APPLICATION_GENERATOR,
   MOCK_MIA_APPLICATION_UNISSUED_ONLY,
   MOCK_APPLICATION_GENERATOR_SUBCOUNT,
-} from './mocks/mock_applications';
+} from './mocks/mock-applications';
 
-import { MOCK_ISSUED_FACILITY, MOCK_FACILITY, MOCK_ISSUED_FACILITY_UNCHANGED, MOCK_UNISSUED_FACILITY } from './mocks/mock_facilities';
+import { MOCK_ISSUED_FACILITY, MOCK_FACILITY, MOCK_ISSUED_FACILITY_UNCHANGED, MOCK_UNISSUED_FACILITY } from './mocks/mock-facilities';
 
-import { MOCK_REQUEST, MOCK_REQUEST_CHECKER } from './mocks/mock_requests';
+import { MOCK_REQUEST, MOCK_REQUEST_CHECKER } from './mocks/mock-requests';
 import { MAKER } from '../constants/roles';
 
 const CONSTANTS = require('../constants');

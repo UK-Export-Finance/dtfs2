@@ -172,7 +172,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       cy.login(BANK1_MAKER1);
       contract.visit(deal);
       contract.proceedToReview().should('not.be.disabled');
-      contract.proceedToReview().click();
+      cy.clickProceedToReviewButton();
       cy.url().should('eq', relative(`/contract/${deal._id}/ready-for-review`));
     });
 
@@ -182,7 +182,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       // log in, visit a deal, select abandon
       cy.login(BANK1_MAKER1);
       contract.visit(deal);
-      contract.proceedToReview().click();
+      cy.clickProceedToReviewButton();
 
       // cancel
       contractReadyForReview.comments().should('have.value', '');
@@ -197,7 +197,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       // log in, visit a deal, select abandon
       cy.login(BANK1_MAKER1);
       contract.visit(deal);
-      contract.proceedToReview().click();
+      cy.clickProceedToReviewButton();
 
       cy.title().should('eq', `Ready for review - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
 
@@ -216,7 +216,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       // log in, visit a deal, select abandon
       cy.login(BANK1_MAKER1);
       contract.visit(deal);
-      contract.proceedToReview().click();
+      cy.clickProceedToReviewButton();
 
       // submit with a comment
       contractReadyForReview.comments().type('a mandatory comment');
@@ -224,6 +224,7 @@ context('A maker selects to submit a contract for review from the view-contract 
 
       // expect to land on the /dashboard page with a success message
       cy.url().should('include', '/dashboard');
+
       successMessage
         .successMessageListItem()
         .invoke('text')
@@ -233,18 +234,10 @@ context('A maker selects to submit a contract for review from the view-contract 
 
       // visit the deal and confirm the updates have been made
       contract.visit(deal);
-      contract
-        .status()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal("Ready for Checker's approval");
-        });
-      contract
-        .previousStatus()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Draft');
-        });
+
+      cy.assertText(contract.status(), "Ready for Checker's approval");
+
+      cy.assertText(contract.previousStatus(), 'Draft');
 
       // while on the deal page: confirm that the various edit features have been
       //  disabled since we're now in a new state
@@ -262,20 +255,10 @@ context('A maker selects to submit a contract for review from the view-contract 
 
       // visit the comments page and prove that the comment has been added
       contract.commentsTab().click();
-      contractComments
-        .row(0)
-        .comment()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('a mandatory comment');
-        });
-      contractComments
-        .row(0)
-        .commentorName()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal(`${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
-        });
+
+      cy.assertText(contractComments.row(0).comment(), 'a mandatory comment');
+
+      cy.assertText(contractComments.row(0).commentorName(), `${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
     });
   });
 
@@ -287,7 +270,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       contract.visit(deal);
 
       contract.proceedToReview().should('not.be.disabled');
-      contract.proceedToReview().click();
+      cy.clickProceedToReviewButton();
       cy.url().should('eq', relative(`/contract/${deal._id}/ready-for-review`));
 
       contractReadyForReview.comments().type('a mandatory comment');
@@ -315,7 +298,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       contract.visit(deal);
 
       contract.proceedToReview().should('not.be.disabled');
-      contract.proceedToReview().click();
+      cy.clickProceedToReviewButton();
       cy.url().should('eq', relative(`/contract/${deal._id}/ready-for-review`));
 
       contractReadyForReview.comments().type('a mandatory comment');

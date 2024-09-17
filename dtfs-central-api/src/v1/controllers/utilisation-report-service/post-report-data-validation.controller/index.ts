@@ -13,11 +13,11 @@ export type PostReportDataValidationRequest = CustomExpressRequest<{
  * @param req - The request
  * @param res - The response
  */
-export const postReportDataValidation = (req: PostReportDataValidationRequest, res: Response) => {
+export const postReportDataValidation = async (req: PostReportDataValidationRequest, res: Response) => {
   const { reportData } = req.body;
 
   try {
-    const csvValidationErrors = validateUtilisationReportCsvData(reportData);
+    const csvValidationErrors = await validateUtilisationReportCsvData(reportData);
 
     return res.status(HttpStatusCode.Ok).send({ csvValidationErrors });
   } catch (error) {

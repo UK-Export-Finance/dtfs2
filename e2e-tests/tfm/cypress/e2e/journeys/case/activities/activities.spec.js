@@ -1,4 +1,5 @@
 import relative from '../../../relativeURL';
+import { errorSummary } from '../../../partials';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 import activityCommentBoxPage from '../../../pages/activities/activityCommentBoxPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
@@ -96,14 +97,14 @@ context('Users can create and submit comments', () => {
     it('pressing cancel should not submit a comment', () => {
       activitiesPage.addACommentButton().click();
       activityCommentBoxPage.activityCommentBox().type('should cancel');
-      activityCommentBoxPage.cancelButton().click();
+      cy.clickCancelLink();
       activitiesPage.activitiesTimeline().contains('should cancel').should('not.exist');
     });
 
     it('pressing comment filter should show comments', () => {
       activitiesPage.activitiesTimeline().contains('Not a comment');
       activitiesPage.filterCommentsOnly().click();
-      activitiesPage.filterSubmitButton().click();
+      cy.clickSubmitButton();
       activitiesPage.activitiesTimeline().contains('test');
       activitiesPage.activitiesTimeline().contains(userFullName);
       // ensures that is filtered out
@@ -115,7 +116,7 @@ context('Users can create and submit comments', () => {
       activitiesPage.addACommentButton().click();
       activityCommentBoxPage.activityCommentBox().typeWithoutDelay(longComment);
       activityCommentBoxPage.addCommentButton().click();
-      activityCommentBoxPage.commentErrorSummary().contains('Comments must be 1000 characters or fewer');
+      errorSummary().contains('Comments must be 1000 characters or fewer');
       activityCommentBoxPage.commentErrorMessage().contains('Comments must be 1000 characters or fewer');
     });
   });

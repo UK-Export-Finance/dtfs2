@@ -42,29 +42,19 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
 
       // select option, submit
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputGood().click();
-      pages.underwritingPricingAndRiskEditPage.submitButton().click();
+      cy.clickSubmitButton();
 
       // assert elements/value in `pricing and risk` page
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().should('contain', 'Change');
 
-      pages.underwritingPricingAndRiskPage
-        .exporterTableRatingValue()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Good (BB-)');
-        });
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), 'Good (BB-)');
     });
 
     it('after submitting a rating, editing the rating has default value and new rating displays in `pricing and risk` page', () => {
       // check value previously submitted
-      pages.underwritingPricingAndRiskPage
-        .exporterTableRatingValue()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Good (BB-)');
-        });
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), 'Good (BB-)');
 
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
@@ -73,17 +63,12 @@ context('Case Underwriting - Pricing and risk for Risk Managers', () => {
 
       // submit different value
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputAcceptable().click();
-      pages.underwritingPricingAndRiskEditPage.submitButton().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
       // check new value displays in `pricing and risk` page
-      pages.underwritingPricingAndRiskPage
-        .exporterTableRatingValue()
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.equal('Acceptable (B+)');
-        });
+      cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), 'Acceptable (B+)');
     });
   });
 

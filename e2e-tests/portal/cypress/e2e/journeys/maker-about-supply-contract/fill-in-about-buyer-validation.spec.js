@@ -29,7 +29,7 @@ context('about-buyer', () => {
 
     // prove the errors are on the about-buyer page
     contractAboutBuyer.visit(deal);
-    partials.errorSummary.errorSummaryLinks().should('have.length', 5);
+    partials.errorSummaryLinks().should('have.length', 5);
     contractAboutBuyer.expectError('Buyer name is required');
     contractAboutBuyer.expectError('Buyer country is required');
     contractAboutBuyer.expectError('Buyer address line 1 is required');
