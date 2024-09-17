@@ -68,7 +68,7 @@ env:
 jobs:
   setup:
     name: Setup 🔧
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: [self-hosted, linux, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
@@ -87,7 +87,7 @@ jobs:
 
   database:
     name: MSSQL 🗄️
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
     environment: ${{ needs.setup.outputs.environment }}
     needs: [setup]
     runs-on: [self-hosted, DTFS, deployment]
@@ -118,7 +118,7 @@ jobs:
 
   webapp:
     name: WebApp 🌐
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: [setup]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
@@ -221,7 +221,7 @@ jobs:
 
   functions:
     name: Functions ⚡
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: [setup, webapp]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
