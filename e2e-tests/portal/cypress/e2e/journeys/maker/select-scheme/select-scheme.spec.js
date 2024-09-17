@@ -1,7 +1,7 @@
-const pages = require('../../pages');
-const partials = require('../../partials');
-const relative = require('../../relativeURL');
-const MOCK_USERS = require('../../../../../e2e-fixtures');
+const pages = require('../../../pages');
+const partials = require('../../../partials');
+const relative = require('../../../relativeURL');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 

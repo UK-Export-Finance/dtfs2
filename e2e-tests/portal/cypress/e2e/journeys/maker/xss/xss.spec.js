@@ -1,9 +1,9 @@
-const { contract, contractDelete, contractComments } = require('../../pages');
-const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { contract, contractDelete, contractComments } = require('../../../pages');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
-const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
+const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
 context('Input is cleaned to avoid Cross Site Scripting', () => {
   let deal;

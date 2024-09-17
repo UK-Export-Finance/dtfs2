@@ -1,6 +1,6 @@
-const { contract, editDealName, defaults } = require('../../pages');
-const relative = require('../../relativeURL');
-const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { contract, editDealName, defaults } = require('../../../pages');
+const relative = require('../../../relativeURL');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 

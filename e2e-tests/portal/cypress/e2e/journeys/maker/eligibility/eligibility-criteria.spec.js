@@ -1,6 +1,6 @@
-const { contract, eligibilityCriteria, defaults } = require('../../pages');
-const { errorSummaryLinks, taskListHeader } = require('../../partials');
-const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { contract, eligibilityCriteria, defaults } = require('../../../pages');
+const { errorSummaryLinks, taskListHeader } = require('../../../partials');
+const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
