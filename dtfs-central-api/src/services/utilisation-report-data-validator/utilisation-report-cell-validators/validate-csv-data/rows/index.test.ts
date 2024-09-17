@@ -1,4 +1,4 @@
-import generateUtilisationReportMatchErrors from '.';
+import validateRows from '.';
 
 const currencyValue = 'EUR';
 const facilityUtilisationValue = '34538e.54';
@@ -26,7 +26,7 @@ const generateCSVData = (currency: string, utilisation: string) => {
   ];
 };
 
-describe('validateUtilisationReportCells', () => {
+describe('validateRows', () => {
   describe('when the base currency and facility utilisation does not match for a facility', () => {
     const csvData = generateCSVData('GBP', '45');
 
@@ -48,7 +48,7 @@ describe('validateUtilisationReportCells', () => {
         },
       ];
 
-      const errors = generateUtilisationReportMatchErrors(csvData, []);
+      const errors = validateRows(csvData, []);
 
       expect(errors).toEqual(expectedErrors);
     });
@@ -68,7 +68,7 @@ describe('validateUtilisationReportCells', () => {
         },
       ];
 
-      const errors = generateUtilisationReportMatchErrors(csvData, []);
+      const errors = validateRows(csvData, []);
 
       expect(errors).toEqual(expectedErrors);
     });
@@ -88,7 +88,7 @@ describe('validateUtilisationReportCells', () => {
         },
       ];
 
-      const errors = generateUtilisationReportMatchErrors(csvData, []);
+      const errors = validateRows(csvData, []);
 
       expect(errors).toEqual(expectedErrors);
     });
@@ -98,7 +98,7 @@ describe('validateUtilisationReportCells', () => {
     const csvData = generateCSVData(currencyValue, facilityUtilisationValue);
 
     it('should return an empty array', () => {
-      const errors = generateUtilisationReportMatchErrors(csvData, []);
+      const errors = validateRows(csvData, []);
 
       expect(errors).toEqual([]);
     });

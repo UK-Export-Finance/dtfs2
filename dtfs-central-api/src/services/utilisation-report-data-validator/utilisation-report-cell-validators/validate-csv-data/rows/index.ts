@@ -6,8 +6,8 @@ interface FacilityData {
 }
 
 /**
- * validateUtilisationReportCells
- * Generate and returns validation errors for the facility utilisation csv cells
+ * validateRows
+ * Generate and returns validation errors for the facility utilisation csv rows
  * if facilities have the same ukef facility ids, then the base currency and facility utilisation values should match
  * if not, generate validation errors
  * Uses a map to store the facility ids and their base currency and facility utilisation values to match against
@@ -15,7 +15,7 @@ interface FacilityData {
  * @param {UtilisationReportDataValidationError[]} validationErrors - Existing validation errors
  * @returns {UtilisationReportDataValidationError[]} The error if data is invalid, null if the data is valid
  */
-const validateUtilisationReportCells = (csvData: UtilisationReportCsvRowData[], validationErrors: UtilisationReportDataValidationError[]) => {
+const validateRows = (csvData: UtilisationReportCsvRowData[], validationErrors: UtilisationReportDataValidationError[]) => {
   // Map to store the facility ids and their base currency and facility utilisation values
   const map = new Map<string, FacilityData>();
   const errors: UtilisationReportDataValidationError[] = [];
@@ -82,4 +82,4 @@ const validateUtilisationReportCells = (csvData: UtilisationReportCsvRowData[], 
   return validationErrors;
 };
 
-export default validateUtilisationReportCells;
+export default validateRows;

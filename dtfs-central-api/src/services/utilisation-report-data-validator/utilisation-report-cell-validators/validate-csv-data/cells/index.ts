@@ -13,15 +13,13 @@ import {
 } from '../..';
 
 /**
- * Validate the utilisation report data from the body of the csv
+ * validateCells
+ * Validate the utilisation report cell data from the body of the csv
  * @param csvData - The data from the uploaded csv file
  * @param availableHeaders - The available headers
  * @returns An array of errors if there are any
  */
-const validateUtilisationReportCsvCellData = async (
-  csvData: UtilisationReportCsvRowData[],
-  availableHeaders: string[],
-): Promise<UtilisationReportDataValidationError[]> => {
+const validateCells = async (csvData: UtilisationReportCsvRowData[], availableHeaders: string[]): Promise<UtilisationReportDataValidationError[]> => {
   const cellValidations = [
     { header: UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID, errorGenerator: generateUkefFacilityIdError },
     { header: UTILISATION_REPORT_HEADERS.BASE_CURRENCY, errorGenerator: generateBaseCurrencyError },
@@ -41,6 +39,12 @@ const validateUtilisationReportCsvCellData = async (
     generatePaymentExchangeRateError,
   ];
 
+  /**
+   * maps through the csv data
+   * maps through cellValidations and generates errors for each validation
+   * then maps through rowValidations and generates errors for each validation
+   * resolves the promises and returns the errors
+   */
   const errors = await Promise.all(
     csvData.map(async (csvRow) => {
       const cellErrorPromises = cellValidations.map(({ header, errorGenerator }) => {
@@ -63,4 +67,4 @@ const validateUtilisationReportCsvCellData = async (
   return errorsWithNullValuesFilteredOut;
 };
 
-export default validateUtilisationReportCsvCellData;
+export default validateCells;

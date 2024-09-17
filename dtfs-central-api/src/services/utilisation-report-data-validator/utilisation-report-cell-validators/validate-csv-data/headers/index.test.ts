@@ -1,5 +1,5 @@
 import { UTILISATION_REPORT_HEADERS, UtilisationReportCsvRowData } from '@ukef/dtfs2-common';
-import validateUtilisationReportCsvHeaders, { getHeaderIsMissingErrorMessage } from './index';
+import validateHeaders, { getHeaderIsMissingErrorMessage } from './index';
 
 const requiredHeaders = [
   UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID,
@@ -32,7 +32,7 @@ describe('getHeaderIsMissingErrorMessage', () => {
   });
 });
 
-describe('validateUtilisationReportCsvHeaders', () => {
+describe('validateHeaders', () => {
   it.each`
     header                                                     | errorPrefix
     ${UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID}             | ${'UKEF facility ID'}
@@ -47,7 +47,7 @@ describe('validateUtilisationReportCsvHeaders', () => {
     delete csvData[header];
 
     // Act
-    const { missingHeaderErrors } = validateUtilisationReportCsvHeaders(csvData);
+    const { missingHeaderErrors } = validateHeaders(csvData);
 
     // Assert
     expect(missingHeaderErrors.length).toBe(1);
@@ -59,7 +59,7 @@ describe('validateUtilisationReportCsvHeaders', () => {
     const csvData = aCsvRowDataWithAllRequiredHeadings();
 
     // Act
-    const { missingHeaderErrors } = validateUtilisationReportCsvHeaders(csvData);
+    const { missingHeaderErrors } = validateHeaders(csvData);
 
     // Assert
     expect(missingHeaderErrors.length).toBe(0);
@@ -75,7 +75,7 @@ describe('validateUtilisationReportCsvHeaders', () => {
     csvData['faculty utilisation'] = { value: '800000', row: 1, column: 'A' };
 
     // Act
-    const { missingHeaderErrors } = validateUtilisationReportCsvHeaders(csvData);
+    const { missingHeaderErrors } = validateHeaders(csvData);
 
     // Assert
     expect(missingHeaderErrors.length).toBe(3);

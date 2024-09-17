@@ -1,7 +1,7 @@
 import { validateUtilisationReportCsvData } from '.';
-import validateUtilisationReportCsvHeaders from './utilisation-report-cell-validators/helpers/validate-csv-headers';
-import validateUtilisationReportCsvCellData from './utilisation-report-cell-validators/helpers/validate-csv-cell-data';
-import validateUtilisationReportCells from './utilisation-report-cell-validators/helpers/validate-csv-cells';
+import validateHeaders from './utilisation-report-cell-validators/validate-csv-data/headers';
+import validateCells from './utilisation-report-cell-validators/validate-csv-data/cells';
+import validateRows from './utilisation-report-cell-validators/validate-csv-data/rows';
 
 jest.mock('./utilisation-report-cell-validators', () => ({
   generateUkefFacilityIdError: jest.fn(),
@@ -38,11 +38,11 @@ describe('services/utilisation-report-data-validator', () => {
   it('should return the expected validation errors when calling validateUtilisationReportCsvData', async () => {
     const response = await validateUtilisationReportCsvData(csvData);
 
-    const { missingHeaderErrors, availableHeaders } = validateUtilisationReportCsvHeaders(csvData[0]);
+    const { missingHeaderErrors, availableHeaders } = validateHeaders(csvData[0]);
 
-    let dataValidationErrors = await validateUtilisationReportCsvCellData(csvData, availableHeaders);
+    let dataValidationErrors = await validateCells(csvData, availableHeaders);
 
-    dataValidationErrors = validateUtilisationReportCells(csvData, dataValidationErrors);
+    dataValidationErrors = validateRows(csvData, dataValidationErrors);
 
     const expectedValidationErrors = missingHeaderErrors.concat(dataValidationErrors);
 
