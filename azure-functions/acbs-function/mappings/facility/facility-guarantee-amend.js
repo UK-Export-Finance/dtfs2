@@ -24,7 +24,10 @@ const facilityGuaranteeAmend = (amendment) => {
     }
 
     if (amount) {
-      record = { ...record, guaranteedLimit: to2Decimals(amount) };
+      record = {
+        ...record,
+        guaranteedLimit: to2Decimals(amount),
+      };
     }
 
     if (facilityGuaranteeDates?.guaranteeExpiryDate) {
