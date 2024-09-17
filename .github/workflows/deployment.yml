@@ -70,15 +70,15 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
-      environment: ${{ env.ENVIRONMENT }}
+      environment: ${{ steps.environment.outputs.environment }}
       timezone: ${{ env.TIMEZONE }}
     steps:
       - name: Environment 🧪
+        id: environment
         run: |
           if [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
-            echo "environment=staging" >> $GITHUB_ENV
+            echo "environment=staging" >> "$GITHUB_OUTPUT"
           fi
-          echo "Environment set to ${{ env.ENVIRONMENT }}"
 
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
