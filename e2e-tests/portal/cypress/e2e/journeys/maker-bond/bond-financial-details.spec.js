@@ -112,6 +112,9 @@ context('Bond Financial Details', () => {
 
       value = '250';
       cy.keyboardInput(pages.bondFinancialDetails.facilityValueInput(), value);
+
+      pages.bondFinancialDetails.facilityValueInput().blur();
+
       pages.bondFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
     });
   });

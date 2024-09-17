@@ -95,7 +95,7 @@ context('Clone a deal', () => {
       goToCloneDealPage(deal);
 
       cy.keyboardInput(pages.cloneDeal.bankInternalRefNameInput(), `${deal.bankInternalRefName}-cloned`);
-      cy.keyboardInput(pages.cloneDeal.additionalRefNameInput(), `${deal.bankInternalRefName}-cloned`);
+      cy.keyboardInput(pages.cloneDeal.additionalRefNameInput(), `${deal.additionalRefName}-cloned`);
       pages.cloneDeal.cloneTransactionsInput().click();
 
       cy.clickSubmitButton();

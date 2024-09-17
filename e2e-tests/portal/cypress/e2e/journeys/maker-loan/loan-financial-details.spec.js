@@ -179,6 +179,9 @@ context('Loan Financial Details', () => {
 
       value = '250';
       cy.keyboardInput(pages.loanFinancialDetails.facilityValueInput(), value);
+
+      pages.loanFinancialDetails.facilityValueInput().blur();
+
       pages.loanFinancialDetails.ukefExposureInput().should('have.value', calculateExpectedUkefExposure(value, coveredPercentage));
     });
   });
