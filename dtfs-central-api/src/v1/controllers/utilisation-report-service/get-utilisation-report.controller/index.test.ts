@@ -47,13 +47,14 @@ describe('getUtilisationReport', () => {
     });
 
     const mockDate = new Date('2024-01');
+    const epochDate = new Date('01-01-1970');
 
     const createMockIncompleteUploadedReport = (...missingFields: UploadedReportFields[]): UtilisationReportEntity =>
       UtilisationReportEntityMockBuilder.forStatus(status)
         .withId(reportId)
         .withAzureFileInfo(azureFileInfo)
-        .withDateUploaded(missingFields.includes('dateUploaded') ? null : mockDate)
-        .withUploadedByUserId(missingFields.includes('uploadedByUserId') ? null : uploadedByUser.id)
+        .withDateUploaded(missingFields.includes('dateUploaded') ? epochDate : mockDate)
+        .withUploadedByUserId(missingFields.includes('uploadedByUserId') ? '' : uploadedByUser.id)
         .build();
 
     const missingFieldCombinations: { missingFields: UploadedReportFields[] }[] = [
