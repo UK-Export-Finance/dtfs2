@@ -1,6 +1,3 @@
-/* eslint-disable no-new */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import $ from 'jquery';
 
 declare global {
@@ -31,6 +28,7 @@ if (cachedShownStatus) {
 // Initially display filters, but hide them if they were previously hidden
 const startHidden = cachedShownStatus === 'HIDDEN';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call, no-new, @typescript-eslint/no-unsafe-member-access
 new window.MOJFrontend.FilterToggleButton({
   bigModeMediaQuery: '(min-width: 48.063em)',
   startHidden,
@@ -43,7 +41,7 @@ new window.MOJFrontend.FilterToggleButton({
   filter: {
     container: $(filterSelector),
   },
-}); // NOSONAR
+});
 
 const toggleButton = document.querySelector(`${toggleButtonContainerSelector} > button`) as HTMLButtonElement;
 
