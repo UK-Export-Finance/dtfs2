@@ -1,19 +1,19 @@
-import relative from '../../relativeURL';
+import relative from '../../../relativeURL';
 
-import CONSTANTS from '../../../fixtures/constants';
+import CONSTANTS from '../../../../fixtures/constants';
 
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
-import { MOCK_APPLICATION_MIN } from '../../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
+import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
+import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../../fixtures/mocks/mock-facilities';
 
-import { mainHeading, errorSummary } from '../../partials';
-import applicationPreview from '../../pages/application-preview';
-import unissuedFacilityTable from '../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
-import facilityEndDate from '../../pages/facility-end-date';
-import statusBanner from '../../pages/application-status-banner';
+import { mainHeading, errorSummary } from '../../../partials';
+import applicationPreview from '../../../pages/application-preview';
+import unissuedFacilityTable from '../../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
+import facilityEndDate from '../../../pages/facility-end-date';
+import statusBanner from '../../../pages/application-status-banner';
 
 let dealId;
 let token;

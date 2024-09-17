@@ -1,21 +1,21 @@
 import { format } from 'date-fns';
 
-import relative from '../../relativeURL';
+import relative from '../../../relativeURL';
 
-import CONSTANTS from '../../../fixtures/constants';
+import CONSTANTS from '../../../../fixtures/constants';
 
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
-import { MOCK_APPLICATION_AIN } from '../../../fixtures/mocks/mock-deals';
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE } from '../../../fixtures/mocks/mock-facilities';
-import { backLink, cancelLink, continueButton, headingCaption, mainHeading, submitButton } from '../../partials';
-import applicationPreview from '../../pages/application-preview';
-import unissuedFacilityTable from '../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../pages/unissued-facilities-about-facility';
-import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
-import statusBanner from '../../pages/application-status-banner';
-import facilities from '../../pages/facilities';
-import facilityEndDate from '../../pages/facility-end-date';
+import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
+import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE } from '../../../../fixtures/mocks/mock-facilities';
+import { backLink, cancelLink, continueButton, headingCaption, mainHeading, submitButton } from '../../../partials';
+import applicationPreview from '../../../pages/application-preview';
+import unissuedFacilityTable from '../../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
+import statusBanner from '../../../pages/application-status-banner';
+import facilities from '../../../pages/facilities';
+import facilityEndDate from '../../../pages/facility-end-date';
 
 let dealId;
 let token;
@@ -25,7 +25,7 @@ const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE];
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
-context('Change issued facilities back to unissued (changed to issued facilities post submission)', () => {
+context('Change issued facilities back to unissued AIN (changed to issued facilities post submission)', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
