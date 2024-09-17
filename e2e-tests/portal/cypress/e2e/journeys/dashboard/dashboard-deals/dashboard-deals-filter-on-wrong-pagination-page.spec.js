@@ -65,7 +65,7 @@ context('Dashboard Deals filters - filtering deal on wrong pagination page from 
     const dealToFilter = exporterNames[0];
 
     filters.showHideButton().click();
-    filters.panel.form.keyword.input().type(dealToFilter);
+    cy.keyboardInput(filters.panel.form.keyword.input(), dealToFilter);
     filters.panel.form.applyFiltersButton().click();
 
     dashboardDeals.rows().should('have.length', 1);

@@ -33,7 +33,7 @@ context('about-buyer', () => {
     contractAboutFinancial.expectError('Supply Contract currency is required');
 
     // fill in value + pick currency=GBP to clear validation warnings
-    contractAboutFinancial.supplyContractValue().type('123.45');
+    cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '123.45');
     contractAboutFinancial.supplyContractCurrency().select('GBP');
     contractAboutFinancial.preview().click();
 
@@ -51,13 +51,18 @@ context('about-buyer', () => {
 
     // prove 6-decimal-place validation
     contractAboutFinancial.visit(deal);
-    contractAboutFinancial.supplyContractConversionRateToGBP().type('{selectall}{backspace}0.1234567');
+
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '{selectall}{backspace}0.1234567');
+
     contractAboutFinancial.preview().click();
+
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion rate must be a number with up to 6 decimal places');
 
     // fix the conversion rate
     contractAboutFinancial.visit(deal);
-    contractAboutFinancial.supplyContractConversionRateToGBP().type('{selectall}{backspace}0.123456');
+
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '{selectall}{backspace}0.123456');
+
     contractAboutFinancial.preview().click();
 
     contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion rate is required for non-GBP currencies');
@@ -65,37 +70,52 @@ context('about-buyer', () => {
 
     // fill in the conversion date field by field..
     contractAboutFinancial.visit(deal);
-    contractAboutFinancial.supplyContractConversionDate().day().type('25');
+
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), '25');
+
     contractAboutFinancial.preview().click();
+
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date is required for non-GBP currencies');
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date Month is required for non-GBP currencies');
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date Year is required for non-GBP currencies');
 
     contractAboutFinancial.visit(deal);
-    contractAboutFinancial.supplyContractConversionDate().month().type('12');
+
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), '12');
+
     contractAboutFinancial.preview().click();
+
     contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion date Month is required for non-GBP currencies');
 
     contractAboutFinancial.visit(deal);
-    contractAboutFinancial.supplyContractConversionDate().year().type('2019');
+
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), '2019');
+
     contractAboutFinancial.preview().click();
+
     contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion date is required for non-GBP currencies');
     contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion date Year is required for non-GBP currencies');
 
     contractAboutFinancial.visit(deal);
-    contractAboutFinancial.supplyContractConversionDate().year().type('{selectall}{backspace}3019');
+
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), '{selectall}{backspace}3019');
+
     contractAboutFinancial.preview().click();
+
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be in the future');
 
     const dateTooFarInThePast = DATE_CONSTANTS.thirtyFiveDaysAgo;
+
     contractAboutFinancial.visit(deal);
-    contractAboutFinancial.supplyContractConversionDate().day().type(`{selectall}{backspace}${dateTooFarInThePast.getDate()}`);
-    contractAboutFinancial
-      .supplyContractConversionDate()
-      .month()
-      .type(`{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);
-    contractAboutFinancial.supplyContractConversionDate().year().type(`{selectall}{backspace}${dateTooFarInThePast.getFullYear()}`);
+
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day()`{selectall}{backspace}${dateTooFarInThePast.getDate()}`);
+
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month()`{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);
+
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `{selectall}{backspace}${dateTooFarInThePast.getFullYear()}`);
+
     contractAboutFinancial.preview().click();
+
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be more than 30 days in the past');
   });
 });

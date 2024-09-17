@@ -66,9 +66,9 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
 
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE.getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE.getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE.getFullYear());
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateDay(), INVALID_DATE.getDate());
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateMonth(), INVALID_DATE.getMonth() + 1);
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateYear(), INVALID_DATE.getFullYear());
     cy.clickSubmitButton();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');
@@ -84,9 +84,9 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
 
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(INVALID_DATE.getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(INVALID_DATE.getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(INVALID_DATE.getFullYear());
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateDay(), INVALID_DATE.getDate());
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateMonth(), INVALID_DATE.getMonth() + 1);
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateYear(), INVALID_DATE.getFullYear());
     cy.clickSubmitButton();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');

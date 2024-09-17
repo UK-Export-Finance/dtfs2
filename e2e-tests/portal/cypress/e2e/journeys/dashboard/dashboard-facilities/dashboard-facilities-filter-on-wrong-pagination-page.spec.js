@@ -72,7 +72,7 @@ context('Dashboard facilities - filtering facility on wrong pagination page from
 
     const facilityToSearch = exporterNames[0];
 
-    filters.panel.form.keyword.input().type(facilityToSearch);
+    cy.keyboardInput(filters.panel.form.keyword.input(), facilityToSearch);
     filters.panel.form.applyFiltersButton().click();
 
     dashboardFacilities.rows().should('have.length', 1);

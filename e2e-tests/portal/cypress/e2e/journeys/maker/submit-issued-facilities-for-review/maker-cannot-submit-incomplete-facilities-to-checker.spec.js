@@ -176,7 +176,7 @@ context('A maker should not be able to submit the deal if it has atleast one `In
     incompleteIssueFacilityBondRow.issueFacilityLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/bond/${incompleteIssueFacilityBondId}/issue-facility`));
 
-    pages.bondIssueFacility.name().type('1234');
+    cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
     cy.clickSubmitButton();
     cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
@@ -199,7 +199,7 @@ context('A maker should not be able to submit the deal if it has atleast one `In
     incompleteIssueFacilityLoanRow.issueFacilityLink().click();
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${incompleteIssueFacilityLoanId}/issue-facility`));
 
-    pages.loanIssueFacility.disbursementAmount().type('1234');
+    cy.keyboardInput(pages.loanIssueFacility.disbursementAmount(), '1234');
     cy.clickSubmitButton();
     cy.clickCancelButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));

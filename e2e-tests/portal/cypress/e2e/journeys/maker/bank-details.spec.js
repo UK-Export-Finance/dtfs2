@@ -27,11 +27,11 @@ context('Create deal', () => {
     bankDetails.bankDealId().clear();
 
     const BANK_DEAL_ID_CHARACTER_COUNT = 30;
-    bankDetails.bankDealId().type('a'.repeat(BANK_DEAL_ID_CHARACTER_COUNT + 1));
+    cy.keyboardInput(bankDetails.bankDealId(), 'a'.repeat(BANK_DEAL_ID_CHARACTER_COUNT + 1));
     bankDetails.bankDealIdCount().should('have.text', 'You have 1 character too many');
 
     const BANK_DEAL_NAME_CHARACTER_COUNT = 100;
-    bankDetails.bankDealName().type('a'.repeat(BANK_DEAL_NAME_CHARACTER_COUNT + 1));
+    cy.keyboardInput(bankDetails.bankDealName(), 'a'.repeat(BANK_DEAL_NAME_CHARACTER_COUNT + 1));
     bankDetails.bankDealNameCount().should('have.text', 'You have 1 character too many');
   });
 
@@ -42,8 +42,8 @@ context('Create deal', () => {
     cy.url().should('eq', relative('/before-you-start/bank-deal'));
 
     // complete 'before you start' form fields
-    bankDetails.bankDealId().type('TEST1234');
-    bankDetails.bankDealName().type('TESTING');
+    cy.keyboardInput(bankDetails.bankDealId(), 'TEST1234');
+    cy.keyboardInput(bankDetails.bankDealName(), 'TESTING');
     cy.clickSubmitButton();
 
     // confirm that we're on the newly created deal '/contract/XYZ'

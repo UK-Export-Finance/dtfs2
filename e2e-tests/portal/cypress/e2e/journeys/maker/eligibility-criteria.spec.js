@@ -79,7 +79,7 @@ context('Eligibility Criteria', () => {
     eligibilityCriteria.eligibilityCriteria11False().click();
     eligibilityCriteria.agentsName.count().should('have.text', `You have ${characterCount} characters remaining`);
 
-    eligibilityCriteria.agentsName.input().type(agentsName);
+    cy.keyboardInput(eligibilityCriteria.agentsName.input(), agentsName);
     eligibilityCriteria.agentsName.count().should('have.text', `You have ${characterCount - agentsName.length} characters remaining`);
   });
 
@@ -88,7 +88,7 @@ context('Eligibility Criteria', () => {
     const longString = 'a'.repeat(characterCount + 1);
 
     eligibilityCriteria.eligibilityCriteria11False().click();
-    eligibilityCriteria.agentsName.input().type(longString);
+    cy.keyboardInput(eligibilityCriteria.agentsName.input(), longString);
 
     eligibilityCriteria.agentsName.count().should('have.text', 'You have 1 character too many');
     eligibilityCriteria.agentsName.input().should('have.value', longString);

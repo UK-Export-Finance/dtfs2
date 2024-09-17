@@ -9,6 +9,8 @@ Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 // Assert an element has some exact text
 Cypress.Commands.add('assertText', require('./utils/assertText'));
 
+Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
+
 // create an element in a div
 Cypress.Commands.add('insertElement', require('./utils/insertElement'));
 

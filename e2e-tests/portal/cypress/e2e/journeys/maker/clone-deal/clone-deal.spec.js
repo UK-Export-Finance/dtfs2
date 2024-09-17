@@ -94,8 +94,8 @@ context('Clone a deal', () => {
     it('should progress to the dashboard page, display a success message, render correct cloned id/name and statuses for each facility', () => {
       goToCloneDealPage(deal);
 
-      pages.cloneDeal.bankInternalRefNameInput().type('-cloned');
-      pages.cloneDeal.additionalRefNameInput().type('-cloned');
+      cy.keyboardInput(pages.cloneDeal.bankInternalRefNameInput(), '-cloned');
+      cy.keyboardInput(pages.cloneDeal.additionalRefNameInput(), '-cloned');
       pages.cloneDeal.cloneTransactionsInput().click();
 
       cy.clickSubmitButton();
@@ -167,7 +167,7 @@ context('Clone a deal', () => {
         cy.url().should('include', '/bond');
         cy.url().should('include', '/details');
 
-        pages.bondDetails.bondIssuerInput().type('test');
+        cy.keyboardInput(pages.bondDetails.bondIssuerInput(), 'test');
         cy.clickSubmitButton();
         cy.url().should('include', '/bond');
         cy.url().should('include', '/financial-details');
