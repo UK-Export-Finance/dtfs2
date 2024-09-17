@@ -27,7 +27,7 @@ const df = require('durable-functions');
 const retryOptions = require('../../helpers/retryOptions');
 const mappings = require('../../mappings');
 
-df.app.orchestration('acbs-amend-facility-guarantee-record', function* amendFAcilityGuarantee(context) {
+df.app.orchestration('acbs-amend-facility-guarantee-record', function* amendFacilityGuarantee(context) {
   const payload = context.df.input;
 
   try {
