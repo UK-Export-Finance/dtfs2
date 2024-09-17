@@ -32,6 +32,7 @@
     "lint:all": "npm run lint --workspaces --if-present",
     "lint:fix:all": "npm run lint --workspaces --if-present -- --fix",
     "load": "(cd utils && npm run load)",
+    "prepare": "husky",
     "prettier:all": "npm run prettier --workspaces --if-present",
     "prettier:fix:all": "npm run prettier:fix --workspaces --if-present",
     "spellcheck": "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color **/*",
@@ -62,7 +63,7 @@
   },
   "dependencies": {
     "axios": "^1.7.4",
-    "express": "^4.19.2",
+    "express": "^4.20.0",
     "release-please": "^16.10.2"
   },
   "devDependencies": {

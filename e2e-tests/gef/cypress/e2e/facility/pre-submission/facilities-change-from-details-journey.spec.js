@@ -1,10 +1,10 @@
-import relative from '../relativeURL';
-import applicationDetails from '../pages/application-details';
-import aboutFacility from '../pages/about-facility';
-import facilityGuarantee from '../pages/facility-guarantee';
-import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import facilityEndDate from '../pages/facility-end-date';
-import { todayDay, todayMonth, todayYear, today } from '../../../../e2e-fixtures/dateConstants';
+import relative from '../../relativeURL';
+import applicationDetails from '../../pages/application-details';
+import aboutFacility from '../../pages/about-facility';
+import facilityGuarantee from '../../pages/facility-guarantee';
+import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
+import facilityEndDate from '../../pages/facility-end-date';
+import { todayDay, todayMonth, todayYear, today } from '../../../../../e2e-fixtures/dateConstants';
 
 const applications = [];
 let token;
