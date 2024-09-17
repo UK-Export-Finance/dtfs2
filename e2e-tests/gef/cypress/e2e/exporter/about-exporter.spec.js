@@ -102,7 +102,7 @@ context('About Exporter Page', () => {
     it('takes user back to application details page when form has been filled in and renders `In progress` status', () => {
       cy.visit(relative(`/gef/application-details/${dealWithEmptyExporter._id}/about-exporter`));
       aboutExporter.microRadioButton().click();
-      aboutExporter.probabilityOfDefaultInput().type('10');
+      cy.keyboardInput(aboutExporter.probabilityOfDefaultInput(), '10');
       aboutExporter.isFinancingIncreasingRadioYes().click();
       aboutExporter.doneButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}`));

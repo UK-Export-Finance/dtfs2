@@ -144,7 +144,7 @@ context('Provided Facility Page', () => {
     it('filling in `Enter details` and clicking on `Continue` takes user to currency page', () => {
       cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
       providedFacility.otherCheckbox().click();
-      providedFacility.detailsOther().type('some text here');
+      cy.keyboardInput(providedFacility.detailsOther(), 'some text here');
       cy.clickContinueButton();
       cy.url().should(
         'eq',

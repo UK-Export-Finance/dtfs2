@@ -63,9 +63,9 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       amendmentsPage.amendmentCurrentFacilityEndDate().should('have.text', '01 January 2023');
       amendmentsPage.amendmentFacilityEndDateDetails().should('exist');
 
-      amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(dateConstants.todayDay);
-      amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.todayYear);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), dateConstants.todayDay);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), dateConstants.todayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), dateConstants.todayYear);
       cy.clickContinueButton();
 
       cy.url().should('contain', 'check-answers');
@@ -81,9 +81,9 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       amendmentsPage.amendmentCurrentBankReviewDate().should('have.text', 'Not provided');
       amendmentsPage.amendmentBankReviewDateDetails().should('exist');
 
-      amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.threeMonthsOneDayDay);
-      amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.threeMonthsOneDayMonth);
-      amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), dateConstants.threeMonthsOneDayYear);
       cy.clickContinueButton();
 
       cy.url().should('contain', 'check-answers');

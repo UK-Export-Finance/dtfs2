@@ -36,7 +36,7 @@ context('Review application when returned to maker', () => {
 
     // submit the deal with a comment
     cy.clickSubmitButton();
-    applicationSubmission.commentsField().type('Hello');
+    cy.keyboardInput(applicationSubmission.commentsField(), 'Hello');
     cy.clickSubmitButton();
     applicationSubmission.confirmationPanelTitle();
 
@@ -44,7 +44,7 @@ context('Review application when returned to maker', () => {
     cy.login(BANK1_CHECKER1);
     cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
     applicationPreview.returnButton().click();
-    returnToMaker.comment().type('Nope');
+    cy.keyboardInput(returnToMaker.comment(), 'Nope');
     cy.clickSubmitButton();
     cy.location('pathname').should('contain', 'dashboard');
     cy.login(BANK1_MAKER1);
@@ -66,7 +66,7 @@ context('Review application when returned to maker', () => {
       cy.clickSubmitButton();
 
       // it allows the maker to optionally add additional comments
-      applicationSubmission.commentsField().type('Comments from the maker');
+      cy.keyboardInput(applicationSubmission.commentsField(), 'Comments from the maker');
       cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 

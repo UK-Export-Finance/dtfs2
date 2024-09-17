@@ -68,7 +68,7 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
 
       pages.managersDecisionPage.decisionRadioInputApproveWithoutConditions().click();
 
-      pages.managersDecisionPage.commentsInputInternal().typeWithoutDelay('a'.repeat(8001));
+      cy.keyboardInput(pages.managersDecisionPage.commentsInputInternal(), 'a'.repeat(8001));
 
       cy.clickSubmitButton();
 
@@ -103,7 +103,7 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
     });
 
     it('should throw validation error if approval comment is too long', () => {
-      pages.managersDecisionPage.commentsInputApproveWithConditions().typeWithoutDelay('a'.repeat(8001));
+      cy.keyboardInput(pages.managersDecisionPage.commentsInputApproveWithConditions(), 'a'.repeat(8001));
 
       cy.clickSubmitButton();
 
@@ -113,7 +113,7 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
     });
 
     it('should throw validation error if approval comment is whitespace', () => {
-      pages.managersDecisionPage.commentsInputApproveWithConditions().type('      ');
+      cy.keyboardInput(pages.managersDecisionPage.commentsInputApproveWithConditions(), '      ');
 
       cy.clickSubmitButton();
 
@@ -149,7 +149,7 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
     });
 
     it('should throw validation error if decline comment is too long', () => {
-      pages.managersDecisionPage.commentsInputDecline().typeWithoutDelay('a'.repeat(8001));
+      cy.keyboardInput(pages.managersDecisionPage.commentsInputDecline(), 'a'.repeat(8001));
 
       cy.clickSubmitButton();
 
@@ -159,7 +159,7 @@ context("Case Underwriting - Underwriter Manager's decision - Form and Validatio
     });
 
     it('should throw validation error if decline comment is whitespace', () => {
-      pages.managersDecisionPage.commentsInputDecline().type('      ');
+      cy.keyboardInput(pages.managersDecisionPage.commentsInputDecline(), '      ');
 
       cy.clickSubmitButton();
 
@@ -211,8 +211,8 @@ context("Case Underwriting - Underwriter Manager's decision - Submit Form", () =
 
     pages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
 
-    pages.managersDecisionPage.commentsInputApproveWithConditions().type(MOCK_COMMENTS);
-    pages.managersDecisionPage.commentsInputInternal().type(MOCK_INTERNAL_COMMENTS);
+    cy.keyboardInput(pages.managersDecisionPage.commentsInputApproveWithConditions(), MOCK_COMMENTS);
+    cy.keyboardInput(pages.managersDecisionPage.commentsInputInternal(), MOCK_INTERNAL_COMMENTS);
 
     cy.clickSubmitButton();
     cy.url().should('eq', relative(`/case/${dealId}/underwriting`));

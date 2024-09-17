@@ -83,7 +83,7 @@ context('Buyer Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.buyerPage.urnError().contains('Enter a unique reference number');
 
         pages.buyerPage.urnInput().clear();
-        pages.buyerPage.urnInput().type('test');
+        cy.keyboardInput(pages.buyerPage.urnInput(), 'test');
 
         pages.buyerPage.saveButton().click();
 
@@ -91,35 +91,35 @@ context('Buyer Party URN - User can add, edit, confirm and submit URN to the TFM
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.buyerPage.urnInput().clear().type('12');
+        cy.keyboardInput(pages.buyerPage.urnInput().clear(), '12');
         pages.buyerPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.buyerPage.urnInput().clear().type('ABC123');
+        cy.keyboardInput(pages.buyerPage.urnInput().clear(), 'ABC123');
         pages.buyerPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.buyerPage.urnInput().clear().type('"!£!"£!"£!"£');
+        cy.keyboardInput(pages.buyerPage.urnInput().clear(), '"!£!"£!"£!"£');
         pages.buyerPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.buyerPage.urnInput().clear().type('1234!');
+        cy.keyboardInput(pages.buyerPage.urnInput().clear(), '1234!');
         pages.buyerPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.buyerPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.buyerPage.urnInput().clear().type(' ');
+        cy.keyboardInput(pages.buyerPage.urnInput().clear(), ' ');
         pages.buyerPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
@@ -130,7 +130,7 @@ context('Buyer Party URN - User can add, edit, confirm and submit URN to the TFM
       it('should re-direct to non-existent party urn page', () => {
         pages.partiesPage.buyerEditLink().click();
         pages.buyerPage.urnInput().clear();
-        pages.buyerPage.urnInput().type(mockUrn);
+        cy.keyboardInput(pages.buyerPage.urnInput(), mockUrn);
 
         pages.buyerPage.saveButton().click();
 
@@ -140,7 +140,7 @@ context('Buyer Party URN - User can add, edit, confirm and submit URN to the TFM
       it('should re-direct to summary page', () => {
         pages.partiesPage.buyerEditLink().click();
         pages.buyerPage.urnInput().clear();
-        pages.buyerPage.urnInput().type(partyUrn);
+        cy.keyboardInput(pages.buyerPage.urnInput(), partyUrn);
 
         pages.buyerPage.saveButton().click();
 
@@ -151,7 +151,7 @@ context('Buyer Party URN - User can add, edit, confirm and submit URN to the TFM
       it('should submit the party URN to TFM', () => {
         pages.partiesPage.buyerEditLink().click();
         pages.buyerPage.urnInput().clear();
-        pages.buyerPage.urnInput().type(partyUrn);
+        cy.keyboardInput(pages.buyerPage.urnInput(), partyUrn);
 
         pages.buyerPage.saveButton().click();
 

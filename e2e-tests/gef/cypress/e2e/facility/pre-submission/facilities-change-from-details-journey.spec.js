@@ -90,9 +90,9 @@ context('Changing facility details from application-details page should take you
 
         applicationDetails.facilitySummaryListTable(0).facilityEndDateAction().click();
 
-        facilityEndDate.facilityEndDateDay().type(todayDay);
-        facilityEndDate.facilityEndDateMonth().type(todayMonth);
-        facilityEndDate.facilityEndDateYear().type(Number(todayYear) + 1);
+        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
+        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), todayMonth);
+        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), Number(todayYear) + 1);
         cy.clickContinueButton();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));
       });

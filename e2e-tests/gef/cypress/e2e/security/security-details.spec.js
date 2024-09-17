@@ -47,8 +47,8 @@ context('Security Details Page', () => {
       const longString = new Array(402).join('t');
 
       securityDetails.visit(dealId);
-      securityDetails.exporterSecurity().type(longString);
-      securityDetails.facilitySecurity().type(longString);
+      cy.keyboardInput(securityDetails.exporterSecurity(), longString);
+      cy.keyboardInput(securityDetails.facilitySecurity(), longString);
       cy.clickSubmitButton();
       errorSummary();
       securityDetails.exporterSecurityError();
@@ -59,8 +59,8 @@ context('Security Details Page', () => {
       const invalidString = 'This text @ is not %()~# valid';
 
       securityDetails.visit(dealId);
-      securityDetails.exporterSecurity().type(invalidString);
-      securityDetails.facilitySecurity().type(invalidString);
+      cy.keyboardInput(securityDetails.exporterSecurity(), invalidString);
+      cy.keyboardInput(securityDetails.facilitySecurity(), invalidString);
       cy.clickSubmitButton();
       errorSummary();
       securityDetails.exporterSecurityError();
@@ -69,8 +69,8 @@ context('Security Details Page', () => {
 
     it('takes you to `Application details` page when clicking on `Continue` button', () => {
       securityDetails.visit(dealId);
-      securityDetails.exporterSecurity().type('Valid security details');
-      securityDetails.facilitySecurity().type('Valid security details');
+      cy.keyboardInput(securityDetails.exporterSecurity(), 'Valid security details');
+      cy.keyboardInput(securityDetails.facilitySecurity(), 'Valid security details');
       cy.clickSubmitButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
