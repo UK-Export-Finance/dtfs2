@@ -1,4 +1,4 @@
-import { UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { NotFoundError } from '../../../../../errors';
 import { getBankNameById } from '../../../../../repositories/banks-repo';
 import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
@@ -10,14 +10,15 @@ import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
 /**
  * Gets the utilisation report reconciliation details for the supplied report entity
  * @param utilisationReport - The utilisation report entity
- * @param facilityIdFilter - The facility id filter to be applied for the premium payments table
+ * @param premiumPaymentsFilters - The filters to be applied for the premium payments table
+ * @param premiumPaymentsFilters.facilityId - The facility ID filter
  * @returns The utilisation report reconciliation details
  * @throws {Error} If the report has not been uploaded
  * @throws {NotFoundError} If a bank cannot be found with the matching bank id
  */
 export const getUtilisationReportReconciliationDetails = async (
   utilisationReport: UtilisationReportEntity,
-  facilityIdFilter: string | undefined,
+  premiumPaymentsFilters: PremiumPaymentsFilters,
 ): Promise<UtilisationReportReconciliationDetails> => {
   const { id, bankId, feeRecords, dateUploaded, status, reportPeriod } = utilisationReport;
 
@@ -34,9 +35,17 @@ export const getUtilisationReportReconciliationDetails = async (
 
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroups(feeRecords);
 
-  const feeRecordPaymentGroups = await mapToFeeRecordPaymentGroups(
-    facilityIdFilter ? filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityIdFilter) : feeRecordPaymentEntityGroups,
-  );
+  const paymentDetails = await mapToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
+
+  const { facilityId } = premiumPaymentsFilters;
+
+  let premiumPayments = paymentDetails;
+
+  if (facilityId) {
+    const filteredFeeRecords = filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityId);
+
+    premiumPayments = await mapToFeeRecordPaymentGroups(filteredFeeRecords);
+  }
 
   return {
     reportId: id,
@@ -47,7 +56,8 @@ export const getUtilisationReportReconciliationDetails = async (
     status,
     reportPeriod,
     dateUploaded,
-    feeRecordPaymentGroups,
+    premiumPayments,
+    paymentDetails,
     keyingSheet,
   };
 };
