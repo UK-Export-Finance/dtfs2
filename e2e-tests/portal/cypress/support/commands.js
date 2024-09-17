@@ -6,10 +6,10 @@ const { downloadFile } = require('./portal-api/fileshare');
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
+Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
+
 // Assert an element has some exact text
 Cypress.Commands.add('assertText', require('./utils/assertText'));
-
-Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
 
 // create an element in a div
 Cypress.Commands.add('insertElement', require('./utils/insertElement'));
