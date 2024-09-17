@@ -24,7 +24,7 @@ context('Amendments - BSS/EWCS deal does not display any Facility end date pages
   });
 
   beforeEach(() => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = facilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
   });

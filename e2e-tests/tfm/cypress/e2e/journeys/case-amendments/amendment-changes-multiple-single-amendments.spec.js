@@ -31,7 +31,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
   });
 
   it('should submit an automatic amendment request for coverEndDate', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -76,7 +76,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
   });
 
   it('should submit an automatic amendment request for facilityValue', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -119,7 +119,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
   });
 
   it('should display amendment changed values on deal and facility page', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/deal`));

@@ -31,7 +31,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should take you to amendment request page when clicking add an amendment button', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -50,7 +50,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should return errors when clicking continue on blank inputs', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -65,7 +65,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should return errors when clicking continue on past date', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -84,7 +84,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should return errors when clicking continue on future date', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -103,7 +103,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should return errors when clicking continue on year in wrong format', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -149,7 +149,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should take you back to amendments page when clicking cancel', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -162,7 +162,7 @@ context('Amendments - Request date', () => {
   });
 
   it('should redirect when adding correct request date', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
 
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));

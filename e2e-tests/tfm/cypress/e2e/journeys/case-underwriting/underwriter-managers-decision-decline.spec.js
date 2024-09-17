@@ -26,7 +26,7 @@ context('Case Underwriting - Pricing and risk', () => {
   });
 
   beforeEach(() => {
-    cy.login({ user: UNDERWRITER_MANAGER_1 });
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to underwriter managers decision page

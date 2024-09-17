@@ -30,7 +30,7 @@ context('Underwriting page', () => {
   });
 
   it('should have the correct headings', () => {
-    cy.login({ user: UNDERWRITER_MANAGER_1 });
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to lead underwriter page
@@ -42,7 +42,7 @@ context('Underwriting page', () => {
   });
 
   it('should show unassigned and no decision yet if logged in as non-underwriter manager', () => {
-    cy.login({ user: T1_USER_1 });
+    cy.login(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to lead underwriter page
@@ -64,7 +64,7 @@ context('Underwriting page', () => {
   });
 
   it('should show correct links and buttons if logged in as underwriter_manager', () => {
-    cy.login({ user: UNDERWRITER_MANAGER_1 });
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to lead underwriter page
@@ -86,7 +86,7 @@ context('Underwriting page', () => {
   });
 
   it('should show correct links and buttons if logged in as underwriter', () => {
-    cy.login({ user: UNDERWRITER_1 });
+    cy.login(UNDERWRITER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to lead underwriter page
@@ -108,7 +108,7 @@ context('Underwriting page', () => {
   });
 
   it('should show correct links and buttons if logged in as T1_USER', () => {
-    cy.login({ user: T1_USER_1 });
+    cy.login(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
     // go to lead underwriter page

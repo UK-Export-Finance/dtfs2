@@ -80,7 +80,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, feeRecords);
 
     pages.landingPage.visit();
-    cy.login({ user: USERS.PDC_RECONCILE });
+    cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
   });

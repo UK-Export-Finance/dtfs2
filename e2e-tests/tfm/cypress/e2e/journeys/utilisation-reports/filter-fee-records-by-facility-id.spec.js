@@ -30,7 +30,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
 
     pages.landingPage.visit();
-    cy.login({ user: USERS.PDC_RECONCILE });
+    cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`/utilisation-reports/${reportId}`);
   });

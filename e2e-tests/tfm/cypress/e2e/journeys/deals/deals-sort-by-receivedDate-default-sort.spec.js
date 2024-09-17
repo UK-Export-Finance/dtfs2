@@ -54,7 +54,7 @@ context('User can view and sort deals', () => {
   });
 
   beforeEach(() => {
-    cy.login({ user: T1_USER_1 });
+    cy.login(T1_USER_1);
     cy.url().should('eq', relative('/deals/0'));
   });
 

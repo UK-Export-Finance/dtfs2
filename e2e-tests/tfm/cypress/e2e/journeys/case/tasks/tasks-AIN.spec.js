@@ -34,7 +34,7 @@ context('Case tasks - AIN deal', () => {
 
       cy.submitDeal(dealId, dealType, T1_USER_1);
 
-      cy.login({ user: MOCK_USERS.BUSINESS_SUPPORT_USER_1 });
+      cy.login(MOCK_USERS.BUSINESS_SUPPORT_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
     });
   });
@@ -60,7 +60,7 @@ context('Case tasks - AIN deal', () => {
   });
 
   it('should not let wrong user edit a task', () => {
-    cy.login({ user: MOCK_USERS.T1_USER_1 });
+    cy.login(MOCK_USERS.T1_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));

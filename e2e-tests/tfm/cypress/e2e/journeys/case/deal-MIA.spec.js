@@ -25,7 +25,7 @@ context('User can view a case deal', () => {
   });
 
   beforeEach(() => {
-    cy.login({ user: T1_USER_1 });
+    cy.login(T1_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
   });
 

@@ -62,7 +62,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
 
   const navigateToAddToExistingPaymentScreenForFirstFeeRecord = () => {
     pages.landingPage.visit();
-    cy.login({ user: USERS.PDC_RECONCILE });
+    cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
     pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.checkbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
@@ -218,7 +218,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     describe('by clicking the back button', () => {
       beforeEach(() => {
         pages.landingPage.visit();
-        cy.login({ user: USERS.PDC_RECONCILE });
+        cy.login(USERS.PDC_RECONCILE);
 
         cy.visit(`utilisation-reports/${REPORT_ID}`);
         pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.checkbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
@@ -255,7 +255,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can add fee records to existing paymen
     describe('by clicking the cancel button', () => {
       beforeEach(() => {
         pages.landingPage.visit();
-        cy.login({ user: USERS.PDC_RECONCILE });
+        cy.login(USERS.PDC_RECONCILE);
 
         cy.visit(`utilisation-reports/${REPORT_ID}`);
         pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.checkbox([FEE_RECORD_ID_ONE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();

@@ -102,7 +102,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     });
 
     pages.landingPage.visit();
-    cy.login({ user: USERS.PDC_RECONCILE });
+    cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
     pages.utilisationReportPage.premiumPaymentsTab.generateKeyingDataButton().click();

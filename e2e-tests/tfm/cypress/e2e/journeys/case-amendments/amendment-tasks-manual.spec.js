@@ -66,7 +66,7 @@ context('Amendments tasks - manual amendment tasks', () => {
   });
 
   it('should submit an amendment request', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -113,7 +113,7 @@ context('Amendments tasks - manual amendment tasks', () => {
   });
 
   it('should open task links with correct amendment tasks with correct status and titles', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -173,7 +173,7 @@ context('Amendments tasks - manual amendment tasks', () => {
   });
 
   it('should change the status of group 1 task 2 after completing the first task', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -208,7 +208,7 @@ context('Amendments tasks - manual amendment tasks', () => {
   });
 
   it('should change change status of group 2 tasks after completing group 1', () => {
-    cy.login({ user: UNDERWRITING_SUPPORT_1 });
+    cy.login(UNDERWRITING_SUPPORT_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -237,7 +237,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(4, 4).status().contains('Cannot start yet');
     pages.tasksPage.tasks.row(4, 5).status().contains('Cannot start yet');
 
-    cy.login({ user: UNDERWRITER_MANAGER_1 });
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -267,7 +267,7 @@ context('Amendments tasks - manual amendment tasks', () => {
   });
 
   it('should change change status of group 3 tasks after completing group 2', () => {
-    cy.login({ user: UNDERWRITER_1 });
+    cy.login(UNDERWRITER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -296,7 +296,7 @@ context('Amendments tasks - manual amendment tasks', () => {
   });
 
   it('should change change status of group 4 tasks after completing group 3', () => {
-    cy.login({ user: UNDERWRITER_1 });
+    cy.login(UNDERWRITER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -343,7 +343,7 @@ context('Amendments tasks - manual amendment tasks', () => {
   });
 
   it('should allow you to add UW decision after completing `approve or decline the amendment` task in order', () => {
-    cy.login({ user: UNDERWRITER_MANAGER_1 });
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -382,7 +382,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(4, 4).status().contains('Cannot start yet');
     pages.tasksPage.tasks.row(4, 5).status().contains('Cannot start yet');
 
-    cy.login({ user: RISK_MANAGER_1 });
+    cy.login(RISK_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -403,7 +403,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(4, 4).status().contains('To do');
     pages.tasksPage.tasks.row(4, 5).status().contains('Cannot start yet');
 
-    cy.login({ user: UNDERWRITER_MANAGER_1 });
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -423,7 +423,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(4, 4).status().contains('In progress');
     pages.tasksPage.tasks.row(4, 5).status().contains('Cannot start yet');
 
-    cy.login({ user: UNDERWRITER_MANAGER_1 });
+    cy.login(UNDERWRITER_MANAGER_1);
     cy.visit(relative(`/case/${dealId}/underwriting`));
     pages.underwritingPage.addAmendmentUnderwriterManagerDecisionButton().contains('Add decision');
 
@@ -446,7 +446,7 @@ context('Amendments tasks - manual amendment tasks', () => {
     pages.tasksPage.tasks.row(4, 4).status().contains('Done');
     pages.tasksPage.tasks.row(4, 5).status().contains('To do');
 
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));

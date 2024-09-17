@@ -24,7 +24,7 @@ context('Amendments - Cover End Date', () => {
   });
 
   beforeEach(() => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
   });

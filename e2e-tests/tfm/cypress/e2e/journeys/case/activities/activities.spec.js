@@ -39,7 +39,7 @@ context('Users can create and submit comments', () => {
         },
       };
       cy.updateTFMDeal(dealId, otherActivity);
-      cy.login({ user: BUSINESS_SUPPORT_USER_1 });
+      cy.login(BUSINESS_SUPPORT_USER_1);
     });
   });
 

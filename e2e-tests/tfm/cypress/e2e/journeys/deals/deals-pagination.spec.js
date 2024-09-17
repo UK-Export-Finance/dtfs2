@@ -11,7 +11,7 @@ context('User can navigate through a paginated table of deals using the paginati
   });
 
   beforeEach(() => {
-    cy.login({ user: T1_USER_1 });
+    cy.login(T1_USER_1);
 
     cy.url().should('eq', relative('/deals/0'));
     cy.checkDealIdCells({ firstDealId: '10000001', increment: 1, numberToCheck: 20 });

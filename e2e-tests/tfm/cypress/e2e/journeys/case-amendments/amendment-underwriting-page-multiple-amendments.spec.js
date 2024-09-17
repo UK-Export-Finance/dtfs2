@@ -32,7 +32,7 @@ context('Amendments underwriting page - multiple amendments should show without 
   });
 
   it('should submit an automatic amendment request', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -86,7 +86,7 @@ context('Amendments underwriting page - multiple amendments should show without 
   });
 
   it('should submit an amendment request', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -132,7 +132,7 @@ context('Amendments underwriting page - multiple amendments should show without 
   });
 
   it('should submit an amendment request', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     const facilityId = dealFacilities[1]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
@@ -167,7 +167,7 @@ context('Amendments underwriting page - multiple amendments should show without 
   });
 
   it('should have length 2 for amendment underwriting headings as automatic amendment should not show', () => {
-    cy.login({ user: PIM_USER_1 });
+    cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     caseSubNavigation.underwritingLink().click();
 

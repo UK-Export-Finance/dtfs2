@@ -35,7 +35,7 @@ context('Case tasks - MIA deal', () => {
 
       cy.submitDeal(dealId, dealType, T1_USER_1);
 
-      cy.login({ user: MOCK_USERS.BUSINESS_SUPPORT_USER_1 });
+      cy.login(MOCK_USERS.BUSINESS_SUPPORT_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
     });
   });
@@ -210,7 +210,7 @@ context('Case tasks - MIA deal', () => {
     thirdTask.title().contains('File all deal emails in this deal');
 
     // task should be open for correct user
-    cy.login({ user: MOCK_USERS.UNDERWRITING_SUPPORT_1 });
+    cy.login(MOCK_USERS.UNDERWRITING_SUPPORT_1);
     cy.visit(relative(`/case/${dealId}/deal`));
     partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
