@@ -29,7 +29,7 @@ const { isHttpErrorStatus } = require('../../helpers/http');
  *
  * @param {object} payload - The payload containing the facilityIdentifier and acbsFacilityGuaranteeInput.
  * @param {string} payload.facilityIdentifier - The identifier of the facility.
- * @param {object} payload.acbsFacilityGuaranteeInput - The acbsFacilityGuaranteeInput object containing the guarantee details.
+ * @param {import('../../mappings/facility/facility-guarantee-amend').MappedFacilityGuaranteeAmendment} payload.acbsFacilityGuaranteeInput - The acbsFacilityGuaranteeInput object containing the guarantee details.
  * @returns {object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request to generate the guarantee ID fails, or if any other error occurs.
  */
@@ -40,6 +40,12 @@ const handler = async (payload) => {
     }
 
     const { facilityIdentifier, acbsFacilityGuaranteeInput } = payload;
+
+    // As both fields on the payload are optional,
+    // we need to check if the payload is not empty
+    if (Object.keys(acbsFacilityGuaranteeInput).length === 0) {
+      throw new Error('Invalid facility guarantee update payload');
+    }
 
     // Call create guarantee API
     const submittedToACBS = getNowAsIsoString();
