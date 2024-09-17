@@ -4,15 +4,20 @@ const { TEAMS } = require('../../constants/teams');
 /**
  * getTfmRolesGroupedByEntraId
  * Get TFM roles grouped by Entra group IDs.
- * @returns {Array} TFM roles
+ * Teams are mapped to a specific Entra group ID.
+ * @returns {Record<string, import('@ukef/dtfs2-common').TeamId>} TFM roles
  */
 const getTfmRolesGroupedByEntraId = () => {
   const roles = {};
 
-  Object.values(TEAMS).forEach((group) => {
-    const azureId = process.env[group.ssoGroupEnvVar];
+  Object.values(TEAMS).forEach((team) => {
+    const azureId = process.env[team.ssoGroupEnvVar];
 
-    roles[azureId] = group.id;
+    if (!azureId) {
+      throw new Error(`SSO group environment variable not found for team: ${team.name}`);
+    }
+
+    roles[azureId] = team.id;
   }, {});
 
   return roles;
@@ -22,7 +27,7 @@ const getTfmRolesGroupedByEntraId = () => {
  * getTfmRolesFromEntraGroups
  * Get TFM roles from Entra groups.
  * @param {Array} groupIds: Entra Group IDs
- * @returns {Array} TFM roles
+ * @returns {import('@ukef/dtfs2-common').TeamId[]} TFM roles
  */
 const getTfmRolesFromEntraGroups = (groupIds) => {
   const entraIdMap = getTfmRolesGroupedByEntraId();
