@@ -31,7 +31,6 @@ if (cachedShownStatus) {
 // Initially display filters, but hide them if they were previously hidden
 const startHidden = cachedShownStatus === 'HIDDEN';
 
-// sonarignore:rule=constructor-for-side-effects
 new window.MOJFrontend.FilterToggleButton({
   bigModeMediaQuery: '(min-width: 48.063em)',
   startHidden,
@@ -44,7 +43,7 @@ new window.MOJFrontend.FilterToggleButton({
   filter: {
     container: $(filterSelector),
   },
-});
+}); // NOSONAR
 
 const toggleButton = document.querySelector(`${toggleButtonContainerSelector} > button`) as HTMLButtonElement;
 
