@@ -54,6 +54,7 @@ on:
       - staging
       - prod
       - release-*
+      - '!release-please*'
 
 env:
   PRODUCT: dtfs
@@ -74,8 +75,8 @@ jobs:
     steps:
       - name: Environment 🧪
         run: |
-          if [[ "${{ env.ENVIRONMENT }}" == *release* ]];
-            echo "::set-output name=environment::staging"
+          if [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
+            echo "environment=staging" >> $GITHUB_ENV
           fi
           echo "Environment set to ${{ env.ENVIRONMENT }}"
 

@@ -8,7 +8,7 @@ import { REGEX } from '../../../../../constants';
  * @returns The parsed filters for the premium payments tab
  */
 export const parsePremiumPaymentsFilters = (premiumPaymentsFilters?: PremiumPaymentsFilters): PremiumPaymentsFilters => {
-  if (!premiumPaymentsFilters) {
+  if (!premiumPaymentsFilters || !premiumPaymentsFilters.facilityId) {
     return {};
   }
 
@@ -16,7 +16,7 @@ export const parsePremiumPaymentsFilters = (premiumPaymentsFilters?: PremiumPaym
 
   let facilityIdFilter;
 
-  if (facilityId && REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityId)) {
+  if (REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityId)) {
     facilityIdFilter = facilityId;
   }
 
