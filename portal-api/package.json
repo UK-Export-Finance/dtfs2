@@ -83,8 +83,8 @@
     "typescript": "^5.6.2"
   },
   "engines": {
-    "node": ">=20",
-    "npm": ">=10"
+    "node": "22.8.0",
+    "npm": ">=10.8.2"
   },
   "engineStrict": true
 }
