@@ -97,7 +97,7 @@ context('Clone GEF (AIN) deal', () => {
       mandatoryCriteria.trueRadio().click();
       form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone/name-application`));
-      nameApplication.internalRef().type('Cloned AIN deal');
+      cy.keyboardInput(nameApplication.internalRef(), 'Cloned AIN deal');
       form().submit();
     });
 
@@ -125,7 +125,7 @@ context('Clone GEF (AIN) deal', () => {
       cy.url().then((url) => {
         cy.visit(`${url}/about-exporter`);
         aboutExporter.mediumRadioButton().click();
-        aboutExporter.probabilityOfDefaultInput().clear().focused().type('10');
+        cy.keyboardInput(aboutExporter.probabilityOfDefaultInput(), '10');
         aboutExporter.isFinancingIncreasingRadioNo().click();
         cy.clickSaveAndReturnButton();
       });
@@ -147,7 +147,7 @@ context('Clone GEF (AIN) deal', () => {
       mandatoryCriteria.trueRadio().click();
       form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone/name-application`));
-      nameApplication.internalRef().type('Cloned AIN deal');
+      cy.keyboardInput(nameApplication.internalRef(), 'Cloned AIN deal');
       form().submit();
 
       cy.get('[data-cy="success-message-link"]').click();
@@ -263,8 +263,8 @@ context('Clone GEF (MIA) deal', () => {
     it('should populate the `Security Details` section', () => {
       uploadFiles.supportingInfoSecurityDetailsButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/security-details`));
-      uploadFiles.exporterSecurity().type('test');
-      uploadFiles.facilitySecurity().type('test2');
+      cy.keyboardInput(uploadFiles.exporterSecurity(), 'test');
+      cy.keyboardInput(uploadFiles.facilitySecurity(), 'test2');
       cy.clickSubmitButton();
     });
 
@@ -278,7 +278,7 @@ context('Clone GEF (MIA) deal', () => {
       mandatoryCriteria.trueRadio().click();
       form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/clone/name-application`));
-      nameApplication.internalRef().clear().type('Cloned MIA deal');
+      cy.keyboardInput(nameApplication.internalRef(), 'Cloned MIA deal');
       form().submit();
     });
 
@@ -288,7 +288,7 @@ context('Clone GEF (MIA) deal', () => {
       cy.url().then((url) => {
         cy.visit(`${url}/about-exporter`);
         aboutExporter.mediumRadioButton().click();
-        aboutExporter.probabilityOfDefaultInput().clear().focused().type('10');
+        cy.keyboardInput(aboutExporter.probabilityOfDefaultInput(), '10');
         aboutExporter.isFinancingIncreasingRadioNo().click();
         cy.clickSaveAndReturnButton();
       });
@@ -348,7 +348,7 @@ context('Clone GEF (MIN) deal', () => {
       mandatoryCriteria.trueRadio().click();
       form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone/name-application`));
-      nameApplication.internalRef().clear().type('Cloned MIN deal');
+      cy.keyboardInput(nameApplication.internalRef(), 'Cloned MIN deal');
       form().submit();
 
       cy.get('[data-cy="success-message-link"]').click();

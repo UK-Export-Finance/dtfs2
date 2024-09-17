@@ -117,24 +117,24 @@ context('About Facility Page', () => {
 
     it('should show an error message if coverStartDate or coverEndDate break validation rules', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.facilityName().type('Name');
+      cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
-      aboutFacility.coverStartDateDay().type(`${now.getDate()}-`);
-      aboutFacility.coverStartDateMonth().type(now.getMonth() + 1);
-      aboutFacility.coverStartDateYear().type(now.getFullYear());
-      aboutFacility.coverEndDateDay().type(`${now.getDate()}-`);
-      aboutFacility.coverEndDateMonth().type(now.getMonth() + 1);
-      aboutFacility.coverEndDateYear().type(now.getFullYear());
+      cy.keyboardInput(aboutFacility.coverStartDateDay(), `${now.getDate()}-`);
+      cy.keyboardInput(aboutFacility.coverStartDateMonth(), now.getMonth() + 1);
+      cy.keyboardInput(aboutFacility.coverStartDateYear(), now.getFullYear());
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), `${now.getDate()}-`);
+      cy.keyboardInput(aboutFacility.coverEndDateMonth(), now.getMonth() + 1);
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), now.getFullYear());
       cy.clickContinueButton();
       errorSummary().contains('The day for the cover start date must include 1 or 2 numbers');
       errorSummary().contains('The day for the cover end date must include 1 or 2 numbers');
       aboutFacility.coverStartDateError().contains('The day for the cover start date must include 1 or 2 numbers');
       aboutFacility.coverEndDateError().contains('The day for the cover end date must include 1 or 2 numbers');
 
-      aboutFacility.coverStartDateDay().clear().type(now.getDate());
-      aboutFacility.coverStartDateYear().type('-');
-      aboutFacility.coverEndDateDay().clear().type(now.getDate());
-      aboutFacility.coverEndDateYear().type('2');
+      cy.keyboardInput(aboutFacility.coverStartDateDay(), now.getDate());
+      cy.keyboardInput(aboutFacility.coverStartDateYear(), '-');
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), now.getDate());
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), '2');
       cy.clickContinueButton();
       errorSummary().contains('The year for the cover start date must include 4 numbers');
       errorSummary().contains('The year for the cover end date must include 4 numbers');
@@ -144,48 +144,36 @@ context('About Facility Page', () => {
 
     it('should show an error message if coverStartDate and coverEndDate are the same', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.facilityName().type('Name');
+      cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
-      aboutFacility.coverStartDateDay().clear().type(now.getDate());
-      aboutFacility
-        .coverStartDateMonth()
-        .clear()
-        .type(now.getMonth() + 1);
-      aboutFacility.coverStartDateYear().clear().type(now.getFullYear());
-      aboutFacility.coverEndDateDay().clear().type(now.getDate());
-      aboutFacility
-        .coverEndDateMonth()
-        .clear()
-        .type(now.getMonth() + 1);
-      aboutFacility.coverEndDateYear().clear().type(now.getFullYear());
+      cy.keyboardInput(aboutFacility.coverStartDateDay(), now.getDate());
+      cy.keyboardInput(aboutFacility.coverStartDateMonth(), now.getMonth() + 1);
+      cy.keyboardInput(aboutFacility.coverStartDateYear(), now.getFullYear());
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), now.getDate());
+      cy.keyboardInput(aboutFacility.coverEndDateMonth(), now.getMonth() + 1);
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), now.getFullYear());
       cy.clickContinueButton();
       aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
     });
 
     it('should show an error message if coverStartDate and coverEndDate are the same - shouldCoverStartOnSubmission', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.facilityName().type('Name');
+      cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
-      aboutFacility.coverEndDateDay().clear().type(now.getDate());
-      aboutFacility
-        .coverEndDateMonth()
-        .clear()
-        .type(now.getMonth() + 1);
-      aboutFacility.coverEndDateYear().clear().type(now.getFullYear());
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), now.getDate());
+      cy.keyboardInput(aboutFacility.coverEndDateMonth(), now.getMonth() + 1);
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), now.getFullYear());
       cy.clickContinueButton();
       aboutFacility.coverEndDateError().contains('The cover end date must be after the cover start date');
     });
 
     it('should show an error message if coverEndDate is before the coverStartDate - shouldCoverStartOnSubmission', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.facilityName().type('Name');
+      cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
-      aboutFacility.coverEndDateDay().clear().type(yesterday.getDate());
-      aboutFacility
-        .coverEndDateMonth()
-        .clear()
-        .type(yesterday.getMonth() + 1);
-      aboutFacility.coverEndDateYear().clear().type(yesterday.getFullYear());
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), yesterday.getDate());
+      cy.keyboardInput(aboutFacility.coverEndDateMonth(), yesterday.getMonth() + 1);
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), yesterday.getFullYear());
       cy.clickContinueButton();
       aboutFacility.coverEndDateError().contains('Cover end date cannot be before cover start date');
     });
@@ -193,14 +181,14 @@ context('About Facility Page', () => {
     if (facilityEndDateEnabled) {
       it('redirects user to `facility end date` page when using facility end date', () => {
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-        aboutFacility.facilityName().clear().type('Name');
+        cy.keyboardInput(aboutFacility.facilityName(), 'Name');
         aboutFacility.shouldCoverStartOnSubmissionNo().click();
-        aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
-        aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
-        aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
-        aboutFacility.coverEndDateDay().clear().type(dateConstants.twoDaysDay);
-        aboutFacility.coverEndDateMonth().clear().type(dateConstants.twoDaysMonth);
-        aboutFacility.coverEndDateYear().clear().type(dateConstants.twoDaysYear);
+        cy.keyboardInput(aboutFacility.coverStartDateDay(), dateConstants.todayDay);
+        cy.keyboardInput(aboutFacility.coverStartDateMonth(), dateConstants.todayMonth);
+        cy.keyboardInput(aboutFacility.coverStartDateYear(), dateConstants.todayYear);
+        cy.keyboardInput(aboutFacility.coverEndDateDay(), dateConstants.twoDaysDay);
+        cy.keyboardInput(aboutFacility.coverEndDateMonth(), dateConstants.twoDaysMonth);
+        cy.keyboardInput(aboutFacility.coverEndDateYear(), dateConstants.twoDaysYear);
         aboutFacility.isUsingFacilityEndDateYes().click();
 
         cy.clickContinueButton();
@@ -210,17 +198,17 @@ context('About Facility Page', () => {
 
       it('wipes the facility end date value when updating the cover start date', () => {
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
-        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.tomorrowDay);
-        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.tomorrowMonth);
-        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.tomorrowYear);
+        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.tomorrowDay);
+        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.tomorrowMonth);
+        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.tomorrowYear);
 
         cy.clickContinueButton();
 
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
-        aboutFacility.coverStartDateDay().clear().type(dateConstants.tomorrowDay);
-        aboutFacility.coverStartDateMonth().clear().type(dateConstants.tomorrowMonth);
-        aboutFacility.coverStartDateYear().clear().type(dateConstants.tomorrowYear);
+        cy.keyboardInput(aboutFacility.coverStartDateDay(), dateConstants.tomorrowDay);
+        cy.keyboardInput(aboutFacility.coverStartDateMonth(), dateConstants.tomorrowMonth);
+        cy.keyboardInput(aboutFacility.coverStartDateYear(), dateConstants.tomorrowYear);
 
         cy.clickContinueButton();
 
@@ -231,14 +219,14 @@ context('About Facility Page', () => {
 
       it('redirects user to `bank review date` page when not using facility end date', () => {
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-        aboutFacility.facilityName().clear().type('Name');
+        cy.keyboardInput(aboutFacility.facilityName(), 'Name');
         aboutFacility.shouldCoverStartOnSubmissionNo().click();
-        aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
-        aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
-        aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
-        aboutFacility.coverEndDateDay().clear().type(dateConstants.twoDaysDay);
-        aboutFacility.coverEndDateMonth().clear().type(dateConstants.twoDaysMonth);
-        aboutFacility.coverEndDateYear().clear().type(dateConstants.twoDaysYear);
+        cy.keyboardInput(aboutFacility.coverStartDateDay(), dateConstants.todayDay);
+        cy.keyboardInput(aboutFacility.coverStartDateMonth(), dateConstants.todayMonth);
+        cy.keyboardInput(aboutFacility.coverStartDateYear(), dateConstants.todayYear);
+        cy.keyboardInput(aboutFacility.coverEndDateDay(), dateConstants.twoDaysDay);
+        cy.keyboardInput(aboutFacility.coverEndDateMonth(), dateConstants.twoDaysMonth);
+        cy.keyboardInput(aboutFacility.coverEndDateYear(), dateConstants.twoDaysYear);
         aboutFacility.isUsingFacilityEndDateNo().click();
 
         cy.clickContinueButton();
@@ -254,9 +242,9 @@ context('About Facility Page', () => {
 
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
-        aboutFacility.coverStartDateDay().clear().type(dateConstants.tomorrowDay);
-        aboutFacility.coverStartDateMonth().clear().type(dateConstants.tomorrowMonth);
-        aboutFacility.coverStartDateYear().clear().type(dateConstants.tomorrowYear);
+        cy.keyboardInput(aboutFacility.coverStartDateDay(), dateConstants.tomorrowDay);
+        cy.keyboardInput(aboutFacility.coverStartDateMonth(), dateConstants.tomorrowMonth);
+        cy.keyboardInput(aboutFacility.coverStartDateYear(), dateConstants.tomorrowYear);
 
         cy.clickContinueButton();
 
@@ -267,14 +255,14 @@ context('About Facility Page', () => {
     } else {
       it('redirects the user to `provided facility` page', () => {
         cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-        aboutFacility.facilityName().clear().type('Name');
+        cy.keyboardInput(aboutFacility.facilityName(), 'Name');
         aboutFacility.shouldCoverStartOnSubmissionNo().click();
-        aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
-        aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
-        aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
-        aboutFacility.coverEndDateDay().clear().type(dateConstants.tomorrowDay);
-        aboutFacility.coverEndDateMonth().clear().type(dateConstants.tomorrowMonth);
-        aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
+        cy.keyboardInput(aboutFacility.coverStartDateDay(), dateConstants.todayDay);
+        cy.keyboardInput(aboutFacility.coverStartDateMonth(), dateConstants.todayMonth);
+        cy.keyboardInput(aboutFacility.coverStartDateYear(), dateConstants.todayYear);
+        cy.keyboardInput(aboutFacility.coverEndDateDay(), dateConstants.tomorrowDay);
+        cy.keyboardInput(aboutFacility.coverEndDateMonth(), dateConstants.tomorrowMonth);
+        cy.keyboardInput(aboutFacility.coverEndDateYear(), dateConstants.tomorrowYear);
 
         cy.clickContinueButton();
 
@@ -284,14 +272,14 @@ context('About Facility Page', () => {
 
     it('stores the inputted values when returning to the page', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.facilityName().clear().type('Name');
+      cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
-      aboutFacility.coverStartDateDay().clear().type(dateConstants.todayDay);
-      aboutFacility.coverStartDateMonth().clear().type(dateConstants.todayMonth);
-      aboutFacility.coverStartDateYear().clear().type(dateConstants.todayYear);
-      aboutFacility.coverEndDateDay().clear().type(dateConstants.tomorrowDay);
-      aboutFacility.coverEndDateMonth().clear().type(dateConstants.tomorrowMonth);
-      aboutFacility.coverEndDateYear().clear().type(dateConstants.tomorrowYear);
+      cy.keyboardInput(aboutFacility.coverStartDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(aboutFacility.coverStartDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(aboutFacility.coverStartDateYear(), dateConstants.todayYear);
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), dateConstants.tomorrowDay);
+      cy.keyboardInput(aboutFacility.coverEndDateMonth(), dateConstants.tomorrowMonth);
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), dateConstants.tomorrowYear);
       if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes().click();
       }
@@ -358,7 +346,7 @@ context('About Facility Page', () => {
 
     it('does not validate facility name field as its optional', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.monthsOfCover().type('10');
+      cy.keyboardInput(aboutFacility.monthsOfCover(), '10');
       if (facilityEndDateEnabled) {
         aboutFacility.isUsingFacilityEndDateYes().click();
       }
@@ -370,12 +358,12 @@ context('About Facility Page', () => {
     it('validates `months of cover` field if not a number', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.monthsOfCover().clear();
-      aboutFacility.monthsOfCover().type('ab');
+      cy.keyboardInput(aboutFacility.monthsOfCover(), 'ab');
       cy.clickContinueButton();
       aboutFacility.monthsOfCoverError();
 
       aboutFacility.monthsOfCover().clear();
-      aboutFacility.monthsOfCover().type('-100');
+      cy.keyboardInput(aboutFacility.monthsOfCover(), '-100');
       cy.clickContinueButton();
       aboutFacility.monthsOfCoverError();
     });

@@ -69,41 +69,32 @@ context('Facility Value Page', () => {
   describe('Percentage of cover field', () => {
     it('only allows the user to enter a value between 1 and 80', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('10');
-      facilityValuePage.percentageCover().type('0');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '10');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '0');
       cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 1 and 80');
       facilityValuePage.percentageCoverError().contains('You can only enter a number between 1 and 80');
 
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('10');
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('-1');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '10');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '-1');
       cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 1 and 80');
       facilityValuePage.percentageCoverError().contains('You can only enter a number between 1 and 80');
 
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('10');
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('a');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '10');
+      cy.keyboardInput(facilityValuePage.percentageCover(), 'a');
       cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 1 and 80');
       facilityValuePage.percentageCoverError().contains('You can only enter a number between 1 and 80');
 
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('10');
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('81');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '10');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '81');
       cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 1 and 80');
       facilityValuePage.percentageCoverError().contains('You can only enter a number between 1 and 80');
 
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('10');
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('80');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '10');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '80');
       cy.clickContinueButton();
       cy.url().should(
         'eq',
@@ -111,10 +102,8 @@ context('Facility Value Page', () => {
       );
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('10');
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('1');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '10');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '1');
       cy.clickContinueButton();
       cy.url().should(
         'eq',
@@ -122,10 +111,8 @@ context('Facility Value Page', () => {
       );
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('10');
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '10');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
       cy.clickContinueButton();
       cy.url().should(
         'eq',
@@ -137,34 +124,26 @@ context('Facility Value Page', () => {
   describe('Interest margin Percentage field', () => {
     it('only allows the user to enter a value between 0.0001 and 99, and allows decimal places', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('-1');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '-1');
       cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('a');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), 'a');
       cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('101');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '101');
       cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('1');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '1');
       cy.clickContinueButton();
       cy.url().should(
         'eq',
@@ -172,55 +151,43 @@ context('Facility Value Page', () => {
       );
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('100');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '100');
       cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('0.0000');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '0.0000');
       cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('0.12345');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '0.12345');
       cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('99.0001');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '99.0001');
       cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('-5');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '-5');
       cy.clickContinueButton();
       errorSummary().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
       facilityValuePage.interestPercentageError().contains('You can only enter a number between 0.0001 and 99 and can have up to 4 decimal places');
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('99.0000');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '99.0000');
       cy.clickContinueButton();
       cy.url().should(
         'eq',
@@ -228,10 +195,8 @@ context('Facility Value Page', () => {
       );
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('79');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '79');
       cy.clickContinueButton();
       cy.url().should(
         'eq',
@@ -239,10 +204,8 @@ context('Facility Value Page', () => {
       );
 
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('79');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('10.1');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '79');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '10.1');
       cy.clickContinueButton();
       cy.url().should(
         'eq',
@@ -254,9 +217,7 @@ context('Facility Value Page', () => {
   describe('Save and return', () => {
     it('displays an error for interest percentage when it has an invalid entry', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('-1');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '-1');
       cy.clickSaveAndReturnButton();
       errorSummary();
       facilityValuePage.interestPercentageError();
@@ -264,9 +225,7 @@ context('Facility Value Page', () => {
 
     it('displays an error for percentage cover when it has an invalid entry', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('-1');
-      facilityValuePage.interestPercentage().clear();
+      cy.keyboardInput(facilityValuePage.percentageCover(), '-1');
       cy.clickSaveAndReturnButton();
       errorSummary();
       facilityValuePage.percentageCoverError();
@@ -274,36 +233,28 @@ context('Facility Value Page', () => {
 
     it('returns to the application page when all the fields are blank', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.interestPercentage().clear();
       cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}`));
     });
 
     it('returns to the application page when all the fields have valid entries', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('80');
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('1');
+      cy.keyboardInput(facilityValuePage.percentageCover(), '80');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '1');
       cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}`));
     });
 
     it('returns to the application page when percentage cover is blank and interestPercentage is valid', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.interestPercentage().clear();
-      facilityValuePage.interestPercentage().type('80');
+      cy.keyboardInput(facilityValuePage.interestPercentage(), '80');
       cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}`));
     });
 
     it('returns to the application page when percentage cover is valid and interestPercentage is blank', () => {
       cy.visit(relative(`/gef/application-details/${applications[2].id}/facilities/${applications[2].facilities[1].details._id}/facility-value`));
-      facilityValuePage.percentageCover().clear();
-      facilityValuePage.percentageCover().type('80');
-      facilityValuePage.interestPercentage().clear();
+      cy.keyboardInput(facilityValuePage.percentageCover(), '80');
       cy.clickSaveAndReturnButton();
       cy.url().should('eq', relative(`/gef/application-details/${applications[2].id}`));
     });
