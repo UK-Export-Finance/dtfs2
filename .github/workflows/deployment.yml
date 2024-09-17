@@ -44,10 +44,11 @@ name: Deployment
 run-name: 🚀 Deploying to ${{ github.event.workflow_run.head_branch }}
 
 on:
-  workflow_run:
-    workflows: ['QAT']
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ['QAT']
+  #   types:
+  #     - completed
+  push:
     branches:
       - dev
       - feature
@@ -55,6 +56,7 @@ on:
       - prod
       - release-*
       - '!release-please*'
+      - 'fix/deployment'
 
 env:
   PRODUCT: dtfs
