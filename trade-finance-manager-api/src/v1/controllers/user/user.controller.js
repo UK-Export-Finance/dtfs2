@@ -88,20 +88,21 @@ exports.createUser = async (user, auditDetails) => {
   };
   delete tfmUser.token;
 
-  if (isVerifiedPayload({ payload: tfmUser, template: PAYLOAD_VERIFICATION.TFM.USER })) {
-    const createUserResult = await collection.insertOne(tfmUser);
-    const { insertedId: userId } = createUserResult;
-
-    if (!ObjectId.isValid(userId)) {
-      throw new Error('User creation failed. Invalid User Id');
-    }
-    const createdUser = await collection.findOne({ _id: { $eq: userId } });
-    const mapUser = mapUserData(createdUser);
-    return mapUser;
+  if (!isVerifiedPayload({ payload: tfmUser, template: PAYLOAD_VERIFICATION.TFM.USER })) {
+    console.error('Error in createUser - payload validation failed');
+    return false;
   }
 
-  console.error('Error in createUser - payload validation failed');
-  return false;
+  const createUserResult = await collection.insertOne(tfmUser);
+  const { insertedId: userId } = createUserResult;
+
+  if (!ObjectId.isValid(userId)) {
+    throw new Error('User creation failed. Invalid User Id');
+  }
+
+  const createdUser = await collection.findOne({ _id: { $eq: userId } });
+  const mapUser = mapUserData(createdUser);
+  return mapUser;
 };
 
 /**
