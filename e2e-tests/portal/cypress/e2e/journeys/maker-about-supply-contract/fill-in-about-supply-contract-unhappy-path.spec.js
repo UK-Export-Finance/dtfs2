@@ -1,40 +1,19 @@
 const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
 const { contract, contractAboutSupplier, contractAboutPreview } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
 
-const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
+const { ADMIN } = MOCK_USERS;
 
 context('about-supply-contract', () => {
   let deal;
 
   before(() => {
-    const aDealWithAboutSupplyContractInStatus = (status) => {
-      const candidates = twentyOneDeals.filter(
-        (aDeal) =>
-          aDeal.submissionDetails && status === aDeal.submissionDetails.status && aDeal.status === 'Draft' && (!aDeal.details || !aDeal.details.submissionDate),
-      );
-
-      const aDeal = candidates[0];
-      if (!aDeal) {
-        throw new Error('no suitable test data found');
-      } else {
-        return aDeal;
-      }
-    };
-
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Incomplete'), BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+
+    cy.createBssDeal({});
   });
 
   it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, selecting every option that requires more data.', () => {
-    cy.login(BANK1_MAKER1);
-
-    // go the long way for the first test- actually clicking via the contract page to prove the link..
-    contract.visit(deal);
-
     // check the status is displaying correctly
     cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
 

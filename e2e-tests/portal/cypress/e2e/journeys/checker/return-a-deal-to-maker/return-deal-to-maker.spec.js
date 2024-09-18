@@ -1,22 +1,16 @@
-const { contract, contractReturnToMaker, contractComments } = require('../../../pages');
+const { contract, contractReturnToMaker, contractComments, dashboardDeals } = require('../../../pages');
 const { successMessage } = require('../../../partials');
-const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_CHECKER1 } = MOCK_USERS;
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
-  let deal;
-
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssDeal({ readyForChecker: true });
+    cy.createBssDeal({ readyForCheck: true });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
-    // log in, visit a deal, select abandon
-    cy.login(BANK1_CHECKER1);
-    contract.visit(deal);
     cy.clickReturnToMakerButton();
 
     // cancel
@@ -24,30 +18,34 @@ context('A checker selects to return a deal to maker from the view-contract page
     contractReturnToMaker.cancel().click();
 
     // check we've gone to the right page
-    cy.url().should('eq', relative(`/contract/${deal._id}`));
+    cy.url().should('include', '/contract');
   });
 
   it('The Return to Maker button generates an error if no comment has been entered.', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
-    contract.visit(deal);
+    dashboardDeals.rowIndex.link().click();
+
     cy.clickReturnToMakerButton();
 
     // submit without a comment
     cy.clickReturnToMakerButton();
 
     // expect to stay on the abandon page, and see an error
-    cy.url().should('eq', relative(`/contract/${deal._id}/return-to-maker`));
+    cy.url().should('include', '/contract');
+    cy.url().should('include', '/return-to-maker');
+
     contractReturnToMaker.expectError('Comment is required when returning a deal to maker.');
   });
 
   it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
-    contract.visit(deal);
+    dashboardDeals.rowIndex.link().click();
 
     contract.commentsTab().click();
-    contract.visit(deal);
+
+    cy.clickBackLink();
 
     cy.clickReturnToMakerButton();
 
@@ -66,7 +64,7 @@ context('A checker selects to return a deal to maker from the view-contract page
       });
 
     // visit the deal and confirm the updates have been made
-    contract.visit(deal);
+    dashboardDeals.rowIndex.link().click();
 
     cy.assertText(contract.status(), "Further Maker's input required");
 

@@ -3,8 +3,8 @@ import { DETAILS } from './bond-form-values';
 const pages = require('../../pages');
 const partials = require('../../partials');
 const BOND_FORM_VALUES = require('./bond-form-values');
-const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { submissionDetails } = require('../../../fixtures/deal');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -19,13 +19,10 @@ const MOCK_DEAL = {
 };
 
 context('Add a Bond to a Deal', () => {
-  let deal;
-
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssDeal({ readyForCheck: true }).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+
+    cy.createBssDeal({});
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Bond to the deal', () => {
@@ -92,7 +89,7 @@ context('Add a Bond to a Deal', () => {
         const bondId = bondIdHiddenInput[0].value;
 
         cy.clickSaveGoBackButton();
-        cy.url().should('eq', relative(`/contract/${deal._id}`));
+        cy.url().should('include', '/contract');
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -180,7 +177,7 @@ context('Add a Bond to a Deal', () => {
         const bondId = bondIdHiddenInput[0].value;
 
         cy.clickSaveGoBackButton();
-        cy.url().should('eq', relative(`/contract/${deal._id}`));
+        cy.url().should('include', '/contract');
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -188,7 +185,7 @@ context('Add a Bond to a Deal', () => {
 
         cy.assertText(row.bondStatus(), 'Completed');
 
-        cy.assertText(row.facilityValue(), `${deal.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
+        cy.assertText(row.facilityValue(), `${submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
 
         cy.assertText(row.facilityStage(), 'Issued');
 

@@ -17,7 +17,7 @@ context('Dashboard Deals filters - filter by keyword', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssDeal({ readyForCheck: true });
+    cy.createBssDeal({});
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
