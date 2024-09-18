@@ -1,5 +1,13 @@
 import { Collection, ObjectId, UpdateFilter, UpdateResult, WithoutId } from 'mongodb';
-import { DEAL_SUBMISSION_TYPE, DealNotFoundError, MONGO_DB_COLLECTIONS, TFM_DEAL_STAGE, TfmDeal, TfmDealCancellation } from '@ukef/dtfs2-common';
+import {
+  CancellationNotFoundError,
+  DEAL_SUBMISSION_TYPE,
+  DealNotFoundError,
+  MONGO_DB_COLLECTIONS,
+  TFM_DEAL_STAGE,
+  TfmDeal,
+  TfmDealCancellation,
+} from '@ukef/dtfs2-common';
 import { mongoDbClient } from '../../drivers/db-client';
 
 export class TfmDealCancellationRepo {
@@ -21,6 +29,10 @@ export class TfmDealCancellationRepo {
 
     if (!matchingDeal) {
       throw new DealNotFoundError(dealId.toString());
+    }
+
+    if (!matchingDeal.tfm?.cancellation) {
+      throw new CancellationNotFoundError(dealId.toString());
     }
 
     return matchingDeal.tfm.cancellation;

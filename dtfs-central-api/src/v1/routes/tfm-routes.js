@@ -23,6 +23,7 @@ const tfmGetAmendmentController = require('../controllers/tfm/amendments/tfm-get
 const tfmPutAmendmentController = require('../controllers/tfm/amendments/tfm-put-amendments.controller');
 const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-post-amendments.controller');
 const tfmPutUpdateDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-put-update-deal-cancellation.controller');
+const tfmGetDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-get-deal-cancellation.controller');
 
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
@@ -572,6 +573,24 @@ tfmRouter
  *         description: Not found
  *       500:
  *         description: Internal server error
+ *   get:
+ *     summary: Get tfm deal cancellation object on MIN and AIN deal types
+ *     tags: [TFM, deals, cancellation, data fix]
+ *     description: Get cancellation object on the deals tfm object
+ *     parameters:
+ *       - in: path
+ *         name: dealId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the deal to update
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 tfmRouter
   .route('/deals/:dealId/cancellation')
@@ -581,6 +600,12 @@ tfmRouter
     handleExpressValidatorResult,
     validatePutDealCancellationPayload,
     tfmPutUpdateDealCancellationController.updateTfmDealCancellation,
+  )
+  .get(
+    validateDealCancellationEnabled,
+    validation.mongoIdValidation('dealId'),
+    handleExpressValidatorResult,
+    tfmGetDealCancellationController.getTfmDealCancellation,
   );
 
 /**
