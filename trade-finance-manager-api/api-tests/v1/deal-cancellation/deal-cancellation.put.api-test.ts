@@ -4,7 +4,7 @@ import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import createApi from '../../api';
 import app from '../../../src/createApp';
 import testUserCache from '../../api-test-users';
-import { MOCK_TFM_SESSION_USER } from '../../../src/v1/__mocks__/mock-tfm-session-user.ts';
+import { MOCK_TFM_SESSION_USER } from '../../../src/v1/__mocks__/mock-tfm-session-user';
 
 const updateDealCancellationMock = jest.fn() as jest.Mock<Promise<UpdateResult>>;
 
