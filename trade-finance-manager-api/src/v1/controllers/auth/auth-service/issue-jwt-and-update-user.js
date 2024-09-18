@@ -4,7 +4,7 @@ const userController = require('../../user/user.controller');
 /**
  * execute
  * Issue a JWT and update the user.
- * @param {import('src/types/db-models/tfm-users').TfmUser} tfmUser TFM user
+ * @param {import('@ukef/dtfs2-common').TfmUser} tfmUser TFM user
  * @returns {Promise<string>} JWT token
  */
 const issueJwtAndUpdateUser = async (tfmUser) => {

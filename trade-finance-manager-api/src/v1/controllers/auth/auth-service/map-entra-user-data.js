@@ -6,7 +6,7 @@ const { mapFirstAndLastName } = require('./map-first-and-last-name');
  * Map Entra user data
  * @param {object} entraUser Entra user data
  * @param {object} tfmUser Optional TFM user object.
- * @returns {object} Mapped user data
+ * @returns {import('src/types/db-models/tfm-users').TfmUserMappedFromEntraUser} Mapped user data
  */
 const mapEntraUserData = (entraUser, tfmUser) => {
   const claims = entraUser.idTokenClaims;

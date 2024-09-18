@@ -47,6 +47,9 @@ exports.findByEmails = async (emails) => {
 
     const emailsRegex = generateArrayOfEmailsRegex(emails);
 
+    /**
+     * @type {import('@ukef/dtfs2-common').TfmUser[]}
+     */
     const users = await collection.find({ email: { $in: emailsRegex } }).toArray();
 
     const getUserResponse = handleFindByEmailsResult(users);
@@ -139,10 +142,10 @@ exports.updateUser = async (_id, update, sessionUser, callback = () => {}) => {
 /**
  * updateLastLoginAndResetSignInData
  * Update a user's "last login" and reset sign in data.
- * @param {object} user
+ * @param {import('@ukef/dtfs2-common').TfmUser} user
  * @param {string} sessionIdentifier
- * @param {Function} callback: Callback function. defaults to an empty function.
- * @returns {Promise<Function>} Callback function
+ * @param {Function} callback Callback function. defaults to an empty function.
+ * @returns {Promise<void>}
  */
 exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, callback = () => {}) => {
   try {
@@ -156,7 +159,6 @@ exports.updateLastLoginAndResetSignInData = async (user, sessionIdentifier, call
 
     const update = {
       lastLogin: Date.now(),
-
       sessionIdentifier,
       auditRecord: generateTfmUserAuditDatabaseRecord(user._id),
     };

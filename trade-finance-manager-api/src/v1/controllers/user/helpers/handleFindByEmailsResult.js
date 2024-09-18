@@ -2,7 +2,7 @@
  * handleFindByEmailsResult
  * Handle the result of "find user by emails".
  * Depending on the amount of users, return "found" and "canProceed" booleans.
- * @param {Array} users TFM users
+ * @param {import("@ukef/dtfs2-common").TfmUser[]} users TFM users
  * @returns {import("src/types/auth/get-user-response").GetUserResponse} result status and maybe user object
  */
 const handleFindByEmailsResult = (users) => {

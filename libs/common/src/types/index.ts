@@ -22,3 +22,4 @@ export * from './api-error-code';
 export * from './facility-type';
 export * from './deal-type';
 export * from './any-object';
+export * from './hex-string';
