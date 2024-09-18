@@ -1,11 +1,11 @@
-import relative from '../../relativeURL';
-import facilityPage from '../../pages/facilityPage';
-import amendmentsPage from '../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
-import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
-import caseDealPage from '../../pages/caseDealPage';
+import relative from '../../../relativeURL';
+import facilityPage from '../../../pages/facilityPage';
+import amendmentsPage from '../../../pages/amendments/amendmentsPage';
+import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
+import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
+import caseDealPage from '../../../pages/caseDealPage';
 
 context('Amendments changes displayed - multiple single change amendments', () => {
   let dealId;

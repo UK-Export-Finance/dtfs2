@@ -1,10 +1,10 @@
-import relative from '../../relativeURL';
-import { errorSummary } from '../../partials';
-import facilityPage from '../../pages/facilityPage';
-import amendmentsPage from '../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
+import { errorSummary } from '../../../partials';
+import facilityPage from '../../../pages/facilityPage';
+import amendmentsPage from '../../../pages/amendments/amendmentsPage';
+import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../../e2e-fixtures';
 
 context('Amendments - Cover End Date', () => {
   let dealId;

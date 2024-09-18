@@ -1,10 +1,10 @@
 import { add } from 'date-fns';
-import relative from '../../relativeURL';
-import { caseSubNavigation, continueButton, errorSummary } from '../../partials';
-import facilityPage from '../../pages/facilityPage';
-import amendmentsPage from '../../pages/amendments/amendmentsPage';
-import caseDealPage from '../../pages/caseDealPage';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
+import relative from '../../../relativeURL';
+import { caseSubNavigation, continueButton, errorSummary } from '../../../partials';
+import facilityPage from '../../../pages/facilityPage';
+import amendmentsPage from '../../../pages/amendments/amendmentsPage';
+import caseDealPage from '../../../pages/caseDealPage';
+import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import {
   oneMonthFormattedTable,
   todayDay,
@@ -15,10 +15,10 @@ import {
   tomorrowYear,
   oneMonthFormattedFull,
   tomorrowFormattedFull,
-} from '../../../../../e2e-fixtures/dateConstants';
-import { ADMIN, BANK1_MAKER1, PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../e2e-fixtures';
-import pages from '../../pages';
-import { CURRENCY } from '../../../../../e2e-fixtures/constants.fixture';
+} from '../../../../../../e2e-fixtures/dateConstants';
+import { ADMIN, BANK1_MAKER1, PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../../e2e-fixtures';
+import pages from '../../../pages';
+import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
 
 context('Amendments underwriting - add banks decision - proceed', () => {
   // If the expiry & commencement date are the same day of the month then we add one to the month

@@ -1,11 +1,11 @@
-import relative from '../../relativeURL';
-import { continueButton, errorSummary } from '../../partials';
-import facilityPage from '../../pages/facilityPage';
-import amendmentsPage from '../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
-import pages from '../../pages';
+import relative from '../../../relativeURL';
+import { continueButton, errorSummary } from '../../../partials';
+import facilityPage from '../../../pages/facilityPage';
+import amendmentsPage from '../../../pages/amendments/amendmentsPage';
+import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
+import pages from '../../../pages';
 
 context('Amendments underwriting - add underwriter decision', () => {
   let dealId;

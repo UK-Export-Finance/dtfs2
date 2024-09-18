@@ -1,14 +1,14 @@
 import { add } from 'date-fns';
-import relative from '../../relativeURL';
-import facilityPage from '../../pages/facilityPage';
-import amendmentsPage from '../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import { NOT_ADDED } from '../../../fixtures/constants';
-import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN, CURRENCY } from '../../../../../e2e-fixtures';
-import caseDealPage from '../../pages/caseDealPage';
+import relative from '../../../relativeURL';
+import { errorSummary } from '../../../partials';
+import facilityPage from '../../../pages/facilityPage';
+import amendmentsPage from '../../../pages/amendments/amendmentsPage';
+import caseDealPage from '../../../pages/caseDealPage';
+import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN, CURRENCY } from '../../../../../../e2e-fixtures';
 
-context('Amendments - Manual approval journey', () => {
+context('Amendments - automatic approval journey', () => {
   // If the expiry & commencement date are the same day of the month then we add one to the month
   // difference for BS (but not for EWCS)
   // BUT... If the commencement date is end of month and the expiry date isn't then we don't add one
@@ -80,12 +80,72 @@ context('Amendments - Manual approval journey', () => {
 
       cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
       cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), '22');
+
+      cy.clickContinueButton();
+
+      errorSummary().contains('The year for the amendment request date must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+      cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+      cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), '2O22');
+
+      cy.clickContinueButton();
+
+      errorSummary().contains('The year for the amendment request date must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+      cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+      cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), '20 22');
+
+      cy.clickContinueButton();
+
+      errorSummary().contains('The year for the amendment request date must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+      cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+      cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), '2 22');
+
+      cy.clickContinueButton();
+
+      errorSummary().contains('The year for the amendment request date must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year for the amendment request date must include 4 numbers');
+
+      cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+      cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
       cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
       cy.clickContinueButton();
 
       cy.url().should('contain', 'request-approval');
-      // manual approval
-      amendmentsPage.amendmentRequestApprovalYes().click();
+      // automatic approval
+      amendmentsPage.amendmentRequestApprovalNo().click();
+      cy.clickContinueButton();
+      cy.url().should('contain', 'amendment-effective-date');
+
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), '22');
+
+      cy.clickContinueButton();
+
+      errorSummary().contains('The year for the effective date must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
+
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), '2O22');
+
+      cy.clickContinueButton();
+
+      errorSummary().contains('The year for the effective date must include 4 numbers');
+      amendmentsPage.errorMessage().contains('The year for the effective date must include 4 numbers');
+
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.fourDaysAgoDay);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.fourDaysAgoMonth);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), dateConstants.fourDaysAgoYear);
       cy.clickContinueButton();
 
       cy.url().should('contain', 'amendment-options');
@@ -98,13 +158,12 @@ context('Amendments - Manual approval journey', () => {
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
       cy.clickContinueButton();
+
       cy.url().should('contain', 'cover-end-date');
-
-      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
-      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
-      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
+      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.twoMonthsDay);
+      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.twoMonthsMonth);
+      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.twoMonthsYear);
       cy.clickContinueButton();
-
       cy.url().should('contain', 'facility-value');
       amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
       cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), '123');
@@ -124,6 +183,8 @@ context('Amendments - Manual approval journey', () => {
       cy.clickContinueButton();
       cy.url().should('contain', 'request-approval');
       cy.clickContinueButton();
+      cy.url().should('contain', 'amendment-effective-date');
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
@@ -135,58 +196,58 @@ context('Amendments - Manual approval journey', () => {
       cy.url().should('contain', 'check-answers');
 
       amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
-      amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'Yes');
-      amendmentsPage.amendmentAnswerEffectiveDate().should('not.exist');
-      amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.tomorrowDay);
+      amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'No');
+      amendmentsPage.amendmentAnswerEffectiveDate().should('contain', dateConstants.fourDaysAgoDay);
+      amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.twoMonthsFormatted);
       amendmentsPage.amendmentAnswerFacilityValue().should('contain', 'GBP 123.00');
 
       cy.clickContinueButton();
-      amendmentsPage.addAmendmentButton().should('not.exist');
+      amendmentsPage.addAmendmentButton().should('exist');
+      amendmentsPage.addAmendmentButton().contains('Add an amendment request');
     });
 
-    it('should display the `Not added` decision for Cover end date AND Facility value', () => {
+    it('should display the Automatic approval for Cover end date AND Facility value', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
-      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedTable);
-      amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
-      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', dateConstants.fourDaysAgoFull);
+      amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
+      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.twoMonthsFormattedFull);
+      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
       amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
     });
 
-    it('should display facility details and values on deal and facility page as amendment not completed', () => {
+    it('should display amendment changed dates and values on deal and facility page', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
-      caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
-      caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
-      caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
-      caseDealPage.dealFacilitiesTable.row(facilityId).totalValue().contains(`${CURRENCY.GBP} 12,345.00`);
-      caseDealPage.dealFacilitiesTable.row(facilityId).totalExposure().contains(`${CURRENCY.GBP} 2,469.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().should('not.contain', facilityTenor);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.twoMonthsFormattedTable);
+      caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).totalValue().contains(`${CURRENCY.GBP} 123.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).totalExposure().contains(`${CURRENCY.GBP} 24.60`);
 
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
-      facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
-      facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
-      facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
+      facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 123.00`);
+      facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
+      facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60`);
 
-      facilityPage.facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
-      facilityPage.facilityTenor().contains(facilityTenor);
+      facilityPage.facilityCoverEndDate().contains(dateConstants.twoMonthsFormattedTable);
+      facilityPage.facilityTenor().should('not.contain', facilityTenor);
     });
   });
 
-  describe('Amendment details - Change the Cover end date', () => {
+  describe('Amendment details - Change the Cover End Date', () => {
     let dealId;
     const dealFacilities = [];
 
@@ -232,7 +293,7 @@ context('Amendments - Manual approval journey', () => {
       facilityPage.facilityTenor().contains(facilityTenor);
     });
 
-    it('should take you to `Check your answers page` page', () => {
+    it('should take you to `Check your answers` page', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
@@ -249,25 +310,32 @@ context('Amendments - Manual approval journey', () => {
       cy.clickContinueButton();
 
       cy.url().should('contain', 'request-approval');
-      // manual approval
-      amendmentsPage.amendmentRequestApprovalYes().click();
+      // automatic approval
+      amendmentsPage.amendmentRequestApprovalNo().click();
+      cy.clickContinueButton();
+      cy.url().should('contain', 'amendment-effective-date');
+
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.fourDaysAgoDay);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.fourDaysAgoMonth);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), dateConstants.fourDaysAgoYear);
       cy.clickContinueButton();
 
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
 
-      // update both the cover end date and the facility value
+      // update the cover end date only
       amendmentsPage.amendmentCoverEndDateCheckbox().click();
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
       cy.clickContinueButton();
 
       cy.url().should('contain', 'cover-end-date');
-      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
-      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
-      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
+      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.twoMonthsDay);
+      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.twoMonthsMonth);
+      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.twoMonthsYear);
       cy.clickContinueButton();
+
       cy.url().should('contain', 'check-answers');
     });
 
@@ -282,49 +350,50 @@ context('Amendments - Manual approval journey', () => {
       cy.clickContinueButton();
       cy.url().should('contain', 'request-approval');
       cy.clickContinueButton();
+      cy.url().should('contain', 'amendment-effective-date');
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('not.be.checked');
       cy.clickContinueButton();
       cy.url().should('contain', 'cover-end-date');
       cy.clickContinueButton();
-      cy.url().should('contain', 'check-answers');
 
+      cy.url().should('contain', 'check-answers');
       amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
-      amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'Yes');
-      amendmentsPage.amendmentAnswerEffectiveDate().should('not.exist');
-      amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.tomorrowDay);
-      amendmentsPage.amendmentAnswerFacilityValue().should('not.exist');
+      amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'No');
+      amendmentsPage.amendmentAnswerEffectiveDate().should('contain', dateConstants.fourDaysAgoDay);
+      amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.twoMonthsFormatted);
 
       cy.clickContinueButton();
-      amendmentsPage.addAmendmentButton().should('not.exist');
+      amendmentsPage.addAmendmentButton().should('exist');
+      amendmentsPage.addAmendmentButton().contains('Add an amendment request');
     });
 
-    it('should display the `Not added` decision for Cover end date', () => {
+    it('should display the Automatic approval for Cover end date', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
+      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', dateConstants.fourDaysAgoFull);
       amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
-      amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
-      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.tomorrowDay);
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('contain', dateConstants.twoMonthsFormattedFull);
+      amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('not.exist');
       amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('not.exist');
       amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('not.exist');
     });
 
-    it('should display facility details and values on deal and facility page as amendment not completed', () => {
+    it('should display amendment changed dates on deal and facility page', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
-      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().should('not.contain', facilityTenor);
+      caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.twoMonthsFormattedTable);
       caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
       caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
@@ -335,12 +404,12 @@ context('Amendments - Manual approval journey', () => {
       facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
       facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
 
-      facilityPage.facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
-      facilityPage.facilityTenor().contains(facilityTenor);
+      facilityPage.facilityCoverEndDate().contains(dateConstants.twoMonthsFormattedTable);
+      facilityPage.facilityTenor().should('not.contain', facilityTenor);
     });
   });
 
-  describe('Amendment details - Change the Facility value', () => {
+  describe('Amendment details - Change the Facility Value', () => {
     let dealId;
     const dealFacilities = [];
 
@@ -403,8 +472,14 @@ context('Amendments - Manual approval journey', () => {
       cy.clickContinueButton();
 
       cy.url().should('contain', 'request-approval');
-      // manual approval
-      amendmentsPage.amendmentRequestApprovalYes().click();
+      // automatic approval
+      amendmentsPage.amendmentRequestApprovalNo().click();
+      cy.clickContinueButton();
+      cy.url().should('contain', 'amendment-effective-date');
+
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.fourDaysAgoDay);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.fourDaysAgoMonth);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), dateConstants.fourDaysAgoYear);
       cy.clickContinueButton();
 
       cy.url().should('contain', 'amendment-options');
@@ -415,8 +490,8 @@ context('Amendments - Manual approval journey', () => {
       amendmentsPage.amendmentFacilityValueCheckbox().click();
       amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-
       cy.clickContinueButton();
+
       cy.url().should('contain', 'facility-value');
       amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
       cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), '123');
@@ -436,6 +511,8 @@ context('Amendments - Manual approval journey', () => {
       cy.clickContinueButton();
       cy.url().should('contain', 'request-approval');
       cy.clickContinueButton();
+      cy.url().should('contain', 'amendment-effective-date');
+      cy.clickContinueButton();
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
@@ -445,50 +522,47 @@ context('Amendments - Manual approval journey', () => {
       cy.url().should('contain', 'check-answers');
 
       amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
-      amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'Yes');
-      amendmentsPage.amendmentAnswerEffectiveDate().should('not.exist');
-      amendmentsPage.amendmentAnswerCoverEndDate().should('not.exist');
-      amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('not.exist');
+      amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'No');
       amendmentsPage.amendmentAnswerFacilityValue().should('contain', 'GBP 123.00');
 
       cy.clickContinueButton();
-      amendmentsPage.addAmendmentButton().should('not.exist');
+      amendmentsPage.addAmendmentButton().should('exist');
+      amendmentsPage.addAmendmentButton().contains('Add an amendment request');
     });
 
-    it('should display the `Not added` decision for Facility value', () => {
+    it('should display the Automatic approval for Facility value', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
       facilityPage.facilityTabAmendments().click();
-      amendmentsPage.amendmentDetails.row(1).bankDecision().should('contain', UNDERWRITER_MANAGER_DECISIONS.AWAITING_DECISION);
       amendmentsPage.amendmentDetails.row(1).heading().should('contain', 'Amendment 1');
-      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', NOT_ADDED.DASH);
+      amendmentsPage.amendmentDetails.row(1).effectiveDate().should('contain', dateConstants.fourDaysAgoFull);
       amendmentsPage.amendmentDetails.row(1).currentCoverEndDate().should('not.exist');
       amendmentsPage.amendmentDetails.row(1).newCoverEndDate().should('not.exist');
       amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate().should('not.exist');
 
       amendmentsPage.amendmentDetails.row(1).currentFacilityValue().should('contain', 'GBP 12,345.00');
       amendmentsPage.amendmentDetails.row(1).newFacilityValue().should('contain', 'GBP 123.00');
-      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED);
+      amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue().should('contain', UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
     });
 
-    it('should display facility details and values on deal and facility page as amendment not completed', () => {
+    it('should display amendment changed values on deal and facility page', () => {
       cy.login(PIM_USER_1);
       const facilityId = dealFacilities[0]._id;
 
       cy.visit(relative(`/case/${dealId}/deal`));
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().contains(facilityTenor);
       caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
-      caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
-      caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 12,345.00`);
-      caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 2,469.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
+      caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
 
       cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
-      facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 12,345.00`);
-      facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 12,345.00`);
-      facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 2,469.00`);
+      facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 123.00`);
+      facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
+      facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${dateConstants.fourDaysAgoFull}`);
 
       facilityPage.facilityCoverEndDate().contains(dateConstants.oneMonthFormattedTable);
       facilityPage.facilityTenor().contains(facilityTenor);

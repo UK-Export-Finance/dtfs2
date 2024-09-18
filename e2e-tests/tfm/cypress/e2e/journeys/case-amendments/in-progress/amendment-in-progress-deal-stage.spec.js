@@ -1,12 +1,12 @@
-import relative from '../../relativeURL';
-import facilityPage from '../../pages/facilityPage';
-import amendmentsPage from '../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
-import pages from '../../pages';
-import { caseSubNavigation, caseSummary } from '../../partials';
-import { DEAL_STAGE_TFM } from '../../../fixtures/constants';
+import relative from '../../../relativeURL';
+import facilityPage from '../../../pages/facilityPage';
+import amendmentsPage from '../../../pages/amendments/amendmentsPage';
+import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
+import pages from '../../../pages';
+import { caseSubNavigation, caseSummary } from '../../../partials';
+import { DEAL_STAGE_TFM } from '../../../../fixtures/constants';
 
 context('Amendments deal stage - amendment in progress and in progress amendment bar', () => {
   let dealId;
