@@ -49,7 +49,7 @@ context('Return to Maker', () => {
     });
 
     it('submits with comments', () => {
-      returnToMaker.comment().type('Test comment');
+      cy.keyboardInput(returnToMaker.comment(), 'Test comment');
       cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
     });
@@ -57,13 +57,13 @@ context('Return to Maker', () => {
     it('display an error when the comment is greater than 400 characters', () => {
       const longComment = 'a'.repeat(401);
 
-      returnToMaker.comment().type(longComment);
+      cy.keyboardInput(returnToMaker.comment(), longComment);
       cy.clickSubmitButton();
       errorSummary();
     });
 
     it('takes checker back to application preview page when cancelled', () => {
-      returnToMaker.comment().type('Some comments here ....');
+      cy.keyboardInput(returnToMaker.comment(), 'Some comments here ....');
       cy.clickCancelLink();
       cy.location('pathname').should('eq', `/gef/application-details/${dealIds[2]}`);
     });

@@ -83,7 +83,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.agentPage.urnError().contains('Enter a unique reference number');
 
         pages.agentPage.agentUniqueRefInput().clear();
-        pages.agentPage.agentUniqueRefInput().type('test');
+        cy.keyboardInput(pages.agentPage.agentUniqueRefInput(), 'test');
 
         pages.agentPage.saveButton().click();
 
@@ -91,35 +91,35 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.agentPage.agentUniqueRefInput().clear().type('12');
+        cy.keyboardInput(pages.agentPage.agentUniqueRefInput().clear(), '12');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.agentPage.agentUniqueRefInput().clear().type('ABC123');
+        cy.keyboardInput(pages.agentPage.agentUniqueRefInput().clear(), 'ABC123');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.agentPage.agentUniqueRefInput().clear().type('"!£!"£!"£!"£');
+        cy.keyboardInput(pages.agentPage.agentUniqueRefInput().clear(), '"!£!"£!"£!"£');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.agentPage.agentUniqueRefInput().clear().type('1234!');
+        cy.keyboardInput(pages.agentPage.agentUniqueRefInput().clear(), '1234!');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
         pages.agentPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        pages.agentPage.agentUniqueRefInput().clear().type(' ');
+        cy.keyboardInput(pages.agentPage.agentUniqueRefInput().clear(), ' ');
         pages.agentPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
@@ -130,7 +130,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
       it('should re-direct to non-existent party urn page', () => {
         pages.partiesPage.agentEditLink().click();
         pages.agentPage.agentUniqueRefInput().clear();
-        pages.agentPage.agentUniqueRefInput().type(mockUrn);
+        cy.keyboardInput(pages.agentPage.agentUniqueRefInput(), mockUrn);
 
         pages.agentPage.saveButton().click();
 
@@ -140,7 +140,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
       it('should re-direct to summary page', () => {
         pages.partiesPage.agentEditLink().click();
         pages.agentPage.agentUniqueRefInput().clear();
-        pages.agentPage.agentUniqueRefInput().type(partyUrn);
+        cy.keyboardInput(pages.agentPage.agentUniqueRefInput(), partyUrn);
 
         pages.agentPage.saveButton().click();
 
@@ -151,7 +151,7 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
       it('should submit the party URN to TFM', () => {
         pages.partiesPage.agentEditLink().click();
         pages.agentPage.agentUniqueRefInput().clear();
-        pages.agentPage.agentUniqueRefInput().type(partyUrn);
+        cy.keyboardInput(pages.agentPage.agentUniqueRefInput(), partyUrn);
 
         pages.agentPage.saveButton().click();
 
@@ -176,8 +176,8 @@ context('Agent Party URN - User can add, edit, confirm and submit URN to the TFM
         pages.partiesPage.agentEditLink().click();
         pages.agentPage.agentUniqueRefInput().clear();
         pages.agentPage.agentCommissionRateInput().clear();
-        pages.agentPage.agentUniqueRefInput().type(partyUrn);
-        pages.agentPage.agentCommissionRateInput().type('1.234');
+        cy.keyboardInput(pages.agentPage.agentUniqueRefInput(), partyUrn);
+        cy.keyboardInput(pages.agentPage.agentCommissionRateInput(), '1.234');
 
         pages.agentPage.saveButton().click();
 
