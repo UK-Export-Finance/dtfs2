@@ -1,11 +1,11 @@
-import relative from '../../relativeURL';
-import pages from '../../pages';
-import { caseSummary, caseSubNavigation } from '../../partials';
-import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIA } from '../../../fixtures/mock-gef-deals';
-import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
-import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../e2e-fixtures';
-import { DEAL_TYPE } from '../../../fixtures/constants';
-import facilityPage from '../../pages/facilityPage';
+import relative from '../../../relativeURL';
+import pages from '../../../pages';
+import { caseSummary, caseSubNavigation } from '../../../partials';
+import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIA } from '../../../../fixtures/mock-gef-deals';
+import { MOCK_FACILITY_ONE } from '../../../../fixtures/mock-gef-facilities';
+import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../../e2e-fixtures';
+import { DEAL_TYPE } from '../../../../fixtures/constants';
+import facilityPage from '../../../pages/facilityPage';
 
 context('User can view a GEF MIA case deal', () => {
   let dealId;
