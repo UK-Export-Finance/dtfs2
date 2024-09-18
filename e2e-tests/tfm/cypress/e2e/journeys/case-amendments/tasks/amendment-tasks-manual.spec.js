@@ -1,12 +1,12 @@
-import relative from '../../relativeURL';
-import { caseSubNavigation } from '../../partials';
-import facilityPage from '../../pages/facilityPage';
-import amendmentsPage from '../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1, UNDERWRITING_SUPPORT_1, UNDERWRITER_MANAGER_1, UNDERWRITER_1, RISK_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
-import pages from '../../pages';
-import { DISPLAY_USER_TEAMS } from '../../../fixtures/constants';
+import relative from '../../../relativeURL';
+import { caseSubNavigation } from '../../../partials';
+import facilityPage from '../../../pages/facilityPage';
+import amendmentsPage from '../../../pages/amendments/amendmentsPage';
+import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { PIM_USER_1, UNDERWRITING_SUPPORT_1, UNDERWRITER_MANAGER_1, UNDERWRITER_1, RISK_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
+import pages from '../../../pages';
+import { DISPLAY_USER_TEAMS } from '../../../../fixtures/constants';
 
 const completeTask = (completeTaskParams) => {
   const { userId, groupId, taskId } = completeTaskParams;
