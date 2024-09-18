@@ -88,8 +88,8 @@ context('Eligibility Criterion 16', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/supporting-information/security-details`));
 
       mainHeading().contains('Enter security details');
-      securityDetails.exporterSecurity().type('exporter test');
-      securityDetails.facilitySecurity().type('facility test');
+      cy.keyboardInput(securityDetails.exporterSecurity(), 'exporter test');
+      cy.keyboardInput(securityDetails.facilitySecurity(), 'facility test');
       cy.clickSubmitButton();
     });
 

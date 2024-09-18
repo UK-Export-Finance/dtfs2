@@ -49,8 +49,8 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealIds[2]}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
       securityDetails.visit(dealIds[2]);
-      securityDetails.exporterSecurity().type('test');
-      securityDetails.facilitySecurity().type('test2');
+      cy.keyboardInput(securityDetails.exporterSecurity(), 'test');
+      cy.keyboardInput(securityDetails.facilitySecurity(), 'test2');
       cy.clickSubmitButton();
 
       // login as maker_checker only to delete a file.  file readded as maker
@@ -70,7 +70,7 @@ context('Create application as MAKER, edit as MAKER_CHECKER, submit application 
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       // submit the deal
       cy.clickSubmitButton();
-      applicationSubmission.commentsField().type('DTFS2-4698 Comments from original maker');
+      cy.keyboardInput(applicationSubmission.commentsField(), 'DTFS2-4698 Comments from original maker');
       cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 

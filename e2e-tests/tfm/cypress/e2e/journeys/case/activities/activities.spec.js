@@ -83,7 +83,7 @@ context('Users can create and submit comments', () => {
 
     it('should submit a comment under 1000 characters and render date of comment', () => {
       activitiesPage.addACommentButton().click();
-      activityCommentBoxPage.activityCommentBox().type('test');
+      cy.keyboardInput(activityCommentBoxPage.activityCommentBox(), 'test');
       activityCommentBoxPage.addCommentButton().click();
 
       activitiesPage.activitiesTimeline().contains('test');
@@ -96,7 +96,7 @@ context('Users can create and submit comments', () => {
 
     it('pressing cancel should not submit a comment', () => {
       activitiesPage.addACommentButton().click();
-      activityCommentBoxPage.activityCommentBox().type('should cancel');
+      cy.keyboardInput(activityCommentBoxPage.activityCommentBox(), 'should cancel');
       cy.clickCancelLink();
       activitiesPage.activitiesTimeline().contains('should cancel').should('not.exist');
     });
@@ -114,7 +114,7 @@ context('Users can create and submit comments', () => {
     it('should not be allowed to add comment over 1000 characters', () => {
       const longComment = 'aaaaaaaaaa'.repeat(101);
       activitiesPage.addACommentButton().click();
-      activityCommentBoxPage.activityCommentBox().typeWithoutDelay(longComment);
+      cy.keyboardInput(activityCommentBoxPage.activityCommentBox(), longComment);
       activityCommentBoxPage.addCommentButton().click();
       errorSummary().contains('Comments must be 1000 characters or fewer');
       activityCommentBoxPage.commentErrorMessage().contains('Comments must be 1000 characters or fewer');

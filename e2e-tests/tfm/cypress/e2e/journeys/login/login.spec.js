@@ -93,7 +93,7 @@ context('User can login', () => {
   });
 
   it('should not login and redirect to /deals with invalid email/username', () => {
-    pages.landingPage.email().type('wrongUser');
+    cy.keyboardInput(pages.landingPage.email(), 'wrongUser');
     cy.clickSubmitButton();
     cy.url().should('eq', relative('/'));
   });

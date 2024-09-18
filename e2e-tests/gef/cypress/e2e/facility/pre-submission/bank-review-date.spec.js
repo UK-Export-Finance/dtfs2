@@ -99,7 +99,7 @@ context('Bank Review Date Page', () => {
     it('validates the form if not blank when clicking on `save and return` button', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-      bankReviewDate.bankReviewDateDay().clear().type(todayDay);
+      cy.keyboardInput(bankReviewDate.bankReviewDateDay(), todayDay);
       bankReviewDate.bankReviewDateMonth().clear();
       cy.clickSaveAndReturnButton();
       errorSummary();
@@ -118,14 +118,14 @@ context('Bank Review Date Page', () => {
 
     it('when cover start date is given, it validates bank review date is after the cover start date', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.facilityName().clear().type('Name');
+      cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
-      aboutFacility.coverStartDateDay().clear().type(tomorrowDay);
-      aboutFacility.coverStartDateMonth().clear().type(tomorrowMonth);
-      aboutFacility.coverStartDateYear().clear().type(tomorrowYear);
-      aboutFacility.coverEndDateDay().clear().type(todayDay);
-      aboutFacility.coverEndDateMonth().clear().type(todayMonth);
-      aboutFacility.coverEndDateYear().clear().type(nextYear);
+      cy.keyboardInput(aboutFacility.coverStartDateDay(), tomorrowDay);
+      cy.keyboardInput(aboutFacility.coverStartDateMonth(), tomorrowMonth);
+      cy.keyboardInput(aboutFacility.coverStartDateYear(), tomorrowYear);
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), todayDay);
+      cy.keyboardInput(aboutFacility.coverEndDateMonth(), todayMonth);
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), nextYear);
       aboutFacility.isUsingFacilityEndDateNo().click();
 
       cy.clickContinueButton();
@@ -148,11 +148,11 @@ context('Bank Review Date Page', () => {
 
     it('when cover start date is not given, it validates bank review date is after today', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.facilityName().clear().type('Name');
+      cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
-      aboutFacility.coverEndDateDay().clear().type(todayDay);
-      aboutFacility.coverEndDateMonth().clear().type(todayMonth);
-      aboutFacility.coverEndDateYear().clear().type(nextYear);
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), todayDay);
+      cy.keyboardInput(aboutFacility.coverEndDateMonth(), todayMonth);
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), nextYear);
       aboutFacility.isUsingFacilityEndDateNo().click();
 
       cy.clickContinueButton();
@@ -205,11 +205,11 @@ context('Bank Review Date Page', () => {
 
     it('redirects to the About Facility page when using facility end date ', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      aboutFacility.facilityName().clear().type('Name');
+      cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
-      aboutFacility.coverEndDateDay().clear().type(todayDay);
-      aboutFacility.coverEndDateMonth().clear().type(todayMonth);
-      aboutFacility.coverEndDateYear().clear().type(nextYear);
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), todayDay);
+      cy.keyboardInput(aboutFacility.coverEndDateMonth(), todayMonth);
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), nextYear);
       aboutFacility.isUsingFacilityEndDateYes().click();
       cy.clickContinueButton();
 

@@ -73,9 +73,9 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       cy.clickContinueButton();
 
       cy.url().should('contain', 'facility-end-date');
-      amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(dateConstants.sixYearsOneDayDay);
-      amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(dateConstants.sixYearsOneDayMonth);
-      amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.sixYearsOneDayYear);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), dateConstants.sixYearsOneDayDay);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), dateConstants.sixYearsOneDayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), dateConstants.sixYearsOneDayYear);
 
       cy.clickContinueButton();
       errorSummary().contains('Facility end date cannot be greater than 6 years in the future');
@@ -86,9 +86,9 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       cy.clickContinueButton();
 
       cy.url().should('contain', 'facility-end-date');
-      amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(dateConstants.todayDay);
-      amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.todayYear);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), dateConstants.todayDay);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), dateConstants.todayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), dateConstants.todayYear);
       cy.clickContinueButton();
 
       cy.url().should('contain', 'facility-value');
@@ -99,9 +99,9 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       cy.clickContinueButton();
 
       cy.url().should('contain', 'facility-end-date');
-      amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(dateConstants.todayDay);
-      amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.todayYear);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), dateConstants.todayDay);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), dateConstants.todayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), dateConstants.todayYear);
       cy.clickContinueButton();
 
       cy.url().should('contain', 'check-answers');
@@ -121,9 +121,9 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       amendmentsPage.amendmentAnswerFacilityEndDateChangeLink().click();
 
       cy.url().should('contain', 'facility-end-date');
-      amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(dateConstants.threeMonthsOneDayDay);
-      amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(dateConstants.threeMonthsOneDayMonth);
-      amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), dateConstants.threeMonthsOneDayYear);
       cy.clickContinueButton();
 
       cy.url().should('contain', 'check-answers');
