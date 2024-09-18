@@ -64,14 +64,14 @@
   "dependencies": {
     "axios": "^1.7.7",
     "express": "^4.21.0",
-    "release-please": "^16.13.0"
+    "release-please": "^16.14.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.8.1",
     "@commitlint/config-conventional": "^17.8.1",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "cspell": "^8.14.3",
+    "cspell": "^8.14.4",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
