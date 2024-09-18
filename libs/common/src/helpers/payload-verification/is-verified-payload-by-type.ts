@@ -1,6 +1,6 @@
 import { IsVerifiedPayloadByTypeParams } from '../../types/payload-verification';
 /**
- * @deprecated
+ * @deprecated prefer IsVerifiedPayloadByZod
  * @param {string[]} errorResult - List of errors
  * @returns {boolean} - Returns false if there are errors, otherwise true
  * @description - Logs the error list and returns false if there are errors, otherwise true

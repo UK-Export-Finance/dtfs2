@@ -7,6 +7,9 @@ type BaseIsVerifiedPayloadParams = {
 };
 export type IsVerifiedPayloadByZodParams = Prettify<BaseIsVerifiedPayloadParams & { template: z.Schema }>;
 
+/**
+ * @deprecated prefer IsVerifiedPayloadByZod
+ */
 export type IsVerifiedPayloadByTypeParams = Prettify<BaseIsVerifiedPayloadParams & { template: Record<string, string> }>;
 
 export type IsVerifiedPayloadParams = IsVerifiedPayloadByZodParams | IsVerifiedPayloadByTypeParams;
