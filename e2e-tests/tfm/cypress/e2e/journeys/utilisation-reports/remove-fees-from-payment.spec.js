@@ -6,6 +6,7 @@ import {
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
+import { errorSummary } from '../../partials';
 import pages from '../../pages';
 import { PDC_TEAMS } from '../../../fixtures/teams';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
@@ -25,6 +26,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
   const paymentReference = 'A payment reference';
 
   const feeRecordIds = [1, 2];
+
+  const editPaymentUrl = `/utilisation-reports/${reportId}/edit-payment/${paymentId}`;
 
   const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(UTILISATION_REPORT_RECONCILIATION_STATUS.RECONCILIATION_IN_PROGRESS)
     .withId(reportId)
@@ -82,12 +85,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     pages.landingPage.visit();
     cy.login(USERS.PDC_RECONCILE);
 
-    cy.visit(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`);
+    cy.visit(`${editPaymentUrl}?redirectTab=premium-payments`);
   });
 
   it('should display errors when form submitted with invalid fee selections and persist the selected fees and inputted values', () => {
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
-    pages.utilisationReportEditPaymentPage.errorSummary().contains('Select fee or fees to remove from the payment');
+    errorSummary().contains('Select fee or fees to remove from the payment');
 
     clearFormValues();
 
@@ -95,15 +98,20 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
       getFeeRecordCheckbox(feeRecordId).check();
     });
 
-    cy.getInputByLabelText('Amount received').type('1234');
-    cy.getInputByLabelText('Day').type('nonsense');
-    cy.getInputByLabelText('Month').type('nonsense');
-    cy.getInputByLabelText('Year').type('nonsense');
-    cy.getInputByLabelText('Payment reference (optional)').type('Some payment reference');
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '1234');
+
+    cy.keyboardInput(cy.getInputByLabelText('Day'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Month'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Year'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), 'Some payment reference');
 
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
-    pages.utilisationReportEditPaymentPage.errorSummary().contains('You cannot remove all the fees. Delete the payment instead.');
+    errorSummary().contains('You cannot remove all the fees. Delete the payment instead.');
+
     feeRecordIds.forEach((feeRecordId) => {
       getFeeRecordCheckbox(feeRecordId).should('be.checked');
     });
@@ -123,15 +131,19 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
     getFeeRecordCheckbox(feeRecordIdToRemove).check();
 
-    cy.getInputByLabelText('Amount received').type('1234');
-    cy.getInputByLabelText('Day').type('nonsense');
-    cy.getInputByLabelText('Month').type('nonsense');
-    cy.getInputByLabelText('Year').type('nonsense');
-    cy.getInputByLabelText('Payment reference (optional)').type('Some payment reference');
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '1234');
+
+    cy.keyboardInput(cy.getInputByLabelText('Day'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Month'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Year'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), 'Some payment reference');
 
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+    cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
     getFeeRecordRow(feeRecordIdToRemove).should('not.exist');
     otherFeeRecordIds.forEach((feeRecordId) => {
@@ -161,12 +173,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     cy.get('strong[data-cy="fee-record-status"]:contains("MATCH")').should('exist');
     pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+    cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
     getFeeRecordCheckbox(1).check();
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
-    cy.url().should('eq', relative(`/utilisation-reports/${reportId}/edit-payment/${paymentId}`));
+    cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
     cy.visit(`/utilisation-reports/${reportId}`);
     cy.get('strong[data-cy="fee-record-status"]:contains("DOES NOT MATCH")').should('exist');

@@ -50,15 +50,15 @@ context('Amendments underwriting page', () => {
       amendmentsPage.addAmendmentButton().click();
       cy.url().should('contain', 'request-date');
 
-      amendmentsPage.amendmentRequestDayInput().clear().focused().type(dateConstants.todayDay);
-      amendmentsPage.amendmentRequestMonthInput().clear().focused().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentRequestYearInput().clear().focused().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
+      cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'request-approval');
       // manual approval
       amendmentsPage.amendmentRequestApprovalYes().click();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'amendment-options');
       amendmentsPage.amendmentCoverEndDateCheckbox().should('not.be.checked');
@@ -69,21 +69,21 @@ context('Amendments underwriting page', () => {
       amendmentsPage.amendmentFacilityValueCheckbox().click();
       amendmentsPage.amendmentCoverEndDateCheckbox().should('be.checked');
       amendmentsPage.amendmentFacilityValueCheckbox().should('be.checked');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'cover-end-date');
 
-      amendmentsPage.amendmentCoverEndDateDayInput().clear().focused().type(dateConstants.tomorrowDay);
-      amendmentsPage.amendmentCoverEndDateMonthInput().clear().focused().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentCoverEndDateYearInput().clear().focused().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
+      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'facility-value');
       amendmentsPage.amendmentCurrentFacilityValue().should('contain', '12,345.00');
-      amendmentsPage.amendmentFacilityValueInput().clear().focused().type('123');
+      cy.keyboardInput(amendmentsPage.amendmentFacilityValueInput(), '123');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
       cy.url().should('contain', 'check-answers');
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
     });
 
     it('should shows amendment on underwriting page as non-PIM and non-underwriter manager with no links to add', () => {

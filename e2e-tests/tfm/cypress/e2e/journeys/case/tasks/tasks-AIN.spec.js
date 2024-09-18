@@ -110,7 +110,7 @@ context('Case tasks - AIN deal', () => {
     pages.taskPage.taskStatusRadioInputInProgress().click();
 
     // submit form
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     // should now be back on the tasks page
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
@@ -130,7 +130,7 @@ context('Case tasks - AIN deal', () => {
     //---------------------------------------------------------------
     pages.taskPage.assignedToSelectInput().select('Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().click();
-    pages.taskPage.submitButton().click();
+    cy.clickSubmitButton();
 
     // should now be back on the tasks page
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));

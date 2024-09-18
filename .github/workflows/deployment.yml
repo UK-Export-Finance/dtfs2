@@ -54,11 +54,12 @@ on:
       - staging
       - prod
       - release-*
+      - '!release-please*'
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: ${{  github.event.workflow_run.head_branch == 'release-*' && 'dev' || github.event.workflow_run.head_branch }}
-  TIMEZONE: 'Europe/London'
+  ENVIRONMENT: ${{ github.event.workflow_run.head_branch }}
+  TIMEZONE: ${{ vars.TIMEZONE }}
   # Base artifact
   FROM: latest
 
@@ -69,11 +70,15 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
-      environment: ${{ env.ENVIRONMENT }}
+      environment: ${{ steps.environment.outputs.environment }}
       timezone: ${{ env.TIMEZONE }}
     steps:
       - name: Environment 🧪
-        run: echo "Environment set to ${{ env.ENVIRONMENT }}"
+        id: environment
+        run: |
+          if [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
+            echo "environment=staging" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
@@ -81,8 +86,8 @@ jobs:
   database:
     name: MSSQL 🗄️
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    environment: ${{ needs.setup.outputs.environment }}
     needs: [setup]
+    environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:
       SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}

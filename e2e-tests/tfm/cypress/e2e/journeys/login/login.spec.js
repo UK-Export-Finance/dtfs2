@@ -1,6 +1,6 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
-import partials from '../../partials';
+import { header, primaryNavigation } from '../../partials';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { BANK1_MAKER1, ADMIN, T1_USER_1, PIM_USER_1 } from '../../../../../e2e-fixtures';
 
@@ -55,7 +55,7 @@ context('User login', () => {
     });
 
     it("should displays the user's first and last name and logout link in the header", () => {
-      partials.header
+      header
         .userLink()
         .invoke('text')
         .then((text) => {
@@ -63,7 +63,7 @@ context('User login', () => {
           expect(text.trim()).to.contain(expected);
         });
 
-      partials.header.signOutLink().should('exist');
+      header.signOutLink().should('exist');
     });
 
     it('should redirect back to /deals when visiting /', () => {
@@ -73,13 +73,13 @@ context('User login', () => {
     });
 
     it('should be able to login again as different user', () => {
-      partials.header.signOutLink().should('exist');
+      header.signOutLink().should('exist');
 
       cy.login(PIM_USER_1);
 
       cy.url().should('eq', relative('/deals/0'));
 
-      partials.header
+      header
         .userLink()
         .invoke('text')
         .then((text) => {
@@ -87,33 +87,33 @@ context('User login', () => {
           expect(text.trim()).to.contain(expected);
         });
 
-      partials.header.signOutLink().should('exist');
+      header.signOutLink().should('exist');
     });
 
     it('should show relevant header information', () => {
-      partials.header.ukefLogo().should('exist');
-      partials.header.headerName().should('exist');
-      partials.header.headerName().contains('Trade Finance Manager');
+      header.ukefLogo().should('exist');
+      header.headerName().should('exist');
+      header.headerName().contains('Trade Finance Manager');
 
-      partials.header
+      header
         .headerName()
         .invoke('attr', 'href')
         .then((href) => {
           expect(href).to.equal('/deals');
         });
 
-      partials.header.userLink().should('exist');
-      partials.header.signOutLink().should('exist');
+      header.userLink().should('exist');
+      header.signOutLink().should('exist');
 
-      partials.primaryNavigation.allDealsLink().should('exist');
-      partials.primaryNavigation.allFacilitiesLink().should('exist');
+      primaryNavigation.allDealsLink().should('exist');
+      primaryNavigation.allFacilitiesLink().should('exist');
     });
 
     it('should display the beta banner correctly', () => {
-      partials.header.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
-      partials.header.betaBanner().contains('beta');
-      partials.header.betaBannerHref().contains('feedback');
-      partials.header
+      header.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
+      header.betaBanner().contains('beta');
+      header.betaBannerHref().contains('feedback');
+      header
         .betaBannerHref()
         .invoke('attr', 'href')
         .then((href) => {

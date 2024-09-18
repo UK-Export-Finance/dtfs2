@@ -67,7 +67,7 @@ context('Companies House Page', () => {
     });
 
     it('shows the correct error message if the registration number is too short', () => {
-      companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT);
+      cy.keyboardInput(companiesHouse.regNumberField(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT);
       cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'Enter a valid Companies House registration number');
@@ -76,7 +76,7 @@ context('Companies House Page', () => {
     });
 
     it('shows the correct error message if the registration number is too long', () => {
-      companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+      cy.keyboardInput(companiesHouse.regNumberField(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
       cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'Enter a valid Companies House registration number');
@@ -85,7 +85,7 @@ context('Companies House Page', () => {
     });
 
     it('shows the correct error message if the registration number has a special character', () => {
-      companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPECIAL_CHARACTER);
+      cy.keyboardInput(companiesHouse.regNumberField(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPECIAL_CHARACTER);
       cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'Enter a valid Companies House registration number');
@@ -94,7 +94,7 @@ context('Companies House Page', () => {
     });
 
     it('shows the correct error message if the registration number has a space', () => {
-      companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPACE);
+      cy.keyboardInput(companiesHouse.regNumberField(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPACE);
       cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'Enter a valid Companies House registration number');
@@ -103,7 +103,7 @@ context('Companies House Page', () => {
     });
 
     it('shows the correct error message if the registration number is valid but does not exist', () => {
-      companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT);
+      cy.keyboardInput(companiesHouse.regNumberField(), MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT);
       cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'No company matching the Companies House registration number entered was found');
@@ -112,7 +112,7 @@ context('Companies House Page', () => {
     });
 
     it('shows the correct error message if the registration number is for an overseas company', () => {
-      companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS);
+      cy.keyboardInput(companiesHouse.regNumberField(), MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS);
       cy.clickContinueButton();
       errorSummary().should('be.visible');
       errorSummary().should('contain', 'UKEF can only process applications from companies based in the UK');
@@ -121,7 +121,7 @@ context('Companies House Page', () => {
     });
 
     it('takes user to `exporters address` page if company registration number exists', () => {
-      companiesHouse.regNumberField().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
+      cy.keyboardInput(companiesHouse.regNumberField(), MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
       cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealWithEmptyExporter._id}/exporters-address`));
     });

@@ -50,9 +50,9 @@ const sendIssuedFacilitiesReceivedEmail = async (deal, updatedFacilities) => {
       // send a copy of the email to PIM
       const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
       // send a copy of the email to bank's general email address
-      const bankResponse = bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal));
+      const bankResponses = await Promise.all(bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal)));
 
-      return { makerEmailResponse, pimEmailResponse, bankResponse };
+      return { makerEmailResponse, pimEmailResponse, bankResponses };
     }
   } catch (error) {
     console.error('TFM-API Error in sendIssuedFacilitiesReceivedEmail %o', error);

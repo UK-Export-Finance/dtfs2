@@ -28,7 +28,7 @@ context('about-buyer', () => {
 
     // prove the errors are on the about-financial page
     contractAboutFinancial.visit(deal);
-    partials.errorSummary.errorSummaryLinks().should('have.length', 2);
+    partials.errorSummaryLinks().should('have.length', 2);
     contractAboutFinancial.expectError('Supply Contract value is required');
     contractAboutFinancial.expectError('Supply Contract currency is required');
 

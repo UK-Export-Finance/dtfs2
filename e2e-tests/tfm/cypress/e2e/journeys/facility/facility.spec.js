@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import partials from '../../partials';
+import { caseSummary, caseSubNavigation } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
@@ -39,21 +39,13 @@ context('Facility page', () => {
 
     // check that a couple of case summary elements have data
     // (no need to check all in E2E test)
-    partials.caseSummary.ukefDealId().should('be.visible');
-    partials.caseSummary
-      .ukefDealId()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(MOCK_DEAL_AIN.details.ukefDealId);
-      });
+    caseSummary.ukefDealId().should('be.visible');
 
-    partials.caseSummary.exporterName().should('be.visible');
-    partials.caseSummary
-      .exporterName()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(MOCK_DEAL_AIN.exporter.companyName);
-      });
+    cy.assertText(caseSummary.ukefDealId(), MOCK_DEAL_AIN.details.ukefDealId);
+
+    caseSummary.exporterName().should('be.visible');
+
+    cy.assertText(caseSummary.exporterName(), MOCK_DEAL_AIN.exporter.companyName);
 
     facilityPage.facilityMaximumUkefExposure().contains(dealFacilities[0].ukefExposure);
   });
@@ -62,7 +54,7 @@ context('Facility page', () => {
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
 
-    partials.caseSubNavigation.partiesLink().click();
+    caseSubNavigation.partiesLink().click();
 
     cy.url().should('eq', relative(`/case/${dealId}/parties`));
   });

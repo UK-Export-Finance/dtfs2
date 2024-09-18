@@ -1,3 +1,4 @@
+import { DEAL_TYPE, FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { applicationDetails, postApplicationDetails } from '.';
 import api from '../../services/api';
 import { NON_MAKER_ROLES } from '../../../test-helpers/common-role-lists';
@@ -46,7 +47,7 @@ describe('controllers/application-details', () => {
     });
 
     it('redirects to problem with service page if the deal is not GEF', async () => {
-      mockApplicationResponse.dealType = CONSTANTS.DEAL_TYPE.BSS_EWCS;
+      mockApplicationResponse.dealType = DEAL_TYPE.BSS_EWCS;
       api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
       await applicationDetails(mockRequest, mockResponse);
 
@@ -56,12 +57,12 @@ describe('controllers/application-details', () => {
     it('renders the `Application Details` template', async () => {
       mockFacilityResponse.items = [
         {
-          details: { type: CONSTANTS.FACILITY_TYPE.CASH },
+          details: { type: FACILITY_TYPE.CASH },
           validation: { required: [] },
           createdAt: 20,
         },
         {
-          details: { type: CONSTANTS.FACILITY_TYPE.CONTINGENT },
+          details: { type: FACILITY_TYPE.CONTINGENT },
           validation: { required: [] },
           createdAt: 10,
         },

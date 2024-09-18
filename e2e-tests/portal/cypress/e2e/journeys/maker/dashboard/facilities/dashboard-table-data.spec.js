@@ -188,12 +188,7 @@ context('View dashboard facilities as a maker', () => {
     cy.login(BANK1_MAKER1);
     dashboardFacilities.visit();
 
-    dashboardFacilities
-      .totalItems()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).equal(`(${ALL_BANK1_DEALS.length} items)`);
-      });
+    cy.assertText(dashboardFacilities.totalItems(), `(${ALL_BANK1_DEALS.length} items)`);
 
     cy.get('table tr').find(`[data-cy="facility__name--link--${ALL_BANK2_DEALS[0]}"]`).should('not.exist');
   });

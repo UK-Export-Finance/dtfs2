@@ -6,7 +6,7 @@ import { UtilisationReportReconciliationForReportViewModel } from '../../server/
 import { TfmSessionUser } from '../../server/types/tfm-session-user';
 
 const page = '../templates/utilisation-reports/utilisation-report-reconciliation-for-report.njk';
-const render = pageRenderer(page);
+const render = pageRenderer<UtilisationReportReconciliationForReportViewModel>(page);
 
 describe(page, () => {
   const aPdcReconcileUser = (): TfmSessionUser => ({ ...aTfmSessionUser(), teams: ['PDC_RECONCILE'] });
@@ -28,9 +28,9 @@ describe(page, () => {
     bank,
     formattedReportPeriod,
     reportId: reportId.toString(),
-    feeRecordPaymentGroups: [],
-    enablePaymentsReceivedSorting: false,
     facilityIdQuery,
+    enablePaymentsReceivedSorting: false,
+    premiumPayments: [],
     keyingSheet: [],
     paymentDetails: [],
   };
@@ -234,6 +234,8 @@ describe(page, () => {
           },
           feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
           feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH,
+          reconciledBy: '-',
+          dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
         },
       ],
     });

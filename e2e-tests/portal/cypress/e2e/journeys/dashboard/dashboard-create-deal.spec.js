@@ -28,7 +28,7 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
         dashboard.createNewSubmission().click();
 
         dashboard.mandatoryCriteriaYes().click();
-        dashboard.continueButton().click();
+        cy.clickContinueButton();
         cy.url().should('eq', relative('/gef/name-application'));
       });
     });
@@ -82,7 +82,7 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
         dashboard.createNewSubmission().click();
 
         dashboard.mandatoryCriteriaYes().click();
-        dashboard.continueButton().click();
+        cy.clickContinueButton();
         cy.url().should('eq', relative('/gef/name-application'));
       });
     });

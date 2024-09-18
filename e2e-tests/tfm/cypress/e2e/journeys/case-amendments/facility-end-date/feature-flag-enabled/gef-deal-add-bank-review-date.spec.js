@@ -1,4 +1,5 @@
 import relative from '../../../../relativeURL';
+import { errorSummary } from '../../../../partials';
 import facilityPage from '../../../../pages/facilityPage';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../../e2e-fixtures';
 import { MOCK_FACILITY_ONE } from '../../../../../fixtures/mock-gef-facilities';
@@ -57,11 +58,11 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         amendmentsPage.isUsingFacilityEndDateYes().should('not.be.checked');
         amendmentsPage.isUsingFacilityEndDateNo().should('not.be.checked');
 
-        amendmentsPage.continueAmendment().click();
-        amendmentsPage.errorSummary().contains('Select if the bank has provided an end date for this facility');
+        cy.clickContinueButton();
+        errorSummary().contains('Select if the bank has provided an end date for this facility');
 
         amendmentsPage.isUsingFacilityEndDateNo().click();
-        amendmentsPage.continueAmendment().click();
+        cy.clickContinueButton();
       });
 
       it('should navigate to the bank review date page', () => {
@@ -74,31 +75,31 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     describe('when the user has entered an incorrect bank review date', () => {
       beforeEach(() => {
         cy.navigateToIsUsingFacilityEndDatePage();
-        amendmentsPage.continueAmendment().click();
+        cy.clickContinueButton();
         cy.url().should('contain', 'bank-review-date');
 
-        amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.sixYearsOneDayDay);
-        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.sixYearsOneDayMonth);
-        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.sixYearsOneDayYear);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), dateConstants.sixYearsOneDayDay);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), dateConstants.sixYearsOneDayMonth);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), dateConstants.sixYearsOneDayYear);
 
-        amendmentsPage.continueAmendment().click();
+        cy.clickContinueButton();
       });
 
       it('should return expected errors when entering an incorrect bank review date', () => {
-        amendmentsPage.errorSummary().contains('Bank review date cannot be greater than 6 years in the future');
+        errorSummary().contains('Bank review date cannot be greater than 6 years in the future');
       });
     });
 
     describe('when the bank review date is valid and the facility value needs changing', () => {
       beforeEach(() => {
         cy.navigateToIsUsingFacilityEndDatePage({ changeFacilityValue: true });
-        amendmentsPage.continueAmendment().click();
+        cy.clickContinueButton();
 
         cy.url().should('contain', 'bank-review-date');
-        amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.todayDay);
-        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.todayMonth);
-        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.todayYear);
-        amendmentsPage.continueAmendment().click();
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), dateConstants.todayDay);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), dateConstants.todayMonth);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), dateConstants.todayYear);
+        cy.clickContinueButton();
       });
 
       it('should continue to the facility value page', () => {
@@ -109,13 +110,13 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     describe('when the bank review date is valid and only the cover end date is being changed', () => {
       beforeEach(() => {
         cy.navigateToIsUsingFacilityEndDatePage();
-        amendmentsPage.continueAmendment().click();
+        cy.clickContinueButton();
 
         cy.url().should('contain', 'bank-review-date');
-        amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.todayDay);
-        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.todayMonth);
-        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.todayYear);
-        amendmentsPage.continueAmendment().click();
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), dateConstants.todayDay);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), dateConstants.todayMonth);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), dateConstants.todayYear);
+        cy.clickContinueButton();
       });
 
       it('should continue to "Check your answers" page', () => {
@@ -129,10 +130,10 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     describe('when on the check your answers page', () => {
       beforeEach(() => {
         cy.navigateToIsUsingFacilityEndDatePage();
-        amendmentsPage.continueAmendment().click();
+        cy.clickContinueButton();
 
         cy.url().should('contain', 'bank-review-date');
-        amendmentsPage.continueAmendment().click();
+        cy.clickContinueButton();
 
         cy.url().should('contain', 'check-answers');
       });
@@ -141,10 +142,10 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         amendmentsPage.amendmentAnswerBankReviewDateChangeLink().click();
 
         cy.url().should('contain', 'bank-review-date');
-        amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.threeMonthsOneDayDay);
-        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.threeMonthsOneDayMonth);
-        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.threeMonthsOneDayYear);
-        amendmentsPage.continueAmendment().click();
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), dateConstants.threeMonthsOneDayDay);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), dateConstants.threeMonthsOneDayMonth);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), dateConstants.threeMonthsOneDayYear);
+        cy.clickContinueButton();
 
         cy.url().should('contain', 'check-answers');
         amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'No');
@@ -154,7 +155,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
       describe('when submitting and visiting the facility summary page', () => {
         beforeEach(() => {
-          amendmentsPage.continueAmendment().click();
+          cy.clickContinueButton();
           cy.visit(relative(`/case/${dealId}/facility/${facility._id}`));
         });
 

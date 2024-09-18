@@ -23,7 +23,7 @@ import {
 
 import { getFacilityCoverStartDate } from './facility-helpers';
 
-import { MOCK_ISSUED_FACILITY, MOCK_FACILITY, MOCK_ISSUED_FACILITY_UNCHANGED, MOCK_UNISSUED_FACILITY } from './mocks/mock_facilities';
+import { MOCK_ISSUED_FACILITY, MOCK_FACILITY, MOCK_ISSUED_FACILITY_UNCHANGED, MOCK_UNISSUED_FACILITY } from './mocks/mock-facilities';
 
 import { makerCanReSubmit } from './deal-helpers';
 
@@ -36,9 +36,9 @@ import {
   MOCK_AIN_APPLICATION_FALSE_COMMENTS,
   MOCK_AIN_APPLICATION_SUPPORTING_INFO,
   MOCK_AIN_APPLICATION_UNISSUED_ONLY,
-} from './mocks/mock_applications';
+} from './mocks/mock-applications';
 
-import { MOCK_REQUEST } from './mocks/mock_requests';
+import { MOCK_REQUEST } from './mocks/mock-requests';
 import { CHECKER } from '../constants/roles';
 
 const CONSTANTS = require('../constants');
@@ -1095,7 +1095,7 @@ describe('summaryItemsConditions()', () => {
 
       expect(text).toEqual('Change');
       expect(href).toContain('/unissued-facilities/');
-      expect(href).toContain('/change');
+      expect(href).toContain('/bank-review-date/change');
     });
 
     it('Should be able to change issued', () => {

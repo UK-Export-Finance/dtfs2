@@ -89,7 +89,7 @@ context('Portal to TFM deal submission', () => {
     tfmPages.managersDecisionPage.addDecisionLink().click({ force: true });
 
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithoutConditions().click();
-    tfmPages.managersDecisionPage.submitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // Go back to Portal
@@ -104,18 +104,8 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // Portal deal status should be updated
     //---------------------------------------------------------------
-    portalPages.contract
-      .previousStatus()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('In progress by UKEF');
-      });
+    cy.assertText(portalPages.contract.previousStatus(), 'In progress by UKEF');
 
-    portalPages.contract
-      .status()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Accepted by UKEF (without conditions)');
-      });
+    cy.assertText(portalPages.contract.status(), 'Accepted by UKEF (without conditions)');
   });
 });

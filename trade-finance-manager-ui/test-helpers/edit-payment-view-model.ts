@@ -10,4 +10,6 @@ export const anEditPaymentViewModel = (): EditPaymentViewModel => ({
   totalReportedPayments: 'GBP 314.59',
   errors: { errorSummary: [] },
   formValues: { paymentDate: {} },
+  redirectTab: 'keying-sheet',
+  backLinkHref: '/utilisation-reports/12#keying-sheet',
 });

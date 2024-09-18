@@ -1,4 +1,4 @@
-import { FeeRecordPaymentEntityGroup } from '../../../../../helpers';
+import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 
 /**
  * Filters the supplied list of fee record payment entity groups

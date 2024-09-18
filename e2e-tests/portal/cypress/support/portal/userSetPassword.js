@@ -5,6 +5,6 @@ module.exports = (email, password) => {
     resetPassword.visitChangePassword(user.resetPwdToken);
     changePassword.password().type(password);
     changePassword.confirmPassword().type(password);
-    changePassword.submit().click();
+    cy.clickSubmitButton();
   });
 };

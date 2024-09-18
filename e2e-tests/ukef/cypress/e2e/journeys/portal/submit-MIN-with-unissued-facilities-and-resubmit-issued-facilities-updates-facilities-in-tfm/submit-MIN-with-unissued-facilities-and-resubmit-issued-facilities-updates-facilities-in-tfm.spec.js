@@ -191,46 +191,32 @@ context('Portal to TFM deal submission', () => {
     const tfmBondFacilityPage = `${TFM_URL}/case/${dealId}/facility/${bondId}`;
     cy.forceVisit(tfmBondFacilityPage);
 
-    tfmPages.facilityPage
-      .facilityStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issued');
-      });
+    cy.assertText(tfmPages.facilityPage.facilityStage(), 'Issued');
 
-    tfmPages.facilityPage
-      .facilityBankIssueNoticeReceived()
-      .invoke('text')
-      .then((text) => {
-        // the code actually uses facility.submittedAsIssuedDate,
-        // but in this e2e test it will always be today so to simplify..
-        const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-        expect(text.trim()).to.equal(expectedDate);
-      });
+    cy.assertText(
+      tfmPages.facilityPage.facilityBankIssueNoticeReceived(),
+      // the code actually uses facility.submittedAsIssuedDate,
+      // but in this e2e test it will always be today so to simplify..
+      new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }),
+    );
 
-    tfmPages.facilityPage
-      .facilityCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        const expectedDate = new Date(BOND_COVER_START_DATE_VALUE).toLocaleString('en-GB', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
-        expect(text.trim()).to.equal(expectedDate);
-      });
+    cy.assertText(
+      tfmPages.facilityPage.facilityCoverStartDate(),
+      new Date(BOND_COVER_START_DATE_VALUE).toLocaleString('en-GB', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+    );
 
-    tfmPages.facilityPage
-      .facilityCoverEndDate()
-      .invoke('text')
-      .then((text) => {
-        const expectedDate = new Date(BOND_COVER_END_DATE_VALUE).toLocaleString('en-GB', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
-        expect(text.trim()).to.equal(expectedDate);
-      });
+    cy.assertText(
+      tfmPages.facilityPage.facilityCoverEndDate(),
+      new Date(BOND_COVER_END_DATE_VALUE).toLocaleString('en-GB', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+    );
 
     tfmPages.facilityPage
       .facilityTenor()
@@ -265,60 +251,39 @@ context('Portal to TFM deal submission', () => {
     const tfmLoanFacilityPage = `${TFM_URL}/case/${dealId}/facility/${loanId}`;
     cy.forceVisit(tfmLoanFacilityPage);
 
-    tfmPages.facilityPage
-      .facilityStage()
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.equal('Issued');
-      });
+    cy.assertText(tfmPages.facilityPage.facilityStage(), 'Issued');
 
-    tfmPages.facilityPage
-      .facilityBankIssueNoticeReceived()
-      .invoke('text')
-      .then((text) => {
-        // the code actually uses facility.submittedAsIssuedDate,
-        // but in this e2e test it will always be today so to simplify..
-        const expectedDate = new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-        expect(text.trim()).to.equal(expectedDate);
-      });
+    cy.assertText(
+      tfmPages.facilityPage.facilityBankIssueNoticeReceived(),
+      // the code actually uses facility.submittedAsIssuedDate,
+      // but in this e2e test it will always be today so to simplify..
+      new Date().toLocaleString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }),
+    );
 
-    tfmPages.facilityPage
-      .firstDrawdownAmountInExportCurrency()
-      .invoke('text')
-      .then((text) => {
-        const expectedValue = Number(DISBURSEMENT_AMOUNT_VALUE).toLocaleString('en', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
+    const expectedDrawdownAmount = Number(DISBURSEMENT_AMOUNT_VALUE).toLocaleString('en', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
 
-        const expected = `${dealFacilities.loans[0].currency.id} ${expectedValue}`;
+    cy.assertText(tfmPages.facilityPage.firstDrawdownAmountInExportCurrency(), `${dealFacilities.loans[0].currency.id} ${expectedDrawdownAmount}`);
 
-        expect(text.trim()).to.equal(expected);
-      });
+    cy.assertText(
+      tfmPages.facilityPage.facilityCoverStartDate(),
+      new Date(LOAN_COVER_START_DATE_VALUE).toLocaleString('en-GB', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+    );
 
-    tfmPages.facilityPage
-      .facilityCoverStartDate()
-      .invoke('text')
-      .then((text) => {
-        const expectedDate = new Date(LOAN_COVER_START_DATE_VALUE).toLocaleString('en-GB', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
-        expect(text.trim()).to.equal(expectedDate);
-      });
-
-    tfmPages.facilityPage
-      .facilityCoverEndDate()
-      .invoke('text')
-      .then((text) => {
-        const expectedDate = new Date(LOAN_COVER_END_DATE_VALUE).toLocaleString('en-GB', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
-        expect(text.trim()).to.equal(expectedDate);
-      });
+    cy.assertText(
+      tfmPages.facilityPage.facilityCoverEndDate(),
+      new Date(LOAN_COVER_END_DATE_VALUE).toLocaleString('en-GB', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+    );
 
     tfmPages.facilityPage
       .facilityTenor()

@@ -923,14 +923,14 @@ const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken)
 
 /**
  * @param {string} reportId - The report id
- * @param {string | undefined} facilityIdQuery - A partial facility id to filter the report fee records by
+ * @param {import('@ukef/dtfs2-common').PremiumPaymentsFilters} premiumPaymentsFilters - Filters to apply to the premium payments tab
  * @param {string} userToken - The user token
  * @returns {Promise<import('./api-response-types').UtilisationReportReconciliationDetailsResponseBody>}
  */
-const getUtilisationReportReconciliationDetailsById = async (reportId, facilityIdQuery, userToken) => {
+const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPaymentsFilters, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
     headers: generateHeaders(userToken),
-    params: { facilityIdQuery },
+    params: { premiumPaymentsFilters },
   });
 
   return response.data;
