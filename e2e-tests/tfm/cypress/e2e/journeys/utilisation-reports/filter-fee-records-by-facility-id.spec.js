@@ -63,7 +63,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
     cy.reload();
 
-    pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().type('11111111');
+    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), '11111111');
     pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}?facilityIdQuery=11111111`));
@@ -89,7 +89,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
     cy.reload();
 
-    pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().type('1111');
+    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), '1111');
     pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}?facilityIdQuery=1111`));
@@ -108,7 +108,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
   });
 
   it('should display an error if the supplied facility id query is an invalid value and persist the inputted value', () => {
-    pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().type('nonsense');
+    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), 'nonsense');
     pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}?facilityIdQuery=nonsense`));
@@ -157,7 +157,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
     pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(paymentId).should('exist');
 
-    pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().type('1111');
+    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), '1111');
     pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
 
     toDoFeeRecords.forEach(({ id }) => {
@@ -181,7 +181,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
     cy.reload();
 
-    pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().type('33333333');
+    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), '33333333');
     pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}?facilityIdQuery=33333333`));
