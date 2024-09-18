@@ -8,7 +8,12 @@ import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../../fixtures/mocks/mock-facilities';
+import {
+  anUnissuedCashFacility,
+  anIssuedCashFacility,
+  anUnissuedContingentFacility,
+  anUnissuedCashFacilityWith20MonthsOfCover,
+} from '../../../../fixtures/mocks/mock-facilities';
 import { mainHeading, continueButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -21,9 +26,14 @@ let dealId;
 let token;
 let facilityOneId;
 
-const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR];
-
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
+const MOCK_FACILITY_ONE = anUnissuedCashFacility({ facilityEndDateEnabled });
+const MOCK_FACILITY_TWO = anIssuedCashFacility({ facilityEndDateEnabled });
+const MOCK_FACILITY_THREE = anUnissuedContingentFacility({ facilityEndDateEnabled });
+const MOCK_FACILITY_FOUR = anUnissuedCashFacilityWith20MonthsOfCover({ facilityEndDateEnabled });
+
+const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR];
 
 /*
   for changing facilities to issued from preview page.

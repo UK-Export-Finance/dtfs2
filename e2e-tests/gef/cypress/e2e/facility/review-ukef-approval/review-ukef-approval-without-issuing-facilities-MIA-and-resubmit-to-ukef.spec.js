@@ -7,7 +7,12 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
 
 import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO_NULL_MIA, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
+import {
+  anUnissuedCashFacility,
+  anIssuedCashFacilityWithCoverDateConfirmed,
+  anUnissuedContingentFacility,
+  anUnissuedCashFacilityWith20MonthsOfCover,
+} from '../../../fixtures/mocks/mock-facilities';
 
 import { toTitleCase } from '../../../fixtures/helpers';
 
@@ -19,6 +24,13 @@ import statusBanner from '../../pages/application-status-banner';
 import coverStartDate from '../../pages/cover-start-date';
 import applicationDetails from '../../pages/application-details';
 import applicationActivities from '../../pages/application-activities';
+
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
+const MOCK_FACILITY_ONE = anUnissuedCashFacility({ facilityEndDateEnabled });
+const MOCK_FACILITY_TWO_NULL_MIA = anIssuedCashFacilityWithCoverDateConfirmed({ facilityEndDateEnabled });
+const MOCK_FACILITY_THREE = anUnissuedContingentFacility({ facilityEndDateEnabled });
+const MOCK_FACILITY_FOUR = anUnissuedCashFacilityWith20MonthsOfCover({ facilityEndDateEnabled });
 
 let dealId;
 let token;

@@ -7,7 +7,7 @@ import CONSTANTS from '../../../../fixtures/constants';
 import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE } from '../../../../fixtures/mocks/mock-facilities';
+import { anUnissuedCashFacility, anIssuedCashFacility, anUnissuedContingentFacility } from '../../../../fixtures/mocks/mock-facilities';
 import { backLink, cancelLink, continueButton, headingCaption, mainHeading, submitButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -21,9 +21,13 @@ let dealId;
 let token;
 let facilityOneId;
 
-const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE];
-
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
+const MOCK_FACILITY_ONE = anUnissuedCashFacility({ facilityEndDateEnabled });
+const MOCK_FACILITY_TWO = anIssuedCashFacility({ facilityEndDateEnabled });
+const MOCK_FACILITY_THREE = anUnissuedContingentFacility({ facilityEndDateEnabled });
+
+const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE];
 
 context('Change issued facilities back to unissued AIN (changed to issued facilities post submission)', () => {
   before(() => {
