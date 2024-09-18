@@ -40,11 +40,11 @@ describe('services/utilisation-report-data-validator', () => {
 
     const { missingHeaderErrors, availableHeaders } = validateHeaders(csvData[0]);
 
-    let dataValidationErrors = await validateCells(csvData, availableHeaders);
+    const cellValidationErrors = await validateCells(csvData, availableHeaders);
 
-    dataValidationErrors = validateRows(csvData, dataValidationErrors);
+    const rowValidationErrors = validateRows(csvData);
 
-    const expectedValidationErrors = missingHeaderErrors.concat(dataValidationErrors);
+    const expectedValidationErrors = [...missingHeaderErrors, ...cellValidationErrors, ...rowValidationErrors];
 
     expect(response).toEqual(expectedValidationErrors);
   });

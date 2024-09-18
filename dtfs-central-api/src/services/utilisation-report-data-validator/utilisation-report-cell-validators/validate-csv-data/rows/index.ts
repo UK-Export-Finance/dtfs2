@@ -12,23 +12,22 @@ interface FacilityData {
  * if not, generate validation errors
  * Uses a map to store the facility ids and their base currency and facility utilisation values to match against
  * @param {UtilisationReportCsvRowData[]} csvData - The csv data
- * @param {UtilisationReportDataValidationError[]} validationErrors - Existing validation errors
- * @returns {UtilisationReportDataValidationError[]} The error if data is invalid, null if the data is valid
+ * @returns {UtilisationReportDataValidationError[]} Generated errors, null if the data is valid
  */
-const validateRows = (csvData: UtilisationReportCsvRowData[], validationErrors: UtilisationReportDataValidationError[]) => {
+const validateRows = (csvData: UtilisationReportCsvRowData[]): UtilisationReportDataValidationError[] => {
   // Map to store the facility ids and their base currency and facility utilisation values
   const map = new Map<string, FacilityData>();
   const errors: UtilisationReportDataValidationError[] = [];
 
   /**
-   * maps through each row of the csv
+   * iterates through each row of the csv
    * get value for the ukef facility id, base currency and facility utilisation and exporter name
    * if the base currency or facility utilisation is missing, go to the next row (these errors handled)
    * if the facility id is already in the map, check if the base currency and facility utilisation match
    * else add the facility id and its base currency and facility utilisation to the map
    */
   csvData.forEach((row) => {
-    const ukefFacilityId = row['ukef facility id'].value;
+    const ukefFacilityId = row['ukef facility id']?.value;
     const baseCurrencyValue = row['base currency']?.value;
     const facilityUtilisationValue = row['facility utilisation']?.value;
     const exporterName = row['bank facility reference']?.value;
@@ -74,12 +73,7 @@ const validateRows = (csvData: UtilisationReportCsvRowData[], validationErrors: 
     }
   });
 
-  // if there are errors, push to the validation errors array
-  if (errors.length) {
-    validationErrors.push(...errors);
-  }
-
-  return validationErrors;
+  return errors;
 };
 
 export default validateRows;

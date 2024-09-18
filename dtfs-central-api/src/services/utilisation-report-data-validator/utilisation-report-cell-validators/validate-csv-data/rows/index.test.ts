@@ -48,7 +48,7 @@ describe('validateRows', () => {
         },
       ];
 
-      const errors = validateRows(csvData, []);
+      const errors = validateRows(csvData);
 
       expect(errors).toEqual(expectedErrors);
     });
@@ -68,7 +68,7 @@ describe('validateRows', () => {
         },
       ];
 
-      const errors = validateRows(csvData, []);
+      const errors = validateRows(csvData);
 
       expect(errors).toEqual(expectedErrors);
     });
@@ -88,7 +88,7 @@ describe('validateRows', () => {
         },
       ];
 
-      const errors = validateRows(csvData, []);
+      const errors = validateRows(csvData);
 
       expect(errors).toEqual(expectedErrors);
     });
@@ -98,7 +98,7 @@ describe('validateRows', () => {
     const csvData = generateCSVData(currencyValue, facilityUtilisationValue);
 
     it('should return an empty array', () => {
-      const errors = validateRows(csvData, []);
+      const errors = validateRows(csvData);
 
       expect(errors).toEqual([]);
     });

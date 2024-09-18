@@ -16,11 +16,11 @@ import validateRows from './utilisation-report-cell-validators/validate-csv-data
 export const validateUtilisationReportCsvData = async (csvData: UtilisationReportCsvRowData[]): Promise<UtilisationReportDataValidationError[]> => {
   const { missingHeaderErrors, availableHeaders } = validateHeaders(csvData[0]);
 
-  let dataValidationErrors = await validateCells(csvData, availableHeaders);
+  const cellValidationErrors = await validateCells(csvData, availableHeaders);
 
-  dataValidationErrors = validateRows(csvData, dataValidationErrors);
+  const rowValidationErrors = validateRows(csvData);
 
-  const validationErrors = missingHeaderErrors.concat(dataValidationErrors);
+  const validationErrors = [...(missingHeaderErrors ?? []), ...(cellValidationErrors ?? []), ...(rowValidationErrors ?? [])];
 
   return validationErrors;
 };
