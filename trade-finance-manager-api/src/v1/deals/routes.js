@@ -1,5 +1,5 @@
 const express = require('express');
-const { TEAM_IDS, validateDealCancellationEnabled } = require('@ukef/dtfs2-common');
+const { validateDealCancellationEnabled } = require('@ukef/dtfs2-common');
 const dealSubmit = require('../controllers/deal.submit.controller');
 const amendmentController = require('../controllers/amendment.controller');
 const dealController = require('../controllers/deal.controller');
@@ -7,7 +7,6 @@ const dealCancellationController = require('../controllers/deal-cancellation.con
 const dealUnderwriterManagersDecisionController = require('../controllers/deal-underwriter-managers-decision.controller');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
-const { validateUserHasAtLeastOneAllowedTeam } = require('../middleware/validate-user-is-in-at-least-one-allowed-team');
 
 const dealsOpenRouter = express.Router();
 
@@ -85,12 +84,7 @@ dealsAuthRouter
 
 dealsAuthRouter
   .route('/deals/:dealId/amendments/:status?/:type?')
-  .get(
-    validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]),
-    validation.dealIdValidation,
-    handleExpressValidatorResult,
-    amendmentController.getAmendmentsByDealId,
-  );
+  .get(validation.dealIdValidation, handleExpressValidatorResult, amendmentController.getAmendmentsByDealId);
 
 dealsAuthRouter
   .route('/deals/:dealId/underwriting/lead-underwriter')
