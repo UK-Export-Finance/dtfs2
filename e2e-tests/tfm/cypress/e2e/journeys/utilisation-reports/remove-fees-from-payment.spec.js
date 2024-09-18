@@ -98,15 +98,20 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
       getFeeRecordCheckbox(feeRecordId).check();
     });
 
-    cy.getInputByLabelText('Amount received').type('1234');
-    cy.getInputByLabelText('Day').type('nonsense');
-    cy.getInputByLabelText('Month').type('nonsense');
-    cy.getInputByLabelText('Year').type('nonsense');
-    cy.getInputByLabelText('Payment reference (optional)').type('Some payment reference');
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '1234');
+
+    cy.keyboardInput(cy.getInputByLabelText('Day'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Month'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Year'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), 'Some payment reference');
 
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 
     errorSummary().contains('You cannot remove all the fees. Delete the payment instead.');
+
     feeRecordIds.forEach((feeRecordId) => {
       getFeeRecordCheckbox(feeRecordId).should('be.checked');
     });
@@ -126,11 +131,15 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
     getFeeRecordCheckbox(feeRecordIdToRemove).check();
 
-    cy.getInputByLabelText('Amount received').type('1234');
-    cy.getInputByLabelText('Day').type('nonsense');
-    cy.getInputByLabelText('Month').type('nonsense');
-    cy.getInputByLabelText('Year').type('nonsense');
-    cy.getInputByLabelText('Payment reference (optional)').type('Some payment reference');
+    cy.keyboardInput(cy.getInputByLabelText('Amount received'), '1234');
+
+    cy.keyboardInput(cy.getInputByLabelText('Day'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Month'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Year'), 'nonsense');
+
+    cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), 'Some payment reference');
 
     pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
 

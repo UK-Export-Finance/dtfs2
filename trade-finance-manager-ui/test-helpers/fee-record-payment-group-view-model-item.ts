@@ -1,7 +1,7 @@
 import { CURRENCY, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
-import { FeeRecordPaymentGroupViewModelItem } from '../server/types/view-models';
+import { PremiumPaymentsViewModelItem } from '../server/types/view-models';
 
-export const aFeeRecordPaymentGroupViewModelItem = (): FeeRecordPaymentGroupViewModelItem => ({
+export const aPremiumPaymentsViewModelItem = (): PremiumPaymentsViewModelItem => ({
   feeRecords: [
     {
       id: 1,
