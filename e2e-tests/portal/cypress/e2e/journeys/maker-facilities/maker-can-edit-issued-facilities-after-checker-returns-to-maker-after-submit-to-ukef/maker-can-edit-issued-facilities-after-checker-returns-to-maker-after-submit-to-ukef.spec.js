@@ -75,32 +75,50 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
 
       bondRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
-      pages.bondIssueFacility.issuedDateDayInput().clear();
-      pages.bondIssueFacility.issuedDateDayInput().type(dateConstants.todayDay);
-      pages.bondIssueFacility.requestedCoverStartDateDayInput().clear().type(`${dateConstants.oneMonthDay}-`);
+
+      cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), dateConstants.todayDay);
+      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateDayInput(), `${dateConstants.oneMonthDay}-`);
+
       cy.clickSubmitButton();
+
       pages.bondIssueFacility.requestedCoverStartDateError().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
-      pages.bondIssueFacility.requestedCoverStartDateDayInput().clear().type(dateConstants.oneMonthDay);
-      pages.bondIssueFacility.requestedCoverStartDateMonthInput().clear().type(`${dateConstants.oneMonthMonth}3`);
+
+      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateDayInput(), dateConstants.oneMonthDay);
+      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateMonthInput(), `${dateConstants.oneMonthMonth}3`);
+
       cy.clickSubmitButton();
+
       pages.bondIssueFacility.requestedCoverStartDateError().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
-      pages.bondIssueFacility.requestedCoverStartDateMonthInput().clear().type(dateConstants.oneMonthMonth);
-      pages.bondIssueFacility.requestedCoverStartDateYearInput().clear().type(`${dateConstants.oneMonthYear}/`);
+
+      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateMonthInput(), dateConstants.oneMonthMonth);
+      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateYearInput(), `${dateConstants.oneMonthYear}/`);
+
       cy.clickSubmitButton();
+
       pages.bondIssueFacility.requestedCoverStartDateError().contains('The year for the requested Cover Start Date must include 4 numbers');
-      pages.bondIssueFacility.requestedCoverStartDateYearInput().clear().type(dateConstants.oneMonthYear);
-      pages.bondIssueFacility.coverEndDateDayInput().clear().type(`${dateConstants.twoMonthsDay}-`);
+
+      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateYearInput(), dateConstants.oneMonthYear);
+      cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), `${dateConstants.twoMonthsDay}-`);
+
       cy.clickSubmitButton();
+
       pages.bondIssueFacility.coverEndDateError().contains('The day for the cover end date must only include 1 or 2 numbers');
-      pages.bondIssueFacility.coverEndDateDayInput().clear().type(dateConstants.twoMonthsDay);
-      pages.bondIssueFacility.coverEndDateMonthInput().clear().type(`${dateConstants.twoMonthsMonth}3`);
+
+      cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), dateConstants.twoMonthsDay);
+      cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), `${dateConstants.twoMonthsMonth}3`);
+
       cy.clickSubmitButton();
+
       pages.bondIssueFacility.coverEndDateError().contains('The month for the cover end date must only include 1 or 2 numbers');
-      pages.bondIssueFacility.coverEndDateMonthInput().clear().type(dateConstants.twoMonthsMonth);
-      pages.bondIssueFacility.coverEndDateYearInput().clear().type(`${dateConstants.twoMonthsYear}/`);
+
+      cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), dateConstants.twoMonthsMonth);
+      cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), `${dateConstants.twoMonthsYear}/`);
+
       cy.clickSubmitButton();
+
       pages.bondIssueFacility.coverEndDateError().contains('The year for the Cover End Date must include 4 numbers');
-      pages.bondIssueFacility.coverEndDateYearInput().clear().type(dateConstants.twoMonthsYear);
+
+      cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), dateConstants.twoMonthsYear);
       cy.clickSubmitButton();
     });
 
@@ -117,8 +135,8 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
 
       loanRow.issueFacilityLink().click();
       cy.url().should('eq', relative(`/contract/${dealId}/loan/${loanId}/issue-facility`));
-      pages.loanIssueFacility.issuedDateDayInput().clear();
-      pages.loanIssueFacility.issuedDateDayInput().type(dateConstants.todayDay);
+
+      cy.keyboardInput(pages.loanIssueFacility.issuedDateDayInput(), dateConstants.todayDay);
       cy.clickSubmitButton();
     });
 
@@ -128,7 +146,7 @@ context('Given an MIA deal that has been submitted to UKEF, maker has issued fac
 
     pages.contract.proceedToReview().should('not.be.disabled');
     cy.clickProceedToReviewButton();
-    pages.contractReadyForReview.comments().type('Updated issued facilities');
+    cy.keyboardInput(pages.contractReadyForReview.comments(), 'Updated issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
     // expect to land on the dashboard after successful submit

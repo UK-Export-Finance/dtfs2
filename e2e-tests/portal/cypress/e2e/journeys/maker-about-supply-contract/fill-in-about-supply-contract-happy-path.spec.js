@@ -58,7 +58,9 @@ context('about-supply-contract', () => {
     // use companies-house lookup
     //---
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
+
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
+
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     // // the search should populate the supplier address fields
@@ -76,7 +78,9 @@ context('about-supply-contract', () => {
     contractAboutSupplier.industryClass().should('have.value', '');
     contractAboutSupplier.industryClass().select('62012'); // Business and domestic software development
     contractAboutSupplier.smeTypeMicro().click();
-    contractAboutSupplier.supplyContractDescription().type('Typing in tests takes time.');
+
+    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Mock description');
+
     contractAboutSupplier.notLegallyDistinct().click();
 
     contractAboutSupplier.saveAndGoBack().click();
