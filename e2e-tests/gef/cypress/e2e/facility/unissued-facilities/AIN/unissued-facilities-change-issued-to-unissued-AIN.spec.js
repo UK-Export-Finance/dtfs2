@@ -7,7 +7,7 @@ import CONSTANTS from '../../../../fixtures/constants';
 import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
-import { multipleMockFacilities } from '../../../../fixtures/mocks/mock-facilities';
+import { multipleMockGefFacilities } from '../../../../fixtures/mocks/mock-facilities';
 import { backLink, cancelLink, continueButton, headingCaption, mainHeading, submitButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -23,7 +23,7 @@ let facilityOneId;
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
-const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility } = multipleMockFacilities({
+const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility } = multipleMockGefFacilities({
   facilityEndDateEnabled,
 });
 

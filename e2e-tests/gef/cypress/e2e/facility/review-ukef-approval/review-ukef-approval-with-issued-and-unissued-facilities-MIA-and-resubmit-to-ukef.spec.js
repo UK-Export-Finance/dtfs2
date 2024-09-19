@@ -7,7 +7,7 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
 
 import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../e2e-fixtures/portal-users.fixture';
-import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockFacilities } from '../../../fixtures/mocks/mock-facilities';
+import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../fixtures/mocks/mock-facilities';
 
 import { toTitleCase } from '../../../fixtures/helpers';
 
@@ -22,7 +22,7 @@ import applicationDetails from '../../pages/application-details';
 import applicationActivities from '../../pages/application-activities';
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
-const { unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockFacilities({ facilityEndDateEnabled });
+const { unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({ facilityEndDateEnabled });
 const issuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed({ facilityEndDateEnabled });
 
 const { format } = require('date-fns');

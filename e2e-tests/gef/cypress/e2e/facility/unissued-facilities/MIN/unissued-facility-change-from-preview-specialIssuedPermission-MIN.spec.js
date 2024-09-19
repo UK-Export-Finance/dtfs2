@@ -8,7 +8,7 @@ import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { multipleMockFacilities } from '../../../../fixtures/mocks/mock-facilities';
+import { multipleMockGefFacilities } from '../../../../fixtures/mocks/mock-facilities';
 import { continueButton, mainHeading } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -23,21 +23,16 @@ let facilityOneId;
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
-const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockFacilities({
+const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
   facilityEndDateEnabled,
 });
 
-const FACILITY_ONE_SPECIAL = { ...unissuedCashFacility };
-const FACILITY_TWO_SPECIAL = { ...issuedCashFacility };
-const FACILITY_THREE_SPECIAL = { ...unissuedContingentFacility };
-const FACILITY_FOUR_SPECIAL = { ...unissuedCashFacilityWith20MonthsOfCover };
+unissuedCashFacility.specialIssuePermission = true;
+issuedCashFacility.specialIssuePermission = true;
+unissuedContingentFacility.specialIssuePermission = true;
+unissuedCashFacilityWith20MonthsOfCover.specialIssuePermission = true;
 
-FACILITY_ONE_SPECIAL.specialIssuePermission = true;
-FACILITY_TWO_SPECIAL.specialIssuePermission = true;
-FACILITY_THREE_SPECIAL.specialIssuePermission = true;
-FACILITY_FOUR_SPECIAL.specialIssuePermission = true;
-
-const unissuedFacilitiesArray = [FACILITY_ONE_SPECIAL, FACILITY_THREE_SPECIAL, FACILITY_FOUR_SPECIAL];
+const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
 /*
   for changing facilities to issued from preview page.
@@ -55,16 +50,16 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_ONE_SPECIAL);
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_TWO_SPECIAL),
+              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
             );
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_THREE_SPECIAL),
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
             );
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_FOUR_SPECIAL),
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
             );
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
           });
