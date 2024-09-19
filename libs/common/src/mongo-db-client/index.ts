@@ -1,35 +1,22 @@
 import { Collection, Db as DbConnection, MongoClient, WithoutId } from 'mongodb';
+import dotenv from 'dotenv';
+import { MongoDbClientConnection } from '../types';
 import { MongoDbCollectionName } from '../types/mongo-db-models/mongo-db-collection-name';
 import { DbModel } from '../types/mongo-db-models/db-model';
 
-type ConnectionOptions = {
-  dbConnectionString: string;
-  dbName: string;
-};
+dotenv.config();
 
-type MongoDbClientConnection =
-  | {
-      isInitialised: false;
-    }
-  | {
-      isInitialised: true;
-      client: MongoClient;
-      connection: DbConnection;
-    };
-
+const { MONGODB_URI, MONGO_INITDB_DATABASE } = process.env;
 export class MongoDbClient {
-  private dbName: string;
+  // MongoDB connection string
+  private uri: string = MONGO_INITDB_DATABASE as string;
 
-  private dbConnectionString: string;
+  // MongoDB database name
+  private name: string = MONGODB_URI as string;
 
   private mongoDbClientConnection: MongoDbClientConnection = {
     isInitialised: false,
   };
-
-  constructor({ dbName, dbConnectionString }: ConnectionOptions) {
-    this.dbName = dbName;
-    this.dbConnectionString = dbConnectionString;
-  }
 
   /**
    * Gets the initialised client. If the client is not yet
@@ -40,8 +27,8 @@ export class MongoDbClient {
     if (this.mongoDbClientConnection.isInitialised) {
       return this.mongoDbClientConnection;
     }
-    const client = await MongoClient.connect(this.dbConnectionString);
-    const connection = client.db(this.dbName);
+    const client = await MongoClient.connect(this.uri);
+    const connection = client.db(this.name);
     this.mongoDbClientConnection = {
       isInitialised: true,
       client,

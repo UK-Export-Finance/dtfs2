@@ -23,7 +23,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": ["dom", "es2022"],
-    "target": "es6",
+    "target": "ES6",
 
     /* Completeness */
     "skipLibCheck": true
