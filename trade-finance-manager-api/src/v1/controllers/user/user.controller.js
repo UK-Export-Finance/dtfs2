@@ -36,7 +36,7 @@ exports.findOne = async (_id, callback) => {
  * Throw an error if any of the following conditions are met:
  * - More than 1 matching user found.
  * - Unexpected DB response.
- * @param {Array} emails
+ * @param {string[]} emails
  * @returns {Promise<import('src/types/auth/get-user-response').GetUserResponse>} result status and maybe user object
  */
 exports.findByEmails = async (emails) => {
