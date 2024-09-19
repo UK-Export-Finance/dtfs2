@@ -142,11 +142,20 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
 
     yield context.df.Task.all([facilityCovenantRecord]);
 
+    // 4. SOF: Facility Guarantee Record (FGR)
+    const facilityGuaranteeRecord = context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
+      facilityId,
+      amendments,
+    });
+
+    yield context.df.Task.all([facilityGuaranteeRecord]);
+
     return {
       facilityId,
       facilityLoanRecord: facilityLoanRecord.result,
       facilityMasterRecord: facilityMasterRecord.result,
       facilityCovenantRecord: facilityCovenantRecord.result,
+      facilityGuaranteeRecord: facilityGuaranteeRecord.result,
     };
   } catch (error) {
     console.error('Error amending facility records %o', error);
