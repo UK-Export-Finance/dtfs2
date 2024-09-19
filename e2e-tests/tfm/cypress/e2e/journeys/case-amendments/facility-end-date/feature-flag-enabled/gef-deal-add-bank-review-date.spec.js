@@ -78,9 +78,9 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         cy.clickContinueButton();
         cy.url().should('contain', 'bank-review-date');
 
-        amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.sixYearsOneDayDay);
-        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.sixYearsOneDayMonth);
-        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.sixYearsOneDayYear);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), dateConstants.sixYearsOneDayDay);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), dateConstants.sixYearsOneDayMonth);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), dateConstants.sixYearsOneDayYear);
 
         cy.clickContinueButton();
       });
@@ -96,9 +96,9 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         cy.clickContinueButton();
 
         cy.url().should('contain', 'bank-review-date');
-        amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.todayDay);
-        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.todayMonth);
-        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.todayYear);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), dateConstants.todayDay);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), dateConstants.todayMonth);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), dateConstants.todayYear);
         cy.clickContinueButton();
       });
 
@@ -113,9 +113,9 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         cy.clickContinueButton();
 
         cy.url().should('contain', 'bank-review-date');
-        amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.todayDay);
-        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.todayMonth);
-        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.todayYear);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), dateConstants.todayDay);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), dateConstants.todayMonth);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), dateConstants.todayYear);
         cy.clickContinueButton();
       });
 
@@ -142,9 +142,9 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         amendmentsPage.amendmentAnswerBankReviewDateChangeLink().click();
 
         cy.url().should('contain', 'bank-review-date');
-        amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.threeMonthsOneDayDay);
-        amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.threeMonthsOneDayMonth);
-        amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.threeMonthsOneDayYear);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), dateConstants.threeMonthsOneDayDay);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), dateConstants.threeMonthsOneDayMonth);
+        cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), dateConstants.threeMonthsOneDayYear);
         cy.clickContinueButton();
 
         cy.url().should('contain', 'check-answers');
