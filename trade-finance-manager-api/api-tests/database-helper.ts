@@ -7,10 +7,5 @@ export const wipeCollection = async (collectionNames: MongoDbCollectionName[]) =
     await collection.drop();
   };
 
-  const dropPromises = [];
-  for (const collection of collectionNames) {
-    dropPromises.push(drop(collection));
-  }
-  const dropped = await Promise.all(dropPromises);
-  return dropped;
+  return await Promise.all(collectionNames.map((collection) => drop(collection)));
 };

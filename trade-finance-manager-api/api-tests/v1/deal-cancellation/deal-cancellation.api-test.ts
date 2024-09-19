@@ -37,10 +37,13 @@ describe('/v1/deals/:id/cancellation', () => {
     auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id),
   };
 
+  beforeAll(async () => {
+    testUsers = await initialiseTestUsers(app);
+    aPimUser = testUsers().withTeam(TEAM_IDS.PIM).one();
+  });
+
   describe('PUT /v1/deals/:id/cancellation', () => {
-    beforeEach(async () => {
-      testUsers = await initialiseTestUsers(app);
-      aPimUser = testUsers().withTeam(TEAM_IDS.PIM).one();
+    beforeEach(() => {
       jest.resetAllMocks();
       jest.mocked(updateDealCancellationMock).mockResolvedValue(mockUpdateResult);
     });
