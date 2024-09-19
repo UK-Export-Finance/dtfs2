@@ -4,14 +4,14 @@ import { TEAM_IDS, TeamId } from '@ukef/dtfs2-common';
 import { validateUserHasAtLeastOneAllowedTeam } from './validate-user-is-in-at-least-one-allowed-team';
 import { aTfmSessionUser } from '../../../test-helpers';
 
-describe('validateUserHasAtLeastOneAllowedTeam returns middleware that', () => {
+describe('validateUserHasAtLeastOneAllowedTeam', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
 
   describe('when the user is not in one of the teams', () => {
     const userTeams: TeamId[] = [TEAM_IDS.PDC_READ];
-    const endpointTeams: TeamId[] = [TEAM_IDS.PIM, TEAM_IDS.RISK_MANAGERS];
+    const allowedTeams: TeamId[] = [TEAM_IDS.PIM, TEAM_IDS.RISK_MANAGERS];
     const user = {
       ...aTfmSessionUser(),
       teams: userTeams,
@@ -23,7 +23,7 @@ describe('validateUserHasAtLeastOneAllowedTeam returns middleware that', () => {
       const next = jest.fn();
 
       // Act
-      const middleware = validateUserHasAtLeastOneAllowedTeam(endpointTeams);
+      const middleware = validateUserHasAtLeastOneAllowedTeam(allowedTeams);
       middleware(req, res, next);
 
       // Assert
@@ -37,7 +37,7 @@ describe('validateUserHasAtLeastOneAllowedTeam returns middleware that', () => {
       const next = jest.fn();
 
       // Act
-      const middleware = validateUserHasAtLeastOneAllowedTeam(endpointTeams);
+      const middleware = validateUserHasAtLeastOneAllowedTeam(allowedTeams);
       middleware(req, res, next);
 
       // Assert
@@ -47,7 +47,7 @@ describe('validateUserHasAtLeastOneAllowedTeam returns middleware that', () => {
 
   describe('when the user is in one of the teams', () => {
     const userTeams: TeamId[] = [TEAM_IDS.PIM];
-    const endpointTeams: TeamId[] = [TEAM_IDS.PIM, TEAM_IDS.RISK_MANAGERS];
+    const allowedTeams: TeamId[] = [TEAM_IDS.PIM, TEAM_IDS.RISK_MANAGERS];
     const user = {
       ...aTfmSessionUser(),
       teams: userTeams,
@@ -59,7 +59,7 @@ describe('validateUserHasAtLeastOneAllowedTeam returns middleware that', () => {
       const next = jest.fn();
 
       // Act
-      const middleware = validateUserHasAtLeastOneAllowedTeam(endpointTeams);
+      const middleware = validateUserHasAtLeastOneAllowedTeam(allowedTeams);
       middleware(req, res, next);
 
       // Assert
@@ -72,7 +72,7 @@ describe('validateUserHasAtLeastOneAllowedTeam returns middleware that', () => {
       const next = jest.fn();
 
       // Act
-      const middleware = validateUserHasAtLeastOneAllowedTeam(endpointTeams);
+      const middleware = validateUserHasAtLeastOneAllowedTeam(allowedTeams);
       middleware(req, res, next);
 
       // Assert

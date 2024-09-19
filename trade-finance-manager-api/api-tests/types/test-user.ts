@@ -1,16 +1,10 @@
-import { TeamId } from '@ukef/dtfs2-common';
+import { TfmUser } from '@ukef/dtfs2-common';
 
 /**
  * Users returned by the test user fluent builder
  */
-export type TestUser = {
+export interface TestUser extends Pick<TfmUser, 'username' | 'teams' | 'email' | 'timezone' | 'lastName' | 'firstName'> {
   _id?: string;
-  username: string;
-  password: string;
-  email: string;
-  teams: TeamId[];
-  timezone: string;
-  firstName: string;
-  lastName: string;
   token: string;
-};
+  password: string;
+}
