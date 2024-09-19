@@ -81,7 +81,7 @@ exports.findByUsername = async (username, callback) => {
 /**
  * @param {object} user to create
  * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - logged in user or NoUser during first SSO login
- * @returns
+ * @returns {import('src/types/tfm-session-user').TfmSessionUser}
  */
 exports.createUser = async (user, auditDetails) => {
   const collection = await db.getCollection('tfm-users');
@@ -104,8 +104,7 @@ exports.createUser = async (user, auditDetails) => {
   }
 
   const createdUser = await collection.findOne({ _id: { $eq: userId } });
-  const mapUser = mapUserData(createdUser);
-  return mapUser;
+  return mapUserData(createdUser);
 };
 
 /**
