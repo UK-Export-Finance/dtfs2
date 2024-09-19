@@ -59,11 +59,7 @@ const handleFloatingPointRoundingErrors = (number) => {
 
   const isRoundedNumberWithinErrorTolerance = Math.abs(number - roundedNumber) < TOLERANCE;
 
-  if (isRoundedNumberWithinErrorTolerance) {
-    return roundedNumber;
-  }
-
-  return number;
+  return isRoundedNumberWithinErrorTolerance ? roundedNumber : number;
 };
 
 
