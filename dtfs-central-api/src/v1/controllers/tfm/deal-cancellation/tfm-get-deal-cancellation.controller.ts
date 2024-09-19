@@ -22,7 +22,7 @@ export const getTfmDealCancellation = async (req: Request, res: GetTfmDealCancel
 
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
-      message: 'Unknown error occurred when updating the deal cancellation object',
+      message: 'Unknown error occurred when getting the deal cancellation object',
     });
   }
 };
