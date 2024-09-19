@@ -42,6 +42,32 @@ const excelColumnToColumnIndex = (column) => {
 };
 
 /**
+ * Checks for floating-point rounding errors and rounds to two decimal places if within error tolerance.
+ * @param {number} number - The number to check and potentially round.
+ * @returns {number} - The rounded number to two decimal places if within tolerance, otherwise the original number.
+ * @throws {TypeError} - If the input is not a number.
+ */
+const handleFloatingPointRoundingErrors = (number) => {
+  if (typeof number !== 'number') {
+    throw new TypeError('Input must be a number');
+  }
+
+  const TOLERANCE = 1e-6;
+  const DECIMAL_PLACES = 2;
+
+  const roundedNumber = Number(number.toFixed(DECIMAL_PLACES));
+
+  const isRoundedNumberWithinErrorTolerance = Math.abs(number - roundedNumber) < TOLERANCE;
+
+  if (isRoundedNumberWithinErrorTolerance) {
+    return roundedNumber;
+  }
+
+  return number;
+};
+
+
+/**
  * Extracts the value in the cell of an excel cell and removes any new lines or commas so that it doesn't affect parsing as a csv.
  * @param {Object} cell - excel cell.
  * @returns {string | number} - cell value.
@@ -49,6 +75,11 @@ const excelColumnToColumnIndex = (column) => {
 const extractCellValue = (cell) => {
   /* eslint-disable-next-line no-underscore-dangle */
   const cellValue = cell.value?.result ?? cell._value?.result ?? cell.value;
+
+  if (typeof cellValue === 'number') {
+    return handleFloatingPointRoundingErrors(cellValue);
+  }
+
   const cellValueWithoutNewLines =
     typeof cellValue === 'string'
       ? cellValue
@@ -255,4 +286,5 @@ module.exports = {
   csvBasedCsvToJsonPromise,
   removeCellAddressesFromArray,
   extractCellValue,
+  handleFloatingPointRoundingErrors,
 };

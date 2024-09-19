@@ -7,6 +7,7 @@ const {
   removeCellAddressesFromArray,
   extractCellValue,
   parseXlsxToCsvArrays,
+  handleFloatingPointRoundingErrors,
 } = require('./csv-utils');
 
 describe('csv-utils', () => {
@@ -61,7 +62,7 @@ describe('csv-utils', () => {
       expect(parsedData).toEqual(expectedParsedData);
     });
 
-    it('Parses and excelJS workbook and adds in addresses for any missing cells in a row', async () => {
+    it('Parses an excelJS workbook and adds in addresses for any missing cells in a row', async () => {
       const workbook = new ExcelJS.Workbook();
 
       const worksheet = workbook.addWorksheet('Sheet1');
@@ -78,6 +79,36 @@ describe('csv-utils', () => {
       const expectedParsedData = {
         csvData: 'UKEF facility ID,Exporter,Base currency\n20001371,Exporter 1,GBP\n20004872,Exporter 2,',
         csvDataWithCellAddresses: ['UKEF facility ID,Exporter,Base currency', '20001371-A2,Exporter 1-B2,GBP-C2', '20004872-A3,Exporter 2-B3,-C3'],
+      };
+
+      expect(parsedData).toEqual(expectedParsedData);
+    });
+
+    it('Parses an excelJS workbook and handles any floating point rounding errors in numeric cells', async () => {
+      const workbook = new ExcelJS.Workbook();
+
+      const worksheet = workbook.addWorksheet('Sheet1');
+      worksheet.columns = [
+        { header: 'UKEF facility ID', key: 'A' },
+        { header: 'Exporter', key: 'B' },
+        { header: 'Base currency', key: 'C' },
+        { header: 'Facility utilisation', key: 'D' },
+      ];
+      worksheet.addRow({ A: '20001371', B: 'Exporter 1', C: 'GBP', D: 3938753.8000000007 });
+      worksheet.addRow({ A: '20004872', B: 'Exporter 2', C: 'EUR', D: 761579.3699999999 });
+      worksheet.addRow({ A: '20004873', B: 'Exporter 3', C: 'USD', D: 123.456 });
+
+      const parsedData = parseXlsxToCsvArrays(worksheet);
+
+      const expectedParsedData = {
+        csvData:
+          'UKEF facility ID,Exporter,Base currency,Facility utilisation\n20001371,Exporter 1,GBP,3938753.8\n20004872,Exporter 2,EUR,761579.37\n20004873,Exporter 3,USD,123.456',
+        csvDataWithCellAddresses: [
+          'UKEF facility ID,Exporter,Base currency,Facility utilisation',
+          '20001371-A2,Exporter 1-B2,GBP-C2,3938753.8-D2',
+          '20004872-A3,Exporter 2-B3,EUR-C3,761579.37-D3',
+          '20004873-A4,Exporter 3-B4,USD-C4,123.456-D4',
+        ],
       };
 
       expect(parsedData).toEqual(expectedParsedData);
@@ -245,5 +276,49 @@ describe('csv-utils', () => {
 
       expect(extractedValue).toEqual(123);
     });
+
+    it.each([
+      { cellValue: { value: 761579.3699999999 }, expectedValue: 761579.37 },
+      { cellValue: { value: 3938753.8000000007 }, expectedValue: 3938753.8 },
+      { cellValue: { value: 1.230001 }, expectedValue: 1.23 },
+      { cellValue: { value: 1.2300011 }, expectedValue: 1.2300011 },
+    ])('returns $expectedValue for numeric input $cellValue.value and handles potential floating-point issues', async ({ cellValue, expectedValue }) => {
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual(expectedValue);
+    });
   });
+
+  describe('handleFloatingPointRoundingErrors', () => {
+    it.each([
+      { input: 761579.3699999999, expected: 761579.37 },
+      { input: 3938753.8000000007, expected: 3938753.8 },
+      { input: 9999.9999999999, expected: 10000 },
+      { input: 1.2300009, expected: 1.23 },
+      { input: 1.230001, expected: 1.23 },
+    ])('should return $expected for $input (within floating-point rounding tolerance)', ({ input, expected }) => {
+      expect(handleFloatingPointRoundingErrors(input)).toBe(expected);
+    });
+
+    it.each([123.456, 0.1, 1.2300011, Number.MAX_SAFE_INTEGER])('should return %f unchanged (outside floating-point rounding tolerance)', (value) => {
+      expect(handleFloatingPointRoundingErrors(value)).toBe(value);
+    });
+
+    it.each([456, 1234567])('should return integer %d unchanged', (value) => {
+      expect(handleFloatingPointRoundingErrors(value)).toBe(value);
+    });
+
+    it.each([
+      { input: -761579.3699999999, expected: -761579.37 },
+      { input: -3938753.8000000007, expected: -3938753.8 },
+      { input: -123.456, expected: -123.456 },
+      { input: Number.MIN_SAFE_INTEGER, expected: Number.MIN_SAFE_INTEGER },
+    ])('should return $expected for negative number $input', ({ input, expected }) => {
+      expect(handleFloatingPointRoundingErrors(input)).toBe(expected);
+    });
+
+    it.each(['123.456', null, undefined])('should throw TypeError for non-number input %o', (input) => {
+      expect(() => handleFloatingPointRoundingErrors(input)).toThrow(TypeError);
+    });
+   });
 });
