@@ -165,15 +165,13 @@
       {{ paymentDetailsFiltersPanel.render({
         filters: filters,
         selectedFilters: selectedFilters,
-        keyword: keyword,
-        csrfToken: csrfToken
+        keyword: keyword
       }) }}
 
       <div class="moj-filter-layout__content">
 
         {{ paymentDetailsFiltersActionBar.render({
-          selectedFilters: selectedFilters,
-          csrfToken: csrfToken
+          selectedFilters: selectedFilters
         }) }}
 
         <div class="moj-scrollable-pane">
