@@ -50,7 +50,7 @@ context('Dashboard Deals filters - filter by keyword', () => {
 
     it('submits the filter and redirects to the dashboard', () => {
       // apply filter
-      filters.panel.form.keyword.input().type(MOCK_KEYWORD);
+      cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
       filters.panel.form.applyFiltersButton().click();
 
       cy.url().should('eq', relative('/dashboard/deals/0'));

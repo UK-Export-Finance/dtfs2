@@ -78,7 +78,7 @@ context('Dashboard facilities - sort', () => {
     filters.showHideButton().click();
 
     // apply filter for first exporter name
-    filters.panel.form.keyword.input().type(exporterNames[0]);
+    cy.keyboardInput(filters.panel.form.keyword.input(), exporterNames[0]);
     filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/facilities/0'));
@@ -90,7 +90,7 @@ context('Dashboard facilities - sort', () => {
     filters.showHideButton().click();
 
     // apply filter for second exporter name
-    filters.panel.form.keyword.input().clear().type(exporterNames[1]);
+    cy.keyboardInput(filters.panel.form.keyword.input(), exporterNames[1]);
     filters.panel.form.applyFiltersButton().click();
 
     cy.url().should('eq', relative('/dashboard/facilities/0'));

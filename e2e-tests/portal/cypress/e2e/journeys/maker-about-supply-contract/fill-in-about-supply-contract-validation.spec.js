@@ -162,7 +162,8 @@ context('about-supply-contract', () => {
     //---------------------------------------------------------------
     // supplier companies house submit - providing an invalid value
     //---------------------------------------------------------------
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -180,7 +181,8 @@ context('about-supply-contract', () => {
     partials.errorSummaryLinks().should('have.length', 11);
 
     // triggering companies house error should then display companies house & required validation errors
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
     partials.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
@@ -198,7 +200,8 @@ context('about-supply-contract', () => {
     //---------------------------------------------------------------
     // supplier companies house submit - providing an invalid value
     //---------------------------------------------------------------
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -227,7 +230,8 @@ context('about-supply-contract', () => {
     partials.errorSummaryLinks().should('have.length', 11);
 
     // triggering companies house error should then display companies house & required validation errors
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
     partials.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
@@ -253,7 +257,8 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which is too short
     //---------------------------------------------------------------
     contractAboutSupplier.legallyDistinct().click();
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+    cy.keyboardInput(contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -266,7 +271,8 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which is too short
     //---------------------------------------------------------------------------
 
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT);
+    cy.keyboardInput(contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT);
+
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -279,7 +285,11 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which has a special character
     //---------------------------------------------------------------------------------------
 
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPECIAL_CHARACTER);
+    cy.keyboardInput(
+      contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear(),
+      MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPECIAL_CHARACTER,
+    );
+
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -292,7 +302,8 @@ context('about-supply-contract', () => {
     // indemnifier companies house submit - providing a value which has a space
     //--------------------------------------------------------------------------
 
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPACE);
+    cy.keyboardInput(contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().clear(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_WITH_SPACE);
+
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
@@ -319,7 +330,8 @@ context('about-supply-contract', () => {
 
     // triggering companies house error should then display companies house & required validation errors
     contractAboutSupplier.legallyDistinct().click();
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+    cy.keyboardInput(contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
     partials.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
@@ -334,8 +346,9 @@ context('about-supply-contract', () => {
     cy.get('[data-cy="continue-button"]').click();
     cy.get('[data-cy="criteriaMet-true"]').click();
     cy.clickSubmitButton();
-    cy.get('[data-cy="bankInternalRefName"]').type('TestBank1903');
-    cy.get('[data-cy="additionalRefName"]').type('TestBank1903');
+
+    cy.keyboardInput(cy.get('[data-cy="bankInternalRefName"]'), 'TestBank1903');
+    cy.keyboardInput(cy.get('[data-cy="additionalRefName"]'), 'TestBank1903');
     cy.clickSubmitButton();
 
     // Click on "View Details" under the "About the Supplier" contract
@@ -346,7 +359,7 @@ context('about-supply-contract', () => {
     //---------------------------------------------------------------------------
 
     // Enter an invalid Companies House registration number
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_LONG);
 
     // Click on Search
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
@@ -374,7 +387,7 @@ context('about-supply-contract', () => {
     //---------------------------------------------------------------------------
 
     // Enter a valid but non-existent Companies House registration number
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT);
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT);
 
     // Click on Search
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
@@ -388,7 +401,7 @@ context('about-supply-contract', () => {
     //---------------------------------------------------------------------------
 
     // Enter a valid Companies House registration number for an overseas company
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().clear().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS);
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS);
 
     // Click on Search
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
@@ -404,17 +417,17 @@ context('about-supply-contract', () => {
     contractAboutSupplier.visit(deal);
     // click through
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierName().type('test');
-    contractAboutSupplier.supplierAddress().line1().type('test');
-    contractAboutSupplier.supplierAddress().town().type('test');
+    cy.keyboardInput(contractAboutSupplier.supplierName(), 'test');
+    cy.keyboardInput(contractAboutSupplier.supplierAddress().line1(), 'test');
+    cy.keyboardInput(contractAboutSupplier.supplierAddress().town(), 'test');
     contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
-    contractAboutSupplier.supplierCorrespondenceAddress().line1().type('test');
-    contractAboutSupplier.supplierCorrespondenceAddress().town().type('test');
+    cy.keyboardInput(contractAboutSupplier.supplierCorrespondenceAddress().line1(), 'test');
+    cy.keyboardInput(contractAboutSupplier.supplierCorrespondenceAddress().town(), 'test');
     contractAboutSupplier.supplierCorrespondenceAddress().country().select('GBR');
     contractAboutSupplier.industrySector().select('Education');
     contractAboutSupplier.industryClass().select('Cultural education');
     contractAboutSupplier.smeTypeMicro().click();
-    contractAboutSupplier.supplyContractDescription().type('test');
+    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'test');
     contractAboutSupplier.legallyDistinct().click();
     contractAboutSupplier.nextPage().click();
     // re-visit supplier page

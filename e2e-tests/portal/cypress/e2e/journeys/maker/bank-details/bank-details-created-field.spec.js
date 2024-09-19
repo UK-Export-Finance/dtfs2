@@ -12,8 +12,8 @@ context('Bank details - Submit form with inserted element on page', () => {
     cy.url().should('eq', relative('/before-you-start/bank-deal'));
 
     // complete 'before you start' form fields
-    bankDetails.bankDealId().type('TEST1234');
-    bankDetails.bankDealName().type('TESTING');
+    cy.keyboardInput(bankDetails.bankDealId(), 'TEST1234');
+    cy.keyboardInput(bankDetails.bankDealName(), 'TESTING');
     // insert element into form
     cy.insertElement('before-you-start-form');
 

@@ -219,7 +219,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       cy.clickProceedToReviewButton();
 
       // submit with a comment
-      contractReadyForReview.comments().type('a mandatory comment');
+      cy.keyboardInput(contractReadyForReview.comments(), 'a mandatory comment');
       contractReadyForReview.readyForCheckersApproval().click();
 
       // expect to land on the /dashboard page with a success message
@@ -273,7 +273,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       cy.clickProceedToReviewButton();
       cy.url().should('eq', relative(`/contract/${deal._id}/ready-for-review`));
 
-      contractReadyForReview.comments().type('a mandatory comment');
+      cy.keyboardInput(contractReadyForReview.comments(), 'a mandatory comment');
       contractReadyForReview.readyForCheckersApproval().click();
 
       cy.url().should('include', '/dashboard');
@@ -301,7 +301,7 @@ context('A maker selects to submit a contract for review from the view-contract 
       cy.clickProceedToReviewButton();
       cy.url().should('eq', relative(`/contract/${deal._id}/ready-for-review`));
 
-      contractReadyForReview.comments().type('a mandatory comment');
+      cy.keyboardInput(contractReadyForReview.comments(), 'a mandatory comment');
       contractReadyForReview.readyForCheckersApproval().click();
 
       cy.url().should('include', '/dashboard');
