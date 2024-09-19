@@ -31,7 +31,7 @@ const processSsoRedirect = async ({ pkceCodes, authCodeRequest, code, state }) =
 
     const entraUser = await authProvider.handleRedirect(pkceCodes, authCodeRequest, code);
 
-    const user = await tfmUser.getOrCreate(entraUser);
+    const user = await tfmUser.getOrCreateTfmUserForEntraUser(entraUser);
 
     const token = await issueJwtAndUpdateUser(user);
 

@@ -2,7 +2,7 @@ const existingTfmUser = require('./get-and-map-existing-tfm-user');
 const tfmUser = require('./tfm-user');
 
 /**
- * getOrCreate
+ * getOrCreateTfmUserForEntraUser
  * Get or create a TFM user.
  * - If a user is found from the provided Entra user and has canProceed=true, update the TFM user and return.
  * - If a user is found, but has canProceed=false, throw an error.
@@ -10,11 +10,11 @@ const tfmUser = require('./tfm-user');
  * @param {import('src/types/auth/azure-user-info-response-account').AzureUserInfoResponseAccount} entraUser Entra user data
  * @returns {Promise<import('src/types/db-models/tfm-users').TfmUser>} New or existing TFM user
  */
-const getOrCreate = async (entraUser) => {
+const getOrCreateTfmUserForEntraUser = async (entraUser) => {
   try {
     console.info('TFM auth service - Getting or creating a TFM user');
 
-    const getUserResponse = await existingTfmUser.getAndMap(entraUser);
+    const getUserResponse = await existingTfmUser.getAndMapExistingTfmUserForEntraUser(entraUser);
 
     if (getUserResponse?.found) {
       console.info('TFM auth service - found an existing user');
@@ -42,4 +42,4 @@ const getOrCreate = async (entraUser) => {
   }
 };
 
-module.exports = { getOrCreate };
+module.exports = { getOrCreateTfmUserForEntraUser };

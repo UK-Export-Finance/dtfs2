@@ -1,13 +1,13 @@
 const userController = require('../../user/user.controller');
 
 /**
- * get
+ * getExistingTfmUserForEntraUser
  * Get an existing TFM user with a matching Entra use email(s)
  * Note: an Entra user could have just a primary email, no secondary email.
  * @param {import('src/types/auth/azure-user-info-response-account').AzureUserInfoResponseAccount} entraUser Entra user data
  * @returns {Promise<import('src/types/auth/get-user-response').GetUserResponse | {}>}
  */
-const get = async (entraUser) => {
+const getExistingTfmUserForEntraUser = async (entraUser) => {
   if (!entraUser?.idTokenClaims) {
     return {};
   }
@@ -31,4 +31,4 @@ const get = async (entraUser) => {
   }
 };
 
-module.exports = { get };
+module.exports = { getExistingTfmUserForEntraUser };
