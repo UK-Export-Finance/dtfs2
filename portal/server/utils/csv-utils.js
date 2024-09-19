@@ -1,3 +1,4 @@
+const { CURRENCY_DECIMAL_PLACES, FLOATING_POINT_ROUNDING_TOLERANCE } = require('@ukef/dtfs2-common');
 const ExcelJS = require('exceljs');
 const csv = require('csv-parser');
 const { Readable } = require('stream');
@@ -52,12 +53,9 @@ const handleFloatingPointRoundingErrors = (number) => {
     throw new TypeError('Input must be a number');
   }
 
-  const TOLERANCE = 1e-6;
-  const DECIMAL_PLACES = 2;
+  const roundedNumber = Number(number.toFixed(CURRENCY_DECIMAL_PLACES));
 
-  const roundedNumber = Number(number.toFixed(DECIMAL_PLACES));
-
-  const isRoundedNumberWithinErrorTolerance = Math.abs(number - roundedNumber) < TOLERANCE;
+  const isRoundedNumberWithinErrorTolerance = Math.abs(number - roundedNumber) < FLOATING_POINT_ROUNDING_TOLERANCE;
 
   return isRoundedNumberWithinErrorTolerance ? roundedNumber : number;
 };

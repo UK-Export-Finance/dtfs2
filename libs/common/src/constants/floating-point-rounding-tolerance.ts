@@ -1,0 +1,1 @@
+export const FLOATING_POINT_ROUNDING_TOLERANCE = 1e-6;
