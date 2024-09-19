@@ -76,7 +76,7 @@ context('A maker issues facilities, submits to checker; checker submits deal to 
     // submit deal for review
     cy.clickProceedToReviewButton();
 
-    pages.contractReadyForReview.comments().type('Issued facilities');
+    cy.keyboardInput(pages.contractReadyForReview.comments(), 'Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
     //---------------------------------------------------------------

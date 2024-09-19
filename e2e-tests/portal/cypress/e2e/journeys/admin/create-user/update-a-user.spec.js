@@ -34,9 +34,11 @@ context('Admin user updates an existing user', () => {
       userToUpdate.roles.forEach((role) => {
         createUser.role(role).click();
       });
-      createUser.username().type(userToUpdate.username);
-      createUser.firstname().type(userToUpdate.firstname);
-      createUser.surname().type(userToUpdate.surname);
+
+      cy.keyboardInput(createUser.username(), userToUpdate.username);
+      cy.keyboardInput(createUser.firstname(), userToUpdate.firstname);
+      cy.keyboardInput(createUser.surname(), userToUpdate.surname);
+
       createUser.bank().select(userToUpdate.bank);
       createUser.createUser().click();
     });
@@ -89,8 +91,9 @@ context('Admin user updates an existing user', () => {
 
       openPageToEdit(userToUpdate);
 
-      editUser.firstname().type(`{selectAll}{backspace}${newFirstName}`);
-      editUser.surname().type(`{selectAll}{backspace}${newSurname}`);
+      cy.keyboardInput(editUser.firstname(), `{selectAll}{backspace}${newFirstName}`);
+      cy.keyboardInput(editUser.surname(), `{selectAll}{backspace}${newSurname}`);
+
       // switch off all of the users roles
       userToUpdate.roles.forEach((role) => {
         editUser.role(role).click();
