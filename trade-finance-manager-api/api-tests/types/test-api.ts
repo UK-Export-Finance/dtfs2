@@ -3,6 +3,7 @@ import { Response } from 'supertest';
 import { IncomingHttpHeaders } from 'http';
 import { TestUser } from './test-user';
 import { File } from './file';
+import { MultipartForm } from './multipart-form';
 
 export type TestRequestWithoutHeaders = (data: AnyObject) => {
   to: (url: string) => Promise<Response>;
@@ -34,7 +35,7 @@ type TestPostEach = (list: AnyObject[]) => {
 };
 
 type TestPutMultipartForm = (
-  data: AnyObject,
+  data: MultipartForm,
   files?: File[],
 ) => {
   to: (url: string) => Promise<Response>;

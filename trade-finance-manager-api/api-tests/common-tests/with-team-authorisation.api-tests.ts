@@ -4,7 +4,7 @@ import { TestUser } from '../types/test-user';
 
 type ResponseObject = { status: number; body: AnyObject };
 
-type WithTeamAuthorisationTests = {
+type WithTeamAuthorisationTestsParams = {
   allowedTeams: TeamId[];
   getUserWithTeam: (team: TeamId) => TestUser;
   makeRequestAsUser: (user: TestUser) => Promise<ResponseObject>;
@@ -21,7 +21,15 @@ const expectForbiddenResponse = ({ status, body }: ResponseObject) => {
 
 const allTeams = Object.values(TEAM_IDS);
 
-export const withTeamAuthorisationTests = ({ allowedTeams, getUserWithTeam, makeRequestAsUser, successStatusCode }: WithTeamAuthorisationTests) => {
+/**
+ * Tests for the user team authorisation
+ * @param params
+ * @param params.allowedTeams - teams allowed on the endpoint
+ * @param params.getUserWithTeam - Generate a logged in user
+ * @param params.makeRequestAsUser - Make request to the endpoint
+ * @param params.successStatusCode - status code on success
+ */
+export const withTeamAuthorisationTests = ({ allowedTeams, getUserWithTeam, makeRequestAsUser, successStatusCode }: WithTeamAuthorisationTestsParams) => {
   const notAllowedTeams = allTeams.filter((team) => !allowedTeams.includes(team));
 
   if (notAllowedTeams.length) {

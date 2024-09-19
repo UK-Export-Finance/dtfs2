@@ -5,6 +5,7 @@ import { IncomingHttpHeaders } from 'http';
 import { TestUser } from './types/test-user';
 import { TestApi } from './types/test-api';
 import { File } from './types/file';
+import { MultipartForm } from './types/multipart-form';
 
 dotenv.config();
 
@@ -57,7 +58,7 @@ export const createApi = (app: unknown): TestApi => ({
         to: (url: string) => request(app).put(url).send(data).set(getHeaders(token)),
       }),
 
-      putMultipartForm: (data: Record<string, any>, files: File[] = []) => ({
+      putMultipartForm: (data: MultipartForm, files: File[] = []) => ({
         to: async (url: string) => {
           const apiRequest = request(app).put(url).set(getHeaders(token));
 
