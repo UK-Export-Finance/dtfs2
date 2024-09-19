@@ -29,7 +29,7 @@ const { isHttpErrorStatus } = require('../../helpers/http');
  *
  * @param {object} payload - The payload containing the facilityIdentifier and acbsFacilityCovenantInput.
  * @param {string} payload.facilityIdentifier - The identifier of the facility.
- * @param {object} payload.acbsFacilityCovenantInput - The acbsFacilityCovenantInput object containing the covenant details.
+ * @param {import('../../mappings/facility/facility-covenant-amend').MappedFacilityCovenantAmendment} payload.acbsFacilityCovenantInput - The acbsFacilityCovenantInput object containing the covenant details.
  * @returns {object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request to generate the covenant ID fails, or if any other error occurs.
  */

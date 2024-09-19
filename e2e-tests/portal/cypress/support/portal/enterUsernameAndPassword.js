@@ -2,7 +2,7 @@ const pages = require('../../e2e/pages');
 
 module.exports = ({ username, password }) => {
   pages.landingPage.visit();
-  pages.landingPage.email().type(username);
-  pages.landingPage.password().type(password);
+  cy.keyboardInput(pages.landingPage.email(), username);
+  cy.keyboardInput(pages.landingPage.password(), password);
   pages.landingPage.login().click();
 };

@@ -72,9 +72,13 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().should('not.exist');
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().should('not.exist');
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(NEW_BOND_COVER_START_DATE().getDate());
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(NEW_BOND_COVER_START_DATE().getMonth() + 1);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(NEW_BOND_COVER_START_DATE().getFullYear());
+
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateDay(), NEW_BOND_COVER_START_DATE().getDate());
+
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateMonth(), NEW_BOND_COVER_START_DATE().getMonth() + 1);
+
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateYear(), NEW_BOND_COVER_START_DATE().getFullYear());
+
     cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
@@ -86,9 +90,13 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
 
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().should('not.exist');
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().should('not.exist');
-    pages.facilityConfirmCoverStartDate.coverStartDateDay().type(dateConstants.oneMonthDay);
-    pages.facilityConfirmCoverStartDate.coverStartDateMonth().type(dateConstants.oneMonthMonth);
-    pages.facilityConfirmCoverStartDate.coverStartDateYear().type(dateConstants.oneMonthYear);
+
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateDay(), dateConstants.oneMonthDay);
+
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateMonth(), dateConstants.oneMonthMonth);
+
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateYear(), dateConstants.oneMonthYear);
+
     cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
 
@@ -103,7 +111,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     pages.contract.proceedToReview().should('not.be.disabled');
     cy.clickProceedToReviewButton();
-    pages.contractReadyForReview.comments().type('Updated cover start dates');
+    cy.keyboardInput(pages.contractReadyForReview.comments(), 'Updated cover start dates');
     pages.contractReadyForReview.readyForCheckersApproval().click();
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });

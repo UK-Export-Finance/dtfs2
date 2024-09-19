@@ -3,7 +3,8 @@ const pages = require('../../e2e/pages');
 module.exports = (opts) => {
   cy.passRedLine(opts);
 
-  pages.bankDetails.bankDealId().type(opts.bankDealId);
-  pages.bankDetails.bankDealName().type(opts.bankDealName);
+  cy.keyboardInput(pages.bankDetails.bankDealId(), opts.bankDealId);
+  cy.keyboardInput(pages.bankDetails.bankDealName(), opts.bankDealName);
+
   cy.clickSubmitButton();
 };

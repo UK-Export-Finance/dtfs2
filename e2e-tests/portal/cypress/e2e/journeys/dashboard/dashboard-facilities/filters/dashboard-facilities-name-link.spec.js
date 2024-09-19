@@ -48,7 +48,7 @@ context('Dashboard Facilities - Name link', () => {
     // sets name to test
     contract.bondTransactionsTable.row(facilityId).uniqueNumberLink().click();
     bondDetails.facilityStageIssuedInput().click();
-    bondDetails.nameInput().type('Test');
+    cy.keyboardInput(bondDetails.nameInput(), 'Test');
     cy.clickSaveGoBackButton();
     // checks name is set
     dashboardFacilities.visit();

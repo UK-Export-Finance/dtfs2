@@ -52,7 +52,7 @@ context('Dashboard Facilities filters - filter by keyword', () => {
 
     it('submits the filter and redirects to the dashboard', () => {
       // apply filter
-      filters.panel.form.keyword.input().type(MOCK_KEYWORD);
+      cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
       filters.panel.form.applyFiltersButton().click();
 
       cy.url().should('eq', relative('/dashboard/facilities/0'));
@@ -60,13 +60,13 @@ context('Dashboard Facilities filters - filter by keyword', () => {
 
     it('renders submitted keyword', () => {
       // apply filter
-      filters.panel.form.keyword.input().type(MOCK_KEYWORD);
+      cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
       filters.panel.form.keyword.input().should('have.value', MOCK_KEYWORD);
     });
 
     it('renders the applied keyword in the `applied filters` section', () => {
       // apply filter
-      filters.panel.form.keyword.input().type(MOCK_KEYWORD);
+      cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
       filters.panel.form.applyFiltersButton().click();
 
       // toggle to show filters (hidden by default)
@@ -90,7 +90,7 @@ context('Dashboard Facilities filters - filter by keyword', () => {
 
     it('renders the applied keyword in the `main container selected filters` section', () => {
       // apply filter
-      filters.panel.form.keyword.input().type(MOCK_KEYWORD);
+      cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
       filters.panel.form.applyFiltersButton().click();
 
       // toggle to show filters (hidden by default)
@@ -104,7 +104,7 @@ context('Dashboard Facilities filters - filter by keyword', () => {
 
     it(`renders only facilities that have ${MOCK_KEYWORD} in a field`, () => {
       // apply filter
-      filters.panel.form.keyword.input().type(MOCK_KEYWORD);
+      cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
       filters.panel.form.applyFiltersButton().click();
 
       // toggle to show filters (hidden by default)
