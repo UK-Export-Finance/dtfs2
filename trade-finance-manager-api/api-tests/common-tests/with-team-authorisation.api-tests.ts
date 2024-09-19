@@ -1,17 +1,18 @@
+import { HttpStatusCode } from 'axios';
 import { AnyObject, TEAM_IDS, TeamId } from '@ukef/dtfs2-common';
-import { TfmSessionUser } from '../../src/types/tfm-session-user';
+import { TestUser } from '../types/test-user';
 
 type ResponseObject = { status: number; body: AnyObject };
 
 type WithTeamAuthorisationTests = {
   allowedTeams: TeamId[];
-  getUserWithTeam: (team: TeamId) => TfmSessionUser;
-  makeRequestAsUser: (user: TfmSessionUser) => Promise<ResponseObject>;
+  getUserWithTeam: (team: TeamId) => TestUser;
+  makeRequestAsUser: (user: TestUser) => Promise<ResponseObject>;
   successStatusCode: number;
 };
 
-const expectNotAuthorisedResponse = ({ status, body }: ResponseObject) => {
-  expect(status).toBe(401);
+const expectForbiddenResponse = ({ status, body }: ResponseObject) => {
+  expect(status).toBe(HttpStatusCode.Forbidden);
   expect(body).toStrictEqual({
     success: false,
     msg: "You don't have access to this page",
@@ -24,10 +25,10 @@ export const withTeamAuthorisationTests = ({ allowedTeams, getUserWithTeam, make
   const notAllowedTeams = allTeams.filter((team) => !allowedTeams.includes(team));
 
   if (notAllowedTeams.length) {
-    it.each(notAllowedTeams)('returns a 401 response for requests from a user with team %s', async (team) => {
+    it.each(notAllowedTeams)('returns a 403 response for requests from a user with team %s', async (team) => {
       const userWithTeam = getUserWithTeam(team);
       const response = await makeRequestAsUser(userWithTeam);
-      expectNotAuthorisedResponse(response);
+      expectForbiddenResponse(response);
     });
   }
 
