@@ -143,7 +143,7 @@ class AuthProvider {
    * handleRedirect
    * Modified Microsoft example, to meet out minimal needs.
    * OpendId tokenResponse is enough for us (UKEF), it has all claims (aka fields) required for user data.
-   * We don't save Authorisation code because we don't need Access token.
+   * We don't save Authorisation code because we don't need an access token.
    * @param {object} pkceCode: PKCE Code object
    * @param {object} origAuthCodeRequest: Original auth code request
    * @param {string} code: authZ code
