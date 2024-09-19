@@ -1,7 +1,7 @@
-const app = require('../../../src/createApp');
-const { createApi } = require('../../api');
-const { initialiseTestUsers } = require('../../api-test-users');
-const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-users');
+const app = require('../../src/createApp');
+const { createApi } = require('../api');
+const { initialiseTestUsers } = require('../api-test-users');
+const { MOCK_PORTAL_USERS } = require('../../src/v1/__mocks__/mock-portal-users');
 
 const { as } = createApi(app);
 
