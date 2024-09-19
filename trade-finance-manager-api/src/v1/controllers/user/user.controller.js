@@ -17,7 +17,7 @@ const { mapUserData } = require('./helpers/mapUserData.helper');
  * Find a TFM user by id
  * Throw an error if user id parameter is not valid.
  * @param {string} _id
- * @param {(error: unknown | null, user: object) => void} callback
+ * @param {(error: unknown | null, user: import('../types/tfm-session-user').TfmSessionUser | undefined) => void} callback
  * @returns {Promise<void>}
  */
 exports.findOne = async (_id, callback) => {
@@ -27,7 +27,7 @@ exports.findOne = async (_id, callback) => {
 
   const collection = await db.getCollection('tfm-users');
 
-  collection.findOne({ _id: { $eq: ObjectId(_id) } }, callback);
+  collection.findOne({ _id: { $eq: ObjectId(_id) } }, (error, user) => (error ? callback(error, user) : callback(error, mapUserData(user))));
 };
 
 /**
