@@ -8,12 +8,7 @@ import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import {
-  anUnissuedCashFacility,
-  anIssuedCashFacility,
-  anUnissuedContingentFacility,
-  anUnissuedCashFacilityWith20MonthsOfCover,
-} from '../../../../fixtures/mocks/mock-facilities';
+import { multipleMockFacilities } from '../../../../fixtures/mocks/mock-facilities';
 import { mainHeading, continueButton, errorSummary } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -28,12 +23,11 @@ let facilityOneId;
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
-const MOCK_FACILITY_ONE = anUnissuedCashFacility({ facilityEndDateEnabled });
-const MOCK_FACILITY_TWO = anIssuedCashFacility({ facilityEndDateEnabled });
-const MOCK_FACILITY_THREE = anUnissuedContingentFacility({ facilityEndDateEnabled });
-const MOCK_FACILITY_FOUR = anUnissuedCashFacilityWith20MonthsOfCover({ facilityEndDateEnabled });
+const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockFacilities({
+  facilityEndDateEnabled,
+});
 
-const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR];
+const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
 context('Unissued Facilities MIN - change all to issued from unissued table', () => {
   before(() => {
@@ -48,16 +42,16 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO),
+              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
             );
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE),
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
             );
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
             );
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
           });
@@ -86,7 +80,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
        at least 1 changed from unissued table
     */
     it('facilities table does not contain any add or change links as have not changed any facilities to issued yet', () => {
-      applicationPreview.facilitySummaryListTable(0).nameValue().contains(MOCK_FACILITY_FOUR.name);
+      applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedCashFacilityWith20MonthsOfCover.name);
       applicationPreview.facilitySummaryListTable(0).nameAction().should('have.class', 'govuk-!-display-none');
 
       applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -318,7 +312,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
       // should be able to change facility four as changed to issued
-      applicationPreview.facilitySummaryListTable(0).nameValue().contains(MOCK_FACILITY_FOUR.name);
+      applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedCashFacilityWith20MonthsOfCover.name);
       applicationPreview.facilitySummaryListTable(0).nameAction().contains('Change');
       applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedValue().contains('Issued');
@@ -336,7 +330,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       }
 
       // should not be able to change facility two has previously issued (not changed from unissued to issued)
-      applicationPreview.facilitySummaryListTable(2).nameValue().contains(MOCK_FACILITY_TWO.name);
+      applicationPreview.facilitySummaryListTable(2).nameValue().contains(issuedCashFacility.name);
       applicationPreview.facilitySummaryListTable(2).nameAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedValue().contains('Issued');
@@ -407,7 +401,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       const coverStart = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
 
       // should be able to change number 1 as changed to issued
-      applicationPreview.facilitySummaryListTable(3).nameValue().contains(MOCK_FACILITY_ONE.name);
+      applicationPreview.facilitySummaryListTable(3).nameValue().contains(unissuedCashFacility.name);
       applicationPreview.facilitySummaryListTable(3).nameAction().contains('Change');
       applicationPreview.facilitySummaryListTable(3).coverStartDateValue().contains(coverStart);
 
@@ -430,7 +424,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
 
       cy.clickCancelLink();
 
-      applicationPreview.facilitySummaryListTable(3).nameValue().contains(MOCK_FACILITY_ONE.name);
+      applicationPreview.facilitySummaryListTable(3).nameValue().contains(unissuedCashFacility.name);
 
       if (facilityEndDateEnabled) {
         applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
@@ -439,7 +433,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       applicationPreview.facilitySummaryListTable(3).nameAction().contains('Change');
       applicationPreview.facilitySummaryListTable(3).nameAction().click();
 
-      cy.keyboardInput(aboutFacilityUnissued.facilityName(), `${MOCK_FACILITY_ONE.name}name`);
+      cy.keyboardInput(aboutFacilityUnissued.facilityName(), `${unissuedCashFacility.name}name`);
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
 
       if (facilityEndDateEnabled) {
@@ -454,7 +448,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       }
 
       // checks that name has been updated
-      applicationPreview.facilitySummaryListTable(3).nameValue().contains(`${MOCK_FACILITY_ONE.name}name`);
+      applicationPreview.facilitySummaryListTable(3).nameValue().contains(`${unissuedCashFacility.name}name`);
       applicationPreview.facilitySummaryListTable(3).issueDateValue().contains(issuedDate);
 
       if (facilityEndDateEnabled) {

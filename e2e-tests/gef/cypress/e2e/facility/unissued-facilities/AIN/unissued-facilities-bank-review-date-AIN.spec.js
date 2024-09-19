@@ -12,12 +12,7 @@ import {
 } from '../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import {
-  anUnissuedCashFacility,
-  anIssuedCashFacility,
-  anUnissuedContingentFacility,
-  anUnissuedCashFacilityWith20MonthsOfCover,
-} from '../../../../fixtures/mocks/mock-facilities';
+import { multipleMockFacilities } from '../../../../fixtures/mocks/mock-facilities';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
 import applicationPreview from '../../../pages/application-preview';
 import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
@@ -25,10 +20,9 @@ import bankReviewDate from '../../../pages/bank-review-date';
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
-const MOCK_FACILITY_ONE = anUnissuedCashFacility({ facilityEndDateEnabled });
-const MOCK_FACILITY_TWO = anIssuedCashFacility({ facilityEndDateEnabled });
-const MOCK_FACILITY_THREE = anUnissuedContingentFacility({ facilityEndDateEnabled });
-const MOCK_FACILITY_FOUR = anUnissuedCashFacilityWith20MonthsOfCover({ facilityEndDateEnabled });
+const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockFacilities({
+  facilityEndDateEnabled,
+});
 
 if (facilityEndDateEnabled) {
   context('Unissued Facilities AIN - bank review date page', () => {
@@ -48,25 +42,25 @@ if (facilityEndDateEnabled) {
             cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
                 facilityOneId = facility.body.details._id;
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+                cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
               });
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO),
+                cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
               );
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE),
+                cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
               );
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+                cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
               );
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+                cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
               );
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+                cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
               );
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+                cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
               );
               cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
             });

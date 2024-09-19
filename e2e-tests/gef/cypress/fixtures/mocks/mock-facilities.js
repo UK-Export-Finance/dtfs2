@@ -20,7 +20,7 @@ const getFacilityEndDateProperties = ({ facilityEndDateEnabled }) => {
  * @param {{ facilityEndDateEnabled?: boolean}} options
  * @returns {import('@ukef/dtfs2-common').Facility }
  */
-exports.anUnissuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
+const anUnissuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
   ...getFacilityEndDateProperties({ facilityEndDateEnabled }),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: false,
@@ -57,11 +57,13 @@ exports.anUnissuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
   canResubmitIssuedFacilities: null,
 });
 
+exports.anUnissuedCashFacility = anUnissuedCashFacility;
+
 /**
  * @param {{ facilityEndDateEnabled?: boolean}} options
  * @returns {import('@ukef/dtfs2-common').Facility }
  */
-exports.anIssuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
+const anIssuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
   ...getFacilityEndDateProperties({ facilityEndDateEnabled }),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: true,
@@ -102,7 +104,7 @@ exports.anIssuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
  * @param {{ facilityEndDateEnabled?: boolean}} options
  * @returns {import('@ukef/dtfs2-common').Facility }
  */
-exports.anIssuedCashFacilityWithCoverDateConfirmed = ({ facilityEndDateEnabled = false } = {}) => ({
+const anIssuedCashFacilityWithCoverDateConfirmed = ({ facilityEndDateEnabled = false } = {}) => ({
   ...getFacilityEndDateProperties({ facilityEndDateEnabled }),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: true,
@@ -139,11 +141,13 @@ exports.anIssuedCashFacilityWithCoverDateConfirmed = ({ facilityEndDateEnabled =
   canResubmitIssuedFacilities: null,
 });
 
+exports.anIssuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed;
+
 /**
  * @param {{ facilityEndDateEnabled?: boolean}} options
  * @returns {import('@ukef/dtfs2-common').Facility }
  */
-exports.anUnissuedContingentFacility = ({ facilityEndDateEnabled = false } = {}) => ({
+const anUnissuedContingentFacility = ({ facilityEndDateEnabled = false } = {}) => ({
   ...getFacilityEndDateProperties({ facilityEndDateEnabled }),
   type: CONSTANTS.FACILITY_TYPE.CONTINGENT,
   hasBeenIssued: false,
@@ -184,7 +188,7 @@ exports.anUnissuedContingentFacility = ({ facilityEndDateEnabled = false } = {})
  * @param {{ facilityEndDateEnabled?: boolean}} options
  * @returns {import('@ukef/dtfs2-common').Facility }
  */
-exports.anUnissuedCashFacilityWith20MonthsOfCover = ({ facilityEndDateEnabled = false } = {}) => ({
+const anUnissuedCashFacilityWith20MonthsOfCover = ({ facilityEndDateEnabled = false } = {}) => ({
   ...getFacilityEndDateProperties({ facilityEndDateEnabled }),
   type: CONSTANTS.FACILITY_TYPE.CASH,
   hasBeenIssued: false,
@@ -219,4 +223,11 @@ exports.anUnissuedCashFacilityWith20MonthsOfCover = ({ facilityEndDateEnabled = 
   dayCountBasis: 365,
   coverDateConfirmed: false,
   canResubmitIssuedFacilities: null,
+});
+
+exports.multipleMockFacilities = ({ facilityEndDateEnabled }) => ({
+  unissuedCashFacility: anUnissuedCashFacility({ facilityEndDateEnabled }),
+  issuedCashFacility: anIssuedCashFacility({ facilityEndDateEnabled }),
+  unissuedContingentFacility: anUnissuedContingentFacility({ facilityEndDateEnabled }),
+  unissuedCashFacilityWith20MonthsOfCover: anUnissuedCashFacilityWith20MonthsOfCover({ facilityEndDateEnabled }),
 });

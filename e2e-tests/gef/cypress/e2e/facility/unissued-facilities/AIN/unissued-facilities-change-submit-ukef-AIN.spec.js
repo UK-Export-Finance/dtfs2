@@ -8,12 +8,7 @@ import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
-import {
-  anUnissuedCashFacility,
-  anIssuedCashFacility,
-  anUnissuedContingentFacility,
-  anUnissuedCashFacilityWith20MonthsOfCover,
-} from '../../../../fixtures/mocks/mock-facilities';
+import { multipleMockFacilities } from '../../../../fixtures/mocks/mock-facilities';
 import { continueButton, submitButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -30,12 +25,11 @@ let facilityOneId;
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
-const MOCK_FACILITY_ONE = anUnissuedCashFacility({ facilityEndDateEnabled });
-const MOCK_FACILITY_TWO = anIssuedCashFacility({ facilityEndDateEnabled });
-const MOCK_FACILITY_THREE = anUnissuedContingentFacility({ facilityEndDateEnabled });
-const MOCK_FACILITY_FOUR = anUnissuedCashFacilityWith20MonthsOfCover({ facilityEndDateEnabled });
+const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockFacilities({
+  facilityEndDateEnabled,
+});
 
-const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR];
+const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
 context('Unissued Facilities AIN - change all to issued from unissued table', () => {
   before(() => {
@@ -50,19 +44,19 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
-              MOCK_FACILITY_ONE._id = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+              unissuedCashFacility._id = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO),
+              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
             );
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) => {
-              MOCK_FACILITY_THREE._id = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE);
+              unissuedContingentFacility._id = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility);
             });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-              MOCK_FACILITY_FOUR._id = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR);
+              unissuedCashFacilityWith20MonthsOfCover._id = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover);
             });
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
           });
@@ -406,7 +400,7 @@ context('Return to maker for unissued to issued facilities', () => {
       }
 
       // forth facility table has correct name and dates
-      applicationDetails.facilitySummaryListTable(3).nameValue().contains(MOCK_FACILITY_ONE.name);
+      applicationDetails.facilitySummaryListTable(3).nameValue().contains(unissuedCashFacility.name);
       applicationDetails.facilitySummaryListTable(3).nameAction().contains('Change');
       applicationDetails.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().contains('Change');
@@ -627,11 +621,11 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationActivities.activityTimeline().should('not.contain', CONSTANTS.PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION);
 
       // already issued facility should not appear in the activity list
-      applicationActivities.facilityActivityChangedBy(MOCK_FACILITY_TWO.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityCheckedBy(MOCK_FACILITY_TWO.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityUnissuedTag(MOCK_FACILITY_TWO.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityIssuedTag(MOCK_FACILITY_TWO.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityLink(MOCK_FACILITY_TWO.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityChangedBy(issuedCashFacility.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityCheckedBy(issuedCashFacility.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityUnissuedTag(issuedCashFacility.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityIssuedTag(issuedCashFacility.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityLink(issuedCashFacility.ukefFacilityId).should('not.exist');
     });
   });
 });

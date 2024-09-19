@@ -23,9 +23,9 @@ let facilityOneId;
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
-const MOCK_FACILITY_ONE = anUnissuedCashFacility({ facilityEndDateEnabled });
+const unissuedCashFacility = anUnissuedCashFacility({ facilityEndDateEnabled });
 
-const unissuedFacilitiesArray = [MOCK_FACILITY_ONE];
+const unissuedFacilitiesArray = [unissuedCashFacility];
 
 context('Unissued Facilities AIN - change all to issued from unissued table', () => {
   before(() => {
@@ -40,7 +40,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
           });
@@ -99,7 +99,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
       mainHeading().contains("Tell us you've issued this facility");
       aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
-      aboutFacilityUnissued.facilityName().should('have.value', MOCK_FACILITY_ONE.name);
+      aboutFacilityUnissued.facilityName().should('have.value', unissuedCashFacility.name);
 
       aboutFacilityUnissued.issueDateDay().should('have.value', '');
       aboutFacilityUnissued.issueDateMonth().should('have.value', '');
