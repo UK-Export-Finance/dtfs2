@@ -1,13 +1,14 @@
 import { WithoutId } from 'mongodb';
 import { cloneDeep } from 'lodash';
 import { MONGO_DB_COLLECTIONS, TeamId, TfmUser } from '@ukef/dtfs2-common';
-import { createApi, TestAs, TestRequestWithoutHeaders } from './api';
+import { createApi } from './api';
 import MOCK_USERS from '../src/v1/__mocks__/mock-users';
 import { TestUser } from './types/test-user';
 import { wipeCollection } from './database-helper';
 import { genPassword } from '../src/utils/crypto.util';
 import { mongoDbClient } from '../src/drivers/db-client';
 import { STATUS as USER_STATUS } from '../src/constants/user';
+import { TestAs, TestRequestWithoutHeaders } from './types/test-api';
 
 type MockUserWithoutTokenOrId = Omit<TestUser, 'token' | '_id'>;
 
