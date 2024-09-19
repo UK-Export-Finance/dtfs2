@@ -10,6 +10,10 @@ dotenv.config();
 
 const { TFM_API_KEY } = process.env;
 
+/**
+ * @param token - The logged in user token
+ * @returns the headers
+ */
 const getHeaders = (token?: string): IncomingHttpHeaders => {
   const headers: IncomingHttpHeaders = {
     'content-type': 'application/json',
@@ -22,13 +26,17 @@ const getHeaders = (token?: string): IncomingHttpHeaders => {
   return headers;
 };
 
+/**
+ * @param app - The express app
+ * @returns supertest request mocks
+ */
 export const createApi = (app: unknown): TestApi => ({
   as: (user: TestUser) => {
     const token = user?.token ? user.token : '';
 
     return {
       post: (data: AnyObject) => ({
-        to: async (url: string) => request(app).post(url).send(data).set(getHeaders(token)),
+        to: (url: string) => request(app).post(url).send(data).set(getHeaders(token)),
       }),
 
       postEach: (list: AnyObject[]) => ({
@@ -46,10 +54,10 @@ export const createApi = (app: unknown): TestApi => ({
       }),
 
       put: (data: AnyObject) => ({
-        to: async (url: string) => request(app).put(url).send(data).set(getHeaders(token)),
+        to: (url: string) => request(app).put(url).send(data).set(getHeaders(token)),
       }),
 
-      putMultipartForm: (data: AnyObject, files: File[] = []) => ({
+      putMultipartForm: (data: Record<string, any>, files: File[] = []) => ({
         to: async (url: string) => {
           const apiRequest = request(app).put(url).set(getHeaders(token));
 
@@ -60,7 +68,7 @@ export const createApi = (app: unknown): TestApi => ({
           await Promise.all(
             Object.entries(data).map(([fieldname, value]) => {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-              return apiRequest.field(fieldname, value as any);
+              return apiRequest.field(fieldname, value);
             }),
           );
 
@@ -68,15 +76,15 @@ export const createApi = (app: unknown): TestApi => ({
         },
       }),
 
-      get: async (url: string) => request(app).get(url).set(getHeaders(token)),
+      get: (url: string) => request(app).get(url).set(getHeaders(token)),
 
       remove: (data: AnyObject) => ({
-        to: async (url: string) => request(app).delete(url).send(data).set(getHeaders(token)),
+        to: (url: string) => request(app).delete(url).send(data).set(getHeaders(token)),
       }),
     };
   },
   post: (data: AnyObject) => ({
-    to: async (url: string) => request(app).post(url).send(data).set(getHeaders()),
+    to: (url: string) => request(app).post(url).send(data).set(getHeaders()),
   }),
   get: async (
     url: string,

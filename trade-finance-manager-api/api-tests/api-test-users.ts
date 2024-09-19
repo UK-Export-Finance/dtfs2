@@ -81,7 +81,7 @@ const createInitialTestUser = async (user: MockUserWithoutTokenOrId) => {
 };
 
 /**
- * Create tests user with an initial user token
+ * Create tests user, calling the api with an initial user token
  * @param params
  * @param params.user - user to create
  * @param params.as - supertest as user
