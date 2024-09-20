@@ -1,7 +1,6 @@
 const express = require('express');
 
 const homeRoutes = require('./home');
-const loginRoutes = require('./login');
 const caseRoutes = require('./case');
 const dealsRoutes = require('./deals');
 const facilitiesRoutes = require('./facilities');
@@ -12,6 +11,7 @@ const { utilisationReportsRoutes } = require('./utilisation-reports');
 const footerRoutes = require('./footer');
 
 const { validateUser } = require('../middleware');
+const { loginRoutes } = require('./login');
 
 const router = express.Router();
 

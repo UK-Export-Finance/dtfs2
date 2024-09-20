@@ -1,5 +1,5 @@
-const api = require('../../api');
-const { validationErrorHandler } = require('../../helpers/validationErrorHandler.helper');
+const api = require('../../../api');
+const { validationErrorHandler } = require('../../../helpers/validationErrorHandler.helper');
 
 const getLogin = (req, res) =>
   res.render('login.njk', {
@@ -37,12 +37,12 @@ const postLogin = async (req, res) => {
   }
 
   if (loginErrors.length) {
-    return res.render('login.njk', {
+    res.render('login.njk', {
       errors: validationErrorHandler(loginErrors),
     });
   }
 
-  return res.redirect('/home');
+  res.redirect('/home');
 };
 
 const logout = (req, res) => {
