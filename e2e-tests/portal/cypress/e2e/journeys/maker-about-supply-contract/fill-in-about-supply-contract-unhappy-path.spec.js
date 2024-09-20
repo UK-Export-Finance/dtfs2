@@ -21,27 +21,38 @@ context('about-supply-contract', () => {
     contract.aboutSupplierDetailsLink().click();
 
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierName().clear().type('UKEF');
+
+    cy.keyboardInput(contractAboutSupplier.supplierName().clear(), 'UKEF');
+
     contractAboutSupplier.supplierAddress().country().select('GBR');
-    contractAboutSupplier.supplierAddress().line1().type('1 Horseguards Road');
-    contractAboutSupplier.supplierAddress().line3().type('Westminster');
-    contractAboutSupplier.supplierAddress().town().type('London');
-    contractAboutSupplier.supplierAddress().postcode().type('SW1A 2HQ');
+
+    cy.keyboardInput(contractAboutSupplier.supplierAddress().line1(), '1 Horseguards Road');
+
+    cy.keyboardInput(contractAboutSupplier.supplierAddress().line3(), 'Westminster');
+
+    cy.keyboardInput(contractAboutSupplier.supplierAddress().town(), 'London');
+
+    cy.keyboardInput(contractAboutSupplier.supplierAddress().postcode(), 'SW1A 2HQ');
 
     //-----
     // select a different correspondence address so we are forced to fill it in
     contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
     // check default state
     contractAboutSupplier.supplierCorrespondenceAddress().country().should('have.value', '');
-    // fill in form..
-    contractAboutSupplier.supplierCorrespondenceAddress().line1().type('2 Horseguards Road');
-    contractAboutSupplier.supplierCorrespondenceAddress().line3().type('Eastminster');
-    contractAboutSupplier.supplierCorrespondenceAddress().town().type('Edinburgh');
-    contractAboutSupplier.supplierCorrespondenceAddress().postcode().type('ED1 23S');
+
+    // fill in form
+    cy.keyboardInput(contractAboutSupplier.supplierCorrespondenceAddress().line1(), '2 Horseguards Road');
+
+    cy.keyboardInput(contractAboutSupplier.supplierCorrespondenceAddress().line3(), 'Eastminster');
+
+    cy.keyboardInput(contractAboutSupplier.supplierCorrespondenceAddress().town(), 'Edinburgh');
+
+    cy.keyboardInput(contractAboutSupplier.supplierCorrespondenceAddress().postcode(), 'ED1 23S');
+
     contractAboutSupplier.industrySector().select('1009'); // Information and communication
     contractAboutSupplier.industryClass().select('62012'); // Business and domestic software development
     contractAboutSupplier.smeTypeSmall().click();
-    contractAboutSupplier.supplyContractDescription().type('Description.');
+    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Description');
 
     //-----
     // select a legally-distinct indemnifier
@@ -51,7 +62,8 @@ context('about-supply-contract', () => {
 
     //-----
     // use the companies house search to find the indemnifier
-    contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
+    cy.keyboardInput(contractAboutSupplier.indemnifierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
+
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     //------
@@ -71,11 +83,15 @@ context('about-supply-contract', () => {
     contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
     // check default state
     contractAboutSupplier.indemnifierCorrespondenceAddress().country().should('have.value', '');
+
     // fill in form
-    contractAboutSupplier.indemnifierCorrespondenceAddress().line1().type('Test address');
-    contractAboutSupplier.indemnifierCorrespondenceAddress().line3().type('Broomfield');
-    contractAboutSupplier.indemnifierCorrespondenceAddress().town().type('Chelmsford');
-    contractAboutSupplier.indemnifierCorrespondenceAddress().postcode().type('SW1A 2HQ');
+    cy.keyboardInput(contractAboutSupplier.indemnifierCorrespondenceAddress().line1(), 'Test address');
+
+    cy.keyboardInput(contractAboutSupplier.indemnifierCorrespondenceAddress().line3(), 'Broomfield');
+
+    cy.keyboardInput(contractAboutSupplier.indemnifierCorrespondenceAddress().town(), 'Chelmsford');
+
+    cy.keyboardInput(contractAboutSupplier.indemnifierCorrespondenceAddress().postcode(), 'SW1A 2HQ');
 
     contractAboutSupplier.saveAndGoBack().click();
 

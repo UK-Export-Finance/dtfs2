@@ -76,7 +76,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     contract.abandonButton().click();
 
     // submit with a comment
-    contractDelete.comments().type('a mandatory comment');
+    cy.keyboardInput(contractDelete.comments(), 'a mandatory comment');
     contractDelete.abandon().click();
 
     // expect to land on the /dashboard page with a success message

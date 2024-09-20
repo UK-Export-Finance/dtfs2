@@ -20,7 +20,7 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
     contract.abandonButton().click();
 
     // submit with a comment with script tag
-    contractDelete.comments().type('<script>alert("XSS")</script>');
+    cy.keyboardInput(contractDelete.comments(), '<script>alert("XSS")</script>');
     contractDelete.abandon().click();
 
     // expect to land on the /dashboard page with a success message

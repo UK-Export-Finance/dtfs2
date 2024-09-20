@@ -20,12 +20,12 @@ context('about-supply-contract', () => {
     contractAboutSupplier.nextPage().click();
 
     // fill in the fields
-    contractAboutBuyer.buyerName().type('Harry Bear');
+    cy.keyboardInput(contractAboutBuyer.buyerName(), 'Harry Bear');
     contractAboutBuyer.buyerAddress().country().select('USA');
-    contractAboutBuyer.buyerAddress().line1().type('Corner of East and Main');
-    contractAboutBuyer.buyerAddress().line3().type('The Bronx');
-    contractAboutBuyer.buyerAddress().town().type('New York');
-    contractAboutBuyer.buyerAddress().postcode().type('no-idea');
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().line1(), 'Corner of East and Main');
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().line3(), 'The Bronx');
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().town(), 'New York');
+    cy.keyboardInput(contractAboutBuyer.buyerAddress().postcode(), 'no-idea');
 
     contractAboutBuyer.destinationOfGoodsAndServices().select('USA');
 

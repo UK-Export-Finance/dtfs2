@@ -50,7 +50,7 @@ context('A checker selects to return a deal to maker from the view-contract page
     cy.clickReturnToMakerButton();
 
     // submit with a comment
-    contractReturnToMaker.comments().type('to you');
+    cy.keyboardInput(contractReturnToMaker.comments(), 'to you');
     cy.clickReturnToMakerButton();
 
     // expect to land on the /dashboard page with a success message

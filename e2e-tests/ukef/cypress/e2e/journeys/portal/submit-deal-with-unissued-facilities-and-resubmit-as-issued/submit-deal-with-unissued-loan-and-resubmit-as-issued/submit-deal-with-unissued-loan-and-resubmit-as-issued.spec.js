@@ -57,7 +57,7 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.proceedToReview().click();
     cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
 
-    portalPages.contractReadyForReview.comments().type('go');
+    cy.keyboardInput(portalPages.contractReadyForReview.comments(), 'go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
     //---------------------------------------------------------------
@@ -117,7 +117,7 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     portalPages.contract.proceedToReview().click();
 
-    portalPages.contractReadyForReview.comments().type('Issued');
+    cy.keyboardInput(portalPages.contractReadyForReview.comments(), 'Issued');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
     // expect to land on the /dashboard page with a success message

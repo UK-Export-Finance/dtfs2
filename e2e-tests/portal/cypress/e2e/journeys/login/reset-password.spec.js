@@ -35,7 +35,7 @@ context('Password management screens', () => {
     });
 
     it('should redirect to login page when a non-existant email is used', () => {
-      resetPassword.emailInput().type('email_is_not_valid@ukexportfinance.gov.uk');
+      cy.keyboardInput(resetPassword.emailInput(), 'email_is_not_valid@ukexportfinance.gov.uk');
       cy.clickSubmitButton();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
@@ -43,7 +43,7 @@ context('Password management screens', () => {
     });
 
     it('should redirect to login page on successful request for reset password', () => {
-      resetPassword.emailInput().type(TEST_EMAIL_NO_GOV_NOTIFY.email);
+      cy.keyboardInput(resetPassword.emailInput(), TEST_EMAIL_NO_GOV_NOTIFY.email);
       cy.clickSubmitButton();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
@@ -51,7 +51,7 @@ context('Password management screens', () => {
     });
 
     it('should be case insensitive when accepting email', () => {
-      resetPassword.emailInput().type(TEST_EMAIL_NO_GOV_NOTIFY.email.toUpperCase());
+      cy.keyboardInput(resetPassword.emailInput(), TEST_EMAIL_NO_GOV_NOTIFY.email.toUpperCase());
       cy.clickSubmitButton();
 
       cy.url().should('eq', relative('/login?passwordreset=1'));
@@ -80,7 +80,7 @@ context('Password management screens', () => {
 
     it('Should display error message on an empty confirm new password field submit', () => {
       resetPassword.visitChangePassword();
-      changePassword.password().type('abc');
+      cy.keyboardInput(changePassword.password(), 'abc');
       cy.clickSubmitButton();
 
       changePassword.passwordConfirmError().should('exist');
