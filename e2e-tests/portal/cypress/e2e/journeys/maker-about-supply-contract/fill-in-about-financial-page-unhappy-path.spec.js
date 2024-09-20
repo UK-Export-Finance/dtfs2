@@ -1,24 +1,20 @@
-const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, dashboardDeals, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
-  let deal;
-
   before(() => {
-    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+    cy.createBssDeal({});
   });
 
   it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
-    contract.visit(deal);
+    dashboardDeals.visit();
+    dashboardDeals.rowIndex.link().click();
     contract.aboutSupplierDetailsLink().click();
     partials.taskListHeader.itemLink('buyer').click();
     partials.taskListHeader.itemLink('financial-information').click();
@@ -44,7 +40,12 @@ context('about-supply-contract', () => {
     contractAboutFinancial.preview().click();
 
     // check that the preview page renders the Submission Details component
-    contractAboutPreview.visit(deal);
+    dashboardDeals.visit();
+    dashboardDeals.rowIndex.link().click();
+    contract.aboutSupplierDetailsLink().click();
+    contractAboutSupplier.nextPage().click();
+    contractAboutBuyer.nextPage().click();
+    contractAboutFinancial.preview().click();
     contractAboutPreview.submissionDetails().should('be.visible');
   });
 });

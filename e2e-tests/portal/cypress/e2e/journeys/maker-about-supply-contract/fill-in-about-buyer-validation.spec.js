@@ -1,24 +1,23 @@
-const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
+const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview, dashboardDeals, contract, contractAboutSupplier } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplete.json');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-buyer', () => {
-  let deal;
-
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(aDealWithAboutSupplyContractComplete, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+
+    cy.createBssDeal({});
   });
 
   it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
     cy.login(BANK1_MAKER1);
 
-    contractAboutBuyer.visit(deal);
+    dashboardDeals.visit();
+    dashboardDeals.rowIndex.link().click();
+    contract.aboutSupplierDetailsLink().click();
+    contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
@@ -28,7 +27,11 @@ context('about-buyer', () => {
     contractAboutPreview.expectError('Destination of Goods and Services is required');
 
     // prove the errors are on the about-buyer page
-    contractAboutBuyer.visit(deal);
+    dashboardDeals.visit();
+    dashboardDeals.rowIndex.link().click();
+    contract.aboutSupplierDetailsLink().click();
+    contractAboutSupplier.taskListLinkBuyer().click();
+
     partials.errorSummaryLinks().should('have.length', 5);
     contractAboutBuyer.expectError('Buyer name is required');
     contractAboutBuyer.expectError('Buyer country is required');

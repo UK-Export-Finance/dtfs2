@@ -27,7 +27,8 @@
         <a
           href="{{ url }}{{ deal._id }}"
           class="govuk-link"
-          data-cy="deal__link--{{ deal._id }}--index--{{ loop.index }}"
+          data-cy="deal__link--{{ deal._id }}"
+          id="deal__link--index--{{ loop.index }}"
         >
           {{ deal.bankInternalRefName }}
         </a>

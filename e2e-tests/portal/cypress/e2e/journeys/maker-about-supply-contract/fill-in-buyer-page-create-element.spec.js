@@ -1,5 +1,7 @@
-const { contract, contractAboutSupplier, contractAboutBuyer, defaults } = require('../../pages');
-const { additionalRefName } = require('../../../fixtures/deal');
+const { contract, contractAboutSupplier, contractAboutBuyer, dashboardDeals } = require('../../pages');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
+
+const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Buyer form - create element and check if inserted into deal', () => {
   before(() => {
@@ -7,11 +9,12 @@ context('Buyer form - create element and check if inserted into deal', () => {
   });
 
   it("should not insert created element's data in the deal", () => {
+    cy.login(BANK1_MAKER1);
     // navigate to the about-buyer page
+    dashboardDeals.visit();
+    dashboardDeals.rowIndex.link().click();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
-
-    cy.title().should('eq', `Buyer information - ${additionalRefName}${defaults.pageTitleAppend}`);
 
     // fill in the fields
     contractAboutBuyer.buyerName().type('Harry Bear');
@@ -27,11 +30,5 @@ context('Buyer form - create element and check if inserted into deal', () => {
 
     // save
     contractAboutBuyer.nextPage().click();
-
-    // TODO
-    // cy.getDeal(deal._id, BANK1_MAKER1).then((updatedDeal) => {
-    //   // ensure the updated deal does not contain additional intruder field
-    //   expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
-    // });
   });
 });

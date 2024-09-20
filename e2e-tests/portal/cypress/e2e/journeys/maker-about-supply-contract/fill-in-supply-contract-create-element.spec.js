@@ -1,18 +1,25 @@
 const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
-const { contract, contractAboutSupplier } = require('../../pages');
+const { contract, contractAboutSupplier, dashboardDeals } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../fixtures/constants');
 
-const { ADMIN } = MOCK_USERS;
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 const { INDUSTRY_SECTOR_CODES } = CONSTANTS;
 
 context('Supply contract form - create element and check if inserted into deal', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
+
     cy.createBssDeal({});
   });
 
   it("should not insert created element's data in the feedback", () => {
+    cy.login(BANK1_MAKER1);
+
+    // go the long way for the first test- actually clicking via the contract page to prove the link..
+    dashboardDeals.visit();
+    dashboardDeals.rowIndex.link().click();
+
     contract.aboutSupplierDetailsLink().click();
 
     //---
@@ -36,11 +43,5 @@ context('Supply contract form - create element and check if inserted into deal',
     cy.insertElement('supplier-form');
 
     contractAboutSupplier.nextPage().click();
-
-    // TODO
-    // cy.getDeal(deal._id, BANK1_MAKER1).then((updatedDeal) => {
-    //   // ensure the updated deal does not contain additional intruder field
-    //   expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
-    // });
   });
 });

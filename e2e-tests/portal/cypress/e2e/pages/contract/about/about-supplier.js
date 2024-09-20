@@ -5,6 +5,7 @@ const page = {
 
   title: () => cy.get('[data-cy="about"]'),
 
+  taskListLinkBuyer: () => cy.get('[data-cy="task-list-link-buyer"]'),
   supplierType: () => cy.get('[data-cy="supplier-type"]'),
   supplierCompaniesHouseRegistrationNumber: () => cy.get('[data-cy="supplier-companies-house-registration-number"]'),
   supplierSearchCompaniesHouse: () => cy.get('[data-cy="DoSearch-supplier-companies-house-registration-number"]'),

@@ -7,7 +7,6 @@ const {
   bankDetails,
   contract,
   eligibilityCriteria,
-  eligibilityPreview,
   bondDetails,
   bondFinancialDetails,
   bondFeeDetails,
@@ -92,7 +91,7 @@ const createBssDeal = ({ readyForCheck = false, unissuedFacilities = false }) =>
     eligibilityCriteria.eligibilityCriteriaTrue(18).click();
     eligibilityCriteria.nextPageButton().click();
 
-    eligibilityPreview.saveGoBackButton().click();
+    cy.clickSaveGoBackButton();
 
     cy.clickAddBondButton();
 
@@ -112,7 +111,7 @@ const createBssDeal = ({ readyForCheck = false, unissuedFacilities = false }) =>
     // Fill in bond fee details
     bondFeeDetails.feeTypeAtMaturityInput().click();
     bondFeeDetails.dayCountBasis365Input().click();
-    bondFeeDetails.saveGoBackButton().click();
+    cy.clickSaveGoBackButton();
 
     contract.proceedToReview().click();
 

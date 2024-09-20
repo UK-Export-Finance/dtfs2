@@ -14,8 +14,8 @@ const page = {
   },
   rowIndex: {
     exporter: (index) => cy.get(`[data-cy="deal__exporter--${index}"]`),
-    bankRef: (id, index) => cy.get(`[data-cy="deal__bankRef--bankInternalRefName${id} deal__bankInternalRefName--index--${index}"`),
-    link: (id, index = 1) => cy.get(`[data-cy="deal__link--${id}--index--${index}"]`),
+    bankRef: (index) => cy.get(`[data-cy="deal__bankRef--deal__bankInternalRefName--index--${index}"`),
+    link: (index = 1) => cy.get(`#deal__link--index--${index}`),
     product: (index) => cy.get(`[data-cy="deal__product--${index}"]`),
     status: (index) => cy.get(`[data-cy="deal__status--${index}"]`),
     type: (index) => cy.get(`[data-cy="deal__submissionType--${index}"]`),

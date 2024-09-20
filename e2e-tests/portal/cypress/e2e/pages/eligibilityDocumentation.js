@@ -15,6 +15,7 @@ const page = {
   financialForecast: () => cy.get('[data-cy="financialForecasts"]'),
   financialCommentary: () => cy.get('[data-cy="financialInformationCommentary"]'),
   corporateStructure: () => cy.get('[data-cy="corporateStructure"]'),
+  saveAndGoBack: () => cy.get('[data-cy="save-go-back-button"]'),
 };
 
 module.exports = page;

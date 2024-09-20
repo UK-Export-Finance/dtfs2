@@ -21,7 +21,6 @@ const MOCK_DEAL = {
 context('Add a Bond to a Deal', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-
     cy.createBssDeal({});
   });
 

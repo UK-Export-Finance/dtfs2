@@ -1,12 +1,10 @@
 const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
-const { contract, contractAboutSupplier, contractAboutPreview } = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutPreview, dashboardDeals, contractAboutBuyer, contractAboutFinancial } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
-const { ADMIN } = MOCK_USERS;
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('about-supply-contract', () => {
-  let deal;
-
   before(() => {
     cy.deleteDeals(ADMIN);
 
@@ -14,8 +12,11 @@ context('about-supply-contract', () => {
   });
 
   it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, selecting every option that requires more data.', () => {
-    // check the status is displaying correctly
-    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
+    cy.login(BANK1_MAKER1);
+
+    // go the long way for the first test- actually clicking via the contract page to prove the link..
+    dashboardDeals.visit();
+    dashboardDeals.rowIndex.link().click();
 
     contract.aboutSupplierDetailsLink().click();
 
@@ -81,7 +82,12 @@ context('about-supply-contract', () => {
     cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
 
     // check that the preview page renders the Submission Details component
-    contractAboutPreview.visit(deal);
+    dashboardDeals.visit();
+    dashboardDeals.rowIndex.link().click();
+    contract.aboutSupplierDetailsLink().click();
+    contractAboutSupplier.nextPage().click();
+    contractAboutBuyer.nextPage().click();
+    contractAboutFinancial.preview().click();
     contractAboutPreview.submissionDetails().should('be.visible');
   });
 });
