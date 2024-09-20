@@ -50,8 +50,8 @@ describe('validateHeaders', () => {
     const { missingHeaderErrors } = validateHeaders(csvData);
 
     // Assert
-    expect(missingHeaderErrors.length).toBe(1);
-    expect(missingHeaderErrors[0].errorMessage).toBe(`${errorPrefix} header is missing or spelt incorrectly`);
+    expect(missingHeaderErrors.length).toEqual(1);
+    expect(missingHeaderErrors[0].errorMessage).toEqual(`${errorPrefix} header is missing or spelt incorrectly`);
   });
 
   it('returns no errors when no headers are missing', () => {
@@ -62,7 +62,7 @@ describe('validateHeaders', () => {
     const { missingHeaderErrors } = validateHeaders(csvData);
 
     // Assert
-    expect(missingHeaderErrors.length).toBe(0);
+    expect(missingHeaderErrors.length).toEqual(0);
   });
 
   it('returns multiple errors if multiple headers are missing', () => {
@@ -78,6 +78,6 @@ describe('validateHeaders', () => {
     const { missingHeaderErrors } = validateHeaders(csvData);
 
     // Assert
-    expect(missingHeaderErrors.length).toBe(3);
+    expect(missingHeaderErrors.length).toEqual(3);
   });
 });

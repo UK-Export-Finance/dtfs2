@@ -3,9 +3,10 @@ import addMatchingRowErrors from '../../helpers/add-matching-error-rows';
 
 /**
  * validateRows
- * Generate and returns validation errors for the facility utilisation csv rows
- * if facilities have the same ukef facility ids, then the base currency and facility utilisation values should match
- * if not, generate validation errors
+ * Generate and returns validation errors for each facility in csv rows
+ * if multiple facilities have the same ukef facility ids,
+ * and the "base currency" and "facility utilisation" values do not match
+ * generate validation errors for each facility
  * Uses a map to store the facility ids and their base currency and facility utilisation values to match against
  * @param {UtilisationReportCsvRowData[]} csvData - The csv data
  * @returns {UtilisationReportDataValidationError[]} Generated errors, null if the data is valid

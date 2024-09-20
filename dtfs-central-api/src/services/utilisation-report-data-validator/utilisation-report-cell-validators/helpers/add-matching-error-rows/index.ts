@@ -1,4 +1,5 @@
 import { UtilisationReportCsvRowData, UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
+import objectsAreEqual from '../../../../../helpers/objects-are-equal';
 
 /**
  * addMatchingRowErrors
@@ -29,7 +30,7 @@ const addMatchingRowErrors = (
    * iterate through rows with same facility id
    * generate error message from row and provided error message
    * check if row contains identical error
-   * if not, then pushes error to errors array
+   * if the error is unique, push the error to the errors array
    */
   matchingRows.forEach((row: UtilisationReportCsvRowData) => {
     const errorObject = {
@@ -40,7 +41,7 @@ const addMatchingRowErrors = (
       exporter: exporterName,
     } as UtilisationReportDataValidationError;
 
-    const isNotInErrors = !errors.some((error) => JSON.stringify(error) === JSON.stringify(errorObject));
+    const isNotInErrors = !errors.some((error) => objectsAreEqual(error, errorObject));
 
     if (isNotInErrors) {
       newErrors.push(errorObject);

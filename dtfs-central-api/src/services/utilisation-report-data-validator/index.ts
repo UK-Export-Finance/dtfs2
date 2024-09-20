@@ -20,7 +20,7 @@ export const validateUtilisationReportCsvData = async (csvData: UtilisationRepor
 
   const rowValidationErrors = validateRows(csvData);
 
-  const validationErrors = [...(missingHeaderErrors ?? []), ...(cellValidationErrors ?? []), ...(rowValidationErrors ?? [])];
+  const validationErrors = [...missingHeaderErrors, ...cellValidationErrors, ...rowValidationErrors];
 
   return validationErrors;
 };
