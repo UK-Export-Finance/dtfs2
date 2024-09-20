@@ -1,15 +1,10 @@
 import z from 'zod';
 import { AuditDetails, TfmDealCancellation, createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { DEAL_CANCELLATION } from '@ukef/dtfs2-common/schemas';
 import { AuditDetailsSchema } from './schemas';
 
 const PutDealCancellationSchema: z.ZodType<{ dealCancellationUpdate: Partial<TfmDealCancellation>; auditDetails: AuditDetails }> = z.object({
-  dealCancellationUpdate: z
-    .object({
-      reason: z.string(),
-      bankRequestDate: z.number(),
-      effectiveFrom: z.number(),
-    })
-    .partial(),
+  dealCancellationUpdate: DEAL_CANCELLATION.partial(),
   auditDetails: AuditDetailsSchema,
 });
 
