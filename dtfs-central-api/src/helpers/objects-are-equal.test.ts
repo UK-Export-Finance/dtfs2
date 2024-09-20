@@ -25,7 +25,7 @@ describe('objectsAreEqual', () => {
     it('should return false', () => {
       const result = objectsAreEqual(object, object2);
 
-      expect(result).toEqual(true);
+      expect(result).toEqual(false);
     });
   });
 });
