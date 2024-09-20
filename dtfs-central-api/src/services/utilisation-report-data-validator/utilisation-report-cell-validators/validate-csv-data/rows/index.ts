@@ -1,9 +1,5 @@
-import { UtilisationReportCsvRowData, UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
-
-interface FacilityData {
-  baseCurrency: string;
-  facilityUtilisation: string;
-}
+import { UtilisationReportCsvRowData, UtilisationReportDataValidationError, UtilisationReportFacilityData } from '@ukef/dtfs2-common';
+import addMatchingRowErrors from '../../helpers/add-matching-error-rows';
 
 /**
  * validateRows
@@ -16,7 +12,7 @@ interface FacilityData {
  */
 const validateRows = (csvData: UtilisationReportCsvRowData[]): UtilisationReportDataValidationError[] => {
   // Map to store the facility ids and their base currency and facility utilisation values
-  const map = new Map<string, FacilityData>();
+  const map = new Map<string, UtilisationReportFacilityData>();
   const errors: UtilisationReportDataValidationError[] = [];
 
   /**
@@ -32,7 +28,7 @@ const validateRows = (csvData: UtilisationReportCsvRowData[]): UtilisationReport
     const facilityUtilisationValue = row['facility utilisation']?.value;
     const exporterName = row['bank facility reference']?.value;
 
-    if (!baseCurrencyValue || !facilityUtilisationValue || !ukefFacilityId) {
+    if (!baseCurrencyValue || !facilityUtilisationValue || !ukefFacilityId || !exporterName) {
       return;
     }
 
@@ -41,29 +37,28 @@ const validateRows = (csvData: UtilisationReportCsvRowData[]): UtilisationReport
 
       /**
        * if the value for base currency in the map does not match the value in the row
-       * push to the error array
+       * call to addMatchingRowErrors to generate an error for all rows of the same facility id
        */
       if (existingData?.baseCurrency !== baseCurrencyValue) {
-        errors.push({
-          errorMessage: `The currency does not match the other records for this facility. Enter the correct currency.`,
-          column: row['base currency']?.column,
-          row: row['base currency']?.row,
-          value: baseCurrencyValue,
-          exporter: exporterName,
-        });
+        const errorMessage = 'The currency does not match the other records for this facility. Enter the correct currency.';
+        const field = 'base currency';
+
+        const generatedErrors = addMatchingRowErrors(csvData, errors, row, field, errorMessage, exporterName);
+
+        errors.push(...generatedErrors);
       }
+
       /**
        * if the value for facility utilisation in the map does not match the value in the row
-       * push to the error array
+       * call to addMatchingRowErrors to generate an error for all rows of the same facility id
        */
       if (existingData?.facilityUtilisation !== facilityUtilisationValue) {
-        errors.push({
-          errorMessage: `The utilisation does not match the other records for this facility. Enter the correct utilisation.`,
-          column: row['facility utilisation']?.column,
-          row: row['facility utilisation']?.row,
-          value: facilityUtilisationValue,
-          exporter: exporterName,
-        });
+        const errorMessage = 'The utilisation does not match the other records for this facility. Enter the correct utilisation.';
+        const field = 'facility utilisation';
+
+        const generatedErrors = addMatchingRowErrors(csvData, errors, row, field, errorMessage, exporterName);
+
+        errors.push(...generatedErrors);
       }
     } else {
       map.set(ukefFacilityId, {

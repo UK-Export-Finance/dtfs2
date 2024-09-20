@@ -172,10 +172,18 @@ context('Monthly utilisation report upload', () => {
         utilisationReportUpload.checkReportTitle().should('exist');
         errorSummary().should('exist');
         utilisationReportUpload.validationErrorTable().should('exist');
-        utilisationReportUpload.validationErrorTableRows().should('have.length', 2);
+        utilisationReportUpload.validationErrorTableRows().should('have.length', 6);
 
         cy.assertValidationErrorTableRowContains({
           tableRowIndex: 1,
+          message: 'The currency does not match the other records for this facility. Enter the correct currency.',
+          exporter: 'Valid GEF',
+          row: '2',
+          column: 'D',
+          entry: 'EUR',
+        });
+        cy.assertValidationErrorTableRowContains({
+          tableRowIndex: 2,
           message: 'The currency does not match the other records for this facility. Enter the correct currency.',
           exporter: 'Valid GEF',
           row: '3',
@@ -183,10 +191,35 @@ context('Monthly utilisation report upload', () => {
           entry: 'USD',
         });
         cy.assertValidationErrorTableRowContains({
-          tableRowIndex: 2,
+          tableRowIndex: 3,
+          message: 'The currency does not match the other records for this facility. Enter the correct currency.',
+          exporter: 'Valid GEF',
+          row: '4',
+          column: 'D',
+          entry: 'USD',
+        });
+
+        cy.assertValidationErrorTableRowContains({
+          tableRowIndex: 4,
+          message: 'The utilisation does not match the other records for this facility. Enter the correct utilisation.',
+          exporter: 'Valid GEF',
+          row: '2',
+          column: 'F',
+          entry: '1589318.23',
+        });
+        cy.assertValidationErrorTableRowContains({
+          tableRowIndex: 5,
           message: 'The utilisation does not match the other records for this facility. Enter the correct utilisation.',
           exporter: 'Valid GEF',
           row: '3',
+          column: 'F',
+          entry: '1589319.23',
+        });
+        cy.assertValidationErrorTableRowContains({
+          tableRowIndex: 6,
+          message: 'The utilisation does not match the other records for this facility. Enter the correct utilisation.',
+          exporter: 'Valid GEF',
+          row: '4',
           column: 'F',
           entry: '1589319.23',
         });
