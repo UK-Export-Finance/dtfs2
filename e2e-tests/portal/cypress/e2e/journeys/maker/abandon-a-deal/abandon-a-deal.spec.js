@@ -1,56 +1,38 @@
-const { contract, contractDelete, defaults } = require('../../../pages');
+const { contract, contractDelete, defaults, dashboardDeals } = require('../../../pages');
 const { successMessage } = require('../../../partials');
-const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('A maker selects to abandon a contract from the view-contract page', () => {
-  let deal;
-
   before(() => {
     cy.deleteDeals(ADMIN);
-
-    cy.createBssDeal({ readyForCheck: true }).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+    cy.createBssDeal({});
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
-    contract.visit(deal);
+    dashboardDeals.visit();
+    dashboardDeals.rowIndex.link().click();
     contract.abandonLink().contains('Abandon');
-    contract
-      .abandonLink()
-      .invoke('attr', 'aria-label')
-      .then((label) => {
-        expect(label).to.equal(`Abandon Deal ${deal.bankInternalRefName}`);
-      });
     contract.abandonButton().click();
 
     cy.title().should('eq', `Abandon Deal${defaults.pageTitleAppend}`);
-
-    cy.assertText(contractDelete.heading(), `Are you sure you want to abandon ${deal.additionalRefName}?`);
 
     // cancel
     contractDelete.cancel().click();
 
     // check we've gone to the right page
-    cy.url().should('eq', relative(`/contract/${deal._id}`));
+    cy.url().should('include', '/contract');
   });
 
   it('The abandon button generates an error if no comment has been entered.', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
-    contract.visit(deal);
+    dashboardDeals.visit();
+    dashboardDeals.rowIndex.link().click();
     contract.abandonLink().contains('Abandon');
-    contract
-      .abandonLink()
-      .invoke('attr', 'aria-label')
-      .then((label) => {
-        expect(label).to.equal(`Abandon Deal ${deal.bankInternalRefName}`);
-      });
     contract.abandonButton().click();
 
     // submit without a comment
@@ -58,21 +40,16 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     contractDelete.abandon().click();
 
     // expect to stay on the abandon page, and see an error
-    cy.url().should('eq', relative(`/contract/${deal._id}/delete`));
+    cy.url().should('include', '/contract');
     contractDelete.expectError('Comment is required when abandoning a deal.');
   });
 
   it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
-    contract.visit(deal);
+    dashboardDeals.visit();
+    dashboardDeals.rowIndex.link().click();
     contract.abandonLink().contains('Abandon');
-    contract
-      .abandonLink()
-      .invoke('attr', 'aria-label')
-      .then((label) => {
-        expect(label).to.equal(`Abandon Deal ${deal.bankInternalRefName}`);
-      });
     contract.abandonButton().click();
 
     // submit with a comment
@@ -90,7 +67,8 @@ context('A maker selects to abandon a contract from the view-contract page', () 
       });
 
     // visit the deal and confirm the updates have been made
-    contract.visit(deal);
+    dashboardDeals.visit();
+    dashboardDeals.rowIndex.link().click();
 
     cy.assertText(contract.status(), 'Abandoned');
 

@@ -64,7 +64,7 @@ context('Add a Loan to a Deal', () => {
       cy.assertText(row.loanStatus(), 'Completed');
 
       // TODO: use fixtures
-      const expectedValue = 'TODO';
+      const expectedValue = '1234.00';
 
       // cy.assertText(row.facilityValue(), `${deal.submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`);
       cy.assertText(row.facilityValue(), expectedValue);
