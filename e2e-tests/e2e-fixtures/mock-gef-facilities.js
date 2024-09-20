@@ -1,5 +1,5 @@
-const CONSTANTS = require('../constants');
-const dateConstants = require('../../../../e2e-fixtures/dateConstants');
+const CONSTANTS = require('../gef/cypress/fixtures/constants');
+const dateConstants = require('./dateConstants');
 
 /**
  * Gets facility end date properties if enabled on default deal version
