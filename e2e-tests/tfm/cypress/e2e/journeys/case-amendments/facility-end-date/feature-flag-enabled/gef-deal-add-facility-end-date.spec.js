@@ -2,19 +2,21 @@ import relative from '../../../../relativeURL';
 import { errorSummary } from '../../../../partials';
 import facilityPage from '../../../../pages/facilityPage';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../../e2e-fixtures';
-import { MOCK_FACILITY_ONE } from '../../../../../fixtures/mock-gef-facilities';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
 import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
+import { anUnissuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
-if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
+const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
+
+if (facilityEndDateEnabled) {
   context('Amendments - GEF deal add facility end date', () => {
     let dealId;
     let facility;
 
-    const MOCK_GEF_FACILITY = {
-      ...MOCK_FACILITY_ONE,
+    const issuedCashFacility = {
+      ...anUnissuedCashFacility({ facilityEndDateEnabled }),
       hasBeenIssued: true,
       isUsingFacilityEndDate: undefined,
       facilityEndDate: undefined,
@@ -28,7 +30,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         // updates a gef deal so has relevant fields
         cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
-        cy.createGefFacilities(dealId, [MOCK_GEF_FACILITY], BANK1_MAKER1).then((createdFacility) => {
+        cy.createGefFacilities(dealId, [issuedCashFacility], BANK1_MAKER1).then((createdFacility) => {
           facility = createdFacility.details;
         });
 
