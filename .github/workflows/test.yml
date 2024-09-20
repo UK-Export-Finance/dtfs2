@@ -42,7 +42,7 @@ on:
   pull_request:
     branches:
       - main
-      - "release-*"
+      - 'release-*'
 
     paths:
       - "package*.json"
