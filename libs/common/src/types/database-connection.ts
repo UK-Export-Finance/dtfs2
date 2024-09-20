@@ -1,21 +1,21 @@
 import { Db as DbConnection, MongoClient } from 'mongodb';
 
 /**
- * Represents the state of a MongoDB client connection.
+ * Represents the status of a MongoDB client connection.
  * This is a union type.
  *
- * This type can be either uninitialized or initialized.
+ * This type can be either uninitialised or initialised.
  */
-export type MongoDbClientConnection =
+export type ClientConnectionStatus =
   | {
       /**
-       * Indicates that the MongoDB client connection is not initialized.
+       * Indicates that the MongoDB client connection is not initialised.
        */
       isInitialised: false;
     }
   | {
       /**
-       * Indicates that the MongoDB client connection is initialized.
+       * Indicates that the MongoDB client connection is initialised.
        */
       isInitialised: true;
       /**

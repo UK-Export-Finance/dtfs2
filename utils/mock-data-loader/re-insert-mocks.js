@@ -1,5 +1,5 @@
 const { createAndLogInAsInitialTfmUser, createAndLogInAsInitialUser, deleteInitialUser, deleteInitialTFMUser } = require('./user-helper');
-const { mongoDbClient: db } = require('./database/database-client');
+const { mongoDbClient: db } = require('../drivers/db-client');
 
 const cleanAllTablesPortal = require('./clean-all-tables-portal');
 const insertMocks = require('./insert-mocks');

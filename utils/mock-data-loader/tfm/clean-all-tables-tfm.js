@@ -1,4 +1,4 @@
-const { mongoDbClient } = require('../database/database-client');
+const { mongoDbClient } = require('../../drivers/db-client');
 const api = require('./api');
 
 const cleanTeams = async () => {

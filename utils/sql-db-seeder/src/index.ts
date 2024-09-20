@@ -3,7 +3,7 @@ import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { AzureFileInfoEntity, FacilityUtilisationDataEntity, FeeRecordEntity, PaymentEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { seedUtilisationReports } from './utilisation-report';
 import { seedFeeRecordPaymentGroups } from './fee-record-payment-group';
-import { mongoDbClient } from './mongo-db-client';
+import { mongoDbClient } from '../../drivers/db-client';
 
 /**
  * Clears all data from the specified MSSQL database.

@@ -8,13 +8,7 @@ import { MongoDbCollectionName } from '@ukef/dtfs2-common';
  */
 export const mongoDbClient = new MongoDbClient();
 
-/**
- * Gets the MongoDB connection.
- *
- * @returns {Promise<DbConnection>} A promise that resolves to the MongoDB connection.
- */
-export const getConnection = async () => mongoDbClient.getConnection();
-
+// TODO: Move to libs/common
 /**
  * Gets a MongoDB collection by name.
  *
@@ -24,10 +18,3 @@ export const getConnection = async () => mongoDbClient.getConnection();
  */
 export const getCollection = async <CollectionName extends MongoDbCollectionName>(collectionName: CollectionName) =>
   mongoDbClient.getCollection<CollectionName>(collectionName);
-
-/**
- * Closes the MongoDB client connection.
- *
- * @returns {Promise<void>} A promise that resolves when the MongoDB client connection is closed.
- */
-export const close = async () => mongoDbClient.close();
