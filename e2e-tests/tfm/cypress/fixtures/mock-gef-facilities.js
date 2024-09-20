@@ -1,9 +1,11 @@
 const CONSTANTS = require('./constants');
+const dateConstants = require('../../../e2e-fixtures/dateConstants');
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
 /**
  * Gets facility end date properties if enabled on default deal version
+ * @returns {Pick<import('@ukef/dtfs2-common').Facility,'isUsingFacilityEndDate' | 'facilityEndDate'> | {} } mock facility end date properties if enabled, or empty object if not
  */
 const getFacilityEndDateProperties = () => {
   if (facilityEndDateEnabled) {
@@ -82,7 +84,7 @@ exports.MOCK_FACILITY_TWO = {
   guaranteeFee: 0.9,
   submittedAsIssuedDate: '1638363717231',
   ukefFacilityId: '10000012',
-  feeType: 'in advance',
+  feeType: 'In advance',
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
   coverDateConfirmed: true,
@@ -96,7 +98,7 @@ exports.MOCK_FACILITY_TWO_NULL_MIA = {
   name: 'Facility two',
   shouldCoverStartOnSubmission: true,
   coverStartDate: 1638403200000,
-  coverEndDate: '2030-01-01T00:00:00.000Z',
+  coverEndDate: dateConstants.tomorrow,
   monthsOfCover: null,
   details: [
     'Term basis',
@@ -119,7 +121,7 @@ exports.MOCK_FACILITY_TWO_NULL_MIA = {
   guaranteeFee: 0.9,
   submittedAsIssuedDate: null,
   ukefFacilityId: '10000012',
-  feeType: 'in advance',
+  feeType: 'In advance',
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
   coverDateConfirmed: null,
@@ -156,7 +158,7 @@ exports.MOCK_FACILITY_THREE = {
   guaranteeFee: 0.9,
   submittedAsIssuedDate: '1638363717231',
   ukefFacilityId: '10000013',
-  feeType: 'in advance',
+  feeType: 'In advance',
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
   coverDateConfirmed: false,
@@ -193,7 +195,7 @@ exports.MOCK_FACILITY_FOUR = {
   guaranteeFee: 0.9,
   submittedAsIssuedDate: '1638363717231',
   ukefFacilityId: '10000014',
-  feeType: 'in advance',
+  feeType: 'In advance',
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
   coverDateConfirmed: false,
