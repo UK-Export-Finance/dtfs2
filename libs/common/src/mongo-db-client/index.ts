@@ -7,12 +7,13 @@ import { DbModel } from '../types/mongo-db-models/db-model';
 dotenv.config();
 
 const { MONGODB_URI, MONGO_INITDB_DATABASE } = process.env;
+
 export class MongoDbClient {
   // MongoDB connection string
-  private uri: string = MONGO_INITDB_DATABASE as string;
+  private uri: string = MONGODB_URI as string;
 
   // MongoDB database name
-  private name: string = MONGODB_URI as string;
+  private name: string = MONGO_INITDB_DATABASE as string;
 
   private mongoDbClientConnection: MongoDbClientConnection = {
     isInitialised: false,
@@ -27,6 +28,7 @@ export class MongoDbClient {
     if (this.mongoDbClientConnection.isInitialised) {
       return this.mongoDbClientConnection;
     }
+
     const client = await MongoClient.connect(this.uri);
     const connection = client.db(this.name);
     this.mongoDbClientConnection = {
