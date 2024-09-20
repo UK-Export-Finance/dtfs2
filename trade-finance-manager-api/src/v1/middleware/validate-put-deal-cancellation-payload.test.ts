@@ -3,7 +3,7 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { validatePutDealCancellationPayload } from './validate-put-deal-cancellation-payload';
 
-describe('validatePostPaymentPayload', () => {
+describe('validatePutDealCancellationPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
   const aValidPayload = (): Partial<TfmDealCancellation> => ({

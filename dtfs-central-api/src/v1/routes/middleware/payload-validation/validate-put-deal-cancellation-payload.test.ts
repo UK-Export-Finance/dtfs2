@@ -5,7 +5,7 @@ import { HttpStatusCode } from 'axios';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { validatePutDealCancellationPayload } from './validate-put-deal-cancellation-payload';
 
-describe('validatePostPaymentPayload', () => {
+describe('validatePutDealCancellationPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
   const aValidPayload = (): { dealCancellationUpdate: TfmDealCancellation; auditDetails: AuditDetails } => ({
