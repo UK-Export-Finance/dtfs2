@@ -32,39 +32,41 @@ const validateRows = (csvData: UtilisationReportCsvRowData[]): UtilisationReport
       return;
     }
 
-    if (map.has(ukefFacilityId)) {
-      const existingData = map.get(ukefFacilityId);
-
-      /**
-       * if the value for base currency in the map does not match the value in the row
-       * call to addMatchingRowErrors to generate an error for all rows of the same facility id
-       */
-      if (existingData?.baseCurrency !== baseCurrencyValue) {
-        const errorMessage = 'The currency does not match the other records for this facility. Enter the correct currency.';
-        const field = 'base currency';
-
-        const generatedErrors = addMatchingRowErrors(csvData, errors, row, field, errorMessage, exporterName);
-
-        errors.push(...generatedErrors);
-      }
-
-      /**
-       * if the value for facility utilisation in the map does not match the value in the row
-       * call to addMatchingRowErrors to generate an error for all rows of the same facility id
-       */
-      if (existingData?.facilityUtilisation !== facilityUtilisationValue) {
-        const errorMessage = 'The utilisation does not match the other records for this facility. Enter the correct utilisation.';
-        const field = 'facility utilisation';
-
-        const generatedErrors = addMatchingRowErrors(csvData, errors, row, field, errorMessage, exporterName);
-
-        errors.push(...generatedErrors);
-      }
-    } else {
+    if (!map.has(ukefFacilityId)) {
       map.set(ukefFacilityId, {
         baseCurrency: baseCurrencyValue,
         facilityUtilisation: facilityUtilisationValue,
       });
+
+      return;
+    }
+
+    const existingData = map.get(ukefFacilityId);
+
+    /**
+     * if the value for base currency in the map does not match the value in the row
+     * call to addMatchingRowErrors to generate an error for all rows of the same facility id
+     */
+    if (existingData?.baseCurrency !== baseCurrencyValue) {
+      const errorMessage = 'The currency does not match the other records for this facility. Enter the correct currency.';
+      const field = 'base currency';
+
+      const generatedErrors = addMatchingRowErrors(csvData, errors, row, field, errorMessage, exporterName);
+
+      errors.push(...generatedErrors);
+    }
+
+    /**
+     * if the value for facility utilisation in the map does not match the value in the row
+     * call to addMatchingRowErrors to generate an error for all rows of the same facility id
+     */
+    if (existingData?.facilityUtilisation !== facilityUtilisationValue) {
+      const errorMessage = 'The utilisation does not match the other records for this facility. Enter the correct utilisation.';
+      const field = 'facility utilisation';
+
+      const generatedErrors = addMatchingRowErrors(csvData, errors, row, field, errorMessage, exporterName);
+
+      errors.push(...generatedErrors);
     }
   });
 
