@@ -7,6 +7,8 @@ import { TfmTeam } from './tfm-teams';
 import { DeletionAuditLog } from './deletion-audit-logs';
 import { TfmFacility } from './tfm-facilities';
 import { Facility } from './facility';
+import { TfmDeal } from './tfm-deals';
+import { Deal } from './deals';
 
 /**
  * This type gets the type of the MongoDB model
@@ -43,4 +45,8 @@ export type DbModel<TCollectionName extends MongoDbCollectionName> = TCollection
   ? TfmFacility
   : TCollectionName extends 'facilities'
   ? Facility
+  : TCollectionName extends 'tfm-deals'
+  ? TfmDeal
+  : TCollectionName extends 'deals'
+  ? Deal
   : WithId<any>;

@@ -46,7 +46,7 @@ context('Supply contract form - create element and check if inserted into deal',
     // use companies-house lookup
     //---
     contractAboutSupplier.supplierType().select('Exporter');
-    contractAboutSupplier.supplierCompaniesHouseRegistrationNumber().type(MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     //---
@@ -57,7 +57,7 @@ context('Supply contract form - create element and check if inserted into deal',
     contractAboutSupplier.industryClass().should('have.value', '');
     contractAboutSupplier.industryClass().select(INDUSTRY_SECTOR_CODES.BUSINESS); // Business and domestic software development
     contractAboutSupplier.smeTypeMicro().click();
-    contractAboutSupplier.supplyContractDescription().type('Typing in tests takes time.');
+    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Mock description');
     contractAboutSupplier.notLegallyDistinct().click();
 
     cy.insertElement('supplier-form');

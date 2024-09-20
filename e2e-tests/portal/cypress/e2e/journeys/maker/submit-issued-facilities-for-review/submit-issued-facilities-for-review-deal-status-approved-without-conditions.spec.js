@@ -103,7 +103,7 @@ context('A maker can issue and submit issued bond & loan facilities with a deal 
     // submit deal for review
     cy.clickProceedToReviewButton();
 
-    pages.contractReadyForReview.comments().type('Issued facilities');
+    cy.keyboardInput(pages.contractReadyForReview.comments(), 'Issued facilities');
     pages.contractReadyForReview.readyForCheckersApproval().click();
 
     // expect to land on the /dashboard page
