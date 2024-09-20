@@ -68,7 +68,6 @@ export const createApi = (app: unknown): TestApi => ({
 
           await Promise.all(
             Object.entries(data).map(([fieldname, value]) => {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
               return apiRequest.field(fieldname, value);
             }),
           );
