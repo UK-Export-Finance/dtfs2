@@ -12,92 +12,47 @@ describe('validatePostPaymentPayload', () => {
     effectiveFrom: new Date().valueOf(),
   });
 
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'payload' is undefined`, () => {
+  const invalidPayloads = [
+    {
+      description: 'the payload is undefined',
+      payload: undefined,
+    },
+    {
+      description: "the 'reason' is not a string",
+      payload: {
+        ...aValidPayload(),
+        reason: 1234,
+      },
+    },
+    {
+      description: `the 'reason' is over ${MAX_CHARACTER_COUNT} characters`,
+      payload: {
+        ...aValidPayload(),
+        reason: 'x'.repeat(MAX_CHARACTER_COUNT + 1),
+      },
+    },
+    {
+      description: "the 'effectiveFrom' is a string",
+      payload: {
+        ...aValidPayload(),
+        effectiveFrom: new Date().toString(),
+      },
+    },
+    {
+      description: "the 'bankRequestDate' is a string",
+      payload: {
+        ...aValidPayload(),
+        bankRequestDate: new Date().toString(),
+      },
+    },
+  ];
+
+  it.each(invalidPayloads)(`responds with a '${HttpStatusCode.BadRequest}' if $description`, ({ payload }) => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
 
-    req.body = undefined;
-
-    // Act
-    validatePutDealCancellationPayload(req, res, next);
-
-    // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
-    expect(next).not.toHaveBeenCalled();
-  });
-
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'reason' is not a string`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
-
-    const invalidPayload = {
-      ...aValidPayload(),
-      reason: 1234,
-    };
-    req.body = invalidPayload;
-
-    // Act
-    validatePutDealCancellationPayload(req, res, next);
-
-    // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
-    expect(next).not.toHaveBeenCalled();
-  });
-
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'reason' is over ${MAX_CHARACTER_COUNT} characters`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
-
-    const invalidPayload = {
-      ...aValidPayload(),
-      reason: 'x'.repeat(MAX_CHARACTER_COUNT + 1),
-    };
-    req.body = invalidPayload;
-
-    // Act
-    validatePutDealCancellationPayload(req, res, next);
-
-    // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
-    expect(next).not.toHaveBeenCalled();
-  });
-
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'effectiveFrom' is a string`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
-
-    const invalidPayload = {
-      ...aValidPayload(),
-      effectiveFrom: new Date().toString(),
-    };
-    req.body = invalidPayload;
-
-    // Act
-    validatePutDealCancellationPayload(req, res, next);
-
-    // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
-    expect(next).not.toHaveBeenCalled();
-  });
-
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'bankRequestDate' is a string`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
-
-    const invalidPayload = {
-      ...aValidPayload(),
-      bankRequestDate: new Date().toString(),
-    };
-    req.body = invalidPayload;
+    req.body = payload;
 
     // Act
     validatePutDealCancellationPayload(req, res, next);

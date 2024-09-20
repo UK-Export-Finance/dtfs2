@@ -17,124 +17,62 @@ describe('validatePostPaymentPayload', () => {
     auditDetails: generateTfmAuditDetails(aTfmSessionUser()._id),
   });
 
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'dealCancellationUpdate' object is undefined`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
-
-    const invalidPayload = {
-      ...aValidPayload(),
-      dealCancellationUpdate: undefined,
-    };
-    req.body = invalidPayload;
-
-    // Act
-    validatePutDealCancellationPayload(req, res, next);
-
-    // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
-    expect(next).not.toHaveBeenCalled();
-  });
-
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'reason' is not a string`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
-
-    const invalidPayload = {
-      ...aValidPayload(),
-      dealCancellationUpdate: {
-        reason: 1234,
+  const invalidPayloads = [
+    {
+      description: 'the payload is undefined',
+      payload: { ...aValidPayload(), dealCancellationUpdate: undefined },
+    },
+    {
+      description: "the 'reason' is not a string",
+      payload: {
+        ...aValidPayload(),
+        dealCancellationUpdate: {
+          reason: 1234,
+        },
       },
-    };
-    req.body = invalidPayload;
-
-    // Act
-    validatePutDealCancellationPayload(req, res, next);
-
-    // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
-    expect(next).not.toHaveBeenCalled();
-  });
-
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'reason' is over ${MAX_CHARACTER_COUNT} characters`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
-
-    const invalidPayload = {
-      ...aValidPayload(),
-      dealCancellationUpdate: {
-        reason: 'x'.repeat(MAX_CHARACTER_COUNT + 1),
+    },
+    {
+      description: `the 'reason' is over ${MAX_CHARACTER_COUNT} characters`,
+      payload: {
+        ...aValidPayload(),
+        dealCancellationUpdate: {
+          reason: 'x'.repeat(MAX_CHARACTER_COUNT + 1),
+        },
       },
-    };
-    req.body = invalidPayload;
-
-    // Act
-    validatePutDealCancellationPayload(req, res, next);
-
-    // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
-    expect(next).not.toHaveBeenCalled();
-  });
-
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'effectiveFrom' is a string`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
-
-    const invalidPayload = {
-      ...aValidPayload(),
-      dealCancellationUpdate: {
-        effectiveFrom: new Date().toString(),
+    },
+    {
+      description: "the 'effectiveFrom' is a string",
+      payload: {
+        ...aValidPayload(),
+        dealCancellationUpdate: {
+          effectiveFrom: new Date().toString(),
+        },
       },
-    };
-    req.body = invalidPayload;
-
-    // Act
-    validatePutDealCancellationPayload(req, res, next);
-
-    // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
-    expect(next).not.toHaveBeenCalled();
-  });
-
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'bankRequestDate' is a string`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
-
-    const invalidPayload = {
-      ...aValidPayload(),
-      dealCancellationUpdate: {
-        bankRequestDate: new Date().toString(),
+    },
+    {
+      description: "the 'bankRequestDate' is a string",
+      payload: {
+        ...aValidPayload(),
+        dealCancellationUpdate: {
+          bankRequestDate: new Date().toString(),
+        },
       },
-    };
-    req.body = invalidPayload;
+    },
+    {
+      description: "'auditDetails' is undefined",
+      payload: {
+        ...aValidPayload(),
+        auditDetails: undefined,
+      },
+    },
+  ];
 
-    // Act
-    validatePutDealCancellationPayload(req, res, next);
-
-    // Assert
-    expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
-    expect(res._isEndCalled()).toBe(true);
-    expect(next).not.toHaveBeenCalled();
-  });
-
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'auditDetails' is undefined`, () => {
+  it.each(invalidPayloads)(`responds with a '${HttpStatusCode.BadRequest}' if $description`, ({ payload }) => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
 
-    const invalidPayload = {
-      ...aValidPayload(),
-      auditDetails: undefined,
-    };
-    req.body = invalidPayload;
+    req.body = payload;
 
     // Act
     validatePutDealCancellationPayload(req, res, next);
