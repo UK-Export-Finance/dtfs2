@@ -1,6 +1,6 @@
 import z from 'zod';
+import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
 import { AmendmentStatusSchema, AuditDetailsSchema, CurrencySchema, MongoObjectIdSchema } from './schemas';
-import { createValidationMiddlewareForSchema } from './create-validation-middleware-for-schema';
 import { dateFromIsoStringSchema } from './schemas/dateFromIsoString.schema.ts';
 
 const SubmittedBySchema = z.object({
