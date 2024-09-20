@@ -14,7 +14,7 @@ import objectsAreEqual from '../../../../../helpers/objects-are-equal';
  * @param {String} exporterName - exporter name for errors
  * @returns {UtilisationReportDataValidationError[]} generated errors
  */
-const addMatchingRowErrors = (
+const generateErrorsForMismatchedFacilityValues = (
   csvData: UtilisationReportCsvRowData[],
   errors: UtilisationReportDataValidationError[],
   csvRow: UtilisationReportCsvRowData,
@@ -51,4 +51,4 @@ const addMatchingRowErrors = (
   return newErrors;
 };
 
-export default addMatchingRowErrors;
+export default generateErrorsForMismatchedFacilityValues;

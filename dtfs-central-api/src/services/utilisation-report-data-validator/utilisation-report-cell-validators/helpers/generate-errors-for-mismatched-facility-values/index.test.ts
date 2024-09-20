@@ -1,7 +1,7 @@
 import { UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
-import addMatchingRowErrors from '.';
+import generateErrorsForMismatchedFacilityValues from '.';
 
-describe('services/utilisation-report-data-validator/utilisation-report-cell-validators/helpers/add-matching-error-rows', () => {
+describe('services/utilisation-report-data-validator/utilisation-report-cell-validators/helpers/generate-errors-for-mismatched-facility-values', () => {
   const field = 'base currency';
   const errorMessage = 'mock error message';
   const exporterName = 'mock name';
@@ -61,7 +61,7 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
     const errors = [] as UtilisationReportDataValidationError[];
     const row = csvData[0];
 
-    const response = addMatchingRowErrors(csvData, errors, row, field, errorMessage, exporterName);
+    const response = generateErrorsForMismatchedFacilityValues(csvData, errors, row, field, errorMessage, exporterName);
 
     expect(response).toEqual(expectedErrors);
   });
@@ -69,7 +69,7 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
   it('should return an empty row when the required errors are provided', () => {
     const row = csvData[0];
 
-    const response = addMatchingRowErrors(csvData, expectedErrors, row, field, errorMessage, exporterName);
+    const response = generateErrorsForMismatchedFacilityValues(csvData, expectedErrors, row, field, errorMessage, exporterName);
 
     expect(response).toEqual([]);
   });

@@ -1,5 +1,5 @@
 import { UtilisationReportCsvRowData, UtilisationReportDataValidationError, UtilisationReportFacilityData } from '@ukef/dtfs2-common';
-import addMatchingRowErrors from '../../helpers/add-matching-error-rows';
+import generateErrorsForMismatchedFacilityValues from '../../helpers/generate-errors-for-mismatched-facility-values';
 
 /**
  * validateRows
@@ -52,7 +52,7 @@ const validateRows = (csvData: UtilisationReportCsvRowData[]): UtilisationReport
       const errorMessage = 'The currency does not match the other records for this facility. Enter the correct currency.';
       const field = 'base currency';
 
-      const generatedErrors = addMatchingRowErrors(csvData, errors, row, field, errorMessage, exporterName);
+      const generatedErrors = generateErrorsForMismatchedFacilityValues(csvData, errors, row, field, errorMessage, exporterName);
 
       errors.push(...generatedErrors);
     }
@@ -65,7 +65,7 @@ const validateRows = (csvData: UtilisationReportCsvRowData[]): UtilisationReport
       const errorMessage = 'The utilisation does not match the other records for this facility. Enter the correct utilisation.';
       const field = 'facility utilisation';
 
-      const generatedErrors = addMatchingRowErrors(csvData, errors, row, field, errorMessage, exporterName);
+      const generatedErrors = generateErrorsForMismatchedFacilityValues(csvData, errors, row, field, errorMessage, exporterName);
 
       errors.push(...generatedErrors);
     }

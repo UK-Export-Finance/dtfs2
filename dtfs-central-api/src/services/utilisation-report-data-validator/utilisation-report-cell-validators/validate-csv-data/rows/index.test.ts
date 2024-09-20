@@ -1,5 +1,5 @@
 import validateRows from '.';
-import addMatchingRowErrors from '../../helpers/add-matching-error-rows';
+import addMatchingRowErrors from '../../helpers/generate-errors-for-mismatched-facility-values';
 
 const currencyValue = 'EUR';
 const facilityUtilisationValue = '34538e.54';
