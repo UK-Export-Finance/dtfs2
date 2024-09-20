@@ -1,4 +1,4 @@
-const { CURRENCY_DECIMAL_PLACES, FLOATING_POINT_ROUNDING_TOLERANCE } = require('@ukef/dtfs2-common');
+const { FLOATING_POINT_ROUNDING_DECIMAL_PLACES } = require('@ukef/dtfs2-common');
 const ExcelJS = require('exceljs');
 const csv = require('csv-parser');
 const { Readable } = require('stream');
@@ -43,9 +43,10 @@ const excelColumnToColumnIndex = (column) => {
 };
 
 /**
- * Checks for floating-point rounding errors and rounds to two decimal places if within error tolerance.
- * @param {number} number - The number to check and potentially round.
- * @returns {number} - The rounded number to two decimal places if within tolerance, otherwise the original number.
+ * Handles floating point rounding errors by rounding a number to
+ * {@link FLOATING_POINT_ROUNDING_DECIMAL_PLACES} decimal places.
+ * @param {number} number - The number to round.
+ * @returns {number} - The rounded number.
  * @throws {TypeError} - If the input is not a number.
  */
 const handleFloatingPointRoundingErrors = (number) => {
@@ -53,13 +54,8 @@ const handleFloatingPointRoundingErrors = (number) => {
     throw new TypeError('Input must be a number');
   }
 
-  const roundedNumber = Number(number.toFixed(CURRENCY_DECIMAL_PLACES));
-
-  const isRoundedNumberWithinErrorTolerance = Math.abs(number - roundedNumber) < FLOATING_POINT_ROUNDING_TOLERANCE;
-
-  return isRoundedNumberWithinErrorTolerance ? roundedNumber : number;
+  return Number(number.toFixed(FLOATING_POINT_ROUNDING_DECIMAL_PLACES));
 };
-
 
 /**
  * Extracts the value in the cell of an excel cell and removes any new lines or commas so that it doesn't affect parsing as a csv.
