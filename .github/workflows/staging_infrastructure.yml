@@ -4,7 +4,7 @@ on:
   push:
     branches: [infrastructure]
     paths:
-      - ".github/workflows/staging_infrastructure.yml"
+      - '.github/workflows/staging_infrastructure.yml'
 
 env:
   # Environment
@@ -20,7 +20,7 @@ env:
   app_service_plan_egress_cidr: 172.16.52.0/28
   vm_cidr: 172.16.53.0/28
   aca_clam_av_cidr: 172.16.52.32/27
-  vnet_address_prefixes: "172.16.50.0/23 172.16.52.0/23 172.16.70.0/23" # App service settings
+  vnet_address_prefixes: '172.16.50.0/23 172.16.52.0/23 172.16.70.0/23' # App service settings
   production_subnet_cidr: 10.60.0.0/16
   palo_alto_next_hop: 10.50.0.100
 
@@ -1292,17 +1292,7 @@ jobs:
 
   portal-api:
     name: Portal API
-    needs:
-      [
-        set-environment,
-        vnet,
-        private-dns,
-        cosmos-db-private,
-        external-api,
-        dtfs-central-api,
-        file-storage,
-        trade-finance-manager-api,
-      ]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, external-api, dtfs-central-api, file-storage, trade-finance-manager-api]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1493,15 +1483,7 @@ jobs:
 
   trade-finance-manager-api:
     name: Trade Finance Manager API
-    needs:
-      [
-        set-environment,
-        vnet,
-        private-dns,
-        cosmos-db-private,
-        external-api,
-        dtfs-central-api,
-      ]
+    needs: [set-environment, vnet, private-dns, cosmos-db-private, external-api, dtfs-central-api]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1668,7 +1650,8 @@ jobs:
                 AZURE_PORTAL_STORAGE_ACCOUNT="tfs${{ env.environment }}storage" \
                 AZURE_UTILISATION_REPORTS_FILESHARE_NAME="${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}" \
                 JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
-                JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}"
+                JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}" \
+                FF_TFM_SSO_ENABLED="${{ vars.FF_TFM_SSO_ENABLED }}"
 
   # END API setup
 
@@ -1835,8 +1818,7 @@ jobs:
 
   trade-finance-manager-ui:
     name: Trade Finance Manager UI
-    needs:
-      [set-environment, vnet, private-dns, trade-finance-manager-api, redis]
+    needs: [set-environment, vnet, private-dns, trade-finance-manager-api, redis]
     environment:
       name: ${{ needs.set-environment.outputs.environment }}
     runs-on: [self-hosted, linux, deployment]
@@ -1985,7 +1967,8 @@ jobs:
                 ESTORE_URL="${{ secrets.ESTORE_URL }}" \
                 ESTORE_CRON_MANAGER_SCHEDULE="${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}" \
                 HTTPS=1 \
-                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
+                FF_TFM_SSO_ENABLED="${{ vars.FF_TFM_SSO_ENABLED }}"
 
       - name: Secrets
         uses: azure/cli@v2
