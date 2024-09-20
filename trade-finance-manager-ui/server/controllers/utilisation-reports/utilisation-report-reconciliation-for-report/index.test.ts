@@ -136,7 +136,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
             dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
             reference: undefined,
           },
-          feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
+          feeRecords: [{ id: 2, facilityId: '12345678', exporter: 'Test exporter' }],
           feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.MATCH,
           reconciledBy: '-',
           dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
