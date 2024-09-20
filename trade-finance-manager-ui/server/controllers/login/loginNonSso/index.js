@@ -37,12 +37,12 @@ const postLogin = async (req, res) => {
   }
 
   if (loginErrors.length) {
-    res.render('login.njk', {
+    return res.render('login.njk', {
       errors: validationErrorHandler(loginErrors),
     });
   }
 
-  res.redirect('/home');
+  return res.redirect('/home');
 };
 
 const logout = (req, res) => {
