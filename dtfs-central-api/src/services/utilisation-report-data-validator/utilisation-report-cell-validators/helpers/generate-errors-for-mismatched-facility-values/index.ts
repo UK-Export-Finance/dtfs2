@@ -2,10 +2,10 @@ import { UtilisationReportCsvRowData, UtilisationReportDataValidationError } fro
 import objectsAreEqual from '../../../../../helpers/objects-are-equal';
 
 /**
- * addMatchingRowErrors
+ * generateErrorsForMismatchedFacilityValues
  * Adds error message for all matching facility id rows
- * Finds all rows with the same facility id as provided row
- * Generates errors if errors do not already exist in provided error object
+ * Finds all rows with the same facility id
+ * Generates errors if errors do not already exist in the provided errors object t
  * @param {UtilisationReportCsvRowData[]} csvData
  * @param {UtilisationReportDataValidationError[]} errors - existing validation errors
  * @param {UtilisationReportCsvRowData} csvRow - current CSV row to generate errors from
