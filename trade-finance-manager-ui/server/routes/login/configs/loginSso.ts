@@ -1,7 +1,7 @@
 import express from 'express';
-import { GetConfiguredRouter } from '../../../types/get-configured-router';
+import { getRouter } from '../../../types/get-router';
 
-export const getLoginSsoRouter: GetConfiguredRouter = () => {
+export const getLoginSsoRouter: getRouter = () => {
   const loginSsoRouter = express.Router();
 
   return loginSsoRouter;
