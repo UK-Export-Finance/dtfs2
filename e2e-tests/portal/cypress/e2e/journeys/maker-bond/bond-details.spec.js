@@ -35,7 +35,7 @@ context('Bond Details', () => {
 
       cy.title().should('eq', `Bond Details${pages.defaults.pageTitleAppend}`);
 
-      pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
+      cy.keyboardInput(pages.bondDetails.bondIssuerInput(), BOND_FORM_VALUES.DETAILS.bondIssuer);
       cy.clickSubmitButton();
 
       cy.url().should('include', '/financial-details');
@@ -63,17 +63,25 @@ context('Bond Details', () => {
 
     cy.clickAddBondButton();
 
-    pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
+    cy.keyboardInput(pages.bondDetails.bondIssuerInput(), BOND_FORM_VALUES.DETAILS.bondIssuer);
     pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
     pages.bondDetails.facilityStageIssuedInput().click();
-    pages.bondDetails.requestedCoverStartDateDayInput().type(`${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}-`);
-    pages.bondDetails.requestedCoverStartDateMonthInput().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
-    pages.bondDetails.requestedCoverStartDateYearInput().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
-    pages.bondDetails.coverEndDateDayInput().type(`${BOND_FORM_VALUES.DETAILS.coverEndDateDay}-`);
-    pages.bondDetails.coverEndDateMonthInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
-    pages.bondDetails.coverEndDateYearInput().type(BOND_FORM_VALUES.DETAILS.coverEndDateYear);
-    pages.bondDetails.nameInput().type(BOND_FORM_VALUES.DETAILS.name);
-    pages.bondDetails.bondBeneficiaryInput().type(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
+
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateDayInput(), `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay}-`);
+
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateMonthInput(), BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
+
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateYearInput(), BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
+
+    cy.keyboardInput(pages.bondDetails.coverEndDateDayInput(), `${BOND_FORM_VALUES.DETAILS.coverEndDateDay}-`);
+
+    cy.keyboardInput(pages.bondDetails.coverEndDateMonthInput(), BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
+
+    cy.keyboardInput(pages.bondDetails.coverEndDateYearInput(), BOND_FORM_VALUES.DETAILS.coverEndDateYear);
+
+    cy.keyboardInput(pages.bondDetails.nameInput(), BOND_FORM_VALUES.DETAILS.name);
+
+    cy.keyboardInput(pages.bondDetails.bondBeneficiaryInput(), BOND_FORM_VALUES.DETAILS.bondBeneficiary);
 
     cy.clickSubmitButton();
 
@@ -85,12 +93,17 @@ context('Bond Details', () => {
     pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The day for the requested Cover Start Date must include 1 or 2 numbers');
     pages.bondDetails.coverEndDateInputErrorMessage().contains('The day for the cover end date must only include 1 or 2 numbers');
 
-    pages.bondDetails.requestedCoverStartDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
-    pages.bondDetails.requestedCoverStartDateMonthInput().clear().type(`${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}-`);
-    pages.bondDetails.requestedCoverStartDateYearInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
-    pages.bondDetails.coverEndDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateDay);
-    pages.bondDetails.coverEndDateMonthInput().clear().type(`${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}-`);
-    pages.bondDetails.coverEndDateYearInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateYear);
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateDayInput().clear(), BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
+
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateMonthInput().clear(), `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth}-`);
+
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateYearInput().clear(), BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear);
+
+    cy.keyboardInput(pages.bondDetails.coverEndDateDayInput().clear(), BOND_FORM_VALUES.DETAILS.coverEndDateDay);
+
+    cy.keyboardInput(pages.bondDetails.coverEndDateMonthInput().clear(), `${BOND_FORM_VALUES.DETAILS.coverEndDateMonth}-`);
+
+    cy.keyboardInput(pages.bondDetails.coverEndDateYearInput().clear(), BOND_FORM_VALUES.DETAILS.coverEndDateYear);
 
     cy.clickSubmitButton();
 
@@ -98,12 +111,17 @@ context('Bond Details', () => {
     pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The month for the requested Cover Start Date must include 1 or 2 numbers');
     pages.bondDetails.coverEndDateInputErrorMessage().contains('The month for the cover end date must only include 1 or 2 numbers');
 
-    pages.bondDetails.requestedCoverStartDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
-    pages.bondDetails.requestedCoverStartDateMonthInput().clear().type(BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
-    pages.bondDetails.requestedCoverStartDateYearInput().clear().type(`${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}-`);
-    pages.bondDetails.coverEndDateDayInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateDay);
-    pages.bondDetails.coverEndDateMonthInput().clear().type(BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
-    pages.bondDetails.coverEndDateYearInput().clear().type(`${BOND_FORM_VALUES.DETAILS.coverEndDateYear}-`);
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateDayInput().clear(), BOND_FORM_VALUES.DETAILS.requestedCoverStartDateDay);
+
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateMonthInput().clear(), BOND_FORM_VALUES.DETAILS.requestedCoverStartDateMonth);
+
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateYearInput().clear(), `${BOND_FORM_VALUES.DETAILS.requestedCoverStartDateYear}-`);
+
+    cy.keyboardInput(pages.bondDetails.coverEndDateDayInput().clear(), BOND_FORM_VALUES.DETAILS.coverEndDateDay);
+
+    cy.keyboardInput(pages.bondDetails.coverEndDateMonthInput().clear(), BOND_FORM_VALUES.DETAILS.coverEndDateMonth);
+
+    cy.keyboardInput(pages.bondDetails.coverEndDateYearInput().clear(), `${BOND_FORM_VALUES.DETAILS.coverEndDateYear}-`);
 
     cy.clickSubmitButton();
 
@@ -111,12 +129,12 @@ context('Bond Details', () => {
     pages.bondDetails.requestedCoverStartDateInputErrorMessage().contains('The year for the requested Cover Start Date must include 4 numbers');
     pages.bondDetails.coverEndDateInputErrorMessage().contains('The year for the Cover End Date must include 4 numbers');
 
-    pages.bondDetails.requestedCoverStartDateDayInput().clear().type('##');
-    pages.bondDetails.requestedCoverStartDateMonthInput().clear().type('##');
-    pages.bondDetails.requestedCoverStartDateYearInput().clear().type('##');
-    pages.bondDetails.coverEndDateDayInput().clear().type('##');
-    pages.bondDetails.coverEndDateMonthInput().clear().type('##');
-    pages.bondDetails.coverEndDateYearInput().clear().type('##');
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateDayInput().clear(), '##');
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateMonthInput().clear(), '##');
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateYearInput().clear(), '##');
+    cy.keyboardInput(pages.bondDetails.coverEndDateDayInput().clear(), '##');
+    cy.keyboardInput(pages.bondDetails.coverEndDateMonthInput().clear(), '##');
+    cy.keyboardInput(pages.bondDetails.coverEndDateYearInput().clear(), '##');
 
     partials.taskListHeader.bondId().then((bondIdHiddenInput) => {
       const bondId = bondIdHiddenInput[0].value;
@@ -223,10 +241,10 @@ context('Bond Details', () => {
       cy.clickAddBondButton();
 
       pages.bondDetails.facilityStageUnissuedInput().click();
-      pages.bondDetails.bondIssuerInput().type(BOND_FORM_VALUES.DETAILS.bondIssuer);
+      cy.keyboardInput(pages.bondDetails.bondIssuerInput(), BOND_FORM_VALUES.DETAILS.bondIssuer);
       pages.bondDetails.bondTypeInput().select(BOND_FORM_VALUES.DETAILS.bondType.value);
-      pages.bondDetails.ukefGuaranteeInMonthsInput().type(BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
-      pages.bondDetails.bondBeneficiaryInput().type(BOND_FORM_VALUES.DETAILS.bondBeneficiary);
+      cy.keyboardInput(pages.bondDetails.ukefGuaranteeInMonthsInput(), BOND_FORM_VALUES.DETAILS.ukefGuaranteeInMonths);
+      cy.keyboardInput(pages.bondDetails.bondBeneficiaryInput(), BOND_FORM_VALUES.DETAILS.bondBeneficiary);
       cy.clickSubmitButton();
 
       cy.url().should('include', '/financial-details');

@@ -6,43 +6,43 @@ export const COVER_START_DATE_VALUE = dateConstants.twoDays;
 export const COVER_END_DATE_VALUE = dateConstants.oneMonth;
 
 export const fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate = () => {
-  pages.bondIssueFacility.issuedDateDayInput().type(dateConstants.todayDay);
-  pages.bondIssueFacility.issuedDateMonthInput().type(dateConstants.todayMonth);
-  pages.bondIssueFacility.issuedDateYearInput().type(dateConstants.todayYear);
+  cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), dateConstants.todayDay);
+  cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), dateConstants.todayMonth);
+  cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), dateConstants.todayYear);
 
-  pages.bondIssueFacility.coverEndDateDayInput().type(dateConstants.oneMonthDay);
-  pages.bondIssueFacility.coverEndDateMonthInput().type(dateConstants.oneMonthMonth);
-  pages.bondIssueFacility.coverEndDateYearInput().type(dateConstants.oneMonthYear);
+  cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), dateConstants.oneMonthDay);
+  cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), dateConstants.oneMonthMonth);
+  cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), dateConstants.oneMonthYear);
 
-  pages.bondIssueFacility.name().type('1234');
+  cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
 
   cy.clickSubmitButton();
 };
 
 export const fillAndSubmitIssueBondFacilityForm = () => {
-  pages.bondIssueFacility.issuedDateDayInput().type(dateConstants.todayDay);
-  pages.bondIssueFacility.issuedDateMonthInput().type(dateConstants.todayMonth);
-  pages.bondIssueFacility.issuedDateYearInput().type(dateConstants.todayYear);
+  cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), dateConstants.todayDay);
+  cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), dateConstants.todayMonth);
+  cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), dateConstants.todayYear);
 
   pages.bondIssueFacility.requestedCoverStartDateDayInput().clear();
-  pages.bondIssueFacility.requestedCoverStartDateDayInput().type(dateConstants.twoDaysDay);
+  cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateDayInput(), dateConstants.twoDaysDay);
 
   pages.bondIssueFacility.requestedCoverStartDateMonthInput().clear();
-  pages.bondIssueFacility.requestedCoverStartDateMonthInput().type(dateConstants.twoDaysMonth);
+  cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateMonthInput(), dateConstants.twoDaysMonth);
 
   pages.bondIssueFacility.requestedCoverStartDateYearInput().clear();
-  pages.bondIssueFacility.requestedCoverStartDateYearInput().type(dateConstants.twoDaysYear);
+  cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateYearInput(), dateConstants.twoDaysYear);
 
   pages.bondIssueFacility.coverEndDateDayInput().clear();
-  pages.bondIssueFacility.coverEndDateDayInput().type(dateConstants.oneMonthDay);
+  cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), dateConstants.oneMonthDay);
 
   pages.bondIssueFacility.coverEndDateMonthInput().clear();
-  pages.bondIssueFacility.coverEndDateMonthInput().type(dateConstants.oneMonthMonth);
+  cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), dateConstants.oneMonthMonth);
 
   pages.bondIssueFacility.coverEndDateYearInput().clear();
-  pages.bondIssueFacility.coverEndDateYearInput().type(dateConstants.oneMonthYear);
+  cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), dateConstants.oneMonthYear);
 
-  pages.bondIssueFacility.name().type('1234');
+  cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
 
   cy.clickSubmitButton();
 };

@@ -203,7 +203,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
     it('should not be able to update facility from application preview with coverStartDate more than 3 months in the future if specialIssuePermission', () => {
       // to change to issued from preview page by clicking change on issued row
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().click();
-      aboutFacilityUnissued.facilityName().clear();
+
       cy.keyboardInput(aboutFacilityUnissued.facilityName(), `${MOCK_FACILITY_FOUR.name}name`);
 
       cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
