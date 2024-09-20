@@ -3,7 +3,7 @@ import express from 'express';
 import * as loginController from '../../../controllers/login/loginNonSso';
 import { GetConfiguredRouter } from '../../../types/get-configured-router';
 
-export const getConfiguredLoginNonSsoRouter: GetConfiguredRouter = () => {
+export const getLoginNonSsoRouter: GetConfiguredRouter = () => {
   const loginNonSsoRouter = express.Router();
 
   loginNonSsoRouter.get('/', loginController.getLogin);
