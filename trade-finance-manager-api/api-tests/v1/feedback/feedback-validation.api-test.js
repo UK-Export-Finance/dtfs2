@@ -1,6 +1,8 @@
 const app = require('../../../src/createApp');
-const { as } = require('../../api')(app);
-const testUserCache = require('../../api-test-users');
+const { createApi } = require('../../api');
+const { initialiseTestUsers } = require('../../api-test-users');
+
+const { as } = createApi(app);
 
 describe('/feedback', () => {
   const allFeedbackFields = {
@@ -14,7 +16,8 @@ describe('/feedback', () => {
   };
 
   const postFeedback = async (body) => {
-    const user = await testUserCache.initialise(app);
+    const testUsers = await initialiseTestUsers(app);
+    const user = testUsers().one();
     const response = await as(user).post(body).to('/v1/feedback');
     return response;
   };
