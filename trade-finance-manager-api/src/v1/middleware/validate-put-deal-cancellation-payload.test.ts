@@ -1,4 +1,4 @@
-import { TfmDealCancellation } from '@ukef/dtfs2-common';
+import { MAX_CHARACTER_COUNT, TfmDealCancellation } from '@ukef/dtfs2-common';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { validatePutDealCancellationPayload } from './validate-put-deal-cancellation-payload';
@@ -7,7 +7,7 @@ describe('validatePostPaymentPayload', () => {
   const getHttpMocks = () => httpMocks.createMocks();
 
   const aValidPayload = (): Partial<TfmDealCancellation> => ({
-    reason: 'x'.repeat(1200),
+    reason: 'x'.repeat(MAX_CHARACTER_COUNT),
     bankRequestDate: new Date().valueOf(),
     effectiveFrom: new Date().valueOf(),
   });
@@ -48,14 +48,14 @@ describe('validatePostPaymentPayload', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'reason' is over 1200 characters`, () => {
+  it(`responds with a '${HttpStatusCode.BadRequest}' if the 'reason' is over ${MAX_CHARACTER_COUNT} characters`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
 
     const invalidPayload = {
       ...aValidPayload(),
-      reason: 'x'.repeat(1201),
+      reason: 'x'.repeat(MAX_CHARACTER_COUNT + 1),
     };
     req.body = invalidPayload;
 

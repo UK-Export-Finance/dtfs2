@@ -1,4 +1,4 @@
-import { AnyObject, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { AnyObject, MAX_CHARACTER_COUNT, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
 import createApi from '../../api';
 import app from '../../../src/createApp';
@@ -25,7 +25,11 @@ const mockUpdateResult: UpdateResult = {
 };
 
 describe('/v1/deals/:id/cancellation', () => {
-  const validPayload: TfmDealCancellation = { reason: 'x'.repeat(1200), bankRequestDate: new Date().valueOf(), effectiveFrom: new Date().valueOf() };
+  const validPayload: TfmDealCancellation = {
+    reason: 'x'.repeat(MAX_CHARACTER_COUNT),
+    bankRequestDate: new Date().valueOf(),
+    effectiveFrom: new Date().valueOf(),
+  };
 
   describe('PUT /v1/deals/:id/cancellation', () => {
     beforeEach(() => {
@@ -100,8 +104,8 @@ describe('/v1/deals/:id/cancellation', () => {
           payload: { reason: 12 },
         },
         {
-          description: 'the reason is over 1200 characters',
-          payload: { reason: 'x'.repeat(1201) },
+          description: `the reason is over ${MAX_CHARACTER_COUNT} characters`,
+          payload: { reason: 'x'.repeat(MAX_CHARACTER_COUNT + 1) },
         },
         {
           description: 'the bankRequestDate is a string ',
