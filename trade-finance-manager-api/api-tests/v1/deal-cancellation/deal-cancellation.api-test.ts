@@ -1,10 +1,8 @@
-import { AnyObject } from '@ukef/dtfs2-common';
+import { AnyObject, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
-import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import createApi from '../../api';
 import app from '../../../src/createApp';
 import testUserCache from '../../api-test-users';
-import { MOCK_TFM_SESSION_USER } from '../../../src/v1/__mocks__/mock-tfm-session-user.ts';
 
 const updateDealCancellationMock = jest.fn() as jest.Mock<Promise<UpdateResult>>;
 
@@ -27,10 +25,7 @@ const mockUpdateResult: UpdateResult = {
 };
 
 describe('/v1/deals/:id/cancellation', () => {
-  const payload = {
-    dealCancellationUpdate: { reason: 'test reason' },
-    auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id),
-  };
+  const validPayload: TfmDealCancellation = { reason: 'x'.repeat(1200), bankRequestDate: new Date().valueOf(), effectiveFrom: new Date().valueOf() };
 
   describe('PUT /v1/deals/:id/cancellation', () => {
     beforeEach(() => {
@@ -60,7 +55,7 @@ describe('/v1/deals/:id/cancellation', () => {
         const url = getTfmDealCancellationUpdateUrl({ id: validId });
 
         // Act
-        const response = await as(tokenUser).put(payload).to(url);
+        const response = await as(tokenUser).put(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(404);
@@ -93,6 +88,37 @@ describe('/v1/deals/:id/cancellation', () => {
         const url = getTfmDealCancellationUpdateUrl({ id: 'invalid' });
 
         // Act
+        const response = await as(tokenUser).put(validPayload).to(url);
+
+        // Assert
+        expect(response.status).toEqual(400);
+      });
+
+      const invalidPayloads = [
+        {
+          description: 'the reason is not a string',
+          payload: { reason: 12 },
+        },
+        {
+          description: 'the reason is over 1200 characters',
+          payload: { reason: 'x'.repeat(1201) },
+        },
+        {
+          description: 'the bankRequestDate is a string ',
+          payload: { bankRequestDate: new Date().toISOString() },
+        },
+        {
+          description: 'the effectiveFrom is a string ',
+          payload: { effectiveFrom: new Date().toISOString() },
+        },
+      ];
+
+      it.each(invalidPayloads)('returns a 400 response when $description', async ({ payload }) => {
+        // Arrange
+        const tokenUser = await testUserCache.initialise(app);
+        const url = getTfmDealCancellationUpdateUrl({ id: validId });
+
+        // Act
         const response = await as(tokenUser).put(payload).to(url);
 
         // Assert
@@ -105,7 +131,7 @@ describe('/v1/deals/:id/cancellation', () => {
         const url = getTfmDealCancellationUpdateUrl({ id: validId });
 
         // Act
-        const response = await as(tokenUser).put(payload).to(url);
+        const response = await as(tokenUser).put(validPayload).to(url);
 
         const expectedResponse = { ...mockUpdateResult, upsertedId: validId };
 

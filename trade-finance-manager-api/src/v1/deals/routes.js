@@ -7,6 +7,7 @@ const dealCancellationController = require('../controllers/deal-cancellation.con
 const dealUnderwriterManagersDecisionController = require('../controllers/deal-underwriter-managers-decision.controller');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
+const { validatePutDealCancellationPayload } = require('../middleware/validate-put-deal-cancellation-payload');
 
 const dealsOpenRouter = express.Router();
 
@@ -80,7 +81,13 @@ dealsAuthRouter
 
 dealsAuthRouter
   .route('/deals/:dealId/cancellation')
-  .put(validateDealCancellationEnabled, validation.dealIdValidation, handleExpressValidatorResult, dealCancellationController.updateDealCancellation);
+  .put(
+    validateDealCancellationEnabled,
+    validation.dealIdValidation,
+    handleExpressValidatorResult,
+    validatePutDealCancellationPayload,
+    dealCancellationController.updateDealCancellation,
+  );
 
 dealsAuthRouter
   .route('/deals/:dealId/amendments/:status?/:type?')
