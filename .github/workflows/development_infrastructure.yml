@@ -1667,7 +1667,8 @@ jobs:
                 AZURE_PORTAL_STORAGE_ACCOUNT="tfs${{ env.environment }}storage" \
                 AZURE_UTILISATION_REPORTS_FILESHARE_NAME="${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}" \
                 JWT_SIGNING_KEY="${{ secrets.JWT_SIGNING_KEY }}" \
-                JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}"
+                JWT_VALIDATING_KEY="${{ secrets.JWT_VALIDATING_KEY }}" \
+                FF_TFM_SSO_ENABLED="${{ vars.FF_TFM_SSO_ENABLED }}"
 
   # END API setup
 
@@ -1998,7 +1999,8 @@ jobs:
                 ESTORE_URL="${{ secrets.ESTORE_URL }}" \
                 ESTORE_CRON_MANAGER_SCHEDULE="${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}" \
                 HTTPS=1 \
-                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }}
+                RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
+                FF_TFM_SSO_ENABLED="${{ vars.FF_TFM_SSO_ENABLED }}"
 
       - name: Secrets
         uses: azure/cli@v2
