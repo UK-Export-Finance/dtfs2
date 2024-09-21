@@ -14,15 +14,19 @@ const options = {
   algorithms: ['RS256'],
 };
 
+/**
+ * @param {import('@ukef/dtfs2-common').TfmUser} user - The user
+ * @returns {import('../../../types/tfm-session-user').TfmSessionUser} The user with confidential data removed
+ */
 const sanitize = (user) => ({
   username: user.username,
-  roles: user.roles,
+  teams: user.teams,
   lastLogin: user.lastLogin,
-  firstname: user.firstname,
-  surname: user.surname,
+  firstName: user.firstName,
+  lastName: user.lastName,
   email: user.email,
   timezone: user.timezone,
-  'user-status': user['user-status'],
+  status: user.status,
   _id: user._id,
 });
 

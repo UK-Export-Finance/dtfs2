@@ -1,10 +1,12 @@
-import { AnyObject } from '@ukef/dtfs2-common';
+import { AnyObject, TEAM_IDS } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import createApi from '../../api';
+import { createApi } from '../../api';
 import app from '../../../src/createApp';
-import testUserCache from '../../api-test-users';
+import { initialiseTestUsers } from '../../api-test-users';
 import { MOCK_TFM_SESSION_USER } from '../../../src/v1/__mocks__/mock-tfm-session-user.ts';
+import { TestUser } from '../../types/test-user.ts';
+import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests.ts';
 
 const updateDealCancellationMock = jest.fn() as jest.Mock<Promise<UpdateResult>>;
 
@@ -27,10 +29,18 @@ const mockUpdateResult: UpdateResult = {
 };
 
 describe('/v1/deals/:id/cancellation', () => {
+  let testUsers: Awaited<ReturnType<typeof initialiseTestUsers>>;
+  let aPimUser: TestUser;
+
   const payload = {
     dealCancellationUpdate: { reason: 'test reason' },
     auditDetails: generateTfmAuditDetails(MOCK_TFM_SESSION_USER._id),
   };
+
+  beforeAll(async () => {
+    testUsers = await initialiseTestUsers(app);
+    aPimUser = testUsers().withTeam(TEAM_IDS.PIM).one();
+  });
 
   describe('PUT /v1/deals/:id/cancellation', () => {
     beforeEach(() => {
@@ -56,11 +66,10 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it('returns a 404 response for an authenticated user with a valid id path', async () => {
         // Arrange
-        const tokenUser = await testUserCache.initialise(app);
         const url = getTfmDealCancellationUpdateUrl({ id: validId });
 
         // Act
-        const response = await as(tokenUser).put(payload).to(url);
+        const response = await as(aPimUser).put(payload).to(url);
 
         // Assert
         expect(response.status).toEqual(404);
@@ -76,12 +85,22 @@ describe('/v1/deals/:id/cancellation', () => {
         jest.resetAllMocks();
       });
 
+      withTeamAuthorisationTests({
+        allowedTeams: [TEAM_IDS.PIM],
+        getUserWithTeam: (team) => testUsers().withTeam(team).one(),
+        makeRequestAsUser: (user: TestUser) =>
+          as(user)
+            .put(payload)
+            .to(getTfmDealCancellationUpdateUrl({ id: validId })),
+        successStatusCode: 200,
+      });
+
       it('returns a 401 response when user is not authenticated', async () => {
         // Arrange
         const url = getTfmDealCancellationUpdateUrl({ id: validId });
 
         // Act
-        const response = await put(url);
+        const response = await put(url, payload);
 
         // Assert
         expect(response.status).toEqual(401);
@@ -89,11 +108,10 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it('returns a 400 response when the id path param is invalid', async () => {
         // Arrange
-        const tokenUser = await testUserCache.initialise(app);
         const url = getTfmDealCancellationUpdateUrl({ id: 'invalid' });
 
         // Act
-        const response = await as(tokenUser).put(payload).to(url);
+        const response = await as(aPimUser).put(payload).to(url);
 
         // Assert
         expect(response.status).toEqual(400);
@@ -101,11 +119,10 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it('updates the deal cancellation for an authenticated user', async () => {
         // Arrange
-        const tokenUser = await testUserCache.initialise(app);
         const url = getTfmDealCancellationUpdateUrl({ id: validId });
 
         // Act
-        const response = await as(tokenUser).put(payload).to(url);
+        const response = await as(aPimUser).put(payload).to(url);
 
         const expectedResponse = { ...mockUpdateResult, upsertedId: validId };
 
