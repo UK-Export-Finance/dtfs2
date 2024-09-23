@@ -62,14 +62,15 @@ context(`users can filter payment details by facility id and payment reference a
         const isFirstFeeRecordRow = index === 0;
 
         if (isFirstFeeRecordRow) {
-          pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable
-            .paymentCurrencyAndAmount(paymentId, feeRecordId)
-            .should('contain', `${currency} ${amount}`);
+          cy.assertText(
+            pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.paymentCurrencyAndAmount(paymentId, feeRecordId),
+            `${currency} ${amount.toFixed(2)}`,
+          );
 
-          pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.paymentReference(paymentId, feeRecordId).should('contain', reference);
+          cy.assertText(pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.paymentReference(paymentId, feeRecordId), reference);
         }
 
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.facilityId(paymentId, feeRecordId).should('contain', facilityId);
+        cy.assertText(pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.facilityId(paymentId, feeRecordId), facilityId);
       });
     });
   });
