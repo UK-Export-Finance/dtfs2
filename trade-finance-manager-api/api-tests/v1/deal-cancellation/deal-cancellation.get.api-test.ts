@@ -1,8 +1,10 @@
-import { AnyObject, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { AnyObject, TEAM_IDS, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import createApi from '../../api.js';
-import app from '../../../src/createApp.js';
-import testUserCache from '../../api-test-users.js';
+import { createApi } from '../../api';
+import app from '../../../src/createApp';
+import { initialiseTestUsers } from '../../api-test-users';
+import { TestUser } from '../../types/test-user.ts';
+import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests.ts';
 
 const getDealCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellation>>;
 
@@ -17,9 +19,17 @@ const { as, get } = createApi(app);
 const validId = new ObjectId().toString();
 
 describe('/v1/deals/:id/cancellation', () => {
+  let testUsers: Awaited<ReturnType<typeof initialiseTestUsers>>;
+  let aPimUser: TestUser;
+
   describe('GET /v1/deals/:id/cancellation', () => {
     beforeEach(() => {
       jest.resetAllMocks();
+    });
+
+    beforeAll(async () => {
+      testUsers = await initialiseTestUsers(app);
+      aPimUser = testUsers().withTeam(TEAM_IDS.PIM).one();
     });
 
     afterAll(() => {
@@ -40,11 +50,10 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it('returns a 404 response', async () => {
         // Arrange
-        const tokenUser = await testUserCache.initialise(app);
         const url = getTfmDealCancellationUrl({ id: validId });
 
         // Act
-        const response = await as(tokenUser).get(url);
+        const response = await as(aPimUser).get(url);
 
         // Assert
         expect(response.status).toEqual(404);
@@ -60,6 +69,13 @@ describe('/v1/deals/:id/cancellation', () => {
         jest.resetAllMocks();
       });
 
+      withTeamAuthorisationTests({
+        allowedTeams: [TEAM_IDS.PIM],
+        getUserWithTeam: (team) => testUsers().withTeam(team).one(),
+        makeRequestAsUser: (user: TestUser) => as(user).get(getTfmDealCancellationUrl({ id: validId })),
+        successStatusCode: 200,
+      });
+
       it('returns a 401 response when user is not authenticated', async () => {
         // Arrange
         const url = getTfmDealCancellationUrl({ id: validId });
@@ -73,11 +89,10 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it('returns a 400 response when the id path param is invalid', async () => {
         // Arrange
-        const tokenUser = await testUserCache.initialise(app);
         const url = getTfmDealCancellationUrl({ id: 'invalid' });
 
         // Act
-        const response = await as(tokenUser).get(url);
+        const response = await as(aPimUser).get(url);
 
         // Assert
         expect(response.status).toEqual(400);
@@ -92,11 +107,10 @@ describe('/v1/deals/:id/cancellation', () => {
         };
 
         jest.mocked(getDealCancellationMock).mockResolvedValue(tfmDealCancellation);
-        const tokenUser = await testUserCache.initialise(app);
         const url = getTfmDealCancellationUrl({ id: validId });
 
         // Act
-        const response = await as(tokenUser).get(url);
+        const response = await as(aPimUser).get(url);
 
         // Assert
         expect(response.status).toEqual(200);
