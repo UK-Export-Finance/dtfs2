@@ -1,6 +1,8 @@
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const app = require('../../../src/createApp');
-const { post } = require('../../api')(app);
+const { createApi } = require('../../api');
+
+const { post } = createApi(app);
 
 describe('/feedback', () => {
   const feedbackFormBody = {

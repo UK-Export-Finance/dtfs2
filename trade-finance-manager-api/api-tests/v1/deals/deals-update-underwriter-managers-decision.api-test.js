@@ -2,8 +2,8 @@ const { AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { when } = require('jest-when');
 const app = require('../../../src/createApp');
-const { as } = require('../../api')(app);
-const testUserCache = require('../../api-test-users');
+const { createApi } = require('../../api');
+const { initialiseTestUsers } = require('../../api-test-users');
 const api = require('../../../src/v1/api');
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const { DEAL_TYPE, SUBMISSION_TYPE, DEAL_STAGE_TFM, PORTAL_DEAL_STATUS, DEAL_COMMENT_TYPE_PORTAL } = require('../../../src/constants/deals');
@@ -12,6 +12,8 @@ const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN
 const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIN-second-submit-facilities-unissued-to-issued');
 const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
 const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit-facilities-unissued-to-issued');
+
+const { as } = createApi(app);
 
 describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
   const PIM_EMAIL = 'pim-test@ukexportfinance.com';
@@ -39,7 +41,8 @@ describe('PUT /deals/:dealId/underwriting/managers-decision', () => {
 
   beforeEach(async () => {
     resetMocks();
-    tokenUser = await testUserCache.initialise(app);
+    const testUsers = await initialiseTestUsers(app);
+    tokenUser = testUsers().one();
     when(api.findOneTeam).calledWith(TEAMS.PIM.id).mockResolvedValueOnce({ email: PIM_EMAIL });
   });
 
