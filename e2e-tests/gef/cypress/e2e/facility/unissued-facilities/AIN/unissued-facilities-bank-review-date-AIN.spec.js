@@ -1,15 +1,7 @@
 import relative from '../../../relativeURL';
 import { errorSummary } from '../../../partials';
 import CONSTANTS from '../../../../fixtures/constants';
-import {
-  today,
-  threeDaysDay,
-  threeDaysMonth,
-  threeDaysYear,
-  threeMonthsOneDayDay,
-  threeMonthsOneDayYear,
-  threeMonthsOneDayMonth,
-} from '../../../../../../e2e-fixtures/dateConstants';
+import { threeDays, threeMonthsOneDay } from '../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../fixtures/mocks/mock-facilities';
@@ -80,18 +72,12 @@ if (facilityEndDateEnabled) {
         cy.visit(getUnissuedFacilitiesUrl());
         unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-        cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDaysDay);
-        cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDaysMonth);
-        cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDaysYear);
+        cy.completeDateFormFields({ idPrefix: 'issued-date', date: threeDays });
 
         aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-        cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDaysDay);
-        cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDaysMonth);
-        cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDaysYear);
 
-        cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), threeMonthsOneDayDay);
-        cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), threeMonthsOneDayMonth);
-        cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), threeMonthsOneDayYear);
+        cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDays });
+        cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
 
         aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
 
@@ -109,7 +95,8 @@ if (facilityEndDateEnabled) {
       });
 
       it('should display an error message when the date is entered incorrectly & click continue', () => {
-        cy.keyboardInput(bankReviewDate.bankReviewDateDay(), 'abcd');
+        cy.completeDateFormFields({ idPrefix: 'bank-review-date', day: 'abcd', month: null, year: null });
+
         cy.clickContinueButton();
 
         errorSummary();
@@ -117,7 +104,8 @@ if (facilityEndDateEnabled) {
       });
 
       it('should display an error message when the date is entered incorrectly & click save and return', () => {
-        cy.keyboardInput(bankReviewDate.bankReviewDateDay(), 'abcd');
+        cy.completeDateFormFields({ idPrefix: 'bank-review-date', day: 'abcd', month: null, year: null });
+
         cy.clickSaveAndReturnButton();
 
         errorSummary();
@@ -125,7 +113,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should redirect user to the unissued facility page when clicking continue', () => {
-        cy.fillInBankReviewDate(today);
+        cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
 
         cy.clickContinueButton();
 
@@ -133,7 +121,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should redirect user to the unissued facility page when clicking save and return', () => {
-        cy.fillInBankReviewDate(today);
+        cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
 
         cy.clickSaveAndReturnButton();
 
@@ -160,7 +148,8 @@ if (facilityEndDateEnabled) {
       });
 
       it('should display an error message when the date is entered incorrectly & click continue', () => {
-        cy.keyboardInput(bankReviewDate.bankReviewDateDay(), 'abcd');
+        cy.completeDateFormFields({ idPrefix: 'bank-review-date', day: 'abcd', month: null, year: null });
+
         cy.clickContinueButton();
 
         errorSummary();
@@ -168,7 +157,8 @@ if (facilityEndDateEnabled) {
       });
 
       it('should display an error message when the date is entered incorrectly & click saveAndReturn', () => {
-        cy.keyboardInput(bankReviewDate.bankReviewDateDay(), 'abcd');
+        cy.completeDateFormFields({ idPrefix: 'bank-review-date', day: 'abcd', month: null, year: null });
+
         cy.clickSaveAndReturnButton();
 
         errorSummary();
@@ -176,14 +166,14 @@ if (facilityEndDateEnabled) {
       });
 
       it('should redirect user to the application details page when clicking continue', () => {
-        cy.fillInBankReviewDate(today);
+        cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
         cy.clickContinueButton();
 
         cy.url().should('eq', getApplicationDetailsUrl());
       });
 
       it('should redirect user to the application details page when clicking save and return', () => {
-        cy.fillInBankReviewDate(today);
+        cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
 
         cy.clickSaveAndReturnButton();
 

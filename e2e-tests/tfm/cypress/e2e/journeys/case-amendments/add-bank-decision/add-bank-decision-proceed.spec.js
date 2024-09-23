@@ -280,44 +280,35 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     errorSummary().contains("Enter the date UKEF received the bank's decision");
     amendmentsPage.errorMessage().contains("Enter the date UKEF received the bank's decision");
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2022');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: null, year: '2022' });
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
     errorSummary().contains("Enter the date UKEF received the bank's decision");
     amendmentsPage.errorMessage().contains("Enter the date UKEF received the bank's decision");
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '22');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '22' });
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2O22');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2022' });
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2 022');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2 022' });
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2 22');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2 22' });
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
@@ -334,9 +325,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateMonth(), '06');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionReceivedDateYear(), '2022');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '06', year: '2022' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/effective-date');
@@ -360,26 +350,23 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     errorSummary().contains('Enter the date the amendment will be effective from');
     amendmentsPage.errorMessage().contains('Enter the date the amendment will be effective from');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateYear(), '2022');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: null, year: '2022' });
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/effective-date');
     errorSummary().contains('Enter the date the amendment will be effective from');
     amendmentsPage.errorMessage().contains('Enter the date the amendment will be effective from');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateMonth(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateYear(), '22');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '22' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/effective-date');
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateMonth(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateYear(), '2O22');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2022' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/effective-date');
@@ -398,9 +385,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/effective-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateDay(), '05');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateMonth(), '06');
-    cy.keyboardInput(amendmentsPage.amendmentBankDecisionEffectiveDateYear(), '2022');
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '06', year: '2022' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', '/banks-decision/check-answers');

@@ -2,7 +2,7 @@ import relative from '../../relativeURL';
 import aboutFacility from '../../pages/about-facility';
 import bankReviewDate from '../../pages/bank-review-date';
 import facilityEndDate from '../../pages/facility-end-date';
-import { tomorrowDay, tomorrowMonth, tomorrowYear, todayDay, todayMonth, todayYear, tomorrow } from '../../../../../e2e-fixtures/dateConstants';
+import { todayYear, tomorrow } from '../../../../../e2e-fixtures/dateConstants';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];
@@ -48,14 +48,16 @@ context('Changing between facility end date and bank review date', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
-      cy.keyboardInput(aboutFacility.coverEndDateDay(), todayDay);
-      cy.keyboardInput(aboutFacility.coverEndDateMonth(), todayMonth);
-      cy.keyboardInput(aboutFacility.coverEndDateYear(), nextYear);
+
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', year: nextYear });
+
       aboutFacility.isUsingFacilityEndDateNo().click();
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
-      cy.fillInBankReviewDate(tomorrow);
+
+      cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: tomorrow });
+
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
@@ -69,9 +71,9 @@ context('Changing between facility end date and bank review date', () => {
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), tomorrowDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), tomorrowMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), tomorrowYear);
+
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: tomorrow });
+
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
@@ -89,7 +91,7 @@ context('Changing between facility end date and bank review date', () => {
       bankReviewDate.bankReviewDateMonth().should('have.value', '');
       bankReviewDate.bankReviewDateYear().should('have.value', '');
 
-      cy.fillInBankReviewDate(tomorrow);
+      cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: tomorrow });
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
@@ -107,9 +109,8 @@ context('Changing between facility end date and bank review date', () => {
       facilityEndDate.facilityEndDateMonth().should('have.value', '');
       facilityEndDate.facilityEndDateYear().should('have.value', '');
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), tomorrowDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), tomorrowMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), tomorrowYear);
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: tomorrow });
+
       cy.clickContinueButton();
     });
   }

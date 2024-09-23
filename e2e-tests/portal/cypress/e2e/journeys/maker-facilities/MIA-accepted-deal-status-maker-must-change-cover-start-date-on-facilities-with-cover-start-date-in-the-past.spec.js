@@ -2,7 +2,7 @@ const pages = require('../../pages');
 const relative = require('../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const dateConstants = require('../../../../../e2e-fixtures/dateConstants');
+const { oneMonth } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -73,11 +73,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().should('not.exist');
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().should('not.exist');
 
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateDay(), NEW_BOND_COVER_START_DATE().getDate());
-
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateMonth(), NEW_BOND_COVER_START_DATE().getMonth() + 1);
-
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateYear(), NEW_BOND_COVER_START_DATE().getFullYear());
+    cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: NEW_BOND_COVER_START_DATE() });
 
     cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
@@ -91,11 +87,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().should('not.exist');
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateNo().should('not.exist');
 
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateDay(), dateConstants.oneMonthDay);
-
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateMonth(), dateConstants.oneMonthMonth);
-
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateYear(), dateConstants.oneMonthYear);
+    cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: oneMonth });
 
     cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));

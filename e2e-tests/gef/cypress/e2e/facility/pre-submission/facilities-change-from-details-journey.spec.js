@@ -3,8 +3,7 @@ import applicationDetails from '../../pages/application-details';
 import aboutFacility from '../../pages/about-facility';
 import facilityGuarantee from '../../pages/facility-guarantee';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
-import facilityEndDate from '../../pages/facility-end-date';
-import { todayDay, todayMonth, todayYear, today } from '../../../../../e2e-fixtures/dateConstants';
+import { todayYear, today } from '../../../../../e2e-fixtures/dateConstants';
 
 const applications = [];
 let token;
@@ -72,7 +71,8 @@ context('Changing facility details from application-details page should take you
 
         applicationDetails.facilitySummaryListTable(0).bankReviewDateAction().click();
 
-        cy.fillInBankReviewDate(today);
+        cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
+
         cy.clickContinueButton();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));
       });
@@ -90,9 +90,8 @@ context('Changing facility details from application-details page should take you
 
         applicationDetails.facilitySummaryListTable(0).facilityEndDateAction().click();
 
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), todayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), Number(todayYear) + 1);
+        cy.completeDateFormFields({ fieldId: 'facility-end-date', date: today, year: Number(todayYear) + 1 });
+
         cy.clickContinueButton();
         cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));
       });
