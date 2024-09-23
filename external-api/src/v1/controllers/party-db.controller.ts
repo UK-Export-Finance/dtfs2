@@ -32,3 +32,28 @@ export const lookup = async (req: Request, res: Response) => {
 
   return res.status(status).send(data);
 };
+
+export const createParty = async (req: Request, res: Response) => {
+  const { partyDbCompanyRegistrationNumber: companyReg } = req.params;
+
+  if (!isValidCompanyRegistrationNumber(companyReg)) {
+    console.error('Invalid company registration number provided %s', companyReg);
+    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
+  }
+
+  const response: { status: number; data: unknown } = await axios({
+    method: 'post',
+    url: `${APIM_MDM_URL}customers`,
+    headers,
+    data: {
+      Name: companyReg,
+    },
+  }).catch((error: AxiosError) => {
+    console.error('Error calling Party DB API %o', error);
+    return { data: 'Failed to call Party DB API', status: error?.response?.status || HttpStatusCode.InternalServerError };
+  });
+
+  const { status, data } = response;
+
+  return res.status(status).send(data);
+};

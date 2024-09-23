@@ -182,12 +182,15 @@ module.exports = {
   })),
   getPartyDbInfo: ({ companyRegNo }) =>
     companyRegNo === 'NO_MATCH'
-      ? false
-      : [
-          {
-            partyUrn: 'testPartyUrn',
-          },
-        ],
+      ? { status: 400, data: 'Failed to get party' }
+      : {
+          status: 200,
+          data: [
+            {
+              partyUrn: 'testPartyUrn',
+            },
+          ],
+        },
   findUser: (username) => {
     if (username === 'invalidUser') {
       return false;
