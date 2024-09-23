@@ -1,0 +1,109 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Cancellation - Bank request date
+{%- endblock %}
+
+{% set headingHtml %}
+<h1 class="govuk-label-wrapper">
+  <span class="govuk-caption-l govuk-!-margin-top-3 govuk-!-margin-bottom-1">Cancel deal {{ ukefDealId }}</span>
+  <label class="govuk-label govuk-label--l" for="bank-request-date">
+    Bank request date
+  </label>
+</h1>
+{% endset %}
+
+{% block sub_content %}
+  {{ govukBackLink({
+      text: "Back",
+      href: "/case/" + dealId + "/deal",
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukDateInput({
+          id: "bankRequestDate",
+          namePrefix: "bank-request-date",
+          fieldset: {
+            legend: {
+              html: headingHtml
+            }
+          },
+          hint: {
+            text: "For example, 31 3 2023",
+            attributes: {
+              "data-cy": "bank-request-date-hint"
+            }
+          },
+          errorMessage: error and {
+            text: error.summary[0].text,
+            attributes: {
+              'data-cy': 'bank-request-date-inline-error'
+            }
+          },
+          items: [
+            {
+              label: "Day",
+              classes: (error and 'bank-request-date-day' in error.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+              name: "day",
+              value: dayInput,
+              attributes: {
+                'data-cy': "bank-request-date-day"
+              }
+            },
+            {
+              label: "Month",
+              classes: (error and 'bank-request-date-month' in error.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+              name: "month",
+              value: monthInput,
+              attributes: {
+                'data-cy': "bank-request-date-month"
+              }
+            },
+            {
+              label: "Year",
+              classes: (error and 'bank-request-date-year' in error.fields) and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+              name: "year",
+              value: yearInput,
+              attributes: {
+                'data-cy': "bank-request-date-year"
+              }
+            }
+          ]
+        }) }}
+
+        <div class="govuk-button-group govuk-!-margin-top-4">
+          {{ govukButton({
+            text: "Continue",
+            attributes: { "data-cy": "continue-button" }
+            })
+          }}
+          <a class="govuk-link" href="/case/{{ dealId }}/deal" data-cy="cancel-link">Cancel</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+{% endblock %}
