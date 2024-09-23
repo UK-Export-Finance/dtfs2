@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { MONGO_DB_COLLECTIONS, AnyObject } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
@@ -38,6 +38,26 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
         auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
       })
       .to('/v1/tfm/deals/submit');
+
+    await testApi
+      .put({
+        dealUpdate: {
+          tfm: {
+            dateReceived: '23-09-2024',
+            dateReceivedTimestamp: 1727085149,
+            parties: {},
+            activities: [],
+            product: DEALS.DEAL_TYPE.BSS_EWCS,
+            stage: TFM_DEAL_STAGE.CONFIRMED,
+            exporterCreditRating: 'Acceptable (B+)',
+            lastUpdated: 1727085149571,
+            lossGivenDefault: 50,
+            probabilityOfDefault: 12,
+          },
+        },
+        auditDetails: generatePortalAuditDetails(MOCK_PORTAL_USER._id),
+      })
+      .to(`/v1/tfm/deals/${dealId}`);
   });
 
   afterEach(async () => {

@@ -31,7 +31,7 @@ export class TfmDealCancellationRepo {
       throw new DealNotFoundError(dealId.toString());
     }
 
-    if (!matchingDeal.tfm?.cancellation) {
+    if (!matchingDeal.tfm.cancellation) {
       throw new DealCancellationNotFoundError(dealId.toString());
     }
 
