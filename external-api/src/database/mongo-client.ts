@@ -8,7 +8,7 @@ import { MongoDbCollectionName } from '@ukef/dtfs2-common';
  */
 export const mongoDbClient = new MongoDbClient();
 
-// TODO: Move to libs/common
+// TODO: DTFS2-7412 Move to libs/common
 /**
  * Gets a MongoDB collection by name.
  *
