@@ -820,9 +820,26 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
       url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
       headers: headers.external,
     });
-    return response.data;
+    return { status: 200, data: response.data };
   } catch (error) {
     console.error('Unable to get party DB info %o', error);
+    if (error.code === 404) {
+      return { status: 404, data: 'Party not found' };
+    }
+    return { status: error?.code || 500, data: 'Failed to get party' };
+  }
+};
+
+const createParty = async ({ companyRegNo }) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${EXTERNAL_API_URL}/party-db/${encodeURIComponent(companyRegNo)}`,
+      headers: headers.external,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Unable to create party %o', error);
     return false;
   }
 };
@@ -1741,6 +1758,7 @@ module.exports = {
   updateGefFacility,
   queryDeals,
   getPartyDbInfo,
+  createParty,
   getCompanyInfo,
   findUser,
   findUserById,

@@ -360,6 +360,33 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
 
 /**
  * @openapi
+ * /party-db/:partyDbCompanyRegistrationNumber:
+ *   post:
+ *     summary: Create a new UKEF party
+ *     tags: [APIM, Salesforce]
+ *     description: We only consume the Companies House number. Not all fields are in the response example.
+ *     parameters:
+ *       - in: path
+ *         name: partyDbCompanyRegistrationNumber
+ *         schema:
+ *           type: string
+ *           example: '1234'
+ *         required: true
+ *         description: Companies House Registration Number to create the UKEF Party
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/PartyDB'
+ *       404:
+ *         description: Not found
+ */
+apiRoutes.post('/party-db/:partyDbCompanyRegistrationNumber', partyDb.createParty);
+
+/**
+ * @openapi
  * /party-db/urn/:urn:
  *   get:
  *     summary: Get a UKEF company
