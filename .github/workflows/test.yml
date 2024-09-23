@@ -802,6 +802,7 @@ jobs:
             './tfm/cypress/e2e/journeys/case-amendments/underwriting-page-unassigned/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/user-flow/*.spec.js',
             './tfm/cypress/e2e/journeys/case-underwriting/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/deal-cancellation/**/*.spec.js',
             './tfm/cypress/e2e/journeys/deals/**/*.spec.js',
             './tfm/cypress/e2e/journeys/facility/**/*.spec.js',
             './tfm/cypress/e2e/journeys/feedback/**/*.spec.js',
