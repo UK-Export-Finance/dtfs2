@@ -1,5 +1,5 @@
-import validateRows from '.';
-import addMatchingRowErrors from '../../helpers/generate-errors-for-mismatched-facility-values';
+import { validateRows } from '.';
+import { generateErrorsForMismatchedFacilityValues } from '../../helpers/generate-errors-for-mismatched-facility-values';
 
 const currencyValue = 'EUR';
 const facilityUtilisationValue = '34538e.54';
@@ -37,9 +37,9 @@ describe('validateRows', () => {
   describe('when the base currency and facility utilisation does not match for a facility', () => {
     const csvData = generateCSVData('GBP', '45');
 
-    it('should return the result of "addMatchingRowErrors" for "base currency" and "facility utilisation"', () => {
-      const currencyErrors = addMatchingRowErrors(csvData, [], csvData[0], baseCurrencyField, baseCurrencyErrorMessage, exporterName);
-      const utilisationErrors = addMatchingRowErrors(
+    it('should return the result of "generateErrorsForMismatchedFacilityValues" for "base currency" and "facility utilisation"', () => {
+      const currencyErrors = generateErrorsForMismatchedFacilityValues(csvData, [], csvData[0], baseCurrencyField, baseCurrencyErrorMessage, exporterName);
+      const utilisationErrors = generateErrorsForMismatchedFacilityValues(
         csvData,
         currencyErrors,
         csvData[0],
@@ -59,8 +59,8 @@ describe('validateRows', () => {
   describe('when the base currency does not match for a facility', () => {
     const csvData = generateCSVData('GBP', facilityUtilisationValue);
 
-    it('should return the result of "addMatchingRowErrors" for "base currency"', () => {
-      const expectedErrors = addMatchingRowErrors(csvData, [], csvData[0], baseCurrencyField, baseCurrencyErrorMessage, exporterName);
+    it('should return the result of "generateErrorsForMismatchedFacilityValues" for "base currency"', () => {
+      const expectedErrors = generateErrorsForMismatchedFacilityValues(csvData, [], csvData[0], baseCurrencyField, baseCurrencyErrorMessage, exporterName);
 
       const errors = validateRows(csvData);
 
@@ -71,8 +71,15 @@ describe('validateRows', () => {
   describe('when the facility utilisation does not match for a facility', () => {
     const csvData = generateCSVData(currencyValue, '45');
 
-    it('should return the result of "addMatchingRowErrors" for "facility utilisation"', () => {
-      const expectedErrors = addMatchingRowErrors(csvData, [], csvData[0], facilityUtilisationField, facilityUtilisationErrorMessage, exporterName);
+    it('should return the result of "generateErrorsForMismatchedFacilityValues" for "facility utilisation"', () => {
+      const expectedErrors = generateErrorsForMismatchedFacilityValues(
+        csvData,
+        [],
+        csvData[0],
+        facilityUtilisationField,
+        facilityUtilisationErrorMessage,
+        exporterName,
+      );
 
       const errors = validateRows(csvData);
 

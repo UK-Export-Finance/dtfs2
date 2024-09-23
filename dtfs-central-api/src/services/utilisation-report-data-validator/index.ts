@@ -1,7 +1,7 @@
 import { UtilisationReportDataValidationError, UtilisationReportCsvRowData } from '@ukef/dtfs2-common';
-import validateHeaders from './utilisation-report-cell-validators/validate-csv-data/headers';
-import validateCells from './utilisation-report-cell-validators/validate-csv-data/cells';
-import validateRows from './utilisation-report-cell-validators/validate-csv-data/rows';
+import { validateHeaders } from './utilisation-report-cell-validators/validate-csv-data/headers';
+import { validateCells } from './utilisation-report-cell-validators/validate-csv-data/cells';
+import { validateRows } from './utilisation-report-cell-validators/validate-csv-data/rows';
 
 /**
  * Validate the utilisation report csv data

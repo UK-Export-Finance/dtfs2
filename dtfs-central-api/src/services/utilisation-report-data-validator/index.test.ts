@@ -1,7 +1,7 @@
 import { validateUtilisationReportCsvData } from '.';
-import validateHeaders from './utilisation-report-cell-validators/validate-csv-data/headers';
-import validateCells from './utilisation-report-cell-validators/validate-csv-data/cells';
-import validateRows from './utilisation-report-cell-validators/validate-csv-data/rows';
+import { validateHeaders } from './utilisation-report-cell-validators/validate-csv-data/headers';
+import { validateCells } from './utilisation-report-cell-validators/validate-csv-data/cells';
+import { validateRows } from './utilisation-report-cell-validators/validate-csv-data/rows';
 
 jest.mock('./utilisation-report-cell-validators', () => ({
   generateUkefFacilityIdError: jest.fn(),

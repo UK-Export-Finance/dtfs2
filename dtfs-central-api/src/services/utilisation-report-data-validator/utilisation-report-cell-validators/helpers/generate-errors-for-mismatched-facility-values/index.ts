@@ -1,5 +1,5 @@
 import { UtilisationReportCsvRowData, UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
-import objectsAreEqual from '../../../../../helpers/objects-are-equal';
+import _ from 'lodash';
 
 /**
  * generateErrorsForMismatchedFacilityValues
@@ -14,7 +14,7 @@ import objectsAreEqual from '../../../../../helpers/objects-are-equal';
  * @param {String} exporterName - exporter name for errors
  * @returns {UtilisationReportDataValidationError[]} generated errors
  */
-const generateErrorsForMismatchedFacilityValues = (
+export const generateErrorsForMismatchedFacilityValues = (
   csvData: UtilisationReportCsvRowData[],
   errors: UtilisationReportDataValidationError[],
   csvRow: UtilisationReportCsvRowData,
@@ -41,7 +41,7 @@ const generateErrorsForMismatchedFacilityValues = (
       exporter: exporterName,
     } as UtilisationReportDataValidationError;
 
-    const isNotInErrors = !errors.some((error) => objectsAreEqual(error, errorObject));
+    const isNotInErrors = !errors.some((error) => _.isEqual(error, errorObject));
 
     if (isNotInErrors) {
       newErrors.push(errorObject);
@@ -50,5 +50,3 @@ const generateErrorsForMismatchedFacilityValues = (
 
   return newErrors;
 };
-
-export default generateErrorsForMismatchedFacilityValues;

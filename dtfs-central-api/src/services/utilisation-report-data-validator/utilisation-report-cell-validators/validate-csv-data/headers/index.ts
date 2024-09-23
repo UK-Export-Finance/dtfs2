@@ -15,7 +15,7 @@ export const getHeaderIsMissingErrorMessage = (header: string) => `${header} ${H
  * @param csvDataRow - A row of data
  * @returns Errors for any missing required headers and a list of the present headers
  */
-const validateHeaders = (
+export const validateHeaders = (
   csvDataRow: UtilisationReportCsvRowData,
 ): { missingHeaderErrors: UtilisationReportDataValidationError[]; availableHeaders: string[] } => {
   const headers = Object.keys(csvDataRow);
@@ -58,5 +58,3 @@ const validateHeaders = (
 
   return { missingHeaderErrors, availableHeaders };
 };
-
-export default validateHeaders;

@@ -1,5 +1,5 @@
 import { UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
-import generateErrorsForMismatchedFacilityValues from '.';
+import { generateErrorsForMismatchedFacilityValues } from '.';
 
 describe('services/utilisation-report-data-validator/utilisation-report-cell-validators/helpers/generate-errors-for-mismatched-facility-values', () => {
   const field = 'base currency';

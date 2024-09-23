@@ -1,5 +1,5 @@
 import { UTILISATION_REPORT_HEADERS, UtilisationReportCsvRowData } from '@ukef/dtfs2-common';
-import validateHeaders, { getHeaderIsMissingErrorMessage } from './index';
+import { validateHeaders, getHeaderIsMissingErrorMessage } from './index';
 
 const requiredHeaders = [
   UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID,

@@ -1,5 +1,5 @@
 import { UtilisationReportCsvRowData, UtilisationReportDataValidationError, UtilisationReportFacilityData } from '@ukef/dtfs2-common';
-import generateErrorsForMismatchedFacilityValues from '../../helpers/generate-errors-for-mismatched-facility-values';
+import { generateErrorsForMismatchedFacilityValues } from '../../helpers/generate-errors-for-mismatched-facility-values';
 
 /**
  * validateRows
@@ -11,7 +11,7 @@ import generateErrorsForMismatchedFacilityValues from '../../helpers/generate-er
  * @param {UtilisationReportCsvRowData[]} csvData - The csv data
  * @returns {UtilisationReportDataValidationError[]} Generated errors, null if the data is valid
  */
-const validateRows = (csvData: UtilisationReportCsvRowData[]): UtilisationReportDataValidationError[] => {
+export const validateRows = (csvData: UtilisationReportCsvRowData[]): UtilisationReportDataValidationError[] => {
   // Map to store the facility ids and their base currency and facility utilisation values
   const map = new Map<string, UtilisationReportFacilityData>();
   const errors: UtilisationReportDataValidationError[] = [];
@@ -73,5 +73,3 @@ const validateRows = (csvData: UtilisationReportCsvRowData[]): UtilisationReport
 
   return errors;
 };
-
-export default validateRows;

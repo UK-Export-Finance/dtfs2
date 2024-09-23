@@ -1,5 +1,5 @@
 import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
-import validateCells from '.';
+import { validateCells } from '.';
 import {
   generateUkefFacilityIdError,
   generateBaseCurrencyError,

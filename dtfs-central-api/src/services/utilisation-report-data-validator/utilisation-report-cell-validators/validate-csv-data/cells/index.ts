@@ -19,7 +19,7 @@ import {
  * @param availableHeaders - The available headers
  * @returns An array of errors if there are any
  */
-const validateCells = async (csvData: UtilisationReportCsvRowData[], availableHeaders: string[]): Promise<UtilisationReportDataValidationError[]> => {
+export const validateCells = async (csvData: UtilisationReportCsvRowData[], availableHeaders: string[]): Promise<UtilisationReportDataValidationError[]> => {
   const cellValidations = [
     { header: UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID, errorGenerator: generateUkefFacilityIdError },
     { header: UTILISATION_REPORT_HEADERS.BASE_CURRENCY, errorGenerator: generateBaseCurrencyError },
@@ -66,5 +66,3 @@ const validateCells = async (csvData: UtilisationReportCsvRowData[], availableHe
 
   return filteredErrors;
 };
-
-export default validateCells;
