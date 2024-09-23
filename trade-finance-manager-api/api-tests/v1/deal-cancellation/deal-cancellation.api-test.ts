@@ -1,8 +1,10 @@
-import { AnyObject, MAX_CHARACTER_COUNT, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { AnyObject, MAX_CHARACTER_COUNT, TfmDealCancellation, TEAM_IDS } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
-import createApi from '../../api';
+import { createApi } from '../../api';
 import app from '../../../src/createApp';
-import testUserCache from '../../api-test-users';
+import { initialiseTestUsers } from '../../api-test-users';
+import { TestUser } from '../../types/test-user.ts';
+import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests.ts';
 
 const updateDealCancellationMock = jest.fn() as jest.Mock<Promise<UpdateResult>>;
 
@@ -25,11 +27,19 @@ const mockUpdateResult: UpdateResult = {
 };
 
 describe('/v1/deals/:id/cancellation', () => {
+  let testUsers: Awaited<ReturnType<typeof initialiseTestUsers>>;
+  let aPimUser: TestUser;
+
   const validPayload: TfmDealCancellation = {
     reason: 'x'.repeat(MAX_CHARACTER_COUNT),
     bankRequestDate: new Date().valueOf(),
     effectiveFrom: new Date().valueOf(),
   };
+
+  beforeAll(async () => {
+    testUsers = await initialiseTestUsers(app);
+    aPimUser = testUsers().withTeam(TEAM_IDS.PIM).one();
+  });
 
   describe('PUT /v1/deals/:id/cancellation', () => {
     beforeEach(() => {
@@ -55,11 +65,10 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it('returns a 404 response for an authenticated user with a valid id path', async () => {
         // Arrange
-        const tokenUser = await testUserCache.initialise(app);
         const url = getTfmDealCancellationUpdateUrl({ id: validId });
 
         // Act
-        const response = await as(tokenUser).put(validPayload).to(url);
+        const response = await as(aPimUser).put(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(404);
@@ -75,12 +84,22 @@ describe('/v1/deals/:id/cancellation', () => {
         jest.resetAllMocks();
       });
 
+      withTeamAuthorisationTests({
+        allowedTeams: [TEAM_IDS.PIM],
+        getUserWithTeam: (team) => testUsers().withTeam(team).one(),
+        makeRequestAsUser: (user: TestUser) =>
+          as(user)
+            .put(validPayload)
+            .to(getTfmDealCancellationUpdateUrl({ id: validId })),
+        successStatusCode: 200,
+      });
+
       it('returns a 401 response when user is not authenticated', async () => {
         // Arrange
         const url = getTfmDealCancellationUpdateUrl({ id: validId });
 
         // Act
-        const response = await put(url);
+        const response = await put(url, validPayload);
 
         // Assert
         expect(response.status).toEqual(401);
@@ -88,11 +107,10 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it('returns a 400 response when the id path param is invalid', async () => {
         // Arrange
-        const tokenUser = await testUserCache.initialise(app);
         const url = getTfmDealCancellationUpdateUrl({ id: 'invalid' });
 
         // Act
-        const response = await as(tokenUser).put(validPayload).to(url);
+        const response = await as(aPimUser).put(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(400);
@@ -119,11 +137,10 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it.each(invalidPayloads)('returns a 400 response when $description', async ({ payload }) => {
         // Arrange
-        const tokenUser = await testUserCache.initialise(app);
         const url = getTfmDealCancellationUpdateUrl({ id: validId });
 
         // Act
-        const response = await as(tokenUser).put(payload).to(url);
+        const response = await as(aPimUser).put(payload).to(url);
 
         // Assert
         expect(response.status).toEqual(400);
@@ -131,11 +148,10 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it('updates the deal cancellation for an authenticated user', async () => {
         // Arrange
-        const tokenUser = await testUserCache.initialise(app);
         const url = getTfmDealCancellationUpdateUrl({ id: validId });
 
         // Act
-        const response = await as(tokenUser).put(validPayload).to(url);
+        const response = await as(aPimUser).put(validPayload).to(url);
 
         const expectedResponse = { ...mockUpdateResult, upsertedId: validId };
 

@@ -39,12 +39,12 @@ const PDC_RECONCILE = {
 };
 
 /**
- * @typedef {import('../types/team-id').TeamId} TeamId
- * @typedef {import('../types/team').Team} Team
+ * @typedef {import('@ukef/dtfs2-common').TeamId} TeamId
+ * @typedef {import('@ukef/dtfs2-common').TfmTeam} TfmTeam
  */
 
 /**
- * @type {Record<TeamId, Team>}
+ * @type {Record<TeamId, TfmTeam>}
  */
 const TEAMS = {
   UNDERWRITING_SUPPORT,

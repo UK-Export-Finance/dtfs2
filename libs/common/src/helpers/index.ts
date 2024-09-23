@@ -9,5 +9,6 @@ export {
   isTfmPaymentReconciliationFeatureFlagEnabled,
   isTfmFacilityEndDateFeatureFlagEnabled,
   isTfmDealCancellationFeatureFlagEnabled,
+  isTfmSsoFeatureFlagEnabled,
 } from './is-feature-flag-enabled';
 export * from './gef-deal-versioning';
