@@ -1,3 +1,4 @@
+const { FLOATING_POINT_ROUNDING_DECIMAL_PLACES } = require('@ukef/dtfs2-common');
 const ExcelJS = require('exceljs');
 const csv = require('csv-parser');
 const { Readable } = require('stream');
@@ -42,6 +43,21 @@ const excelColumnToColumnIndex = (column) => {
 };
 
 /**
+ * Handles floating point rounding errors by rounding a number to
+ * {@link FLOATING_POINT_ROUNDING_DECIMAL_PLACES} decimal places.
+ * @param {number} number - The number to round.
+ * @returns {number} - The rounded number.
+ * @throws {TypeError} - If the input is not a number.
+ */
+const handleFloatingPointRoundingErrors = (number) => {
+  if (typeof number !== 'number') {
+    throw new TypeError('Input must be a number');
+  }
+
+  return Number(number.toFixed(FLOATING_POINT_ROUNDING_DECIMAL_PLACES));
+};
+
+/**
  * Extracts the value in the cell of an excel cell and removes any new lines or commas so that it doesn't affect parsing as a csv.
  * @param {Object} cell - excel cell.
  * @returns {string | number} - cell value.
@@ -49,6 +65,11 @@ const excelColumnToColumnIndex = (column) => {
 const extractCellValue = (cell) => {
   /* eslint-disable-next-line no-underscore-dangle */
   const cellValue = cell.value?.result ?? cell._value?.result ?? cell.value;
+
+  if (typeof cellValue === 'number') {
+    return handleFloatingPointRoundingErrors(cellValue);
+  }
+
   const cellValueWithoutNewLines =
     typeof cellValue === 'string'
       ? cellValue
@@ -255,4 +276,5 @@ module.exports = {
   csvBasedCsvToJsonPromise,
   removeCellAddressesFromArray,
   extractCellValue,
+  handleFloatingPointRoundingErrors,
 };
