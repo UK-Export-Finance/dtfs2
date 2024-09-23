@@ -45,7 +45,7 @@ run-name: 🚀 Deploying to ${{ github.event.workflow_run.head_branch }}
 
 on:
   workflow_run:
-    workflows: ["QAT"]
+    workflows: ['QAT']
     types:
       - completed
     branches:
@@ -54,6 +54,7 @@ on:
       - staging
       - prod
       - release-*
+      - '!release-please*'
 
 env:
   PRODUCT: dtfs
@@ -69,26 +70,24 @@ jobs:
     runs-on: [self-hosted, linux, deployment]
     outputs:
       product: ${{ env.PRODUCT }}
-      environment: ${{ env.ENVIRONMENT }}
+      environment: ${{ steps.environment.outputs.environment }}
       timezone: ${{ env.TIMEZONE }}
     steps:
-      - name: Configure 🔨
-        if:  ${{ !contains(fromJson('["feature", "staging", "prod"]'), github.event.workflow_run.head_branch) }}
-        run: |
-          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-          echo "ENVIRONMENT=dev" >> $GITHUB_OUTPUT
-
       - name: Environment 🧪
-        run: echo "Environment has been set to ${{ env.ENVIRONMENT }}"
+        id: environment
+        run: |
+          if [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
+            echo "environment=staging" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
 
   database:
     name: MSSQL 🗄️
-    if: ${{ github.event.workflow_run.conclusion == 'success' && vars.DATABASE == '1' }}
-    environment: ${{ needs.setup.outputs.environment }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: [setup]
+    environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:
       SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
@@ -130,16 +129,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        webapp:
-          [
-            "portal-ui",
-            "gef-ui",
-            "trade-finance-manager-ui",
-            "portal-api",
-            "dtfs-central-api",
-            "external-api",
-            "trade-finance-manager-api",
-          ]
+        webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
 
     concurrency:
       group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
@@ -152,7 +142,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Defaults ✨
-        uses: Azure/cli@v1.0.9
+        uses: azure/cli@v2
         with:
           inlineScript: |
             # Basic
@@ -199,7 +189,7 @@ jobs:
           docker push ${{ env.ACR }}/${{ matrix.webapp }}:${{ env.FROM }}
 
       - name: Slot 🔀
-        uses: azure/cli@v1.0.9
+        uses: azure/cli@v2
         with:
           inlineScript: |
             # Create new temporary slot
@@ -219,7 +209,7 @@ jobs:
 
       - name: Cleanup 🧹
         if: always()
-        uses: azure/cli@v1.0.9
+        uses: azure/cli@v2
         with:
           inlineScript: |
             # Delete temporary slot
@@ -243,7 +233,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        functions: ["acbs-function"]
+        functions: ['acbs-function']
 
     concurrency:
       group: deployment-functions-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
@@ -256,7 +246,7 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Defaults ✨
-        uses: Azure/cli@v1.0.9
+        uses: azure/cli@v2
         with:
           inlineScript: |
             # Basic
@@ -298,7 +288,7 @@ jobs:
           docker push ${{ env.ACR }}/${{ matrix.functions }}:${{ env.FROM }}
 
       - name: Slot 🔀
-        uses: azure/cli@v1.0.9
+        uses: azure/cli@v2
         with:
           inlineScript: |
             # Create new temporary slot
@@ -318,7 +308,7 @@ jobs:
 
       - name: Cleanup 🧹
         if: always()
-        uses: azure/cli@v1.0.9
+        uses: azure/cli@v2
         with:
           inlineScript: |
             # Delete temporary slot
