@@ -1,6 +1,4 @@
-import { isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
-import { getLoginSsoRouter } from './configs/loginSso';
-import { getLoginNonSsoRouter } from './configs/loginNonSso';
+import { getLoginRouter } from './configs';
 
 /**
  * As the implimentation for SSO vs standard login is so different, it is not possible to simply
@@ -8,5 +6,4 @@ import { getLoginNonSsoRouter } from './configs/loginNonSso';
  *
  * Therefore, we handle what routes are avaliable at the routes level.
  */
-
-export const loginRoutes = isTfmSsoFeatureFlagEnabled() ? getLoginSsoRouter() : getLoginNonSsoRouter();
+export const loginRoutes = getLoginRouter();
