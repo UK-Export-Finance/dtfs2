@@ -1,13 +1,13 @@
-import relative from '../relativeURL';
-import returnToMaker from '../pages/return-to-maker';
-import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import applicationDetails from '../pages/application-details';
-import automaticCover from '../pages/automatic-cover';
-import manualInclusion from '../pages/manual-inclusion-questionnaire';
-import securityDetails from '../pages/security-details';
-import applicationSubmission from '../pages/application-submission';
-import applicationPreview from '../pages/application-preview';
-import statusBanner from '../pages/application-status-banner';
+import relative from '../../relativeURL';
+import returnToMaker from '../../pages/return-to-maker';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
+import applicationDetails from '../../pages/application-details';
+import automaticCover from '../../pages/automatic-cover';
+import manualInclusion from '../../pages/manual-inclusion-questionnaire';
+import securityDetails from '../../pages/security-details';
+import applicationSubmission from '../../pages/application-submission';
+import applicationPreview from '../../pages/application-preview';
+import statusBanner from '../../pages/application-status-banner';
 
 let dealId;
 
