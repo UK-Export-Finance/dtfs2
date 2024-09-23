@@ -124,6 +124,7 @@ services:
       - FF_TFM_PAYMENT_RECONCILIATION_ENABLED
       - FF_TFM_FACILITY_END_DATE_ENABLED
       - FF_TFM_DEAL_CANCELLATION_ENABLED
+      - FF_TFM_SSO_ENABLED
 
   trade-finance-manager-api:
     build:
