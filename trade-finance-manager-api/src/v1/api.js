@@ -303,7 +303,7 @@ const updateDealCancellation = async ({ dealId, dealCancellationUpdate, auditDet
 };
 
 /**
- * Updates the deal cancellation object on a TFM AIN or MIN deal
+ * Gets the deal cancellation object on a TFM deal
  * @param {string} dealId - deal cancellation to update
  * @returns {Promise<import('@ukef/dtfs2-common').TfmDealCancellation>} - Deal cancellation object
  */

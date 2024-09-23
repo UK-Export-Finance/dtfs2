@@ -5,6 +5,7 @@ import app from '../../../src/createApp';
 import { initialiseTestUsers } from '../../api-test-users';
 import { TestUser } from '../../types/test-user.ts';
 import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests.ts';
+import { getTfmDealCancellationUrl } from './get-cancellation-url.ts';
 
 const getDealCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellation>>;
 
@@ -36,8 +37,6 @@ describe('/v1/deals/:id/cancellation', () => {
       jest.restoreAllMocks();
       process.env = originalProcessEnv;
     });
-
-    const getTfmDealCancellationUrl = ({ id }: { id: string }) => `/v1/deals/${id}/cancellation`;
 
     describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
       beforeEach(() => {

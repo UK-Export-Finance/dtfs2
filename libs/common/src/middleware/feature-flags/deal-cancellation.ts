@@ -7,7 +7,7 @@ import { isTfmDealCancellationFeatureFlagEnabled } from '../../helpers';
  */
 export const validateDealCancellationEnabled: RequestHandler = (req, res, next) => {
   if (!isTfmDealCancellationFeatureFlagEnabled()) {
-    console.error(`Deal Cancellation feature flag disabled, accessing ${req.originalUrl}`);
+    console.info(`Deal Cancellation feature flag disabled, accessing ${req.originalUrl}`);
     return res.sendStatus(HttpStatusCode.NotFound);
   }
 
