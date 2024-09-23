@@ -5,14 +5,12 @@ import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
 import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
-import { anUnissuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
 if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'false') {
   context('Amendments - GEF deal does not display any Facility end date pages or fields when TFM feature flag is disabled', () => {
     let dealId;
     let facility;
-
-    const issuedCashFacility = { ...anUnissuedCashFacility(), hasBeenIssued: true };
 
     before(() => {
       // inserts a gef deal
@@ -21,7 +19,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'false') {
         // updates a gef deal so has relevant fields
         cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
-        cy.createGefFacilities(dealId, [issuedCashFacility], BANK1_MAKER1).then((createdFacility) => {
+        cy.createGefFacilities(dealId, [anIssuedCashFacility()], BANK1_MAKER1).then((createdFacility) => {
           facility = createdFacility.details;
         });
 

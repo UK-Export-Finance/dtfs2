@@ -11,7 +11,6 @@ import { aliasSelector } from '../../../../../support/alias-selector';
 import { anUnissuedCashFacility } from '../../../../../e2e-fixtures/mock-gef-facilities';
 
 const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
-const unissuedCashFacility = anUnissuedCashFacility({ facilityEndDateEnabled });
 
 const { format } = require('date-fns');
 
@@ -98,7 +97,7 @@ context('User can view and filter multiple deals', () => {
       const dealId = insertedDeal._id;
       cy.updateGefDeal(dealId, MOCK_GEF_DEAL_AIN, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [unissuedCashFacility], BANK1_MAKER1);
+      cy.createGefFacilities(dealId, [anUnissuedCashFacility({ facilityEndDateEnabled })], BANK1_MAKER1);
 
       cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_DEAL)).then((submittedDeal) => {

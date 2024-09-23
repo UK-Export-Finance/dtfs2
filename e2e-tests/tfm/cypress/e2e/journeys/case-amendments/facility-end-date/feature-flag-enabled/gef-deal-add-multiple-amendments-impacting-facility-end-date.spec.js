@@ -7,7 +7,7 @@ import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
 import { todayDay, todayMonth, todayYear } from '../../../../../../../e2e-fixtures/dateConstants';
 import { DATE_FORMATS } from '../../../../../fixtures/constants';
-import { anUnissuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
 const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 
@@ -27,8 +27,7 @@ if (facilityEndDateEnabled) {
     const facilityPageDateFormat = DATE_FORMATS.SINGLE_DIGIT_DAY_LONG;
 
     const facilityWithBankReviewDate = {
-      ...anUnissuedCashFacility({ facilityEndDateEnabled }),
-      hasBeenIssued: true,
+      ...anIssuedCashFacility({ facilityEndDateEnabled }),
       isUsingFacilityEndDate: false,
       facilityEndDate: undefined,
       bankReviewDate: Date1,

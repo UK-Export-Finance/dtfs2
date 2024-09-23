@@ -6,7 +6,7 @@ import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
 import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
-import { anUnissuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
 const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 
@@ -15,13 +15,7 @@ if (facilityEndDateEnabled) {
     let dealId;
     let facility;
 
-    const issuedCashFacility = {
-      ...anUnissuedCashFacility({ facilityEndDateEnabled }),
-      hasBeenIssued: true,
-      isUsingFacilityEndDate: undefined,
-      facilityEndDate: undefined,
-      bankReviewDate: undefined,
-    };
+    const issuedCashFacility = anIssuedCashFacility();
 
     before(() => {
       // inserts a gef deal

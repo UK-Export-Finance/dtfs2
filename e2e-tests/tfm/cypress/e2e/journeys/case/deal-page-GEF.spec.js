@@ -8,7 +8,6 @@ import facilityPage from '../../pages/facilityPage';
 import { anUnissuedCashFacility } from '../../../../../e2e-fixtures/mock-gef-facilities';
 
 const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
-const unissuedCashFacility = anUnissuedCashFacility({ facilityEndDateEnabled });
 
 context('User can view a GEF MIA case deal', () => {
   let dealId;
@@ -21,7 +20,7 @@ context('User can view a GEF MIA case deal', () => {
       // updates a gef deal so has relevant fields
       cy.updateGefDeal(dealId, MOCK_APPLICATION_MIA, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [unissuedCashFacility], BANK1_MAKER1).then((createdFacilities) => {
+      cy.createGefFacilities(dealId, [anUnissuedCashFacility({ facilityEndDateEnabled })], BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities = createdFacilities.details;
       });
 
@@ -120,7 +119,7 @@ context('User can view a GEF AIN case deal', () => {
       // updates a gef deal so has relevant fields
       cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [unissuedCashFacility], BANK1_MAKER1).then((createdFacilities) => {
+      cy.createGefFacilities(dealId, [anUnissuedCashFacility({ facilityEndDateEnabled })], BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities = createdFacilities.details;
       });
 

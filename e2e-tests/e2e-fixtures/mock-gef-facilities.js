@@ -99,6 +99,7 @@ const anIssuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
   coverDateConfirmed: true,
   canResubmitIssuedFacilities: null,
 });
+exports.anIssuedCashFacility = anUnissuedCashFacility;
 
 /**
  * @param {{ facilityEndDateEnabled?: boolean}} options

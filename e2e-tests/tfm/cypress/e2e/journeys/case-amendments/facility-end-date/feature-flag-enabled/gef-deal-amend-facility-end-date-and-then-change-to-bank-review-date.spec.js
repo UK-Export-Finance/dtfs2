@@ -6,7 +6,7 @@ import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
 import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 
-import { anUnissuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
 const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 if (facilityEndDateEnabled) {
@@ -15,8 +15,7 @@ if (facilityEndDateEnabled) {
     let facility;
 
     const facilityWithFacilityEndDate = {
-      ...anUnissuedCashFacility({ facilityEndDateEnabled }),
-      hasBeenIssued: true,
+      ...anIssuedCashFacility({ facilityEndDateEnabled }),
       isUsingFacilityEndDate: true,
       facilityEndDate: new Date('2023-01-01'),
       bankReviewDate: undefined,
