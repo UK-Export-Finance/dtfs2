@@ -10,7 +10,13 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 const filters = dashboardFilters;
 
 context('Dashboard Deals filters - filter by dealType/product', () => {
-  const ALL_DEALS = [];
+  const ALL_DEALS = [
+    {
+      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+      // other deal properties...
+    },
+    // other deals...
+  ];
 
   before(() => {
     cy.deleteGefApplications(ADMIN);

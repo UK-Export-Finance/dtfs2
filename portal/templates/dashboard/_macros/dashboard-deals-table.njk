@@ -53,7 +53,10 @@
         },
         {
           text: deal.status or "-",
-          attributes: { "data-cy": "deal__status--" + deal._id + " deal__status--index--" + loop.index }
+          attributes: {
+            "data-cy": "deal__status--" + deal._id,
+            "id": "deal__status--index--" + loop.index
+            }
         },
         {
           text: deal.updatedAt | localiseTimestamp("d MMM yyyy", userTimezone) or "-",

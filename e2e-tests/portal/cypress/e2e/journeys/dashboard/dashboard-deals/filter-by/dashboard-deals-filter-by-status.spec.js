@@ -11,7 +11,18 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 const filters = dashboardFilters;
 
 context('Dashboard Deals filters - filter by status', () => {
-  const ALL_DEALS = [];
+  const ALL_DEALS = [
+    {
+      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+      status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
+      // other deal properties...
+    },
+    {
+      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
+      status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
+      // other deal statuses...
+    },
+  ];
 
   before(() => {
     cy.deleteGefApplications(ADMIN);
@@ -76,19 +87,16 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders only draft deals', () => {
-      const ALL_DRAFT_DEALS = ALL_DEALS.filter(({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
-      dashboardDeals.rows().should('have.length', ALL_DRAFT_DEALS.length);
+      dashboardDeals.rows().should('have.length', 2);
 
-      const firstDraftDeal = ALL_DRAFT_DEALS[0];
-
-      dashboardDeals.row.status(firstDraftDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
+      dashboardDeals.rowIndex.status(1).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
     });
   });
 
   describe('Ready for checker', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
+      cy.createBssDeal({ readyForCheck: true });
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -137,12 +145,9 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders only Ready for Check deals', () => {
-      const ALL_READY_FOR_CHECK_DEALS = ALL_DEALS.filter(({ status }) => status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
-      dashboardDeals.rows().should('have.length', ALL_READY_FOR_CHECK_DEALS.length);
+      dashboardDeals.rowIndex.status().should('have.length', 1);
 
-      const firstReadyToCheckDeal = ALL_READY_FOR_CHECK_DEALS[0];
-
-      dashboardDeals.row.status(firstReadyToCheckDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
+      dashboardDeals.rowIndex.status(1).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
   });
 
@@ -198,7 +203,7 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders all deals regardless of status', () => {
-      dashboardDeals.rows().should('have.length', ALL_DEALS.length);
+      dashboardDeals.rows().should('have.length', 3);
     });
   });
 });
