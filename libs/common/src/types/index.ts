@@ -1,4 +1,4 @@
-export * from './database-connection';
+export * from './mongo-connection-status.';
 export * from './azure-file-info';
 export * from './currency';
 export * from './date';

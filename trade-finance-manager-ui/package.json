@@ -114,7 +114,7 @@
     "webpack-merge": "^5.10.0"
   },
   "engines": {
-    "node": "22.8.0",
+    "node": ">=22.8.0",
     "npm": ">=10.8.2"
   },
   "engineStrict": true

@@ -1,6 +1,6 @@
 import { Collection, Db as DbConnection, MongoClient, WithoutId } from 'mongodb';
 import dotenv from 'dotenv';
-import { ClientConnectionStatus } from '../types';
+import { MongoConnectionStatus } from '../types';
 import { MongoDbCollectionName } from '../types/mongo-db-models/mongo-db-collection-name';
 import { DbModel } from '../types/mongo-db-models/db-model';
 
@@ -25,16 +25,17 @@ export class MongoDbClient {
   /**
    * Client connection status.
    */
-  private clientConnection: ClientConnectionStatus = {
+  private clientConnection: MongoConnectionStatus = {
     isInitialised: false,
   };
 
   /**
-   * Gets the initialised client. If the client is not yet initialised, initialises the client and then returns it.
+   * Gets the initialised client. If the client is not yet initialised,
+   * initialises the client and then returns it.
    *
-   * @returns {Promise<ClientConnectionStatus>} The initialised client.
+   * @returns {Promise<MongoConnectionStatus>} The initialised client.
    */
-  private async getInitialisedClient(): Promise<ClientConnectionStatus> {
+  private async getInitialisedClient(): Promise<MongoConnectionStatus> {
     if (this.clientConnection.isInitialised) {
       return this.clientConnection;
     }

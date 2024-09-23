@@ -6,7 +6,7 @@ import { Db as DbConnection, MongoClient } from 'mongodb';
  *
  * This type can be either uninitialised or initialised.
  */
-export type ClientConnectionStatus =
+export type MongoConnectionStatus =
   | {
       /**
        * Indicates that the MongoDB client connection is not initialised.
