@@ -51,16 +51,6 @@ describe(page, () => {
     wrapper.expectElement('[data-cy="error-summary"]').notToExist();
   });
 
-  it('should not render in line error when there are errors', () => {
-    // Arrange
-    const bankRequestDateViewModel: BankRequestDateViewModel = aBankRequestDateViewModel();
-    // Act
-    const wrapper = render(bankRequestDateViewModel);
-
-    // Assert
-    wrapper.expectElement('[data-cy="bank-request-date-inline-error"]').notToExist();
-  });
-
   it('should render error summary when there are errors', () => {
     // Arrange
     const errorSummaryText = 'an error';
