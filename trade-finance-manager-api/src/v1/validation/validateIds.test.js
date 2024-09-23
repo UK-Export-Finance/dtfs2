@@ -6,7 +6,7 @@ const {
   isValidCurrencyCode,
   isValidTeamId,
   sanitizeUsername,
-} = require('../../../src/v1/validation/validateIds');
+} = require('./validateIds');
 
 describe('validateIds', () => {
   describe('isValidMongoId', () => {
