@@ -12,4 +12,4 @@ export * from './invalid-facility-id.error';
 export * from './deal-version.error';
 export * from './invalid-parameter-error';
 export * from './invalid-payload-error';
-export * from './cancellation-not-found.error';
+export * from './deal-cancellation-not-found.error';

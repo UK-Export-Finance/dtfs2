@@ -1,6 +1,6 @@
 import { Collection, ObjectId, UpdateFilter, UpdateResult, WithoutId } from 'mongodb';
 import {
-  CancellationNotFoundError,
+  DealCancellationNotFoundError,
   DEAL_SUBMISSION_TYPE,
   DealNotFoundError,
   MONGO_DB_COLLECTIONS,
@@ -32,7 +32,7 @@ export class TfmDealCancellationRepo {
     }
 
     if (!matchingDeal.tfm?.cancellation) {
-      throw new CancellationNotFoundError(dealId.toString());
+      throw new DealCancellationNotFoundError(dealId.toString());
     }
 
     return matchingDeal.tfm.cancellation;
