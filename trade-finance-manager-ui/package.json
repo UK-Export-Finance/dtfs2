@@ -34,6 +34,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
+    "@azure/msal-node": "^2.14.0",
     "@babel/polyfill": "^7.12.1",
     "@ministryofjustice/frontend": "1.8.0",
     "@types/lodash": "^4.17.4",
@@ -74,7 +75,8 @@
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.3",
-    "validator": "^13.12.0"
+    "validator": "^13.12.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "7.21.5",
