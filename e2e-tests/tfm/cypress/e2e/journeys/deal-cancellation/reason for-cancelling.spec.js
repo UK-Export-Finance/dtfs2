@@ -7,7 +7,7 @@ import { backLink, cancelLink, continueButton, errorSummary } from '../../partia
 
 context('Amendments underwriting - add banks decision - proceed', () => {
   let dealId;
-  let dealFacilities;
+  const dealFacilities = [];
 
   before(() => {
     cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
@@ -30,7 +30,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     });
   });
 
-  beforeAll(() => {
+  beforeEach(() => {
     cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
@@ -38,10 +38,40 @@ context('Amendments underwriting - add banks decision - proceed', () => {
   });
 
   it('should render page correctly', () => {
-    errorSummary();
+    cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
+
     cancelLink();
     continueButton();
     backLink();
     reasonForCancellingPage.reasonForCancellingTextBox();
+  });
+
+  it('should validate submitting more than 1200 characters', () => {
+    cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox().clear(), 'x'.repeat(1201));
+
+    cy.clickContinueButton();
+
+    errorSummary().contains('Reason for cancelling must be 1200 characters or less');
+    reasonForCancellingPage.reasonForCancellingError().contains('Reason for cancelling must be 1200 characters or less');
+  });
+
+  it('back link should take you to deal summary page', () => {
+    cy.clickBackLink();
+
+    cy.url().should('eq', relative(`/case/${dealId}/deal`));
+  });
+
+  // TODO: DTFS2-7296 - add this test once bank request date page is implemented
+  it.skip('continue button should take you to bank request date page', () => {
+    cy.clickContinueButton();
+
+    cy.url().should('eq', relative(`/case/${dealId}/cancellation/request-date`));
+  });
+
+  // TODO: DTFS2-7359 - add this test once cancel link is implemented
+  it.skip('cancel link should take you to confirm cancellation page', () => {
+    cy.clickCancelLink();
+
+    cy.url().should('eq', relative(`/case/${dealId}/cancellation/cancel`));
   });
 });

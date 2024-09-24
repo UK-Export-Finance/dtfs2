@@ -19,7 +19,7 @@
 # portal, gef-ui, trade-finance-manager-ui
 # Generates code coverage reports for UI integration tests.
 #
-# 5-8. End-to-End (E2E) Tests:
+# 5-7. End-to-End (E2E) Tests:
 # Runs tests simulating user journeys through different parts of the application:
 # portal (various scenarios)
 # gef
@@ -27,6 +27,9 @@
 # ukef
 # Uses Cypress for E2E testing.
 # Initializes the environment with data before tests.
+#
+# 8. E2E - FF
+# Run tests 5-7 with all feature flags set to true
 #
 # Additional Notes:
 # Workflow runs on pull requests to the main branch and pushes to specific branches.
