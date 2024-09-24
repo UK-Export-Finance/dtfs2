@@ -23,4 +23,3 @@ export * from './facility-type';
 export * from './deal-type';
 export * from './any-object';
 export * from './tfm-deal-cancellation';
-export * from './zod-type-from-object';
