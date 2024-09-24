@@ -7,7 +7,7 @@ import { UtilisationReportReconciliationDetails } from '../../../../../types/uti
 import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
 import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
 import { getFeeRecordPaymentEntityGroups } from '../../../../../helpers';
-import * as filterFeeRecordsModule from './filter-fee-record-payment-entity-groups-by-facility-id';
+import * as filterFeeRecordsModule from './filter-fee-record-payment-entity-groups';
 
 console.error = jest.fn();
 
@@ -47,10 +47,11 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       async (status) => {
         // Arrange
         const report = UtilisationReportEntityMockBuilder.forStatus(status).withId(reportId).withDateUploaded(null).build();
+        const paymentDetailsFilters = {};
         const premiumPaymentsFilters = {};
 
         // Act / Assert
-        await expect(getUtilisationReportReconciliationDetails(report, premiumPaymentsFilters)).rejects.toThrow(
+        await expect(getUtilisationReportReconciliationDetails(report, paymentDetailsFilters, premiumPaymentsFilters)).rejects.toThrow(
           new Error(`Report with id '${reportId}' has not been uploaded`),
         );
         expect(getBankNameById).not.toHaveBeenCalled();
@@ -61,12 +62,13 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       // Arrange
       const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
 
+      const paymentDetailsFilters = {};
       const premiumPaymentsFilters = {};
 
       when(getBankNameById).calledWith(bankId).mockResolvedValue(undefined);
 
       // Act / Assert
-      await expect(getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters)).rejects.toThrow(
+      await expect(getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters)).rejects.toThrow(
         new NotFoundError(`Failed to find a bank with id '${bankId}'`),
       );
       expect(getBankNameById).toHaveBeenCalledWith(bankId);
@@ -87,13 +89,14 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         .withFeeRecords([])
         .build();
 
+      const paymentDetailsFilters = {};
       const premiumPaymentsFilters = {};
 
       const bankName = 'Test bank';
       when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
 
       // Act
-      const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters);
+      const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters);
 
       // Assert
       expect(getBankNameById).toHaveBeenCalledWith(bankId);
@@ -127,13 +130,14 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const bankName = 'Test bank';
         when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
 
+        const paymentDetailsFilters = {};
         const facilityId = 'some filter';
         const premiumPaymentsFilters = {
           facilityId,
         };
 
         // Act
-        await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters);
+        await getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters);
 
         // Assert
         expect(filterFeeRecordSpy).toHaveBeenCalledWith([], facilityId);
@@ -151,10 +155,11 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const bankName = 'Test bank';
         when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
 
+        const paymentDetailsFilters = {};
         const premiumPaymentsFilters = {};
 
         // Act
-        await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters);
+        await getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters);
 
         // Assert
         expect(filterFeeRecordSpy).not.toHaveBeenCalled();

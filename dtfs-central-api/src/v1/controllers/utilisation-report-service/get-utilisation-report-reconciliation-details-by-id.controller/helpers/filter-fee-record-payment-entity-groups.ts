@@ -32,7 +32,7 @@ export const filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters = (
   feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[],
   filters: PaymentDetailsFilters,
 ): FeeRecordPaymentEntityGroup[] => {
-  const { paymentCurrency: paymentCurrencyFilter, facilityId: facilityIdFilter, paymentReference: paymentReferenceFilter } = filters;
+  const { facilityId: facilityIdFilter, paymentCurrency: paymentCurrencyFilter, paymentReference: paymentReferenceFilter } = filters;
 
   if (!paymentCurrencyFilter && !facilityIdFilter && !paymentReferenceFilter) {
     return feeRecordPaymentEntityGroups;

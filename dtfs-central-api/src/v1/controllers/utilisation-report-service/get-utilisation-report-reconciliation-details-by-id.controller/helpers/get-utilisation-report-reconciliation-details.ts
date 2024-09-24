@@ -5,7 +5,7 @@ import { UtilisationReportReconciliationDetails } from '../../../../../types/uti
 import {
   filterFeeRecordPaymentEntityGroupsByFacilityId,
   filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters,
-} from './filter-fee-record-payment-entity-groups-by-facility-id';
+} from './filter-fee-record-payment-entity-groups';
 import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
 import { getFeeRecordPaymentEntityGroups } from '../../../../../helpers';
 import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
@@ -52,20 +52,20 @@ const filterPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecordPayme
 /**
  * Gets the utilisation report reconciliation details for the supplied report entity
  * @param utilisationReport - The utilisation report entity
- * @param premiumPaymentsFilters - The filters to be applied for the premium payments table
- * @param premiumPaymentsFilters.facilityId - The facility ID filter
  * @param paymentDetailsFilters - The filters to be applied to the fee record payment data
  * @param paymentDetailsFilters.facilityId - The facility ID filter
  * @param paymentDetailsFilters.paymentCurrency - The payment currency filter
  * @param paymentDetailsFilters.paymentReference - The payment reference filter
+ * @param premiumPaymentsFilters - The filters to be applied for the premium payments table
+ * @param premiumPaymentsFilters.facilityId - The facility ID filter
  * @returns The utilisation report reconciliation details
  * @throws {Error} If the report has not been uploaded
  * @throws {NotFoundError} If a bank cannot be found with the matching bank id
  */
 export const getUtilisationReportReconciliationDetails = async (
   utilisationReport: UtilisationReportEntity,
-  premiumPaymentsFilters: PremiumPaymentsFilters,
   paymentDetailsFilters: PaymentDetailsFilters,
+  premiumPaymentsFilters: PremiumPaymentsFilters,
 ): Promise<UtilisationReportReconciliationDetails> => {
   const { id, bankId, feeRecords, dateUploaded, status, reportPeriod } = utilisationReport;
 
