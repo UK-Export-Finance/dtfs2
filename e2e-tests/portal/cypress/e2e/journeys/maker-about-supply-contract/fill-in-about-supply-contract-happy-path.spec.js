@@ -1,7 +1,8 @@
 const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
-const { contract, contractAboutSupplier, contractAboutPreview, dashboardDeals, contractAboutBuyer, contractAboutFinancial } = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutPreview, defaults, dashboardDeals, contractAboutBuyer, contractAboutFinancial } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { additionalRefName } = require('../../../fixtures/deal');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -23,6 +24,8 @@ context('about-supply-contract', () => {
     cy.assertText(contract.aboutSupplierDetailsStatus(), 'Not started');
 
     contract.aboutSupplierDetailsLink().click();
+
+    cy.title().should('eq', `Supplier information - ${additionalRefName}${defaults.pageTitleAppend}`);
 
     //---
     // check initial page state..

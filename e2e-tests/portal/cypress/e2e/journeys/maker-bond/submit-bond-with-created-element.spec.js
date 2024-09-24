@@ -33,11 +33,6 @@ context('Bond form - Submit bond with created element on page', () => {
     cy.insertElement('bond-fee-form');
     cy.clickSubmitButton();
 
-    // TODO: need to
-    // 1) create a new command to get the deal ID from the URL
-    //   - search for this, can move this into a command: // gets url and gets dealId from url
-    // 2) consume the new command here.
-
     cy.getDealIdFromUrl().then((dealId) => {
       cy.getDeal(dealId, BANK1_MAKER1).then((updatedDeal) => {
         cy.getFacility(dealId, updatedDeal.facilities[0], BANK1_MAKER1).then((bond) => {

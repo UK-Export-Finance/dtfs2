@@ -153,8 +153,11 @@ context('about-supply-contract', () => {
     //---------------------------------------------------------------
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
+    cy.url().should('include', '/contract');
+    cy.url().should('include', '/about/supplier');
+
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a Companies House registration number');
 
     //---------------------------------------------------------------
@@ -165,7 +168,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------
@@ -247,7 +250,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a Companies House registration number');
 
     //---------------------------------------------------------------
@@ -259,7 +262,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------------------
@@ -271,7 +274,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------------------------------
@@ -286,7 +289,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //--------------------------------------------------------------------------
@@ -298,7 +301,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     // companies house input value should be retained

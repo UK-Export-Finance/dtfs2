@@ -89,7 +89,7 @@ context('Dashboard Deals filters - filter by status', () => {
     it('renders only draft deals', () => {
       dashboardDeals.rows().should('have.length', 2);
 
-      dashboardDeals.rowIndex.status(1).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
+      dashboardDeals.rowIndex.status().should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
     });
   });
 
@@ -147,7 +147,7 @@ context('Dashboard Deals filters - filter by status', () => {
     it('renders only Ready for Check deals', () => {
       dashboardDeals.rowIndex.status().should('have.length', 1);
 
-      dashboardDeals.rowIndex.status(1).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
+      cy.assertText(dashboardDeals.rowIndex.status(), CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
   });
 

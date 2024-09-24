@@ -1,6 +1,7 @@
-const { contract, contractAboutFinancial, dashboardDeals } = require('../../pages');
+const { contract, contractAboutFinancial, defaults, dashboardDeals } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { additionalRefName } = require('../../../fixtures/deal');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -19,7 +20,7 @@ context('about-supply-contract', () => {
     partials.taskListHeader.itemLink('buyer').click();
     partials.taskListHeader.itemLink('financial-information').click();
 
-    // cy.title().should('eq', `Financial information - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
+    cy.title().should('eq', `Financial information - ${additionalRefName}${defaults.pageTitleAppend}`);
 
     // prove the exchange-rate fields start hidden..
     contractAboutFinancial.supplyContractConversionRateToGBP().should('not.be.visible');

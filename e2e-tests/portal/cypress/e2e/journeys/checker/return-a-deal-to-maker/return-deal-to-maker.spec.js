@@ -43,10 +43,6 @@ context('A checker selects to return a deal to maker from the view-contract page
     cy.login(BANK1_CHECKER1);
     dashboardDeals.rowIndex.link().click();
 
-    contract.commentsTab().click();
-
-    cy.clickBackLink();
-
     cy.clickReturnToMakerButton();
 
     // submit with a comment

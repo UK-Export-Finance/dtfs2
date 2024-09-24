@@ -1,6 +1,7 @@
 const { contract, contractDelete, defaults, dashboardDeals } = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
+const { additionalRefName, bankInternalRefName } = require('../../../../fixtures/deal');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -16,9 +17,18 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     dashboardDeals.visit();
     dashboardDeals.rowIndex.link().click();
     contract.abandonLink().contains('Abandon');
+    contract
+      .abandonLink()
+      .invoke('attr', 'aria-label')
+      .then((label) => {
+        expect(label).to.equal(`Abandon Deal ${bankInternalRefName}`);
+      });
+
     contract.abandonButton().click();
 
     cy.title().should('eq', `Abandon Deal${defaults.pageTitleAppend}`);
+
+    cy.assertText(contractDelete.heading(), `Are you sure you want to abandon ${additionalRefName}?`);
 
     // cancel
     contractDelete.cancel().click();
@@ -33,6 +43,12 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     dashboardDeals.visit();
     dashboardDeals.rowIndex.link().click();
     contract.abandonLink().contains('Abandon');
+    contract
+      .abandonLink()
+      .invoke('attr', 'aria-label')
+      .then((label) => {
+        expect(label).to.equal(`Abandon Deal ${bankInternalRefName}`);
+      });
     contract.abandonButton().click();
 
     // submit without a comment

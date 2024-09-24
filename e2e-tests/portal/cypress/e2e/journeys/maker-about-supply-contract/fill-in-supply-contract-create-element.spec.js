@@ -43,5 +43,12 @@ context('Supply contract form - create element and check if inserted into deal',
     cy.insertElement('supplier-form');
 
     contractAboutSupplier.nextPage().click();
+
+    cy.getDealIdFromUrl().then((dealId) => {
+      cy.getDeal(dealId, BANK1_MAKER1).then((updatedDeal) => {
+        // ensure the updated deal does not contain additional intruder field
+        expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
+      });
+    });
   });
 });

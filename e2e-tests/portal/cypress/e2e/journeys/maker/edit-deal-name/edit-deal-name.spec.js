@@ -23,6 +23,9 @@ context('Edit deal name', () => {
     cy.keyboardInput(editDealName.additionalRefName(), '{selectall}{backspace}');
     cy.clickSubmitButton();
 
+    cy.url().should('include', '/contract');
+    cy.url().should('include', '/edit-name');
+
     editDealName.expectError('A value is required.');
   });
 

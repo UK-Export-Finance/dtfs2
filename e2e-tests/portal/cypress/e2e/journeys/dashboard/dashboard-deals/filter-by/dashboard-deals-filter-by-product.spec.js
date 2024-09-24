@@ -76,6 +76,8 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
     it('renders only BSS deals', () => {
       const ALL_BSS_DEALS = ALL_DEALS.filter(({ dealType }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
       dashboardDeals.rows().should('have.length', ALL_BSS_DEALS.length);
+
+      cy.assertText(dashboardDeals.rowIndex.product(), CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
     });
   });
 
@@ -133,6 +135,8 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
     it('renders only GEF deals', () => {
       const ALL_GEF_DEALS = ALL_DEALS.filter(({ dealType }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF);
       dashboardDeals.rows().should('have.length', ALL_GEF_DEALS.length);
+
+      cy.assertText(dashboardDeals.rowIndex.product(), CONSTANTS.DEALS.DEAL_TYPE.GEF);
     });
   });
 });

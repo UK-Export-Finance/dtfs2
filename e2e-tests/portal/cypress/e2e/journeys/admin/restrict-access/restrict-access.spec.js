@@ -16,7 +16,7 @@ context('Only allow authorised users to access admin pages', () => {
 
     it('allows read only user with all bank access to view deal', () => {
       cy.loginGoToDealPage(ADMIN);
-      cy.url().should('eq', relative(`/dashboard/deals/0`));
+      cy.url().should('include', '/contract');
     });
   });
 

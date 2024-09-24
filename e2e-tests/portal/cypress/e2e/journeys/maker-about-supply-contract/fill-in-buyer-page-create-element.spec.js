@@ -1,5 +1,6 @@
-const { contract, contractAboutSupplier, contractAboutBuyer, dashboardDeals } = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutBuyer, dashboardDeals, defaults } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { additionalRefName } = require('../../../fixtures/deal');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -16,6 +17,8 @@ context('Buyer form - create element and check if inserted into deal', () => {
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
 
+    cy.title().should('eq', `Buyer information - ${additionalRefName}${defaults.pageTitleAppend}`);
+
     // fill in the fields
     cy.keyboardInput(contractAboutBuyer.buyerName(), 'Harry Bear');
     contractAboutBuyer.buyerAddress().country().select('USA');
@@ -30,5 +33,12 @@ context('Buyer form - create element and check if inserted into deal', () => {
 
     // save
     contractAboutBuyer.nextPage().click();
+
+    cy.getDealIdFromUrl().then((dealId) => {
+      cy.getDeal(dealId, BANK1_MAKER1).then((updatedDeal) => {
+        // ensure the updated deal does not contain additional intruder field
+        expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
+      });
+    });
   });
 });

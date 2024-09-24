@@ -18,6 +18,9 @@ context('about-supply-contract', () => {
     dashboardDeals.visit();
     dashboardDeals.rowIndex.link().click();
 
+    // check the status is displaying correctly
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
+
     contract.aboutSupplierDetailsLink().click();
 
     contractAboutSupplier.supplierType().select('Exporter');
