@@ -5,6 +5,7 @@ const partials = require('../../partials');
 const LOAN_FORM_VALUES = require('./loan-form-values');
 const fillLoanForm = require('./fill-loan-forms');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { submissionDetails } = require('../../../fixtures/deal');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -15,8 +16,6 @@ context('Add a Loan to a Deal', () => {
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Loan to the deal', () => {
-    cy.createBssEwcsDeal({});
-
     cy.addLoanToDeal();
 
     cy.url().should('include', '/check-your-answers');
@@ -27,8 +26,6 @@ context('Add a Loan to a Deal', () => {
   });
 
   it('should show relevant details on application details page', () => {
-    cy.createBssEwcsDeal({});
-
     cy.addLoanToDeal();
 
     partials.taskListHeader.loanId().then((loanIdHiddenInput) => {
@@ -63,11 +60,7 @@ context('Add a Loan to a Deal', () => {
 
       cy.assertText(row.loanStatus(), 'Completed');
 
-      // TODO: use fixtures
-      const expectedValue = '1234.00';
-
-      // cy.assertText(row.facilityValue(), `${deal.submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`);
-      cy.assertText(row.facilityValue(), expectedValue);
+      cy.assertText(row.facilityValue(), `${submissionDetails.supplyContractCurrency.id} ${LOAN_FORM_VALUES.FINANCIAL_DETAILS.value}`);
 
       cy.assertText(row.facilityStage(), 'Unconditional');
 

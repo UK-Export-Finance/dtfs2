@@ -10,29 +10,20 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
-context('Dashboard Deals filters - filter by status', () => {
-  const ALL_DEALS = [
-    {
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-      status: CONSTANTS.DEALS.DEAL_STATUS.DRAFT,
-      // other deal properties...
-    },
-    {
-      dealType: CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS,
-      status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
-      // other deal statuses...
-    },
-  ];
+const EXPECTED_DEALS_LENGTH = {
+  DRAFT: 2,
+  READY_FOR_CHECK: 1,
+  ALL_STATUSES: 3,
+};
 
+context('Dashboard Deals filters - filter by status', () => {
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
     cy.createBssEwcsDeal({});
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
   });
 
   describe('Draft', () => {
@@ -86,7 +77,7 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders only draft deals', () => {
-      dashboardDeals.rows().should('have.length', 2);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.DRAFT);
 
       dashboardDeals.rowIndex.status().should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
     });
@@ -144,7 +135,7 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders only Ready for Check deals', () => {
-      dashboardDeals.rowIndex.status().should('have.length', 1);
+      dashboardDeals.rowIndex.status().should('have.length', EXPECTED_DEALS_LENGTH.READY_FOR_CHECK);
 
       cy.assertText(dashboardDeals.rowIndex.status(), CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
@@ -201,7 +192,7 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders all deals regardless of status', () => {
-      dashboardDeals.rows().should('have.length', 3);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.ALL_STATUSES);
     });
   });
 });
