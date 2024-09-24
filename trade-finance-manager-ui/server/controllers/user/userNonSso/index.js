@@ -1,6 +1,6 @@
-const api = require('../../api');
-const { generateErrorSummary } = require('../../helpers/generateErrorSummary.helper');
-const { errorHref } = require('../../helpers/errorHref.helper');
+const api = require('../../../api');
+const { generateErrorSummary } = require('../../../helpers/generateErrorSummary.helper');
+const { errorHref } = require('../../../helpers/errorHref.helper');
 
 const getUserProfile = (req, res) => {
   if (req?.session?.user) {

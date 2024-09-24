@@ -1,4 +1,4 @@
-import { AnyObject, MAX_CHARACTER_COUNT, TfmDealCancellation, TEAM_IDS } from '@ukef/dtfs2-common';
+import { AnyObject, MAX_CHARACTER_COUNT, TEAM_IDS, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
 import { createApi } from '../../api';
 import app from '../../../src/createApp';

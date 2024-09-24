@@ -1,3 +1,5 @@
+const { DEAL_SUBMISSION_TYPE } = require('@ukef/dtfs2-common');
+
 const DEAL_TYPE = {
   BSS_EWCS: 'BSS/EWCS',
   GEF: 'GEF',
@@ -16,11 +18,7 @@ const DEAL_STATUS = {
   UKEF_REFUSED: 'Rejected by UKEF',
 };
 
-const SUBMISSION_TYPE = {
-  AIN: 'Automatic Inclusion Notice',
-  MIA: 'Manual Inclusion Application',
-  MIN: 'Manual Inclusion Notice',
-};
+const SUBMISSION_TYPE = DEAL_SUBMISSION_TYPE;
 
 const SORT_BY = {
   ASCENDING: 'ascending',
