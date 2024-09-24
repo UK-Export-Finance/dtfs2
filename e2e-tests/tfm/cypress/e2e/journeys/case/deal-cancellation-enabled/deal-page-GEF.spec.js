@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import pages from '../../../pages';
 import { caseSummary, caseSubNavigation } from '../../../partials';
 import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIA } from '../../../../fixtures/mock-gef-deals';
-import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../../e2e-fixtures';
+import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2e-fixtures';
 import { DEAL_TYPE } from '../../../../fixtures/constants';
 import facilityPage from '../../../pages/facilityPage';
 import { anUnissuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -42,6 +42,13 @@ context('User can view a GEF MIA case deal', () => {
     caseSubNavigation.container().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
+  });
+
+  it('should not show the deal cancellation button for PIM user', () => {
+    cy.login(PIM_USER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+
+    pages.caseDealPage.cancelButton().should('not.exist');
   });
 
   it('should render case summary fields', () => {

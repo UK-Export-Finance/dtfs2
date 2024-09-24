@@ -3,7 +3,7 @@ import relative from '../../../relativeURL';
 import pages from '../../../pages';
 import { caseSubNavigation, caseSummary } from '../../../partials';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../../e2e-fixtures';
+import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2e-fixtures';
 
 context('User can view a case deal', () => {
   let dealId;
@@ -40,6 +40,13 @@ context('User can view a case deal', () => {
     caseSubNavigation.container().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
+  });
+
+  it('should not show the deal cancellation button for PIM user', () => {
+    cy.login(PIM_USER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+
+    pages.caseDealPage.cancelButton().should('not.exist');
   });
 
   it('should render case summary fields', () => {
