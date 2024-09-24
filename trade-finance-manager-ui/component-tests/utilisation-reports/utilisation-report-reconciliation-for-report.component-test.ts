@@ -232,7 +232,7 @@ describe(page, () => {
             dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
             reference: undefined,
           },
-          feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
+          feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
           feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH,
           reconciledBy: '-',
           dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
