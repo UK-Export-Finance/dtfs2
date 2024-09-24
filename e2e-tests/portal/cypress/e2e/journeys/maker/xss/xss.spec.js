@@ -1,4 +1,4 @@
-const { contract, contractDelete, contractComments, dashboardDeals } = require('../../../pages');
+const { contract, contractDelete, contractComments } = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
@@ -15,7 +15,6 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
   it('Does not allow <script> tag', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.abandonButton().click();
 
@@ -27,7 +26,6 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
     cy.url().should('include', '/dashboard');
 
     // visit the deal and confirm the updates have been made
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.commentsTab().click();
 
