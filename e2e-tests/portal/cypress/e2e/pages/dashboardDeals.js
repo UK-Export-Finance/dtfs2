@@ -13,7 +13,7 @@ const page = {
     updated: (id) => cy.get(`[data-cy="deal__updated--${id}"]`),
   },
   rowIndex: {
-    exporter: (index) => cy.get(`[data-cy="deal__exporter--${index}"]`),
+    exporter: (index = 1) => cy.get(`#deal__exporter--index--${index}`),
     bankRef: (index) => cy.get(`[data-cy="deal__bankRef--deal__bankInternalRefName--index--${index}"`),
     link: (index = 1) => cy.get(`#deal__link--index--${index}`),
     product: (index = 1) => cy.get(`#deal__product--index--${index}`),

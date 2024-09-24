@@ -78,6 +78,8 @@ context('Dashboard Deals filters - filter by keyword', () => {
     it(`renders only deals that have ${MOCK_KEYWORD} in a field`, () => {
       const ALL_KEYWORD_DEALS = ALL_DEALS.filter(({ exporter }) => exporter.companyName === MOCK_KEYWORD);
       dashboardDeals.rows().should('have.length', ALL_KEYWORD_DEALS.length);
+
+      cy.assertText(dashboardDeals.rowIndex.exporter(), MOCK_KEYWORD);
     });
   });
 });
