@@ -25,7 +25,7 @@ context('Loan Dates and Repayments', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   describe('Loan Dates and Repayments title', () => {

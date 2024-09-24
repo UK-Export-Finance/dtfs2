@@ -7,7 +7,7 @@ context('about-supply-contract', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it('A maker picks up a deal with every field filled in and starts deselecting "separate indemnifier correspondence address" etc.', () => {

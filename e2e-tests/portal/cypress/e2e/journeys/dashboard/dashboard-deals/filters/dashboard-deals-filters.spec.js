@@ -15,7 +15,7 @@ context('Dashboard Deals filters', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssDeal({ readyForCheck: true }).then((deal) => {
+    cy.createBssEwcsDeal({ readyForCheck: true }).then((deal) => {
       ALL_DEALS.push(deal);
     });
 

@@ -6,7 +6,7 @@ const { BANK1_READ_ONLY1, ADMIN } = MOCK_USERS;
 context('A read-only role viewing a bond that can be issued', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   after(() => {

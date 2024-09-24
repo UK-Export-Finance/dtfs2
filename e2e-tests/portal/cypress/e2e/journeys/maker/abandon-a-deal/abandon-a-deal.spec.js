@@ -7,7 +7,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 context('A maker selects to abandon a contract from the view-contract page', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {

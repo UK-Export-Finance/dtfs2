@@ -11,7 +11,7 @@ context('Bond Details', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   describe('after submitting one form field and navigating back to `Bond Details` page', () => {

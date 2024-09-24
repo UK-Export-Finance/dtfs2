@@ -5,7 +5,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('About supply contract page titles', () => {
   before(() => {
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it('displays correct page title for buyer', () => {

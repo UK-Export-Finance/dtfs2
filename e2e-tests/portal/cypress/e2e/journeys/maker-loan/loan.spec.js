@@ -11,11 +11,11 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 context('Add a Loan to a Deal', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Loan to the deal', () => {
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
 
     cy.addLoanToDeal();
 
@@ -27,7 +27,7 @@ context('Add a Loan to a Deal', () => {
   });
 
   it('should show relevant details on application details page', () => {
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
 
     cy.addLoanToDeal();
 

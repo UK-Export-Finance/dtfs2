@@ -9,7 +9,7 @@ context('about-supply-contract', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, using the companies house search.', () => {

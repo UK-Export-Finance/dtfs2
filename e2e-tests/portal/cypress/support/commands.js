@@ -74,7 +74,7 @@ Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
-Cypress.Commands.add('createBssDeal', require('./portal/createBssDeal'));
+Cypress.Commands.add('createBssEwcsDeal', require('./portal/createBssEwcsDeal'));
 
 Cypress.Commands.add('getDealIdFromUrl', require('./portal/getDealIdFromUrl'));
 

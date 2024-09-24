@@ -8,7 +8,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Ensure proceed to review button is only visible once facilities are in eligible for submission', () => {
   before(() => {
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   after(() => {

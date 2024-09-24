@@ -8,7 +8,7 @@ context('Edit deal name', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it('rejects an empty field', () => {

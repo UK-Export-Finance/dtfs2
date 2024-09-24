@@ -26,8 +26,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
  * @param {Boolean} readyForCheck: Conditionally complete all "maker" required forms
  * @param {Boolean} unissuedFacilities: TBD
  */
-
-const createBssDeal = ({ readyForCheck = false, unissuedFacilities = false }) => {
+const createBssEwcsDeal = ({ readyForCheck = false, unissuedFacilities = false }) => {
   // Log in as BANK1_MAKER1
   login(BANK1_MAKER1);
 
@@ -125,4 +124,4 @@ const createBssDeal = ({ readyForCheck = false, unissuedFacilities = false }) =>
   }
 };
 
-module.exports = createBssDeal;
+export default createBssEwcsDeal;

@@ -7,7 +7,7 @@ context('Bond form - Submit bond with created element on page', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it("should not insert created element's data into the bond", () => {

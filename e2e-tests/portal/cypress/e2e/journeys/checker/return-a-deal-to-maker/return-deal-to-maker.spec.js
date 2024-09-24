@@ -7,7 +7,7 @@ const { ADMIN, BANK1_CHECKER1 } = MOCK_USERS;
 context('A checker selects to return a deal to maker from the view-contract page', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssDeal({ readyForCheck: true });
+    cy.createBssEwcsDeal({ readyForCheck: true });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {

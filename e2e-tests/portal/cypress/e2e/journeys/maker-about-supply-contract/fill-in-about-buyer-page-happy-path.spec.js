@@ -7,7 +7,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
   before(() => {
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {

@@ -7,7 +7,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-buyer', () => {
   before(() => {
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it('A maker picks up a deal with the first 2 pages of about-supply-contract complete, and triggers all validation errors on the financial page.', () => {

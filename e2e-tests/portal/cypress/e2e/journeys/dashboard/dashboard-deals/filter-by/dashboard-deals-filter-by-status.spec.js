@@ -28,7 +28,7 @@ context('Dashboard Deals filters - filter by status', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
@@ -96,7 +96,7 @@ context('Dashboard Deals filters - filter by status', () => {
   describe('Ready for checker', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      cy.createBssDeal({ readyForCheck: true });
+      cy.createBssEwcsDeal({ readyForCheck: true });
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 

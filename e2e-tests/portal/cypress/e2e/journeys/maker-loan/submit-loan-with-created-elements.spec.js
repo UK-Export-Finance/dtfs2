@@ -8,7 +8,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 context('Loan form - Submit loan with created element on page', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it("should not insert created element's data into the loan", () => {

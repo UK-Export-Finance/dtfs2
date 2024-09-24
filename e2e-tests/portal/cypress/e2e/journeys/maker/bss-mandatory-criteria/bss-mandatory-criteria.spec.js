@@ -8,7 +8,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 context('BSS Mandatory criteria: Check deal details page', () => {
   let deal;
   beforeEach(() => {
-    cy.createBssDeal({ readyForCheck: true }).then((insertedDeal) => {
+    cy.createBssEwcsDeal({ readyForCheck: true }).then((insertedDeal) => {
       deal = insertedDeal;
     });
   });

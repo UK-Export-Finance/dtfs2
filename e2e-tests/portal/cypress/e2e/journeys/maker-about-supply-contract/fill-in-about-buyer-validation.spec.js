@@ -8,7 +8,7 @@ context('about-buyer', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {

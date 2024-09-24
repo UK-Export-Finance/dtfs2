@@ -13,7 +13,7 @@ context(
     before(() => {
       cy.deleteDeals(ADMIN);
 
-      cy.createBssDeal({ readyForCheck: true });
+      cy.createBssEwcsDeal({ readyForCheck: true });
     });
 
     it('should throw error and not submit or redirect', () => {

@@ -5,7 +5,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Buyer form - create element and check if inserted into deal', () => {
   before(() => {
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it("should not insert created element's data in the deal", () => {

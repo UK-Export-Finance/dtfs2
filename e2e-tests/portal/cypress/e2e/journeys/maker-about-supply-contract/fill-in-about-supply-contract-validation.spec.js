@@ -9,7 +9,7 @@ context('about-supply-contract', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {

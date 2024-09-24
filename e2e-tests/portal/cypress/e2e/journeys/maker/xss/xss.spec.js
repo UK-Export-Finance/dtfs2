@@ -9,7 +9,7 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
 
     cy.deleteDeals(ADMIN);
 
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   it('Does not allow <script> tag', () => {

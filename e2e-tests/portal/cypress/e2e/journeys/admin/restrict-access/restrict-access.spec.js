@@ -11,7 +11,7 @@ context('Only allow authorised users to access admin pages', () => {
   describe('Access a deal', () => {
     before(() => {
       cy.deleteDeals(ADMIN);
-      cy.createBssDeal({});
+      cy.createBssEwcsDeal({});
     });
 
     it('allows read only user with all bank access to view deal', () => {

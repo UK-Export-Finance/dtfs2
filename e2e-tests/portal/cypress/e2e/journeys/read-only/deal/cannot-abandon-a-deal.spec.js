@@ -6,7 +6,7 @@ const { BANK1_READ_ONLY1, ADMIN } = MOCK_USERS;
 context('Abandon a deal', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssDeal({});
+    cy.createBssEwcsDeal({});
   });
 
   describe('when a read-only user views a draft deal', () => {
