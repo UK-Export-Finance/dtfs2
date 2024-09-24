@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createValidationMiddlewareForSchema } from './create-validation-middleware-for-schema';
+import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
 import { AuditDetailsSchema } from './schemas';
 
 const PostFacilityAmendmentSchema = z.object({
