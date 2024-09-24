@@ -1,4 +1,4 @@
-const { orderNumber } = require('../../../src/utils/error-list-order-number');
+const { orderNumber } = require('./error-list-order-number');
 
 describe('utils - orderNumber', () => {
   it("should return a number as string that is incremented from the `order` value of the last property from the given errorList's", () => {
