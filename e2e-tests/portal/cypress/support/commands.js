@@ -76,6 +76,8 @@ Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
 Cypress.Commands.add('createBssDeal', require('./portal/createBssDeal'));
 
+Cypress.Commands.add('getDealIdFromUrl', require('./portal/getDealIdFromUrl'));
+
 // command to assert row contents in the utilisation report upload journey
 Cypress.Commands.add('assertValidationErrorTableRowContains', require('./portal/utilisation-reports/assertUploadReportValidationErrorTableRowContains'));
 

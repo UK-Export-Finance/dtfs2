@@ -38,12 +38,13 @@ context('Bond form - Submit bond with created element on page', () => {
     //   - search for this, can move this into a command: // gets url and gets dealId from url
     // 2) consume the new command here.
 
-    // cy.getDeal(deal._id, BANK1_MAKER1).then((updatedDeal) => {
-    //   // get bond from deal facility id
-    //   cy.getFacility(deal._id, updatedDeal.facilities[0], BANK1_MAKER1).then((bond) => {
-    //     // checks bond does not contain inserted field
-    //     expect(bond.intruder).to.be.an('undefined');
-    //   });
-    // });
+    cy.getDealIdFromUrl().then((dealId) => {
+      cy.getDeal(dealId, BANK1_MAKER1).then((updatedDeal) => {
+        cy.getFacility(dealId, updatedDeal.facilities[0], BANK1_MAKER1).then((bond) => {
+          // checks bond does not contain inserted field
+          expect(bond.intruder).to.be.an('undefined');
+        });
+      });
+    });
   });
 });

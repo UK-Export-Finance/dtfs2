@@ -25,13 +25,7 @@ context('Name Application Page - Add element to page', () => {
 
     form().submit();
 
-    // gets url and gets dealId from url
-    cy.url().then((url) => {
-      const urlSplit = url.split('/');
-
-      const dealId = urlSplit[5];
-
-      // gets deal
+    cy.getDealIdFromUrl().then((dealId) => {
       cy.getApplicationById(dealId).then((deal) => {
         // checks extra field has not been added to the deal object
         expect(deal.intruder).to.be.an('undefined');
