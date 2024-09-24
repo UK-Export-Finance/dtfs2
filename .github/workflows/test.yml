@@ -207,6 +207,8 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_QA }}
         run: |
           sleep 100s
           npm run load
