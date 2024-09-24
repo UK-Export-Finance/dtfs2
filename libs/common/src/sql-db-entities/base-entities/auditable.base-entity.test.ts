@@ -1,5 +1,6 @@
 import { AuditableBaseEntity } from '.';
 import { DbRequestSource } from '../helpers';
+import { REQUEST_PLATFORM_TYPE } from '../../constants';
 
 // We cannot create instances of abstract classes, so we define a test class below
 class TestAuditableBaseEntity extends AuditableBaseEntity {}
@@ -12,7 +13,7 @@ describe('AuditableBaseEntity', () => {
       const userId = 'abc123';
 
       // Act
-      testAuditableBaseEntity.updateLastUpdatedBy({ platform: 'PORTAL', userId });
+      testAuditableBaseEntity.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.PORTAL, userId });
 
       // Assert
       expect(testAuditableBaseEntity).toEqual(
