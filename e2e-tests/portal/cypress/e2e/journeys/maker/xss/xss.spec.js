@@ -5,8 +5,6 @@ const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('Input is cleaned to avoid Cross Site Scripting', () => {
   before(() => {
-    // const aDealInStatus = (status) => twentyOneDeals.filter((aDeal) => status === aDeal.status)[0];
-
     cy.deleteDeals(ADMIN);
 
     cy.createBssEwcsDeal({});
