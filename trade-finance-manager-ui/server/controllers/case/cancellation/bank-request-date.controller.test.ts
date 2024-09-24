@@ -7,7 +7,7 @@ import { getBankRequestDate, GetBankRequestDateRequest, postBankRequestDate, Pos
 
 const validateBankRequestDateMock: jest.Mock<BankRequestDateValidationViewModel> = jest.fn(() => ({
   errors: null,
-  bankRequestDate: undefined,
+  bankRequestDate: new Date(),
 }));
 
 jest.mock('./validation/validate-bank-request-date', () => ({
