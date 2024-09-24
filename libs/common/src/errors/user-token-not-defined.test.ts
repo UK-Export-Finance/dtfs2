@@ -36,7 +36,7 @@ describe('UserTokenNotDefinedError', () => {
     expect(exception).toBeInstanceOf(UserTokenNotDefinedError);
   });
 
-  it('is an instance of UserTokenError', () => {
+  it('is an instance of UserSessionError', () => {
     // Act
     const exception = new UserTokenNotDefinedError();
 
