@@ -33,7 +33,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
   };
 
   beforeAll(async () => {
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS]);
   });
 
   beforeEach(async () => {
@@ -55,7 +55,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
 
   afterEach(async () => {
     process.env = { ...originalProcessEnv };
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_DEALS, MONGO_DB_COLLECTIONS.DEALS]);
   });
 
   describe('PUT /v1/tfm/deals/:dealId/cancellation', () => {
@@ -68,7 +68,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
         jest.resetAllMocks();
       });
 
-      it('should return 404 if valid deal id', async () => {
+      it('should return 404', async () => {
         const { status } = await testApi.put({ dealCancellationUpdate, auditDetails: tfmAuditDetails }).to(dealCancellationUrl);
 
         expect(status).toEqual(404);

@@ -2,7 +2,7 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { ApiError, CustomExpressRequest, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import api from '../api';
+import api from '../../api';
 
 export type UpdateDealCancellationRequest = CustomExpressRequest<{
   params: {

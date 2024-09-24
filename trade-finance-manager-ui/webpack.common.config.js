@@ -12,6 +12,7 @@ module.exports = {
     disableFormSubmitOnSubmission: '../libs/common/src/ui-scripts/disable-form-submit-on-submission.js',
     enableSelectAllTableCheckbox: './scripts/enable-select-all-table-checkbox.js',
     enableFindReportsByYearDropdown: './scripts/enable-find-reports-by-year-dropdown.ts',
+    mojFilterHide: './scripts/moj-filter-hide.ts',
   },
   output: {
     path: path.join(__dirname, 'public/js'),
