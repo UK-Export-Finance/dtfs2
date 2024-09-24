@@ -1,5 +1,5 @@
-import { BaseViewModel } from './base-view-model';
-import { ErrorSummaryViewModel } from './error-summary-view-model';
+import { BaseViewModel } from '../base-view-model';
+import { ErrorSummaryViewModel } from '../error-summary-view-model';
 
 export type ReasonForCancellingErrorsViewModel = {
   errorSummary: ErrorSummaryViewModel[];
