@@ -14,7 +14,7 @@ import {
   contractAboutFinancial,
 } from '../../e2e/pages';
 import { submissionDetails } from '../../fixtures/deal';
-import MOCK_USERS from '../../../../e2e-fixtures/index';
+import { MOCK_USERS } from '../../../../e2e-fixtures/index';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
