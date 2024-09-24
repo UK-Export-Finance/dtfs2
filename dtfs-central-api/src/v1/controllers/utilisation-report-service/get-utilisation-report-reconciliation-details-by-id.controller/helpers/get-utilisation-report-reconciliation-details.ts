@@ -1,8 +1,11 @@
-import { UtilisationReportEntity, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, PremiumPaymentsFilters, PaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { NotFoundError } from '../../../../../errors';
 import { getBankNameById } from '../../../../../repositories/banks-repo';
-import { FeeRecordPaymentGroup, UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
-import { filterFeeRecordPaymentEntityGroupsByFacilityId } from './filter-fee-record-payment-entity-groups-by-facility-id';
+import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
+import {
+  filterFeeRecordPaymentEntityGroupsByFacilityId,
+  filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters,
+} from './filter-fee-record-payment-entity-groups-by-facility-id';
 import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
 import { getFeeRecordPaymentEntityGroups } from '../../../../../helpers';
 import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
@@ -10,28 +13,40 @@ import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-pay
 
 /**
  * Filters premium payments based on provided filters.
- * If a facilityId is provided in the filters, it filters the fee record payment entity groups
- * and maps them to fee record payment groups. Otherwise, it returns the unfiltered groups.
+ * If a facilityId is provided in the filters, it filters the fee record payment entity groups.
+ * Otherwise, returns the original groups.
  * @param feeRecordPaymentEntityGroups - The fee record payment entity groups to filter
- * @param unfilteredFeeRecordPaymentGroups - The unfiltered fee record payment groups
  * @param filters - The filters to be applied to the premium payments data
  * @param filters.facilityId - The facility ID filter
- * @returns A promise that resolves to the filtered or unfiltered fee record payment groups
+ * @returns A promise that resolves to the filtered fee record payment groups
  */
-const filterPremiumPayments = async (
-  feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[],
-  unfilteredFeeRecordPaymentGroups: FeeRecordPaymentGroup[],
-  filters: PremiumPaymentsFilters,
-) => {
+const filterPremiumPayments = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: PremiumPaymentsFilters) => {
   const { facilityId } = filters;
 
-  if (facilityId) {
-    const filteredFeeRecords = filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityId);
+  let feeRecords = feeRecordPaymentEntityGroups;
 
-    return await mapToFeeRecordPaymentGroups(filteredFeeRecords);
+  // TODO: Refactor to call the filter function even with empty facilityId.
+  if (facilityId) {
+    feeRecords = filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityId);
   }
 
-  return unfilteredFeeRecordPaymentGroups;
+  return await mapToFeeRecordPaymentGroups(feeRecords);
+};
+
+/**
+ * Filters fee record payment entity groups based on provided filters.
+ * Applies filters for payment currency, facility ID, and payment reference.
+ * @param feeRecordPaymentEntityGroups - The fee record payment entity groups to filter
+ * @param filters - The filters to be applied to the fee record payment data
+ * @param filters.facilityId - The facility ID filter
+ * @param filters.paymentCurrency - The payment currency filter
+ * @param filters.paymentReference - The payment reference filter
+ * @returns A promise that resolves to the filtered fee record payment groups
+ */
+const filterPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: PaymentDetailsFilters) => {
+  const filteredFeeRecords = filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters(feeRecordPaymentEntityGroups, filters);
+
+  return await mapToFeeRecordPaymentGroups(filteredFeeRecords);
 };
 
 /**
@@ -39,6 +54,10 @@ const filterPremiumPayments = async (
  * @param utilisationReport - The utilisation report entity
  * @param premiumPaymentsFilters - The filters to be applied for the premium payments table
  * @param premiumPaymentsFilters.facilityId - The facility ID filter
+ * @param paymentDetailsFilters - The filters to be applied to the fee record payment data
+ * @param paymentDetailsFilters.facilityId - The facility ID filter
+ * @param paymentDetailsFilters.paymentCurrency - The payment currency filter
+ * @param paymentDetailsFilters.paymentReference - The payment reference filter
  * @returns The utilisation report reconciliation details
  * @throws {Error} If the report has not been uploaded
  * @throws {NotFoundError} If a bank cannot be found with the matching bank id
@@ -46,6 +65,7 @@ const filterPremiumPayments = async (
 export const getUtilisationReportReconciliationDetails = async (
   utilisationReport: UtilisationReportEntity,
   premiumPaymentsFilters: PremiumPaymentsFilters,
+  paymentDetailsFilters: PaymentDetailsFilters,
 ): Promise<UtilisationReportReconciliationDetails> => {
   const { id, bankId, feeRecords, dateUploaded, status, reportPeriod } = utilisationReport;
 
@@ -62,12 +82,9 @@ export const getUtilisationReportReconciliationDetails = async (
 
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroups(feeRecords);
 
-  const feeRecordPaymentGroups = await mapToFeeRecordPaymentGroups(feeRecordPaymentEntityGroups);
+  const premiumPayments = await filterPremiumPayments(feeRecordPaymentEntityGroups, premiumPaymentsFilters);
 
-  const premiumPayments = await filterPremiumPayments(feeRecordPaymentEntityGroups, feeRecordPaymentGroups, premiumPaymentsFilters);
-
-  const paymentDetails = feeRecordPaymentGroups;
-
+  const paymentDetails = await filterPaymentDetails(feeRecordPaymentEntityGroups, paymentDetailsFilters);
 
   return {
     reportId: id,
