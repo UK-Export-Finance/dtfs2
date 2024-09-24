@@ -4,9 +4,10 @@ import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { createApi } from '../../api';
 import app from '../../../src/createApp';
 import { initialiseTestUsers } from '../../api-test-users';
-import { MOCK_TFM_SESSION_USER } from '../../../src/v1/__mocks__/mock-tfm-session-user.ts';
+import { MOCK_TFM_SESSION_USER } from '../../../src/v1/__mocks__/mock-tfm-session-user';
 import { TestUser } from '../../types/test-user.ts';
 import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests.ts';
+import { getTfmDealCancellationUrl } from './get-cancellation-url.ts';
 
 const updateDealCancellationMock = jest.fn() as jest.Mock<Promise<UpdateResult>>;
 
@@ -53,8 +54,6 @@ describe('/v1/deals/:id/cancellation', () => {
       process.env = originalProcessEnv;
     });
 
-    const getTfmDealCancellationUpdateUrl = ({ id }: { id: string }) => `/v1/deals/${id}/cancellation`;
-
     describe('when FF_TFM_DEAL_CANCELLATION_ENABLED is disabled', () => {
       beforeEach(() => {
         process.env.FF_TFM_DEAL_CANCELLATION_ENABLED = 'false';
@@ -66,7 +65,7 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it('returns a 404 response for an authenticated user with a valid id path', async () => {
         // Arrange
-        const url = getTfmDealCancellationUpdateUrl({ id: validId });
+        const url = getTfmDealCancellationUrl({ id: validId });
 
         // Act
         const response = await as(aPimUser).put(payload).to(url);
@@ -91,13 +90,13 @@ describe('/v1/deals/:id/cancellation', () => {
         makeRequestAsUser: (user: TestUser) =>
           as(user)
             .put(payload)
-            .to(getTfmDealCancellationUpdateUrl({ id: validId })),
+            .to(getTfmDealCancellationUrl({ id: validId })),
         successStatusCode: 200,
       });
 
       it('returns a 401 response when user is not authenticated', async () => {
         // Arrange
-        const url = getTfmDealCancellationUpdateUrl({ id: validId });
+        const url = getTfmDealCancellationUrl({ id: validId });
 
         // Act
         const response = await put(url, payload);
@@ -108,7 +107,7 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it('returns a 400 response when the id path param is invalid', async () => {
         // Arrange
-        const url = getTfmDealCancellationUpdateUrl({ id: 'invalid' });
+        const url = getTfmDealCancellationUrl({ id: 'invalid' });
 
         // Act
         const response = await as(aPimUser).put(payload).to(url);
@@ -119,7 +118,7 @@ describe('/v1/deals/:id/cancellation', () => {
 
       it('updates the deal cancellation for an authenticated user', async () => {
         // Arrange
-        const url = getTfmDealCancellationUpdateUrl({ id: validId });
+        const url = getTfmDealCancellationUrl({ id: validId });
 
         // Act
         const response = await as(aPimUser).put(payload).to(url);
