@@ -1,3 +1,6 @@
+// Required as the MOJ component expects elements with jQuery functions (e.g., `addClass` and `removeClass`).
+// document.querySelector returns a standard DOM Element without these methods, so we use jQuery to provide them.
+// See: https://api.jquery.com/removeClass/ and https://developer.mozilla.org/en-US/docs/Web/API/Element
 import $ from 'jquery';
 
 /**
