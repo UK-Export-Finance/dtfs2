@@ -1,4 +1,4 @@
-import {
+const {
   dashboard,
   selectScheme,
   beforeYouStart,
@@ -12,9 +12,9 @@ import {
   contractAboutSupplier,
   contractAboutBuyer,
   contractAboutFinancial,
-} from '../../e2e/pages';
-import { submissionDetails } from '../../fixtures/deal';
-import { MOCK_USERS } from '../../../../e2e-fixtures/index';
+} = require('../../e2e/pages');
+const { submissionDetails } = require('../../fixtures/deal');
+const { MOCK_USERS } = require('../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
