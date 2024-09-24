@@ -109,7 +109,7 @@ describe('csv-utils', () => {
           '20001371-A2,Exporter 1-B2,GBP-C2,3938753.8-D2',
           '20004872-A3,Exporter 2-B3,EUR-C3,761579.37-D3',
           '20004873-A4,Exporter 3-B4,USD-C4,123.456789-D4',
-          '20004874-A5,Exporter 4-B5,GBP-C5,987654321.120001-D5'
+          '20004874-A5,Exporter 4-B5,GBP-C5,987654321.120001-D5',
         ],
       };
 
@@ -323,5 +323,5 @@ describe('csv-utils', () => {
     it.each(['123.456', null, undefined])('should throw TypeError for non-number input %o', (input) => {
       expect(() => handleFloatingPointRoundingErrors(input)).toThrow(TypeError);
     });
-   });
+  });
 });
