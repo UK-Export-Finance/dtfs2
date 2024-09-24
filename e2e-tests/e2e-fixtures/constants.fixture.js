@@ -1,3 +1,5 @@
+import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+
 export const TFM_URL = 'http://localhost:5003';
 
 export const DEAL_TYPE = {
@@ -5,11 +7,7 @@ export const DEAL_TYPE = {
   GEF: 'GEF',
 };
 
-export const SUBMISSION_TYPE = {
-  AIN: 'Automatic Inclusion Notice',
-  MIA: 'Manual Inclusion Application',
-  MIN: 'Manual Inclusion Notice',
-};
+export const SUBMISSION_TYPE = DEAL_SUBMISSION_TYPE;
 
 export const FACILITY_TYPE = {
   CASH: 'Cash',

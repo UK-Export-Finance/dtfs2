@@ -65,6 +65,7 @@ export type PaymentDetailsViewModel = {
   feeRecordPaymentGroupStatus: FeeRecordStatus;
   payment: PaymentDetailsPaymentViewModel;
   feeRecords: {
+    id: number;
     facilityId: string;
     exporter: string;
   }[];

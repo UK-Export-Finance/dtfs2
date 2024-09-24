@@ -26,7 +26,7 @@ describe(component, () => {
   const aPaymentDetailsTableRow = (): PaymentDetailsTableRow => ({
     feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.TO_DO,
     payment: aPaymentDetailsPayment(),
-    feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
+    feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
     reconciledBy: '-',
     dateReconciled: {
       formattedDateReconciled: '-',
@@ -60,6 +60,7 @@ describe(component, () => {
       ...aPaymentDetailsTableRow(),
       feeRecords: [
         {
+          id: 1,
           facilityId: 'Some facility id',
           exporter: 'Some exporter',
         },
@@ -154,7 +155,8 @@ describe(component, () => {
   });
 
   describe('when there are multiple fee records for the payment', () => {
-    const aFeeRecord = (): { facilityId: string; exporter: string } => ({
+    const aFeeRecord = (): { id: number; facilityId: string; exporter: string } => ({
+      id: 1,
       facilityId: '12345678',
       exporter: 'Test exporter',
     });
@@ -276,10 +278,10 @@ describe(component, () => {
     });
 
     it('renders each of the fee records listed in the supplied array', () => {
-      const feeRecords: { facilityId: string; exporter: string }[] = [
-        { facilityId: '11111111', exporter: 'Test exporter 1' },
-        { facilityId: '22222222', exporter: 'Test exporter 2' },
-        { facilityId: '33333333', exporter: 'Test exporter 3' },
+      const feeRecords: { id: number; facilityId: string; exporter: string }[] = [
+        { id: 1, facilityId: '11111111', exporter: 'Test exporter 1' },
+        { id: 1, facilityId: '22222222', exporter: 'Test exporter 2' },
+        { id: 1, facilityId: '33333333', exporter: 'Test exporter 3' },
       ];
       const paymentDetailsRow: PaymentDetailsTableRow = {
         ...aPaymentDetailsTableRow(),

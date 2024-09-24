@@ -78,6 +78,8 @@ jobs:
         run: |
           if [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
             echo "environment=staging" >> "$GITHUB_OUTPUT"
+          else
+            echo "environment=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Timezone 🌐

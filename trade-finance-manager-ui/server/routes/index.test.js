@@ -1,11 +1,11 @@
 import { use } from '../test-mocks/router-mock';
 import homeRoutes from './home';
-import loginRoutes from './login';
+import { loginRoutes } from './login';
 import dealsRoutes from './deals';
 import facilitiesRoutes from './facilities';
 import feedbackRoutes from './feedback';
 import feedbackThankYouRoutes from './feedback-thank-you';
-import userRoutes from './user';
+import { userRoutes } from './user';
 import { utilisationReportsRoutes } from './utilisation-reports';
 import footerRoutes from './footer';
 import { validateUser } from '../middleware/user-validation';
