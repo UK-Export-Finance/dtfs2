@@ -13,8 +13,6 @@ context('Loan form - Submit loan with created element on page', () => {
 
   it("should not insert created element's data into the loan", () => {
     // navigate to the about-buyer page
-    cy.loginGoToDealPage(BANK1_MAKER1);
-
     cy.clickAddLoanButton();
 
     // insert text element onto loan form

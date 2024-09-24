@@ -11,8 +11,6 @@ context('Bond form - Submit bond with created element on page', () => {
   });
 
   it("should not insert created element's data into the bond", () => {
-    cy.login(BANK1_MAKER1);
-
     // navigate to the about-buyer page
     cy.loginGoToDealPage(BANK1_MAKER1);
 

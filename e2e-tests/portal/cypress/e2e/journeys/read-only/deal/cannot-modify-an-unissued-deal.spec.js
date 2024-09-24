@@ -3,7 +3,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { BANK1_READ_ONLY1, ADMIN } = MOCK_USERS;
 
-context('A read-only role viewing a bond that can be issued', () => {
+context('A read-only role viewing a draft deal', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal({});

@@ -3,7 +3,7 @@ const { contract } = require('../../../pages');
 
 const { BANK1_READ_ONLY1, ADMIN } = MOCK_USERS;
 
-context('Abandon a deal', () => {
+context('A read-only role viewing a draft deal', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal({});
