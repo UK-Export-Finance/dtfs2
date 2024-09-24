@@ -1,6 +1,4 @@
-// This file is used to create a BSS application that is ready for check
-const { submissionDetails } = require('../../fixtures/deal');
-const {
+import {
   dashboard,
   selectScheme,
   beforeYouStart,
@@ -14,10 +12,10 @@ const {
   contractAboutSupplier,
   contractAboutBuyer,
   contractAboutFinancial,
-} = require('../../e2e/pages');
-
-const login = require('./login');
-const MOCK_USERS = require('../../../../e2e-fixtures/index');
+} from '../../e2e/pages';
+import login from './login';
+import { submissionDetails } from '../../fixtures/deal';
+import MOCK_USERS from '../../../../e2e-fixtures/index';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
