@@ -3,23 +3,29 @@ const page = {
   tableHeader: (column) => cy.get(`[data-cy="deal__header--${column}"]`),
   rows: () => cy.get('.govuk-table__body .govuk-table__row'),
   exporterButton: () => cy.get('[data-cy="deal__header--exporter-button"]'),
+
+  // NOTE (TODO: Add documentation)
+
+  // * selector is "containing"
+  // ^ selector is "starts with"
+  // if these are working as expected, update rowIndex to use *, to be consistent
   row: {
-    exporter: (id) => cy.get(`[data-cy="deal__exporter--${id}"]`),
-    bankRef: (id) => cy.get(`[data-cy="deal__bankRef--bankInternalRefName${id}"]`),
-    link: (id) => cy.get(`[data-cy="deal__link--${id}"]`),
-    product: (id) => cy.get(`[data-cy="deal__product--${id}"]`),
-    status: (id) => cy.get(`[data-cy="deal__status--${id}"]`),
-    type: (id) => cy.get(`[data-cy="deal__submissionType--${id}"]`),
-    updated: (id) => cy.get(`[data-cy="deal__updated--${id}"]`),
+    exporter: (id) => cy.get(`[data-cy*="deal__exporter--${id}"]`),
+    bankRef: (id) => cy.get(`[data-cy*="deal__bankRef--${id}"]`),
+    link: (id) => cy.get(`[data-cy*="deal__link--${id}"]`),
+    product: (id) => cy.get(`[data-cy*="deal__product--${id}"]`),
+    status: (id) => cy.get(`[data-cy*="deal__status--${id}"]`),
+    type: (id) => cy.get(`[data-cy*="deal__submissionType--${id}"]`),
+    updated: (id) => cy.get(`[data-cy*="deal__updated--${id}"]`),
   },
   rowIndex: {
-    exporter: (index = 1) => cy.get(`#deal__exporter--index--${index}`),
-    bankRef: (index) => cy.get(`[data-cy="deal__bankRef--deal__bankInternalRefName--index--${index}"`),
-    link: (index = 1) => cy.get(`#deal__link--index--${index}`),
-    product: (index = 1) => cy.get(`#deal__product--index--${index}`),
-    status: (index = 1) => cy.get(`#deal__status--index--${index}`),
-    type: (index = 1) => cy.get(`#deal__type--index--${index}`),
-    updated: (index) => cy.get(`[data-cy="deal__updated--${index}"]`),
+    deal__exporter: (index = 1) => cy.get(`[data-cy^="deal__exporter--index--${index}`),
+    bankRef: (index = 1) => cy.get(`[data-cy^="deal__bankRef--index--${index}`),
+    link: (index = 1) => cy.get(`[data-cy^="deal__link--index--${index}`),
+    product: (index = 1) => cy.get(`[data-cy^="deal__product--index--${index}`),
+    status: (index = 1) => cy.get(`[data-cy^="deal__status--index--${index}`),
+    type: (index = 1) => cy.get(`[data-cy^="deal__type--index--${index}`),
+    updated: (index = 1) => cy.get(`[data-cy^="deal__updated--index--${index}`),
   },
   first: () => cy.get('[data-cy="First"]'),
   previous: () => cy.get('[data-cy="Previous"]'),

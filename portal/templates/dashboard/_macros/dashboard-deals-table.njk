@@ -27,8 +27,7 @@
         <a
           href="{{ url }}{{ deal._id }}"
           class="govuk-link"
-          data-cy="deal__link--{{ deal._id }}"
-          id="deal__link--index--{{ loop.index }}"
+          data-cy="deal__link--index--{{ loop.index }} deal__link--{{ deal._id }}"
         >
           {{ deal.bankInternalRefName }}
         </a>
@@ -38,39 +37,37 @@
         {
           text: deal.exporter or "-",
           attributes: {
-            "data-cy": "deal__exporter--" + deal._id + " deal__exporter--index--" + loop.index,
-            "id": "deal__exporter--index--" + loop.index
+            "data-cy": "deal__exporter--index--" + loop.index + " deal__exporter--" + deal._id
           }
         },
         {
           html: linkHtml,
           attributes: {
-            "data-cy": "deal__bankRef--bankInternalRefName" + deal._id +  " deal__bankInternalRefName--index--" + loop.index
+            "data-cy": "dea__bankRef--index--" + loop.index + " dea__bankRef" + deal._id
           }
         },
         {
           text: deal.product or "-",
           attributes: {
-            "data-cy": "deal__product--" + deal._id + " deal__product--index--" + loop.index
+            "data-cy": deal__product--index--" + loop.index + " deal__product--" + deal._id
           }
         },
         {
           text: deal.submissionType or "-",
           attributes: {
-            "data-cy": "deal__submissionType--" + deal._id + " deal__submissionType--index--" + loop.index
+            "data-cy": deal__submissionType--index--" + loop.index + " deal__submissionType--" + deal._id
           }
         },
         {
           text: deal.status or "-",
           attributes: {
-            "data-cy": "deal__status--" + deal._id,
-            "id": "deal__status--index--" + loop.index
+            "data-cy": "deal__status--index--" + loop.index + " deal__status--" + deal._id
           }
         },
         {
           text: deal.updatedAt | localiseTimestamp("d MMM yyyy", userTimezone) or "-",
           attributes: {
-          'data-cy': 'deal__updated--' + deal._id + " deal__updated--index--" + loop.index
+          'data-cy': deal__updated--index--" + loop.index + " deal__updated--"" + deal._id
           }
         }
       ] %}
@@ -116,15 +113,13 @@
         {
           text: "Product",
           attributes: {
-            "data-cy": "deal__header--product",
-            "id": "deal__product--index--" + loop.index
+            "data-cy": "deal__header--product"
           }
         },
         {
           text: "Type",
           attributes: {
-            "data-cy": "deal__header--type",
-            "id": "deal__type--index--" + loop.index
+            "data-cy": "deal__header--type"
           }
         },
         {
