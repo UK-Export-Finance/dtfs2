@@ -61,7 +61,6 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
   describe('Sort dashboard alphabetically - Company name', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -81,7 +80,6 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
       // sorts array alphabetically
       ALL_DEALS.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
 
       dashboardDeals.exporterButton().click();
@@ -101,7 +99,6 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
       // sorts array and then reverses so in reverse order
       ALL_DEALS.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())).reverse();
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
 
       dashboardDeals.exporterButton().click();

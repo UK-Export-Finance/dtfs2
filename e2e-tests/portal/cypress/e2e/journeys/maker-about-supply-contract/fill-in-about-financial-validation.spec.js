@@ -13,7 +13,6 @@ context('about-buyer', () => {
   it('A maker picks up a deal with the first 2 pages of about-supply-contract complete, and triggers all validation errors on the financial page.', () => {
     cy.login(BANK1_MAKER1);
 
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();

@@ -189,7 +189,6 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
 
   it('renders only deals that have matching fields - Draft status, Ready for check status', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     filters.showHideButton().click();
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();
@@ -207,7 +206,6 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
 
   it('renders only deals that have matching fields - AIN, MIA', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     filters.showHideButton().click();
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
@@ -225,7 +223,6 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
 
   it('renders only deals that have matching fields for all filters', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     filters.showHideButton().click();
     dashboardDeals.filters.panel.form.status.draft.checkbox().click();

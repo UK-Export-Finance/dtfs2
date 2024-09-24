@@ -1,4 +1,4 @@
-const { contract, editDealName, dashboardDeals, defaults } = require('../../../pages');
+const { contract, editDealName, defaults } = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { additionalRefName } = require('../../../../fixtures/deal');
 
@@ -13,7 +13,6 @@ context('Edit deal name', () => {
 
   it('rejects an empty field', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.editDealName().contains('Edit deal name');
     contract.editDealName().click();
@@ -31,7 +30,6 @@ context('Edit deal name', () => {
 
   it('updates deal.additionalRefName', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.editDealName().contains('Edit deal name');
     contract.editDealName().click();

@@ -1,4 +1,4 @@
-const { contract, dashboardDeals } = require('../../../pages');
+const { contract } = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { BANK1_READ_ONLY1, ADMIN } = MOCK_USERS;
@@ -15,7 +15,6 @@ context('A read-only role viewing a bond that can be issued', () => {
 
   it('should not allow for any publishing actions', () => {
     cy.login(BANK1_READ_ONLY1);
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
 
     cy.url().should('include', '/contract');

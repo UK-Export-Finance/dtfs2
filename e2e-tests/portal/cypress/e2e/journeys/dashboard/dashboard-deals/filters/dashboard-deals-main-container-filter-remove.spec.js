@@ -24,7 +24,6 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
     });
 
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
@@ -59,7 +58,6 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
 
   it('retains other filters when one is removed', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     // toggle to show filters (hidden by default)
     filters.showHideButton().click();

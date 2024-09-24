@@ -48,7 +48,6 @@ context('Admin dashboard', () => {
   it('Bank column should appear for admin user', () => {
     // login and go to dashboard
     cy.login(ADMIN);
-    dashboardDeals.visit();
 
     // check the fields we understand
     expect(dashboardDeals.tableHeader('bankRef').should('exist'));
@@ -57,14 +56,12 @@ context('Admin dashboard', () => {
 
   it('clicking on a gef deal takes you to application details page (Admin)', () => {
     cy.login(ADMIN);
-    dashboardDeals.visit();
     dashboardDeals.row.link(gefDeal._id).click();
     cy.url().should('eq', relative(`/gef/application-details/${gefDeal._id}`));
   });
 
   it('clicking on a bss deal takes you to application details page (Admin)', () => {
     cy.login(ADMIN);
-    dashboardDeals.visit();
     dashboardDeals.row.link(deal._id).click();
     cy.url().should('eq', relative(`/contract/${deal._id}`));
   });

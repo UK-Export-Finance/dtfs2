@@ -1,4 +1,4 @@
-const { contract, contractAboutSupplier, contractAboutBuyer, dashboardDeals, defaults } = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutBuyer, defaults } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { additionalRefName } = require('../../../fixtures/deal');
 
@@ -12,7 +12,6 @@ context('Buyer form - create element and check if inserted into deal', () => {
   it("should not insert created element's data in the deal", () => {
     cy.login(BANK1_MAKER1);
     // navigate to the about-buyer page
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();

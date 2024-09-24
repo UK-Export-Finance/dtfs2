@@ -72,7 +72,6 @@ context('View dashboard deals as a checker', () => {
   it("Only deals with checker status that belong to the checker's bank appear on the dashboard. Each deal goes to correct deal URL", () => {
     // login, go to dashboard
     cy.login(BANK1_CHECKER1);
-    dashboardDeals.visit();
 
     const gefDeal = BANK1_DEALS.find(
       ({ dealType, status }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,

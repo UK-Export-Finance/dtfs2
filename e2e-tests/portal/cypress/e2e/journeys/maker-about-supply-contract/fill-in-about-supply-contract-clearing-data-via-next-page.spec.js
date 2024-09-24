@@ -13,7 +13,6 @@ context('about-supply-contract', () => {
   it('A maker picks up a deal with every field filled in and starts deselecting "separate indemnifier correspondence address" etc.', () => {
     cy.login(BANK1_MAKER1);
 
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();

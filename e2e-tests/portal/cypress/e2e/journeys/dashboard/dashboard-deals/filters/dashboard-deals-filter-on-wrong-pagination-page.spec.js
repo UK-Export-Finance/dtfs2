@@ -59,7 +59,6 @@ context('Dashboard Deals filters - filtering deal on wrong pagination page from 
   it('should show filtered deal', () => {
     cy.login(BANK1_MAKER1);
 
-    dashboardDeals.visit();
     dashboardDeals.next().click();
 
     const dealToFilter = exporterNames[0];

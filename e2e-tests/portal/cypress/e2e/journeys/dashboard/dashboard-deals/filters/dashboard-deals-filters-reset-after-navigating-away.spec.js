@@ -15,7 +15,6 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
 
   before(() => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 

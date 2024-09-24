@@ -1,4 +1,4 @@
-const { contract, contractAboutFinancial, dashboardDeals, defaults } = require('../../pages');
+const { contract, contractAboutFinancial, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { additionalRefName } = require('../../../fixtures/deal');
@@ -14,7 +14,6 @@ context('Financial page form - create element and check if inserted into deal', 
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 

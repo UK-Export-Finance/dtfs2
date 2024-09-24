@@ -65,7 +65,6 @@ context('View dashboard deals as a maker', () => {
 
   it('BSS and GEF deals render on the dashboard with correct values', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     const { exporter, bankRef, product, status, type, updated } = dashboardDeals.row;
 
@@ -118,7 +117,6 @@ context('View dashboard deals as a maker', () => {
 
   it('deal links go to correct deal page/URL depending on dealType', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     // GEF link
     dashboardDeals.row.link(gefDealId).click();
@@ -135,7 +133,6 @@ context('View dashboard deals as a maker', () => {
   // TODO: DTFS2-5372 - fix.
   it('should not show deals created by other banks', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     cy.assertText(dashboardDeals.totalItems(), `(${ALL_BANK1_DEALS.length} items)`);
 

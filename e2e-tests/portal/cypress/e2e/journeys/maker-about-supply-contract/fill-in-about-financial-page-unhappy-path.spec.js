@@ -13,7 +13,6 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     partials.taskListHeader.itemLink('buyer').click();

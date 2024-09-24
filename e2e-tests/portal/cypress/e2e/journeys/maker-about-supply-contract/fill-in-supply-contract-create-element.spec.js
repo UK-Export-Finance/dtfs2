@@ -1,5 +1,5 @@
 const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
-const { contract, contractAboutSupplier, dashboardDeals } = require('../../pages');
+const { contract, contractAboutSupplier } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../fixtures/constants');
 
@@ -17,7 +17,6 @@ context('Supply contract form - create element and check if inserted into deal',
     cy.login(BANK1_MAKER1);
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
 
     contract.aboutSupplierDetailsLink().click();

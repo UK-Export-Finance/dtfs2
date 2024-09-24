@@ -1,4 +1,4 @@
-const { contract, contractAboutSupplier, contractAboutBuyer, dashboardDeals } = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutBuyer } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
@@ -13,7 +13,6 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
@@ -32,7 +31,6 @@ context('about-supply-contract', () => {
     contractAboutBuyer.saveAndGoBack().click();
 
     // check that the preview page renders the Submission Details component
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 

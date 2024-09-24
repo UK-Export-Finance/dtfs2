@@ -14,7 +14,6 @@ context('about-buyer', () => {
   it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
     cy.login(BANK1_MAKER1);
 
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();

@@ -32,7 +32,6 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
   describe('BSS', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -84,7 +83,6 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
   describe('GEF', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 

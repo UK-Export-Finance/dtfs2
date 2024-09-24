@@ -26,7 +26,6 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
   describe('MIA', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 

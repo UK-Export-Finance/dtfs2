@@ -19,7 +19,6 @@ context('Dashboard deals pagination', () => {
   it('displays 20 results per page, total number of items and working First/Previous/Next/Last links', () => {
     // login and go to the dashboard
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     // test amount of rows
     dashboardDeals.rows().should('have.length', 20);

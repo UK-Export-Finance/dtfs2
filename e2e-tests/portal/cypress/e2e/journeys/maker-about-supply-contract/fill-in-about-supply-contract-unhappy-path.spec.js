@@ -15,7 +15,6 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
 
     // check the status is displaying correctly

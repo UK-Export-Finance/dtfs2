@@ -38,7 +38,6 @@ context('Dashboard Deals filters - filter by status', () => {
   describe('Draft', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -154,7 +153,6 @@ context('Dashboard Deals filters - filter by status', () => {
   describe('All statuses', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
