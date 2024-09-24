@@ -1,31 +1,31 @@
 const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
-// const { FACILITY } = require('../../../../fixtures/constants');
+const { FACILITY } = require('../../../../fixtures/constants');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context.skip('Issue Bond Form - Submit issued bond with inserted element on page', () => {
-  let deal;
-  // let dealId;
+context('Issue Bond Form - Submit issued bond with inserted element on page', () => {
+  let dealId;
+
   const dealFacilities = {
     bonds: [],
   };
 
   before(() => {
-    // TODO: replace with new command.
-    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-      // dealId = deal._id;
+    cy.createBssEwcsDeal({});
 
-      // const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+    cy.getDealIdFromUrl().then((id) => {
+      dealId = id;
 
-      // const bonds = mockFacilities.filter((f) => f.type === FACILITY.FACILITY_TYPE.BOND);
+      const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-      // cy.createFacilities(dealId, bonds, BANK1_MAKER1).then((createdFacilities) => {
-      //   dealFacilities.bonds = createdFacilities;
-      // });
+      const bonds = mockFacilities.filter((f) => f.type === FACILITY.FACILITY_TYPE.BOND);
+
+      cy.createFacilities(dealId, bonds, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.bonds = createdFacilities;
+      });
     });
   });
 
@@ -37,7 +37,7 @@ context.skip('Issue Bond Form - Submit issued bond with inserted element on page
 
   it("should not insert created element's data into the bond", () => {
     cy.login(BANK1_MAKER1);
-    pages.contract.visit(deal);
+    cy.clickDashboardDealLink();
     pages.contract.proceedToReview().should('not.exist');
 
     const bondId = dealFacilities.bonds[0]._id;
@@ -60,11 +60,9 @@ context.skip('Issue Bond Form - Submit issued bond with inserted element on page
 
     cy.clickSubmitButton();
 
-    cy.getDealIdFromUrl().then((dealId) => {
-      cy.getFacility(dealId, bondId, BANK1_MAKER1).then((bond) => {
-        // check bond does not contain inserted field
-        expect(bond.intruder).to.be.an('undefined');
-      });
+    cy.getFacility(dealId, bondId, BANK1_MAKER1).then((bond) => {
+      // check bond does not contain inserted field
+      expect(bond.intruder).to.be.an('undefined');
     });
   });
 });

@@ -30,7 +30,6 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
 
     // Ensure proceed to review button does not exist
@@ -57,7 +56,6 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
 
     // Add loan
@@ -81,7 +79,6 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
@@ -156,7 +153,6 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
 
     // Add bond
@@ -180,7 +176,6 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
 
     // Add loan
@@ -204,7 +199,6 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
@@ -279,7 +273,6 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
 
     // Add loan
@@ -316,7 +309,6 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    dashboardDeals.visit();
     cy.clickDashboardDealLink();
 
     // Proceed to review button

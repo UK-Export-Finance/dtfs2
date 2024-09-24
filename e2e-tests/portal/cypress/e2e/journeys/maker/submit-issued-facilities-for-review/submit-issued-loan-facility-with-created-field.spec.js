@@ -1,6 +1,6 @@
 const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
-// const { FACILITY } = require('../../../../fixtures/constants');
+const { FACILITY } = require('../../../../fixtures/constants');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
 const {
   fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate,
@@ -9,26 +9,25 @@ const {
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Issue Loan Form - Submit issued loan with inserted element on page', () => {
-  let deal;
-  // let dealId;
+  let dealId;
+
   const dealFacilities = {
-    bonds: [],
     loans: [],
   };
 
   before(() => {
-    // TODO: replace with new command.
-    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-      // dealId = deal._id;
+    cy.createBssEwcsDeal({});
 
-      // const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+    cy.getDealIdFromUrl().then((id) => {
+      dealId = id;
 
-      // const loans = mockFacilities.filter((f) => f.type === FACILITY.FACILITY_TYPE.LOAN);
+      const { mockFacilities } = dealWithNotStartedFacilityStatuses;
 
-      // cy.createFacilities(dealId, loans, BANK1_MAKER1).then((createdFacilities) => {
-      //   dealFacilities.loans = createdFacilities;
-      // });
+      const loans = mockFacilities.filter((f) => f.type === FACILITY.FACILITY_TYPE.LOAN);
+
+      cy.createFacilities(dealId, loans, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.loans = createdFacilities;
+      });
     });
   });
 
@@ -40,7 +39,7 @@ context('Issue Loan Form - Submit issued loan with inserted element on page', ()
 
   it("should not insert created element's data into the loan", () => {
     cy.login(BANK1_MAKER1);
-    pages.contract.visit(deal);
+    cy.clickDashboardDealLink();
     pages.contract.proceedToReview().should('not.exist');
 
     const loanId = dealFacilities.loans[0]._id;
@@ -53,11 +52,9 @@ context('Issue Loan Form - Submit issued loan with inserted element on page', ()
     // fills out and submits the rest of form
     fillAndSubmitIssueLoanFacilityFormWithoutRequestedCoverStartDate();
 
-    cy.getDealIdFromUrl().then((dealId) => {
-      cy.getFacility(dealId, loanId, BANK1_MAKER1).then((loan) => {
-        // check the loan does not include inserted field
-        expect(loan.intruder).to.be.an('undefined');
-      });
+    cy.getFacility(dealId, loanId, BANK1_MAKER1).then((loan) => {
+      // check the loan does not include inserted field
+      expect(loan.intruder).to.be.an('undefined');
     });
   });
 });
