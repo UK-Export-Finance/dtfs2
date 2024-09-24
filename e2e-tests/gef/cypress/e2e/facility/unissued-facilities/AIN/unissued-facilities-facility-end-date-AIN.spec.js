@@ -4,13 +4,17 @@ import CONSTANTS from '../../../../fixtures/constants';
 import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../../fixtures/mocks/mock-facilities';
+import { multipleMockGefFacilities } from '../../../../fixtures/mocks/mock-facilities';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
 import applicationPreview from '../../../pages/application-preview';
 import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
 import facilityEndDate from '../../../pages/facility-end-date';
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
+const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
+  facilityEndDateEnabled,
+});
 
 if (facilityEndDateEnabled) {
   context('Unissued Facilities AIN - facility end date page', () => {
@@ -30,25 +34,25 @@ if (facilityEndDateEnabled) {
             cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
                 facilityOneId = facility.body.details._id;
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+                cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
               });
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO),
+                cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
               );
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE),
+                cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
               );
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+                cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
               );
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+                cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
               );
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+                cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
               );
               cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-                cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+                cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
               );
               cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
             });
@@ -66,18 +70,18 @@ if (facilityEndDateEnabled) {
         cy.visit(relative(`/gef/application-details/${dealId}/unissued-facilities`));
         unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-        aboutFacilityUnissued.issueDateDay().type(dateConstants.threeDaysDay);
-        aboutFacilityUnissued.issueDateMonth().type(dateConstants.threeDaysMonth);
-        aboutFacilityUnissued.issueDateYear().type(dateConstants.threeDaysYear);
+        cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.threeDaysDay);
+        cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.threeDaysMonth);
+        cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.threeDaysYear);
 
         aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-        aboutFacilityUnissued.coverStartDateDay().type(dateConstants.threeDaysDay);
-        aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.threeDaysMonth);
-        aboutFacilityUnissued.coverStartDateYear().type(dateConstants.threeDaysYear);
+        cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.threeDaysDay);
+        cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.threeDaysMonth);
+        cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.threeDaysYear);
 
-        aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
-        aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
-        aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+        cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeMonthsOneDayDay);
+        cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
+        cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
@@ -93,7 +97,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should display error messages when clicking continue', () => {
-        facilityEndDate.facilityEndDateDay().clear().type('abcd');
+        cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), 'abcd');
         cy.clickContinueButton();
 
         errorSummary();
@@ -101,7 +105,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should display error messages when clicking save and return', () => {
-        facilityEndDate.facilityEndDateDay().clear().type('abcd');
+        cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), 'abcd');
         cy.clickSaveAndReturnButton();
 
         errorSummary();
@@ -109,9 +113,9 @@ if (facilityEndDateEnabled) {
       });
 
       it('should redirect user to the unissued facility page when clicking continue', () => {
-        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.todayDay);
-        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.todayMonth);
-        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.todayYear);
+        cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.todayDay);
+        cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.todayMonth);
+        cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.todayYear);
 
         cy.clickContinueButton();
 
@@ -119,9 +123,9 @@ if (facilityEndDateEnabled) {
       });
 
       it('should redirect user to the unissued facility page when clicking save and return', () => {
-        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.todayDay);
-        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.todayMonth);
-        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.todayYear);
+        cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.todayDay);
+        cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.todayMonth);
+        cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.todayYear);
 
         cy.clickSaveAndReturnButton();
 
@@ -144,7 +148,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should display error messages when clicking continue', () => {
-        facilityEndDate.facilityEndDateDay().clear().type('abcd');
+        cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), 'abcd');
         cy.clickContinueButton();
 
         errorSummary();
@@ -152,7 +156,7 @@ if (facilityEndDateEnabled) {
       });
 
       it('should display error messages when clicking save and return', () => {
-        facilityEndDate.facilityEndDateDay().clear().type('abcd');
+        cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), 'abcd');
         cy.clickSaveAndReturnButton();
 
         errorSummary();
@@ -160,18 +164,18 @@ if (facilityEndDateEnabled) {
       });
 
       it('should redirect user to the application details page when clicking continue', () => {
-        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.todayDay);
-        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.todayMonth);
-        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.todayYear);
+        cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.todayDay);
+        cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.todayMonth);
+        cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.todayYear);
         cy.clickContinueButton();
 
         cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
       });
 
       it('should redirect user to the application details page when clicking save and return', () => {
-        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.todayDay);
-        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.todayMonth);
-        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.todayYear);
+        cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.todayDay);
+        cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.todayMonth);
+        cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.todayYear);
 
         cy.clickSaveAndReturnButton();
 

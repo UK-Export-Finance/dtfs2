@@ -44,15 +44,15 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
 
     bondRow.issueFacilityLink().click();
 
-    pages.bondIssueFacility.issuedDateDayInput().type(dateConstants.todayDay);
-    pages.bondIssueFacility.issuedDateMonthInput().type(dateConstants.todayMonth);
-    pages.bondIssueFacility.issuedDateYearInput().type(dateConstants.todayYear);
+    cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), dateConstants.todayDay);
+    cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), dateConstants.todayMonth);
+    cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), dateConstants.todayYear);
 
-    pages.bondIssueFacility.coverEndDateDayInput().type(dateConstants.oneMonthDay);
-    pages.bondIssueFacility.coverEndDateMonthInput().type(dateConstants.oneMonthMonth);
-    pages.bondIssueFacility.coverEndDateYearInput().type(dateConstants.oneMonthYear);
+    cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), dateConstants.oneMonthDay);
+    cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), dateConstants.oneMonthMonth);
+    cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), dateConstants.oneMonthYear);
 
-    pages.bondIssueFacility.name().type('1234');
+    cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
 
     // insert populated text field on form
     cy.insertElement('issue-bond-form');

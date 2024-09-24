@@ -18,7 +18,7 @@ context('Name Application Page - Add element to page', () => {
   });
 
   it("should not add added element's data to page", () => {
-    nameApplication.internalRef().type('NEW-REF-NAME');
+    cy.keyboardInput(nameApplication.internalRef(), 'NEW-REF-NAME');
 
     // adds extra populated text input element to page
     cy.insertElement('name-application-form');

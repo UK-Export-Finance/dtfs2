@@ -1,7 +1,7 @@
-import { AnyZodObject, ZodError } from 'zod';
+import { ZodError, ZodType } from 'zod';
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { API_ERROR_CODE, ApiErrorCode, ApiErrorResponseBody } from '@ukef/dtfs2-common';
+import { AnyObject, API_ERROR_CODE, ApiErrorCode, ApiErrorResponseBody } from '@ukef/dtfs2-common';
 
 const getFormattedZodErrors = (error: ZodError): string[] => error.issues.map(({ path, message, code }) => `${path.join('.')}: ${message} (${code})`);
 
@@ -25,7 +25,7 @@ const getErrorCode = (error: ZodError): ApiErrorCode => {
 };
 
 export const createValidationMiddlewareForSchema =
-  <TSchema extends AnyZodObject>(schema: TSchema) =>
+  <TSchema extends ZodType<AnyObject>>(schema: TSchema) =>
   (req: Request, res: Response<ApiErrorResponseBody>, next: NextFunction) => {
     const { success, error, data } = schema.safeParse(req.body);
 

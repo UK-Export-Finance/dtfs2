@@ -53,8 +53,8 @@ context('Return to Maker as MIA', () => {
       cy.uploadFile('upload-file-valid.doc', `/gef/application-details/${dealId}/supporting-information/document/manual-inclusion-questionnaire/upload`);
       manualInclusion.uploadSuccess('upload_file_valid.doc');
       securityDetails.visit(dealId);
-      securityDetails.exporterSecurity().type('test');
-      securityDetails.facilitySecurity().type('test2');
+      cy.keyboardInput(securityDetails.exporterSecurity(), 'test');
+      cy.keyboardInput(securityDetails.facilitySecurity(), 'test2');
       cy.clickSubmitButton();
 
       cy.clickSubmitButton();
@@ -77,7 +77,7 @@ context('Return to Maker as MIA', () => {
       applicationPreview.supportingInfoListRowAction(0, 0).should('not.exist');
       applicationPreview.supportingInfoListRowAction(0, 1).should('not.exist');
       applicationPreview.returnButton().click();
-      returnToMaker.comment().type('comment1');
+      cy.keyboardInput(returnToMaker.comment(), 'comment1');
       cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
     });
@@ -164,8 +164,8 @@ context('Return to Maker as MIA', () => {
 
     it('can change security details comments', () => {
       securityDetails.securityDetailsChangeCta().click();
-      securityDetails.exporterSecurity().type(' test3');
-      securityDetails.facilitySecurity().type('test4');
+      cy.keyboardInput(securityDetails.exporterSecurity(), ' test3');
+      cy.keyboardInput(securityDetails.facilitySecurity(), 'test4');
       cy.clickSubmitButton();
     });
 

@@ -68,16 +68,13 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
 
       // cover starts on submission
-      pages.bondIssueFacility.issuedDateDayInput().clear().type(day);
-      pages.bondIssueFacility.issuedDateMonthInput().clear().type(month);
-      pages.bondIssueFacility.issuedDateYearInput().clear().type(year);
+      cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), day);
+      cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), month);
+      cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), year);
 
-      pages.bondIssueFacility.coverEndDateDayInput().clear().type(day);
-      pages.bondIssueFacility.coverEndDateMonthInput().clear().type(month);
-      pages.bondIssueFacility
-        .coverEndDateYearInput()
-        .clear()
-        .type(year + 1);
+      cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), day);
+      cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), month);
+      cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), year + 1);
 
       cy.clickSubmitButton();
       pages.bondIssueFacility
@@ -86,12 +83,9 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
 
       // cover starts beyond 3 months from submission
 
-      pages.bondIssueFacility.requestedCoverStartDateDayInput().clear().type(day);
-      pages.bondIssueFacility.requestedCoverStartDateMonthInput().clear().type(month);
-      pages.bondIssueFacility
-        .requestedCoverStartDateYearInput()
-        .clear()
-        .type(year + 1);
+      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateDayInput(), day);
+      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateMonthInput(), month);
+      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateYearInput(), year + 1);
 
       cy.clickSubmitButton();
       pages.bondIssueFacility
@@ -115,16 +109,13 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
 
       // cover starts on submission
 
-      pages.loanIssueFacility.issuedDateDayInput().clear().type(day);
-      pages.loanIssueFacility.issuedDateMonthInput().clear().type(month);
-      pages.loanIssueFacility.issuedDateYearInput().clear().type(year);
+      cy.keyboardInput(pages.loanIssueFacility.issuedDateDayInput(), day);
+      cy.keyboardInput(pages.loanIssueFacility.issuedDateMonthInput(), month);
+      cy.keyboardInput(pages.loanIssueFacility.issuedDateYearInput(), year);
 
-      pages.loanIssueFacility.coverEndDateDayInput().clear().type(day);
-      pages.loanIssueFacility.coverEndDateMonthInput().clear().type(month);
-      pages.loanIssueFacility
-        .coverEndDateYearInput()
-        .clear()
-        .type(year + 1);
+      cy.keyboardInput(pages.loanIssueFacility.coverEndDateDayInput(), day);
+      cy.keyboardInput(pages.loanIssueFacility.coverEndDateMonthInput(), month);
+      cy.keyboardInput(pages.loanIssueFacility.coverEndDateYearInput(), year + 1);
 
       cy.clickSubmitButton();
       pages.loanIssueFacility
@@ -133,9 +124,9 @@ context('Issue facilities beyond 3 months of submission - errors', () => {
 
       // cover starts beyond 3 months from submission
 
-      pages.loanIssueFacility.requestedCoverStartDateDayInput().clear().type(day);
-      pages.loanIssueFacility.requestedCoverStartDateMonthInput().clear().type(month);
-      pages.loanIssueFacility.requestedCoverStartDateYearInput().clear().type(year);
+      cy.keyboardInput(pages.loanIssueFacility.requestedCoverStartDateDayInput(), day);
+      cy.keyboardInput(pages.loanIssueFacility.requestedCoverStartDateMonthInput(), month);
+      cy.keyboardInput(pages.loanIssueFacility.requestedCoverStartDateYearInput(), year);
 
       cy.clickSubmitButton();
       pages.loanIssueFacility
@@ -204,16 +195,13 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
       cy.url().should('eq', relative(`/contract/${dealId}/bond/${bondId}/issue-facility`));
 
       // cover starts on submission
-      pages.bondIssueFacility.issuedDateDayInput().clear().type(day);
-      pages.bondIssueFacility.issuedDateMonthInput().clear().type(month);
-      pages.bondIssueFacility.issuedDateYearInput().clear().type(year);
+      cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), day);
+      cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), month);
+      cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), year);
 
-      pages.bondIssueFacility.coverEndDateDayInput().clear().type(day);
-      pages.bondIssueFacility.coverEndDateMonthInput().clear().type(month);
-      pages.bondIssueFacility
-        .coverEndDateYearInput()
-        .clear()
-        .type(year + 1);
+      cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), day);
+      cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), month);
+      cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), year + 1);
 
       cy.clickSubmitButton();
       cy.url().should('eq', relative(`/contract/${dealId}`));
@@ -221,9 +209,9 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
       cy.assertText(bondRow.issueFacilityLink(), 'Facility issued');
 
       bondRow.issueFacilityLink().click();
-      pages.bondIssueFacility.requestedCoverStartDateDayInput().clear().type(day);
-      pages.bondIssueFacility.requestedCoverStartDateMonthInput().clear().type(month);
-      pages.bondIssueFacility.requestedCoverStartDateYearInput().clear().type(year);
+      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateDayInput(), day);
+      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateMonthInput(), month);
+      cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateYearInput(), year);
 
       cy.clickSubmitButton();
       cy.url().should('eq', relative(`/contract/${dealId}`));
@@ -246,16 +234,13 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
 
       // cover starts on submission
 
-      pages.loanIssueFacility.issuedDateDayInput().clear().type(day);
-      pages.loanIssueFacility.issuedDateMonthInput().clear().type(month);
-      pages.loanIssueFacility.issuedDateYearInput().clear().type(year);
+      cy.keyboardInput(pages.loanIssueFacility.issuedDateDayInput(), day);
+      cy.keyboardInput(pages.loanIssueFacility.issuedDateMonthInput(), month);
+      cy.keyboardInput(pages.loanIssueFacility.issuedDateYearInput(), year);
 
-      pages.loanIssueFacility.coverEndDateDayInput().clear().type(day);
-      pages.loanIssueFacility.coverEndDateMonthInput().clear().type(month);
-      pages.loanIssueFacility
-        .coverEndDateYearInput()
-        .clear()
-        .type(year + 1);
+      cy.keyboardInput(pages.loanIssueFacility.coverEndDateDayInput(), day);
+      cy.keyboardInput(pages.loanIssueFacility.coverEndDateMonthInput(), month);
+      cy.keyboardInput(pages.loanIssueFacility.coverEndDateYearInput(), year + 1);
 
       cy.clickSubmitButton();
       cy.url().should('eq', relative(`/contract/${dealId}`));
@@ -265,9 +250,9 @@ context('Issue facilities beyond 3 months of submission specialIssuePermission -
       // cover starts beyond 3 months from submission
       loanRow.issueFacilityLink().click();
 
-      pages.loanIssueFacility.requestedCoverStartDateDayInput().clear().type(day);
-      pages.loanIssueFacility.requestedCoverStartDateMonthInput().clear().type(month);
-      pages.loanIssueFacility.requestedCoverStartDateYearInput().clear().type(year);
+      cy.keyboardInput(pages.loanIssueFacility.requestedCoverStartDateDayInput(), day);
+      cy.keyboardInput(pages.loanIssueFacility.requestedCoverStartDateMonthInput(), month);
+      cy.keyboardInput(pages.loanIssueFacility.requestedCoverStartDateYearInput(), year);
 
       cy.clickSubmitButton();
       cy.url().should('eq', relative(`/contract/${dealId}`));

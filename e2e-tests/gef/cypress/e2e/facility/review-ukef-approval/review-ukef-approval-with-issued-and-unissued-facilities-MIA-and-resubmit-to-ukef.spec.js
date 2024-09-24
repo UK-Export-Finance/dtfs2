@@ -7,7 +7,7 @@ import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
 
 import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO_NULL_MIA, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../fixtures/mocks/mock-facilities';
+import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../fixtures/mocks/mock-facilities';
 
 import { toTitleCase } from '../../../fixtures/helpers';
 
@@ -19,8 +19,11 @@ import applicationSubmission from '../../pages/application-submission';
 import statusBanner from '../../pages/application-status-banner';
 import coverStartDate from '../../pages/cover-start-date';
 import applicationDetails from '../../pages/application-details';
-import facilityEndDate from '../../pages/facility-end-date';
 import applicationActivities from '../../pages/application-activities';
+
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+const { unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({ facilityEndDateEnabled });
+const issuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed({ facilityEndDateEnabled });
 
 const { format } = require('date-fns');
 
@@ -28,11 +31,9 @@ let dealId;
 let token;
 let facilityTwoId;
 
-const unissuedFacilitiesArray = [MOCK_FACILITY_ONE, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR];
+const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
-const issuedFacilities = [MOCK_FACILITY_TWO_NULL_MIA];
-
-const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+const issuedFacilities = [issuedCashFacilityWithCoverDateConfirmed];
 
 context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued facility', () => {
   before(() => {
@@ -48,18 +49,18 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
           cy.submitDealAfterUkefIds(dealId, 'GEF', BANK1_CHECKER1_WITH_MOCK_ID);
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-              MOCK_FACILITY_ONE._id = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_ONE);
+              unissuedCashFacility._id = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityTwoId = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_TWO_NULL_MIA);
+              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacilityWithCoverDateConfirmed);
             });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_THREE),
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
             );
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, MOCK_FACILITY_FOUR),
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
             );
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
             cy.addCommentObjToDeal(dealId, CONSTANTS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION, UKEF_DECISION);
@@ -173,12 +174,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      coverStartDate.coverStartDateDay().clear();
-      coverStartDate.coverStartDateDay().type(dateConstants.todayDay);
-      coverStartDate.coverStartDateMonth().clear();
-      coverStartDate.coverStartDateMonth().type(dateConstants.todayMonth);
-      coverStartDate.coverStartDateYear().clear();
-      coverStartDate.coverStartDateYear().type(dateConstants.todayYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.todayYear);
 
       cy.clickContinueButton();
 
@@ -200,12 +198,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      coverStartDate.coverStartDateDay().clear();
-      coverStartDate.coverStartDateDay().type(dateConstants.threeDaysDay);
-      coverStartDate.coverStartDateMonth().clear();
-      coverStartDate.coverStartDateMonth().type(dateConstants.threeDaysMonth);
-      coverStartDate.coverStartDateYear().clear();
-      coverStartDate.coverStartDateYear().type(dateConstants.threeDaysYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.threeDaysDay);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.threeDaysMonth);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.threeDaysYear);
 
       cy.clickContinueButton();
 
@@ -220,12 +215,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      coverStartDate.coverStartDateDay().clear();
-      coverStartDate.coverStartDateDay().type(dateConstants.threeMonthsOneDayDay);
-      coverStartDate.coverStartDateMonth().clear();
-      coverStartDate.coverStartDateMonth().type(dateConstants.threeMonthsOneDayMonth);
-      coverStartDate.coverStartDateYear().clear();
-      coverStartDate.coverStartDateYear().type(dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.threeMonthsOneDayYear);
 
       cy.clickContinueButton();
 
@@ -238,19 +230,19 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      aboutFacilityUnissued.issueDateDay().type(dateConstants.todayDay);
-      aboutFacilityUnissued.issueDateMonth().type(dateConstants.todayMonth);
-      aboutFacilityUnissued.issueDateYear().type(dateConstants.todayYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      aboutFacilityUnissued.coverStartDateDay().type(dateConstants.twoMonthsDay);
-      aboutFacilityUnissued.coverStartDateMonth().type(dateConstants.twoMonthsMonth);
-      aboutFacilityUnissued.coverStartDateYear().type(dateConstants.twoMonthsYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoMonthsDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoMonthsMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoMonthsYear);
 
-      aboutFacilityUnissued.coverEndDateDay().type(dateConstants.threeMonthsOneDayDay);
-      aboutFacilityUnissued.coverEndDateMonth().type(dateConstants.threeMonthsOneDayMonth);
-      aboutFacilityUnissued.coverEndDateYear().type(dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
       if (facilityEndDateEnabled) {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
@@ -259,9 +251,6 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       cy.clickContinueButton();
 
       if (facilityEndDateEnabled) {
-        facilityEndDate.facilityEndDateDay().clear().type(dateConstants.threeMonthsOneDayDay);
-        facilityEndDate.facilityEndDateMonth().clear().type(dateConstants.threeMonthsOneDayMonth);
-        facilityEndDate.facilityEndDateYear().clear().type(dateConstants.threeMonthsOneDayYear);
         cy.clickContinueButton();
       }
 
@@ -558,11 +547,11 @@ context('Check activity feed', () => {
       applicationActivities.subNavigationBarActivities().click();
 
       // already issued facility should not appear in the activity list
-      applicationActivities.facilityActivityChangedBy(MOCK_FACILITY_TWO_NULL_MIA.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityCheckedBy(MOCK_FACILITY_TWO_NULL_MIA.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityUnissuedTag(MOCK_FACILITY_TWO_NULL_MIA.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityIssuedTag(MOCK_FACILITY_TWO_NULL_MIA.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityLink(MOCK_FACILITY_TWO_NULL_MIA.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityChangedBy(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityCheckedBy(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityUnissuedTag(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityIssuedTag(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityLink(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
 
       // 2nd facility unissued so should not show up
       applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');

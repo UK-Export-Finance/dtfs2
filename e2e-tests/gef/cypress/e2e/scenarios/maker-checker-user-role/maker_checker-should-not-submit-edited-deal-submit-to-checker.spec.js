@@ -41,7 +41,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
 
       // submit the deal
       cy.clickSubmitButton();
-      applicationSubmission.commentsField().type('DTFS2-4698 Comments from original maker');
+      cy.keyboardInput(applicationSubmission.commentsField(), 'DTFS2-4698 Comments from original maker');
       cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 
@@ -49,7 +49,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
       cy.login(BANK1_MAKER_CHECKER1);
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
       applicationPreview.returnButton().click();
-      returnToMaker.comment().type('nope');
+      cy.keyboardInput(returnToMaker.comment(), 'nope');
       cy.clickSubmitButton();
       cy.location('pathname').should('contain', 'dashboard');
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
@@ -69,7 +69,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
       cy.clickSubmitButton();
 
       // it allows the maker to optionally add additional comments
-      applicationSubmission.commentsField().type('Hello');
+      cy.keyboardInput(applicationSubmission.commentsField(), 'Hello');
       cy.clickSubmitButton();
       applicationSubmission.confirmationPanelTitle();
 
