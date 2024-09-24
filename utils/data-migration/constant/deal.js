@@ -1,13 +1,11 @@
+const { DEAL_SUBMISSION_TYPE } = require('@ukef/dtfs2-common');
+
 const DEAL_TYPE = {
   GEF: 'GEF',
   BSS_EWCS: 'BSS/EWCS',
 };
 
-const SUBMISSION_TYPE = {
-  AIN: 'Automatic Inclusion Notice',
-  MIA: 'Manual Inclusion Application',
-  MIN: 'Manual Inclusion Notice',
-};
+const SUBMISSION_TYPE = DEAL_SUBMISSION_TYPE;
 
 const TFM_STATUS = {
   CONFIRMED: 'Confirmed',
