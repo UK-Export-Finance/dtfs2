@@ -1,4 +1,4 @@
-const pages = require('../../../pages');
+const { dashboardDeals, contractConfirmSubmission } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
@@ -18,18 +18,18 @@ context(
 
     it('should throw error and not submit or redirect', () => {
       cy.login(BANK1_CHECKER1);
-      pages.dashboardDeals.rowIndex.link().click();
+      dashboardDeals.rowIndex.link().click();
 
       cy.clickProceedToSubmitButton();
       cy.url().should('eq', relative(`/contract/${dealId}/confirm-submission`));
 
-      pages.contractConfirmSubmission.confirmSubmit().check();
-      pages.contractConfirmSubmission.acceptAndSubmit().click();
+      contractConfirmSubmission.confirmSubmit().check();
+      contractConfirmSubmission.acceptAndSubmit().click();
 
       cy.url().should('eq', relative(`/contract/${dealId}/confirm-submission`));
 
       const expectedError = 'Requested Cover Start Date must be on the application submission date or in the future';
-      pages.contractConfirmSubmission.expectError(expectedError);
+      contractConfirmSubmission.expectError(expectedError);
     });
   },
 );
