@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { Facility, TfmFacility } from '@ukef/dtfs2-common';
+import { generateMockTfmUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
 import { getLatestFacilityEndDateValues } from './getLatestFacilityEndDateValues.ts';
 import { MOCK_FACILITY_SNAPSHOT } from '../../../__mocks__/mock-facility-snapshot.ts';
 import { MOCK_AMENDMENT } from '../../../__mocks__/mock-amendment';
@@ -8,6 +9,8 @@ describe('getLatestFacilityEndDateValues', () => {
   const facility: TfmFacility = {
     _id: new ObjectId('1234567890abcdef12345678'),
     facilitySnapshot: MOCK_FACILITY_SNAPSHOT,
+    tfm: {},
+    auditRecord: generateMockTfmUserAuditDatabaseRecord(new ObjectId()),
   };
 
   const mockFacilityEndDate = new Date('2024-04-04');
