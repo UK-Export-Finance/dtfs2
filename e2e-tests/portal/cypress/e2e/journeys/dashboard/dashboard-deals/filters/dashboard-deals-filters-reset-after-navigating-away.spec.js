@@ -10,7 +10,7 @@ context('Dashboard Deals filters - reset after applying and navigating away', ()
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({ readyForCheck: true });
+    cy.createBssEwcsDeal({});
   });
 
   before(() => {
