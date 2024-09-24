@@ -1,7 +1,7 @@
-import relative from '../../../relativeURL';
-import partials from '../../../partials';
-import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
+import relative from '../../../../relativeURL';
+import partials from '../../../../partials';
+import MOCK_DEAL_MIA from '../../../../../fixtures/deal-MIA';
+import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../../e2e-fixtures';
 
 context('Documents', () => {
   let dealId;
