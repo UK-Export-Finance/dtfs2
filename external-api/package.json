@@ -32,7 +32,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@types/lodash": "^4.17.7",
+    "@types/lodash": "^4.17.9",
     "@ukef/dtfs2-common": "1.0.0",
     "axios": "^1.7.7",
     "axios-mock-adapter": "^1.22.0",
