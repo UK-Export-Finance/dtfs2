@@ -15,7 +15,7 @@ context('about-buyer', () => {
     cy.login(BANK1_MAKER1);
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
@@ -28,7 +28,7 @@ context('about-buyer', () => {
 
     // prove the errors are on the about-buyer page
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.taskListLinkBuyer().click();
 

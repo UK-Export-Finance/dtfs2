@@ -15,7 +15,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.abandonLink().contains('Abandon');
     contract
       .abandonLink()
@@ -41,7 +41,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.abandonLink().contains('Abandon');
     contract
       .abandonLink()
@@ -64,7 +64,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.abandonLink().contains('Abandon');
     contract.abandonButton().click();
 
@@ -84,7 +84,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
 
     // visit the deal and confirm the updates have been made
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     cy.assertText(contract.status(), 'Abandoned');
 

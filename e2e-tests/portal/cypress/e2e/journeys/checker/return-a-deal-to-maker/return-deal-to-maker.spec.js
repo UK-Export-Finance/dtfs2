@@ -1,4 +1,4 @@
-const { contract, contractReturnToMaker, contractComments, dashboardDeals } = require('../../../pages');
+const { contract, contractReturnToMaker, contractComments } = require('../../../pages');
 const { successMessage } = require('../../../partials');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
@@ -24,7 +24,7 @@ context('A checker selects to return a deal to maker from the view-contract page
   it('The Return to Maker button generates an error if no comment has been entered.', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     cy.clickReturnToMakerButton();
 
@@ -41,7 +41,7 @@ context('A checker selects to return a deal to maker from the view-contract page
   it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     cy.clickReturnToMakerButton();
 
@@ -60,7 +60,7 @@ context('A checker selects to return a deal to maker from the view-contract page
       });
 
     // visit the deal and confirm the updates have been made
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     cy.assertText(contract.status(), "Further Maker's input required");
 

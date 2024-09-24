@@ -15,7 +15,7 @@ context('about-supply-contract', () => {
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     partials.taskListHeader.itemLink('buyer').click();
     partials.taskListHeader.itemLink('financial-information').click();
@@ -38,7 +38,7 @@ context('about-supply-contract', () => {
 
     // check that the preview page renders the Submission Details component
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     cy.assertText(partials.taskListHeader.itemStatus('financial-information'), 'Completed');

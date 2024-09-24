@@ -14,13 +14,13 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.indemnifierCorrespondenceAddressNotDifferent().click({ force: true });
     contractAboutSupplier.saveAndGoBack().click();
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
@@ -33,13 +33,13 @@ context('about-supply-contract', () => {
     contractAboutPreview.indemnifierCorrespondenceAddress().country().should('not.exist');
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.notLegallyDistinct().click();
     contractAboutSupplier.saveAndGoBack().click();
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
@@ -55,13 +55,13 @@ context('about-supply-contract', () => {
     contractAboutPreview.indemnifierCorrespondenceAddressDifferent().should('not.exist');
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
     contractAboutSupplier.saveAndGoBack().click();
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();

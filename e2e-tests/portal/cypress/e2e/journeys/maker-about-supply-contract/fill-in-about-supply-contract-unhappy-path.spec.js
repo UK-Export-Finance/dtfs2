@@ -16,7 +16,7 @@ context('about-supply-contract', () => {
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     // check the status is displaying correctly
     cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
@@ -102,7 +102,7 @@ context('about-supply-contract', () => {
 
     // check that the preview page renders the Submission Details component
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();

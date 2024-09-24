@@ -13,7 +13,7 @@ context('Buyer form - create element and check if inserted into deal', () => {
     cy.login(BANK1_MAKER1);
     // navigate to the about-buyer page
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
 

@@ -58,6 +58,7 @@ Cypress.Commands.add('clickProceedToReviewButton', require('./portal/click-event
 Cypress.Commands.add('clickProceedToSubmitButton', require('./portal/click-events/click-proceed-to-submit-button'));
 Cypress.Commands.add('clickSaveGoBackButton', require('./portal/click-events/click-save-go-back-button'));
 Cypress.Commands.add('clickSubmitButton', require('./portal/click-events/click-submit-button'));
+Cypress.Commands.add('clickDashboardDealLink', require('./portal/click-events/click-dashboard-deal-link'));
 
 Cypress.Commands.add('addBondToDeal', require('./portal/addBondToDeal'));
 Cypress.Commands.add('addLoanToDeal', require('./portal/addLoanToDeal'));

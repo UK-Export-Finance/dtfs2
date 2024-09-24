@@ -14,7 +14,7 @@ context('about-supply-contract', () => {
 
     // navigate to the about-buyer page
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
 
@@ -33,7 +33,7 @@ context('about-supply-contract', () => {
 
     // check that the preview page renders the Submission Details component
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     cy.assertText(partials.taskListHeader.itemStatus('buyer'), 'Completed');

@@ -16,7 +16,7 @@ context('A read-only role viewing a bond that can be issued', () => {
   it('should not allow for any publishing actions', () => {
     cy.login(BANK1_READ_ONLY1);
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     cy.url().should('include', '/contract');
 

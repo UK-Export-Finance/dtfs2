@@ -31,7 +31,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
 
     // Navigate to the deal in question
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     // Ensure proceed to review button does not exist
     contract.proceedToReview().should('not.exist');
@@ -58,7 +58,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
 
     // Navigate to the deal in question
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     // Add loan
     cy.clickAddLoanButton();
@@ -82,7 +82,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
 
     // Navigate to the deal in question
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     // Fill in details about supplier
@@ -157,7 +157,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
 
     // Navigate to the deal in question
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     // Add bond
     cy.clickAddBondButton();
@@ -181,7 +181,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
 
     // Navigate to the deal in question
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     // Add loan
     cy.clickAddLoanButton();
@@ -205,7 +205,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
 
     // Navigate to the deal in question
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     // Fill in details about supplier
@@ -280,7 +280,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
 
     // Navigate to the deal in question
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     // Add loan
     cy.clickAddLoanButton();
@@ -300,7 +300,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
 
     // Navigate to the deal in question
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     // Ensure facility stage is `Incomplete`
     contract.loansTransactionsTableRows().each((row, index) => {
@@ -317,7 +317,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
 
     // Navigate to the deal in question
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     // Proceed to review button
     contract.proceedToReview().should('not.exist');

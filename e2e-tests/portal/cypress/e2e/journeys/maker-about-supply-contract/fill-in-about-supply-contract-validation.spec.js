@@ -16,7 +16,7 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.supplierName().clear();
     contractAboutSupplier.nextPage().click();
@@ -36,7 +36,7 @@ context('about-supply-contract', () => {
 
     // prove the errors are on the about-supplier page
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.expectError('Supplier type is required');
     contractAboutSupplier.expectError('Supplier name is required');
@@ -55,7 +55,7 @@ context('about-supply-contract', () => {
     contractAboutFinancial.preview().click();
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     // open up the correspondence address to generate more errors..
     contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
@@ -71,7 +71,7 @@ context('about-supply-contract', () => {
 
     // prove the errors show on the about-supplier page
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.expectError('Supplier postcode is required for UK addresses');
     contractAboutSupplier.expectError('Supplier correspondence postcode is required for UK addresses');
@@ -86,7 +86,7 @@ context('about-supply-contract', () => {
     contractAboutPreview.errors().should('contain', 'Supplier correspondence town is required for non-UK addresses');
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     // open up the legally-distinct indemnifier section to generate more errors...
     contractAboutSupplier.legallyDistinct().click();
@@ -100,7 +100,7 @@ context('about-supply-contract', () => {
 
     // prove the errors show on the about-supplier page
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.expectError('Indemnifier address line 1 is require');
 
@@ -115,7 +115,7 @@ context('about-supply-contract', () => {
 
     // open up the indemnifier correspondence address section to generate more errors...
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
     // save + skip ahead to the preview
@@ -127,7 +127,7 @@ context('about-supply-contract', () => {
 
     // prove the errors show on the about-supplier page
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.expectError('Indemnifier correspondence address line 1 is required');
 
@@ -145,7 +145,7 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     //---------------------------------------------------------------
@@ -191,7 +191,7 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     //---------------------------------------------------------------
@@ -240,7 +240,7 @@ context('about-supply-contract', () => {
   it('A maker picks up a deal in status=Draft, triggers Indemnifier companies house validation errors', () => {
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     //---------------------------------------------------------------
@@ -407,7 +407,7 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     // click through
     contractAboutSupplier.supplierType().select('Exporter');

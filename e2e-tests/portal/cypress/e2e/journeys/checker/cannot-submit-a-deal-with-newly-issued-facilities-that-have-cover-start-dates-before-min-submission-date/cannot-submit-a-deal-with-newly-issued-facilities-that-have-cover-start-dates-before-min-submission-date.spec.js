@@ -1,4 +1,4 @@
-const { dashboardDeals, contractConfirmSubmission } = require('../../../pages');
+const { contractConfirmSubmission } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
@@ -18,7 +18,7 @@ context(
 
     it('should throw error and not submit or redirect', () => {
       cy.login(BANK1_CHECKER1);
-      dashboardDeals.rowIndex.link().click();
+      cy.clickDashboardDealLink();
 
       cy.clickProceedToSubmitButton();
       cy.url().should('eq', relative(`/contract/${dealId}/confirm-submission`));

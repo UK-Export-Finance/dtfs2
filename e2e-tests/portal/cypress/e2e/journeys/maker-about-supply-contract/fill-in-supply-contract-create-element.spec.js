@@ -18,7 +18,7 @@ context('Supply contract form - create element and check if inserted into deal',
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
 
     contract.aboutSupplierDetailsLink().click();
 

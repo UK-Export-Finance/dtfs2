@@ -15,7 +15,7 @@ context('Financial page form - create element and check if inserted into deal', 
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     partials.taskListHeader.itemLink('buyer').click();

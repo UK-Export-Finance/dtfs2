@@ -12,7 +12,7 @@ context('About supply contract page titles', () => {
     cy.login(BANK1_MAKER1);
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.title().contains('Add buyer details');
@@ -22,7 +22,7 @@ context('About supply contract page titles', () => {
     cy.login(BANK1_MAKER1);
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
@@ -33,7 +33,7 @@ context('About supply contract page titles', () => {
     cy.login(BANK1_MAKER1);
 
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.title().contains('About the Supply Contract');
   });

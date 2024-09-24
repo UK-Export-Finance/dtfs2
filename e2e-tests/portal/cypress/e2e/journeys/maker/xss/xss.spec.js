@@ -16,7 +16,7 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.abandonButton().click();
 
     // submit with a comment with script tag
@@ -28,7 +28,7 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
 
     // visit the deal and confirm the updates have been made
     dashboardDeals.visit();
-    dashboardDeals.rowIndex.link().click();
+    cy.clickDashboardDealLink();
     contract.commentsTab().click();
 
     contractComments
