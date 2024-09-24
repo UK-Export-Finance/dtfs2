@@ -36,8 +36,7 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
   });
 
   it("should not insert created element's data into the bond", () => {
-    cy.login(BANK1_MAKER1);
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
     pages.contract.proceedToReview().should('not.exist');
 
     const bondId = dealFacilities.bonds[0]._id;

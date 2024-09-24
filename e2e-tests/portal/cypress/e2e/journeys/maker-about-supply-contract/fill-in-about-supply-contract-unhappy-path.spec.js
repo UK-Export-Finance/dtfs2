@@ -12,10 +12,7 @@ context('about-supply-contract', () => {
   });
 
   it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, selecting every option that requires more data.', () => {
-    cy.login(BANK1_MAKER1);
-
-    // go the long way for the first test- actually clicking via the contract page to prove the link..
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // check the status is displaying correctly
     cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');

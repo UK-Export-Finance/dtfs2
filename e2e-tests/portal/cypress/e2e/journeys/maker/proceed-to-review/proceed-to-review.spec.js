@@ -26,11 +26,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Add an un-issued bond', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Ensure proceed to review button does not exist
     contract.proceedToReview().should('not.exist');
@@ -52,11 +48,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Add an un-issued (conditional) loan', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Add loan
     cy.clickAddLoanButton();
@@ -75,11 +67,8 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Ensure proceed to review button is visible', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
-    // Navigate to the deal in question
-    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     // Fill in details about supplier
@@ -149,11 +138,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Add an issued bond', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Add bond
     cy.clickAddBondButton();
@@ -172,11 +157,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Add an issued (unconditional) loan', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Add loan
     cy.clickAddLoanButton();
@@ -195,11 +176,8 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Ensure proceed to review button is visible', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
-    // Navigate to the deal in question
-    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     // Fill in details about supplier
@@ -269,11 +247,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Add a partial issued (unconditional) loan', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Add loan
     cy.clickAddLoanButton();
@@ -305,11 +279,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Ensure proceed to review button is not visible', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Proceed to review button
     contract.proceedToReview().should('not.exist');

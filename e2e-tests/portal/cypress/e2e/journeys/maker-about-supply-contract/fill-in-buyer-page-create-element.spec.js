@@ -10,9 +10,9 @@ context('Buyer form - create element and check if inserted into deal', () => {
   });
 
   it("should not insert created element's data in the deal", () => {
-    cy.login(BANK1_MAKER1);
+    cy.loginGoToDealPage(BANK1_MAKER1);
+
     // navigate to the about-buyer page
-    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
 

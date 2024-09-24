@@ -1,5 +1,5 @@
 const { contract, contractAboutFinancial, defaults } = require('../../pages');
-const partials = require('../../partials');
+const { header, taskListHeader } = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { additionalRefName } = require('../../../fixtures/deal');
 
@@ -16,8 +16,8 @@ context('about-supply-contract', () => {
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
-    partials.taskListHeader.itemLink('buyer').click();
-    partials.taskListHeader.itemLink('financial-information').click();
+    taskListHeader.itemLink('buyer').click();
+    taskListHeader.itemLink('financial-information').click();
 
     cy.title().should('eq', `Financial information - ${additionalRefName}${defaults.pageTitleAppend}`);
 
@@ -39,6 +39,12 @@ context('about-supply-contract', () => {
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
-    cy.assertText(partials.taskListHeader.itemStatus('financial-information'), 'Completed');
+    cy.assertText(taskListHeader.itemStatus('financial-information'), 'Completed');
+
+    // since we've cleared all validation at this point the section should show as completed on the deal page
+    // go back to dashboard
+    header.dashboard().click();
+
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Completed');
   });
 });

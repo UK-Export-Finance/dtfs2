@@ -12,8 +12,7 @@ context('Edit deal name', () => {
   });
 
   it('rejects an empty field', () => {
-    cy.login(BANK1_MAKER1);
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
     contract.editDealName().contains('Edit deal name');
     contract.editDealName().click();
 
@@ -29,8 +28,7 @@ context('Edit deal name', () => {
   });
 
   it('updates deal.additionalRefName', () => {
-    cy.login(BANK1_MAKER1);
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
     contract.editDealName().contains('Edit deal name');
     contract.editDealName().click();
 

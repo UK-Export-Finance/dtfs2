@@ -23,8 +23,7 @@ context('A checker selects to return a deal to maker from the view-contract page
 
   it('The Return to Maker button generates an error if no comment has been entered.', () => {
     // log in, visit a deal, select abandon
-    cy.login(BANK1_CHECKER1);
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_CHECKER1);
 
     cy.clickReturnToMakerButton();
 
@@ -40,8 +39,7 @@ context('A checker selects to return a deal to maker from the view-contract page
 
   it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard', () => {
     // log in, visit a deal, select abandon
-    cy.login(BANK1_CHECKER1);
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_CHECKER1);
 
     cy.clickReturnToMakerButton();
 

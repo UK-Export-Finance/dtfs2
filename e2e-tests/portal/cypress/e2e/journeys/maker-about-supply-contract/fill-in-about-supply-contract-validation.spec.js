@@ -13,10 +13,8 @@ context('about-supply-contract', () => {
   });
 
   it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
-    cy.login(BANK1_MAKER1);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
-    dashboardDeals.visit();
-    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.supplierName().clear();
     contractAboutSupplier.nextPage().click();
@@ -142,10 +140,8 @@ context('about-supply-contract', () => {
   });
 
   it('A maker picks up a deal in status=Draft, triggers Supplier companies house validation errors', () => {
-    cy.login(BANK1_MAKER1);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
-    dashboardDeals.visit();
-    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     //---------------------------------------------------------------
@@ -188,10 +184,8 @@ context('about-supply-contract', () => {
   });
 
   it('A maker picks up a deal in status=Draft, fills in a field, triggers Supplier companies house validation errors', () => {
-    cy.login(BANK1_MAKER1);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
-    dashboardDeals.visit();
-    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     //---------------------------------------------------------------
@@ -207,7 +201,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 1);
+    partials.errorSummaryLinks().should('have.length', 12);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     // the unrelated form field we provided earlier should be populated
@@ -238,8 +232,8 @@ context('about-supply-contract', () => {
   });
 
   it('A maker picks up a deal in status=Draft, triggers Indemnifier companies house validation errors', () => {
-    cy.login(BANK1_MAKER1);
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
+
     contract.aboutSupplierDetailsLink().click();
 
     //---------------------------------------------------------------
@@ -329,8 +323,8 @@ context('about-supply-contract', () => {
   });
 
   it('trigger just Supplier companies house validation error', () => {
-    cy.login(BANK1_MAKER1);
-    cy.visit('/dashboard');
+    cy.loginGoToDealPage(BANK1_MAKER1);
+
     // Select "Create new" and choose "Bond Support" as the scheme type
     cy.get('[data-cy="CreateNewSubmission"]').click();
     cy.get('[data-cy="scheme-bss"]').click();
@@ -403,10 +397,8 @@ context('about-supply-contract', () => {
   });
 
   it('A maker picks up a deal in status=Draft, misses mandatory field then trigger missed validation error.', () => {
-    cy.login(BANK1_MAKER1);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
-    dashboardDeals.visit();
-    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     // click through
     contractAboutSupplier.supplierType().select('Exporter');

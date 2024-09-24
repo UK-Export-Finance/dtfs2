@@ -14,10 +14,7 @@ context('Supply contract form - create element and check if inserted into deal',
   });
 
   it("should not insert created element's data in the feedback", () => {
-    cy.login(BANK1_MAKER1);
-
-    // go the long way for the first test- actually clicking via the contract page to prove the link..
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     contract.aboutSupplierDetailsLink().click();
 

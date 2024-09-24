@@ -10,10 +10,8 @@ context('about-supply-contract', () => {
   });
 
   it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {
-    cy.login(BANK1_MAKER1);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
-    // navigate to the about-buyer page
-    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
 

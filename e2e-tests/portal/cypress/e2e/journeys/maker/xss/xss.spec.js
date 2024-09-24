@@ -12,8 +12,7 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
 
   it('Does not allow <script> tag', () => {
     // log in, visit a deal, select abandon
-    cy.login(BANK1_MAKER1);
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
     contract.abandonButton().click();
 
     // submit with a comment with script tag

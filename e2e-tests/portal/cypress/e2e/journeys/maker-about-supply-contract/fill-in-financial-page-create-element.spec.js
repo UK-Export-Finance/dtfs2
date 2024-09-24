@@ -11,10 +11,8 @@ context('Financial page form - create element and check if inserted into deal', 
   });
 
   it("should not insert created element's data into the deal", () => {
-    cy.login(BANK1_MAKER1);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
-    // navigate to the about-buyer page; use the nav so we have it covered in a test..
-    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
 
     partials.taskListHeader.itemLink('buyer').click();

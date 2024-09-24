@@ -11,9 +11,8 @@ context('about-buyer', () => {
   });
 
   it('A maker picks up a deal with the first 2 pages of about-supply-contract complete, and triggers all validation errors on the financial page.', () => {
-    cy.login(BANK1_MAKER1);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
-    cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();

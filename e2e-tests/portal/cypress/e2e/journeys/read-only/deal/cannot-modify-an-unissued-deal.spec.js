@@ -14,8 +14,7 @@ context('A read-only role viewing a draft deal', () => {
   });
 
   it('should not allow for any publishing actions', () => {
-    cy.login(BANK1_READ_ONLY1);
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_READ_ONLY1);
 
     cy.url().should('include', '/contract');
 

@@ -13,8 +13,8 @@ context('A maker selects to abandon a contract from the view-contract page', () 
 
   it('The cancel button returns the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
-    cy.login(BANK1_MAKER1);
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
+
     contract.abandonLink().contains('Abandon');
     contract
       .abandonLink()
@@ -60,8 +60,7 @@ context('A maker selects to abandon a contract from the view-contract page', () 
 
   it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard', () => {
     // log in, visit a deal, select abandon
-    cy.login(BANK1_MAKER1);
-    cy.clickDashboardDealLink();
+    cy.loginGoToDealPage(BANK1_MAKER1);
     contract.abandonLink().contains('Abandon');
     contract.abandonButton().click();
 
