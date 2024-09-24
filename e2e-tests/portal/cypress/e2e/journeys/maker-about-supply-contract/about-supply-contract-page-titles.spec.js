@@ -1,12 +1,8 @@
 const { contractAboutBuyer, contractAboutFinancial, contractAboutSupplier, contract } = require('../../pages');
-const MOCK_USERS = require('../../../../../e2e-fixtures');
-
-const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('About supply contract page titles', () => {
   before(() => {
     cy.createBssEwcsDeal({});
-    cy.loginGoToDealPage(BANK1_MAKER1);
   });
 
   it('displays correct page title for buyer', () => {
