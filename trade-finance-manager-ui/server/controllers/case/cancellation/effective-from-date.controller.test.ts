@@ -127,7 +127,7 @@ describe('postEffectiveFromDate', () => {
       });
     });
 
-    it('redirects to the effective from date page', () => {
+    it('redirects to the check cancellation details page', () => {
       // Arrange
       const today = new Date();
 
