@@ -22,7 +22,7 @@ export const getReasonForCancelling = async (req: GetReasonForCancellingRequest,
   try {
     const deal = await api.getDeal(_id, userToken);
 
-    if (!deal) {
+    if (!deal || 'status' in deal) {
       return res.redirect('/not-found');
     }
 
@@ -60,7 +60,7 @@ export const postReasonForCancelling = async (req: PostReasonForCancellingReques
   try {
     const deal = await api.getDeal(_id, userToken);
 
-    if (!deal) {
+    if (!deal || 'status' in deal) {
       return res.redirect('/not-found');
     }
 
