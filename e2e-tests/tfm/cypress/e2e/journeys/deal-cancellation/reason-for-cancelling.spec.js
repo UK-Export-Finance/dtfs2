@@ -83,7 +83,7 @@ context('Deal cancellation - reason for cancelling', () => {
     });
 
     it('should redirect when visiting reason for cancelling page ', () => {
-      cy.url().should('eq', relative());
+      cy.url().should('eq', relative('/deals/0'));
     });
   });
 });
