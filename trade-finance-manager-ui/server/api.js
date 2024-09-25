@@ -19,7 +19,7 @@ const generateHeaders = (token) => ({
  * @param {string} token - logged in user token
  * @param {import('@ukef/dtfs2-common').AnyObject} tasksFilters - tasks filters
  * @param {import('@ukef/dtfs2-common').AnyObject} activityFilters - activity filters
- * @returns {Promise<import('./types/tfm-deal-dto').TfmDealDto | { status: 400; data: 'Invalid deal id'} | undefined>}
+ * @returns {Promise<import('./types/data-transfer-objects/get-deal-response').GetDealResponse | { status: 400; data: 'Invalid deal id'}>}
  */
 const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
   const { filterType: tasksFilterType, teamId: tasksTeamId, userId: tasksUserId } = tasksFilters;
