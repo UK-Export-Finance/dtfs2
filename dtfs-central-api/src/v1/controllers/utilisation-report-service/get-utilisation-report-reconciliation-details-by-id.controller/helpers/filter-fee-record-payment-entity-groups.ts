@@ -1,23 +1,29 @@
-import { PaymentDetailsFilters } from '@ukef/dtfs2-common';
+import { PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 
 /**
- * Filters the supplied list of fee record payment entity groups
- * by facility id where a fee record entity in the group has a
- * facility id which partially matches the supplied facility id
- * filter
- * @param feeRecordPaymentEntityGroups - A list of fee record payment entity groups
- * @param facilityIdFilter - The facility id to partially filter by
- * @returns The fee record payment entity groups (filtered if the filter is defined)
+ * Filters the supplied list of fee record payment entity groups by the {@link PremiumPaymentsFilters}.
+ * The facility id filter allows for partial matches.
+ * @param feeRecordPaymentEntityGroups - A list of fee record payment entity groups to be filtered
+ * @param filters - The filters to be applied to the fee record payment data
+ * @param filters.facilityId - The facility ID filter
+ * @returns The filtered fee record payment entity groups. If no filters are provided, returns the original list.
  */
-export const filterFeeRecordPaymentEntityGroupsByFacilityId = (
+export const filterFeeRecordPaymentEntityGroupsByPremiumPaymentsFilters = (
   feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[],
-  facilityIdFilter: string,
-): FeeRecordPaymentEntityGroup[] =>
-  feeRecordPaymentEntityGroups.filter(({ feeRecords }) => feeRecords.some(({ facilityId }) => facilityId.includes(facilityIdFilter)));
+  filters: PremiumPaymentsFilters,
+): FeeRecordPaymentEntityGroup[] => {
+  const { facilityId: facilityIdFilter } = filters;
+
+  if (!facilityIdFilter) {
+    return feeRecordPaymentEntityGroups;
+  }
+
+  return feeRecordPaymentEntityGroups.filter(({ feeRecords }) => feeRecords.some(({ facilityId }) => facilityId.includes(facilityIdFilter)));
+};
 
 /**
- * Filters the supplied list of fee record payment entity groups by payment currency, facility id and payment reference.
+ * Filters the supplied list of fee record payment entity groups by the {@link PaymentDetailsFilters}.
  * Payment reference and facility id filters allow for partial matches.
  * These filters are applied cumulatively, meaning if multiple filters are provided,
  * all conditions must be met for a record to be included in the result.
@@ -33,10 +39,6 @@ export const filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters = (
   filters: PaymentDetailsFilters,
 ): FeeRecordPaymentEntityGroup[] => {
   const { facilityId: facilityIdFilter, paymentCurrency: paymentCurrencyFilter, paymentReference: paymentReferenceFilter } = filters;
-
-  if (!paymentCurrencyFilter && !facilityIdFilter && !paymentReferenceFilter) {
-    return feeRecordPaymentEntityGroups;
-  }
 
   return feeRecordPaymentEntityGroups.filter(({ feeRecords, payments }) => {
     const matchesFacilityId = !facilityIdFilter || feeRecords.some(({ facilityId }) => facilityId.includes(facilityIdFilter));

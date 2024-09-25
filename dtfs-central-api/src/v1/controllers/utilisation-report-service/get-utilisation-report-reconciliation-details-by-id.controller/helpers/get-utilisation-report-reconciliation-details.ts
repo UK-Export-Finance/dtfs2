@@ -3,7 +3,7 @@ import { NotFoundError } from '../../../../../errors';
 import { getBankNameById } from '../../../../../repositories/banks-repo';
 import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
 import {
-  filterFeeRecordPaymentEntityGroupsByFacilityId,
+  filterFeeRecordPaymentEntityGroupsByPremiumPaymentsFilters,
   filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters,
 } from './filter-fee-record-payment-entity-groups';
 import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
@@ -25,9 +25,8 @@ const filterPremiumPayments = async (feeRecordPaymentEntityGroups: FeeRecordPaym
 
   let feeRecords = feeRecordPaymentEntityGroups;
 
-  // TODO: Refactor to call the filter function even with empty facilityId.
   if (facilityId) {
-    feeRecords = filterFeeRecordPaymentEntityGroupsByFacilityId(feeRecordPaymentEntityGroups, facilityId);
+    feeRecords = filterFeeRecordPaymentEntityGroupsByPremiumPaymentsFilters(feeRecordPaymentEntityGroups, filters);
   }
 
   return await mapToFeeRecordPaymentGroups(feeRecords);
@@ -44,9 +43,15 @@ const filterPremiumPayments = async (feeRecordPaymentEntityGroups: FeeRecordPaym
  * @returns A promise that resolves to the filtered fee record payment groups
  */
 const filterPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: PaymentDetailsFilters) => {
-  const filteredFeeRecords = filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters(feeRecordPaymentEntityGroups, filters);
+  const { facilityId, paymentCurrency, paymentReference } = filters;
 
-  return await mapToFeeRecordPaymentGroups(filteredFeeRecords);
+  let feeRecords = feeRecordPaymentEntityGroups;
+
+  if (facilityId || paymentCurrency || paymentReference) {
+    feeRecords = filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters(feeRecordPaymentEntityGroups, filters);
+  }
+
+  return await mapToFeeRecordPaymentGroups(feeRecords);
 };
 
 /**
