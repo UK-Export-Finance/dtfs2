@@ -1,21 +1,21 @@
 import { format } from 'date-fns';
 
-import relative from '../../../../relativeURL';
+import relative from '../../../relativeURL';
 
-import CONSTANTS from '../../../../../fixtures/constants';
+import CONSTANTS from '../../../../fixtures/constants';
 
-import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
-import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { mainHeading, continueButton } from '../../../../partials';
-import applicationPreview from '../../../../pages/application-preview';
-import unissuedFacilityTable from '../../../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
-import applicationSubmission from '../../../../pages/application-submission';
-import statusBanner from '../../../../pages/application-status-banner';
-import facilityEndDate from '../../../../pages/facility-end-date';
+import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
+import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
+import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
+import { mainHeading, continueButton, errorSummary } from '../../../partials';
+import applicationPreview from '../../../pages/application-preview';
+import unissuedFacilityTable from '../../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
+import applicationSubmission from '../../../pages/application-submission';
+import statusBanner from '../../../pages/application-status-banner';
+import facilityEndDate from '../../../pages/facility-end-date';
 
 let dealId;
 let token;
@@ -33,7 +33,7 @@ const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacilit
   for changing facilities to issued from preview page.
   To unlock functionality, need to first issue one facility from unissued-facility table
 */
-context('Unissued Facilities AIN - change to issued from preview page', () => {
+context('Unissued Facilities MIN - change to issued from preview page', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
@@ -42,7 +42,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       .then(() => {
         cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
           dealId = body._id;
-          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
@@ -83,7 +83,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about`));
     });
 
-    it('update facility page should have correct titles and text', () => {
+    it('update facility page should have correct titles and text (only name should be prepopulated', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
@@ -111,9 +111,31 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.threeDaysYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
+
+      aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoYearsDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoYearsMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoYearsYear);
+
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeYearsDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeYearsMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeYearsYear);
+
+      if (facilityEndDateEnabled) {
+        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+      }
+
+      cy.clickContinueButton();
+
+      errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoMonthsDay);
@@ -123,11 +145,6 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeMonthsOneDayDay);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
-
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
-      }
-
       cy.clickContinueButton();
 
       if (facilityEndDateEnabled) {
@@ -156,7 +173,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
     });
 
     it('facility table should have change links on the changed to issued facilities', () => {
-      const issuedDate = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
+      const issuedDate = format(dateConstants.today, 'd MMMM yyyy');
       const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
@@ -194,6 +211,10 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(0).coverStartDateAction().should('not.exist');
       applicationPreview.facilitySummaryListTable(0).coverEndDateAction().should('not.exist');
 
+      if (facilityEndDateEnabled) {
+        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
+      }
+
       // should not be able to change facility two has previously issued
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(issuedCashFacility.name);
       applicationPreview.facilitySummaryListTable(2).nameAction().should('have.class', 'govuk-!-display-none');
@@ -205,25 +226,34 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(2).issueDateAction().should('not.exist');
       applicationPreview.facilitySummaryListTable(2).coverStartDateValue().contains('Date you submit the notice');
       applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('have.class', 'govuk-!-display-none');
-
-      if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
-
-      if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
     });
 
     it('change unissued to issued from application preview page', () => {
       // to change to issued from preview page by clicking change on issued row
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().click();
-      aboutFacilityUnissued.facilityName().clear();
+
       cy.keyboardInput(aboutFacilityUnissued.facilityName(), `${unissuedCashFacilityWith20MonthsOfCover.name}name`);
 
       cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
       cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
       cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
+
+      aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoYearsDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoYearsMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoYearsYear);
+
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeYearsDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeYearsMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeYearsYear);
+      cy.clickContinueButton();
+
+      errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.threeDaysDay);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.threeDaysMonth);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.threeDaysYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoMonthsDay);
@@ -249,7 +279,7 @@ context('Unissued Facilities AIN - change to issued from preview page', () => {
     });
 
     it('change links should appear for facility four and three should be unissued still', () => {
-      const issuedDate = format(dateConstants.today, 'd MMMM yyyy');
+      const issuedDate = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
       const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 

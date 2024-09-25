@@ -1,23 +1,23 @@
 import { format } from 'date-fns';
 
-import relative from '../../../../relativeURL';
+import relative from '../../../relativeURL';
 
-import CONSTANTS from '../../../../../fixtures/constants';
+import CONSTANTS from '../../../../fixtures/constants';
 
-import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
-import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { continueButton, submitButton } from '../../../../partials';
-import applicationPreview from '../../../../pages/application-preview';
-import unissuedFacilityTable from '../../../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
-import applicationSubmission from '../../../../pages/application-submission';
-import statusBanner from '../../../../pages/application-status-banner';
-import applicationDetails from '../../../../pages/application-details';
-import applicationActivities from '../../../../pages/application-activities';
-import facilityEndDate from '../../../../pages/facility-end-date';
+import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
+import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
+import { continueButton, submitButton } from '../../../partials';
+import applicationPreview from '../../../pages/application-preview';
+import unissuedFacilityTable from '../../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
+import applicationSubmission from '../../../pages/application-submission';
+import statusBanner from '../../../pages/application-status-banner';
+import applicationDetails from '../../../pages/application-details';
+import applicationActivities from '../../../pages/application-activities';
+import facilityEndDate from '../../../pages/facility-end-date';
 
 let dealId;
 let token;
@@ -31,7 +31,7 @@ const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, un
 
 const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
-context('Unissued Facilities AIN - change all to issued from unissued table', () => {
+context('Unissued Facilities MIN - change all to issued from unissued table', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
@@ -41,7 +41,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
         // creates application and inserts facilities and changes status
         cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
           dealId = body._id;
-          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
               unissuedCashFacility._id = facility.body.details._id;
@@ -194,7 +194,6 @@ context('Return to maker for unissued to issued facilities', () => {
       if (facilityEndDateEnabled) {
         applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
       }
-
       // second facility
       applicationPreview.facilitySummaryListTable(1).nameAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -361,26 +360,29 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.abandonLink().should('not.exist');
       // should not be able to edit ref name
       applicationDetails.editRefNameLink().should('not.exist');
+
+      applicationDetails.supportingInfoListRowAction(0, 0).should('not.exist');
+      applicationDetails.supportingInfoListRowAction(0, 1).should('not.exist');
     });
 
     // change facility to issued and check correct format
     it('change unissued to issued from application details whilst changes required', () => {
-      const issuedDate = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
-      const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
+      const issuedDate = format(dateConstants.today, 'd MMMM yyyy');
+      const coverStart = format(dateConstants.today, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
       const facilityEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
       applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.threeDaysYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoMonthsDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoMonthsMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoMonthsYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.todayYear);
 
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeMonthsOneDayDay);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
@@ -389,7 +391,6 @@ context('Return to maker for unissued to issued facilities', () => {
       if (facilityEndDateEnabled) {
         aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
       }
-
       cy.clickContinueButton();
 
       if (facilityEndDateEnabled) {
@@ -419,6 +420,7 @@ context('Return to maker for unissued to issued facilities', () => {
       if (facilityEndDateEnabled) {
         applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
         applicationDetails.facilitySummaryListTable(3).facilityEndDateValue().contains(facilityEnd);
+
         applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateAction().contains('Change');
       }
 
@@ -546,6 +548,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationSubmission.confirmationText().contains("We'll send you a confirmation email shortly, once we've acknowledged your issued facilities.");
     });
   });
+
   /**
    * Check the activity feed for facility changed to issued activity
    * Should contain Bank facility stage changed
@@ -613,7 +616,7 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[2]._id}`));
     });
 
-    it('should not contain already issued facility or submission message', () => {
+    it('should not contain already issued facility or submission messages', () => {
       applicationActivities.subNavigationBarActivities().click();
 
       applicationActivities.activityTimeline().should('not.contain', CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION);
