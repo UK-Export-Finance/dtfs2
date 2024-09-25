@@ -49,13 +49,13 @@
         {
           text: deal.product or "-",
           attributes: {
-            "data-cy": deal__product--index--" + loop.index + " deal__product--" + deal._id
+            "data-cy": "deal__product--index--" + loop.index + " deal__product--" + deal._id
           }
         },
         {
           text: deal.submissionType or "-",
           attributes: {
-            "data-cy": deal__submissionType--index--" + loop.index + " deal__submissionType--" + deal._id
+            "data-cy": "deal__submissionType--index--" + loop.index + " deal__submissionType--" + deal._id
           }
         },
         {
@@ -67,7 +67,7 @@
         {
           text: deal.updatedAt | localiseTimestamp("d MMM yyyy", userTimezone) or "-",
           attributes: {
-            'data-cy': deal__updated--index--" + loop.index + " deal__updated--"" + deal._id
+            'data-cy': "deal__updated--index--" + loop.index + " deal__updated--" + deal._id
           }
         }
       ] %}
