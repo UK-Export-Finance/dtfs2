@@ -57,13 +57,13 @@ describe('getUtilisationReport', () => {
        *
        */
       const uploadDate = missingFields.includes('dateUploaded') ? null : mockDate;
-      const uploadUser = missingFields.includes('uploadedByUserId') ? null : uploadedByUser.id;
+      const uploadUserId = missingFields.includes('uploadedByUserId') ? null : uploadedByUser.id;
 
       return UtilisationReportEntityMockBuilder.forStatus(status)
         .withId(reportId)
         .withAzureFileInfo(azureFileInfo)
         .withDateUploaded(uploadDate)
-        .withUploadedByUserId(uploadUser)
+        .withUploadedByUserId(uploadUserId)
         .build();
     };
 

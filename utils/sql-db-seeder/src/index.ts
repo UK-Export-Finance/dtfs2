@@ -44,7 +44,7 @@ const seedData = async (dataSource: DataSource): Promise<void> => {
  * @returns {Promise<void>} - A promise that resolves when the seeding process is complete.
  */
 const run = async (): Promise<void> => {
-  const dataSource = (await SqlDbDataSource.initialize()) as unknown as DataSource;
+  const dataSource: DataSource = await SqlDbDataSource.initialize();
 
   try {
     await clearDatabase(dataSource);
@@ -64,11 +64,11 @@ const run = async (): Promise<void> => {
 /**
  * Immediately-invoked function expression (IIFE)
  *
- * Above pattern is being used to execute the `run` function
+ * Below pattern is being used to execute the `run` function
  * as soon as the script has been loaded, without waiting for
  * any external triggers.
  *
- * This pattern is ideal for intialisation scripts
+ * This pattern is ideal for intialisation scripts.
  */
 (async () => {
   await run();
