@@ -9,6 +9,7 @@ const dealUnderwriterManagersDecisionController = require('../controllers/deal-u
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 const { validateUserHasAtLeastOneAllowedTeam } = require('../middleware/validate-user-is-in-at-least-one-allowed-team');
+const { validatePutDealCancellationPayload } = require('../middleware/validate-put-deal-cancellation-payload');
 
 const dealsOpenRouter = express.Router();
 
@@ -83,7 +84,7 @@ dealsAuthRouter
 dealsAuthRouter
   .route('/deals/:dealId/cancellation')
   .all(validateDealCancellationEnabled, validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]), validation.dealIdValidation, handleExpressValidatorResult)
-  .put(updateDealCancellation)
+  .put(validatePutDealCancellationPayload, updateDealCancellation)
   .get(getDealCancellation);
 
 dealsAuthRouter
