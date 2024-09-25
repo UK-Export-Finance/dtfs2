@@ -21,7 +21,7 @@
 {% block sub_content %}
   {{ govukBackLink({
       text: "Back",
-      href: "/case/" + dealId + "/deal",
+      href: "/case/" + dealId + "/cancellation/reason",
       attributes: {
         'data-cy': 'back-link'
       }
@@ -30,7 +30,7 @@
   {% if errors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: errors.errorSummary,
+      errorList: errors.summary,
       attributes: {
         'data-cy': 'error-summary'
       },
@@ -44,7 +44,8 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukDateInput({
-          id: "bankRequestDate",
+          id: "bank-request-date",
+          value: bankRequestDate,
           namePrefix: "bank-request-date",
           fieldset: {
             legend: {
@@ -57,8 +58,8 @@
               "data-cy": "bank-request-date-hint"
             }
           },
-          errorMessage: error and {
-            text: error.summary[0].text,
+          errorMessage: errors and {
+            text: errors.bankRequestDateError.message,
             attributes: {
               'data-cy': 'bank-request-date-inline-error'
             }
@@ -66,27 +67,27 @@
           items: [
             {
               label: "Day",
-              classes: (error and 'bank-request-date-day' in error.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+              classes: (errors and 'bank-request-date-day' in errors.bankRequestDateError.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
               name: "day",
-              value: dayInput,
+              value: day,
               attributes: {
                 'data-cy': "bank-request-date-day"
               }
             },
             {
               label: "Month",
-              classes: (error and 'bank-request-date-month' in error.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+              classes: (errors and 'bank-request-date-month' in errors.bankRequestDateError.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
               name: "month",
-              value: monthInput,
+              value: month,
               attributes: {
                 'data-cy': "bank-request-date-month"
               }
             },
             {
               label: "Year",
-              classes: (error and 'bank-request-date-year' in error.fields) and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+              classes: (errors and 'bank-request-date-year' in errors.bankRequestDateError.fields) and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
               name: "year",
-              value: yearInput,
+              value: year,
               attributes: {
                 'data-cy': "bank-request-date-year"
               }
