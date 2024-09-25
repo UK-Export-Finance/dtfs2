@@ -1,8 +1,8 @@
-import relative from '../../../../relativeURL';
-import partials from '../../../../partials';
-import pages from '../../../../pages';
-import MOCK_DEAL_MIA_EC_11_FALSE from '../../../../../fixtures/deal-MIA-EC-11-false';
-import { BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
+import partials from '../../../partials';
+import pages from '../../../pages';
+import MOCK_DEAL_MIA_EC_11_FALSE from '../../../../fixtures/deal-MIA-EC-11-false';
+import { BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 
 context('Case tasks - MIA deal - EC 11 false', () => {
   let dealId;

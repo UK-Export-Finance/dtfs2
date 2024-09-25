@@ -1,9 +1,9 @@
-import relative from '../../../../relativeURL';
-import { caseSummary, caseSubNavigation } from '../../../../partials';
-import pages from '../../../../pages';
-import MOCK_DEAL_MIA from '../../../../../fixtures/deal-MIA';
-import * as MOCK_USERS from '../../../../../../../e2e-fixtures';
-import { BANK1_MAKER1, ADMIN } from '../../../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
+import { caseSummary, caseSubNavigation } from '../../../partials';
+import pages from '../../../pages';
+import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
+import * as MOCK_USERS from '../../../../../../e2e-fixtures';
+import { BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import { submitTaskInProgress, submitTaskComplete } from './tasks-helpers';
 
 const { T1_USER_1 } = MOCK_USERS;

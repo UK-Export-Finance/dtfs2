@@ -1,11 +1,11 @@
-import relative from '../../../relativeURL';
-import pages from '../../../pages';
-import { caseSummary, caseSubNavigation } from '../../../partials';
-import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIA } from '../../../../fixtures/mock-gef-deals';
-import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../../e2e-fixtures';
-import { DEAL_TYPE } from '../../../../fixtures/constants';
-import facilityPage from '../../../pages/facilityPage';
-import { anUnissuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
+import relative from '../../relativeURL';
+import pages from '../../pages';
+import { caseSummary, caseSubNavigation } from '../../partials';
+import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIA } from '../../../fixtures/mock-gef-deals';
+import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../e2e-fixtures';
+import { DEAL_TYPE } from '../../../fixtures/constants';
+import facilityPage from '../../pages/facilityPage';
+import { anUnissuedCashFacility } from '../../../../../e2e-fixtures/mock-gef-facilities';
 
 const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 

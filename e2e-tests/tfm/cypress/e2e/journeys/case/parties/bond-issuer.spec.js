@@ -1,10 +1,10 @@
-import relative from '../../../../relativeURL';
-import { errorSummary } from '../../../../partials';
-import pages from '../../../../pages';
-import MOCK_DEAL_AIN from '../../../../../fixtures/deal-AIN';
-import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
+import { errorSummary } from '../../../partials';
+import pages from '../../../pages';
+import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
+import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 
-const CONSTANTS = require('../../../../../fixtures/constants');
+const CONSTANTS = require('../../../../fixtures/constants');
 
 context('Bond issuer URN - User can add, edit, confirm and submit URN to the TFM', () => {
   let dealId;

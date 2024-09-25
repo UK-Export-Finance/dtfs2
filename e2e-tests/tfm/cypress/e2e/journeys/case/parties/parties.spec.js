@@ -1,7 +1,7 @@
-import relative from '../../../../relativeURL';
-import pages from '../../../../pages';
-import MOCK_DEAL_AIN from '../../../../../fixtures/deal-AIN';
-import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
+import pages from '../../../pages';
+import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
+import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 
 context('Parties page', () => {
   let dealId;

@@ -1,5 +1,5 @@
-const MOCK_MIA_TASKS = require('../../../../../fixtures/tasks-MIA');
-const pages = require('../../../../pages');
+const MOCK_MIA_TASKS = require('../../../../fixtures/tasks-MIA');
+const pages = require('../../../pages');
 
 const getGroup = (groupId) => MOCK_MIA_TASKS.find((g) => g.id === groupId);
 
