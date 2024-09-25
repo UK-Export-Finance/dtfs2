@@ -146,6 +146,7 @@ env:
   FF_TFM_PAYMENT_RECONCILIATION_ENABLED: ${{ vars.FF_TFM_PAYMENT_RECONCILIATION_ENABLED }}
   FF_TFM_FACILITY_END_DATE_ENABLED: ${{ vars.FF_TFM_FACILITY_END_DATE_ENABLED }}
   FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
+  FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
   GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
 
 jobs:
@@ -348,6 +349,7 @@ jobs:
       FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
+      FF_TFM_SSO_ENABLED: 'true'
       GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -759,6 +761,7 @@ jobs:
       FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
+      # TODO DTFS2-6892: add FF_TFM_SSO_ENABLED feature flag here when e2e tests implimented
       GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}

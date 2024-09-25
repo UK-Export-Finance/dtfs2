@@ -39,7 +39,7 @@ context('User submit feedback on portal', () => {
   });
 
   it('feedback should give errors if incorrectly filled up', () => {
-    feedbackPage.emailAddress().type('a');
+    cy.keyboardInput(feedbackPage.emailAddress(), 'a');
 
     cy.clickSubmitButton();
 
@@ -61,13 +61,13 @@ context('User submit feedback on portal', () => {
   });
 
   it('feedback should submit without errors and with correct thank you page', () => {
-    feedbackPage.role().type('test');
-    feedbackPage.organisation().type('test');
+    cy.keyboardInput(feedbackPage.role(), 'test');
+    cy.keyboardInput(feedbackPage.organisation(), 'test');
     feedbackPage.reasonForVisitingSelection().click();
     feedbackPage.easyToUseSelection().click();
     feedbackPage.clearlyExplainedSelection().click();
     feedbackPage.satisfiedSelection().click();
-    feedbackPage.howCanWeImprove().type('test');
+    cy.keyboardInput(feedbackPage.howCanWeImprove(), 'test');
     feedbackPage.emailAddress().clear();
 
     cy.clickSubmitButton();

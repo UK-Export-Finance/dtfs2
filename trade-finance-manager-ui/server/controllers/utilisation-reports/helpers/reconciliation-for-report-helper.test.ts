@@ -693,12 +693,12 @@ describe('reconciliation-for-report-helper', () => {
       // Arrange
       const firstGroup: FeeRecordPaymentGroup = {
         ...aFeeRecordPaymentGroup(),
-        feeRecords: [{ ...aFeeRecord(), facilityId: '11111111', exporter: 'Test exporter 1' }],
+        feeRecords: [{ ...aFeeRecord(), id: 1, facilityId: '11111111', exporter: 'Test exporter 1' }],
         paymentsReceived: [aPayment()],
       };
       const secondGroup: FeeRecordPaymentGroup = {
         ...aFeeRecordPaymentGroup(),
-        feeRecords: [{ ...aFeeRecord(), facilityId: '22222222', exporter: 'Test exporter 2' }],
+        feeRecords: [{ ...aFeeRecord(), id: 2, facilityId: '22222222', exporter: 'Test exporter 2' }],
         paymentsReceived: [aPayment()],
       };
 
@@ -708,9 +708,9 @@ describe('reconciliation-for-report-helper', () => {
       // Assert
       expect(result).toHaveLength(2);
       expect(result[0].feeRecords).toHaveLength(1);
-      expect(result[0].feeRecords[0]).toEqual({ facilityId: '11111111', exporter: 'Test exporter 1' });
+      expect(result[0].feeRecords[0]).toEqual({ id: 1, facilityId: '11111111', exporter: 'Test exporter 1' });
       expect(result[1].feeRecords).toHaveLength(1);
-      expect(result[1].feeRecords[0]).toEqual({ facilityId: '22222222', exporter: 'Test exporter 2' });
+      expect(result[1].feeRecords[0]).toEqual({ id: 2, facilityId: '22222222', exporter: 'Test exporter 2' });
     });
 
     it('maps the fee records in the group to an array of facility ids and exporters when a payment has multiple fee records', () => {
@@ -718,9 +718,9 @@ describe('reconciliation-for-report-helper', () => {
       const group: FeeRecordPaymentGroup = {
         ...aFeeRecordPaymentGroup(),
         feeRecords: [
-          { ...aFeeRecord(), facilityId: '11111111', exporter: 'Test exporter 1' },
-          { ...aFeeRecord(), facilityId: '22222222', exporter: 'Test exporter 2' },
-          { ...aFeeRecord(), facilityId: '33333333', exporter: 'Test exporter 3' },
+          { ...aFeeRecord(), id: 1, facilityId: '11111111', exporter: 'Test exporter 1' },
+          { ...aFeeRecord(), id: 2, facilityId: '22222222', exporter: 'Test exporter 2' },
+          { ...aFeeRecord(), id: 3, facilityId: '33333333', exporter: 'Test exporter 3' },
         ],
         paymentsReceived: [aPayment()],
       };
@@ -731,9 +731,9 @@ describe('reconciliation-for-report-helper', () => {
       // Assert
       expect(result).toHaveLength(1);
       expect(result[0].feeRecords).toHaveLength(3);
-      expect(result[0].feeRecords[0]).toEqual({ facilityId: '11111111', exporter: 'Test exporter 1' });
-      expect(result[0].feeRecords[1]).toEqual({ facilityId: '22222222', exporter: 'Test exporter 2' });
-      expect(result[0].feeRecords[2]).toEqual({ facilityId: '33333333', exporter: 'Test exporter 3' });
+      expect(result[0].feeRecords[0]).toEqual({ id: 1, facilityId: '11111111', exporter: 'Test exporter 1' });
+      expect(result[0].feeRecords[1]).toEqual({ id: 2, facilityId: '22222222', exporter: 'Test exporter 2' });
+      expect(result[0].feeRecords[2]).toEqual({ id: 3, facilityId: '33333333', exporter: 'Test exporter 3' });
     });
 
     it('maps the fee records to an array of facility ids and exporters for each payment in the group when a group has multiple fee records and payments', () => {
@@ -741,9 +741,9 @@ describe('reconciliation-for-report-helper', () => {
       const group: FeeRecordPaymentGroup = {
         ...aFeeRecordPaymentGroup(),
         feeRecords: [
-          { ...aFeeRecord(), facilityId: '11111111', exporter: 'Test exporter 1' },
-          { ...aFeeRecord(), facilityId: '22222222', exporter: 'Test exporter 2' },
-          { ...aFeeRecord(), facilityId: '33333333', exporter: 'Test exporter 3' },
+          { ...aFeeRecord(), id: 1, facilityId: '11111111', exporter: 'Test exporter 1' },
+          { ...aFeeRecord(), id: 2, facilityId: '22222222', exporter: 'Test exporter 2' },
+          { ...aFeeRecord(), id: 3, facilityId: '33333333', exporter: 'Test exporter 3' },
         ],
         paymentsReceived: [aPayment(), aPayment()],
       };
@@ -755,14 +755,14 @@ describe('reconciliation-for-report-helper', () => {
       expect(result).toHaveLength(2);
 
       expect(result[0].feeRecords).toHaveLength(3);
-      expect(result[0].feeRecords[0]).toEqual({ facilityId: '11111111', exporter: 'Test exporter 1' });
-      expect(result[0].feeRecords[1]).toEqual({ facilityId: '22222222', exporter: 'Test exporter 2' });
-      expect(result[0].feeRecords[2]).toEqual({ facilityId: '33333333', exporter: 'Test exporter 3' });
+      expect(result[0].feeRecords[0]).toEqual({ id: 1, facilityId: '11111111', exporter: 'Test exporter 1' });
+      expect(result[0].feeRecords[1]).toEqual({ id: 2, facilityId: '22222222', exporter: 'Test exporter 2' });
+      expect(result[0].feeRecords[2]).toEqual({ id: 3, facilityId: '33333333', exporter: 'Test exporter 3' });
 
       expect(result[1].feeRecords).toHaveLength(3);
-      expect(result[1].feeRecords[0]).toEqual({ facilityId: '11111111', exporter: 'Test exporter 1' });
-      expect(result[1].feeRecords[1]).toEqual({ facilityId: '22222222', exporter: 'Test exporter 2' });
-      expect(result[1].feeRecords[2]).toEqual({ facilityId: '33333333', exporter: 'Test exporter 3' });
+      expect(result[1].feeRecords[0]).toEqual({ id: 1, facilityId: '11111111', exporter: 'Test exporter 1' });
+      expect(result[1].feeRecords[1]).toEqual({ id: 2, facilityId: '22222222', exporter: 'Test exporter 2' });
+      expect(result[1].feeRecords[2]).toEqual({ id: 3, facilityId: '33333333', exporter: 'Test exporter 3' });
     });
 
     it('maps the payment to a formatted currency and amount sorted first by currency alphabetically and second by amount ascending', () => {

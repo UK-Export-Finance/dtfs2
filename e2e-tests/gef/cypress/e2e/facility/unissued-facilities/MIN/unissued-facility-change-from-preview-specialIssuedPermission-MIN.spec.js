@@ -8,8 +8,7 @@ import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_FACILITY_ONE, MOCK_FACILITY_TWO, MOCK_FACILITY_THREE, MOCK_FACILITY_FOUR } from '../../../../fixtures/mocks/mock-facilities';
-
+import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { continueButton, mainHeading } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -22,19 +21,18 @@ let dealId;
 let token;
 let facilityOneId;
 
-const FACILITY_ONE_SPECIAL = { ...MOCK_FACILITY_ONE };
-const FACILITY_TWO_SPECIAL = { ...MOCK_FACILITY_TWO };
-const FACILITY_THREE_SPECIAL = { ...MOCK_FACILITY_THREE };
-const FACILITY_FOUR_SPECIAL = { ...MOCK_FACILITY_FOUR };
-
-FACILITY_ONE_SPECIAL.specialIssuePermission = true;
-FACILITY_TWO_SPECIAL.specialIssuePermission = true;
-FACILITY_THREE_SPECIAL.specialIssuePermission = true;
-FACILITY_FOUR_SPECIAL.specialIssuePermission = true;
-
-const unissuedFacilitiesArray = [FACILITY_ONE_SPECIAL, FACILITY_THREE_SPECIAL, FACILITY_FOUR_SPECIAL];
-
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+
+const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
+  facilityEndDateEnabled,
+});
+
+unissuedCashFacility.specialIssuePermission = true;
+issuedCashFacility.specialIssuePermission = true;
+unissuedContingentFacility.specialIssuePermission = true;
+unissuedCashFacilityWith20MonthsOfCover.specialIssuePermission = true;
+
+const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
 /*
   for changing facilities to issued from preview page.
@@ -52,16 +50,16 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_ONE_SPECIAL);
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_TWO_SPECIAL),
+              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacility),
             );
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_THREE_SPECIAL),
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
             );
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, FACILITY_FOUR_SPECIAL),
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
             );
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
           });
@@ -96,7 +94,7 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
 
       mainHeading().contains("Tell us you've issued this facility");
       aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
-      aboutFacilityUnissued.facilityName().should('have.value', MOCK_FACILITY_ONE.name);
+      aboutFacilityUnissued.facilityName().should('have.value', unissuedCashFacility.name);
 
       aboutFacilityUnissued.issueDateDay().should('have.value', '');
       aboutFacilityUnissued.issueDateMonth().should('have.value', '');
@@ -167,7 +165,7 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       const coverEnd = format(dateConstants.threeYears, 'd MMMM yyyy');
 
       // can change facility one name and issue dates etc since changed to issued
-      applicationPreview.facilitySummaryListTable(3).nameValue().contains(MOCK_FACILITY_ONE.name);
+      applicationPreview.facilitySummaryListTable(3).nameValue().contains(unissuedCashFacility.name);
       applicationPreview.facilitySummaryListTable(3).nameAction().contains('Change');
       applicationPreview.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).hasBeenIssuedAction().contains('Change');
@@ -189,7 +187,7 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       }
 
       // not be able to change facility four name, but can change to issued
-      applicationPreview.facilitySummaryListTable(0).nameValue().contains(MOCK_FACILITY_FOUR.name);
+      applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedCashFacilityWith20MonthsOfCover.name);
       applicationPreview.facilitySummaryListTable(0).nameAction().should('have.class', 'govuk-!-display-none');
 
       applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -201,7 +199,7 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       applicationPreview.facilitySummaryListTable(0).coverEndDateAction().should('not.exist');
 
       // should not be able to change facility two has previously issued
-      applicationPreview.facilitySummaryListTable(2).nameValue().contains(MOCK_FACILITY_TWO.name);
+      applicationPreview.facilitySummaryListTable(2).nameValue().contains(issuedCashFacility.name);
       applicationPreview.facilitySummaryListTable(2).nameAction().should('have.class', 'govuk-!-display-none');
 
       applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -220,8 +218,8 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
     it('change unissued to issued from application preview page with coverStartDate more than 3 months in the future', () => {
       // to change to issued from preview page by clicking change on issued row
       applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().click();
-      aboutFacilityUnissued.facilityName().clear();
-      cy.keyboardInput(aboutFacilityUnissued.facilityName(), `${MOCK_FACILITY_FOUR.name}name`);
+
+      cy.keyboardInput(aboutFacilityUnissued.facilityName(), `${unissuedCashFacilityWith20MonthsOfCover.name}name`);
 
       cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
       cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
@@ -277,7 +275,7 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       }
 
       // facility three still unissued
-      applicationPreview.facilitySummaryListTable(1).nameValue().contains(MOCK_FACILITY_THREE.name);
+      applicationPreview.facilitySummaryListTable(1).nameValue().contains(unissuedContingentFacility.name);
       applicationPreview.facilitySummaryListTable(1).nameAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(1).hasBeenIssuedValue().contains('Unissued');
