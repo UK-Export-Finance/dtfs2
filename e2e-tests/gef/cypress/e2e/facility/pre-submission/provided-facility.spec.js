@@ -1,8 +1,8 @@
-import relative from '../../../relativeURL';
-import { backLink, continueButton, headingCaption, errorSummary, mainHeading, form, saveAndReturnButton } from '../../../partials';
-import providedFacility from '../../../pages/provided-facility';
-import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import aboutFacility from '../../../pages/about-facility';
+import relative from '../../relativeURL';
+import { backLink, continueButton, headingCaption, errorSummary, mainHeading, form, saveAndReturnButton } from '../../partials';
+import providedFacility from '../../pages/provided-facility';
+import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
+import aboutFacility from '../../pages/about-facility';
 
 const applications = [];
 let token;

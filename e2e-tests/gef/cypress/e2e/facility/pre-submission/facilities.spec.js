@@ -1,8 +1,8 @@
-import relative from '../../../relativeURL';
-import { backLink, cancelLink, continueButton, form, errorSummary, headingCaption } from '../../../partials';
-import facilities from '../../../pages/facilities';
-import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import CONSTANTS from '../../../../fixtures/constants';
+import relative from '../../relativeURL';
+import { backLink, cancelLink, continueButton, form, errorSummary, headingCaption } from '../../partials';
+import facilities from '../../pages/facilities';
+import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
+import CONSTANTS from '../../../fixtures/constants';
 
 const dealIds = [];
 let token;

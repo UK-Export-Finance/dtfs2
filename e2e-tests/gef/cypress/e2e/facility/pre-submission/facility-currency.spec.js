@@ -1,7 +1,7 @@
-import relative from '../../../relativeURL';
-import { backLink, errorSummary, headingCaption, mainHeading, form, continueButton, saveAndReturnButton } from '../../../partials';
-import facilityCurrency from '../../../pages/facility-currency';
-import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
+import relative from '../../relativeURL';
+import { backLink, errorSummary, headingCaption, mainHeading, form, continueButton, saveAndReturnButton } from '../../partials';
+import facilityCurrency from '../../pages/facility-currency';
+import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];
 let token;
