@@ -1,10 +1,11 @@
 import { Response } from 'express';
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, DealSubmissionType } from '@ukef/dtfs2-common';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { ReasonForCancellingViewModel } from '../../../types/view-models';
 import { validateReasonForCancelling } from './validation/validate-reason-for-cancelling';
 import api from '../../../api';
+import { canSubmissionTypeBeCancelled } from '../../helpers';
 
 export type GetReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string } }>;
 export type PostReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string }; reqBody: { reason: string } }>;
@@ -19,13 +20,17 @@ export const getReasonForCancelling = async (req: GetReasonForCancellingRequest,
   const { _id } = req.params;
   const { user, userToken } = asUserSession(req.session);
   try {
-    const deal = (await api.getDeal(_id, userToken)) as { dealSnapshot: { details: { ukefDealId: string } } };
-
-    const cancellation = await api.getDealCancellation(_id, userToken);
+    const deal = (await api.getDeal(_id, userToken)) as { dealSnapshot: { details: { ukefDealId: string }; submissionType: DealSubmissionType } };
 
     if (!deal) {
       return res.redirect('/not-found');
     }
+
+    if (canSubmissionTypeBeCancelled(deal.dealSnapshot.submissionType)) {
+      return res.redirect(`/case/${_id}/`);
+    }
+
+    const cancellation = await api.getDealCancellation(_id, userToken);
 
     const reasonForCancellingViewModel: ReasonForCancellingViewModel = {
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
