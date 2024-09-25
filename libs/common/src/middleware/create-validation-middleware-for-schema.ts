@@ -1,7 +1,8 @@
 import { ZodError, ZodType } from 'zod';
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { AnyObject, API_ERROR_CODE, ApiErrorCode, ApiErrorResponseBody } from '@ukef/dtfs2-common';
+import { AnyObject, ApiErrorCode, ApiErrorResponseBody } from '../types';
+import { API_ERROR_CODE } from '../constants';
 
 const getFormattedZodErrors = (error: ZodError): string[] => error.issues.map(({ path, message, code }) => `${path.join('.')}: ${message} (${code})`);
 
