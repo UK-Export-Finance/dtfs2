@@ -19,13 +19,15 @@ const page = {
     updated: (id) => cy.get(`[data-cy*="deal__updated--${id}"]`),
   },
   rowIndex: {
-    deal__exporter: (index = 1) => cy.get(`[data-cy^="deal__exporter--index--${index}`),
-    bankRef: (index = 1) => cy.get(`[data-cy^="deal__bankRef--index--${index}`),
-    link: (index = 1) => cy.get(`[data-cy^="deal__link--index--${index}`),
-    product: (index = 1) => cy.get(`[data-cy^="deal__product--index--${index}`),
-    status: (index = 1) => cy.get(`[data-cy^="deal__status--index--${index}`),
-    type: (index = 1) => cy.get(`[data-cy^="deal__type--index--${index}`),
-    updated: (index = 1) => cy.get(`[data-cy^="deal__updated--index--${index}`),
+    deal__exporter: (index = 1) => cy.get(`[data-cy*="deal__exporter--index--${index}]`),
+    bankRef: (index = 1) => cy.get(`[data-cy*="deal__bankRef--index--${index}]`),
+
+    link: (index = 1) => cy.get(`[data-cy*="deal__link--index--${index}]`),
+
+    product: (index = 1) => cy.get(`[data-cy*="deal__product--index--${index}]`),
+    status: (index = 1) => cy.get(`[data-cy*="deal__status--index--${index}]`),
+    type: (index = 1) => cy.get(`[data-cy*="deal__type--index--${index}]`),
+    updated: (index = 1) => cy.get(`[data-cy*="deal__updated--index--${index}]`),
   },
   first: () => cy.get('[data-cy="First"]'),
   previous: () => cy.get('[data-cy="Previous"]'),
