@@ -28,7 +28,7 @@
 # Uses Cypress for E2E testing.
 # Initializes the environment with data before tests.
 #
-# 8. E2E - FF
+# 8. End-to-End (E2E) - Feature flags (FF)
 # Run tests 5-7 with all feature flags set to true
 #
 # Additional Notes:

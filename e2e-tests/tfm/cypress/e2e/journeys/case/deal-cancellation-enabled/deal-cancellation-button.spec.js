@@ -5,38 +5,44 @@ import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIN } from '../../../../fixtures/mock-gef-deals';
 
-context('Cancel deal button', () => {
+context('Deal cancellation button - feature flag enabled', () => {
   describe('when visiting a BSS/EWCS AIN deal summary page', () => {
-    let ainDealId;
+    let dealId;
     before(() => {
       cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
-        ainDealId = insertedDeal._id;
+        dealId = insertedDeal._id;
 
         const { dealType } = MOCK_DEAL_AIN;
 
-        cy.submitDeal(ainDealId, dealType, T1_USER_1);
+        cy.submitDeal(dealId, dealType, T1_USER_1);
       });
     });
 
     after(() => {
-      cy.deleteDeals(ainDealId, ADMIN);
+      cy.deleteDeals(dealId, ADMIN);
     });
 
     describe('when logged in as a PIM user', () => {
       beforeEach(() => {
         cy.login(PIM_USER_1);
-        cy.visit(relative(`/case/${ainDealId}/deal`));
+        cy.visit(relative(`/case/${dealId}/deal`));
       });
 
       it('should display the deal cancellation button', () => {
         pages.caseDealPage.cancelButton().should('exist');
+      });
+
+      it('deal cancellation button should navigate to reason for cancelling page', () => {
+        pages.caseDealPage.cancelButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
       });
     });
 
     describe('when logged in as a non-PIM user', () => {
       beforeEach(() => {
         cy.login(T1_USER_1);
-        cy.visit(relative(`/case/${ainDealId}/deal`));
+        cy.visit(relative(`/case/${dealId}/deal`));
       });
 
       it('should not display the deal cancellation button', () => {
@@ -46,25 +52,25 @@ context('Cancel deal button', () => {
   });
 
   describe('when visiting a BSS/EWCS MIA deal summary page', () => {
-    let miaDealId;
+    let dealId;
     before(() => {
       cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1).then((insertedDeal) => {
-        miaDealId = insertedDeal._id;
+        dealId = insertedDeal._id;
 
         const { dealType } = MOCK_DEAL_MIA;
 
-        cy.submitDeal(miaDealId, dealType, T1_USER_1);
+        cy.submitDeal(dealId, dealType, T1_USER_1);
       });
     });
 
     after(() => {
-      cy.deleteDeals(miaDealId, ADMIN);
+      cy.deleteDeals(dealId, ADMIN);
     });
 
     describe('when logged in as a PIM user', () => {
       beforeEach(() => {
         cy.login(PIM_USER_1);
-        cy.visit(relative(`/case/${miaDealId}/deal`));
+        cy.visit(relative(`/case/${dealId}/deal`));
       });
 
       it('should not display the deal cancellation button', () => {
@@ -75,7 +81,7 @@ context('Cancel deal button', () => {
     describe('when logged in as a non-PIM user', () => {
       beforeEach(() => {
         cy.login(T1_USER_1);
-        cy.visit(relative(`/case/${miaDealId}/deal`));
+        cy.visit(relative(`/case/${dealId}/deal`));
       });
 
       it('should not display the deal cancellation button', () => {
@@ -85,39 +91,45 @@ context('Cancel deal button', () => {
   });
 
   describe('when visiting a GEF AIN deal summary page', () => {
-    let ainDealId;
+    let dealId;
 
     before(() => {
       cy.insertOneGefDeal(MOCK_APPLICATION_AIN, BANK1_MAKER1).then((insertedDeal) => {
-        ainDealId = insertedDeal._id;
+        dealId = insertedDeal._id;
 
-        cy.updateGefDeal(ainDealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
+        cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
         const { dealType } = MOCK_APPLICATION_AIN;
 
-        cy.submitDeal(ainDealId, dealType, T1_USER_1);
+        cy.submitDeal(dealId, dealType, T1_USER_1);
       });
     });
 
     after(() => {
-      cy.deleteDeals(ainDealId, ADMIN);
+      cy.deleteDeals(dealId, ADMIN);
     });
 
     describe('when logged in as a PIM user', () => {
       beforeEach(() => {
         cy.login(PIM_USER_1);
-        cy.visit(relative(`/case/${ainDealId}/deal`));
+        cy.visit(relative(`/case/${dealId}/deal`));
       });
 
       it('should display the deal cancellation button', () => {
         pages.caseDealPage.cancelButton().should('exist');
+      });
+
+      it('deal cancellation button should navigate to reason for cancelling page', () => {
+        pages.caseDealPage.cancelButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
       });
     });
 
     describe('when logged in as a non-PIM user', () => {
       beforeEach(() => {
         cy.login(T1_USER_1);
-        cy.visit(relative(`/case/${ainDealId}/deal`));
+        cy.visit(relative(`/case/${dealId}/deal`));
       });
 
       it('should not display the deal cancellation button', () => {
@@ -127,39 +139,45 @@ context('Cancel deal button', () => {
   });
 
   describe('when visiting a GEF MIN deal summary page', () => {
-    let minDealId;
+    let dealId;
 
     before(() => {
       cy.insertOneGefDeal(MOCK_APPLICATION_MIN, BANK1_MAKER1).then((insertedDeal) => {
-        minDealId = insertedDeal._id;
+        dealId = insertedDeal._id;
 
-        cy.updateGefDeal(minDealId, MOCK_APPLICATION_MIN, BANK1_MAKER1);
+        cy.updateGefDeal(dealId, MOCK_APPLICATION_MIN, BANK1_MAKER1);
 
         const { dealType } = MOCK_APPLICATION_MIN;
 
-        cy.submitDeal(minDealId, dealType, T1_USER_1);
+        cy.submitDeal(dealId, dealType, T1_USER_1);
       });
     });
 
     after(() => {
-      cy.deleteDeals(minDealId, ADMIN);
+      cy.deleteDeals(dealId, ADMIN);
     });
 
     describe('when logged in as a PIM user', () => {
       beforeEach(() => {
         cy.login(PIM_USER_1);
-        cy.visit(relative(`/case/${minDealId}/deal`));
+        cy.visit(relative(`/case/${dealId}/deal`));
       });
 
       it('should display the deal cancellation button', () => {
         pages.caseDealPage.cancelButton().should('exist');
+      });
+
+      it('deal cancellation button should navigate to reason for cancelling page', () => {
+        pages.caseDealPage.cancelButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
       });
     });
 
     describe('when logged in as a non-PIM user', () => {
       beforeEach(() => {
         cy.login(T1_USER_1);
-        cy.visit(relative(`/case/${minDealId}/deal`));
+        cy.visit(relative(`/case/${dealId}/deal`));
       });
 
       it('should not display the deal cancellation button', () => {
@@ -169,28 +187,28 @@ context('Cancel deal button', () => {
   });
 
   describe('when visiting a GEF MIA deal summary page', () => {
-    let miaDealId;
+    let dealId;
 
     before(() => {
       cy.insertOneGefDeal(MOCK_APPLICATION_MIA, BANK1_MAKER1).then((insertedDeal) => {
-        miaDealId = insertedDeal._id;
+        dealId = insertedDeal._id;
 
-        cy.updateGefDeal(miaDealId, MOCK_APPLICATION_MIA, BANK1_MAKER1);
+        cy.updateGefDeal(dealId, MOCK_APPLICATION_MIA, BANK1_MAKER1);
 
         const { dealType } = MOCK_APPLICATION_MIA;
 
-        cy.submitDeal(miaDealId, dealType, T1_USER_1);
+        cy.submitDeal(dealId, dealType, T1_USER_1);
       });
     });
 
     after(() => {
-      cy.deleteDeals(miaDealId, ADMIN);
+      cy.deleteDeals(dealId, ADMIN);
     });
 
     describe('when logged in as a PIM user', () => {
       beforeEach(() => {
         cy.login(PIM_USER_1);
-        cy.visit(relative(`/case/${miaDealId}/deal`));
+        cy.visit(relative(`/case/${dealId}/deal`));
       });
 
       it('should not display the deal cancellation button', () => {
@@ -201,7 +219,7 @@ context('Cancel deal button', () => {
     describe('when logged in as a non-PIM user', () => {
       beforeEach(() => {
         cy.login(T1_USER_1);
-        cy.visit(relative(`/case/${miaDealId}/deal`));
+        cy.visit(relative(`/case/${dealId}/deal`));
       });
 
       it('should not display the deal cancellation button', () => {
