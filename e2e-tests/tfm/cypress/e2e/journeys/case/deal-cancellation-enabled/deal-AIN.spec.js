@@ -42,11 +42,11 @@ context('User can view a case deal', () => {
     pages.caseDealPage.dealFacilities().should('exist');
   });
 
-  it('should not show the deal cancellation button for PIM user', () => {
+  it('should show the deal cancellation button for PIM user', () => {
     cy.login(PIM_USER_1);
     cy.visit(relative(`/case/${dealId}/deal`));
 
-    pages.caseDealPage.cancelButton().should('not.exist');
+    pages.caseDealPage.cancelButton().should('exist');
   });
 
   it('should render case summary fields', () => {
