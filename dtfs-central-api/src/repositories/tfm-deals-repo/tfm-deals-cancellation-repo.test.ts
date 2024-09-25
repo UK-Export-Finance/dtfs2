@@ -47,6 +47,19 @@ describe('tfm-deals-cancellation-repo', () => {
       await expect(TfmDealCancellationRepo.findDealCancellationByDealId(dealId)).rejects.toThrow(new DealNotFoundError(dealId.toString()));
     });
 
+    it('returns an empty object if a deal is found without a cancellation', async () => {
+      // Arrange
+      findOneMock.mockResolvedValue({ tfm: {} });
+
+      getCollectionMock.mockResolvedValue({ findOne: findOneMock });
+
+      // Act
+      const result = await TfmDealCancellationRepo.findDealCancellationByDealId(dealId);
+
+      // Assert
+      expect(result).toEqual({});
+    });
+
     it('returns the found deal cancellation', async () => {
       // Act
       const result = await TfmDealCancellationRepo.findDealCancellationByDealId(dealId);

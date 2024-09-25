@@ -1,13 +1,5 @@
 import { Collection, ObjectId, UpdateFilter, UpdateResult, WithoutId } from 'mongodb';
-import {
-  DealCancellationNotFoundError,
-  DEAL_SUBMISSION_TYPE,
-  DealNotFoundError,
-  MONGO_DB_COLLECTIONS,
-  TFM_DEAL_STAGE,
-  TfmDeal,
-  TfmDealCancellation,
-} from '@ukef/dtfs2-common';
+import { DEAL_SUBMISSION_TYPE, DealNotFoundError, MONGO_DB_COLLECTIONS, TFM_DEAL_STAGE, TfmDeal, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { mongoDbClient } from '../../drivers/db-client';
 
 export class TfmDealCancellationRepo {
@@ -20,7 +12,7 @@ export class TfmDealCancellationRepo {
    * @param dealId - The deal id
    * @returns the found deal cancellation
    */
-  public static async findDealCancellationByDealId(dealId: string | ObjectId): Promise<TfmDealCancellation> {
+  public static async findDealCancellationByDealId(dealId: string | ObjectId): Promise<Partial<TfmDealCancellation>> {
     const dealCollection = await this.getCollection();
     const matchingDeal = await dealCollection.findOne({
       _id: { $eq: new ObjectId(dealId) },
@@ -32,7 +24,7 @@ export class TfmDealCancellationRepo {
     }
 
     if (!matchingDeal.tfm.cancellation) {
-      throw new DealCancellationNotFoundError(dealId.toString());
+      return {};
     }
 
     return matchingDeal.tfm.cancellation;
