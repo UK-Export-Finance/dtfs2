@@ -2,10 +2,10 @@ import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { TestApiError } from '@ukef/dtfs2-common';
-import api from '../api';
-import { updateDealCancellation, UpdateDealCancellationRequest } from './deal-cancellation.controller';
+import api from '../../api';
+import { updateDealCancellation, UpdateDealCancellationRequest } from './update-deal-cancellation.controller';
 
-jest.mock('../api');
+jest.mock('../../api');
 
 const dealCancellationUpdate = {
   reason: 'test reason',
@@ -31,8 +31,6 @@ describe('controllers - deal cancellation', () => {
 
   describe('PUT - updateDealCancellation', () => {
     it('should call api.updateDealCancellation with the correct parameters', async () => {
-      jest.mocked(api.updateDealCancellation);
-
       // Arrange
       const { req, res } = httpMocks.createMocks<UpdateDealCancellationRequest>({
         params: { dealId: mockDealId },
@@ -64,7 +62,7 @@ describe('controllers - deal cancellation', () => {
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-      expect(res._getData()).toEqual(expect.objectContaining(mockUpdateResult));
+      expect(res._getData()).toEqual(mockUpdateResult);
     });
 
     it('should return an error when there is an API error', async () => {
@@ -84,7 +82,7 @@ describe('controllers - deal cancellation', () => {
 
       // Assert
       expect(res._getStatusCode()).toBe(testErrorStatus);
-      expect(res._getData()).toEqual(expect.objectContaining({ message: `Failed to update deal cancellation: ${testApiErrorMessage}` }));
+      expect(res._getData()).toEqual({ message: `Failed to update deal cancellation: ${testApiErrorMessage}`, status: testErrorStatus });
     });
 
     it('should return an error when there is a general error', async () => {
@@ -102,7 +100,7 @@ describe('controllers - deal cancellation', () => {
 
       // Assert
       expect(res._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
-      expect(res._getData()).toEqual(expect.objectContaining({ message: 'Failed to update deal cancellation' }));
+      expect(res._getData()).toEqual({ message: 'Failed to update deal cancellation', status: 500 });
     });
   });
 });

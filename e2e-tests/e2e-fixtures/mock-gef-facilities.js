@@ -1,5 +1,5 @@
-const CONSTANTS = require('../constants');
-const dateConstants = require('../../../../e2e-fixtures/dateConstants');
+const CONSTANTS = require('../gef/cypress/fixtures/constants');
+const dateConstants = require('./dateConstants');
 
 /**
  * Gets facility end date properties if enabled on default deal version
@@ -39,7 +39,7 @@ const anUnissuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
     'Other',
   ],
   detailsOther: 'Other',
-  currency: 'GBP',
+  currency: { id: 'GBP' },
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,
@@ -49,7 +49,7 @@ const anUnissuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
   ukefExposure: 1600,
   guaranteeFee: 0.9,
   submittedAsIssuedDate: '1638363717231',
-  feeType: 'in advance',
+  feeType: 'In advance',
   feeFrequency: 'Monthly',
   ukefFacilityId: '10000011',
   dayCountBasis: 365,
@@ -82,7 +82,7 @@ const anIssuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
     'Other',
   ],
   detailsOther: 'Other',
-  currency: 'GBP',
+  currency: { id: 'GBP' },
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,
@@ -93,12 +93,13 @@ const anIssuedCashFacility = ({ facilityEndDateEnabled = false } = {}) => ({
   guaranteeFee: 0.9,
   submittedAsIssuedDate: '1638363717231',
   ukefFacilityId: '10000012',
-  feeType: 'in advance',
+  feeType: 'In advance',
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
   coverDateConfirmed: true,
   canResubmitIssuedFacilities: null,
 });
+exports.anIssuedCashFacility = anIssuedCashFacility;
 
 /**
  * @param {{ facilityEndDateEnabled?: boolean}} options
@@ -123,7 +124,7 @@ const anIssuedCashFacilityWithCoverDateConfirmed = ({ facilityEndDateEnabled = f
     'Other',
   ],
   detailsOther: 'Other',
-  currency: 'GBP',
+  currency: { id: 'GBP' },
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,
@@ -134,7 +135,7 @@ const anIssuedCashFacilityWithCoverDateConfirmed = ({ facilityEndDateEnabled = f
   guaranteeFee: 0.9,
   submittedAsIssuedDate: null,
   ukefFacilityId: '10000012',
-  feeType: 'in advance',
+  feeType: 'In advance',
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
   coverDateConfirmed: null,
@@ -166,7 +167,7 @@ const anUnissuedContingentFacility = ({ facilityEndDateEnabled = false } = {}) =
     'Other',
   ],
   detailsOther: 'Other',
-  currency: 'GBP',
+  currency: { id: 'GBP' },
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,
@@ -177,7 +178,7 @@ const anUnissuedContingentFacility = ({ facilityEndDateEnabled = false } = {}) =
   guaranteeFee: 0.9,
   submittedAsIssuedDate: '1638363717231',
   ukefFacilityId: '10000013',
-  feeType: 'in advance',
+  feeType: 'In advance',
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
   coverDateConfirmed: false,
@@ -207,7 +208,7 @@ const anUnissuedCashFacilityWith20MonthsOfCover = ({ facilityEndDateEnabled = fa
     'Other',
   ],
   detailsOther: 'Other',
-  currency: 'GBP',
+  currency: { id: 'GBP' },
   value: 2000,
   coverPercentage: 80,
   interestPercentage: 1,
@@ -218,7 +219,7 @@ const anUnissuedCashFacilityWith20MonthsOfCover = ({ facilityEndDateEnabled = fa
   guaranteeFee: 0.9,
   submittedAsIssuedDate: '1638363717231',
   ukefFacilityId: '10000014',
-  feeType: 'in advance',
+  feeType: 'In advance',
   feeFrequency: 'Monthly',
   dayCountBasis: 365,
   coverDateConfirmed: false,

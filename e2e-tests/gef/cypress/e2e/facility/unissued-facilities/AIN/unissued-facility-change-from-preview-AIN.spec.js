@@ -4,7 +4,7 @@ import CONSTANTS from '../../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { threeDays, threeDaysAgo, threeMonthsOneDay, today, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
-import { multipleMockGefFacilities } from '../../../../fixtures/mocks/mock-facilities';
+import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { mainHeading, continueButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';

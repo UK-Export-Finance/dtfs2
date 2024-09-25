@@ -3,7 +3,7 @@ import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
 import { threeDays, threeMonthsOneDay, today, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
-import { multipleMockGefFacilities } from '../../../../fixtures/mocks/mock-facilities';
+import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { continueButton, submitButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';

@@ -2,14 +2,16 @@ import { format } from 'date-fns';
 import relative from '../../../../relativeURL';
 import facilityPage from '../../../../pages/facilityPage';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../../e2e-fixtures';
-import { MOCK_FACILITY_ONE } from '../../../../../fixtures/mock-gef-facilities';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
 import { todayDay, todayMonth, todayYear } from '../../../../../../../e2e-fixtures/dateConstants';
 import { DATE_FORMATS } from '../../../../../fixtures/constants';
+import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
-if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
+const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
+
+if (facilityEndDateEnabled) {
   context('Amendments - GEF deal add multiple consecutive amendments impacting facility end date values', () => {
     let dealId;
     let facility;
@@ -24,9 +26,8 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
     const checkAnswersDateFormat = DATE_FORMATS.SHORT;
     const facilityPageDateFormat = DATE_FORMATS.SINGLE_DIGIT_DAY_LONG;
 
-    const MOCK_GEF_FACILITY_WITH_BANK_REVIEW_DATE = {
-      ...MOCK_FACILITY_ONE,
-      hasBeenIssued: true,
+    const facilityWithBankReviewDate = {
+      ...anIssuedCashFacility({ facilityEndDateEnabled }),
       isUsingFacilityEndDate: false,
       facilityEndDate: undefined,
       bankReviewDate: Date1,
@@ -39,7 +40,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         // updates a gef deal so has relevant fields
         cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
-        cy.createGefFacilities(dealId, [MOCK_GEF_FACILITY_WITH_BANK_REVIEW_DATE], BANK1_MAKER1).then((createdFacility) => {
+        cy.createGefFacilities(dealId, [facilityWithBankReviewDate], BANK1_MAKER1).then((createdFacility) => {
           facility = createdFacility.details;
         });
 

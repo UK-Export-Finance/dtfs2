@@ -1,11 +1,5 @@
-const { ROLES, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { ROLES, FACILITY_TYPE, DEAL_SUBMISSION_TYPE } = require('@ukef/dtfs2-common');
 const ALL_BANKS_ID = require('./all-banks-id');
-
-const DEAL_SUBMISSION_TYPE = {
-  AIN: 'Automatic Inclusion Notice',
-  MIA: 'Manual Inclusion Application',
-  MIN: 'Manual Inclusion Notice',
-};
 
 const DEAL_STATUS = {
   // these statuses can be either on the top level

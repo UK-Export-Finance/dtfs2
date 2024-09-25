@@ -3,7 +3,7 @@ import CONSTANTS from '../../../fixtures/constants';
 import { tomorrow, threeDays, threeMonthsOneDay } from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../e2e-fixtures/portal-users.fixture';
-import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../fixtures/mocks/mock-facilities';
+import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
 import { toTitleCase } from '../../../fixtures/helpers';
 import { errorSummary, submitButton } from '../../partials';
 import applicationPreview from '../../pages/application-preview';

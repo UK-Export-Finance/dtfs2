@@ -3,11 +3,13 @@ const { TEAM_IDS, validateDealCancellationEnabled } = require('@ukef/dtfs2-commo
 const dealSubmit = require('../controllers/deal.submit.controller');
 const amendmentController = require('../controllers/amendment.controller');
 const dealController = require('../controllers/deal.controller');
-const dealCancellationController = require('../controllers/deal-cancellation.controller');
+const { getDealCancellation } = require('../controllers/deal-cancellation/get-deal-cancellation.controller');
+const { updateDealCancellation } = require('../controllers/deal-cancellation/update-deal-cancellation.controller');
 const dealUnderwriterManagersDecisionController = require('../controllers/deal-underwriter-managers-decision.controller');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
 const { validateUserHasAtLeastOneAllowedTeam } = require('../middleware/validate-user-is-in-at-least-one-allowed-team');
+const { validatePutDealCancellationPayload } = require('../middleware/validate-put-deal-cancellation-payload');
 
 const dealsOpenRouter = express.Router();
 
@@ -81,13 +83,9 @@ dealsAuthRouter
 
 dealsAuthRouter
   .route('/deals/:dealId/cancellation')
-  .put(
-    validateDealCancellationEnabled,
-    validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]),
-    validation.dealIdValidation,
-    handleExpressValidatorResult,
-    dealCancellationController.updateDealCancellation,
-  );
+  .all(validateDealCancellationEnabled, validateUserHasAtLeastOneAllowedTeam([TEAM_IDS.PIM]), validation.dealIdValidation, handleExpressValidatorResult)
+  .put(validatePutDealCancellationPayload, updateDealCancellation)
+  .get(getDealCancellation);
 
 dealsAuthRouter
   .route('/deals/:dealId/amendments/:status?/:type?')

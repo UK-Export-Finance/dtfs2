@@ -1,0 +1,61 @@
+{% from "moj/components/filter/macro.njk" import mojFilter %}
+{% import "./payment-details-filters-form.njk" as paymentDetailsFiltersForm %}
+
+{% macro render(params) %}
+  {% set filters = params.filters %}
+  {% set selectedFilters = params.selectedFilters %}
+  {% set paymentReference = params.paymentReference %}
+  {% set facilityId = params.facilityId %}
+
+  {% set filterOptionsHtml %}
+    {{ paymentDetailsFiltersForm.render({
+      filters: filters,
+      paymentReference: paymentReference,
+      facilityId: facilityId
+    }) }}
+  {% endset %}
+
+  <div class="moj-filter-layout__filter" data-filtered-table-id="payment-details" data-cy="payment-details--filters-panel">
+
+    <form method="GET" data-cy="payment-details--filter-form">
+
+      {% if selectedFilters.length %}
+
+        {{ mojFilter({
+          heading: {
+            text: 'Filter'
+          },
+          selectedFilters: {
+            heading: {
+              text: 'Selected filters'
+            },
+            clearLink: {
+              text: 'Clear filters',
+              href: '#payment-details'
+            },
+            categories: selectedFilters
+          },
+          attributes: {
+            'data-cy': 'payment-details--filters-container'
+          },
+          optionsHtml: filterOptionsHtml
+        }) }}
+
+      {% else %}
+
+        {{ mojFilter({
+          heading: {
+            text: 'Filter'
+          },
+          attributes: {
+            'data-cy': 'payment-details--filters-container'
+          },
+          optionsHtml: filterOptionsHtml
+        }) }}
+
+      {% endif %}
+
+    </form>
+
+  </div>
+{% endmacro %}
