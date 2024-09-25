@@ -35,7 +35,7 @@ context('Deal cancellation - reason for cancelling', () => {
       cy.login(PIM_USER_1);
       cy.visit(relative(`/case/${dealId}/deal`));
 
-      caseDealPage.cancelButton().click();
+      caseDealPage.cancelDealButton().click();
     });
 
     it('should render page correctly', () => {

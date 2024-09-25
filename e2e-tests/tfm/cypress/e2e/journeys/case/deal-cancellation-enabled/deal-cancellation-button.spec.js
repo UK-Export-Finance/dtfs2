@@ -29,11 +29,11 @@ context('Deal cancellation button - feature flag enabled', () => {
       });
 
       it('should display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('exist');
+        pages.caseDealPage.cancelDealButton().should('exist');
       });
 
       it('deal cancellation button should navigate to reason for cancelling page', () => {
-        pages.caseDealPage.cancelButton().click();
+        pages.caseDealPage.cancelDealButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
       });
@@ -46,7 +46,7 @@ context('Deal cancellation button - feature flag enabled', () => {
       });
 
       it('should not display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('not.exist');
+        pages.caseDealPage.cancelDealButton().should('not.exist');
       });
     });
   });
@@ -74,7 +74,7 @@ context('Deal cancellation button - feature flag enabled', () => {
       });
 
       it('should not display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('not.exist');
+        pages.caseDealPage.cancelDealButton().should('not.exist');
       });
     });
 
@@ -85,7 +85,7 @@ context('Deal cancellation button - feature flag enabled', () => {
       });
 
       it('should not display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('not.exist');
+        pages.caseDealPage.cancelDealButton().should('not.exist');
       });
     });
   });
@@ -116,11 +116,11 @@ context('Deal cancellation button - feature flag enabled', () => {
       });
 
       it('should display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('exist');
+        pages.caseDealPage.cancelDealButton().should('exist');
       });
 
       it('deal cancellation button should navigate to reason for cancelling page', () => {
-        pages.caseDealPage.cancelButton().click();
+        pages.caseDealPage.cancelDealButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
       });
@@ -133,7 +133,7 @@ context('Deal cancellation button - feature flag enabled', () => {
       });
 
       it('should not display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('not.exist');
+        pages.caseDealPage.cancelDealButton().should('not.exist');
       });
     });
   });
@@ -164,11 +164,11 @@ context('Deal cancellation button - feature flag enabled', () => {
       });
 
       it('should display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('exist');
+        pages.caseDealPage.cancelDealButton().should('exist');
       });
 
       it('deal cancellation button should navigate to reason for cancelling page', () => {
-        pages.caseDealPage.cancelButton().click();
+        pages.caseDealPage.cancelDealButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
       });
@@ -181,7 +181,7 @@ context('Deal cancellation button - feature flag enabled', () => {
       });
 
       it('should not display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('not.exist');
+        pages.caseDealPage.cancelDealButton().should('not.exist');
       });
     });
   });
@@ -212,7 +212,7 @@ context('Deal cancellation button - feature flag enabled', () => {
       });
 
       it('should not display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('not.exist');
+        pages.caseDealPage.cancelDealButton().should('not.exist');
       });
     });
 
@@ -223,7 +223,7 @@ context('Deal cancellation button - feature flag enabled', () => {
       });
 
       it('should not display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('not.exist');
+        pages.caseDealPage.cancelDealButton().should('not.exist');
       });
     });
   });

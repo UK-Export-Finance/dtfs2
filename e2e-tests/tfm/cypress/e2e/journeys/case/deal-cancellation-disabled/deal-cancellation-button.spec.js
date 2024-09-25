@@ -28,7 +28,7 @@ context('Deal cancellation button - feature flag disabled', () => {
       });
 
       it('should not display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('not.exist');
+        pages.caseDealPage.cancelDealButton().should('not.exist');
       });
     });
   });
@@ -59,7 +59,7 @@ context('Deal cancellation button - feature flag disabled', () => {
       });
 
       it('should not display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('not.exist');
+        pages.caseDealPage.cancelDealButton().should('not.exist');
       });
     });
   });
@@ -90,7 +90,7 @@ context('Deal cancellation button - feature flag disabled', () => {
       });
 
       it('should not display the deal cancellation button', () => {
-        pages.caseDealPage.cancelButton().should('not.exist');
+        pages.caseDealPage.cancelDealButton().should('not.exist');
       });
     });
   });
