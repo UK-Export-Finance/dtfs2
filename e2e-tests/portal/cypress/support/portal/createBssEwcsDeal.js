@@ -14,7 +14,7 @@ const {
   contractAboutFinancial,
 } = require('../../e2e/pages');
 const { submissionDetails } = require('../../fixtures/deal');
-const { MOCK_USERS } = require('../../../../e2e-fixtures/portal-users.fixture');
+const MOCK_USERS = require('../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
