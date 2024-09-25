@@ -51,7 +51,7 @@ describe(page, () => {
     wrapper.expectElement('[data-cy="error-summary"]').notToExist();
   });
 
-  it('should not render in line error when there are errors', () => {
+  it('should not render in line error when there are no errors', () => {
     // Arrange
     const reasonForCancellingViewModel = aReasonForCancellingViewModel();
     // Act
