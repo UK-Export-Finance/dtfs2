@@ -13,8 +13,8 @@ import {
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   UtilisationReportReconciliationStatus,
+  withSqlIdPathParameterValidationTests,
 } from '@ukef/dtfs2-common';
-import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { mongoDbClient } from '../../../src/drivers/db-client';
