@@ -17,5 +17,5 @@ export type BankRequestDateViewModel = BaseViewModel & {
   day?: string;
   month?: string;
   year?: string;
-  errors?: BankRequestErrorsViewModel | null;
+  errors?: BankRequestErrorsViewModel;
 };
