@@ -199,7 +199,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       errorSummary().contains('Cover start date cannot be before the issue date');
 
       // entering cover start date beyond 3 months from notice date
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeMonthsOneDayYear });
 
       cy.clickContinueButton();
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');

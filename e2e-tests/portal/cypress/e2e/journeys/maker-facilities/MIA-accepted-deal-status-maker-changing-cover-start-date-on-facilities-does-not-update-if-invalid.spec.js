@@ -66,7 +66,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
 
-    cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: INVALID_DATE });
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: INVALID_DATE });
     cy.clickSubmitButton();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');
@@ -82,7 +82,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
 
-    cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: INVALID_DATE });
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: INVALID_DATE });
 
     cy.clickSubmitButton();
 

@@ -17,19 +17,19 @@ const completeDateFormFields = ({ idPrefix, date = today, day, month, year }) =>
   if (day !== null) {
     const dayValue = day || format(date, longDayFormat);
 
-    cy.keyboardInput(`[data-cy="${idPrefix}-day"]`, dayValue);
+    cy.keyboardInput(cy.get(`[data-cy="${idPrefix}-day"]`), dayValue);
   }
 
   if (month !== null) {
     const monthValue = month || format(date, longMonthFormat);
 
-    cy.keyboardInput(`[data-cy="${idPrefix}-month"]`, monthValue);
+    cy.keyboardInput(cy.get(`[data-cy="${idPrefix}-month"]`), monthValue);
   }
 
   if (year !== null) {
     const yearValue = year || format(date, longYearFormat);
 
-    cy.keyboardInput(`[data-cy="${idPrefix}-year"]`, yearValue);
+    cy.keyboardInput(cy.get(`[data-cy="${idPrefix}-year"]`), yearValue);
   }
 };
 

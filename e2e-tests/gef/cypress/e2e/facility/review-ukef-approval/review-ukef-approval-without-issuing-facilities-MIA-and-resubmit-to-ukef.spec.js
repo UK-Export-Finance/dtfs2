@@ -159,7 +159,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: tomorrow });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: tomorrow });
 
       cy.clickContinueButton();
 
@@ -174,7 +174,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDays });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeDays });
 
       cy.clickContinueButton();
 
@@ -189,7 +189,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeMonthsOneDay });
 
       cy.clickContinueButton();
 
@@ -205,7 +205,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date' });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date' });
 
       cy.clickContinueButton();
 
