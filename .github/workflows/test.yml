@@ -82,7 +82,6 @@ on:
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
-  node: ${{ vars.NODE_VERSION }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
@@ -186,6 +185,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v1.2
         with:
+          node-version: ${{ vars.NODE_VERSION }}
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
@@ -194,7 +194,7 @@ jobs:
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: Dependencies
         working-directory: ./
@@ -231,6 +231,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          node-version: ${{ vars.NODE_VERSION }}
           flags: api-test
           verbose: true
 
@@ -257,6 +258,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v1.2
         with:
+          node-version: ${{ vars.NODE_VERSION }}
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
@@ -265,7 +267,7 @@ jobs:
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: Dependencies
         working-directory: ./
@@ -279,6 +281,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          node-version: ${{ vars.NODE_VERSION }}
           flags: api-test
           verbose: true
 
@@ -316,6 +319,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v1.2
         with:
+          node-version: ${{ vars.NODE_VERSION }}
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
@@ -324,7 +328,7 @@ jobs:
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: Dependencies
         working-directory: ./
@@ -338,6 +342,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          node-version: ${{ vars.NODE_VERSION }}
           flags: unit-test
           verbose: true
 
@@ -382,6 +387,7 @@ jobs:
       - name: Timezone
         uses: szenius/set-timezone@v1.2
         with:
+          node-version: ${{ vars.NODE_VERSION }}
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
@@ -390,7 +396,7 @@ jobs:
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: Dependencies
         working-directory: ./
@@ -404,6 +410,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          node-version: ${{ vars.NODE_VERSION }}
           flags: unit-test
           verbose: true
 
@@ -470,11 +477,12 @@ jobs:
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
         with:
+          node-version: ${{ vars.NODE_VERSION }}
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Dependencies
@@ -551,11 +559,12 @@ jobs:
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
         with:
+          node-version: ${{ vars.NODE_VERSION }}
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Dependencies
@@ -639,11 +648,12 @@ jobs:
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
         with:
+          node-version: ${{ vars.NODE_VERSION }}
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Dependencies
@@ -723,11 +733,12 @@ jobs:
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
         with:
+          node-version: ${{ vars.NODE_VERSION }}
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Dependencies
@@ -836,11 +847,12 @@ jobs:
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
 
       - name: Timezone
         uses: szenius/set-timezone@v1.2
         with:
+          node-version: ${{ vars.NODE_VERSION }}
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Dependencies
