@@ -43,7 +43,7 @@
         {
           html: linkHtml,
           attributes: {
-            "data-cy": "dea__bankRef--index--" + loop.index + " dea__bankRef" + deal._id
+            "data-cy": "deal__bankRef--index--" + loop.index + " deal__bankRef" + deal._id
           }
         },
         {
@@ -67,7 +67,7 @@
         {
           text: deal.updatedAt | localiseTimestamp("d MMM yyyy", userTimezone) or "-",
           attributes: {
-          'data-cy': deal__updated--index--" + loop.index + " deal__updated--"" + deal._id
+            'data-cy': deal__updated--index--" + loop.index + " deal__updated--"" + deal._id
           }
         }
       ] %}
