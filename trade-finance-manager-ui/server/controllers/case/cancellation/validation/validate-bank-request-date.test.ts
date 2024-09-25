@@ -1,7 +1,9 @@
-import { add, startOfDay } from 'date-fns';
 import { applyStandardValidationAndParseDateInput } from '@ukef/dtfs2-common';
+import { add, startOfDay } from 'date-fns';
 import { getErrorObjectFromMessageAndRefs, validateBankRequestDate } from './validate-bank-request-date';
 import { BankRequestDateValidationViewModel } from '../../../../types/view-models';
+
+jest.mock('@ukef/dtfs2-common', () => ({ applyStandardValidationAndParseDateInput: jest.fn() }));
 
 describe('validate bank request date', () => {
   describe('getErrorObjectFromMessageAndRefs', () => {
@@ -26,6 +28,10 @@ describe('validate bank request date', () => {
   });
 
   describe('validateBankRequestDate', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
     const today = startOfDay(new Date());
 
     const validDates = [
@@ -44,11 +50,14 @@ describe('validate bank request date', () => {
     ];
 
     it.each(validDates)('returns no errors when the date is $description', ({ date }) => {
-      // Act
+      // Arrange
+      jest.mocked(applyStandardValidationAndParseDateInput).mockReturnValueOnce({ error: null, parsedDate: date });
+
       const day = date.getDate().toString();
       const month = (date.getMonth() + 1).toString();
       const year = date.getUTCFullYear().toString();
 
+      // Act
       const result = validateBankRequestDate({ day, month, year });
 
       // Assert
@@ -61,13 +70,18 @@ describe('validate bank request date', () => {
 
     describe('custom date validation rules', () => {
       it('returns an error if the bank request date is greater than 12 months in the future', () => {
-        const invalidBankRequestDate = add(new Date(), { months: 12, days: 1 });
-        const day = invalidBankRequestDate.getDate().toString();
-        const month = (invalidBankRequestDate.getMonth() + 1).toString();
-        const year = invalidBankRequestDate.getFullYear().toString();
+        // Arrange
+        const twelveMonthsAndDayInFuture = add(new Date(), { months: 12, days: 1 });
+        jest.mocked(applyStandardValidationAndParseDateInput).mockReturnValueOnce({ error: null, parsedDate: twelveMonthsAndDayInFuture });
 
+        const day = twelveMonthsAndDayInFuture.getDate().toString();
+        const month = (twelveMonthsAndDayInFuture.getMonth() + 1).toString();
+        const year = twelveMonthsAndDayInFuture.getFullYear().toString();
+
+        // Act
         const result = validateBankRequestDate({ day, month, year });
 
+        // Assert
         const expectedMessage = 'The bank request date cannot exceed 12 months in the future from the submission date';
 
         const expectedError = {
@@ -79,13 +93,18 @@ describe('validate bank request date', () => {
       });
 
       it('returns an error if the bank request date is greater than 12 months in the past', () => {
-        const invalidBankRequestDate = add(new Date(), { months: -12, days: -1 });
-        const day = invalidBankRequestDate.getDate().toString();
-        const month = (invalidBankRequestDate.getMonth() + 1).toString();
-        const year = invalidBankRequestDate.getFullYear().toString();
+        // Arrange
+        const twelveMonthsAndDayInPast = add(new Date(), { months: -12, days: -1 });
+        jest.mocked(applyStandardValidationAndParseDateInput).mockReturnValueOnce({ error: null, parsedDate: twelveMonthsAndDayInPast });
 
+        const day = twelveMonthsAndDayInPast.getDate().toString();
+        const month = (twelveMonthsAndDayInPast.getMonth() + 1).toString();
+        const year = twelveMonthsAndDayInPast.getFullYear().toString();
+
+        // Act
         const result = validateBankRequestDate({ day, month, year });
 
+        // Assert
         const expectedMessage = 'The bank request date cannot exceed 12 months in the past from the submission date';
 
         const expectedError = {
@@ -98,15 +117,32 @@ describe('validate bank request date', () => {
     });
 
     describe('base date validation rules', () => {
-      it('should return the result of applyStandardValidationAndParseDateInput', () => {
-        const dateObjectToTest = { day: '', month: '1', year: '2024' };
+      const dateObjectToTest = { day: '', month: '1', year: '2024' };
+      const mockReturnedMessage = 'mock error message';
+      const mockReturnedRef = 'mock-ref';
+      const mockReturnedFieldRefs = ['mock-ref-1, mock-ref-2'];
 
-        const { errors: receivedErrors } = validateBankRequestDate(dateObjectToTest);
+      beforeEach(() => {
+        jest
+          .mocked(applyStandardValidationAndParseDateInput)
+          .mockReturnValueOnce({ error: { message: mockReturnedMessage, ref: mockReturnedRef, fieldRefs: mockReturnedFieldRefs }, parsedDate: undefined });
+      });
 
-        const { error: expectedError } = applyStandardValidationAndParseDateInput(dateObjectToTest, 'bank request date', 'bank-request-date');
+      it('should call applyStandardValidationAndParseDateInput', () => {
+        validateBankRequestDate(dateObjectToTest);
 
-        expect(receivedErrors?.bankRequestDateError.message).toEqual(expectedError?.message);
-        expect(receivedErrors?.bankRequestDateError.fields).toEqual(expectedError?.fieldRefs);
+        expect(applyStandardValidationAndParseDateInput).toHaveBeenCalledTimes(1);
+      });
+
+      it('should return the result of applyStandardValidationAndParseDateInput when it errors', () => {
+        const result = validateBankRequestDate(dateObjectToTest);
+
+        const expectedError = {
+          summary: [{ text: mockReturnedMessage, href: `#${mockReturnedFieldRefs[0]}` }],
+          bankRequestDateError: { message: mockReturnedMessage, fields: mockReturnedFieldRefs },
+        };
+
+        expect(result.errors).toEqual(expectedError);
       });
     });
   });
