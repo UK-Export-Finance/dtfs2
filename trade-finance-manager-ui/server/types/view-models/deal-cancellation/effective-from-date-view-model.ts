@@ -6,6 +6,11 @@ export type EffectiveFromDateErrorsViewModel = {
   effectiveFromDateError: { message: string; fields: string[] };
 };
 
+export type EffectiveFromDateValidationViewModel = {
+  errors: EffectiveFromDateErrorsViewModel | null;
+  effectiveFromDate?: Date;
+};
+
 export type EffectiveFromDateViewModel = BaseViewModel & {
   ukefDealId: string;
   dealId: string;
