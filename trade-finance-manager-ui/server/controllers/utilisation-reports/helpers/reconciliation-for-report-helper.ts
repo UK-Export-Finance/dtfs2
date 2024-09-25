@@ -282,7 +282,7 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
         return paymentDetails;
       }
 
-      const mappedFeeRecords = feeRecords.map(({ facilityId, exporter }) => ({ facilityId, exporter }));
+      const mappedFeeRecords = feeRecords.map(({ id, facilityId, exporter }) => ({ id, facilityId, exporter }));
       return [
         ...paymentDetails,
         ...paymentsReceived.map((payment) => ({

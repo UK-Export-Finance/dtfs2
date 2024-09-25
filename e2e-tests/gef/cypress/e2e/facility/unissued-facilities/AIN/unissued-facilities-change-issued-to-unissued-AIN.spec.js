@@ -7,7 +7,7 @@ import CONSTANTS from '../../../../fixtures/constants';
 import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
-import { multipleMockGefFacilities } from '../../../../fixtures/mocks/mock-facilities';
+import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { backLink, cancelLink, continueButton, headingCaption, mainHeading, submitButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';

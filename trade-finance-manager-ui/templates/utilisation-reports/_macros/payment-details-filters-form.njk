@@ -1,0 +1,58 @@
+{% from "moj/components/filter/macro.njk" import mojFilter %}
+{% from 'govuk/components/input/macro.njk' import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% macro render(params) %}
+  {% set filters = params.filters %}
+  {% set paymentReference = params.paymentReference %}
+  {% set facilityId = params.facilityId %}
+
+  {% if filters.currency %}
+    {{ govukRadios({
+      name: "paymentDetailsCurrency",
+      fieldset: {
+        legend: {
+          text: "Currency",
+          classes: "govuk-fieldset__legend--m"
+        }
+      },
+      items: filters.currency,
+      attributes: {
+        'data-cy': 'payment-details--filter-currency'
+      }
+    }) }}
+  {% endif %}
+
+  {{ govukInput({
+    id: 'paymentDetailsPaymentReference',
+    name: 'paymentDetailsPaymentReference',
+    value: paymentReference,
+    label: {
+      text: 'Payment reference',
+      classes: 'govuk-label--m',
+      attributes: {
+        'data-cy': 'payment-details--filter-payment-reference-label'
+      }
+    },
+    attributes: {
+      'data-cy': 'payment-details--filter-payment-reference-input'
+    }
+  }) }}
+
+  {{ govukInput({
+    id: 'paymentDetailsFacilityId',
+    name: 'paymentDetailsFacilityId',
+    value: facilityId,
+    label: {
+      text: 'Facility ID',
+      classes: 'govuk-label--m',
+      attributes: {
+        'data-cy': 'payment-details--filter-facility-id-label'
+      }
+    },
+    attributes: {
+      'data-cy': 'payment-details--filter-facility-id-input'
+    }
+  }) }}
+
+{% endmacro %}
