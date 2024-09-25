@@ -1,7 +1,7 @@
-import relative from '../../relativeURL';
-import { cancelLink, errorSummary, mainHeading, submitButton } from '../../partials';
-import returnToMaker from '../../pages/return-to-maker';
-import { BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
+import relative from '../relativeURL';
+import { cancelLink, errorSummary, mainHeading, submitButton } from '../partials';
+import returnToMaker from '../pages/return-to-maker';
+import { BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 let dealIds = [];
 
