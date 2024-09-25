@@ -84,11 +84,10 @@ env:
   timezone: ${{ vars.TIMEZONE }}
   node: ${{ vars.NODE_VERSION }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+  MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
   MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
   MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
-  MONGODB_URI_LOCALHOST: ${{ secrets.MONGODB_URI_LOCALHOST }}
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
   AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
@@ -207,8 +206,6 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: |
           sleep 100s
           npm run load
@@ -220,8 +217,6 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
@@ -487,8 +482,6 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: |
           sleep 100s
           npm run load
@@ -567,8 +560,6 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: |
           sleep 100s
           npm run load
@@ -654,8 +645,6 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: |
           sleep 100s
           npm run load
@@ -737,8 +726,6 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: |
           sleep 100s
           npm run load
@@ -849,8 +836,6 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: |
           sleep 100s
           npm run load
