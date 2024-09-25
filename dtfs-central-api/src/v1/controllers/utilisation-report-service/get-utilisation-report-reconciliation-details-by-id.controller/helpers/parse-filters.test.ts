@@ -62,10 +62,10 @@ describe('parse-filters helper', () => {
     });
 
     describe('payment currency', () => {
-      it('returns an object with undefined paymentCurrency when an invalid paymentCurrency is provided', () => {
+      it('returns an object with undefined paymentCurrency when paymentCurrency is undefined', () => {
         // Arrange
-        const paymentDetailsFilters: PaymentDetailsFilters = { paymentCurrency: 'invalid-payment-currency' };
-        const expected = { paymentCurrency: undefined };
+        const paymentDetailsFilters: PaymentDetailsFilters = { paymentCurrency: undefined };
+        const expected = paymentDetailsFilters;
 
         // Act
         const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);

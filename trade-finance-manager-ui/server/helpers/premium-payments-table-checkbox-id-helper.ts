@@ -1,4 +1,4 @@
-import { Currency, CURRENCY_REGEX, CURRENCY_REGEX_GROUP, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { CURRENCY, Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { PremiumPaymentsTableCheckboxId } from '../types/premium-payments-table-checkbox-id';
 
 /**
@@ -8,6 +8,14 @@ import { PremiumPaymentsTableCheckboxId } from '../types/premium-payments-table-
  */
 const COMMA_SEPARATED_IDS_REGEX_GROUP = `(?<commaSeparatedIds>(\\d+,?)+)`;
 const COMMA_SEPARATED_IDS_REGEX = new RegExp(COMMA_SEPARATED_IDS_REGEX_GROUP);
+
+/**
+ * Regular expression group to match valid currency codes.
+ * This regex captures any of the currency codes defined in the CURRENCY enum.
+ * Example matches: "GBP", "USD", etc.
+ */
+const CURRENCY_REGEX_GROUP = `(?<currency>${Object.values(CURRENCY).join('|')})`;
+const CURRENCY_REGEX = new RegExp(CURRENCY_REGEX_GROUP);
 
 /**
  * Regular expression group to match valid fee record statuses.

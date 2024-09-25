@@ -1,4 +1,4 @@
-import { CURRENCY_REGEX, isPaymentReferenceOverFiftyCharacters, PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { isPaymentReferenceOverFiftyCharacters, PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { REGEX } from '../../../../../constants';
 
 /**
