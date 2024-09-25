@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest, DealSubmissionType } from '@ukef/dtfs2-common';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { ReasonForCancellingViewModel } from '../../../types/view-models';
@@ -20,7 +20,7 @@ export const getReasonForCancelling = async (req: GetReasonForCancellingRequest,
   const { _id } = req.params;
   const { user, userToken } = asUserSession(req.session);
   try {
-    const deal = (await api.getDeal(_id, userToken)) as { dealSnapshot: { details: { ukefDealId: string }; submissionType: DealSubmissionType } };
+    const deal = await api.getDeal(_id, userToken);
 
     if (!deal) {
       return res.redirect('/not-found');
@@ -58,7 +58,7 @@ export const postReasonForCancelling = async (req: PostReasonForCancellingReques
   const { user, userToken } = asUserSession(req.session);
 
   try {
-    const deal = (await api.getDeal(_id, userToken)) as { dealSnapshot: { details: { ukefDealId: string }; submissionType: DealSubmissionType } };
+    const deal = await api.getDeal(_id, userToken);
 
     if (!deal) {
       return res.redirect('/not-found');
