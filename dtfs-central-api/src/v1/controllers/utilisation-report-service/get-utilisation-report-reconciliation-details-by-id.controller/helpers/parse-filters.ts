@@ -1,4 +1,4 @@
-import { CURRENCY_REGEX, PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { CURRENCY_REGEX, isPaymentReferenceOverFiftyCharacters, PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { REGEX } from '../../../../../constants';
 
 /**
@@ -18,20 +18,20 @@ export const parsePaymentDetailsFilters = (paymentDetailsFilters?: PaymentDetail
 
   let facilityIdFilter;
 
-  if (!facilityId || REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityId)) {
+  if (facilityId && REGEX.UKEF_PARTIAL_FACILITY_ID_REGEX.test(facilityId)) {
     facilityIdFilter = facilityId;
   }
 
-  let paymentCurrencyFilter;
+  let paymentReferenceFilter;
 
-  if (!paymentCurrency || CURRENCY_REGEX.test(paymentCurrency)) {
-    paymentCurrencyFilter = paymentCurrency;
+  if (paymentReference && !isPaymentReferenceOverFiftyCharacters(paymentReference)) {
+    paymentReferenceFilter = paymentReference;
   }
 
   return {
     facilityId: facilityIdFilter,
-    paymentCurrency: paymentCurrencyFilter,
-    paymentReference,
+    paymentReference: paymentReferenceFilter,
+    paymentCurrency,
   };
 };
 
