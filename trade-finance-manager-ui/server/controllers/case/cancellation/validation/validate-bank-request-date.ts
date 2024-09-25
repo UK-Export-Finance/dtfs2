@@ -7,10 +7,11 @@ const DATE_TOO_EARLY_MESSAGE = 'The bank request date cannot exceed 12 months in
 
 /**
  * Returns the error object containing the error summary text with links and the inline error text with refs
+ * @private
  * @param message the error message to display in the summary and inline
  * @param refs a list of the specific date fields the error message relates to
  */
-const getErrorObjectFromMessageAndRefs = (message: string, refs: string[]) => {
+export const getErrorObjectFromMessageAndRefs = (message: string, refs: string[]) => {
   return {
     errors: {
       summary: [{ text: message, href: `#${refs[0]}` }],
