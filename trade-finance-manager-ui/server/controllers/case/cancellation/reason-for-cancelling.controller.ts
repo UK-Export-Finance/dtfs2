@@ -4,6 +4,7 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { ReasonForCancellingViewModel } from '../../../types/view-models';
 import { validateReasonForCancelling } from './validation/validate-reason-for-cancelling';
+import api from '../../../api';
 
 export type GetReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string } }>;
 export type PostReasonForCancellingRequest = CustomExpressRequest<{ params: { _id: string }; reqBody: { reason: string } }>;
@@ -14,17 +15,30 @@ export type PostReasonForCancellingRequest = CustomExpressRequest<{ params: { _i
  * @param req - The express request
  * @param res - The express response
  */
-export const getReasonForCancelling = (req: GetReasonForCancellingRequest, res: Response) => {
+export const getReasonForCancelling = async (req: GetReasonForCancellingRequest, res: Response) => {
   const { _id } = req.params;
-  const { user } = asUserSession(req.session);
+  const { user, userToken } = asUserSession(req.session);
+  try {
+    const deal = (await api.getDeal(_id, userToken)) as { dealSnapshot: { details: { ukefDealId: string } } };
 
-  const reasonForCancellingViewModel: ReasonForCancellingViewModel = {
-    activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
-    user,
-    ukefDealId: '0040613574', // TODO: DTFS2-7350 get values from database
-    dealId: _id,
-  };
-  return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);
+    const cancellation = await api.getDealCancellation(_id, userToken);
+
+    if (!deal) {
+      return res.redirect('/not-found');
+    }
+
+    const reasonForCancellingViewModel: ReasonForCancellingViewModel = {
+      activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+      user,
+      ukefDealId: deal.dealSnapshot.details.ukefDealId,
+      dealId: _id,
+      reasonForCancelling: cancellation.reason,
+    };
+    return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);
+  } catch (error) {
+    console.error('Error getting reason for cancelling', error);
+    return res.render('_partials/problem-with-service.njk');
+  }
 };
 
 /**
