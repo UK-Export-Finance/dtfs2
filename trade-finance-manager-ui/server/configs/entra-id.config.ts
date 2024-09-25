@@ -1,4 +1,4 @@
-import { MsalAppConfig } from '@azure/msal-node';
+import { Configuration as MsalAppConfig } from '@azure/msal-node';
 import { z } from 'zod';
 import dotenv from 'dotenv';
 
