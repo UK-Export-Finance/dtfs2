@@ -11,7 +11,7 @@ import statusBanner from '../../pages/application-status-banner';
 
 let dealId;
 
-context('Return to Maker as MIA', () => {
+context('Return to Maker as MIA  - feature flag disabled', () => {
   before(() => {
     cy.loadData();
     cy.apiLogin(BANK1_CHECKER1)

@@ -12,7 +12,7 @@ let token;
 const now = new Date();
 const { yesterday } = dateConstants;
 
-context('About Facility Page', () => {
+context('About Facility Page  - feature flag enabled', () => {
   before(() => {
     cy.loadData();
     cy.apiLogin(BANK1_MAKER1)

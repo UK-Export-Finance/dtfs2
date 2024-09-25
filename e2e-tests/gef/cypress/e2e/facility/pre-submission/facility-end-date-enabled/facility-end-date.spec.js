@@ -23,7 +23,7 @@ const nextYear = Number(todayYear) + 1;
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
-context('Facility End Date Page', () => {
+context('Facility End Date Page - feature flag enabled', () => {
   let application;
   let facilityId;
 

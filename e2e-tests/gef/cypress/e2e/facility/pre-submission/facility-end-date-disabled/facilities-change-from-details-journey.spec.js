@@ -6,7 +6,7 @@ import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixtur
 const applications = [];
 let token;
 
-context('Changing facility details from application-details page should take you to next page on facilities journey', () => {
+context('Changing facility details from application-details page should take you to next page on facilities journey  - feature flag disabled', () => {
   before(() => {
     cy.loadData();
     cy.apiLogin(BANK1_MAKER1)

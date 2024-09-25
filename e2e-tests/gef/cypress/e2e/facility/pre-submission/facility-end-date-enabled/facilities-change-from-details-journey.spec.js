@@ -9,7 +9,7 @@ import { todayDay, todayMonth, todayYear, today } from '../../../../../../e2e-fi
 const applications = [];
 let token;
 
-context('Changing facility details from application-details page should take you to next page on facilities journey', () => {
+context('Changing facility details from application-details page should take you to next page on facilities journey - feature flag enabled', () => {
   before(() => {
     cy.loadData();
     cy.apiLogin(BANK1_MAKER1)
