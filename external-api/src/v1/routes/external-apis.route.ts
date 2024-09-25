@@ -370,7 +370,7 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *         name: partyDbCompanyRegistrationNumber
  *         schema:
  *           type: string
- *           example: '1234'
+ *           example: '12341234'
  *         required: true
  *         description: Companies House Registration Number to create the UKEF Party
  *     responses:
@@ -380,8 +380,6 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/PartyDB'
- *       404:
- *         description: Not found
  */
 apiRoutes.post('/party-db/:partyDbCompanyRegistrationNumber', partyDb.createParty);
 
