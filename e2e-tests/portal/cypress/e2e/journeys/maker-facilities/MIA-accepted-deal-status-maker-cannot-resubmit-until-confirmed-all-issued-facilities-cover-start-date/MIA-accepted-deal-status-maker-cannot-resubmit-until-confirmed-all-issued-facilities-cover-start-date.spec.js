@@ -175,7 +175,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const NEW_LOAN_COVER_START_DATE = DATE_CONSTANTS.oneMonth;
 
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
-    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_LOAN_COVER_START_DATE() });
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_LOAN_COVER_START_DATE });
 
     cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
@@ -196,7 +196,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     cy.url().should('eq', relative(`/contract/${dealId}/loan/${unconditionalCompletedLoanId}/confirm-requested-cover-start-date`));
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
 
-    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_LOAN_COVER_START_DATE() });
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate', date: NEW_LOAN_COVER_START_DATE });
 
     cy.clickSubmitButton();
 
