@@ -823,10 +823,10 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
     return { status: 200, data: response.data };
   } catch (error) {
     console.error('Unable to get party DB info %o', error);
-    if (error.code === 404) {
+    if (error?.status === 404) {
       return { status: 404, data: 'Party not found' };
     }
-    return { status: error?.code || 500, data: 'Failed to get party' };
+    return { status: error?.status || 500, data: 'Failed to get party' };
   }
 };
 
