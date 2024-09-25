@@ -1,22 +1,20 @@
-import { todayFormattedShort } from '../../../../../e2e-fixtures/dateConstants';
+import { todayFormattedShort } from '../../../../e2e-fixtures/dateConstants';
 
-import relative from '../../relativeURL';
-import { form, mainHeading, submitButton } from '../../partials';
-import manualInclusion from '../../pages/manual-inclusion-questionnaire';
-import applicationDetails from '../../pages/application-details';
-import submitToUkef from '../../pages/submit-to-ukef';
-import aboutExporter from '../../pages/about-exporter';
-import cloneGEFDeal from '../../pages/clone-deal';
-import nameApplication from '../../pages/name-application';
-import mandatoryCriteria from '../../pages/mandatory-criteria';
-import uploadFiles from '../../pages/upload-files';
-import statusBanner from '../../pages/application-status-banner';
-import CONSTANTS from '../../../fixtures/constants';
-import { anUnissuedCashFacility } from '../../../../../e2e-fixtures/mock-gef-facilities';
-import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_MIN } from '../../../fixtures/mocks/mock-deals';
-
-const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
+import relative from '../relativeURL';
+import { form, mainHeading, submitButton } from '../partials';
+import manualInclusion from '../pages/manual-inclusion-questionnaire';
+import applicationDetails from '../pages/application-details';
+import submitToUkef from '../pages/submit-to-ukef';
+import aboutExporter from '../pages/about-exporter';
+import cloneGEFDeal from '../pages/clone-deal';
+import nameApplication from '../pages/name-application';
+import mandatoryCriteria from '../pages/mandatory-criteria';
+import uploadFiles from '../pages/upload-files';
+import statusBanner from '../pages/application-status-banner';
+import CONSTANTS from '../../fixtures/constants';
+import { anUnissuedCashFacility } from '../../../../e2e-fixtures/mock-gef-facilities';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_MIN } from '../../fixtures/mocks/mock-deals';
 
 context('Clone GEF (AIN) deal', () => {
   let AINdealId;
@@ -331,7 +329,7 @@ context('Clone GEF (MIN) deal', () => {
           cy.apiUpdateApplication(MINdealId, token, MOCK_APPLICATION_MIN).then(() => {
             cy.apiCreateFacility(MINdealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
-              cy.apiUpdateFacility(facilityOneId, token, anUnissuedCashFacility({ facilityEndDateEnabled }));
+              cy.apiUpdateFacility(facilityOneId, token, anUnissuedCashFacility());
             });
           });
         });
