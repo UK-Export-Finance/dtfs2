@@ -596,9 +596,13 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec:
-          [
-            'case/**/*.spec.js',
+        spec: [
+            'case/*.spec.js',
+            'case/activities/*.spec.js',
+            'case/deal-cancellation-disabled/*.spec.js',
+            'case/documents/*.spec.js',
+            'case/parties/*.spec.js',
+            'case/tasks/*.spec.js',
             'case-amendments/add-bank-decision/*.spec.js',
             'case-amendments/add-underwriter-decision/*.spec.js',
             'case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
@@ -788,7 +792,12 @@ jobs:
             './gef/cypress/e2e/security/**/*.spec.js',
             './gef/cypress/e2e/ukef/**/*.spec.js',
             './gef/cypress/e2e/upload/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/activities/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/deal-cancellation-enabled/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/documents/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/parties/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/tasks/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/add-bank-decision/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/add-underwriter-decision/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
