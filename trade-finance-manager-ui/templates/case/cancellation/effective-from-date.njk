@@ -6,14 +6,14 @@
 {% extends "index.njk" %}
 
 {% block pageTitle -%}
-  Cancellation - Bank request date
+  Cancellation - Date effective from
 {%- endblock %}
 
 {% set headingHtml %}
 <h1 class="govuk-label-wrapper">
   <span class="govuk-caption-l govuk-!-margin-top-3 govuk-!-margin-bottom-1">Cancel deal {{ ukefDealId }}</span>
-  <label class="govuk-label govuk-label--l" for="bank-request-date">
-    Bank request date
+  <label class="govuk-label govuk-label--l" for="effective-from-date">
+    Date effective from
   </label>
 </h1>
 {% endset %}
@@ -21,7 +21,7 @@
 {% block sub_content %}
   {{ govukBackLink({
       text: "Back",
-      href: "/case/" + dealId + "/cancellation/reason",
+      href: "/case/" + dealId + "/cancellation/bank-request-date",
       attributes: {
         'data-cy': 'back-link'
       }
@@ -44,52 +44,52 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukDateInput({
-          id: "bank-request-date",
-          value: bankRequestDate,
-          namePrefix: "bank-request-date",
+          id: "effective-from-date",
+          value: effectiveFromDate,
+          namePrefix: "effective-from-date",
           fieldset: {
             legend: {
               html: headingHtml
             }
           },
           hint: {
-            text: "For example, 31 3 2023",
+            text: "For example, 31 3 2024",
             attributes: {
-              "data-cy": "bank-request-date-hint"
+              "data-cy": "effective-from-date-hint"
             }
           },
           errorMessage: errors and {
-            text: errors.bankRequestDateError.message,
+            text: errors.effectiveFromDateError.message,
             attributes: {
-              'data-cy': 'bank-request-date-inline-error'
+              'data-cy': 'effective-from-date-inline-error'
             }
           },
           items: [
             {
               label: "Day",
-              classes: (errors and 'bank-request-date-day' in errors.bankRequestDateError.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+              classes: (errors and 'effective-from-date-day' in errors.effectiveFromDateError.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
               name: "day",
               value: day,
               attributes: {
-                'data-cy': "bank-request-date-day"
+                'data-cy': "effective-from-date-day"
               }
             },
             {
               label: "Month",
-              classes: (errors and 'bank-request-date-month' in errors.bankRequestDateError.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
+              classes: (errors and 'effective-from-date-month' in errors.effectiveFromDateError.fields) and "govuk-input--error govuk-input--width-2" or "govuk-input--width-2",
               name: "month",
               value: month,
               attributes: {
-                'data-cy': "bank-request-date-month"
+                'data-cy': "effective-from-date-month"
               }
             },
             {
               label: "Year",
-              classes: (errors and 'bank-request-date-year' in errors.bankRequestDateError.fields) and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
+              classes: (errors and 'effective-from-date-year' in errors.effectiveFromDateError.fields) and "govuk-input--error govuk-input--width-4" or "govuk-input--width-4",
               name: "year",
               value: year,
               attributes: {
-                'data-cy': "bank-request-date-year"
+                'data-cy': "effective-from-date-year"
               }
             }
           ]

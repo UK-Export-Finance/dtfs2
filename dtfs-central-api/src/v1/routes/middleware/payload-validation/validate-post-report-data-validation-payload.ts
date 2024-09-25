@@ -1,6 +1,6 @@
 import z from 'zod';
+import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
 import { UtilisationReportCsvRowDataSchema } from './schemas';
-import { createValidationMiddlewareForSchema } from './create-validation-middleware-for-schema';
 
 const PostReportDataValidationSchema = z.object({
   reportData: z.array(UtilisationReportCsvRowDataSchema),
