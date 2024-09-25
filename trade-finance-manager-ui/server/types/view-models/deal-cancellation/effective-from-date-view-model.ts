@@ -12,5 +12,5 @@ export type EffectiveFromDateViewModel = BaseViewModel & {
   day?: string;
   month?: string;
   year?: string;
-  errors?: EffectiveFromDateErrorsViewModel | null;
+  errors?: EffectiveFromDateErrorsViewModel;
 };
