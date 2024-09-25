@@ -46,7 +46,7 @@ export const createParty = async (req: Request, res: Response) => {
     url: `${APIM_MDM_URL}customers`,
     headers,
     data: {
-      Name: companyReg,
+      companyRegistrationNumber: companyReg,
     },
   }).catch((error: AxiosError) => {
     console.error('Error calling Party DB API %o', error);
