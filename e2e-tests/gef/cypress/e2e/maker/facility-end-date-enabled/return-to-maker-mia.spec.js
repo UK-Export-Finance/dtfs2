@@ -105,6 +105,8 @@ context('Return to Maker as MIA', () => {
       applicationDetails.facilitySummaryListTable(0).nameAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).hasBeenIssuedAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).monthsOfCoverAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(0).facilityEndDateAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).facilityProvidedOnAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).valueAction().contains('Change');
 
