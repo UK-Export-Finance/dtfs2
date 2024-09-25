@@ -85,7 +85,7 @@ describe(`POST ${BASE_URL}`, () => {
 
   withSqlIdPathParameterValidationTests({
     baseUrl: BASE_URL,
-    makeRequest: (url) => testApi.post(aValidRequestBody()).to(url),
+    makeRequest: (url: string) => testApi.post(aValidRequestBody()).to(url),
   });
 
   it("returns a 400 (Bad Request) when the payload 'user' is an empty object", async () => {
