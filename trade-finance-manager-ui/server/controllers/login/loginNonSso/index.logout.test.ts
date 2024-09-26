@@ -1,8 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { getLoginUrl } from '../../../services/entra-id-service';
 import { logout } from '.';
-
-const mockLoginRedirectUrl = `mock-login-redirect-url`;
 
 jest.mock('../../../services/entra-id-service', () => ({
   getLoginUrl: jest.fn(),
@@ -11,7 +8,6 @@ jest.mock('../../../services/entra-id-service', () => ({
 describe('controllers - login (sso)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.mocked(getLoginUrl).mockReturnValue(mockLoginRedirectUrl);
   });
 
   describe('logout', () => {
