@@ -25,7 +25,7 @@ const unissuedCashFacility = anUnissuedCashFacility({ facilityEndDateEnabled: tr
 
 const unissuedFacilitiesArray = [unissuedCashFacility];
 
-context('Unissued Facilities AIN - change all to issued from unissued table', () => {
+context('Unissued Facilities AIN - change all to issued from unissued table - feature flag enabled', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
