@@ -126,7 +126,7 @@ describe('postBankRequestDate', () => {
       });
     });
 
-    it('redirects to the bank request date page', () => {
+    it('redirects to the effective from date page', () => {
       // Arrange
       const today = new Date();
 
