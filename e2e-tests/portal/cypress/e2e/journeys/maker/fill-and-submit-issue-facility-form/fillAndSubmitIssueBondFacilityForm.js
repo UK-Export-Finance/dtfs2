@@ -1,18 +1,19 @@
-const pages = require('../../../pages');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+import { oneMonth, today, twoDays } from '../../../../../../e2e-fixtures/dateConstants';
 
-export const ISSUED_BOND_DATE_VALUE = dateConstants.today;
-export const COVER_START_DATE_VALUE = dateConstants.twoDays;
-export const COVER_END_DATE_VALUE = dateConstants.oneMonth;
+const pages = require('../../../pages');
+
+export const ISSUED_BOND_DATE_VALUE = today.date;
+export const COVER_START_DATE_VALUE = twoDays.date;
+export const COVER_END_DATE_VALUE = oneMonth.date;
 
 export const fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate = () => {
-  cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), dateConstants.todayDay);
-  cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), dateConstants.todayMonth);
-  cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), dateConstants.todayYear);
+  cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), today.day);
+  cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), today.month);
+  cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), today.year);
 
-  cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), dateConstants.oneMonthDay);
-  cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), dateConstants.oneMonthMonth);
-  cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), dateConstants.oneMonthYear);
+  cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), oneMonth.day);
+  cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), oneMonth.month);
+  cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), oneMonth.year);
 
   cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
 
@@ -20,27 +21,27 @@ export const fillAndSubmitIssueBondFacilityFormWithoutRequestedCoverStartDate = 
 };
 
 export const fillAndSubmitIssueBondFacilityForm = () => {
-  cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), dateConstants.todayDay);
-  cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), dateConstants.todayMonth);
-  cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), dateConstants.todayYear);
+  cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), today.day);
+  cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), today.month);
+  cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), today.year);
 
   pages.bondIssueFacility.requestedCoverStartDateDayInput().clear();
-  cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateDayInput(), dateConstants.twoDaysDay);
+  cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateDayInput(), twoDays.day);
 
   pages.bondIssueFacility.requestedCoverStartDateMonthInput().clear();
-  cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateMonthInput(), dateConstants.twoDaysMonth);
+  cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateMonthInput(), twoDays.month);
 
   pages.bondIssueFacility.requestedCoverStartDateYearInput().clear();
-  cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateYearInput(), dateConstants.twoDaysYear);
+  cy.keyboardInput(pages.bondIssueFacility.requestedCoverStartDateYearInput(), twoDays.year);
 
   pages.bondIssueFacility.coverEndDateDayInput().clear();
-  cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), dateConstants.oneMonthDay);
+  cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), oneMonth.day);
 
   pages.bondIssueFacility.coverEndDateMonthInput().clear();
-  cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), dateConstants.oneMonthMonth);
+  cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), oneMonth.month);
 
   pages.bondIssueFacility.coverEndDateYearInput().clear();
-  cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), dateConstants.oneMonthYear);
+  cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), oneMonth.year);
 
   cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
 

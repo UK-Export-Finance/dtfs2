@@ -1,27 +1,18 @@
 const dealThatJustNeedsConversionDate = require('./dealThatJustNeedsConversionDate');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { today, oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 module.exports = () => {
-  const now = new Date();
-
-  const nowDay = dateConstants.todayDay.toString();
-  const nowMonth = dateConstants.todayMonth.toString();
-  const nowYear = dateConstants.todayYear.toString();
-  const nowPlusMonthDay = dateConstants.oneMonthDay.toString();
-  const nowPlusMonthMonth = dateConstants.oneMonthMonth.toString();
-  const nowPlusMonthYear = dateConstants.oneMonthYear.toString();
-
   const deal = { ...dealThatJustNeedsConversionDate() };
 
-  deal.submissionDetails['supplyContractConversionDate-day'] = nowDay;
-  deal.submissionDetails['supplyContractConversionDate-month'] = nowMonth;
-  deal.submissionDetails['supplyContractConversionDate-year'] = nowYear;
+  deal.submissionDetails['supplyContractConversionDate-day'] = today.day;
+  deal.submissionDetails['supplyContractConversionDate-month'] = today.month;
+  deal.submissionDetails['supplyContractConversionDate-year'] = today.year;
 
   const loan = deal.mockFacilities.find((f) => f.type === 'Loan');
-  loan.requestedCoverStartDate = now.valueOf();
+  loan.requestedCoverStartDate = today.unixMilliseconds;
 
-  loan['coverEndDate-day'] = nowPlusMonthDay;
-  loan['coverEndDate-month'] = nowPlusMonthMonth;
-  loan['coverEndDate-year'] = nowPlusMonthYear;
+  loan['coverEndDate-day'] = oneMonth.day;
+  loan['coverEndDate-month'] = oneMonth.month;
+  loan['coverEndDate-year'] = oneMonth.year;
   return deal;
 };

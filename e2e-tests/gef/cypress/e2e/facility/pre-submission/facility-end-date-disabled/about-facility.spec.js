@@ -2,13 +2,12 @@ import relative from '../../../relativeURL';
 import { backLink, continueButton, errorSummary, headingCaption, mainHeading, form, saveAndReturnButton } from '../../../partials';
 import aboutFacility from '../../../pages/about-facility';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { today, tomorrow, yesterday } from '../../../../../../e2e-fixtures/dateConstants';
 
 const applications = [];
 let token;
 
 const now = new Date();
-const { yesterday } = dateConstants;
 
 context('About Facility Page - feature flag disabled', () => {
   before(() => {
@@ -160,9 +159,9 @@ context('About Facility Page - feature flag disabled', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
-      cy.keyboardInput(aboutFacility.coverEndDateDay(), yesterday.getDate());
-      cy.keyboardInput(aboutFacility.coverEndDateMonth(), yesterday.getMonth() + 1);
-      cy.keyboardInput(aboutFacility.coverEndDateYear(), yesterday.getFullYear());
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), yesterday.day);
+      cy.keyboardInput(aboutFacility.coverEndDateMonth(), yesterday.month);
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), yesterday.year);
       cy.clickContinueButton();
       aboutFacility.coverEndDateError().contains('Cover end date cannot be before cover start date');
     });
@@ -171,12 +170,12 @@ context('About Facility Page - feature flag disabled', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacility.coverStartDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(aboutFacility.coverStartDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(aboutFacility.coverStartDateYear(), dateConstants.todayYear);
-      cy.keyboardInput(aboutFacility.coverEndDateDay(), dateConstants.tomorrowDay);
-      cy.keyboardInput(aboutFacility.coverEndDateMonth(), dateConstants.tomorrowMonth);
-      cy.keyboardInput(aboutFacility.coverEndDateYear(), dateConstants.tomorrowYear);
+      cy.keyboardInput(aboutFacility.coverStartDateDay(), today.day);
+      cy.keyboardInput(aboutFacility.coverStartDateMonth(), today.month);
+      cy.keyboardInput(aboutFacility.coverStartDateYear(), today.year);
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), tomorrow.day);
+      cy.keyboardInput(aboutFacility.coverEndDateMonth(), tomorrow.month);
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), tomorrow.year);
 
       cy.clickContinueButton();
 
@@ -187,12 +186,12 @@ context('About Facility Page - feature flag disabled', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacility.coverStartDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(aboutFacility.coverStartDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(aboutFacility.coverStartDateYear(), dateConstants.todayYear);
-      cy.keyboardInput(aboutFacility.coverEndDateDay(), dateConstants.tomorrowDay);
-      cy.keyboardInput(aboutFacility.coverEndDateMonth(), dateConstants.tomorrowMonth);
-      cy.keyboardInput(aboutFacility.coverEndDateYear(), dateConstants.tomorrowYear);
+      cy.keyboardInput(aboutFacility.coverStartDateDay(), today.day);
+      cy.keyboardInput(aboutFacility.coverStartDateMonth(), today.month);
+      cy.keyboardInput(aboutFacility.coverStartDateYear(), today.year);
+      cy.keyboardInput(aboutFacility.coverEndDateDay(), tomorrow.day);
+      cy.keyboardInput(aboutFacility.coverEndDateMonth(), tomorrow.month);
+      cy.keyboardInput(aboutFacility.coverEndDateYear(), tomorrow.year);
 
       cy.clickContinueButton();
       errorSummary().should('not.exist');
@@ -200,12 +199,12 @@ context('About Facility Page - feature flag disabled', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.facilityName().should('have.value', 'Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().should('be.checked');
-      aboutFacility.coverStartDateDay().should('have.value', dateConstants.today.getDate().toString()); // pre-populated date uses the 'd' format (not 'dd' like 'todayDay')
-      aboutFacility.coverStartDateMonth().should('have.value', dateConstants.today.getMonth() + 1); // pre-populated month uses the 'M' format (not 'MM' like 'todayMonth')
-      aboutFacility.coverStartDateYear().should('have.value', dateConstants.todayYear);
-      aboutFacility.coverEndDateDay().should('have.value', dateConstants.tomorrow.getDate().toString()); // pre-populated date uses the 'd' format (not 'dd' like 'tomorrowDay')
-      aboutFacility.coverEndDateMonth().should('have.value', dateConstants.tomorrow.getMonth() + 1); // pre-populated month uses the 'M' format (not 'MM' like 'tomorrowMonth')
-      aboutFacility.coverEndDateYear().should('have.value', dateConstants.tomorrowYear);
+      aboutFacility.coverStartDateDay().should('have.value', today.day); // pre-populated date uses the 'd' format (not 'dd' like 'today.day')
+      aboutFacility.coverStartDateMonth().should('have.value', today.month); // pre-populated month uses the 'M' format (not 'MM' like 'today.month')
+      aboutFacility.coverStartDateYear().should('have.value', today.year);
+      aboutFacility.coverEndDateDay().should('have.value', tomorrow.day); // pre-populated date uses the 'd' format (not 'dd' like 'tomorrowDay')
+      aboutFacility.coverEndDateMonth().should('have.value', tomorrow.month); // pre-populated month uses the 'M' format (not 'MM' like 'tomorrowMonth')
+      aboutFacility.coverEndDateYear().should('have.value', tomorrow.year);
       if (application.version >= 1) {
         aboutFacility.isUsingFacilityEndDateYes().should('be.checked');
         aboutFacility.isUsingFacilityEndDateNo().should('not.be.checked');

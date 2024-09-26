@@ -1,8 +1,8 @@
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { sevenDaysAgo, twoMonths, oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date();
-const nowPlusWeek = `${dateConstants.sevenDaysUnix}000`;
+const nowPlusWeek = sevenDaysAgo.unixMilliseconds;
 
 const deal = {
   submissionType: 'Manual Inclusion Application',
@@ -19,7 +19,7 @@ const deal = {
   maker: {
     username: 'MAKER',
     roles: ['maker'],
-    lastLogin: now.valueOf(),
+    lastLogin: today.unixMilliseconds,
     firstname: 'Hugo',
     surname: 'Drax',
     email: 'maker@ukexportfinance.gov.uk',
@@ -43,7 +43,7 @@ const deal = {
       'user-status': 'active',
       username: 'CHECKER',
     },
-    submissionDate: now.valueOf(),
+    submissionDate: today.unixMilliseconds,
     ukefDealId: '1001349',
     approvalDate: '1599048727451',
   },
@@ -209,13 +209,13 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': dateConstants.twoMonthsDay.toString(),
-      'coverEndDate-month': dateConstants.twoMonthsMonth.toString(),
-      'coverEndDate-year': dateConstants.twoMonthsYear.toString(),
+      'coverEndDate-day': twoMonths.day,
+      'coverEndDate-month': twoMonths.month,
+      'coverEndDate-year': twoMonths.year,
       name: '1234',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
-      requestedCoverStartDate: `${dateConstants.oneMonthUnix}000`,
+      requestedCoverStartDate: oneMonth.unixMilliseconds,
       issuedDate: nowPlusWeek,
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
@@ -245,9 +245,9 @@ const deal = {
       'requestedCoverStartDate-day': '',
       'requestedCoverStartDate-month': '',
       'requestedCoverStartDate-year': '',
-      'coverEndDate-day': dateConstants.twoMonthsDay.toString(),
-      'coverEndDate-month': dateConstants.twoMonthsMonth.toString(),
-      'coverEndDate-year': dateConstants.twoMonthsYear.toString(),
+      'coverEndDate-day': twoMonths.day.toString(),
+      'coverEndDate-month': twoMonths.month.toString(),
+      'coverEndDate-year': twoMonths.year.toString(),
       disbursementAmount: '1,234.00',
       issueFacilityDetailsStarted: true,
       nameRequiredForIssuance: true,
@@ -255,7 +255,7 @@ const deal = {
       issueFacilityDetailsProvided: true,
       status: "Maker's input required",
       previousFacilityStage: 'Conditional',
-      requestedCoverStartDate: `${dateConstants.oneMonthUnix}000`,
+      requestedCoverStartDate: oneMonth.unixMilliseconds,
     },
   ],
   summary: {},

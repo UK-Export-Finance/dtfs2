@@ -1,11 +1,11 @@
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+const { twoMonths, oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
-const now = new Date().valueOf();
-const nowPlusOneMonth = `${dateConstants.oneMonthUnix}000`;
-const nowPlusTwoMonthsDay = dateConstants.twoMonthsDay.toString();
-const nowPlusTwoMonthsMonth = dateConstants.twoMonthsMonth.toString();
-const nowPlusTwoMonthsYear = dateConstants.twoMonthsYear.toString();
+const now = today.unixMilliseconds;
+const nowPlusOneMonth = oneMonth.unixMilliseconds;
+const nowPlusTwoMonthsDay = twoMonths.day;
+const nowPlusTwoMonthsMonth = twoMonths.month;
+const nowPlusTwoMonthsYear = twoMonths.year;
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',
@@ -27,7 +27,7 @@ const deal = {
       name: 'UKEF test bank (Delegated)',
       emails: ['maker@ukexportfinance.gov.uk', 'checker@ukexportfinance.gov.uk'],
     },
-    lastLogin: now,
+    lastLogin: today.unixMilliseconds,
     firstname: 'Hugo',
     surname: 'Drax',
     email: 'maker@ukexportfinance.gov.uk',

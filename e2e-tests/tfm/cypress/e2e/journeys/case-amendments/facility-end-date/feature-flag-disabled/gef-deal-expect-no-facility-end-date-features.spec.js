@@ -4,8 +4,8 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../..
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
-import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { today } from '../../../../../../../e2e-fixtures/dateConstants';
 
 context('Amendments - GEF deal does not display any Facility end date pages or fields when TFM feature flag is disabled', () => {
   let dealId;
@@ -49,9 +49,9 @@ context('Amendments - GEF deal does not display any Facility end date pages or f
     amendmentsPage.addAmendmentButton().click();
 
     cy.url().should('contain', 'request-date');
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), today.day);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), today.month);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), today.year);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -63,9 +63,9 @@ context('Amendments - GEF deal does not display any Facility end date pages or f
     cy.clickContinueButton();
 
     cy.url().should('contain', 'cover-end-date');
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), today.day);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), today.month);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), today.year);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'check-answers');

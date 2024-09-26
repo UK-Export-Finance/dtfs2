@@ -1,5 +1,3 @@
-import { todayFormattedShort } from '../../../../e2e-fixtures/dateConstants';
-
 import relative from '../relativeURL';
 import { cancelLink, errorSummary, mainHeading, submitButton } from '../partials';
 import submitToUkef from '../pages/submit-to-ukef';
@@ -10,6 +8,7 @@ import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-us
 
 import CONSTANTS from '../../fixtures/constants';
 import { toTitleCase } from '../../fixtures/helpers';
+import { today } from '../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 
@@ -100,9 +99,9 @@ context('Submit to UKEF', () => {
       it('application banner displays the submission date, pending UKEF deal ID and updated status and contains comment in correct format', () => {
         cy.visit(relative(`/gef/application-details/${dealId}`));
 
-        statusBanner.bannerDateSubmitted().contains(todayFormattedShort);
+        statusBanner.bannerDateSubmitted().contains(today.ddMMMyyyy);
         statusBanner.bannerUkefDealId();
-        statusBanner.bannerDateCreated().contains(todayFormattedShort);
+        statusBanner.bannerDateCreated().contains(today.ddMMMyyyy);
       });
     });
   });

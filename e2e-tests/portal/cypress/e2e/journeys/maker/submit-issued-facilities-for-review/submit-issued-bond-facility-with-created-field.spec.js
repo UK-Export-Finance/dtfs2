@@ -2,7 +2,8 @@ const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { FACILITY } = require('../../../../fixtures/constants');
 const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacilityStatuses');
-const dateConstants = require('../../../../../../e2e-fixtures/dateConstants');
+
+const { today, oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -44,13 +45,13 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
 
     bondRow.issueFacilityLink().click();
 
-    cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(pages.bondIssueFacility.issuedDateDayInput(), today.day);
+    cy.keyboardInput(pages.bondIssueFacility.issuedDateMonthInput(), today.month);
+    cy.keyboardInput(pages.bondIssueFacility.issuedDateYearInput(), today.year);
 
-    cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), dateConstants.oneMonthDay);
-    cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), dateConstants.oneMonthMonth);
-    cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), dateConstants.oneMonthYear);
+    cy.keyboardInput(pages.bondIssueFacility.coverEndDateDayInput(), oneMonth.day);
+    cy.keyboardInput(pages.bondIssueFacility.coverEndDateMonthInput(), oneMonth.month);
+    cy.keyboardInput(pages.bondIssueFacility.coverEndDateYearInput(), oneMonth.year);
 
     cy.keyboardInput(pages.bondIssueFacility.name(), '1234');
 

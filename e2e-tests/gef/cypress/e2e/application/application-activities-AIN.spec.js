@@ -8,7 +8,7 @@ import submitToUkef from '../pages/submit-to-ukef';
 
 import CONSTANTS from '../../fixtures/constants';
 import { toTitleCase } from '../../fixtures/helpers';
-import { todayFormatted, todayFormattedShort } from '../../../../e2e-fixtures/dateConstants';
+import { today } from '../../../../e2e-fixtures/dateConstants';
 
 let deal;
 let dealId;
@@ -92,7 +92,7 @@ context('Submit AIN deal and check portalActivities', () => {
         .activityTimeline()
         .contains(`${toTitleCase(CONSTANTS.DEAL_SUBMISSION_TYPE.MIA)}`)
         .should('not.exist');
-      applicationActivities.activityTimeline().contains(todayFormatted);
+      applicationActivities.activityTimeline().contains(today.dMMMMyyyy);
       applicationActivities.activityTimeline().contains(BANK1_CHECKER1.firstname);
     });
 
@@ -100,8 +100,8 @@ context('Submit AIN deal and check portalActivities', () => {
     it('should display the blue status banner', () => {
       applicationActivities.subNavigationBarActivities().click();
       statusBanner.applicationBanner().should('exist');
-      statusBanner.bannerDateCreated().contains(todayFormattedShort);
-      statusBanner.bannerDateSubmitted().contains(todayFormattedShort);
+      statusBanner.bannerDateCreated().contains(today.ddMMMyyyy);
+      statusBanner.bannerDateSubmitted().contains(today.ddMMMyyyy);
       statusBanner.bannerCreatedBy().contains(deal.maker.firstname);
       statusBanner.bannerCheckedBy().contains(BANK1_CHECKER1.firstname);
       statusBanner.bannerSubmissionType().contains(CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);

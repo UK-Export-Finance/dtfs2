@@ -5,9 +5,9 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../..
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
-import { todayDay, todayMonth, todayYear } from '../../../../../../../e2e-fixtures/dateConstants';
 import { DATE_FORMATS } from '../../../../../fixtures/constants';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { today } from '../../../../../../../e2e-fixtures/dateConstants';
 
 context('Amendments - GEF deal add multiple consecutive amendments impacting facility end date values - feature flag enabled', () => {
   let dealId;
@@ -206,9 +206,9 @@ context('Amendments - GEF deal add multiple consecutive amendments impacting fac
       amendmentsPage.addAmendmentButton().click();
 
       cy.url().should('contain', 'request-date');
-      cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), todayDay);
-      cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), todayMonth);
-      cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), todayYear);
+      cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), today.day);
+      cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), today.month);
+      cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), today.year);
       cy.clickContinueButton();
 
       cy.url().should('contain', 'request-approval');
@@ -216,9 +216,9 @@ context('Amendments - GEF deal add multiple consecutive amendments impacting fac
       cy.clickContinueButton();
 
       cy.url().should('contain', 'amendment-effective-date');
-      cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), todayDay);
-      cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), todayMonth);
-      cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), todayYear);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), today.day);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), today.month);
+      cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), today.year);
       cy.clickContinueButton();
 
       cy.url().should('contain', 'amendment-options');

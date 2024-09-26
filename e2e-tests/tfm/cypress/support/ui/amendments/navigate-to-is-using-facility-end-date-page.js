@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { today, todayDay, todayMonth, todayYear } from '../../../../../e2e-fixtures/dateConstants';
+import { today } from '../../../../../e2e-fixtures/dateConstants';
 
 const amendmentsPage = require('../../../e2e/pages/amendments/amendmentsPage');
 const facilityPage = require('../../../e2e/pages/facilityPage');
@@ -24,9 +24,9 @@ const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, chang
   }
 
   cy.url().should('contain', 'request-date');
-  cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), todayDay);
-  cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), todayMonth);
-  cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), todayYear);
+  cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), today.day);
+  cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), today.month);
+  cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), today.year);
   cy.clickContinueButton();
 
   cy.url().should('contain', 'request-approval');
@@ -34,9 +34,9 @@ const navigateToIsUsingFacilityEndDatePage = ({ startNewAmendment = false, chang
   cy.clickContinueButton();
 
   cy.url().should('contain', 'amendment-effective-date');
-  cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), todayDay);
-  cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), todayMonth);
-  cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), todayYear);
+  cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), today.day);
+  cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), today.month);
+  cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), today.year);
   cy.clickContinueButton();
 
   cy.url().should('contain', 'amendment-options');

@@ -3,8 +3,9 @@ import { errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+
 import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../../e2e-fixtures';
+import { oneMonth, today } from '../../../../../../e2e-fixtures/dateConstants';
 
 context('Amendments - Cover End Date', () => {
   let dealId;
@@ -44,9 +45,9 @@ context('Amendments - Cover End Date', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), today.day);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), today.month);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), today.year);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -73,10 +74,10 @@ context('Amendments - Cover End Date', () => {
     cy.url().should('contain', 'amendment-options');
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
-    amendmentsPage.amendmentCurrentCoverEndDate().should('contain', dateConstants.oneMonthFormattedFull);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.oneMonthDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.oneMonthMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.oneMonthYear);
+    amendmentsPage.amendmentCurrentCoverEndDate().should('contain', oneMonth.ddMMMMyyyy);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), oneMonth.day);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), oneMonth.month);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), oneMonth.year);
     cy.clickContinueButton();
     errorSummary().contains('The new cover end date cannot be the same as the current cover end date');
 
@@ -115,16 +116,16 @@ context('Amendments - Cover End Date', () => {
     cy.url().should('contain', 'amendment-options');
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), today.day);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), today.month);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), today.year);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'check-answers');
 
-    amendmentsPage.amendmentAnswerBankRequestDate().should('contain', dateConstants.todayDay);
+    amendmentsPage.amendmentAnswerBankRequestDate().should('contain', today.day);
     amendmentsPage.amendmentAnswerRequireApproval().should('contain', 'Yes');
-    amendmentsPage.amendmentAnswerCoverEndDate().should('contain', dateConstants.todayDay);
+    amendmentsPage.amendmentAnswerCoverEndDate().should('contain', today.day);
   });
 
   it('should continue to the `Enter the facility value` page if the cover end date is valid and the facility value also needs changing', () => {
@@ -138,9 +139,9 @@ context('Amendments - Cover End Date', () => {
     amendmentsPage.amendmentFacilityValueCheckbox().click();
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), today.day);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), today.month);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), today.year);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');

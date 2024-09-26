@@ -3,10 +3,11 @@ import { caseSubNavigation } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 import { DISPLAY_USER_TEAMS } from '../../../../fixtures/constants';
+import { today, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 
 context('Amendments tasks - automatic amendment tasks', () => {
   let dealId;
@@ -49,9 +50,9 @@ context('Amendments tasks - automatic amendment tasks', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), today.day);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), today.month);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), today.year);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -61,9 +62,9 @@ context('Amendments tasks - automatic amendment tasks', () => {
 
     cy.url().should('contain', 'amendment-effective-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), today.day);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), today.month);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), today.year);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'amendment-options');
@@ -78,9 +79,9 @@ context('Amendments tasks - automatic amendment tasks', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.tomorrowDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), tomorrow.day);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), today.month);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), today.year);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');

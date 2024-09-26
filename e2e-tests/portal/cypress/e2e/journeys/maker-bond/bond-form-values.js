@@ -1,5 +1,5 @@
 const { roundNumber } = require('../../../../../../portal-api/src/utils/number');
-const dateConstants = require('../../../../../e2e-fixtures/dateConstants');
+const { today, oneMonth } = require('../../../../../e2e-fixtures/dateConstants');
 
 const DETAILS = {
   bondIssuer: 'mock issuer',
@@ -9,12 +9,12 @@ const DETAILS = {
   },
 
   // 'issued' facility stage specifics
-  requestedCoverStartDateDay: dateConstants.todayDay.toString(),
-  requestedCoverStartDateMonth: dateConstants.todayMonth.toString(),
-  requestedCoverStartDateYear: dateConstants.todayYear.toString(),
-  coverEndDateDay: dateConstants.oneMonthDay.toString(),
-  coverEndDateMonth: dateConstants.oneMonthMonth.toString(),
-  coverEndDateYear: dateConstants.oneMonthYear.toString(),
+  requestedCoverStartDateDay: today.day,
+  requestedCoverStartDateMonth: today.month,
+  requestedCoverStartDateYear: today.year.toString(),
+  coverEndDateDay: oneMonth.day,
+  coverEndDateMonth: oneMonth.month,
+  coverEndDateYear: oneMonth.year,
   name: '123456',
   bondBeneficiary: 'mock beneficiary',
 
@@ -59,9 +59,9 @@ const FINANCIAL_DETAILS = {
     text: 'EUR - Euros',
   },
   conversionRate: '100',
-  conversionRateDateDay: dateConstants.todayDay.toString(),
-  conversionRateDateMonth: dateConstants.todayMonth.toString(),
-  conversionRateDateYear: dateConstants.todayYear.toString(),
+  conversionRateDateDay: today.day,
+  conversionRateDateMonth: today.month,
+  conversionRateDateYear: today.year.toString(),
 };
 
 module.exports = {

@@ -2,7 +2,7 @@ const pages = require('../../pages');
 const relative = require('../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const DATE_CONSTANTS = require('../../../../../e2e-fixtures/dateConstants');
+const { sevenDaysAgo } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -59,16 +59,16 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const unconditionalSubmittedLoanId = unconditionalSubmittedLoan._id;
     const unconditionalSubmittedLoanRow = pages.contract.loansTransactionsTable.row(unconditionalSubmittedLoanId);
 
-    const INVALID_DATE = DATE_CONSTANTS.sevenDaysAgo;
+    const INVALID_DATE = sevenDaysAgo;
 
     //---------------------------------------------------------------
     // Issued Bond - enter and submit an invalid date in 'Confirm start date' form
     //---------------------------------------------------------------
     issuedSubmittedBondRow.changeOrConfirmCoverStartDateLink().click();
 
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateDay(), INVALID_DATE.getDate());
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateMonth(), INVALID_DATE.getMonth() + 1);
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateYear(), INVALID_DATE.getFullYear());
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateDay(), INVALID_DATE.day);
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateMonth(), INVALID_DATE.month);
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateYear(), INVALID_DATE.year);
     cy.clickSubmitButton();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');
@@ -84,9 +84,9 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     //---------------------------------------------------------------
     unconditionalSubmittedLoanRow.changeOrConfirmCoverStartDateLink().click();
 
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateDay(), INVALID_DATE.getDate());
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateMonth(), INVALID_DATE.getMonth() + 1);
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateYear(), INVALID_DATE.getFullYear());
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateDay(), INVALID_DATE.day);
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateMonth(), INVALID_DATE.month);
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateYear(), INVALID_DATE.year);
     cy.clickSubmitButton();
 
     pages.facilityConfirmCoverStartDate.coverStarDateErrorMessage().should('be.visible');

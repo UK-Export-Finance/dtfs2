@@ -2,10 +2,11 @@ import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
 import caseDealPage from '../../../pages/caseDealPage';
+import { today, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
 
 context('Amendments changes displayed - multiple single change amendments', () => {
   let dealId;
@@ -41,9 +42,9 @@ context('Amendments changes displayed - multiple single change amendments', () =
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), today.day);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), today.month);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), today.year);
     cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
 
@@ -52,9 +53,9 @@ context('Amendments changes displayed - multiple single change amendments', () =
     cy.clickContinueButton();
     cy.url().should('contain', 'amendment-effective-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), today.day);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), today.month);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), today.year);
     cy.clickContinueButton();
     cy.url().should('contain', 'amendment-options');
 
@@ -66,9 +67,9 @@ context('Amendments changes displayed - multiple single change amendments', () =
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), dateConstants.twoMonthsDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), dateConstants.twoMonthsMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), dateConstants.twoMonthsYear);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), twoMonths.day);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), twoMonths.month);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), twoMonths.year);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'check-answers');
@@ -86,9 +87,9 @@ context('Amendments changes displayed - multiple single change amendments', () =
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), today.day);
+    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), today.month);
+    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), today.year);
     cy.clickContinueButton();
     cy.url().should('contain', 'request-approval');
 
@@ -97,9 +98,9 @@ context('Amendments changes displayed - multiple single change amendments', () =
     cy.clickContinueButton();
     cy.url().should('contain', 'amendment-effective-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), dateConstants.todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), dateConstants.todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), dateConstants.todayYear);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveDayInput(), today.day);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveMonthInput(), today.month);
+    cy.keyboardInput(amendmentsPage.amendmentEffectiveYearInput(), today.year);
     cy.clickContinueButton();
     cy.url().should('contain', 'amendment-options');
 
@@ -124,7 +125,7 @@ context('Amendments changes displayed - multiple single change amendments', () =
 
     cy.visit(relative(`/case/${dealId}/deal`));
     caseDealPage.dealFacilitiesTable.row(facilityId).facilityTenor().should('not.contain', '23 months');
-    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(dateConstants.twoMonthsFormattedTable);
+    caseDealPage.dealFacilitiesTable.row(facilityId).facilityCoverEndDate().contains(twoMonths.dMMMMyyyy);
     caseDealPage.dealFacilitiesTable.row(facilityId).exportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).valueGBP().contains(`${CURRENCY.GBP} 123.00`);
     caseDealPage.dealFacilitiesTable.row(facilityId).exposure().contains(`${CURRENCY.GBP} 24.60`);
@@ -132,8 +133,8 @@ context('Amendments changes displayed - multiple single change amendments', () =
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
     facilityPage.facilityValueExportCurrency().contains(`${CURRENCY.GBP} 123.00`);
     facilityPage.facilityValueGbp().contains(`${CURRENCY.GBP} 123.00`);
-    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${dateConstants.todayFormatted}`);
-    facilityPage.facilityCoverEndDate().contains(dateConstants.twoMonthsFormattedTable);
+    facilityPage.facilityMaximumUkefExposure().contains(`${CURRENCY.GBP} 24.60 as at ${today.dMMMMyyyy}`);
+    facilityPage.facilityCoverEndDate().contains(twoMonths.dMMMMyyyy);
     facilityPage.facilityTenor().should('not.contain', '23 months');
   });
 });

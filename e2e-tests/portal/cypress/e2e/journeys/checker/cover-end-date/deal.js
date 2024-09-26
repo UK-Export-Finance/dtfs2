@@ -2,6 +2,7 @@ const mockDeal = require('../../../../fixtures/deal');
 const CONSTANTS = require('../../../../fixtures/constants');
 const FIXTURE_CONSTANTS = require('../../../../../../e2e-fixtures/constants.fixture');
 const DATE_CONSTANTS = require('../../../../../../e2e-fixtures/dateConstants');
+const { tomorrow } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const deal = {
   ...mockDeal,
@@ -69,7 +70,7 @@ const deal = {
       'conversionRateDate-day': '28',
       'conversionRateDate-month': '04',
       'conversionRateDate-year': '2022',
-      issuedDate: DATE_CONSTANTS.tomorrow.valueOf(),
+      issuedDate: tomorrow.unixMilliseconds,
       'coverEndDate-day': '06',
       'coverEndDate-month': '01',
       'coverEndDate-year': '2021',

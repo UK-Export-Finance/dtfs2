@@ -181,11 +181,11 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     const NEW_LOAN_COVER_START_DATE = DATE_CONSTANTS.oneMonth;
 
     pages.facilityConfirmCoverStartDate.needToChangeCoverStartDateYes().click();
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateDay(), NEW_LOAN_COVER_START_DATE.getDate());
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateDay(), NEW_LOAN_COVER_START_DATE.day);
 
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateMonth(), NEW_LOAN_COVER_START_DATE.getMonth() + 1);
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateMonth(), NEW_LOAN_COVER_START_DATE.month);
 
-    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateYear(), NEW_LOAN_COVER_START_DATE.getFullYear());
+    cy.keyboardInput(pages.facilityConfirmCoverStartDate.coverStartDateYear(), NEW_LOAN_COVER_START_DATE.year);
 
     cy.clickSubmitButton();
     cy.url().should('eq', relative(`/contract/${dealId}`));
