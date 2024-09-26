@@ -102,25 +102,25 @@ describe(page, () => {
 
     it('should render the facility ID filter input', () => {
       const wrapper = getWrapper();
-      wrapper.expectElement('[data-cy="facility-filter-input"]').toExist();
+      wrapper.expectElement('[data-cy="premium-payments-facility-filter-input"]').toExist();
       wrapper.expectText('[data-cy="facility-filter-form"]').toContain('Filter by facility ID');
     });
 
     it('initialises the filter input value to the premiumPaymentsFacilityId value', () => {
       const wrapper = getWrapper();
-      wrapper.expectInput('[data-cy="facility-filter-input"]').toHaveValue(premiumPaymentsFilters.facilityId);
+      wrapper.expectInput('[data-cy="premium-payments-facility-filter-input"]').toHaveValue(premiumPaymentsFilters.facilityId);
     });
 
     it('should render the facility ID filter submit button', () => {
       const wrapper = getWrapper();
-      wrapper.expectElement('[data-cy="facility-filter-submit-button"]').toExist();
-      wrapper.expectText('[data-cy="facility-filter-submit-button"]').toRead('Filter');
+      wrapper.expectElement('[data-cy="premium-payments-facility-filter-submit-button"]').toExist();
+      wrapper.expectText('[data-cy="premium-payments-facility-filter-submit-button"]').toRead('Filter');
     });
 
     it('should render the facility ID filter clear button', () => {
       const wrapper = getWrapper();
-      wrapper.expectElement('[data-cy="facility-filter-clear-button"]').toExist();
-      wrapper.expectText('[data-cy="facility-filter-clear-button"]').toRead('Clear filter');
+      wrapper.expectElement('[data-cy="premium-payments-facility-filter-clear-button"]').toExist();
+      wrapper.expectText('[data-cy="premium-payments-facility-filter-clear-button"]').toRead('Clear filter');
     });
 
     it('renders error when premiumPaymentsFilterError is provided', () => {
