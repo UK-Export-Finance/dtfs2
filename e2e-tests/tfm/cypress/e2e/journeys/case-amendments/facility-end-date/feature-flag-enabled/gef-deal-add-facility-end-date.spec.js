@@ -8,7 +8,7 @@ import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
 import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
-context('Amendments - GEF deal add facility end date', () => {
+context('Amendments - GEF deal add facility end date - feature flag enabled', () => {
   let dealId;
   let facility;
 

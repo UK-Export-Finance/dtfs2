@@ -8,7 +8,7 @@ import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
-context('Amendments - GEF deal amend facility end date and then change to bank review date', () => {
+context('Amendments - GEF deal amend facility end date and then change to bank review date - feature flag enabled', () => {
   let dealId;
   let facility;
 
