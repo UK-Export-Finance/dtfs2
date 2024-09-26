@@ -1,24 +1,24 @@
-import relative from '../../relativeURL';
+import relative from '../../../relativeURL';
 
-import CONSTANTS from '../../../fixtures/constants';
+import CONSTANTS from '../../../../fixtures/constants';
 
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
-import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../../fixtures/mocks/mock-deals';
 
-import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../e2e-fixtures/portal-users.fixture';
-import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
+import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../../e2e-fixtures/portal-users.fixture';
+import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 
-import { toTitleCase } from '../../../fixtures/helpers';
+import { toTitleCase } from '../../../../fixtures/helpers';
 
-import { errorSummary, submitButton } from '../../partials';
-import applicationPreview from '../../pages/application-preview';
-import unissuedFacilityTable from '../../pages/unissued-facilities';
-import applicationSubmission from '../../pages/application-submission';
-import statusBanner from '../../pages/application-status-banner';
-import coverStartDate from '../../pages/cover-start-date';
-import applicationDetails from '../../pages/application-details';
-import applicationActivities from '../../pages/application-activities';
+import { errorSummary, submitButton } from '../../../partials';
+import applicationPreview from '../../../pages/application-preview';
+import unissuedFacilityTable from '../../../pages/unissued-facilities';
+import applicationSubmission from '../../../pages/application-submission';
+import statusBanner from '../../../pages/application-status-banner';
+import coverStartDate from '../../../pages/cover-start-date';
+import applicationDetails from '../../../pages/application-details';
+import applicationActivities from '../../../pages/application-activities';
 
 const { unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities();
 const issuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed();
