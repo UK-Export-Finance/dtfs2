@@ -8,6 +8,11 @@ const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 
 const { as } = createApi(app);
 
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  asString: (value) => String(value),
+}));
+
 describe('user controller', () => {
   let userId = '';
   let tokenUser;
@@ -20,11 +25,6 @@ describe('user controller', () => {
   afterAll(() => {
     jest.resetAllMocks();
   });
-
-  jest.mock('@ukef/dtfs2-common', () => ({
-    ...jest.requireActual('@ukef/dtfs2-common'),
-    asString: (value) => String(value),
-  }));
 
   describe('POST /v1/users', () => {
     it('should not create a new TFM user with malformed payload', async () => {
