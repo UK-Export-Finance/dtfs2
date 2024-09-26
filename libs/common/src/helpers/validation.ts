@@ -11,7 +11,11 @@ export const asString = (value: unknown, context: string): string => {
     throw new Error(`Expected ${context} to be a string, but was ${typeof value}`);
   }
 
-  return value;
+  /**
+   * Ensure return is `String` primitive type and
+   * not `unknown`.
+   */
+  return String(value);
 };
 
 /**
