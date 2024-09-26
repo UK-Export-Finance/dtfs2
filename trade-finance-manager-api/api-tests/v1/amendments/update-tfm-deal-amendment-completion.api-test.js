@@ -8,10 +8,6 @@ const MOCK_GEF_AIN_DEAL = require('../../../src/v1/__mocks__/mock-TFM-deal-AIN-s
 const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-}));
-
 describe('update tfm-deals on amendment completion', () => {
   const mockAmendment = {
     dealId: '6463805ebf6e581d581f9ce0',
