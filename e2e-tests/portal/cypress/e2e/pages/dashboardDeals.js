@@ -19,7 +19,7 @@ const page = {
     updated: (id) => cy.get(`[data-cy*="deal__updated--${id}"]`),
   },
   rowIndex: {
-    deal__exporter: (index = 1) => cy.get(`[data-cy*="deal__exporter--index--${index}]`),
+    exporter: (index = 1) => cy.get(`[data-cy*="deal__exporter--index--${index}]`),
     bankRef: (index = 1) => cy.get(`[data-cy*="deal__bankRef--index--${index}]`),
 
     link: (index = 1) => cy.get(`[data-cy*="deal__link--index--${index}]`),
