@@ -1,27 +1,30 @@
-import relative from '../../relativeURL';
+import relative from '../../../relativeURL';
 
-import CONSTANTS from '../../../fixtures/constants';
+import CONSTANTS from '../../../../fixtures/constants';
 
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
+import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
-import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../../fixtures/mocks/mock-deals';
 
-import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../e2e-fixtures/portal-users.fixture';
-import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
+import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../../e2e-fixtures/portal-users.fixture';
+import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 
-import { toTitleCase } from '../../../fixtures/helpers';
+import { toTitleCase } from '../../../../fixtures/helpers';
 
-import { errorSummary, submitButton } from '../../partials';
-import applicationPreview from '../../pages/application-preview';
-import unissuedFacilityTable from '../../pages/unissued-facilities';
-import applicationSubmission from '../../pages/application-submission';
-import statusBanner from '../../pages/application-status-banner';
-import coverStartDate from '../../pages/cover-start-date';
-import applicationDetails from '../../pages/application-details';
-import applicationActivities from '../../pages/application-activities';
+import { continueButton, errorSummary, submitButton } from '../../../partials';
+import applicationPreview from '../../../pages/application-preview';
+import unissuedFacilityTable from '../../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
+import applicationSubmission from '../../../pages/application-submission';
+import statusBanner from '../../../pages/application-status-banner';
+import coverStartDate from '../../../pages/cover-start-date';
+import applicationDetails from '../../../pages/application-details';
+import applicationActivities from '../../../pages/application-activities';
 
 const { unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities();
 const issuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed();
+
+const { format } = require('date-fns');
 
 let dealId;
 let token;
@@ -31,7 +34,7 @@ const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacilit
 
 const issuedFacilities = [issuedCashFacilityWithCoverDateConfirmed];
 
-context('Review UKEF decision MIA -> confirm coverStartDate without issuing facilities', () => {
+context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued facility', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
@@ -44,9 +47,10 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_DRAFT);
           cy.submitDealAfterUkefIds(dealId, 'GEF', BANK1_CHECKER1_WITH_MOCK_ID);
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA).then(() => {
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility),
-            );
+            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
+              unissuedCashFacility._id = facility.body.details._id;
+              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
+            });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityTwoId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacilityWithCoverDateConfirmed);
@@ -73,6 +77,12 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
     });
 
     it('relevant fields are locked ', () => {
+      applicationPreview.facilityGuidance();
+      applicationPreview.facilityGuidance().contains('Guidance on cash and contingent facilities');
+      applicationPreview.facilityGuidance().contains('Cash facilities');
+      applicationPreview.facilityGuidance().contains('Contingent facilities');
+      applicationPreview.facilityGuidance().contains('How many you can add');
+
       //  makes sure no action buttons exist (change or add)
       applicationPreview.facilitySummaryListTable(2).nameAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -156,22 +166,29 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
     });
 
-    it('entering cover date the same date as the coverEndDate should show an error', () => {
+    it('entering cover date correctly shows success message and redirects to unissued facilities table', () => {
       cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
 
       coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.tomorrowDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.tomorrowMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.tomorrowYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.todayYear);
 
       cy.clickContinueButton();
 
-      errorSummary().contains('The cover start date must be before the cover end date');
-      coverStartDate.coverStartDateNo().click();
-      coverStartDate.errorInput().contains('The cover start date must be before the cover end date');
+      coverStartDate.coverStartDateSuccess().contains('All cover start dates confirmed for issued facilities');
+      cy.clickContinueButton();
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
+      unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
+      unissuedFacilityTable.rows().contains(format(dateConstants.threeMonths, 'dd MMM yyyy'));
+      unissuedFacilityTable.updateFacilitiesLater().click();
+
+      // link on application preview exists
+      applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
+      applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
     });
 
     it('entering cover date in past on confirm cover start date shows an error', () => {
@@ -208,28 +225,31 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
       coverStartDate.errorInput().contains('Cover date must be within 3 months');
     });
 
-    it('entering cover date correctly shows success message and redirects to unissued facilities table and update facilities later', () => {
-      cy.visit(relative(`/gef/application-details/${dealId}/${facilityTwoId}/confirm-cover-start-date`));
+    it('can update one unissued facility and return to application preview', () => {
+      applicationPreview.unissuedFacilitiesReviewLink().click();
+      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      coverStartDate.coverStartDateScreen().contains('Do you want UKEF cover to start when the notice is submitted to UKEF?');
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
 
-      coverStartDate.coverStartDateNo().click();
+      aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.todayYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoMonthsDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoMonthsMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoMonthsYear);
+
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
       cy.clickContinueButton();
 
-      coverStartDate.coverStartDateSuccess().contains('All cover start dates confirmed for issued facilities');
-      cy.clickContinueButton();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
-      unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
+      unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
+      unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
+      continueButton().should('not.exist');
+      // to go back to application preview page
       unissuedFacilityTable.updateFacilitiesLater().click();
-
-      // link on application preview exists
-      applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
-      applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
     });
 
     it('pressing submit button takes you to submit page and with correct panel once submitted to checker', () => {
@@ -256,9 +276,10 @@ context('Return to maker', () => {
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    it('should show correct heading for reviewing UKEF decision', () => {
+    it('should show changed facilities in task comments box with correct heading for reviewing UKEF decision', () => {
       applicationPreview.miaStageChecker().contains('Check manual inclusion application before submitting to UKEF');
       applicationPreview.acceptMIADecision().contains('You are accepting the following conditions:');
+      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
     });
 
     it('should show correct status', () => {
@@ -266,6 +287,12 @@ context('Return to maker', () => {
     });
 
     it('should not be able to edit any facilities', () => {
+      applicationPreview.facilityGuidance();
+      applicationPreview.facilityGuidance().contains('Guidance on cash and contingent facilities');
+      applicationPreview.facilityGuidance().contains('Cash facilities');
+      applicationPreview.facilityGuidance().contains('Contingent facilities');
+      applicationPreview.facilityGuidance().contains('How many you can add');
+
       // 1st facility table - makes sure no action buttons exist (change or add)
       applicationPreview.facilitySummaryListTable(0).nameAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -307,7 +334,8 @@ context('Return to maker', () => {
       applicationPreview.facilitySummaryListTable(3).nameAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
-      applicationPreview.facilitySummaryListTable(3).monthsOfCoverAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).coverStartDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(3).coverEndDateAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).valueAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).coverPercentageAction().should('have.class', 'govuk-!-display-none');
@@ -339,9 +367,8 @@ context('Return to maker', () => {
 
     it('Statuses and banners should correct text', () => {
       statusBanner.bannerStatus().contains(CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED);
-      applicationPreview.acceptMIADecision().contains('You are proceeding with UKEF cover and accepting the following conditions:');
-      applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
-      applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
+      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
+      applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
     });
 
     it('should not have all fields unlocked', () => {
@@ -366,7 +393,7 @@ context('Return to maker', () => {
       // 1st facility table - make sure change exists on issue action
       applicationDetails.facilitySummaryListTable(0).nameAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
-      applicationDetails.facilitySummaryListTable(0).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(0).hasBeenIssuedAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).monthsOfCoverAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(0).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(0).valueAction().should('have.class', 'govuk-!-display-none');
@@ -378,7 +405,7 @@ context('Return to maker', () => {
       // second facility - make sure change exists on issue action
       applicationDetails.facilitySummaryListTable(1).nameAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
-      applicationDetails.facilitySummaryListTable(1).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(1).hasBeenIssuedAction().contains('Change');
       applicationDetails.facilitySummaryListTable(1).monthsOfCoverAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(1).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(1).valueAction().should('have.class', 'govuk-!-display-none');
@@ -388,10 +415,12 @@ context('Return to maker', () => {
       applicationDetails.facilitySummaryListTable(1).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
       // forth facility has change links as changedToIssued
-      applicationDetails.facilitySummaryListTable(3).nameAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).nameAction().contains('Change');
       applicationDetails.facilitySummaryListTable(3).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
-      applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().should('have.class', 'govuk-!-display-none');
-      applicationDetails.facilitySummaryListTable(3).monthsOfCoverAction().should('have.class', 'govuk-!-display-none');
+      applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(3).issueDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(3).coverStartDateAction().contains('Change');
+      applicationDetails.facilitySummaryListTable(3).coverEndDateAction().contains('Change');
       applicationDetails.facilitySummaryListTable(3).facilityProvidedOnAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(3).valueAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(3).coverPercentageAction().should('have.class', 'govuk-!-display-none');
@@ -443,8 +472,9 @@ context('Submit to UKEF', () => {
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    it('should show changed facilities in task comments box with correct heading for accepting conditions', () => {
-      applicationPreview.acceptMIADecision().contains('You are accepting the following conditions:');
+    it('should show changed facilities in task comments box with correct heading including newly issued', () => {
+      applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
+      applicationPreview.updatedUnissuedFacilitiesList().contains(unissuedFacilitiesArray[0].name);
     });
 
     it('should show correct status', () => {
@@ -470,7 +500,7 @@ context('Submit to UKEF', () => {
  * Should not contain already issued facilities
  */
 context('Check activity feed', () => {
-  describe('Check activity feed contains MIA->MIN activity and does not contain any issued facilities activities', () => {
+  describe('Check activity feed contains the correct facility issued activity', () => {
     beforeEach(() => {
       cy.saveSession();
       cy.login(BANK1_MAKER1);
@@ -479,11 +509,27 @@ context('Check activity feed', () => {
 
     it('activity tab contains the correct elements and redirects to correct place on clicking facility link', () => {
       applicationActivities.subNavigationBarActivities().click();
+      applicationActivities.activityTimeline().contains('Bank facility stage changed');
 
       // contains submission message
       applicationActivities
         .activityTimeline()
         .contains(`${CONSTANTS.PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+
+      // first facility issued activity
+      applicationActivities
+        .facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId)
+        .contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
+      applicationActivities
+        .facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId)
+        .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
+      applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Unissued');
+      applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Issued');
+      applicationActivities
+        .facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId)
+        .contains(`${unissuedFacilitiesArray[0].type} facility ${unissuedFacilitiesArray[0].ukefFacilityId}`);
+      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId).click();
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[0]._id}`));
 
       applicationActivities.subNavigationBarActivities().click();
     });
@@ -491,21 +537,12 @@ context('Check activity feed', () => {
     it('should not contain already issued facility or unissued facilities', () => {
       applicationActivities.subNavigationBarActivities().click();
 
-      applicationActivities.activityTimeline().should('not.contain', 'Bank facility stage changed');
-
       // already issued facility should not appear in the activity list
       applicationActivities.facilityActivityChangedBy(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityCheckedBy(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityUnissuedTag(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityIssuedTag(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityLink(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
-
-      // 1st facility unissued so should not show up
-      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityUnissuedTag(unissuedFacilitiesArray[0].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityIssuedTag(unissuedFacilitiesArray[0].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId).should('not.exist');
 
       // 2nd facility unissued so should not show up
       applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
