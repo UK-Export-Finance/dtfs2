@@ -2,13 +2,14 @@ import { DEAL_SUBMISSION_TYPE, DealSubmissionType, isTfmDealCancellationFeatureF
 import { userIsInTeam } from '../../helpers/user';
 import { TfmSessionUser } from '../../types/tfm-session-user';
 
+const { AIN, MIN } = DEAL_SUBMISSION_TYPE;
 /**
  * Checks if the deal submission type can be cancelled
  * @param submissionType - the deal submission type
  * @returns true if the deal is AIN or MIN
  */
 export const canSubmissionTypeBeCancelled = (submissionType: DealSubmissionType): boolean => {
-  return submissionType === DEAL_SUBMISSION_TYPE.AIN || submissionType === DEAL_SUBMISSION_TYPE.MIN;
+  return submissionType === AIN || submissionType === MIN;
 };
 
 /**
