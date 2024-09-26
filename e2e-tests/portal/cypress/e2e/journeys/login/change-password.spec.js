@@ -35,9 +35,9 @@ context('Admin user creates a new user; the new user sets their password and the
         createUser.role(role).click();
       });
 
-      createUser.username().type(userToCreate.username);
-      createUser.firstname().type(userToCreate.firstname);
-      createUser.surname().type(userToCreate.surname);
+      cy.keyboardInput(createUser.username(), userToCreate.username);
+      cy.keyboardInput(createUser.firstname(), userToCreate.firstname);
+      cy.keyboardInput(createUser.surname(), userToCreate.surname);
       createUser.bank().select(userToCreate.bank);
 
       // Create user
@@ -91,9 +91,9 @@ context('Admin user creates a new user; the new user sets their password and the
       cy.clickSubmitButton();
 
       // Input
-      changePassword.currentPassword().type(userToCreate.password);
-      changePassword.password().type('fail');
-      changePassword.confirmPassword().type('fail');
+      cy.keyboardInput(changePassword.currentPassword(), userToCreate.password);
+      cy.keyboardInput(changePassword.password(), 'fail');
+      cy.keyboardInput(changePassword.confirmPassword(), 'fail');
       cy.clickSubmitButton();
 
       // Expect failure
@@ -109,9 +109,9 @@ context('Admin user creates a new user; the new user sets their password and the
         });
 
       // Try changing with wrong current password
-      changePassword.currentPassword().type('wrongPassword');
-      changePassword.password().type('P4ssPl£ase');
-      changePassword.confirmPassword().type('P4ssPl£ase');
+      cy.keyboardInput(changePassword.currentPassword(), 'wrongPassword');
+      cy.keyboardInput(changePassword.password(), 'P4ssPl£ase');
+      cy.keyboardInput(changePassword.confirmPassword(), 'P4ssPl£ase');
       cy.clickSubmitButton();
 
       // Expect failure
@@ -120,9 +120,9 @@ context('Admin user creates a new user; the new user sets their password and the
       cy.assertText(changePassword.currentPasswordError(), 'Error: Current password is not correct.');
 
       // Try changing it to a password that is too short
-      changePassword.currentPassword().type('AbC!2345');
-      changePassword.password().type(' ');
-      changePassword.confirmPassword().type(' ');
+      cy.keyboardInput(changePassword.currentPassword(), 'AbC!2345');
+      cy.keyboardInput(changePassword.password(), ' ');
+      cy.keyboardInput(changePassword.confirmPassword(), ' ');
       cy.clickSubmitButton();
 
       changePassword
@@ -140,9 +140,9 @@ context('Admin user creates a new user; the new user sets their password and the
       header.profile().click();
       cy.clickSubmitButton();
       // try to change to a legit password
-      changePassword.currentPassword().type(userToCreate.password);
-      changePassword.password().type('P4ssPl£ase');
-      changePassword.confirmPassword().type('P4ssPl£ase');
+      cy.keyboardInput(changePassword.currentPassword(), userToCreate.password);
+      cy.keyboardInput(changePassword.password(), 'P4ssPl£ase');
+      cy.keyboardInput(changePassword.confirmPassword(), 'P4ssPl£ase');
       cy.clickSubmitButton();
     });
 
@@ -171,9 +171,9 @@ context('Admin user creates a new user; the new user sets their password and the
       changePassword.password().should('exist');
       changePassword.confirmPassword().should('exist');
 
-      changePassword.currentPassword().type('P4ssPl£ase');
-      changePassword.password().type('AbC!2345');
-      changePassword.confirmPassword().type('AbC!2345');
+      cy.keyboardInput(changePassword.currentPassword(), 'P4ssPl£ase');
+      cy.keyboardInput(changePassword.password(), 'AbC!2345');
+      cy.keyboardInput(changePassword.confirmPassword(), 'AbC!2345');
       cy.clickSubmitButton();
 
       // expect failure

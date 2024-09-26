@@ -95,7 +95,7 @@ context('Exporters Address Page', () => {
 
     it('shows error message if user enter bad postcode and a valid manual address entry link', () => {
       exportersAddress.yesRadioButton().click();
-      exportersAddress.correspondenceAddress().type('1');
+      cy.keyboardInput(exportersAddress.correspondenceAddress(), '1');
       cy.clickContinueButton();
       exportersAddress.postcodeError();
       exportersAddress.manualAddressEntryLink().click();
@@ -104,7 +104,7 @@ context('Exporters Address Page', () => {
 
     it('redirects user to Select exporters correspondence address page if form filled in correctly', () => {
       exportersAddress.yesRadioButton().click();
-      exportersAddress.correspondenceAddress().type(POSTCODE.VALID);
+      cy.keyboardInput(exportersAddress.correspondenceAddress(), POSTCODE.VALID);
       cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/select-exporters-correspondence-address`));
     });

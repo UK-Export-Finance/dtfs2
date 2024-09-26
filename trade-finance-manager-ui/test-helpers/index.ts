@@ -7,3 +7,4 @@ export * from './fee-records-to-key-response-body';
 export * from './payment';
 export * from './payment-details-response-body';
 export * from './edit-payment-view-model';
+export * from './fee-record-payment-group-view-model-item';

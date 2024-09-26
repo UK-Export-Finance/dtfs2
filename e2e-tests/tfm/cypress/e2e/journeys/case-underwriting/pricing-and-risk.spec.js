@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import partials from '../../partials';
+import { errorSummaryItems, caseSubNavigation } from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { UNDERWRITING_SUPPORT_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
@@ -37,7 +37,7 @@ context('Case Underwriting - Pricing and risk', () => {
       cy.visit(relative(`/case/${dealId}/deal`));
 
       // go to pricing and risk page
-      partials.caseSubNavigation.underwritingLink().click();
+      caseSubNavigation.underwritingLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
     });
 
@@ -54,7 +54,7 @@ context('Case Underwriting - Pricing and risk', () => {
       cy.visit(relative(`/case/${dealId}/deal`));
 
       // go to pricing and risk page
-      partials.caseSubNavigation.underwritingLink().click();
+      caseSubNavigation.underwritingLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
     });
 
@@ -80,9 +80,9 @@ context('Case Underwriting - Pricing and risk', () => {
     it('submitting an empty edit form displays validation errors', () => {
       pages.underwritingPricingAndRiskPage.exporterTableChangeOrAddCreditRatingLink().click({ force: true });
 
-      pages.underwritingPricingAndRiskEditPage.submitButton().click();
+      cy.clickSubmitButton();
 
-      pages.underwritingPricingAndRiskEditPage.errorSummaryItems().should('have.length', 1);
+      errorSummaryItems().should('have.length', 1);
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputValidationError().should('be.visible');
     });
 
@@ -92,9 +92,9 @@ context('Case Underwriting - Pricing and risk', () => {
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
-      pages.underwritingPricingAndRiskEditPage.submitButton().click();
+      cy.clickSubmitButton();
 
-      pages.underwritingPricingAndRiskEditPage.errorSummaryItems().should('have.length', 1);
+      errorSummaryItems().should('have.length', 1);
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOtherValidationError().should('be.visible');
     });
@@ -105,10 +105,10 @@ context('Case Underwriting - Pricing and risk', () => {
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().type('abc1');
-      pages.underwritingPricingAndRiskEditPage.submitButton().click();
+      cy.keyboardInput(pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther(), 'abc1');
+      cy.clickSubmitButton();
 
-      pages.underwritingPricingAndRiskEditPage.errorSummaryItems().should('have.length', 1);
+      errorSummaryItems().should('have.length', 1);
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('be.visible');
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOtherValidationError().should('be.visible');
     });
@@ -118,7 +118,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
       // select option, submit
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputGood().click();
-      pages.underwritingPricingAndRiskEditPage.submitButton().click();
+      cy.clickSubmitButton();
 
       // assert elements/value in `pricing and risk` page
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
@@ -139,7 +139,7 @@ context('Case Underwriting - Pricing and risk', () => {
 
       // submit different value
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputAcceptable().click();
-      pages.underwritingPricingAndRiskEditPage.submitButton().click();
+      cy.clickSubmitButton();
 
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
 
@@ -153,8 +153,8 @@ context('Case Underwriting - Pricing and risk', () => {
       pages.underwritingPricingAndRiskEditPage.creditRatingRadioInputOther().click();
       pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().should('have.value', '');
 
-      pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther().type(MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
-      pages.underwritingPricingAndRiskEditPage.submitButton().click();
+      cy.keyboardInput(pages.underwritingPricingAndRiskEditPage.creditRatingTextInputOther(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
+      cy.clickSubmitButton();
 
       cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableRatingValue(), MOCK_CREDIT_RATING_TEXT_INPUT_VALUE);
 

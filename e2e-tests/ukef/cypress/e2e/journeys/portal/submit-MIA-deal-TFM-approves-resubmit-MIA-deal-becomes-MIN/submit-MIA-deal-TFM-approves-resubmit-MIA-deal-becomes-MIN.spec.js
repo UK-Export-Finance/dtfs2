@@ -61,7 +61,7 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.proceedToReview().click();
     cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
 
-    portalPages.contractReadyForReview.comments().type('go');
+    cy.keyboardInput(portalPages.contractReadyForReview.comments(), 'go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
     //---------------------------------------------------------------
@@ -131,7 +131,7 @@ context('Portal to TFM deal submission', () => {
 
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithoutConditions().click();
 
-    tfmPages.managersDecisionPage.submitButton().click();
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // portal BANK1_MAKER1 confirms no need to change cover start dates
@@ -157,7 +157,7 @@ context('Portal to TFM deal submission', () => {
     // portal BANK1_MAKER1 submits deal for review
     //---------------------------------------------------------------
     portalPages.contract.proceedToReview().click();
-    portalPages.contractReadyForReview.comments().type('go');
+    cy.keyboardInput(portalPages.contractReadyForReview.comments(), 'go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
     //---------------------------------------------------------------

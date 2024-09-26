@@ -1,5 +1,5 @@
 import { facilityItems } from './display-items';
-import { MOCK_FACILITY } from './mocks/mock_facilities';
+import { MOCK_FACILITY } from './mocks/mock-facilities';
 
 describe('facilityItems', () => {
   describe('when the deal version is undefined', () => {

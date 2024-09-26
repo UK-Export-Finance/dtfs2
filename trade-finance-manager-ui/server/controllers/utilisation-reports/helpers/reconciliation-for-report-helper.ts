@@ -3,7 +3,7 @@ import { FeeRecordStatus, getFormattedCurrencyAndAmount, IsoDateTimeStamp, Keyin
 import { format, parseISO } from 'date-fns';
 import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import {
-  FeeRecordPaymentGroupViewModelItem,
+  PremiumPaymentsViewModelItem,
   FeeRecordViewModelItem,
   KeyingSheetAdjustmentViewModel,
   KeyingSheetViewModel,
@@ -98,15 +98,15 @@ const getCheckboxAriaLabel = (feeRecords: FeeRecord[]): string => {
 };
 
 /**
- * Maps the fee record payment groups to the fee record payment group view model items
+ * Maps the fee record payment groups to the premium payment items
  * @param feeRecordPaymentGroups - The fee record payment groups
  * @param isCheckboxChecked - Whether or not the fee record payment group checkbox is checked
- * @returns The fee record payment group view model items
+ * @returns The premium payments view model items
  */
-export const mapFeeRecordPaymentGroupsToFeeRecordPaymentGroupViewModelItems = (
+export const mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems = (
   feeRecordPaymentGroups: FeeRecordPaymentGroup[],
   isCheckboxChecked: (feeRecordIds: number[]) => boolean = () => false,
-): FeeRecordPaymentGroupViewModelItem[] => {
+): PremiumPaymentsViewModelItem[] => {
   const totalReportedPaymentsDataSortValueMap = getDataSortValueMapForFeeRecordPaymentGroupProperty(feeRecordPaymentGroups, 'totalReportedPayments');
   const totalPaymentsReceivedDataSortValueMap = getDataSortValueMapForFeeRecordPaymentGroupProperty(feeRecordPaymentGroups, 'totalPaymentsReceived');
 
@@ -282,7 +282,7 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
         return paymentDetails;
       }
 
-      const mappedFeeRecords = feeRecords.map(({ facilityId, exporter }) => ({ facilityId, exporter }));
+      const mappedFeeRecords = feeRecords.map(({ id, facilityId, exporter }) => ({ id, facilityId, exporter }));
       return [
         ...paymentDetails,
         ...paymentsReceived.map((payment) => ({

@@ -48,7 +48,7 @@ context('Portal to TFM deal submission', () => {
     portalPages.contract.proceedToReview().click();
     cy.url().should('eq', relative(`/contract/${dealId}/ready-for-review`));
 
-    portalPages.contractReadyForReview.comments().type('go');
+    cy.keyboardInput(portalPages.contractReadyForReview.comments(), 'go');
     portalPages.contractReadyForReview.readyForCheckersApproval().click();
 
     //---------------------------------------------------------------
@@ -88,8 +88,8 @@ context('Portal to TFM deal submission', () => {
     const MOCK_COMMENTS = 'e2e test comment';
 
     tfmPages.managersDecisionPage.decisionRadioInputApproveWithConditions().click();
-    tfmPages.managersDecisionPage.commentsInputApproveWithConditions().type(MOCK_COMMENTS);
-    tfmPages.managersDecisionPage.submitButton().click();
+    cy.keyboardInput(tfmPages.managersDecisionPage.commentsInputApproveWithConditions(), MOCK_COMMENTS);
+    cy.clickSubmitButton();
 
     //---------------------------------------------------------------
     // Go back to Portal

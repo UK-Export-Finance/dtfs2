@@ -6,7 +6,7 @@ const { createTasks } = require('../support/tasks');
 // Read from root `./.env` directory
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-const { TFM_API_KEY, FF_TFM_FACILITY_END_DATE_ENABLED } = process.env;
+const { TFM_API_KEY, FF_TFM_FACILITY_END_DATE_ENABLED, FF_TFM_DEAL_CANCELLATION_ENABLED } = process.env;
 
 module.exports = defineConfig({
   dealApiProtocol: 'http://',
@@ -44,6 +44,7 @@ module.exports = defineConfig({
   },
   env: {
     FF_TFM_FACILITY_END_DATE_ENABLED,
+    FF_TFM_DEAL_CANCELLATION_ENABLED,
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],
 });

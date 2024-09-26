@@ -1,20 +1,21 @@
 import relative from '../../../../relativeURL';
 import facilityPage from '../../../../pages/facilityPage';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../../e2e-fixtures';
-import { MOCK_FACILITY_ONE } from '../../../../../fixtures/mock-gef-facilities';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
 import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 
-if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
+import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+
+const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
+if (facilityEndDateEnabled) {
   context('Amendments - GEF deal amend facility end date and then change to bank review date', () => {
     let dealId;
     let facility;
 
-    const MOCK_GEF_FACILITY = {
-      ...MOCK_FACILITY_ONE,
-      hasBeenIssued: true,
+    const facilityWithFacilityEndDate = {
+      ...anIssuedCashFacility({ facilityEndDateEnabled }),
       isUsingFacilityEndDate: true,
       facilityEndDate: new Date('2023-01-01'),
       bankReviewDate: undefined,
@@ -27,7 +28,7 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
         // updates a gef deal so has relevant fields
         cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
-        cy.createGefFacilities(dealId, [MOCK_GEF_FACILITY], BANK1_MAKER1).then((createdFacility) => {
+        cy.createGefFacilities(dealId, [facilityWithFacilityEndDate], BANK1_MAKER1).then((createdFacility) => {
           facility = createdFacility.details;
         });
 
@@ -57,16 +58,16 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
       amendmentsPage.isUsingFacilityEndDateNo().should('not.be.checked');
 
       amendmentsPage.isUsingFacilityEndDateYes().click();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'facility-end-date');
       amendmentsPage.amendmentCurrentFacilityEndDate().should('have.text', '01 January 2023');
       amendmentsPage.amendmentFacilityEndDateDetails().should('exist');
 
-      amendmentsPage.amendmentFacilityEndDateDayInput().clear().type(dateConstants.todayDay);
-      amendmentsPage.amendmentFacilityEndDateMonthInput().clear().type(dateConstants.todayMonth);
-      amendmentsPage.amendmentFacilityEndDateYearInput().clear().type(dateConstants.todayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateDayInput(), dateConstants.todayDay);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateMonthInput(), dateConstants.todayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentFacilityEndDateYearInput(), dateConstants.todayYear);
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'check-answers');
       amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'Yes');
@@ -75,23 +76,23 @@ if (Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true') {
 
       amendmentsPage.amendmentAnswerIsUsingFacilityEndDateChangeLink().click();
       amendmentsPage.isUsingFacilityEndDateNo().check();
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'bank-review-date');
       amendmentsPage.amendmentCurrentBankReviewDate().should('have.text', 'Not provided');
       amendmentsPage.amendmentBankReviewDateDetails().should('exist');
 
-      amendmentsPage.amendmentBankReviewDateDayInput().clear().type(dateConstants.threeMonthsOneDayDay);
-      amendmentsPage.amendmentBankReviewDateMonthInput().clear().type(dateConstants.threeMonthsOneDayMonth);
-      amendmentsPage.amendmentBankReviewDateYearInput().clear().type(dateConstants.threeMonthsOneDayYear);
-      amendmentsPage.continueAmendment().click();
+      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateDayInput(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateMonthInput(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(amendmentsPage.amendmentBankReviewDateYearInput(), dateConstants.threeMonthsOneDayYear);
+      cy.clickContinueButton();
 
       cy.url().should('contain', 'check-answers');
       amendmentsPage.amendmentAnswerIsUsingFacilityEndDate().should('have.text', 'No');
       amendmentsPage.amendmentAnswerBankReviewDate().should('have.text', dateConstants.threeMonthsOneDayFullString);
       amendmentsPage.amendmentAnswerFacilityEndDate().should('not.exist');
 
-      amendmentsPage.continueAmendment().click();
+      cy.clickContinueButton();
 
       cy.visit(relative(`/case/${dealId}/facility/${facility._id}`));
       facilityPage.facilityIsUsingFacilityEndDate().should('have.text', 'No');

@@ -12,9 +12,11 @@ import mandatoryCriteria from '../pages/mandatory-criteria';
 import uploadFiles from '../pages/upload-files';
 import statusBanner from '../pages/application-status-banner';
 import CONSTANTS from '../../fixtures/constants';
-import { MOCK_FACILITY_ONE } from '../../fixtures/mocks/mock-facilities';
+import { anUnissuedCashFacility } from '../../../../e2e-fixtures/mock-gef-facilities';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_MIN } from '../../fixtures/mocks/mock-deals';
+
+const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
 context('Clone GEF (AIN) deal', () => {
   let AINdealId;
@@ -97,7 +99,7 @@ context('Clone GEF (AIN) deal', () => {
       mandatoryCriteria.trueRadio().click();
       form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone/name-application`));
-      nameApplication.internalRef().type('Cloned AIN deal');
+      cy.keyboardInput(nameApplication.internalRef(), 'Cloned AIN deal');
       form().submit();
     });
 
@@ -125,7 +127,7 @@ context('Clone GEF (AIN) deal', () => {
       cy.url().then((url) => {
         cy.visit(`${url}/about-exporter`);
         aboutExporter.mediumRadioButton().click();
-        aboutExporter.probabilityOfDefaultInput().clear().focused().type('10');
+        cy.keyboardInput(aboutExporter.probabilityOfDefaultInput(), '10');
         aboutExporter.isFinancingIncreasingRadioNo().click();
         cy.clickSaveAndReturnButton();
       });
@@ -147,7 +149,7 @@ context('Clone GEF (AIN) deal', () => {
       mandatoryCriteria.trueRadio().click();
       form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${AINdealId}/clone/name-application`));
-      nameApplication.internalRef().type('Cloned AIN deal');
+      cy.keyboardInput(nameApplication.internalRef(), 'Cloned AIN deal');
       form().submit();
 
       cy.get('[data-cy="success-message-link"]').click();
@@ -263,8 +265,8 @@ context('Clone GEF (MIA) deal', () => {
     it('should populate the `Security Details` section', () => {
       uploadFiles.supportingInfoSecurityDetailsButton().click();
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/supporting-information/security-details`));
-      uploadFiles.exporterSecurity().type('test');
-      uploadFiles.facilitySecurity().type('test2');
+      cy.keyboardInput(uploadFiles.exporterSecurity(), 'test');
+      cy.keyboardInput(uploadFiles.facilitySecurity(), 'test2');
       cy.clickSubmitButton();
     });
 
@@ -278,7 +280,7 @@ context('Clone GEF (MIA) deal', () => {
       mandatoryCriteria.trueRadio().click();
       form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${MIAdealId}/clone/name-application`));
-      nameApplication.internalRef().clear().type('Cloned MIA deal');
+      cy.keyboardInput(nameApplication.internalRef(), 'Cloned MIA deal');
       form().submit();
     });
 
@@ -288,7 +290,7 @@ context('Clone GEF (MIA) deal', () => {
       cy.url().then((url) => {
         cy.visit(`${url}/about-exporter`);
         aboutExporter.mediumRadioButton().click();
-        aboutExporter.probabilityOfDefaultInput().clear().focused().type('10');
+        cy.keyboardInput(aboutExporter.probabilityOfDefaultInput(), '10');
         aboutExporter.isFinancingIncreasingRadioNo().click();
         cy.clickSaveAndReturnButton();
       });
@@ -329,7 +331,7 @@ context('Clone GEF (MIN) deal', () => {
           cy.apiUpdateApplication(MINdealId, token, MOCK_APPLICATION_MIN).then(() => {
             cy.apiCreateFacility(MINdealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
-              cy.apiUpdateFacility(facilityOneId, token, MOCK_FACILITY_ONE);
+              cy.apiUpdateFacility(facilityOneId, token, anUnissuedCashFacility({ facilityEndDateEnabled }));
             });
           });
         });
@@ -348,7 +350,7 @@ context('Clone GEF (MIN) deal', () => {
       mandatoryCriteria.trueRadio().click();
       form().submit();
       cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone/name-application`));
-      nameApplication.internalRef().clear().type('Cloned MIN deal');
+      cy.keyboardInput(nameApplication.internalRef(), 'Cloned MIN deal');
       form().submit();
 
       cy.get('[data-cy="success-message-link"]').click();

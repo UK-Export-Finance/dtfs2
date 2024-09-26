@@ -6,7 +6,7 @@ import { UtilisationReportReconciliationForReportViewModel } from '../../server/
 import { TfmSessionUser } from '../../server/types/tfm-session-user';
 
 const page = '../templates/utilisation-reports/utilisation-report-reconciliation-for-report.njk';
-const render = pageRenderer(page);
+const render = pageRenderer<UtilisationReportReconciliationForReportViewModel>(page);
 
 describe(page, () => {
   const aPdcReconcileUser = (): TfmSessionUser => ({ ...aTfmSessionUser(), teams: ['PDC_RECONCILE'] });
@@ -28,9 +28,9 @@ describe(page, () => {
     bank,
     formattedReportPeriod,
     reportId: reportId.toString(),
-    feeRecordPaymentGroups: [],
-    enablePaymentsReceivedSorting: false,
     facilityIdQuery,
+    enablePaymentsReceivedSorting: false,
+    premiumPayments: [],
     keyingSheet: [],
     paymentDetails: [],
   };
@@ -221,7 +221,7 @@ describe(page, () => {
       .toMatch(/Payment details will be displayed when payments have been entered on the premium payments tab./);
   });
 
-  it('should render the payment details tab with headings (without text), the show filter button and the table when there are payment details', () => {
+  it('should render the payment details tab with headings (without text), the filters panel and the table when there are payment details', () => {
     const wrapper = getWrapper({
       ...params,
       paymentDetails: [
@@ -232,7 +232,7 @@ describe(page, () => {
             dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
             reference: undefined,
           },
-          feeRecords: [{ facilityId: '12345678', exporter: 'Test exporter' }],
+          feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
           feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH,
           reconciledBy: '-',
           dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
@@ -244,8 +244,9 @@ describe(page, () => {
     wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
     wrapper.expectElement(`${paymentDetailsTabSelector} p`).notToExist();
 
-    wrapper.expectElement(`${paymentDetailsTabSelector} button[data-cy="payment-details-show-filter-button"]`).toExist();
-    wrapper.expectElement(`${paymentDetailsTabSelector} button[data-cy="payment-details-show-filter-button"]`).hasClass('govuk-button--secondary');
+    wrapper.expectElement(`${paymentDetailsTabSelector} [data-cy="payment-details--filters-panel"]`).toExist();
+    wrapper.expectElement(`${paymentDetailsTabSelector} [data-cy="payment-details--filters-action-bar"]`).toExist();
+
     wrapper.expectElement(`${paymentDetailsTabSelector} table`).toExist();
   });
 });

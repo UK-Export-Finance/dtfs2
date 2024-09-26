@@ -7,7 +7,7 @@ import { longYearFormat, shortDayFormat, shortMonthFormat } from '../../../../e2
  * @param {Date} date
  */
 export const fillInBankReviewDate = (date) => {
-  bankReviewDate.bankReviewDateDay().clear().type(format(date, shortDayFormat));
-  bankReviewDate.bankReviewDateMonth().clear().type(format(date, shortMonthFormat));
-  bankReviewDate.bankReviewDateYear().clear().type(format(date, longYearFormat));
+  cy.keyboardInput(bankReviewDate.bankReviewDateDay(), format(date, shortDayFormat));
+  cy.keyboardInput(bankReviewDate.bankReviewDateMonth(), format(date, shortMonthFormat));
+  cy.keyboardInput(bankReviewDate.bankReviewDateYear(), format(date, longYearFormat));
 };

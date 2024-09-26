@@ -6,6 +6,8 @@ const { downloadFile } = require('./portal-api/fileshare');
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
+Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
+
 // Assert an element has some exact text
 Cypress.Commands.add('assertText', require('./utils/assertText'));
 
@@ -72,6 +74,9 @@ Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
+
+// command to assert row contents in the utilisation report upload journey
+Cypress.Commands.add('assertValidationErrorTableRowContains', require('./portal/utilisation-reports/assertUploadReportValidationErrorTableRowContains'));
 
 // commands that add/edit facilities directly in central API
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));

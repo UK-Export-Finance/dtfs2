@@ -27,7 +27,7 @@ context('Financial page form - create element and check if inserted into deal', 
     cy.title().should('eq', `Financial information - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
 
     // set a GBP value, so we don't need to fill in the exchange-rate fields
-    contractAboutFinancial.supplyContractValue().type('10000');
+    cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '10000');
     contractAboutFinancial.supplyContractValue().should('have.value', '10,000');
 
     contractAboutFinancial.supplyContractCurrency().select('GBP');

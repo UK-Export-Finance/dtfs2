@@ -1,11 +1,13 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
-import partials from '../../partials';
+import { caseSummary, caseSubNavigation } from '../../partials';
 import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIA } from '../../../fixtures/mock-gef-deals';
-import { MOCK_FACILITY_ONE } from '../../../fixtures/mock-gef-facilities';
 import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../e2e-fixtures';
 import { DEAL_TYPE } from '../../../fixtures/constants';
 import facilityPage from '../../pages/facilityPage';
+import { anUnissuedCashFacility } from '../../../../../e2e-fixtures/mock-gef-facilities';
+
+const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 
 context('User can view a GEF MIA case deal', () => {
   let dealId;
@@ -18,7 +20,7 @@ context('User can view a GEF MIA case deal', () => {
       // updates a gef deal so has relevant fields
       cy.updateGefDeal(dealId, MOCK_APPLICATION_MIA, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], BANK1_MAKER1).then((createdFacilities) => {
+      cy.createGefFacilities(dealId, [anUnissuedCashFacility({ facilityEndDateEnabled })], BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities = createdFacilities.details;
       });
 
@@ -36,16 +38,16 @@ context('User can view a GEF MIA case deal', () => {
   });
 
   it('should render case deal components', () => {
-    pages.caseDealPage.caseSummary().should('exist');
-    pages.caseDealPage.caseSubNavigation().should('exist');
+    caseSummary.container().should('exist');
+    caseSubNavigation.container().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
   });
 
   it('should render case summary fields', () => {
-    cy.assertText(partials.caseSummary.dealSubmissionType(), MOCK_APPLICATION_MIA.submissionType);
+    cy.assertText(caseSummary.dealSubmissionType(), MOCK_APPLICATION_MIA.submissionType);
 
-    cy.assertText(partials.caseSummary.exporterName(), MOCK_APPLICATION_MIA.exporter.companyName);
+    cy.assertText(caseSummary.exporterName(), MOCK_APPLICATION_MIA.exporter.companyName);
   });
 
   describe('Bank security section', () => {
@@ -117,7 +119,7 @@ context('User can view a GEF AIN case deal', () => {
       // updates a gef deal so has relevant fields
       cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [MOCK_FACILITY_ONE], BANK1_MAKER1).then((createdFacilities) => {
+      cy.createGefFacilities(dealId, [anUnissuedCashFacility({ facilityEndDateEnabled })], BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities = createdFacilities.details;
       });
 
@@ -135,16 +137,16 @@ context('User can view a GEF AIN case deal', () => {
   });
 
   it('should render case deal components', () => {
-    pages.caseDealPage.caseSummary().should('exist');
-    pages.caseDealPage.caseSubNavigation().should('exist');
+    caseSummary.container().should('exist');
+    caseSubNavigation.container().should('exist');
     pages.caseDealPage.dealBankDetails().should('exist');
     pages.caseDealPage.dealFacilities().should('exist');
   });
 
   it('should render case summary fields', () => {
-    cy.assertText(partials.caseSummary.dealSubmissionType(), MOCK_APPLICATION_AIN.submissionType);
+    cy.assertText(caseSummary.dealSubmissionType(), MOCK_APPLICATION_AIN.submissionType);
 
-    cy.assertText(partials.caseSummary.exporterName(), MOCK_APPLICATION_AIN.exporter.companyName);
+    cy.assertText(caseSummary.exporterName(), MOCK_APPLICATION_AIN.exporter.companyName);
   });
 
   describe('Bank security section', () => {

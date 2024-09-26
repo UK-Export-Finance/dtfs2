@@ -1,5 +1,5 @@
 import relative from '../../relativeURL';
-import partials from '../../partials';
+import partials, { errorSummary } from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { T1_USER_1, UNDERWRITER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
@@ -62,23 +62,23 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
     });
 
     it('should display validation error if necessary', () => {
-      pages.underwritingLossGivenDefaultPage.errorSummary().should('not.exist');
+      errorSummary().should('not.exist');
       pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput().clear();
-      pages.underwritingLossGivenDefaultPage.submitButton().click();
+      cy.clickSubmitButton();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting/pricing-and-risk/loss-given-default`));
-      pages.underwritingLossGivenDefaultPage.errorSummary().should('exist');
+      errorSummary().should('exist');
     });
 
     it('should return to pricing & risk page without updating value if cancel', () => {
-      pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput().clear().type('45');
+      cy.keyboardInput(pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput(), '45');
       pages.underwritingLossGivenDefaultPage.closeLink().click();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
       cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault(), '50%');
     });
 
     it('should update LGD', () => {
-      pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput().clear().type('45');
-      pages.underwritingLossGivenDefaultPage.submitButton().click();
+      cy.keyboardInput(pages.underwritingLossGivenDefaultPage.lossGivenDefaultInput(), '45');
+      cy.clickSubmitButton();
       cy.url().should('eq', relative(`/case/${dealId}/underwriting`));
       cy.assertText(pages.underwritingPricingAndRiskPage.exporterTableLossGivenDefault(), '45%');
     });

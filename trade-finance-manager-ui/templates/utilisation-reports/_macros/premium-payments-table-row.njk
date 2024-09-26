@@ -39,8 +39,8 @@
               <li class="payments-list-item">
                 {% if userCanEdit and (status === 'MATCH' or status === 'DOES_NOT_MATCH') %}
                   <a
-                    href="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentReceived.id }}"
-                    data-cy="edit-payment-link--paymentId-{{ paymentReceived.id }}">
+                    href="/utilisation-reports/{{ reportId }}/edit-payment/{{ paymentReceived.id }}?redirectTab=premium-payments"
+                    data-cy="premium-payments-tab-edit-payment-link--paymentId-{{ paymentReceived.id }}">
                     {{ paymentReceived.formattedCurrencyAndAmount }}
                   </a>
                 {% else %}
