@@ -14,7 +14,7 @@ import { extractQueryAndSessionData } from './extract-query-and-session-data';
 
 export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   query: {
-    facilityIdQuery?: string;
+    premiumPaymentsFacilityId?: string;
     selectedFeeRecordIds?: string;
   };
 }>;
@@ -45,7 +45,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
   const { reportId } = req.params;
 
   try {
-    const { facilityIdQuery, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
+    const { premiumPaymentsFacilityId, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
 
     const { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds } = req.session;
 
@@ -54,7 +54,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
     delete req.session.generateKeyingDataErrorKey;
 
     const { premiumPaymentsFilters, premiumPaymentsFilterError, premiumPaymentsTableDataError, isCheckboxChecked } = extractQueryAndSessionData(
-      { facilityIdQuery, selectedFeeRecordIdsQuery },
+      { premiumPaymentsFacilityId, selectedFeeRecordIdsQuery },
       { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
       req.originalUrl,
     );

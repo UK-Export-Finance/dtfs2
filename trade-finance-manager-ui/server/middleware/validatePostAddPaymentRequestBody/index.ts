@@ -12,19 +12,19 @@ import { PremiumPaymentsTableCheckboxId } from '../../types/premium-payments-tab
 
 const isRequestBodyAnObject = (body: unknown): body is object => !body || typeof body === 'object';
 
-const FACILITY_ID_QUERY_REGEX = /facilityIdQuery=(?<facilityIdQuery>\d{4,10})/;
+const PREMIUM_PAYMENTS_FACILITY_ID_QUERY_REGEX = /premiumPaymentsFacilityId=(?<premiumPaymentsFacilityId>\d{4,10})/;
 
-const getFacilityIdQueryFromReferer = (req: Request): string | undefined => {
+const getPremiumPaymentsFacilityIdQueryFromReferer = (req: Request): string | undefined => {
   const { referer } = req.headers;
   if (!referer) {
     return undefined;
   }
 
-  const captureGroups = FACILITY_ID_QUERY_REGEX.exec(referer)?.groups;
+  const captureGroups = PREMIUM_PAYMENTS_FACILITY_ID_QUERY_REGEX.exec(referer)?.groups;
   if (!captureGroups) {
     return undefined;
   }
-  return captureGroups.facilityIdQuery;
+  return captureGroups.premiumPaymentsFacilityId;
 };
 
 const redirectWithError = (
@@ -36,8 +36,8 @@ const redirectWithError = (
 ) => {
   req.session.addPaymentErrorKey = addPaymentError;
   req.session.checkedCheckboxIds = checkedCheckboxIds;
-  const facilityIdQuery = getFacilityIdQueryFromReferer(req);
-  return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { facilityIdQuery } }));
+  const premiumPaymentsFacilityId = getPremiumPaymentsFacilityIdQueryFromReferer(req);
+  return res.redirect(axios.getUri({ url: `/utilisation-reports/${reportId}`, params: { premiumPaymentsFacilityId } }));
 };
 
 const mapCheckedCheckboxesToRecord = (checkedCheckboxIds: string[]): Record<string, true | undefined> => {

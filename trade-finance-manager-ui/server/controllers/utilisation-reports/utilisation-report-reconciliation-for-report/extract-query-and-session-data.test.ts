@@ -7,7 +7,7 @@ jest.mock('./validate-facility-id-query');
 
 describe('extractQueryAndSessionData', () => {
   const ORIGINAL_URL = '/original-url';
-  const FACILITY_ID_QUERY = '1234';
+  const PREMIUM_PAYMENTS_FACILITY_ID_QUERY = '1234';
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -19,10 +19,10 @@ describe('extractQueryAndSessionData', () => {
   });
 
   describe('premium payments filters', () => {
-    it('uses provided facilityIdQuery', () => {
+    it('uses provided premiumPaymentsFacilityId', () => {
       // Arrange
       const queryParams = {
-        facilityIdQuery: FACILITY_ID_QUERY,
+        premiumPaymentsFacilityId: PREMIUM_PAYMENTS_FACILITY_ID_QUERY,
       };
       const sessionData = {};
 
@@ -30,13 +30,13 @@ describe('extractQueryAndSessionData', () => {
       const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
       // Assert
-      expect(result.premiumPaymentsFilters.facilityId).toBe(FACILITY_ID_QUERY);
+      expect(result.premiumPaymentsFilters.facilityId).toBe(PREMIUM_PAYMENTS_FACILITY_ID_QUERY);
     });
 
-    it('validates facilityIdQuery and returns any errors as premiumPaymentsFilterError', () => {
+    it('validates premiumPaymentsFacilityId and returns any errors as premiumPaymentsFilterError', () => {
       // Arrange
       const queryParams = {
-        facilityIdQuery: FACILITY_ID_QUERY,
+        premiumPaymentsFacilityId: PREMIUM_PAYMENTS_FACILITY_ID_QUERY,
       };
       const sessionData = {};
 
@@ -47,7 +47,7 @@ describe('extractQueryAndSessionData', () => {
       const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
       // Assert
-      expect(validateFacilityIdQuery).toHaveBeenCalledWith(FACILITY_ID_QUERY, ORIGINAL_URL);
+      expect(validateFacilityIdQuery).toHaveBeenCalledWith(PREMIUM_PAYMENTS_FACILITY_ID_QUERY, ORIGINAL_URL);
       expect(result.premiumPaymentsFilterError).toEqual(mockError);
     });
   });
@@ -55,7 +55,7 @@ describe('extractQueryAndSessionData', () => {
   it('uses premiumPaymentsTableDataError derived from session data', () => {
     // Arrange
     const queryParams = {
-      facilityIdQuery: FACILITY_ID_QUERY,
+      premiumPaymentsFacilityId: PREMIUM_PAYMENTS_FACILITY_ID_QUERY,
     };
     const sessionData = {};
 
@@ -76,7 +76,7 @@ describe('extractQueryAndSessionData', () => {
   it('uses selectedFeeRecordIds from query for isCheckboxChecked when present', () => {
     // Arrange
     const queryParams = {
-      facilityIdQuery: FACILITY_ID_QUERY,
+      premiumPaymentsFacilityId: PREMIUM_PAYMENTS_FACILITY_ID_QUERY,
       selectedFeeRecordIdsQuery: '1,2,3',
     };
     const sessionData = {};
@@ -93,7 +93,7 @@ describe('extractQueryAndSessionData', () => {
   it('uses selectedFeeRecordIds from session data for isCheckboxChecked when present', () => {
     // Arrange
     const queryParams = {
-      facilityIdQuery: FACILITY_ID_QUERY,
+      premiumPaymentsFacilityId: PREMIUM_PAYMENTS_FACILITY_ID_QUERY,
     };
     const sessionData = {};
 

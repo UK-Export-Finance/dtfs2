@@ -6,13 +6,13 @@ import { getSelectedFeeRecordIdsFromQuery } from './get-selected-fee-record-ids-
 import { validateFacilityIdQuery } from './validate-facility-id-query';
 
 type GetUtilisationReportReconciliationQuery = {
-  facilityIdQuery?: string;
+  premiumPaymentsFacilityId?: string;
   selectedFeeRecordIdsQuery?: string;
 };
 
 /**
  * Parses premium payments filters from the query parameters.
- * @param facilityIdQuery - The facility ID query.
+ * @param premiumPaymentsFacilityId - The premium payments facility ID query.
  * @param originalUrl - The original URL of the request.
  * @returns An object containing the parsed premium payments filters and any
  * error resulting from validating the facility ID query.
@@ -40,7 +40,8 @@ const parsePremiumPaymentsFilters = (facilityIdQuery: string | undefined, origin
  * This handles cases where the user was redirected from another page.
  *
  * @param queryParams - The request query parameters object
- * @param queryParams.facilityIdQuery - The facility ID query parameter
+ * @param queryParams.premiumPaymentsFacilityId - The premium payments facility
+ * ID query parameter
  * @param queryParams.selectedFeeRecordIdsQuery - The selected fee record IDs
  * query parameter
  * @param sessionData - The session data
@@ -50,11 +51,11 @@ const parsePremiumPaymentsFilters = (facilityIdQuery: string | undefined, origin
  * premiumPaymentsTableDataError, and derived values such as isCheckboxChecked.
  */
 export const extractQueryAndSessionData = (
-  { facilityIdQuery, selectedFeeRecordIdsQuery }: GetUtilisationReportReconciliationQuery,
+  { premiumPaymentsFacilityId, selectedFeeRecordIdsQuery }: GetUtilisationReportReconciliationQuery,
   sessionData: Partial<SessionData>,
   originalUrl: string,
 ) => {
-  const { premiumPaymentsFilters, premiumPaymentsFilterError } = parsePremiumPaymentsFilters(facilityIdQuery, originalUrl);
+  const { premiumPaymentsFilters, premiumPaymentsFilterError } = parsePremiumPaymentsFilters(premiumPaymentsFacilityId, originalUrl);
 
   const { premiumPaymentsTableDataError, selectedFeeRecordIds: selectedFeeRecordIdsFromSessionData } = handleRedirectSessionData(sessionData);
 

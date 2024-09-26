@@ -106,7 +106,7 @@ describe(page, () => {
       wrapper.expectText('[data-cy="facility-filter-form"]').toContain('Filter by facility ID');
     });
 
-    it('initialises the filter input value to the facilityIdQuery', () => {
+    it('initialises the filter input value to the premiumPaymentsFacilityId value', () => {
       const wrapper = getWrapper();
       wrapper.expectInput('[data-cy="facility-filter-input"]').toHaveValue(premiumPaymentsFilters.facilityId);
     });

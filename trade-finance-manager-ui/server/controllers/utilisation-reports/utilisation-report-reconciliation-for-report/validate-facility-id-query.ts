@@ -5,7 +5,7 @@ import { REGEX } from '../../../constants';
 const FACILITY_ID_INPUT_ID = '#facility-id-filter';
 
 export const validateFacilityIdQuery = (facilityIdQuery: string | undefined, originalUrl: string): ErrorSummaryViewModel | undefined => {
-  if (originalUrl.includes('?') && originalUrl.includes('facilityIdQuery')) {
+  if (originalUrl.includes('?') && originalUrl.includes('?premiumPaymentsFacilityId')) {
     if (!isNonEmptyString(facilityIdQuery)) {
       return {
         text: 'Enter a facility ID',

@@ -25,8 +25,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     const session = { userToken, user };
 
     const reportId = '1';
-    const facilityIdQuery = '1234';
-    const originalUrl = '?facilityIdQuery';
+    const premiumPaymentsFacilityId = '1234';
+    const originalUrl = '?premiumPaymentsFacilityId';
 
     const getHttpMocksWithSessionData = (sessionData: Partial<SessionData>) =>
       httpMocks.createMocks({
@@ -35,7 +35,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           reportId,
         },
         query: {
-          facilityIdQuery,
+          premiumPaymentsFacilityId,
         },
         originalUrl,
       });
@@ -47,7 +47,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const { req, res } = getHttpMocks();
 
       const premiumPaymentsFilters = {
-        facilityId: facilityIdQuery,
+        facilityId: premiumPaymentsFacilityId,
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockRejectedValue(new Error('Some error'));
@@ -144,7 +144,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       ];
 
       const premiumPaymentsFilters = {
-        facilityId: facilityIdQuery,
+        facilityId: premiumPaymentsFacilityId,
       };
 
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
@@ -163,7 +163,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         enablePaymentsReceivedSorting: true,
         reportId: '1',
         premiumPayments,
-        facilityIdQuery,
+        premiumPaymentsFilters,
         keyingSheet: [],
         paymentDetails: paymentDetailsViewModel,
       });
@@ -253,14 +253,14 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
     it('sets facility ID query error when invalid facility ID query value used', async () => {
       // Arrange
-      const facilityIdQueryParam = 'abc';
+      const premiumPaymentsFacilityIdParam = 'abc';
       const { req, res } = httpMocks.createMocks({
         session,
         params: {
           reportId,
         },
         query: {
-          facilityIdQuery: facilityIdQueryParam,
+          premiumPaymentsFacilityId: premiumPaymentsFacilityIdParam,
         },
         originalUrl,
       });
@@ -280,9 +280,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.filterError).toBeDefined();
-      expect(viewModel.filterError?.href).toBe('#facility-id-filter');
-      expect(viewModel.filterError?.text).toBe('Facility ID must be a number');
+      expect(viewModel.premiumPaymentsFilterError).toBeDefined();
+      expect(viewModel.premiumPaymentsFilterError?.href).toBe('#facility-id-filter');
+      expect(viewModel.premiumPaymentsFilterError?.text).toBe('Facility ID must be a number');
     });
 
     it('checks selected checkboxes when selected fee record ids query param defined', async () => {
@@ -292,7 +292,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         session,
         params: { reportId },
         query: {
-          facilityIdQuery,
+          premiumPaymentsFacilityId,
           selectedFeeRecordIds: selectedFeeRecordIdsQueryParam,
         },
         originalUrl,
