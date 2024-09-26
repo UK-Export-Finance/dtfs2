@@ -4,7 +4,7 @@ import { getReasonForCancelling, postReasonForCancelling } from '../../controlle
 import { getBankRequestDate, postBankRequestDate } from '../../controllers/case/cancellation/bank-request-date.controller';
 import { validateUserTeam } from '../../middleware';
 import { validateDealCancellationEnabled } from '../../middleware/feature-flags/deal-cancellation';
-import { getEffectiveFromDate } from '../../controllers/case/cancellation/effective-from-date.controller';
+import { getEffectiveFromDate, postEffectiveFromDate } from '../../controllers/case/cancellation/effective-from-date.controller';
 
 export const cancellationRouter = Router();
 
@@ -17,3 +17,4 @@ cancellationRouter.get('/:_id/cancellation/bank-request-date', getBankRequestDat
 cancellationRouter.post('/:_id/cancellation/bank-request-date', postBankRequestDate);
 
 cancellationRouter.get('/:_id/cancellation/effective-from-date', getEffectiveFromDate);
+cancellationRouter.post('/:_id/cancellation/effective-from-date', postEffectiveFromDate);
