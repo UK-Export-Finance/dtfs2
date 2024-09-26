@@ -45,6 +45,11 @@ jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
   createACBS: jest.fn(),
 }));
 
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  asString: (value) => String(value),
+}));
+
 describe('/v1/deals', () => {
   beforeEach(() => {
     acbsController.issueAcbsFacilities.mockClear();

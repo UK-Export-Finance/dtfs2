@@ -21,6 +21,11 @@ describe('user controller', () => {
     jest.resetAllMocks();
   });
 
+  jest.mock('@ukef/dtfs2-common', () => ({
+    ...jest.requireActual('@ukef/dtfs2-common'),
+    asString: (value) => String(value),
+  }));
+
   describe('POST /v1/users', () => {
     it('should not create a new TFM user with malformed payload', async () => {
       const { body } = await as(tokenUser).post({}).to('/v1/users');

@@ -25,6 +25,11 @@ describe('update tfm-deals on amendment completion', () => {
 
   const updateDealSpy = jest.fn(() => Promise.resolve(mockDeal));
 
+  jest.mock('@ukef/dtfs2-common', () => ({
+    ...jest.requireActual('@ukef/dtfs2-common'),
+    asString: (value) => String(value),
+  }));
+
   beforeEach(() => {
     updateDealSpy.mockClear();
     api.getAmendmentById = jest.fn(() => Promise.resolve(mockAmendment));
