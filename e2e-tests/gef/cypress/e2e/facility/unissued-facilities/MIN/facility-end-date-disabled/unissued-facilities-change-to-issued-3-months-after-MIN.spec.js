@@ -11,18 +11,13 @@ import { mainHeading, errorSummary } from '../../../../partials';
 import applicationPreview from '../../../../pages/application-preview';
 import unissuedFacilityTable from '../../../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
-import facilityEndDate from '../../../../pages/facility-end-date';
 import statusBanner from '../../../../pages/application-status-banner';
 
 let dealId;
 let token;
 let facilityOneId;
 
-const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
-
-const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
-  facilityEndDateEnabled,
-});
+const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities();
 
 const FACILITY_THREE_SPECIAL = { ...unissuedContingentFacility };
 FACILITY_THREE_SPECIAL.specialIssuePermission = true;
@@ -95,11 +90,6 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
       aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
-
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
-        aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
-      }
     });
 
     it('should not be able to update facility and then go back to application preview page with coverStartDate more than 3 months in the future', () => {
@@ -148,60 +138,11 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeYearsMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeYearsYear);
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
-      }
-
       cy.clickContinueButton();
-
-      if (facilityEndDateEnabled) {
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.threeMonthsOneDayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.threeMonthsOneDayYear);
-        cy.clickContinueButton();
-      }
 
       // to go back to application preview page
       unissuedFacilityTable.updateFacilitiesLater().click();
     });
-
-    if (facilityEndDateEnabled) {
-      it('should display error on facility end date page if date is not provided', () => {
-        applicationPreview.facilitySummaryListTable(1).facilityEndDateAction().click();
-
-        facilityEndDate.facilityEndDateDay().clear();
-        facilityEndDate.facilityEndDateMonth().clear();
-        facilityEndDate.facilityEndDateYear().clear();
-        cy.clickContinueButton();
-
-        errorSummary().contains('Facility end date must be in the correct format DD/MM/YYYY');
-        facilityEndDate.facilityEndDateError();
-      });
-
-      it('should display error on facility end date page if date is over 6 years in the future', () => {
-        applicationPreview.facilitySummaryListTable(1).facilityEndDateAction().click();
-
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.sixYearsOneDayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.sixYearsOneDayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.sixYearsOneDayYear);
-        cy.clickContinueButton();
-
-        errorSummary().contains('Facility end date cannot be greater than 6 years in the future');
-        facilityEndDate.facilityEndDateError();
-      });
-
-      it('should display error on facility end date page if date before the cover start date', () => {
-        applicationPreview.facilitySummaryListTable(1).facilityEndDateAction().click();
-
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.todayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.todayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.todayYear);
-        cy.clickContinueButton();
-
-        errorSummary().contains('Facility end date cannot be before the cover start date');
-        facilityEndDate.facilityEndDateError();
-      });
-    }
 
     it('should not be able to update facility from application preview with coverStartDate more than 3 months in the future if specialIssuePermission', () => {
       // to change to issued from preview page by clicking change on issued row

@@ -17,17 +17,12 @@ import applicationSubmission from '../../../../pages/application-submission';
 import statusBanner from '../../../../pages/application-status-banner';
 import applicationDetails from '../../../../pages/application-details';
 import applicationActivities from '../../../../pages/application-activities';
-import facilityEndDate from '../../../../pages/facility-end-date';
 
 let dealId;
 let token;
 let facilityOneId;
 
-const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
-
-const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
-  facilityEndDateEnabled,
-});
+const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities();
 
 const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
@@ -88,18 +83,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
-      }
-
       cy.clickContinueButton();
-
-      if (facilityEndDateEnabled) {
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.threeMonthsOneDayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.threeMonthsOneDayYear);
-        cy.clickContinueButton();
-      }
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[1].name} is updated`);
       // checks the facility has been removed from unissued list
@@ -120,18 +104,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
-      }
-
       cy.clickContinueButton();
-
-      if (facilityEndDateEnabled) {
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.threeMonthsOneDayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.threeMonthsOneDayYear);
-        cy.clickContinueButton();
-      }
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[2].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 2);
@@ -191,9 +164,6 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
       // second facility
       applicationPreview.facilitySummaryListTable(1).nameAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -208,10 +178,6 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(1).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(1).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(1).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
-
       // third facility
       applicationPreview.facilitySummaryListTable(2).nameAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -224,10 +190,6 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
-
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
 
       // forth facility table - shorter as not yet issued
       applicationPreview.facilitySummaryListTable(3).nameAction().should('have.class', 'govuk-!-display-none');
@@ -291,10 +253,6 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
-
       // 1st facility table - makes sure no action buttons exist (change or add)
       applicationDetails.facilitySummaryListTable(0).nameAction().contains('Change');
       applicationDetails.facilitySummaryListTable(0).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -309,10 +267,6 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListTable(0).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(0).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Change');
-      }
-
       // second facility
       applicationDetails.facilitySummaryListTable(1).nameAction().contains('Change');
       applicationDetails.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -326,10 +280,6 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListTable(1).interestPercentageAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(1).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(1).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
-
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(1).isUsingFacilityEndDateAction().contains('Change');
-      }
 
       // forth facility table only has change as not yet issued
       applicationDetails.facilitySummaryListTable(3).nameAction().should('have.class', 'govuk-!-display-none');
@@ -370,7 +320,6 @@ context('Return to maker for unissued to issued facilities', () => {
       const issuedDate = format(dateConstants.today, 'd MMMM yyyy');
       const coverStart = format(dateConstants.today, 'd MMMM yyyy');
       const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
-      const facilityEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
 
       applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
@@ -388,17 +337,7 @@ context('Return to maker for unissued to issued facilities', () => {
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
-      }
       cy.clickContinueButton();
-
-      if (facilityEndDateEnabled) {
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.threeMonthsOneDayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.threeMonthsOneDayYear);
-        cy.clickContinueButton();
-      }
 
       // forth facility table has correct name and dates
       applicationDetails.facilitySummaryListTable(3).nameValue().contains(unissuedCashFacility.name);
@@ -416,13 +355,6 @@ context('Return to maker for unissued to issued facilities', () => {
       applicationDetails.facilitySummaryListTable(3).coverPercentageAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(3).interestPercentageAction().should('have.class', 'govuk-!-display-none');
       applicationDetails.facilitySummaryListTable(3).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
-
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
-        applicationDetails.facilitySummaryListTable(3).facilityEndDateValue().contains(facilityEnd);
-
-        applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateAction().contains('Change');
-      }
 
       // check that header updated to include this facility
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
@@ -480,10 +412,6 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
-
       // second facility
       applicationPreview.facilitySummaryListTable(1).nameAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(1).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -498,10 +426,6 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(1).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(1).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(1).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
-
       // third facility
       applicationPreview.facilitySummaryListTable(2).nameAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).ukefFacilityIdAction().should('have.class', 'govuk-!-display-none');
@@ -514,10 +438,6 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(2).interestPercentageAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(2).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
-
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
 
       // forth facility table
       applicationPreview.facilitySummaryListTable(3).nameAction().should('have.class', 'govuk-!-display-none');
@@ -532,10 +452,6 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       applicationPreview.facilitySummaryListTable(3).interestPercentageAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
-
-      if (facilityEndDateEnabled) {
-        applicationDetails.facilitySummaryListTable(3).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
     });
 
     it('submit to ukef and return to maker buttons exist and able to return to maker', () => {
