@@ -21,9 +21,7 @@ let dealId;
 let token;
 let facilityOneId;
 
-const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
-
-const unissuedCashFacility = anUnissuedCashFacility({ facilityEndDateEnabled });
+const unissuedCashFacility = anUnissuedCashFacility({ facilityEndDateEnabled: true });
 
 const unissuedFacilitiesArray = [unissuedCashFacility];
 
@@ -113,10 +111,8 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
-        aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
-      }
+      aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
+      aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
     });
 
     it('Should not throw error upon user defined cover start date input when cover start date is set to issuance date', () => {
@@ -140,20 +136,16 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
-      }
+      aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
       // Changing cover start date to issuance date
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
       cy.clickContinueButton();
 
-      if (facilityEndDateEnabled) {
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.threeMonthsOneDayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.threeMonthsOneDayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.threeMonthsOneDayYear);
-        cy.clickContinueButton();
-      }
+      cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.threeMonthsOneDayYear);
+      cy.clickContinueButton();
 
       // Success banner
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');
