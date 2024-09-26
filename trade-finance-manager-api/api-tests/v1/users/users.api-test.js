@@ -10,7 +10,6 @@ const { as } = createApi(app);
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
-  asString: (value) => String(value),
 }));
 
 describe('user controller', () => {

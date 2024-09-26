@@ -4,14 +4,6 @@ const { createApi } = require('../../api');
 
 const { post } = createApi(app);
 
-/**
- * TODO: DTFS2-7419 Ensure `asString` usage as normal
- */
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  asString: (value) => String(value),
-}));
-
 describe('/feedback', () => {
   const feedbackFormBody = {
     role: 'computers',

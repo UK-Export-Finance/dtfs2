@@ -1,4 +1,4 @@
-import { COMPANY_REGISTRATION_NUMBER } from '..';
+import { COMPANY_REGISTRATION_NUMBER } from '../constants';
 import { isString } from './string';
 
 /**

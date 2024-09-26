@@ -10,7 +10,6 @@ const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
-  asString: (value) => String(value),
 }));
 
 describe('update tfm-deals on amendment completion', () => {
