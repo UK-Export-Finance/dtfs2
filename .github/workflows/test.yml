@@ -19,7 +19,7 @@
 # portal, gef-ui, trade-finance-manager-ui
 # Generates code coverage reports for UI integration tests.
 #
-# 5-8. End-to-End (E2E) Tests:
+# 5-7. End-to-End (E2E) Tests:
 # Runs tests simulating user journeys through different parts of the application:
 # portal (various scenarios)
 # gef
@@ -27,6 +27,9 @@
 # ukef
 # Uses Cypress for E2E testing.
 # Initializes the environment with data before tests.
+#
+# 8. End-to-End (E2E) - Feature flags (FF)
+# Run tests 5-7 with all feature flags set to true
 #
 # Additional Notes:
 # Workflow runs on pull requests to the main branch and pushes to specific branches.
@@ -528,11 +531,13 @@ jobs:
             'exporter/**/*.spec.js',
             'external/**/*.spec.js',
             'facility/pre-submission/*.spec.js',
+            'facility/pre-submission/facility-end-date-disabled/*.spec.js',
             'facility/review-ukef-approval/*.spec.js',
             'facility/version-0/*.spec.js',
             'facility/unissued-facilities/AIN/*.spec.js',
             'facility/unissued-facilities/MIN/*.spec.js',
-            'maker/**/*.spec.js',
+            'maker/*.spec.js',
+            'maker/facility-end-date-disabled/*.spec.js',
             'scenarios/**/*.spec.js',
             'security/**/*.spec.js',
             'ukef/**/*.spec.js',
@@ -599,9 +604,13 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec:
-          [
-            'case/**/*.spec.js',
+        spec: [
+            'case/*.spec.js',
+            'case/activities/*.spec.js',
+            'case/deal-cancellation-disabled/*.spec.js',
+            'case/documents/*.spec.js',
+            'case/parties/*.spec.js',
+            'case/tasks/*.spec.js',
             'case-amendments/add-bank-decision/*.spec.js',
             'case-amendments/add-underwriter-decision/*.spec.js',
             'case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
@@ -788,16 +797,23 @@ jobs:
             './gef/cypress/e2e/exporter/**/*.spec.js',
             './gef/cypress/e2e/external/**/*.spec.js',
             './gef/cypress/e2e/facility/pre-submission/*.spec.js',
+            './gef/cypress/e2e/facility/pre-submission/facility-end-date-enabled/*.spec.js',
             './gef/cypress/e2e/facility/review-ukef-approval/*.spec.js',
             './gef/cypress/e2e/facility/version-0/*.spec.js',
             './gef/cypress/e2e/facility/unissued-facilities/AIN/*.spec.js',
             './gef/cypress/e2e/facility/unissued-facilities/MIN/*.spec.js',
-            './gef/cypress/e2e/maker/**/*.spec.js',
+            './gef/cypress/e2e/maker/*.spec.js',
+            './gef/cypress/e2e/maker/facility-end-date-enabled/*.spec.js',
             './gef/cypress/e2e/scenarios/**/*.spec.js',
             './gef/cypress/e2e/security/**/*.spec.js',
             './gef/cypress/e2e/ukef/**/*.spec.js',
             './gef/cypress/e2e/upload/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/activities/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/deal-cancellation-enabled/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/documents/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/parties/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/tasks/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/add-bank-decision/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/add-underwriter-decision/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
@@ -814,6 +830,7 @@ jobs:
             './tfm/cypress/e2e/journeys/case-amendments/underwriting-page-unassigned/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/user-flow/*.spec.js',
             './tfm/cypress/e2e/journeys/case-underwriting/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/deal-cancellation/**/*.spec.js',
             './tfm/cypress/e2e/journeys/deals/**/*.spec.js',
             './tfm/cypress/e2e/journeys/facility/**/*.spec.js',
             './tfm/cypress/e2e/journeys/feedback/**/*.spec.js',

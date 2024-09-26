@@ -202,12 +202,12 @@ describe(`${page} cancel deal button`, () => {
     });
 
     it("should render the 'Cancel deal' button", () => {
-      wrapper.expectElement('[data-cy="cancel-button"]').toExist();
-      wrapper.expectText('[data-cy="cancel-button"]').toRead('Cancel deal');
+      wrapper.expectElement('[data-cy="cancel-deal-button"]').toExist();
+      wrapper.expectText('[data-cy="cancel-deal-button"]').toRead('Cancel deal');
     });
 
     it("should have the correct link attribute on the 'Cancel deal' button", () => {
-      wrapper.expectElement('[data-cy="cancel-button"]').toHaveAttribute('href', `/case/${dealId}/cancellation/reason`);
+      wrapper.expectElement('[data-cy="cancel-deal-button"]').toHaveAttribute('href', `/case/${dealId}/cancellation/reason`);
     });
   });
 
@@ -218,7 +218,7 @@ describe(`${page} cancel deal button`, () => {
     });
 
     it("should not render the 'Cancel deal' button", () => {
-      wrapper.expectElement('[data-cy="cancel-button"]').notToExist();
+      wrapper.expectElement('[data-cy="cancel-deal-button"]').notToExist();
     });
   });
 });
