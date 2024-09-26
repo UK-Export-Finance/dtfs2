@@ -1,4 +1,4 @@
-import { asString } from '@ukef/dtfs2-common';
+import { asString, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { SessionData } from 'express-session';
 import { handleRedirectSessionData } from './handle-redirect-session-data';
 import { getIsCheckboxChecked } from './get-is-checkbox-checked';
@@ -6,37 +6,60 @@ import { getSelectedFeeRecordIdsFromQuery } from './get-selected-fee-record-ids-
 import { validateFacilityIdQuery } from './validate-facility-id-query';
 
 type GetUtilisationReportReconciliationQuery = {
-  facilityIdQuery?: string;
+  premiumPaymentsFacilityId?: string;
   selectedFeeRecordIdsQuery?: string;
+};
+
+/**
+ * Parses premium payments filters from the query parameters.
+ * @param premiumPaymentsFacilityId - The premium payments facility ID query.
+ * @param originalUrl - The original URL of the request.
+ * @returns An object containing the parsed premium payments filters and any
+ * error resulting from validating the facility ID query.
+ */
+const parsePremiumPaymentsFilters = (facilityIdQuery: string | undefined, originalUrl: string) => {
+  const facilityIdQueryString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
+
+  const filters: PremiumPaymentsFilters = {
+    facilityId: facilityIdQueryString,
+  };
+
+  const facilityIdInputId = '#premium-payments-facility-id-filter';
+
+  const filterError = validateFacilityIdQuery(facilityIdQueryString, originalUrl, facilityIdInputId);
+
+  return {
+    premiumPaymentsFilters: filters,
+    premiumPaymentsFilterError: filterError,
+  };
 };
 
 /**
  * Extracts and processes query parameters and session data.
  *
  * Extracts selected fee record IDs from query parameters or session data.
- * Prioritizes query parameters if available, falling back to session data.
+ * Prioritises query parameters if available, falling back to session data.
  * This handles cases where the user was redirected from another page.
  *
  * @param queryParams - The request query parameters object
- * @param queryParams.facilityIdQuery - The facility ID query parameter
+ * @param queryParams.premiumPaymentsFacilityId - The premium payments facility
+ * ID query parameter
  * @param queryParams.selectedFeeRecordIdsQuery - The selected fee record IDs
  * query parameter
  * @param sessionData - The session data
  * @param originalUrl - The original URL of the request
  * @returns An object containing extracted and processed data including
- * facilityIdQueryString, filterError, tableDataError, and derived values
- * such as isCheckboxChecked.
+ * premiumPaymentsFilters, premiumPaymentsFilterError,
+ * premiumPaymentsTableDataError, and derived values such as isCheckboxChecked.
  */
 export const extractQueryAndSessionData = (
-  { facilityIdQuery, selectedFeeRecordIdsQuery }: GetUtilisationReportReconciliationQuery,
+  { premiumPaymentsFacilityId, selectedFeeRecordIdsQuery }: GetUtilisationReportReconciliationQuery,
   sessionData: Partial<SessionData>,
   originalUrl: string,
 ) => {
-  const facilityIdQueryString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
+  const { premiumPaymentsFilters, premiumPaymentsFilterError } = parsePremiumPaymentsFilters(premiumPaymentsFacilityId, originalUrl);
 
-  const filterError = validateFacilityIdQuery(facilityIdQueryString, originalUrl);
-
-  const { tableDataError, selectedFeeRecordIds: selectedFeeRecordIdsFromSessionData } = handleRedirectSessionData(sessionData);
+  const { premiumPaymentsTableDataError, selectedFeeRecordIds: selectedFeeRecordIdsFromSessionData } = handleRedirectSessionData(sessionData);
 
   const selectedFeeRecordIdsQueryString = selectedFeeRecordIdsQuery ? asString(selectedFeeRecordIdsQuery, 'selectedFeeRecordIdsQuery') : undefined;
 
@@ -46,9 +69,9 @@ export const extractQueryAndSessionData = (
   const isCheckboxChecked = getIsCheckboxChecked(selectedFeeRecordIds);
 
   return {
-    facilityIdQueryString,
-    filterError,
-    tableDataError,
+    premiumPaymentsFilters,
+    premiumPaymentsFilterError,
+    premiumPaymentsTableDataError,
     isCheckboxChecked,
   };
 };

@@ -22,14 +22,14 @@ export const handleRedirectSessionData = ({
   generateKeyingDataErrorKey,
   checkedCheckboxIds: checkedCheckboxIdsSession,
 }: Partial<SessionData>): {
-  tableDataError: ErrorSummaryViewModel | undefined;
+  premiumPaymentsTableDataError: ErrorSummaryViewModel | undefined;
   selectedFeeRecordIds: Set<number>;
 } => {
   if (generateKeyingDataErrorKey) {
     switch (generateKeyingDataErrorKey) {
       case 'no-matching-fee-records':
         return {
-          tableDataError: getGenerateKeyingDataError(generateKeyingDataErrorKey),
+          premiumPaymentsTableDataError: getGenerateKeyingDataError(generateKeyingDataErrorKey),
           selectedFeeRecordIds: new Set(),
         };
       default:
@@ -39,7 +39,7 @@ export const handleRedirectSessionData = ({
 
   if (!addPaymentErrorKey) {
     return {
-      tableDataError: undefined,
+      premiumPaymentsTableDataError: undefined,
       selectedFeeRecordIds: new Set(),
     };
   }
@@ -54,7 +54,7 @@ export const handleRedirectSessionData = ({
     case 'different-fee-record-statuses':
     case 'different-fee-record-payment-currencies':
     case 'multiple-does-not-match-selected':
-      return { tableDataError: getAddPaymentError(addPaymentErrorKey), selectedFeeRecordIds: selectedFeeRecordIdsSet };
+      return { premiumPaymentsTableDataError: getAddPaymentError(addPaymentErrorKey), selectedFeeRecordIds: selectedFeeRecordIdsSet };
     default:
       throw new Error(`Unrecognised add payment error key '${addPaymentErrorKey}'`);
   }
