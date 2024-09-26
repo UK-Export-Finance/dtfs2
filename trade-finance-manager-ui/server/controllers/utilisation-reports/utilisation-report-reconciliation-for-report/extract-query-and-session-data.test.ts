@@ -47,7 +47,7 @@ describe('extractQueryAndSessionData', () => {
       const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
       // Assert
-      expect(validateFacilityIdQuery).toHaveBeenCalledWith(PREMIUM_PAYMENTS_FACILITY_ID_QUERY, ORIGINAL_URL);
+      expect(validateFacilityIdQuery).toHaveBeenCalledWith(PREMIUM_PAYMENTS_FACILITY_ID_QUERY, ORIGINAL_URL, '#premium-payments-facility-id-filter');
       expect(result.premiumPaymentsFilterError).toEqual(mockError);
     });
   });

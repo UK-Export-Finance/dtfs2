@@ -281,7 +281,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
       expect(viewModel.premiumPaymentsFilterError).toBeDefined();
-      expect(viewModel.premiumPaymentsFilterError?.href).toBe('#facility-id-filter');
+      expect(viewModel.premiumPaymentsFilterError?.href).toBe('#premium-payments-facility-id-filter');
       expect(viewModel.premiumPaymentsFilterError?.text).toBe('Facility ID must be a number');
     });
 
