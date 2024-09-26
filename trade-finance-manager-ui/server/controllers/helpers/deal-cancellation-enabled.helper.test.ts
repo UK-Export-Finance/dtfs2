@@ -28,20 +28,14 @@ describe('dealCancellationEnabled', () => {
 });
 
 describe('canSubmissionTypeBeCancelled', () => {
-  it('returns true when deal submission type is AIN', () => {
-    const result = canSubmissionTypeBeCancelled(DEAL_SUBMISSION_TYPE.AIN);
+  it.each([AIN, MIN])('returns true when deal submission type is %s', (submissionType) => {
+    const result = canSubmissionTypeBeCancelled(submissionType);
 
     expect(result).toBe(true);
   });
 
-  it('returns true when deal submission type is MIN', () => {
-    const result = canSubmissionTypeBeCancelled(DEAL_SUBMISSION_TYPE.MIN);
-
-    expect(result).toBe(true);
-  });
-
-  it('returns false when deal submission type is MIA', () => {
-    const result = canSubmissionTypeBeCancelled(DEAL_SUBMISSION_TYPE.MIA);
+  it(`returns false when deal submission type is ${MIA}`, () => {
+    const result = canSubmissionTypeBeCancelled(MIA);
 
     expect(result).toBe(false);
   });
