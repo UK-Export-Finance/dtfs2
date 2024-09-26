@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -53,19 +53,15 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
     delete req.session.checkedCheckboxIds;
     delete req.session.generateKeyingDataErrorKey;
 
-    const { facilityIdQueryString, filterError, tableDataError, isCheckboxChecked } = extractQueryAndSessionData(
+    const { premiumPaymentsFilters, premiumPaymentsFilterError, premiumPaymentsTableDataError, isCheckboxChecked } = extractQueryAndSessionData(
       { facilityIdQuery, selectedFeeRecordIdsQuery },
       { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
       req.originalUrl,
     );
 
-    const premiumPaymentsTabFilters: PremiumPaymentsFilters = {
-      facilityId: facilityIdQueryString,
-    };
-
     const { premiumPayments, paymentDetails, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
-      premiumPaymentsTabFilters,
+      premiumPaymentsFilters,
       userToken,
     );
 
@@ -85,9 +81,9 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       bank,
       formattedReportPeriod,
       reportId,
-      facilityIdQuery: facilityIdQueryString,
-      tableDataError,
-      filterError,
+      premiumPaymentsFilters,
+      premiumPaymentsFilterError,
+      premiumPaymentsTableDataError,
       enablePaymentsReceivedSorting,
       premiumPayments: premiumPaymentsViewModel,
       keyingSheet: keyingSheetViewModel,

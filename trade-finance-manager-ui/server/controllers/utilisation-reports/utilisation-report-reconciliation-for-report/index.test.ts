@@ -46,7 +46,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Arrange
       const { req, res } = getHttpMocks();
 
-      const premiumPaymentsTabFilters = {
+      const premiumPaymentsFilters = {
         facilityId: facilityIdQuery,
       };
 
@@ -56,7 +56,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       await getUtilisationReportReconciliationByReportId(req, res);
 
       // Assert
-      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsTabFilters, userToken);
+      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsFilters, userToken);
       expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user });
     });
@@ -143,7 +143,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         },
       ];
 
-      const premiumPaymentsTabFilters = {
+      const premiumPaymentsFilters = {
         facilityId: facilityIdQuery,
       };
 
@@ -153,7 +153,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       await getUtilisationReportReconciliationByReportId(req, res);
 
       // Assert
-      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsTabFilters, userToken);
+      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsFilters, userToken);
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       expect(res._getRenderData()).toEqual<UtilisationReportReconciliationForReportViewModel>({
         user: MOCK_TFM_SESSION_USER,
@@ -194,9 +194,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.tableDataError).toBeDefined();
-      expect(viewModel.tableDataError?.href).toBe('#premium-payments-table');
-      expect(viewModel.tableDataError?.text).toBe('Select a fee or fees with the same status');
+      expect(viewModel.premiumPaymentsTableDataError).toBeDefined();
+      expect(viewModel.premiumPaymentsTableDataError?.href).toBe('#premium-payments-table');
+      expect(viewModel.premiumPaymentsTableDataError?.text).toBe('Select a fee or fees with the same status');
       expect(viewModel.premiumPayments[0].isChecked).toBe(true);
     });
 

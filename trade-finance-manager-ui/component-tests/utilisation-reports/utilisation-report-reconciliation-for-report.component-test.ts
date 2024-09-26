@@ -20,7 +20,9 @@ describe(page, () => {
 
   const reportId = 1;
 
-  const facilityIdQuery = '1234';
+  const premiumPaymentsFilters = {
+    facilityId: '1234',
+  };
 
   const params: UtilisationReportReconciliationForReportViewModel = {
     user: aTfmSessionUser(),
@@ -28,7 +30,7 @@ describe(page, () => {
     bank,
     formattedReportPeriod,
     reportId: reportId.toString(),
-    facilityIdQuery,
+    premiumPaymentsFilters,
     enablePaymentsReceivedSorting: false,
     premiumPayments: [],
     keyingSheet: [],
@@ -61,192 +63,198 @@ describe(page, () => {
     wrapper.expectElement(tabSelector).toHaveAttribute('href', href);
   });
 
-  it('should render the premium payments tab with headings, text, table and buttons', () => {
-    const wrapper = getWrapper();
-    const premiumPaymentsTabSelector = 'div#premium-payments';
+  describe('premium payments tab', () => {
+    it('should render the premium payments tab with headings, text, table and buttons', () => {
+      const wrapper = getWrapper();
+      const premiumPaymentsTabSelector = 'div#premium-payments';
 
-    wrapper.expectElement(premiumPaymentsTabSelector).toExist();
+      wrapper.expectElement(premiumPaymentsTabSelector).toExist();
 
-    wrapper.expectText(`${premiumPaymentsTabSelector} h2[data-cy="premium-payments-heading"]`).toRead('Premium payments');
-    wrapper
-      .expectText(`${premiumPaymentsTabSelector} p`)
-      .toMatch(/Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button./);
-    wrapper
-      .expectText(`${premiumPaymentsTabSelector} p`)
-      .toMatch(
-        /When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when you select the 'Generate keying data' button./,
-      );
+      wrapper.expectText(`${premiumPaymentsTabSelector} h2[data-cy="premium-payments-heading"]`).toRead('Premium payments');
+      wrapper
+        .expectText(`${premiumPaymentsTabSelector} p`)
+        .toMatch(/Enter received payments against reported fees by selecting them and then selecting the 'Add a payment' button./);
+      wrapper
+        .expectText(`${premiumPaymentsTabSelector} p`)
+        .toMatch(
+          /When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when you select the 'Generate keying data' button./,
+        );
 
-    wrapper.expectElement(`${premiumPaymentsTabSelector} form[data-cy="premium-payments-form"]`).toExist();
+      wrapper.expectElement(`${premiumPaymentsTabSelector} form[data-cy="premium-payments-form"]`).toExist();
 
-    wrapper.expectElement(`${premiumPaymentsTabSelector} div.govuk-button-group`).toExist();
+      wrapper.expectElement(`${premiumPaymentsTabSelector} div.govuk-button-group`).toExist();
 
-    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`).toExist();
-    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`).toHaveAttribute('value', 'Add a payment');
-    wrapper
-      .expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`)
-      .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/add-payment`);
+      wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`).toExist();
+      wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`).toHaveAttribute('value', 'Add a payment');
+      wrapper
+        .expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`)
+        .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/add-payment`);
 
-    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).toExist();
-    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).toHaveAttribute('value', 'Generate keying data');
-    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).hasClass('govuk-button--secondary');
-    wrapper
-      .expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`)
-      .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/check-keying-data`);
+      wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).toExist();
+      wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).toHaveAttribute('value', 'Generate keying data');
+      wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).hasClass('govuk-button--secondary');
+      wrapper
+        .expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`)
+        .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/check-keying-data`);
 
-    wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
-  });
-
-  it('should render the facility ID filter input', () => {
-    const wrapper = getWrapper();
-    wrapper.expectElement('[data-cy="facility-filter-input"]').toExist();
-    wrapper.expectText('[data-cy="facility-filter-form"]').toContain('Filter by facility ID');
-  });
-
-  it('initialises the filter input value to the facilityIdQuery', () => {
-    const wrapper = getWrapper();
-    wrapper.expectInput('[data-cy="facility-filter-input"]').toHaveValue(facilityIdQuery);
-  });
-
-  it('should render the facility ID filter submit button', () => {
-    const wrapper = getWrapper();
-    wrapper.expectElement('[data-cy="facility-filter-submit-button"]').toExist();
-    wrapper.expectText('[data-cy="facility-filter-submit-button"]').toRead('Filter');
-  });
-
-  it('should render the facility ID filter clear button', () => {
-    const wrapper = getWrapper();
-    wrapper.expectElement('[data-cy="facility-filter-clear-button"]').toExist();
-    wrapper.expectText('[data-cy="facility-filter-clear-button"]').toRead('Clear filter');
-  });
-
-  it('renders error when filterError is provided', () => {
-    const wrapper = getWrapper({ ...params, filterError: { text: 'Oh no that is not correct', href: '#filter-component' } });
-    wrapper.expectText('[data-cy="facility-filter-form"]').toContain('Oh no that is not correct');
-    wrapper.expectLink('[data-cy="error-summary"] a').toLinkTo('#filter-component', 'Oh no that is not correct');
-  });
-
-  it('should not render add payment button for PDC_READ user', () => {
-    const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
-
-    const premiumPaymentsTabSelector = 'div#premium-payments';
-    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`).notToExist();
-  });
-
-  it('should not render generate keying data button for PDC_READ user', () => {
-    const wrapper = getWrapper({
-      ...params,
-      user: aPdcReadUser(),
+      wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
     });
 
-    const premiumPaymentsTabSelector = 'div#premium-payments';
-    wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).notToExist();
-  });
-
-  it('should render edit actions within the premium payments table for PDC_RECONCILE users', () => {
-    const wrapper = getWrapper({
-      ...params,
-      user: aPdcReconcileUser(),
+    it('should render the facility ID filter input', () => {
+      const wrapper = getWrapper();
+      wrapper.expectElement('[data-cy="facility-filter-input"]').toExist();
+      wrapper.expectText('[data-cy="facility-filter-form"]').toContain('Filter by facility ID');
     });
 
-    wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).toExist();
-  });
-
-  it('should not render edit actions within the premium payments table for PDC_READ users', () => {
-    const wrapper = getWrapper({
-      ...params,
-      user: aPdcReadUser(),
+    it('initialises the filter input value to the facilityIdQuery', () => {
+      const wrapper = getWrapper();
+      wrapper.expectInput('[data-cy="facility-filter-input"]').toHaveValue(premiumPaymentsFilters.facilityId);
     });
 
-    wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).notToExist();
+    it('should render the facility ID filter submit button', () => {
+      const wrapper = getWrapper();
+      wrapper.expectElement('[data-cy="facility-filter-submit-button"]').toExist();
+      wrapper.expectText('[data-cy="facility-filter-submit-button"]').toRead('Filter');
+    });
+
+    it('should render the facility ID filter clear button', () => {
+      const wrapper = getWrapper();
+      wrapper.expectElement('[data-cy="facility-filter-clear-button"]').toExist();
+      wrapper.expectText('[data-cy="facility-filter-clear-button"]').toRead('Clear filter');
+    });
+
+    it('renders error when premiumPaymentsFilterError is provided', () => {
+      const wrapper = getWrapper({ ...params, premiumPaymentsFilterError: { text: 'Oh no that is not correct', href: '#filter-component' } });
+      wrapper.expectText('[data-cy="facility-filter-form"]').toContain('Oh no that is not correct');
+      wrapper.expectLink('[data-cy="error-summary"] a').toLinkTo('#filter-component', 'Oh no that is not correct');
+    });
+
+    it('should not render add payment button for PDC_READ user', () => {
+      const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
+
+      const premiumPaymentsTabSelector = 'div#premium-payments';
+      wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="add-a-payment-button"]`).notToExist();
+    });
+
+    it('should not render generate keying data button for PDC_READ user', () => {
+      const wrapper = getWrapper({
+        ...params,
+        user: aPdcReadUser(),
+      });
+
+      const premiumPaymentsTabSelector = 'div#premium-payments';
+      wrapper.expectElement(`${premiumPaymentsTabSelector} input[data-cy="generate-keying-data-button"]`).notToExist();
+    });
+
+    it('should render edit actions within the premium payments table for PDC_RECONCILE users', () => {
+      const wrapper = getWrapper({
+        ...params,
+        user: aPdcReconcileUser(),
+      });
+
+      wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).toExist();
+    });
+
+    it('should not render edit actions within the premium payments table for PDC_READ users', () => {
+      const wrapper = getWrapper({
+        ...params,
+        user: aPdcReadUser(),
+      });
+
+      wrapper.expectElement(`div#premium-payments input[type="checkbox"]`).notToExist();
+    });
   });
 
-  it('should render the keying sheet tab with headings, text, table and buttons for PDC_RECONCILE users', () => {
-    const wrapper = getWrapper({ ...params, user: aPdcReconcileUser() });
-    const keyingSheetTabSelector = 'div#keying-sheet';
+  describe('keying sheet tab', () => {
+    it('should render the keying sheet tab with headings, text, table and buttons for PDC_RECONCILE users', () => {
+      const wrapper = getWrapper({ ...params, user: aPdcReconcileUser() });
+      const keyingSheetTabSelector = 'div#keying-sheet';
 
-    wrapper.expectElement(keyingSheetTabSelector).toExist();
+      wrapper.expectElement(keyingSheetTabSelector).toExist();
 
-    wrapper.expectText(`${keyingSheetTabSelector} h2[data-cy="keying-sheet-heading"]`).toRead('Keying sheet');
-    wrapper.expectText(`${keyingSheetTabSelector} p`).toMatch(/Select payments and mark as done when the adjustments have been keyed into ACBS./);
-    wrapper
-      .expectText(`${keyingSheetTabSelector} p`)
-      .toMatch(/Payments on the premium payments tab will show as reconciled when they have been marked as done here./);
+      wrapper.expectText(`${keyingSheetTabSelector} h2[data-cy="keying-sheet-heading"]`).toRead('Keying sheet');
+      wrapper.expectText(`${keyingSheetTabSelector} p`).toMatch(/Select payments and mark as done when the adjustments have been keyed into ACBS./);
+      wrapper
+        .expectText(`${keyingSheetTabSelector} p`)
+        .toMatch(/Payments on the premium payments tab will show as reconciled when they have been marked as done here./);
 
-    wrapper.expectElement(`${keyingSheetTabSelector} form[data-cy="keying-sheet-form"]`).toExist();
+      wrapper.expectElement(`${keyingSheetTabSelector} form[data-cy="keying-sheet-form"]`).toExist();
 
-    wrapper.expectElement(`${keyingSheetTabSelector} div.govuk-button-group`).toExist();
+      wrapper.expectElement(`${keyingSheetTabSelector} div.govuk-button-group`).toExist();
 
-    const markAsDoneButtonSelector = `${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-done-button"]`;
-    wrapper.expectInput(markAsDoneButtonSelector).toHaveValue('Mark as done');
-    wrapper.expectElement(markAsDoneButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/${reportId}/keying-data/mark-as-done`);
-    wrapper.expectElement(markAsDoneButtonSelector).doesNotHaveClass('govuk-button--secondary');
+      const markAsDoneButtonSelector = `${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-done-button"]`;
+      wrapper.expectInput(markAsDoneButtonSelector).toHaveValue('Mark as done');
+      wrapper.expectElement(markAsDoneButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/${reportId}/keying-data/mark-as-done`);
+      wrapper.expectElement(markAsDoneButtonSelector).doesNotHaveClass('govuk-button--secondary');
 
-    const markAsToDoButtonSelector = `${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-to-do-button"]`;
-    wrapper.expectInput(markAsToDoButtonSelector).toHaveValue('Mark as to do');
-    wrapper.expectElement(markAsToDoButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/${reportId}/keying-data/mark-as-to-do`);
-    wrapper.expectElement(markAsToDoButtonSelector).hasClass('govuk-button--secondary');
+      const markAsToDoButtonSelector = `${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-to-do-button"]`;
+      wrapper.expectInput(markAsToDoButtonSelector).toHaveValue('Mark as to do');
+      wrapper.expectElement(markAsToDoButtonSelector).toHaveAttribute('formaction', `/utilisation-reports/${reportId}/keying-data/mark-as-to-do`);
+      wrapper.expectElement(markAsToDoButtonSelector).hasClass('govuk-button--secondary');
 
-    wrapper.expectElement(`${keyingSheetTabSelector} table[data-cy="keying-sheet-table"]`).toExist();
+      wrapper.expectElement(`${keyingSheetTabSelector} table[data-cy="keying-sheet-table"]`).toExist();
+    });
+
+    it('should render the keying sheet tab with headings, text, table but not buttons for PDC_READ users', () => {
+      const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
+      const keyingSheetTabSelector = 'div#keying-sheet';
+
+      wrapper.expectElement(keyingSheetTabSelector).toExist();
+
+      wrapper.expectText(`${keyingSheetTabSelector} h2[data-cy="keying-sheet-heading"]`).toRead('Keying sheet');
+      wrapper.expectText(`${keyingSheetTabSelector} p`).toMatch(/Select payments and mark as done when the adjustments have been keyed into ACBS./);
+      wrapper
+        .expectText(`${keyingSheetTabSelector} p`)
+        .toMatch(/Payments on the premium payments tab will show as reconciled when they have been marked as done here./);
+
+      wrapper.expectElement(`${keyingSheetTabSelector} form[data-cy="keying-sheet-form"]`).toExist();
+
+      wrapper.expectElement(`${keyingSheetTabSelector} div.govuk-button-group`).notToExist();
+      wrapper.expectElement(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-done-button"]`).notToExist();
+      wrapper.expectElement(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-to-do-button"]`).notToExist();
+
+      wrapper.expectElement(`${keyingSheetTabSelector} table[data-cy="keying-sheet-table"]`).toExist();
+    });
   });
 
-  it('should render the keying sheet tab with headings, text, table but not buttons for PDC_READ users', () => {
-    const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
-    const keyingSheetTabSelector = 'div#keying-sheet';
+  describe('payment details tab', () => {
+    it('should render the payment details tab with headings and text when the payment details array is empty', () => {
+      const wrapper = getWrapper({ ...params, paymentDetails: [] });
+      const paymentDetailsTabSelector = 'div#payment-details';
 
-    wrapper.expectElement(keyingSheetTabSelector).toExist();
+      wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
+      wrapper
+        .expectText(`${paymentDetailsTabSelector} p`)
+        .toMatch(/Payment details will be displayed when payments have been entered on the premium payments tab./);
+    });
 
-    wrapper.expectText(`${keyingSheetTabSelector} h2[data-cy="keying-sheet-heading"]`).toRead('Keying sheet');
-    wrapper.expectText(`${keyingSheetTabSelector} p`).toMatch(/Select payments and mark as done when the adjustments have been keyed into ACBS./);
-    wrapper
-      .expectText(`${keyingSheetTabSelector} p`)
-      .toMatch(/Payments on the premium payments tab will show as reconciled when they have been marked as done here./);
-
-    wrapper.expectElement(`${keyingSheetTabSelector} form[data-cy="keying-sheet-form"]`).toExist();
-
-    wrapper.expectElement(`${keyingSheetTabSelector} div.govuk-button-group`).notToExist();
-    wrapper.expectElement(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-done-button"]`).notToExist();
-    wrapper.expectElement(`${keyingSheetTabSelector} [data-cy="keying-sheet-mark-as-to-do-button"]`).notToExist();
-
-    wrapper.expectElement(`${keyingSheetTabSelector} table[data-cy="keying-sheet-table"]`).toExist();
-  });
-
-  it('should render the payment details tab with headings and text when the payment details array is empty', () => {
-    const wrapper = getWrapper({ ...params, paymentDetails: [] });
-    const paymentDetailsTabSelector = 'div#payment-details';
-
-    wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
-    wrapper
-      .expectText(`${paymentDetailsTabSelector} p`)
-      .toMatch(/Payment details will be displayed when payments have been entered on the premium payments tab./);
-  });
-
-  it('should render the payment details tab with headings (without text), the filters panel and the table when there are payment details', () => {
-    const wrapper = getWrapper({
-      ...params,
-      paymentDetails: [
-        {
-          payment: {
-            id: 1,
-            amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
-            dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
-            reference: undefined,
+    it('should render the payment details tab with headings (without text), the filters panel and the table when there are payment details', () => {
+      const wrapper = getWrapper({
+        ...params,
+        paymentDetails: [
+          {
+            payment: {
+              id: 1,
+              amount: { formattedCurrencyAndAmount: 'GBP 100.00', dataSortValue: 0 },
+              dateReceived: { formattedDateReceived: '1 Jan 2024', dataSortValue: 0 },
+              reference: undefined,
+            },
+            feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
+            feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH,
+            reconciledBy: '-',
+            dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
           },
-          feeRecords: [{ id: 1, facilityId: '12345678', exporter: 'Test exporter' }],
-          feeRecordPaymentGroupStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH,
-          reconciledBy: '-',
-          dateReconciled: { formattedDateReconciled: '-', dataSortValue: 0 },
-        },
-      ],
+        ],
+      });
+      const paymentDetailsTabSelector = 'div#payment-details';
+
+      wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
+      wrapper.expectElement(`${paymentDetailsTabSelector} p`).notToExist();
+
+      wrapper.expectElement(`${paymentDetailsTabSelector} [data-cy="payment-details--filters-panel"]`).toExist();
+      wrapper.expectElement(`${paymentDetailsTabSelector} [data-cy="payment-details--filters-action-bar"]`).toExist();
+
+      wrapper.expectElement(`${paymentDetailsTabSelector} table`).toExist();
     });
-    const paymentDetailsTabSelector = 'div#payment-details';
-
-    wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
-    wrapper.expectElement(`${paymentDetailsTabSelector} p`).notToExist();
-
-    wrapper.expectElement(`${paymentDetailsTabSelector} [data-cy="payment-details--filters-panel"]`).toExist();
-    wrapper.expectElement(`${paymentDetailsTabSelector} [data-cy="payment-details--filters-action-bar"]`).toExist();
-
-    wrapper.expectElement(`${paymentDetailsTabSelector} table`).toExist();
   });
 });
