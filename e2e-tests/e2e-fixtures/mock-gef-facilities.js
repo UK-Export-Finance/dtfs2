@@ -226,7 +226,7 @@ const anUnissuedCashFacilityWith20MonthsOfCover = ({ facilityEndDateEnabled = fa
   canResubmitIssuedFacilities: null,
 });
 
-exports.multipleMockGefFacilities = ({ facilityEndDateEnabled }) => ({
+exports.multipleMockGefFacilities = ({ facilityEndDateEnabled = false } = {}) => ({
   unissuedCashFacility: anUnissuedCashFacility({ facilityEndDateEnabled }),
   issuedCashFacility: anIssuedCashFacility({ facilityEndDateEnabled }),
   unissuedContingentFacility: anUnissuedContingentFacility({ facilityEndDateEnabled }),
