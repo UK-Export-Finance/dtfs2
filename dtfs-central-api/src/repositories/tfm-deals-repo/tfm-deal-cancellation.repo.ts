@@ -1,5 +1,13 @@
 import { Collection, ObjectId, UpdateFilter, UpdateResult, WithoutId } from 'mongodb';
-import { DEAL_SUBMISSION_TYPE, DealNotFoundError, MONGO_DB_COLLECTIONS, TFM_DEAL_STAGE, TfmDeal, TfmDealCancellation } from '@ukef/dtfs2-common';
+import {
+  DEAL_SUBMISSION_TYPE,
+  DealNotFoundError,
+  InvalidDealIdError,
+  MONGO_DB_COLLECTIONS,
+  TFM_DEAL_STAGE,
+  TfmDeal,
+  TfmDealCancellation,
+} from '@ukef/dtfs2-common';
 import { mongoDbClient } from '../../drivers/db-client';
 
 export class TfmDealCancellationRepo {
@@ -13,6 +21,10 @@ export class TfmDealCancellationRepo {
    * @returns the found deal cancellation
    */
   public static async findDealCancellationByDealId(dealId: string | ObjectId): Promise<Partial<TfmDealCancellation>> {
+    if (!ObjectId.isValid(dealId)) {
+      throw new InvalidDealIdError(dealId.toString());
+    }
+
     const dealCollection = await this.getCollection();
     const matchingDeal = await dealCollection.findOne({
       _id: { $eq: new ObjectId(dealId) },
@@ -37,6 +49,10 @@ export class TfmDealCancellationRepo {
    * @returns The update result
    */
   public static async updateOneDealCancellation(dealId: string | ObjectId, update: UpdateFilter<TfmDealCancellation>): Promise<UpdateResult> {
+    if (!ObjectId.isValid(dealId)) {
+      throw new InvalidDealIdError(dealId.toString());
+    }
+
     const dealCollection = await this.getCollection();
 
     const updateResult = await dealCollection.updateOne(
