@@ -22,10 +22,7 @@ export const withDeleteManyTests = ({ makeRequest, collectionName, auditRecord, 
     const insertManyMock = jest.spyOn(Collection.prototype, 'insertMany');
 
     beforeAll(async () => {
-      mongoDbClient = new MongoDbClient({
-        dbName: process.env.MONGO_INITDB_DATABASE as string,
-        dbConnectionString: process.env.MONGODB_URI as string,
-      });
+      mongoDbClient = new MongoDbClient();
 
       deletionAuditLogsCollection = await mongoDbClient.getCollection('deletion-audit-logs');
     });

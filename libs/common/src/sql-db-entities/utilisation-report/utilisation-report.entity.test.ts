@@ -1,14 +1,14 @@
 import { AzureFileInfoEntity } from '../azure-file-info';
 import { MOCK_AZURE_FILE_INFO, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 import { DbRequestSource } from '../helpers';
-import { UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
+import { REQUEST_PLATFORM_TYPE, UTILISATION_REPORT_RECONCILIATION_STATUS } from '../../constants';
 
 describe('UtilisationReportEntity', () => {
   describe('updateReportWithUploadDetails', () => {
     const uploadedByUserId = 'abc123';
 
     const requestSource: DbRequestSource = {
-      platform: 'PORTAL',
+      platform: REQUEST_PLATFORM_TYPE.PORTAL,
       userId: uploadedByUserId,
     };
 

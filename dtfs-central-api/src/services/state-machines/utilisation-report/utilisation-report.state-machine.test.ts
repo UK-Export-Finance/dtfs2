@@ -1,6 +1,7 @@
 import difference from 'lodash/difference';
 import { EntityManager } from 'typeorm';
 import {
+  REQUEST_PLATFORM_TYPE,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
   UtilisationReportEntityMockBuilder,
   MOCK_AZURE_FILE_INFO,
@@ -94,7 +95,7 @@ describe('UtilisationReportStateMachine', () => {
           azureFileInfo: MOCK_AZURE_FILE_INFO,
           reportCsvData: [],
           uploadedByUserId: userId,
-          requestSource: { platform: 'PORTAL', userId },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId },
           transactionEntityManager,
         },
       });

@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb';
 import { faker } from '@faker-js/faker';
-import { mongoDbClient } from '../database-client/mongo-db-client';
+import { mongoDbClient } from '../../drivers/db-client';
 
 /**
  * TFM facilities should have a deal id which is linked to
