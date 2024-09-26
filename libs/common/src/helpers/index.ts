@@ -1,4 +1,5 @@
 export * from './string';
+export * from './validation';
 export * from './date';
 export * from './currency';
 export * from './schema';
@@ -11,4 +12,3 @@ export {
   isTfmSsoFeatureFlagEnabled,
 } from './is-feature-flag-enabled';
 export * from './gef-deal-versioning';
-export * from './validation';

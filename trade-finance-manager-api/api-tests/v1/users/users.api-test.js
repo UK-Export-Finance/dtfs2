@@ -8,10 +8,6 @@ const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 
 const { as } = createApi(app);
 
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-}));
-
 describe('user controller', () => {
   let userId = '';
   let tokenUser;
