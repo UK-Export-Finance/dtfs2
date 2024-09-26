@@ -1,5 +1,6 @@
 import { UtilisationReportCsvRowData, UtilisationReportDataValidationError, UtilisationReportFacilityData } from '@ukef/dtfs2-common';
-import { generateErrorsForMismatchedFacilityValues } from '../../helpers/generate-errors-for-mismatched-facility-values';
+import { generateBaseCurrencyErrors } from '../../helpers/generate-base-currency-errors';
+import { generateFacilityUtilisationErrors } from '../../helpers/generate-facility-utilisation-errors';
 
 /**
  * validateRows
@@ -14,7 +15,7 @@ import { generateErrorsForMismatchedFacilityValues } from '../../helpers/generat
 export const validateRows = (csvData: UtilisationReportCsvRowData[]): UtilisationReportDataValidationError[] => {
   // Map to store the facility ids and their base currency and facility utilisation values
   const map = new Map<string, UtilisationReportFacilityData>();
-  const errors: UtilisationReportDataValidationError[] = [];
+  let errors: UtilisationReportDataValidationError[] = [];
 
   /**
    * iterates through each row of the csv
@@ -44,31 +45,11 @@ export const validateRows = (csvData: UtilisationReportCsvRowData[]): Utilisatio
 
     const existingData = map.get(ukefFacilityId);
 
-    /**
-     * if the value for base currency in the map does not match the value in the row
-     * call to addMatchingRowErrors to generate an error for all rows of the same facility id
-     */
-    if (existingData?.baseCurrency !== baseCurrencyValue) {
-      const errorMessage = 'The currency does not match the other records for this facility. Enter the correct currency.';
-      const field = 'base currency';
+    // generate errors for base currency
+    errors = generateBaseCurrencyErrors(existingData, baseCurrencyValue, errors, csvData, row, exporterName);
 
-      const generatedErrors = generateErrorsForMismatchedFacilityValues(csvData, errors, row, field, errorMessage, exporterName);
-
-      errors.push(...generatedErrors);
-    }
-
-    /**
-     * if the value for facility utilisation in the map does not match the value in the row
-     * call to addMatchingRowErrors to generate an error for all rows of the same facility id
-     */
-    if (existingData?.facilityUtilisation !== facilityUtilisationValue) {
-      const errorMessage = 'The utilisation does not match the other records for this facility. Enter the correct utilisation.';
-      const field = 'facility utilisation';
-
-      const generatedErrors = generateErrorsForMismatchedFacilityValues(csvData, errors, row, field, errorMessage, exporterName);
-
-      errors.push(...generatedErrors);
-    }
+    // generate errors for facility utilisation
+    errors = generateFacilityUtilisationErrors(existingData, facilityUtilisationValue, errors, csvData, row, exporterName);
   });
 
   return errors;

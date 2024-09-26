@@ -57,7 +57,7 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
     },
   ];
 
-  it('should return the expected validation errors for all rows when calling addMatchingRowErrors when no errors are provided', () => {
+  it('should return the expected validation errors for all rows when calling generateErrorsForMismatchedFacilityValues when no errors are provided', () => {
     const errors = [] as UtilisationReportDataValidationError[];
     const row = csvData[0];
 
