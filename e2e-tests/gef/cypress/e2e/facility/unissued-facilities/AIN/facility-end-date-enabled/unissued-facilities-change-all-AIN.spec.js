@@ -1,21 +1,21 @@
 import { format } from 'date-fns';
 
-import relative from '../../../relativeURL';
+import relative from '../../../../relativeURL';
 
-import CONSTANTS from '../../../../fixtures/constants';
+import CONSTANTS from '../../../../../fixtures/constants';
 
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 
-import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import { continueButton, errorSummary, mainHeading } from '../../../partials';
-import applicationPreview from '../../../pages/application-preview';
-import unissuedFacilityTable from '../../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
-import applicationSubmission from '../../../pages/application-submission';
-import statusBanner from '../../../pages/application-status-banner';
-import facilityEndDate from '../../../pages/facility-end-date';
+import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
+import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
+import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { continueButton, errorSummary, mainHeading } from '../../../../partials';
+import applicationPreview from '../../../../pages/application-preview';
+import unissuedFacilityTable from '../../../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
+import applicationSubmission from '../../../../pages/application-submission';
+import statusBanner from '../../../../pages/application-status-banner';
+import facilityEndDate from '../../../../pages/facility-end-date';
 
 const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 

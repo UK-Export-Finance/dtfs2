@@ -1,29 +1,26 @@
 import { format } from 'date-fns';
 
-import relative from '../../../relativeURL';
+import relative from '../../../../relativeURL';
 
-import CONSTANTS from '../../../../fixtures/constants';
+import CONSTANTS from '../../../../../fixtures/constants';
 
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 
-import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { anUnissuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
+import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
+import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
+import { anUnissuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 
-import { mainHeading } from '../../../partials';
-import applicationPreview from '../../../pages/application-preview';
-import unissuedFacilityTable from '../../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
-import statusBanner from '../../../pages/application-status-banner';
-import facilityEndDate from '../../../pages/facility-end-date';
+import { mainHeading } from '../../../../partials';
+import applicationPreview from '../../../../pages/application-preview';
+import unissuedFacilityTable from '../../../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
+import statusBanner from '../../../../pages/application-status-banner';
 
 let dealId;
 let token;
 let facilityOneId;
 
-const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
-
-const unissuedCashFacility = anUnissuedCashFacility({ facilityEndDateEnabled });
+const unissuedCashFacility = anUnissuedCashFacility();
 
 const unissuedFacilitiesArray = [unissuedCashFacility];
 
@@ -112,11 +109,6 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
       aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
-
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
-        aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
-      }
     });
 
     it('Should not throw error upon user defined cover start date input when cover start date is set to issuance date', () => {
@@ -140,20 +132,9 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
-      }
-
       // Changing cover start date to issuance date
       aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
       cy.clickContinueButton();
-
-      if (facilityEndDateEnabled) {
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.threeMonthsOneDayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.threeMonthsOneDayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.threeMonthsOneDayYear);
-        cy.clickContinueButton();
-      }
 
       // Success banner
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');
