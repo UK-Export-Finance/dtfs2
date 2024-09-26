@@ -6,4 +6,11 @@ import { DealSubmissionType } from '@ukef/dtfs2-common';
  * This type is likely incomplete and should be added
  * to as and when new properties are discovered
  */
-export type GetDealResponse = { dealSnapshot: { details: { ukefDealId: string }; submissionType: DealSubmissionType } } | undefined;
+export type GetDealResponse =
+  | {
+      dealSnapshot: {
+        details: { ukefDealId: string };
+        submissionType: DealSubmissionType;
+      };
+    }
+  | undefined;
