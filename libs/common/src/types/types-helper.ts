@@ -1,4 +1,4 @@
-export type ValuesOf<T> = T[keyof T];
+export type ValuesOf<T extends object> = T[keyof T];
 
 // https://www.totaltypescript.com/concepts/the-prettify-helper
 export type Prettify<T> = {
@@ -24,3 +24,11 @@ export type SafeExclude<T extends string, K extends T> = Exclude<T, K>;
 export type Unknown<T> = {
   [K in keyof T]: unknown;
 };
+
+export type ExtractValuesOfType<TObject extends object, TType> = {
+  [Key in keyof TObject as TObject[Key] extends TType ? Key : never]: TObject[Key];
+};
+
+export type ExtractMethodNames<TClass extends object> = keyof ExtractValuesOfType<TClass, (...args: any) => any>;
+
+export type ExtractFields<TClass extends object> = Omit<TClass, ExtractMethodNames<TClass>>;
