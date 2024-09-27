@@ -7,7 +7,7 @@ import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIN } from '../../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { errorSummary } from '../../../../partials';
+import { mainHeading } from '../../../../partials';
 import applicationPreview from '../../../../pages/application-preview';
 import unissuedFacilityTable from '../../../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
@@ -73,63 +73,28 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about`));
     });
 
-    it('should not be able to update facility and then go back to application preview page with coverStartDate more than 3 months in the future', () => {
+    it('update facility page should have correct titles and text', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
+      mainHeading().contains("Tell us you've issued this facility");
+      aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
+      aboutFacilityUnissued.facilityName().should('have.value', unissuedCashFacility.name);
 
-      aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.tomorrowDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.tomorrowMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.tomorrowYear);
+      aboutFacilityUnissued.issueDateDay().should('have.value', '');
+      aboutFacilityUnissued.issueDateMonth().should('have.value', '');
+      aboutFacilityUnissued.issueDateMonth().should('have.value', '');
+      aboutFacilityUnissued.coverStartDateDay().should('have.value', '');
+      aboutFacilityUnissued.coverStartDateMonth().should('have.value', '');
+      aboutFacilityUnissued.coverStartDateYear().should('have.value', '');
+      aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
+      aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
+      aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
 
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeYearsDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeYearsMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeYearsYear);
-
-      cy.clickContinueButton();
-
-      errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
-
-      aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
-      cy.clickContinueButton();
-
-      errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
-    });
-
-    it('should not be able to update facility from application preview with coverStartDate more than 3 months in the future if specialIssuePermission', () => {
-      // to change to issued from preview page by clicking change on issued row
-      applicationPreview.facilitySummaryListTable(0).hasBeenIssuedAction().click();
-
-      cy.keyboardInput(aboutFacilityUnissued.facilityName(), `${unissuedCashFacilityWith20MonthsOfCover.name}name`);
-
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
-
-      aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.tomorrowDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.tomorrowMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.tomorrowYear);
-
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeYearsDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeYearsMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeYearsYear);
-      cy.clickContinueButton();
-
-      errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
-
-      aboutFacilityUnissued.shouldCoverStartOnSubmissionYes().click();
-      cy.clickContinueButton();
-
-      errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
-      aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+      // if (facilityEndDateEnabled) {
+      //   aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
+      //   aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
+      // }
     });
   });
 });

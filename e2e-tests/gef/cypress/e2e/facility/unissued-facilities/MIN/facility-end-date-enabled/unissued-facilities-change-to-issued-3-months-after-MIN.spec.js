@@ -7,16 +7,14 @@ import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIN } from '../../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { mainHeading, errorSummary } from '../../../../partials';
+import { errorSummary } from '../../../../partials';
 import applicationPreview from '../../../../pages/application-preview';
 import unissuedFacilityTable from '../../../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
 import facilityEndDate from '../../../../pages/facility-end-date';
-import statusBanner from '../../../../pages/application-status-banner';
 
 let dealId;
 let token;
-let facilityOneId;
 
 const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
   facilityEndDateEnabled: true,
@@ -37,7 +35,6 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
           MOCK_APPLICATION_MIN.manualInclusionNoticeSubmissionDate = `${dateConstants.oneYearUnix}608`;
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-              facilityOneId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
@@ -62,37 +59,9 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    it('clicking unissued facilities link takes you to unissued facility list page', () => {
-      applicationPreview.unissuedFacilitiesReviewLink().click();
-      unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
-      statusBanner.applicationBanner().should('exist');
-      cy.clickBackLink();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
-    });
-
-    it('clicking on update should take you to the update facility page with correct url', () => {
+    it('update facility page should have correct values for is using facility end date', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about`));
-    });
-
-    it('update facility page should have correct titles and text', () => {
-      applicationPreview.unissuedFacilitiesReviewLink().click();
-      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-
-      mainHeading().contains("Tell us you've issued this facility");
-      aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
-      aboutFacilityUnissued.facilityName().should('have.value', unissuedCashFacility.name);
-
-      aboutFacilityUnissued.issueDateDay().should('have.value', '');
-      aboutFacilityUnissued.issueDateMonth().should('have.value', '');
-      aboutFacilityUnissued.issueDateMonth().should('have.value', '');
-      aboutFacilityUnissued.coverStartDateDay().should('have.value', '');
-      aboutFacilityUnissued.coverStartDateMonth().should('have.value', '');
-      aboutFacilityUnissued.coverStartDateYear().should('have.value', '');
-      aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
-      aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
-      aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
       aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
