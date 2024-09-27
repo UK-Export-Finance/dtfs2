@@ -1,10 +1,14 @@
 import relative from '../../../../relativeURL';
+
 import CONSTANTS from '../../../../../fixtures/constants';
+
 import { MOCK_APPLICATION_MIN } from '../../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { mainHeading } from '../../../../partials';
 import applicationPreview from '../../../../pages/application-preview';
 import unissuedFacilityTable from '../../../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
 import statusBanner from '../../../../pages/application-status-banner';
 
 let dealId;
@@ -70,6 +74,25 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about`));
+    });
+
+    it('update facility page should have correct titles and text (only name should be prepopulated', () => {
+      applicationPreview.unissuedFacilitiesReviewLink().click();
+      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
+
+      mainHeading().contains("Tell us you've issued this facility");
+      aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
+      aboutFacilityUnissued.facilityName().should('have.value', unissuedCashFacility.name);
+
+      aboutFacilityUnissued.issueDateDay().should('have.value', '');
+      aboutFacilityUnissued.issueDateMonth().should('have.value', '');
+      aboutFacilityUnissued.issueDateMonth().should('have.value', '');
+      aboutFacilityUnissued.coverStartDateDay().should('have.value', '');
+      aboutFacilityUnissued.coverStartDateMonth().should('have.value', '');
+      aboutFacilityUnissued.coverStartDateYear().should('have.value', '');
+      aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
+      aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
+      aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
     });
   });
 });
