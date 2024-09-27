@@ -8,6 +8,7 @@ import {
   UploadedByUserDetails,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
+  REQUEST_PLATFORM_TYPE,
 } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { GetUtilisationReportResponse } from '../../../../types/utilisation-reports';
@@ -33,8 +34,9 @@ describe('getUtilisationReport', () => {
       params: { id: reportId.toString() },
     });
 
-  const uploadedStatuses = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).filter((status) => status !== 'REPORT_NOT_RECEIVED');
-  describe.each(uploadedStatuses)("when a report has been uploaded and is in the '%s' state", (status) => {
+  const reportUploadStatuses = Object.values(UTILISATION_REPORT_RECONCILIATION_STATUS).filter((status) => status !== 'REPORT_NOT_RECEIVED');
+
+  describe.each(reportUploadStatuses)("when a report has been uploaded and is in the '%s' state", (status) => {
     const uploadedByUser: UploadedByUserDetails = {
       id: '5ce819935e539c343f141ece',
       firstname: 'Test',
@@ -43,18 +45,27 @@ describe('getUtilisationReport', () => {
 
     const azureFileInfo = AzureFileInfoEntity.create({
       ...MOCK_AZURE_FILE_INFO,
-      requestSource: { platform: 'PORTAL', userId: uploadedByUser.id },
+      requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: uploadedByUser.id },
     });
 
     const mockDate = new Date('2024-01');
 
-    const createMockIncompleteUploadedReport = (...missingFields: UploadedReportFields[]): UtilisationReportEntity =>
-      UtilisationReportEntityMockBuilder.forStatus(status)
+    const createMockIncompleteUploadedReport = (...missingFields: UploadedReportFields[]): UtilisationReportEntity => {
+      /**
+       * `uploadDate` and `uploadUser` can be `null` when the required fields are
+       * missing which will throw an error under `allUploadFieldsArePopulated` functions.
+       *
+       */
+      const uploadDate = missingFields.includes('dateUploaded') ? null : mockDate;
+      const uploadUserId = missingFields.includes('uploadedByUserId') ? null : uploadedByUser.id;
+
+      return UtilisationReportEntityMockBuilder.forStatus(status)
         .withId(reportId)
         .withAzureFileInfo(azureFileInfo)
-        .withDateUploaded(missingFields.includes('dateUploaded') ? null : mockDate)
-        .withUploadedByUserId(missingFields.includes('uploadedByUserId') ? null : uploadedByUser.id)
+        .withDateUploaded(uploadDate)
+        .withUploadedByUserId(uploadUserId)
         .build();
+    };
 
     const missingFieldCombinations: { missingFields: UploadedReportFields[] }[] = [
       { missingFields: ['dateUploaded'] },

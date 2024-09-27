@@ -1,5 +1,6 @@
 import { Column, UpdateDateColumn } from 'typeorm';
 import { DbRequestSource } from '../helpers';
+import { REQUEST_PLATFORM_TYPE } from '../../constants';
 
 export abstract class AuditableBaseEntity {
   /**
@@ -35,17 +36,17 @@ export abstract class AuditableBaseEntity {
   public updateLastUpdatedBy(requestSource: DbRequestSource): void {
     const { platform } = requestSource;
     switch (platform) {
-      case 'PORTAL':
+      case REQUEST_PLATFORM_TYPE.PORTAL:
         this.lastUpdatedByPortalUserId = requestSource.userId;
         this.lastUpdatedByTfmUserId = null;
         this.lastUpdatedByIsSystemUser = false;
         return;
-      case 'TFM':
+      case REQUEST_PLATFORM_TYPE.TFM:
         this.lastUpdatedByPortalUserId = null;
         this.lastUpdatedByTfmUserId = requestSource.userId;
         this.lastUpdatedByIsSystemUser = false;
         return;
-      case 'SYSTEM':
+      case REQUEST_PLATFORM_TYPE.SYSTEM:
         this.lastUpdatedByPortalUserId = null;
         this.lastUpdatedByTfmUserId = null;
         this.lastUpdatedByIsSystemUser = true;

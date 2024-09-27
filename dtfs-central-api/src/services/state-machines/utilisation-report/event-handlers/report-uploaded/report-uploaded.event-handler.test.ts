@@ -1,5 +1,6 @@
 import { EntityManager } from 'typeorm';
 import {
+  REQUEST_PLATFORM_TYPE,
   DbRequestSource,
   MOCK_AZURE_FILE_INFO,
   UtilisationReportEntityMockBuilder,
@@ -32,7 +33,7 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
     const reportCsvData: UtilisationReportRawCsvData[] = [];
     const uploadedByUserId = 'abc123';
     const requestSource: DbRequestSource = {
-      platform: 'PORTAL',
+      platform: REQUEST_PLATFORM_TYPE.PORTAL,
       userId: uploadedByUserId,
     };
 
@@ -79,7 +80,7 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
     ];
     const uploadedByUserId = 'abc123';
     const requestSource: DbRequestSource = {
-      platform: 'PORTAL',
+      platform: REQUEST_PLATFORM_TYPE.PORTAL,
       userId: uploadedByUserId,
     };
 

@@ -1,5 +1,5 @@
 import { Bank, MONGO_DB_COLLECTIONS, PDC_TEAM_IDS, PortalUser, ROLES, TfmUser } from '@ukef/dtfs2-common';
-import { mongoDbClient } from './mongo-db-client';
+import { mongoDbClient } from '../../../drivers/db-client';
 
 /**
  * This class should be used to query values from the MongoDB database. It is
