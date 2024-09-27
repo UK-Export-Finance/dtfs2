@@ -5,7 +5,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-f
 import caseDealPage from '../../pages/caseDealPage';
 import { backLink, cancelLink, continueButton, errorSummary } from '../../partials';
 import bankRequestDatePage from '../../pages/deal-cancellation/bank-request-date';
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
+import { today, twelveMonthsOneDay, twelveMonthsOneDayAgo } from '../../../../../e2e-fixtures/dateConstants';
 
 context('Deal cancellation - bank request date', () => {
   let dealId;
@@ -55,18 +55,18 @@ context('Deal cancellation - bank request date', () => {
     });
 
     it('should validate submitting a date more than 12 months in the future', () => {
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), dateConstants.twelveMonthsOneDayDay);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), dateConstants.twelveMonthsOneDayMonth);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), dateConstants.twelveMonthsOneDayYear);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), twelveMonthsOneDay.day);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), twelveMonthsOneDay.month);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), twelveMonthsOneDay.year);
 
       cy.clickContinueButton();
       errorSummary().contains('The bank request date cannot exceed 12 months in the future from the submission date');
     });
 
     it('should validate submitting a date more than 12 months in the past', () => {
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), dateConstants.twelveMonthsOneDayAgoDay);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), dateConstants.twelveMonthsOneDayAgoMonth);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), dateConstants.twelveMonthsOneDayAgoYear);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), twelveMonthsOneDayAgo.day);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), twelveMonthsOneDayAgo.month);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), twelveMonthsOneDayAgo.year);
 
       cy.clickContinueButton();
       errorSummary().contains('The bank request date cannot exceed 12 months in the past from the submission date');
@@ -79,9 +79,9 @@ context('Deal cancellation - bank request date', () => {
     });
 
     it('continue button should take you to the effective from date page', () => {
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), dateConstants.todayYear);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), today.day);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), today.month);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), today.year);
 
       cy.clickContinueButton();
 

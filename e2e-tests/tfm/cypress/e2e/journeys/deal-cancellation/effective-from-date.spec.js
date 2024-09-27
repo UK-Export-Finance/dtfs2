@@ -5,7 +5,7 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-f
 import caseDealPage from '../../pages/caseDealPage';
 import { backLink, cancelLink, continueButton, errorSummary } from '../../partials';
 import effectiveFromDatePage from '../../pages/deal-cancellation/effective-from-date';
-import dateConstants from '../../../../../e2e-fixtures/dateConstants';
+import { today, twelveMonthsOneDay, twelveMonthsOneDayAgo } from '../../../../../e2e-fixtures/dateConstants';
 import bankRequestDatePage from '../../pages/deal-cancellation/bank-request-date';
 
 context('Deal cancellation - effective from date', () => {
@@ -44,9 +44,9 @@ context('Deal cancellation - effective from date', () => {
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), dateConstants.todayYear);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), today.day);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), today.month);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), today.year);
       cy.clickContinueButton();
     });
 
@@ -62,18 +62,18 @@ context('Deal cancellation - effective from date', () => {
     });
 
     it('should validate submitting a date more than 12 months in the future', () => {
-      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateDay(), dateConstants.twelveMonthsOneDayDay);
-      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateMonth(), dateConstants.twelveMonthsOneDayMonth);
-      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateYear(), dateConstants.twelveMonthsOneDayYear);
+      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateDay(), twelveMonthsOneDay.day);
+      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateMonth(), twelveMonthsOneDay.month);
+      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateYear(), twelveMonthsOneDay.year);
 
       cy.clickContinueButton();
       errorSummary().contains('The effective date cannot exceed 12 months in the future from the submission date');
     });
 
     it('should validate submitting a date more than 12 months in the past', () => {
-      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateDay(), dateConstants.twelveMonthsOneDayAgoDay);
-      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateMonth(), dateConstants.twelveMonthsOneDayAgoMonth);
-      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateYear(), dateConstants.twelveMonthsOneDayAgoYear);
+      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateDay(), twelveMonthsOneDayAgo.day);
+      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateMonth(), twelveMonthsOneDayAgo.month);
+      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateYear(), twelveMonthsOneDayAgo.year);
 
       cy.clickContinueButton();
       errorSummary().contains('The effective date cannot exceed 12 months in the past from the submission date');
@@ -86,9 +86,9 @@ context('Deal cancellation - effective from date', () => {
     });
 
     it('continue button should take you to the check answers page', () => {
-      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateYear(), dateConstants.todayYear);
+      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateDay(), today.day);
+      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateMonth(), today.month);
+      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateYear(), today.year);
 
       cy.clickContinueButton();
 
