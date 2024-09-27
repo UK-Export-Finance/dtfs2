@@ -1,15 +1,7 @@
 import relative from '../../../../relativeURL';
 import { errorSummary } from '../../../../partials';
 import CONSTANTS from '../../../../../fixtures/constants';
-import {
-  today,
-  threeDaysDay,
-  threeDaysMonth,
-  threeDaysYear,
-  threeMonthsOneDayDay,
-  threeMonthsOneDayYear,
-  threeMonthsOneDayMonth,
-} from '../../../../../../../e2e-fixtures/dateConstants';
+import { threeDays, threeMonthsOneDay, today } from '../../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -77,18 +69,18 @@ context('Unissued Facilities AIN - bank review date page - feature flag enabled'
       cy.visit(getUnissuedFacilitiesUrl());
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDaysDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDaysMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDaysYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDays.day);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDays.month);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDays.year);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDaysDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDaysMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDaysYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDays.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDays.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDays.year);
 
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), threeMonthsOneDayDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), threeMonthsOneDayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), threeMonthsOneDayYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), threeMonthsOneDay.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), threeMonthsOneDay.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), threeMonthsOneDay.year);
 
       aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
 

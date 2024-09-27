@@ -13,7 +13,7 @@ import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-f
 import applicationSubmission from '../../../../pages/application-submission';
 import statusBanner from '../../../../pages/application-status-banner';
 import facilityEndDate from '../../../../pages/facility-end-date';
-import { threeDays, threeDaysAgo, threeMonthsOneDay, today, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
+import { threeDays, twoMonths, threeMonthsOneDay, today, threeDaysAgo } from '../../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;

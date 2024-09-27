@@ -6,8 +6,8 @@ const GUARANTEE_DETAILS = {
 
   // 'Unconditional' facility stage specifics
   name: '123456',
-  requestedCoverStartDateDay: today.day,
-  requestedCoverStartDateMonth: today.month,
+  requestedCoverStartDateDay: today.dayLong,
+  requestedCoverStartDateMonth: today.monthLong,
   requestedCoverStartDateYear: today.year,
   coverEndDateDay: oneMonth.day,
   coverEndDateMonth: oneMonth.month,
@@ -22,8 +22,8 @@ const FINANCIAL_DETAILS = {
     text: 'EUR - Euros',
   },
   conversionRate: '100',
-  conversionRateDateDay: today.day,
-  conversionRateDateMonth: today.month,
+  conversionRateDateDay: today.dayLong,
+  conversionRateDateMonth: today.monthLong,
   conversionRateDateYear: today.year,
   disbursementAmount: '10.00',
   interestMarginFee: '20',

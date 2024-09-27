@@ -7,14 +7,13 @@ import CONSTANTS from '../../../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { anUnissuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-
 import { mainHeading } from '../../../../partials';
 import applicationPreview from '../../../../pages/application-preview';
 import unissuedFacilityTable from '../../../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
 import statusBanner from '../../../../pages/application-status-banner';
 import facilityEndDate from '../../../../pages/facility-end-date';
-import { threeDays, threeDaysAgoPlusMonth, threeMonthsOneDay, today } from '../../../../../../e2e-fixtures/dateConstants';
+import { threeDays, threeMonthsOneDay, today, threeDaysAgoPlusMonth } from '../../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;

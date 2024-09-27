@@ -261,11 +261,11 @@ context('About Facility Page  - feature flag enabled', () => {
       cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
       aboutFacility.facilityName().should('have.value', 'Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().should('be.checked');
-      aboutFacility.coverStartDateDay().should('have.value', today.day); // pre-populated date uses the 'd' format (not 'dd' like 'today.day')
-      aboutFacility.coverStartDateMonth().should('have.value', today.month); // pre-populated month uses the 'M' format (not 'MM' like 'today.month')
+      aboutFacility.coverStartDateDay().should('have.value', today.day); // pre-populated date uses the 'd' format (not 'dd')
+      aboutFacility.coverStartDateMonth().should('have.value', today.month); // pre-populated month uses the 'M' format (not 'MM')
       aboutFacility.coverStartDateYear().should('have.value', today.year);
-      aboutFacility.coverEndDateDay().should('have.value', tomorrow.day); // pre-populated date uses the 'd' format (not 'dd' like 'tomorrowDay')
-      aboutFacility.coverEndDateMonth().should('have.value', tomorrow.month); // pre-populated month uses the 'M' format (not 'MM' like 'tomorrowMonth')
+      aboutFacility.coverEndDateDay().should('have.value', tomorrow.day); // pre-populated date uses the 'd' format (not 'dd')
+      aboutFacility.coverEndDateMonth().should('have.value', tomorrow.month); // pre-populated month uses the 'M' format (not 'MM')
       aboutFacility.coverEndDateYear().should('have.value', tomorrow.year);
       if (application.version >= 1) {
         aboutFacility.isUsingFacilityEndDateYes().should('be.checked');

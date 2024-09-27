@@ -4,8 +4,6 @@ import relative from '../../../../relativeURL';
 
 import CONSTANTS from '../../../../../fixtures/constants';
 
-import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
-
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
 import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { backLink, cancelLink, continueButton, headingCaption, mainHeading, submitButton } from '../../../../partials';
@@ -15,6 +13,7 @@ import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-f
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import statusBanner from '../../../../pages/application-status-banner';
 import facilities from '../../../../pages/facilities';
+import { threeDays, threeDaysAgo, threeDaysAgoPlusMonth, threeMonthsOneDay, today, twoMonths } from '../../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;
@@ -85,7 +84,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(dateConstants.threeDaysAgoPlusMonth, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(format(threeDaysAgoPlusMonth, 'dd MMM yyyy'));
       statusBanner.applicationBanner().should('exist');
     });
 
@@ -100,18 +99,18 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.threeDaysYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDays.day);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDays.month);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDays.year);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.threeDaysYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDays.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDays.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDays.year);
 
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), threeMonthsOneDay.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), threeMonthsOneDay.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), threeMonthsOneDay.year);
 
       cy.clickContinueButton();
 
@@ -122,17 +121,17 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       continueButton().should('not.exist');
 
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), today.day);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), today.month);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), today.year);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoMonthsDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoMonthsMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoMonthsYear);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), twoMonths.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), twoMonths.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), twoMonths.year);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), threeMonthsOneDay.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), threeMonthsOneDay.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), threeMonthsOneDay.year);
 
       cy.clickContinueButton();
 
@@ -156,9 +155,9 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
     /* should be able to change dates and unissue on facility that has changed to issued */
     it('facility table should have change links on the changed to issued facilities', () => {
       // to check date format
-      const issuedDate = format(dateConstants.today, 'd MMMM yyyy');
-      const coverStart = format(dateConstants.twoMonths, 'd MMMM yyyy');
-      const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
+      const issuedDate = today.dMMMMyyyy;
+      const coverStart = twoMonths.dMMMMyyyy;
+      const coverEnd = today.dMMMMyyyy;
 
       // should be able to change facility three as changed to issued
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedContingentFacility.name);
@@ -215,9 +214,9 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
     });
 
     it('pressing back, cancel or yes should not edit the facility and take you back to details page', () => {
-      const issuedDate = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
-      const coverStart = format(dateConstants.threeDaysAgo, 'd MMMM yyyy');
-      const coverEnd = format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy');
+      const issuedDate = threeDaysAgo.dMMMMyyyy;
+      const coverStart = threeDaysAgo.dMMMMyyyy;
+      const coverEnd = today.dMMMMyyyy;
       // should be able to change number 1 as changed to issued
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(unissuedCashFacility.name);
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().click();
@@ -333,18 +332,18 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.threeDaysYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDays.day);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDays.month);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDays.year);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.threeDaysYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDays.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDays.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDays.year);
 
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), threeMonthsOneDay.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), threeMonthsOneDay.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), threeMonthsOneDay.year);
 
       cy.clickContinueButton();
 

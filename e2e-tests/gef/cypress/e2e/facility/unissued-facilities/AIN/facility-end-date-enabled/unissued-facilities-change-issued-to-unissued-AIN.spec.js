@@ -14,7 +14,15 @@ import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../../e2e-fixtures/
 import statusBanner from '../../../../pages/application-status-banner';
 import facilities from '../../../../pages/facilities';
 import facilityEndDate from '../../../../pages/facility-end-date';
-import { threeDays, threeDaysAgo, threeDaysAgoPlusMonth, threeMonths, threeMonthsOneDay, today, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
+import {
+  threeDays,
+  twoMonths,
+  threeMonthsOneDay,
+  today,
+  threeDaysAgo,
+  threeMonths,
+  threeDaysAgoPlusMonth,
+} from '../../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;

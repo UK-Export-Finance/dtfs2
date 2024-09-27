@@ -59,8 +59,8 @@ const FINANCIAL_DETAILS = {
     text: 'EUR - Euros',
   },
   conversionRate: '100',
-  conversionRateDateDay: today.day,
-  conversionRateDateMonth: today.month,
+  conversionRateDateDay: today.dayLong,
+  conversionRateDateMonth: today.monthLong,
   conversionRateDateYear: today.year.toString(),
 };
 

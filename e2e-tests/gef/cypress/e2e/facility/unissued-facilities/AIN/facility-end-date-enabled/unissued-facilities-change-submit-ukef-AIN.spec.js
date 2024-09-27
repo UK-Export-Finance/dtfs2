@@ -15,7 +15,7 @@ import statusBanner from '../../../../pages/application-status-banner';
 import applicationDetails from '../../../../pages/application-details';
 import applicationActivities from '../../../../pages/application-activities';
 import facilityEndDate from '../../../../pages/facility-end-date';
-import { threeDays, twoMonths, threeMonthsOneDay, today, threeDaysAgo } from '../../../../../../e2e-fixtures/dateConstants';
+import { threeDays, twoMonths, threeMonthsOneDay, today, threeDaysAgo } from '../../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;
