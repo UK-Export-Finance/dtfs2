@@ -15,7 +15,7 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
     };
 
     it(`should return the result of "generateErrorsForMismatchedFacilityValues" for "${field}"`, () => {
-      const result = generateBaseCurrencyErrors(existingData, mockCurrencyValue, [], csvData, csvData[1], 'test exporter');
+      const result = generateBaseCurrencyErrors(mockCurrencyValue, [], csvData, csvData[1], 'test exporter', existingData);
 
       const currencyErrors = generateErrorsForMismatchedFacilityValues(csvData, [], csvData[0], field, errorMessage, exporterName);
 
@@ -31,7 +31,7 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
     } as UtilisationReportFacilityData;
 
     it(`should return the result of "generateErrorsForMismatchedFacilityValues" for "${field}"`, () => {
-      const result = generateBaseCurrencyErrors(existingData, mockCurrencyValue, [], csvData, csvData[1], 'test exporter');
+      const result = generateBaseCurrencyErrors(mockCurrencyValue, [], csvData, csvData[1], 'test exporter', existingData);
 
       expect(result).toEqual([]);
     });
