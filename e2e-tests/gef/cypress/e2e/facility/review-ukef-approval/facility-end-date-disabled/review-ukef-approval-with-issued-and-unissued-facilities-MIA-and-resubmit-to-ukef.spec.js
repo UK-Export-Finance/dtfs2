@@ -2,8 +2,6 @@ import relative from '../../../relativeURL';
 
 import CONSTANTS from '../../../../fixtures/constants';
 
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
-
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../../fixtures/mocks/mock-deals';
 
 import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../../e2e-fixtures/portal-users.fixture';
@@ -20,11 +18,10 @@ import statusBanner from '../../../pages/application-status-banner';
 import coverStartDate from '../../../pages/cover-start-date';
 import applicationDetails from '../../../pages/application-details';
 import applicationActivities from '../../../pages/application-activities';
+import { threeDays, threeMonths, threeMonthsOneDay, today, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
 
 const { unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities();
 const issuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed();
-
-const { format } = require('date-fns');
 
 let dealId;
 let token;
@@ -173,9 +170,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.todayYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), today.day);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), today.month);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), today.year);
 
       cy.clickContinueButton();
 
@@ -183,7 +180,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(dateConstants.threeMonths, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(threeMonths.ddMMMyyyy);
       unissuedFacilityTable.updateFacilitiesLater().click();
 
       // link on application preview exists
@@ -197,9 +194,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.threeDaysYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), threeDays.day);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), threeDays.month);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), threeDays.year);
 
       cy.clickContinueButton();
 
@@ -214,9 +211,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), threeMonthsOneDay.day);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), threeMonthsOneDay.month);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), threeMonthsOneDay.year);
 
       cy.clickContinueButton();
 
@@ -229,19 +226,19 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), today.day);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), today.month);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), today.year);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoMonthsDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoMonthsMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoMonthsYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), twoMonths.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), twoMonths.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), twoMonths.year);
 
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), threeMonthsOneDay.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), threeMonthsOneDay.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), threeMonthsOneDay.year);
 
       cy.clickContinueButton();
 

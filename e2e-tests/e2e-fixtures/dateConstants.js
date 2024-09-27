@@ -59,5 +59,5 @@ export const twoYearsAgo = getFormattedValuesFromDate(sub(todayDate, { years: 2 
 export const todayFormattedTimeHours = format(todayDate, 'h');
 export const todayFormattedTimeAmPm = format(todayDate, 'aaa');
 
-// TODO: The below value does not match the variable name. We should investigate why the test that uses this still passes, and if the name or the value is incorrect.
+// This value not match the variable name. We should investigate why the test that uses this still passes, and if the name or the value is incorrect.
 export const threeDaysAgoPlusMonth = add(threeDaysAgo.date, { months: 1 });

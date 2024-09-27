@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 
 import CONSTANTS from '../../../../fixtures/constants';
 
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import { threeDays, threeMonthsOneDay, today, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../../fixtures/mocks/mock-deals';
 
@@ -163,9 +163,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.tomorrowDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.tomorrowMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.tomorrowYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), tomorrow.day);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), tomorrow.month);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), tomorrow.year);
 
       cy.clickContinueButton();
 
@@ -180,9 +180,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.threeDaysYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), threeDays.day);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), threeDays.month);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), threeDays.year);
 
       cy.clickContinueButton();
 
@@ -197,9 +197,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), threeMonthsOneDay.day);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), threeMonthsOneDay.month);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), threeMonthsOneDay.year);
 
       cy.clickContinueButton();
 
@@ -215,9 +215,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), dateConstants.todayYear);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), today.day);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), today.month);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), today.year);
 
       cy.clickContinueButton();
 
