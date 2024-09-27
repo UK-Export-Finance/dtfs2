@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 import { EntraIdService } from '../../../services/entra-id.service';
 
 export class LoginController {
-  constructor(private readonly entraIdService: EntraIdService) {
+  private readonly entraIdService: EntraIdService;
+
+  constructor({ entraIdService }: { entraIdService: EntraIdService }) {
     this.entraIdService = entraIdService;
   }
 

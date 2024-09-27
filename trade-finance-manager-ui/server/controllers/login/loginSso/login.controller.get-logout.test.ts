@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { LoginController } from './login.controller';
 import { EntraIdService } from '../../../services/entra-id.service';
-import { EntraIdServiceMockBuilder } from '../../../../test-helpers/mocks/extra-id.service.mock';
+import { EntraIdServiceMockBuilder } from '../../../../test-helpers/mocks';
 
 describe('controllers - login (sso)', () => {
   describe('getLogout', () => {
@@ -10,7 +10,7 @@ describe('controllers - login (sso)', () => {
 
     beforeEach(() => {
       entraIdService = new EntraIdServiceMockBuilder().build();
-      loginController = new LoginController(entraIdService);
+      loginController = new LoginController({ entraIdService });
     });
 
     it('redirects to /', () => {

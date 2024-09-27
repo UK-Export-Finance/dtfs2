@@ -1,5 +1,5 @@
 import { EntraIdConfig } from '../../server/configs/entra-id.config';
-import { BaseMockBuilder } from './mock-builder.mock';
+import { BaseMockBuilder } from './mock-builder.mock.builder';
 
 export class EntraIdConfigMockBuilder extends BaseMockBuilder<EntraIdConfig> {
   constructor() {

@@ -3,7 +3,7 @@ import { resetAllWhenMocks, when } from 'jest-when';
 import { aTfmSessionUser } from '../../../../test-helpers';
 import { LoginController } from './login.controller';
 import { EntraIdService } from '../../../services/entra-id.service';
-import { EntraIdServiceMockBuilder } from '../../../../test-helpers/mocks/extra-id.service.mock';
+import { EntraIdServiceMockBuilder } from '../../../../test-helpers/mocks';
 
 describe('controllers - login (sso)', () => {
   describe('getLogin', () => {
@@ -20,7 +20,7 @@ describe('controllers - login (sso)', () => {
 
       entraIdService = new EntraIdServiceMockBuilder().with({ getAuthCodeUrl: getAuthCodeUrlMock }).build();
 
-      loginController = new LoginController(entraIdService);
+      loginController = new LoginController({ entraIdService });
 
       mockSuccessfulGetAuthCodeUrl();
     });

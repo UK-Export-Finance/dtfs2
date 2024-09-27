@@ -1,7 +1,7 @@
-import axios from 'axios';
-import { AuthorizationUrlRequest, ConfidentialClientApplication, Configuration as MsalAppConfig, CryptoProvider, ResponseMode } from '@azure/msal-node';
+import { AuthorizationUrlRequest, ConfidentialClientApplication, Configuration as MsalAppConfig, CryptoProvider } from '@azure/msal-node';
 import { DecodedAuthCodeRequestState } from '../types/entra-id';
 import { EntraIdConfig } from '../configs/entra-id.config';
+import { EntraIdApi } from '../apis/entra-id.api';
 
 type GetAuthCodeUrlParams = {
   successRedirect?: string;
@@ -16,8 +16,11 @@ export class EntraIdService {
   private readonly msalAppConfig: MsalAppConfig;
 
   private readonly cryptoProvider = new CryptoProvider();
-
-  constructor(private readonly entraIdConfig: EntraIdConfig) {
+  private readonly entraIdConfig: EntraIdConfig;
+  private readonly entraIdApi: EntraIdApi;
+  constructor({ entraIdConfig, entraIdApi }: { entraIdConfig: EntraIdConfig; entraIdApi: EntraIdApi }) {
+    this.entraIdConfig = entraIdConfig;
+    this.entraIdApi = entraIdApi;
     this.msalAppConfig = entraIdConfig.msalAppConfig;
   }
 
@@ -36,7 +39,7 @@ export class EntraIdService {
     const authCodeUrlRequest: AuthorizationUrlRequest = {
       scopes: this.entraIdConfig.scopes,
       redirectUri: this.entraIdConfig.redirectUri,
-      responseMode: ResponseMode.FORM_POST,
+      responseMode: 'form_post',
       state: this.cryptoProvider.base64Encode(JSON.stringify(decodedState)),
     };
 
@@ -47,8 +50,7 @@ export class EntraIdService {
 
   private async getAuthorityMetadata() {
     try {
-      const response = await axios.get(this.entraIdConfig.authorityMetadataUrl);
-      return response.data as unknown;
+      return await this.entraIdApi.getAuthorityMetadataUrl();
     } catch (error) {
       console.error('Error fetching Entra ID authority metadata: %o', error);
       throw error;

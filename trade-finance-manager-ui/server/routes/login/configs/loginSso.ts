@@ -3,10 +3,12 @@ import { LoginController } from '../../../controllers/login/loginSso/login.contr
 import { getRouter } from '../../../types/get-router';
 import { EntraIdService } from '../../../services/entra-id.service';
 import { EntraIdConfig } from '../../../configs/entra-id.config';
+import { EntraIdApi } from '../../../apis/entra-id.api';
 
 const entraIdConfig = new EntraIdConfig();
-const entraIdService = new EntraIdService(entraIdConfig);
-const loginController = new LoginController(entraIdService);
+const entraIdApi = new EntraIdApi({ entraIdConfig });
+const entraIdService = new EntraIdService({ entraIdConfig, entraIdApi });
+const loginController = new LoginController({ entraIdService });
 
 export const getLoginSsoRouter: getRouter = () => {
   const loginSsoRouter = express.Router();
