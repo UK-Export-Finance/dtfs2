@@ -10,8 +10,10 @@ import {
   ReportPeriod,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportReportUploadedEvent } from './report-uploaded.event-handler';
+import { calculateInitialUtilisationAndFixedFee } from '../helpers';
 import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
-import { aUtilisationReportRawCsvData } from '../../../../../../test-helpers';
+import { aUtilisationReportRawCsvData, aTfmFacility } from '../../../../../../test-helpers';
+import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 
 describe('handleUtilisationReportReportUploadedEvent', () => {
   const mockSave = jest.fn();
@@ -59,6 +61,10 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
   });
 
   it('creates and saves new FacilityUtilisationData entities using the report reportPeriod for the supplied facility ids which do not have existing entries', async () => {
+    const findOneByUkefFacilityIdSpy = jest.spyOn(TfmFacilitiesRepo, 'findOneByUkefFacilityId');
+    const facility = aTfmFacility();
+    findOneByUkefFacilityIdSpy.mockResolvedValue(facility);
+
     // Arrange
     const reportReportPeriod: ReportPeriod = {
       start: { month: 5, year: 2024 },
@@ -98,15 +104,20 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
     // Assert
     expect(mockExistsBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: reportCsvDataWithExistingFacilityUtilisationData['ukef facility id'] });
 
-    const createdFacilityUtilisationDataEntities = reportCsvDataWithoutExistingFacilityUtilisationData.map(({ 'ukef facility id': facilityId }) => {
+    const createdFacilityUtilisationDataEntities = reportCsvDataWithoutExistingFacilityUtilisationData.map(async ({ 'ukef facility id': facilityId }) => {
       expect(mockExistsBy).toHaveBeenCalledWith(FacilityUtilisationDataEntity, { id: facilityId });
 
-      return FacilityUtilisationDataEntity.createWithoutUtilisationAndFixedFee({
+      const { utilisation, fixedFee } = await calculateInitialUtilisationAndFixedFee(facilityId);
+
+      return FacilityUtilisationDataEntity.createWithUtilisationAndFixedFee({
         id: facilityId,
         reportPeriod: reportReportPeriod,
         requestSource,
+        utilisation,
+        fixedFee,
       });
     });
-    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, createdFacilityUtilisationDataEntities, { chunk: 100 });
+
+    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, await Promise.all(createdFacilityUtilisationDataEntities), { chunk: 100 });
   });
 });

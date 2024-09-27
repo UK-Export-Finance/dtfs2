@@ -15,12 +15,12 @@ import { generateErrorsForMismatchedFacilityValues } from '../generate-errors-fo
  * @returns {UtilisationReportDataValidationError[]} generated errors
  */
 export const generateFacilityUtilisationErrors = (
-  mapData: UtilisationReportFacilityData | undefined,
   facilityUtilisationValue: string,
   errors: UtilisationReportDataValidationError[],
   csvData: UtilisationReportCsvRowData[],
   row: UtilisationReportCsvRowData,
   exporterName: string,
+  mapData?: UtilisationReportFacilityData,
 ) => {
   /**
    * if the value for facility utilisation in the map does not match the value in the row

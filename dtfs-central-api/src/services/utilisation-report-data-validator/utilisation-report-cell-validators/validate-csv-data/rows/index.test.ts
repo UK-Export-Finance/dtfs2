@@ -24,8 +24,8 @@ describe('validateRows', () => {
     });
 
     it('should return the result of "generateBaseCurrencyErrors" and "generateFacilityUtilisationErrors" for "base currency" and "facility utilisation"', () => {
-      const currencyErrors = generateBaseCurrencyErrors(map.get(ukefFacilityId), 'GBP', errors, csvData, csvData[1], exporterName);
-      const expectedErrors = generateFacilityUtilisationErrors(map.get(ukefFacilityId), '1', currencyErrors, csvData, csvData[1], exporterName);
+      const currencyErrors = generateBaseCurrencyErrors('GBP', errors, csvData, csvData[1], exporterName, map.get(ukefFacilityId));
+      const expectedErrors = generateFacilityUtilisationErrors('1', currencyErrors, csvData, csvData[1], exporterName, map.get(ukefFacilityId));
 
       const result = validateRows(csvData);
 
@@ -45,7 +45,7 @@ describe('validateRows', () => {
     });
 
     it('should return the result of "generateBaseCurrencyErrors" for "base currency"', () => {
-      const currencyErrors = generateBaseCurrencyErrors(map.get(ukefFacilityId), 'GBP', errors, csvData, csvData[1], exporterName);
+      const currencyErrors = generateBaseCurrencyErrors('GBP', errors, csvData, csvData[1], exporterName, map.get(ukefFacilityId));
 
       const result = validateRows(csvData);
 
@@ -65,7 +65,7 @@ describe('validateRows', () => {
     });
 
     it('should return the result of "generateFacilityUtilisationErrors" for "facility utilisation"', () => {
-      const expectedErrors = generateFacilityUtilisationErrors(map.get(ukefFacilityId), '1', errors, csvData, csvData[1], exporterName);
+      const expectedErrors = generateFacilityUtilisationErrors('1', errors, csvData, csvData[1], exporterName, map.get(ukefFacilityId));
 
       const result = validateRows(csvData);
 

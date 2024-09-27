@@ -49,3 +49,24 @@ export type UtilisationReportFacilityData = {
   baseCurrency: string;
   facilityUtilisation: string;
 };
+
+export interface CalculateFixedFeeBaseParams {
+  utilisation: number;
+  interestPercentage: number;
+  dayCountBasis: number;
+}
+
+export interface CalculateFixedFeeParams extends CalculateFixedFeeBaseParams {
+  coverStartDate: Date;
+  coverEndDate: Date;
+  reportPeriod: ReportPeriod;
+}
+
+export interface CalculateFixedFeeUtilisationReportParams extends CalculateFixedFeeBaseParams {
+  coverStartDate: Date;
+  coverEndDate: Date;
+}
+
+export interface CalculateFixedFeeFromDaysRemainingParams extends CalculateFixedFeeBaseParams {
+  numberOfDaysRemainingInCoverPeriod: number;
+}

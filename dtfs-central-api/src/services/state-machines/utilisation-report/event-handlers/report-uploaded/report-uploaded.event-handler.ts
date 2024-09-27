@@ -11,6 +11,7 @@ import {
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { UtilisationReportRawCsvData } from '../../../../../types/utilisation-reports';
 import { feeRecordCsvRowToSqlEntity } from '../../../../../helpers';
+import { calculateInitialUtilisationAndFixedFee } from '../helpers';
 
 type ReportUploadedEventPayload = {
   azureFileInfo: AzureFileInfo;
@@ -21,8 +22,10 @@ type ReportUploadedEventPayload = {
 };
 
 /**
- * Creates a new facility utilisation data entity if an entity with the
- * supplied facility id does not already exist
+ * Creates a new facility utilisation data entity by id if an entity does not exist
+ * if it does not exist:
+ * calculates the initial utilisation and fixed fee
+ * creates a new facility utilisation data entity with the calculated values
  * @param facilityId - The facility id
  * @param reportPeriod - The report period
  * @param requestSource - The request source
@@ -39,7 +42,16 @@ const createFacilityUtilisationDataEntityIfNotExists = async (
   if (entityExists) {
     return null;
   }
-  return FacilityUtilisationDataEntity.createWithoutUtilisationAndFixedFee({ id: facilityId, reportPeriod, requestSource });
+
+  const { utilisation, fixedFee } = await calculateInitialUtilisationAndFixedFee(facilityId);
+
+  return FacilityUtilisationDataEntity.createWithUtilisationAndFixedFee({
+    id: facilityId,
+    reportPeriod,
+    requestSource,
+    utilisation,
+    fixedFee,
+  });
 };
 
 const CHUNK_SIZE_FOR_BATCH_SAVING = 100;
@@ -80,6 +92,7 @@ export const handleUtilisationReportReportUploadedEvent = async (
       createFacilityUtilisationDataEntityIfNotExists(facilityId, report.reportPeriod, requestSource, transactionEntityManager),
     ),
   );
+
   await transactionEntityManager.save(
     FacilityUtilisationDataEntity,
     facilityUtilisationDataEntities.filter((entity): entity is FacilityUtilisationDataEntity => entity !== null),

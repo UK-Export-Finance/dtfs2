@@ -2,12 +2,12 @@ import { UtilisationReportCsvRowData, UtilisationReportDataValidationError, Util
 import { generateErrorsForMismatchedFacilityValues } from '../generate-errors-for-mismatched-facility-values';
 
 export const generateBaseCurrencyErrors = (
-  existingData: UtilisationReportFacilityData | undefined,
   baseCurrencyValue: string,
   errors: UtilisationReportDataValidationError[],
   csvData: UtilisationReportCsvRowData[],
   row: UtilisationReportCsvRowData,
   exporterName: string,
+  existingData?: UtilisationReportFacilityData,
 ) => {
   /**
    * if the value for base currency in the map does not match the value in the row
