@@ -2,10 +2,6 @@ import httpMocks from 'node-mocks-http';
 import { aTfmSessionUser } from '../../../../test-helpers';
 import { getLogin } from '.';
 
-jest.mock('../../../services/entra-id-service', () => ({
-  getLoginUrl: jest.fn(),
-}));
-
 describe('controllers - login (sso)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
