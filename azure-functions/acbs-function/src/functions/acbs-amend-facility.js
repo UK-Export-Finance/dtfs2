@@ -1,29 +1,41 @@
 /**
- * This function is an Azure Durable sub-orchestrator function.
- * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
- * function.
+ * ACBS Amend Facility Orchestration Function
+ * ------------------------------------------
+ * This module defines a Durable Orchestration Function (DOF) for amending facility records in the ACBS system.
+ * The function is triggered by an HTTP trigger function (`acbs-http`) and performs various amendments to facility records.
  *
- * Facility Amendment DOF
- * ***********************
- * This DOF invokes following activity functions to satisfy mandatory amendments ACs
- * 1. get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
- * 2. update-facility-master: Update ACBS `Facility Master Record`
- * 3. amend-facility-loan: Update ACBS `Facility Loan Record`
+ * Amendments
+ * ----------
+ * 1. amend-facility-master: Updates the ACBS `Facility Master Record`
+ * 2. amend-facility-covenant: Updates the ACBS `Facility Covenant Record`
+ * 3. amend-facility-guarantee: Updates the ACBS `Facility Guarantee Record`
+ * 4. amend-facility-loan: Updates the ACBS `Facility Loan Record`
+ * 5. amend-facility-fixed-fee: Updates the ACBS `Facility Fixed Fee Record`
  *
  * Durable Orchestration Function (DOF)
  * ------------------------------------
  * This function is not intended to be invoked directly.
- * This function is trigger by an HTTP trigger function (acbs-http).
+ * It is triggered by an HTTP trigger function (`acbs-http`).
  *
  * Check
- * ------
- * 1. `07`facility only
+ * -----
+ * 1. Only facilities with stage `07` (Issued) are acceptable.
  *
  * Prerequisites
  * -------------
- * 0. 'npm install durable-functions'
- * 1. Durable HTTP trigger function (acbs-http)
- * 2. Durable activity function (get-facility-master, update-facility-master)
+ * 0. Run 'npm install durable-functions' to install the required durable functions package.
+ * 1. Ensure the Durable HTTP trigger function (`acbs-http`) is set up.
+ * 2. Ensure the Durable activity functions (`get-facility-master`, `update-facility-master`) are set up.
+ *
+ * Orchestration Function
+ * ----------------------
+ * - `amendFacility`: Main orchestration function for amending facility records.
+ *   - Validates the amendment payload.
+ *   - Checks for the existence of required properties in the payload.
+ *   - Throws errors for invalid payloads.
+ *   - Processes amendments based on the facility ID and other properties.
+ *
+ * @module acbs-amend-facility
  */
 
 const df = require('durable-functions');
@@ -77,19 +89,25 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
 
     if (!acceptableFacilityStage.includes(facilityStageCode)) {
       // Error upon unacceptable facility stage
-      const incorrectFacilityStageErrorMessage = `Facility ${facilityId} stage is ${facilityStageCode}, amendment will not be processed`;
+      const incorrectFacilityStageErrorMessage = `Facility ${facilityId} stage is ${facilityStageCode}, amendments are accepted for 07 stage.`;
 
-      console.error('Facility %s stage is %s, amendment will not be processed', facilityId, facilityStageCode);
+      console.error(incorrectFacilityStageErrorMessage);
 
       return {
         facilityId,
-        facilityLoanRecord: {
-          error: incorrectFacilityStageErrorMessage,
-        },
         facilityMasterRecord: {
           error: incorrectFacilityStageErrorMessage,
         },
         facilityCovenantRecord: {
+          error: incorrectFacilityStageErrorMessage,
+        },
+        facilityGuaranteeRecord: {
+          error: incorrectFacilityStageErrorMessage,
+        },
+        facilityLoanRecord: {
+          error: incorrectFacilityStageErrorMessage,
+        },
+        facilityFixedFeeRecord: {
           error: incorrectFacilityStageErrorMessage,
         },
       };
@@ -148,14 +166,21 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
       amendments,
     });
 
+    // 5. SOF: Facility Fixed Fee Record (FFFR)
+    const facilityFixedFeeRecord = context.df.callSubOrchestrator('acbs-amend-facility-fixed-fee-record', {
+      facilityId,
+      amendments,
+    });
+
     yield context.df.Task.all([facilityGuaranteeRecord]);
 
     return {
       facilityId,
-      facilityLoanRecord: facilityLoanRecord.result,
       facilityMasterRecord: facilityMasterRecord.result,
       facilityCovenantRecord: facilityCovenantRecord.result,
       facilityGuaranteeRecord: facilityGuaranteeRecord.result,
+      facilityLoanRecord: facilityLoanRecord.result,
+      facilityFixedFeeRecord: facilityFixedFeeRecord.result,
     };
   } catch (error) {
     console.error('Error amending facility records %o', error);

@@ -1,8 +1,37 @@
 /**
- * This function is an Azure Durable sub-orchestrator function.
- * This function cannot be invoked directly and is rather executed by an Azure durable orchestrator
- * function.
+ * ACBS Issue Facility Orchestration Function
+ * ------------------------------------------
+ * This module defines a Durable Orchestration Function (DOF) for issuing facility records in the ACBS system.
+ * The function is triggered by an HTTP trigger function and performs various operations to issue a facility.
  *
+ * Operations
+ * ----------
+ * 1. GET Facility master record object
+ * 2. Create updated facility master record object
+ * 3. PUT updated facility master record object
+ * 4. Create facility loan record
+ * 5. Create facility fixed fee record
+ *
+ * Durable Orchestration Function (DOF)
+ * ------------------------------------
+ * This function is not intended to be invoked directly.
+ * It is triggered by an HTTP trigger function.
+ *
+ * Prerequisites
+ * -------------
+ * 0. Run 'npm install durable-functions' to install the required durable functions package.
+ * 1. Ensure the Durable HTTP trigger function is set up.
+ * 2. Ensure the Durable activity functions (`get-facility-master`, `update-facility-master`) are set up.
+ *
+ * Orchestration Function
+ * ----------------------
+ * - `issueFacility`: Main orchestration function for issuing facility records.
+ *   - Validates the facility ID.
+ *   - Retrieves the facility master record.
+ *   - Creates and updates the facility master record.
+ *   - Updates the ACBS parties information.
+ *
+ * @module acbs-issue-facility
  */
 
 const df = require('durable-functions');
