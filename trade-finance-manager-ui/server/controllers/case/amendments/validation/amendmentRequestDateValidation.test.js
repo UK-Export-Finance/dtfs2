@@ -285,10 +285,14 @@ describe('requestDateValidation()', () => {
   it('returns no errors if amendment date now', async () => {
     const today = new Date();
 
+    const todayDay = format(today, 'dd');
+    const todayMonth = format(today, 'MM');
+    const todayYear = format(today, 'yyyy');
+
     const body = {
-      'amendment-request-date-day': today.day,
-      'amendment-request-date-month': today.month,
-      'amendment-request-date-year': today.year,
+      'amendment-request-date-day': todayDay.toString(),
+      'amendment-request-date-month': todayMonth.toString(),
+      'amendment-request-date-year': todayYear.toString(),
     };
 
     const mockFacility = {
@@ -312,9 +316,9 @@ describe('requestDateValidation()', () => {
           errorSummary: [],
           fieldErrors: {},
         },
-        amendmentRequestDateDay: today.day,
-        amendmentRequestDateMonth: today.month,
-        amendmentRequestDateYear: today.year,
+        amendmentRequestDateDay: todayDay.toString(),
+        amendmentRequestDateMonth: todayMonth.toString(),
+        amendmentRequestDateYear: todayYear.toString(),
       },
       amendmentRequestDateErrors: [],
     };

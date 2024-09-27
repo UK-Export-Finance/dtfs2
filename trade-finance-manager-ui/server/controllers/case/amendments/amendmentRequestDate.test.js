@@ -245,6 +245,10 @@ describe('controllers - case - amendments', () => {
 
         const today = new Date();
 
+        const todayDay = format(today, 'dd');
+        const todayMonth = format(today, 'MM');
+        const todayYear = format(today, 'yyyy');
+
         const req = {
           params: {
             facilityId: mockFacility._id,
@@ -252,9 +256,9 @@ describe('controllers - case - amendments', () => {
           },
           session,
           body: {
-            'amendment-request-date-day': today.day,
-            'amendment-request-date-month': today.month,
-            'amendment-request-date-year': today.year,
+            'amendment-request-date-day': todayDay.toString(),
+            'amendment-request-date-month': todayMonth.toString(),
+            'amendment-request-date-year': todayYear.toString(),
           },
         };
 
