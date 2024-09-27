@@ -23,14 +23,13 @@ const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, un
 
 const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
 
-context('Unissued Facilities MIN - change all to issued from unissued table', () => {
+context('Unissued Facilities MIN - about unissued facility page', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
         token = t;
       })
       .then(() => {
-        // creates application and inserts facilities and changes status
         cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
           dealId = body._id;
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
@@ -53,14 +52,13 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       });
   });
 
-  describe('Change facility to issued from unissued table', () => {
+  describe('About unissued facility page', () => {
     beforeEach(() => {
       cy.saveSession();
       cy.login(BANK1_MAKER1);
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    // ensures the task comment box exists with correct headers and link
     it('task comment box exists with correct header and unissued facilities link and shows type as MIN', () => {
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
@@ -70,9 +68,6 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       applicationPreview.automaticCoverCriteria().should('exist');
     });
 
-    /* application preview should not have unlocked ability to change unissued facilities until
-       at least 1 changed from unissued table
-    */
     it('facilities table does not contain any add or change links as have not changed any facilities to issued yet', () => {
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedCashFacilityWith20MonthsOfCover.name);
       applicationPreview.facilitySummaryListTable(0).nameAction().should('have.class', 'govuk-!-display-none');
@@ -101,13 +96,12 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
 
       applicationPreview.unissuedFacilitiesReviewLink().click();
-      // ensures that nothing has changed
+
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
       cy.clickBackLink();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
     });
 
-    // clicking update on unissued-facilities table
     it('clicking on update should take you to the update facility page with correct url', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
@@ -115,7 +109,25 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
     });
 
     it('update facility page should have correct titles and text (only name should be prepopulated', () => {
-      // when entering no dates
+      applicationPreview.unissuedFacilitiesReviewLink().click();
+      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
+
+      mainHeading().contains("Tell us you've issued this facility");
+      aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
+      aboutFacilityUnissued.facilityName().should('have.value', unissuedCashFacility.name);
+
+      aboutFacilityUnissued.issueDateDay().should('have.value', '');
+      aboutFacilityUnissued.issueDateMonth().should('have.value', '');
+      aboutFacilityUnissued.issueDateMonth().should('have.value', '');
+      aboutFacilityUnissued.coverStartDateDay().should('have.value', '');
+      aboutFacilityUnissued.coverStartDateMonth().should('have.value', '');
+      aboutFacilityUnissued.coverStartDateYear().should('have.value', '');
+      aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
+      aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
+      aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
+    });
+
+    it('displays error messages when nothing filled in', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
       cy.clickContinueButton();
@@ -126,16 +138,24 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       errorSummary().contains('Enter the date you issued the facility to the exporter');
       errorSummary().contains('Select if you want UKEF cover to start on the day you issue the facility');
       errorSummary().contains('Enter a cover end date');
+    });
 
-      // entering date in the past for issue date
+    it('displays error messages when issue date is before the submission date', () => {
+      applicationPreview.unissuedFacilitiesReviewLink().click();
+      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
+
       cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.fourDaysAgoDay);
       cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.fourDaysAgoMonth);
       cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.fourDaysAgoYear);
       cy.clickContinueButton();
       aboutFacilityUnissued.issueDateError().contains('The issue date must not be before the date of the inclusion notice submission date');
       errorSummary().contains('The issue date must not be before the date of the inclusion notice submission date');
+    });
 
-      // entering issue date in the future
+    it('displays error messages when issue date is in the future', () => {
+      applicationPreview.unissuedFacilitiesReviewLink().click();
+      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
+
       cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.tomorrowDay);
       cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.tomorrowMonth);
       cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.tomorrowYear);
@@ -146,42 +166,66 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
       cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
       cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
       cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
+    });
 
-      // entering cover start date before issue date
+    it('displays error messages when cover start date is before the issue', () => {
+      applicationPreview.unissuedFacilitiesReviewLink().click();
+      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
+
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.threeDaysDay);
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.threeDaysMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.threeDaysYear);
       cy.clickContinueButton();
+
       aboutFacilityUnissued.coverStartDateError().contains('Cover start date cannot be before the issue date');
       errorSummary().contains('Cover start date cannot be before the issue date');
+    });
 
-      // entering cover start date beyond 3 months from notice date
+    it('displays error messages when cover start date is over 3 months after submission date', () => {
+      applicationPreview.unissuedFacilitiesReviewLink().click();
+      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
+
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.threeMonthsOneDayDay);
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.threeMonthsOneDayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.threeMonthsOneDayYear);
       cy.clickContinueButton();
+
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
       errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
+    });
 
-      // coverEnd date before coverStartDate
+    it('displays error messages when cover end date is before the cover start date', () => {
+      applicationPreview.unissuedFacilitiesReviewLink().click();
+      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
+
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoMonthsDay);
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoMonthsMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoMonthsYear);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.twentyEightDay);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.twentyEightMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.twentyEightYear);
-      cy.clickContinueButton();
-      errorSummary().contains('Cover end date cannot be before cover start date');
 
-      // coverEnd date same as coverStartDate
+      cy.clickContinueButton();
+
+      aboutFacilityUnissued.coverEndDateError().contains('Cover end date cannot be before cover start date');
+      errorSummary().contains('Cover end date cannot be before cover start date');
+    });
+
+    it('displays error messages when cover end date is same as the cover start date', () => {
+      applicationPreview.unissuedFacilitiesReviewLink().click();
+      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
+
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.todayDay);
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.todayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.todayYear);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.todayDay);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.todayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.todayYear);
+
       cy.clickContinueButton();
+
+      aboutFacilityUnissued.coverEndDateError().contains('The cover end date must be after the cover start date');
       errorSummary().contains('The cover end date must be after the cover start date');
     });
   });
