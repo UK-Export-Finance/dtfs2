@@ -14,8 +14,9 @@ export class LoginController {
 
     const { authCodeUrl, authCodeUrlRequest } = await this.entraIdService.getAuthCodeUrl({ successRedirect: '/' });
 
-    // test this
-    req.session.loginData ??= { authCodeUrlRequest };
+    // As this is the user logging in, there should be no existing login data in the session.
+    // if there is, it should be cleared and set to the authCodeUrlRequest.
+    req.session.loginData = { authCodeUrlRequest };
     return res.redirect(authCodeUrl);
   }
 

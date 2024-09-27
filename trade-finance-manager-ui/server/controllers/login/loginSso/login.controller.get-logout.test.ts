@@ -1,22 +1,17 @@
 import httpMocks from 'node-mocks-http';
-import { mock } from 'jest-mock-extended';
 import { LoginController } from './login.controller';
 import { EntraIdService } from '../../../services/entra-id.service';
+import { EntraIdServiceMockBuilder } from '../../../../test-helpers/mocks/extra-id.service.mock';
 
 describe('controllers - login (sso)', () => {
-  let entraIdService: EntraIdService;
-  let loginController: LoginController;
-
-  beforeEach(() => {
-    entraIdService = mock<EntraIdService>();
-    loginController = new LoginController(entraIdService);
-  });
-
   describe('getLogout', () => {
-    const getHttpMocks = () =>
-      httpMocks.createMocks({
-        session: { destroy: jest.fn((callback: () => void) => callback()) },
-      });
+    let entraIdService: EntraIdService;
+    let loginController: LoginController;
+
+    beforeEach(() => {
+      entraIdService = new EntraIdServiceMockBuilder().build();
+      loginController = new LoginController(entraIdService);
+    });
 
     it('redirects to /', () => {
       // Arrange
@@ -40,5 +35,11 @@ describe('controllers - login (sso)', () => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(req.session.destroy).toHaveBeenCalled();
     });
+
+    function getHttpMocks() {
+      return httpMocks.createMocks({
+        session: { destroy: jest.fn((callback: () => void) => callback()) },
+      });
+    }
   });
 });

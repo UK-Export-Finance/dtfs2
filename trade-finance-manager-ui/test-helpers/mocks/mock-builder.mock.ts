@@ -1,5 +1,3 @@
-import { ExtractFields } from '@ukef/dtfs2-common';
-
 /**
  * Class to allow for the passing of jest fns into methods on the class object
  */
@@ -67,10 +65,11 @@ type Mocked<T> = {
  * ```
  */
 export abstract class BaseMockBuilder<TClass extends object> {
-  private readonly instance: Mocked<TClass>;
+  private readonly defaults: Mocked<TClass>;
+  private readonly instance: Mocked<TClass> = {} as Mocked<TClass>;
 
   protected constructor(config: { defaultInstance: Mocked<TClass> }) {
-    this.instance = config.defaultInstance;
+    this.defaults = config.defaultInstance;
   }
 
   /**
@@ -86,9 +85,13 @@ export abstract class BaseMockBuilder<TClass extends object> {
    *   .build()
    * ```
    */
-  public with(values: Partial<ExtractFields<TClass>>): BaseMockBuilder<TClass> {
+  public with(values: Partial<Mocked<TClass>>): BaseMockBuilder<TClass> {
     Object.assign(this.instance, values);
     return this;
+  }
+
+  public withDefaults(): BaseMockBuilder<TClass> {
+    return this.with(this.defaults);
   }
 
   /**
