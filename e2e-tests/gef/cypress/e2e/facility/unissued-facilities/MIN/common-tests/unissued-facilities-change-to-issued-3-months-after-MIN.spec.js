@@ -90,11 +90,6 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
       aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
       aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
-
-      // if (facilityEndDateEnabled) {
-      //   aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
-      //   aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
-      // }
     });
   });
 });
