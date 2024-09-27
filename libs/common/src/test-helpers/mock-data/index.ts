@@ -6,3 +6,4 @@ export * from './payment.entity.mock-builder';
 export * from './company-registration-numbers.mock';
 export * from './facility-utilisation-data.entity.mock-builder';
 export * from './payment-matching-tolerance.entity.mock-builder';
+export * from './utilisation-report-mock-csv-data';

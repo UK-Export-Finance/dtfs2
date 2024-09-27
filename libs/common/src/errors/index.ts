@@ -15,3 +15,4 @@ export * from './invalid-payload-error';
 export * from './user-session.error';
 export * from './user-session-not-defined.error';
 export * from './user-token-not-defined.error';
+export * from './deal-cancellation-not-found.error';

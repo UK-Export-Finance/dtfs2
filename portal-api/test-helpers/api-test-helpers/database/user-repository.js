@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const jsonwebtoken = require('jsonwebtoken');
 const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
-const { mongoDbClient: db } = require('./database-client');
+const { mongoDbClient: db } = require('../../../src/drivers/db-client');
 
 const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('ascii');
 

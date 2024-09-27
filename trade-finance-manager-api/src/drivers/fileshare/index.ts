@@ -1,9 +1,10 @@
 import { Buffer } from 'buffer';
 import path from 'path';
+import { FileshareConfig } from '@ukef/dtfs2-common';
 import { ShareServiceClient, StorageSharedKeyCredential } from '@azure/storage-file-share';
 import { FILESHARES } from '../../constants';
 import { AZURE_UTILISATION_REPORTS_FILESHARE_CONFIG } from '../../config/fileshare.config';
-import { Fileshare, FileshareConfig } from '../../types/fileshare';
+import { Fileshare } from '../../types/fileshare';
 import { isParentNotFoundError } from './error-helper';
 
 const getConfig = (fileshare: Fileshare): FileshareConfig => {

@@ -1,6 +1,7 @@
 const utilisationReportPage = {
   bankReportsNavLink: () => cy.get('a[data-cy="bank-reports-nav-link"]'),
   keyingSheetTabLink: () => cy.get('a[data-cy="bank-report-tab-keying-sheet"]'),
+  paymentDetailsLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
   premiumPaymentsTab: {
     getPaymentLink: (paymentId) => cy.get(`a[data-cy="premium-payments-tab-edit-payment-link--paymentId-${paymentId}"]`),
     clickPaymentLink: (paymentId) => cy.get(`a[data-cy="premium-payments-tab-edit-payment-link--paymentId-${paymentId}"]`).click(),
@@ -29,6 +30,15 @@ const utilisationReportPage = {
   },
   paymentDetailsTab: {
     clickPaymentLink: (paymentId) => cy.get(`a[data-cy="payment-details-tab-edit-payment-link--paymentId-${paymentId}"]`).click(),
+    paymentDetailsTable: {
+      row: (paymentId, feeRecordId) => cy.get(`[data-cy="payment-details-row--paymentId-${paymentId}-feeRecordId-${feeRecordId}"]`),
+      paymentCurrencyAndAmount: (paymentId, feeRecordId) =>
+        cy.get(`[data-cy="payment-details-row--paymentId-${paymentId}-feeRecordId-${feeRecordId}"] td[data-cy="payment-currency-and-amount"]`),
+      paymentReference: (paymentId, feeRecordId) =>
+        cy.get(`[data-cy="payment-details-row--paymentId-${paymentId}-feeRecordId-${feeRecordId}"] td[data-cy="payment-reference"]`),
+      facilityId: (paymentId, feeRecordId) =>
+        cy.get(`[data-cy="payment-details-row--paymentId-${paymentId}-feeRecordId-${feeRecordId}"] td[data-cy="facility-id"]`),
+    },
   },
 };
 

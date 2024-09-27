@@ -12,7 +12,7 @@ export const validateReasonForCancelling = (reason: string): ReasonForCancelling
 
   const reasonForCancellingErrorMessage = reason.length > MAX_CHARACTER_COUNT ? REASON_TOO_LONG_MESSAGE : undefined;
   if (reasonForCancellingErrorMessage) {
-    errorSummary.push({ text: reasonForCancellingErrorMessage, href: 'reason-for-cancelling' });
+    errorSummary.push({ text: reasonForCancellingErrorMessage, href: '#reason-for-cancelling' });
   }
 
   return { errorSummary, reasonForCancellingErrorMessage };

@@ -1,21 +1,19 @@
 import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
-import { mongoDbClient } from './database/database-client';
-import { logger } from './helpers/logger.helper';
+import { mongoDbClient } from '../drivers/db-client';
 
 export const deleteDeletionAuditLogsCollection = async () => {
-  logger.info('Dropping deletion audit logs collection');
+  console.info('Dropping deletion audit logs collection');
   const collection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS);
 
   try {
     await collection.drop();
   } catch (error) {
-    logger.info('Failed to drop collection, continuing to insert mocks', { depth: 1 });
-    logger.error(String(error), { depth: 1 });
+    console.error('Failed to drop collection, continuing to insert mocks %o', error);
   }
 };
 
 export const setupDeletionAuditLogsCollection = async () => {
-  logger.info('Setting up deletion audit logs collection');
+  console.info('Setting up deletion audit logs collection');
   const dbConnection = await mongoDbClient.getConnection();
 
   const collection = await dbConnection.createCollection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS, {
