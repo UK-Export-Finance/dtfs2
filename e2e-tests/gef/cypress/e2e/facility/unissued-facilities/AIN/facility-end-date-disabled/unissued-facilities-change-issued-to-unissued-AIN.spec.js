@@ -13,7 +13,7 @@ import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-f
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import statusBanner from '../../../../pages/application-status-banner';
 import facilities from '../../../../pages/facilities';
-import { threeDays, threeDaysAgo, threeDaysAgoPlusMonth, threeMonthsOneDay, today, twoMonths } from '../../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, threeDaysAgoPlusMonth, threeMonthsOneDay, today, twoMonths } from '../../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;
@@ -99,14 +99,14 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDays.day);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDays.month);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDays.year);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDaysAgo.day);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDaysAgo.month);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDaysAgo.year);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDays.day);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDays.month);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDays.year);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDaysAgo.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDaysAgo.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDaysAgo.year);
 
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), threeMonthsOneDay.day);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), threeMonthsOneDay.month);
@@ -332,14 +332,14 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDays.day);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDays.month);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDays.year);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDaysAgo.day);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDaysAgo.month);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDaysAgo.year);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDays.day);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDays.month);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDays.year);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDaysAgo.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDaysAgo.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDaysAgo.year);
 
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), threeMonthsOneDay.day);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), threeMonthsOneDay.month);

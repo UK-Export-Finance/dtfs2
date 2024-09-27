@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 
 import CONSTANTS from '../../../../fixtures/constants';
 
-import { threeDays, threeMonthsOneDay, today, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, threeMonthsOneDay, today, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../../fixtures/mocks/mock-deals';
 
@@ -180,9 +180,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), threeDays.day);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), threeDays.month);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), threeDays.year);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), threeDaysAgo.day);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), threeDaysAgo.month);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), threeDaysAgo.year);
 
       cy.clickContinueButton();
 

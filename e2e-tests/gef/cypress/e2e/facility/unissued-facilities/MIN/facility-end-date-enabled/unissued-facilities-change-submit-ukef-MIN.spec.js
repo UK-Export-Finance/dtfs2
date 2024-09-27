@@ -14,7 +14,7 @@ import statusBanner from '../../../pages/application-status-banner';
 import applicationDetails from '../../../pages/application-details';
 import applicationActivities from '../../../pages/application-activities';
 import facilityEndDate from '../../../pages/facility-end-date';
-import { threeDays, threeMonthsOneDay, today, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, threeMonthsOneDay, today, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;
@@ -70,14 +70,14 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(1).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDays.day);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDays.month);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDays.year);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDaysAgo.day);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDaysAgo.month);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDaysAgo.year);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDays.day);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDays.month);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDays.year);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDaysAgo.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDaysAgo.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDaysAgo.year);
 
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), threeMonthsOneDay.day);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), threeMonthsOneDay.month);

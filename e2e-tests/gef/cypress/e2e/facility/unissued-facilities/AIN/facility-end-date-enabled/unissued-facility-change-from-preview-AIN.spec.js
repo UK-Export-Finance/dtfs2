@@ -13,7 +13,7 @@ import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-f
 import applicationSubmission from '../../../../pages/application-submission';
 import statusBanner from '../../../../pages/application-status-banner';
 import facilityEndDate from '../../../../pages/facility-end-date';
-import { threeDays, twoMonths, threeMonthsOneDay, today, threeDaysAgo } from '../../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, twoMonths, threeMonthsOneDay, today } from '../../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;
@@ -105,9 +105,9 @@ context('Unissued Facilities AIN - change to issued from preview page - feature 
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDays.day);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDays.month);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDays.year);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), threeDaysAgo.day);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), threeDaysAgo.month);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), threeDaysAgo.year);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), twoMonths.day);

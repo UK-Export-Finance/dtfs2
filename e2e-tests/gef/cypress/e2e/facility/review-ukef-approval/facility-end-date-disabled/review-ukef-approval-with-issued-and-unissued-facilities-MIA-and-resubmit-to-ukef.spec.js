@@ -18,7 +18,7 @@ import statusBanner from '../../../pages/application-status-banner';
 import coverStartDate from '../../../pages/cover-start-date';
 import applicationDetails from '../../../pages/application-details';
 import applicationActivities from '../../../pages/application-activities';
-import { threeDays, threeMonths, threeMonthsOneDay, today, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, threeMonths, threeMonthsOneDay, today, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
 
 const { unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities();
 const issuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed();
@@ -194,9 +194,9 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.keyboardInput(coverStartDate.coverStartDateDay(), threeDays.day);
-      cy.keyboardInput(coverStartDate.coverStartDateMonth(), threeDays.month);
-      cy.keyboardInput(coverStartDate.coverStartDateYear(), threeDays.year);
+      cy.keyboardInput(coverStartDate.coverStartDateDay(), threeDaysAgo.day);
+      cy.keyboardInput(coverStartDate.coverStartDateMonth(), threeDaysAgo.month);
+      cy.keyboardInput(coverStartDate.coverStartDateYear(), threeDaysAgo.year);
 
       cy.clickContinueButton();
 

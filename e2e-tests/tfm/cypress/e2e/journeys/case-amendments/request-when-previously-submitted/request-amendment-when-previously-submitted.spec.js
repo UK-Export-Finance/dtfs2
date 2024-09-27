@@ -6,7 +6,7 @@ import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
-import { threeDays, threeYears, today, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, threeYears, today, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 
 context('Amendments - should not allow amendments to have same coverEndDate/value if previously submitted', () => {
   let dealId;
@@ -127,9 +127,9 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     errorSummary().contains('The new cover end date cannot be the same as the current cover end date');
     amendmentsPage.errorMessage().contains('The new cover end date cannot be the same as the current cover end date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), threeDays.day);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), threeDays.month);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), threeDays.year);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), threeDaysAgo.day);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), threeDaysAgo.month);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), threeDaysAgo.year);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');
@@ -330,9 +330,9 @@ context('Amendments - should not allow amendments to have same coverEndDate/valu
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), threeDays.day);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), threeDays.month);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), threeDays.year);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), threeDaysAgo.day);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), threeDaysAgo.month);
+    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), threeDaysAgo.year);
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');

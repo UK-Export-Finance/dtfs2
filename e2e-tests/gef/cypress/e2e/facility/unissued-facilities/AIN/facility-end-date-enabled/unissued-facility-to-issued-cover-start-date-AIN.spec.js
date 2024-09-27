@@ -13,7 +13,7 @@ import unissuedFacilityTable from '../../../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
 import statusBanner from '../../../../pages/application-status-banner';
 import facilityEndDate from '../../../../pages/facility-end-date';
-import { threeDays, threeMonthsOneDay, today, threeDaysAgoPlusMonth } from '../../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, threeMonthsOneDay, today, threeDaysAgoPlusMonth } from '../../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;
@@ -125,9 +125,9 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
 
       // Cover start date to user defined date - Three days in the past
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDays.day);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDays.month);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDays.year);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDaysAgo.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDaysAgo.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDaysAgo.year);
 
       // Cover end date to user defined date
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), threeMonthsOneDay.day);
