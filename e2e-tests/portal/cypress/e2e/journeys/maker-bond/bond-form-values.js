@@ -9,11 +9,11 @@ const DETAILS = {
   },
 
   // 'issued' facility stage specifics
-  requestedCoverStartDateDay: today.day,
-  requestedCoverStartDateMonth: today.month,
+  requestedCoverStartDateDay: today.dayLong,
+  requestedCoverStartDateMonth: today.monthLong,
   requestedCoverStartDateYear: today.year.toString(),
-  coverEndDateDay: oneMonth.day,
-  coverEndDateMonth: oneMonth.month,
+  coverEndDateDay: oneMonth.dayLong,
+  coverEndDateMonth: oneMonth.monthLong,
   coverEndDateYear: oneMonth.year,
   name: '123456',
   bondBeneficiary: 'mock beneficiary',
