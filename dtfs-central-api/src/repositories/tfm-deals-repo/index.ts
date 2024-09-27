@@ -1,1 +1,1 @@
-export * from './tfm-deal-cancellation.repo.ts';
+export * from './tfm-deal-cancellation.repo';

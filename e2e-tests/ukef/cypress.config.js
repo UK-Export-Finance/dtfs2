@@ -34,9 +34,8 @@ module.exports = defineConfig({
   e2e: {
     baseUrl: 'http://localhost:5000',
     specPattern: 'cypress/e2e/**/*.spec.js',
-    setupNodeEvents(on, config) {
-      const { dbName, dbConnectionString } = config;
-      on('task', createTasks({ dbName, dbConnectionString }));
+    setupNodeEvents(on) {
+      on('task', createTasks());
     },
   },
   experimentalCspAllowList: ['child-src', 'default-src', 'frame-src', 'form-action', 'script-src', 'script-src-elem'],

@@ -1,92 +1,123 @@
 import { Collection, Db as DbConnection, MongoClient, WithoutId } from 'mongodb';
+import dotenv from 'dotenv';
+import { MongoConnectionStatus } from '../types';
 import { MongoDbCollectionName } from '../types/mongo-db-models/mongo-db-collection-name';
 import { DbModel } from '../types/mongo-db-models/db-model';
 
-type ConnectionOptions = {
-  dbConnectionString: string;
-  dbName: string;
-};
+dotenv.config();
 
-type MongoDbClientConnection =
-  | {
-      isInitialised: false;
-    }
-  | {
-      isInitialised: true;
-      client: MongoClient;
-      connection: DbConnection;
-    };
+const { MONGODB_URI, MONGO_INITDB_DATABASE } = process.env;
 
+/**
+ * Class representing a MongoDB client.
+ */
 export class MongoDbClient {
-  private dbName: string;
+  /**
+   * MongoDB connection string.
+   */
+  private uri: string = MONGODB_URI as string;
 
-  private dbConnectionString: string;
+  /**
+   * MongoDB database name.
+   */
+  private name: string = MONGO_INITDB_DATABASE as string;
 
-  private mongoDbClientConnection: MongoDbClientConnection = {
+  /**
+   * Client connection status.
+   */
+  private clientConnection: MongoConnectionStatus = {
     isInitialised: false,
   };
 
-  constructor({ dbName, dbConnectionString }: ConnectionOptions) {
-    this.dbName = dbName;
-    this.dbConnectionString = dbConnectionString;
-  }
-
   /**
-   * Gets the initialised client. If the client is not yet
-   * initialised, initialises the client and then returns it
-   * @returns The initialised client
+   * Gets the initialised client. If the client is not yet initialised,
+   * initialises the client and then returns it.
+   *
+   * @returns {Promise<MongoConnectionStatus>} The initialised client.
    */
-  private async getOrInitialiseClient(): Promise<MongoDbClientConnection & { isInitialised: true }> {
-    if (this.mongoDbClientConnection.isInitialised) {
-      return this.mongoDbClientConnection;
+  private async getInitialisedClient(): Promise<MongoConnectionStatus> {
+    if (this.clientConnection.isInitialised) {
+      return this.clientConnection;
     }
-    const client = await MongoClient.connect(this.dbConnectionString);
-    const connection = client.db(this.dbName);
-    this.mongoDbClientConnection = {
+
+    const client = await MongoClient.connect(this.uri);
+    const connection = client.db(this.name);
+
+    this.clientConnection = {
       isInitialised: true,
       client,
       connection,
     };
-    return this.mongoDbClientConnection;
+
+    return this.clientConnection;
   }
 
   /**
-   * Gets the initialised connection
-   * @returns The initialised connection
+   * Gets the initialised connection.
+   *
+   * @returns {Promise<DbConnection>} The initialised connection.
+   * @throws {Error} If the client connection is not initialised.
    */
   public async getConnection(): Promise<DbConnection> {
-    return (await this.getOrInitialiseClient()).connection;
+    const client = await this.getInitialisedClient();
+
+    if (!client.isInitialised) {
+      throw new Error('Client connection is not initialised');
+    }
+
+    const { connection } = client;
+
+    return connection;
   }
 
   /**
-   * Gets a specific collection
-   * @param collectionName - The collection name to get
-   * @returns The collection
+   * Gets a specific collection.
+   *
+   * @param {CollectionName} collectionName - The collection name to get.
+   * @returns {Promise<Collection<WithoutId<DbModel<CollectionName>>>>} The collection.
+   * @throws {Error} If the client connection is not initialised.
    */
   public async getCollection<CollectionName extends MongoDbCollectionName>(
     collectionName: CollectionName,
   ): Promise<Collection<WithoutId<DbModel<CollectionName>>>> {
-    return (await this.getOrInitialiseClient()).connection.collection(collectionName);
+    const client = await this.getInitialisedClient();
+
+    if (!client.isInitialised) {
+      throw new Error('Client connection is not initialised');
+    }
+
+    return client.connection.collection(collectionName);
   }
 
   /**
-   * Gets the initialised client
-   * @returns The initialised client
+   * Gets the initialised client.
+   *
+   * @returns {Promise<MongoClient>} The initialised client.
+   * @throws {Error} If the client connection is not initialised.
    */
   public async getClient(): Promise<MongoClient> {
-    return (await this.getOrInitialiseClient()).client;
+    const client = await this.getInitialisedClient();
+
+    if (!client.isInitialised) {
+      throw new Error('Client connection is not initialised');
+    }
+
+    return client.client;
   }
 
   /**
-   * Closes the connection or, if the connection
-   * is not initialised, does nothing
+   * Closes the connection or, if the connection is not initialised, does nothing.
+   *
+   * @returns {Promise<void>}
    */
   public async close(): Promise<void> {
-    if (!this.mongoDbClientConnection.isInitialised) {
+    if (!this.clientConnection.isInitialised) {
       return;
     }
-    await this.mongoDbClientConnection.client.close();
-    this.mongoDbClientConnection = {
+
+    await this.clientConnection.client.close();
+
+    this.clientConnection = {
       isInitialised: false,
     };
   }

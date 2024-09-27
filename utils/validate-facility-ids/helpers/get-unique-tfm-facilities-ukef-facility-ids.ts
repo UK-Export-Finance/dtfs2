@@ -1,5 +1,5 @@
 import { TfmFacility } from '@ukef/dtfs2-common';
-import { mongoDbClient } from '../database-client';
+import { mongoDbClient } from '../../drivers/db-client';
 
 /**
  * Gets the unique tfm facilities UKEF facility ids
