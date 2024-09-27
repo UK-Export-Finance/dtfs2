@@ -62,8 +62,7 @@ context('Deal cancellation - reason for cancelling', () => {
       cy.url().should('eq', relative(`/case/${dealId}/deal`));
     });
 
-    // TODO: DTFS2-7296 - add this test once bank request date page is implemented
-    it.skip('continue button should take you to bank request date page', () => {
+    it('continue button should take you to bank request date page', () => {
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/request-date`));
@@ -74,6 +73,16 @@ context('Deal cancellation - reason for cancelling', () => {
       cy.clickCancelLink();
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/cancel`));
+    });
+
+    it('returning to the page should display saved data', () => {
+      const reason = 'A Reason';
+      cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox().clear(), reason);
+
+      cy.clickContinueButton();
+      cy.clickBackLink();
+
+      reasonForCancellingPage.reasonForCancellingTextBox().should('have.value', reason);
     });
   });
 
