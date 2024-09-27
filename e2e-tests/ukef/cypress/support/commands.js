@@ -1,8 +1,6 @@
 import 'cypress-file-upload';
 import './click-events';
 
-import './commands/click-events';
-
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 

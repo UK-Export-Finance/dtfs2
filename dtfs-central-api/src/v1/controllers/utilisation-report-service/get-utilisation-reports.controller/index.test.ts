@@ -9,6 +9,7 @@ import {
   UploadedByUserDetails,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
+  REQUEST_PLATFORM_TYPE,
 } from '@ukef/dtfs2-common';
 import { GetUtilisationReportsByBankIdAndOptionsRequest, getUtilisationReportsByBankIdAndOptions } from './index';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
@@ -189,7 +190,7 @@ describe('getUtilisationReports', () => {
 
       const azureFileInfo = AzureFileInfoEntity.create({
         ...MOCK_AZURE_FILE_INFO,
-        requestSource: { platform: 'PORTAL', userId: 'abc123' },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
       });
 
       const mockDate = new Date('2024-01');

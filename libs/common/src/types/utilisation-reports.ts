@@ -44,3 +44,8 @@ export type UtilisationReportDataValidationError = {
 export type PremiumPaymentsFilters = {
   facilityId?: string;
 };
+
+export type UtilisationReportFacilityData = {
+  baseCurrency: string;
+  facilityUtilisation: string;
+};

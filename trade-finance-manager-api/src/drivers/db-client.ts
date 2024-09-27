@@ -1,4 +1,8 @@
 import { MongoDbClient } from '@ukef/dtfs2-common/mongo-db-client';
-import { dbName, url } from '../config/database.config';
 
-export const mongoDbClient = new MongoDbClient({ dbName, dbConnectionString: url });
+/**
+ * An instance of the MongoDbClient class.
+ *
+ * This client is used to interact with the MongoDB database.
+ */
+export const mongoDbClient = new MongoDbClient();

@@ -1,3 +1,4 @@
+import { REQUEST_PLATFORM_TYPE } from '../../constants';
 import { AzureFileInfoEntity, DbRequestSource, FeeRecordEntity, UtilisationReportEntity, ReportPeriodPartialEntity } from '../../sql-db-entities';
 import { UtilisationReportReconciliationStatus } from '../../types';
 import { MOCK_AZURE_FILE_INFO } from './azure-file-info.mock';
@@ -21,7 +22,7 @@ export class UtilisationReportEntityMockBuilder<ReportStatus extends Utilisation
         UtilisationReportEntity.createNotReceived({
           bankId,
           reportPeriod,
-          requestSource: { platform: 'SYSTEM' },
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.SYSTEM },
         }),
       );
     }
@@ -29,7 +30,7 @@ export class UtilisationReportEntityMockBuilder<ReportStatus extends Utilisation
     const report = new UtilisationReportEntity();
     const userId = '5ce819935e539c343f141ece';
     const requestSource: DbRequestSource = {
-      platform: 'PORTAL',
+      platform: REQUEST_PLATFORM_TYPE.PORTAL,
       userId,
     };
 
@@ -40,7 +41,7 @@ export class UtilisationReportEntityMockBuilder<ReportStatus extends Utilisation
     report.azureFileInfo = AzureFileInfoEntity.create({ ...MOCK_AZURE_FILE_INFO, requestSource });
     report.status = status;
     report.uploadedByUserId = userId;
-    report.updateLastUpdatedBy({ platform: 'PORTAL', userId });
+    report.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.PORTAL, userId });
     return new UtilisationReportEntityMockBuilder(report);
   }
 
@@ -59,7 +60,7 @@ export class UtilisationReportEntityMockBuilder<ReportStatus extends Utilisation
     return this;
   }
 
-  public withDateUploaded(dateUploaded: ReportStatus extends 'REPORT_NOT_RECEIVED' ? null : Date): UtilisationReportEntityMockBuilder<ReportStatus> {
+  public withDateUploaded(dateUploaded: null | Date): UtilisationReportEntityMockBuilder<ReportStatus> {
     this.report.dateUploaded = dateUploaded;
     return this;
   }
@@ -71,7 +72,7 @@ export class UtilisationReportEntityMockBuilder<ReportStatus extends Utilisation
     return this;
   }
 
-  public withUploadedByUserId(uploadedByUserId: ReportStatus extends 'REPORT_NOT_RECEIVED' ? null : string): UtilisationReportEntityMockBuilder<ReportStatus> {
+  public withUploadedByUserId(uploadedByUserId: null | string): UtilisationReportEntityMockBuilder<ReportStatus> {
     this.report.uploadedByUserId = uploadedByUserId;
     return this;
   }

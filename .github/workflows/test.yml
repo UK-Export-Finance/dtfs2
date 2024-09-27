@@ -19,7 +19,7 @@
 # portal, gef-ui, trade-finance-manager-ui
 # Generates code coverage reports for UI integration tests.
 #
-# 5-8. End-to-End (E2E) Tests:
+# 5-7. End-to-End (E2E) Tests:
 # Runs tests simulating user journeys through different parts of the application:
 # portal (various scenarios)
 # gef
@@ -27,6 +27,9 @@
 # ukef
 # Uses Cypress for E2E testing.
 # Initializes the environment with data before tests.
+#
+# 8. End-to-End (E2E) - Feature flags (FF)
+# Run tests 5-7 with all feature flags set to true
 #
 # Additional Notes:
 # Workflow runs on pull requests to the main branch and pushes to specific branches.
@@ -82,13 +85,11 @@ on:
 env:
   environment: dev
   timezone: ${{ vars.TIMEZONE }}
-  node: ${{ vars.NODE_VERSION }}
   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
   MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
   MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
-  MONGODB_URI_QA: ${{ secrets.MONGODB_URI_QA }}
   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
   AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
@@ -184,18 +185,18 @@ jobs:
       cancel-in-progress: true
 
     steps:
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
         uses: actions/checkout@v4
-
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.node }}
 
       - name: Dependencies
         working-directory: ./
@@ -207,6 +208,8 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: |
           sleep 100s
           npm run load
@@ -219,7 +222,7 @@ jobs:
 
       - name: Execute
         env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI_QA }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
 
       - name: Stop
@@ -227,7 +230,7 @@ jobs:
         run: docker compose down
 
       - name: Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -253,18 +256,18 @@ jobs:
       cancel-in-progress: true
 
     steps:
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
         uses: actions/checkout@v4
-
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.node }}
 
       - name: Dependencies
         working-directory: ./
@@ -275,7 +278,7 @@ jobs:
         run: npm run api-test
 
       - name: Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -312,18 +315,18 @@ jobs:
       cancel-in-progress: true
 
     steps:
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
         uses: actions/checkout@v4
-
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.node }}
 
       - name: Dependencies
         working-directory: ./
@@ -334,7 +337,7 @@ jobs:
         run: npm run unit-test
 
       - name: Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-test
@@ -378,18 +381,18 @@ jobs:
       cancel-in-progress: true
 
     steps:
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
       - name: Repository
         uses: actions/checkout@v4
-
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.node }}
 
       - name: Dependencies
         working-directory: ./
@@ -400,7 +403,7 @@ jobs:
         run: npm run unit-test-ff
 
       - name: Coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-test
@@ -463,16 +466,16 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Repository
-        uses: actions/checkout@v4
-
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Repository
+        uses: actions/checkout@v4
 
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -485,6 +488,8 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: |
           sleep 100s
           npm run load
@@ -498,6 +503,7 @@ jobs:
       - name: Execute
         working-directory: ./e2e-tests
         env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
           TZ: ${{ vars.TIMEZONE }}
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec "./portal/cypress/e2e/journeys/${{ matrix.spec }}"
@@ -525,11 +531,13 @@ jobs:
             'exporter/**/*.spec.js',
             'external/**/*.spec.js',
             'facility/pre-submission/*.spec.js',
-            'facility/review-ukef-approval/*.spec.js',
+            'facility/pre-submission/facility-end-date-disabled/*.spec.js',
+            'facility/review-ukef-approval/facility-end-date-disabled/*.spec.js',
             'facility/version-0/*.spec.js',
             'facility/unissued-facilities/AIN/*.spec.js',
             'facility/unissued-facilities/MIN/*.spec.js',
-            'maker/**/*.spec.js',
+            'maker/*.spec.js',
+            'maker/facility-end-date-disabled/*.spec.js',
             'scenarios/**/*.spec.js',
             'security/**/*.spec.js',
             'ukef/**/*.spec.js',
@@ -541,16 +549,16 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Repository
-        uses: actions/checkout@v4
-
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Repository
+        uses: actions/checkout@v4
 
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -563,6 +571,8 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: |
           sleep 100s
           npm run load
@@ -576,6 +586,7 @@ jobs:
       - name: Execute
         working-directory: ./e2e-tests
         env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
           TZ: ${{ vars.TIMEZONE }}
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec "./gef/cypress/e2e/${{ matrix.spec }}"
@@ -593,9 +604,13 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec:
-          [
-            'case/**/*.spec.js',
+        spec: [
+            'case/*.spec.js',
+            'case/activities/*.spec.js',
+            'case/deal-cancellation-disabled/*.spec.js',
+            'case/documents/*.spec.js',
+            'case/parties/*.spec.js',
+            'case/tasks/*.spec.js',
             'case-amendments/add-bank-decision/*.spec.js',
             'case-amendments/add-underwriter-decision/*.spec.js',
             'case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
@@ -626,16 +641,16 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Repository
-        uses: actions/checkout@v4
-
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Repository
+        uses: actions/checkout@v4
 
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -648,6 +663,8 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: |
           sleep 100s
           npm run load
@@ -661,6 +678,7 @@ jobs:
       - name: Execute
         working-directory: ./e2e-tests
         env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
           TZ: ${{ vars.TIMEZONE }}
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec "./tfm/cypress/e2e/journeys/${{ matrix.spec }}"
@@ -707,16 +725,16 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Repository
-        uses: actions/checkout@v4
-
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Repository
+        uses: actions/checkout@v4
 
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -729,6 +747,8 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: |
           sleep 100s
           npm run load
@@ -742,6 +762,7 @@ jobs:
       - name: Execute
         working-directory: ./e2e-tests
         env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
           TZ: ${{ vars.TIMEZONE }}
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec "./ukef/cypress/e2e/journeys/portal/${{ matrix.spec }}"
@@ -776,16 +797,23 @@ jobs:
             './gef/cypress/e2e/exporter/**/*.spec.js',
             './gef/cypress/e2e/external/**/*.spec.js',
             './gef/cypress/e2e/facility/pre-submission/*.spec.js',
-            './gef/cypress/e2e/facility/review-ukef-approval/*.spec.js',
+            './gef/cypress/e2e/facility/pre-submission/facility-end-date-enabled/*.spec.js',
+            './gef/cypress/e2e/facility/review-ukef-approval/facility-end-date-enabled/*.spec.js',
             './gef/cypress/e2e/facility/version-0/*.spec.js',
             './gef/cypress/e2e/facility/unissued-facilities/AIN/*.spec.js',
             './gef/cypress/e2e/facility/unissued-facilities/MIN/*.spec.js',
-            './gef/cypress/e2e/maker/**/*.spec.js',
+            './gef/cypress/e2e/maker/*.spec.js',
+            './gef/cypress/e2e/maker/facility-end-date-enabled/*.spec.js',
             './gef/cypress/e2e/scenarios/**/*.spec.js',
             './gef/cypress/e2e/security/**/*.spec.js',
             './gef/cypress/e2e/ukef/**/*.spec.js',
             './gef/cypress/e2e/upload/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/activities/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/deal-cancellation-enabled/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/documents/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/parties/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/tasks/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/add-bank-decision/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/add-underwriter-decision/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
@@ -802,6 +830,7 @@ jobs:
             './tfm/cypress/e2e/journeys/case-amendments/underwriting-page-unassigned/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/user-flow/*.spec.js',
             './tfm/cypress/e2e/journeys/case-underwriting/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/deal-cancellation/**/*.spec.js',
             './tfm/cypress/e2e/journeys/deals/**/*.spec.js',
             './tfm/cypress/e2e/journeys/facility/**/*.spec.js',
             './tfm/cypress/e2e/journeys/feedback/**/*.spec.js',
@@ -817,16 +846,16 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Repository
-        uses: actions/checkout@v4
-
       - name: Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.node }}
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Repository
+        uses: actions/checkout@v4
 
       - name: Timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: ${{ needs.setup.outputs.timezone }}
 
@@ -839,6 +868,8 @@ jobs:
 
       - name: Initialise
         working-directory: ./utils
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
         run: |
           sleep 100s
           npm run load
@@ -858,6 +889,7 @@ jobs:
       - name: Execute
         working-directory: ./e2e-tests
         env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI_LOCALHOST }}
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
           TZ: ${{ vars.TIMEZONE }}
         run: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec "${{ matrix.spec }}"

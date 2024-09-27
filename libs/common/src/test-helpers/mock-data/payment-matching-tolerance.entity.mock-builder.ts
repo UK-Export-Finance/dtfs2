@@ -1,5 +1,6 @@
 import { DbRequestSource, PaymentMatchingToleranceEntity } from '../../sql-db-entities';
 import { Currency } from '../../types';
+import { REQUEST_PLATFORM_TYPE } from '../../constants';
 
 export class PaymentMatchingToleranceEntityMockBuilder {
   private readonly tolerance: PaymentMatchingToleranceEntity;
@@ -12,7 +13,7 @@ export class PaymentMatchingToleranceEntityMockBuilder {
     const data = new PaymentMatchingToleranceEntity();
     const userId = '5ce819935e539c343f141ece';
     const requestSource: DbRequestSource = {
-      platform: 'PORTAL',
+      platform: REQUEST_PLATFORM_TYPE.PORTAL,
       userId,
     };
 

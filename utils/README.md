@@ -111,7 +111,9 @@ In order to run this script against a specific environment, you need to update t
 ```sh
 # Mongo DB
 MONGO_INITDB_DATABASE=
-MONGODB_URI_QA=
+MONGO_INITDB_ROOT_USERNAME=
+MONGO_INITDB_ROOT_PASSWORD=
+MONGODB_URI=
 
 # SQL
 SQL_DB_HOST=
