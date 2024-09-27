@@ -70,6 +70,9 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
     });
 
     it('update facility page should show correct value for is using facility end date', () => {
+      applicationPreview.unissuedFacilitiesReviewLink().click();
+      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
+
       aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
       aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
     });
