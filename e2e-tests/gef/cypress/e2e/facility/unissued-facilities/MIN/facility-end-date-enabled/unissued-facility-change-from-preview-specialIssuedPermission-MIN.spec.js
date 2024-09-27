@@ -84,7 +84,7 @@ context('Unissued Facilities MIN - change to issued from preview page - specialI
       cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), today.year);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), twoYears.Day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), twoYears.day);
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), twoYears.month);
       cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), twoYears.year);
 
