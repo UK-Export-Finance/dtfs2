@@ -1,5 +1,5 @@
 import { DEAL_SUBMISSION_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
-import { isDealCancellationEnabled } from './deal-cancellation-enabled.helper';
+import { canSubmissionTypeBeCancelled, isDealCancellationEnabled } from './deal-cancellation-enabled.helper';
 import { TfmSessionUser } from '../../types/tfm-session-user';
 
 const pimUser = { teams: [TEAM_IDS.PIM] } as TfmSessionUser;
@@ -24,5 +24,19 @@ describe('dealCancellationEnabled', () => {
         expect(result).toEqual(false);
       });
     });
+  });
+});
+
+describe('canSubmissionTypeBeCancelled', () => {
+  it.each([AIN, MIN])('returns true when deal submission type is %s', (submissionType) => {
+    const result = canSubmissionTypeBeCancelled(submissionType);
+
+    expect(result).toBe(true);
+  });
+
+  it(`returns false when deal submission type is ${MIA}`, () => {
+    const result = canSubmissionTypeBeCancelled(MIA);
+
+    expect(result).toBe(false);
   });
 });

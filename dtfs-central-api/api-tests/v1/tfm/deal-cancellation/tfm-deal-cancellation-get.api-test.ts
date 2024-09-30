@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { HttpStatusCode } from 'axios';
 import { MONGO_DB_COLLECTIONS, AnyObject, TFM_DEAL_STAGE } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
@@ -78,7 +79,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
       it('should return 404', async () => {
         const { status } = await testApi.get(dealCancellationUrl);
 
-        expect(status).toEqual(404);
+        expect(status).toEqual(HttpStatusCode.NotFound);
       });
     });
 
@@ -108,14 +109,14 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
         const getCancellationResponse = await testApi.get(dealCancellationUrl);
 
         expect(getCancellationResponse.body).toEqual(dealCancellation);
-        expect(getCancellationResponse.status).toEqual(200);
+        expect(getCancellationResponse.status).toEqual(HttpStatusCode.Ok);
       });
 
-      it('should return 404 if the deal does not have an existing cancellation', async () => {
+      it('should return an empty object if the deal does not have an existing cancellation', async () => {
         const getCancellationResponse = await testApi.get(dealCancellationUrl);
 
-        expect(getCancellationResponse.status).toEqual(404);
-        expect(getCancellationResponse.body).toEqual({ status: 404, message: `Cancellation not found on Deal: ${dealId}` });
+        expect(getCancellationResponse.body).toEqual({});
+        expect(getCancellationResponse.status).toEqual(HttpStatusCode.Ok);
       });
 
       it('should return 404 if dealId is valid but not associated to a record', async () => {
@@ -123,8 +124,8 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
 
         const getCancellationResponse = await testApi.get(`/v1/tfm/deals/${validButNonExistentDealId.toString()}/cancellation`);
 
-        expect(getCancellationResponse.status).toEqual(404);
-        expect(getCancellationResponse.body).toEqual({ status: 404, message: `Deal not found: ${validButNonExistentDealId.toString()}` });
+        expect(getCancellationResponse.status).toEqual(HttpStatusCode.NotFound);
+        expect(getCancellationResponse.body).toEqual({ status: HttpStatusCode.NotFound, message: `Deal not found: ${validButNonExistentDealId.toString()}` });
       });
 
       it('should return 400 if invalid dealId', async () => {
