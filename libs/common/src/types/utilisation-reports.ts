@@ -50,3 +50,8 @@ export type PaymentDetailsFilters = {
   paymentCurrency?: Currency;
   paymentReference?: string;
 };
+
+export type UtilisationReportFacilityData = {
+  baseCurrency: string;
+  facilityUtilisation: string;
+};

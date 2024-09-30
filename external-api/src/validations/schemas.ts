@@ -10,10 +10,6 @@ export const schemas = {
     // 2. PORT
     PORT: Joi.number().default(5002),
 
-    // 3. MongoDB
-    MONGO_INITDB_DATABASE: Joi.string().required(),
-    MONGODB_URI: Joi.string().required(),
-
     // External
 
     // 1. APIM

@@ -1,4 +1,4 @@
-import { COMPANY_REGISTRATION_NUMBER } from '..';
+import { COMPANY_REGISTRATION_NUMBER } from '../constants';
 import { isNonEmptyString, isString } from './string';
 
 /**
@@ -11,7 +11,11 @@ export const asString = (value: unknown, context: string): string => {
     throw new Error(`Expected ${context} to be a string, but was ${typeof value}`);
   }
 
-  return value;
+  /**
+   * Ensure return is `String` primitive type and
+   * not `unknown`.
+   */
+  return String(value);
 };
 
 /**
