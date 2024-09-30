@@ -11,7 +11,7 @@ describe('at least 1 special character', () => {
       password: 'aaaaa',
     };
 
-    const expectedResult = [
+    const expected = [
       {
         password: {
           order: '4',
@@ -21,7 +21,7 @@ describe('at least 1 special character', () => {
     ];
 
     const matchTest = passwordAtLeastOneSpecialCharacter(user, change);
-    expect(matchTest).toEqual(expectedResult);
+    expect(matchTest).toEqual(expected);
   });
 
   it('should not return error for passwords with uppercase', () => {

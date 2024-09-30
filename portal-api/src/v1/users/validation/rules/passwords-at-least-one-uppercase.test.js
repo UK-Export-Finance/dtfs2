@@ -11,7 +11,7 @@ describe('at least 1 uppercase', () => {
       password: 'aaaaa',
     };
 
-    const expectedResult = [
+    const expected = [
       {
         password: {
           order: '5',
@@ -21,7 +21,7 @@ describe('at least 1 uppercase', () => {
     ];
 
     const matchTest = passwordAtLeastOneUppercase(user, change);
-    expect(matchTest).toEqual(expectedResult);
+    expect(matchTest).toEqual(expected);
   });
 
   it('should not return error for passwords with uppercase', () => {

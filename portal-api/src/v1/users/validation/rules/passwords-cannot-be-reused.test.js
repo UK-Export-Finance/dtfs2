@@ -24,7 +24,7 @@ describe('passwords cannot be reused', () => {
       ],
     };
 
-    const expectedResult = [
+    const expected = [
       {
         password: {
           order: '6',
@@ -34,7 +34,7 @@ describe('passwords cannot be reused', () => {
     ];
 
     const matchTest = passwordsCannotBeReused(blockedUser, change);
-    expect(matchTest).toEqual(expectedResult);
+    expect(matchTest).toEqual(expected);
   });
 
   it("should not return error for passwords that haven't been previously used", () => {
