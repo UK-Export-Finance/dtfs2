@@ -4,8 +4,6 @@
 
 {% macro render(params) %}
   {% set filters = params.filters %}
-  {% set paymentReference = params.paymentReference %}
-  {% set facilityId = params.facilityId %}
 
   {% if filters.currency %}
     {{ govukRadios({
@@ -24,9 +22,9 @@
   {% endif %}
 
   {{ govukInput({
-    id: 'paymentDetailsPaymentReference',
+    id: 'payment-details-payment-reference-filter',
     name: 'paymentDetailsPaymentReference',
-    value: paymentReference,
+    value: filters.paymentReference,
     label: {
       text: 'Payment reference',
       classes: 'govuk-label--m',
@@ -40,9 +38,9 @@
   }) }}
 
   {{ govukInput({
-    id: 'paymentDetailsFacilityId',
+    id: 'payment-details-facility-id-filter',
     name: 'paymentDetailsFacilityId',
-    value: facilityId,
+    value: filters.facilityId,
     label: {
       text: 'Facility ID',
       classes: 'govuk-label--m',

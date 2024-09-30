@@ -4,6 +4,7 @@ import {
   FeeRecordStatus,
   KeyingSheetAdjustmentChange,
   KeyingSheetRowStatus,
+  PaymentDetailsFilters,
   PremiumPaymentsFilters,
   SessionBank,
 } from '@ukef/dtfs2-common';
@@ -107,4 +108,5 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   enablePaymentsReceivedSorting: boolean;
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
+  paymentDetailsFilters?: PaymentDetailsFilters;
 };

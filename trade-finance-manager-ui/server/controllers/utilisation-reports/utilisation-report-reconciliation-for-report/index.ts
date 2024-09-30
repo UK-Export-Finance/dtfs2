@@ -15,6 +15,8 @@ import { extractQueryAndSessionData } from './extract-query-and-session-data';
 export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   query: {
     premiumPaymentsFacilityId?: string;
+    paymentDetailsFacilityId?: string;
+    paymentDetailsPaymentReference?: string;
     selectedFeeRecordIds?: string;
   };
 }>;
@@ -45,7 +47,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
   const { reportId } = req.params;
 
   try {
-    const { premiumPaymentsFacilityId, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
+    const { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
 
     const { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds } = req.session;
 
@@ -53,15 +55,17 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
     delete req.session.checkedCheckboxIds;
     delete req.session.generateKeyingDataErrorKey;
 
-    const { premiumPaymentsFilters, premiumPaymentsFilterError, premiumPaymentsTableDataError, isCheckboxChecked } = extractQueryAndSessionData(
-      { premiumPaymentsFacilityId, selectedFeeRecordIdsQuery },
-      { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
-      req.originalUrl,
-    );
+    const { premiumPaymentsFilters, premiumPaymentsFilterError, premiumPaymentsTableDataError, paymentDetailsFilters, isCheckboxChecked } =
+      extractQueryAndSessionData(
+        { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, selectedFeeRecordIdsQuery },
+        { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
+        req.originalUrl,
+      );
 
     const { premiumPayments, paymentDetails, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
       premiumPaymentsFilters,
+      paymentDetailsFilters,
       userToken,
     );
 
@@ -88,6 +92,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       premiumPayments: premiumPaymentsViewModel,
       keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,
+      paymentDetailsFilters,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

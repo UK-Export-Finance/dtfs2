@@ -7,7 +7,11 @@ jest.mock('./validate-facility-id-query');
 
 describe('extractQueryAndSessionData', () => {
   const ORIGINAL_URL = '/original-url';
+
   const PREMIUM_PAYMENTS_FACILITY_ID_QUERY = '1234';
+
+  const PAYMENT_DETAILS_FACILITY_ID_QUERY = '5678';
+  const PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY = 'some-payment-reference';
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -49,6 +53,36 @@ describe('extractQueryAndSessionData', () => {
       // Assert
       expect(validateFacilityIdQuery).toHaveBeenCalledWith(PREMIUM_PAYMENTS_FACILITY_ID_QUERY, ORIGINAL_URL, '#premium-payments-facility-id-filter');
       expect(result.premiumPaymentsFilterError).toEqual(mockError);
+    });
+  });
+
+  describe('payment details filters', () => {
+    it('uses provided paymentDetailsFacilityId', () => {
+      // Arrange
+      const queryParams = {
+        paymentDetailsFacilityId: PAYMENT_DETAILS_FACILITY_ID_QUERY,
+      };
+      const sessionData = {};
+
+      // Act
+      const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
+
+      // Assert
+      expect(result.paymentDetailsFilters.facilityId).toBe(PAYMENT_DETAILS_FACILITY_ID_QUERY);
+    });
+
+    it('uses provided paymentDetailsPaymentReference', () => {
+      // Arrange
+      const queryParams = {
+        paymentDetailsPaymentReference: PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY,
+      };
+      const sessionData = {};
+
+      // Act
+      const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
+
+      // Assert
+      expect(result.paymentDetailsFilters.paymentReference).toBe(PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY);
     });
   });
 

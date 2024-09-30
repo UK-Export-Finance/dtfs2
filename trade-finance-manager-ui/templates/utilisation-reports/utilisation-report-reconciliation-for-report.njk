@@ -162,17 +162,17 @@
   {% else %}
     <div class="moj-filter-layout">
 
+      {# TODO FN-2311: Need to pass paymentDetailsSelectedFilters in through the view model for this page. #}
+
       {{ paymentDetailsFiltersPanel.render({
-        filters: filters,
-        selectedFilters: selectedFilters,
-        paymentReference: paymentReference,
-        facilityId: facilityId
+        filters: paymentDetailsFilters,
+        selectedFilters: paymentDetailsSelectedFilters
       }) }}
 
       <div class="moj-filter-layout__content">
 
         {{ paymentDetailsFiltersActionBar.render({
-          selectedFilters: selectedFilters
+          selectedFilters: paymentDetailsSelectedFilters
         }) }}
 
         <div class="moj-scrollable-pane">

@@ -4,14 +4,10 @@
 {% macro render(params) %}
   {% set filters = params.filters %}
   {% set selectedFilters = params.selectedFilters %}
-  {% set paymentReference = params.paymentReference %}
-  {% set facilityId = params.facilityId %}
 
   {% set filterOptionsHtml %}
     {{ paymentDetailsFiltersForm.render({
-      filters: filters,
-      paymentReference: paymentReference,
-      facilityId: facilityId
+      filters: filters
     }) }}
   {% endset %}
 

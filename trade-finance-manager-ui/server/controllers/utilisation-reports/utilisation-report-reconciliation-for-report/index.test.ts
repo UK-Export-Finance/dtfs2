@@ -26,7 +26,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
     const reportId = '1';
     const premiumPaymentsFacilityId = '1234';
-    const originalUrl = '?premiumPaymentsFacilityId';
+    const paymentDetailsFacilityId = '5678';
+    const paymentDetailsPaymentReference = 'some-payment-reference';
+    const originalUrl = '?';
 
     const getHttpMocksWithSessionData = (sessionData: Partial<SessionData>) =>
       httpMocks.createMocks({
@@ -36,6 +38,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         },
         query: {
           premiumPaymentsFacilityId,
+          paymentDetailsFacilityId,
+          paymentDetailsPaymentReference,
         },
         originalUrl,
       });
@@ -50,13 +54,18 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         facilityId: premiumPaymentsFacilityId,
       };
 
+      const paymentDetailsFilters = {
+        facilityId: paymentDetailsFacilityId,
+        paymentReference: paymentDetailsPaymentReference,
+      };
+
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockRejectedValue(new Error('Some error'));
 
       // Act
       await getUtilisationReportReconciliationByReportId(req, res);
 
       // Assert
-      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsFilters, userToken);
+      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsFilters, paymentDetailsFilters, userToken);
       expect(res._getRenderView()).toBe('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user });
     });
@@ -147,13 +156,18 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         facilityId: premiumPaymentsFacilityId,
       };
 
+      const paymentDetailsFilters = {
+        facilityId: paymentDetailsFacilityId,
+        paymentReference: paymentDetailsPaymentReference,
+      };
+
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
 
       // Act
       await getUtilisationReportReconciliationByReportId(req, res);
 
       // Assert
-      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsFilters, userToken);
+      expect(api.getUtilisationReportReconciliationDetailsById).toHaveBeenCalledWith(reportId, premiumPaymentsFilters, paymentDetailsFilters, userToken);
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       expect(res._getRenderData()).toEqual<UtilisationReportReconciliationForReportViewModel>({
         user: MOCK_TFM_SESSION_USER,
@@ -164,6 +178,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         reportId: '1',
         premiumPayments,
         premiumPaymentsFilters,
+        paymentDetailsFilters,
         keyingSheet: [],
         paymentDetails: paymentDetailsViewModel,
       });
@@ -251,7 +266,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.enablePaymentsReceivedSorting).toBe(false);
     });
 
-    it('sets facility ID query error when invalid facility ID query value used', async () => {
+    it('sets premium payments facility ID query error when invalid premium payments facility ID query value used', async () => {
       // Arrange
       const premiumPaymentsFacilityIdParam = 'abc';
       const { req, res } = httpMocks.createMocks({
@@ -262,7 +277,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         query: {
           premiumPaymentsFacilityId: premiumPaymentsFacilityIdParam,
         },
-        originalUrl,
+        originalUrl: '?premiumPaymentsFacilityId',
       });
 
       const feeRecordPaymentGroups = [aFeeRecordPaymentGroupWithoutReceivedPayments(), aFeeRecordPaymentGroupWithoutReceivedPayments()];
