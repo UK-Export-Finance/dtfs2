@@ -21,8 +21,6 @@ let token;
 const now = new Date();
 const nextYear = Number(todayYear) + 1;
 
-const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
-
 context('Facility End Date Page - feature flag enabled', () => {
   let application;
   let facilityId;
@@ -54,191 +52,183 @@ context('Facility End Date Page - feature flag enabled', () => {
     cy.saveSession();
   });
 
-  if (facilityEndDateEnabled) {
-    it('displays the correct elements', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+  it('displays the correct elements', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
 
-      aboutFacility.isUsingFacilityEndDateYes().click();
-      cy.clickSaveAndReturnButton();
+    aboutFacility.isUsingFacilityEndDateYes().click();
+    cy.clickSaveAndReturnButton();
 
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      backLink();
-      headingCaption();
-      facilityEndDate.facilityEndDateDay();
-      facilityEndDate.facilityEndDateMonth();
-      facilityEndDate.facilityEndDateYear();
-      facilityEndDate.facilityEndDateDetails();
-      continueButton();
-      saveAndReturnButton();
-    });
+    backLink();
+    headingCaption();
+    facilityEndDate.facilityEndDateDay();
+    facilityEndDate.facilityEndDateMonth();
+    facilityEndDate.facilityEndDateYear();
+    facilityEndDate.facilityEndDateDetails();
+    continueButton();
+    saveAndReturnButton();
+  });
 
-    it('redirects the user to `About this facility` page when clicking on back link', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+  it('redirects the user to `About this facility` page when clicking on back link', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.clickBackLink();
+    cy.clickBackLink();
 
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-    });
+    cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+  });
 
-    it('validates the form when clicking on Continue', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+  it('validates the form when clicking on Continue', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.clickContinueButton();
-      errorSummary();
-      facilityEndDate.facilityEndDateError();
-    });
+    cy.clickContinueButton();
+    errorSummary();
+    facilityEndDate.facilityEndDateError();
+  });
 
-    it('redirects user to application page when clicking on `save and return` button', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
-      cy.clickSaveAndReturnButton();
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
-    });
+  it('redirects user to application page when clicking on `save and return` button', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+    cy.clickSaveAndReturnButton();
+    cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
+  });
 
-    it('validates the form if not blank when clicking on `save and return` button', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+  it('validates the form if not blank when clicking on `save and return` button', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
-      facilityEndDate.facilityEndDateMonth().clear();
-      cy.clickSaveAndReturnButton();
-      errorSummary();
-      facilityEndDate.facilityEndDateError();
-    });
+    cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
+    facilityEndDate.facilityEndDateMonth().clear();
+    cy.clickSaveAndReturnButton();
+    errorSummary();
+    facilityEndDate.facilityEndDateError();
+  });
 
-    it('redirects user to application page when clicking on `save and return` button and form has been successfully filled in', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+  it('redirects user to application page when clicking on `save and return` button and form has been successfully filled in', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), todayMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), nextYear);
+    cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
+    cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), todayMonth);
+    cy.keyboardInput(facilityEndDate.facilityEndDateYear(), nextYear);
 
-      cy.clickSaveAndReturnButton();
+    cy.clickSaveAndReturnButton();
 
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
-    });
+    cy.url().should('eq', relative(`/gef/application-details/${application.id}`));
+  });
 
-    it('when cover start date is given, it validates facility end date is after the cover start date', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      cy.keyboardInput(aboutFacility.facilityName(), 'Name');
-      aboutFacility.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacility.coverStartDateDay(), tomorrowDay);
-      cy.keyboardInput(aboutFacility.coverStartDateMonth(), tomorrowMonth);
-      cy.keyboardInput(aboutFacility.coverStartDateYear(), tomorrowYear);
-      cy.keyboardInput(aboutFacility.coverEndDateDay(), todayDay);
-      cy.keyboardInput(aboutFacility.coverEndDateMonth(), todayMonth);
-      cy.keyboardInput(aboutFacility.coverEndDateYear(), nextYear);
-      aboutFacility.isUsingFacilityEndDateYes().click();
+  it('when cover start date is given, it validates facility end date is after the cover start date', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+    cy.keyboardInput(aboutFacility.facilityName(), 'Name');
+    aboutFacility.shouldCoverStartOnSubmissionNo().click();
+    cy.keyboardInput(aboutFacility.coverStartDateDay(), tomorrowDay);
+    cy.keyboardInput(aboutFacility.coverStartDateMonth(), tomorrowMonth);
+    cy.keyboardInput(aboutFacility.coverStartDateYear(), tomorrowYear);
+    cy.keyboardInput(aboutFacility.coverEndDateDay(), todayDay);
+    cy.keyboardInput(aboutFacility.coverEndDateMonth(), todayMonth);
+    cy.keyboardInput(aboutFacility.coverEndDateYear(), nextYear);
+    aboutFacility.isUsingFacilityEndDateYes().click();
 
-      cy.clickContinueButton();
+    cy.clickContinueButton();
 
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+    cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), todayMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), todayYear);
+    cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
+    cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), todayMonth);
+    cy.keyboardInput(facilityEndDate.facilityEndDateYear(), todayYear);
 
-      cy.clickContinueButton();
-      errorSummary();
-      facilityEndDate.facilityEndDateError();
+    cy.clickContinueButton();
+    errorSummary();
+    facilityEndDate.facilityEndDateError();
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), tomorrowDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), tomorrowMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), tomorrowYear);
+    cy.keyboardInput(facilityEndDate.facilityEndDateDay(), tomorrowDay);
+    cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), tomorrowMonth);
+    cy.keyboardInput(facilityEndDate.facilityEndDateYear(), tomorrowYear);
 
-      cy.clickContinueButton();
-      errorSummary().should('not.exist');
-    });
+    cy.clickContinueButton();
+    errorSummary().should('not.exist');
+  });
 
-    it('when cover start date is not given, it validates facility end date is after today', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      cy.keyboardInput(aboutFacility.facilityName(), 'Name');
-      aboutFacility.shouldCoverStartOnSubmissionYes().click();
-      cy.keyboardInput(aboutFacility.coverEndDateDay(), todayDay);
-      cy.keyboardInput(aboutFacility.coverEndDateMonth(), todayMonth);
-      cy.keyboardInput(aboutFacility.coverEndDateYear(), nextYear);
-      aboutFacility.isUsingFacilityEndDateYes().click();
+  it('when cover start date is not given, it validates facility end date is after today', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+    cy.keyboardInput(aboutFacility.facilityName(), 'Name');
+    aboutFacility.shouldCoverStartOnSubmissionYes().click();
+    cy.keyboardInput(aboutFacility.coverEndDateDay(), todayDay);
+    cy.keyboardInput(aboutFacility.coverEndDateMonth(), todayMonth);
+    cy.keyboardInput(aboutFacility.coverEndDateYear(), nextYear);
+    aboutFacility.isUsingFacilityEndDateYes().click();
 
-      cy.clickContinueButton();
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+    cy.clickContinueButton();
+    cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), yesterdayDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), yesterdayMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), yesterdayYear);
+    cy.keyboardInput(facilityEndDate.facilityEndDateDay(), yesterdayDay);
+    cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), yesterdayMonth);
+    cy.keyboardInput(facilityEndDate.facilityEndDateYear(), yesterdayYear);
 
-      cy.clickContinueButton();
-      errorSummary();
-      facilityEndDate.facilityEndDateError();
+    cy.clickContinueButton();
+    errorSummary();
+    facilityEndDate.facilityEndDateError();
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), todayMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), todayYear);
+    cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
+    cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), todayMonth);
+    cy.keyboardInput(facilityEndDate.facilityEndDateYear(), todayYear);
 
-      cy.clickContinueButton();
-      errorSummary().should('not.exist');
-    });
+    cy.clickContinueButton();
+    errorSummary().should('not.exist');
+  });
 
-    it('validates facility end date is less than 6 years in the future', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+  it('validates facility end date is less than 6 years in the future', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), now.getDate() + 1);
+    cy.keyboardInput(facilityEndDate.facilityEndDateDay(), now.getDate() + 1);
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), now.getMonth() + 1);
+    cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), now.getMonth() + 1);
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), now.getFullYear() + 7);
+    cy.keyboardInput(facilityEndDate.facilityEndDateYear(), now.getFullYear() + 7);
 
-      cy.clickContinueButton();
-      errorSummary();
-      facilityEndDate.facilityEndDateError();
-    });
+    cy.clickContinueButton();
+    errorSummary();
+    facilityEndDate.facilityEndDateError();
+  });
 
-    it('redirects the user to `provided facility` page when form has been successfully filled in', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+  it('redirects the user to `provided facility` page when form has been successfully filled in', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), todayMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), nextYear);
+    cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
+    cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), todayMonth);
+    cy.keyboardInput(facilityEndDate.facilityEndDateYear(), nextYear);
 
-      cy.clickContinueButton();
+    cy.clickContinueButton();
 
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
-    });
+    cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/provided-facility`));
+  });
 
-    it('stores the inputted values', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+  it('stores the inputted values', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
-      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), todayMonth);
-      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), nextYear);
+    cy.keyboardInput(facilityEndDate.facilityEndDateDay(), todayDay);
+    cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), todayMonth);
+    cy.keyboardInput(facilityEndDate.facilityEndDateYear(), nextYear);
 
-      cy.clickContinueButton();
+    cy.clickContinueButton();
 
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
-      facilityEndDate.facilityEndDateDay().should('have.value', now.getDate());
-      facilityEndDate.facilityEndDateMonth().should('have.value', now.getMonth() + 1);
-      facilityEndDate.facilityEndDateYear().should('have.value', now.getFullYear() + 1);
-    });
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+    facilityEndDate.facilityEndDateDay().should('have.value', now.getDate());
+    facilityEndDate.facilityEndDateMonth().should('have.value', now.getMonth() + 1);
+    facilityEndDate.facilityEndDateYear().should('have.value', now.getFullYear() + 1);
+  });
 
-    it('redirects to the Application Details page when not using facility end date ', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-      cy.keyboardInput(aboutFacility.facilityName(), 'Name');
-      aboutFacility.shouldCoverStartOnSubmissionYes().click();
-      cy.keyboardInput(aboutFacility.coverEndDateDay(), todayDay);
-      cy.keyboardInput(aboutFacility.coverEndDateMonth(), todayMonth);
-      cy.keyboardInput(aboutFacility.coverEndDateYear(), nextYear);
-      aboutFacility.isUsingFacilityEndDateNo().click();
-      cy.clickContinueButton();
+  it('redirects to the Application Details page when not using facility end date ', () => {
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+    cy.keyboardInput(aboutFacility.facilityName(), 'Name');
+    aboutFacility.shouldCoverStartOnSubmissionYes().click();
+    cy.keyboardInput(aboutFacility.coverEndDateDay(), todayDay);
+    cy.keyboardInput(aboutFacility.coverEndDateMonth(), todayMonth);
+    cy.keyboardInput(aboutFacility.coverEndDateYear(), nextYear);
+    aboutFacility.isUsingFacilityEndDateNo().click();
+    cy.clickContinueButton();
 
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
+    cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
 
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-    });
-  } else {
-    it('redirects to about facility page', () => {
-      cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/facility-end-date`));
-
-      cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
-    });
-  }
+    cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/about-facility`));
+  });
 });

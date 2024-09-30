@@ -62,11 +62,10 @@ context('Deal cancellation - reason for cancelling', () => {
       cy.url().should('eq', relative(`/case/${dealId}/deal`));
     });
 
-    // TODO: DTFS2-7296 - add this test once bank request date page is implemented
-    it.skip('continue button should take you to bank request date page', () => {
+    it('continue button should take you to bank request date page', () => {
       cy.clickContinueButton();
 
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/request-date`));
+      cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
     });
 
     // TODO: DTFS2-7359 - add this test once cancel link is implemented

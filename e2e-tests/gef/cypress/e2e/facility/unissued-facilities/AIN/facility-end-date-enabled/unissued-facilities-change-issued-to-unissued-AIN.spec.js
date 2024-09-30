@@ -1,35 +1,33 @@
 import { format } from 'date-fns';
 
-import relative from '../../../relativeURL';
+import relative from '../../../../relativeURL';
 
-import CONSTANTS from '../../../../fixtures/constants';
+import CONSTANTS from '../../../../../fixtures/constants';
 
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 
-import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
-import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import { backLink, cancelLink, continueButton, headingCaption, mainHeading, submitButton } from '../../../partials';
-import applicationPreview from '../../../pages/application-preview';
-import unissuedFacilityTable from '../../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
-import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import statusBanner from '../../../pages/application-status-banner';
-import facilities from '../../../pages/facilities';
-import facilityEndDate from '../../../pages/facility-end-date';
+import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
+import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { backLink, cancelLink, continueButton, headingCaption, mainHeading, submitButton } from '../../../../partials';
+import applicationPreview from '../../../../pages/application-preview';
+import unissuedFacilityTable from '../../../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
+import statusBanner from '../../../../pages/application-status-banner';
+import facilities from '../../../../pages/facilities';
+import facilityEndDate from '../../../../pages/facility-end-date';
 
 let dealId;
 let token;
 let facilityOneId;
 
-const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
-
 const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility } = multipleMockGefFacilities({
-  facilityEndDateEnabled,
+  facilityEndDateEnabled: true,
 });
 
 const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility];
 
-context('Change issued facilities back to unissued AIN (changed to issued facilities post submission)', () => {
+context('Change issued facilities back to unissued AIN (changed to issued facilities post submission) - feature flag enabled', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
@@ -118,18 +116,14 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
-      }
+      aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
       cy.clickContinueButton();
 
-      if (facilityEndDateEnabled) {
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.threeMonthsOneDayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.threeMonthsOneDayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.threeMonthsOneDayYear);
-        cy.clickContinueButton();
-      }
+      cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.threeMonthsOneDayYear);
+      cy.clickContinueButton();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       // checks the facility has been removed from unissued list
@@ -150,16 +144,12 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
-      }
+      aboutFacilityUnissued.isUsingFacilityEndDateNo().click();
 
       cy.clickContinueButton();
 
-      if (facilityEndDateEnabled) {
-        cy.fillInBankReviewDate(dateConstants.threeMonths);
-        cy.clickContinueButton();
-      }
+      cy.fillInBankReviewDate(dateConstants.threeMonths);
+      cy.clickContinueButton();
 
       unissuedFacilityTable.rows().should('have.length', 0);
       unissuedFacilityTable.allUnissuedUpdatedSuccess().contains('Facility stages are now updated');
@@ -198,10 +188,8 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.facilitySummaryListTable(0).coverEndDateValue().contains(coverEnd);
       applicationPreview.facilitySummaryListTable(0).coverEndDateAction().contains('Change');
 
-      if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateValue().contains('No');
-        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Change');
-      }
+      applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateValue().contains('No');
+      applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Change');
 
       // should not be able to change facility two has previously issued (not changed from unissued to issued)
       applicationPreview.facilitySummaryListTable(1).nameValue().contains(issuedCashFacility.name);
@@ -213,9 +201,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.facilitySummaryListTable(1).coverStartDateValue().contains('Date you submit the notice');
       applicationPreview.facilitySummaryListTable(1).coverStartDateAction().should('have.class', 'govuk-!-display-none');
 
-      if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(1).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
+      applicationPreview.facilitySummaryListTable(1).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
     });
 
     // checks that can unissue a changed to issued facility
@@ -273,11 +259,9 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.facilitySummaryListTable(2).coverEndDateValue().contains(coverEnd);
       applicationPreview.facilitySummaryListTable(2).coverEndDateAction().contains('Change');
 
-      if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateValue().contains('Yes');
-        applicationPreview.facilitySummaryListTable(2).facilityEndDateValue().contains(facilityEnd);
-        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().contains('Change');
-      }
+      applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateValue().contains('Yes');
+      applicationPreview.facilitySummaryListTable(2).facilityEndDateValue().contains(facilityEnd);
+      applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().contains('Change');
 
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().click();
       cy.clickCancelLink();
@@ -294,11 +278,9 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.facilitySummaryListTable(2).coverEndDateValue().contains(coverEnd);
       applicationPreview.facilitySummaryListTable(2).coverEndDateAction().contains('Change');
 
-      if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateValue().contains('Yes');
-        applicationPreview.facilitySummaryListTable(2).facilityEndDateValue().contains(facilityEnd);
-        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().contains('Change');
-      }
+      applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateValue().contains('Yes');
+      applicationPreview.facilitySummaryListTable(2).facilityEndDateValue().contains(facilityEnd);
+      applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().contains('Change');
 
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().click();
       cy.clickContinueButton();
@@ -315,11 +297,9 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.facilitySummaryListTable(2).coverEndDateValue().contains(coverEnd);
       applicationPreview.facilitySummaryListTable(2).coverEndDateAction().contains('Change');
 
-      if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateValue().contains('Yes');
-        applicationPreview.facilitySummaryListTable(2).facilityEndDateValue().contains(facilityEnd);
-        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().contains('Change');
-      }
+      applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateValue().contains('Yes');
+      applicationPreview.facilitySummaryListTable(2).facilityEndDateValue().contains(facilityEnd);
+      applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().contains('Change');
     });
 
     it('changing the facility to unissued should remove it from the list of issued facilities and remove dates', () => {
@@ -350,10 +330,8 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.facilitySummaryListTable(2).coverStartDateAction().should('not.exist');
       applicationPreview.facilitySummaryListTable(2).coverEndDateAction().should('not.exist');
 
-      if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-        applicationPreview.facilitySummaryListTable(2).facilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
+      applicationPreview.facilitySummaryListTable(2).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
+      applicationPreview.facilitySummaryListTable(2).facilityEndDateAction().should('have.class', 'govuk-!-display-none');
 
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');
       applicationPreview.updatedUnissuedFacilitiesList().should('not.contain', unissuedFacilitiesArray[0].name);
@@ -381,9 +359,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.facilitySummaryListTable(0).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(0).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
-      if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
+      applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
 
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
@@ -408,18 +384,14 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
-      }
+      aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
       cy.clickContinueButton();
 
-      if (facilityEndDateEnabled) {
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.threeMonthsOneDayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.threeMonthsOneDayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.threeMonthsOneDayYear);
-        cy.clickContinueButton();
-      }
+      cy.keyboardInput(facilityEndDate.facilityEndDateDay().clear(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(facilityEndDate.facilityEndDateMonth().clear(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(facilityEndDate.facilityEndDateYear().clear(), dateConstants.threeMonthsOneDayYear);
+      cy.clickContinueButton();
 
       unissuedFacilityTable.updateFacilitiesLater().click();
 
