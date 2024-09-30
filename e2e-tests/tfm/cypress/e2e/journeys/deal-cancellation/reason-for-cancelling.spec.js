@@ -77,7 +77,7 @@ context('Deal cancellation - reason for cancelling', () => {
 
     it('returning to the page should display saved data', () => {
       const reason = 'A Reason';
-      cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox().clear(), reason);
+      cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox(), reason);
 
       cy.clickContinueButton();
       cy.clickBackLink();
