@@ -4,8 +4,7 @@ const { MongoClient } = require('mongodb');
 
 const router = express.Router();
 const GITHUB_SHA = process.env.GITHUB_SHA || 'undefined';
-const { MONGODB_URI } = process.env;
-const MONGO_INITDB_DATABASE = process.env.MONGO_INITDB_DATABASE || 'test';
+const { MONGODB_URI, MONGO_INITDB_DATABASE } = process.env;
 
 async function pingMongo() {
   if (!MONGODB_URI) {

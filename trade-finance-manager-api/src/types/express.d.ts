@@ -1,4 +1,4 @@
-import { TfmSessionUser } from './tfm-session-user.ts';
+import { TfmSessionUser } from './tfm-session-user';
 
 // This is needed so that we can access the user property on the Request object which is used for generating audit details
 declare global {
