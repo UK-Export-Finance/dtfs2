@@ -1,4 +1,4 @@
-import { DealNotFoundError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { DealNotFoundError, InvalidDealIdError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
 import { mongoDbClient as db } from '../../drivers/db-client';
@@ -37,7 +37,15 @@ describe('tfm-deals-cancellation-repo', () => {
       expect(findOneMock).toHaveBeenCalled();
     });
 
-    it('returns an error if no matching result is found', async () => {
+    it('throws an InvalidDealIdError if deal id is not a valid object id', async () => {
+      // Arrange
+      const invalidDealId = 'xyz';
+
+      // Assert
+      await expect(TfmDealCancellationRepo.findDealCancellationByDealId(invalidDealId)).rejects.toThrow(new InvalidDealIdError(invalidDealId.toString()));
+    });
+
+    it('throws a DealNotFoundError if no matching result is found', async () => {
       // Arrange
       findOneMock.mockResolvedValue(undefined);
 
@@ -45,6 +53,19 @@ describe('tfm-deals-cancellation-repo', () => {
 
       // Assert
       await expect(TfmDealCancellationRepo.findDealCancellationByDealId(dealId)).rejects.toThrow(new DealNotFoundError(dealId.toString()));
+    });
+
+    it('returns an empty object if a deal is found without a cancellation', async () => {
+      // Arrange
+      findOneMock.mockResolvedValue({ tfm: {} });
+
+      getCollectionMock.mockResolvedValue({ findOne: findOneMock });
+
+      // Act
+      const result = await TfmDealCancellationRepo.findDealCancellationByDealId(dealId);
+
+      // Assert
+      expect(result).toEqual({});
     });
 
     it('returns the found deal cancellation', async () => {
@@ -77,7 +98,17 @@ describe('tfm-deals-cancellation-repo', () => {
       expect(updateOneMock).toHaveBeenCalled();
     });
 
-    it('returns an error if no matching result is found', async () => {
+    it('throws an InvalidDealIdError if deal is not a valid object id', async () => {
+      // Arrange
+      const invalidDealId = 'xyz';
+
+      // Assert
+      await expect(TfmDealCancellationRepo.updateOneDealCancellation(invalidDealId, mockDealCancellationObject)).rejects.toThrow(
+        new InvalidDealIdError(invalidDealId.toString()),
+      );
+    });
+
+    it('throws a DealNotFoundError if no matching result is found', async () => {
       // Arrange
       const mockFailedUpdateResult = { matchedCount: 0 };
 
