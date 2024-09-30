@@ -37,7 +37,7 @@ describe('tfm-deals-cancellation-repo', () => {
       expect(findOneMock).toHaveBeenCalled();
     });
 
-    it('throws an InvalidDealIdError if deal is not a valid object id', async () => {
+    it('throws an InvalidDealIdError if deal id is not a valid object id', async () => {
       // Arrange
       const invalidDealId = 'xyz';
 
