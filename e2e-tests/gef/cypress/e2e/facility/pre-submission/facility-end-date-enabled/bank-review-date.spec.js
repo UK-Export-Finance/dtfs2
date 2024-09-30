@@ -106,7 +106,7 @@ context('Bank Review Date Page - feature flag enabled', () => {
   it('redirects user to application page when clicking on `save and return` button and form has been successfully filled in', () => {
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.fillInBankReviewDate(twoYears);
+    cy.completeDateFormFields({ idPrefix: 'bank--review-date', date: twoYears });
 
     cy.clickSaveAndReturnButton();
 
@@ -131,13 +131,13 @@ context('Bank Review Date Page - feature flag enabled', () => {
 
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.fillInBankReviewDate(today);
+    cy.completeDateFormFields({ idPrefix: 'bank--review-date', date: today });
 
     cy.clickContinueButton();
     errorSummary();
     bankReviewDate.bankReviewDateError();
 
-    cy.fillInBankReviewDate(tomorrow);
+    cy.completeDateFormFields({ idPrefix: 'bank--review-date', date: tomorrow });
 
     cy.clickContinueButton();
     errorSummary().should('not.exist');
@@ -155,13 +155,13 @@ context('Bank Review Date Page - feature flag enabled', () => {
     cy.clickContinueButton();
     cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.fillInBankReviewDate(yesterday);
+    cy.completeDateFormFields({ idPrefix: 'bank--review-date', date: yesterday });
 
     cy.clickContinueButton();
     errorSummary();
     bankReviewDate.bankReviewDateError();
 
-    cy.fillInBankReviewDate(today);
+    cy.completeDateFormFields({ idPrefix: 'bank--review-date', date: today });
 
     cy.clickContinueButton();
     errorSummary().should('not.exist');
@@ -170,7 +170,7 @@ context('Bank Review Date Page - feature flag enabled', () => {
   it('validates bank review date is less than 6 years in the future', () => {
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.fillInBankReviewDate(sixYearsOneDay);
+    cy.completeDateFormFields({ idPrefix: 'bank--review-date', date: sixYearsOneDay });
 
     cy.clickContinueButton();
     errorSummary();
@@ -180,7 +180,7 @@ context('Bank Review Date Page - feature flag enabled', () => {
   it('redirects the user to `provided facility` page when form has been successfully filled in', () => {
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.fillInBankReviewDate(twoYears);
+    cy.completeDateFormFields({ idPrefix: 'bank--review-date', date: twoYears });
 
     cy.clickContinueButton();
 
@@ -190,7 +190,7 @@ context('Bank Review Date Page - feature flag enabled', () => {
   it('stores the inputted values', () => {
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.fillInBankReviewDate(twoYears);
+    cy.completeDateFormFields({ idPrefix: 'bank--review-date', date: twoYears });
 
     cy.clickContinueButton();
 
