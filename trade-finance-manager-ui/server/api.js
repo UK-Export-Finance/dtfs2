@@ -14,6 +14,13 @@ const generateHeaders = (token) => ({
   'x-api-key': TFM_API_KEY,
 });
 
+/**
+ * @param {string} id - deal id
+ * @param {string} token - logged in user token
+ * @param {import('@ukef/dtfs2-common').AnyObject} tasksFilters - tasks filters
+ * @param {import('@ukef/dtfs2-common').AnyObject} activityFilters - activity filters
+ * @returns {Promise<import('./types/data-transfer-objects/get-deal-response').GetDealResponse | { status: 400; data: 'Invalid deal id'}>}
+ */
 const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
   const { filterType: tasksFilterType, teamId: tasksTeamId, userId: tasksUserId } = tasksFilters;
   const { filterType: activityFilterType } = activityFilters;
@@ -1251,6 +1258,27 @@ const updateDealCancellation = async (dealId, cancellationUpdate, userToken) => 
   }
 };
 
+/**
+ * Updates the deal cancellation object on a TFM MIN or AIN deal
+ * @param {string} dealId - The deal ID
+ * @param {string} userToken - The user token
+ * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellation>>}
+ */
+const getDealCancellation = async (dealId, userToken) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation`,
+      headers: generateHeaders(userToken),
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get deal cancellation', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1308,4 +1336,5 @@ module.exports = {
   removeFeesFromPayment,
   addFeesToAnExistingPayment,
   updateDealCancellation,
+  getDealCancellation,
 };
