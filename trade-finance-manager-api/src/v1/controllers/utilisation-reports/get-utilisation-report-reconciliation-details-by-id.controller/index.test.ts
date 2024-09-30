@@ -1,5 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode, AxiosError, AxiosResponse } from 'axios';
+import { PaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { GetUtilisationReportReconciliationDetailsByIdRequest, getUtilisationReportReconciliationDetailsById } from '.';
 import api from '../../../api';
 import { aUtilisationReportReconciliationDetailsResponse } from '../../../../../test-helpers';
@@ -57,6 +58,25 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
 
       // Assert
       expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsFilters);
+    });
+
+    it('fetches report with the payment details tab filters query param when provided', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+      const paymentDetailsFilters: PaymentDetailsFilters = {
+        facilityId: '1234',
+        paymentCurrency: 'GBP',
+        paymentReference: 'A sample payment reference.',
+      };
+      req.query = { paymentDetailsFilters };
+
+      apiGetUtilisationReportReconciliationDetailsByIdSpy.mockResolvedValue(utilisationReportReconciliationDetailsResponse);
+
+      // Act
+      await getUtilisationReportReconciliationDetailsById(req, res);
+
+      // Assert
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), paymentDetailsFilters);
     });
 
     it('responds with the specific axios error code when the api throws an error', async () => {
