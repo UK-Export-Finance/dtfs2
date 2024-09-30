@@ -134,6 +134,16 @@ const sixYearsOneDayDay = format(sixYearsOneDay, longDayFormat);
 const sixYearsOneDayMonth = format(sixYearsOneDay, longMonthFormat);
 const sixYearsOneDayYear = format(sixYearsOneDay, longYearFormat);
 
+const twelveMonthsOneDay = add(today, { months: 12, days: 1 });
+const twelveMonthsOneDayDay = format(twelveMonthsOneDay, longDayFormat);
+const twelveMonthsOneDayMonth = format(twelveMonthsOneDay, longMonthFormat);
+const twelveMonthsOneDayYear = format(twelveMonthsOneDay, longYearFormat);
+
+const twelveMonthsOneDayAgo = sub(today, { months: 12, days: 1 });
+const twelveMonthsOneDayAgoDay = format(twelveMonthsOneDayAgo, longDayFormat);
+const twelveMonthsOneDayAgoMonth = format(twelveMonthsOneDayAgo, longMonthFormat);
+const twelveMonthsOneDayAgoYear = format(twelveMonthsOneDayAgo, longYearFormat);
+
 const todayUnix = getUnixTime(today).toString();
 const todayUnixDay = format(threeDaysAgo, longDayFormat);
 const todayUnixMonth = format(threeDaysAgo, longMonthFormat);
@@ -267,4 +277,10 @@ module.exports = {
   oneYearAgoDay,
   oneYearAgoMonth,
   oneYearAgoYear,
+  twelveMonthsOneDayDay,
+  twelveMonthsOneDayMonth,
+  twelveMonthsOneDayYear,
+  twelveMonthsOneDayAgoDay,
+  twelveMonthsOneDayAgoMonth,
+  twelveMonthsOneDayAgoYear,
 };

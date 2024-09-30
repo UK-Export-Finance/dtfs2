@@ -8,6 +8,7 @@ import {
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
   ReportWithStatus,
+  REQUEST_PLATFORM_TYPE,
 } from '@ukef/dtfs2-common';
 import { PutUtilisationReportStatusRequest, putUtilisationReportStatus } from '.';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
@@ -177,7 +178,7 @@ describe('put-utilisation-report-status.controller', () => {
       const azureFileInfo = AzureFileInfoEntity.create({
         ...MOCK_AZURE_FILE_INFO,
         requestSource: {
-          platform: 'PORTAL',
+          platform: REQUEST_PLATFORM_TYPE.PORTAL,
           userId: 'abc123',
         },
       });

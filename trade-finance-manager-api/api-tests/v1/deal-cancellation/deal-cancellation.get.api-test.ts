@@ -3,9 +3,9 @@ import { ObjectId } from 'mongodb';
 import { createApi } from '../../api';
 import app from '../../../src/createApp';
 import { initialiseTestUsers } from '../../api-test-users';
-import { TestUser } from '../../types/test-user.ts';
-import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests.ts';
-import { getTfmDealCancellationUrl } from './get-cancellation-url.ts';
+import { TestUser } from '../../types/test-user';
+import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests';
+import { getTfmDealCancellationUrl } from './get-cancellation-url';
 
 const getDealCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellation>>;
 

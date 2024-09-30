@@ -1,6 +1,7 @@
 import { DbRequestSource, FeeRecordEntity, UtilisationReportEntity, FacilityUtilisationDataEntity, PaymentEntity } from '../../sql-db-entities';
 import { Currency, FeeRecordStatus, ReportPeriod } from '../../types';
 import { FacilityUtilisationDataEntityMockBuilder } from './facility-utilisation-data.entity.mock-builder';
+import { REQUEST_PLATFORM_TYPE } from '../../constants';
 
 /**
  * Gets the previous report period based on a monthly reporting
@@ -32,7 +33,7 @@ export class FeeRecordEntityMockBuilder {
     const data = new FeeRecordEntity();
     const userId = '5ce819935e539c343f141ece';
     const requestSource: DbRequestSource = {
-      platform: 'PORTAL',
+      platform: REQUEST_PLATFORM_TYPE.PORTAL,
       userId,
     };
 
