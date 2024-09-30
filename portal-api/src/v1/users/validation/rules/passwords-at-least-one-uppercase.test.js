@@ -20,8 +20,8 @@ describe('at least 1 uppercase', () => {
       },
     ];
 
-    const matchTest = passwordAtLeastOneUppercase(user, change);
-    expect(matchTest).toEqual(expected);
+    const result = passwordAtLeastOneUppercase(user, change);
+    expect(result).toEqual(expected);
   });
 
   it('should not return error for passwords with uppercase', () => {
@@ -29,12 +29,12 @@ describe('at least 1 uppercase', () => {
       password: 'Aaaa',
     };
 
-    const matchTest = passwordAtLeastOneUppercase(user, change);
-    expect(matchTest).toEqual([]);
+    const result = passwordAtLeastOneUppercase(user, change);
+    expect(result).toEqual([]);
   });
 
   it('should not return error if no change', () => {
-    const matchTest = passwordAtLeastOneUppercase(user, '');
-    expect(matchTest).toEqual([]);
+    const result = passwordAtLeastOneUppercase(user, '');
+    expect(result).toEqual([]);
   });
 });

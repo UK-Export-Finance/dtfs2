@@ -33,8 +33,8 @@ describe('passwords cannot be reused', () => {
       },
     ];
 
-    const matchTest = passwordsCannotBeReused(blockedUser, change);
-    expect(matchTest).toEqual(expected);
+    const result = passwordsCannotBeReused(blockedUser, change);
+    expect(result).toEqual(expected);
   });
 
   it("should not return error for passwords that haven't been previously used", () => {
@@ -42,12 +42,12 @@ describe('passwords cannot be reused', () => {
       password: 'AAAA',
     };
 
-    const matchTest = passwordsCannotBeReused(user, change);
-    expect(matchTest).toEqual([]);
+    const result = passwordsCannotBeReused(user, change);
+    expect(result).toEqual([]);
   });
 
   it('should not return error if no change', () => {
-    const matchTest = passwordsCannotBeReused(user, '');
-    expect(matchTest).toEqual([]);
+    const result = passwordsCannotBeReused(user, '');
+    expect(result).toEqual([]);
   });
 });
