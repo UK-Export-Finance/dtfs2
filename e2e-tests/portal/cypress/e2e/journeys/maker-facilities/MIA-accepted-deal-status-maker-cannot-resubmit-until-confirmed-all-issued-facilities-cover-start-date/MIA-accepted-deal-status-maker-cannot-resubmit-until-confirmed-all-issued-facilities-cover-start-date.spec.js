@@ -259,7 +259,7 @@ context('Given a deal that has `Accepted` status with Issued, Unissued, Uncondit
     issuedCompletedBondRow.requestedCoverStartDate().should('contain.text', expectedBondDate);
     issuedCompletedBondRow.changeOrConfirmCoverStartDateLink().should('contain.text', 'Start date confirmed');
 
-    const expectedLoanDate = NEW_LOAN_COVER_START_DATE.toLocaleDateString('en-GB');
+    const expectedLoanDate = NEW_LOAN_COVER_START_DATE.date.toLocaleDateString('en-GB');
 
     cy.assertText(unconditionalSubmittedLoanRow.requestedCoverStartDate(), expectedLoanDate);
 
