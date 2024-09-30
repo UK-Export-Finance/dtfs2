@@ -7,7 +7,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const facilityIdQuery = undefined;
 
       // Act
-      const filterError = validateFacilityIdQuery(facilityIdQuery, '', '#facility-id-filter');
+      const filterError = validateFacilityIdQuery('', 'facilityId', '#facility-id-filter', facilityIdQuery);
 
       // Assert
       expect(filterError).toEqual(undefined);
@@ -18,7 +18,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const facilityIdQuery = undefined;
 
       // Act
-      const filterError = validateFacilityIdQuery(facilityIdQuery, '?someOtherQueryParam', '#facility-id-filter');
+      const filterError = validateFacilityIdQuery('?someOtherQueryParam', 'facilityId', '#facility-id-filter', facilityIdQuery);
 
       // Assert
       expect(filterError).toEqual(undefined);
@@ -30,7 +30,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const facilityIdInputId = '#facility-id-filter';
 
       // Act
-      const filterError = validateFacilityIdQuery(facilityIdQuery, '?premiumPaymentsFacilityId=', facilityIdInputId);
+      const filterError = validateFacilityIdQuery('?facilityId=', 'facilityId', facilityIdInputId, facilityIdQuery);
 
       // Assert
       expect(filterError).toEqual({
@@ -44,7 +44,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const facilityIdInputId = '#facility-id-filter';
 
       // Act
-      const filterError = validateFacilityIdQuery(facilityIdQuery, '?premiumPaymentsFacilityId', facilityIdInputId);
+      const filterError = validateFacilityIdQuery('?facilityId', 'facilityId', facilityIdInputId, facilityIdQuery);
 
       // Assert
       expect(filterError).toEqual({
@@ -58,7 +58,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const facilityIdInputId = '#facility-id-filter';
 
       // Act
-      const filterError = validateFacilityIdQuery(facilityIdQuery, '?premiumPaymentsFacilityId', facilityIdInputId);
+      const filterError = validateFacilityIdQuery('?facilityId', 'facilityId', facilityIdInputId, facilityIdQuery);
 
       // Assert
       expect(filterError).toEqual({
@@ -72,7 +72,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const facilityIdQuery = '1234';
 
       // Act
-      const filterError = validateFacilityIdQuery(facilityIdQuery, '?someOtherQueryParam=1234&premiumPaymentsFacilityId=1234', '#facility-id-filter');
+      const filterError = validateFacilityIdQuery(facilityIdQuery, '?someOtherQueryParam=1234&facilityId=1234', '#facility-id-filter');
 
       // Assert
       expect(filterError).toEqual(undefined);

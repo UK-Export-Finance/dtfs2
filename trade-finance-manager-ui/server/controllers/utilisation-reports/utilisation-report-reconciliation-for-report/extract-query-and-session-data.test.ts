@@ -51,7 +51,12 @@ describe('extractQueryAndSessionData', () => {
       const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
       // Assert
-      expect(validateFacilityIdQuery).toHaveBeenCalledWith(PREMIUM_PAYMENTS_FACILITY_ID_QUERY, ORIGINAL_URL, '#premium-payments-facility-id-filter');
+      expect(validateFacilityIdQuery).toHaveBeenCalledWith(
+        ORIGINAL_URL,
+        'premiumPaymentsFacilityId',
+        '#premium-payments-facility-id-filter',
+        PREMIUM_PAYMENTS_FACILITY_ID_QUERY,
+      );
       expect(result.premiumPaymentsFilterError).toEqual(mockError);
     });
   });
@@ -84,6 +89,8 @@ describe('extractQueryAndSessionData', () => {
       // Assert
       expect(result.paymentDetailsFilters.paymentReference).toBe(PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY);
     });
+
+    // TODO: FN-2311: Add tests for payment details filters validation, similar to above.
   });
 
   it('uses premiumPaymentsTableDataError derived from session data', () => {

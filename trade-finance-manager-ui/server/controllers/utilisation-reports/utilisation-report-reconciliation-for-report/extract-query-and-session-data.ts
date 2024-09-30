@@ -23,9 +23,10 @@ type GetUtilisationReportReconciliationQuery = {
 const parsePremiumPaymentsFilters = (facilityIdQuery: string | undefined, originalUrl: string) => {
   const facilityIdQueryString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
 
+  const facilityIdQueryName = 'premiumPaymentsFacilityId';
   const facilityIdInputId = '#premium-payments-facility-id-filter';
 
-  const filterError = validateFacilityIdQuery(facilityIdQueryString, originalUrl, facilityIdInputId);
+  const filterError = validateFacilityIdQuery(originalUrl, facilityIdQueryName, facilityIdInputId, facilityIdQueryString);
 
   const filters: PremiumPaymentsFilters = {
     facilityId: facilityIdQueryString,
@@ -51,8 +52,8 @@ const parsePaymentDetailsFilters = (facilityId: string | undefined, paymentRefer
 
   const paymentReferenceString = paymentReference ? asString(paymentReference, 'paymentReference') : undefined;
 
-  // TODO FN-2311: Update this to return multiple errors (as multiple fields can be invalid).
-  const filterError = validateFacilityIdQuery(facilityIdString, originalUrl, '#payment-details-facility-id-filter');
+  // TODO FN-2311: Update this to return multiple errors (as we now have multiple query params which can each be invalid).
+  const filterError = validateFacilityIdQuery(originalUrl, 'paymentDetailsFacilityId', '#payment-details-facility-id-filter', facilityIdString);
 
   const filters: PaymentDetailsFilters = {
     facilityId: facilityIdString,
