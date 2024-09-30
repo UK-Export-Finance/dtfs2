@@ -21,4 +21,5 @@ export type ReportPeriodSummariesViewModel = ReportPeriodSummaryViewModel[];
 
 export type UtilisationReportsViewModel = BaseViewModel & {
   reportPeriodSummaries: ReportPeriodSummariesViewModel;
+  isPDCReadUser: boolean;
 };

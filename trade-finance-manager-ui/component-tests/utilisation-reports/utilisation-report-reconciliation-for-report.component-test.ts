@@ -168,6 +168,7 @@ describe(page, () => {
     wrapper.expectElement(keyingSheetTabSelector).toExist();
 
     wrapper.expectText(`${keyingSheetTabSelector} h2[data-cy="keying-sheet-heading"]`).toRead('Keying sheet');
+    wrapper.expectText(`${keyingSheetTabSelector} p`).toMatch(/Select payments and mark as done when the adjustments have been keyed into ACBS./);
     wrapper
       .expectText(`${keyingSheetTabSelector} p`)
       .toMatch(/Payments on the premium payments tab will show as reconciled when they have been marked as done here./);
@@ -196,6 +197,7 @@ describe(page, () => {
     wrapper.expectElement(keyingSheetTabSelector).toExist();
 
     wrapper.expectText(`${keyingSheetTabSelector} h2[data-cy="keying-sheet-heading"]`).toRead('Keying sheet');
+    wrapper.expectText(`${keyingSheetTabSelector} p`).notToContain('Select payments and mark as done when the adjustments have been keyed into ACBS.');
     wrapper
       .expectText(`${keyingSheetTabSelector} p`)
       .toMatch(/Payments on the premium payments tab will show as reconciled when they have been marked as done here./);

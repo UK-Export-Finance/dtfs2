@@ -1,4 +1,5 @@
 {% import './_macros/report-reconciliation-table.njk' as reportReconciliationTable %}
+{% import './_macros/pdc-read-only-notification-banner.njk' as pdcReadOnlyNotificationBanner %}
 
 {% extends "index.njk" %}
 
@@ -7,6 +8,10 @@
 {% endblock %}
 
 {% block content %}
+  {{ pdcReadOnlyNotificationBanner.render({
+    isPDCReadUser: isPDCReadUser
+  }) }}
+
   <div class="govuk-grid-row govuk-!-padding-top-7">
     <div class="govuk-grid-column-one-half">
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="utilisation-report-heading">

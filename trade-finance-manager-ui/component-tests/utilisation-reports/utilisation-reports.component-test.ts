@@ -21,7 +21,7 @@ describe(page, () => {
     process.env = originalProcessEnv;
   });
 
-  const getWrapper = () => {
+  const getWrapper = (isPDCReadUser = false) => {
     const reportPeriodSummaries = [
       {
         items: [],
@@ -35,9 +35,14 @@ describe(page, () => {
       reportPeriodSummaries,
       user: MOCK_TFM_SESSION_USER,
       isTfmPaymentReconciliationFeatureFlagEnabled: false,
+      isPDCReadUser,
     };
     return render(params);
   };
+
+  it('should NOT render the read only banner', () => {
+    getWrapper().expectElement('[data-cy="read-only-banner"]').notToExist();
+  });
 
   it('should render the main heading', () => {
     getWrapper().expectElement('[data-cy="utilisation-report-heading"]').toExist();
@@ -57,5 +62,14 @@ describe(page, () => {
 
   it('should render the report reconciliation table', () => {
     getWrapper().expectElement('[data-cy="utilisation-report-reconciliation-table"]').toExist();
+  });
+
+  it('should render the read only banner for PDC_READ users', () => {
+    getWrapper(true).expectElement('[data-cy="read-only-banner"]').toExist();
+    getWrapper(true)
+      .expectText(`[data-cy="read-only-banner"]`)
+      .toContain(
+        'You are viewing the trade finance manager in read-only view. You will not be able to perform any actions to the reported fees on the system.',
+      );
   });
 });

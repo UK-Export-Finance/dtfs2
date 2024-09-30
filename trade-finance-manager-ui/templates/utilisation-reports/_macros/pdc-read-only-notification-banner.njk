@@ -1,0 +1,20 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
+{% macro render(params) %}
+  {% set isPDCReadUser = params.isPDCReadUser %}
+
+  {% set html %}
+    <p class="govuk-notification-banner__heading" data-cy="read-only-banner">You are viewing the trade finance manager in read-only view. You will not be able to perform any actions to the reported fees on the system.</p>
+  {% endset %}
+
+  {% if isPDCReadUser %}
+    <div class="govuk-grid-row govuk-!-padding-top-7">
+      <div class="govuk-grid-column-one-half-from-desktop">
+        {{ govukNotificationBanner({
+          html: html
+        }) }}
+      </div>
+    </div>
+  {% endif %}
+
+{% endmacro %}
