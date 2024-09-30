@@ -12,7 +12,7 @@ import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
 import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 
 /**
- * Filters premium payments based on provided filters.
+ * Gets premium payment fee record payment groups based on provided filters.
  * If a facilityId is provided in the filters, it filters the fee record payment entity groups.
  * Otherwise, returns the original groups.
  * @param feeRecordPaymentEntityGroups - The fee record payment entity groups to filter
@@ -20,7 +20,7 @@ import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-pay
  * @param filters.facilityId - The facility ID filter
  * @returns A promise that resolves to the filtered fee record payment groups
  */
-const filterPremiumPayments = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: PremiumPaymentsFilters) => {
+const getPremiumPayments = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: PremiumPaymentsFilters) => {
   const { facilityId } = filters;
 
   let feeRecords = feeRecordPaymentEntityGroups;
@@ -33,7 +33,7 @@ const filterPremiumPayments = async (feeRecordPaymentEntityGroups: FeeRecordPaym
 };
 
 /**
- * Filters fee record payment entity groups based on provided filters.
+ * Gets payment details fee record payment groups based on provided filters.
  * Applies filters for payment currency, facility ID, and payment reference.
  * @param feeRecordPaymentEntityGroups - The fee record payment entity groups to filter
  * @param filters - The filters to be applied to the fee record payment data
@@ -42,7 +42,7 @@ const filterPremiumPayments = async (feeRecordPaymentEntityGroups: FeeRecordPaym
  * @param filters.paymentReference - The payment reference filter
  * @returns A promise that resolves to the filtered fee record payment groups
  */
-const filterPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: ValidatedPaymentDetailsFilters) => {
+const getPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: ValidatedPaymentDetailsFilters) => {
   const { facilityId, paymentCurrency, paymentReference } = filters;
 
   let feeRecords = feeRecordPaymentEntityGroups;
@@ -87,9 +87,9 @@ export const getUtilisationReportReconciliationDetails = async (
 
   const feeRecordPaymentEntityGroups = getFeeRecordPaymentEntityGroups(feeRecords);
 
-  const premiumPayments = await filterPremiumPayments(feeRecordPaymentEntityGroups, premiumPaymentsFilters);
+  const premiumPayments = await getPremiumPayments(feeRecordPaymentEntityGroups, premiumPaymentsFilters);
 
-  const paymentDetails = await filterPaymentDetails(feeRecordPaymentEntityGroups, paymentDetailsFilters);
+  const paymentDetails = await getPaymentDetails(feeRecordPaymentEntityGroups, paymentDetailsFilters);
 
   return {
     reportId: id,
