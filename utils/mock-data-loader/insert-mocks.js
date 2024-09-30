@@ -3,26 +3,25 @@ const centralApi = require('./centralApi');
 const MOCK_PORTAL_USERS = require('./portal-users');
 const MOCK_BANKS = require('./banks');
 const MOCKS = require('./bss');
-const { logger } = require('./helpers/logger.helper');
 
 const insertMocks = async (mockDataLoaderToken) => {
-  logger.info('inserting portal mocks');
-  logger.info('inserting portal users', { depth: 1 });
+  console.info('inserting portal mocks');
+  console.info('inserting portal users');
   for (const user of Object.values(MOCK_PORTAL_USERS)) {
     await api.createUser(user, mockDataLoaderToken);
   }
 
-  logger.info('inserting banks', { depth: 1 });
+  console.info('inserting banks');
   for (const bank of MOCK_BANKS) {
     await api.createBank(bank, mockDataLoaderToken);
   }
 
-  logger.info('inserting BSS mandatory-criteria', { depth: 1 });
+  console.info('inserting BSS mandatory-criteria');
   for (const mandatoryCriteria of MOCKS.MANDATORY_CRITERIA) {
     await api.createMandatoryCriteria(mandatoryCriteria, mockDataLoaderToken);
   }
 
-  logger.info('inserting BSS eligibility-criteria', { depth: 1 });
+  console.info('inserting BSS eligibility-criteria');
   for (const eligibilityCriteria of MOCKS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(eligibilityCriteria, mockDataLoaderToken);
   }
@@ -30,7 +29,7 @@ const insertMocks = async (mockDataLoaderToken) => {
   const maker = MOCK_PORTAL_USERS.BANK1_MAKER3;
   const makerToken = await api.loginViaPortal(maker);
 
-  logger.info('inserting BSS deals', { depth: 1 });
+  console.info('inserting BSS deals');
   const insertedDeals = [];
   for (const deal of MOCKS.DEALS) {
     const { _id } = await api.createDeal(deal, makerToken);
@@ -39,7 +38,7 @@ const insertMocks = async (mockDataLoaderToken) => {
     insertedDeals.push(createdDeal);
   }
 
-  logger.info('inserting BSS facilities', { depth: 1 });
+  console.info('inserting BSS facilities');
   MOCKS.FACILITIES.forEach(async (facility) => {
     const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);
     const facilityToInsert = {

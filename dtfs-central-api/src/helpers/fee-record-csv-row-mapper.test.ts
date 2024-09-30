@@ -1,4 +1,4 @@
-import { DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { REQUEST_PLATFORM_TYPE, DbRequestSource, FeeRecordEntity, FeeRecordStatus, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { feeRecordCsvRowToSqlEntity } from './fee-record-csv-row-mapper';
 import { UtilisationReportRawCsvData } from '../types/utilisation-reports';
 import { aUtilisationReportRawCsvData } from '../../test-helpers';
@@ -8,7 +8,7 @@ describe('fee-record-helpers', () => {
     const mockDate = new Date('2024-01');
 
     const requestSource: DbRequestSource = {
-      platform: 'PORTAL',
+      platform: REQUEST_PLATFORM_TYPE.PORTAL,
       userId: 'abc123',
     };
 

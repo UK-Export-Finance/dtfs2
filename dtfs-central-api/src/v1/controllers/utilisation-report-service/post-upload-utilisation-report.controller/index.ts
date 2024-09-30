@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { AzureFileInfo, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { REQUEST_PLATFORM_TYPE, AzureFileInfo, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { UtilisationReportRawCsvData } from '../../../../types/utilisation-reports';
@@ -42,7 +42,7 @@ export const uploadReportInTransaction = async (
         reportCsvData: reportData,
         uploadedByUserId,
         requestSource: {
-          platform: 'PORTAL',
+          platform: REQUEST_PLATFORM_TYPE.PORTAL,
           userId: uploadedByUserId,
         },
         transactionEntityManager,

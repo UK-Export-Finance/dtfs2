@@ -92,6 +92,7 @@ jobs:
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
       SQL_DB_HOST: ${{ secrets.SQL_DB_HOST }}
       SQL_DB_PORT: ${{ secrets.SQL_DB_PORT }}
       SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME }}
