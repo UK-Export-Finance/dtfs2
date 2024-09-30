@@ -33,7 +33,7 @@ describe('controllers - login (sso)', () => {
 
       // Assert
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(req.session.destroy).toHaveBeenCalled();
+      expect(req.session.destroy).toHaveBeenCalledTimes(1);
     });
 
     function getHttpMocks() {
