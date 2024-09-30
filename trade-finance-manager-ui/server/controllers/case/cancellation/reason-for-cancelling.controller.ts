@@ -37,7 +37,7 @@ export const getReasonForCancelling = async (req: GetReasonForCancellingRequest,
       user,
       ukefDealId: deal.dealSnapshot.details.ukefDealId,
       dealId: _id,
-      reasonForCancelling: cancellation.reason,
+      reasonForCancelling: cancellation?.reason,
     };
     return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);
   } catch (error) {
