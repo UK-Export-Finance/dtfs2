@@ -34,9 +34,9 @@ const { formatDate } = require('../../helpers/date');
  * Only following properties are eligible for amendments:
  * 1. Facility amount
  * 2. Facility cover end date
- * @param {object} fmr Facility Master Record
- * @param {object} amendments Facility amendment(s)
- * @param {object} deal Deal object
+ * @param {Object} fmr Facility Master Record
+ * @param {Object} amendments Facility amendment(s)
+ * @param {Object} deal Deal object
  * @returns {object} Facility Master Record (FMR) amended
  */
 const facilityMasterAmend = (fmr, amendments, deal) => {

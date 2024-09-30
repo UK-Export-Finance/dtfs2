@@ -37,7 +37,7 @@ const mandatoryFields = [
  * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
  * If any other error occurs, it throws a new error.
  *
- * @param {object} payload - The payload containing the mandatory fields for creating a facility master record.
+ * @param {Object} payload - The payload containing the mandatory fields for creating a facility master record.
  * @returns {object} - An object containing the status and data received from the API, or an object with the missing mandatory fields.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */

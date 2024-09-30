@@ -117,7 +117,7 @@ const get = async (endpoint) => {
 /**
  * Invokes TFS POST endpoint
  * @param {string} endpoint TFS endpoint
- * @param {object} payload Payload object
+ * @param {Object} payload Payload object
  * @returns {Promise<object>} API response object
  */
 const post = async (endpoint, payload) => {
@@ -143,7 +143,7 @@ const post = async (endpoint, payload) => {
 /**
  * Invokes MDM POST endpoint
  * @param {string} endpoint MDM endpoint
- * @param {object} payload Payload object
+ * @param {Object} payload Payload object
  * @returns {Promise<object>} API response object
  */
 const postMdm = async (endpoint, payload) => {
@@ -169,7 +169,7 @@ const postMdm = async (endpoint, payload) => {
 /**
  * Invokes TFS PUT endpoint
  * @param {string} endpoint TFS endpoint
- * @param {object} payload Payload object
+ * @param {Object} payload Payload object
  * @param {string} etag Entity tag
  * @returns {Promise<object>} API response object
  */
@@ -205,7 +205,7 @@ const put = async (endpoint, payload, etag) => {
 /**
  * Invokes TFS PATCH endpoint
  * @param {string} endpoint TFS endpoint
- * @param {object} payload Payload object
+ * @param {Object} payload Payload object
  * @param {string} etag Entity tag
  * @returns {Promise<object>} API response object
  */

@@ -8,7 +8,6 @@ ENV GITHUB_SHA=$GITHUB_SHA
 # Node setup
 WORKDIR /app
 COPY package.json .
-COPY package-lock.json .
 
 COPY libs libs
 COPY portal-api portal-api
