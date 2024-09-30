@@ -8,7 +8,7 @@
 const df = require('durable-functions');
 const mappings = require('../../mappings');
 const CONSTANTS = require('../../constants');
-const retryOptions = require('../../helpers/retryOptions');
+const retry = require('../../helpers/retry');
 
 df.app.orchestration('acbs-facility-loan', function* createFacilityLoan(context) {
   const payload = context.df.input;
@@ -27,7 +27,7 @@ df.app.orchestration('acbs-facility-loan', function* createFacilityLoan(context)
       CONSTANTS.FACILITY.GUARANTEE_TYPE.FACILITY_PROVIDER,
     );
 
-    const facilityProviderTask = context.df.callActivityWithRetry('create-facility-guarantee', retryOptions, {
+    const facilityProviderTask = context.df.callActivityWithRetry('create-facility-guarantee', retry, {
       facilityIdentifier,
       acbsFacilityGuaranteeInput: acbsFacilityProviderGuaranteeInput,
     });
@@ -41,7 +41,7 @@ df.app.orchestration('acbs-facility-loan', function* createFacilityLoan(context)
         CONSTANTS.FACILITY.GUARANTEE_TYPE.BUYER_FOR_EXPORTER_EWCS,
       );
 
-      const facilityBuyerTask = context.df.callActivityWithRetry('create-facility-guarantee', retryOptions, {
+      const facilityBuyerTask = context.df.callActivityWithRetry('create-facility-guarantee', retry, {
         facilityIdentifier,
         acbsFacilityGuaranteeInput: acbsFacilityBuyerGuaranteeInput,
       });

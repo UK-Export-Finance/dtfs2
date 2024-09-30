@@ -39,7 +39,7 @@
  */
 
 const df = require('durable-functions');
-const retryOptions = require('../../helpers/retryOptions');
+const retry = require('../../helpers/retry');
 const { DEAL, FACILITY } = require('../../constants');
 
 const acceptableFacilityStage = ['07'];
@@ -79,7 +79,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
     }
 
     // 1. DAF : get-facility-master: Retrieve ACBS `Facility Master Record` with eTag
-    const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, facilityId);
+    const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('get-facility-master', retry, facilityId);
 
     /**
      * Check 1 - Facility stage `07` only

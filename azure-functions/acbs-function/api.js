@@ -1,13 +1,64 @@
 /**
- * ACBS durable functions API library deals with following HTTP methods:
- *
+ * ACBS Durable Functions API Library
+ * ----------------------------------
+ * This module provides a set of functions to interact with the ACBS system using HTTP methods.
+ * The supported HTTP methods are:
  * 1. GET
  * 2. POST
  * 3. PUT
  * 4. PATCH
  *
- * All of the function have argument validation check and return object verification in
- * case error object does not have expected properties due to network connection, SSL verification or other issues.
+ * Each function includes argument validation and error handling to ensure robust API interactions.
+ * In case of errors such as network issues or SSL verification failures, the functions return a standardized error object.
+ *
+ * Environment Variables
+ * ---------------------
+ * - `APIM_TFS_URL`: The base URL for the TFS API.
+ * - `APIM_MDM_URL`: The base URL for the MDM API.
+ * - `APIM_TFS_KEY`: The key for the TFS API.
+ * - `APIM_TFS_VALUE`: The value for the TFS API key.
+ * - `APIM_MDM_KEY`: The key for the MDM API.
+ * - `APIM_MDM_VALUE`: The value for the MDM API key.
+ *
+ * Constants
+ * ---------
+ * - `HEADERS`: Contains the headers used for API requests.
+ *
+ * Functions
+ * ---------
+ * - `get`: Invokes a TFS GET endpoint.
+ * - `post`: Invokes a TFS POST endpoint.
+ * - `postMdm`: Invokes an MDM POST endpoint.
+ * - `put`: Invokes a TFS PUT endpoint.
+ * - `patch`: Invokes a TFS PATCH endpoint.
+ *
+ * MDM Functions
+ * -------------
+ * - `createFacilityCovenantId`: Creates a facility covenant ID using the MDM POST endpoint.
+ *
+ * TFS Functions
+ * -------------
+ * - `getFacility`: Retrieves a facility by its ID using the TFS GET endpoint.
+ * - `getLoanId`: Retrieves the loan ID for a given facility ID using the TFS GET endpoint.
+ * - `createParty`: Creates a party using the TFS POST endpoint.
+ * - `createDeal`: Creates a deal using the TFS POST endpoint.
+ * - `createDealInvestor`: Creates a deal investor using the TFS POST endpoint.
+ * - `createDealGuarantee`: Creates a deal guarantee using the TFS POST endpoint.
+ * - `createFacility`: Creates a facility using the TFS POST endpoint.
+ * - `createFacilityInvestor`: Creates a facility investor using the TFS POST endpoint.
+ * - `createFacilityCovenant`: Creates a facility covenant using the TFS POST endpoint.
+ * - `createFacilityGuarantee`: Creates a facility guarantee using the TFS POST endpoint.
+ * - `createCodeValueTransaction`: Creates a code value transaction using the TFS POST endpoint.
+ * - `createFacilityLoan`: Creates a facility loan using the TFS POST endpoint.
+ * - `createFacilityFee`: Creates a facility fee using the TFS POST endpoint.
+ * - `updateFacilityLoanAmount`: Updates the facility loan amount using the TFS POST endpoint.
+ * - `updateFacilityFixedFeeAmount`: Updates the facility fixed fee amount using the TFS POST endpoint.
+ * - `updateFacility`: Updates a facility using the TFS PUT endpoint.
+ * - `updateFacilityLoan`: Updates a facility loan using the TFS PATCH endpoint.
+ * - `updateFacilityCovenant`: Updates a facility covenant using the TFS PATCH endpoint.
+ * - `updateFacilityGuarantee`: Updates a facility guarantee using the TFS PATCH endpoint.
+ *
+ * @module api
  */
 
 require('dotenv').config();
@@ -211,6 +262,7 @@ const createCodeValueTransaction = (facilityIdentifier, payload) => post(`facili
 const createFacilityLoan = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/loans`, payload);
 const createFacilityFee = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/fixed-fees`, payload);
 const updateFacilityLoanAmount = (facilityIdentifier, loanId, payload) => post(`facilities/${facilityIdentifier}/loans/${loanId}/amendments/amount`, payload);
+const updateFacilityFixedFeeAmount = (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/fixed-fees/amendments/amount`, payload);
 
 // PUT
 const updateFacility = (facilityIdentifier, updateType, payload, etag) => put(`facilities/${facilityIdentifier}?op=${updateType}`, payload, etag);
@@ -240,4 +292,5 @@ module.exports = {
   updateFacilityLoanAmount,
   updateFacilityCovenant,
   updateFacilityGuarantee,
+  updateFacilityFixedFeeAmount,
 };

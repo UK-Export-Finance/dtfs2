@@ -29,6 +29,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
+    "@ukef/dtfs2-common": "1.0.0",
     "axios": "^1.7.7",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.5",

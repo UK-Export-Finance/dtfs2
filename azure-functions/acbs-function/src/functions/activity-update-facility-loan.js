@@ -15,28 +15,11 @@
  * ------------------
  */
 const df = require('durable-functions');
-const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
+const { getNowAsIsoString } = require('../../helpers/date');
 const { isHttpErrorStatus } = require('../../helpers/http');
 const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
-const mandatoryFields = ['expiryDate'];
-
-/**
- * This function is used to update the loan amount of a facility. It first checks if the payload is valid and contains all mandatory fields.
- * If the payload is valid, it sends a request to the API to update the facility loan amount.
- * If the API request is successful, it returns an object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * If the API request fails, it throws an error with details about the request and the error.
- * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
- * If any other error occurs, it logs the error and throws a new error.
- *
- * @param {object} payload - The payload containing the loanId, facilityId, and acbsFacilityLoanInput.
- * @param {string} payload.loanId - The ID of the loan.
- * @param {string} payload.facilityId - The ID of the facility.
- * @param {object} payload.acbsFacilityLoanInput - The input for the ACBS facility loan, containing the expiryDate.
- * @returns {object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
- */
 const handler = async (payload) => {
   try {
     if (!payload) {
@@ -44,7 +27,7 @@ const handler = async (payload) => {
     }
 
     const { loanId, facilityId, acbsFacilityLoanInput } = payload;
-
+    const mandatoryFields = ['expiryDate'];
     const missingMandatory = findMissingMandatory(acbsFacilityLoanInput, mandatoryFields);
 
     if (missingMandatory.length) {
@@ -52,7 +35,6 @@ const handler = async (payload) => {
     }
 
     const submittedToACBS = getNowAsIsoString();
-
     const { status, data } = await api.updateFacilityLoan(facilityId, loanId, acbsFacilityLoanInput);
 
     if (isHttpErrorStatus(status)) {
