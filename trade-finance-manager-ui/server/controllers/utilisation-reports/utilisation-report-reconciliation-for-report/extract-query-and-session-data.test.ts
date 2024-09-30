@@ -76,6 +76,29 @@ describe('extractQueryAndSessionData', () => {
       expect(result.paymentDetailsFilters.facilityId).toBe(PAYMENT_DETAILS_FACILITY_ID_QUERY);
     });
 
+    it('validates paymentDetailsFacilityId and returns any errors as paymentDetailsFilterErrors', () => {
+      // Arrange
+      const queryParams = {
+        paymentDetailsFacilityId: PAYMENT_DETAILS_FACILITY_ID_QUERY,
+      };
+      const sessionData = {};
+
+      const mockError = { text: 'Error text', href: '#test-error' };
+      jest.mocked(validateFacilityIdQuery).mockReturnValue(mockError);
+
+      // Act
+      const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
+
+      // Assert
+      expect(validateFacilityIdQuery).toHaveBeenCalledWith(
+        ORIGINAL_URL,
+        'paymentDetailsFacilityId',
+        '#payment-details-facility-id-filter',
+        PAYMENT_DETAILS_FACILITY_ID_QUERY,
+      );
+      expect(result.paymentDetailsFilterErrors).toEqual([mockError]);
+    });
+
     it('uses provided paymentDetailsPaymentReference', () => {
       // Arrange
       const queryParams = {
@@ -90,7 +113,8 @@ describe('extractQueryAndSessionData', () => {
       expect(result.paymentDetailsFilters.paymentReference).toBe(PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY);
     });
 
-    // TODO: FN-2311: Add tests for payment details filters validation, similar to above.
+    // TODO FN-2311: Implement 'uses provided paymentDetailsPaymentCurrency' test case.
+    // TODO FN-2311: Implement 'validates paymentDetailsPaymentCurrency and returns any errors as paymentDetailsFilterErrors' test case.
   });
 
   it('uses premiumPaymentsTableDataError derived from session data', () => {

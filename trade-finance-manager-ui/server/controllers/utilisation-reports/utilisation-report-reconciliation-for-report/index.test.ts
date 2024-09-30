@@ -181,6 +181,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         paymentDetailsFilters,
         keyingSheet: [],
         paymentDetails: paymentDetailsViewModel,
+        paymentDetailsFilterErrors: [],
       });
     });
 
@@ -266,7 +267,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.enablePaymentsReceivedSorting).toBe(false);
     });
 
-    it('sets premium payments facility ID query error when invalid premium payments facility ID query value used', async () => {
+    it('sets premium payments filter error when invalid premium payments facility ID query value used', async () => {
       // Arrange
       const premiumPaymentsFacilityIdParam = 'abc';
       const { req, res } = httpMocks.createMocks({
@@ -298,6 +299,40 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       expect(viewModel.premiumPaymentsFilterError).toBeDefined();
       expect(viewModel.premiumPaymentsFilterError?.href).toBe('#premium-payments-facility-id-filter');
       expect(viewModel.premiumPaymentsFilterError?.text).toBe('Facility ID must be a number');
+    });
+
+    it('sets payment details filter error when invalid payment details facility ID query value used', async () => {
+      // Arrange
+      const paymentDetailsFacilityIdParam = 'abc';
+      const { req, res } = httpMocks.createMocks({
+        session,
+        params: {
+          reportId,
+        },
+        query: {
+          paymentDetailsFacilityId: paymentDetailsFacilityIdParam,
+        },
+        originalUrl: '?paymentDetailsFacilityId',
+      });
+
+      const feeRecordPaymentGroups = [aFeeRecordPaymentGroupWithoutReceivedPayments(), aFeeRecordPaymentGroupWithoutReceivedPayments()];
+      const utilisationReportReconciliationDetails: UtilisationReportReconciliationDetailsResponseBody = {
+        ...aUtilisationReportReconciliationDetailsResponse(),
+        premiumPayments: feeRecordPaymentGroups,
+        paymentDetails: feeRecordPaymentGroups,
+      };
+
+      jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
+
+      // Act
+      await getUtilisationReportReconciliationByReportId(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
+      const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
+      expect(viewModel.paymentDetailsFilterErrors).toHaveLength(1);
+      expect(viewModel.paymentDetailsFilterErrors[0].href).toBe('#payment-details-facility-id-filter');
+      expect(viewModel.paymentDetailsFilterErrors[0].text).toBe('Facility ID must be a number');
     });
 
     it('checks selected checkboxes when selected fee record ids query param defined', async () => {

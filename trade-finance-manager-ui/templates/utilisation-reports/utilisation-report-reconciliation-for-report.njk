@@ -153,6 +153,16 @@
 {% endset %}
 
 {% set paymentDetailsHtml %}
+  {% if paymentDetailsFilterErrors | length %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: paymentDetailsFilterErrors,
+      attributes: {
+        'data-cy': 'payment-details-error-summary'
+      }
+    }) }}
+  {% endif %}
+
   <h2 class="govuk-heading-l" data-cy="payment-details-heading">Payment details</h2>
 
   {% if paymentDetails.length === 0 %}
@@ -160,6 +170,7 @@
   {% else %}
     <div class="moj-filter-layout">
 
+      {# TODO FN-2311: Pass paymentDetailsFilterErrors down so that errors can be rendered on the inputs? #}
       {# TODO FN-2311: Need to pass paymentDetailsSelectedFilters in through the view model for this page. #}
 
       {{ paymentDetailsFiltersPanel.render({

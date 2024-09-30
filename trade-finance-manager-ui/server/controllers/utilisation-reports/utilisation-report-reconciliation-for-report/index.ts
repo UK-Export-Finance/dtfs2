@@ -55,12 +55,18 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
     delete req.session.checkedCheckboxIds;
     delete req.session.generateKeyingDataErrorKey;
 
-    const { premiumPaymentsFilters, premiumPaymentsFilterError, premiumPaymentsTableDataError, paymentDetailsFilters, isCheckboxChecked } =
-      extractQueryAndSessionData(
-        { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, selectedFeeRecordIdsQuery },
-        { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
-        req.originalUrl,
-      );
+    const {
+      premiumPaymentsFilters,
+      premiumPaymentsFilterError,
+      premiumPaymentsTableDataError,
+      paymentDetailsFilters,
+      paymentDetailsFilterErrors,
+      isCheckboxChecked,
+    } = extractQueryAndSessionData(
+      { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, selectedFeeRecordIdsQuery },
+      { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
+      req.originalUrl,
+    );
 
     const { premiumPayments, paymentDetails, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
@@ -93,6 +99,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,
       paymentDetailsFilters,
+      paymentDetailsFilterErrors,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

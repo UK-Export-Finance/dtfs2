@@ -4,6 +4,7 @@ import { handleRedirectSessionData } from './handle-redirect-session-data';
 import { getIsCheckboxChecked } from './get-is-checkbox-checked';
 import { getSelectedFeeRecordIdsFromQuery } from './get-selected-fee-record-ids-from-query';
 import { validateFacilityIdQuery } from './validate-facility-id-query';
+import { ErrorSummaryViewModel } from '../../../types/view-models';
 
 type PremiumPaymentsQuery = {
   premiumPaymentsFacilityId?: string;
@@ -53,16 +54,24 @@ const parsePremiumPaymentsFilters = (originalUrl: string, queryFilters?: Premium
  * @returns An object containing the parsed payment details filters and any
  * errors resulting from validating the filter query parameters.
  */
-// TODO FN-2311: Add support for the other query params, add validation of these.
 const parsePaymentDetailsFilters = (originalUrl: string, queryFilters?: PaymentDetailsQuery) => {
+  const errorSummary: ErrorSummaryViewModel[] = [];
+
   const facilityIdString = queryFilters?.paymentDetailsFacilityId ? asString(queryFilters.paymentDetailsFacilityId, 'paymentDetailsFacilityId') : undefined;
+
+  if (facilityIdString) {
+    const facilityIdError = validateFacilityIdQuery(originalUrl, 'paymentDetailsFacilityId', '#payment-details-facility-id-filter', facilityIdString);
+    if (facilityIdError) {
+      errorSummary.push(facilityIdError);
+    }
+  }
 
   const paymentReferenceString = queryFilters?.paymentDetailsPaymentReference
     ? asString(queryFilters.paymentDetailsPaymentReference, 'paymentDetailsPaymentReference')
     : undefined;
 
-  // TODO FN-2311: Update this to return multiple errors (as we now have multiple query params which can each be invalid).
-  const filterError = validateFacilityIdQuery(originalUrl, 'paymentDetailsFacilityId', '#payment-details-facility-id-filter', facilityIdString);
+  // TODO FN-2311: Add support for payment currency query param.
+  // TODO FN-2311: Validate payment currency, push any errors onto errorSummary.
 
   const filters: PaymentDetailsFilters = {
     facilityId: facilityIdString,
@@ -71,7 +80,7 @@ const parsePaymentDetailsFilters = (originalUrl: string, queryFilters?: PaymentD
 
   return {
     paymentDetailsFilters: filters,
-    paymentDetailsFilterErrors: filterError,
+    paymentDetailsFilterErrors: errorSummary,
   };
 };
 
@@ -94,9 +103,8 @@ const parsePaymentDetailsFilters = (originalUrl: string, queryFilters?: PaymentD
  * @param sessionData - The session data
  * @param originalUrl - The original URL of the request
  * @returns An object containing extracted and processed data including
- * premiumPaymentsFilters, premiumPaymentsFilterError,
- * premiumPaymentsTableDataError, paymentDetailsFilters and derived values such
- * as isCheckboxChecked.
+ * the parsed filters, any errors, and derived values such as
+ * isCheckboxChecked.
  */
 export const extractQueryAndSessionData = (
   { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, selectedFeeRecordIdsQuery }: GetUtilisationReportReconciliationQuery,
@@ -105,8 +113,10 @@ export const extractQueryAndSessionData = (
 ) => {
   const { premiumPaymentsFilters, premiumPaymentsFilterError } = parsePremiumPaymentsFilters(originalUrl, { premiumPaymentsFacilityId });
 
-  // TODO FN-2311: Have this return paymentDetailsFilterErrors and return this from the function.
-  const { paymentDetailsFilters } = parsePaymentDetailsFilters(originalUrl, { paymentDetailsFacilityId, paymentDetailsPaymentReference });
+  const { paymentDetailsFilters, paymentDetailsFilterErrors } = parsePaymentDetailsFilters(originalUrl, {
+    paymentDetailsFacilityId,
+    paymentDetailsPaymentReference,
+  });
 
   const { premiumPaymentsTableDataError, selectedFeeRecordIds: selectedFeeRecordIdsFromSessionData } = handleRedirectSessionData(sessionData);
 
@@ -122,6 +132,7 @@ export const extractQueryAndSessionData = (
     premiumPaymentsFilterError,
     premiumPaymentsTableDataError,
     paymentDetailsFilters,
+    paymentDetailsFilterErrors,
     isCheckboxChecked,
   };
 };
