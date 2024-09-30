@@ -1,5 +1,6 @@
-import { PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
+import { ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
 
 /**
  * Filters the supplied list of fee record payment entity groups by the {@link PremiumPaymentsFilters}.
@@ -36,7 +37,7 @@ export const filterFeeRecordPaymentEntityGroupsByPremiumPaymentsFilters = (
  */
 export const filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters = (
   feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[],
-  filters: PaymentDetailsFilters,
+  filters: ValidatedPaymentDetailsFilters,
 ): FeeRecordPaymentEntityGroup[] => {
   const { facilityId: facilityIdFilter, paymentCurrency: paymentCurrencyFilter, paymentReference: paymentReferenceFilter } = filters;
 

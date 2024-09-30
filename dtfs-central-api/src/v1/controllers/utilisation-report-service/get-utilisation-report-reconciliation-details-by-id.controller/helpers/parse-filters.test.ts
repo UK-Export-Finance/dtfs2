@@ -76,9 +76,20 @@ describe('parse-filters helper', () => {
 
       it('returns an object with valid paymentCurrency when a valid paymentCurrency is provided', () => {
         // Arrange
-        const validPaymentCurrency = 'GBP';
-        const paymentDetailsFilters: PaymentDetailsFilters = { paymentCurrency: validPaymentCurrency };
+        const paymentDetailsFilters: PaymentDetailsFilters = { paymentCurrency: 'GBP' };
         const expected = paymentDetailsFilters;
+
+        // Act
+        const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
+
+        // Assert
+        expect(paymentDetailsTabParsedFilters).toEqual(expected);
+      });
+
+      it('returns an object with undefined paymentCurrency when an unknown paymentCurrency is provided', () => {
+        // Arrange
+        const paymentDetailsFilters: PaymentDetailsFilters = { paymentCurrency: 'unknown-currency' };
+        const expected = {};
 
         // Act
         const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);

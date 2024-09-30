@@ -1,5 +1,6 @@
-import { isPaymentReferenceOverFiftyCharacters, PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { Currency, CURRENCY_REGEX, isPaymentReferenceOverFiftyCharacters, PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { REGEX } from '../../../../../constants';
+import { ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
 
 /**
  * Parses the provided payment details tab filters to test validity.
@@ -9,7 +10,7 @@ import { REGEX } from '../../../../../constants';
  * @param paymentDetailsFilters.paymentReference - The payment reference filter
  * @returns The parsed filters for the payment details tab
  */
-export const parsePaymentDetailsFilters = (paymentDetailsFilters?: PaymentDetailsFilters): PaymentDetailsFilters => {
+export const parsePaymentDetailsFilters = (paymentDetailsFilters?: PaymentDetailsFilters): ValidatedPaymentDetailsFilters => {
   if (!paymentDetailsFilters) {
     return {};
   }
@@ -24,14 +25,20 @@ export const parsePaymentDetailsFilters = (paymentDetailsFilters?: PaymentDetail
 
   let paymentReferenceFilter;
 
-  if (paymentReference && !isPaymentReferenceOverFiftyCharacters(paymentReference)) {
+  if (paymentReference && !isPaymentReferenceOverFiftyCharacters(paymentReference) && paymentReference.length >= 4) {
     paymentReferenceFilter = paymentReference;
+  }
+
+  let paymentCurrencyFilter: Currency | undefined;
+
+  if (paymentCurrency && CURRENCY_REGEX.test(paymentCurrency)) {
+    paymentCurrencyFilter = paymentCurrency as Currency;
   }
 
   return {
     facilityId: facilityIdFilter,
     paymentReference: paymentReferenceFilter,
-    paymentCurrency,
+    paymentCurrency: paymentCurrencyFilter,
   };
 };
 

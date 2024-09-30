@@ -1,7 +1,7 @@
-import { UtilisationReportEntity, PremiumPaymentsFilters, PaymentDetailsFilters } from '@ukef/dtfs2-common';
+import { UtilisationReportEntity, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { NotFoundError } from '../../../../../errors';
 import { getBankNameById } from '../../../../../repositories/banks-repo';
-import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
+import { UtilisationReportReconciliationDetails, ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
 import {
   filterFeeRecordPaymentEntityGroupsByPremiumPaymentsFilters,
   filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters,
@@ -42,7 +42,7 @@ const filterPremiumPayments = async (feeRecordPaymentEntityGroups: FeeRecordPaym
  * @param filters.paymentReference - The payment reference filter
  * @returns A promise that resolves to the filtered fee record payment groups
  */
-const filterPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: PaymentDetailsFilters) => {
+const filterPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: ValidatedPaymentDetailsFilters) => {
   const { facilityId, paymentCurrency, paymentReference } = filters;
 
   let feeRecords = feeRecordPaymentEntityGroups;
@@ -69,7 +69,7 @@ const filterPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecordPayme
  */
 export const getUtilisationReportReconciliationDetails = async (
   utilisationReport: UtilisationReportEntity,
-  paymentDetailsFilters: PaymentDetailsFilters,
+  paymentDetailsFilters: ValidatedPaymentDetailsFilters,
   premiumPaymentsFilters: PremiumPaymentsFilters,
 ): Promise<UtilisationReportReconciliationDetails> => {
   const { id, bankId, feeRecords, dateUploaded, status, reportPeriod } = utilisationReport;

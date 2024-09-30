@@ -1,4 +1,5 @@
-import { FeeRecordEntityMockBuilder, PaymentDetailsFilters, PaymentEntity, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, PaymentEntity, PaymentEntityMockBuilder } from '@ukef/dtfs2-common';
+import { ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
 import { aUtilisationReport, getSqlIdGenerator } from '../../../../../../test-helpers';
 import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 import {
@@ -280,7 +281,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         payments: anotherPayments,
       };
 
-      const paymentDetailsFilters: PaymentDetailsFilters = {
+      const paymentDetailsFilters: ValidatedPaymentDetailsFilters = {
         facilityId: '2222', // partial matches on all fee record payment groups
         paymentCurrency: 'EUR', // matches all payments in anotherFeeRecordPaymentGroup, and 1/2 payments in secondFeeRecordPaymentGroup
         paymentReference: 'AAA', // matches all payments in firstFeeRecordPaymentGroup and anotherFeeRecordPaymentGroup

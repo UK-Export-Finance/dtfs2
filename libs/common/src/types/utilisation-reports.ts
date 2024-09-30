@@ -47,7 +47,7 @@ export type PremiumPaymentsFilters = {
 
 export type PaymentDetailsFilters = {
   facilityId?: string;
-  paymentCurrency?: Currency;
+  paymentCurrency?: string;
   paymentReference?: string;
 };
 
