@@ -158,7 +158,7 @@ context('Bank Review Date Page - feature flag enabled', () => {
   it('validates bank review date is less than 6 years in the future', () => {
     cy.visit(relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.fillInBankReviewDate(sixYearsOneDay);
+    cy.fillInBankReviewDate(sixYearsOneDay.date);
 
     cy.clickContinueButton();
     errorSummary();
