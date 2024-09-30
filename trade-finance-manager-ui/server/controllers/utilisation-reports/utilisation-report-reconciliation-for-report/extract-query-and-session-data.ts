@@ -5,23 +5,31 @@ import { getIsCheckboxChecked } from './get-is-checkbox-checked';
 import { getSelectedFeeRecordIdsFromQuery } from './get-selected-fee-record-ids-from-query';
 import { validateFacilityIdQuery } from './validate-facility-id-query';
 
-// TODO FN-2311: Can we pull out the two filter types? Can then use these in the parse functions.
-type GetUtilisationReportReconciliationQuery = {
+type PremiumPaymentsQuery = {
   premiumPaymentsFacilityId?: string;
+};
+
+type PaymentDetailsQuery = {
   paymentDetailsFacilityId?: string;
   paymentDetailsPaymentReference?: string;
-  selectedFeeRecordIdsQuery?: string;
 };
+
+type GetUtilisationReportReconciliationQuery = PremiumPaymentsQuery &
+  PaymentDetailsQuery & {
+    selectedFeeRecordIdsQuery?: string;
+  };
 
 /**
  * Parses premium payments filters from the query parameters.
- * @param facilityIdQuery - The premium payments facility ID query.
  * @param originalUrl - The original URL of the request.
+ * @param queryFilters - The premium payments query filters.
  * @returns An object containing the parsed premium payments filters and any
  * error resulting from validating the facility ID query.
  */
-const parsePremiumPaymentsFilters = (facilityIdQuery: string | undefined, originalUrl: string) => {
-  const facilityIdQueryString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
+const parsePremiumPaymentsFilters = (originalUrl: string, queryFilters?: PremiumPaymentsQuery) => {
+  const facilityIdQueryString = queryFilters?.premiumPaymentsFacilityId
+    ? asString(queryFilters.premiumPaymentsFacilityId, 'premiumPaymentsFacilityId')
+    : undefined;
 
   const facilityIdQueryName = 'premiumPaymentsFacilityId';
   const facilityIdInputId = '#premium-payments-facility-id-filter';
@@ -40,17 +48,18 @@ const parsePremiumPaymentsFilters = (facilityIdQuery: string | undefined, origin
 
 /**
  * Parses payment details filters from the query parameters.
- * @param facilityId - The payment details facility ID query.
- * @param paymentReference - The payment details payment reference query.
  * @param originalUrl - The original URL of the request.
+ * @param queryFilters - The payment details query filters.
  * @returns An object containing the parsed payment details filters and any
  * errors resulting from validating the filter query parameters.
  */
 // TODO FN-2311: Add support for the other query params, add validation of these.
-const parsePaymentDetailsFilters = (facilityId: string | undefined, paymentReference: string | undefined, originalUrl: string) => {
-  const facilityIdString = facilityId ? asString(facilityId, 'facilityId') : undefined;
+const parsePaymentDetailsFilters = (originalUrl: string, queryFilters?: PaymentDetailsQuery) => {
+  const facilityIdString = queryFilters?.paymentDetailsFacilityId ? asString(queryFilters.paymentDetailsFacilityId, 'paymentDetailsFacilityId') : undefined;
 
-  const paymentReferenceString = paymentReference ? asString(paymentReference, 'paymentReference') : undefined;
+  const paymentReferenceString = queryFilters?.paymentDetailsPaymentReference
+    ? asString(queryFilters.paymentDetailsPaymentReference, 'paymentDetailsPaymentReference')
+    : undefined;
 
   // TODO FN-2311: Update this to return multiple errors (as we now have multiple query params which can each be invalid).
   const filterError = validateFacilityIdQuery(originalUrl, 'paymentDetailsFacilityId', '#payment-details-facility-id-filter', facilityIdString);
@@ -94,10 +103,10 @@ export const extractQueryAndSessionData = (
   sessionData: Partial<SessionData>,
   originalUrl: string,
 ) => {
-  const { premiumPaymentsFilters, premiumPaymentsFilterError } = parsePremiumPaymentsFilters(premiumPaymentsFacilityId, originalUrl);
+  const { premiumPaymentsFilters, premiumPaymentsFilterError } = parsePremiumPaymentsFilters(originalUrl, { premiumPaymentsFacilityId });
 
   // TODO FN-2311: Have this return paymentDetailsFilterErrors and return this from the function.
-  const { paymentDetailsFilters } = parsePaymentDetailsFilters(paymentDetailsFacilityId, paymentDetailsPaymentReference, originalUrl);
+  const { paymentDetailsFilters } = parsePaymentDetailsFilters(originalUrl, { paymentDetailsFacilityId, paymentDetailsPaymentReference });
 
   const { premiumPaymentsTableDataError, selectedFeeRecordIds: selectedFeeRecordIdsFromSessionData } = handleRedirectSessionData(sessionData);
 
