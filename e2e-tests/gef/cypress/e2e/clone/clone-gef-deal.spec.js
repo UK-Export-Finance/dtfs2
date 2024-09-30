@@ -16,8 +16,6 @@ import { anUnissuedCashFacility } from '../../../../e2e-fixtures/mock-gef-facili
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_MIN } from '../../fixtures/mocks/mock-deals';
 
-const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
-
 context('Clone GEF (AIN) deal', () => {
   let AINdealId;
   let testDealId;
@@ -331,7 +329,7 @@ context('Clone GEF (MIN) deal', () => {
           cy.apiUpdateApplication(MINdealId, token, MOCK_APPLICATION_MIN).then(() => {
             cy.apiCreateFacility(MINdealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
-              cy.apiUpdateFacility(facilityOneId, token, anUnissuedCashFacility({ facilityEndDateEnabled }));
+              cy.apiUpdateFacility(facilityOneId, token, anUnissuedCashFacility());
             });
           });
         });

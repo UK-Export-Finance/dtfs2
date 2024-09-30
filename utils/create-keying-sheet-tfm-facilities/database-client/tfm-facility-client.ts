@@ -1,6 +1,6 @@
 import { Collection, WithoutId } from 'mongodb';
 import { TfmFacility } from '@ukef/dtfs2-common';
-import { mongoDbClient } from './mongo-db-client';
+import { mongoDbClient } from '../../drivers/db-client';
 
 export class TfmFacilityClient {
   private static collection?: Collection<WithoutId<TfmFacility>>;

@@ -20,8 +20,8 @@ SqlDbDataSource.initialize()
   .catch((error) => console.error('❌ Failed to initialise connection to SQL database:', error));
 
 module.exports = {
-  createTasks: ({ dbName, dbConnectionString }) => {
-    const db = new MongoDbClient({ dbName, dbConnectionString });
+  createTasks: () => {
+    const db = new MongoDbClient();
 
     const usersCollectionName = 'users';
     const tfmDealsCollectionName = 'tfm-deals';

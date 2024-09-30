@@ -32,9 +32,8 @@ module.exports = defineConfig({
   e2e: {
     baseUrl: 'http://localhost',
     specPattern: 'cypress/e2e/**/*.spec.js',
-    setupNodeEvents(on, config) {
-      const { dbName, dbConnectionString } = config;
-      on('task', createTasks({ dbName, dbConnectionString }));
+    setupNodeEvents(on) {
+      on('task', createTasks());
     },
     env: {
       CONTACT_US_EMAIL_ADDRESS,

@@ -9,8 +9,6 @@ import CONSTANTS from '../../../../fixtures/constants';
 
 import { anUnissuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 
-const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
-
 context('Amendments page', () => {
   describe('AIN', () => {
     let dealId;
@@ -112,7 +110,7 @@ context('Amendments page', () => {
         // updates a gef deal so has relevant fields
         cy.updateGefDeal(dealId, MOCK_APPLICATION_MIN, BANK1_MAKER1);
 
-        cy.createGefFacilities(dealId, [anUnissuedCashFacility({ facilityEndDateEnabled })], BANK1_MAKER1).then((createdFacilities) => {
+        cy.createGefFacilities(dealId, [anUnissuedCashFacility()], BANK1_MAKER1).then((createdFacilities) => {
           dealFacilities = createdFacilities.details;
         });
 

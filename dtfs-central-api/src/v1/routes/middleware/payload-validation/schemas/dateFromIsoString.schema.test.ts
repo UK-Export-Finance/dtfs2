@@ -1,4 +1,4 @@
-import { dateFromIsoStringSchema } from './dateFromIsoString.schema.ts';
+import { dateFromIsoStringSchema } from './dateFromIsoString.schema';
 
 describe('dateFromIsoString.schema', () => {
   describe('dateFromIsoStringSchema', () => {
