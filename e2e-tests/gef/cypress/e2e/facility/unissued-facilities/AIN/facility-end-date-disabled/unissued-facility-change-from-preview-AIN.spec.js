@@ -135,7 +135,7 @@ context('Unissued Facilities AIN - change to issued from preview page - feature 
     it('facility table should have change links on the changed to issued facilities', () => {
       const issuedDate = threeDaysAgo.dMMMMyyyy;
       const coverStart = twoMonths.dMMMMyyyy;
-      const coverEnd = today.dMMMMyyyy;
+      const coverEnd = threeMonthsOneDay.dMMMMyyyy;
 
       // can change facility one name and issue dates etc since changed to issued
       applicationPreview.facilitySummaryListTable(3).nameValue().contains(unissuedCashFacility.name);
@@ -204,7 +204,7 @@ context('Unissued Facilities AIN - change to issued from preview page - feature 
     it('change links should appear for facility four and three should be unissued still', () => {
       const issuedDate = today.dMMMMyyyy;
       const coverStart = twoMonths.dMMMMyyyy;
-      const coverEnd = today.dMMMMyyyy;
+      const coverEnd = threeMonthsOneDay.dMMMMyyyy;
 
       applicationPreview.reviewFacilityStage().contains('Review facility stage');
       applicationPreview.updatedUnissuedFacilitiesHeader().contains('The following facility stages have been updated to issued:');

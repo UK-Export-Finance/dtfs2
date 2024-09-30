@@ -325,7 +325,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       // to check date format
       const issuedDate = today.dMMMMyyyy;
       const coverStart = twoMonths.dMMMMyyyy;
-      const coverEnd = today.dMMMMyyyy;
+      const coverEnd = threeMonthsOneDay.dMMMMyyyy;
 
       // should be able to change facility four as changed to issued
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedCashFacilityWith20MonthsOfCover.name);

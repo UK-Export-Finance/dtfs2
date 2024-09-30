@@ -314,7 +314,7 @@ context('Return to maker for unissued to issued facilities - feature flag disabl
     it('change unissued to issued from application details whilst changes required', () => {
       const issuedDate = threeDaysAgo.dMMMMyyyy;
       const coverStart = twoMonths.dMMMMyyyy;
-      const coverEnd = today.dMMMMyyyy;
+      const coverEnd = threeMonthsOneDay.dMMMMyyyy;
 
       applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));

@@ -157,7 +157,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       // to check date format
       const issuedDate = today.dMMMMyyyy;
       const coverStart = twoMonths.dMMMMyyyy;
-      const coverEnd = today.dMMMMyyyy;
+      const coverEnd = threeMonthsOneDay.dMMMMyyyy;
 
       // should be able to change facility three as changed to issued
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedContingentFacility.name);
@@ -216,7 +216,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
     it('pressing back, cancel or yes should not edit the facility and take you back to details page', () => {
       const issuedDate = threeDaysAgo.dMMMMyyyy;
       const coverStart = threeDaysAgo.dMMMMyyyy;
-      const coverEnd = today.dMMMMyyyy;
+      const coverEnd = threeMonthsOneDay.dMMMMyyyy;
       // should be able to change number 1 as changed to issued
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(unissuedCashFacility.name);
       applicationPreview.facilitySummaryListTable(2).hasBeenIssuedAction().click();
