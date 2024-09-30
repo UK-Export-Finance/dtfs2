@@ -4,6 +4,7 @@
 
 {% macro render(params) %}
   {% set filters = params.filters %}
+  {% set errors = params.errors %}
 
   {% if filters.currency %}
     {{ govukRadios({
@@ -46,6 +47,12 @@
       classes: 'govuk-label--m',
       attributes: {
         'data-cy': 'payment-details--filter-facility-id-label'
+      }
+    },
+    errorMessage: errors and errors.facilityIdErrorMessage and {
+      text: errors.facilityIdErrorMessage,
+      attributes: {
+        'data-cy': 'payment-details--filter-facility-id-error'
       }
     },
     attributes: {

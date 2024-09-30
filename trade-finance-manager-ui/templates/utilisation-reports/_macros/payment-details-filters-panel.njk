@@ -4,10 +4,12 @@
 {% macro render(params) %}
   {% set filters = params.filters %}
   {% set selectedFilters = params.selectedFilters %}
+  {% set errors = params.errors %}
 
   {% set filterOptionsHtml %}
     {{ paymentDetailsFiltersForm.render({
-      filters: filters
+      filters: filters,
+      errors: errors
     }) }}
   {% endset %}
 

@@ -7,9 +7,9 @@ describe(component, () => {
   const defaultParams = {
     filters: {
       currency: [],
+      paymentReference: '',
+      facilityId: '',
     },
-    paymentReference: '',
-    facilityId: '',
   };
 
   describe('Currency filter', () => {
@@ -54,7 +54,7 @@ describe(component, () => {
     });
 
     it('should set provided value for payment reference', () => {
-      const params = { ...defaultParams, paymentReference: 'REF123' };
+      const params = { ...defaultParams, filters: { ...defaultParams.filters, paymentReference: 'REF123' } };
 
       const wrapper = render(params);
 
@@ -64,7 +64,7 @@ describe(component, () => {
     it('should set correct id for payment reference input', () => {
       const wrapper = render(defaultParams);
 
-      wrapper.expectElement(inputSelector).toHaveAttribute('id', 'paymentDetailsPaymentReference');
+      wrapper.expectElement(inputSelector).toHaveAttribute('id', 'payment-details-payment-reference-filter');
     });
 
     it('should have correct label for payment reference input', () => {
@@ -84,7 +84,7 @@ describe(component, () => {
     });
 
     it('should set provided value for facility ID', () => {
-      const params = { ...defaultParams, facilityId: 'FAC456' };
+      const params = { ...defaultParams, filters: { ...defaultParams.filters, facilityId: 'FAC456' } };
 
       const wrapper = render(params);
 
@@ -94,13 +94,28 @@ describe(component, () => {
     it('should set correct id for facility ID input', () => {
       const wrapper = render(defaultParams);
 
-      wrapper.expectElement(inputSelector).toHaveAttribute('id', 'paymentDetailsFacilityId');
+      wrapper.expectElement(inputSelector).toHaveAttribute('id', 'payment-details-facility-id-filter');
     });
 
     it('should have correct label for facility ID input', () => {
       const wrapper = render(defaultParams);
 
       wrapper.expectText('[data-cy="payment-details--filter-facility-id-label"]').toRead('Facility ID');
+    });
+
+    it('should render in line error when there is an error with the facility ID input', () => {
+      const facilityIdErrorMessage = 'an error occurred';
+      const params = {
+        ...defaultParams,
+        errors: {
+          facilityIdErrorMessage,
+        },
+      };
+
+      const wrapper = render(params);
+
+      wrapper.expectElement('[data-cy="payment-details--filter-facility-id-error"]').toExist();
+      wrapper.expectText('[data-cy="payment-details--filter-facility-id-error"]').toContain(facilityIdErrorMessage);
     });
   });
 });

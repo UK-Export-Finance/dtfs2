@@ -161,6 +161,10 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         paymentReference: paymentDetailsPaymentReference,
       };
 
+      const paymentDetailsFilterErrors = {
+        errorSummary: [],
+      };
+
       jest.mocked(api.getUtilisationReportReconciliationDetailsById).mockResolvedValue(utilisationReportReconciliationDetails);
 
       // Act
@@ -181,7 +185,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         paymentDetailsFilters,
         keyingSheet: [],
         paymentDetails: paymentDetailsViewModel,
-        paymentDetailsFilterErrors: [],
+        paymentDetailsFilterErrors,
       });
     });
 
@@ -330,9 +334,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-reports/utilisation-report-reconciliation-for-report.njk');
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
-      expect(viewModel.paymentDetailsFilterErrors).toHaveLength(1);
-      expect(viewModel.paymentDetailsFilterErrors[0].href).toBe('#payment-details-facility-id-filter');
-      expect(viewModel.paymentDetailsFilterErrors[0].text).toBe('Facility ID must be a number');
+      expect(viewModel.paymentDetailsFilterErrors.errorSummary).toHaveLength(1);
+      expect(viewModel.paymentDetailsFilterErrors.errorSummary[0].href).toBe('#payment-details-facility-id-filter');
+      expect(viewModel.paymentDetailsFilterErrors.errorSummary[0].text).toBe('Facility ID must be a number');
     });
 
     it('checks selected checkboxes when selected fee record ids query param defined', async () => {

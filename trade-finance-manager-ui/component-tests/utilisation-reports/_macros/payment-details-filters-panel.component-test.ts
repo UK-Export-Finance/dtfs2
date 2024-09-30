@@ -7,10 +7,10 @@ describe(component, () => {
   const defaultParams = {
     filters: {
       currency: [],
+      paymentReference: '',
+      facilityId: '',
     },
     selectedFilters: [],
-    paymentReference: '',
-    facilityId: '',
   };
 
   const filtersContainerSelector = '[data-cy="payment-details--filters-container"]';

@@ -4,7 +4,7 @@ import { handleRedirectSessionData } from './handle-redirect-session-data';
 import { getIsCheckboxChecked } from './get-is-checkbox-checked';
 import { getSelectedFeeRecordIdsFromQuery } from './get-selected-fee-record-ids-from-query';
 import { validateFacilityIdQuery } from './validate-facility-id-query';
-import { ErrorSummaryViewModel } from '../../../types/view-models';
+import { PaymentDetailsFilterErrorsViewModel } from '../../../types/view-models';
 
 type PremiumPaymentsQuery = {
   premiumPaymentsFacilityId?: string;
@@ -55,14 +55,18 @@ const parsePremiumPaymentsFilters = (originalUrl: string, queryFilters?: Premium
  * errors resulting from validating the filter query parameters.
  */
 const parsePaymentDetailsFilters = (originalUrl: string, queryFilters?: PaymentDetailsQuery) => {
-  const errorSummary: ErrorSummaryViewModel[] = [];
+  const filterErrors: PaymentDetailsFilterErrorsViewModel = {
+    errorSummary: [],
+  };
 
   const facilityIdString = queryFilters?.paymentDetailsFacilityId ? asString(queryFilters.paymentDetailsFacilityId, 'paymentDetailsFacilityId') : undefined;
 
   if (facilityIdString) {
     const facilityIdError = validateFacilityIdQuery(originalUrl, 'paymentDetailsFacilityId', '#payment-details-facility-id-filter', facilityIdString);
+
     if (facilityIdError) {
-      errorSummary.push(facilityIdError);
+      filterErrors.facilityIdErrorMessage = facilityIdError.text;
+      filterErrors.errorSummary.push(facilityIdError);
     }
   }
 
@@ -80,7 +84,7 @@ const parsePaymentDetailsFilters = (originalUrl: string, queryFilters?: PaymentD
 
   return {
     paymentDetailsFilters: filters,
-    paymentDetailsFilterErrors: errorSummary,
+    paymentDetailsFilterErrors: filterErrors,
   };
 };
 

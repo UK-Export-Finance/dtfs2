@@ -35,6 +35,9 @@ describe(page, () => {
     premiumPayments: [],
     keyingSheet: [],
     paymentDetails: [],
+    paymentDetailsFilterErrors: {
+      errorSummary: [],
+    },
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -253,6 +256,23 @@ describe(page, () => {
       wrapper.expectElement(`${paymentDetailsTabSelector} [data-cy="payment-details--filters-action-bar"]`).toExist();
 
       wrapper.expectElement(`${paymentDetailsTabSelector} table`).toExist();
+    });
+
+    it('should render error summary when present', () => {
+      const wrapper = getWrapper({
+        ...params,
+        paymentDetailsFilterErrors: {
+          errorSummary: [
+            { text: "You've done something wrong", href: '#id' },
+            { text: "You've done another thing wrong", href: '#other' },
+          ],
+        },
+      });
+
+      wrapper.expectElement('a[href="#id"]').toExist();
+      wrapper.expectText('a[href="#id"]').toRead("You've done something wrong");
+      wrapper.expectElement('a[href="#other"]').toExist();
+      wrapper.expectText('a[href="#other"]').toRead("You've done another thing wrong");
     });
   });
 });

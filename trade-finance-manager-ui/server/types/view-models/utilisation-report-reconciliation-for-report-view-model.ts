@@ -97,6 +97,11 @@ export type PremiumPaymentsViewModelItem = {
   checkboxAriaLabel: string;
 };
 
+export type PaymentDetailsFilterErrorsViewModel = {
+  facilityIdErrorMessage?: string;
+  errorSummary: ErrorSummaryViewModel[];
+};
+
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {
   bank: SessionBank;
   formattedReportPeriod: string;
@@ -109,6 +114,5 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
   paymentDetailsFilters?: PaymentDetailsFilters;
-  // TODO FN-2311: Convert the following to a new ViewModel similar to 'PaymentErrorsViewModel' - where individual errors are also passed through to be applied on the inputs.
-  paymentDetailsFilterErrors: ErrorSummaryViewModel[];
+  paymentDetailsFilterErrors: PaymentDetailsFilterErrorsViewModel;
 };

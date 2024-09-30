@@ -153,10 +153,10 @@
 {% endset %}
 
 {% set paymentDetailsHtml %}
-  {% if paymentDetailsFilterErrors | length %}
+  {% if paymentDetailsFilterErrors.errorSummary | length %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: paymentDetailsFilterErrors,
+      errorList: paymentDetailsFilterErrors.errorSummary,
       attributes: {
         'data-cy': 'payment-details-error-summary'
       }
@@ -170,12 +170,12 @@
   {% else %}
     <div class="moj-filter-layout">
 
-      {# TODO FN-2311: Pass paymentDetailsFilterErrors down so that errors can be rendered on the inputs? #}
       {# TODO FN-2311: Need to pass paymentDetailsSelectedFilters in through the view model for this page. #}
 
       {{ paymentDetailsFiltersPanel.render({
         filters: paymentDetailsFilters,
-        selectedFilters: paymentDetailsSelectedFilters
+        selectedFilters: paymentDetailsSelectedFilters,
+        errors: paymentDetailsFilterErrors
       }) }}
 
       <div class="moj-filter-layout__content">
