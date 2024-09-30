@@ -606,7 +606,6 @@ jobs:
       # Single dimension matrix
       matrix:
         spec: [
-
             'case/activities/*.spec.js',
             'case/AIN/*.spec.js',
             'case/deal-cancellation-disabled/*.spec.js',
