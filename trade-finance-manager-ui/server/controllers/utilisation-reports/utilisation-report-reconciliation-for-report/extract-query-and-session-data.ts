@@ -12,12 +12,12 @@ type GetUtilisationReportReconciliationQuery = {
 
 /**
  * Parses premium payments filters from the query parameters.
- * @param premiumPaymentsFacilityId - The premium payments facility ID query.
  * @param originalUrl - The original URL of the request.
+ * @param premiumPaymentsFacilityId - The premium payments facility ID query.
  * @returns An object containing the parsed premium payments filters and any
  * error resulting from validating the facility ID query.
  */
-const parsePremiumPaymentsFilters = (facilityIdQuery: string | undefined, originalUrl: string) => {
+const parsePremiumPaymentsFilters = (originalUrl: string, facilityIdQuery?: string) => {
   const facilityIdQueryString = facilityIdQuery ? asString(facilityIdQuery, 'facilityIdQuery') : undefined;
 
   const filters: PremiumPaymentsFilters = {
@@ -57,7 +57,7 @@ export const extractQueryAndSessionData = (
   sessionData: Partial<SessionData>,
   originalUrl: string,
 ) => {
-  const { premiumPaymentsFilters, premiumPaymentsFilterError } = parsePremiumPaymentsFilters(premiumPaymentsFacilityId, originalUrl);
+  const { premiumPaymentsFilters, premiumPaymentsFilterError } = parsePremiumPaymentsFilters(originalUrl, premiumPaymentsFacilityId);
 
   const { premiumPaymentsTableDataError, selectedFeeRecordIds: selectedFeeRecordIdsFromSessionData } = handleRedirectSessionData(sessionData);
 
