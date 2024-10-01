@@ -102,9 +102,9 @@ context('Deal cancellation - bank request date', () => {
       cy.clickContinueButton();
       cy.clickBackLink();
 
-      bankRequestDatePage.bankRequestDateDay()().should('have.value', dateConstants.todayDay);
-      bankRequestDatePage.bankRequestDateMonth()().should('have.value', dateConstants.todayMonth);
-      bankRequestDatePage.bankRequestDateYear()().should('have.value', dateConstants.todayYear);
+      bankRequestDatePage.bankRequestDateDay().should('have.value', dateConstants.todayDay);
+      bankRequestDatePage.bankRequestDateMonth().should('have.value', dateConstants.todayMonth);
+      bankRequestDatePage.bankRequestDateYear().should('have.value', dateConstants.todayYear);
     });
   });
 

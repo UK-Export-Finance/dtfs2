@@ -37,7 +37,7 @@ export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Re
 
     const cancellation = await api.getDealCancellation(_id, userToken);
 
-    const previouslyEnteredBankRequestDate = cancellation?.bankRequestDate ? new Date(cancellation.bankRequestDate) : undefined;
+    const previouslyEnteredBankRequestDate = cancellation?.bankRequestDate && new Date(cancellation.bankRequestDate);
 
     const day = previouslyEnteredBankRequestDate ? format(previouslyEnteredBankRequestDate, 'd') : '';
     const month = previouslyEnteredBankRequestDate ? format(previouslyEnteredBankRequestDate, 'M') : '';

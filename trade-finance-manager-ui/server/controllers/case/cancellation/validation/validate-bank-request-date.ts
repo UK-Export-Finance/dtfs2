@@ -46,7 +46,7 @@ export const validateBankRequestDate = (date: DayMonthYearInput): BankRequestDat
   }
 
   return {
-    bankRequestDate: startOfDay(parsedDate),
+    bankRequestDate: parsedDate,
     errors: null,
   };
 };
