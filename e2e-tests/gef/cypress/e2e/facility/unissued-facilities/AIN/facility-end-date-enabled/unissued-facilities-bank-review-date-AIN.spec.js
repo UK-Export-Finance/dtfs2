@@ -121,7 +121,7 @@ context('Unissued Facilities AIN - bank review date page - feature flag enabled'
     });
 
     it('should redirect user to the unissued facility page when clicking continue', () => {
-      cy.completeDateFormFields({ idPrefix: 'bank--review-date' });
+      cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
 
       cy.clickContinueButton();
 
@@ -129,7 +129,7 @@ context('Unissued Facilities AIN - bank review date page - feature flag enabled'
     });
 
     it('should redirect user to the unissued facility page when clicking save and return', () => {
-      cy.completeDateFormFields({ idPrefix: 'bank--review-date' });
+      cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
 
       cy.clickSaveAndReturnButton();
 
@@ -172,14 +172,14 @@ context('Unissued Facilities AIN - bank review date page - feature flag enabled'
     });
 
     it('should redirect user to the application details page when clicking continue', () => {
-      cy.completeDateFormFields({ idPrefix: 'bank--review-date' });
+      cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
       cy.clickContinueButton();
 
       cy.url().should('eq', getApplicationDetailsUrl());
     });
 
     it('should redirect user to the application details page when clicking save and return', () => {
-      cy.completeDateFormFields({ idPrefix: 'bank--review-date' });
+      cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
 
       cy.clickSaveAndReturnButton();
 

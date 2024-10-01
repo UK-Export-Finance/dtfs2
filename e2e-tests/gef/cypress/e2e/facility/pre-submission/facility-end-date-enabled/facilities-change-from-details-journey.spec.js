@@ -62,7 +62,7 @@ context('Changing facility details from application-details page should take you
 
       applicationDetails.facilitySummaryListTable(0).bankReviewDateAction().click();
 
-      cy.completeDateFormFields({ idPrefix: 'bank--review-date' });
+      cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
 
       cy.clickContinueButton();
       cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facility._id}/provided-facility`));

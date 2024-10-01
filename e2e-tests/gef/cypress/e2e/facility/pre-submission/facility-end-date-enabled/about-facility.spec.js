@@ -4,7 +4,18 @@ import aboutFacility from '../../../pages/about-facility';
 import bankReviewDate from '../../../pages/bank-review-date';
 import facilityEndDate from '../../../pages/facility-end-date';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { yesterday, today, todayDay, todayMonth, todayYear, twoDays, twoDaysAgo, tomorrow, tomorrowYear } from '../../../../../../e2e-fixtures/dateConstants';
+import {
+  now,
+  today,
+  todayDay,
+  todayMonth,
+  todayYear,
+  twoDays,
+  twoDaysAgo,
+  tomorrow,
+  tomorrowYear,
+  yesterday,
+} from '../../../../../../e2e-fixtures/dateConstants';
 
 const applications = [];
 let token;
@@ -109,8 +120,9 @@ context('About Facility Page  - feature flag enabled', () => {
       cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', day: `${todayDay}-`, month: `${todayMonth} + 1` });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: `${todayDay}-`, month: `${todayMonth} + 1` });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', day: `${todayDay}-`, month: `${todayMonth} + 1`, year: now.getFullYear() });
+
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: `${todayDay}-`, month: `${todayMonth} + 1`, year: now.getFullYear() });
 
       cy.clickContinueButton();
       errorSummary().contains('The day for the cover start date must include 1 or 2 numbers');
@@ -118,7 +130,7 @@ context('About Facility Page  - feature flag enabled', () => {
       aboutFacility.coverStartDateError().contains('The day for the cover start date must include 1 or 2 numbers');
       aboutFacility.coverEndDateError().contains('The day for the cover end date must include 1 or 2 numbers');
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', month: null });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', month: null, year: '-' });
       cy.completeDateFormFields({ idPrefix: 'cover-end-date', month: null, year: '2' });
 
       cy.clickContinueButton();

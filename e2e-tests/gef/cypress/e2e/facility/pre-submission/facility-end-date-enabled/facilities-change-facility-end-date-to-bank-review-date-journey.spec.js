@@ -53,7 +53,7 @@ context('Changing between facility end date and bank review date - feature flag 
 
     cy.url().should('eq', relative(`/gef/application-details/${application.id}/facilities/${facilityId}/bank-review-date`));
 
-    cy.completeDateFormFields({ idPrefix: 'bank--review-date', date: tomorrow });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: tomorrow });
 
     cy.clickContinueButton();
 
@@ -88,7 +88,7 @@ context('Changing between facility end date and bank review date - feature flag 
     bankReviewDate.bankReviewDateMonth().should('have.value', '');
     bankReviewDate.bankReviewDateYear().should('have.value', '');
 
-    cy.completeDateFormFields({ idPrefix: 'bank--review-date', date: tomorrow });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: tomorrow });
 
     cy.clickContinueButton();
 
