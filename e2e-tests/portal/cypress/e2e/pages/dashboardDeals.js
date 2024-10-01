@@ -22,7 +22,8 @@ const page = {
     exporter: (index = 1) => cy.get(`[data-cy*="deal__exporter--index--${index}]`),
     bankRef: (index = 1) => cy.get(`[data-cy*="deal__bankRef--index--${index}]`),
 
-    link: (index = 1) => cy.get(`[data-cy*="deal__link--index--${index}]`),
+    // link: (index = 1) => cy.get(`[data-cy*="deal__link--index--${index}]`),
+    link: () => cy.get('.govuk-table__body .govuk-table__row').eq(0).find('a'),
 
     product: (index = 1) => cy.get(`[data-cy*="deal__product--index--${index}]`),
     status: (index = 1) => cy.get(`[data-cy*="deal__status--index--${index}]`),
