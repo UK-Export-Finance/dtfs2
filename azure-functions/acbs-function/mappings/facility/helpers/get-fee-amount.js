@@ -5,7 +5,7 @@ const { to2Decimals } = require('../../../helpers/currency');
  * Return facility fee record amount.
  * @param {Object} facility Facility object
  * @param {string} dealType Deal type i.e. GEF, BSS, EWCS
- * @param {Integer} premiumScheduleIndex Premium schedule index
+ * @param {number} premiumScheduleIndex Premium schedule index
  * @returns {number} Fee record amount
  */
 

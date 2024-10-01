@@ -43,10 +43,10 @@ const uploadAndSaveToDeal = async (files, field, dealId, userToken, user, maxFil
 /**
  * Removes a file from the application as well as from the filestore via the API
  *
- * @param {*} filename name of file to remove
- * @param {*} field field identifier for supplementaryInfo question
- * @param {*} deal application/deal object
- * @param {*} userToken
+ * @param {string} filename name of file to remove
+ * @param {Object} field field identifier for supplementaryInfo question
+ * @param {Object} deal application/deal object
+ * @param {string} userToken
  */
 const removeFileFromDeal = async (filename, field, deal, userToken, user) => {
   const existingFiles = deal.supportingInformation?.[field];

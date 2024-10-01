@@ -185,10 +185,10 @@ exports.delete = async (req, res) => {
 
 /**
  * Query all deals in the deals collection (BSS, EWCS, GEF)
- * @param {*} filters any filters for list, uses match spec
- * @param {*} sort any additional sort fields for list
- * @param {*} start where list should start - part of pagination.
- * @param {*} pagesize Size of each page - limits list results
+ * @param {Object} filters any filters for list, uses match spec
+ * @param {Object} sort any additional sort fields for list
+ * @param {number} start where list should start - part of pagination.
+ * @param {number} pagesize Size of each page - limits list results
  * @returns combined and formatted list of deals
  */
 const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) => {

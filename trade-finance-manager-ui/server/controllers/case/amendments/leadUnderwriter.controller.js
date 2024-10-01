@@ -36,8 +36,8 @@ const getAmendmentLeadUnderwriter = async (amendment, user, token) => {
 };
 
 /**
- * @param {*} req
- * @param {*} res
+ * @param {Object} req
+ * @param {Object} res
  * gets deal and amendment by id
  * checks if user can edit
  * gets all underwriter/ managers and populates dropdown list
@@ -84,8 +84,8 @@ const getAssignAmendmentLeadUnderwriter = async (req, res) => {
 };
 
 /**
- * @param {*} req
- * @param {*} res
+ * @param {Object} req
+ * @param {Object} res
  * checks if unassigned or assigned to user
  * if unassigned then does not make getUser api call
  * redirects back to underwriting page

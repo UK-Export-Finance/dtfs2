@@ -152,8 +152,8 @@ const ukefSubmissionPortalActivity = async (application) => {
  * Generates MIN Activity objects for submission and changed facilities
  * Removes flag for changedToIssued facility
  * Returns updated deal
- * @param {*} req
- * @param {*} res
+ * @param {Object} req
+ * @param {Object} res
  */
 const generateMINActivities = async (req, res) => {
   const {
