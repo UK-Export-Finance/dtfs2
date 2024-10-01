@@ -46,7 +46,7 @@ const generateFilterObject = (field, text, value, submittedFilters) => {
  * This will used in the checkboxes component 'items' array.
  *
  * @param {string} field name
- * @param {array} array of field values - all possible values for the field name
+ * @param {Array} array of field values - all possible values for the field name
  * @param {Object} submitted filters
  * @example ( fieldName: 'dealType', fieldInputs: [ { text: 'GEF', value: 'GEF' }, { text: 'Issued', value: true } ], submittedFilters: { dealType: ['GEF'] })
  * @returns [ { text: 'GEF', value: 'GEF', checked: true }, { text: 'BSS/EWCS', value: 'BSS/EWCS', checked: false } ]

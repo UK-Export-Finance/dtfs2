@@ -36,7 +36,7 @@ const submittedFiltersArray = (allSubmittedFilters = {}) => {
  * Transforms an array of objects into an object.
  * Each field becomes a child object.
  *
- * @param {array} array of filter objects
+ * @param {Array} array of filter objects
  * @example [ { submissionType: ['Automatic', 'Manual'] }, { dealType: ['GEF'] } ]
  * @returns { submissionType: ['Automatic', 'Manual'], dealType: ['GEF'] }
  */

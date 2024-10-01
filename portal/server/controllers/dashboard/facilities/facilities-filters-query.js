@@ -7,7 +7,7 @@ const { isSuperUser } = require('../../../helpers');
  * Generates an array of objects to be sent to API (for DB query)
  *
  * @param {Object} user
- * @param {array} custom filters
+ * @param {Array} custom filters
  * @example ( { _id: '1234', bank: { id: '9' } }, [ type: ['Bond'] ] )
  * @returns { AND: [ { 'deal.bank.id': '9'} ], OR: [{ hasBeenIssued: true }, { type: 'Bond' } ] }
  */

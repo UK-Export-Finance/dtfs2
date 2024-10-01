@@ -4,7 +4,7 @@ const { uploadFile, deleteFile, updateApplication, updateSupportingInformation }
  * Uploads a file to the API, and saves it against the application.
  * Currently configured for supportingInfo section
  *
- * @param {array} files array of files to upload, assumes format from multer
+ * @param {Array} files array of files to upload, assumes format from multer
  * @param {string} field field identifier for supplementaryInfo question
  * @param {string} dealId application/deal ID
  * @param {string} userToken user token

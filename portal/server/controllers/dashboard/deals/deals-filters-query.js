@@ -7,7 +7,7 @@ const keywordQuery = require('./deals-filters-keyword-query');
  * Generates an array of objects to be sent to API (for DB query)
  *
  * @param {string} createdByYou flag
- * @param {array} custom filters
+ * @param {Array} custom filters
  * @param {Object} user
  * @example ( 'true', [ dealType: ['BSS/EWCS'] ], { _id: '123', firstName: 'Mock' } )
  * @returns { AND: [ { 'bank.id': '9'} ], OR: [{ dealType: 'BSS/EWCS' }] }
