@@ -13,7 +13,6 @@ describe('extractQueryAndSessionData', () => {
     jest.resetAllMocks();
 
     jest.mocked(handleRedirectSessionData).mockReturnValue({
-      premiumPaymentsTableDataError: undefined,
       selectedFeeRecordIds: new Set(),
     });
   });
@@ -47,7 +46,7 @@ describe('extractQueryAndSessionData', () => {
       const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
       // Assert
-      expect(validateFacilityIdQuery).toHaveBeenCalledWith(PREMIUM_PAYMENTS_FACILITY_ID_QUERY, ORIGINAL_URL, '#premium-payments-facility-id-filter');
+      expect(validateFacilityIdQuery).toHaveBeenCalledWith(ORIGINAL_URL, PREMIUM_PAYMENTS_FACILITY_ID_QUERY);
       expect(result.premiumPaymentsFilterError).toEqual(mockError);
     });
   });
@@ -98,7 +97,6 @@ describe('extractQueryAndSessionData', () => {
     const sessionData = {};
 
     jest.mocked(handleRedirectSessionData).mockReturnValue({
-      premiumPaymentsTableDataError: undefined,
       selectedFeeRecordIds: new Set([1, 2, 3]),
     });
 

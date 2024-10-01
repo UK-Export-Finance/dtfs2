@@ -14,7 +14,8 @@ import {
  * @param sessionData.addPaymentErrorKey - The add payment error key
  * @param sessionData.generateKeyingDataErrorKey - The generate keying data error key
  * @param sessionData.checkedCheckboxIds - The checked checkbox IDs
- * @returns An object containing table data error and selected fee record IDs
+ * @returns An object containing selected fee record IDs and optionally a
+ * premium payments table data error
  * @throws {Error} If an unrecognised error key is provided
  */
 export const handleRedirectSessionData = ({
@@ -22,7 +23,7 @@ export const handleRedirectSessionData = ({
   generateKeyingDataErrorKey,
   checkedCheckboxIds: checkedCheckboxIdsSession,
 }: Partial<SessionData>): {
-  premiumPaymentsTableDataError: ErrorSummaryViewModel | undefined;
+  premiumPaymentsTableDataError?: ErrorSummaryViewModel;
   selectedFeeRecordIds: Set<number>;
 } => {
   if (generateKeyingDataErrorKey) {
@@ -39,7 +40,6 @@ export const handleRedirectSessionData = ({
 
   if (!addPaymentErrorKey) {
     return {
-      premiumPaymentsTableDataError: undefined,
       selectedFeeRecordIds: new Set(),
     };
   }
