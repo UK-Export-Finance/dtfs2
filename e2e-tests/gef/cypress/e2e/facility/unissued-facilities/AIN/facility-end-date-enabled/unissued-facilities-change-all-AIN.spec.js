@@ -3,13 +3,12 @@ import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
 import {
   fourDaysAgo,
+  threeDaysAgo,
+  threeDaysAgoPlusMonth,
   threeDaysMonth,
   threeDaysYear,
   threeMonthsOneDay,
   threeMonthsOneDayYear,
-  threeDays,
-  threeDaysAgo,
-  threeDaysAgoPlusMonth,
   threeMonthsOneDayDay,
   threeMonthsOneDayMonth,
   threeMonths,
@@ -188,7 +187,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       // entering cover start date before issue date
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDays });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
 
       cy.clickContinueButton();
       aboutFacilityUnissued.coverStartDateError().contains('Cover start date cannot be before the issue date');

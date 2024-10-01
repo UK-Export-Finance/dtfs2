@@ -92,6 +92,8 @@ context('Unissued Facilities MIN - change to issued from preview page - feature 
       cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths });
       cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeMonthsOneDay });
 
+      aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
+
       cy.clickContinueButton();
 
       cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay });
