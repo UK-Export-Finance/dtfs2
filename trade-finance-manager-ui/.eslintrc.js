@@ -27,7 +27,6 @@ const baseRules = {
   'no-await-in-loop': 'off',
   'no-restricted-syntax': 'off',
   'no-return-await': 'off',
-  'no-useless-constructor': 'off',
   '@typescript-eslint/no-useless-constructor': 'error',
   '@typescript-eslint/no-empty-function': ['error', { allow: ['constructors'] }],
   'no-use-before-define': [
