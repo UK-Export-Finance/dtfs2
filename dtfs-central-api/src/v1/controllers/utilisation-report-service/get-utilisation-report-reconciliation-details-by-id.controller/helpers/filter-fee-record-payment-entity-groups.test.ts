@@ -7,6 +7,8 @@ import { ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
   const feeRecordIdGenerator = getSqlIdGenerator();
 
+  const aFeeRecord = () => FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).build();
+
   const aFeeRecordWithFacilityId = (facilityId: string) =>
     FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withId(feeRecordIdGenerator.next().value).withFacilityId(facilityId).build();
 
@@ -51,7 +53,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
         const groups = [firstGroup, secondGroup];
 
-        const facilityIdFilter = '1111'; // corresponds to firstGroup.feeRecords[0].facilityId
+        const facilityIdFilter = '1111';
         const filters = { facilityId: facilityIdFilter };
 
         // Act
@@ -75,7 +77,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         };
 
         const thirdGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('11112222')], // partially matches firstGroup.feeRecords[0].facilityId
+          feeRecords: [aFeeRecordWithFacilityId('11112222')],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
         };
 
@@ -98,12 +100,12 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       it('returns the group where the supplied payment currency filter matches one of the payments in a group', () => {
         // Arrange
         const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('11111111')],
+          feeRecords: [aFeeRecord()],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
         };
 
         const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('22222222')],
+          feeRecords: [aFeeRecord()],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build(), PaymentEntityMockBuilder.forCurrency(CURRENCY.USD).build()],
         };
 
@@ -123,17 +125,17 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       it('returns all groups which have a payment currency which matches the supplied payment currency filter', () => {
         // Arrange
         const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('11111111')],
+          feeRecords: [aFeeRecord()],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
         };
 
         const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('22222222')],
+          feeRecords: [aFeeRecord()],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build(), PaymentEntityMockBuilder.forCurrency(CURRENCY.USD).build()],
         };
 
         const thirdGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('33333333')],
+          feeRecords: [aFeeRecord()],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.USD).build()],
         };
 
@@ -156,7 +158,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       it('returns the group where the supplied payment reference filter matches one of the fee records in a group', () => {
         // Arrange
         const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('11111111')],
+          feeRecords: [aFeeRecord()],
           payments: [
             PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAA').build(),
             PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('BBBB').build(),
@@ -164,7 +166,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         };
 
         const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('22222222')],
+          feeRecords: [aFeeRecord()],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('CCCC').build()],
         };
 
@@ -184,18 +186,18 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       it('returns the group where the supplied payment reference filter partially matches a payment reference in the group', () => {
         // Arrange
         const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('11111111')],
+          feeRecords: [aFeeRecord()],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAA').build()],
         };
 
         const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('22222222')],
+          feeRecords: [aFeeRecord()],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('BBBB').build()],
         };
 
         const groups = [firstGroup, secondGroup];
 
-        const paymentReferenceFilter = 'AA'; // corresponds to firstGroup.payments[0].reference
+        const paymentReferenceFilter = 'AA';
         const filters = { paymentReference: paymentReferenceFilter };
 
         // Act
@@ -209,22 +211,18 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       it('returns all groups which have a payment reference which partially matches the supplied payment reference filter', () => {
         // Arrange
         const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('11111111')],
+          feeRecords: [aFeeRecord()],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAA').build()],
         };
 
         const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('22222222')],
+          feeRecords: [aFeeRecord()],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('BBBB').build()],
         };
 
         const thirdGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('33333333')],
-          payments: [
-            PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
-              .withReference('AAAABB') // partially matches firstGroup.payments[0].reference
-              .build(),
-          ],
+          feeRecords: [aFeeRecord()],
+          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAABB').build()],
         };
 
         const groups = [firstGroup, secondGroup, thirdGroup];
@@ -255,14 +253,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       };
 
       const thirdGroup: FeeRecordPaymentEntityGroup = {
-        feeRecords: [
-          aFeeRecordWithFacilityId('77772222'), // partially matches secondGroup.feeRecords[0].facilityId
-        ],
-        payments: [
-          PaymentEntityMockBuilder.forCurrency(CURRENCY.EUR)
-            .withReference('AAAABB') // partially matches firstGroup.payments[0].reference
-            .build(),
-        ],
+        feeRecords: [aFeeRecordWithFacilityId('77772222')],
+        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.EUR).withReference('AAAABB').build()],
       };
 
       const groups = [firstGroup, secondGroup, thirdGroup];

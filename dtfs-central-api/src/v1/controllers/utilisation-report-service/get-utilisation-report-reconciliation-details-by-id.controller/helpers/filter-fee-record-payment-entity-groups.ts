@@ -3,7 +3,7 @@ import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-pay
 import { ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
 
 /**
- * The type intersection of the PremiumPaymentsFilters and ValidatedPaymentDetailsFilters.
+ * All possible filters for FeeRecordPaymentGroup filtering.
  */
 type Filters = PremiumPaymentsFilters & ValidatedPaymentDetailsFilters;
 
