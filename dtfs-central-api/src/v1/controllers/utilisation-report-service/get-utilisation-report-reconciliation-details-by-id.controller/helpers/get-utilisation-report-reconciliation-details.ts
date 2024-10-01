@@ -2,10 +2,7 @@ import { UtilisationReportEntity, PremiumPaymentsFilters } from '@ukef/dtfs2-com
 import { NotFoundError } from '../../../../../errors';
 import { getBankNameById } from '../../../../../repositories/banks-repo';
 import { UtilisationReportReconciliationDetails, ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
-import {
-  filterFeeRecordPaymentEntityGroupsByPremiumPaymentsFilters,
-  filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters,
-} from './filter-fee-record-payment-entity-groups';
+import { filterFeeRecordPaymentEntityGroups } from './filter-fee-record-payment-entity-groups';
 import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
 import { getFeeRecordPaymentEntityGroups } from '../../../../../helpers';
 import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
@@ -26,7 +23,7 @@ const getPremiumPayments = async (feeRecordPaymentEntityGroups: FeeRecordPayment
   let feeRecords = feeRecordPaymentEntityGroups;
 
   if (facilityId) {
-    feeRecords = filterFeeRecordPaymentEntityGroupsByPremiumPaymentsFilters(feeRecordPaymentEntityGroups, filters);
+    feeRecords = filterFeeRecordPaymentEntityGroups(feeRecordPaymentEntityGroups, filters);
   }
 
   return await mapToFeeRecordPaymentGroups(feeRecords);
@@ -48,7 +45,7 @@ const getPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecordPaymentE
   let feeRecords = feeRecordPaymentEntityGroups;
 
   if (facilityId || paymentCurrency || paymentReference) {
-    feeRecords = filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters(feeRecordPaymentEntityGroups, filters);
+    feeRecords = filterFeeRecordPaymentEntityGroups(feeRecordPaymentEntityGroups, filters);
   }
 
   return await mapToFeeRecordPaymentGroups(feeRecords);

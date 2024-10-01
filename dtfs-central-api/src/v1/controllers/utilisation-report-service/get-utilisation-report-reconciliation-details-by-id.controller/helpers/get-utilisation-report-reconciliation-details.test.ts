@@ -18,6 +18,8 @@ jest.mock('./map-to-fee-record-payment-groups');
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
   describe('getUtilisationReportReconciliationDetails', () => {
+    const filterFeeRecordSpy = jest.spyOn(filterFeeRecordsModule, 'filterFeeRecordPaymentEntityGroups');
+
     const reportId = 1;
 
     const bankId = '123';
@@ -114,8 +116,6 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     });
 
     describe('premium payment tab filtering', () => {
-      const filterFeeRecordSpy = jest.spyOn(filterFeeRecordsModule, 'filterFeeRecordPaymentEntityGroupsByPremiumPaymentsFilters');
-
       const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
         .withId(reportId)
         .withBankId(bankId)
@@ -160,8 +160,6 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     });
 
     describe('payment details tab filtering', () => {
-      const filterFeeRecordSpy = jest.spyOn(filterFeeRecordsModule, 'filterFeeRecordPaymentEntityGroupsByPaymentDetailsFilters');
-
       const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
         .withId(reportId)
         .withBankId(bankId)
