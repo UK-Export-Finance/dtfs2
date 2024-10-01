@@ -25,25 +25,25 @@ describe('date', () => {
         const dateInMonth = new Date('2023-11-15');
 
         it.each([
-          { businessDay: 1, expectedResult: new Date('2023-11-01') },
-          { businessDay: 2, expectedResult: new Date('2023-11-02') },
-          { businessDay: 3, expectedResult: new Date('2023-11-03') },
+          { businessDay: 1, expected: new Date('2023-11-01') },
+          { businessDay: 2, expected: new Date('2023-11-02') },
+          { businessDay: 3, expected: new Date('2023-11-03') },
           //                                         '2023-11-04' - Saturday
           //                                         '2023-11-05' - Sunday
-          { businessDay: 4, expectedResult: new Date('2023-11-06') },
-          { businessDay: 5, expectedResult: new Date('2023-11-07') },
-          { businessDay: 6, expectedResult: new Date('2023-11-08') },
-          { businessDay: 7, expectedResult: new Date('2023-11-09') },
-          { businessDay: 8, expectedResult: new Date('2023-11-10') },
+          { businessDay: 4, expected: new Date('2023-11-06') },
+          { businessDay: 5, expected: new Date('2023-11-07') },
+          { businessDay: 6, expected: new Date('2023-11-08') },
+          { businessDay: 7, expected: new Date('2023-11-09') },
+          { businessDay: 8, expected: new Date('2023-11-10') },
           //                                         '2023-11-11' - Saturday
           //                                         '2023-11-12' - Sunday
-          { businessDay: 9, expectedResult: new Date('2023-11-13') },
-        ])(`returns $expectedResult when dateInMonth is ${dateInMonth.toISOString()} and businessDay is $businessDay`, ({ businessDay, expectedResult }) => {
+          { businessDay: 9, expected: new Date('2023-11-13') },
+        ])(`returns $expected when dateInMonth is ${dateInMonth.toISOString()} and businessDay is $businessDay`, ({ businessDay, expected }) => {
           // Act
           const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
           // Assert
-          expect(isSameDay(result, expectedResult)).toBe(true);
+          expect(isSameDay(result, expected)).toBe(true);
         });
       });
 
@@ -52,14 +52,14 @@ describe('date', () => {
 
         it.each([
           //                                               '2023-10-01' - Sunday
-          { businessDay: 1, expectedResult: new Date('2023-10-02') },
-          { businessDay: 2, expectedResult: new Date('2023-10-03') },
-        ])(`returns $expectedResult when dateInMonth is ${dateInMonth.toISOString()} and businessDay is $businessDay`, ({ businessDay, expectedResult }) => {
+          { businessDay: 1, expected: new Date('2023-10-02') },
+          { businessDay: 2, expected: new Date('2023-10-03') },
+        ])(`returns $expected when dateInMonth is ${dateInMonth.toISOString()} and businessDay is $businessDay`, ({ businessDay, expected }) => {
           // Act
           const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
           // Assert
-          expect(isSameDay(result, expectedResult)).toBe(true);
+          expect(isSameDay(result, expected)).toBe(true);
         });
       });
     });
@@ -73,13 +73,13 @@ describe('date', () => {
           new Date('2023-08-03'), // Thursday
         ];
         const businessDay = 2; // would expect '2023-08-02' without holidays
-        const expectedResult = new Date('2023-08-04');
+        const expected = new Date('2023-08-04');
 
         // Act
         const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
         // Assert
-        expect(isSameDay(result, expectedResult)).toBe(true);
+        expect(isSameDay(result, expected)).toBe(true);
       });
 
       it('takes into account both holidays and weekend dates', () => {
@@ -90,13 +90,13 @@ describe('date', () => {
           new Date('2023-11-06'), // Monday
         ];
         const businessDay = 3; // would expect '2023-11-03' without holidays
-        const expectedResult = new Date('2023-11-07');
+        const expected = new Date('2023-11-07');
 
         // Act
         const result = getBusinessDayOfMonth(dateInMonth, holidays, businessDay);
 
         // Assert
-        expect(isSameDay(result, expectedResult)).toBe(true);
+        expect(isSameDay(result, expected)).toBe(true);
       });
     });
   });
