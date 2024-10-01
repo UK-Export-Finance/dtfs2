@@ -121,7 +121,10 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
 
       cy.clickContinueButton();
 
-      cy.fillInBankReviewDate(threeMonths);
+      cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: threeMonths });
+
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
+
       cy.clickContinueButton();
 
       unissuedFacilityTable.rows().should('have.length', 0);
@@ -204,7 +207,8 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
       const bankReviewDateFormatted = format(threeMonths, 'd MMMM yyyy');
 
       applicationPreview.facilitySummaryListTable(3).bankReviewDateAction().click();
-      cy.fillInBankReviewDate(threeMonths);
+
+      cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: threeMonths });
 
       cy.clickContinueButton();
 
@@ -266,7 +270,8 @@ context('Unissued Facilities MIN - change all to issued from unissued table - fe
 
       cy.clickContinueButton();
 
-      cy.fillInBankReviewDate(threeMonths);
+      cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: threeMonths });
+
       cy.clickContinueButton();
 
       // checks that name has been updated
