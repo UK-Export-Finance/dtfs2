@@ -1,7 +1,7 @@
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import { primaryNavigation } from '../../partials';
-import DATE_CONSTANTS from '../../../../../e2e-fixtures/dateConstants';
+import { yesterday } from '../../../../../e2e-fixtures/dateConstants';
 import createMockDeal from '../../../fixtures/create-mock-deal';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
@@ -9,8 +9,6 @@ import { FACILITY_TYPE, DEAL_TYPE, ALIAS_KEY } from '../../../fixtures/constants
 import { MOCK_APPLICATION_AIN } from '../../../fixtures/mock-gef-deals';
 import { aliasSelector } from '../../../../../support/alias-selector';
 import { anUnissuedCashFacility } from '../../../../../e2e-fixtures/mock-gef-facilities';
-
-const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
 
 const { format } = require('date-fns');
 
@@ -52,8 +50,6 @@ context('User can view and filter multiple deals', () => {
     testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
     mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.LOAN)],
   });
-
-  const { yesterday } = DATE_CONSTANTS;
 
   // NOTE: searching by date queries multiple fields.
   // Therefore we need to set all of these fields to yesterday.
@@ -97,7 +93,7 @@ context('User can view and filter multiple deals', () => {
       const dealId = insertedDeal._id;
       cy.updateGefDeal(dealId, MOCK_GEF_DEAL_AIN, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [anUnissuedCashFacility({ facilityEndDateEnabled })], BANK1_MAKER1);
+      cy.createGefFacilities(dealId, [anUnissuedCashFacility()], BANK1_MAKER1);
 
       cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_DEAL)).then((submittedDeal) => {
