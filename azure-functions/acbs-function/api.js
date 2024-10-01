@@ -42,7 +42,7 @@ const badRequest = {
 /**
  * Invokes TFS GET endpoint
  * @param {string} endpoint TFS endpoint
- * @returns {Promise<object>} API response object
+ * @returns {Promise<Object>} API response object
  */
 const get = async (endpoint) => {
   if (endpoint) {
@@ -67,7 +67,7 @@ const get = async (endpoint) => {
  * Invokes TFS POST endpoint
  * @param {string} endpoint TFS endpoint
  * @param {Object} payload Payload object
- * @returns {Promise<object>} API response object
+ * @returns {Promise<Object>} API response object
  */
 const post = async (endpoint, payload) => {
   if (endpoint && payload) {
@@ -93,7 +93,7 @@ const post = async (endpoint, payload) => {
  * Invokes MDM POST endpoint
  * @param {string} endpoint MDM endpoint
  * @param {Object} payload Payload object
- * @returns {Promise<object>} API response object
+ * @returns {Promise<Object>} API response object
  */
 const postMdm = async (endpoint, payload) => {
   if (endpoint && payload) {
@@ -120,7 +120,7 @@ const postMdm = async (endpoint, payload) => {
  * @param {string} endpoint TFS endpoint
  * @param {Object} payload Payload object
  * @param {string} etag Entity tag
- * @returns {Promise<object>} API response object
+ * @returns {Promise<Object>} API response object
  */
 const put = async (endpoint, payload, etag) => {
   if (endpoint && payload) {
@@ -156,7 +156,7 @@ const put = async (endpoint, payload, etag) => {
  * @param {string} endpoint TFS endpoint
  * @param {Object} payload Payload object
  * @param {string} etag Entity tag
- * @returns {Promise<object>} API response object
+ * @returns {Promise<Object>} API response object
  */
 const patch = async (endpoint, payload, eTag) => {
   if (endpoint && payload) {

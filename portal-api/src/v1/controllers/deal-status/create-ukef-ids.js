@@ -8,7 +8,7 @@ const { NUMBER } = require('../../../constants');
  * @param {Object} deal - An object representing the deal, including its ID and facilities.
  * @param {Object} user - An object representing the user performing the operation.
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
- * @returns {Promise<object>} - The updated deal object with UKEF IDs for the deal and its facilities.
+ * @returns {Promise<Object>} - The updated deal object with UKEF IDs for the deal and its facilities.
  * @throws {Error} - If unable to get UKEF IDs from the number generator.
  */
 const createUkefIds = async (deal, user, auditDetails) => {

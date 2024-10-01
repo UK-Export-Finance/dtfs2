@@ -26,7 +26,7 @@ const canSubmitToACBS = require('../helpers/can-submit-to-acbs');
  * Retrieves a deal from the portal based on the provided deal ID and deal type.
  * @param {string} dealId - The ID of the deal to retrieve from the portal.
  * @param {string} dealType - The type of the deal to retrieve from the portal.
- * @returns {Promise<object>} - The retrieved deal from the portal.
+ * @returns {Promise<Object>} - The retrieved deal from the portal.
  */
 const getPortalDeal = async (dealId, dealType) => {
   let deal;
@@ -208,7 +208,7 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * @param {string} dealType - The type of the deal.
  * @param {Object} checker - checker submitting the deal
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - checker information
- * @returns {Promise<object | false> } - A promise that resolves to an object, other false.
+ * @returns {Promise<Object | false> } - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
  */
 const submitDealBeforeUkefIds = async (dealId, dealType, checker, auditDetails) => {
@@ -271,7 +271,7 @@ exports.submitDealAfterUkefIdsPUT = submitDealAfterUkefIdsPUT;
  * Handles the submission of a deal to TFM (Trade Finance Manager).
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @returns {Promise<object>} - The response object.
+ * @returns {Promise<Object>} - The response object.
  */
 const submitDealPUT = async (req, res) => {
   try {

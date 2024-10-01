@@ -61,7 +61,7 @@ const createDeal = async (deal, user, auditDetails) => {
  * @param {Object} params.dealUpdate - The update to be made to the deal.
  * @param {Object} params.user - The user making the changes.
  * @param {Object} params.auditDetails - The audit details for the update.
- * @returns {Promise<object | false>} The updated deal object.
+ * @returns {Promise<Object | false>} The updated deal object.
  */
 const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
   try {
@@ -428,7 +428,7 @@ const getAllBanks = async () => {
 /**
  * Call the central API to get the next report period for a bank
  * @param {string} bankId
- * @returns {Promise<object>} response of API call or wrapped error response
+ * @returns {Promise<Object>} response of API call or wrapped error response
  */
 const getNextReportPeriodByBankId = async (bankId) => {
   try {

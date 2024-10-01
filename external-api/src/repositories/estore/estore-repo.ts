@@ -15,7 +15,7 @@ export class EstoreRepo {
    *
    * @param {string} dealId - The unique identifier for the deal.
    *
-   * @returns {Promise<WithId<object> | null>} - A promise that resolves to the found document, or `null` if no document is found.
+   * @returns {Promise<WithId<Object> | null>} - A promise that resolves to the found document, or `null` if no document is found.
    *
    * @example
    * const dealId = '507f1f77bcf86cd799439011';

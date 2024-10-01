@@ -22,7 +22,7 @@ const { findOneTfmDeal } = require('./deal.controller');
  * @param {Object} payload.facility - The facility object.
  * @param {Object} payload.bank - The bank object.
  * @param {Object} payload.acbsTaskLinks - The ACBS task links object.
- * @returns {Promise<object|boolean>} - A promise that resolves to the inserted log entry if successful, or false otherwise.
+ * @returns {Promise<Object|boolean>} - A promise that resolves to the inserted log entry if successful, or false otherwise.
  */
 const addToACBSLog = async (payload) => {
   if (!payload?.deal || !payload?.acbsTaskLinks) {
@@ -221,7 +221,7 @@ const checkAzureAcbsFunction = async () => {
  * 2. Facility has been created in ACBS.
  * 3. Facility in ACBS is `06` stage.
  * @param {Object} deal - The deal object containing information about the deal, including facilities and ACBS details.
- * @returns {Promise<object>} - A promise that resolves with the results of adding the facilities to ACBS log.
+ * @returns {Promise<Object>} - A promise that resolves with the results of adding the facilities to ACBS log.
  */
 const issueAcbsFacilities = async (deal) => {
   if (!deal?.tfm?.acbs) {

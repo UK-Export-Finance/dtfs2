@@ -91,7 +91,7 @@ class SignInLinkService {
    * Logs in a user and returns the user object and authentication token.
    * @param {string} userId - The ID of the user to log in.
    * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
-   * @returns {Promise<object>} - The user object and authentication token.
+   * @returns {Promise<Object>} - The user object and authentication token.
    */
   async loginUser(userId, auditDetails) {
     const user = await this.#userRepository.findById(userId);

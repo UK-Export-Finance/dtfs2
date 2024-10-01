@@ -128,7 +128,7 @@ describe('validate-post-upload-utilisation-report-payload', () => {
       condition                        | value
       ${'undefined'}                   | ${undefined}
       ${'null'}                        | ${null}
-      ${'object'}                      | ${{}}
+      ${'Object'}                      | ${{}}
       ${'string'}                      | ${'some data'}
       ${'item properties not strings'} | ${[{ key: {} }]}
     `('responds with an error if the reportData is invalid (case: $condition)', async ({ value }: { value: unknown }) => {

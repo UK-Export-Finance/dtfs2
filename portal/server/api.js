@@ -29,7 +29,7 @@ const login = async (username, password) => {
 /**
  * Sends a new sign in link to a user
  * @param {string} token auth token
- * @returns {Promise<object>} Response object
+ * @returns {Promise<Object>} Response object
  */
 const sendSignInLink = async (token) =>
   axios({
@@ -43,7 +43,7 @@ const sendSignInLink = async (token) =>
 /**
  * Logs in a user using a sign in link
  * @param {Object} parameters token, userId and signInToken
- * @returns {Promise<object>} loginStatus, token and user
+ * @returns {Promise<Object>} loginStatus, token and user
  */
 const loginWithSignInLink = async ({ token: requestAuthToken, userId, signInToken }) => {
   const response = await axios({
@@ -185,7 +185,7 @@ const updateDealName = async (id, newName, token) => {
  * @param {Object} statusUpdate - An object containing the `_id` property representing
  * the deal ID and the `status` property representing the new status of the deal.
  * @param {string} token - A token used for authorization in the API call.
- * @returns {Promise<object | boolean>} - An object containing the `status` code and the `data` from the API response, or `false` if the `_id` is not valid.
+ * @returns {Promise<Object | boolean>} - An object containing the `status` code and the `data` from the API response, or `false` if the `_id` is not valid.
  */
 const updateDealStatus = async (statusUpdate, token) => {
   if (!isValidMongoId(statusUpdate._id)) {

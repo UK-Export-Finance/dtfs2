@@ -374,7 +374,7 @@ const getCaseDocuments = async (req, res) => {
  * Post party URNs to bond summary page for confirmation
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Promise<object>} Express response as rendered confirm party URN page.
+ * @returns {Promise<Object>} Express response as rendered confirm party URN page.
  */
 const confirmTfmFacility = async (req, res) => {
   try {
@@ -494,7 +494,7 @@ const confirmTfmFacility = async (req, res) => {
  * Post bond party URNs to the TFM
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Promise<object>} Express response as rendered confirm party URN page.
+ * @returns {Promise<Object>} Express response as rendered confirm party URN page.
  */
 const postTfmFacility = async (req, res) => {
   try {

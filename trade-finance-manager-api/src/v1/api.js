@@ -760,7 +760,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 /**
  * Get company information from Party URN
  * @param {number} partyUrn Party URN
- * @returns {Promise<object>} Company information
+ * @returns {Promise<Object>} Company information
  */
 const getCompanyInfo = async (partyUrn) => {
   try {
@@ -1012,7 +1012,7 @@ const updateACBSfacility = async (facility, deal) => {
  * ACBS facility amendment
  * @param {string} ukefFacilityId UKEF Facility ID
  * @param {Object} amendments Facility object comprising of amendments
- * @returns {Promise<object>} updated FMR upon success otherwise error
+ * @returns {Promise<Object>} updated FMR upon success otherwise error
  */
 const amendACBSfacility = async (amendments, facility, deal) => {
   if (amendments && facility.facilitySnapshot) {
@@ -1058,7 +1058,7 @@ const getFunctionsAPI = async (url = '') => {
  * eStore site, directories and documents (if applicable).
  * Upon any exception an empty object is returned.
  * @param {Object} data eStore API object
- * @returns {Promise<object>} eStore API response object
+ * @returns {Promise<Object>} eStore API response object
  */
 const createEstoreSite = async (data) => {
   try {

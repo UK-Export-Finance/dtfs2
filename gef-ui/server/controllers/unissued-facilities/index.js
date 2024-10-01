@@ -18,7 +18,7 @@ const { validationErrorHandler } = require('../../utils/helpers');
  * @param {Object} input.query - An object containing the query status
  * @param {boolean} input.hasComeFromApplicationPreviewPage - Whether the previous page was application preview or unissued facilities
  * @param {string} input.userToken - The user token
- * @returns {Promise<object>} body
+ * @returns {Promise<Object>} body
  */
 const renderChangeFacilityPartial = async ({ params, query, hasComeFromApplicationPreviewPage, userToken }) => {
   const { dealId, facilityId } = params;

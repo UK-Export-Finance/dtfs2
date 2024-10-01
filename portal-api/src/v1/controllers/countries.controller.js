@@ -35,7 +35,7 @@ const sortCountries = (countries) => {
  * Retrieves country information from an external API based on the provided country code.
  *
  * @param {string} code - The country code.
- * @returns {Promise<object>} - A promise that resolves to the country information.
+ * @returns {Promise<Object>} - A promise that resolves to the country information.
  */
 const getCountry = async (code) => {
   try {
