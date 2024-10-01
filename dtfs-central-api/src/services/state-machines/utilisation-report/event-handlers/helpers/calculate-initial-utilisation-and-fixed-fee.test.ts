@@ -1,10 +1,27 @@
 import { calculateInitialUtilisation } from '@ukef/dtfs2-common';
-import { calculateInitialUtilisationAndFixedFee } from './calculate-initial-utilisation-and-fixed-fee';
+import { calculateInitialUtilisationAndFixedFee, hasRequiredValues } from './calculate-initial-utilisation-and-fixed-fee';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { aTfmFacility } from '../../../../../../test-helpers';
 import { calculateFixedFee } from './calculate-fixed-fee';
 
 describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
+  describe('hasRequiredValues', () => {
+    it('should return true if all values are present', () => {
+      const result = hasRequiredValues(1, 2, 3, new Date(), new Date());
+      expect(result).toEqual(true);
+    });
+
+    it('should return false if a value is missing', () => {
+      const result = hasRequiredValues(1, 2, 3, new Date(), null);
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if a date is the wrong format', () => {
+      const result = hasRequiredValues(1, 2, 3, 'a', new Date());
+      expect(result).toEqual(false);
+    });
+  });
+
   describe('calculateInitialUtilisationAndFixedFee', () => {
     const findOneByUkefFacilityIdSpy = jest.spyOn(TfmFacilitiesRepo, 'findOneByUkefFacilityId');
     const facilityId = '12345678';

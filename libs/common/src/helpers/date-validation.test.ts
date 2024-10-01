@@ -1,4 +1,4 @@
-import { applyStandardValidationAndParseDateInput } from './date-validation';
+import { applyStandardValidationAndParseDateInput, isDate } from './date-validation';
 
 describe('date-validation helpers', () => {
   describe('applyStandardValidationAndParseDateInput', () => {
@@ -237,6 +237,29 @@ describe('date-validation helpers', () => {
       const result = applyStandardValidationAndParseDateInput({ day, month, year }, 'test name', 'test-ref');
 
       expect(result).toEqual({ error: null, parsedDate: expectedParsedDate });
+    });
+  });
+
+  describe('isDate', () => {
+    describe('when date is valid', () => {
+      it('should return true', () => {
+        const result = isDate(new Date());
+        expect(result).toEqual(true);
+      });
+    });
+
+    describe('when date is invalid', () => {
+      it('should return false', () => {
+        const result = isDate('invalid date');
+        expect(result).toEqual(false);
+      });
+    });
+
+    describe('when date is null', () => {
+      it('should return false', () => {
+        const result = isDate(null);
+        expect(result).toEqual(false);
+      });
     });
   });
 });

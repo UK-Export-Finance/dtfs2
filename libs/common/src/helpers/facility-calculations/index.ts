@@ -1,8 +1,8 @@
 /**
  * calculateInitialUtilisation
  * calculates initial utilisation for a facility (10% of the facility value)
- * @param {Number} facilityValue
- * @returns {Number} initial utilisation value
+ * @param facilityValue
+ * @returns initial utilisation value
  */
 export const calculateInitialUtilisation = (facilityValue: number): number => facilityValue * 0.1;
 
