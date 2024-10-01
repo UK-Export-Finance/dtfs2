@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-fixtures';
@@ -102,8 +103,8 @@ context('Deal cancellation - bank request date', () => {
       cy.clickContinueButton();
       cy.clickBackLink();
 
-      bankRequestDatePage.bankRequestDateDay().should('have.value', dateConstants.todayDay);
-      bankRequestDatePage.bankRequestDateMonth().should('have.value', dateConstants.todayMonth);
+      bankRequestDatePage.bankRequestDateDay().should('have.value', format(dateConstants.today, 'd'));
+      bankRequestDatePage.bankRequestDateMonth().should('have.value', format(dateConstants.today, 'M'));
       bankRequestDatePage.bankRequestDateYear().should('have.value', dateConstants.todayYear);
     });
   });
