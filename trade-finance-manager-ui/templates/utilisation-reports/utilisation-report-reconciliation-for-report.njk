@@ -117,7 +117,10 @@
 {% set keyingSheetHtml %}
   <h2 class="govuk-heading-l" data-cy="keying-sheet-heading">Keying sheet</h2>
 
-  <p class="govuk-body">Payments on the premium payments tab will show as reconciled when they have been marked as done here.</p>
+  {% if userCanEdit %}
+    <p class="govuk-body" data-cy="select-payments-text">Select payments and mark as done when the adjustments have been keyed into ACBS.</p>
+   {% endif %}
+  <p class="govuk-body" data-cy="payments-on-premium-payments-tab-text">Payments on the premium payments tab will show as reconciled when they have been marked as done here.</p>
 
   <form method="post" data-cy="keying-sheet-form">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
