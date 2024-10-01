@@ -60,12 +60,12 @@ services:
       - ./dtfs-central-api/src:/app/dtfs-central-api/src:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORT=5005
       - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
       - MONGO_INITDB_DATABASE
       - MONGODB_URI
-      - TZ
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
@@ -103,6 +103,7 @@ services:
       - ./trade-finance-manager-ui/templates:/app/trade-finance-manager-ui/templates:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORT=5003
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -115,7 +116,6 @@ services:
       - REDIS_HOSTNAME=redis
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - SESSION_SECRET
-      - TZ
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
@@ -143,6 +143,7 @@ services:
       - ./trade-finance-manager-api/src:/app/trade-finance-manager-api/src:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORT=5004
       - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
@@ -162,7 +163,6 @@ services:
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
-      - TZ
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
@@ -190,6 +190,7 @@ services:
       - ./portal/templates:/app/portal/templates:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_API_KEY
@@ -198,7 +199,6 @@ services:
       - EXTERNAL_API_KEY
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
-      - TZ
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - CLAMAV_PORT=3310
@@ -224,6 +224,7 @@ services:
       - ./portal-api/src:/app/portal-api/src:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORT=5001
       - CORS_ORIGIN
       - JWT_SIGNING_KEY
@@ -246,7 +247,6 @@ services:
       - TFM_UI_URL=http://localhost:5003
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
-      - TZ
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UKEF_GEF_REPORTING_EMAIL_RECIPIENT
@@ -280,6 +280,7 @@ services:
       - ./external-api/src:/app/external-api/src:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORT=5002
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -300,7 +301,6 @@ services:
       - MONGO_INITDB_DATABASE
       - MONGODB_URI
       - EXTERNAL_API_URL=http://external-api:5002
-      - TZ
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - ESTORE_CRON_MANAGER_SCHEDULE
@@ -324,13 +324,13 @@ services:
       - ./gef-ui/templates:/app/gef-ui/templates:ro
       - ./libs:/app/libs:ro
     environment:
+      - TZ
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
-      - TZ
       - NODE_ENV
       - PORTAL_API_KEY
       - TFM_API_KEY
