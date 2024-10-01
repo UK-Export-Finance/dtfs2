@@ -74,6 +74,16 @@ context('Deal cancellation - reason for cancelling', () => {
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/cancel`));
     });
+
+    it('returning to the page should display saved data', () => {
+      const reason = 'A Reason';
+      cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox(), reason);
+
+      cy.clickContinueButton();
+      cy.clickBackLink();
+
+      reasonForCancellingPage.reasonForCancellingTextBox().should('have.value', reason);
+    });
   });
 
   describe('when logged in as a non-PIM user', () => {
