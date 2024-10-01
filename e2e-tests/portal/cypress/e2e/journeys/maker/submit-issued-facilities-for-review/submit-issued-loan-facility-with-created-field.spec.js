@@ -38,7 +38,9 @@ context('Issue Loan Form - Submit issued loan with inserted element on page', ()
   });
 
   it("should not insert created element's data into the loan", () => {
-    cy.loginGoToDealPage(BANK1_MAKER1);
+    pages.dashboardDeals.visit();
+    cy.clickDashboardDealLink();
+
     pages.contract.proceedToReview().should('not.exist');
 
     const loanId = dealFacilities.loans[0]._id;

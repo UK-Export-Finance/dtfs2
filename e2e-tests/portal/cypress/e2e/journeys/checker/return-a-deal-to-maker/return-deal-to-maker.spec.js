@@ -57,9 +57,6 @@ context('A checker selects to return a deal to maker from the view-contract page
         expect(text.trim()).to.match(/Supply Contract returned to maker./);
       });
 
-    // visit the deal and confirm the updates have been made
-    cy.clickDashboardDealLink();
-
     cy.assertText(contract.status(), "Further Maker's input required");
 
     cy.assertText(contract.previousStatus(), "Ready for Checker's approval");

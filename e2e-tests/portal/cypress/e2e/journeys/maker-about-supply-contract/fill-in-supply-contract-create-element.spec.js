@@ -7,10 +7,16 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 const { INDUSTRY_SECTOR_CODES } = CONSTANTS;
 
 context('Supply contract form - create element and check if inserted into deal', () => {
+  let dealId;
+
   before(() => {
     cy.deleteDeals(ADMIN);
 
     cy.createBssEwcsDeal({});
+
+    cy.getDealIdFromUrl().then((id) => {
+      dealId = id;
+    });
   });
 
   it("should not insert created element's data in the feedback", () => {
@@ -40,11 +46,9 @@ context('Supply contract form - create element and check if inserted into deal',
 
     contractAboutSupplier.nextPage().click();
 
-    cy.getDealIdFromUrl().then((dealId) => {
-      cy.getDeal(dealId, BANK1_MAKER1).then((updatedDeal) => {
-        // ensure the updated deal does not contain additional intruder field
-        expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
-      });
+    cy.getDeal(dealId, BANK1_MAKER1).then((updatedDeal) => {
+      // ensure the updated deal does not contain additional intruder field
+      expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
     });
   });
 });

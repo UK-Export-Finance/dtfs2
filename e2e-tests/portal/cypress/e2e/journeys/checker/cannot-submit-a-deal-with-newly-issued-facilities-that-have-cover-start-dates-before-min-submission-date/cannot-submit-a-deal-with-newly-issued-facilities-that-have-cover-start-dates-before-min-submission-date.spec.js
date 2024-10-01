@@ -19,6 +19,10 @@ context(
     it('should throw error and not submit or redirect', () => {
       cy.loginGoToDealPage(BANK1_CHECKER1);
 
+      cy.getDealIdFromUrl().then((id) => {
+        dealId = id;
+      });
+
       cy.clickProceedToSubmitButton();
       cy.url().should('eq', relative(`/contract/${dealId}/confirm-submission`));
 

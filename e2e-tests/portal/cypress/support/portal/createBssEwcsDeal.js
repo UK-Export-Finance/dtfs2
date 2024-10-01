@@ -68,7 +68,7 @@ const createBssEwcsDeal = ({ readyForCheck = false }) => {
 
     // complete "financial details"
     cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '12000');
-    contractAboutFinancial.supplyContractCurrency().select('GBP - UK Sterling');
+    contractAboutFinancial.supplyContractCurrency().select('GBP');
     contractAboutFinancial.saveAndGoBack().click();
 
     contract.eligibilityCriteriaLink().click();
