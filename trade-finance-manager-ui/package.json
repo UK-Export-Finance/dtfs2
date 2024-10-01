@@ -60,7 +60,7 @@
     "govuk-frontend": "^4.8.0",
     "imask": "^6.6.3",
     "joi": "^17.13.3",
-    "jquery": "3.6.4",
+    "jquery": "3.7.1",
     "lodash.difference": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.orderby": "^4.6.0",
