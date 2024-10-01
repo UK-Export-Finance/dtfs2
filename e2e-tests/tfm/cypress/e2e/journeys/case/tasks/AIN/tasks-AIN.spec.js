@@ -1,14 +1,13 @@
-import relative from '../../../relativeURL';
-import { caseSummary, caseSubNavigation } from '../../../partials';
-import pages from '../../../pages';
-import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
-import * as MOCK_USERS from '../../../../../../e2e-fixtures';
-import { BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-import { submitTaskInProgress, submitTaskComplete } from './tasks-helpers';
+import relative from '../../../../relativeURL';
+import partials from '../../../../partials';
+import pages from '../../../../pages';
+import MOCK_DEAL_AIN from '../../../../../fixtures/deal-AIN';
+import * as MOCK_USERS from '../../../../../../../e2e-fixtures';
+import { BANK1_MAKER1, ADMIN } from '../../../../../../../e2e-fixtures';
 
 const { T1_USER_1 } = MOCK_USERS;
 
-context('Case tasks - MIA deal', () => {
+context('Case tasks - AIN deal', () => {
   let dealId;
   const dealFacilities = [];
   const userFullName = `${MOCK_USERS.BUSINESS_SUPPORT_USER_1.firstName} ${MOCK_USERS.BUSINESS_SUPPORT_USER_1.lastName}`;
@@ -24,10 +23,10 @@ context('Case tasks - MIA deal', () => {
   });
 
   beforeEach(() => {
-    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1).then((insertedDeal) => {
+    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
 
-      const { dealType, mockFacilities } = MOCK_DEAL_MIA;
+      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
       cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
@@ -47,21 +46,35 @@ context('Case tasks - MIA deal', () => {
     });
   });
 
-  it('should render all MIA task groups and tasks', () => {
-    caseSubNavigation.tasksLink().click();
+  it('should render all AIN tasks', () => {
+    partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     pages.tasksPage.filterRadioAllTasks().click();
 
-    const TOTAL_MIA_TASK_GROUPS = 4;
-    pages.tasksPage.taskGroupTable().should('have.length', TOTAL_MIA_TASK_GROUPS);
+    const TOTAL_AIN_TASK_GROUPS = 1;
+    pages.tasksPage.taskGroupTable().should('have.length', TOTAL_AIN_TASK_GROUPS);
 
-    const TOTAL_MIA_TASKS = 13;
-    pages.tasksPage.tasksTableRows().should('have.length', TOTAL_MIA_TASKS);
+    const TOTAL_AIN_TASKS = 2;
+    pages.tasksPage.tasksTableRows().should('have.length', TOTAL_AIN_TASKS);
   });
 
-  it('user can assign a task to themselves, change status and then unassign', () => {
-    caseSubNavigation.tasksLink().click();
+  it('should not let wrong user edit a task', () => {
+    cy.login(MOCK_USERS.T1_USER_1);
+    cy.visit(relative(`/case/${dealId}/deal`));
+    partials.caseSubNavigation.tasksLink().click();
+    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
+
+    //---------------------------------------------------------------
+    // user cannot assign tasks to themselves if in wrong group
+    //---------------------------------------------------------------
+    pages.tasksPage.filterRadioAllTasks().click();
+    const firstTask = pages.tasksPage.tasks.row(1, 1);
+    firstTask.link().should('not.exist');
+  });
+
+  it('user can assign a task to themselves, change status and then unassign.', () => {
+    partials.caseSubNavigation.tasksLink().click();
     cy.url().should('eq', relative(`/case/${dealId}/tasks`));
 
     //---------------------------------------------------------------
@@ -127,75 +140,5 @@ context('Case tasks - MIA deal', () => {
     firstTask.link().click();
     pages.taskPage.assignedToSelectInput().find('option:selected').should('have.text', 'Unassigned');
     pages.taskPage.taskStatusRadioInputTodo().should('be.checked');
-  });
-
-  it('starting the first task in the first group updates the deal stage from `Application` to `In progress`', () => {
-    caseSubNavigation.tasksLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
-
-    pages.tasksPage.filterRadioAllTasks().click();
-
-    // check initial deal stage
-    cy.assertText(caseSummary.ukefDealStage(), 'Application');
-
-    submitTaskInProgress(1, 1, userId);
-
-    cy.assertText(caseSummary.ukefDealStage(), 'In progress');
-  });
-
-  it('immediately completing the first task in the first group updates the deal stage from `Application` to `In progress`', () => {
-    caseSubNavigation.tasksLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
-
-    pages.tasksPage.filterRadioAllTasks().click();
-
-    // check initial deal stage
-    cy.assertText(caseSummary.ukefDealStage(), 'Application');
-
-    submitTaskComplete(1, 1, userId);
-
-    cy.assertText(caseSummary.ukefDealStage(), 'In progress');
-  });
-
-  it('should not allow you to click on task if not in the right group`', () => {
-    caseSubNavigation.tasksLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
-
-    //---------------------------------------------------------------
-    // user completes task
-    //---------------------------------------------------------------
-    pages.tasksPage.filterRadioAllTasks().click();
-    const firstTask = pages.tasksPage.tasks.row(1, 1);
-    firstTask.link().click();
-
-    cy.url().should('eq', relative(`/case/${dealId}/tasks/1/1`));
-    pages.taskPage.taskStatusRadioInputDone().click();
-    cy.clickSubmitButton();
-
-    pages.tasksPage.filterRadioAllTasks().click();
-    const secondTask = pages.tasksPage.tasks.row(1, 2);
-    secondTask.link().click();
-
-    cy.url().should('eq', relative(`/case/${dealId}/tasks/1/2`));
-    pages.taskPage.taskStatusRadioInputDone().click();
-    cy.clickSubmitButton();
-
-    //---------------------------------------------------------------
-    // user cannot click on task as belongs to another group
-    //---------------------------------------------------------------
-
-    pages.tasksPage.filterRadioAllTasks().click();
-    const thirdTask = pages.tasksPage.tasks.row(1, 3);
-    thirdTask.link().should('not.exist');
-    thirdTask.title().contains('File all deal emails in this deal');
-
-    // task should be open for correct user
-    cy.login(MOCK_USERS.UNDERWRITING_SUPPORT_1);
-    cy.visit(relative(`/case/${dealId}/deal`));
-    caseSubNavigation.tasksLink().click();
-    cy.url().should('eq', relative(`/case/${dealId}/tasks`));
-    pages.tasksPage.filterRadioAllTasks().click();
-    thirdTask.link().should('exist');
-    thirdTask.title().should('not.exist');
   });
 });
