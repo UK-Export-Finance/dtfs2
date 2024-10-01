@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@azure/storage-file-share": "12.14.0",
-    "@babel/plugin-transform-runtime": "7.23.6",
+    "@babel/plugin-transform-runtime": "7.25.4",
     "@babel/preset-env": "7.23.6",
     "@ukef/dtfs2-common": "1.0.0",
     "axios": "^1.7.7",
