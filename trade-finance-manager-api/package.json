@@ -71,7 +71,7 @@
     "@types/mongodb": "^4.0.7",
     "@types/supertest": "^2.0.16",
     "@types/swagger-ui-express": "^4.1.6",
-    "axios-mock-adapter": "^1.22.0",
+    "axios-mock-adapter": "^2.0.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-typescript": "^3.6.3",
