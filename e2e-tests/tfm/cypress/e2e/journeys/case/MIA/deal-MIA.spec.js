@@ -1,19 +1,20 @@
 import format from 'date-fns/format';
-import relative from '../../relativeURL';
-import pages from '../../pages';
-import { caseSubNavigation, caseSummary } from '../../partials';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../e2e-fixtures';
+import relative from '../../../relativeURL';
+import pages from '../../../pages';
+import { caseSummary, caseSubNavigation } from '../../../partials';
+import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
+import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../../e2e-fixtures';
+import { DATE_FORMATS } from '../../../../fixtures/constants';
 
 context('User can view a case deal', () => {
   let dealId;
   let dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
+    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
 
-      const { dealType, mockFacilities } = MOCK_DEAL_AIN;
+      const { dealType, mockFacilities } = MOCK_DEAL_MIA;
 
       cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities = createdFacilities;
@@ -30,8 +31,8 @@ context('User can view a case deal', () => {
 
   after(() => {
     cy.deleteDeals(dealId, ADMIN);
-    dealFacilities.forEach((facility) => {
-      cy.deleteFacility(facility._id, BANK1_MAKER1);
+    dealFacilities.forEach(({ _id }) => {
+      cy.deleteFacility(_id, BANK1_MAKER1);
     });
   });
 
@@ -43,17 +44,17 @@ context('User can view a case deal', () => {
   });
 
   it('should render case summary fields', () => {
-    cy.assertText(caseSummary.dealSubmissionType(), MOCK_DEAL_AIN.submissionType);
+    cy.assertText(caseSummary.dealSubmissionType(), MOCK_DEAL_MIA.submissionType);
 
-    cy.assertText(caseSummary.exporterName(), MOCK_DEAL_AIN.exporter.companyName);
+    cy.assertText(caseSummary.exporterName(), MOCK_DEAL_MIA.exporter.companyName);
   });
 
   describe('Bank security section', () => {
-    it('bank security section should not be displayed as AIN', () => {
-      pages.caseDealPage.bankSecuritySection().should('not.exist');
-      pages.caseDealPage.bankSecuritySectionHeading().should('not.exist');
-      pages.caseDealPage.bankSecuritySubHeading().should('not.exist');
-      pages.caseDealPage.bankSecurityText().should('not.exist');
+    it('bank security section should be displayed as MIA', () => {
+      pages.caseDealPage.bankSecuritySection().should('exist');
+      pages.caseDealPage.bankSecuritySectionHeading().contains('Bank security');
+      pages.caseDealPage.bankSecuritySubHeading().contains('General bank security for this exporter');
+      pages.caseDealPage.bankSecurityText().contains('Mock security details');
       pages.caseDealPage.bankSecurityFacilitySubHeading().should('not.exist');
       pages.caseDealPage.bankSecurityFacilityText().should('not.exist');
     });
@@ -71,10 +72,10 @@ context('User can view a case deal', () => {
         dealFacilities[0]['coverEndDate-day'],
       );
       // formats to correct format in table
-      const coverEndDate = format(coverEndDateRaw, 'd MMMM yyyy');
+      const coverEndDate = format(coverEndDateRaw, DATE_FORMATS.FULL);
 
       facilityRow.facilityCoverEndDate().contains(coverEndDate);
-      facilityRow.facilityCoverEndDate().should('not.contain', '(expected)');
+      facilityRow.facilityCoverEndDate().contains('(expected)');
     });
 
     it('clicking `Facility ID` link should take user to facility details page', () => {
@@ -91,7 +92,7 @@ context('User can view a case deal', () => {
     it('should show the correct passed/failed criteria', () => {
       const { eligibilityCriteriaTable } = pages.caseDealPage;
 
-      MOCK_DEAL_AIN.eligibility.criteria.forEach(({ id, answer }, index) => {
+      MOCK_DEAL_MIA.eligibility.criteria.forEach(({ id, answer }, index) => {
         eligibilityCriteriaTable
           .row(index + 1)
           .heading(id)
