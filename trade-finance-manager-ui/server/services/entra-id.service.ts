@@ -1,7 +1,7 @@
 import { AuthorizationUrlRequest, ConfidentialClientApplication, Configuration as MsalAppConfig, CryptoProvider } from '@azure/msal-node';
 import { DecodedAuthCodeRequestState } from '../types/entra-id';
 import { EntraIdConfig } from '../configs/entra-id.config';
-import { EntraIdApi } from '../apis/entra-id.api';
+import { EntraIdApi } from '../third-party-apis/entra-id.api';
 
 type GetAuthCodeUrlParams = {
   successRedirect?: string;

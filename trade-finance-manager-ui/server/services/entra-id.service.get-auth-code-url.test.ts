@@ -2,7 +2,7 @@ import { ConfidentialClientApplication, CryptoProvider } from '@azure/msal-node'
 import { EntraIdConfigMockBuilder, EntraIdApiMockBuilder } from '../../test-helpers/mocks';
 import { EntraIdConfig } from '../configs/entra-id.config';
 import { EntraIdService } from './entra-id.service';
-import { EntraIdApi } from '../apis/entra-id.api';
+import { EntraIdApi } from '../third-party-apis/entra-id.api';
 
 jest.mock('@azure/msal-node', () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return

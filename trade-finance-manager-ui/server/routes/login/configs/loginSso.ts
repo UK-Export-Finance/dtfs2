@@ -3,7 +3,7 @@ import { LoginController } from '../../../controllers/login/loginSso/login.contr
 import { getRouter } from '../../../types/get-router';
 import { EntraIdService } from '../../../services/entra-id.service';
 import { EntraIdConfig } from '../../../configs/entra-id.config';
-import { EntraIdApi } from '../../../apis/entra-id.api';
+import { EntraIdApi } from '../../../third-party-apis/entra-id.api';
 
 export const getLoginSsoRouter: getRouter = () => {
   const entraIdConfig = new EntraIdConfig();

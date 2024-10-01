@@ -1,4 +1,4 @@
-import { EntraIdApi } from '../../server/apis/entra-id.api';
+import { EntraIdApi } from '../../server/third-party-apis/entra-id.api';
 import { BaseMockBuilder } from './mock-builder.mock.builder';
 
 export class EntraIdApiMockBuilder extends BaseMockBuilder<EntraIdApi> {
