@@ -7,12 +7,11 @@ ENV GITHUB_SHA=$GITHUB_SHA
 
 # Directories setup
 WORKDIR /app
-COPY package.json .
-COPY ../package-lock.json .
 
 COPY libs libs
 COPY portal-api portal-api
 
+COPY package*.json .
 RUN npm ci
 RUN npm cache clean --force
 

@@ -7,12 +7,11 @@ ENV GITHUB_SHA=$GITHUB_SHA
 
 # Directories setup
 WORKDIR /app
-COPY package.json .
-COPY ../package-lock.json .
 
 COPY libs libs
 COPY trade-finance-manager-ui trade-finance-manager-ui
 
+COPY package*.json .
 RUN npm ci
 RUN npm cache clean --force
 
