@@ -1,30 +1,26 @@
 import { format } from 'date-fns';
 
-import relative from '../../../relativeURL';
+import relative from '../../../../relativeURL';
 
-import CONSTANTS from '../../../../fixtures/constants';
+import CONSTANTS from '../../../../../fixtures/constants';
 
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
+import dateConstants from '../../../../../../../e2e-fixtures/dateConstants';
 
-import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import { mainHeading, continueButton, errorSummary } from '../../../partials';
-import applicationPreview from '../../../pages/application-preview';
-import unissuedFacilityTable from '../../../pages/unissued-facilities';
-import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
-import applicationSubmission from '../../../pages/application-submission';
-import statusBanner from '../../../pages/application-status-banner';
-import facilityEndDate from '../../../pages/facility-end-date';
+import { MOCK_APPLICATION_MIN } from '../../../../../fixtures/mocks/mock-deals';
+import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
+import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { continueButton, errorSummary } from '../../../../partials';
+import applicationPreview from '../../../../pages/application-preview';
+import unissuedFacilityTable from '../../../../pages/unissued-facilities';
+import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-facility';
+import applicationSubmission from '../../../../pages/application-submission';
+import facilityEndDate from '../../../../pages/facility-end-date';
 
 let dealId;
 let token;
-let facilityOneId;
-
-const facilityEndDateEnabled = Number(Cypress.env('GEF_DEAL_VERSION')) >= 1;
 
 const { unissuedCashFacility, issuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
-  facilityEndDateEnabled,
+  facilityEndDateEnabled: true,
 });
 
 const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
@@ -33,7 +29,7 @@ const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacilit
   for changing facilities to issued from preview page.
   To unlock functionality, need to first issue one facility from unissued-facility table
 */
-context('Unissued Facilities MIN - change to issued from preview page', () => {
+context('Unissued Facilities MIN - change to issued from preview page - feature flag enabled', () => {
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
@@ -44,7 +40,6 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
           dealId = body._id;
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-              facilityOneId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
@@ -69,42 +64,12 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    it('clicking unissued facilities link takes you to unissued facility list page', () => {
-      applicationPreview.unissuedFacilitiesReviewLink().click();
-      unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
-      statusBanner.applicationBanner().should('exist');
-      cy.clickBackLink();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
-    });
-
-    it('clicking on update should take you to the update facility page with correct url', () => {
-      applicationPreview.unissuedFacilitiesReviewLink().click();
-      unissuedFacilityTable.updateIndividualFacilityButton(0).click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/about`));
-    });
-
-    it('update facility page should have correct titles and text (only name should be prepopulated', () => {
+    it('update facility page should have correct value for is using facility end date', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      mainHeading().contains("Tell us you've issued this facility");
-      aboutFacilityUnissued.facilityNameLabel().contains('Name for this cash facility');
-      aboutFacilityUnissued.facilityName().should('have.value', unissuedCashFacility.name);
-
-      aboutFacilityUnissued.issueDateDay().should('have.value', '');
-      aboutFacilityUnissued.issueDateMonth().should('have.value', '');
-      aboutFacilityUnissued.issueDateMonth().should('have.value', '');
-      aboutFacilityUnissued.coverStartDateDay().should('have.value', '');
-      aboutFacilityUnissued.coverStartDateMonth().should('have.value', '');
-      aboutFacilityUnissued.coverStartDateYear().should('have.value', '');
-      aboutFacilityUnissued.coverEndDateDay().should('have.value', '');
-      aboutFacilityUnissued.coverEndDateMonth().should('have.value', '');
-      aboutFacilityUnissued.coverEndDateYear().should('have.value', '');
-
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
-        aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
-      }
+      aboutFacilityUnissued.isUsingFacilityEndDateYes().should('be.checked');
+      aboutFacilityUnissued.isUsingFacilityEndDateNo().should('not.be.checked');
     });
 
     it('should be able to update facility and then go back to application preview page', () => {
@@ -124,9 +89,7 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeYearsMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeYearsYear);
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
-      }
+      aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
       cy.clickContinueButton();
 
@@ -147,12 +110,10 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
       cy.clickContinueButton();
 
-      if (facilityEndDateEnabled) {
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.threeMonthsOneDayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.threeMonthsOneDayYear);
-        cy.clickContinueButton();
-      }
+      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.clickContinueButton();
 
       unissuedFacilityTable.successBanner().contains(`${unissuedFacilitiesArray[0].name} is updated`);
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length - 1);
@@ -194,10 +155,8 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(3).feeFrequencyAction().should('have.class', 'govuk-!-display-none');
       applicationPreview.facilitySummaryListTable(3).dayCountBasisAction().should('have.class', 'govuk-!-display-none');
 
-      if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
-        applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().contains('Change');
-      }
+      applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateValue().contains('Yes');
+      applicationPreview.facilitySummaryListTable(3).isUsingFacilityEndDateAction().contains('Change');
 
       // not be able to change facility four name, but can change to issued
       applicationPreview.facilitySummaryListTable(0).nameValue().contains(unissuedCashFacilityWith20MonthsOfCover.name);
@@ -211,9 +170,7 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(0).coverStartDateAction().should('not.exist');
       applicationPreview.facilitySummaryListTable(0).coverEndDateAction().should('not.exist');
 
-      if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
-      }
+      applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().should('have.class', 'govuk-!-display-none');
 
       // should not be able to change facility two has previously issued
       applicationPreview.facilitySummaryListTable(2).nameValue().contains(issuedCashFacility.name);
@@ -264,18 +221,14 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
       cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.threeMonthsOneDayYear);
 
-      if (facilityEndDateEnabled) {
-        aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
-      }
+      aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
       cy.clickContinueButton();
 
-      if (facilityEndDateEnabled) {
-        cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.threeMonthsOneDayDay);
-        cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
-        cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.threeMonthsOneDayYear);
-        cy.clickContinueButton();
-      }
+      cy.keyboardInput(facilityEndDate.facilityEndDateDay(), dateConstants.threeMonthsOneDayDay);
+      cy.keyboardInput(facilityEndDate.facilityEndDateMonth(), dateConstants.threeMonthsOneDayMonth);
+      cy.keyboardInput(facilityEndDate.facilityEndDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.clickContinueButton();
     });
 
     it('change links should appear for facility four and three should be unissued still', () => {
@@ -302,10 +255,8 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
       applicationPreview.facilitySummaryListTable(0).coverEndDateValue().contains(coverEnd);
       applicationPreview.facilitySummaryListTable(0).coverEndDateAction().contains('Change');
 
-      if (facilityEndDateEnabled) {
-        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Change');
-        applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateValue().contains('Yes');
-      }
+      applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateAction().contains('Change');
+      applicationPreview.facilitySummaryListTable(0).isUsingFacilityEndDateValue().contains('Yes');
 
       // facility three still unissued
       applicationPreview.facilitySummaryListTable(1).nameValue().contains(unissuedContingentFacility.name);

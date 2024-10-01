@@ -10,8 +10,6 @@ import { MOCK_APPLICATION_AIN } from '../../../fixtures/mock-gef-deals';
 import { aliasSelector } from '../../../../../support/alias-selector';
 import { anUnissuedCashFacility } from '../../../../../e2e-fixtures/mock-gef-facilities';
 
-const facilityEndDateEnabled = Cypress.env('FF_TFM_FACILITY_END_DATE_ENABLED') === 'true';
-
 const { format } = require('date-fns');
 
 context('User can view and filter multiple deals', () => {
@@ -97,7 +95,7 @@ context('User can view and filter multiple deals', () => {
       const dealId = insertedDeal._id;
       cy.updateGefDeal(dealId, MOCK_GEF_DEAL_AIN, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [anUnissuedCashFacility({ facilityEndDateEnabled })], BANK1_MAKER1);
+      cy.createGefFacilities(dealId, [anUnissuedCashFacility()], BANK1_MAKER1);
 
       cy.submitDeal(dealId, DEAL_TYPE.GEF, T1_USER_1);
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_DEAL)).then((submittedDeal) => {
@@ -148,17 +146,17 @@ context('User can view and filter multiple deals', () => {
       (d) => d.dealSnapshot.details?.ukefDealId === searchString || d.dealSnapshot.ukefDealId === searchString,
     );
 
-    const expectedResultsLength = bssDealsWithUkefDealId.length;
+    const expectedLength = bssDealsWithUkefDealId.length;
 
     cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    if (expectedResultsLength === 1) {
-      cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} result for "${searchString}"`);
+    if (expectedLength === 1) {
+      cy.assertText(pages.dealsPage.heading(), `${expectedLength} result for "${searchString}"`);
     } else {
-      cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} result for "${searchString}"`);
+      cy.assertText(pages.dealsPage.heading(), `${expectedLength} result for "${searchString}"`);
     }
   });
 
@@ -167,14 +165,14 @@ context('User can view and filter multiple deals', () => {
 
     const searchString = gefDeal.dealSnapshot.ukefDealId;
 
-    const expectedResultsLength = 1;
+    const expectedLength = 1;
 
     cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} result for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${expectedLength} result for "${searchString}"`);
   });
 
   it('search/filter by bank name', () => {
@@ -255,27 +253,27 @@ context('User can view and filter multiple deals', () => {
       return null;
     });
 
-    const expectedResultsLength = dealsWithBonds.length;
+    const expectedLength = dealsWithBonds.length;
 
     cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} results for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${expectedLength} results for "${searchString}"`);
   });
 
   it('search/filter by loan productCode', () => {
     const searchString = 'EWCS';
 
-    const expectedResultsLength = 1;
+    const expectedLength = 1;
 
     cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} result for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${expectedLength} result for "${searchString}"`);
   });
 
   it('search/filter by date received in DD/MM/YYYY format', () => {
@@ -285,14 +283,14 @@ context('User can view and filter multiple deals', () => {
 
     // Note: Date received is generated on submission.
     // all deals in this test are submitted at the same time.
-    const expectedResultsLength = ALL_SUBMITTED_DEALS.length;
+    const expectedLength = ALL_SUBMITTED_DEALS.length;
 
     cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} results for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${expectedLength} results for "${searchString}"`);
   });
 
   it('search/filter by date received in DD-MM-YYYY format', () => {
@@ -302,14 +300,14 @@ context('User can view and filter multiple deals', () => {
 
     // Note: Date received is generated on submission.
     // all deals in this test are submitted at the same time.
-    const expectedResultsLength = ALL_SUBMITTED_DEALS.length;
+    const expectedLength = ALL_SUBMITTED_DEALS.length;
 
     cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} results for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${expectedLength} results for "${searchString}"`);
   });
 
   it('updates heading text and does not render any deals when no results are found', () => {
@@ -318,11 +316,11 @@ context('User can view and filter multiple deals', () => {
     cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    const expectedResultsLength = 0;
+    const expectedLength = 0;
 
-    pages.dealsPage.dealsTableRows().should('have.length', expectedResultsLength);
+    pages.dealsPage.dealsTableRows().should('have.length', expectedLength);
 
-    cy.assertText(pages.dealsPage.heading(), `${expectedResultsLength} results for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${expectedLength} results for "${searchString}"`);
   });
 
   it('after a search has been performed, clicking `All deals` nav item returns all deals ', () => {

@@ -11,7 +11,7 @@ describe('at least 8 characters', () => {
       password: '1234',
     };
 
-    const expectedResult = [
+    const expected = [
       {
         password: {
           order: '1',
@@ -20,8 +20,8 @@ describe('at least 8 characters', () => {
       },
     ];
 
-    const matchTest = passwordAtLeast8Characters(user, change);
-    expect(matchTest).toEqual(expectedResult);
+    const result = passwordAtLeast8Characters(user, change);
+    expect(result).toEqual(expected);
   });
 
   it('should not return error for passwords with 8 characters', () => {
@@ -29,12 +29,12 @@ describe('at least 8 characters', () => {
       password: '12345678',
     };
 
-    const matchTest = passwordAtLeast8Characters(user, change);
-    expect(matchTest).toEqual([]);
+    const result = passwordAtLeast8Characters(user, change);
+    expect(result).toEqual([]);
   });
 
   it('should not return error if no change', () => {
-    const matchTest = passwordAtLeast8Characters(user, '');
-    expect(matchTest).toEqual([]);
+    const result = passwordAtLeast8Characters(user, '');
+    expect(result).toEqual([]);
   });
 });
