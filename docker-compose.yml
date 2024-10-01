@@ -65,7 +65,7 @@ services:
       - EXTERNAL_API_URL=http://external-api:5002
       - MONGO_INITDB_DATABASE
       - MONGODB_URI
-      - TZ=Europe/London
+      - TZ
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
@@ -115,7 +115,7 @@ services:
       - REDIS_HOSTNAME=redis
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - SESSION_SECRET
-      - TZ=Europe/London
+      - TZ
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
@@ -162,7 +162,7 @@ services:
       - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
-      - TZ=Europe/London
+      - TZ
       - UKEF_INTERNAL_NOTIFICATION=test
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
@@ -198,7 +198,7 @@ services:
       - EXTERNAL_API_KEY
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
-      - TZ=Europe/London
+      - TZ
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - CLAMAV_PORT=3310
@@ -246,7 +246,7 @@ services:
       - TFM_UI_URL=http://localhost:5003
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
-      - TZ=Europe/London
+      - TZ
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UKEF_GEF_REPORTING_EMAIL_RECIPIENT
@@ -300,7 +300,7 @@ services:
       - MONGO_INITDB_DATABASE
       - MONGODB_URI
       - EXTERNAL_API_URL=http://external-api:5002
-      - TZ=Europe/London
+      - TZ
       - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - ESTORE_CRON_MANAGER_SCHEDULE
@@ -330,7 +330,7 @@ services:
       - SESSION_SECRET
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
-      - TZ=Europe/London
+      - TZ
       - NODE_ENV
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -366,3 +366,25 @@ services:
         limits:
           cpus: '0.01'
           memory: 150M
+
+  acbs:
+    build:
+      context: .
+      dockerfile: ./azure-functions/acbs-function/Dockerfile
+    image: dtfs/acbs
+    profiles:
+      - acbs
+    restart: always
+    ports:
+      - '7071:80'
+    environment:
+      - TZ
+      - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
+      - FUNCTIONS_WORKER_RUNTIME=node
+      - WEBSITE_HOSTNAME=localhost:7071
+      - APIM_MDM_URL
+      - APIM_MDM_KEY
+      - APIM_MDM_VALUE
+      - APIM_TFS_URL
+      - APIM_TFS_KEY
+      - APIM_TFS_VALUE
