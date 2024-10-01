@@ -9,6 +9,7 @@ import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
 import * as getUtilisationReportReconciliationDetailsModule from './get-utilisation-report-reconciliation-details';
 import { getPaymentDetails, getPremiumPayments, getUtilisationReportReconciliationDetails } from './get-utilisation-report-reconciliation-details';
 import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
+import { getUtilisationDetails } from './get-utilisation-details';
 
 console.error = jest.fn();
 
@@ -16,6 +17,7 @@ jest.mock('../../../../../repositories/banks-repo');
 jest.mock('../../../../../helpers');
 jest.mock('./get-keying-sheet-for-report-id');
 jest.mock('./map-to-fee-record-payment-groups');
+jest.mock('./get-utilisation-details');
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
   const reportId = 1;
@@ -26,15 +28,10 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
     beforeEach(() => {
       jest.resetAllMocks();
       jest.mocked(getBankNameById).mockRejectedValue('Some error');
-      jest.mocked(getKeyingSheetForReportId).mockRejectedValue('Some error');
-      jest.mocked(getFeeRecordPaymentEntityGroups).mockImplementation(() => {
-        throw new Error('Some error');
-      });
-      jest.mocked(mapToFeeRecordPaymentGroups).mockRejectedValue('Some error');
-
-      when(getKeyingSheetForReportId).calledWith(reportId, []).mockResolvedValue([]);
-      when(getFeeRecordPaymentEntityGroups).calledWith([]).mockReturnValue([]);
-      when(mapToFeeRecordPaymentGroups).calledWith([]).mockResolvedValue([]);
+      jest.mocked(getKeyingSheetForReportId).mockResolvedValue([]);
+      jest.mocked(getFeeRecordPaymentEntityGroups).mockReturnValue([]);
+      jest.mocked(mapToFeeRecordPaymentGroups).mockResolvedValue([]);
+      jest.mocked(getUtilisationDetails).mockResolvedValue([]);
     });
 
     afterEach(() => {
@@ -72,7 +69,6 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         await expect(getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters)).rejects.toThrow(
           new NotFoundError(`Failed to find a bank with id '${bankId}'`),
         );
-
         expect(getBankNameById).toHaveBeenCalledWith(bankId);
       });
     });
@@ -116,6 +112,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           premiumPayments: [],
           paymentDetails: [],
           keyingSheet: [],
+          utilisationDetails: [],
         });
       });
     });
