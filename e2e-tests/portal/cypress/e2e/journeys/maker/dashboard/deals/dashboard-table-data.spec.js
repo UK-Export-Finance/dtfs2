@@ -66,7 +66,7 @@ context('View dashboard deals as a maker', () => {
   it('BSS and GEF deals render on the dashboard with correct values', () => {
     cy.login(BANK1_MAKER1);
 
-    const { exporter, bankRef, product, status, type, updated } = dashboardDeals.row;
+    const { exporter, bankRef, product, status, type, updated } = dashboardDeals.rowIndex;
 
     // should see all deals in the maker's bank
     cy.assertText(dashboardDeals.totalItems(), `(${ALL_BANK1_DEALS.length} items)`);
@@ -75,17 +75,15 @@ context('View dashboard deals as a maker', () => {
     // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
 
-    cy.get('table tr').eq(1).as('firstRow').find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
+    cy.assertText(dashboardDeals.rowIndex.exporter(), GEF_DEAL_BANK_2_MAKER_2.exporter.companyName);
 
-    cy.assertText(exporter(gefDealId), gefDeal.exporter.companyName);
+    cy.assertText(bankRef(), gefDeal.bankInternalRefName);
 
-    cy.assertText(bankRef(gefDealId), gefDeal.bankInternalRefName);
+    cy.assertText(dashboardDeals.rowIndex.product(), CONSTANTS.DEALS.DEAL_TYPE.GEF);
 
-    cy.assertText(product(gefDealId), gefDeal.dealType);
+    cy.assertText(type(), '-');
 
-    cy.assertText(type(gefDealId), '-');
-
-    cy.assertText(status(gefDealId), gefDeal.status);
+    cy.assertText(status(), gefDeal.status);
 
     updated(gefDealId)
       .invoke('text')

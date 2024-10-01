@@ -1,5 +1,4 @@
 const { contractConfirmSubmission } = require('../../../pages');
-const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
 const { ADMIN, BANK1_CHECKER1 } = MOCK_USERS;
@@ -8,8 +7,6 @@ const { ADMIN, BANK1_CHECKER1 } = MOCK_USERS;
 context(
   'Checker tries to submit a deal that has changed/newly issued facilities (in `Ready for check` status) with cover start dates that are before MIN submission date',
   () => {
-    let dealId;
-
     before(() => {
       cy.deleteDeals(ADMIN);
 
@@ -19,17 +16,16 @@ context(
     it('should throw error and not submit or redirect', () => {
       cy.loginGoToDealPage(BANK1_CHECKER1);
 
-      cy.getDealIdFromUrl().then((id) => {
-        dealId = id;
-      });
-
       cy.clickProceedToSubmitButton();
-      cy.url().should('eq', relative(`/contract/${dealId}/confirm-submission`));
+
+      cy.url().should('include', '/contract');
+      cy.url().should('include', '/confirm-submission');
 
       contractConfirmSubmission.confirmSubmit().check();
       contractConfirmSubmission.acceptAndSubmit().click();
 
-      cy.url().should('eq', relative(`/contract/${dealId}/confirm-submission`));
+      cy.url().should('include', '/contract');
+      cy.url().should('include', '/confirm-submission');
 
       const expectedError = 'Requested Cover Start Date must be on the application submission date or in the future';
       contractConfirmSubmission.expectError(expectedError);

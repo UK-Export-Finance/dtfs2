@@ -1,5 +1,5 @@
-const { contract, contractAboutFinancial, defaults } = require('../../pages');
-const { header, taskListHeader } = require('../../partials');
+const { contract, contractAboutFinancial, defaults, header } = require('../../pages');
+const { taskListHeader } = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { additionalRefName } = require('../../../fixtures/deal');
 
