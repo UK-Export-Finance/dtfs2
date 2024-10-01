@@ -79,7 +79,7 @@ context('Dashboard Deals filters - filter by keyword', () => {
       const ALL_KEYWORD_DEALS = ALL_DEALS.filter(({ exporter }) => exporter.companyName === MOCK_KEYWORD);
       dashboardDeals.rows().should('have.length', ALL_KEYWORD_DEALS.length);
 
-      cy.assertText(dashboardDeals.rowIndex.exporter(), MOCK_KEYWORD);
+      cy.assertText(dashboardDeals.rowIndex.link(), MOCK_KEYWORD);
     });
   });
 });

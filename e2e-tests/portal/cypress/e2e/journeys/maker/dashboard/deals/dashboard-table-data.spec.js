@@ -75,7 +75,7 @@ context('View dashboard deals as a maker', () => {
     // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
 
-    cy.assertText(dashboardDeals.rowIndex.exporter(), GEF_DEAL_BANK_2_MAKER_2.exporter.companyName);
+    cy.assertText(dashboardDeals.rowIndex.link(), GEF_DEAL_BANK_2_MAKER_2.exporter.companyName);
 
     cy.assertText(bankRef(), gefDeal.bankInternalRefName);
 

@@ -28,8 +28,7 @@ const page = {
     // product: (index = 1) => cy.get(`[data-cy*="deal__product--index--${index}]`),
     product: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(2),
 
-    // type: (index = 1) => cy.get(`[data-cy*="deal__type--index--${index}]`),
-    exporter: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(3),
+    type: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(3),
 
     // status: (index = 1) => cy.get(`[data-cy*="deal__status--index--${index}]`),
     status: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(4),
