@@ -20,22 +20,22 @@ const page = {
   },
   rowIndex: {
     // link: (index = 1) => cy.get(`[data-cy*="deal__link--index--${index}]`),
-    link: (index) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('a'),
+    link: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('a'),
 
     // bankRef: (index = 1) => cy.get(`[data-cy*="deal__bankRef--index--${index}]`),
-    bankRef: (index) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(1),
+    bankRef: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(1),
 
     // product: (index = 1) => cy.get(`[data-cy*="deal__product--index--${index}]`),
-    product: (index) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(2),
+    product: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(2),
 
     // type: (index = 1) => cy.get(`[data-cy*="deal__type--index--${index}]`),
-    exporter: (index) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(3),
+    exporter: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(3),
 
     // status: (index = 1) => cy.get(`[data-cy*="deal__status--index--${index}]`),
-    status: (index) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(4),
+    status: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(4),
 
     // updated: (index = 1) => cy.get(`[data-cy*="deal__updated--index--${index}]`),
-    updated: (index) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(5),
+    updated: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(5),
   },
   first: () => cy.get('[data-cy="First"]'),
   previous: () => cy.get('[data-cy="Previous"]'),
