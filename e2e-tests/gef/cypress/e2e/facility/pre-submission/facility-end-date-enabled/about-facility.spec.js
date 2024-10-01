@@ -156,8 +156,6 @@ context('About Facility Page  - feature flag enabled', () => {
       cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionYes().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
-
       cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: yesterday });
 
       cy.clickContinueButton();

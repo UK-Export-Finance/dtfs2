@@ -17,21 +17,18 @@ const completeDateFormFields = ({ idPrefix, date = today, day, month, year }) =>
   if (day !== null) {
     const dayValue = day || format(date, longDayFormat);
 
-    // TODO: partials?
     cy.keyboardInput(cy.get(`[data-cy="${idPrefix}-day"]`), dayValue);
   }
 
   if (month !== null) {
     const monthValue = month || format(date, longMonthFormat);
 
-    // TODO: partials?
     cy.keyboardInput(cy.get(`[data-cy="${idPrefix}-month"]`), monthValue);
   }
 
   if (year !== null) {
     const yearValue = year || format(date, longYearFormat);
 
-    // TODO: partials?
     cy.keyboardInput(cy.get(`[data-cy="${idPrefix}-year"]`), yearValue);
   }
 };

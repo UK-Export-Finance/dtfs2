@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
-import { fourDaysAgo, tomorrow, threeDays, threeMonths, threeMonthsOneDay, twentyEight, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
+import { fourDaysAgo, tomorrow, threeDaysAgo, threeMonths, threeMonthsOneDay, twentyEight, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -168,7 +168,7 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDays });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
 
       cy.clickContinueButton();
 
