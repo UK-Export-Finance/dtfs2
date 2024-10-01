@@ -93,6 +93,19 @@ context('Deal cancellation - bank request date', () => {
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/cancel`));
     });
+
+    it('returning to the page should display saved data', () => {
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), dateConstants.todayYear);
+
+      cy.clickContinueButton();
+      cy.clickBackLink();
+
+      bankRequestDatePage.bankRequestDateDay()().should('have.value', dateConstants.todayDay);
+      bankRequestDatePage.bankRequestDateMonth()().should('have.value', dateConstants.todayMonth);
+      bankRequestDatePage.bankRequestDateYear()().should('have.value', dateConstants.todayYear);
+    });
   });
 
   describe('when logged in as a non-PIM user', () => {

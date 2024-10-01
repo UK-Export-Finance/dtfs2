@@ -1,9 +1,12 @@
 import { Response } from 'express';
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { format } from 'date-fns';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { asUserSession } from '../../../helpers/express-session';
 import { BankRequestDateViewModel } from '../../../types/view-models';
 import { validateBankRequestDate } from './validation/validate-bank-request-date';
+import api from '../../../api';
+import { canSubmissionTypeBeCancelled } from '../../helpers';
 
 export type GetBankRequestDateRequest = CustomExpressRequest<{ params: { _id: string } }>;
 export type PostBankRequestDateRequest = CustomExpressRequest<{
@@ -17,19 +20,43 @@ export type PostBankRequestDateRequest = CustomExpressRequest<{
  * @param req - The express request
  * @param res - The express response
  */
-export const getBankRequestDate = (req: GetBankRequestDateRequest, res: Response) => {
+export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Response) => {
   const { _id } = req.params;
-  const { user } = asUserSession(req.session);
+  const { user, userToken } = asUserSession(req.session);
 
-  // TODO DTFS2-7409: Check deal type allows for cancellation and deal hasn't already been cancelled
+  try {
+    const deal = await api.getDeal(_id, userToken);
 
-  const bankRequestDateViewModel: BankRequestDateViewModel = {
-    activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
-    user,
-    ukefDealId: '0040613574', // TODO DTFS2-7409: get values from database
-    dealId: _id,
-  };
-  return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
+    if (!deal || 'status' in deal) {
+      return res.redirect('/not-found');
+    }
+
+    if (!canSubmissionTypeBeCancelled(deal.dealSnapshot.submissionType)) {
+      return res.redirect(`/case/${_id}/deal`);
+    }
+
+    const cancellation = await api.getDealCancellation(_id, userToken);
+
+    const previouslyEnteredBankRequestDate = cancellation?.bankRequestDate ? new Date(cancellation.bankRequestDate) : undefined;
+
+    const day = previouslyEnteredBankRequestDate ? format(previouslyEnteredBankRequestDate, 'd') : '';
+    const month = previouslyEnteredBankRequestDate ? format(previouslyEnteredBankRequestDate, 'M') : '';
+    const year = previouslyEnteredBankRequestDate ? format(previouslyEnteredBankRequestDate, 'yyyy') : '';
+
+    const bankRequestDateViewModel: BankRequestDateViewModel = {
+      activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+      user,
+      ukefDealId: deal.dealSnapshot.details.ukefDealId,
+      dealId: _id,
+      day,
+      month,
+      year,
+    };
+    return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
+  } catch (error) {
+    console.error('Error getting bank request date', error);
+    return res.render('_partials/problem-with-service.njk');
+  }
 };
 
 /**
@@ -38,25 +65,42 @@ export const getBankRequestDate = (req: GetBankRequestDateRequest, res: Response
  * @param req - The express request
  * @param res - The express response
  */
-export const postBankRequestDate = (req: PostBankRequestDateRequest, res: Response) => {
+export const postBankRequestDate = async (req: PostBankRequestDateRequest, res: Response) => {
   const { _id } = req.params;
   const { 'bank-request-date-day': day, 'bank-request-date-month': month, 'bank-request-date-year': year } = req.body;
-  const { user } = asUserSession(req.session);
-  const { errors: validationErrors } = validateBankRequestDate({ day, month, year });
+  const { user, userToken } = asUserSession(req.session);
 
-  if (validationErrors) {
-    const bankRequestDateViewModel: BankRequestDateViewModel = {
-      activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
-      user,
-      ukefDealId: '0040613574', // TODO DTFS2-7409: get values from database
-      dealId: _id,
-      day,
-      month,
-      year,
-      errors: validationErrors,
-    };
+  try {
+    const deal = await api.getDeal(_id, userToken);
 
-    return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
+    if (!deal || 'status' in deal) {
+      return res.redirect('/not-found');
+    }
+
+    if (!canSubmissionTypeBeCancelled(deal.dealSnapshot.submissionType)) {
+      return res.redirect(`/case/${_id}/deal`);
+    }
+
+    const { errors: validationErrors, bankRequestDate } = validateBankRequestDate({ day, month, year });
+
+    if (validationErrors) {
+      const bankRequestDateViewModel: BankRequestDateViewModel = {
+        activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+        user,
+        ukefDealId: deal.dealSnapshot.details.ukefDealId,
+        dealId: _id,
+        day,
+        month,
+        year,
+        errors: validationErrors,
+      };
+      return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
+    }
+    await api.updateDealCancellation(_id, { bankRequestDate: bankRequestDate?.valueOf() }, userToken);
+
+    return res.redirect(`/case/${_id}/cancellation/effective-from-date`);
+  } catch (error) {
+    console.error('Error updating bank request date', error);
+    return res.render('_partials/problem-with-service.njk');
   }
-  return res.redirect(`/case/${_id}/cancellation/effective-from-date`);
 };
