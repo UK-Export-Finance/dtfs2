@@ -36,7 +36,7 @@ const sanitiseHasBeenIssued = (hasBeenIssued) => {
 
 /**
  * Sanitise req.body
- * @param {object} body
+ * @param {Object} body
  * @example ( { keyword: 'mock', hasBeenIssued: ['true', 'false'] } )
  * @returns { keyword: 'mock', hasBeenIssued: [true, false] }
  */

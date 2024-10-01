@@ -8,7 +8,7 @@ const keywordQuery = require('./deals-filters-keyword-query');
  *
  * @param {string} createdByYou flag
  * @param {array} custom filters
- * @param {object} user
+ * @param {Object} user
  * @example ( 'true', [ dealType: ['BSS/EWCS'] ], { _id: '123', firstName: 'Mock' } )
  * @returns { AND: [ { 'bank.id': '9'} ], OR: [{ dealType: 'BSS/EWCS' }] }
  */

@@ -18,8 +18,8 @@ exports.hasAllCoverEndDateValues = hasAllCoverEndDateValues;
 /**
  * returns facility object with added coverEndDate property, if the day month,
  * year are given. This is stored as a UTC timestamp
- * @param {object} facility
- * @returns {object}
+ * @param {Object} facility
+ * @returns {Object}
  *
  * This function has odd behaviour inherited from moment js:
  *  - If the month is invalid set coverEndDate to NaN

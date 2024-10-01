@@ -129,7 +129,7 @@ const createTasksManualAmendment = (NDBDeal = false) => {
 /**
  * Create tasks/task groups depending on the amendment type (automatic or manual)
  * @param {string} requireUkefApproval - true/false
- * @param {object} tfm - facility TFM object
+ * @param {Object} tfm - facility TFM object
  * @returns {Array} created task groups
  */
 const createAmendmentTasks = (requireUkefApproval, tfm) => {

@@ -19,8 +19,8 @@ const findOneIndustrySector = async (code) => {
 
 /**
  * Retrieves and sorts industry sectors from an external API.
- * @param {object} req - The request object containing information about the HTTP request.
- * @param {object} res - The response object used to send the HTTP response.
+ * @param {Object} req - The request object containing information about the HTTP request.
+ * @param {Object} res - The response object used to send the HTTP response.
  * @returns {Promise<Response<object<number, string>>>} - An object containing the count of industry sectors and the sorted industry sectors,
  *                    or an error response object with a status code of 500 and a message indicating the error.
  */
@@ -51,8 +51,8 @@ exports.findAll = async (req, res) => {
 
 /**
  * Finds and returns a specific industry sector based on a given code.
- * @param {object} req - The request object containing information about the HTTP request.
- * @param {object} res - The response object used to send the HTTP response.
+ * @param {Object} req - The request object containing information about the HTTP request.
+ * @param {Object} res - The response object used to send the HTTP response.
  * @returns {Promise<Response<any, object<number, string>>>} - A promise that resolves with the industry sector data or rejects with an error.
  */
 exports.findOne = async (req, res) => {

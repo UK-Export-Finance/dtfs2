@@ -2,7 +2,7 @@
  * Transforms an object of submitted filters into a consistent array of objects.
  * If a submitted filter has just one string value, wrap into an array.
  *
- * @param {object} all submitted filters
+ * @param {Object} all submitted filters
  * @example { fieldA: 'value', fieldB: ['a', 'b'] }
  * @returns [ { fieldA: ['value'] }, { fieldB: ['a', 'b'] } ]
  */

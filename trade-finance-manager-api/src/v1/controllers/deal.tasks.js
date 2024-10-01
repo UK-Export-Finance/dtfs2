@@ -6,7 +6,7 @@ const { createTasks } = require('../helpers/create-tasks');
  * Check if the "create or match parties" task should be created
  * if BSS, show task if either buyer or exporter party URN are not present
  * if GEF, show task if exporter party URN is not present
- * @param {object} deal
+ * @param {Object} deal
  * @returns {boolean}
  */
 const shouldCreatePartiesTask = (deal) => {
@@ -33,7 +33,7 @@ const shouldCreatePartiesTask = (deal) => {
 
 /**
  * Check if the "check agent" task should be created
- * @param {object} deal
+ * @param {Object} deal
  * @returns {boolean}
  */
 const shouldCreateAgentCheckTask = (deal) => {
@@ -57,7 +57,7 @@ const shouldCreateAgentCheckTask = (deal) => {
 
 /**
  * Get additional/conditional tasks that should be added to tasks, depending on deal data.
- * @param {object} deal
+ * @param {Object} deal
  * @returns {Array}
  */
 const listAdditionalTasks = (deal) => {
@@ -76,7 +76,7 @@ const listAdditionalTasks = (deal) => {
 
 /**
  * Get additional/conditional tasks that should be added to tasks, depending on deal data.
- * @param {object} deal
+ * @param {Object} deal
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns {Promise<object>} deal with tasks
  */

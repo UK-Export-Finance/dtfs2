@@ -38,7 +38,7 @@ export class EstoreRepo {
   /**
    * Inserts a document into the CRON_JOB_LOGS collection.
    *
-   * @param {object} document - The document to be inserted.
+   * @param {Object} document - The document to be inserted.
    *
    * @returns {Promise<InsertOneResult | boolean>} - A promise that resolves to the result of the insert operation, or `false` if an error occurs.
    *

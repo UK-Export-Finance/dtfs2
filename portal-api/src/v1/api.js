@@ -56,11 +56,11 @@ const createDeal = async (deal, user, auditDetails) => {
 
 /**
  * Sends a request to DTFS Central to update a deal
- * @param {object} params - The parameters for updating the deal.
+ * @param {Object} params - The parameters for updating the deal.
  * @param {string} params.dealId - The ID of the deal being updated.
- * @param {object} params.dealUpdate - The update to be made to the deal.
- * @param {object} params.user - The user making the changes.
- * @param {object} params.auditDetails - The audit details for the update.
+ * @param {Object} params.dealUpdate - The update to be made to the deal.
+ * @param {Object} params.user - The user making the changes.
+ * @param {Object} params.auditDetails - The audit details for the update.
  * @returns {Promise<object | false>} The updated deal object.
  */
 const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
@@ -295,8 +295,8 @@ const validateUtilisationReportData = async (reportData) => {
 /**
  * Saves a utilisation report to the database
  * @param {number} reportId - The report id
- * @param {object} reportData - The report data
- * @param {object} user - The user object
+ * @param {Object} reportData - The report data
+ * @param {Object} user - The user object
  * @param {import('@ukef/dtfs2-common').AzureFileInfo} fileInfo - The azure file info
  * @returns {Promise<import('./api-response-types').SaveUtilisationReportResponseBody>}
  */
@@ -322,7 +322,7 @@ const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
 };
 
 /**
- * @typedef {object} GetUtilisationReportsOptions
+ * @typedef {Object} GetUtilisationReportsOptions
  * @property {import('../types/utilisation-reports').ReportPeriod} [reportPeriod] - a report period to filter reports by
  * @property {boolean} [excludeNotReceived] - whether or not to exclude reports which have not been uploaded
  */

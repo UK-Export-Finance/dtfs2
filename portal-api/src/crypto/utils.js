@@ -62,8 +62,8 @@ function genPasswordResetToken(user) {
 }
 
 /**
- * @param {object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
- * @returns {object} Token, expires in and session ID
+ * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @returns {Object} Token, expires in and session ID
  */
 function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = crypto.randomBytes(32).toString('hex'), expiresIn, additionalPayload }) {
   const { _id } = user;
@@ -84,8 +84,8 @@ function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = crypto.randomB
 }
 
 /**
- * @param {object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
- * @returns {object} Token, expires in and session ID
+ * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @returns {Object} Token, expires in and session ID
  */
 function issueValidUsernameAndPasswordJWT(user) {
   return issueJWTWithExpiryAndPayload({
@@ -97,8 +97,8 @@ function issueValidUsernameAndPasswordJWT(user) {
 }
 
 /**
- * @param {object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
- * @returns {object} Token, expires in and session ID
+ * @param {Object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @returns {Object} Token, expires in and session ID
  */
 function issueValid2faJWT(user) {
   if (!user.sessionIdentifier) {

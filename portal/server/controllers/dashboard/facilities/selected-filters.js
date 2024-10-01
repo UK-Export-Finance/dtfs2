@@ -27,7 +27,7 @@ const mapIssuedValueToText = (hasBeenIssued) => {
  *
  * @param {string} field heading
  * @param {string} field name
- * @param {object} submitted hasBeenIssued filters
+ * @param {Object} submitted hasBeenIssued filters
  * @example ( 'Bank facility stage', 'hasBeenIssued', [ true, false ] )
  * @returns generateSelectedFiltersObjectWithMappedValues('Facility stage', 'hasBeenIssued', [ {value: true, mappedValue: 'Issued' }])
  */
@@ -46,7 +46,7 @@ const selectedHasBeenIssuedFilters = (heading, fieldName, submittedFilters) => {
  * Create an array of objects for all selected filters.
  * This will used in mojFilter component - selectedFilters.categories.
  *
- * @param {object} submitted filters
+ * @param {Object} submitted filters
  * @returns [ generateSelectedFiltersObject(...params), generateSelectedFiltersObject(...params) ]
  */
 const selectedFilters = (submittedFilters) => {

@@ -206,7 +206,7 @@ exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
  * Submits a deal to TFM before the UKEF IDs are generated.
  * @param {string} dealId - The ID of the deal to be submitted.
  * @param {string} dealType - The type of the deal.
- * @param {object} checker - checker submitting the deal
+ * @param {Object} checker - checker submitting the deal
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - checker information
  * @returns {Promise<object | false> } - A promise that resolves to an object, other false.
  * @throws {Error} - If there is an error during the submission process.
@@ -238,8 +238,8 @@ exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
 /**
  * Handles a PUT request to submit a deal after validating the deal ID, deal type, and checker.
  * Calls the `submitDealAfterUkefIds` function to process the deal submission and returns the updated deal if successful.
- * @param {object} req - The request object containing the request body with `dealId`, `dealType`, and `checker` properties.
- * @param {object} res - The response object representing the response object with `status` and `send` methods.
+ * @param {Object} req - The request object containing the request body with `dealId`, `dealType`, and `checker` properties.
+ * @param {Object} res - The response object representing the response object with `status` and `send` methods.
  * @returns {Promise<Response>} A promise that resolves with the updated deal or rejects with an error.
  */
 // TODO: DTFS2-7112 this endpoint is obsolete and should be removed
@@ -269,8 +269,8 @@ exports.submitDealAfterUkefIdsPUT = submitDealAfterUkefIdsPUT;
 
 /**
  * Handles the submission of a deal to TFM (Trade Finance Manager).
- * @param {object} req - The request object.
- * @param {object} res - The response object.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
  * @returns {Promise<object>} - The response object.
  */
 const submitDealPUT = async (req, res) => {

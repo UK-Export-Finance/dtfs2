@@ -7,8 +7,8 @@ const { EXTERNAL_API_KEY } = process.env;
 
 /**
  * Check that the x-api-key header is valid
- * @param {object} req Request object
- * @param {object} res Response object
+ * @param {Object} req Request object
+ * @param {Object} res Response object
  * @param {NextFunction} next Callback function name
  */
 export const checkApiKey = (req: Request, res: Response, next: NextFunction) => {

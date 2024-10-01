@@ -4,7 +4,7 @@ const { to2Decimals } = require('../../../helpers/currency');
 
 /**
  * Returns supply contract value if `BSS/EWCS` in native currency else deal value.
- * @param {object} deal Deal object
+ * @param {Object} deal Deal object
  * @returns {Float} Deal guarantee value
  */
 const getDealGuaranteeValue = (deal) =>

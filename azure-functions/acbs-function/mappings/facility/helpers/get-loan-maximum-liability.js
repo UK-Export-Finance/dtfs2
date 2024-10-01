@@ -6,8 +6,8 @@ const { to2Decimals } = require('../../../helpers/currency');
  * `Loan` (EWCS) = Disbursement amount * (UKEF cover percentage / 100)
  * `Bond` (BSS) = Amount
  * @param {Float} amount Facility UKEF exposure
- * @param {object} facility Facility
- * @param {object} dealType Deal type
+ * @param {Object} facility Facility
+ * @param {Object} dealType Deal type
  */
 const getLoanMaximumLiability = (amount, facility, dealType) => {
   let ukefExposure;

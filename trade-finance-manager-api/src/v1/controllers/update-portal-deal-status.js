@@ -3,7 +3,7 @@ const CONSTANTS = require('../../constants');
 
 /**
  * Updates the status of a deal in a portal.
- * @param {object} deal - The deal object containing properties `_id`, `dealType`, and `submissionType`.
+ * @param {Object} deal - The deal object containing properties `_id`, `dealType`, and `submissionType`.
  * @returns {Promise<object>} - The updated deal object.
  */
 const updatePortalDealStatus = async (deal, auditDetails) => {

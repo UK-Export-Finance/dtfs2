@@ -4,8 +4,8 @@ const facilitiesController = require('../facilities.controller');
 
 /**
  * Updates the cover start dates of facilities in a deal.
- * @param {object} user - The user object representing the user performing the update.
- * @param {object} deal - The deal object containing the facilities to be updated.
+ * @param {Object} user - The user object representing the user performing the update.
+ * @param {Object} deal - The deal object containing the facilities to be updated.
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns {Promise<object>} - The modified deal object with updated facility cover start dates.
  */

@@ -3,7 +3,7 @@ const CONSTANTS = require('../../../constants');
 
 /**
  * Returns numerical months from facility's fee frequency.
- * @param {object} facility Facility object
+ * @param {Object} facility Facility object
  * @returns {number} Number of months
  */
 const getFeeFrequencyMonths = (facility) => {

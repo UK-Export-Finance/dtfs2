@@ -13,9 +13,9 @@ const { validationErrorHandler } = require('../../utils/helpers');
  * creates body/parameters for the template for unissued facilities
  * if hasComeFromApplicationPreviewPage true, changes 'cancel' + 'back' button href back to application preview
  * else renders back to unissued facilities list
- * @param {object} input - An object containing the below
- * @param {object} input.params - An object containing the facility id and deal id
- * @param {object} input.query - An object containing the query status
+ * @param {Object} input - An object containing the below
+ * @param {Object} input.params - An object containing the facility id and deal id
+ * @param {Object} input.query - An object containing the query status
  * @param {boolean} input.hasComeFromApplicationPreviewPage - Whether the previous page was application preview or unissued facilities
  * @param {string} input.userToken - The user token
  * @returns {Promise<object>} body
@@ -134,7 +134,7 @@ const changeIssuedToUnissuedFacility = async (req, res) => {
 
 /**
  * post function for changing unissued facilities to issued from unissued facilities list
- * validates first and gets parameters {object} from validation function
+ * validates first and gets parameters {Object} from validation function
  * displays success message and redirects to unissued facilities list
  * @param {req}
  * @param {res}
