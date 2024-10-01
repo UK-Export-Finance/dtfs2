@@ -24,9 +24,7 @@ const parsePremiumPaymentsFilters = (originalUrl: string, facilityIdQuery?: stri
     facilityId: facilityIdQueryString,
   };
 
-  const facilityIdInputId = '#premium-payments-facility-id-filter';
-
-  const filterError = validateFacilityIdQuery(facilityIdQueryString, originalUrl, facilityIdInputId);
+  const filterError = validateFacilityIdQuery(originalUrl, facilityIdQueryString);
 
   return {
     premiumPaymentsFilters: filters,
