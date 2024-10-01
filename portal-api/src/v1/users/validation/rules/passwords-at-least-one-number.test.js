@@ -11,7 +11,7 @@ describe('at least 1 number', () => {
       password: 'aaaaa',
     };
 
-    const expectedResult = [
+    const expected = [
       {
         password: {
           order: '3',
@@ -20,8 +20,8 @@ describe('at least 1 number', () => {
       },
     ];
 
-    const matchTest = passwordAtLeastOneNumber(user, change);
-    expect(matchTest).toEqual(expectedResult);
+    const result = passwordAtLeastOneNumber(user, change);
+    expect(result).toEqual(expected);
   });
 
   it('should not return error for passwords with a number', () => {
@@ -29,12 +29,12 @@ describe('at least 1 number', () => {
       password: 'Aaaa1',
     };
 
-    const matchTest = passwordAtLeastOneNumber(user, change);
-    expect(matchTest).toEqual([]);
+    const result = passwordAtLeastOneNumber(user, change);
+    expect(result).toEqual([]);
   });
 
   it('should not return error if no change', () => {
-    const matchTest = passwordAtLeastOneNumber(user, '');
-    expect(matchTest).toEqual([]);
+    const result = passwordAtLeastOneNumber(user, '');
+    expect(result).toEqual([]);
   });
 });
