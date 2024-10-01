@@ -1,5 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { format } from 'date-fns';
 import { aTfmSessionUser } from '../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import { BankRequestDateViewModel } from '../../../types/view-models';
@@ -131,9 +132,9 @@ describe('getBankRequestDate', () => {
         user: mockUser,
         ukefDealId,
         dealId,
-        day: '21',
-        month: '3',
-        year: '2024',
+        day: format(existingBankRequestDate, 'd'),
+        month: format(existingBankRequestDate, 'M'),
+        year: format(existingBankRequestDate, 'yyyy'),
       });
     });
   });
