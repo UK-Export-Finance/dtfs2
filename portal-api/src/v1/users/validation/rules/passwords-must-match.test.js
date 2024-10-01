@@ -12,7 +12,7 @@ describe('passwords must match', () => {
       passwordConfirm: 'BBBB',
     };
 
-    const expectedResult = [
+    const expected = [
       {
         passwordConfirm: {
           order: '1',
@@ -21,8 +21,8 @@ describe('passwords must match', () => {
       },
     ];
 
-    const matchTest = passwordsMustMatch(user, change);
-    expect(matchTest).toEqual(expectedResult);
+    const result = passwordsMustMatch(user, change);
+    expect(result).toEqual(expected);
   });
 
   it('should not return error for passwords match', () => {
@@ -31,12 +31,12 @@ describe('passwords must match', () => {
       passwordConfirm: 'AAAA',
     };
 
-    const matchTest = passwordsMustMatch(user, change);
-    expect(matchTest).toEqual([]);
+    const result = passwordsMustMatch(user, change);
+    expect(result).toEqual([]);
   });
 
   it('should not return error if no change', () => {
-    const matchTest = passwordsMustMatch(user, '');
-    expect(matchTest).toEqual([]);
+    const result = passwordsMustMatch(user, '');
+    expect(result).toEqual([]);
   });
 });

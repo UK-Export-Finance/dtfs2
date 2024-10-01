@@ -177,7 +177,7 @@ describe('reconciliation-summary-helper', () => {
         const result = await getReportReconciliationSummariesViewModel(summariesApiResponse, 'user-token');
 
         // Assert
-        const expectedResult: Awaited<ReturnType<typeof getReportReconciliationSummariesViewModel>> = [
+        const expected: Awaited<ReturnType<typeof getReportReconciliationSummariesViewModel>> = [
           {
             items: [
               {
@@ -199,7 +199,7 @@ describe('reconciliation-summary-helper', () => {
           },
         ];
 
-        expect(result).toEqual(expectedResult);
+        expect(result).toEqual(expected);
       });
     });
 
@@ -234,7 +234,7 @@ describe('reconciliation-summary-helper', () => {
         const result = await getReportReconciliationSummariesViewModel(summariesApiResponse, 'user-token');
 
         // Assert
-        const expectedResult: Awaited<ReturnType<typeof getReportReconciliationSummariesViewModel>> = [
+        const expected: Awaited<ReturnType<typeof getReportReconciliationSummariesViewModel>> = [
           {
             items: [
               {
@@ -256,7 +256,7 @@ describe('reconciliation-summary-helper', () => {
           },
         ];
 
-        expect(result).toEqual(expectedResult);
+        expect(result).toEqual(expected);
       });
     });
   });
