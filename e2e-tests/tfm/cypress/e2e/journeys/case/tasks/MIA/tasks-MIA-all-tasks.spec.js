@@ -1,7 +1,7 @@
-import relative from '../../../relativeURL';
-import partials from '../../../partials';
-import pages from '../../../pages';
-import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
+import relative from '../../../../relativeURL';
+import partials from '../../../../partials';
+import pages from '../../../../pages';
+import MOCK_DEAL_MIA from '../../../../../fixtures/deal-MIA';
 import {
   BUSINESS_SUPPORT_USER_1,
   UNDERWRITING_SUPPORT_1,
@@ -10,7 +10,7 @@ import {
   RISK_MANAGER_1,
   BANK1_MAKER1,
   ADMIN,
-} from '../../../../../../e2e-fixtures';
+} from '../../../../../../../e2e-fixtures';
 import {
   MIA_TASKS_STRUCTURE,
   submitTaskInProgress,
@@ -19,7 +19,7 @@ import {
   submitTaskCompleteAndAssertOtherTasks,
   assertTaskStatus,
   assertTaskLinkDoesNotExist,
-} from './tasks-helpers';
+} from '../tasks-helpers';
 
 context('Case tasks - MIA deal - all tasks', () => {
   let dealId;
