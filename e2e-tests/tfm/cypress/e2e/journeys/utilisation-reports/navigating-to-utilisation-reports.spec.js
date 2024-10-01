@@ -11,7 +11,7 @@ import USERS from '../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import { aliasSelector } from '../../../../../support/alias-selector';
 
-context('Route to the payments page for a bank', () => {
+context('Users can route to the payments page for a bank', () => {
   const allBanksAlias = 'allBanksAlias';
   const today = new Date();
   const submissionMonthStamp = toIsoMonthStamp(today);

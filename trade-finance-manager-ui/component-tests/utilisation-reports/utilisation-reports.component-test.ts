@@ -21,7 +21,7 @@ describe(page, () => {
     process.env = originalProcessEnv;
   });
 
-  const getWrapper = (isPDCReadUser = false) => {
+  const getWrapper = ({ isPDCReconcileUser = true }) => {
     const reportPeriodSummaries = [
       {
         items: [],
@@ -35,41 +35,47 @@ describe(page, () => {
       reportPeriodSummaries,
       user: MOCK_TFM_SESSION_USER,
       isTfmPaymentReconciliationFeatureFlagEnabled: false,
-      isPDCReadUser,
+      isPDCReconcileUser,
     };
     return render(params);
   };
 
-  it('should NOT render the read only banner', () => {
-    getWrapper().expectElement('[data-cy="read-only-banner"]').notToExist();
+  describe('when user is PDC_RECONCILE', () => {
+    it('should NOT render the read only banner', () => {
+      getWrapper({}).expectElement('[data-cy="read-only-banner"]').notToExist();
+    });
   });
 
   it('should render the main heading', () => {
-    getWrapper().expectElement('[data-cy="utilisation-report-heading"]').toExist();
+    getWrapper({}).expectElement('[data-cy="utilisation-report-heading"]').toExist();
   });
 
   it('should render the search link', () => {
-    getWrapper().expectLink('a[data-cy="find-reports-by-year-link"]').toLinkTo('/utilisation-reports/find-reports-by-year', 'Find reports by year');
+    getWrapper({}).expectLink('a[data-cy="find-reports-by-year-link"]').toLinkTo('/utilisation-reports/find-reports-by-year', 'Find reports by year');
   });
 
   it('should render the report period heading', () => {
-    getWrapper().expectText('[data-cy="2023-12-submission-month-report-period-heading"]').toRead('A heading to display for the report period');
+    getWrapper({}).expectText('[data-cy="2023-12-submission-month-report-period-heading"]').toRead('A heading to display for the report period');
   });
 
   it('should render the report due date for the current period', () => {
-    getWrapper().expectText(`[data-cy="2023-12-submission-month-report-due-date-text"]`).toRead('Some text to display explaining the due date');
+    getWrapper({}).expectText(`[data-cy="2023-12-submission-month-report-due-date-text"]`).toRead('Some text to display explaining the due date');
   });
 
   it('should render the report reconciliation table', () => {
-    getWrapper().expectElement('[data-cy="utilisation-report-reconciliation-table"]').toExist();
+    getWrapper({}).expectElement('[data-cy="utilisation-report-reconciliation-table"]').toExist();
   });
 
-  it('should render the read only banner for PDC_READ users', () => {
-    getWrapper(true).expectElement('[data-cy="read-only-banner"]').toExist();
-    getWrapper(true)
-      .expectText(`[data-cy="read-only-banner"]`)
-      .toContain(
-        'You are viewing the trade finance manager in read-only view. You will not be able to perform any actions to the reported fees on the system.',
-      );
+  describe('when user is NOT PDC_RECONCILE', () => {
+    it('should render the read only banner', () => {
+      const wrapper = getWrapper({ isPDCReconcileUser: false });
+
+      wrapper.expectElement('[data-cy="read-only-banner"]').toExist();
+      wrapper
+        .expectText(`[data-cy="read-only-banner"]`)
+        .toContain(
+          'You are viewing the trade finance manager in read-only view. You will not be able to perform any actions to the reported fees on the system.',
+        );
+    });
   });
 });
