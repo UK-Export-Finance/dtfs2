@@ -1,14 +1,24 @@
 import { UtilisationReportCsvRowData, UtilisationReportDataValidationError, UtilisationReportFacilityData } from '@ukef/dtfs2-common';
 import { generateErrorsForMismatchedFacilityValues } from '../generate-errors-for-mismatched-facility-values';
 
+/**
+ * generates errors for base currency
+ * if the value for base currency in the map does not match the value in the row
+ * then call generateErrorsForMismatchedFacilityValues to generate an error for all rows of the same facility id
+ * @param {UtilisationReportFacilityData | undefined} existingData - data in the map
+ * @param {String} baseCurrencyValue - provided value for base currency
+ * @param {UtilisationReportDataValidationError[]} errors - existing validation errors
+ * @param {UtilisationReportCsvRowData[]} csvData - all csv data
+ * @param {UtilisationReportCsvRowData} row - current row to generate errors from
+ * @returns {UtilisationReportDataValidationError[]} generated errors
+ */
 export const generateBaseCurrencyErrors = (
   existingData: UtilisationReportFacilityData | undefined,
   baseCurrencyValue: string,
   errors: UtilisationReportDataValidationError[],
   csvData: UtilisationReportCsvRowData[],
   row: UtilisationReportCsvRowData,
-  exporterName: string,
-) => {
+): UtilisationReportDataValidationError[] => {
   /**
    * if the value for base currency in the map does not match the value in the row
    * call to addMatchingRowErrors to generate an error for all rows of the same facility id
@@ -17,7 +27,7 @@ export const generateBaseCurrencyErrors = (
     const errorMessage = 'The currency does not match the other records for this facility. Enter the correct currency.';
     const field = 'base currency';
 
-    const generatedErrors = generateErrorsForMismatchedFacilityValues(csvData, errors, row, field, errorMessage, exporterName);
+    const generatedErrors = generateErrorsForMismatchedFacilityValues(csvData, errors, row, field, errorMessage);
 
     errors.push(...generatedErrors);
   }

@@ -238,7 +238,7 @@ context('Quarterly utilisation report upload', () => {
         cy.assertValidationErrorTableRowContains({
           tableRowIndex: 1,
           message: 'The currency does not match the other records for this facility. Enter the correct currency.',
-          exporter: 'Valid GEF',
+          exporter: 'Potato Exporter',
           row: '2',
           column: 'D',
           entry: 'EUR',
@@ -246,7 +246,7 @@ context('Quarterly utilisation report upload', () => {
         cy.assertValidationErrorTableRowContains({
           tableRowIndex: 2,
           message: 'The currency does not match the other records for this facility. Enter the correct currency.',
-          exporter: 'Valid GEF',
+          exporter: 'Potato Exporter 1',
           row: '3',
           column: 'D',
           entry: 'USD',
@@ -254,7 +254,7 @@ context('Quarterly utilisation report upload', () => {
         cy.assertValidationErrorTableRowContains({
           tableRowIndex: 3,
           message: 'The currency does not match the other records for this facility. Enter the correct currency.',
-          exporter: 'Valid GEF',
+          exporter: 'Potato Exporter 2',
           row: '4',
           column: 'D',
           entry: 'USD',
@@ -263,7 +263,7 @@ context('Quarterly utilisation report upload', () => {
         cy.assertValidationErrorTableRowContains({
           tableRowIndex: 4,
           message: 'The utilisation does not match the other records for this facility. Enter the correct utilisation.',
-          exporter: 'Valid GEF',
+          exporter: 'Potato Exporter',
           row: '2',
           column: 'F',
           entry: '1589318.23',
@@ -271,7 +271,7 @@ context('Quarterly utilisation report upload', () => {
         cy.assertValidationErrorTableRowContains({
           tableRowIndex: 5,
           message: 'The utilisation does not match the other records for this facility. Enter the correct utilisation.',
-          exporter: 'Valid GEF',
+          exporter: 'Potato Exporter 1',
           row: '3',
           column: 'F',
           entry: '1589319.23',
@@ -279,7 +279,7 @@ context('Quarterly utilisation report upload', () => {
         cy.assertValidationErrorTableRowContains({
           tableRowIndex: 6,
           message: 'The utilisation does not match the other records for this facility. Enter the correct utilisation.',
-          exporter: 'Valid GEF',
+          exporter: 'Potato Exporter 2',
           row: '4',
           column: 'F',
           entry: '1589319.23',
