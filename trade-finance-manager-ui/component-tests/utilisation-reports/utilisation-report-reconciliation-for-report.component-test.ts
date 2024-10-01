@@ -69,12 +69,9 @@ describe(page, () => {
 
     wrapper.expectText(`${premiumPaymentsTabSelector} h2[data-cy="premium-payments-heading"]`).toRead('Premium payments');
     wrapper
-      .expectText(`${premiumPaymentsTabSelector} p`)
-      .toMatch(/Received payments are entered against reported fees through selection and then selection of the 'Add a payment' button./);
-    wrapper
-      .expectText(`${premiumPaymentsTabSelector} p`)
+      .expectText(`[data-cy="received-payments-text"]`)
       .toMatch(
-        /When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected./,
+        /Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated./,
       );
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} form[data-cy="premium-payments-form"]`).toExist();
