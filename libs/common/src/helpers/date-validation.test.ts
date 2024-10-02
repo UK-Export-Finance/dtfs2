@@ -261,5 +261,12 @@ describe('date-validation helpers', () => {
         expect(result).toEqual(false);
       });
     });
+
+    describe('when date is undefined', () => {
+      it('should return false', () => {
+        const result = isDate(undefined);
+        expect(result).toEqual(false);
+      });
+    });
   });
 });

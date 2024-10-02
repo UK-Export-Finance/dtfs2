@@ -5,8 +5,8 @@ import { calculateFixedFeeFromDaysRemaining } from '../../../../../helpers/calcu
 /**
  * getNumberOfDaysInCoverPeriod
  * calculates number of days in the cover period between the cover start and end dates
- * @param {Date} coverStartDate
- * @param {Date} coverEndDate
+ * @param coverStartDate
+ * @param coverEndDate
  * @returns {Number} number of days in the cover period
  */
 export const getNumberOfDaysInCoverPeriod = (coverStartDate: Date, coverEndDate: Date): number => differenceInDays(coverEndDate, coverStartDate);
@@ -16,11 +16,11 @@ export const getNumberOfDaysInCoverPeriod = (coverStartDate: Date, coverEndDate:
  * Calculates the fixed fee for the utilisation report
  * gets the number of days in the cover period
  * calculates and returns the fixed free from calculateFixedFeeFromDaysRemaining
- * @param {Number} utilisation - The facility utilisation
- * @param {Date} coverStartDate - The facility cover start date
- * @param {Date} coverEndDate - The facility cover end date
- * @param {Number} interestPercentage - The facility interest percentage
- * @param {Number} dayCountBasis - The facility day count basis
+ * @param utilisation - The facility utilisation
+ * @param coverStartDate - The facility cover start date
+ * @param coverEndDate - The facility cover end date
+ * @param interestPercentage - The facility interest percentage
+ * @param dayCountBasis - The facility day count basis
  * @returns The fixed fee for the current report period
  */
 export const calculateFixedFee = ({

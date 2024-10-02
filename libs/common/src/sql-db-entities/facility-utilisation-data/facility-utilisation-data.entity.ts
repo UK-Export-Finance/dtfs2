@@ -64,11 +64,13 @@ export class FacilityUtilisationDataEntity extends AuditableBaseEntity {
   }
 
   /**
-   * Creates a new FacilityUtilisationDataEntity without utilisation and fixed fee
+   * Creates a new FacilityUtilisationDataEntity with utilisation and fixed fee
    * @param facilityUtilisationData - Parameters for creating the entity
    * @param facilityUtilisationData.id - The ID of the entity
    * @param facilityUtilisationData.reportPeriod - The report period details
    * @param facilityUtilisationData.requestSource - The source of the request
+   * @param facilityUtilisationData.utilisation - The utilisation value
+   * @param facilityUtilisationData.fixedFee - The fixed fee value
    * @returns The created entity
    */
   public static createWithUtilisationAndFixedFee({
