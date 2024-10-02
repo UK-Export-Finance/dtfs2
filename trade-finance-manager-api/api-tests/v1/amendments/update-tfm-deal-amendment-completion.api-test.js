@@ -44,9 +44,11 @@ describe('update tfm-deals on amendment completion', () => {
       generateTfmAuditDetails(MOCK_USERS[0]._id),
     );
 
+    const formatted = format(result.tfm.lastUpdated, 'dd/MM/yyyy');
+
     const expected = format(new Date(), 'dd/MM/yyyy');
-    const expectedResult = format(result.tfm.lastUpdated, 'dd/MM/yyyy');
-    expect(expectedResult).toEqual(expected);
+
+    expect(formatted).toEqual(expected);
   });
 
   it('updateTFMDealLastUpdated() - should return null when dealId is null', async () => {

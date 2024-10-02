@@ -1,15 +1,15 @@
-import relative from '../../../relativeURL';
-import { errorSummary } from '../../../partials';
-import pages from '../../../pages';
-import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
+import relative from '../../../../relativeURL';
+import { errorSummary } from '../../../../partials';
+import pages from '../../../../pages';
+import MOCK_DEAL_AIN from '../../../../../fixtures/deal-AIN';
+import { T1_USER_1, BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../../e2e-fixtures';
 
-const CONSTANTS = require('../../../../fixtures/constants');
+const CONSTANTS = require('../../../../../fixtures/constants');
 
-context('Indemnifier Party URN - User can add, edit, confirm and submit URN to the TFM', () => {
+context('Exporter Party URN - User can add, edit, confirm and submit URN to the TFM', () => {
   let dealId;
   const dealFacilities = [];
-  const party = CONSTANTS.PARTIES.INDEMNIFIER;
+  const party = CONSTANTS.PARTIES.EXPORTER;
   const mockUrn = CONSTANTS.PARTY_URN.INVALID;
   const partyUrn = CONSTANTS.PARTY_URN.VALID;
 
@@ -36,7 +36,7 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
     });
   });
 
-  describe('Indemnifier party', () => {
+  describe('Exporter party', () => {
     /**
      * Only TFM users in `BUSINESS_SUPPORT` team can add/edit
      * or confirm party URN.
@@ -48,24 +48,24 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
       });
 
       it('should render edit page', () => {
-        pages.partiesPage.indemnifierEditLink().click();
+        pages.partiesPage.exporterEditLink().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        pages.partiesPage.indemnifierEditLink().should('not.exist');
+        pages.partiesPage.exporterEditLink().should('not.exist');
 
-        pages.indemnifierPage.urnInput().should('exist');
-        pages.indemnifierPage.heading().should('have.text', 'Edit indemnifier details');
+        pages.exporterPage.urnInput().should('exist');
+        pages.exporterPage.heading().should('have.text', 'Edit exporter details');
 
-        pages.indemnifierPage.saveButton().should('exist');
-        pages.indemnifierPage.closeLink().should('exist');
+        pages.exporterPage.saveButton().should('exist');
+        pages.exporterPage.closeLink().should('exist');
 
         // Go back
-        pages.indemnifierPage.closeLink().click();
+        pages.exporterPage.closeLink().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
       });
 
       it('should have the back link', () => {
-        pages.partiesPage.indemnifierEditLink().click();
+        pages.partiesPage.exporterEditLink().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
 
         cy.clickBackLink();
@@ -73,98 +73,98 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
       });
 
       it('should throw an error upon validation failure', () => {
-        pages.partiesPage.indemnifierEditLink().click();
-        pages.indemnifierPage.urnInput().clear();
+        pages.partiesPage.exporterEditLink().click();
+        pages.exporterPage.urnInput().clear();
 
-        pages.indemnifierPage.saveButton().click();
+        pages.exporterPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a unique reference number');
-        pages.indemnifierPage.urnError().contains('Enter a unique reference number');
+        pages.exporterPage.urnError().contains('Enter a unique reference number');
 
-        pages.indemnifierPage.urnInput().clear();
-        cy.keyboardInput(pages.indemnifierPage.urnInput(), 'test');
+        pages.exporterPage.urnInput().clear();
+        cy.keyboardInput(pages.exporterPage.urnInput(), 'test');
 
-        pages.indemnifierPage.saveButton().click();
-
-        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        errorSummary().contains('Enter a minimum of 3 numbers');
-        pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
-
-        cy.keyboardInput(pages.indemnifierPage.urnInput(), '12');
-        pages.indemnifierPage.saveButton().click();
+        pages.exporterPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
-        pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        cy.keyboardInput(pages.indemnifierPage.urnInput(), 'ABC123');
-        pages.indemnifierPage.saveButton().click();
-
-        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        errorSummary().contains('Enter a minimum of 3 numbers');
-        pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
-
-        cy.keyboardInput(pages.indemnifierPage.urnInput(), '"!£!"£!"£!"£');
-        pages.indemnifierPage.saveButton().click();
+        cy.keyboardInput(pages.exporterPage.urnInput().clear(), '12');
+        pages.exporterPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
-        pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
 
-        cy.keyboardInput(pages.indemnifierPage.urnInput(), '1234!');
-        pages.indemnifierPage.saveButton().click();
-
-        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
-        errorSummary().contains('Enter a minimum of 3 numbers');
-        pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
-
-        cy.keyboardInput(pages.indemnifierPage.urnInput(), ' ');
-        pages.indemnifierPage.saveButton().click();
+        cy.keyboardInput(pages.exporterPage.urnInput().clear(), 'ABC123');
+        pages.exporterPage.saveButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
         errorSummary().contains('Enter a minimum of 3 numbers');
-        pages.indemnifierPage.urnError().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        cy.keyboardInput(pages.exporterPage.urnInput().clear(), '"!£!"£!"£!"£');
+        pages.exporterPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
+        errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        cy.keyboardInput(pages.exporterPage.urnInput().clear(), '1234!');
+        pages.exporterPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
+        errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
+
+        cy.keyboardInput(pages.exporterPage.urnInput().clear(), ' ');
+        pages.exporterPage.saveButton().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/parties/${party}`));
+        errorSummary().contains('Enter a minimum of 3 numbers');
+        pages.exporterPage.urnError().contains('Enter a minimum of 3 numbers');
       });
 
       it('should re-direct to non-existent party urn page', () => {
-        pages.partiesPage.indemnifierEditLink().click();
-        pages.indemnifierPage.urnInput().clear();
-        cy.keyboardInput(pages.indemnifierPage.urnInput(), mockUrn);
+        pages.partiesPage.exporterEditLink().click();
+        pages.exporterPage.urnInput().clear();
+        cy.keyboardInput(pages.exporterPage.urnInput(), mockUrn);
 
-        pages.indemnifierPage.saveButton().click();
+        pages.exporterPage.saveButton().click();
 
         pages.partiesPage.nonExistentHeading().should('exist');
       });
 
       it('should re-direct to summary page', () => {
-        pages.partiesPage.indemnifierEditLink().click();
-        pages.indemnifierPage.urnInput().clear();
-        cy.keyboardInput(pages.indemnifierPage.urnInput(), partyUrn);
+        pages.partiesPage.exporterEditLink().click();
+        pages.exporterPage.urnInput().clear();
+        cy.keyboardInput(pages.exporterPage.urnInput(), partyUrn);
 
-        pages.indemnifierPage.saveButton().click();
+        pages.exporterPage.saveButton().click();
 
         pages.partiesPage.partyUrnSummaryTable().should('exist');
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}/summary/${partyUrn}`));
       });
 
       it('should submit the party URN to TFM', () => {
-        pages.partiesPage.indemnifierEditLink().click();
-        pages.indemnifierPage.urnInput().clear();
-        cy.keyboardInput(pages.indemnifierPage.urnInput(), partyUrn);
+        pages.partiesPage.exporterEditLink().click();
+        pages.exporterPage.urnInput().clear();
+        cy.keyboardInput(pages.exporterPage.urnInput(), partyUrn);
 
-        pages.indemnifierPage.saveButton().click();
+        pages.exporterPage.saveButton().click();
 
         pages.partiesPage.partyUrnSummaryTable().should('exist');
         cy.url().should('eq', relative(`/case/${dealId}/parties/${party}/summary/${partyUrn}`));
 
-        pages.indemnifierPage.saveButton().click();
+        pages.exporterPage.saveButton().click();
         cy.url().should('eq', relative(`/case/${dealId}/parties`));
 
-        cy.assertText(pages.indemnifierPage.uniqueRef(), partyUrn);
+        cy.assertText(pages.exporterPage.uniqueRef(), partyUrn);
 
-        pages.partiesPage.indemnifierEditLink().click();
-        pages.indemnifierPage
+        pages.partiesPage.exporterEditLink().click();
+        pages.exporterPage
           .urnInput()
           .invoke('val')
           .then((value) => {
@@ -181,7 +181,7 @@ context('Indemnifier Party URN - User can add, edit, confirm and submit URN to t
 
     it('ensure user cannot add or edit party URN', () => {
       cy.visit(`/case/${dealId}/parties`);
-      pages.partiesPage.indemnifierEditLink().should('not.exist');
+      pages.partiesPage.exporterEditLink().should('not.exist');
     });
 
     it('ensure user cannot manually visit the party URN page', () => {
