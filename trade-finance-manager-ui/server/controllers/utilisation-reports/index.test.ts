@@ -5,7 +5,7 @@ import { getUtilisationReports } from '.';
 import { MOCK_BANK_HOLIDAYS } from '../../test-mocks/mock-bank-holidays';
 import { MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY } from '../../test-mocks/mock-utilisation-report-reconciliation-summary';
 import { MOCK_TFM_SESSION_USER } from '../../test-mocks/mock-tfm-session-user';
-import { getReportReconciliationSummariesViewModel } from './helpers';
+import { getReportReconciliationSummariesViewModel, isPDCReconcileUser } from './helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../constants';
 
 jest.mock('../../api');
@@ -65,6 +65,7 @@ describe('controllers/utilisation-reports', () => {
       expect(res._getRenderData()).toMatchObject({
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         reportPeriodSummaries: expectedViewModel,
+        isPDCReconcileUser: isPDCReconcileUser(MOCK_TFM_SESSION_USER),
       });
     });
 
