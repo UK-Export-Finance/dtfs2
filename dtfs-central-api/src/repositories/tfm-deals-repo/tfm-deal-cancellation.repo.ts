@@ -10,7 +10,7 @@ import {
   TfmDealCancellation,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import $ from 'mongo-dot-notation';
+import { flatten } from 'mongo-dot-notation';
 import { mongoDbClient } from '../../drivers/db-client';
 
 export class TfmDealCancellationRepo {
@@ -69,7 +69,7 @@ export class TfmDealCancellationRepo {
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
         'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
       },
-      $.flatten({
+      flatten({
         'tfm.cancellation': update,
         auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
       }),
