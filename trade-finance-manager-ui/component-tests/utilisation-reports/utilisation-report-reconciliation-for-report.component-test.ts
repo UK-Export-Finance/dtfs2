@@ -69,9 +69,12 @@ describe(page, () => {
 
     wrapper.expectText(`${premiumPaymentsTabSelector} h2[data-cy="premium-payments-heading"]`).toRead('Premium payments');
     wrapper
-      .expectText(`[data-cy="received-payments-text"]`)
+      .expectText(`[data-cy="received-payments-entered-text"]`)
+      .toMatch(/Received payments are entered against reported fees through selection and then selection of the 'Add a payment' button./);
+    wrapper
+      .expectText(`[data-cy=""when-payments-show-text""]`)
       .toMatch(
-        /Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated./,
+        /When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected./,
       );
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} form[data-cy="premium-payments-form"]`).toExist();
@@ -92,6 +95,19 @@ describe(page, () => {
       .toHaveAttribute('formaction', `/utilisation-reports/${reportId}/check-keying-data`);
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
+  });
+
+  it('should render the premium payments with the relevant text for non-PDC_RECONCILE users', () => {
+    const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
+    const premiumPaymentsTabSelector = 'div#premium-payments';
+
+    wrapper.expectElement(premiumPaymentsTabSelector).toExist();
+
+    wrapper
+      .expectText(`[data-cy="received-payments-text"]`)
+      .toMatch(
+        /Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated./,
+      );
   });
 
   it('should render the facility ID filter input', () => {
