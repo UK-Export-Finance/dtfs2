@@ -57,7 +57,7 @@ context('Provided Facility Page - feature flag enabled', () => {
     cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/bank-review-date`));
   });
 
-  it('The `Back` Link works after form has been validated', () => {
+  it('the `Back` link works after form has been validated', () => {
     cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
     cy.clickContinueButton();
     errorSummary();

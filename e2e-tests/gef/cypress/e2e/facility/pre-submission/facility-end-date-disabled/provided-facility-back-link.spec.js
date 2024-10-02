@@ -29,13 +29,14 @@ context('Provided Facility Page - feature flag disabled', () => {
   beforeEach(() => {
     cy.saveSession();
   });
+
   it('redirects user to `about facility` page when clicking on `Back` Link ', () => {
     cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
     cy.clickBackLink();
     cy.url().should('eq', relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/about-facility`));
   });
 
-  it('The `Back` Link works after form has been validated', () => {
+  it('the `Back` link works after form has been validated', () => {
     cy.visit(relative(`/gef/application-details/${applications[1].id}/facilities/${applications[1].facilities[1].details._id}/provided-facility`));
     cy.clickContinueButton();
     errorSummary();
