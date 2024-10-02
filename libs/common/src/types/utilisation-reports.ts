@@ -47,6 +47,13 @@ export type PremiumPaymentsFilters = {
 
 export type PaymentDetailsFilters = {
   facilityId?: string;
+  paymentCurrency?: string;
+  paymentReference?: string;
+};
+
+// TODO FN-2311: When PR 3573 (backend) is merged, pull the same type out from `dtfs-central-api/src/types/utilisation-reports.ts` and use this version.
+export type ValidatedPaymentDetailsFilters = {
+  facilityId?: string;
   paymentCurrency?: Currency;
   paymentReference?: string;
 };

@@ -16,6 +16,12 @@
         }
       },
       items: filters.currency,
+      errorMessage: errors and errors.paymentCurrencyErrorMessage and {
+        text: errors.paymentCurrencyErrorMessage,
+        attributes: {
+          'data-cy': 'payment-details--filter-payment-currency-error'
+        }
+      },
       attributes: {
         'data-cy': 'payment-details--filter-currency'
       }
@@ -31,6 +37,12 @@
       classes: 'govuk-label--m',
       attributes: {
         'data-cy': 'payment-details--filter-payment-reference-label'
+      }
+    },
+    errorMessage: errors and errors.paymentReferenceErrorMessage and {
+      text: errors.paymentReferenceErrorMessage,
+      attributes: {
+        'data-cy': 'payment-details--filter-payment-reference-error'
       }
     },
     attributes: {

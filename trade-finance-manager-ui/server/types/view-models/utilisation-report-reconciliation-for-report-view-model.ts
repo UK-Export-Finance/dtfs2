@@ -98,8 +98,10 @@ export type PremiumPaymentsViewModelItem = {
 };
 
 export type PaymentDetailsFilterErrorsViewModel = {
-  facilityIdErrorMessage?: string;
   errorSummary: ErrorSummaryViewModel[];
+  facilityIdErrorMessage?: string;
+  paymentCurrencyErrorMessage?: string;
+  paymentReferenceErrorMessage?: string;
 };
 
 export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & {

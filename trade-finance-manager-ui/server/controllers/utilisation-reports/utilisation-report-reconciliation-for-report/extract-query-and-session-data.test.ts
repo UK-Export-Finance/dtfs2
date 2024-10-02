@@ -1,9 +1,9 @@
 import { extractQueryAndSessionData } from './extract-query-and-session-data';
 import { handleRedirectSessionData } from './handle-redirect-session-data';
-import { validateFacilityIdQuery } from './validate-facility-id-query';
+import { validateFacilityIdQuery } from './validate-premium-payments-filters';
 
 jest.mock('./handle-redirect-session-data');
-jest.mock('./validate-facility-id-query');
+jest.mock('./validate-premium-payments-filters');
 
 describe('extractQueryAndSessionData', () => {
   const ORIGINAL_URL = '/original-url';
@@ -96,7 +96,10 @@ describe('extractQueryAndSessionData', () => {
         '#payment-details-facility-id-filter',
         PAYMENT_DETAILS_FACILITY_ID_QUERY,
       );
-      expect(result.paymentDetailsFilterErrors).toEqual([mockError]);
+      expect(result.paymentDetailsFilterErrors).toEqual({
+        errorSummary: [mockError],
+        facilityIdErrorMessage: mockError.text,
+      });
     });
 
     it('uses provided paymentDetailsPaymentReference', () => {

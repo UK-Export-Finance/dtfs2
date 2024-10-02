@@ -3,8 +3,8 @@ import { SessionData } from 'express-session';
 import { handleRedirectSessionData } from './handle-redirect-session-data';
 import { getIsCheckboxChecked } from './get-is-checkbox-checked';
 import { getSelectedFeeRecordIdsFromQuery } from './get-selected-fee-record-ids-from-query';
-import { validateFacilityIdQuery } from './validate-facility-id-query';
-import { PaymentDetailsFilterErrorsViewModel } from '../../../types/view-models';
+import { validateFacilityIdQuery } from './validate-premium-payments-filters';
+import { validatePaymentDetailsFilters } from './validate-payment-details-filters';
 
 type PremiumPaymentsQuery = {
   premiumPaymentsFacilityId?: string;
@@ -12,6 +12,7 @@ type PremiumPaymentsQuery = {
 
 type PaymentDetailsQuery = {
   paymentDetailsFacilityId?: string;
+  paymentDetailsPaymentCurrency?: string;
   paymentDetailsPaymentReference?: string;
 };
 
@@ -23,7 +24,8 @@ type GetUtilisationReportReconciliationQuery = PremiumPaymentsQuery &
 /**
  * Parses premium payments filters from the query parameters.
  * @param originalUrl - The original URL of the request.
- * @param queryFilters - The premium payments query filters.
+ * @param queryFilters - An object containing the premium payments filters.
+ * @param queryFilters.facilityId - Optional. The facility ID filter.
  * @returns An object containing the parsed premium payments filters and any
  * error resulting from validating the facility ID query.
  */
@@ -32,10 +34,7 @@ const parsePremiumPaymentsFilters = (originalUrl: string, queryFilters?: Premium
     ? asString(queryFilters.premiumPaymentsFacilityId, 'premiumPaymentsFacilityId')
     : undefined;
 
-  const facilityIdQueryName = 'premiumPaymentsFacilityId';
-  const facilityIdInputId = '#premium-payments-facility-id-filter';
-
-  const filterError = validateFacilityIdQuery(originalUrl, facilityIdQueryName, facilityIdInputId, facilityIdQueryString);
+  const filterError = validateFacilityIdQuery(originalUrl, facilityIdQueryString);
 
   const filters: PremiumPaymentsFilters = {
     facilityId: facilityIdQueryString,
@@ -50,37 +49,31 @@ const parsePremiumPaymentsFilters = (originalUrl: string, queryFilters?: Premium
 /**
  * Parses payment details filters from the query parameters.
  * @param originalUrl - The original URL of the request.
- * @param queryFilters - The payment details query filters.
+ * @param queryFilters - An object containing the payment details filters.
+ * @param queryFilters.facilityId - Optional. The facility ID filter.
+ * @param queryFilters.paymentCurrency - Optional. The payment currency filter.
+ * @param queryFilters.paymentReference - Optional. The payment reference filter.
  * @returns An object containing the parsed payment details filters and any
  * errors resulting from validating the filter query parameters.
  */
 const parsePaymentDetailsFilters = (originalUrl: string, queryFilters?: PaymentDetailsQuery) => {
-  const filterErrors: PaymentDetailsFilterErrorsViewModel = {
-    errorSummary: [],
-  };
+  const facilityId = queryFilters?.paymentDetailsFacilityId ? asString(queryFilters.paymentDetailsFacilityId, 'paymentDetailsFacilityId') : undefined;
 
-  const facilityIdString = queryFilters?.paymentDetailsFacilityId ? asString(queryFilters.paymentDetailsFacilityId, 'paymentDetailsFacilityId') : undefined;
-
-  if (facilityIdString) {
-    const facilityIdError = validateFacilityIdQuery(originalUrl, 'paymentDetailsFacilityId', '#payment-details-facility-id-filter', facilityIdString);
-
-    if (facilityIdError) {
-      filterErrors.facilityIdErrorMessage = facilityIdError.text;
-      filterErrors.errorSummary.push(facilityIdError);
-    }
-  }
-
-  const paymentReferenceString = queryFilters?.paymentDetailsPaymentReference
+  const paymentReference = queryFilters?.paymentDetailsPaymentReference
     ? asString(queryFilters.paymentDetailsPaymentReference, 'paymentDetailsPaymentReference')
     : undefined;
 
-  // TODO FN-2311: Add support for payment currency query param.
-  // TODO FN-2311: Validate payment currency, push any errors onto errorSummary.
+  const paymentCurrency = queryFilters?.paymentDetailsPaymentCurrency
+    ? asString(queryFilters.paymentDetailsPaymentCurrency, 'paymentDetailsPaymentCurrency')
+    : undefined;
 
   const filters: PaymentDetailsFilters = {
-    facilityId: facilityIdString,
-    paymentReference: paymentReferenceString,
+    facilityId,
+    paymentCurrency,
+    paymentReference,
   };
+
+  const filterErrors = validatePaymentDetailsFilters(filters, originalUrl);
 
   return {
     paymentDetailsFilters: filters,
