@@ -77,6 +77,8 @@ describe(page, () => {
         /When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected./,
       );
 
+    wrapper.expectText(`[data-cy="received-payments-text"]`).notToExist();
+
     wrapper.expectElement(`${premiumPaymentsTabSelector} form[data-cy="premium-payments-form"]`).toExist();
 
     wrapper.expectElement(`${premiumPaymentsTabSelector} div.govuk-button-group`).toExist();
