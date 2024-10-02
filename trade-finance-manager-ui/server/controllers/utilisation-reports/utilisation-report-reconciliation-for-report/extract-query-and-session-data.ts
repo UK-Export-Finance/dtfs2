@@ -104,7 +104,13 @@ const parsePaymentDetailsFilters = (originalUrl: string, queryFilters?: PaymentD
  * isCheckboxChecked.
  */
 export const extractQueryAndSessionData = (
-  { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, selectedFeeRecordIdsQuery }: GetUtilisationReportReconciliationQuery,
+  {
+    premiumPaymentsFacilityId,
+    paymentDetailsFacilityId,
+    paymentDetailsPaymentCurrency,
+    paymentDetailsPaymentReference,
+    selectedFeeRecordIdsQuery,
+  }: GetUtilisationReportReconciliationQuery,
   sessionData: Partial<SessionData>,
   originalUrl: string,
 ) => {
@@ -112,6 +118,7 @@ export const extractQueryAndSessionData = (
 
   const { paymentDetailsFilters, paymentDetailsFilterErrors } = parsePaymentDetailsFilters(originalUrl, {
     paymentDetailsFacilityId,
+    paymentDetailsPaymentCurrency,
     paymentDetailsPaymentReference,
   });
 
