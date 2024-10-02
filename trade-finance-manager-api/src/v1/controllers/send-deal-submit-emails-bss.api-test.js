@@ -36,7 +36,7 @@ describe('send-deal-submit-emails - BSS', () => {
       email: 'mock@testing.com',
       template: {},
     },
-    bankResponse: [],
+    bankResponses: [],
   };
 
   beforeEach(async () => {

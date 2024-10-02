@@ -4,10 +4,10 @@ const { validationErrorHandler } = require('../../../../helpers/validationErrorH
 const amendmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**
- * @param {object} body
+ * @param {Object} body
  * @param {string} type
  * @param {string} message
- * @returns {object}
+ * @returns {Object}
  * Validation function for effective and received dates on amendment banks decision
  * Used for both received and effective date with type and message passed as string
  * checks that full date has been provided

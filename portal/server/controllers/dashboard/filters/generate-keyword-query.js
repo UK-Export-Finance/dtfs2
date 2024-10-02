@@ -16,7 +16,7 @@ const generateObject = (fieldName, keywordValue) => ({
 /**
  * Generates an array of objects from given field names and keyword value
  *
- * @param {array} fields
+ * @param {Array} fields
  * @param {string} keyword value
  * @example ( ['dealType', 'submissionType' ], 'Automatic' )
  * @returns [ { dealType: { KEYWORD: 'Automatic', $options: 'i' } }, { submissionType: { KEYWORD: 'Automatic', $options: 'i' } } ]

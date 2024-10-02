@@ -5,8 +5,8 @@
  * If sorting object is populated but additional filters are selected, then returns 0 for startPage
  * If sorting is set or no additional filters, returns currentStartPage
  * @param {number} currentStartPage
- * @param {object} filters
- * @param {object} sort
+ * @param {Object} filters
+ * @param {Object} sort
  * @returns {number} startpage
  */
 const computeSkipPosition = (currentStartPage, filters, sort) => {

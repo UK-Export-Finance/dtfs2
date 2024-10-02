@@ -13,10 +13,10 @@ const { stripCommas, getMaximumLiability } = require('../../data-migration/helpe
 // ******************** DEALS *************************
 /**
  * Return all the TFM deals with `MIA/MIN` filter.
- * @param {Integer} EPOCH Fetch records greater than.
+ * @param {number} EPOCH Fetch records greater than.
  * Defaulted to `1648684800` (31-03-2022). This argument
  * accepts EPOCH with `ms`
- * @returns {object} Collection object
+ * @returns {Object} Collection object
  */
 const getTfmDeals = (epoch = 1648684800) =>
   getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, {

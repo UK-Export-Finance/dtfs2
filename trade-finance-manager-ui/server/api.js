@@ -14,6 +14,13 @@ const generateHeaders = (token) => ({
   'x-api-key': TFM_API_KEY,
 });
 
+/**
+ * @param {string} id - deal id
+ * @param {string} token - logged in user token
+ * @param {import('@ukef/dtfs2-common').AnyObject} tasksFilters - tasks filters
+ * @param {import('@ukef/dtfs2-common').AnyObject} activityFilters - activity filters
+ * @returns {Promise<import('./types/data-transfer-objects/get-deal-response').GetDealResponse | { status: 400; data: 'Invalid deal id'}>}
+ */
 const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
   const { filterType: tasksFilterType, teamId: tasksTeamId, userId: tasksUserId } = tasksFilters;
   const { filterType: activityFilterType } = activityFilters;
@@ -48,9 +55,9 @@ const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
 /**
  * Makes a request to the GET /facilities TFM API endpoint
  * and throws an error if the page number is out of bounds
- * @param {object} queryParams Query parameters
+ * @param {Object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {object} Facilities data and pagination metadata
+ * @returns {Object} Facilities data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getFacilities = async (queryParams, token) => {
@@ -75,9 +82,9 @@ const getFacilities = async (queryParams, token) => {
 /**
  * Makes a request to the GET /deals TFM API endpoint
  * and throws an error if the page number is out of bounds
- * @param {object} queryParams Query parameters
+ * @param {Object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {object} Deals data and pagination metadata
+ * @returns {Object} Deals data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getDeals = async (queryParams, token) => {
@@ -1252,6 +1259,27 @@ const updateDealCancellation = async (dealId, cancellationUpdate, userToken) => 
   }
 };
 
+/**
+ * Updates the deal cancellation object on a TFM MIN or AIN deal
+ * @param {string} dealId - The deal ID
+ * @param {string} userToken - The user token
+ * @returns {Promise<Partial<import('@ukef/dtfs2-common').TfmDealCancellation>>}
+ */
+const getDealCancellation = async (dealId, userToken) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation`,
+      headers: generateHeaders(userToken),
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get deal cancellation', error);
+    throw error;
+  }
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1309,4 +1337,5 @@ module.exports = {
   removeFeesFromPayment,
   addFeesToAnExistingPayment,
   updateDealCancellation,
+  getDealCancellation,
 };
