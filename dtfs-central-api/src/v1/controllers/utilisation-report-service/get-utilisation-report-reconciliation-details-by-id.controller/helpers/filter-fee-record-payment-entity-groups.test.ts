@@ -36,8 +36,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
           // Assert
-          expect(result).toContainEqual(firstGroup);
-          expect(result).not.toContainEqual(secondGroup);
+          expect(result).toEqual([firstGroup]);
         });
       });
 
@@ -63,8 +62,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
           // Assert
-          expect(result).toContainEqual(firstGroup);
-          expect(result).not.toContainEqual(secondGroup);
+          expect(result).toEqual([firstGroup]);
         });
       });
 
@@ -95,9 +93,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
           // Assert
-          expect(result).toContainEqual(firstGroup);
-          expect(result).not.toContainEqual(secondGroup);
-          expect(result).toContainEqual(thirdGroup);
+          expect(result).toEqual([firstGroup, thirdGroup]);
         });
       });
     });
@@ -125,8 +121,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
           // Assert
-          expect(result).not.toContainEqual(firstGroup);
-          expect(result).toContainEqual(secondGroup);
+          expect(result).toEqual([secondGroup]);
         });
       });
 
@@ -157,9 +152,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
           // Assert
-          expect(result).not.toContainEqual(firstGroup);
-          expect(result).toContainEqual(secondGroup);
-          expect(result).toContainEqual(thirdGroup);
+          expect(result).toEqual([secondGroup, thirdGroup]);
         });
       });
     });
@@ -190,8 +183,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
           // Assert
-          expect(result).toContainEqual(firstGroup);
-          expect(result).not.toContainEqual(secondGroup);
+          expect(result).toEqual([firstGroup]);
         });
       });
 
@@ -217,8 +209,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
           // Assert
-          expect(result).toContainEqual(firstGroup);
-          expect(result).not.toContainEqual(secondGroup);
+          expect(result).toEqual([firstGroup]);
         });
       });
 
@@ -249,9 +240,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
           // Assert
-          expect(result).toContainEqual(firstGroup);
-          expect(result).not.toContainEqual(secondGroup);
-          expect(result).toContainEqual(thirdGroup);
+          expect(result).toEqual([firstGroup, thirdGroup]);
         });
       });
     });
@@ -286,9 +275,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
         // Assert
-        expect(result).not.toContainEqual(firstGroup);
-        expect(result).not.toContainEqual(secondGroup);
-        expect(result).toContainEqual(thirdGroup);
+        expect(result).toEqual([thirdGroup]);
       });
     });
   });
