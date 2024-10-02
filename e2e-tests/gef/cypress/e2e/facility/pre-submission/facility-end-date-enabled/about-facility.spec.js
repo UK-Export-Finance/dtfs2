@@ -109,9 +109,9 @@ context('About Facility Page  - feature flag enabled', () => {
       cy.keyboardInput(aboutFacility.facilityName(), 'Name');
       aboutFacility.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', day: `${todayDay}-`, month: `${todayMonth} + 1`, year: todayYear });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', day: `${todayDay}-`, month: todayMonth, year: todayYear });
 
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: `${todayDay}-`, month: `${todayMonth} + 1`, year: todayYear });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: `${todayDay}-`, month: todayMonth, year: todayYear });
 
       cy.clickContinueButton();
       errorSummary().contains('The day for the cover start date must include 1 or 2 numbers');

@@ -7,11 +7,11 @@ import { today, longDayFormat, longMonthFormat, longYearFormat } from '../../../
  * For each date field, check that a null value is NOT provided.
  * In some tests, only 1x date fields is changed, for validation testing.
  * Therefore, only enter something into each field if the field is NOT provided as null.
- * @param {String} idPrefix: ID prefix of the date fields
- * @param {String} date: Date. Defaults to today
- * @param {String} day: Optional day string
- * @param {String} month: Optional month string
- * @param {String} year: Optional year string
+ * @param {string} idPrefix: ID prefix of the date fields
+ * @param {string} date: Date. Defaults to today
+ * @param {string} day: Optional day string
+ * @param {string} month: Optional month string
+ * @param {string} year: Optional year string
  */
 const completeDateFormFields = ({ idPrefix, date = today, day, month, year }) => {
   if (day !== null) {

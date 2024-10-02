@@ -10,15 +10,7 @@ import aboutFacilityUnissued from '../../../../pages/unissued-facilities-about-f
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import statusBanner from '../../../../pages/application-status-banner';
 import facilities from '../../../../pages/facilities';
-import {
-  threeDays,
-  threeDaysAgo,
-  threeDaysAgoPlusMonth,
-  threeMonths,
-  threeMonthsOneDay,
-  today,
-  twoMonths,
-} from '../../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, threeDaysAgoPlusMonth, threeMonths, threeMonthsOneDay, today, twoMonths } from '../../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;
@@ -106,11 +98,11 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDays });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDays });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
       cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
@@ -363,11 +355,11 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDays });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDays });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
       cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();

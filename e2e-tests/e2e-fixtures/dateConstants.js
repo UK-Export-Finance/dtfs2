@@ -277,6 +277,8 @@ module.exports = {
   oneYearAgoDay,
   oneYearAgoMonth,
   oneYearAgoYear,
+  twelveMonthsOneDayAgo,
+  twelveMonthsOneDay,
   twelveMonthsOneDayDay,
   twelveMonthsOneDayMonth,
   twelveMonthsOneDayYear,
