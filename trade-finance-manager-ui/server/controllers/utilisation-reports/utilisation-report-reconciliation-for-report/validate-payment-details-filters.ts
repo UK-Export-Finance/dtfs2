@@ -42,13 +42,6 @@ export const isPaymentReferenceFilterValid = (originalUrl: string, paymentRefere
 export const validatePaymentDetailsFilters = (originalUrl: string, filters: PaymentDetailsFilters): PaymentDetailsFilterErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
 
-  let facilityIdErrorMessage;
-  if (filters.facilityId && !isFacilityIdFilterValid(originalUrl, filters.facilityId)) {
-    facilityIdErrorMessage = 'Facility ID must be blank or contain between 4 and 10 numbers';
-
-    errorSummary.push({ text: facilityIdErrorMessage, href: '#payment-details-facility-id-filter' });
-  }
-
   let paymentCurrencyErrorMessage;
   if (filters.paymentCurrency && !isPaymentCurrencyFilterValid(originalUrl, filters.paymentCurrency)) {
     paymentCurrencyErrorMessage = 'Payment currency must be blank or a supported currency';
@@ -62,6 +55,13 @@ export const validatePaymentDetailsFilters = (originalUrl: string, filters: Paym
     paymentReferenceErrorMessage = 'Payment reference must be blank or contain a minimum of 4 characters';
 
     errorSummary.push({ text: paymentReferenceErrorMessage, href: '#payment-details-payment-reference-filter' });
+  }
+
+  let facilityIdErrorMessage;
+  if (filters.facilityId && !isFacilityIdFilterValid(originalUrl, filters.facilityId)) {
+    facilityIdErrorMessage = 'Facility ID must be blank or contain between 4 and 10 numbers';
+
+    errorSummary.push({ text: facilityIdErrorMessage, href: '#payment-details-facility-id-filter' });
   }
 
   return {
