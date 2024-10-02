@@ -3,54 +3,32 @@ import { parsePaymentDetailsFilters, parsePremiumPaymentsFilters } from './parse
 
 describe('parse-filters helper', () => {
   describe('parsePaymentDetailsFilters', () => {
-    it('returns an empty object when paymentDetailsFilters is undefined', () => {
-      // Arrange
-      const expected = {};
-
-      // Act
-      const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters();
-
-      // Assert
-      expect(paymentDetailsTabParsedFilters).toEqual(expected);
-    });
-
-    it('returns an object with all valid filters when all valid filters are provided', () => {
-      // Arrange
-      const validFacilityId = '987654321';
-      const validPaymentCurrency = 'GBP';
-      const validPaymentReference = 'Valid reference';
-
-      const paymentDetailsFilters: PaymentDetailsFilters = {
-        facilityId: validFacilityId,
-        paymentCurrency: validPaymentCurrency,
-        paymentReference: validPaymentReference,
-      };
-      const expected = paymentDetailsFilters;
-
-      // Act
-      const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
-
-      // Assert
-      expect(paymentDetailsTabParsedFilters).toEqual(expected);
-    });
-
-    describe('facility id', () => {
-      it('returns an object with undefined facilityId when an invalid facilityId is provided', () => {
+    describe('when paymentDetailsFilters is undefined', () => {
+      it('should return an empty object', () => {
         // Arrange
-        const paymentDetailsFilters = { facilityId: 'invalid-facility-id' };
-        const expected = { facilityId: undefined };
+        const expected = {};
 
         // Act
-        const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
+        const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters();
 
         // Assert
         expect(paymentDetailsTabParsedFilters).toEqual(expected);
       });
+    });
 
-      it('returns an object with valid facilityId when a valid facilityId is provided', () => {
+    describe('when all valid filters are provided', () => {
+      it('should return an object with all valid filters', () => {
         // Arrange
-        const validFacilityId = '123456789';
-        const paymentDetailsFilters = { facilityId: validFacilityId };
+
+        const validFacilityId = '987654321';
+        const validPaymentCurrency = 'GBP';
+        const validPaymentReference = 'Valid reference';
+
+        const paymentDetailsFilters: PaymentDetailsFilters = {
+          facilityId: validFacilityId,
+          paymentCurrency: validPaymentCurrency,
+          paymentReference: validPaymentReference,
+        };
         const expected = paymentDetailsFilters;
 
         // Act
@@ -58,111 +36,200 @@ describe('parse-filters helper', () => {
 
         // Assert
         expect(paymentDetailsTabParsedFilters).toEqual(expected);
+      });
+    });
+
+    describe('facility id', () => {
+      describe('when facilityId is undefined', () => {
+        it('should return an object with undefined facilityId', () => {
+          // Arrange
+          const paymentDetailsFilters: PaymentDetailsFilters = { facilityId: undefined };
+          const expected = paymentDetailsFilters;
+
+          // Act
+          const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
+
+          // Assert
+          expect(paymentDetailsTabParsedFilters).toEqual(expected);
+        });
+      });
+
+      describe('when a valid facilityId is provided', () => {
+        it('should return an object with valid facilityId', () => {
+          // Arrange
+          const validFacilityId = '123456789';
+          const paymentDetailsFilters = { facilityId: validFacilityId };
+          const expected = paymentDetailsFilters;
+
+          // Act
+          const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
+
+          // Assert
+          expect(paymentDetailsTabParsedFilters).toEqual(expected);
+        });
+      });
+
+      describe('when an invalid facilityId is provided', () => {
+        it('should return an object with undefined facilityId', () => {
+          // Arrange
+          const paymentDetailsFilters = { facilityId: 'invalid-facility-id' };
+          const expected = { facilityId: undefined };
+
+          // Act
+          const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
+
+          // Assert
+          expect(paymentDetailsTabParsedFilters).toEqual(expected);
+        });
       });
     });
 
     describe('payment currency', () => {
-      it('returns an object with undefined paymentCurrency when paymentCurrency is undefined', () => {
-        // Arrange
-        const paymentDetailsFilters: PaymentDetailsFilters = { paymentCurrency: undefined };
-        const expected = paymentDetailsFilters;
+      describe('when paymentCurrency is undefined', () => {
+        it('should return an object with undefined paymentCurrency', () => {
+          // Arrange
+          const paymentDetailsFilters: PaymentDetailsFilters = { paymentCurrency: undefined };
+          const expected = paymentDetailsFilters;
 
-        // Act
-        const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
+          // Act
+          const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
 
-        // Assert
-        expect(paymentDetailsTabParsedFilters).toEqual(expected);
+          // Assert
+          expect(paymentDetailsTabParsedFilters).toEqual(expected);
+        });
       });
 
-      it('returns an object with valid paymentCurrency when a valid paymentCurrency is provided', () => {
-        // Arrange
-        const paymentDetailsFilters: PaymentDetailsFilters = { paymentCurrency: 'GBP' };
-        const expected = paymentDetailsFilters;
+      describe('when a valid paymentCurrency is provided', () => {
+        it('should return an object with valid paymentCurrency', () => {
+          // Arrange
+          const paymentDetailsFilters: PaymentDetailsFilters = { paymentCurrency: 'GBP' };
+          const expected = paymentDetailsFilters;
 
-        // Act
-        const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
+          // Act
+          const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
 
-        // Assert
-        expect(paymentDetailsTabParsedFilters).toEqual(expected);
+          // Assert
+          expect(paymentDetailsTabParsedFilters).toEqual(expected);
+        });
       });
 
-      it('returns an object with undefined paymentCurrency when an unknown paymentCurrency is provided', () => {
-        // Arrange
-        const paymentDetailsFilters: PaymentDetailsFilters = { paymentCurrency: 'unknown-currency' };
-        const expected = {};
+      describe('when an invalid paymentCurrency is provided', () => {
+        it('should return an object with undefined paymentCurrency', () => {
+          // Arrange
+          const paymentDetailsFilters: PaymentDetailsFilters = { paymentCurrency: 'invalid-currency' };
+          const expected = {};
 
-        // Act
-        const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
+          // Act
+          const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
 
-        // Assert
-        expect(paymentDetailsTabParsedFilters).toEqual(expected);
+          // Assert
+          expect(paymentDetailsTabParsedFilters).toEqual(expected);
+        });
       });
     });
 
     describe('payment reference', () => {
-      it('returns an object with undefined paymentReference when an invalid paymentReference is provided', () => {
-        // Arrange
-        const paymentDetailsFilters: PaymentDetailsFilters = { paymentReference: 'a-very-long-payment-reference-that-is-invalid-due-to-its-length' };
-        const expected = { paymentReference: undefined };
+      describe('when paymentReference is undefined', () => {
+        it('should return an object with undefined paymentReference', () => {
+          // Arrange
+          const paymentDetailsFilters: PaymentDetailsFilters = { paymentReference: undefined };
+          const expected = paymentDetailsFilters;
 
-        // Act
-        const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
+          // Act
+          const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
 
-        // Assert
-        expect(paymentDetailsTabParsedFilters).toEqual(expected);
+          // Assert
+          expect(paymentDetailsTabParsedFilters).toEqual(expected);
+        });
       });
 
-      it('returns an object with valid paymentReference when a valid paymentReference is provided', () => {
-        // Arrange
-        const validPaymentReference = 'A valid payment reference';
-        const paymentDetailsFilters: PaymentDetailsFilters = { paymentReference: validPaymentReference };
-        const expected = paymentDetailsFilters;
+      describe('when a valid paymentReference is provided', () => {
+        it('should return an object with valid paymentReference', () => {
+          // Arrange
+          const validPaymentReference = 'A valid payment reference';
+          const paymentDetailsFilters: PaymentDetailsFilters = { paymentReference: validPaymentReference };
+          const expected = paymentDetailsFilters;
 
-        // Act
-        const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
+          // Act
+          const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
 
-        // Assert
-        expect(paymentDetailsTabParsedFilters).toEqual(expected);
+          // Assert
+          expect(paymentDetailsTabParsedFilters).toEqual(expected);
+        });
+      });
+
+      describe('when an invalid paymentReference is provided', () => {
+        it('should return an object with undefined paymentReference', () => {
+          // Arrange
+          const paymentDetailsFilters: PaymentDetailsFilters = { paymentReference: 'a-very-long-payment-reference-that-is-invalid-due-to-its-length' };
+          const expected = { paymentReference: undefined };
+
+          // Act
+          const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
+
+          // Assert
+          expect(paymentDetailsTabParsedFilters).toEqual(expected);
+        });
       });
     });
   });
 
   describe('parsePremiumPaymentsFilters', () => {
-    it('returns an empty object when premiumPaymentsFilters is undefined', () => {
-      // Arrange
-      const expected = {};
-
-      // Act
-      const premiumPaymentsTabParsedFilters = parsePremiumPaymentsFilters();
-
-      // Assert
-      expect(premiumPaymentsTabParsedFilters).toEqual(expected);
-    });
-
-    describe('facility id', () => {
-      it('returns an object with undefined facilityId when an invalid facilityId is provided', () => {
+    describe('when premiumPaymentsFilters is undefined', () => {
+      it('should return an empty object', () => {
         // Arrange
-        const premiumPaymentsFilters = { facilityId: 'invalid-facility-id' };
-        const expected = { facilityId: undefined };
+        const expected = {};
 
         // Act
-        const premiumPaymentsTabParsedFilters = parsePremiumPaymentsFilters(premiumPaymentsFilters);
+        const premiumPaymentsTabParsedFilters = parsePremiumPaymentsFilters();
 
         // Assert
         expect(premiumPaymentsTabParsedFilters).toEqual(expected);
       });
+    });
 
-      it('returns an object with valid facilityId when a valid facilityId is provided', () => {
-        // Arrange
-        const validFacilityId = '123456789';
-        const premiumPaymentsFilters = { facilityId: validFacilityId };
-        const expected = premiumPaymentsFilters;
+    describe('facility id', () => {
+      describe('when facilityId is undefined', () => {
+        it('should return an object with undefined facilityId', () => {
+          // Arrange
+          const premiumPaymentsFilters = { facilityId: undefined };
+          const expected = premiumPaymentsFilters;
 
-        // Act
-        const premiumPaymentsTabParsedFilters = parsePremiumPaymentsFilters(premiumPaymentsFilters);
+          // Act
+          const premiumPaymentsTabParsedFilters = parsePremiumPaymentsFilters(premiumPaymentsFilters);
 
-        // Assert
-        expect(premiumPaymentsTabParsedFilters).toEqual(expected);
+          // Assert
+          expect(premiumPaymentsTabParsedFilters).toEqual(expected);
+        });
+      });
+
+      describe('when a valid facilityId is provided', () => {
+        it('should return an object with valid facilityId', () => {
+          // Arrange
+          const validFacilityId = '123456789';
+          const premiumPaymentsFilters = { facilityId: validFacilityId };
+          const expected = premiumPaymentsFilters;
+
+          // Act
+          const premiumPaymentsTabParsedFilters = parsePremiumPaymentsFilters(premiumPaymentsFilters);
+
+          // Assert
+          expect(premiumPaymentsTabParsedFilters).toEqual(expected);
+        });
+      });
+
+      describe('when an invalid facilityId is provided', () => {
+        it('should return an object with undefined facilityId', () => {
+          // Arrange
+          const premiumPaymentsFilters = { facilityId: 'invalid-facility-id' };
+          const expected = { facilityId: undefined };
+
+          // Act
+          const premiumPaymentsTabParsedFilters = parsePremiumPaymentsFilters(premiumPaymentsFilters);
+
+          // Assert
+          expect(premiumPaymentsTabParsedFilters).toEqual(expected);
+        });
       });
     });
   });

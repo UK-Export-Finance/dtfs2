@@ -14,264 +14,282 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
 
   describe('filterFeeRecordPaymentEntityGroups', () => {
     describe('facility id filter', () => {
-      it('returns the group where the supplied facility id filter matches one of the fee records in a group', () => {
-        // Arrange
-        const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('11111111'), aFeeRecordWithFacilityId('22222222')],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
-        };
+      describe('when the supplied facility id filter matches one of the fee records in a group', () => {
+        it('should return the group with the matching facility id', () => {
+          // Arrange
+          const firstGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecordWithFacilityId('11111111'), aFeeRecordWithFacilityId('22222222')],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+          };
 
-        const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('33333333')],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
-        };
+          const secondGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecordWithFacilityId('33333333')],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+          };
 
-        const groups = [firstGroup, secondGroup];
+          const groups = [firstGroup, secondGroup];
 
-        const facilityIdFilter = '22222222';
-        const filters = { facilityId: facilityIdFilter };
+          const facilityIdFilter = '22222222';
+          const filters = { facilityId: facilityIdFilter };
 
-        // Act
-        const result = filterFeeRecordPaymentEntityGroups(groups, filters);
+          // Act
+          const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
-        // Assert
-        expect(result).toContainEqual(firstGroup);
-        expect(result).not.toContainEqual(secondGroup);
+          // Assert
+          expect(result).toContainEqual(firstGroup);
+          expect(result).not.toContainEqual(secondGroup);
+        });
       });
 
-      it('returns the group where the supplied facility id filter partially matches a facility id in the group', () => {
-        // Arrange
-        const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('11111111'), aFeeRecordWithFacilityId('22222222')],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
-        };
+      describe('when the supplied facility id filter partially matches a facility id in the group', () => {
+        it('should return the group with the partially matching facility id', () => {
+          // Arrange
+          const firstGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecordWithFacilityId('11111111'), aFeeRecordWithFacilityId('22222222')],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+          };
 
-        const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('33333333')],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
-        };
+          const secondGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecordWithFacilityId('33333333')],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+          };
 
-        const groups = [firstGroup, secondGroup];
+          const groups = [firstGroup, secondGroup];
 
-        const facilityIdFilter = '1111';
-        const filters = { facilityId: facilityIdFilter };
+          const facilityIdFilter = '1111';
+          const filters = { facilityId: facilityIdFilter };
 
-        // Act
-        const result = filterFeeRecordPaymentEntityGroups(groups, filters);
+          // Act
+          const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
-        // Assert
-        expect(result).toContainEqual(firstGroup);
-        expect(result).not.toContainEqual(secondGroup);
+          // Assert
+          expect(result).toContainEqual(firstGroup);
+          expect(result).not.toContainEqual(secondGroup);
+        });
       });
 
-      it('returns all groups which have a facility id which partially matches the supplied facility id filter', () => {
-        // Arrange
-        const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('11111111'), aFeeRecordWithFacilityId('22222222')],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
-        };
+      describe('when multiple groups have facility ids which partially match the supplied facility id filter', () => {
+        it('should return all groups with the partially matching facility id', () => {
+          // Arrange
+          const firstGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecordWithFacilityId('11111111'), aFeeRecordWithFacilityId('22222222')],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+          };
 
-        const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('33333333')],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
-        };
+          const secondGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecordWithFacilityId('33333333')],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+          };
 
-        const thirdGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecordWithFacilityId('11112222')],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
-        };
+          const thirdGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecordWithFacilityId('11112222')],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+          };
 
-        const groups = [firstGroup, secondGroup, thirdGroup];
+          const groups = [firstGroup, secondGroup, thirdGroup];
 
-        const facilityIdFilter = '1111';
-        const filters = { facilityId: facilityIdFilter };
+          const facilityIdFilter = '1111';
+          const filters = { facilityId: facilityIdFilter };
 
-        // Act
-        const result = filterFeeRecordPaymentEntityGroups(groups, filters);
+          // Act
+          const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
-        // Assert
-        expect(result).toContainEqual(firstGroup);
-        expect(result).not.toContainEqual(secondGroup);
-        expect(result).toContainEqual(thirdGroup);
+          // Assert
+          expect(result).toContainEqual(firstGroup);
+          expect(result).not.toContainEqual(secondGroup);
+          expect(result).toContainEqual(thirdGroup);
+        });
       });
     });
 
     describe('payment currency filter', () => {
-      it('returns the group where the supplied payment currency filter matches one of the payments in a group', () => {
-        // Arrange
-        const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecord()],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
-        };
+      describe('when the supplied payment currency filter matches one of the payments in a group', () => {
+        it('should return the group with the matching payment currency', () => {
+          // Arrange
+          const firstGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecord()],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+          };
 
-        const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecord()],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build(), PaymentEntityMockBuilder.forCurrency(CURRENCY.USD).build()],
-        };
+          const secondGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecord()],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build(), PaymentEntityMockBuilder.forCurrency(CURRENCY.USD).build()],
+          };
 
-        const groups = [firstGroup, secondGroup];
+          const groups = [firstGroup, secondGroup];
 
-        const paymentCurrencyFilter = CURRENCY.USD;
-        const filters = { paymentCurrency: paymentCurrencyFilter };
+          const paymentCurrencyFilter = CURRENCY.USD;
+          const filters = { paymentCurrency: paymentCurrencyFilter };
 
-        // Act
-        const result = filterFeeRecordPaymentEntityGroups(groups, filters);
+          // Act
+          const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
-        // Assert
-        expect(result).not.toContainEqual(firstGroup);
-        expect(result).toContainEqual(secondGroup);
+          // Assert
+          expect(result).not.toContainEqual(firstGroup);
+          expect(result).toContainEqual(secondGroup);
+        });
       });
 
-      it('returns all groups which have a payment currency which matches the supplied payment currency filter', () => {
-        // Arrange
-        const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecord()],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
-        };
+      describe('when multiple groups have a payment currency which matches the supplied payment currency filter', () => {
+        it('should return all groups with the matching payment currency', () => {
+          // Arrange
+          const firstGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecord()],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+          };
 
-        const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecord()],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build(), PaymentEntityMockBuilder.forCurrency(CURRENCY.USD).build()],
-        };
+          const secondGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecord()],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build(), PaymentEntityMockBuilder.forCurrency(CURRENCY.USD).build()],
+          };
 
-        const thirdGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecord()],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.USD).build()],
-        };
+          const thirdGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecord()],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.USD).build()],
+          };
 
-        const groups = [firstGroup, secondGroup, thirdGroup];
+          const groups = [firstGroup, secondGroup, thirdGroup];
 
-        const paymentCurrencyFilter = CURRENCY.USD;
-        const filters = { paymentCurrency: paymentCurrencyFilter };
+          const paymentCurrencyFilter = CURRENCY.USD;
+          const filters = { paymentCurrency: paymentCurrencyFilter };
 
-        // Act
-        const result = filterFeeRecordPaymentEntityGroups(groups, filters);
+          // Act
+          const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
-        // Assert
-        expect(result).not.toContainEqual(firstGroup);
-        expect(result).toContainEqual(secondGroup);
-        expect(result).toContainEqual(thirdGroup);
+          // Assert
+          expect(result).not.toContainEqual(firstGroup);
+          expect(result).toContainEqual(secondGroup);
+          expect(result).toContainEqual(thirdGroup);
+        });
       });
     });
 
     describe('payment reference filter', () => {
-      it('returns the group where the supplied payment reference filter matches one of the fee records in a group', () => {
-        // Arrange
-        const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecord()],
-          payments: [
-            PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAA').build(),
-            PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('BBBB').build(),
-          ],
-        };
+      describe('when the supplied payment reference filter matches one of the fee records in a group', () => {
+        it('should return the group with the matching payment reference', () => {
+          // Arrange
+          const firstGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecord()],
+            payments: [
+              PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAA').build(),
+              PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('BBBB').build(),
+            ],
+          };
 
-        const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecord()],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('CCCC').build()],
-        };
+          const secondGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecord()],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('CCCC').build()],
+          };
 
-        const groups = [firstGroup, secondGroup];
+          const groups = [firstGroup, secondGroup];
 
-        const paymentReferenceFilter = 'BBBB';
-        const filters = { paymentReference: paymentReferenceFilter };
+          const paymentReferenceFilter = 'BBBB';
+          const filters = { paymentReference: paymentReferenceFilter };
 
-        // Act
-        const result = filterFeeRecordPaymentEntityGroups(groups, filters);
+          // Act
+          const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
-        // Assert
-        expect(result).toContainEqual(firstGroup);
-        expect(result).not.toContainEqual(secondGroup);
+          // Assert
+          expect(result).toContainEqual(firstGroup);
+          expect(result).not.toContainEqual(secondGroup);
+        });
       });
 
-      it('returns the group where the supplied payment reference filter partially matches a payment reference in the group', () => {
+      describe('when the supplied payment reference filter partially matches a payment reference in the group', () => {
+        it('should return the group with the partially matching payment reference', () => {
+          // Arrange
+          const firstGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecord()],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAA').build()],
+          };
+
+          const secondGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecord()],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('BBBB').build()],
+          };
+
+          const groups = [firstGroup, secondGroup];
+
+          const paymentReferenceFilter = 'AA';
+          const filters = { paymentReference: paymentReferenceFilter };
+
+          // Act
+          const result = filterFeeRecordPaymentEntityGroups(groups, filters);
+
+          // Assert
+          expect(result).toContainEqual(firstGroup);
+          expect(result).not.toContainEqual(secondGroup);
+        });
+      });
+
+      describe('when multiple groups have a payment reference which partially matches the supplied payment reference filter', () => {
+        it('should return all groups matching the partially matching payment reference', () => {
+          // Arrange
+          const firstGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecord()],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAA').build()],
+          };
+
+          const secondGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecord()],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('BBBB').build()],
+          };
+
+          const thirdGroup: FeeRecordPaymentEntityGroup = {
+            feeRecords: [aFeeRecord()],
+            payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAABB').build()],
+          };
+
+          const groups = [firstGroup, secondGroup, thirdGroup];
+
+          const paymentReferenceFilter = 'AAAA';
+          const filters = { paymentReference: paymentReferenceFilter };
+
+          // Act
+          const result = filterFeeRecordPaymentEntityGroups(groups, filters);
+
+          // Assert
+          expect(result).toContainEqual(firstGroup);
+          expect(result).not.toContainEqual(secondGroup);
+          expect(result).toContainEqual(thirdGroup);
+        });
+      });
+    });
+
+    describe('when applying multiple filters', () => {
+      it('should return all groups which match all supplied filters', () => {
         // Arrange
         const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecord()],
+          feeRecords: [aFeeRecordWithFacilityId('11111111')],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAA').build()],
         };
 
         const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecord()],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('BBBB').build()],
-        };
-
-        const groups = [firstGroup, secondGroup];
-
-        const paymentReferenceFilter = 'AA';
-        const filters = { paymentReference: paymentReferenceFilter };
-
-        // Act
-        const result = filterFeeRecordPaymentEntityGroups(groups, filters);
-
-        // Assert
-        expect(result).toContainEqual(firstGroup);
-        expect(result).not.toContainEqual(secondGroup);
-      });
-
-      it('returns all groups which have a payment reference which partially matches the supplied payment reference filter', () => {
-        // Arrange
-        const firstGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecord()],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAA').build()],
-        };
-
-        const secondGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecord()],
+          feeRecords: [aFeeRecordWithFacilityId('22222222')],
           payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('BBBB').build()],
         };
 
         const thirdGroup: FeeRecordPaymentEntityGroup = {
-          feeRecords: [aFeeRecord()],
-          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAABB').build()],
+          feeRecords: [aFeeRecordWithFacilityId('77772222')],
+          payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.EUR).withReference('AAAABB').build()],
         };
 
         const groups = [firstGroup, secondGroup, thirdGroup];
 
-        const paymentReferenceFilter = 'AAAA';
-        const filters = { paymentReference: paymentReferenceFilter };
+        const filters: ValidatedPaymentDetailsFilters = {
+          facilityId: '2222', // partial matches on all fee record payment groups
+          paymentCurrency: 'EUR', // matches all payments in thirdGroup, and 1/2 payments in secondGroup
+          paymentReference: 'AAA', // matches all payments in firstGroup and thirdGroup
+        };
 
         // Act
         const result = filterFeeRecordPaymentEntityGroups(groups, filters);
 
         // Assert
-        expect(result).toContainEqual(firstGroup);
+        expect(result).not.toContainEqual(firstGroup);
         expect(result).not.toContainEqual(secondGroup);
         expect(result).toContainEqual(thirdGroup);
       });
-    });
-
-    it('returns all groups which match all supplied filters', () => {
-      // Arrange
-      const firstGroup: FeeRecordPaymentEntityGroup = {
-        feeRecords: [aFeeRecordWithFacilityId('11111111')],
-        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('AAAA').build()],
-      };
-
-      const secondGroup: FeeRecordPaymentEntityGroup = {
-        feeRecords: [aFeeRecordWithFacilityId('22222222')],
-        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withReference('BBBB').build()],
-      };
-
-      const thirdGroup: FeeRecordPaymentEntityGroup = {
-        feeRecords: [aFeeRecordWithFacilityId('77772222')],
-        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.EUR).withReference('AAAABB').build()],
-      };
-
-      const groups = [firstGroup, secondGroup, thirdGroup];
-
-      const filters: ValidatedPaymentDetailsFilters = {
-        facilityId: '2222', // partial matches on all fee record payment groups
-        paymentCurrency: 'EUR', // matches all payments in thirdGroup, and 1/2 payments in secondGroup
-        paymentReference: 'AAA', // matches all payments in firstGroup and thirdGroup
-      };
-
-      // Act
-      const result = filterFeeRecordPaymentEntityGroups(groups, filters);
-
-      // Assert
-      expect(result).not.toContainEqual(firstGroup);
-      expect(result).not.toContainEqual(secondGroup);
-      expect(result).toContainEqual(thirdGroup);
     });
   });
 });
