@@ -35,11 +35,11 @@ export const isPaymentReferenceFilterValid = (originalUrl: string, paymentRefere
 
 /**
  * Validates the payment details filters and returns any error messages.
- * @param filters - The payment details filters to validate.
  * @param originalUrl - The original URL of the request.
+ * @param filters - The payment details filters to validate.
  * @returns An object containing error messages for invalid filters.
  */
-export const validatePaymentDetailsFilters = (filters: PaymentDetailsFilters, originalUrl: string): PaymentDetailsFilterErrorsViewModel => {
+export const validatePaymentDetailsFilters = (originalUrl: string, filters: PaymentDetailsFilters): PaymentDetailsFilterErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
 
   let facilityIdErrorMessage;

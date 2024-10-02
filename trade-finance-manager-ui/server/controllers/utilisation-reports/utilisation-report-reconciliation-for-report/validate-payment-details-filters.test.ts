@@ -101,7 +101,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         const originalUrl = 'http://example.com?paymentDetailsFacilityId=1234&paymentDetailsPaymentCurrency=GBP&paymentDetailsPaymentReference=REF123';
 
         // Act
-        const result = validatePaymentDetailsFilters(filters, originalUrl);
+        const result = validatePaymentDetailsFilters(originalUrl, filters);
 
         // Assert
         expect(result.errorSummary).toHaveLength(0);
@@ -124,7 +124,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         const expectedFacilityIdErrorMessage = 'Facility ID must be blank or contain between 4 and 10 numbers';
 
         // Act
-        const result = validatePaymentDetailsFilters(filters, originalUrl);
+        const result = validatePaymentDetailsFilters(originalUrl, filters);
 
         // Assert
         expect(result.errorSummary).toEqual([
@@ -152,7 +152,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         const expectedPaymentCurrencyErrorMessage = 'Payment currency must be blank or a supported currency';
 
         // Act
-        const result = validatePaymentDetailsFilters(filters, originalUrl);
+        const result = validatePaymentDetailsFilters(originalUrl, filters);
 
         // Assert
         expect(result.errorSummary).toEqual([
@@ -180,7 +180,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         const expectedPaymentReferenceErrorMessage = 'Payment reference must be blank or contain a minimum of 4 characters';
 
         // Act
-        const result = validatePaymentDetailsFilters(filters, originalUrl);
+        const result = validatePaymentDetailsFilters(originalUrl, filters);
 
         // Assert
         expect(result.errorSummary).toEqual([
@@ -206,7 +206,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         const originalUrl = 'http://example.com?paymentDetailsFacilityId=INVALID&paymentDetailsPaymentCurrency=INVALID&paymentDetailsPaymentReference=ABC';
 
         // Act
-        const result = validatePaymentDetailsFilters(filters, originalUrl);
+        const result = validatePaymentDetailsFilters(originalUrl, filters);
 
         // Assert
         expect(result.errorSummary).toHaveLength(3);
@@ -227,7 +227,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         const originalUrl = 'http://example.com';
 
         // Act
-        const result = validatePaymentDetailsFilters(filters, originalUrl);
+        const result = validatePaymentDetailsFilters(originalUrl, filters);
 
         // Assert
         expect(result.errorSummary).toHaveLength(3);

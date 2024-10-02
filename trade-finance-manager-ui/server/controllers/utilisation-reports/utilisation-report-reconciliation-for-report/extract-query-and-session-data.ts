@@ -73,7 +73,7 @@ const parsePaymentDetailsFilters = (originalUrl: string, queryFilters?: PaymentD
     paymentReference,
   };
 
-  const filterErrors = validatePaymentDetailsFilters(filters, originalUrl);
+  const filterErrors = validatePaymentDetailsFilters(originalUrl, filters);
 
   return {
     paymentDetailsFilters: filters,

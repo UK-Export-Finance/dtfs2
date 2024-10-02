@@ -116,7 +116,7 @@ describe('extractQueryAndSessionData', () => {
         const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
         // Assert
-        expect(validatePaymentDetailsFilters).toHaveBeenCalledWith({ facilityId: PAYMENT_DETAILS_FACILITY_ID_QUERY }, ORIGINAL_URL);
+        expect(validatePaymentDetailsFilters).toHaveBeenCalledWith(ORIGINAL_URL, { facilityId: PAYMENT_DETAILS_FACILITY_ID_QUERY });
         expect(result.paymentDetailsFilterErrors).toEqual(mockErrorsViewModel);
       });
     });
@@ -154,7 +154,7 @@ describe('extractQueryAndSessionData', () => {
         const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
         // Assert
-        expect(validatePaymentDetailsFilters).toHaveBeenCalledWith({ paymentCurrency: PAYMENT_DETAILS_PAYMENT_CURRENCY_QUERY }, ORIGINAL_URL);
+        expect(validatePaymentDetailsFilters).toHaveBeenCalledWith(ORIGINAL_URL, { paymentCurrency: PAYMENT_DETAILS_PAYMENT_CURRENCY_QUERY });
         expect(result.paymentDetailsFilterErrors).toEqual(mockErrorsViewModel);
       });
     });
@@ -192,7 +192,7 @@ describe('extractQueryAndSessionData', () => {
         const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
 
         // Assert
-        expect(validatePaymentDetailsFilters).toHaveBeenCalledWith({ paymentReference: PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY }, ORIGINAL_URL);
+        expect(validatePaymentDetailsFilters).toHaveBeenCalledWith(ORIGINAL_URL, { paymentReference: PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY });
         expect(result.paymentDetailsFilterErrors).toEqual(mockErrorsViewModel);
       });
     });
