@@ -587,8 +587,8 @@ tfmRouter
  *         required: true
  *         description: ID of the deal to update
  *     responses:
- *       204:
- *         description: No content
+ *       200:
+ *         description: OK
  *       404:
  *         description: Not found
  *       500:
@@ -605,8 +605,8 @@ tfmRouter
  *         required: true
  *         description: ID of the deal to update
  *     responses:
- *       200:
- *         description: OK
+ *       204:
+ *         description: No content
  *       404:
  *         description: Not found
  *       500:

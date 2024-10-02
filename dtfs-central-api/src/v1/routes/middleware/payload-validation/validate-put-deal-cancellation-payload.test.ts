@@ -73,7 +73,7 @@ describe('validatePutDealCancellationPayload', () => {
       },
     },
     {
-      description: "'auditDetails.type' is undefined",
+      description: "'auditDetails.userType' is undefined",
       payload: {
         ...aValidPayload(),
         auditDetails: {

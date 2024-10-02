@@ -28,7 +28,7 @@ describe('validateDeleteDealCancellationPayload', () => {
       },
     },
     {
-      description: "'auditDetails.type' is undefined",
+      description: "'auditDetails.userType' is undefined",
       payload: {
         ...aValidPayload(),
         auditDetails: {
