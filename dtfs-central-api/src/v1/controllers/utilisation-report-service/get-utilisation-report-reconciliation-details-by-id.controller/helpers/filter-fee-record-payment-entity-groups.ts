@@ -20,7 +20,7 @@ type Filterer = (group: FeeRecordPaymentEntityGroup) => boolean;
  * @param facilityIdFilter - The facility ID to filter by. Partial matches are allowed.
  * @returns A Filterer function that returns true if any fee record in the group has a facility ID that includes the filter string.
  */
-const getFacilityIdFilterer = (facilityIdFilter: string): Filterer => {
+export const getFacilityIdFilterer = (facilityIdFilter: string): Filterer => {
   return (group: FeeRecordPaymentEntityGroup) => group.feeRecords.some(({ facilityId }) => facilityId.includes(facilityIdFilter));
 };
 
@@ -29,7 +29,7 @@ const getFacilityIdFilterer = (facilityIdFilter: string): Filterer => {
  * @param paymentCurrencyFilter - The payment currency to filter by. Exact matches are required.
  * @returns A Filterer function that returns true if any payment in the group has a currency that exactly matches the filter.
  */
-const getPaymentCurrencyFilterer = (paymentCurrencyFilter: Currency): Filterer => {
+export const getPaymentCurrencyFilterer = (paymentCurrencyFilter: Currency): Filterer => {
   return (group: FeeRecordPaymentEntityGroup) => group.payments.some(({ currency }) => currency === paymentCurrencyFilter);
 };
 
@@ -38,7 +38,7 @@ const getPaymentCurrencyFilterer = (paymentCurrencyFilter: Currency): Filterer =
  * @param paymentReferenceFilter - The payment reference to filter by. Partial matches are allowed.
  * @returns A Filterer function that returns true if any payment in the group has a reference that includes the filter string.
  */
-const getPaymentReferenceFilterer = (paymentReferenceFilter: string): Filterer => {
+export const getPaymentReferenceFilterer = (paymentReferenceFilter: string): Filterer => {
   return (group: FeeRecordPaymentEntityGroup) => group.payments.some(({ reference }) => reference?.includes(paymentReferenceFilter));
 };
 
