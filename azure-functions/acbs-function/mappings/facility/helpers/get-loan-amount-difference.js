@@ -12,7 +12,7 @@ const { FACILITY } = CONSTANTS;
  * `Bond` facility type will return the full difference.
  * @param {number} ukefExposure UKEF Exposure
  * @param {string} type Facility Type
- * @param {object} facilityMasterRecord Facility master record object
+ * @param {Object} facilityMasterRecord Facility master record object
  * @returns {number} Loan amount difference, if null argument then returns `0`
  */
 const getLoanAmountDifference = (ukefExposure, type, facilityMasterRecord) => {

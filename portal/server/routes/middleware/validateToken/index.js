@@ -2,9 +2,9 @@ const api = require('../../../api');
 const destroySessionAndRedirectToStart = require('../../../utils/destroy-session-and-redirect-to-start');
 /**
  * Global middleware to validate user session
- * @param {object} req Request object
- * @param {object} res Response object
- * @param {object} next Next object
+ * @param {Object} req Request object
+ * @param {Object} res Response object
+ * @param {Object} next Next object
  */
 const validateToken = async (req, res, next) => {
   const { userToken } = req.session;
