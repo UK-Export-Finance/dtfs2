@@ -24,9 +24,9 @@ export const deleteTfmDealCancellation = async (req: DeleteTfmDealCancellationRe
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
 
-    const updateResult = await TfmDealCancellationRepo.deleteOneDealCancellation(dealId, auditDetails);
+    await TfmDealCancellationRepo.deleteOneDealCancellation(dealId, auditDetails);
 
-    return res.status(HttpStatusCode.Ok).json(updateResult);
+    return res.sendStatus(HttpStatusCode.NoContent);
   } catch (error) {
     console.error('Error deleting deal cancellation:', error);
     if (error instanceof ApiError) {
