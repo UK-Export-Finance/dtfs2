@@ -9,8 +9,6 @@ import { validateRows } from '.';
 import { generateBaseCurrencyErrors } from '../../helpers/generate-base-currency-errors';
 import { generateFacilityUtilisationErrors } from '../../helpers/generate-facility-utilisation-errors';
 
-const exporterName = 'test exporter';
-
 describe('validateRows', () => {
   describe('when the base currency and facility utilisation does not match for a facility', () => {
     const map = new Map<string, UtilisationReportFacilityData>();
@@ -24,8 +22,8 @@ describe('validateRows', () => {
     });
 
     it('should return the result of "generateBaseCurrencyErrors" and "generateFacilityUtilisationErrors" for "base currency" and "facility utilisation"', () => {
-      const currencyErrors = generateBaseCurrencyErrors('GBP', errors, csvData, csvData[1], exporterName, map.get(ukefFacilityId));
-      const expectedErrors = generateFacilityUtilisationErrors('1', currencyErrors, csvData, csvData[1], exporterName, map.get(ukefFacilityId));
+      const currencyErrors = generateBaseCurrencyErrors('GBP', errors, csvData, csvData[1], map.get(ukefFacilityId));
+      const expectedErrors = generateFacilityUtilisationErrors('1', currencyErrors, csvData, csvData[1], map.get(ukefFacilityId));
 
       const result = validateRows(csvData);
 
@@ -45,7 +43,7 @@ describe('validateRows', () => {
     });
 
     it('should return the result of "generateBaseCurrencyErrors" for "base currency"', () => {
-      const currencyErrors = generateBaseCurrencyErrors('GBP', errors, csvData, csvData[1], exporterName, map.get(ukefFacilityId));
+      const currencyErrors = generateBaseCurrencyErrors('GBP', errors, csvData, csvData[1], map.get(ukefFacilityId));
 
       const result = validateRows(csvData);
 
@@ -65,7 +63,7 @@ describe('validateRows', () => {
     });
 
     it('should return the result of "generateFacilityUtilisationErrors" for "facility utilisation"', () => {
-      const expectedErrors = generateFacilityUtilisationErrors('1', errors, csvData, csvData[1], exporterName, map.get(ukefFacilityId));
+      const expectedErrors = generateFacilityUtilisationErrors('1', errors, csvData, csvData[1], map.get(ukefFacilityId));
 
       const result = validateRows(csvData);
 
