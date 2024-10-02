@@ -7,7 +7,7 @@ const { SUBMISSION_TYPE } = require('../../../constants');
  *
  * @param {string} field name
  * @param {string} field value
- * @param {object} submitted filters
+ * @param {Object} submitted filters
  * @example ( field: 'dealType', text: 'GEF deals', value: 'GEF', submittedFilters: { dealType: ['GEF', 'BSS/EWCS'] })
  * @returns { text: 'GEF deals', value: 'GEF', checked: true }
  */
@@ -46,8 +46,8 @@ const generateFilterObject = (field, text, value, submittedFilters) => {
  * This will used in the checkboxes component 'items' array.
  *
  * @param {string} field name
- * @param {array} array of field values - all possible values for the field name
- * @param {object} submitted filters
+ * @param {Array} array of field values - all possible values for the field name
+ * @param {Object} submitted filters
  * @example ( fieldName: 'dealType', fieldInputs: [ { text: 'GEF', value: 'GEF' }, { text: 'Issued', value: true } ], submittedFilters: { dealType: ['GEF'] })
  * @returns [ { text: 'GEF', value: 'GEF', checked: true }, { text: 'BSS/EWCS', value: 'BSS/EWCS', checked: false } ]
  */

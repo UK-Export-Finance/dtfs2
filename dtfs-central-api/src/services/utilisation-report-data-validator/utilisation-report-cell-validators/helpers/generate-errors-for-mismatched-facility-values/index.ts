@@ -9,9 +9,9 @@ import _ from 'lodash';
  * @param {UtilisationReportCsvRowData[]} csvData
  * @param {UtilisationReportDataValidationError[]} errors - existing validation errors
  * @param {UtilisationReportCsvRowData} csvRow - current CSV row to generate errors from
- * @param {String} field - field to obtain values
- * @param {String} errorMessage - error message to generate
- * @param {String} exporterName - exporter name for errors
+ * @param {string} field - field to obtain values
+ * @param {string} errorMessage - error message to generate
+ * @param {string} exporterName - exporter name for errors
  * @returns {UtilisationReportDataValidationError[]} generated errors
  */
 export const generateErrorsForMismatchedFacilityValues = (

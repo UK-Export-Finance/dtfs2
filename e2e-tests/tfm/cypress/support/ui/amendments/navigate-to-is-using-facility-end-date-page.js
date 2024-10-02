@@ -7,7 +7,7 @@ const facilityPage = require('../../../e2e/pages/facilityPage');
 /**
  * Navigates to the is using facility end date page from the facility page
  * Entering current date as the amendment request date and effective date
- * @param {object} [options = {}] - options for navigating to the is using facility end date page
+ * @param {Object} [options = {}] - options for navigating to the is using facility end date page
  * @param {boolean} [options.startNewAmendment = false] - whether to start a new amendment request
  * @param {boolean} [options.changeFacilityValue = false] - whether to change the facility value
  * @param {Date} [options.newCoverEndDate = today] - the new cover end date

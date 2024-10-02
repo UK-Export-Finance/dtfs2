@@ -55,9 +55,9 @@ const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
 /**
  * Makes a request to the GET /facilities TFM API endpoint
  * and throws an error if the page number is out of bounds
- * @param {object} queryParams Query parameters
+ * @param {Object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {object} Facilities data and pagination metadata
+ * @returns {Object} Facilities data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getFacilities = async (queryParams, token) => {
@@ -82,9 +82,9 @@ const getFacilities = async (queryParams, token) => {
 /**
  * Makes a request to the GET /deals TFM API endpoint
  * and throws an error if the page number is out of bounds
- * @param {object} queryParams Query parameters
+ * @param {Object} queryParams Query parameters
  * @param {string} token Authorisation token
- * @returns {object} Deals data and pagination metadata
+ * @returns {Object} Deals data and pagination metadata
  * @throws {PageOutOfBoundsError} Will throw if the requested page number exceeds the maximum page number
  */
 const getDeals = async (queryParams, token) => {

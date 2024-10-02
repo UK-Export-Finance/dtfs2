@@ -41,7 +41,7 @@ const estoreFiles = {
 
 /**
  * Produces an array of files mapped per eStore consumption
- * @param {object} files Object of files uploaded
+ * @param {Object} files Object of files uploaded
  * @returns Mapped array of files for eStore API consumption
  */
 const mapEstoreFiles = (files) => {

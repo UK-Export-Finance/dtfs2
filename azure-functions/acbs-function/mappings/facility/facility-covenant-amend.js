@@ -15,10 +15,10 @@ const { to2Decimals } = require('../../helpers/currency');
 /**
  * Maps a facility covenant amendment from DTFS to the acceptable TFS format.
  *
- * @param {object} amendment - The amendment details.
- * @param {number|string=} amendment.amount - The amount to be amended, can be a number or a string. It is required if guaranteeExpiryDate is not provided.
- * @param {object=} amendment.facilityGuaranteeDates - The dates related to the facility guarantee.
- * @param {string=} amendment.facilityGuaranteeDates.guaranteeExpiryDate - The expiry date of the guarantee in 'YYYY-MM-DD' format. It is required if amount is not provided.
+ * @param {Object} amendment - The amendment details.
+ * @param {number|string} amendment.amount - The amount to be amended, can be a number or a string. It is required if guaranteeExpiryDate is not provided.
+ * @param {Object} amendment.facilityGuaranteeDates - The dates related to the facility guarantee.
+ * @param {string} amendment.facilityGuaranteeDates.guaranteeExpiryDate - The expiry date of the guarantee in 'YYYY-MM-DD' format. It is required if amount is not provided.
  * @returns { MappedFacilityCovenantAmendment } - The amended facility guarantee record, or an empty object if there is an error.
  */
 const facilityCovenantAmend = (amendment) => {
