@@ -5,7 +5,6 @@ import { generateErrorsForMismatchedFacilityValues } from '../generate-errors-fo
 describe('services/utilisation-report-data-validator/utilisation-report-cell-validators/helpers/generate-facility-utilisation-errors', () => {
   const errorMessage = 'The utilisation does not match the other records for this facility. Enter the correct utilisation.';
   const field = 'facility utilisation';
-  const exporterName = 'test exporter';
 
   describe('when the facility utilisation does not match', () => {
     const csvData = generateUtilisationReportMockCSVData('GBP', '100');
@@ -15,9 +14,9 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
     };
 
     it(`should return the result of "generateErrorsForMismatchedFacilityValues" for "${field}"`, () => {
-      const result = generateFacilityUtilisationErrors(existingData, mockFacilityUtilisationValue, [], csvData, csvData[1], exporterName);
+      const result = generateFacilityUtilisationErrors(existingData, mockFacilityUtilisationValue, [], csvData, csvData[1]);
 
-      const currencyErrors = generateErrorsForMismatchedFacilityValues(csvData, [], csvData[0], field, errorMessage, exporterName);
+      const currencyErrors = generateErrorsForMismatchedFacilityValues(csvData, [], csvData[0], field, errorMessage);
 
       expect(result).toEqual(currencyErrors);
     });
@@ -31,7 +30,7 @@ describe('services/utilisation-report-data-validator/utilisation-report-cell-val
     } as UtilisationReportFacilityData;
 
     it(`should return the result of "generateErrorsForMismatchedFacilityValues" for "${field}"`, () => {
-      const result = generateFacilityUtilisationErrors(existingData, mockFacilityUtilisationValue, [], csvData, csvData[1], exporterName);
+      const result = generateFacilityUtilisationErrors(existingData, mockFacilityUtilisationValue, [], csvData, csvData[1]);
 
       expect(result).toEqual([]);
     });
