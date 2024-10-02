@@ -10,7 +10,7 @@ const { getCountry } = require('./countries.controller');
  * Returns `{}` when either the country code specified is void or upon an unexpected response.
  *
  * @param {string} countryCode - The country code.
- * @returns {Promise<object>} - The country object with properties 'name' and 'code' returned as a promise.
+ * @returns {Promise<Object>} - The country object with properties 'name' and 'code' returned as a promise.
  */
 const countryObject = async (countryCode) => {
   if (!countryCode) {

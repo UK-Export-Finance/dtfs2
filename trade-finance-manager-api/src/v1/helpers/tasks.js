@@ -3,7 +3,7 @@ const CONSTANTS = require('../../constants');
 /**
  * Get the first task in a all tasks
  * @param {Array} all task groups array
- * @returns {object} Task
+ * @returns {Object} Task
  */
 const getFirstTask = (tasks) => tasks[0].groupTasks[0];
 
@@ -11,7 +11,7 @@ const getFirstTask = (tasks) => tasks[0].groupTasks[0];
  * Get a task in a group by task ID
  * @param {Array} tasks in a group (groupTasks)
  * @param {string} task ID
- * @returns {object} Task
+ * @returns {Object} Task
  */
 const getTaskInGroupById = (groupTasks, taskId) => groupTasks.find((t) => t.id === taskId);
 
@@ -19,7 +19,7 @@ const getTaskInGroupById = (groupTasks, taskId) => groupTasks.find((t) => t.id =
  * Get a task in a group by task title
  * @param {Array} tasks in a group (groupTasks)
  * @param {string} task title
- * @returns {object} Task
+ * @returns {Object} Task
  */
 const getTaskInGroupByTitle = (groupTasks, title) => groupTasks.find((task) => task.title === title);
 
@@ -27,7 +27,7 @@ const getTaskInGroupByTitle = (groupTasks, title) => groupTasks.find((task) => t
  * Get a group by group ID
  * @param {Array} all task groups array
  * @param {number} group ID
- * @returns {object} Group
+ * @returns {Object} Group
  */
 const getGroupById = (allTaskGroups, groupId) => {
   const group = allTaskGroups.find((g) => g.id === groupId);
@@ -39,7 +39,7 @@ const getGroupById = (allTaskGroups, groupId) => {
  * Get a group by group title
  * @param {Array} all task groups array
  * @param {string} group title
- * @returns {object} Group
+ * @returns {Object} Group
  */
 const getGroupByTitle = (allTaskGroups, title) => allTaskGroups.find(({ groupTitle }) => groupTitle === title);
 

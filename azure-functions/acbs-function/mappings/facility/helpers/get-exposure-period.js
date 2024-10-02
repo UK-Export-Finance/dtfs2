@@ -8,9 +8,9 @@ const { PRODUCT } = CONSTANTS;
  * Evaluates facility's exposure period in months.
  * If `Unissued` then guarantee month value is returned.
  * If `Issued` then cover start and end date difference in months.
- * @param {object} facility Facility object
+ * @param {Object} facility Facility object
  * @param {string} dealType Deal type `GEF`, `BSS`, `EWCS`
- * @param {object | null} FMR Facility master record object, particularly used for amendments. `null` as default when no argument is provided.
+ * @param {Object | null} FMR Facility master record object, particularly used for amendments. `null` as default when no argument is provided.
  * @returns {string} Exposure period in months
  */
 const getExposurePeriod = (facility, dealType, fmr = null) => {

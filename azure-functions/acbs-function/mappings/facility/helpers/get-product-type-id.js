@@ -2,7 +2,7 @@ const CONSTANTS = require('../../../constants');
 
 /**
  * Return facility product ACBS compliant code.
- * @param {object} facility Facility object
+ * @param {Object} facility Facility object
  * @param {boolean} facilityMasterRecord Set to `true` if creating facility master record
  * @returns {string} Facility product ACBS compliant code, GEF facility master record will return `280`.
  */
