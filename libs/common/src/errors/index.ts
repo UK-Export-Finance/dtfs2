@@ -12,3 +12,6 @@ export * from './invalid-facility-id.error';
 export * from './deal-version.error';
 export * from './invalid-parameter-error';
 export * from './invalid-payload-error';
+export * from './user-session.error';
+export * from './user-session-not-defined.error';
+export * from './user-token-not-defined.error';

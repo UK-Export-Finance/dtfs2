@@ -1,12 +1,15 @@
-const api = require('../../../api');
-const { validationErrorHandler } = require('../../../helpers/validationErrorHandler.helper');
+import { Request, Response } from 'express';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { TfmSessionUser } from '../../../types/tfm-session-user';
+import api from '../../../api';
+import { validationErrorHandler } from '../../../helpers/validationErrorHandler.helper';
 
-const getLogin = (req, res) =>
+export const getLogin = (req: Request, res: Response) =>
   res.render('login.njk', {
     user: req.session.user,
   });
 
-const postLogin = async (req, res) => {
+export const postLogin = async (req: CustomExpressRequest<{ reqBody: { email?: string; password?: string } }>, res: Response) => {
   const { email, password } = req.body;
   const loginErrors = [];
 
@@ -23,7 +26,11 @@ const postLogin = async (req, res) => {
   if (!password) loginErrors.push(passwordError);
 
   if (email && password) {
-    const response = await api.login(email, password);
+    const response = (await api.login(email, password)) as {
+      success: boolean;
+      token: string;
+      user: TfmSessionUser;
+    };
 
     const { success, token, user } = response;
 
@@ -45,10 +52,8 @@ const postLogin = async (req, res) => {
   return res.redirect('/home');
 };
 
-const logout = (req, res) => {
+export const logout = (req: Request, res: Response) => {
   req.session.destroy(() => {
     res.redirect('/');
   });
 };
-
-module.exports = { getLogin, postLogin, logout };
