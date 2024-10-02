@@ -15,7 +15,7 @@ const url = process.env.MONGODB_URI;
 
 /**
  * Initiates MongoDB connection
- * @returns {Promise<object>} Connection
+ * @returns {Promise<Object>} Connection
  */
 const connect = async () => {
   client = await MongoClient.connect(url);
@@ -30,8 +30,8 @@ const disconnect = async () => {
 /**
  * Retrieves complete collection
  * @param {string} name Collection name
- * @param {object} filter Search filter, default to `null`
- * @returns {Promise<object>} Collection rows
+ * @param {Object} filter Search filter, default to `null`
+ * @returns {Promise<Object>} Collection rows
  */
 const getCollection = async (name, filter = null, raw = null) => {
   if (!connection) await connect();
@@ -55,7 +55,7 @@ const getCollection = async (name, filter = null, raw = null) => {
 /**
  * Portal - Updates collection property(ies)
  * @param {string} ukefDealId UKEF Deal ID
- * @param {object} updates Properties to update
+ * @param {Object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
 const portalDealUpdate = async (id, updates) => {
@@ -84,7 +84,7 @@ const portalDealUpdate = async (id, updates) => {
 /**
  * Portal facilities - Updates portal facility collection
  * @param {string} facilityId facility ID
- * @param {object} updates Properties to update
+ * @param {Object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
 const portalFacilityUpdate = async (id, updates) => {
@@ -112,7 +112,7 @@ const portalFacilityUpdate = async (id, updates) => {
 
 /**
  * TFM - Updates collection property(ies)
- * @param {object} updates Properties to update
+ * @param {Object} updates Properties to update
  * @returns {Promise} Resolved as `true` when updated successfully, otherwise Reject error.
  */
 const tfmDealUpdate = async (updatedDeal) => {
@@ -142,7 +142,7 @@ const tfmDealUpdate = async (updatedDeal) => {
 
 /**
  * Update TFM Facility
- * @param {object} updatedFacility Updated facility payload
+ * @param {Object} updatedFacility Updated facility payload
  * @returns {Promise} Resolve if successful otherwise reject.
  */
 const tfmFacilityUpdate = async (updatedFacility) => {

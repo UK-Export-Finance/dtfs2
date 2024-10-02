@@ -29,7 +29,7 @@ exports.findByUsername = async (username, callback) => {
 };
 
 /**
- * @param {object} user to create
+ * @param {Object} user to create
  * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - logged in user
  * @param {(error: string | null, createdUser: object) => void} callback
  * @returns
@@ -65,7 +65,7 @@ exports.create = async (user, auditDetails, callback) => {
 
 /**
  * @param {string} _id of the user to update
- * @param {object} update to make to the user
+ * @param {Object} update to make to the user
  * @param {import('@ukef/dtfs2-common').AuditDetails} auditDetails - logged in user
  * @param {(error: string | null, updatedUser: object) => void} callback
  */

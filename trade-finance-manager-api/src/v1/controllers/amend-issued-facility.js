@@ -10,9 +10,9 @@ const { mapBssEwcsFacility } = require('../mappings/map-submitted-deal/map-bss-e
  * 2. Premium Schedule (BSS/EWCS) / Fixed Fee (GEF) (tfm.premiumSchedule / tfm.feeRecord)
  * 3. Exposure period (tfm.exposurePeriodInMonths)
  * 4. UKEF Exposure (tfm.ukefExposure / tfm.ukefExposureCalculationTimestamp)
- * @param {object} amendment Amendment object
- * @param {object} facility Facility object
- * @param {object} deal TFM deal object
+ * @param {Object} amendment Amendment object
+ * @param {Object} facility Facility object
+ * @param {Object} deal TFM deal object
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - details of the user making the request
  * @returns {Promise<boolean>} Boolean upon execution
  */

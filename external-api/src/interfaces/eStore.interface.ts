@@ -116,7 +116,7 @@ export interface EstoreDocument extends AzureDocument {
  *
  * @interface EstoreAxiosResponse
  * @property {number} status - HTTP status code of the response.
- * @property {object} body - Body payload comprising a response.
+ * @property {Object} body - Body payload comprising a response.
  */
 export interface EstoreAxiosResponse {
   readonly status: number;
@@ -130,7 +130,7 @@ export interface EstoreAxiosResponse {
  *
  * @interface EstoreResponse
  * @property {number} status - HTTP status code of the response.
- * @property {object} data - Data payload of the response.
+ * @property {Object} data - Data payload of the response.
  */
 export interface EstoreResponse {
   readonly status: number;

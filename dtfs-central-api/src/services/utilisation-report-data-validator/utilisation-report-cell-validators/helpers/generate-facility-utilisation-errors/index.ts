@@ -6,7 +6,7 @@ import { generateErrorsForMismatchedFacilityValues } from '../generate-errors-fo
  * if the value for facility utilisation in the map does not match the value in the row
  * then call generateErrorsForMismatchedFacilityValues to generate an error for all rows of the same facility id
  * @param {UtilisationReportFacilityData | undefined} mapData - data in the map
- * @param {String} facilityUtilisationValue - provided value for facility utilisation
+ * @param {string} facilityUtilisationValue - provided value for facility utilisation
  * @param {UtilisationReportDataValidationError[]} errors - existing validation errors
  * @param {UtilisationReportCsvRowData[]} csvData - all csv data
  * @param {UtilisationReportCsvRowData} row - current row to generate errors from
