@@ -5,12 +5,12 @@ import { generateErrorsForMismatchedFacilityValues } from '../generate-errors-fo
  * generates errors for base currency
  * if the value for base currency in the map does not match the value in the row
  * then call generateErrorsForMismatchedFacilityValues to generate an error for all rows of the same facility id
- * @param {UtilisationReportFacilityData | undefined} existingData - data in the map
- * @param {String} baseCurrencyValue - provided value for base currency
- * @param {UtilisationReportDataValidationError[]} errors - existing validation errors
- * @param {UtilisationReportCsvRowData[]} csvData - all csv data
- * @param {UtilisationReportCsvRowData} row - current row to generate errors from
- * @returns {UtilisationReportDataValidationError[]} generated errors
+ * @param existingData - data in the map
+ * @param baseCurrencyValue - provided value for base currency
+ * @param errors - existing validation errors
+ * @param csvData - all csv data
+ * @param row - current row to generate errors from
+ * @returns generated errors
  */
 export const generateBaseCurrencyErrors = (
   existingData: UtilisationReportFacilityData | undefined,
