@@ -119,8 +119,8 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
       });
     });
 
-    const expected = await Promise.all(createdFacilityUtilisationDataEntities);
+    const expectedEntities = await Promise.all(createdFacilityUtilisationDataEntities);
 
-    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, expected, { chunk: 100 });
+    expect(mockSave).toHaveBeenCalledWith(FacilityUtilisationDataEntity, expectedEntities, { chunk: 100 });
   });
 });
