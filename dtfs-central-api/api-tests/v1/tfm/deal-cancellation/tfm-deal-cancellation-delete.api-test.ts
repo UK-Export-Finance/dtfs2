@@ -110,16 +110,7 @@ describe('/v1/tfm/deals/:dealId/cancellation', () => {
 
         const deleteCancellationResponse = await testApi.remove({ auditDetails }).to(dealCancellationUrl);
 
-        const expected = {
-          acknowledged: true,
-          modifiedCount: 1,
-          upsertedId: null,
-          upsertedCount: 0,
-          matchedCount: 1,
-        };
-
-        expect(deleteCancellationResponse.body).toEqual(expected);
-        expect(deleteCancellationResponse.status).toEqual(HttpStatusCode.Ok);
+        expect(deleteCancellationResponse.status).toEqual(HttpStatusCode.NoContent);
 
         const getCancellationResponse = await testApi.get(dealCancellationUrl);
 
