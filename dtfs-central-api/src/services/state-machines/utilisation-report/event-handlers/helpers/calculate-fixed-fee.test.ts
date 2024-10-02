@@ -22,7 +22,7 @@ describe('helpers/calculate-fixed-fee', () => {
       const interestPercentage = 5;
       const dayCountBasis = 365;
       const coverStartDate = new Date();
-      const coverEndDate = addDays(coverStartDate, 368);
+      const coverEndDate = addDays(coverStartDate, 1);
 
       const result = calculateFixedFee({
         utilisation,
