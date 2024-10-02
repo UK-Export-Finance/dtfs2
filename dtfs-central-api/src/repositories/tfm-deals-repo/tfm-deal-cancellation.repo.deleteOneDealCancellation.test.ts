@@ -1,15 +1,11 @@
 import { DEAL_SUBMISSION_TYPE, DealNotFoundError, InvalidDealIdError, MONGO_DB_COLLECTIONS, TFM_DEAL_STAGE } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
-import { flatten } from 'mongo-dot-notation';
-import { getUnixTime } from 'date-fns';
 import { mongoDbClient as db } from '../../drivers/db-client';
 import { TfmDealCancellationRepo } from './tfm-deal-cancellation.repo';
 import { aTfmUser } from '../../../test-helpers';
 
 const dealId = new ObjectId();
-
-const mockDealCancellationObject = { reason: 'test reason', bankRequestDate: getUnixTime(new Date()), effectiveFrom: getUnixTime(new Date()) };
 
 const tfmUserId = aTfmUser()._id;
 
@@ -27,7 +23,7 @@ describe('tfm-deals-cancellation-repo', () => {
     jest.resetAllMocks();
   });
 
-  describe('updateOneDealCancellation', () => {
+  describe('deleteOneDealCancellation', () => {
     const mockUpdateResult = { matchedCount: 1 };
 
     beforeEach(() => {
@@ -41,7 +37,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('calls the DB with the correct collection name', async () => {
       // Act
-      await TfmDealCancellationRepo.updateOneDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+      await TfmDealCancellationRepo.deleteOneDealCancellation(dealId, auditDetails);
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_DEALS);
@@ -53,7 +49,7 @@ describe('tfm-deals-cancellation-repo', () => {
       const invalidDealId = 'xyz';
 
       // Assert
-      await expect(TfmDealCancellationRepo.updateOneDealCancellation(invalidDealId, mockDealCancellationObject, auditDetails)).rejects.toThrow(
+      await expect(TfmDealCancellationRepo.deleteOneDealCancellation(invalidDealId, auditDetails)).rejects.toThrow(
         new InvalidDealIdError(invalidDealId.toString()),
       );
     });
@@ -67,14 +63,12 @@ describe('tfm-deals-cancellation-repo', () => {
       getCollectionMock.mockResolvedValue({ updateOne: updateOneMock });
 
       // Assert
-      await expect(TfmDealCancellationRepo.updateOneDealCancellation(dealId, mockDealCancellationObject, auditDetails)).rejects.toThrow(
-        new DealNotFoundError(dealId.toString()),
-      );
+      await expect(TfmDealCancellationRepo.deleteOneDealCancellation(dealId, auditDetails)).rejects.toThrow(new DealNotFoundError(dealId.toString()));
     });
 
     it('calls updateOne with the expected parameters', async () => {
       // Act
-      await TfmDealCancellationRepo.updateOneDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+      await TfmDealCancellationRepo.deleteOneDealCancellation(dealId, auditDetails);
 
       // Assert
       const expectedFilter = {
@@ -82,10 +76,7 @@ describe('tfm-deals-cancellation-repo', () => {
         'tfm.stage': { $ne: TFM_DEAL_STAGE.CANCELLED },
         'dealSnapshot.submissionType': { $in: [DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN] },
       };
-      const expectedUpdate = flatten({
-        'tfm.cancellation': mockDealCancellationObject,
-        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-      });
+      const expectedUpdate = { $unset: { 'tfm.cancellation': '' }, $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) } };
 
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_DEALS);
       expect(updateOneMock).toHaveBeenCalledWith(expectedFilter, expectedUpdate);
@@ -93,7 +84,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
     it('returns the deal cancellation update', async () => {
       // Act
-      const result = await TfmDealCancellationRepo.updateOneDealCancellation(dealId, mockDealCancellationObject, auditDetails);
+      const result = await TfmDealCancellationRepo.deleteOneDealCancellation(dealId, auditDetails);
 
       // Assert
       expect(result).toEqual(mockUpdateResult);
