@@ -1,4 +1,4 @@
-import { AuditDetails, MAX_CHARACTER_COUNT, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { AUDIT_USER_TYPES, AuditDetails, MAX_CHARACTER_COUNT, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
@@ -63,6 +63,34 @@ describe('validatePutDealCancellationPayload', () => {
       payload: {
         ...aValidPayload(),
         auditDetails: undefined,
+      },
+    },
+    {
+      description: "'auditDetails' is an empty object",
+      payload: {
+        ...aValidPayload().auditDetails,
+        auditDetails: {},
+      },
+    },
+    {
+      description: "'auditDetails.type' is undefined",
+      payload: {
+        ...aValidPayload(),
+        auditDetails: {
+          ...aValidPayload().auditDetails,
+          userType: undefined,
+        },
+      },
+    },
+    {
+      description: "'auditDetails.id' is invalid and type is tfm",
+      payload: {
+        ...aValidPayload(),
+        auditDetails: {
+          ...aValidPayload().auditDetails,
+          userType: AUDIT_USER_TYPES.TFM,
+          id: 'invalid',
+        },
       },
     },
   ];
