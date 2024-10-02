@@ -108,7 +108,7 @@ context('Deal cancellation - effective from date', () => {
       cy.keyboardInput(effectiveFromDatePage.effectiveFromDateYear(), dateConstants.todayYear);
 
       cy.clickContinueButton();
-      cy.clickBackLink();
+      cy.visit(relative(`/case/${dealId}/cancellation/effective-from-date`));
 
       effectiveFromDatePage.effectiveFromDateDay().should('have.value', format(dateConstants.today, 'd'));
       effectiveFromDatePage.effectiveFromDateMonth().should('have.value', format(dateConstants.today, 'M'));
