@@ -7,6 +7,7 @@
 {% import "./_macros/payment-details-table.njk" as paymentDetailsTable %}
 {% import './_macros/payment-details-filters-panel.njk' as paymentDetailsFiltersPanel %}
 {% import './_macros/payment-details-filters-action-bar.njk' as paymentDetailsFiltersActionBar %}
+{% import './_macros/utilisation-table.njk' as utilisationTable %}
 
 {% extends "index.njk" %}
 
@@ -201,7 +202,11 @@
 {% endset %}
 
 {% set utilisationHtml %}
-  <div></div>
+  <h2 class="govuk-heading-l" data-cy="bank-report-heading">Bank report</h2>
+
+  {{ utilisationTable.render({
+    utilisationTableRows: utilisationDetails.utilisationTableRows
+  }) }}
 {% endset %}
 
 {% block content %}

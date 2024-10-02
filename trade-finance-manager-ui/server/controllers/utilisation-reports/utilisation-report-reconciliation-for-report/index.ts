@@ -11,6 +11,7 @@ import {
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { FeeRecordPaymentGroup } from '../../../api-response-types';
 import { extractQueryAndSessionData } from './extract-query-and-session-data';
+import { mapToUtilisationDetailsViewModel } from '../helpers/utilisation-details-helper';
 
 export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   query: {
@@ -59,7 +60,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       req.originalUrl,
     );
 
-    const { premiumPayments, paymentDetails, reportPeriod, bank, keyingSheet } = await api.getUtilisationReportReconciliationDetailsById(
+    const { premiumPayments, paymentDetails, reportPeriod, bank, keyingSheet, utilisationDetails } = await api.getUtilisationReportReconciliationDetailsById(
       reportId,
       premiumPaymentsFilters,
       userToken,
@@ -75,6 +76,8 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(paymentDetails);
 
+    const utilisationDetailsViewModel = mapToUtilisationDetailsViewModel(utilisationDetails);
+
     return renderUtilisationReportReconciliationForReport(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -88,6 +91,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       premiumPayments: premiumPaymentsViewModel,
       keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,
+      utilisationDetails: utilisationDetailsViewModel,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

@@ -7,6 +7,7 @@ import {
   KeyingSheetRowStatus,
   Currency,
   KeyingSheetAdjustment,
+  FeeRecordUtilisation,
 } from '@ukef/dtfs2-common';
 import { FeeRecord } from './fee-record';
 import { Payment } from './payment';
@@ -51,4 +52,5 @@ export type UtilisationReportReconciliationDetailsResponseBody = {
   dateUploaded: IsoDateTimeStamp;
   feeRecordPaymentGroups: FeeRecordPaymentGroup[];
   keyingSheet: KeyingSheet;
+  utilisationDetails: FeeRecordUtilisation[];
 };

@@ -1,11 +1,10 @@
-import { CURRENCY, FeeRecordEntityMockBuilder } from '@ukef/dtfs2-common';
+import { CURRENCY, FeeRecordEntityMockBuilder, FeeRecordUtilisation } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
 import { getUtilisationDetails } from './get-utilisation-details';
 import { aTfmFacility, aUtilisationReport } from '../../../../../../test-helpers';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
 import { mapToFeeRecordUtilisation } from './map-to-fee-record-utilisation';
-import { FeeRecordUtilisation } from '../../../../../types/fee-records';
 
 jest.mock('../../../../../repositories/tfm-facilities-repo');
 jest.mock('../../../../../helpers');
@@ -45,9 +44,9 @@ describe('get-utilisation-details', () => {
         secondTfmFacility.facilitySnapshot.ukefFacilityId = secondFacilityId;
 
         jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([firstTfmFacility, secondTfmFacility]);
-
         const expected: FeeRecordUtilisation[] = [
           {
+            feeRecordId: 1,
             facilityId: '12345',
             exporter: 'first exporter',
             baseCurrency: CURRENCY.GBP,
@@ -59,6 +58,7 @@ describe('get-utilisation-details', () => {
             feesPayable: { currency: CURRENCY.JPY, amount: 600 },
           },
           {
+            feeRecordId: 2,
             facilityId: '678910',
             exporter: 'second exporter',
             baseCurrency: CURRENCY.USD,
