@@ -27,10 +27,10 @@ const { isHttpErrorStatus } = require('../../helpers/http');
  * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
  * If any other error occurs, it logs the error and throws a new error.
  *
- * @param {object} payload - The payload containing the facilityIdentifier and acbsFacilityGuaranteeInput.
+ * @param {Object} payload - The payload containing the facilityIdentifier and acbsFacilityGuaranteeInput.
  * @param {string} payload.facilityIdentifier - The identifier of the facility.
  * @param {import('../../mappings/facility/facility-guarantee-amend').MappedFacilityGuaranteeAmendment} payload.acbsFacilityGuaranteeInput - The acbsFacilityGuaranteeInput object containing the guarantee details.
- * @returns {object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
+ * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request to generate the guarantee ID fails, or if any other error occurs.
  */
 const handler = async (payload) => {

@@ -187,11 +187,11 @@ const findOneDeal = async (dealId) => {
 };
 
 /**
- * @param {object} params
+ * @param {Object} params
  * @param {string} params.dealId - deal to update
- * @param {object} params.dealUpdate - update to make
+ * @param {Object} params.dealUpdate - update to make
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
- * @typedef {object} ErrorParam
+ * @typedef {Object} ErrorParam
  * @property {string} message error message
  * @property {number} status HTTP status code
  * @param {(Error: ErrorParam) => any} params.onError
@@ -271,7 +271,7 @@ const submitDeal = async (dealType, dealId, auditDetails) => {
 
 /**
  * Updates the deal cancellation object on a TFM AIN or MIN deal
- * @param {object} params
+ * @param {Object} params
  * @param {string} params.dealId - deal cancellation to update
  * @param {Partial<import('@ukef/dtfs2-common').TfmDealCancellation>} params.dealCancellationUpdate - deal cancellation update to make
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
@@ -759,8 +759,8 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
 
 /**
  * Get company information from Party URN
- * @param {Integer} partyUrn Party URN
- * @returns {Promise<object>} Company information
+ * @param {number} partyUrn Party URN
+ * @returns {Promise<Object>} Company information
  */
 const getCompanyInfo = async (partyUrn) => {
   try {
@@ -1011,8 +1011,8 @@ const updateACBSfacility = async (facility, deal) => {
 /**
  * ACBS facility amendment
  * @param {string} ukefFacilityId UKEF Facility ID
- * @param {object} amendments Facility object comprising of amendments
- * @returns {Promise<object>} updated FMR upon success otherwise error
+ * @param {Object} amendments Facility object comprising of amendments
+ * @returns {Promise<Object>} updated FMR upon success otherwise error
  */
 const amendACBSfacility = async (amendments, facility, deal) => {
   if (amendments && facility.facilitySnapshot) {
@@ -1057,8 +1057,8 @@ const getFunctionsAPI = async (url = '') => {
  * An external API call, responsible for creating
  * eStore site, directories and documents (if applicable).
  * Upon any exception an empty object is returned.
- * @param {object} data eStore API object
- * @returns {Promise<object>} eStore API response object
+ * @param {Object} data eStore API object
+ * @returns {Promise<Object>} eStore API response object
  */
 const createEstoreSite = async (data) => {
   try {
@@ -1255,7 +1255,7 @@ const findBankById = async (bankId) => {
 };
 
 /**
- * @typedef {object} GetBanksQuery
+ * @typedef {Object} GetBanksQuery
  * @property {boolean | undefined} includeReportingYears - Whether or not to include the bank reporting years
  */
 

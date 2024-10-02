@@ -4,9 +4,9 @@ const amendmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**
  *
- * @param {object} body
- * @param {object} facility
- * @returns {object} containing errors and amendment date
+ * @param {Object} body
+ * @param {Object} facility
+ * @returns {Object} containing errors and amendment date
  * function to validate the amendment request date
  * checks if in future or before submission date
  */

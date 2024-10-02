@@ -1,7 +1,7 @@
 const { utilisationReportUpload } = require('../../../e2e/pages');
 
 /**
- * @typedef {object} ValidationRowAssertionParams
+ * @typedef {Object} ValidationRowAssertionParams
  * @property {number} tableRowIndex - The index of the row to assert on within the table (one-indexed)
  * @property {string} message - The value expected to be in the message column
  * @property {string} [exporter] - The value expected to be in the exporter column

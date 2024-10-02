@@ -7,8 +7,8 @@ const { amendmentUnderwriterManagerDecisionValidation } = require('./validation/
 const { formattedNumber } = require('../../../helpers/number');
 
 /**
- * @param {*} req
- * @param {*} res
+ * @param {Object} req
+ * @param {Object} res
  * renders first page of amendment managers decision if can be edited by user
  */
 const getAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res) => {

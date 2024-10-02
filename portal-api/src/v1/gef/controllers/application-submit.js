@@ -23,15 +23,15 @@ const generateSubmissionData = async (existingApplication) => {
  * Generates an ID based on the provided entityType and dealId.
  * @param {string} options.entityType - The type of entity for which the ID is being generated.
  * @param {string} options.dealId - The ID of the deal or facility.
- * @returns {Promise<object>} Response from the number generator API.
+ * @returns {Promise<Object>} Response from the number generator API.
  */
 const generateId = async (entityType, dealId) => number.getNumber(entityType, dealId);
 
 /**
  * Generates a unique identifier for a given entity (either a 'deal' or a 'facility') based on the provided application data.
  * @param {string} entity - The type of entity for which the unique identifier needs to be generated ('deal' or 'facility').
- * @param {object} application - The application data containing the necessary information to generate the identifier.
- * @returns {Promise<object>} - The generated unique identifier for the specified entity.
+ * @param {Object} application - The application data containing the necessary information to generate the identifier.
+ * @returns {Promise<Object>} - The generated unique identifier for the specified entity.
  * @throws {Error} - If unable to generate the identifier.
  */
 const generateUkefId = async (entity, application) => {
@@ -182,7 +182,7 @@ const submissionPortalActivity = async (application) => {
 
 /**
  * Check the `coverDateConfirmed` property of the facility has the correct boolean flag.
- * @param {object} app Application object
+ * @param {Object} app Application object
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
  * @returns {Promise<boolean>} Facility(ies) was(were) updated or not
  */
@@ -224,9 +224,9 @@ const checkCoverDateConfirmed = async (app, auditDetails) => {
 /**
  * Adds submission data to an existing application.
  * @param {string} dealId - The ID of the deal.
- * @param {object} existingApplication - An object representing the existing application.
+ * @param {Object} existingApplication - An object representing the existing application.
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
- * @returns {Promise<object>} - An object containing the submission count, submission date, portal activities, and UKEF deal ID.
+ * @returns {Promise<Object>} - An object containing the submission count, submission date, portal activities, and UKEF deal ID.
  */
 const addSubmissionData = async (dealId, existingApplication, auditDetails) => {
   await checkCoverDateConfirmed(existingApplication, auditDetails);

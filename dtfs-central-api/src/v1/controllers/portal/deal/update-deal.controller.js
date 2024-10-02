@@ -66,12 +66,12 @@ exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
 /**
  * Updates a deal in the database.
- * @param {object} params - The parameters for updating the deal.
+ * @param {Object} params - The parameters for updating the deal.
  * @param {string} params.dealId - The ID of the deal being updated.
- * @param {object} params.dealUpdate - The update to be made to the deal.
- * @param {object} params.user - The user making the changes.
+ * @param {Object} params.dealUpdate - The update to be made to the deal.
+ * @param {Object} params.user - The user making the changes.
  * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - The audit details for the update.
- * @param {object} params.existingDeal - The existing deal object.
+ * @param {Object} params.existingDeal - The existing deal object.
  * @param {string} params.routePath - The route path.
  * @returns {Promise<{ status: number, message: string }>} The updated deal object.
  */
