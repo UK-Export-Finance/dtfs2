@@ -4,7 +4,7 @@ const { isTrueSet } = require('../../utils/helpers');
 const { validateAndParseDayMonthYear } = require('../../utils/day-month-year-validation');
 
 /**
- * @param {object} params
+ * @param {Object} params
  * @param {string} params.coverStartDateDay
  * @param {string} params.coverStartDateMonth,
  * @param {string} params.coverStartDateYear,

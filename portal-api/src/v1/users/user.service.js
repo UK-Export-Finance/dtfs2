@@ -5,7 +5,7 @@ const UserDisabledError = require('../errors/user-disabled.error');
 class UserService {
   /**
    * Validates the user has an active status and is not disabled, throws an error if not
-   * @param {object} user User being validated
+   * @param {Object} user User being validated
    * @returns {void}
    */
   validateUserIsActiveAndNotDisabled(user) {
@@ -23,7 +23,7 @@ class UserService {
 
   /**
    * Returns a boolean indicating if the user is blocked or disabled
-   * @param {object} user User being validated
+   * @param {Object} user User being validated
    * @returns {boolean}
    */
   isUserBlockedOrDisabled(user) {

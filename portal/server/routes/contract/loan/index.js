@@ -26,7 +26,7 @@ const router = express.Router();
 /**
  * Determines whether a loan can be accessed based on the status of the deal.
  *
- * @param {object} deal - The deal object containing details of the deal.
+ * @param {Object} deal - The deal object containing details of the deal.
  * @returns {boolean} - Returns true if the loan can be accessed, false otherwise.
  */
 const isLoanAccessable = (deal) => {

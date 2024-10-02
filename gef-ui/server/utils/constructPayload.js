@@ -2,10 +2,10 @@
  * Construct expected properties payload to general consumption.
  * Method ensures only expected properties are added and any frivolous
  * properties are filtered out.
- * @param {object} body Request body (req.body)
+ * @param {Object} body Request body (req.body)
  * @param {Array} properties Interested properties to be added into payload
  * @param {boolean} csrf Include CSRF token, defaulted to `true`
- * @returns {object} Payload
+ * @returns {Object} Payload
  */
 const constructPayload = (body, properties, csrf = true) => {
   let payload = {};

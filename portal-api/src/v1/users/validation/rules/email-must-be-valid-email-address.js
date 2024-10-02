@@ -2,8 +2,8 @@ const { isValidEmail } = require('../../../../utils/string');
 
 /**
  * Ensures that if the change has an email property, it is a valid email address
- * @param {object} user the existing user
- * @param {object} change the changes to make
+ * @param {Object} user the existing user
+ * @param {Object} change the changes to make
  * @returns {Array} either an empty array or an array containing an error object if the email is not a valid email address
  */
 const emailMustBeValidEmailAddress = (user, change) => {

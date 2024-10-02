@@ -1,7 +1,7 @@
 /**
  * Validates that if the first name is present it is not empty
- * @param {object} user the existing user
- * @param {object} change the changes to make
+ * @param {Object} user the existing user
+ * @param {Object} change the changes to make
  * @returns {Array} either an empty array or an array containing an error object
  */
 const firstnameMustNotBeEmpty = (user, change) => {

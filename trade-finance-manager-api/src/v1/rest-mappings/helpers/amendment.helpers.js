@@ -64,7 +64,7 @@ const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
 };
 
 /**
- * @typedef {object} LatestCompletedAmendment
+ * @typedef {Object} LatestCompletedAmendment
  * @property {{ currency: import('@ukef/dtfs2-common').Currency, value: number }} [value]
  * @property {import('@ukef/dtfs2-common').UnixTimestamp} [coverEndDate]
  * @property {number} [amendmentExposurePeriodInMonths]
