@@ -250,21 +250,21 @@ describe('parse-filters helper', () => {
 
     describe('when payment reference is between 4 and 50 characters', () => {
       it('should return true', () => {
-        const result = isPaymentReferenceBetweenFourAndFiftyCharacters('12345678901234567890');
+        const result = isPaymentReferenceBetweenFourAndFiftyCharacters('This is a string with exactly 44 characters.');
         expect(result).toBe(true);
       });
     });
 
     describe('when payment reference is exactly 50 characters', () => {
       it('should return true', () => {
-        const result = isPaymentReferenceBetweenFourAndFiftyCharacters('12345678901234567890123456789012345678901234567890');
+        const result = isPaymentReferenceBetweenFourAndFiftyCharacters('This is a string with exactly 50 characters.......');
         expect(result).toBe(true);
       });
     });
 
     describe('when payment reference is more than 50 characters', () => {
       it('should return false', () => {
-        const paymentReference = '123456789012345678901234567890123456789012345678901';
+        const paymentReference = 'This is a string with exactly 51 characters........';
 
         const result = isPaymentReferenceBetweenFourAndFiftyCharacters(paymentReference);
 
