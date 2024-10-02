@@ -72,7 +72,7 @@ describe(page, () => {
       .expectText(`[data-cy="received-payments-entered-text"]`)
       .toMatch(/Received payments are entered against reported fees through selection and then selection of the 'Add a payment' button./);
     wrapper
-      .expectText(`[data-cy=""when-payments-show-text""]`)
+      .expectText(`[data-cy="when-payments-show-text"]`)
       .toMatch(
         /When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected./,
       );
