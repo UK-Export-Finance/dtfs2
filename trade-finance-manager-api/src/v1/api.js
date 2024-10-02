@@ -328,6 +328,35 @@ const getDealCancellation = async (dealId) => {
   }
 };
 
+/**
+ * Deletes the deal cancellation object on a TFM AIN or MIN deal
+ * @param {Object} params
+ * @param {string} params.dealId - deal cancellation to update
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
+ * @returns {Promise<void>} update result object
+ */
+const deleteDealCancellation = async ({ dealId, auditDetails }) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      throw new InvalidDealIdError(dealId);
+    }
+
+    await axios({
+      method: 'delete',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/cancellation`,
+      headers: headers.central,
+      data: {
+        auditDetails,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 const findOneFacility = async (facilityId) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -1633,6 +1662,7 @@ module.exports = {
   findUserById,
   updateDealCancellation,
   getDealCancellation,
+  deleteDealCancellation,
   findPortalUserById,
   updateUserTasks,
   findOneTeam,
