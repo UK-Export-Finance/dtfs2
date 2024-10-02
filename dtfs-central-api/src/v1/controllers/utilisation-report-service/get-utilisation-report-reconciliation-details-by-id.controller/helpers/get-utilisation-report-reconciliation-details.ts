@@ -17,7 +17,7 @@ import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-pay
  * @param filters.facilityId - The facility ID filter
  * @returns A promise that resolves to the filtered fee record payment groups
  */
-const getPremiumPayments = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: PremiumPaymentsFilters) => {
+export const getPremiumPayments = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: PremiumPaymentsFilters) => {
   const { facilityId } = filters;
 
   let feeRecords = feeRecordPaymentEntityGroups;
@@ -39,7 +39,7 @@ const getPremiumPayments = async (feeRecordPaymentEntityGroups: FeeRecordPayment
  * @param filters.paymentReference - The payment reference filter
  * @returns A promise that resolves to the filtered fee record payment groups
  */
-const getPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: ValidatedPaymentDetailsFilters) => {
+export const getPaymentDetails = async (feeRecordPaymentEntityGroups: FeeRecordPaymentEntityGroup[], filters: ValidatedPaymentDetailsFilters) => {
   const { facilityId, paymentCurrency, paymentReference } = filters;
 
   let feeRecords = feeRecordPaymentEntityGroups;
