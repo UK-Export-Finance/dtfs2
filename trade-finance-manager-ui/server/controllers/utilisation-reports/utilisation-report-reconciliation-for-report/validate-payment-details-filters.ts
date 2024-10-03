@@ -1,4 +1,4 @@
-import { PaymentDetailsFilters } from '@ukef/dtfs2-common';
+import { CURRENCY_REGEX, PaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { REGEX } from '../../../constants';
 import { ErrorSummaryViewModel, PaymentDetailsFilterErrorsViewModel } from '../../../types/view-models';
 
@@ -19,8 +19,7 @@ export const isFacilityIdFilterValid = (originalUrl: string, facilityIdQuery: st
  * @returns True if the payment currency filter is valid, false otherwise.
  */
 export const isPaymentCurrencyFilterValid = (originalUrl: string, paymentCurrencyQuery: string): boolean => {
-  // TODO FN-2311: CURRENCY_REGEX will be exported as part of PR 3573 - https://github.com/UK-Export-Finance/dtfs2/pull/3573/files
-  return originalUrl.includes('paymentDetailsPaymentCurrency') && !!paymentCurrencyQuery; // && CURRENCY_REGEX.test(paymentCurrencyQuery);
+  return originalUrl.includes('paymentDetailsPaymentCurrency') && CURRENCY_REGEX.test(paymentCurrencyQuery);
 };
 
 /**
