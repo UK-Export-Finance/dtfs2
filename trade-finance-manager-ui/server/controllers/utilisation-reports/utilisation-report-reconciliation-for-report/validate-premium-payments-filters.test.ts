@@ -65,7 +65,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const facilityIdQuery = '1234';
 
       // Act
-      const filterError = validateFacilityIdQuery('?someOtherQueryParam=1234&facilityId=1234', facilityIdQuery);
+      const filterError = validateFacilityIdQuery('?someOtherQueryParam=1234&premiumPaymentsFacilityId=1234', facilityIdQuery);
 
       // Assert
       expect(filterError).toEqual(undefined);

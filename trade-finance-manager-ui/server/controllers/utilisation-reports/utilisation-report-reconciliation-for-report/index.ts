@@ -17,6 +17,7 @@ export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
     premiumPaymentsFacilityId?: string;
     paymentDetailsFacilityId?: string;
     paymentDetailsPaymentReference?: string;
+    // TODO FN-2311: Add in payment currency?
     selectedFeeRecordIds?: string;
   };
 }>;
@@ -47,6 +48,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
   const { reportId } = req.params;
 
   try {
+    // TODO FN-2311: Add in payment currency
     const { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
 
     const { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds } = req.session;

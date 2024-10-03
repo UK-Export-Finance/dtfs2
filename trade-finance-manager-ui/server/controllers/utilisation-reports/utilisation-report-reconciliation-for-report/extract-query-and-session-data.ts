@@ -93,6 +93,8 @@ const parsePaymentDetailsFilters = (originalUrl: string, queryFilters?: PaymentD
  * ID query parameter
  * @param queryParams.paymentDetailsFacilityId - The payment details facility
  * ID query parameter
+ * @param queryParams.paymentDetailsPaymentCurrency - The payment details
+ * payment currency query parameter
  * @param queryParams.paymentDetailsPaymentReference - The payment details
  * payment reference query parameter
  * @param queryParams.selectedFeeRecordIdsQuery - The selected fee record IDs

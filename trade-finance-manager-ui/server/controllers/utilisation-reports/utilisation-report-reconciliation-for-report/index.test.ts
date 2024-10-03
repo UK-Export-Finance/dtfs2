@@ -25,10 +25,10 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     const session = { userToken, user };
 
     const reportId = '1';
-    const premiumPaymentsFacilityId = '1234';
-    const paymentDetailsFacilityId = '5678';
+    const premiumPaymentsFacilityId = '11111111';
+    const paymentDetailsFacilityId = '22222222';
     const paymentDetailsPaymentReference = 'some-payment-reference';
-    const originalUrl = '?';
+    const originalUrl = '?premiumPaymentsFacilityId=11111111&paymentDetailsFacilityId=22222222&paymentDetailsPaymentReference=some-payment-reference';
 
     const getHttpMocksWithSessionData = (sessionData: Partial<SessionData>) =>
       httpMocks.createMocks({
@@ -40,6 +40,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
           premiumPaymentsFacilityId,
           paymentDetailsFacilityId,
           paymentDetailsPaymentReference,
+          // TODO FN-2311: Add payment currency support
         },
         originalUrl,
       });
@@ -336,7 +337,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
       const viewModel = res._getRenderData() as UtilisationReportReconciliationForReportViewModel;
       expect(viewModel.paymentDetailsFilterErrors.errorSummary).toHaveLength(1);
       expect(viewModel.paymentDetailsFilterErrors.errorSummary[0].href).toBe('#payment-details-facility-id-filter');
-      expect(viewModel.paymentDetailsFilterErrors.errorSummary[0].text).toBe('Facility ID must be a number');
+      expect(viewModel.paymentDetailsFilterErrors.errorSummary[0].text).toBe('Facility ID must be blank or contain between 4 and 10 numbers');
     });
 
     it('checks selected checkboxes when selected fee record ids query param defined', async () => {
