@@ -1,0 +1,115 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle -%}
+  Check details before cancelling deal
+{%- endblock %}
+
+{% set optionsWithHTML = [] %}
+
+{% set rowTextClasses = "govuk-!-padding-top-6 govuk-!-padding-bottom-6" %}
+{% set rowLinkClasses = "govuk-!-padding-top-6 govuk-!-padding-bottom-6 govuk-!-text-align-right" %}
+
+{% set reasonForCancellingUrl %}
+  <a
+    class="govuk-link"
+    href="/case/{{ dealId }}/cancellation/reason"
+    data-cy="reason-link">
+    Change <span class="govuk-visually-hidden">reason</span>
+  </a>
+{% endset %}
+{% set reasonForCancelling =
+  [
+    { text: 'Reason for cancelling deal', attributes: { "data-cy": "reason-heading" }, classes: rowTextClasses },
+    { text: reason | dashIfEmpty, attributes: { "data-cy": "reason-response" }, classes: rowTextClasses },
+    { html: reasonForCancellingUrl, classes: rowLinkClasses }
+  ]
+%}
+{% set optionsWithHTML = (optionsWithHTML.push(reasonForCancelling), optionsWithHTML) %}
+
+{% set bankRequestDateUrl %}
+  <a
+    class="govuk-link"
+    href="/case/{{ dealId }}/cancellation/bank-request-date"
+    data-cy="bank-request-date-link">
+    Change <span class="govuk-visually-hidden">bank request date</span>
+  </a>
+{% endset %}
+{% set bankRequestDate =
+  [
+    { text: 'Bank request date', attributes: { "data-cy": "bank-request-date-heading" }, classes: rowTextClasses},
+    { text: bankRequestDate | dashIfEmpty, attributes: { "data-cy": "bank-request-date-response" }, classes: rowTextClasses },
+    { html: bankRequestDateUrl, classes: rowLinkClasses }
+  ]
+%}
+{% set optionsWithHTML = (optionsWithHTML.push(bankRequestDate), optionsWithHTML) %}
+
+{% set effectiveFromDateUrl %}
+  <a
+    class="govuk-link"
+    href="/case/{{ dealId }}/cancellation/effective-from-date"
+    data-cy="effective-from-link">
+    Change <span class="govuk-visually-hidden">date effective from</span>
+  </a>
+{% endset %}
+  {% set effectiveFromDate =
+    [
+      { text: 'Date effective from', attributes: { "data-cy": "effective-from-heading" }, classes: rowTextClasses },
+      { text: effectiveFromDate | dashIfEmpty, attributes: { "data-cy": "effective-from-response" }, classes: rowTextClasses },
+      { html: effectiveFromDateUrl, classes: rowLinkClasses }
+    ]
+%}
+{% set optionsWithHTML = (optionsWithHTML.push(effectiveFromDate), optionsWithHTML) %}
+
+{% block sub_content %}
+  {{ govukBackLink({
+      text: "Back",
+      href: "/case/" + dealId + "/cancellation/effective-from-date",
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    }) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+
+      <h1 class="govuk-label-wrapper">
+        <span class="govuk-caption-l govuk-!-margin-top-3 govuk-!-margin-bottom-1">Cancel deal {{ ukefDealId }}</span>
+        <label class="govuk-label govuk-label--l" for="check-details">
+          Check details before cancelling deal
+        </label>
+      </h1>
+
+      {{ govukTable({
+        rows: optionsWithHTML,
+       firstCellIsHeader: true,
+       classes: "govuk-!-margin-top-4"
+      }) }}
+
+      <div class="govuk-!-margin-bottom-9">
+      {{ govukWarningText({
+        text: "When you cancel the deal it cannot be undone",
+        iconFallbackText: "Warning",
+        attributes: { 'data-cy': 'warning' }
+      }) }}
+      </div>
+
+      <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <div class="govuk-!-margin-bottom-5">
+          {{ govukButton({
+            text: "Delete account",
+            classes: "govuk-button--warning",
+            attributes: { 'data-cy': 'delete-button' }
+          }) }}
+        </div>
+      </form>
+
+      <a class="govuk-link" href="/case/{{ dealId }}/deal" data-cy="return-link">Return to deal summary</a>
+
+    </div>
+  </div>
+{% endblock %}
