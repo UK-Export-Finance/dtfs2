@@ -41,7 +41,7 @@ describe('tfm-deals-cancellation-repo', () => {
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_DEALS);
-      expect(updateOneMock).toHaveBeenCalled();
+      expect(updateOneMock).toHaveBeenCalledTimes(1);
     });
 
     it('throws an InvalidDealIdError if deal is not a valid object id', async () => {
