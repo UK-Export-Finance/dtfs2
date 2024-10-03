@@ -25,7 +25,7 @@
  */
 
 const df = require('durable-functions');
-const retry = require('../../helpers/retry');
+const retryOptions = require('../../helpers/retryOptions');
 const mapping = require('../../mappings');
 
 /**
@@ -63,7 +63,7 @@ df.app.orchestration('acbs-amend-fixed-fee-record', function* amendFacilityFixed
       const acbsFacilityFixedFeeInput = mapping.facility.facilityFixedFeeAmend(amendments);
 
       // 5.2. Facility Fixed Fee Record update
-      facilityFixedFeeRecordAmendment = yield context.df.callActivityWithRetry('update-facility-fixed-fee', retry, {
+      facilityFixedFeeRecordAmendment = yield context.df.callActivityWithRetry('update-facility-fixed-fee', retryOptions, {
         facilityId,
         acbsFacilityFixedFeeInput,
       });

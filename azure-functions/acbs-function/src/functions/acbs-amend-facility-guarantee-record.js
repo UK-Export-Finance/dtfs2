@@ -24,7 +24,7 @@
  * This function is responsible for amending Facility Guarantee Record.
  */
 const df = require('durable-functions');
-const retry = require('../../helpers/retry');
+const retryOptions = require('../../helpers/retryOptions');
 const mappings = require('../../mappings');
 
 /**
@@ -59,7 +59,7 @@ df.app.orchestration('acbs-amend-facility-guarantee-record', function* amendFaci
     const acbsFacilityGuaranteeInput = mappings.facility.facilityGuaranteeAmend(amendment);
 
     // 4.2. Facility Guarantee Record update
-    const facilityGuaranteeRecordAmendment = yield context.df.callActivityWithRetry('update-facility-guarantee', retry, {
+    const facilityGuaranteeRecordAmendment = yield context.df.callActivityWithRetry('update-facility-guarantee', retryOptions, {
       facilityId,
       acbsFacilityGuaranteeInput,
     });

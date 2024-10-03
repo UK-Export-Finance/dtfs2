@@ -25,7 +25,7 @@
  * FLR is one of a child record of an issued facility.
  */
 const df = require('durable-functions');
-const retry = require('../../helpers/retry');
+const retryOptions = require('../../helpers/retryOptions');
 const mappings = require('../../mappings');
 
 /**
@@ -64,7 +64,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
     const acbsFacilityLoanInput = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
 
     // 1.2. Extract loan id for facility id
-    const loanId = yield context.df.callActivityWithRetry('get-facility-loan-id', retry, {
+    const loanId = yield context.df.callActivityWithRetry('get-facility-loan-id', retryOptions, {
       facilityId,
     });
 
@@ -75,7 +75,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
 
       // 1.3.1 - UKEF Exposure
       if (amendment.amount) {
-        const amount = yield context.df.callActivityWithRetry('update-facility-loan-amount', retry, {
+        const amount = yield context.df.callActivityWithRetry('update-facility-loan-amount', retryOptions, {
           loanId,
           facilityId,
           acbsFacilityLoanInput,
@@ -89,7 +89,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
 
       // 1.3.2 - Cover end date
       if (amendment.coverEndDate) {
-        const coverEndDate = yield context.df.callActivityWithRetry('update-facility-loan', retry, {
+        const coverEndDate = yield context.df.callActivityWithRetry('update-facility-loan', retryOptions, {
           loanId,
           facilityId,
           acbsFacilityLoanInput,

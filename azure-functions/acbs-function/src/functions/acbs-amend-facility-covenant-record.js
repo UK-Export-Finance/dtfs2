@@ -24,7 +24,7 @@
  * This function is responsible for amending Facility Covenant Record.
  */
 const df = require('durable-functions');
-const retry = require('../../helpers/retry');
+const retryOptions = require('../../helpers/retryOptions');
 const mappings = require('../../mappings');
 
 /**
@@ -59,7 +59,7 @@ df.app.orchestration('acbs-amend-facility-covenant-record', function* amendFacil
     const acbsFacilityCovenantInput = mappings.facility.facilityCovenantAmend(amendment);
 
     // 3.2. Facility Covenant Record update
-    const facilityCovenantRecordAmendment = yield context.df.callActivityWithRetry('update-facility-covenant', retry, {
+    const facilityCovenantRecordAmendment = yield context.df.callActivityWithRetry('update-facility-covenant', retryOptions, {
       facilityId,
       acbsFacilityCovenantInput,
     });

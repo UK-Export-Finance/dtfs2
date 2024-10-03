@@ -25,7 +25,7 @@
  * FMR is a parent record, created for every facility.
  */
 const df = require('durable-functions');
-const retry = require('../../helpers/retry');
+const retryOptions = require('../../helpers/retryOptions');
 const mappings = require('../../mappings');
 
 /**
@@ -66,7 +66,7 @@ df.app.orchestration('acbs-amend-facility-master-record', function* amendFacilit
 
     // 2.2.1 - UKEF Exposure
     if (amendment.amount) {
-      const amount = yield context.df.callActivityWithRetry('update-facility-master', retry, {
+      const amount = yield context.df.callActivityWithRetry('update-facility-master', retryOptions, {
         facilityId,
         acbsFacilityMasterInput,
         updateType: 'amendAmount',
@@ -81,10 +81,10 @@ df.app.orchestration('acbs-amend-facility-master-record', function* amendFacilit
     // 2.2.2 - Cover end date
     if (amendment.coverEndDate) {
       // 2.2.3. DAF : get-facility-master: Retrieve ACBS `Facility Master Record` with new eTag
-      const updatedFmr = yield context.df.callActivityWithRetry('get-facility-master', retry, facilityId);
+      const updatedFmr = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, facilityId);
 
       if (updatedFmr.etag) {
-        const coverEndDate = yield context.df.callActivityWithRetry('update-facility-master', retry, {
+        const coverEndDate = yield context.df.callActivityWithRetry('update-facility-master', retryOptions, {
           facilityId,
           acbsFacilityMasterInput,
           updateType: 'amendExpiryDate',
