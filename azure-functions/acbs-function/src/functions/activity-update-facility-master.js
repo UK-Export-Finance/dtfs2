@@ -1,19 +1,3 @@
-/*
- * Facility master record update DAF
- * **********************************
- * This DAF (Durable Activity Function) is never invoked directly.
- * It is invoked via DOF (Durable Orchestrator Function).
- *
- * Pre-requisites
- * --------------
- * 0. 'npm install durable-functions'
- * 1. Durable  HTTP trigger function (acbs-http)
- * 2. Durable Orchestrator function (DOF) (acbs-issue-facility)
- *
- * ------------------
- * HTTP -> DOF -> DAF
- * ------------------
- */
 const df = require('durable-functions');
 const api = require('../../api');
 const { getNowAsIsoString } = require('../../helpers/date');
@@ -21,13 +5,17 @@ const { isHttpErrorStatus } = require('../../helpers/http');
 const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
 /**
- * Handles the amendment of a facility master record in the ACBS system.
+ * Handles the creation of a deal guarantee record in the ACBS system.
  *
- * @param {Object} payload - The payload containing the facilityId, acbsFacilityMasterInput, updateType, and etag.
- * @param {string} payload.facilityId - The ID of the facility.
- * @param {Object} payload.acbsFacilityMasterInput - The input for the ACBS facility master, containing the mandatory fields.
- * @param {string} payload.updateType - The type of update to be performed.
- * @param {string} payload.etag - The etag of the facility.
+ * This function performs the following operations:
+ * 1. Validates the input payload.
+ * 2. Checks for missing mandatory fields in the guarantee object.
+ * 3. Submits the creation request to the ACBS system.
+ * 4. Handles the response from the ACBS system and returns the result.
+ *
+ * @param {Object} payload - The input payload containing the deal identifier and guarantee details.
+ * @param {string} payload.dealIdentifier - The identifier of the deal.
+ * @param {Object} payload.guarantee - The guarantee object containing the mandatory fields.
  * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */

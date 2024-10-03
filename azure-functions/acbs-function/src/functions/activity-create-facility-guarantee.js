@@ -1,10 +1,8 @@
 const df = require('durable-functions');
-const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
+const { getNowAsIsoString } = require('../../helpers/date');
 const { isHttpErrorStatus } = require('../../helpers/http');
 const { findMissingMandatory } = require('../../helpers/mandatoryFields');
-
-const mandatoryFields = ['guarantorParty', 'limitKey', 'guaranteeExpiryDate', 'effectiveDate', 'maximumLiability', 'guaranteeTypeCode'];
 
 /**
  * This function is used to create a facility guarantee record. It first checks if the payload is valid and contains all mandatory fields.
@@ -27,7 +25,7 @@ const handler = async (payload) => {
     }
 
     const { facilityIdentifier, acbsFacilityGuaranteeInput } = payload;
-
+    const mandatoryFields = ['guarantorParty', 'limitKey', 'guaranteeExpiryDate', 'effectiveDate', 'maximumLiability', 'guaranteeTypeCode'];
     const missingMandatory = findMissingMandatory(acbsFacilityGuaranteeInput, mandatoryFields);
 
     if (missingMandatory.length) {

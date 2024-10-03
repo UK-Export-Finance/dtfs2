@@ -1,21 +1,3 @@
-/**
- *
- * Facility fixed fee `amount` amendment DAF
- * *****************************************
- * This DAF (Durable Activity Function) is never invoked directly.
- * It is invoked via DOF (Durable Orchestrator Function).
- *
- * Pre-requisites
- * --------------
- * 0. 'npm install durable-functions'
- * 1. Durable  HTTP trigger function (acbs-http)
- * 2. Durable Orchestrator function (DOF) (acbs-amend-facility)
- *
- * ------------------
- * HTTP -> DOF -> DAF
- * ------------------
- */
-
 const df = require('durable-functions');
 const api = require('../../api');
 const { findMissingMandatory } = require('../../helpers/mandatoryFields');

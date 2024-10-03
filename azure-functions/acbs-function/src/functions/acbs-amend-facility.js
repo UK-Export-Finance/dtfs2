@@ -42,7 +42,7 @@ const df = require('durable-functions');
 const retryOptions = require('../../helpers/retryOptions');
 const { DEAL, FACILITY } = require('../../constants');
 
-const acceptableFacilityStage = ['07'];
+const acceptableFacilityStage = [FACILITY.STAGE_CODE.ISSUED];
 
 df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
   const payload = context.df.input;

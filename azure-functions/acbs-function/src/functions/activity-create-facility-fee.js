@@ -1,35 +1,23 @@
 const df = require('durable-functions');
-const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
+const { getNowAsIsoString } = require('../../helpers/date');
 const { isHttpErrorStatus } = require('../../helpers/http');
 const { findMissingMandatory } = require('../../helpers/mandatoryFields');
 
-const mandatoryFields = [
-  'amount',
-  'effectiveDate',
-  'expirationDate',
-  'nextDueDate',
-  'nextAccrueToDate',
-  'period',
-  'currency',
-  'lenderTypeCode',
-  'incomeClassCode',
-  'spreadToInvestorsIndicator',
-];
-
 /**
- * This function is used to create a facility fee record. It first checks if the payload is valid and contains all mandatory fields.
- * If the payload is valid, it sends a request to the API to create the facility fee record.
- * If the API request is successful, it returns an object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * If the API request fails, it throws an error with details about the request and the error.
- * If the payload is not valid or does not contain all mandatory fields, it returns an object with the missing mandatory fields.
- * If any other error occurs, it logs the error and throws a new error.
+ * Handles the creation of a facility fee record in the ACBS system.
  *
- * @param {Object} payload - The payload containing the facilityIdentifier and acbsFacilityFeeInput.
+ * This function performs the following operations:
+ * 1. Validates the input payload.
+ * 2. Checks for missing mandatory fields in the ACBS facility fee input.
+ * 3. Submits the creation request to the ACBS system.
+ * 4. Handles the response from the ACBS system and returns the result.
+ *
+ * @param {Object} payload - The input payload containing the facility identifier and ACBS facility fee input.
  * @param {string} payload.facilityIdentifier - The identifier of the facility.
- * @param {Object} payload.acbsFacilityFeeInput - The acbsFacilityFeeInput object containing the mandatory fields.
- * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
+ * @param {Object} payload.acbsFacilityFeeInput - The ACBS facility fee input details.
+ * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API, or an object with the missing mandatory fields.
+ * @throws {Error} - Throws an error if the payload is invalid, if there are missing mandatory fields, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {
   try {
@@ -38,7 +26,18 @@ const handler = async (payload) => {
     }
 
     const { facilityIdentifier, acbsFacilityFeeInput } = payload;
-
+    const mandatoryFields = [
+      'amount',
+      'effectiveDate',
+      'expirationDate',
+      'nextDueDate',
+      'nextAccrueToDate',
+      'period',
+      'currency',
+      'lenderTypeCode',
+      'incomeClassCode',
+      'spreadToInvestorsIndicator',
+    ];
     const missingMandatory = findMissingMandatory(acbsFacilityFeeInput, mandatoryFields);
     if (missingMandatory.length) {
       return { missingMandatory };
