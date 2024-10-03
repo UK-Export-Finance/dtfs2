@@ -118,11 +118,7 @@ const get = async (endpoint) => {
  * Invokes TFS POST endpoint
  * @param {string} endpoint TFS endpoint
  * @param {Object} payload Payload object
-<<<<<<< HEAD
- * @returns {Promise<object>} API response object
-=======
  * @returns {Promise<Object>} API response object
->>>>>>> main
  */
 const post = async (endpoint, payload) => {
   if (endpoint && payload) {
@@ -148,11 +144,7 @@ const post = async (endpoint, payload) => {
  * Invokes MDM POST endpoint
  * @param {string} endpoint MDM endpoint
  * @param {Object} payload Payload object
-<<<<<<< HEAD
- * @returns {Promise<object>} API response object
-=======
  * @returns {Promise<Object>} API response object
->>>>>>> main
  */
 const postMdm = async (endpoint, payload) => {
   if (endpoint && payload) {
