@@ -3,7 +3,7 @@ const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
 /**
- * @param {object} deal
+ * @param {Object} deal
  * @param {Array} userTeams
  * @returns {boolean}
  * function to show amendment button
@@ -36,7 +36,7 @@ const userCanEditBankDecision = (amendment, user) => {
 /**
  * Ascertain whether the requested amendment
  * have been declined or not.
- * @param {object} amendment Amendment object
+ * @param {Object} amendment Amendment object
  * @returns {boolean} Whether both the amendments decision has been declined by the underwriter.
  */
 const ukefDecisionRejected = (amendment) => {
@@ -55,7 +55,7 @@ const ukefDecisionRejected = (amendment) => {
 };
 
 /**
- * @param {object} amendment
+ * @param {Object} amendment
  * @param {string} decisionType
  * @returns {boolean}
  * checks if amendment has declined or approved with conditions and returns true if so

@@ -126,12 +126,12 @@ exports.findOne = (req, res) => {
 
 /**
  * Sends a request to DTFS Central to update a deal
- * @param {object} params - The parameters for updating the deal.
+ * @param {Object} params - The parameters for updating the deal.
  * @param {string} params.dealId - The ID of the deal being updated.
- * @param {object} params.dealUpdate - The update to be made to the deal.
- * @param {object} params.user - The user making the changes.
- * @param {object} params.auditDetails - The audit details for the update.
- * @returns {Promise<object | false>} The updated deal object.
+ * @param {Object} params.dealUpdate - The update to be made to the deal.
+ * @param {Object} params.user - The user making the changes.
+ * @param {Object} params.auditDetails - The audit details for the update.
+ * @returns {Promise<Object | false>} The updated deal object.
  */
 const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
   const updatedDeal = await api.updateDeal({ dealId, dealUpdate, user, auditDetails });
@@ -185,10 +185,10 @@ exports.delete = async (req, res) => {
 
 /**
  * Query all deals in the deals collection (BSS, EWCS, GEF)
- * @param {*} filters any filters for list, uses match spec
- * @param {*} sort any additional sort fields for list
- * @param {*} start where list should start - part of pagination.
- * @param {*} pagesize Size of each page - limits list results
+ * @param {Object} filters any filters for list, uses match spec
+ * @param {Object} sort any additional sort fields for list
+ * @param {number} start where list should start - part of pagination.
+ * @param {number} pagesize Size of each page - limits list results
  * @returns combined and formatted list of deals
  */
 const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) => {

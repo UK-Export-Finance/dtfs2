@@ -6,7 +6,7 @@ const CONSTANTS = require('../../../constants');
  * Create an array of objects for all selected filters.
  * This will used in mojFilter component - selectedFilters.categories.
  *
- * @param {object} submitted filters
+ * @param {Object} submitted filters
  * @example ( { keyword: 'Special exporter' }, { dealType: ['BSS/EWCS', 'GEF'] } )
  * @returns [ generateSelectedFiltersObject(...params), generateSelectedFiltersObject(...params) ]
  */

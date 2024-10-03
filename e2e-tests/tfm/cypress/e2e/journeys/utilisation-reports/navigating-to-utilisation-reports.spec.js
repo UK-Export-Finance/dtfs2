@@ -11,7 +11,7 @@ import USERS from '../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../e2e-fixtures';
 import { aliasSelector } from '../../../../../support/alias-selector';
 
-context('PDC_RECONCILE users can route to the payments page for a bank', () => {
+context('Users can route to the payments page for a bank', () => {
   const allBanksAlias = 'allBanksAlias';
   const today = new Date();
   const submissionMonthStamp = toIsoMonthStamp(today);
@@ -74,6 +74,10 @@ context('PDC_RECONCILE users can route to the payments page for a bank', () => {
     pages.utilisationReportsSummaryPage.visit();
   });
 
+  it('should NOT render a read only banner when logging in as a "PDC_RECONCILE" user', () => {
+    pages.utilisationReportsSummaryPage.readOnlyBanner().should('not.exist');
+  });
+
   it('should render all current reports and open previous reports for banks visible in tfm utilisation reports', () => {
     pages.utilisationReportsSummaryPage.heading(submissionMonthStamp).should('exist');
     pages.utilisationReportsSummaryPage.heading(previousSubmissionMonthStamp).should('exist');
@@ -109,6 +113,18 @@ context('PDC_RECONCILE users can route to the payments page for a bank', () => {
       .then(($heading) => {
         expect($heading).to.contain('Sorry, there is a problem with the service');
       });
+  });
+
+  it('should render a read only banner when signing in as a "PDC_READ" user', () => {
+    pages.landingPage.visit();
+    cy.login(USERS.PDC_READ);
+
+    pages.utilisationReportsSummaryPage.visit();
+    pages.utilisationReportsSummaryPage.readOnlyBanner().should('exist');
+    cy.assertText(
+      pages.utilisationReportsSummaryPage.readOnlyBanner(),
+      'You are viewing the trade finance manager in read-only view. You will not be able to perform any actions to the reported fees on the system.',
+    );
   });
 
   function getLatestQuarterlySubmissionMonthStamp() {

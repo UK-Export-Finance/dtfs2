@@ -6,7 +6,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       condition      | testValue
       ${'undefined'} | ${undefined}
       ${'number'}    | ${7}
-      ${'object'}    | ${{}}
+      ${'Object'}    | ${{}}
       ${'array'}     | ${[]}
     `("sets the 'success' property to false when the cell value is: $condition", ({ testValue }: { testValue: unknown }) => {
       // Arrange
@@ -24,7 +24,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       ${'null'}      | ${null}
       ${'undefined'} | ${undefined}
       ${'number'}    | ${7}
-      ${'object'}    | ${{}}
+      ${'Object'}    | ${{}}
       ${'array'}     | ${[]}
     `("sets the 'success' property to false when the cell column is: $condition", ({ testValue }: { testValue: unknown }) => {
       // Arrange
@@ -41,7 +41,7 @@ describe('utilisation-report-raw-csv-cell-data-with-location.schema', () => {
       condition      | testValue
       ${'null'}      | ${null}
       ${'undefined'} | ${undefined}
-      ${'object'}    | ${{}}
+      ${'Object'}    | ${{}}
       ${'array'}     | ${[]}
     `("sets the 'success' property to false when the cell row is: $condition", ({ testValue }: { testValue: unknown }) => {
       // Arrange

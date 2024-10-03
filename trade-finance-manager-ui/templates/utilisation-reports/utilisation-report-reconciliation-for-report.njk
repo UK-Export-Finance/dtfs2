@@ -34,11 +34,15 @@
 
     <div class="govuk-grid-row premium-payments-description-filter-container">
       <div class="govuk-grid-column-one-half premium-payments-description-container">
-        <p class="govuk-body">Received payments are entered against reported fees through selection and then selection of the 'Add a payment' button.</p>
+        {% if userCanEdit %}
+          <p class="govuk-body" data-cy="how-to-add-payments-text">Received payments are entered against reported fees through selection and then selection of the 'Add a payment' button.</p>
 
-        <p class="govuk-body">
-          When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.
-        </p>
+          <p class="govuk-body" data-cy="how-to-generate-keying-data-text">
+            When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.
+          </p>
+        {% else %}
+          <p class="govuk-body" data-cy="received-payments-text">Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated.</p>
+        {% endif %}
       </div>
 
       <div class="govuk-grid-column-one-half govuk-!-text-align-right premium-payments-filter-container">
@@ -121,7 +125,10 @@
 {% set keyingSheetHtml %}
   <h2 class="govuk-heading-l" data-cy="keying-sheet-heading">Keying sheet</h2>
 
-  <p class="govuk-body">Payments on the premium payments tab will show as reconciled when they have been marked as done here.</p>
+  {% if userCanEdit %}
+    <p class="govuk-body" data-cy="select-payments-text">Select payments and mark as done when the adjustments have been keyed into ACBS.</p>
+   {% endif %}
+  <p class="govuk-body" data-cy="payments-on-premium-payments-tab-text">Payments on the premium payments tab will show as reconciled when they have been marked as done here.</p>
 
   <form method="post" data-cy="keying-sheet-form">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
