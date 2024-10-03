@@ -2,6 +2,7 @@ const utilisationReportPage = {
   bankReportsNavLink: () => cy.get('a[data-cy="bank-reports-nav-link"]'),
   keyingSheetTabLink: () => cy.get('a[data-cy="bank-report-tab-keying-sheet"]'),
   paymentDetailsLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
+  utilisationTabLink: () => cy.get('a[data-cy="bank-report-tab-utilisation"]'),
   premiumPaymentsTab: {
     selectPaymentsText: () => cy.get('[data-cy="select-payments-text"]'),
     paymentsOnPremiumPaymentsText: () => cy.get('[data-cy="payments-on-premium-payments-tab-text"]'),
@@ -47,6 +48,11 @@ const utilisationReportPage = {
         cy.get(`[data-cy="payment-details-row--paymentId-${paymentId}-feeRecordId-${feeRecordId}"] td[data-cy="payment-reference"]`),
       facilityId: (paymentId, feeRecordId) =>
         cy.get(`[data-cy="payment-details-row--paymentId-${paymentId}-feeRecordId-${feeRecordId}"] td[data-cy="facility-id"]`),
+    },
+  },
+  utilisationTab: {
+    utilisationTable: {
+      row: (feeRecordId) => cy.get(`tr[data-cy="utilisation-table-row-${feeRecordId}"]`),
     },
   },
 };
