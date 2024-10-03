@@ -82,7 +82,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
     const { acbsFacility: fmr, etag } = yield context.df.callActivityWithRetry('get-facility-master', retryOptions, facilityId);
 
     /**
-     * Check 1 - Facility stage `07` only
+     * Check 1 - Facility stage `07` (issued) only
      * Ensure facility is `Issued` before processing amendment payload
      */
     const { facilityStageCode } = fmr;
