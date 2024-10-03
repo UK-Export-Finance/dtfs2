@@ -81,5 +81,13 @@ describe('tfm-deals-cancellation-repo', () => {
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_DEALS);
       expect(updateOneMock).toHaveBeenCalledWith(expectedFilter, expectedUpdate);
     });
+
+    it('returns the update result', async () => {
+      // Act
+      const result = await TfmDealCancellationRepo.deleteOneDealCancellation(dealId, auditDetails);
+
+      // Assert
+      expect(result).toBe(mockUpdateResult);
+    });
   });
 });

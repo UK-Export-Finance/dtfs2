@@ -87,7 +87,7 @@ export class TfmDealCancellationRepo {
    * @param dealId - The deal id
    * @param auditDetails - The users audit details
    */
-  public static async deleteOneDealCancellation(dealId: string | ObjectId, auditDetails: AuditDetails): Promise<void> {
+  public static async deleteOneDealCancellation(dealId: string | ObjectId, auditDetails: AuditDetails): Promise<UpdateResult> {
     if (!ObjectId.isValid(dealId)) {
       throw new InvalidDealIdError(dealId.toString());
     }
@@ -106,5 +106,7 @@ export class TfmDealCancellationRepo {
     if (!updateResult?.matchedCount) {
       throw new DealNotFoundError(dealId.toString());
     }
+
+    return updateResult;
   }
 }
