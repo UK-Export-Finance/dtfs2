@@ -1,5 +1,5 @@
 const { pageRenderer } = require('../pageRenderer');
-const { anAddPaymentViewModel, aRecordedPaymentDetailsViewModel } = require('../../test-helpers/test-data/add-payment-view-model');
+const { anAddPaymentViewModel, aRecordedPaymentDetailsViewModel } = require('../../test-helpers/test-data/view-models');
 
 const page = '../templates/utilisation-reports/add-payment.njk';
 const render = pageRenderer(page);

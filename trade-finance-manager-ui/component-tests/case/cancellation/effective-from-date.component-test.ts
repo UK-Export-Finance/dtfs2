@@ -1,6 +1,6 @@
 import { EffectiveFromDateErrorsViewModel, EffectiveFromDateViewModel } from '../../../server/types/view-models';
 import { pageRenderer } from '../../pageRenderer';
-import { aEffectiveFromDateViewModel } from '../../../test-helpers/test-data/effective-from-date-view-model';
+import { aEffectiveFromDateViewModel } from '../../../test-helpers/test-data/view-models';
 
 const page = '../templates/case/cancellation/effective-from-date.njk';
 const render = pageRenderer(page);
