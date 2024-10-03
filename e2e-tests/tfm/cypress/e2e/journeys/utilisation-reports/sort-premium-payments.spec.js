@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
@@ -62,30 +61,10 @@ context(`users can sort premium payments table by total reported payments and to
   });
 
   describe('when status column heading is clicked', () => {
-    it.only('should sort the rows by status', () => {
+    it('should sort the rows by status', () => {
       pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.header.status().click();
 
       // Check that the rows are sorted by status by checking the facility IDs.
-
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-        .rows()
-        .eq(0)
-        .find('th')
-        .first()
-        .invoke('text')
-        .then((text) => {
-          console.log(`Text of first row's first th element: ${text}`);
-        });
-
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable
-        .rows()
-        .eq(0)
-        .find('th')
-        .first()
-        .then(($el) => {
-          console.log(`HTML of first row's first th element:`);
-          console.log($el.prop('outerHTML'));
-        });
 
       // Facility 22222222 has status 'DOES_NOT_MATCH' (alphabetically first) and has the lowest total reported payments
       // (secondary sorting criteria, ascending), so it should appear first.
