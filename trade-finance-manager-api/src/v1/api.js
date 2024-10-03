@@ -329,7 +329,7 @@ const getDealCancellation = async (dealId) => {
 };
 
 /**
- * Deletes the deal cancellation object on a TFM AIN or MIN deal
+ * Deletes the deal cancellation object on a deal
  * @param {Object} params
  * @param {string} params.dealId - deal cancellation to update
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
