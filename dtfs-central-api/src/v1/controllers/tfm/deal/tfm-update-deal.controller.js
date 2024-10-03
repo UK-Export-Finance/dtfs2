@@ -15,12 +15,12 @@ const withoutId = (obj) => {
 };
 
 /**
- * @param {object} params
+ * @param {Object} params
  * @param {string} params.dealId - id of deal to be updated
- * @param {object} params.dealUpdate - updates to make
- * @param {object} params.existingDeal
+ * @param {Object} params.dealUpdate - updates to make
+ * @param {Object} params.existingDeal
  * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - tfm user making the update
- * @returns {Promise<object>} updated deal or error object
+ * @returns {Promise<Object>} updated deal or error object
  */
 const updateDeal = async ({ dealId, dealUpdate, existingDeal, auditDetails }) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);

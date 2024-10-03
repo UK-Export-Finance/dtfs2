@@ -1987,7 +1987,12 @@ jobs:
                 ESTORE_CRON_MANAGER_SCHEDULE="${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}" \
                 HTTPS=1 \
                 RATE_LIMIT_THRESHOLD=${{ vars.RATE_LIMIT_THRESHOLD }} \
-                FF_TFM_SSO_ENABLED="${{ vars.FF_TFM_SSO_ENABLED }}"
+                FF_TFM_SSO_ENABLED="${{ vars.FF_TFM_SSO_ENABLED }}" \
+                ENTRA_ID_CLIENT_ID="${{ vars.ENTRA_ID_CLIENT_ID }}" \
+                ENTRA_ID_CLOUD_INSTANCE="${{ vars.ENTRA_ID_CLOUD_INSTANCE }}" \
+                ENTRA_ID_TENANT_ID="${{ vars.ENTRA_ID_TENANT_ID }}" \
+                ENTRA_ID_CLIENT_SECRET="${{ vars.ENTRA_ID_CLIENT_SECRET }}" \
+                ENTRA_ID_REDIRECT_URL="${{ vars.ENTRA_ID_REDIRECT_URL }}"
 
       - name: Secrets
         uses: azure/cli@v2

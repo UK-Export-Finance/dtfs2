@@ -2,16 +2,14 @@ import { UtilisationReportCsvRowData, UtilisationReportDataValidationError } fro
 import _ from 'lodash';
 
 /**
- * generateErrorsForMismatchedFacilityValues
  * Adds error message for all matching facility id rows
  * Finds all rows with the same facility id
  * Generates errors if errors do not already exist in the provided errors object t
  * @param {UtilisationReportCsvRowData[]} csvData
  * @param {UtilisationReportDataValidationError[]} errors - existing validation errors
  * @param {UtilisationReportCsvRowData} csvRow - current CSV row to generate errors from
- * @param {String} field - field to obtain values
- * @param {String} errorMessage - error message to generate
- * @param {String} exporterName - exporter name for errors
+ * @param {string} field - field to obtain values
+ * @param {string} errorMessage - error message to generate
  * @returns {UtilisationReportDataValidationError[]} generated errors
  */
 export const generateErrorsForMismatchedFacilityValues = (
@@ -20,8 +18,7 @@ export const generateErrorsForMismatchedFacilityValues = (
   csvRow: UtilisationReportCsvRowData,
   field: string,
   errorMessage: string,
-  exporterName: string,
-) => {
+): UtilisationReportDataValidationError[] => {
   // find all rows with matching facility id
   const matchingRows = csvData.filter((row: UtilisationReportCsvRowData) => row['ukef facility id']?.value === csvRow['ukef facility id']?.value);
   const newErrors: UtilisationReportDataValidationError[] = [];
@@ -38,7 +35,7 @@ export const generateErrorsForMismatchedFacilityValues = (
       column: row[field]?.column,
       row: row[field]?.row,
       value: row[field]?.value,
-      exporter: exporterName,
+      exporter: row.exporter?.value,
     } as UtilisationReportDataValidationError;
 
     const isNotInErrors = !errors.some((error) => _.isEqual(error, errorObject));

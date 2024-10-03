@@ -48,7 +48,7 @@ context('Deal cancellation - reason for cancelling', () => {
     });
 
     it('should validate submitting more than 1200 characters', () => {
-      cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox().clear(), 'x'.repeat(1201));
+      cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox(), 'x'.repeat(1201));
 
       cy.clickContinueButton();
 

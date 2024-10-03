@@ -2,7 +2,7 @@
  * assertText
  * Check an element's text
  * @param {Object} selector: Cypress selector
- * @param {String} expected: Expected text
+ * @param {string} expected: Expected text
  */
 const assertText = (selector, expected) => {
   selector.invoke('text').then((text) => {

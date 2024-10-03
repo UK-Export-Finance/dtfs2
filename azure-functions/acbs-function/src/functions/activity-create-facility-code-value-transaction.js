@@ -17,7 +17,7 @@ const mandatoryFields = ['lenderTypeCode', 'initialBundleStatusCode', 'facilityT
  * @param {Object} payload - The payload containing the facilityIdentifier and acbsCodeValueTransactionInput.
  * @param {string} payload.facilityIdentifier - The identifier of the facility.
  * @param {Object} payload.acbsCodeValueTransactionInput - The acbsCodeValueTransactionInput object containing the mandatory fields.
- * @returns {object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
+ * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {

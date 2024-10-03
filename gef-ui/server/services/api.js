@@ -54,7 +54,7 @@ const cloneApplication = async ({ payload, userToken }) => {
 };
 
 /**
- * @param {object} param
+ * @param {Object} param
  * @param {string} param.dealId
  * @param {string} param.userToken
  * @returns {Promise<import('../types/deal').Deal}>}
@@ -144,7 +144,7 @@ const createFacility = async ({ payload, userToken }) => {
 };
 
 /**
- * @param {object} param
+ * @param {Object} param
  * @param {string} param.facilityId
  * @param {string} param.userToken
  * @returns {Promise<{ details: import('../types/facility').Facility }>}

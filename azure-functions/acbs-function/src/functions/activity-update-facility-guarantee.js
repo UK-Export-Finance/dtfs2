@@ -22,16 +22,11 @@ const { isHttpErrorStatus } = require('../../helpers/http');
 /**
  * Handles the amendment of a facility guarantee record in the ACBS system.
  *
- * This function performs the following operations:
- * 1. Validates the input payload.
- * 2. Submits the amendment to the ACBS system.
- * 3. Handles the response from the ACBS system and returns the result.
- *
- * @param {Object} payload - The input payload containing the facility identifier and ACBS facility guarantee input.
- * @param {string} payload.facilityIdentifier - The identifier of the facility to be amended.
- * @param {Object} payload.acbsFacilityGuaranteeInput - The ACBS facility guarantee input details.
- * @returns {Object} - The result of the facility guarantee record amendment, including status, timestamps, and data sent/received.
- * @throws {Error} - Throws an error if the input payload is invalid or if there is an error during the amendment process.
+ * @param {Object} payload - The payload containing the facilityIdentifier and acbsFacilityGuaranteeInput.
+ * @param {string} payload.facilityIdentifier - The identifier of the facility.
+ * @param {import('../../mappings/facility/facility-guarantee-amend').MappedFacilityGuaranteeAmendment} payload.acbsFacilityGuaranteeInput - The acbsFacilityGuaranteeInput object containing the guarantee details.
+ * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
+ * @throws {Error} - Throws an error if the payload is invalid, if the API request to generate the guarantee ID fails, or if any other error occurs.
  */
 const handler = async (payload) => {
   try {

@@ -13,7 +13,7 @@ const format = (epoch, fromEpoch) => (fromEpoch ? formatDate(epoch) : epoch);
  * When the product is BSS/EWCS then requestedCoverStartDate
  * property is referred to else coverStartDate.
  * @param {Object} facility Deal's facility object
- * @param {bool} formatted Return in YYYY-MM-DD date format
+ * @param {boolean} formatted Return in YYYY-MM-DD date format
  * @returns {string} String Cover start date
  */
 const getCoverStartDate = (facility, formatted) => {

@@ -23,7 +23,7 @@ const mandatoryFields = [
  * If any other error occurs, it logs the error and throws a new error.
  *
  * @param {Object} payload - The payload containing the deal details.
- * @returns {object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
+ * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {

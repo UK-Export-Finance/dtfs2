@@ -17,7 +17,7 @@ const mandatoryFields = ['effectiveDate', 'limitKey', 'guaranteeExpiryDate', 'ma
  * @param {Object} payload - The payload containing the dealIdentifier and guarantee.
  * @param {string} payload.dealIdentifier - The identifier of the deal.
  * @param {Object} payload.guarantee - The guarantee object containing the mandatory fields.
- * @returns {object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
+ * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
  * @throws {Error} - Throws an error if the payload is invalid, if the API request fails, or if any other error occurs.
  */
 const handler = async (payload) => {

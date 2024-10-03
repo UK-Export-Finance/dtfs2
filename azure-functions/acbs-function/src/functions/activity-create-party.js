@@ -15,7 +15,7 @@ const mandatoryFields = ['alternateIdentifier', 'industryClassification', 'name1
  * If any other error occurs, it logs the error and throws a new error.
  *
  * @param {Object} party - The party object containing the mandatory fields for creating a party record.
- * @returns {object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API, or an object with the missing mandatory fields.
+ * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API, or an object with the missing mandatory fields.
  * @throws {Error} - Throws an error if the API request fails, or if any other error occurs.
  */
 const handler = async (party) => {

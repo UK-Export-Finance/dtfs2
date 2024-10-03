@@ -30,7 +30,7 @@ export interface NumberGeneratorResponse {
  *
  * @interface NumberGeneratorErrorResponse
  * @property {number} status - The status code of the error response.
- * @property {object} error - The error object containing details about the error.
+ * @property {Object} error - The error object containing details about the error.
  */
 export interface NumberGeneratorErrorResponse {
   readonly status: number;

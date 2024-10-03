@@ -138,7 +138,7 @@ const getUnissuedFacilitiesAsArray = (facilities, application) =>
  * This is a bespoke govUkTable mapping function which
  * returns an array of all the facilities specifically
  * for the cover-start-date.njk template.
- * @param {object} facilities
+ * @param {Object} facilities
  * @returns {Array}
  */
 const getIssuedFacilitiesAsArray = (facilities) => {
@@ -189,7 +189,7 @@ const facilitiesChangedPresent = (application) => facilitiesChangedToIssuedAsArr
 /**
  * Helper function ascertain whether the facility confirmation message should appear or not.
  * It takes into account recent issuance of a facility, submission type to be MIN.
- * @param {object} application Application object with facilities
+ * @param {Object} application Application object with facilities
  * @returns {boolean} Boolean value
  */
 const issuedFacilityConfirmation = (application) => {

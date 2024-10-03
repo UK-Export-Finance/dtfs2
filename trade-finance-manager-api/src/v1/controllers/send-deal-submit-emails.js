@@ -142,8 +142,8 @@ const sendAinMinAcknowledgement = async (deal) => {
       // send a copy of the email to PIM
       const pimEmailResponse = await sendTfmEmail(templateId, pimEmail, emailVariables, deal);
       // send a copy of the email to the bank's general email address
-      const bankResponse = await Promise.all(bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal)));
-      return { makerEmailResponse, pimEmailResponse, bankResponse };
+      const bankResponses = await Promise.all(bankEmails.map((email) => sendTfmEmail(templateId, email, emailVariables, deal)));
+      return { makerEmailResponse, pimEmailResponse, bankResponses };
     }
 
     if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {

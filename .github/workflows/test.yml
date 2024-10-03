@@ -149,6 +149,11 @@ env:
   FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
   FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
   GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
+  ENTRA_ID_CLIENT_ID: ${{ vars.ENTRA_ID_CLIENT_ID }}
+  ENTRA_ID_CLOUD_INSTANCE: ${{ vars.ENTRA_ID_CLOUD_INSTANCE }}
+  ENTRA_ID_TENANT_ID: ${{ vars.ENTRA_ID_TENANT_ID }}
+  ENTRA_ID_CLIENT_SECRET: ${{ vars.ENTRA_ID_CLIENT_SECRET }}
+  ENTRA_ID_REDIRECT_URL: ${{ vars.ENTRA_ID_REDIRECT_URL }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -606,12 +611,21 @@ jobs:
       # Single dimension matrix
       matrix:
         spec: [
-            'case/*.spec.js',
             'case/activities/*.spec.js',
+            'case/AIN/*.spec.js',
             'case/deal-cancellation-disabled/*.spec.js',
             'case/documents/*.spec.js',
+            'case/GEF/*.spec.js',
+            'case/MIA/*.spec.js',
             'case/parties/*.spec.js',
+            'case/parties/agent/*.spec.js',
+            'case/parties/bond/*.spec.js',
+            'case/parties/buyer/*.spec.js',
+            'case/parties/exporter/*.spec.js',
+            'case/parties/indemnifier/*.spec.js',
             'case/tasks/*.spec.js',
+            'case/tasks/AIN/*.spec.js',
+            'case/tasks/MIA/*.spec.js',
             'case-amendments/add-bank-decision/*.spec.js',
             'case-amendments/add-underwriter-decision/*.spec.js',
             'case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
@@ -809,12 +823,21 @@ jobs:
             './gef/cypress/e2e/security/**/*.spec.js',
             './gef/cypress/e2e/ukef/**/*.spec.js',
             './gef/cypress/e2e/upload/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/*.spec.js',
             './tfm/cypress/e2e/journeys/case/activities/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/AIN/*.spec.js',
             './tfm/cypress/e2e/journeys/case/deal-cancellation-enabled/*.spec.js',
             './tfm/cypress/e2e/journeys/case/documents/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/GEF/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/MIA/*.spec.js',
             './tfm/cypress/e2e/journeys/case/parties/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/parties/agent/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/parties/bond/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/parties/buyer/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/parties/exporter/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/parties/indemnifier/*.spec.js',
             './tfm/cypress/e2e/journeys/case/tasks/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/tasks/AIN/*.spec.js',
+            './tfm/cypress/e2e/journeys/case/tasks/MIA/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/add-bank-decision/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/add-underwriter-decision/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',

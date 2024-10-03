@@ -1,7 +1,7 @@
 /**
  *
- * @param {array} requiredRoles  (i.e. ['maker'])
- * @param {array} user (i.e. ['checker'] or ['maker', 'checker'])
+ * @param {Array} requiredRoles  (i.e. ['maker'])
+ * @param {Array} user (i.e. ['checker'] or ['maker', 'checker'])
  * @returns {boolean}
  *
  */
@@ -18,7 +18,7 @@ const userRoleIsValid = (requiredRoles, user) => {
 };
 /**
  *
- * @param {object} opts  (i.e. { role: [MAKER] })
+ * @param {Object} opts  (i.e. { role: [MAKER] })
  *
  */
 const validateRole = (opts) => {

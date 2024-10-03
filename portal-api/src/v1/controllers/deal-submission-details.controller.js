@@ -10,8 +10,8 @@ const { FACILITIES } = require('../../constants');
 /**
  * Retrieves a deal by its ID and checks if the user has access to it.
  * If the deal is found and the user has access, validates the submission details of the deal and returns them as a response.
- * @param {object} req - The request object containing information about the HTTP request.
- * @param {object} res - The response object used to send the HTTP response.
+ * @param {Object} req - The request object containing information about the HTTP request.
+ * @param {Object} res - The response object used to send the HTTP response.
  */
 exports.findOne = async (req, res) => {
   try {
@@ -133,8 +133,8 @@ const checkCurrency = async (existingCurrencyObj, submitted) => {
 
 /**
  * Updates a deal with new submission details.
- * @param {object} req - The request object containing information about the HTTP request.
- * @param {object} res - The response object used to send the HTTP response.
+ * @param {Object} req - The request object containing information about the HTTP request.
+ * @param {Object} res - The response object used to send the HTTP response.
  */
 exports.update = async (req, res) => {
   const {

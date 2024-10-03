@@ -38,9 +38,9 @@ const rules = [
 
 /**
  * Applies a set of rules to the submission details and returns any errors found.
- * @param {object} submissionDetails - An object containing details of the submission.
- * @param {object} deal - An object containing details of the deal.
- * @returns {Promise<object>} - An object containing any errors found during the rule checks.
+ * @param {Object} submissionDetails - An object containing details of the submission.
+ * @param {Object} deal - An object containing details of the deal.
+ * @returns {Promise<Object>} - An object containing any errors found during the rule checks.
  */
 module.exports = async (submissionDetails, deal) => {
   let errors = {};

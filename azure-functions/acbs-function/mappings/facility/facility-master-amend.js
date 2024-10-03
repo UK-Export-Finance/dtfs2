@@ -37,7 +37,7 @@ const { formatDate } = require('../../helpers/date');
  * @param {Object} fmr Facility Master Record
  * @param {Object} amendments Facility amendment(s)
  * @param {Object} deal Deal object
- * @returns {object} Facility Master Record (FMR) amended
+ * @returns {Object} Facility Master Record (FMR) amended
  */
 const facilityMasterAmend = (fmr, amendments, deal) => {
   try {

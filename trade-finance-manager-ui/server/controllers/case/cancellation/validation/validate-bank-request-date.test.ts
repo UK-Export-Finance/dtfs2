@@ -13,7 +13,7 @@ describe('validate bank request date', () => {
 
       const result = getErrorObjectFromMessageAndRefs(testErrorMessage, testRefs);
 
-      const expectedResult = {
+      const expected = {
         errors: {
           summary: [{ text: testErrorMessage, href: '#ref1' }],
           bankRequestDateError: {
@@ -23,7 +23,7 @@ describe('validate bank request date', () => {
         },
       };
 
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(expected);
     });
   });
 
