@@ -13,9 +13,9 @@ const utilisationReportPage = {
     addAPaymentButton: () => cy.get('[data-cy="add-a-payment-button"]'),
     premiumPaymentsTable: {
       header: {
-        totalReportedPayments: () => cy.get('th[data-cy="premium-payments-table--total-reported-payments"]'),
-        totalPaymentsReceived: () => cy.get('th[data-cy="premium-payments-table--total-payments-received"]'),
-        status: () => cy.get('th[data-cy="premium-payments-table--status"]'),
+        totalReportedPayments: () => cy.get('th[data-cy="premium-payments-table--total-reported-payments"] button'),
+        totalPaymentsReceived: () => cy.get('th[data-cy="premium-payments-table--total-payments-received"] button'),
+        status: () => cy.get('th[data-cy="premium-payments-table--status"] button'),
       },
       rows: () => cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]'),
       row: (feeRecordId) => cy.get(`tr[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),

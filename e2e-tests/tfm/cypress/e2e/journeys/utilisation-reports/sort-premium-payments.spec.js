@@ -39,8 +39,8 @@ context(`users can sort premium payments table by total reported payments and to
     .withFacilityId('33333333')
     .build();
 
-  const firstPayment = PaymentEntityMockBuilder.forCurrency('USD').withId(1).withAmount(200).withFeeRecords([firstFeeRecord]).build();
-  const secondPayment = PaymentEntityMockBuilder.forCurrency('EUR').withId(2).withAmount(300).withFeeRecords([secondFeeRecord]).build();
+  const firstPayment = PaymentEntityMockBuilder.forCurrency('USD').withId(1).withAmount(300).withFeeRecords([firstFeeRecord]).build();
+  const secondPayment = PaymentEntityMockBuilder.forCurrency('EUR').withId(2).withAmount(200).withFeeRecords([secondFeeRecord]).build();
 
   before(() => {
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
@@ -64,9 +64,18 @@ context(`users can sort premium payments table by total reported payments and to
     it('should sort the rows by status', () => {
       pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.header.status().click();
 
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(0).first('th').contains('33333333');
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(1).first('th').contains('22222222');
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(2).first('th').contains('11111111');
+      // Check that the rows are sorted by status by checking the facility IDs.
+
+      // Facility 22222222 has status 'DOES_NOT_MATCH' (alphabetically first) and has the lowest total reported payments
+      // (secondary sorting criteria, ascending), so it should appear first.
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(0).first('th').contains('22222222');
+
+      // Facility 11111111 also has status 'DOES_NOT_MATCH' but has a slightly higher total reported payments, so it
+      // should appear second.
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(1).first('th').contains('11111111');
+
+      // Facility 33333333 has status 'TO_DO' (alphabetically last), so it should appear last..
+      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(2).first('th').contains('33333333');
     });
   });
 
@@ -74,8 +83,15 @@ context(`users can sort premium payments table by total reported payments and to
     it('should sort the rows by total payment received', () => {
       pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.header.totalPaymentsReceived().click();
 
+      // Check that the rows are sorted by total payment received by checking the facility IDs.
+
+      // Facility 33333333 has no reported payments, so it should appear first.
       pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(0).first('th').contains('33333333');
+
+      // Facility 22222222 has the highest total reported payments (200 EUR), so it should appear second.
       pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(1).first('th').contains('22222222');
+
+      // Facility 11111111 has the lowest total reported payments (300 USD), so it should appear last.
       pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(2).first('th').contains('11111111');
     });
   });
@@ -84,8 +100,17 @@ context(`users can sort premium payments table by total reported payments and to
     it('should sort the rows by total reported payments', () => {
       pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.header.totalReportedPayments().click();
 
+      // Check that the rows are sorted by total reported payments by checking the facility IDs.
+
+      // NOTE: This column is the default sorting column and defaults to ascending, therefore the descending case is being tested.
+
+      // Facility 11111111 has the highest total reported payments (30 EUR), so it should appear first.
       pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(0).first('th').contains('11111111');
+
+      // Facility 22222222 has the second highest total reported payments (20 GBP), so it should appear second.
       pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(1).first('th').contains('22222222');
+
+      // Facility 33333333 has the lowest total reported payments (10 USD), so it should appear last.
       pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(2).first('th').contains('33333333');
     });
   });
