@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
-import * as loginController from '../../../controllers/login/loginNonSso';
+import * as loginNonSsoController from '../../../controllers/login/loginNonSso';
 import { getRouter } from '../../../types/get-router';
 
 export const getLoginNonSsoRouter: getRouter = () => {
   const loginNonSsoRouter = express.Router();
 
-  loginNonSsoRouter.get('/', loginController.getLogin);
+  loginNonSsoRouter.get('/', loginNonSsoController.getLogin);
 
-  loginNonSsoRouter.post('/', loginController.postLogin);
+  loginNonSsoRouter.post('/', loginNonSsoController.postLogin);
 
-  loginNonSsoRouter.get('/logout', loginController.logout);
+  loginNonSsoRouter.get('/logout', loginNonSsoController.logout);
 
   return loginNonSsoRouter;
 };
