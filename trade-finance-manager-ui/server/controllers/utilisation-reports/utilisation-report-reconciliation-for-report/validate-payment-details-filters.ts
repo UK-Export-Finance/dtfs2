@@ -45,7 +45,6 @@ export const validatePaymentDetailsFilters = (originalUrl: string, filters: Paym
   if (filters.paymentCurrency && !isPaymentCurrencyFilterValid(originalUrl, filters.paymentCurrency)) {
     paymentCurrencyErrorMessage = 'Payment currency must be blank or a supported currency';
 
-    // TODO FN-2311: Need to add support for this anchor href.
     errorSummary.push({ text: paymentCurrencyErrorMessage, href: '#payment-details-payment-currency-filter' });
   }
 

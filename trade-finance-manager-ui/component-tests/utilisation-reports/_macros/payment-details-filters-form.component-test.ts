@@ -14,17 +14,18 @@ describe(component, () => {
 
   describe('Currency filter', () => {
     const containerSelector = '[data-cy="payment-details--filter-currency"]';
+    const filters = {
+      currency: [
+        { value: 'GBP', text: 'GBP', attributes: { 'data-cy': 'payment-details--filter-currency-input-GBP' } },
+        { value: 'USD', text: 'USD', attributes: { 'data-cy': 'payment-details--filter-currency-input-USD' } },
+        { value: 'EUR', text: 'EUR', attributes: { 'data-cy': 'payment-details--filter-currency-input-EUR' } },
+      ],
+    };
 
     it('should render currency radio buttons when currency filter is provided', () => {
       const params = {
         ...defaultParams,
-        filters: {
-          currency: [
-            { value: 'GBP', text: 'GBP', attributes: { 'data-cy': 'payment-details--filter-currency-input-GBP' } },
-            { value: 'USD', text: 'USD', attributes: { 'data-cy': 'payment-details--filter-currency-input-USD' } },
-            { value: 'EUR', text: 'EUR', attributes: { 'data-cy': 'payment-details--filter-currency-input-EUR' } },
-          ],
-        },
+        filters,
       };
 
       const wrapper = render(params);
@@ -33,6 +34,17 @@ describe(component, () => {
       wrapper.expectElement('[data-cy="payment-details--filter-currency-input-GBP"]').toExist();
       wrapper.expectElement('[data-cy="payment-details--filter-currency-input-USD"]').toExist();
       wrapper.expectElement('[data-cy="payment-details--filter-currency-input-EUR"]').toExist();
+    });
+
+    it('should set correct id for payment currency input', () => {
+      const params = {
+        ...defaultParams,
+        filters,
+      };
+
+      const wrapper = render(params);
+
+      wrapper.expectElement(containerSelector).toHaveAttribute('id', 'payment-details-payment-currency-filter');
     });
 
     it('should not render currency radio buttons when currency filter is not provided', () => {
