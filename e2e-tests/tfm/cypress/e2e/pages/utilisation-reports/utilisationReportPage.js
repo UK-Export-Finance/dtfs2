@@ -12,6 +12,12 @@ const utilisationReportPage = {
     generateKeyingDataButton: () => cy.get('[data-cy="generate-keying-data-button"]'),
     addAPaymentButton: () => cy.get('[data-cy="add-a-payment-button"]'),
     premiumPaymentsTable: {
+      header: {
+        totalReportedPayments: () => cy.get('th[data-cy="premium-payments-table--total-reported-payments"]'),
+        totalPaymentsReceived: () => cy.get('th[data-cy="premium-payments-table--total-payments-received"]'),
+        status: () => cy.get('th[data-cy="premium-payments-table--status"]'),
+      },
+      rows: () => cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]'),
       row: (feeRecordId) => cy.get(`tr[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
       checkbox: (feeRecordIds, paymentCurrency, status) =>
         cy.get(`[type="checkbox"][id="feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${paymentCurrency}-status-${status}"]`),
