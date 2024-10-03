@@ -206,7 +206,7 @@ describe(page, () => {
       wrapper.expectText(`${keyingSheetTabSelector} h2[data-cy="keying-sheet-heading"]`).toRead('Keying sheet');
       wrapper.expectText('[data-cy="select-payments-text"]').notToExist();
       wrapper
-        .expectText(`${keyingSheetTabSelector} p`)
+        .expectText('[data-cy="payments-on-premium-payments-tab-text"]')
         .toMatch(/Payments on the premium payments tab will show as reconciled when they have been marked as done here./);
 
       wrapper.expectElement(`${keyingSheetTabSelector} form[data-cy="keying-sheet-form"]`).toExist();
