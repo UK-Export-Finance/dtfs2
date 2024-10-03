@@ -102,6 +102,21 @@ describe(page, () => {
       wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
     });
 
+    it('should render the premium payments with the relevant text for non-PDC_RECONCILE users', () => {
+      const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
+      const premiumPaymentsTabSelector = 'div#premium-payments';
+
+      wrapper.expectElement(premiumPaymentsTabSelector).toExist();
+      wrapper
+        .expectText(`[data-cy="received-payments-text"]`)
+        .toMatch(
+          /Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated./,
+        );
+
+      wrapper.expectText(`[data-cy="how-to-add-payments-text"]`).notToExist();
+      wrapper.expectText(`[data-cy="how-to-generate-keying-data-text"]`).notToExist();
+    });
+
     it('should render the facility ID filter input', () => {
       const wrapper = getWrapper();
       wrapper.expectElement('[data-cy="premium-payments-facility-filter-input"]').toExist();
