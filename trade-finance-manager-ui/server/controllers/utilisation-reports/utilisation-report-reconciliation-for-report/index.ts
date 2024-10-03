@@ -16,8 +16,8 @@ export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
   query: {
     premiumPaymentsFacilityId?: string;
     paymentDetailsFacilityId?: string;
+    paymentDetailsPaymentCurrency?: string;
     paymentDetailsPaymentReference?: string;
-    // TODO FN-2311: Add in payment currency?
     selectedFeeRecordIds?: string;
   };
 }>;
@@ -48,8 +48,13 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
   const { reportId } = req.params;
 
   try {
-    // TODO FN-2311: Add in payment currency
-    const { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, selectedFeeRecordIds: selectedFeeRecordIdsQuery } = req.query;
+    const {
+      premiumPaymentsFacilityId,
+      paymentDetailsFacilityId,
+      paymentDetailsPaymentReference,
+      paymentDetailsPaymentCurrency,
+      selectedFeeRecordIds: selectedFeeRecordIdsQuery,
+    } = req.query;
 
     const { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds } = req.session;
 
@@ -65,7 +70,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       paymentDetailsFilterErrors,
       isCheckboxChecked,
     } = extractQueryAndSessionData(
-      { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, selectedFeeRecordIdsQuery },
+      { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, paymentDetailsPaymentCurrency, selectedFeeRecordIdsQuery },
       { addPaymentErrorKey, generateKeyingDataErrorKey, checkedCheckboxIds },
       req.originalUrl,
     );

@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { SessionData } from 'express-session';
-import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { CURRENCY, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getUtilisationReportReconciliationByReportId } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
@@ -27,8 +27,9 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
     const reportId = '1';
     const premiumPaymentsFacilityId = '11111111';
     const paymentDetailsFacilityId = '22222222';
+    const paymentDetailsPaymentCurrency = CURRENCY.GBP;
     const paymentDetailsPaymentReference = 'some-payment-reference';
-    const originalUrl = '?premiumPaymentsFacilityId=11111111&paymentDetailsFacilityId=22222222&paymentDetailsPaymentReference=some-payment-reference';
+    const originalUrl = `?premiumPaymentsFacilityId=11111111&paymentDetailsFacilityId=22222222&paymentDetailsPaymentCurrency=${CURRENCY.GBP}&paymentDetailsPaymentReference=some-payment-reference`;
 
     const getHttpMocksWithSessionData = (sessionData: Partial<SessionData>) =>
       httpMocks.createMocks({
@@ -39,8 +40,8 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         query: {
           premiumPaymentsFacilityId,
           paymentDetailsFacilityId,
+          paymentDetailsPaymentCurrency,
           paymentDetailsPaymentReference,
-          // TODO FN-2311: Add payment currency support
         },
         originalUrl,
       });
@@ -57,6 +58,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
       const paymentDetailsFilters = {
         facilityId: paymentDetailsFacilityId,
+        paymentCurrency: paymentDetailsPaymentCurrency,
         paymentReference: paymentDetailsPaymentReference,
       };
 
@@ -159,6 +161,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
 
       const paymentDetailsFilters = {
         facilityId: paymentDetailsFacilityId,
+        paymentCurrency: paymentDetailsPaymentCurrency,
         paymentReference: paymentDetailsPaymentReference,
       };
 
