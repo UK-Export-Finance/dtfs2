@@ -68,14 +68,14 @@ context(`users can sort premium payments table by total reported payments and to
 
       // Facility 22222222 has status 'DOES_NOT_MATCH' (alphabetically first) and has the lowest total reported payments
       // (secondary sorting criteria, ascending), so it should appear first.
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(0).first('th').contains('22222222');
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(0).first('th'), '22222222');
 
       // Facility 11111111 also has status 'DOES_NOT_MATCH' but has a slightly higher total reported payments, so it
       // should appear second.
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(1).first('th').contains('11111111');
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(1).first('th'), '11111111');
 
       // Facility 33333333 has status 'TO_DO' (alphabetically last), so it should appear last.
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(2).first('th').contains('33333333');
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(2).first('th'), '33333333');
     });
   });
 
@@ -86,13 +86,13 @@ context(`users can sort premium payments table by total reported payments and to
       // Check that the rows are sorted by total payment received by checking the facility IDs.
 
       // Facility 33333333 has no reported payments, so it should appear first.
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(0).first('th').contains('33333333');
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(0).first('th'), '33333333');
 
       // Facility 22222222 has the highest total reported payments (200 EUR), so it should appear second.
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(1).first('th').contains('22222222');
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(1).first('th'), '22222222');
 
       // Facility 11111111 has the lowest total reported payments (300 USD), so it should appear last.
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(2).first('th').contains('11111111');
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(2).first('th'), '11111111');
     });
   });
 
@@ -105,13 +105,13 @@ context(`users can sort premium payments table by total reported payments and to
       // NOTE: This column is the default sorting column and defaults to ascending, therefore the descending case is being tested.
 
       // Facility 11111111 has reported payment currency 'EUR' (alphabetically first), so it should appear first.
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(0).first('th').contains('11111111');
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(0).first('th'), '11111111');
 
       // Facility 22222222 has reported payment currency 'GBP' (alphabetically second), so it should appear second.
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(1).first('th').contains('22222222');
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(1).first('th'), '22222222');
 
       // Facility 33333333 has reported payment currency 'USD' (alphabetically last), so it should appear last.
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(2).first('th').contains('33333333');
+      cy.assertText(pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rows().eq(2).first('th'), '33333333');
     });
   });
 });
