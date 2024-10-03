@@ -35,7 +35,7 @@ const sortCountries = (countries) => {
  * Retrieves country information from an external API based on the provided country code.
  *
  * @param {string} code - The country code.
- * @returns {Promise<object>} - A promise that resolves to the country information.
+ * @returns {Promise<Object>} - A promise that resolves to the country information.
  */
 const getCountry = async (code) => {
   try {
@@ -57,9 +57,9 @@ const getCountry = async (code) => {
 /**
  * Function to find one country.
  *
- * @param {object} req - The request object.
- * @param {object} res - The response object.
- * @returns {object} - A promise that resolves with the response data.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - A promise that resolves with the response data.
  * @throws {Error} - If unable to find one country.
  */
 const findOne = async (req, res) => {
@@ -94,9 +94,9 @@ const findOne = async (req, res) => {
  * It returns an object with the count of countries and the sorted array of countries.
  * If there are no countries, it returns an empty array.
  *
- * @param {object} req - The request object.
- * @param {object} res - The response object.
- * @returns {object} - An object with the count of countries and the sorted array of countries.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} - An object with the count of countries and the sorted array of countries.
  * Status `400` and `500` can also be returned if an exception is caught.
  */
 const findAll = async (req, res) => {

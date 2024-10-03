@@ -16,8 +16,8 @@ const router = express.Router();
  * Checks that the session uploadCsrf token matches the query uploadCsrf token
  * If the token is valid move to the next middleware
  * If it is invalid return an error response
- * @param {object} req
- * @param {object} res
+ * @param {Object} req
+ * @param {Object} res
  * @param {Function} next
  */
 const validateUploadCsrfToken = (req, res, next) => {

@@ -8,7 +8,7 @@ const status = HttpStatusCode.InternalServerError;
  *
  * @param {string} message - The error message to include in the response, this can
  * be either of type `string` or an `object`.
- * @returns {object} - The internal server error response object.
+ * @returns {Object} - The internal server error response object.
  */
 export const estoreInternalServerError = (message: unknown): EstoreErrorResponse => ({
   status,

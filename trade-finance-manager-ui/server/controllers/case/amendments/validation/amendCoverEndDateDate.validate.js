@@ -4,9 +4,9 @@ const amendmentYearValidation = require('./amendmentYearValidation.validate');
 
 /**
  *
- * @param {object} body
- * @param {object} facility
- * @returns {object} containing errors and amendment cover end date
+ * @param {Object} body
+ * @param {Object} facility
+ * @returns {Object} containing errors and amendment cover end date
  * function to validate the amendment cover end date
  */
 const coverEndDateValidation = (body, currentEndDate) => {

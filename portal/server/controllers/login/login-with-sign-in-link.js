@@ -14,7 +14,7 @@ const updateSessionAfterLogin = ({ req, newUserToken, loginStatus, user }) => {
 
 /**
  * Gets the redirect url for the user after they have successfully logged in
- * @param {object} user - The user object
+ * @param {Object} user - The user object
  * @returns {import('../../types/landing-pages').LandingPage}
  */
 const getUserRedirectUrl = (user) => {
