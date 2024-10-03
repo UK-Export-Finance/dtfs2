@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { TestApiError } from '@ukef/dtfs2-common';
+import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
 import { deleteDealCancellation, DeleteDealCancellationRequest } from './delete-deal-cancellation.controller';
 
@@ -22,7 +23,7 @@ describe('controllers - deal cancellation', () => {
         params: { dealId: mockDealId },
         user: { _id: mockUserId },
       });
-      const auditDetails = { id: mockUserId, userType: 'tfm' };
+      const auditDetails = generateTfmAuditDetails(mockUserId);
 
       // Act
       await deleteDealCancellation(req, res);
