@@ -73,6 +73,7 @@ export const postDealCancellationDetails = async (req: PostDealCancellationDetai
       return res.redirect(`/case/${_id}/deal`);
     }
 
+    // TODO: DTFS2-7298 - enact deal cancellation
     return res.redirect(`/case/${_id}/deal`);
   } catch (error) {
     console.error('Error cancelling deal', error);
