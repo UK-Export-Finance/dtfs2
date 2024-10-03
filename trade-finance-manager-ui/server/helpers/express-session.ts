@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { UserSessionNotDefinedError, UserTokenNotDefinedError } from '@ukef/dtfs2-common';
 import { UserSessionData } from '../types/express-session';
 
 type Session = Request['session'];
@@ -20,11 +21,11 @@ export const asUserSession = (session: Session): UserSession => {
   const { user, userToken } = session;
 
   if (!user) {
-    throw Error('Expected session.user to be defined');
+    throw new UserSessionNotDefinedError();
   }
 
   if (!userToken) {
-    throw Error('Expected session.userToken to be defined');
+    throw new UserTokenNotDefinedError();
   }
 
   return Object.assign(session, { user, userToken });
