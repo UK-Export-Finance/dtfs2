@@ -28,7 +28,7 @@ describe(page, () => {
     wrapper.expectText('[data-cy="no-go-back-button"]').toRead('No, go back');
   });
 
-  it('should render back link button linking to the previous page', () => {
+  it('should render back link to the previous page', () => {
     // Arrange
     const previousPage = 'previousPage';
     const reasonForCancellingViewModel: CancelCancellationViewModel = { ...aCancelCancellationViewModel(), previousPage };
