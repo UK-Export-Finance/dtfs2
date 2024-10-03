@@ -1,4 +1,4 @@
 ﻿Bank facility reference,UKEF facility ID,Exporter,Base currency,Facility limit,Facility utilisation,Total fees accrued for the period,Fees paid to UKEF for the period,Fees paid to UKEF currency
 Valid GEF,20001371,Potato Exporter,EUR,"2300000.00","1589318.23",28.34,28.34,GBP
-Valid GEF,20001371,Potato Exporter,USD,"2300000.00","1589319.23",28.34,28.34,GBP
-Valid GEF,20001371,Potato Exporter,USD,"2300000.00","1589319.23",28.34,28.34,GBP
+Valid GEF,20001371,Potato Exporter 1,USD,"2300000.00","1589319.23",28.34,28.34,GBP
+Valid GEF,20001371,Potato Exporter 2,USD,"2300000.00","1589319.23",28.34,28.34,GBP

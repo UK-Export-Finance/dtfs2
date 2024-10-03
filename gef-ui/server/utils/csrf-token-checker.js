@@ -7,7 +7,7 @@ const { isBefore } = require('date-fns');
  * If the token is valid move to the next middleware
  * If it is invalid return an error response
  * @param {string} receivedCsrfToken
- * @param {object} storedCsrfToken
+ * @param {Object} storedCsrfToken
  * @param {Function} next
  */
 const isCsrfTokenValid = (receivedCsrfToken, storedCsrfToken) =>

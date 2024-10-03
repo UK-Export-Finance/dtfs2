@@ -3,8 +3,8 @@ const utils = require('../../../../crypto/utils');
 
 /**
  * Ensures that if the change has a password property, it is not a password that has been used before
- * @param {object} user the existing user
- * @param {object} change the changes to make
+ * @param {Object} user the existing user
+ * @param {Object} change the changes to make
  * @returns {Array} either an empty array or an array containing an error object
  */
 const passwordsCannotBeReUsed = (user, change) => {

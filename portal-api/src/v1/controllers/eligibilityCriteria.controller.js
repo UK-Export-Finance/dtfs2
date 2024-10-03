@@ -65,7 +65,7 @@ exports.findOne = (req, res) => findOneEligibilityCriteria(Number(req.params.ver
  * criteria document from the 'eligibilityCriteria' collection.
  * EC is returned as an array for mapping.
  *
- * @returns {Promise<object>} The latest eligibility criteria document.
+ * @returns {Promise<Object>} The latest eligibility criteria document.
  */
 const getLatestEligibilityCriteria = async () => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA);

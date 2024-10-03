@@ -4,8 +4,8 @@ const CONSTANTS = require('../../constants');
 
 /**
  * Creates eStore API input object
- * @param {object} deal Deal object
- * @returns {object} Mapped eStore object
+ * @param {Object} deal Deal object
+ * @returns {Object} Mapped eStore object
  */
 const mapCreateEstore = (deal) => {
   // Destructure relevant properties

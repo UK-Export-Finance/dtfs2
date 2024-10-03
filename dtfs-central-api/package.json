@@ -46,7 +46,7 @@
     "lodash": "^4.17.21",
     "lodash.orderby": "^4.6.0",
     "mongo-dot-notation": "3.1.0",
-    "mongodb": "4.17.2",
+    "mongodb": "^4.17.2",
     "node-cron": "^3.0.3",
     "reflect-metadata": "^0.2.2",
     "swagger-jsdoc": "^6.2.8",

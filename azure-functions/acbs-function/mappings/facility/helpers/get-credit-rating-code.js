@@ -4,7 +4,7 @@ const CONSTANTS = require('../../../constants');
  * Returns ACBS credit rating code based on deal's exporter credit rating.
  * `AIN` = B+(14)
  * `MIN` = TFM value
- * @param {object} deal Deal object
+ * @param {Object} deal Deal object
  * @returns {string} ACBS credit rating code, defaults to `B+(14)`
  */
 const getCreditRatingCode = (deal) => {

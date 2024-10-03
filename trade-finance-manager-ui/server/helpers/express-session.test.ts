@@ -1,4 +1,5 @@
 import httpMocks from 'node-mocks-http';
+import { UserSessionNotDefinedError, UserTokenNotDefinedError } from '@ukef/dtfs2-common';
 import { asUserSession } from './express-session';
 import { MOCK_TFM_SESSION_USER } from '../test-mocks/mock-tfm-session-user';
 
@@ -11,7 +12,7 @@ describe('express-session helper', () => {
       });
 
       // Act / Assert
-      expect(() => asUserSession(req.session)).toThrow('Expected session.user to be defined');
+      expect(() => asUserSession(req.session)).toThrow(UserSessionNotDefinedError);
     });
 
     it('throws if the userToken is not defined', () => {
@@ -21,7 +22,7 @@ describe('express-session helper', () => {
       });
 
       // Act / Assert
-      expect(() => asUserSession(req.session)).toThrow('Expected session.userToken to be defined');
+      expect(() => asUserSession(req.session)).toThrow(UserTokenNotDefinedError);
     });
 
     it('returns the session user values', () => {
