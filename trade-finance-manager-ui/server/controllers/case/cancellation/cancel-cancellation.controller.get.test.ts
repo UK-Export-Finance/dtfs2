@@ -8,7 +8,6 @@ import api from '../../../api';
 
 jest.mock('../../../api', () => ({
   getDeal: jest.fn(),
-  getDealCancellation: jest.fn(),
 }));
 
 const dealId = 'dealId';
@@ -82,7 +81,6 @@ describe('getCancelCancellation', () => {
       const previousPage = 'previousPage';
 
       // Arrange
-      jest.mocked(api.getDealCancellation).mockResolvedValue({});
       jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
 
       const { req, res } = createMocks<CancelCancellationRequest>({
