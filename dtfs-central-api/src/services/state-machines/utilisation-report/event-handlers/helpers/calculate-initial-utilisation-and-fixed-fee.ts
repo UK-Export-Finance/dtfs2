@@ -18,7 +18,8 @@ export const hasRequiredValues = (
   dayCountBasis: number,
   coverStartDate: string | Date | null,
   coverEndDate: string | Date | null,
-): boolean => Boolean(value && coverStartDate && coverEndDate && interestPercentage && dayCountBasis && isDate(coverStartDate) && isDate(coverEndDate));
+): boolean =>
+  Boolean(value && coverStartDate && coverEndDate && interestPercentage && dayCountBasis && isDate(new Date(coverStartDate)) && isDate(new Date(coverEndDate)));
 
 /**
  * calculateInitialUtilisationAndFixedFee
