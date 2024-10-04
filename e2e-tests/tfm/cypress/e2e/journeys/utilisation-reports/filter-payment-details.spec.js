@@ -1,4 +1,5 @@
 import {
+  CURRENCY,
   FeeRecordEntityMockBuilder,
   PaymentEntityMockBuilder,
   UTILISATION_REPORT_RECONCILIATION_STATUS,
@@ -184,6 +185,89 @@ context(`users can filter payment details by facility id and payment reference a
     });
   });
 
+  describe.only('payment currency filter', () => {
+    // TODO FN-2311: Add test setup here?
+
+    const assertAllPaymentCurrencyInputsAreNotChecked = () => {
+      Object.values(CURRENCY).forEach((currency) => {
+        pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(currency).should('not.be.checked');
+      });
+    };
+
+    describe('when a payment currency filter is submitted', () => {
+      it('should only display the payment with the supplied payment currency and persist the checked currency', () => {
+        const paymentCurrency = CURRENCY.GBP;
+
+        pages.utilisationReportPage.paymentDetailsLink().click();
+
+        pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(paymentCurrency).click();
+        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+
+        cy.url().should(
+          'eq',
+          relative(
+            `/utilisation-reports/${reportId}?paymentDetailsPaymentCurrency=${paymentCurrency}&paymentDetailsPaymentReference=&paymentDetailsFacilityId=#payment-details`,
+          ),
+        );
+
+        pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(paymentCurrency).should('be.checked');
+
+        // TODO FN-2311: Test that the expected payment is displayed, and other non-matching payments are not displayed.
+      });
+    });
+
+    describe('when the payment currency filter is submitted with an unknown value', () => {
+      it.only('should not check any radio inputs', () => {
+        const unknownPaymentCurrency = 'UNKNOWN';
+
+        // The payment currency filter is a radio input, so we need to visit the URL directly with the invalid value.
+        cy.visit(
+          relative(
+            `/utilisation-reports/${reportId}?paymentDetailsPaymentCurrency=${unknownPaymentCurrency}&paymentDetailsPaymentReference=&paymentDetailsFacilityId=#payment-details`,
+          ),
+        );
+
+        assertAllPaymentCurrencyInputsAreNotChecked();
+      });
+    });
+
+    describe('when the payment currency filter is submitted with no selection', () => {
+      it('should not check any radio inputs or display any error messages', () => {
+        pages.utilisationReportPage.paymentDetailsLink().click();
+
+        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+
+        cy.url().should('eq', relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=&paymentDetailsFacilityId=#payment-details`));
+
+        assertAllPaymentCurrencyInputsAreNotChecked();
+
+        pages.utilisationReportPage.paymentDetailsTab.errorSummaryErrors().should('have.length', 0);
+      });
+    });
+
+    describe('when the payment currency filter matches no payments', () => {
+      it('should display an error message for no payments found and persist the inputted value', () => {
+        const paymentCurrency = CURRENCY.JPY;
+
+        pages.utilisationReportPage.paymentDetailsLink().click();
+
+        pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(paymentCurrency).click();
+        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+
+        cy.url().should(
+          'eq',
+          relative(
+            `/utilisation-reports/${reportId}?paymentDetailsPaymentCurrency=${paymentCurrency}&paymentDetailsPaymentReference=&paymentDetailsFacilityId=#payment-details`,
+          ),
+        );
+
+        pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(paymentCurrency).should('be.checked');
+
+        // TODO FN-2311: Test that 'no results' message is shown once this is in place.
+      });
+    });
+  });
+
   describe('payment reference filter', () => {
     describe('when a complete payment reference filter is submitted', () => {
       it('should only display the payment with the supplied payment reference and persist the inputted value', () => {
@@ -273,6 +357,4 @@ context(`users can filter payment details by facility id and payment reference a
       });
     });
   });
-
-  // TODO FN-2311: Add additional tests for payment currency filter.
 });

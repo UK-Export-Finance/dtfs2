@@ -45,11 +45,13 @@ const utilisationReportPage = {
     filters: {
       panel: () => cy.get('[data-cy="payment-details--filters-panel"]'),
       panelToggleButton: () => cy.get('[data-cy="payment-details--filters-action-bar"] button'),
+      submitButton: () => cy.get('[data-cy="payment-details--filters-submit-button"]'),
       facilityIdInput: () => cy.get('[data-cy="payment-details--filter-facility-id-input"]'),
       facilityIdError: () => cy.get('[data-cy="payment-details--filter-facility-id-error"]'),
       paymentReferenceInput: () => cy.get('[data-cy="payment-details--filter-payment-reference-input"]'),
       paymentReferenceError: () => cy.get('[data-cy="payment-details--filter-payment-reference-error"]'),
-      submitButton: () => cy.get('[data-cy="payment-details--filters-submit-button"]'),
+      paymentCurrencyRadioInput: (currencyCode) => cy.get(`input[type="radio"][data-cy="currency-${currencyCode}"]`),
+      paymentCurrencyError: () => cy.get('[data-cy="payment-details--filter-payment-currency-error"]'),
     },
   },
 };
