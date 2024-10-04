@@ -54,7 +54,7 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
       });
 
       it('should throw an error', async () => {
-        await expect(calculateInitialUtilisationAndFixedFee(facilityId)).rejects.toThrow(new Error(`TFM facility values for ${facilityId} is missing`));
+        await expect(calculateInitialUtilisationAndFixedFee(facilityId)).rejects.toThrow(new Error(`TFM facility values for ${facilityId} are missing`));
       });
     });
 

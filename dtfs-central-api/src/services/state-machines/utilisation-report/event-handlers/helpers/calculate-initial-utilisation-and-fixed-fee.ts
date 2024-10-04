@@ -18,7 +18,7 @@ export const hasRequiredValues = (
   dayCountBasis: number,
   coverStartDate: string | Date | null,
   coverEndDate: string | Date | null,
-) => value && coverStartDate && coverEndDate && interestPercentage && dayCountBasis && isDate(coverStartDate) && isDate(coverEndDate);
+): boolean => Boolean(value && coverStartDate && coverEndDate && interestPercentage && dayCountBasis && isDate(coverStartDate) && isDate(coverEndDate));
 
 /**
  * calculateInitialUtilisationAndFixedFee
@@ -38,7 +38,7 @@ export const calculateInitialUtilisationAndFixedFee = async (facilityId: string)
 
   const { value, coverStartDate, coverEndDate, interestPercentage, dayCountBasis } = tfmFacility.facilitySnapshot;
 
-  if (hasRequiredValues(value, interestPercentage, dayCountBasis, coverStartDate, coverEndDate)) {
+  if (!hasRequiredValues(value, interestPercentage, dayCountBasis, coverStartDate, coverEndDate)) {
     throw new Error(`TFM facility values for ${facilityId} are missing`);
   }
 
