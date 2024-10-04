@@ -51,7 +51,7 @@ context(`users can filter payment details by facility id and payment reference a
     cy.visit(`/utilisation-reports/${reportId}`);
   });
 
-  describe.only('when filter panel toggle button is clicked', () => {
+  describe('when filter panel toggle button is clicked', () => {
     it('should toggle the filter panel', () => {
       pages.utilisationReportPage.paymentDetailsLink().click();
 
@@ -120,7 +120,7 @@ context(`users can filter payment details by facility id and payment reference a
       });
     });
 
-    describe('when an invalid facility id filter is submitted', () => {
+    describe('when the facility id filter is submitted with an invalid value', () => {
       it('should display an error message for invalid facility id and persist the inputted value', () => {
         const invalidFacilityId = '123';
         const expectedErrorMessage = 'Facility ID must be blank or contain between 4 and 10 numbers';
@@ -146,16 +146,16 @@ context(`users can filter payment details by facility id and payment reference a
 
     describe('when the facility id filter is submitted with no value', () => {
       it('should persist the inputted value and not display any error messages', () => {
-        const invalidFacilityId = '';
+        const emptyFacilityId = '';
 
         pages.utilisationReportPage.paymentDetailsLink().click();
 
-        cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput(), invalidFacilityId);
+        pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', emptyFacilityId);
         pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
 
         cy.url().should('eq', relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=&paymentDetailsFacilityId=#payment-details`));
 
-        pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', invalidFacilityId);
+        pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', emptyFacilityId);
 
         pages.utilisationReportPage.paymentDetailsTab.errorSummaryErrors().should('have.length', 0);
         pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdError().should('not.exist');
