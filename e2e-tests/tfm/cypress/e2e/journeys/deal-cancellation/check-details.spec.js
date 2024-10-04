@@ -63,17 +63,17 @@ context('Deal cancellation - check details', () => {
 
       backLink();
       checkDetailsPage.reasonResponse();
-      checkDetailsPage.reasonResponse().should('have.text', '-');
+      cy.assertText(checkDetailsPage.reasonResponse(), '-');
 
       checkDetailsPage.reasonLink();
 
       checkDetailsPage.bankRequestDateResponse();
-      checkDetailsPage.bankRequestDateResponse().should('have.text', format(dateConstants.today, 'd MMMM yyyy'));
+      cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(dateConstants.today, 'd MMMM yyyy'));
 
       checkDetailsPage.bankRequestDateLink();
 
       checkDetailsPage.effectiveFromResponse();
-      checkDetailsPage.effectiveFromResponse().should('have.text', format(dateConstants.tomorrow, 'd MMMM yyyy'));
+      cy.assertText(checkDetailsPage.effectiveFromResponse(), format(dateConstants.tomorrow, 'd MMMM yyyy'));
 
       checkDetailsPage.effectiveFromLink();
 
@@ -114,9 +114,9 @@ context('Deal cancellation - check details', () => {
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
-      checkDetailsPage.reasonResponse().should('have.text', testReason);
-      checkDetailsPage.bankRequestDateResponse().should('have.text', format(dateConstants.today, 'd MMMM yyyy'));
-      checkDetailsPage.effectiveFromResponse().should('have.text', format(dateConstants.tomorrow, 'd MMMM yyyy'));
+      cy.assertText(checkDetailsPage.reasonResponse(), testReason);
+      cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(dateConstants.today, 'd MMMM yyyy'));
+      cy.assertText(checkDetailsPage.effectiveFromResponse(), format(dateConstants.tomorrow, 'd MMMM yyyy'));
     });
 
     it('bank request date change link should take you to the bank request date page and correctly update any changes', () => {
@@ -133,9 +133,9 @@ context('Deal cancellation - check details', () => {
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
-      checkDetailsPage.reasonResponse().should('have.text', testReason);
-      checkDetailsPage.bankRequestDateResponse().should('have.text', format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy'));
-      checkDetailsPage.effectiveFromResponse().should('have.text', format(dateConstants.tomorrow, 'd MMMM yyyy'));
+      cy.assertText(checkDetailsPage.reasonResponse(), testReason);
+      cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy'));
+      cy.assertText(checkDetailsPage.effectiveFromResponse(), format(dateConstants.tomorrow, 'd MMMM yyyy'));
     });
 
     it('effective from date change link should take you to the effective from page and correctly update any changes', () => {
@@ -151,9 +151,9 @@ context('Deal cancellation - check details', () => {
       cy.clickContinueButton();
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
-      checkDetailsPage.reasonResponse().should('have.text', testReason);
-      checkDetailsPage.bankRequestDateResponse().should('have.text', format(dateConstants.today, 'd MMMM yyyy'));
-      checkDetailsPage.effectiveFromResponse().should('have.text', format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy'));
+      cy.assertText(checkDetailsPage.reasonResponse(), testReason);
+      cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(dateConstants.today, 'd MMMM yyyy'));
+      cy.assertText(checkDetailsPage.effectiveFromResponse(), format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy'));
     });
   });
 
