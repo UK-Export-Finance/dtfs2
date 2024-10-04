@@ -11,7 +11,6 @@ const mockDealObject = { tfm: { cancellation: mockDealCancellationObject } };
 
 describe('tfm-deals-cancellation-repo', () => {
   const findOneMock = jest.fn();
-  const updateOneMock = jest.fn();
   const getCollectionMock = jest.fn();
 
   afterEach(() => {
@@ -74,69 +73,6 @@ describe('tfm-deals-cancellation-repo', () => {
 
       // Assert
       expect(result).toEqual(mockDealCancellationObject);
-    });
-  });
-
-  describe('updateOneDealCancellation', () => {
-    const mockUpdateResult = { matchedCount: 1 };
-
-    beforeEach(() => {
-      updateOneMock.mockResolvedValue(mockUpdateResult);
-
-      getCollectionMock.mockResolvedValue({
-        updateOne: updateOneMock,
-      });
-      jest.spyOn(db, 'getCollection').mockImplementation(getCollectionMock);
-    });
-
-    it('calls the DB with the correct collection name', async () => {
-      // Act
-      await TfmDealCancellationRepo.updateOneDealCancellation(dealId, mockDealCancellationObject);
-
-      // Assert
-      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_DEALS);
-      expect(updateOneMock).toHaveBeenCalled();
-    });
-
-    it('throws an InvalidDealIdError if deal is not a valid object id', async () => {
-      // Arrange
-      const invalidDealId = 'xyz';
-
-      // Assert
-      await expect(TfmDealCancellationRepo.updateOneDealCancellation(invalidDealId, mockDealCancellationObject)).rejects.toThrow(
-        new InvalidDealIdError(invalidDealId.toString()),
-      );
-    });
-
-    it('throws a DealNotFoundError if no matching result is found', async () => {
-      // Arrange
-      const mockFailedUpdateResult = { matchedCount: 0 };
-
-      updateOneMock.mockResolvedValue(mockFailedUpdateResult);
-
-      getCollectionMock.mockResolvedValue({ updateOne: updateOneMock });
-
-      // Assert
-      await expect(TfmDealCancellationRepo.updateOneDealCancellation(dealId, mockDealCancellationObject)).rejects.toThrow(
-        new DealNotFoundError(dealId.toString()),
-      );
-    });
-
-    it('calls updateOne with the expected parameters', async () => {
-      // Act
-      await TfmDealCancellationRepo.updateOneDealCancellation(dealId, mockDealCancellationObject);
-
-      // Assert
-      expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.TFM_DEALS);
-      expect(updateOneMock).toHaveBeenCalledWith(expect.objectContaining({ _id: { $eq: new ObjectId(dealId) } }), mockDealCancellationObject);
-    });
-
-    it('returns the deal cancellation update', async () => {
-      // Act
-      const result = await TfmDealCancellationRepo.updateOneDealCancellation(dealId, mockDealCancellationObject);
-
-      // Assert
-      expect(result).toEqual(mockUpdateResult);
     });
   });
 });
