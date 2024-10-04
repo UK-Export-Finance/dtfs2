@@ -1,4 +1,4 @@
-import { calculateInitialUtilisation, isDate } from '@ukef/dtfs2-common';
+import { calculateInitialUtilisation, isValidDate } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { calculateFixedFee } from './calculate-fixed-fee';
 
@@ -19,7 +19,15 @@ export const hasRequiredValues = (
   coverStartDate: string | Date | null,
   coverEndDate: string | Date | null,
 ): boolean =>
-  Boolean(value && coverStartDate && coverEndDate && interestPercentage && dayCountBasis && isDate(new Date(coverStartDate)) && isDate(new Date(coverEndDate)));
+  Boolean(
+    value &&
+      coverStartDate &&
+      coverEndDate &&
+      interestPercentage &&
+      dayCountBasis &&
+      isValidDate(new Date(coverStartDate)) &&
+      isValidDate(new Date(coverEndDate)),
+  );
 
 /**
  * calculateInitialUtilisationAndFixedFee
