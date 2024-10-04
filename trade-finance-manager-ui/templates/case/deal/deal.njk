@@ -117,7 +117,7 @@
   {% if showDealCancelButton %}
     <div class="govuk-!-padding-top-7">
       {{ govukButton({
-        text: "Cancel deal",
+        text: "Continue with deal cancellation" if hasDraftCancellation else "Cancel deal",
         classes: "govuk-button--warning",
         attributes: {
           'data-cy': 'cancel-deal-button'

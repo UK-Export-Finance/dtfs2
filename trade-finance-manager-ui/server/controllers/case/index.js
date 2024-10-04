@@ -1,4 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
+const { isEmpty } = require('lodash');
 const { AMENDMENT_STATUS, isTfmFacilityEndDateFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const { getTask, showAmendmentButton, ukefDecisionRejected, isDealCancellationEnabled } = require('../helpers');
@@ -25,6 +26,8 @@ const getCaseDeal = async (req, res) => {
   const { user } = asUserSession(req.session);
 
   const deal = await api.getDeal(dealId, userToken);
+  const cancellation = await api.getDealCancellation(dealId, userToken);
+
   const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
 
   if (!deal) {
@@ -55,6 +58,7 @@ const getCaseDeal = async (req, res) => {
     amendmentsInProgress,
     hasAmendmentInProgress,
     showDealCancelButton: isDealCancellationEnabled(submissionType, user),
+    hasDraftCancellation: !isEmpty(cancellation),
   });
 };
 
