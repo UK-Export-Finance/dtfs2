@@ -108,7 +108,6 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       premiumPayments: premiumPaymentsViewModel,
       keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,
-      // TODO FN-2311: Check if tests need updating for this.
       paymentDetailsFilters: paymentDetailsFiltersViewModel,
       paymentDetailsFilterErrors,
     });

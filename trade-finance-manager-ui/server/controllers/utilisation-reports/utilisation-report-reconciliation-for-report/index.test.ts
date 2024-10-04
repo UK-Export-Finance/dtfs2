@@ -165,6 +165,44 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         paymentReference: paymentDetailsPaymentReference,
       };
 
+      const paymentDetailsFiltersViewModel = {
+        ...paymentDetailsFilters,
+        paymentCurrency: [
+          {
+            text: CURRENCY.GBP,
+            value: CURRENCY.GBP,
+            checked: true,
+            attributes: {
+              'data-cy': 'currency-GBP',
+            },
+          },
+          {
+            text: CURRENCY.EUR,
+            value: CURRENCY.EUR,
+            checked: false,
+            attributes: {
+              'data-cy': 'currency-EUR',
+            },
+          },
+          {
+            text: CURRENCY.USD,
+            value: CURRENCY.USD,
+            checked: false,
+            attributes: {
+              'data-cy': 'currency-USD',
+            },
+          },
+          {
+            text: CURRENCY.JPY,
+            value: CURRENCY.JPY,
+            checked: false,
+            attributes: {
+              'data-cy': 'currency-JPY',
+            },
+          },
+        ],
+      };
+
       const paymentDetailsFilterErrors = {
         errorSummary: [],
       };
@@ -186,7 +224,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         reportId: '1',
         premiumPayments,
         premiumPaymentsFilters,
-        paymentDetailsFilters,
+        paymentDetailsFilters: paymentDetailsFiltersViewModel,
         keyingSheet: [],
         paymentDetails: paymentDetailsViewModel,
         paymentDetailsFilterErrors,
