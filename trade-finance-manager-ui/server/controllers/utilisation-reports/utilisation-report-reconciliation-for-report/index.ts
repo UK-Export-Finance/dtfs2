@@ -7,6 +7,7 @@ import {
   mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems,
   mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
+  mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel,
 } from '../helpers';
 import { UtilisationReportReconciliationForReportViewModel } from '../../../types/view-models';
 import { FeeRecordPaymentGroup } from '../../../api-response-types';
@@ -92,6 +93,8 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const paymentDetailsViewModel = mapFeeRecordPaymentGroupsToPaymentDetailsViewModel(paymentDetails);
 
+    const paymentDetailsFiltersViewModel = mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel(paymentDetailsFilters);
+
     return renderUtilisationReportReconciliationForReport(res, {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -105,7 +108,8 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       premiumPayments: premiumPaymentsViewModel,
       keyingSheet: keyingSheetViewModel,
       paymentDetails: paymentDetailsViewModel,
-      paymentDetailsFilters,
+      // TODO FN-2311: Check if tests need updating for this.
+      paymentDetailsFilters: paymentDetailsFiltersViewModel,
       paymentDetailsFilterErrors,
     });
   } catch (error) {

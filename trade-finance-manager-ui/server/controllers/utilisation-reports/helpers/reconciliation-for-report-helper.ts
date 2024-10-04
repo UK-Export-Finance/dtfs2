@@ -1,5 +1,5 @@
 import orderBy from 'lodash.orderby';
-import { FeeRecordStatus, getFormattedCurrencyAndAmount, IsoDateTimeStamp, KeyingSheetAdjustment } from '@ukef/dtfs2-common';
+import { FeeRecordStatus, getFormattedCurrencyAndAmount, IsoDateTimeStamp, KeyingSheetAdjustment, PaymentDetailsFilters } from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
 import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import {
@@ -18,6 +18,7 @@ import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 import { getKeyingSheetDisplayStatus } from './get-keying-sheet-display-status';
 import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
 import { getKeyToDateSortValueMap } from './get-key-to-date-sort-value-map-helper';
+import { mapCurrenciesToRadioItems } from '../../../helpers/map-currencies-to-radio-items';
 
 /**
  * Sort fee records by reported payments
@@ -303,4 +304,13 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
     },
     [] as PaymentDetailsViewModel,
   );
+};
+
+// TODO FN-2311: Add docs
+// TODO FN-2311: Add unit tests
+export const mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel = (paymentDetailsFilters: PaymentDetailsFilters) => {
+  return {
+    ...paymentDetailsFilters,
+    paymentCurrency: mapCurrenciesToRadioItems(paymentDetailsFilters.paymentCurrency),
+  };
 };

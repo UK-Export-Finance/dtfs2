@@ -6,16 +6,16 @@
   {% set filters = params.filters %}
   {% set errors = params.errors %}
 
-  {% if filters.currency %}
+  {% if filters.paymentCurrency %}
     {{ govukRadios({
-      name: "paymentDetailsCurrency",
+      name: "paymentDetailsPaymentCurrency",
       fieldset: {
         legend: {
           text: "Currency",
           classes: "govuk-fieldset__legend--m"
         }
       },
-      items: filters.currency,
+      items: filters.paymentCurrency,
       errorMessage: errors and errors.paymentCurrencyErrorMessage and {
         text: errors.paymentCurrencyErrorMessage,
         attributes: {

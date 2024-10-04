@@ -6,6 +6,7 @@ import {
   KeyingSheetRowStatus,
   PaymentDetailsFilters,
   PremiumPaymentsFilters,
+  RadioItem,
   SessionBank,
 } from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
@@ -97,6 +98,10 @@ export type PremiumPaymentsViewModelItem = {
   checkboxAriaLabel: string;
 };
 
+export type PaymentDetailsFiltersViewModel = Omit<PaymentDetailsFilters, 'paymentCurrency'> & {
+  paymentCurrency: RadioItem[];
+};
+
 export type PaymentDetailsFilterErrorsViewModel = {
   errorSummary: ErrorSummaryViewModel[];
   facilityIdErrorMessage?: string;
@@ -115,6 +120,6 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   enablePaymentsReceivedSorting: boolean;
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
-  paymentDetailsFilters?: PaymentDetailsFilters;
+  paymentDetailsFilters?: PaymentDetailsFiltersViewModel;
   paymentDetailsFilterErrors: PaymentDetailsFilterErrorsViewModel;
 };
