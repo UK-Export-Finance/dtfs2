@@ -33,44 +33,46 @@ context(`users can filter payment details by facility id and payment reference a
     cy.visit(`/utilisation-reports/${reportId}`);
   });
 
-  it('should display all the payments attached to the utilisation report', () => {
-    const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
-    const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
-    const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withFacilityId('33333333').build();
+  describe('when no filters are applied', () => {
+    it('should display all the payments attached to the utilisation report', () => {
+      const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(1).withFacilityId('11111111').build();
+      const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(2).withFacilityId('22222222').build();
+      const thirdFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withId(3).withFacilityId('33333333').build();
 
-    const firstPayment = PaymentEntityMockBuilder.forCurrency('GBP')
-      .withId(2)
-      .withAmount(100)
-      .withReference('ABC')
-      .withFeeRecords([firstFeeRecord, secondFeeRecord])
-      .build();
-    const secondPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(3).withAmount(200).withReference('DEF').withFeeRecords([thirdFeeRecord]).build();
+      const firstPayment = PaymentEntityMockBuilder.forCurrency('GBP')
+        .withId(2)
+        .withAmount(100)
+        .withReference('ABC')
+        .withFeeRecords([firstFeeRecord, secondFeeRecord])
+        .build();
+      const secondPayment = PaymentEntityMockBuilder.forCurrency('GBP').withId(3).withAmount(200).withReference('DEF').withFeeRecords([thirdFeeRecord]).build();
 
-    const payments = [firstPayment, secondPayment];
+      const payments = [firstPayment, secondPayment];
 
-    cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord]);
-    cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, payments);
+      cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord]);
+      cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, payments);
 
-    cy.reload();
+      cy.reload();
 
-    pages.utilisationReportPage.paymentDetailsLink().click();
+      pages.utilisationReportPage.paymentDetailsLink().click();
 
-    payments.forEach(({ id: paymentId, currency, amount, reference, feeRecords }) => {
-      feeRecords.forEach(({ id: feeRecordId, facilityId }, index) => {
-        pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(paymentId, feeRecordId).should('exist');
+      payments.forEach(({ id: paymentId, currency, amount, reference, feeRecords }) => {
+        feeRecords.forEach(({ id: feeRecordId, facilityId }, index) => {
+          pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.row(paymentId, feeRecordId).should('exist');
 
-        const isFirstFeeRecordRow = index === 0;
+          const isFirstFeeRecordRow = index === 0;
 
-        if (isFirstFeeRecordRow) {
-          cy.assertText(
-            pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.paymentCurrencyAndAmount(paymentId, feeRecordId),
-            `${currency} ${amount.toFixed(2)}`,
-          );
+          if (isFirstFeeRecordRow) {
+            cy.assertText(
+              pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.paymentCurrencyAndAmount(paymentId, feeRecordId),
+              `${currency} ${amount.toFixed(2)}`,
+            );
 
-          cy.assertText(pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.paymentReference(paymentId, feeRecordId), reference);
-        }
+            cy.assertText(pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.paymentReference(paymentId, feeRecordId), reference);
+          }
 
-        cy.assertText(pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.facilityId(paymentId, feeRecordId), facilityId);
+          cy.assertText(pages.utilisationReportPage.paymentDetailsTab.paymentDetailsTable.facilityId(paymentId, feeRecordId), facilityId);
+        });
       });
     });
   });
