@@ -172,6 +172,7 @@
 
   <h2 class="govuk-heading-l" data-cy="payment-details-heading">Payment details</h2>
 
+  {# TODO FN-2311: If no records AND filters applied, need to render filters panel AND display 'There are no records matching the search criteria' error message. #}
   {% if paymentDetails.length === 0 %}
     <p class="govuk-body">Payment details will be displayed when payments have been entered on the premium payments tab.</p>
   {% else %}
