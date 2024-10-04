@@ -13,6 +13,6 @@ WORKDIR /app
 COPY libs libs
 COPY azure-functions/acbs-function .
 
-COPY package*.json .
-RUN npm ci
+COPY package-lock.json .
+RUN npm i
 RUN npm cache clean --force

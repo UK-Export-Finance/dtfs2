@@ -24,6 +24,7 @@
     "lint:fix": "eslint --fix --color **/*.{ts,js}",
     "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js} --ignore-path ../../.prettierignore",
     "prettier:fix": "prettier --write **/*.{ts,js} --ignore-path ../../.prettierignore",
+    "type-check": "tsc --noEmit --pretty",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
@@ -37,7 +38,6 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@ukef/dtfs2-common": "1.0.0",
     "babel-jest": "29.5.0",
     "babel-loader": "9.1.2",
     "eslint": "^8.57.1",

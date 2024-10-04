@@ -4,6 +4,7 @@ const PRODUCT = require('./product');
 const PARTY = require('./party');
 const INDUSTRY = require('./industry');
 const REQUEST = require('./request');
+const RETRY = require('./retry');
 
 module.exports = {
   DEAL,
@@ -12,4 +13,5 @@ module.exports = {
   PARTY,
   INDUSTRY,
   REQUEST,
+  RETRY,
 };
