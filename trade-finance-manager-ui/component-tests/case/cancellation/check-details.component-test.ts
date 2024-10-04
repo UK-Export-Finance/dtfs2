@@ -19,7 +19,7 @@ describe(page, () => {
     wrapper.expectLink('[data-cy="back-link"]').toLinkTo(`/case/${dealId}/cancellation/effective-from-date`, 'Back');
   });
 
-  it('should render the return to deal summary link, linking to case deal page', () => {
+  it('should render the return to deal summary link, linking to the cancel page', () => {
     // Arrange
     const dealId = 'dealId';
     const effectiveFromDateViewModel: CheckDetailsViewModel = { ...aCheckDetailsViewModel(), dealId };
@@ -29,7 +29,7 @@ describe(page, () => {
 
     // Assert
     wrapper.expectElement('[data-cy="return-link"]').toExist();
-    wrapper.expectLink('[data-cy="return-link"]').toLinkTo(`/case/${dealId}/deal`, 'Return to deal summary');
+    wrapper.expectLink('[data-cy="return-link"]').toLinkTo(`/case/${dealId}/cancellation/cancel`, 'Return to deal summary');
   });
 
   it('should render the delete account button', () => {
