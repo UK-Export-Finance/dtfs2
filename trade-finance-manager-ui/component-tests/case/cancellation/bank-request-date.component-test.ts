@@ -28,7 +28,7 @@ describe(page, () => {
 
     // Assert
     wrapper.expectElement('[data-cy="cancel-link"]').toExist();
-    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`cancel`, 'Cancel');
+    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`/case/${dealId}/cancellation/cancel`, 'Cancel');
   });
 
   it('should render back link button linking to the deal cancellation reason page', () => {
