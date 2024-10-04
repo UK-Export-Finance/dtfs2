@@ -30,7 +30,7 @@ context('Deal cancellation button - feature flag enabled', () => {
       });
 
       it('should display button with text "Cancel deal" if there is no cancellation', () => {
-        pages.caseDealPage.cancelDealButton().contains('Cancel deal');
+        cy.assertText(pages.caseDealPage.cancelDealButton(), 'Cancel deal');
       });
 
       it('deal cancellation button should navigate to reason for cancelling page', () => {
@@ -44,7 +44,7 @@ context('Deal cancellation button - feature flag enabled', () => {
         cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox(), 'reason');
 
         cy.visit(relative(`/case/${dealId}/deal`));
-        pages.caseDealPage.cancelDealButton().contains('Continue with deal cancellation');
+        cy.assertText(pages.caseDealPage.cancelDealButton(), 'Continue with deal cancellation');
       });
     });
 
