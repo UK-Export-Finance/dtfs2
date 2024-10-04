@@ -5,7 +5,7 @@ import { CalculateFixedFeeFromDaysRemainingParams } from '@ukef/dtfs2-common';
  * An admin fee (fixed at 10%) is applied to the fixed fee, meaning
  * we subtract this amount when calculating it
  */
-const BANK_ADMIN_FEE_ADJUSTMENT = 0.9;
+export const BANK_ADMIN_FEE_ADJUSTMENT = 0.9;
 
 /**
  * calculateFixedFeeFromDaysRemaining

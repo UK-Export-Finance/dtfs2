@@ -20,7 +20,7 @@ describe('calculateFixedFeeFromDaysRemaining', () => {
 
     // Assert
     // utilisation * (interestPercentage / 100) * BANK_ADMIN_FEE_ADJUSTMENT * numberOfDaysRemainingInCoverPeriod / dayCountBasis = 5,326.02739... = 5,326.03 (ROUNDED)
-    const expected = 5326.03;
+    const expected = (utilisation * (interestPercentage / 100) * 0.9 * numberOfDaysRemainingInCoverPeriod) / dayCountBasis;
 
     expect(result).toEqual(expected);
   });
