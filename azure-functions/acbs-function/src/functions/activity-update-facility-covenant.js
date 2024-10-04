@@ -1,19 +1,3 @@
-/*
- * Facility covenant amendment DAF
- * ********************************
- * This DAF (Durable Activity Function) is never invoked directly.
- * It is invoked via DOF (Durable Orchestrator Function).
- *
- * Pre-requisites
- * --------------
- * 0. 'npm install durable-functions'
- * 1. Durable  HTTP trigger function (acbs-http)
- * 2. Durable Orchestrator function (DOF) (acbs-amend-facility)
- *
- * ------------------
- * HTTP -> DOF -> DAF
- * ------------------
- */
 const df = require('durable-functions');
 const api = require('../../api');
 const { getNowAsIsoString } = require('../../helpers/date');
@@ -22,11 +6,16 @@ const { isHttpErrorStatus } = require('../../helpers/http');
 /**
  * Handles the amendment of a facility covenant record in the ACBS system.
  *
- * @param {Object} payload - The payload containing the facilityIdentifier and acbsFacilityCovenantInput.
- * @param {string} payload.facilityIdentifier - The identifier of the facility.
- * @param {import('../../mappings/facility/facility-covenant-amend').MappedFacilityCovenantAmendment} payload.acbsFacilityCovenantInput - The acbsFacilityCovenantInput object containing the covenant details.
- * @returns {Object} - An object containing the status, timestamps of when the request was sent and received, the data sent, and the data received from the API.
- * @throws {Error} - Throws an error if the payload is invalid, if the API request to generate the covenant ID fails, or if any other error occurs.
+ * This function performs the following operations:
+ * 1. Validates the input payload.
+ * 2. Submits the amendment to the ACBS system.
+ * 3. Handles the response from the ACBS system and returns the result.
+ *
+ * @param {Object} payload - The input payload containing the facility identifier and ACBS facility covenant input.
+ * @param {string} payload.facilityId - The identifier of the facility to be amended.
+ * @param {Object} payload.acbsFacilityCovenantInput - The ACBS facility covenant input details.
+ * @returns {Object} - The result of the facility covenant record amendment, including status, timestamps, and data sent/received.
+ * @throws {Error} - Throws an error if the input payload is invalid or if there is an error during the amendment process.
  */
 const handler = async (payload) => {
   try {
@@ -40,16 +29,15 @@ const handler = async (payload) => {
      * `targetAmount` is only set for the value attribute.
      */
 
-    const { facilityIdentifier, acbsFacilityCovenantInput } = payload;
+    const { facilityId, acbsFacilityCovenantInput } = payload;
     const submittedToACBS = getNowAsIsoString();
-    const { status, data } = await api.updateFacilityCovenant(facilityIdentifier, acbsFacilityCovenantInput);
+    const { status, data } = await api.updateFacilityCovenant(facilityId, acbsFacilityCovenantInput);
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
         JSON.stringify(
           {
             name: 'ACBS Facility Covenant amend error',
-            facilityIdentifier,
             submittedToACBS,
             receivedFromACBS: getNowAsIsoString(),
             dataReceived: data,

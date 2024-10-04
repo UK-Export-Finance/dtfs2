@@ -27,6 +27,7 @@
 const df = require('durable-functions');
 const retryOptions = require('../../helpers/retryOptions');
 const mappings = require('../../mappings');
+const { FACILITY } = require('../../constants');
 
 /**
  * Durable Orchestration Function (DOF) for amending a facility loan record in the ACBS system.
@@ -57,8 +58,17 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
     }
 
     const { facilityId, facility, amendments, fmr } = payload;
+    const { facilitySnapshot } = facility;
     const { amendment } = amendments;
     let facilityLoanRecordAmendment;
+
+    // Non-bond facilities will be rejected
+    if (facilitySnapshot.type !== FACILITY.FACILITY_TYPE.BOND) {
+      facilityLoanRecordAmendment = {
+        error: `Facility type ${facilitySnapshot.type} will not be amended.`,
+      };
+      return facilityLoanRecordAmendment;
+    }
 
     // 1.1. Facility Loan Record (FLR) amendment mapping
     const acbsFacilityLoanInput = mappings.facility.facilityLoanAmend(amendments, facility, fmr);

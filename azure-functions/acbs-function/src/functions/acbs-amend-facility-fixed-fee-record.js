@@ -46,7 +46,7 @@ const mapping = require('../../mappings');
  * @returns {Object} - The result of the facility fixed fee record amendment.
  * @throws {Error} - Throws an error if the input payload is invalid or if there is an error during the amendment process.
  */
-df.app.orchestration('acbs-amend-fixed-fee-record', function* amendFacilityFixedFee(context) {
+df.app.orchestration('acbs-amend-facility-fixed-fee-record', function* amendFacilityFixedFee(context) {
   const payload = context.df.input;
 
   try {

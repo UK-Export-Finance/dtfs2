@@ -72,7 +72,6 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
 
     const { facility, deal } = amendment;
     const { facilitySnapshot } = facility;
-    let facilityLoanRecord;
 
     if (facilityId.includes(DEAL.UKEF_ID.PENDING) || facilityId.includes(DEAL.UKEF_ID.TEST)) {
       throw new Error(`Invalid facility ID ${facilityId}`);
@@ -126,53 +125,39 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
      */
 
     // 1. SOF: Facility Loan Record (FLR)
-    // `Bond` facility only
-    if (facilitySnapshot.type === FACILITY.FACILITY_TYPE.BOND) {
-      facilityLoanRecord = context.df.callSubOrchestrator('acbs-amend-facility-loan-record', {
-        facilityId,
-        facility,
-        amendments,
-        fmr,
-      });
-
-      yield context.df.Task.all([facilityLoanRecord]);
-    } else {
-      facilityLoanRecord = {
-        result: `Facility type ${facilitySnapshot.type} will not be amended.`,
-      };
-    }
+    const facilityLoanRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-loan-record', {
+      facilityId,
+      facility,
+      amendments,
+      fmr,
+    });
 
     // 2. SOF: Facility Master Record (FMR)
-    const facilityMasterRecord = context.df.callSubOrchestrator('acbs-amend-facility-master-record', {
+    const facilityMasterRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-master-record', {
       deal,
       facilityId,
       fmr,
       etag,
       amendments,
     });
-    yield context.df.Task.all([facilityMasterRecord]);
 
     // 3. SOF: Facility Covenant Record (FCR)
-    const facilityCovenantRecord = context.df.callSubOrchestrator('acbs-amend-facility-covenant-record', {
+    const facilityCovenantRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-covenant-record', {
       facilityId,
       amendments,
     });
 
-    yield context.df.Task.all([facilityCovenantRecord]);
-
     // 4. SOF: Facility Guarantee Record (FGR)
-    const facilityGuaranteeRecord = context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
+    const facilityGuaranteeRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
       facilityId,
       amendments,
     });
 
     // 5. SOF: Facility Fixed Fee Record (FFFR)
-    const facilityFixedFeeRecord = context.df.callSubOrchestrator('acbs-amend-facility-fixed-fee-record', {
+    const facilityFixedFeeRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-fixed-fee-record', {
       facilityId,
       amendments,
     });
-
-    yield context.df.Task.all([facilityGuaranteeRecord]);
 
     return {
       facilityId,
