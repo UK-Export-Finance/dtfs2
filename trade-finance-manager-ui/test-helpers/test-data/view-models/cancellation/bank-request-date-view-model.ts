@@ -1,6 +1,6 @@
-import { PRIMARY_NAVIGATION_KEYS } from '../../server/constants';
-import { BankRequestDateViewModel } from '../../server/types/view-models';
-import { aTfmSessionUser } from './tfm-session-user';
+import { PRIMARY_NAVIGATION_KEYS } from '../../../../server/constants';
+import { BankRequestDateViewModel } from '../../../../server/types/view-models';
+import { aTfmSessionUser } from '../../tfm-session-user';
 
 export const aBankRequestDateViewModel = (): BankRequestDateViewModel => ({
   user: aTfmSessionUser(),

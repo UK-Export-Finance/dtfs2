@@ -1,6 +1,6 @@
-import { PRIMARY_NAVIGATION_KEYS } from '../../server/constants';
-import { AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../server/types/view-models';
-import { aTfmSessionUser } from './tfm-session-user';
+import { PRIMARY_NAVIGATION_KEYS } from '../../../server/constants';
+import { AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../server/types/view-models';
+import { aTfmSessionUser } from '../tfm-session-user';
 
 export const anAddPaymentViewModel = (): AddPaymentViewModel => ({
   user: aTfmSessionUser(),
