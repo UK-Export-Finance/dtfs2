@@ -149,7 +149,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         };
         const originalUrl = 'http://example.com?paymentDetailsFacilityId=1234&paymentDetailsPaymentCurrency=INVALID&paymentDetailsPaymentReference=REF123';
 
-        const expectedPaymentCurrencyErrorMessage = 'Payment currency must be blank or a supported currency';
+        const expectedPaymentCurrencyErrorMessage = 'Payment currency must be unselected or one of the options';
 
         // Act
         const result = validatePaymentDetailsFilters(originalUrl, filters);

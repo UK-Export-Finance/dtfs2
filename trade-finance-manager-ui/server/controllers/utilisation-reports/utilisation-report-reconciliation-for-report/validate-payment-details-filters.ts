@@ -43,7 +43,7 @@ export const validatePaymentDetailsFilters = (originalUrl: string, filters: Paym
 
   let paymentCurrencyErrorMessage;
   if (filters.paymentCurrency && !isPaymentCurrencyFilterValid(originalUrl, filters.paymentCurrency)) {
-    paymentCurrencyErrorMessage = 'Payment currency must be blank or a supported currency';
+    paymentCurrencyErrorMessage = 'Payment currency must be unselected or one of the options';
 
     errorSummary.push({ text: paymentCurrencyErrorMessage, href: '#payment-details-payment-currency-filter' });
   }
