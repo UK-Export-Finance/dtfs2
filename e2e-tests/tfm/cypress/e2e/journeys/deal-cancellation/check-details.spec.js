@@ -93,8 +93,7 @@ context('Deal cancellation - check details', () => {
       cy.url().should('eq', relative(`/case/${dealId}/deal`));
     });
 
-    // TODO: DTFS2-7359 - add this test once cancel link is implemented
-    it.skip('return to deal summary link should take you to confirm cancellation page', () => {
+    it('return to deal summary link should take you to confirm cancellation page', () => {
       checkDetailsPage.returnLink().click();
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/cancel`));
