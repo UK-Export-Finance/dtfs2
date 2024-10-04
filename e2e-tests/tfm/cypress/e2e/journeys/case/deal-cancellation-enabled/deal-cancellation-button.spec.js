@@ -4,6 +4,7 @@ import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import MOCK_DEAL_MIA from '../../../../fixtures/deal-MIA';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIN } from '../../../../fixtures/mock-gef-deals';
+import reasonForCancellingPage from '../../../pages/deal-cancellation/reason-for-cancelling';
 
 context('Deal cancellation button - feature flag enabled', () => {
   describe('when visiting a BSS/EWCS AIN deal summary page', () => {
@@ -28,14 +29,22 @@ context('Deal cancellation button - feature flag enabled', () => {
         cy.visit(relative(`/case/${dealId}/deal`));
       });
 
-      it('should display the deal cancellation button', () => {
-        pages.caseDealPage.cancelDealButton().should('exist');
+      it('should display button with text "Cancel deal" if there is no cancellation', () => {
+        pages.caseDealPage.cancelDealButton().contains('Cancel deal');
       });
 
       it('deal cancellation button should navigate to reason for cancelling page', () => {
         pages.caseDealPage.cancelDealButton().click();
 
         cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
+      });
+
+      it('should display button with text "Continue with deal cancellation" if a cancellation is in draft', () => {
+        pages.caseDealPage.cancelDealButton().click();
+        cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox(), 'reason');
+
+        cy.visit(relative(`/case/${dealId}/deal`));
+        pages.caseDealPage.cancelDealButton().contains('Continue with deal cancellation');
       });
     });
 
