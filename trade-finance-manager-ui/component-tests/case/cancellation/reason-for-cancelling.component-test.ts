@@ -1,5 +1,5 @@
 import { ReasonForCancellingErrorsViewModel, ReasonForCancellingViewModel } from '../../../server/types/view-models';
-import { aReasonForCancellingViewModel } from '../../../test-helpers/test-data/reason-for-cancelling-view-model';
+import { aReasonForCancellingViewModel } from '../../../test-helpers/test-data/view-models';
 import { pageRenderer } from '../../pageRenderer';
 
 const page = '../templates/case/cancellation/reason-for-cancelling.njk';

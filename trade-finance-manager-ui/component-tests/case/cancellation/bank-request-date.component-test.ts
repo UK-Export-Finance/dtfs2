@@ -1,6 +1,6 @@
 import { BankRequestDateViewModel, BankRequestErrorsViewModel } from '../../../server/types/view-models';
 import { pageRenderer } from '../../pageRenderer';
-import { aBankRequestDateViewModel } from '../../../test-helpers/test-data/bank-request-date-view-model';
+import { aBankRequestDateViewModel } from '../../../test-helpers/test-data/view-models';
 
 const page = '../templates/case/cancellation/bank-request-date.njk';
 const render = pageRenderer(page);
