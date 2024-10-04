@@ -255,6 +255,13 @@ describe('date-validation helpers', () => {
       });
     });
 
+    describe('when date is invalid', () => {
+      it('should return false', () => {
+        const result = isDate(new Date('a'));
+        expect(result).toEqual(false);
+      });
+    });
+
     describe('when date is null', () => {
       it('should return false', () => {
         const result = isDate(null);
