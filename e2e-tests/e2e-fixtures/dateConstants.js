@@ -33,6 +33,7 @@ export const today = getFormattedValuesFromDate(todayDate);
 // Dates in the future
 export const tomorrow = getFormattedValuesFromDate(add(todayDate, { days: 1 }));
 export const twoDays = getFormattedValuesFromDate(add(todayDate, { days: 2 }));
+export const threeDays = getFormattedValuesFromDate(add(todayDate, { days: 3 }));
 export const twentyEightDays = getFormattedValuesFromDate(add(todayDate, { days: 28 }));
 export const oneMonth = getFormattedValuesFromDate(add(todayDate, { months: 1 }));
 export const twoMonths = getFormattedValuesFromDate(add(todayDate, { months: 2 }));

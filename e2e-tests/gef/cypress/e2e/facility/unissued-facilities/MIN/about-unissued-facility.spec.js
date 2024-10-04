@@ -1,10 +1,6 @@
-import { format } from 'date-fns';
-
 import relative from '../../../relativeURL';
 
 import CONSTANTS from '../../../../fixtures/constants';
-
-import dateConstants from '../../../../../../e2e-fixtures/dateConstants';
 
 import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
@@ -14,6 +10,16 @@ import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
 import aboutFacilityUnissued from '../../../pages/unissued-facilities-about-facility';
 import statusBanner from '../../../pages/application-status-banner';
+import {
+  fourDaysAgo,
+  threeDays,
+  threeMonths,
+  threeMonthsOneDay,
+  today,
+  tomorrow,
+  twentyEightDays,
+  twoMonths,
+} from '../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;
@@ -86,7 +92,7 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities`));
       unissuedFacilityTable.updateFacilitiesLater().contains('Update facility stage later');
       unissuedFacilityTable.rows().should('have.length', unissuedFacilitiesArray.length);
-      unissuedFacilityTable.rows().contains(format(dateConstants.threeMonths, 'dd MMM yyyy'));
+      unissuedFacilityTable.rows().contains(threeMonths.ddMMMyyyy);
       statusBanner.applicationBanner().should('exist');
     });
 
@@ -144,9 +150,9 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.fourDaysAgoDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.fourDaysAgoMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.fourDaysAgoYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), fourDaysAgo.day);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), fourDaysAgo.month);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), fourDaysAgo.year);
       cy.clickContinueButton();
 
       aboutFacilityUnissued.issueDateError().contains('The issue date must not be before the date of the inclusion notice submission date');
@@ -157,9 +163,9 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.tomorrowDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.tomorrowMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.tomorrowYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), tomorrow.day);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), tomorrow.month);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), tomorrow.year);
       cy.clickContinueButton();
 
       aboutFacilityUnissued.issueDateError().contains('The issue date cannot be in the future');
@@ -170,14 +176,14 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
-      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), dateConstants.todayYear);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateDay(), today.day);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateMonth(), today.month);
+      cy.keyboardInput(aboutFacilityUnissued.issueDateYear(), today.year);
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.threeDaysDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.threeDaysMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.threeDaysYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeDays.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeDays.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeDays.year);
       cy.clickContinueButton();
 
       aboutFacilityUnissued.coverStartDateError().contains('Cover start date cannot be before the issue date');
@@ -189,9 +195,9 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.threeMonthsOneDayYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), threeMonthsOneDay.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), threeMonthsOneDay.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), threeMonthsOneDay.year);
       cy.clickContinueButton();
 
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
@@ -203,12 +209,12 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.twoMonthsDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.twoMonthsMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.twoMonthsYear);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.twentyEightDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.twentyEightMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.twentyEightYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), twoMonths.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), twoMonths.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), twoMonths.year);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), twentyEightDays.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), twentyEightDays.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), twentyEightDays.year);
 
       cy.clickContinueButton();
 
@@ -221,12 +227,12 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       unissuedFacilityTable.updateIndividualFacilityButton(0).click();
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), dateConstants.todayYear);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), dateConstants.todayDay);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), dateConstants.todayMonth);
-      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), dateConstants.todayYear);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateDay(), today.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateMonth(), today.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverStartDateYear(), today.year);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateDay(), today.day);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateMonth(), today.month);
+      cy.keyboardInput(aboutFacilityUnissued.coverEndDateYear(), today.year);
 
       cy.clickContinueButton();
 
