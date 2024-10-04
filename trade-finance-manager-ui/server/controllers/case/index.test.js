@@ -68,6 +68,7 @@ describe('controllers - case', () => {
             status: 200,
             data: mockAmendments,
           });
+        api.getDealCancellation = jest.fn(() => ({}));
 
         req = {
           params: {
@@ -87,6 +88,7 @@ describe('controllers - case', () => {
           activeSubNavigation: 'deal',
           dealId: req.params._id,
           user: session.user,
+          hasDraftCancellation: false,
           showDealCancelButton: false,
           hasAmendmentInProgress: true,
           amendments: mockAmendments,
@@ -110,6 +112,34 @@ describe('controllers - case', () => {
             'case/deal/deal.njk',
             expect.objectContaining({
               showDealCancelButton: true,
+            }),
+          );
+        });
+
+        it('should render the remplate with hasDraftCancellation=true when cancellation object non-empty', async () => {
+          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
+          jest.mocked(api.getDealCancellation).mockReturnValueOnce({ reason: 'a reason' });
+
+          await caseController.getCaseDeal(req, res);
+
+          expect(res.render).toHaveBeenCalledWith(
+            'case/deal/deal.njk',
+            expect.objectContaining({
+              hasDraftCancellation: true,
+            }),
+          );
+        });
+
+        it('should render the remplate with hasDraftCancellation=false when cancellation object empty', async () => {
+          jest.mocked(isDealCancellationEnabled).mockReturnValueOnce(true);
+          jest.mocked(api.getDealCancellation).mockReturnValueOnce({});
+
+          await caseController.getCaseDeal(req, res);
+
+          expect(res.render).toHaveBeenCalledWith(
+            'case/deal/deal.njk',
+            expect.objectContaining({
+              hasDraftCancellation: false,
             }),
           );
         });
