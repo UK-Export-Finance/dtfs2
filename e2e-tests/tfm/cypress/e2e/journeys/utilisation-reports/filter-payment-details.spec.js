@@ -42,6 +42,7 @@ context(`users can filter payment details by facility id and payment reference a
 
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [utilisationReport]);
 
+    // TODO FN-2311: Move this setup into each nested describe block.
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [firstFeeRecord, secondFeeRecord, thirdFeeRecord]);
     cy.task(NODE_TASKS.INSERT_PAYMENTS_INTO_DB, payments);
 
@@ -178,10 +179,100 @@ context(`users can filter payment details by facility id and payment reference a
 
         pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', unknownFacilityId);
 
-        // TODO FN-2311: Test that error message is shown once this is in place.
+        // TODO FN-2311: Test that 'no results' message is shown once this is in place.
       });
     });
   });
 
-  // TODO FN-2311: Add additional tests for other filters
+  describe('payment reference filter', () => {
+    describe('when a complete payment reference filter is submitted', () => {
+      it('should only display the payment with the supplied payment reference and persist the inputted value', () => {
+        const completePaymentReference = 'ABC';
+
+        pages.utilisationReportPage.paymentDetailsLink().click();
+
+        cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput(), completePaymentReference);
+        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+
+        cy.url().should(
+          'eq',
+          relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=${completePaymentReference}&paymentDetailsFacilityId=#payment-details`),
+        );
+
+        pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', completePaymentReference);
+
+        // TODO FN-2311: Test that the expected payment is displayed, and other non-matching payments are not displayed.
+      });
+    });
+
+    describe('when a partial payment reference filter is submitted', () => {
+      it('should only display the payments which partially match the supplied payment reference and persist the inputted value', () => {
+        // TODO FN-2311: Add implementation, to be based on the complete case above once this is implemented.
+      });
+    });
+
+    describe('when the payment reference filter is submitted with an invalid value', () => {
+      it('should display an error message for invalid payment reference and persist the inputted value', () => {
+        const invalidPaymentReference = '123';
+        const expectedErrorMessage = 'Payment reference must be blank or contain a minimum of 4 characters';
+
+        pages.utilisationReportPage.paymentDetailsLink().click();
+
+        cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput(), invalidPaymentReference);
+        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+
+        cy.url().should(
+          'eq',
+          relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=${invalidPaymentReference}&paymentDetailsFacilityId=#payment-details`),
+        );
+
+        pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', invalidPaymentReference);
+
+        pages.utilisationReportPage.paymentDetailsTab.errorSummaryErrors().should('have.length', 1);
+        cy.assertText(pages.utilisationReportPage.paymentDetailsTab.errorSummaryErrors().eq(0), expectedErrorMessage);
+
+        cy.assertText(pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceError(), `Error: ${expectedErrorMessage}`);
+      });
+    });
+
+    describe('when the payment reference filter is submitted with no value', () => {
+      it('should persist the inputted value and not display any error messages', () => {
+        const emptyPaymentReference = '';
+
+        pages.utilisationReportPage.paymentDetailsLink().click();
+
+        pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', emptyPaymentReference);
+        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+
+        cy.url().should('eq', relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=&paymentDetailsFacilityId=#payment-details`));
+
+        pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', emptyPaymentReference);
+
+        pages.utilisationReportPage.paymentDetailsTab.errorSummaryErrors().should('have.length', 0);
+        pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdError().should('not.exist');
+      });
+    });
+
+    describe('when the payment reference filter matches no payments', () => {
+      it('should display an error message for no payments found and persist the inputted value', () => {
+        const unknownPaymentReference = 'some-unknown-payment-reference';
+
+        pages.utilisationReportPage.paymentDetailsLink().click();
+
+        cy.keyboardInput(pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput(), unknownPaymentReference);
+        pages.utilisationReportPage.paymentDetailsTab.filters.submitButton().click();
+
+        cy.url().should(
+          'eq',
+          relative(`/utilisation-reports/${reportId}?paymentDetailsPaymentReference=${unknownPaymentReference}&paymentDetailsFacilityId=#payment-details`),
+        );
+
+        pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', unknownPaymentReference);
+
+        // TODO FN-2311: Test that 'no results' message is shown once this is in place.
+      });
+    });
+  });
+
+  // TODO FN-2311: Add additional tests for payment currency filter.
 });

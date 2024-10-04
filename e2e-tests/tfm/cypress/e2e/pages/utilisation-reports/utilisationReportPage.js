@@ -47,6 +47,8 @@ const utilisationReportPage = {
       panelToggleButton: () => cy.get('[data-cy="payment-details--filters-action-bar"] button'),
       facilityIdInput: () => cy.get('[data-cy="payment-details--filter-facility-id-input"]'),
       facilityIdError: () => cy.get('[data-cy="payment-details--filter-facility-id-error"]'),
+      paymentReferenceInput: () => cy.get('[data-cy="payment-details--filter-payment-reference-input"]'),
+      paymentReferenceError: () => cy.get('[data-cy="payment-details--filter-payment-reference-error"]'),
       submitButton: () => cy.get('[data-cy="payment-details--filters-submit-button"]'),
     },
   },
