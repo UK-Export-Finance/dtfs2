@@ -114,13 +114,13 @@ describe('validatePostAddPaymentRequestBody', () => {
       // Arrange
       const { req, res } = getHttpMocks();
       req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
-      req.headers.referer = 'some-url?facilityIdQuery=1234';
+      req.headers.referer = 'some-url?premiumPaymentsFacilityId=1234';
 
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`${REDIRECT_URL}?facilityIdQuery=1234`);
+      expect(res._getRedirectUrl()).toBe(`${REDIRECT_URL}?premiumPaymentsFacilityId=1234`);
     });
 
     it(`populates the session with the 'different-fee-record-payment-currencies' error and the checked checkbox ids`, () => {
@@ -168,13 +168,13 @@ describe('validatePostAddPaymentRequestBody', () => {
       // Arrange
       const { req, res } = getHttpMocks();
       req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
-      req.headers.referer = 'some-url?facilityIdQuery=1234';
+      req.headers.referer = 'some-url?premiumPaymentsFacilityId=1234';
 
       // Act
       validatePostAddPaymentRequestBody(req, res, next);
 
       // Assert
-      expect(res._getRedirectUrl()).toBe(`${REDIRECT_URL}?facilityIdQuery=1234`);
+      expect(res._getRedirectUrl()).toBe(`${REDIRECT_URL}?premiumPaymentsFacilityId=1234`);
     });
 
     it(`populates the session with the 'different-fee-record-statuses' error and the checked checkbox ids`, () => {

@@ -1,4 +1,4 @@
-import { PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
@@ -6,13 +6,14 @@ import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { NotFoundError, ApiError } from '../../../../errors';
 import { getUtilisationReportReconciliationDetails } from './helpers';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { parsePremiumPaymentsFilters } from './helpers/parse-filters';
+import { parsePaymentDetailsFilters, parsePremiumPaymentsFilters } from './helpers/parse-filters';
 
 export type GetUtilisationReportReconciliationDetailsByIdRequest = CustomExpressRequest<{
   params: {
     reportId: string;
   };
   query: {
+    paymentDetailsFilters?: PaymentDetailsFilters;
     premiumPaymentsFilters?: PremiumPaymentsFilters;
   };
 }>;
@@ -21,7 +22,7 @@ type ResponseBody = UtilisationReportReconciliationDetails | string;
 
 export const getUtilisationReportReconciliationDetailsById = async (req: GetUtilisationReportReconciliationDetailsByIdRequest, res: Response<ResponseBody>) => {
   const { reportId } = req.params;
-  const { premiumPaymentsFilters } = req.query;
+  const { paymentDetailsFilters, premiumPaymentsFilters } = req.query;
 
   try {
     const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsWithPayments(Number(reportId));
@@ -29,9 +30,14 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
       throw new NotFoundError(`Failed to find a report with id '${reportId}'`);
     }
 
+    const paymentDetailsTabParsedFilters = parsePaymentDetailsFilters(paymentDetailsFilters);
     const premiumPaymentsTabParsedFilters = parsePremiumPaymentsFilters(premiumPaymentsFilters);
 
-    const utilisationReportReconciliationDetails = await getUtilisationReportReconciliationDetails(utilisationReport, premiumPaymentsTabParsedFilters);
+    const utilisationReportReconciliationDetails = await getUtilisationReportReconciliationDetails(
+      utilisationReport,
+      paymentDetailsTabParsedFilters,
+      premiumPaymentsTabParsedFilters,
+    );
 
     return res.status(HttpStatusCode.Ok).send(utilisationReportReconciliationDetails);
   } catch (error) {

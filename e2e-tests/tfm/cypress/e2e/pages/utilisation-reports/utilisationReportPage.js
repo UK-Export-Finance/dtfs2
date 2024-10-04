@@ -8,7 +8,7 @@ const utilisationReportPage = {
     getPaymentLink: (paymentId) => cy.get(`a[data-cy="premium-payments-tab-edit-payment-link--paymentId-${paymentId}"]`),
     clickPaymentLink: (paymentId) => cy.get(`a[data-cy="premium-payments-tab-edit-payment-link--paymentId-${paymentId}"]`).click(),
     getFacilityIdFilterInput: () => cy.getInputByLabelText('Filter by facility ID'),
-    submitFacilityIdFilter: () => cy.get('button[data-cy="facility-filter-submit-button"]').click(),
+    submitFacilityIdFilter: () => cy.get('button[data-cy="premium-payments-facility-filter-submit-button"]').click(),
     generateKeyingDataButton: () => cy.get('[data-cy="generate-keying-data-button"]'),
     addAPaymentButton: () => cy.get('[data-cy="add-a-payment-button"]'),
     premiumPaymentsTable: {

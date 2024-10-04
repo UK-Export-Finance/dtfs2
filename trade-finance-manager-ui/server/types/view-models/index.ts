@@ -15,3 +15,4 @@ export * from './deal-cancellation/reason-for-cancelling-view-model';
 export * from './deal-cancellation/bank-request-date-view-model';
 export * from './deal-cancellation/effective-from-date-view-model';
 export * from './deal-cancellation/cancel-cancellation-view-model';
+export * from './deal-cancellation/check-details-view-model';
