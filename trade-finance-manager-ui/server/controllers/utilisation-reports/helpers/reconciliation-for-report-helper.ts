@@ -306,8 +306,15 @@ export const mapFeeRecordPaymentGroupsToPaymentDetailsViewModel = (feeRecordPaym
   );
 };
 
-// TODO FN-2311: Add docs
-// TODO FN-2311: Add unit tests
+/**
+ * Maps payment details filters to a view model for payment details filters.
+ * The supported currencies are mapped to radio items.
+ * If a currency filter is defined, the corresponding radio item for that
+ * currency is checked.
+ * @param paymentDetailsFilters - The payment details filters to be mapped.
+ * @returns A view model of the payment details filters with the supported
+ * payment currencies mapped to radio items.
+ */
 export const mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel = (paymentDetailsFilters: PaymentDetailsFilters) => {
   return {
     ...paymentDetailsFilters,

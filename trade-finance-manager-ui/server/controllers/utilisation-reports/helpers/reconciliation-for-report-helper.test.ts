@@ -1,14 +1,16 @@
 import { when } from 'jest-when';
-import { Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { CURRENCY, Currency, CurrencyAndAmount, FeeRecordStatus } from '@ukef/dtfs2-common';
 import {
   getFormattedDateReconciled,
   getFormattedReconciledByUser,
   mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems,
   mapFeeRecordPaymentGroupsToPaymentDetailsViewModel,
   mapKeyingSheetToKeyingSheetViewModel,
+  mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel,
 } from './reconciliation-for-report-helper';
 import { FeeRecord, FeeRecordPaymentGroup, KeyingSheet, KeyingSheetRow, Payment } from '../../../api-response-types';
 import { aFeeRecordPaymentGroup, aFeeRecord, aPayment } from '../../../../test-helpers';
+import * as mapCurrenciesToRadioItems from '../../../helpers/map-currencies-to-radio-items';
 
 describe('reconciliation-for-report-helper', () => {
   describe('mapFeeRecordPaymentGroupsToPremiumPaymentsViewModelItems', () => {
@@ -983,6 +985,62 @@ describe('reconciliation-for-report-helper', () => {
 
       // Assert
       expect(result).toEqual('-');
+    });
+  });
+
+  describe('mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel', () => {
+    describe('when payment currency filter is defined', () => {
+      it('should map payment details filters to view model with radio items for currencies with the provided currency checked', () => {
+        // Arrange
+        const paymentDetailsFilters = {
+          facilityId: '11111111',
+          paymentCurrency: CURRENCY.GBP,
+          paymentReference: 'some-payment-reference',
+        };
+
+        const mockCurrencyRadioItems = [
+          { value: 'GBP', text: 'GBP', checked: true },
+          { value: 'EUR', text: 'EUR', checked: false },
+        ];
+
+        const mapCurrenciesToRadioItemsSpy = jest.spyOn(mapCurrenciesToRadioItems, 'mapCurrenciesToRadioItems').mockReturnValue(mockCurrencyRadioItems);
+
+        // Act
+        const result = mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel(paymentDetailsFilters);
+
+        // Assert
+        expect(mapCurrenciesToRadioItemsSpy).toHaveBeenCalledWith(CURRENCY.GBP);
+        expect(result).toEqual({
+          ...paymentDetailsFilters,
+          paymentCurrency: mockCurrencyRadioItems,
+        });
+      });
+    });
+
+    describe('when payment currency filter is undefined', () => {
+      it('should map payment details filters to view model with radio items for currencies with no currencies checked', () => {
+        // Arrange
+        const paymentDetailsFilters = {
+          facilityId: '11111111',
+          paymentReference: 'some-payment-reference',
+        };
+
+        const mockCurrencyRadioItems = [
+          { value: 'GBP', text: 'GBP', checked: false },
+          { value: 'EUR', text: 'EUR', checked: false },
+        ];
+        const mapCurrenciesToRadioItemsSpy = jest.spyOn(mapCurrenciesToRadioItems, 'mapCurrenciesToRadioItems').mockReturnValue(mockCurrencyRadioItems);
+
+        // Act
+        const result = mapPaymentDetailsFiltersToPaymentDetailsFiltersViewModel(paymentDetailsFilters);
+
+        // Assert
+        expect(mapCurrenciesToRadioItemsSpy).toHaveBeenCalledWith(undefined);
+        expect(result).toEqual({
+          ...paymentDetailsFilters,
+          paymentCurrency: mockCurrencyRadioItems,
+        });
+      });
     });
   });
 });
