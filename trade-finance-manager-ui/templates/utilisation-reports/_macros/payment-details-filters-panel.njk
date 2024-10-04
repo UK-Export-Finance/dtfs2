@@ -33,6 +33,11 @@
             },
             categories: selectedFilters
           },
+          submit: {
+            attributes: {
+              'data-cy': 'payment-details--filters-submit-button'
+            }
+          },
           attributes: {
             'data-cy': 'payment-details--filters-container'
           },
@@ -44,6 +49,11 @@
         {{ mojFilter({
           heading: {
             text: 'Filter'
+          },
+          submit: {
+            attributes: {
+              'data-cy': 'payment-details--filters-submit-button'
+            }
           },
           attributes: {
             'data-cy': 'payment-details--filters-container'
