@@ -1,13 +1,14 @@
+import { CURRENCY, ReportPeriod, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
-import { ReportPeriod, UTILISATION_REPORT_RECONCILIATION_STATUS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
-import { getUtilisationReportReconciliationDetails } from './get-utilisation-report-reconciliation-details';
-import { getBankNameById } from '../../../../../repositories/banks-repo';
 import { NotFoundError } from '../../../../../errors';
-import { UtilisationReportReconciliationDetails } from '../../../../../types/utilisation-reports';
-import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
-import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
 import { getFeeRecordPaymentEntityGroups } from '../../../../../helpers';
-import * as filterFeeRecordsModule from './filter-fee-record-payment-entity-groups-by-facility-id';
+import { getBankNameById } from '../../../../../repositories/banks-repo';
+import { UtilisationReportReconciliationDetails, ValidatedPaymentDetailsFilters } from '../../../../../types/utilisation-reports';
+import * as filterFeeRecordsModule from './filter-fee-record-payment-entity-groups';
+import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
+import * as getUtilisationReportReconciliationDetailsModule from './get-utilisation-report-reconciliation-details';
+import { getPaymentDetails, getPremiumPayments, getUtilisationReportReconciliationDetails } from './get-utilisation-report-reconciliation-details';
+import { mapToFeeRecordPaymentGroups } from './map-to-fee-record-payment-groups';
 
 console.error = jest.fn();
 
@@ -17,13 +18,11 @@ jest.mock('./get-keying-sheet-for-report-id');
 jest.mock('./map-to-fee-record-payment-groups');
 
 describe('get-utilisation-report-reconciliation-details-by-id.controller helpers', () => {
+  const reportId = 1;
+
+  const bankId = '123';
+
   describe('getUtilisationReportReconciliationDetails', () => {
-    const reportId = 1;
-
-    const bankId = '123';
-
-    const filterFeeRecordSpy = jest.spyOn(filterFeeRecordsModule, 'filterFeeRecordPaymentEntityGroupsByFacilityId');
-
     beforeEach(() => {
       jest.resetAllMocks();
       jest.mocked(getBankNameById).mockRejectedValue('Some error');
@@ -47,85 +46,138 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
       async (status) => {
         // Arrange
         const report = UtilisationReportEntityMockBuilder.forStatus(status).withId(reportId).withDateUploaded(null).build();
+        const paymentDetailsFilters = {};
         const premiumPaymentsFilters = {};
 
         // Act / Assert
-        await expect(getUtilisationReportReconciliationDetails(report, premiumPaymentsFilters)).rejects.toThrow(
+        await expect(getUtilisationReportReconciliationDetails(report, paymentDetailsFilters, premiumPaymentsFilters)).rejects.toThrow(
           new Error(`Report with id '${reportId}' has not been uploaded`),
         );
         expect(getBankNameById).not.toHaveBeenCalled();
       },
     );
 
-    it('throws an error if a bank with the same id as the report bankId does not exist', async () => {
-      // Arrange
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
+    describe('when a bank with the same id as the report bankId does not exist', () => {
+      it('should throw an error', async () => {
+        // Arrange
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withId(reportId).withBankId(bankId).build();
 
-      const premiumPaymentsFilters = {};
+        const paymentDetailsFilters = {};
+        const premiumPaymentsFilters = {};
 
-      when(getBankNameById).calledWith(bankId).mockResolvedValue(undefined);
+        when(getBankNameById).calledWith(bankId).mockResolvedValue(undefined);
 
-      // Act / Assert
-      await expect(getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters)).rejects.toThrow(
-        new NotFoundError(`Failed to find a bank with id '${bankId}'`),
-      );
-      expect(getBankNameById).toHaveBeenCalledWith(bankId);
-    });
+        // Act / Assert
 
-    it('maps the utilisation report to the report reconciliation details object', async () => {
-      // Arrange
-      const reportPeriod: ReportPeriod = {
-        start: { month: 1, year: 2024 },
-        end: { month: 1, year: 2024 },
-      };
-      const dateUploaded = new Date();
-      const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
-        .withId(reportId)
-        .withBankId(bankId)
-        .withReportPeriod(reportPeriod)
-        .withDateUploaded(dateUploaded)
-        .withFeeRecords([])
-        .build();
+        await expect(getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters)).rejects.toThrow(
+          new NotFoundError(`Failed to find a bank with id '${bankId}'`),
+        );
 
-      const premiumPaymentsFilters = {};
-
-      const bankName = 'Test bank';
-      when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
-
-      // Act
-      const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters);
-
-      // Assert
-      expect(getBankNameById).toHaveBeenCalledWith(bankId);
-      expect(mappedReport).toEqual<UtilisationReportReconciliationDetails>({
-        reportId,
-        bank: {
-          id: bankId,
-          name: bankName,
-        },
-        status: 'PENDING_RECONCILIATION',
-        reportPeriod,
-        dateUploaded,
-        premiumPayments: [],
-        paymentDetails: [],
-        keyingSheet: [],
+        expect(getBankNameById).toHaveBeenCalledWith(bankId);
       });
     });
 
-    describe('premium payment tab filtering', () => {
-      it('filters the fee record payment groups by the facility id when the facility id is a string', async () => {
+    describe('when mapping the utilisation report', () => {
+      it('should map to the report reconciliation details object', async () => {
         // Arrange
+        const reportPeriod: ReportPeriod = {
+          start: { month: 1, year: 2024 },
+          end: { month: 1, year: 2024 },
+        };
+        const dateUploaded = new Date();
         const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
           .withId(reportId)
           .withBankId(bankId)
-          .withDateUploaded(new Date())
+          .withReportPeriod(reportPeriod)
+          .withDateUploaded(dateUploaded)
           .withFeeRecords([])
           .build();
 
-        filterFeeRecordSpy.mockReturnValue([]);
+        const paymentDetailsFilters = {};
+        const premiumPaymentsFilters = {};
 
         const bankName = 'Test bank';
         when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
+
+        // Act
+        const mappedReport = await getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters);
+
+        // Assert
+        expect(getBankNameById).toHaveBeenCalledWith(bankId);
+        expect(mappedReport).toEqual<UtilisationReportReconciliationDetails>({
+          reportId,
+          bank: {
+            id: bankId,
+            name: bankName,
+          },
+          status: 'PENDING_RECONCILIATION',
+          reportPeriod,
+          dateUploaded,
+          premiumPayments: [],
+          paymentDetails: [],
+          keyingSheet: [],
+        });
+      });
+    });
+
+    describe('when calling getPremiumPayments', () => {
+      it('should call with expected filters', async () => {
+        // Arrange
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withFeeRecords([]).build();
+
+        const paymentDetailsFilters = {};
+        const premiumPaymentsFilters = { facilityId: 'testFacilityId' };
+
+        const bankName = 'Test bank';
+        when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
+
+        const getPremiumPaymentsSpy = jest.spyOn(getUtilisationReportReconciliationDetailsModule, 'getPremiumPayments').mockResolvedValue([]);
+
+        // Act
+        await getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters);
+
+        // Assert
+        expect(getPremiumPaymentsSpy).toHaveBeenCalledWith([], premiumPaymentsFilters);
+
+        getPremiumPaymentsSpy.mockRestore();
+      });
+    });
+
+    describe('when calling getPaymentDetails', () => {
+      it('should call with expected filters', async () => {
+        // Arrange
+        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION').withFeeRecords([]).build();
+
+        const paymentDetailsFilters = { facilityId: 'testFacilityId', paymentCurrency: CURRENCY.GBP, paymentReference: 'testPaymentReference' };
+        const premiumPaymentsFilters = {};
+
+        const bankName = 'Test bank';
+        when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
+
+        const getPaymentDetailsSpy = jest.spyOn(getUtilisationReportReconciliationDetailsModule, 'getPaymentDetails').mockResolvedValue([]);
+
+        // Act
+        await getUtilisationReportReconciliationDetails(uploadedReport, paymentDetailsFilters, premiumPaymentsFilters);
+
+        // Assert
+        expect(getPaymentDetailsSpy).toHaveBeenCalledWith([], paymentDetailsFilters);
+
+        getPaymentDetailsSpy.mockRestore();
+      });
+    });
+  });
+
+  describe('getPremiumPayments', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    const filterFeeRecordSpy = jest.spyOn(filterFeeRecordsModule, 'filterFeeRecordPaymentEntityGroups');
+
+    describe('when the facility id is a string', () => {
+      it('should filter the fee record payment groups by the facility id', async () => {
+        // Arrange
+        filterFeeRecordSpy.mockReturnValue([]);
 
         const facilityId = 'some filter';
         const premiumPaymentsFilters = {
@@ -133,28 +185,79 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
         };
 
         // Act
-        await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters);
+        await getPremiumPayments([], premiumPaymentsFilters);
 
         // Assert
-        expect(filterFeeRecordSpy).toHaveBeenCalledWith([], facilityId);
+        expect(filterFeeRecordSpy).toHaveBeenCalledWith([], premiumPaymentsFilters);
       });
+    });
 
-      it('does not filter the fee record payment groups by the facility id when the facility id is undefined', async () => {
+    describe('when no premium payments filters are defined', () => {
+      it('should not filter the fee record payment groups', async () => {
         // Arrange
-        const uploadedReport = UtilisationReportEntityMockBuilder.forStatus('PENDING_RECONCILIATION')
-          .withId(reportId)
-          .withBankId(bankId)
-          .withDateUploaded(new Date())
-          .withFeeRecords([])
-          .build();
-
-        const bankName = 'Test bank';
-        when(getBankNameById).calledWith(bankId).mockResolvedValue(bankName);
-
         const premiumPaymentsFilters = {};
 
         // Act
-        await getUtilisationReportReconciliationDetails(uploadedReport, premiumPaymentsFilters);
+        await getPremiumPayments([], premiumPaymentsFilters);
+
+        // Assert
+        expect(filterFeeRecordSpy).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('getPaymentDetails', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    const filterFeeRecordSpy = jest.spyOn(filterFeeRecordsModule, 'filterFeeRecordPaymentEntityGroups');
+
+    it.each([
+      { filter: 'facilityId', description: 'facility ID' },
+      { filter: 'paymentCurrency', description: 'payment currency' },
+      { filter: 'paymentReference', description: 'payment reference' },
+    ])('filters the fee record payment groups by the $description filter when it is the only filter defined', async ({ filter }) => {
+      // Arrange
+      filterFeeRecordSpy.mockReturnValue([]);
+
+      const paymentDetailsFilters = {
+        [filter]: 'some filter',
+      };
+
+      // Act
+      await getPaymentDetails([], paymentDetailsFilters);
+
+      // Assert
+      expect(filterFeeRecordSpy).toHaveBeenCalledWith([], paymentDetailsFilters);
+    });
+
+    describe('when multiple payment details filters are defined', () => {
+      it('should filter the fee record payment groups', async () => {
+        // Arrange
+        filterFeeRecordSpy.mockReturnValue([]);
+
+        const paymentDetailsFilters: ValidatedPaymentDetailsFilters = {
+          facilityId: '12345678',
+          paymentCurrency: 'GBP',
+          paymentReference: 'REF123',
+        };
+
+        // Act
+        await getPaymentDetails([], paymentDetailsFilters);
+
+        // Assert
+        expect(filterFeeRecordSpy).toHaveBeenCalledWith([], paymentDetailsFilters);
+      });
+    });
+
+    describe('when no payment details filters are defined', () => {
+      it('should not filter the fee record payment groups', async () => {
+        // Arrange
+        const paymentDetailsFilters = {};
+
+        // Act
+        await getPaymentDetails([], paymentDetailsFilters);
 
         // Assert
         expect(filterFeeRecordSpy).not.toHaveBeenCalled();
