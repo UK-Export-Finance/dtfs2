@@ -61,12 +61,17 @@ export type FeeRecordReconciledByUser = {
   lastName: string;
 };
 
-export type FeeRecordPaymentGroup = {
+export type PremiumPaymentsGroup = {
   feeRecords: FeeRecord[];
   totalReportedPayments: CurrencyAndAmount;
   paymentsReceived: Payment[] | null;
   totalPaymentsReceived: CurrencyAndAmount | null;
   status: FeeRecordStatus;
+};
+
+export type PaymentDetails = {
+  feeRecords: FeeRecord[];
+  payment: Payment;
   reconciledByUser?: FeeRecordReconciledByUser;
   dateReconciled?: Date;
 };
@@ -80,8 +85,8 @@ export type UtilisationReportReconciliationDetails = {
   status: UtilisationReportReconciliationStatus;
   reportPeriod: ReportPeriod;
   dateUploaded: Date;
-  premiumPayments: FeeRecordPaymentGroup[];
-  paymentDetails: FeeRecordPaymentGroup[];
+  premiumPayments: PremiumPaymentsGroup[];
+  paymentDetails: PaymentDetails[];
   keyingSheet: KeyingSheet;
 };
 

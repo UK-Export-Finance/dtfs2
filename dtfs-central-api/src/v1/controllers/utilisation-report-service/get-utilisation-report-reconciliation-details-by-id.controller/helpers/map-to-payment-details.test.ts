@@ -1,0 +1,130 @@
+import { when } from 'jest-when';
+import {
+  CURRENCY,
+  FEE_RECORD_STATUS,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  UtilisationReportEntity,
+  UtilisationReportEntityMockBuilder,
+} from '@ukef/dtfs2-common';
+import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
+import * as helpersModule from '../../../../../helpers';
+import { TfmUsersRepo } from '../../../../../repositories/tfm-users-repo';
+import { mapToPaymentDetails } from './map-to-payment-details';
+
+describe('mapToPaymentDetails', () => {
+  const findTfmUserSpy = jest.spyOn(TfmUsersRepo, 'findOneUserById');
+  const getFeeRecordPaymentEntityGroupReconciliationDataSpy = jest.spyOn(helpersModule, 'getFeeRecordPaymentEntityGroupReconciliationData');
+
+  beforeEach(() => {
+    findTfmUserSpy.mockRejectedValue('Some error');
+    getFeeRecordPaymentEntityGroupReconciliationDataSpy.mockResolvedValue({});
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  describe('when a group has one payment and a multiple fee records', () => {
+    it('returns only one payment details object', async () => {
+      // Arrange
+      const group: FeeRecordPaymentEntityGroup = {
+        feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()],
+        payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+      };
+
+      // Act
+      const result = await mapToPaymentDetails([group]);
+
+      // Assert
+      expect(result).toHaveLength(1);
+    });
+
+    it('returns the group with as many fee records as there are fee records in the supplied group', async () => {
+      // Arrange
+      const feeRecords = [FeeRecordEntityMockBuilder.forReport(utilisationReport()).build(), FeeRecordEntityMockBuilder.forReport(utilisationReport()).build()];
+      const group: FeeRecordPaymentEntityGroup = {
+        feeRecords,
+        payments: [PaymentEntityMockBuilder.forCurrency('GBP').build()],
+      };
+
+      // Act
+      const result = await mapToPaymentDetails([group]);
+
+      // Assert
+      expect(result[0].feeRecords).toHaveLength(2);
+    });
+  });
+
+  describe('when populating groups with reconciliation data', () => {
+    it('should populate each of the groups with their respective reconciliation data', async () => {
+      // Arrange
+      const firstGroup: FeeRecordPaymentEntityGroup = {
+        feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.TO_DO).build()],
+        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+      };
+      const secondGroup: FeeRecordPaymentEntityGroup = {
+        feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.DOES_NOT_MATCH).build()],
+        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+      };
+      const thirdGroup: FeeRecordPaymentEntityGroup = {
+        feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build()],
+        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+      };
+      const groups = [firstGroup, secondGroup, thirdGroup];
+
+      when(getFeeRecordPaymentEntityGroupReconciliationDataSpy).calledWith(firstGroup).mockResolvedValue({});
+      when(getFeeRecordPaymentEntityGroupReconciliationDataSpy)
+        .calledWith(secondGroup)
+        .mockResolvedValue({ dateReconciled: new Date('2024') });
+      when(getFeeRecordPaymentEntityGroupReconciliationDataSpy)
+        .calledWith(thirdGroup)
+        .mockResolvedValue({ dateReconciled: new Date('2023'), reconciledByUser: { firstName: 'John', lastName: 'Smith' } });
+
+      // Act
+      const result = await mapToPaymentDetails(groups);
+
+      // Assert
+      expect(result).toHaveLength(3);
+      expect(result[0].dateReconciled).toBeUndefined();
+      expect(result[0].reconciledByUser).toBeUndefined();
+      expect(result[1].dateReconciled).toEqual(new Date('2024'));
+      expect(result[1].reconciledByUser).toBeUndefined();
+      expect(result[2].dateReconciled).toEqual(new Date('2023'));
+      expect(result[2].reconciledByUser).toEqual({ firstName: 'John', lastName: 'Smith' });
+    });
+  });
+
+  describe('when a group has no payments', () => {
+    it('should return an empty array', async () => {
+      // Arrange
+      const group: FeeRecordPaymentEntityGroup = {
+        feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withId(1).build()],
+        payments: [],
+      };
+
+      // Act
+      const result = await mapToPaymentDetails([group]);
+
+      // Assert
+      expect(result).toHaveLength(0);
+    });
+  });
+
+  describe('when a group has multiple payments', () => {
+    it('should throw an error', async () => {
+      // Arrange
+      const group: FeeRecordPaymentEntityGroup = {
+        feeRecords: [FeeRecordEntityMockBuilder.forReport(utilisationReport()).withId(1).build()],
+        payments: [PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build(), PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()],
+      };
+
+      // Act / Assert
+      await expect(mapToPaymentDetails([group])).rejects.toThrow(new Error('Each fee record payment entity group must have at most one payment.'));
+    });
+  });
+
+  function utilisationReport(): UtilisationReportEntity {
+    return UtilisationReportEntityMockBuilder.forStatus('RECONCILIATION_IN_PROGRESS').build();
+  }
+});
