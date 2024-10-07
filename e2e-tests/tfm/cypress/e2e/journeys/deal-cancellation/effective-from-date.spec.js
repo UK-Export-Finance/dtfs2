@@ -44,7 +44,7 @@ context('Deal cancellation - effective from date', () => {
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
 
-      cy.keyboardInput({ completeDateFormFields: 'bank-request-date' });
+      cy.completeDateFormFields({ idPrefix: 'bank-request-date' });
 
       cy.clickContinueButton();
     });

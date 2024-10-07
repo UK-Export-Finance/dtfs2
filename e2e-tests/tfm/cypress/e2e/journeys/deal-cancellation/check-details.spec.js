@@ -122,7 +122,7 @@ context('Deal cancellation - check details', () => {
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
 
-      cy.keyboardInput({ completeDateFormFields: 'bank-request-date', date: threeMonthsOneDay });
+      cy.completeDateFormFields({ idPrefix: 'bank-request-date', date: threeMonthsOneDay });
 
       cy.clickContinueButton();
       cy.clickContinueButton();
