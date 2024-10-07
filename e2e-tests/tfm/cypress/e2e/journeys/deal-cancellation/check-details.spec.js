@@ -3,7 +3,7 @@ import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-fixtures';
 import caseDealPage from '../../pages/caseDealPage';
-import { backLink } from '../../partials';
+import { backLink, errorSummary } from '../../partials';
 import effectiveFromDatePage from '../../pages/deal-cancellation/effective-from-date';
 import dateConstants from '../../../../../e2e-fixtures/dateConstants';
 import bankRequestDatePage from '../../pages/deal-cancellation/bank-request-date';
@@ -81,10 +81,18 @@ context('Deal cancellation - check details', () => {
       checkDetailsPage.returnLink();
     });
 
-    it('back link should take you to the effective from date page', () => {
+    it('back link should take you to the effective from date page and continue to take you back through and out of the deal cancellation flow', () => {
       cy.clickBackLink();
-
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
+
+      cy.clickBackLink();
+      cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
+
+      cy.clickBackLink();
+      cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
+
+      cy.clickBackLink();
+      cy.url().should('eq', relative(`/case/${dealId}/deal`));
     });
 
     it('delete deal button should take you to the deal summary page', () => {
@@ -99,60 +107,136 @@ context('Deal cancellation - check details', () => {
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/cancel`));
     });
 
-    it('reason change link should take you to the reason for cancelling page and correctly update the reason', () => {
-      const testReason = 'test reason';
+    describe('reason change link', () => {
+      it('takes you to the reason for cancelling page and correctly updates the reason', () => {
+        const testReason = 'test reason';
 
-      checkDetailsPage.reasonLink().click();
+        checkDetailsPage.reasonLink().click();
 
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason`));
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason?status=change`));
 
-      cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox(), testReason);
+        cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox(), testReason);
 
-      cy.clickContinueButton();
-      cy.clickContinueButton();
-      cy.clickContinueButton();
+        cy.clickContinueButton();
+        cy.clickContinueButton();
+        cy.clickContinueButton();
 
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
-      cy.assertText(checkDetailsPage.reasonResponse(), testReason);
-      cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(dateConstants.today, 'd MMMM yyyy'));
-      cy.assertText(checkDetailsPage.effectiveFromResponse(), format(dateConstants.tomorrow, 'd MMMM yyyy'));
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
+        cy.assertText(checkDetailsPage.reasonResponse(), testReason);
+        cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(dateConstants.today, 'd MMMM yyyy'));
+        cy.assertText(checkDetailsPage.effectiveFromResponse(), format(dateConstants.tomorrow, 'd MMMM yyyy'));
+      });
+
+      it('takes you to the reason for cancelling page and pressing "Back" returns you to the summary page', () => {
+        checkDetailsPage.reasonLink().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason?status=change`));
+
+        cy.clickBackLink();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
+      });
+
+      it('takes you to the reason for cancelling page and pressing "Back" returns you to the summary page after validation errors', () => {
+        checkDetailsPage.reasonLink().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/reason?status=change`));
+
+        cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox(), 'x'.repeat(1201));
+        cy.clickContinueButton();
+        errorSummary();
+
+        cy.clickBackLink();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
+      });
     });
 
-    it('bank request date change link should take you to the bank request date page and correctly update any changes', () => {
-      const testReason = 'test reason';
-      checkDetailsPage.bankRequestDateLink().click();
+    describe('bank request date change link', () => {
+      it('takes you to the bank request date page and correctly updates any changes', () => {
+        const testReason = 'test reason';
+        checkDetailsPage.bankRequestDateLink().click();
 
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date?status=change`));
 
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), dateConstants.threeMonthsOneDayYear);
+        cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), dateConstants.threeMonthsOneDayDay);
+        cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), dateConstants.threeMonthsOneDayMonth);
+        cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), dateConstants.threeMonthsOneDayYear);
 
-      cy.clickContinueButton();
-      cy.clickContinueButton();
+        cy.clickContinueButton();
+        cy.clickContinueButton();
 
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
-      cy.assertText(checkDetailsPage.reasonResponse(), testReason);
-      cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy'));
-      cy.assertText(checkDetailsPage.effectiveFromResponse(), format(dateConstants.tomorrow, 'd MMMM yyyy'));
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
+        cy.assertText(checkDetailsPage.reasonResponse(), testReason);
+        cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy'));
+        cy.assertText(checkDetailsPage.effectiveFromResponse(), format(dateConstants.tomorrow, 'd MMMM yyyy'));
+      });
+
+      it('takes you to the bank request date page and pressing "Back" returns you to the summary page', () => {
+        checkDetailsPage.bankRequestDateLink().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date?status=change`));
+
+        cy.clickBackLink();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
+      });
+
+      it('takes you to the bank request date page and pressing "Back" returns you to the summary page after validation errors', () => {
+        checkDetailsPage.bankRequestDateLink().click();
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date?status=change`));
+
+        cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), '1');
+        cy.clickContinueButton();
+        errorSummary();
+
+        cy.clickBackLink();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
+      });
     });
 
-    it('effective from date change link should take you to the effective from page and correctly update any changes', () => {
-      const testReason = 'test reason';
-      checkDetailsPage.effectiveFromLink().click();
+    describe('effective from date change link', () => {
+      it('takes you to the effective from page and correctly updates any changes', () => {
+        const testReason = 'test reason';
+        checkDetailsPage.effectiveFromLink().click();
 
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date?status=change`));
 
-      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateDay(), dateConstants.threeMonthsOneDayDay);
-      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateMonth(), dateConstants.threeMonthsOneDayMonth);
-      cy.keyboardInput(effectiveFromDatePage.effectiveFromDateYear(), dateConstants.threeMonthsOneDayYear);
+        cy.keyboardInput(effectiveFromDatePage.effectiveFromDateDay(), dateConstants.threeMonthsOneDayDay);
+        cy.keyboardInput(effectiveFromDatePage.effectiveFromDateMonth(), dateConstants.threeMonthsOneDayMonth);
+        cy.keyboardInput(effectiveFromDatePage.effectiveFromDateYear(), dateConstants.threeMonthsOneDayYear);
 
-      cy.clickContinueButton();
+        cy.clickContinueButton();
 
-      cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
-      cy.assertText(checkDetailsPage.reasonResponse(), testReason);
-      cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(dateConstants.today, 'd MMMM yyyy'));
-      cy.assertText(checkDetailsPage.effectiveFromResponse(), format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy'));
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
+        cy.assertText(checkDetailsPage.reasonResponse(), testReason);
+        cy.assertText(checkDetailsPage.bankRequestDateResponse(), format(dateConstants.today, 'd MMMM yyyy'));
+        cy.assertText(checkDetailsPage.effectiveFromResponse(), format(dateConstants.threeMonthsOneDay, 'd MMMM yyyy'));
+      });
+
+      it('takes you to the effective from page and pressing "Back" returns you to the summary page', () => {
+        checkDetailsPage.effectiveFromLink().click();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date?status=change`));
+
+        cy.clickBackLink();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
+      });
+
+      it('takes you to the effective from page and pressing "Back" returns you to the summary page after validation errors', () => {
+        checkDetailsPage.effectiveFromLink().click();
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date?status=change`));
+
+        cy.keyboardInput(effectiveFromDatePage.effectiveFromDateYear(), '1');
+        cy.clickContinueButton();
+        errorSummary();
+
+        cy.clickBackLink();
+
+        cy.url().should('eq', relative(`/case/${dealId}/cancellation/check-details`));
+      });
     });
   });
 
