@@ -5,17 +5,7 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../../pages/caseDealPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import {
-  oneMonthFormattedTable,
-  todayDay,
-  todayMonth,
-  todayYear,
-  tomorrowDay,
-  tomorrowMonth,
-  tomorrowYear,
-  oneMonthFormattedFull,
-  tomorrowFormattedFull,
-} from '../../../../../../e2e-fixtures/dateConstants';
+import { oneMonthFormattedTable, tomorrow, tomorrowDay, oneMonthFormattedFull, tomorrowFormattedFull } from '../../../../../../e2e-fixtures/dateConstants';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
@@ -88,9 +78,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     amendmentsPage.addAmendmentButton().click();
     cy.url().should('contain', 'request-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentRequestDayInput(), todayDay);
-    cy.keyboardInput(amendmentsPage.amendmentRequestMonthInput(), todayMonth);
-    cy.keyboardInput(amendmentsPage.amendmentRequestYearInput(), todayYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--request-date' });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'request-approval');
@@ -110,9 +99,8 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     cy.clickContinueButton();
     cy.url().should('contain', 'cover-end-date');
 
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateDayInput(), tomorrowDay);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateMonthInput(), tomorrowMonth);
-    cy.keyboardInput(amendmentsPage.amendmentCoverEndDateYearInput(), tomorrowYear);
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', date: tomorrow });
+
     cy.clickContinueButton();
 
     cy.url().should('contain', 'facility-value');

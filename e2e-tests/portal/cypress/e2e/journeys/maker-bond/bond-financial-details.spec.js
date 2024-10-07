@@ -217,22 +217,20 @@ context('Bond Financial Details', () => {
         pages.bondFinancialDetails.conversionRateInputErrorMessage().should('be.visible');
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().should('be.visible');
 
-        cy.keyboardInput(pages.bondFinancialDetails.conversionRateDateDayInput(), '22-');
-        cy.keyboardInput(pages.bondFinancialDetails.conversionRateDateMonthInput(), '02');
-        cy.keyboardInput(pages.bondFinancialDetails.conversionRateDateYearInput(), '2022');
+        cy.completeDateFormFields({ idPrefix: 'conversionRateDate', day: '22-', month: '02', year: '2022' });
+
         cy.clickSubmitButton();
         partials.taskListHeader.itemLink('financial-details').click();
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The day for the conversion rate must include 1 or 2 numbers');
 
-        cy.keyboardInput(pages.bondFinancialDetails.conversionRateDateDayInput(), '22');
-        cy.keyboardInput(pages.bondFinancialDetails.conversionRateDateMonthInput(), '022');
+        cy.completeDateFormFields({ idPrefix: 'conversionRateDate', day: '22', month: '022', year: null });
+
         cy.clickSubmitButton();
         partials.taskListHeader.itemLink('financial-details').click();
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The month for the conversion rate must include 1 or 2 numbers');
 
-        cy.keyboardInput(pages.bondFinancialDetails.conversionRateDateDayInput(), '22');
-        cy.keyboardInput(pages.bondFinancialDetails.conversionRateDateMonthInput(), '02');
-        cy.keyboardInput(pages.bondFinancialDetails.conversionRateDateYearInput(), '2O22');
+        cy.completeDateFormFields({ idPrefix: 'conversionRateDate', day: '22', month: '02', year: '2022' });
+
         cy.clickSubmitButton();
         partials.taskListHeader.itemLink('financial-details').click();
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The year for the conversion rate must include 4 numbers');
