@@ -10,9 +10,9 @@ export const calculateInitialUtilisation = (facilityValue: number): number => fa
  * calculateDrawnAmount
  * Business logic:
  * (Facility Amount * UKEF Cover (fractional percentage)) * 10%
- * @param {Number} facilityValue
- * @param {Number} coverPercentage
- * @returns {Number} calculated drawn amount
+ * @param facilityValue
+ * @param coverPercentage
+ * @returns calculated drawn amount
  */
 export const calculateDrawnAmount = (facilityValue: number, coverPercentage: number): number =>
   calculateInitialUtilisation(facilityValue) * (coverPercentage / 100);

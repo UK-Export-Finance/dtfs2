@@ -110,7 +110,7 @@ describe('handleUtilisationReportReportUploadedEvent', () => {
 
       const { utilisation, fixedFee } = await calculateInitialUtilisationAndFixedFee(facilityId);
 
-      return FacilityUtilisationDataEntity.createWithUtilisationAndFixedFee({
+      return FacilityUtilisationDataEntity.create({
         id: facilityId,
         reportPeriod: reportReportPeriod,
         requestSource,

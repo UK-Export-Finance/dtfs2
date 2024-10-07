@@ -64,32 +64,6 @@ export class FacilityUtilisationDataEntity extends AuditableBaseEntity {
   }
 
   /**
-   * Creates a new FacilityUtilisationDataEntity with utilisation and fixed fee
-   * @param facilityUtilisationData - Parameters for creating the entity
-   * @param facilityUtilisationData.id - The ID of the entity
-   * @param facilityUtilisationData.reportPeriod - The report period details
-   * @param facilityUtilisationData.requestSource - The source of the request
-   * @param facilityUtilisationData.utilisation - The utilisation value
-   * @param facilityUtilisationData.fixedFee - The fixed fee value
-   * @returns The created entity
-   */
-  public static createWithUtilisationAndFixedFee({
-    id,
-    reportPeriod,
-    requestSource,
-    utilisation,
-    fixedFee,
-  }: CreateFacilityUtilisationDataParams): FacilityUtilisationDataEntity {
-    const data = new FacilityUtilisationDataEntity();
-    data.id = id;
-    data.reportPeriod = reportPeriod;
-    data.updateLastUpdatedBy(requestSource);
-    data.utilisation = utilisation;
-    data.fixedFee = fixedFee;
-    return data;
-  }
-
-  /**
    * Updates the entity with current report period details
    * @param facilityUtilisationData - Parameters for updating the entity
    * @param facilityUtilisationData.fixedFee - The updated fixed fee

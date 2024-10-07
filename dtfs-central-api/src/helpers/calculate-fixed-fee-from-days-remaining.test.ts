@@ -1,4 +1,3 @@
-import Big from 'big.js';
 import { calculateFixedFeeFromDaysRemaining } from './calculate-fixed-fee-from-days-remaining';
 
 describe('calculateFixedFeeFromDaysRemaining', () => {
@@ -21,9 +20,6 @@ describe('calculateFixedFeeFromDaysRemaining', () => {
 
     // Assert
     // utilisation * (interestPercentage / 100) * BANK_ADMIN_FEE_ADJUSTMENT * numberOfDaysRemainingInCoverPeriod / dayCountBasis = 5,326.02739... = 5,326.03 (ROUNDED)
-    const calculation = (utilisation * (interestPercentage / 100) * 0.9 * numberOfDaysRemainingInCoverPeriod) / dayCountBasis;
-    const expected = Big(calculation).round(2).toNumber();
-
-    expect(result).toEqual(expected);
+    expect(result).toEqual(5326.03);
   });
 });
