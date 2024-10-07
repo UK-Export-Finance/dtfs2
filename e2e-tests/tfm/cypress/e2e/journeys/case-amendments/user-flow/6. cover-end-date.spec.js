@@ -84,7 +84,7 @@ context('Amendments - Cover End Date', () => {
     cy.clickContinueButton();
     errorSummary().contains('The year for the amendment cover end date must include 4 numbers');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: '20', month: '10', year: '2022' });
+    cy.completeDateFormFields({ idPrefix: 'amendment--cover-end-date', day: '20', month: '10', year: '2O22' });
 
     cy.clickContinueButton();
     errorSummary().contains('The year for the amendment cover end date must include 4 numbers');

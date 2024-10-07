@@ -229,7 +229,7 @@ context('Bond Financial Details', () => {
         partials.taskListHeader.itemLink('financial-details').click();
         pages.bondFinancialDetails.conversionRateDateInputErrorMessage().contains('The month for the conversion rate must include 1 or 2 numbers');
 
-        cy.completeDateFormFields({ idPrefix: 'conversionRateDate', day: '22', month: '02', year: '2022' });
+        cy.completeDateFormFields({ idPrefix: 'conversionRateDate', day: '22', month: '02', year: '2O22' });
 
         cy.clickSubmitButton();
         partials.taskListHeader.itemLink('financial-details').click();
