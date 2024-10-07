@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
-import { threeYears, threeDays, threeDaysAgo, threeMonthsOneDay, today, twoMonths, twoYears } from '../../../../../../../e2e-fixtures/dateConstants';
+import { threeYears, threeDaysAgo, threeMonthsOneDay, today, twoMonths, twoYears } from '../../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIN } from '../../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -188,7 +188,7 @@ context('Unissued Facilities MIN - change to issued from preview page - feature 
       errorSummary().contains('The cover start date must be within 3 months of the inclusion notice submission date');
       aboutFacilityUnissued.coverStartDateError().contains('The cover start date must be within 3 months of the inclusion notice submission date');
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDays });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 

@@ -3,7 +3,7 @@ import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { threeDays, threeDaysAgo, threeMonthsOneDay, twoMonths } from '../../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, threeMonthsOneDay, twoMonths } from '../../../../../../../e2e-fixtures/dateConstants';
 import { multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { continueButton, submitButton } from '../../../../partials';
 import applicationPreview from '../../../../pages/application-preview';
@@ -68,11 +68,11 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       applicationPreview.unissuedFacilitiesReviewLink().click();
       unissuedFacilityTable.updateIndividualFacilityButton(1).click();
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDays });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDays });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
       cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
@@ -334,7 +334,7 @@ context('Return to maker for unissued to issued facilities - feature flag enable
       applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
 
-      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDays });
+      cy.completeDateFormFields({ idPrefix: 'issue-date', date: threeDaysAgo });
 
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 

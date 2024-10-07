@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import relative from '../../../../relativeURL';
 import CONSTANTS from '../../../../../fixtures/constants';
-import { threeDaysAgoPlusMonth, threeDays, threeMonthsOneDay } from '../../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgoPlusMonth, threeDaysAgo, threeMonthsOneDay } from '../../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN } from '../../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { anUnissuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -120,7 +120,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table - fe
       // Cover start date to user defined date - Three days in the past
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDays });
+      cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo });
 
       // Cover end date to user defined date
       cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay });

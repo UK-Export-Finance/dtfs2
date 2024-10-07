@@ -294,7 +294,7 @@ context('Amendments underwriting - add banks decision - proceed', () => {
     errorSummary().contains('The year must include 4 numbers');
     amendmentsPage.errorMessage().contains('The year must include 4 numbers');
 
-    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2022' });
+    cy.completeDateFormFields({ idPrefix: 'amendment--bank-decision-date', day: '05', month: '05', year: '2o22' });
 
     cy.clickContinueButton();
     cy.url().should('contain', '/banks-decision/received-date');
