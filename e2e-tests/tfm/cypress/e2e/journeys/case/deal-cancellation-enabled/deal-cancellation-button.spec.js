@@ -42,6 +42,7 @@ context('Deal cancellation button - feature flag enabled', () => {
       it('should display button with text "Continue with deal cancellation" if a cancellation is in draft', () => {
         pages.caseDealPage.cancelDealButton().click();
         cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox(), 'reason');
+        cy.clickContinueButton();
 
         cy.visit(relative(`/case/${dealId}/deal`));
         cy.assertText(pages.caseDealPage.cancelDealButton(), 'Continue with deal cancellation');
