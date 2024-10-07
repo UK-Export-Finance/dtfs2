@@ -7,17 +7,67 @@ import { calculateFixedFee } from './calculate-fixed-fee';
 describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
   describe('hasRequiredValues', () => {
     it('should return true if all values are present', () => {
-      const result = hasRequiredValues(1, 2, 3, new Date(), new Date());
+      const params = {
+        value: 1,
+        interestPercentage: 2,
+        dayCountBasis: 3,
+        coverStartDate: new Date(),
+        coverEndDate: new Date(),
+      };
+
+      const result = hasRequiredValues(params);
       expect(result).toEqual(true);
     });
 
-    it('should return false if a value is missing', () => {
-      const result = hasRequiredValues(1, 2, 3, new Date(), null);
+    it('should return false if the coverEndDate not provided', () => {
+      const params = {
+        value: 1,
+        interestPercentage: 2,
+        dayCountBasis: 3,
+        coverStartDate: new Date(),
+        coverEndDate: null,
+      };
+
+      const result = hasRequiredValues(params);
       expect(result).toEqual(false);
     });
 
-    it('should return false if a date is the wrong format', () => {
-      const result = hasRequiredValues(1, 2, 3, 'a', new Date());
+    it('should return false if the coverStartDate not provided', () => {
+      const params = {
+        value: 1,
+        interestPercentage: 2,
+        dayCountBasis: 3,
+        coverStartDate: null,
+        coverEndDate: new Date(),
+      };
+
+      const result = hasRequiredValues(params);
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if the coverStartDate is the wrong format', () => {
+      const params = {
+        value: 1,
+        interestPercentage: 2,
+        dayCountBasis: 3,
+        coverStartDate: 'a',
+        coverEndDate: new Date(),
+      };
+
+      const result = hasRequiredValues(params);
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if the coverEndDate is the wrong format', () => {
+      const params = {
+        value: 1,
+        interestPercentage: 2,
+        dayCountBasis: 3,
+        coverStartDate: new Date(),
+        coverEndDate: 'a',
+      };
+
+      const result = hasRequiredValues(params);
       expect(result).toEqual(false);
     });
   });

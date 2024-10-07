@@ -220,7 +220,7 @@ export const applyStandardValidationAndParseDateInput = (inputtedDate: DayMonthY
  * @param date - provided date
  * @returns if the provided date is an instance of Date
  */
-export const isDate = (date: any): boolean => date instanceof Date && !Number.isNaN(date.getTime());
+export const isDate = (date: any): boolean => date instanceof Date;
 
 /**
  * checks if provided value is a date and is not invalid

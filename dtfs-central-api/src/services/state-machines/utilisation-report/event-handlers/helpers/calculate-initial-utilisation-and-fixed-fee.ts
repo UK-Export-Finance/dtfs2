@@ -2,6 +2,14 @@ import { calculateInitialUtilisation, isValidDate } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { calculateFixedFee } from './calculate-fixed-fee';
 
+export type RequiredParams = {
+  value: number;
+  interestPercentage: number;
+  dayCountBasis: number;
+  coverStartDate: string | Date | null;
+  coverEndDate: string | Date | null;
+};
+
 /**
  * checks that all required values are present
  * checks that cover start and end dates are in date format
@@ -12,13 +20,7 @@ import { calculateFixedFee } from './calculate-fixed-fee';
  * @param coverEndDate
  * @returns true if all values are present and in the correct format
  */
-export const hasRequiredValues = (
-  value: number,
-  interestPercentage: number,
-  dayCountBasis: number,
-  coverStartDate: string | Date | null,
-  coverEndDate: string | Date | null,
-): boolean =>
+export const hasRequiredValues = ({ value, interestPercentage, dayCountBasis, coverStartDate, coverEndDate }: RequiredParams): boolean =>
   Boolean(
     value &&
       coverStartDate &&
@@ -47,7 +49,7 @@ export const calculateInitialUtilisationAndFixedFee = async (facilityId: string)
 
   const { value, coverStartDate, coverEndDate, interestPercentage, dayCountBasis } = tfmFacility.facilitySnapshot;
 
-  if (!hasRequiredValues(value, interestPercentage, dayCountBasis, coverStartDate, coverEndDate)) {
+  if (!hasRequiredValues({ value, interestPercentage, dayCountBasis, coverStartDate, coverEndDate })) {
     throw new Error(`TFM facility values for ${facilityId} are missing`);
   }
 
