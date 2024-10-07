@@ -23,6 +23,7 @@ jest.mock('../../../api', () => ({
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
 const mockUser = aTfmSessionUser();
+const defaultBackUrl = `/case/${dealId}/deal`;
 
 describe('postReasonForCancelling', () => {
   beforeEach(() => {
@@ -156,6 +157,38 @@ describe('postReasonForCancelling', () => {
           dealId,
           errors: validationErrors,
           reasonForCancelling,
+          backUrl: defaultBackUrl,
+        });
+      });
+
+      it('renders the page with the back URL as the check details page when "Change" is passed in as a query parameter', async () => {
+        // Arrange
+        const reasonForCancelling = 'reasonForCancelling';
+        const { req, res } = createMocks<PostReasonForCancellingRequest>({
+          params: { _id: dealId },
+          query: { status: 'change' },
+          session: {
+            user: mockUser,
+            userToken: 'a user token',
+          },
+          body: {
+            reason: reasonForCancelling,
+          },
+        });
+
+        // Act
+        await postReasonForCancelling(req, res);
+
+        // Assert
+        expect(res._getRenderView()).toEqual('case/cancellation/reason-for-cancelling.njk');
+        expect(res._getRenderData() as ReasonForCancellingViewModel).toEqual({
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+          user: mockUser,
+          ukefDealId,
+          dealId,
+          errors: validationErrors,
+          reasonForCancelling,
+          backUrl: `/case/${dealId}/cancellation/check-details`,
         });
       });
 

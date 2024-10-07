@@ -15,6 +15,7 @@ jest.mock('../../../api', () => ({
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
 const mockUser = aTfmSessionUser();
+const defaultBackUrl = `/case/${dealId}/cancellation/bank-request-date`;
 
 describe('getEffectiveFromDate', () => {
   beforeEach(() => {
@@ -105,6 +106,7 @@ describe('getEffectiveFromDate', () => {
         day: '',
         month: '',
         year: '',
+        backUrl: defaultBackUrl,
       });
     });
 
@@ -135,6 +137,39 @@ describe('getEffectiveFromDate', () => {
         day: format(existingEffectiveFromDate, 'd'),
         month: format(existingEffectiveFromDate, 'M'),
         year: format(existingEffectiveFromDate, 'yyyy'),
+        backUrl: defaultBackUrl,
+      });
+    });
+
+    it('renders the page with the back URL as the check details page when "change" is passed in as a query parameter', async () => {
+      // Arrange
+      const existingEffectiveFromDate = new Date('2024-03-21');
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ effectiveFrom: existingEffectiveFromDate.valueOf() });
+      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
+
+      const { req, res } = createMocks<GetEffectiveFromDateRequest>({
+        params: { _id: dealId },
+        query: { status: 'change' },
+        session: {
+          user: mockUser,
+          userToken: 'a user token',
+        },
+      });
+
+      // Act
+      await getEffectiveFromDate(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('case/cancellation/effective-from-date.njk');
+      expect(res._getRenderData() as EffectiveFromDateViewModel).toEqual({
+        activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+        user: mockUser,
+        ukefDealId,
+        dealId,
+        day: format(existingEffectiveFromDate, 'd'),
+        month: format(existingEffectiveFromDate, 'M'),
+        year: format(existingEffectiveFromDate, 'yyyy'),
+        backUrl: `/case/${dealId}/cancellation/check-details`,
       });
     });
   });

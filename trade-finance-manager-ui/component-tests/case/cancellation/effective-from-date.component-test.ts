@@ -31,17 +31,18 @@ describe(page, () => {
     wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`/case/${dealId}/cancellation/cancel`, 'Cancel');
   });
 
-  it('should render back link button linking to the deal bank request date page', () => {
+  it('should render back link button with the passed in URL', () => {
     // Arrange
     const dealId = 'dealId';
-    const effectiveFromDateViewModel: EffectiveFromDateViewModel = { ...aEffectiveFromDateViewModel(), dealId };
+    const backUrl = 'testUrl';
+    const effectiveFromDateViewModel: EffectiveFromDateViewModel = { ...aEffectiveFromDateViewModel(), dealId, backUrl };
 
     // Act
     const wrapper = render(effectiveFromDateViewModel);
 
     // Assert
     wrapper.expectElement('[data-cy="back-link"]').toExist();
-    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(`/case/${dealId}/cancellation/bank-request-date`, 'Back');
+    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(backUrl, 'Back');
   });
 
   it('should render date input fields', () => {

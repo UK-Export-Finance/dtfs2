@@ -23,6 +23,7 @@ jest.mock('../../../api', () => ({
 const dealId = 'dealId';
 const ukefDealId = 'ukefDealId';
 const mockUser = aTfmSessionUser();
+const defaultBackUrl = `/case/${dealId}/cancellation/reason`;
 
 describe('postBankRequestDate', () => {
   beforeEach(() => {
@@ -151,6 +152,37 @@ describe('postBankRequestDate', () => {
           day,
           month,
           year,
+          backUrl: defaultBackUrl,
+        });
+      });
+
+      it('renders the page with the back URL as the check details page when "Change" is passed in as a query parameter', async () => {
+        // Arrange
+        const { req, res } = createMocks<PostBankRequestDateRequest>({
+          params: { _id: dealId },
+          query: { status: 'change' },
+          session: {
+            user: mockUser,
+            userToken: 'a user token',
+          },
+          body: inputtedDate,
+        });
+
+        // Act
+        await postBankRequestDate(req, res);
+
+        // Assert
+        expect(res._getRenderView()).toEqual('case/cancellation/bank-request-date.njk');
+        expect(res._getRenderData() as BankRequestDateViewModel).toEqual({
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
+          user: mockUser,
+          ukefDealId,
+          dealId,
+          errors,
+          day,
+          month,
+          year,
+          backUrl: `/case/${dealId}/cancellation/check-details`,
         });
       });
 
