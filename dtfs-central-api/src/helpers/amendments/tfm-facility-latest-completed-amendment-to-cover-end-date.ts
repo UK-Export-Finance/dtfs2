@@ -1,9 +1,7 @@
-import { TfmFacility, TfmFacilityAmendment } from '@ukef/dtfs2-common';
+import { TfmFacility } from '@ukef/dtfs2-common';
 import orderBy from 'lodash.orderby';
-import { convertTimestampToDate } from './convert-timestamp-to-date';
-
-const getCompletedAmendments = (tfmFacilityAmendment: TfmFacilityAmendment[]): TfmFacilityAmendment[] =>
-  tfmFacilityAmendment.filter(({ status }) => status === 'Completed');
+import { convertTimestampToDate } from '../convert-timestamp-to-date';
+import { getCompletedAmendments } from './completed-amendments';
 
 /**
  * Get the latest completed amendment cover end date

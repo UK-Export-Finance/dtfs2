@@ -3,6 +3,7 @@ import Big from 'big.js';
 import { FeeRecordUtilisation } from '../../../../../types/fee-records';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
+import { getLatestCompletedAmendmentToFacilityValue } from '../../../../../helpers';
 
 /**
  * Calculates the exposure based on the current utilisation
@@ -48,12 +49,13 @@ export const getUtilisationDetails = async (feeRecords: FeeRecordEntity[]): Prom
       }
 
       const { value, coverPercentage } = tfmFacility.facilitySnapshot;
+      const amendedValue = getLatestCompletedAmendmentToFacilityValue(tfmFacility);
 
       return {
         facilityId,
         exporter,
         baseCurrency,
-        value,
+        value: amendedValue ?? value,
         utilisation,
         coverPercentage,
         exposure: calculateExposure(utilisation, coverPercentage),

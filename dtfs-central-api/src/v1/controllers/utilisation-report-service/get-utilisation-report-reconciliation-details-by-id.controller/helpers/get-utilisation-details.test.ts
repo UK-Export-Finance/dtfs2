@@ -3,8 +3,10 @@ import { calculateExposure, getUtilisationDetails } from './get-utilisation-deta
 import { aTfmFacility, aUtilisationReport } from '../../../../../../test-helpers';
 import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 import { NotFoundError } from '../../../../../errors';
+import * as helpers from '../../../../../helpers';
 
 jest.mock('../../../../../repositories/tfm-facilities-repo');
+jest.mock('../../../../../helpers');
 
 describe('get-utilisation-details', () => {
   describe('calculateExposure', () => {
@@ -52,10 +54,9 @@ describe('get-utilisation-details', () => {
       );
     });
 
-    it('retrieves the cover percentage and value from the facility', async () => {
+    it('retrieves the cover percentage from the facility snapshot', async () => {
       // Arrange
       const coverPercentage = 80;
-      const value = 200000;
       const facilityId = '12345678';
 
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
@@ -63,7 +64,6 @@ describe('get-utilisation-details', () => {
       const tfmFacility = aTfmFacility();
       tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
       tfmFacility.facilitySnapshot.coverPercentage = coverPercentage;
-      tfmFacility.facilitySnapshot.value = value;
 
       const findByUkefFacilityIdsSpy = jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([tfmFacility]);
 
@@ -74,7 +74,57 @@ describe('get-utilisation-details', () => {
       expect(findByUkefFacilityIdsSpy).toHaveBeenCalledTimes(1);
       expect(findByUkefFacilityIdsSpy).toHaveBeenCalledWith([facilityId]);
       expect(utilisationDetails.at(0)?.coverPercentage).toEqual(coverPercentage);
+    });
+
+    it('retrieves the value from the facility snapshot when there are no amendments to the value', async () => {
+      // Arrange
+      const value = 200000;
+      const facilityId = '12345678';
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
+
+      const tfmFacility = aTfmFacility();
+      tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
+      tfmFacility.facilitySnapshot.value = value;
+
+      const findByUkefFacilityIdsSpy = jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([tfmFacility]);
+      const getLatestCompletedAmendmentFacilityValueSpy = jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(undefined);
+
+      // Act
+      const utilisationDetails = await getUtilisationDetails([feeRecord]);
+
+      // Assert
+      expect(findByUkefFacilityIdsSpy).toHaveBeenCalledTimes(1);
+      expect(findByUkefFacilityIdsSpy).toHaveBeenCalledWith([facilityId]);
+      expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledTimes(1);
+      expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledWith(tfmFacility);
       expect(utilisationDetails.at(0)?.value).toEqual(value);
+    });
+
+    it('retrieves the value from the facility snapshot when there is an amendement to the value', async () => {
+      // Arrange
+      const originalValue = 200000;
+      const amendedValue = 300000;
+      const facilityId = '12345678';
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport()).withFacilityId(facilityId).build();
+
+      const tfmFacility = aTfmFacility();
+      tfmFacility.facilitySnapshot.ukefFacilityId = facilityId;
+      tfmFacility.facilitySnapshot.value = originalValue;
+
+      const findByUkefFacilityIdsSpy = jest.spyOn(TfmFacilitiesRepo, 'findByUkefFacilityIds').mockResolvedValue([tfmFacility]);
+      const getLatestCompletedAmendmentFacilityValueSpy = jest.spyOn(helpers, 'getLatestCompletedAmendmentToFacilityValue').mockReturnValue(amendedValue);
+
+      // Act
+      const utilisationDetails = await getUtilisationDetails([feeRecord]);
+
+      // Assert
+      expect(findByUkefFacilityIdsSpy).toHaveBeenCalledTimes(1);
+      expect(findByUkefFacilityIdsSpy).toHaveBeenCalledWith([facilityId]);
+      expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledTimes(1);
+      expect(getLatestCompletedAmendmentFacilityValueSpy).toHaveBeenCalledWith(tfmFacility);
+      expect(utilisationDetails.at(0)?.value).toEqual(amendedValue);
     });
 
     it('calculates the exposure from the utilisation and cover percentage', async () => {
