@@ -97,3 +97,14 @@ export type ValidatedPaymentDetailsFilters = {
   paymentCurrency?: Currency;
   paymentReference?: string;
 };
+
+export type FeeRecordReconciledEmailVariables = {
+  bankRecipient: string;
+  reportReconciledDate: string;
+  reportPeriod: string;
+};
+
+export type FeeRecordReconciledEmail = {
+  emails: Array<string>;
+  variables: FeeRecordReconciledEmailVariables;
+};
