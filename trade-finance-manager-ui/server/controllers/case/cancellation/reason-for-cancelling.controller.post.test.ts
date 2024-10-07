@@ -161,7 +161,7 @@ describe('postReasonForCancelling', () => {
         });
       });
 
-      it('renders the page with the back URL as the check details page when "Change" is passed in as a query parameter', async () => {
+      it('renders the page with the back URL as the check details page when "change" is passed in as a query parameter', async () => {
         // Arrange
         const reasonForCancelling = 'reasonForCancelling';
         const { req, res } = createMocks<PostReasonForCancellingRequest>({
