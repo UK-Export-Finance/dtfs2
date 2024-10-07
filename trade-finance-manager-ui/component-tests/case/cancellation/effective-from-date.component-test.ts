@@ -1,6 +1,6 @@
 import { EffectiveFromDateErrorsViewModel, EffectiveFromDateViewModel } from '../../../server/types/view-models';
 import { pageRenderer } from '../../pageRenderer';
-import { aEffectiveFromDateViewModel } from '../../../test-helpers/test-data/effective-from-date-view-model';
+import { aEffectiveFromDateViewModel } from '../../../test-helpers/test-data/view-models';
 
 const page = '../templates/case/cancellation/effective-from-date.njk';
 const render = pageRenderer(page);
@@ -28,7 +28,7 @@ describe(page, () => {
 
     // Assert
     wrapper.expectElement('[data-cy="cancel-link"]').toExist();
-    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`/case/${dealId}/deal`, 'Cancel');
+    wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(`/case/${dealId}/cancellation/cancel`, 'Cancel');
   });
 
   it('should render back link button linking to the deal bank request date page', () => {

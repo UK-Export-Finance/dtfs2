@@ -12,9 +12,9 @@ const df = require('durable-functions');
  * It logs the request URL and method, extracts the HTTP body as input, and starts a new orchestration instance with the provided input.
  * It then returns a check status response for the started orchestration instance.
  *
- * @param {object} request - The HTTP request object, containing the URL, method, and body of the request.
- * @param {object} client - The durable client used to start a new orchestration instance and create a check status response.
- * @returns {Promise<object>} - A check status response for the started orchestration instance.
+ * @param {Object} request - The HTTP request object, containing the URL, method, and body of the request.
+ * @param {Object} client - The durable client used to start a new orchestration instance and create a check status response.
+ * @returns {Promise<Object>} - A check status response for the started orchestration instance.
  */
 
 const handler = async (request, client) => {

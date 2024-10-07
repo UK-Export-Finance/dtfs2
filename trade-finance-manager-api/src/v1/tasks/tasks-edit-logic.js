@@ -11,7 +11,7 @@ const {
 /**
  * Check if a task's previous task is complete
  * @param {Array} all task groups array
- * @param {object} group that the task you want to check is in
+ * @param {Object} group that the task you want to check is in
  * @param {string} task ID you want to check
  * @returns {boolean}
  */
@@ -57,7 +57,7 @@ const previousTaskIsComplete = (allTaskGroups, group, taskId) => {
 
 /**
  * Check if a task is in the Underwriting group.
- * @param {object} group
+ * @param {Object} group
  * @param {string} task title
  * @returns {boolean}
  */
@@ -78,8 +78,8 @@ const isTaskInUnderwritingGroup = (group, taskTitle) => {
  * - Any tasks in the group can be completed regardless of a previous task in that group.
  * - This currently only applies to the Underwriting group.
  * - If required, can be easily extended for other groups.
- * @param {object} group
- * @param {object} task
+ * @param {Object} group
+ * @param {Object} task
  * @returns {boolean}
  */
 const taskCanBeEditedWithoutPreviousTaskComplete = (group, task) => {
@@ -101,8 +101,8 @@ const taskCanBeEditedWithoutPreviousTaskComplete = (group, task) => {
 /**
  * Rules/conditions for task.canEdit and task.status
  * When a task is updated, all tasks are mapped over and call this function.
- * @param {object} group
- * @param {object} task
+ * @param {Object} group
+ * @param {Object} task
  * @returns {boolean}
  */
 const handleTaskEditFlagAndStatus = (allTaskGroups, group, task, isTaskThatIsBeingUpdated) => {

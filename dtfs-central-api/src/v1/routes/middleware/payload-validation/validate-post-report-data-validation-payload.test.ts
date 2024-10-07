@@ -26,7 +26,7 @@ describe('validatePostReportDataValidationPayload', () => {
     ${'undefined'} | ${undefined}
     ${'number'}    | ${7}
     ${'string'}    | ${''}
-    ${'object'}    | ${{}}
+    ${'Object'}    | ${{}}
   `(`responds with a '${HttpStatusCode.BadRequest}' if the reportData is not a list: $condition`, (testValue: unknown) => {
     // Arrange
     const { req, res } = getHttpMocks();

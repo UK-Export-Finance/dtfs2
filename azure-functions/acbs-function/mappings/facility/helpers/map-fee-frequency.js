@@ -1,6 +1,6 @@
 /**
  * Maps free frequency across any product.
- * @param {object} facilitySnapshot Facility snapshot
+ * @param {Object} facilitySnapshot Facility snapshot
  * @returns {string} Fee frequency else `null`
  */
 const mapFeeFrequency = (facilitySnapshot) => {

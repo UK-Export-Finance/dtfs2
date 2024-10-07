@@ -106,4 +106,11 @@ export const createApi = (app: unknown): TestApi => ({
     }
     return requestInProgress.send(data);
   },
+  remove: async (url: string, data: AnyObject, { headers }: { headers: IncomingHttpHeaders | undefined } = { headers: undefined }) => {
+    const requestInProgress = request(app).delete(url);
+    if (headers) {
+      await requestInProgress.set(headers);
+    }
+    return requestInProgress.send(data);
+  },
 });

@@ -82,8 +82,7 @@ context('Deal cancellation - bank request date', () => {
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
     });
 
-    // TODO: DTFS2-7359 - add this test once cancel link is implemented
-    it.skip('cancel link should take you to confirm cancellation page', () => {
+    it('cancel link should take you to confirm cancellation page', () => {
       cy.clickCancelLink();
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/cancel`));

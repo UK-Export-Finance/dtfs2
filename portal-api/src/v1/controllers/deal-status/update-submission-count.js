@@ -2,10 +2,10 @@ const { updateDeal } = require('../deal.controller');
 
 /**
  * Updates the submission count of a deal and returns the updated deal.
- * @param {object} deal - The deal object.
- * @param {object} user - The user object.
+ * @param {Object} deal - The deal object.
+ * @param {Object} user - The user object.
  * @param {import("@ukef/dtfs2-common").AuditDetails} auditDetails - user making the request
- * @returns {Promise<object>} - The updated deal object with submission count incremented.
+ * @returns {Promise<Object>} - The updated deal object with submission count incremented.
  */
 const updateSubmissionCount = async (deal, user, auditDetails) => {
   const { _id: dealId } = deal;

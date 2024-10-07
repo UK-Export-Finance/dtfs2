@@ -1,7 +1,7 @@
 /**
  * Determines if a user is a super user.
  *
- * @param {object} user - The user object.
+ * @param {Object} user - The user object.
  * @returns {boolean} - True if the user is a super user, false otherwise.
  */
 const isSuperUser = (user) => user?.bank?.id === '*';
@@ -9,8 +9,8 @@ const isSuperUser = (user) => user?.bank?.id === '*';
 /**
  * Determines if a user has access to a specific deal.
  *
- * @param {object} user - The user object.
- * @param {object} deal - The deal object.
+ * @param {Object} user - The user object.
+ * @param {Object} deal - The deal object.
  * @returns {boolean} - True if the user has access, false otherwise.
  */
 const userHasAccessTo = (user, deal) => {
@@ -37,8 +37,8 @@ const userHasAccessTo = (user, deal) => {
 /**
  * Determines if a user has access to a specific deal.
  *
- * @param {object} user - The user object.
- * @param {object} deal - The deal object.
+ * @param {Object} user - The user object.
+ * @param {Object} deal - The deal object.
  * @returns {boolean} - True if the user has access, false otherwise.
  */
 const userOwns = (user, deal) => user._id.toString() === deal.maker._id.toString();

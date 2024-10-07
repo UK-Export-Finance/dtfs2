@@ -8,9 +8,9 @@ const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('as
 
 /**
  *
- * @param {*} password - The plain text password
- * @param {*} hash - The hash stored in the database
- * @param {*} salt - The salt stored in the database
+ * @param {string} password - The plain text password
+ * @param {string} hash - The hash stored in the database
+ * @param {string} salt - The salt stored in the database
  *
  * This function uses the crypto library to decrypt the hash using the salt and then compares
  * the decrypted hash/salt with the password that the user provided at login
@@ -32,7 +32,7 @@ function validPassword(password, hash, salt) {
 
 /**
  *
- * @param {*} password - The password string that the user inputs to the password field in the register form
+ * @param {string} password - The password string that the user inputs to the password field in the register form
  *
  * This function takes a plain text password and creates a salt and hash out of it.  Instead of storing the plaintext
  * password in the database, the salt and hash are stored for security
@@ -53,7 +53,7 @@ function genPasswordResetToken(user) {
 }
 
 /**
- * @param {*} user - The user object.  We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @param {Object} user - The user object.  We need this to set the JWT `sub` payload property to the MongoDB user ID
  */
 function issueJWT(user) {
   const { _id } = user;

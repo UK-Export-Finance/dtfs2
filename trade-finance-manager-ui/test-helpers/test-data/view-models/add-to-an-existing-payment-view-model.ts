@@ -1,7 +1,7 @@
-import { PRIMARY_NAVIGATION_KEYS } from '../../server/constants';
-import { AddToAnExistingPaymentViewModel } from '../../server/types/view-models';
+import { PRIMARY_NAVIGATION_KEYS } from '../../../server/constants';
+import { AddToAnExistingPaymentViewModel } from '../../../server/types/view-models';
 import { aPaymentGroupInputsViewModel } from './payment-group-inputs-view-model';
-import { aTfmSessionUser } from './tfm-session-user';
+import { aTfmSessionUser } from '../tfm-session-user';
 
 export const anAddToAnExistingPaymentViewModel = (): AddToAnExistingPaymentViewModel => ({
   user: aTfmSessionUser(),
