@@ -1,7 +1,7 @@
 const utilisationReportPage = {
   bankReportsNavLink: () => cy.get('a[data-cy="bank-reports-nav-link"]'),
   keyingSheetTabLink: () => cy.get('a[data-cy="bank-report-tab-keying-sheet"]'),
-  paymentDetailsLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
+  paymentDetailsTabLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
   premiumPaymentsTab: {
     selectPaymentsText: () => cy.get('[data-cy="select-payments-text"]'),
     paymentsOnPremiumPaymentsText: () => cy.get('[data-cy="payments-on-premium-payments-tab-text"]'),
