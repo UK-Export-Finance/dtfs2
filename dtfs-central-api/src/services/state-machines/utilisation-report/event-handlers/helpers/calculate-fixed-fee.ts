@@ -30,7 +30,7 @@ export const calculateFixedFee = ({
   interestPercentage,
   dayCountBasis,
 }: CalculateFixedFeeUtilisationReportParams): number => {
-  const numberOfDaysRemainingInCoverPeriod = getNumberOfDaysInCoverPeriod(new Date(coverStartDate), new Date(coverEndDate));
+  const numberOfDaysRemainingInCoverPeriod = getNumberOfDaysInCoverPeriod(coverStartDate, coverEndDate);
 
   return calculateFixedFeeFromDaysRemaining({ utilisation, numberOfDaysRemainingInCoverPeriod, interestPercentage, dayCountBasis });
 };
