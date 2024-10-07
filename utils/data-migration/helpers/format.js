@@ -31,7 +31,7 @@ const getMaximumLiability = (facilities) => {
 
 /**
  * Returns filtered task as per `taskName`
- * @param {object} tfm Deal TFM Object
+ * @param {Object} tfm Deal TFM Object
  * @param {string} taskName Interested task name from `Approvals` task group
  * @returns {Array} Filtered task
  */

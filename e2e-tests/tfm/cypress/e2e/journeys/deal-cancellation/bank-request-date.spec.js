@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-fixtures';
@@ -87,11 +88,23 @@ context('Deal cancellation - bank request date', () => {
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/effective-from-date`));
     });
 
-    // TODO: DTFS2-7359 - add this test once cancel link is implemented
-    it.skip('cancel link should take you to confirm cancellation page', () => {
+    it('cancel link should take you to confirm cancellation page', () => {
       cy.clickCancelLink();
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/cancel`));
+    });
+
+    it('returning to the page should display saved data', () => {
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateDay(), dateConstants.todayDay);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateMonth(), dateConstants.todayMonth);
+      cy.keyboardInput(bankRequestDatePage.bankRequestDateYear(), dateConstants.todayYear);
+
+      cy.clickContinueButton();
+      cy.clickBackLink();
+
+      bankRequestDatePage.bankRequestDateDay().should('have.value', format(dateConstants.today, 'd'));
+      bankRequestDatePage.bankRequestDateMonth().should('have.value', format(dateConstants.today, 'M'));
+      bankRequestDatePage.bankRequestDateYear().should('have.value', dateConstants.todayYear);
     });
   });
 

@@ -1,4 +1,12 @@
-import { Currency, CurrencyAndAmountString, FeeRecordStatus, KeyingSheetAdjustmentChange, KeyingSheetRowStatus, SessionBank } from '@ukef/dtfs2-common';
+import {
+  Currency,
+  CurrencyAndAmountString,
+  FeeRecordStatus,
+  KeyingSheetAdjustmentChange,
+  KeyingSheetRowStatus,
+  PremiumPaymentsFilters,
+  SessionBank,
+} from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
 import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
 import { BaseViewModel } from './base-view-model';
@@ -92,11 +100,11 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   bank: SessionBank;
   formattedReportPeriod: string;
   reportId: string;
-  facilityIdQuery?: string;
-  tableDataError?: ErrorSummaryViewModel;
-  filterError?: ErrorSummaryViewModel;
-  enablePaymentsReceivedSorting: boolean;
   premiumPayments: PremiumPaymentsViewModelItem[];
+  premiumPaymentsFilters?: PremiumPaymentsFilters;
+  premiumPaymentsFilterError?: ErrorSummaryViewModel;
+  premiumPaymentsTableDataError?: ErrorSummaryViewModel;
+  enablePaymentsReceivedSorting: boolean;
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
 };

@@ -11,21 +11,16 @@ export type TestRequestWithoutHeaders = (data: AnyObject) => {
 
 type TestGetWithHeaders = (
   url: string,
-  {
-    headers,
-    query,
-  }?: {
+  options?: {
     headers: IncomingHttpHeaders | undefined;
     query: AnyObject | undefined;
   },
 ) => Promise<Response>;
 
-type TestPutWithHeaders = (
+type TestRequestWithHeaders = (
   url: string,
   data: AnyObject,
-  {
-    headers,
-  }?: {
+  options?: {
     headers: IncomingHttpHeaders | undefined;
   },
 ) => Promise<Response>;
@@ -56,5 +51,6 @@ export type TestApi = {
   as: TestAs;
   post: TestRequestWithoutHeaders;
   get: TestGetWithHeaders;
-  put: TestPutWithHeaders;
+  put: TestRequestWithHeaders;
+  remove: TestRequestWithHeaders;
 };

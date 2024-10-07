@@ -21,7 +21,7 @@ const isBondPartyType = (partyType) => bondParties.includes(partyType);
  * if `bondBeneficiary` or `bondIssuer`, then add index for field reference
  * otherwise should return default field reference.
  * @param {string} partyType Party type
- * @param {Integer} index Party URN field index
+ * @param {number} index Party URN field index
  * @returns {string} Party URN reference for an inline error display
  */
 const constructErrRef = (party, index) => (isBondPartyType(party) ? `partyUrn-${index}` : 'partyUrn');

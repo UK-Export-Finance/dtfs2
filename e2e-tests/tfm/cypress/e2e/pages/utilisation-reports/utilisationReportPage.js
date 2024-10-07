@@ -3,17 +3,26 @@ const utilisationReportPage = {
   keyingSheetTabLink: () => cy.get('a[data-cy="bank-report-tab-keying-sheet"]'),
   paymentDetailsLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
   premiumPaymentsTab: {
+    selectPaymentsText: () => cy.get('[data-cy="select-payments-text"]'),
+    paymentsOnPremiumPaymentsText: () => cy.get('[data-cy="payments-on-premium-payments-tab-text"]'),
     getPaymentLink: (paymentId) => cy.get(`a[data-cy="premium-payments-tab-edit-payment-link--paymentId-${paymentId}"]`),
     clickPaymentLink: (paymentId) => cy.get(`a[data-cy="premium-payments-tab-edit-payment-link--paymentId-${paymentId}"]`).click(),
     getFacilityIdFilterInput: () => cy.getInputByLabelText('Filter by facility ID'),
-    submitFacilityIdFilter: () => cy.get('button[data-cy="facility-filter-submit-button"]').click(),
+    submitFacilityIdFilter: () => cy.get('button[data-cy="premium-payments-facility-filter-submit-button"]').click(),
     generateKeyingDataButton: () => cy.get('[data-cy="generate-keying-data-button"]'),
     addAPaymentButton: () => cy.get('[data-cy="add-a-payment-button"]'),
     premiumPaymentsTable: {
+      header: {
+        totalReportedPayments: () => cy.get('th[data-cy="premium-payments-table--total-reported-payments"] button'),
+        totalPaymentsReceived: () => cy.get('th[data-cy="premium-payments-table--total-payments-received"] button'),
+        status: () => cy.get('th[data-cy="premium-payments-table--status"] button'),
+      },
       row: (feeRecordId) => cy.get(`tr[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
       checkbox: (feeRecordIds, paymentCurrency, status) =>
         cy.get(`[type="checkbox"][id="feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${paymentCurrency}-status-${status}"]`),
       status: (feeRecordId) => cy.get(`[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-status"]`),
+      // NOTE: Using the ^= selector to match all table rows starting with the given data-cy value (regardless of the actual fee record id value).
+      facilityIdByRowIndex: (rowIndex) => cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('th').first(),
     },
   },
   keyingSheetTab: {

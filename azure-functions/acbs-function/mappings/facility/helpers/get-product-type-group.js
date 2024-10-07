@@ -3,7 +3,7 @@ const CONSTANTS = require('../../../constants');
 /**
  * Return facility product type group, commonly used for
  * facility loan record creation.
- * @param {object} facility Facility object
+ * @param {Object} facility Facility object
  * @param {string} dealType Deal type i.e. GEF, BSS, EWCS
  * @returns {string} Facility product type group
  */

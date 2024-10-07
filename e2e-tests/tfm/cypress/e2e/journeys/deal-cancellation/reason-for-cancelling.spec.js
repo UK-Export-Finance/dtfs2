@@ -48,7 +48,7 @@ context('Deal cancellation - reason for cancelling', () => {
     });
 
     it('should validate submitting more than 1200 characters', () => {
-      cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox().clear(), 'x'.repeat(1201));
+      cy.keyboardInput(reasonForCancellingPage.reasonForCancellingTextBox(), 'x'.repeat(1201));
 
       cy.clickContinueButton();
 
@@ -68,8 +68,7 @@ context('Deal cancellation - reason for cancelling', () => {
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/bank-request-date`));
     });
 
-    // TODO: DTFS2-7359 - add this test once cancel link is implemented
-    it.skip('cancel link should take you to confirm cancellation page', () => {
+    it('cancel link should take you to confirm cancellation page', () => {
       cy.clickCancelLink();
 
       cy.url().should('eq', relative(`/case/${dealId}/cancellation/cancel`));

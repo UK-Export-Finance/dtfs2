@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { isTfmPaymentReconciliationFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { getIsoMonth } from '../../helpers/date';
-import { getReportReconciliationSummariesViewModel } from './helpers';
+import { getReportReconciliationSummariesViewModel, isPDCReconcileUser } from './helpers';
 import { asUserSession } from '../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../constants';
 import { UtilisationReportsViewModel } from '../../types/view-models';
@@ -26,6 +26,7 @@ export const getUtilisationReports = async (req: Request, res: Response) => {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportPeriodSummaries: reconciliationSummariesViewModel,
+      isPDCReconcileUser: isPDCReconcileUser(user),
     });
   } catch (error) {
     console.error('Error rendering utilisation reports page', error);
