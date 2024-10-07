@@ -5,6 +5,7 @@ import { asUserSession } from '../../../helpers/express-session';
 import { CancelCancellationViewModel } from '../../../types/view-models';
 import api from '../../../api';
 import { canSubmissionTypeBeCancelled } from '../../helpers';
+import { validatePreviousPage } from './validation/validate-previous-page';
 
 export type GetCancelCancellationRequest = CustomExpressRequest<{ params: { _id: string } }>;
 export type PostCancelCancellationRequest = CustomExpressRequest<{ params: { _id: string }; query: { return: string }; reqBody: { previousPage: string } }>;
@@ -33,7 +34,7 @@ export const getCancelCancellation = async (req: GetCancelCancellationRequest, r
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.ALL_DEALS,
       user,
       ukefDealId: deal.dealSnapshot.details.ukefDealId,
-      previousPage: req.headers.referer ?? 'reason',
+      previousPage: req.headers.referer ?? `/case/${_id}/cancellation/reason`,
     };
     return res.render('case/cancellation/cancel.njk', cancelCancellationViewModel);
   } catch (error) {
@@ -53,7 +54,7 @@ export const postCancelCancellation = async (req: PostCancelCancellationRequest,
   const { userToken } = asUserSession(req.session);
 
   if (req.query.return) {
-    return res.redirect(req.body.previousPage);
+    return res.redirect(validatePreviousPage(req.body.previousPage, _id));
   }
 
   try {
