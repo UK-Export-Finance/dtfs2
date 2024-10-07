@@ -81,42 +81,44 @@ describe('postCancelCancellation', () => {
     expect(res._getRedirectUrl()).toBe(`/not-found`);
   });
 
-  it('redirects to deal summary page if the submission type is invalid (MIA)', async () => {
-    // Arrange
-    jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
-
-    const { req, res } = createMocks<PostCancelCancellationRequest>({
-      params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+  describe(`when the deal type is ${DEAL_SUBMISSION_TYPE.MIA}`, () => {
+    beforeEach(() => {
+      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
     });
 
-    // Act
-    await postCancelCancellation(req, res);
+    it('redirects to deal summary page', async () => {
+      // Arrange
+      const { req, res } = createMocks<PostCancelCancellationRequest>({
+        params: { _id: dealId },
+        session: {
+          user: mockUser,
+          userToken: 'a user token',
+        },
+      });
 
-    // Assert
-    expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
-  });
+      // Act
+      await postCancelCancellation(req, res);
 
-  it('does not call the api if the type is invalid (MIA)', async () => {
-    // Arrange
-    jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
-
-    const { req, res } = createMocks<PostCancelCancellationRequest>({
-      params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+      // Assert
+      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
     });
 
-    // Act
-    await postCancelCancellation(req, res);
+    it('does not delete the deal cancellation', async () => {
+      // Arrange
+      const { req, res } = createMocks<PostCancelCancellationRequest>({
+        params: { _id: dealId },
+        session: {
+          user: mockUser,
+          userToken: 'a user token',
+        },
+      });
 
-    // Assert
-    expect(api.deleteDealCancellation).toHaveBeenCalledTimes(0);
+      // Act
+      await postCancelCancellation(req, res);
+
+      // Assert
+      expect(api.deleteDealCancellation).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe.each([DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN])('when the deal type is %s', (validDealType) => {
