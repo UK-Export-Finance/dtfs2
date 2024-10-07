@@ -12,6 +12,7 @@
     {% set isNumericColumn = params.isNumericColumn %}
     {% set enableSorting = params.enableSorting %}
     {% set ariaSort = params.ariaSort %}
+    {% set dataCy = params.dataCy %}
 
     {% set class = 'govuk-table__header' %}
     {% if isNumericColumn %}
@@ -19,9 +20,22 @@
     {% endif %}
 
     {% if enableSorting %}
-      <th scope="col" class="{{ class }}" aria-sort="{{ ariaSort }}">{{ headerText }}</th>
+      <th
+        scope="col"
+        class="{{ class }}"
+        aria-sort="{{ ariaSort }}"
+        {% if dataCy %} data-cy="{{ dataCy }}" {% endif %}
+      >
+        {{ headerText }}
+      </th>
     {% else %}
-      <th scope="col" class="{{ class }}">{{ headerText }}</th>
+      <th
+        scope="col"
+        class="{{ class }}"
+        {% if dataCy %} data-cy="{{ dataCy }}" {% endif %}
+      >
+        {{ headerText }}
+      </th>
     {% endif %}
   {% endmacro %}
 
@@ -32,10 +46,10 @@
         {{ tableHeader({ headerText: 'Exporter', isNumericColumn: false, enableSorting: false }) }}
         {{ tableHeader({ headerText: 'Reported fees', isNumericColumn: true, enableSorting: false }) }}
         {{ tableHeader({ headerText: 'Reported payments', isNumericColumn: true, enableSorting: false }) }}
-        {{ tableHeader({ headerText: 'Total reported payments', isNumericColumn: true, enableSorting: true, ariaSort: 'ascending' }) }}
+        {{ tableHeader({ headerText: 'Total reported payments', isNumericColumn: true, enableSorting: true, ariaSort: 'ascending', dataCy: 'premium-payments-table--total-reported-payments' }) }}
         {{ tableHeader({ headerText: 'Payments received', isNumericColumn: true, enableSorting: false }) }}
-        {{ tableHeader({ headerText: 'Total payments received', isNumericColumn: true, enableSorting: enablePaymentsReceivedSorting, ariaSort: 'none' }) }}
-        {{ tableHeader({ headerText: 'Status', isNumericColumn: false, enableSorting: true, ariaSort: 'none' }) }}
+        {{ tableHeader({ headerText: 'Total payments received', isNumericColumn: true, enableSorting: enablePaymentsReceivedSorting, ariaSort: 'none', dataCy: 'premium-payments-table--total-payments-received' }) }}
+        {{ tableHeader({ headerText: 'Status', isNumericColumn: false, enableSorting: true, ariaSort: 'none', dataCy: 'premium-payments-table--status' }) }}
         {% if userCanEdit %}
           <td class="govuk-table__header">
             {{ selectAllTableCellCheckbox.render() }}
