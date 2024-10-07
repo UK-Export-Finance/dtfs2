@@ -12,10 +12,17 @@ const utilisationReportPage = {
     generateKeyingDataButton: () => cy.get('[data-cy="generate-keying-data-button"]'),
     addAPaymentButton: () => cy.get('[data-cy="add-a-payment-button"]'),
     premiumPaymentsTable: {
+      header: {
+        totalReportedPayments: () => cy.get('th[data-cy="premium-payments-table--total-reported-payments"] button'),
+        totalPaymentsReceived: () => cy.get('th[data-cy="premium-payments-table--total-payments-received"] button'),
+        status: () => cy.get('th[data-cy="premium-payments-table--status"] button'),
+      },
       row: (feeRecordId) => cy.get(`tr[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}"]`),
       checkbox: (feeRecordIds, paymentCurrency, status) =>
         cy.get(`[type="checkbox"][id="feeRecordIds-${feeRecordIds.join(',')}-reportedPaymentsCurrency-${paymentCurrency}-status-${status}"]`),
       status: (feeRecordId) => cy.get(`[data-cy="premium-payments-table-row--feeRecordId-${feeRecordId}-status"]`),
+      // NOTE: Using the ^= selector to match all table rows starting with the given data-cy value (regardless of the actual fee record id value).
+      facilityIdByRowIndex: (rowIndex) => cy.get('tr[data-cy^="premium-payments-table-row--feeRecordId-"]').eq(rowIndex).find('th').first(),
     },
   },
   keyingSheetTab: {
