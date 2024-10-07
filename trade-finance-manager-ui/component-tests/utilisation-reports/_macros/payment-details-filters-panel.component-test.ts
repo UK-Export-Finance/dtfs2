@@ -33,6 +33,35 @@ describe(component, () => {
     wrapper.expectElement(filtersContainerSelector).toExist();
   });
 
+  it('should render the clear filters button when no selected filters are provided', () => {
+    const wrapper = render(defaultParams);
+
+    wrapper.expectElement('[data-cy="payment-details--clear-filters-button"]').toExist();
+  });
+
+  it('should not render the clear filters button when selected filters are provided', () => {
+    const params = {
+      ...defaultParams,
+      selectedFilters: [
+        {
+          heading: {
+            text: 'Field 1',
+          },
+          items: [
+            {
+              href: '/path/to/remove/item',
+              text: 'Value 1',
+            },
+          ],
+        },
+      ],
+    };
+
+    const wrapper = render(params);
+
+    wrapper.expectElement('[data-cy="payment-details--clear-filters-button"]').toExist();
+  });
+
   it('should not render selected filters when none are provided', () => {
     const wrapper = render(defaultParams);
 
