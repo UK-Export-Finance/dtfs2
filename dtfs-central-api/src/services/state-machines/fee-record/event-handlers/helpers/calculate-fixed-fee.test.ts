@@ -1,4 +1,4 @@
-import { addDays, addMonths, startOfMonth, subMonths } from 'date-fns';
+import { addDays, addMonths, subMonths } from 'date-fns';
 import { ReportPeriod } from '@ukef/dtfs2-common';
 import { calculateFixedFee } from './calculate-fixed-fee';
 
@@ -51,11 +51,14 @@ describe('calculateFixedFeeAdjustment', () => {
       const interestPercentage = 5;
       const dayCountBasis = 365;
 
-      const reportPeriod = getReportPeriodForDate(TODAY);
-      const coverStartDateBeforeReportPeriod = subMonths(TODAY, 1);
+      const aDate = new Date(2024, 0, 1);
 
-      // Number of days remaining = 432
-      const coverEndDate = addDays(startOfMonth(TODAY), 432);
+      const reportPeriod = getReportPeriodForDate(aDate);
+      const coverStartDateBeforeReportPeriod = subMonths(aDate, 3);
+
+      // Number of days of cover from end of report period to cover end date
+      // is days between 1st Feb 2024 and 1st Sep 2024 = 213
+      const coverEndDate = new Date(2024, 8, 1);
 
       // Act
       const result = calculateFixedFee({
@@ -68,7 +71,7 @@ describe('calculateFixedFeeAdjustment', () => {
       });
 
       // Assert
-      expect(result).toBe(5326.03); // 100000 * (5 / 100) * 0.9 * 432 / 365 = 5,326.02739... = 5,326.03 (ROUNDED)
+      expect(result).toBe(2626.03); // 100000 * (5 / 100) * 0.9 * 213 / 365 = 2,626.0274 = 2,626.03 (ROUNDED)
     });
   });
 });

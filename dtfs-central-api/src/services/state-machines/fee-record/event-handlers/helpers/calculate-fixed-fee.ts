@@ -1,5 +1,5 @@
 import Big from 'big.js';
-import { differenceInDays, isBefore, startOfMonth } from 'date-fns';
+import { differenceInDays, isBefore, endOfMonth, addDays, startOfDay } from 'date-fns';
 import { getDateFromMonthAndYear, MonthAndYear, ReportPeriod } from '@ukef/dtfs2-common';
 
 /**
@@ -8,13 +8,14 @@ import { getDateFromMonthAndYear, MonthAndYear, ReportPeriod } from '@ukef/dtfs2
  */
 const BANK_ADMIN_FEE_ADJUSTMENT = 0.9;
 
-const getNumberOfDaysRemainingInCoverPeriod = (reportPeriodStart: MonthAndYear, coverStartDate: Date, coverEndDate: Date): number => {
-  const currentReportPeriodStartMonthStart = startOfMonth(getDateFromMonthAndYear(reportPeriodStart));
+const getNumberOfDaysRemainingInCoverPeriod = (reportPeriodEnd: MonthAndYear, coverStartDate: Date, coverEndDate: Date): number => {
+  const endDateOfReportPeriod = startOfDay(endOfMonth(getDateFromMonthAndYear(reportPeriodEnd)));
+  const startDateOfNextReportPeriod = addDays(endDateOfReportPeriod, 1);
 
-  if (isBefore(currentReportPeriodStartMonthStart, coverStartDate)) {
+  if (isBefore(startDateOfNextReportPeriod, coverStartDate)) {
     return differenceInDays(coverEndDate, coverStartDate);
   }
-  return differenceInDays(coverEndDate, currentReportPeriodStartMonthStart);
+  return differenceInDays(coverEndDate, startDateOfNextReportPeriod);
 };
 
 export type CalculateFixedFeeParams = {
@@ -45,7 +46,7 @@ export const calculateFixedFee = ({
   interestPercentage,
   dayCountBasis,
 }: CalculateFixedFeeParams): number => {
-  const numberOfDaysRemainingInCoverPeriod = getNumberOfDaysRemainingInCoverPeriod(reportPeriod.start, coverStartDate, coverEndDate);
+  const numberOfDaysRemainingInCoverPeriod = getNumberOfDaysRemainingInCoverPeriod(reportPeriod.end, coverStartDate, coverEndDate);
   const interestPercentageAsDecimal = new Big(interestPercentage).div(100);
   return new Big(utilisation)
     .mul(interestPercentageAsDecimal)
