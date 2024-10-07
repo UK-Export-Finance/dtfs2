@@ -16,7 +16,7 @@ describe('calculateFixedFeeAdjustment', () => {
     jest.resetAllMocks();
   });
 
-  describe('when the report period starts before the cover start date', () => {
+  describe('when the report period ends before the cover start date', () => {
     it('returns the product of the utilisation, interest percentage (divided by 100), bank admin fee percentage (fixed at 0.9) and number of days remaining in the cover period divided by the day count basis and rounds to 2 decimal places', () => {
       // Arrange
       const utilisation = 100000;
@@ -44,7 +44,7 @@ describe('calculateFixedFeeAdjustment', () => {
     });
   });
 
-  describe('when the report period starts after the cover start date', () => {
+  describe('when the report period ends after the cover start date', () => {
     it('returns the product of the utilisation, interest percentage (divided by 100), bank admin fee percentage (fixed at 0.9) and number of days remaining in the cover period divided by the day count basis and rounds to 2 decimal places', () => {
       // Arrange
       const utilisation = 100000;
