@@ -97,6 +97,20 @@ describe('extractQueryAndSessionData', () => {
         expect(result.paymentDetailsFilters.facilityId).toBe(PAYMENT_DETAILS_FACILITY_ID_QUERY);
       });
 
+      it('should set isPaymentDetailsFilterActive to true', () => {
+        // Arrange
+        const queryParams = {
+          paymentDetailsFacilityId: PAYMENT_DETAILS_FACILITY_ID_QUERY,
+        };
+        const sessionData = {};
+
+        // Act
+        const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
+
+        // Assert
+        expect(result.isPaymentDetailsFilterActive).toBe(true);
+      });
+
       it('should validate paymentDetailsFacilityId and return any errors as paymentDetailsFilterErrors', () => {
         // Arrange
         const queryParams = {
@@ -133,6 +147,20 @@ describe('extractQueryAndSessionData', () => {
 
         // Assert
         expect(result.paymentDetailsFilters.paymentCurrency).toBe(PAYMENT_DETAILS_PAYMENT_CURRENCY_QUERY);
+      });
+
+      it('should set isPaymentDetailsFilterActive to true', () => {
+        // Arrange
+        const queryParams = {
+          paymentDetailsFacilityId: PAYMENT_DETAILS_FACILITY_ID_QUERY,
+        };
+        const sessionData = {};
+
+        // Act
+        const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
+
+        // Assert
+        expect(result.isPaymentDetailsFilterActive).toBe(true);
       });
 
       it('should validate paymentDetailsPaymentCurrency and return any errors as paymentDetailsFilterErrors', () => {
@@ -173,6 +201,20 @@ describe('extractQueryAndSessionData', () => {
         expect(result.paymentDetailsFilters.paymentReference).toBe(PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY);
       });
 
+      it('should set isPaymentDetailsFilterActive to true', () => {
+        // Arrange
+        const queryParams = {
+          paymentDetailsFacilityId: PAYMENT_DETAILS_FACILITY_ID_QUERY,
+        };
+        const sessionData = {};
+
+        // Act
+        const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
+
+        // Assert
+        expect(result.isPaymentDetailsFilterActive).toBe(true);
+      });
+
       it('should validate paymentDetailsPaymentReference and return any errors as paymentDetailsFilterErrors', () => {
         // Arrange
         const queryParams = {
@@ -193,6 +235,42 @@ describe('extractQueryAndSessionData', () => {
         // Assert
         expect(validatePaymentDetailsFilters).toHaveBeenCalledWith(ORIGINAL_URL, { paymentReference: PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY });
         expect(result.paymentDetailsFilterErrors).toEqual(mockErrorsViewModel);
+      });
+    });
+
+    describe('when extracting multiple filters', () => {
+      it('should use the provided filters', () => {
+        // Arrange
+        const queryParams = {
+          paymentDetailsFacilityId: PAYMENT_DETAILS_FACILITY_ID_QUERY,
+          paymentDetailsPaymentCurrency: PAYMENT_DETAILS_PAYMENT_CURRENCY_QUERY,
+          paymentDetailsPaymentReference: PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY,
+        };
+        const sessionData = {};
+
+        // Act
+        const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
+
+        // Assert
+        expect(result.paymentDetailsFilters.facilityId).toBe(PAYMENT_DETAILS_FACILITY_ID_QUERY);
+        expect(result.paymentDetailsFilters.paymentCurrency).toBe(PAYMENT_DETAILS_PAYMENT_CURRENCY_QUERY);
+        expect(result.paymentDetailsFilters.paymentReference).toBe(PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY);
+      });
+
+      it('should set isPaymentDetailsFilterActive to true when extracting multiple filters', () => {
+        // Arrange
+        const queryParams = {
+          paymentDetailsFacilityId: PAYMENT_DETAILS_FACILITY_ID_QUERY,
+          paymentDetailsPaymentCurrency: PAYMENT_DETAILS_PAYMENT_CURRENCY_QUERY,
+          paymentDetailsPaymentReference: PAYMENT_DETAILS_PAYMENT_REFERENCE_QUERY,
+        };
+        const sessionData = {};
+
+        // Act
+        const result = extractQueryAndSessionData(queryParams, sessionData, ORIGINAL_URL);
+
+        // Assert
+        expect(result.isPaymentDetailsFilterActive).toBe(true);
       });
     });
   });

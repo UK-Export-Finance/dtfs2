@@ -38,6 +38,7 @@ describe(page, () => {
     paymentDetailsFilterErrors: {
       errorSummary: [],
     },
+    isPaymentDetailsFilterActive: false,
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
@@ -244,8 +245,20 @@ describe(page, () => {
 
       wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
       wrapper
-        .expectText(`${paymentDetailsTabSelector} p`)
+        .expectText(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-payments-text"]`)
         .toMatch(/Payment details will be displayed when payments have been entered on the premium payments tab./);
+      wrapper.expectElement(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-records-matching-filters-text"]`).notToExist();
+    });
+
+    it('should render the payment details tab with headings and no records matching filters text when the payment details array is empty and the filter is active', () => {
+      const wrapper = getWrapper({ ...params, paymentDetails: [], isPaymentDetailsFilterActive: true });
+      const paymentDetailsTabSelector = 'div#payment-details';
+
+      wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
+      wrapper
+        .expectText(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-records-matching-filters-text"]`)
+        .toMatch(/There are no records matching the search criteria/);
+      wrapper.expectElement(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-payments-text"]`).notToExist();
     });
 
     it('should render the payment details tab with headings (without text), the filters panel and the table when there are payment details', () => {

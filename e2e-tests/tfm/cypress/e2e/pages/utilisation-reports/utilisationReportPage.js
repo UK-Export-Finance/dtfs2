@@ -52,6 +52,7 @@ const utilisationReportPage = {
       paymentReferenceError: () => cy.get('[data-cy="payment-details--filter-payment-reference-error"]'),
       paymentCurrencyRadioInput: (currencyCode) => cy.get(`input[type="radio"][data-cy="currency-${currencyCode}"]`),
       paymentCurrencyError: () => cy.get('[data-cy="payment-details--filter-payment-currency-error"]'),
+      noRecordsMatchingFiltersText: () => cy.get('[data-cy="payment-details-no-records-matching-filters-text"]'),
     },
   },
 };

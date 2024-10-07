@@ -69,6 +69,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       premiumPaymentsTableDataError,
       paymentDetailsFilters,
       paymentDetailsFilterErrors,
+      isPaymentDetailsFilterActive,
       isCheckboxChecked,
     } = extractQueryAndSessionData(
       { premiumPaymentsFacilityId, paymentDetailsFacilityId, paymentDetailsPaymentReference, paymentDetailsPaymentCurrency, selectedFeeRecordIdsQuery },
@@ -110,6 +111,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       paymentDetails: paymentDetailsViewModel,
       paymentDetailsFilters: paymentDetailsFiltersViewModel,
       paymentDetailsFilterErrors,
+      isPaymentDetailsFilterActive,
     });
   } catch (error) {
     console.error(`Failed to render utilisation report with id ${reportId}`, error);

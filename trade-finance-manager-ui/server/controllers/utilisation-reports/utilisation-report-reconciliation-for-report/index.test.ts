@@ -228,6 +228,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         keyingSheet: [],
         paymentDetails: paymentDetailsViewModel,
         paymentDetailsFilterErrors,
+        isPaymentDetailsFilterActive: true,
       });
     });
 

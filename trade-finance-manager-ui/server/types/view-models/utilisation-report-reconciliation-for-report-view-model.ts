@@ -122,4 +122,5 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   paymentDetails: PaymentDetailsViewModel;
   paymentDetailsFilters?: PaymentDetailsFiltersViewModel;
   paymentDetailsFilterErrors: PaymentDetailsFilterErrorsViewModel;
+  isPaymentDetailsFilterActive: boolean;
 };

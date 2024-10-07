@@ -75,9 +75,12 @@ const parsePaymentDetailsFilters = (originalUrl: string, queryFilters?: PaymentD
 
   const filterErrors = validatePaymentDetailsFilters(originalUrl, filters);
 
+  const isPaymentDetailsFilterActive = !!(facilityId || paymentReference || paymentCurrency);
+
   return {
     paymentDetailsFilters: filters,
     paymentDetailsFilterErrors: filterErrors,
+    isPaymentDetailsFilterActive,
   };
 };
 
@@ -118,7 +121,7 @@ export const extractQueryAndSessionData = (
 ) => {
   const { premiumPaymentsFilters, premiumPaymentsFilterError } = parsePremiumPaymentsFilters(originalUrl, { premiumPaymentsFacilityId });
 
-  const { paymentDetailsFilters, paymentDetailsFilterErrors } = parsePaymentDetailsFilters(originalUrl, {
+  const { paymentDetailsFilters, paymentDetailsFilterErrors, isPaymentDetailsFilterActive } = parsePaymentDetailsFilters(originalUrl, {
     paymentDetailsFacilityId,
     paymentDetailsPaymentCurrency,
     paymentDetailsPaymentReference,
@@ -139,6 +142,7 @@ export const extractQueryAndSessionData = (
     premiumPaymentsTableDataError,
     paymentDetailsFilters,
     paymentDetailsFilterErrors,
+    isPaymentDetailsFilterActive,
     isCheckboxChecked,
   };
 };

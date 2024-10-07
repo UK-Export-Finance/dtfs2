@@ -180,12 +180,12 @@ context(`users can filter payment details by facility id and payment reference a
 
         pages.utilisationReportPage.paymentDetailsTab.filters.facilityIdInput().should('have.value', unknownFacilityId);
 
-        // TODO FN-2311: Test that 'no results' message is shown once this is in place.
+        pages.utilisationReportPage.paymentDetailsTab.filters.noRecordsMatchingFiltersText().should('exist');
       });
     });
   });
 
-  describe.only('payment currency filter', () => {
+  describe('payment currency filter', () => {
     // TODO FN-2311: Add test setup here?
 
     const assertAllPaymentCurrencyInputsAreNotChecked = () => {
@@ -217,7 +217,7 @@ context(`users can filter payment details by facility id and payment reference a
     });
 
     describe('when the payment currency filter is submitted with an unknown value', () => {
-      it.only('should not check any radio inputs', () => {
+      it('should not check any radio inputs', () => {
         const unknownPaymentCurrency = 'UNKNOWN';
 
         // The payment currency filter is a radio input, so we need to visit the URL directly with the invalid value.
@@ -263,7 +263,7 @@ context(`users can filter payment details by facility id and payment reference a
 
         pages.utilisationReportPage.paymentDetailsTab.filters.paymentCurrencyRadioInput(paymentCurrency).should('be.checked');
 
-        // TODO FN-2311: Test that 'no results' message is shown once this is in place.
+        pages.utilisationReportPage.paymentDetailsTab.filters.noRecordsMatchingFiltersText().should('exist');
       });
     });
   });
@@ -353,8 +353,10 @@ context(`users can filter payment details by facility id and payment reference a
 
         pages.utilisationReportPage.paymentDetailsTab.filters.paymentReferenceInput().should('have.value', unknownPaymentReference);
 
-        // TODO FN-2311: Test that 'no results' message is shown once this is in place.
+        pages.utilisationReportPage.paymentDetailsTab.filters.noRecordsMatchingFiltersText().should('exist');
       });
     });
   });
+
+  // TODO FN-2311: Add tests for multiple filters being applied.
 });
