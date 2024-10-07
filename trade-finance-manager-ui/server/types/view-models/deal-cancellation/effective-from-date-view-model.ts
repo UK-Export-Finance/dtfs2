@@ -14,6 +14,7 @@ export type EffectiveFromDateValidationViewModel = {
 export type EffectiveFromDateViewModel = BaseViewModel & {
   ukefDealId: string;
   dealId: string;
+  backUrl: string;
   day?: string;
   month?: string;
   year?: string;

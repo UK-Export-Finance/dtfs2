@@ -22,6 +22,7 @@ export type PostBankRequestDateRequest = CustomExpressRequest<{
  */
 export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Response) => {
   const { _id } = req.params;
+  const { status } = req.query;
   const { user, userToken } = asUserSession(req.session);
 
   try {
@@ -51,6 +52,7 @@ export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Re
       day,
       month,
       year,
+      backUrl: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/reason`,
     };
     return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
   } catch (error) {
@@ -67,6 +69,7 @@ export const getBankRequestDate = async (req: GetBankRequestDateRequest, res: Re
  */
 export const postBankRequestDate = async (req: PostBankRequestDateRequest, res: Response) => {
   const { _id } = req.params;
+  const { status } = req.query;
   const { 'bank-request-date-day': day, 'bank-request-date-month': month, 'bank-request-date-year': year } = req.body;
   const { user, userToken } = asUserSession(req.session);
 
@@ -93,6 +96,7 @@ export const postBankRequestDate = async (req: PostBankRequestDateRequest, res: 
         month,
         year,
         errors: validationErrors,
+        backUrl: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/reason`,
       };
       return res.render('case/cancellation/bank-request-date.njk', bankRequestDateViewModel);
     }

@@ -9,6 +9,7 @@ export type ReasonForCancellingErrorsViewModel = {
 export type ReasonForCancellingViewModel = BaseViewModel & {
   ukefDealId: string;
   dealId: string;
+  backUrl: string;
   errors?: ReasonForCancellingErrorsViewModel;
   reasonForCancelling?: string;
 };

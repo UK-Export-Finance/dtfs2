@@ -18,7 +18,9 @@ export type PostReasonForCancellingRequest = CustomExpressRequest<{ params: { _i
  */
 export const getReasonForCancelling = async (req: GetReasonForCancellingRequest, res: Response) => {
   const { _id } = req.params;
+  const { status } = req.query;
   const { user, userToken } = asUserSession(req.session);
+
   try {
     const deal = await api.getDeal(_id, userToken);
 
@@ -38,6 +40,7 @@ export const getReasonForCancelling = async (req: GetReasonForCancellingRequest,
       ukefDealId: deal.dealSnapshot.details.ukefDealId,
       dealId: _id,
       reasonForCancelling: cancellation?.reason,
+      backUrl: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/deal`,
     };
     return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);
   } catch (error) {
@@ -54,6 +57,7 @@ export const getReasonForCancelling = async (req: GetReasonForCancellingRequest,
  */
 export const postReasonForCancelling = async (req: PostReasonForCancellingRequest, res: Response) => {
   const { _id } = req.params;
+  const { status } = req.query;
   const { reason } = req.body;
   const { user, userToken } = asUserSession(req.session);
 
@@ -80,6 +84,7 @@ export const postReasonForCancelling = async (req: PostReasonForCancellingReques
         dealId: _id,
         errors: validationErrors,
         reasonForCancelling: reason,
+        backUrl: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/deal`,
       };
 
       return res.render('case/cancellation/reason-for-cancelling.njk', reasonForCancellingViewModel);

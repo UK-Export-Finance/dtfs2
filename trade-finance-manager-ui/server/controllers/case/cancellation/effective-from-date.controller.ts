@@ -22,6 +22,7 @@ export type PostEffectiveFromDateRequest = CustomExpressRequest<{
  */
 export const getEffectiveFromDate = async (req: GetEffectiveFromDateRequest, res: Response) => {
   const { _id } = req.params;
+  const { status } = req.query;
   const { user, userToken } = asUserSession(req.session);
 
   try {
@@ -51,6 +52,7 @@ export const getEffectiveFromDate = async (req: GetEffectiveFromDateRequest, res
       day,
       month,
       year,
+      backUrl: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/bank-request-date`,
     };
     return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);
   } catch (error) {
@@ -67,6 +69,7 @@ export const getEffectiveFromDate = async (req: GetEffectiveFromDateRequest, res
  */
 export const postEffectiveFromDate = async (req: PostEffectiveFromDateRequest, res: Response) => {
   const { _id } = req.params;
+  const { status } = req.query;
   const { 'effective-from-date-day': day, 'effective-from-date-month': month, 'effective-from-date-year': year } = req.body;
   const { user, userToken } = asUserSession(req.session);
 
@@ -93,6 +96,7 @@ export const postEffectiveFromDate = async (req: PostEffectiveFromDateRequest, r
         month,
         year,
         errors: validationErrors,
+        backUrl: status === 'change' ? `/case/${_id}/cancellation/check-details` : `/case/${_id}/cancellation/bank-request-date`,
       };
 
       return res.render('case/cancellation/effective-from-date.njk', effectiveFromDateViewModel);
