@@ -3,11 +3,11 @@ import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-re
 import { calculateFixedFee } from './calculate-fixed-fee';
 
 export type RequiredParams = {
-  value: number;
-  interestPercentage: number;
-  dayCountBasis: number;
-  coverStartDate: string | Date | null;
-  coverEndDate: string | Date | null;
+  value?: number | null;
+  interestPercentage?: number | null;
+  dayCountBasis?: number | null;
+  coverStartDate?: string | Date | null;
+  coverEndDate?: string | Date | null;
 };
 
 /**

@@ -19,7 +19,46 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
       expect(result).toEqual(true);
     });
 
-    it('should return false if the coverEndDate not provided', () => {
+    it('should return false if the value is not provided', () => {
+      const params = {
+        value: null,
+        interestPercentage: 2,
+        dayCountBasis: 3,
+        coverStartDate: new Date(),
+        coverEndDate: new Date(),
+      };
+
+      const result = hasRequiredValues(params);
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if the interestPercentage is not provided', () => {
+      const params = {
+        value: 1,
+        interestPercentage: null,
+        dayCountBasis: 3,
+        coverStartDate: new Date(),
+        coverEndDate: new Date(),
+      };
+
+      const result = hasRequiredValues(params);
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if the dayCountBasis is not provided', () => {
+      const params = {
+        value: 1,
+        interestPercentage: 2,
+        dayCountBasis: null,
+        coverStartDate: new Date(),
+        coverEndDate: new Date(),
+      };
+
+      const result = hasRequiredValues(params);
+      expect(result).toEqual(false);
+    });
+
+    it('should return false if the coverEndDate is not provided', () => {
       const params = {
         value: 1,
         interestPercentage: 2,
@@ -32,7 +71,7 @@ describe('helpers/calculate-initial-utilisation-and-fixed-fee', () => {
       expect(result).toEqual(false);
     });
 
-    it('should return false if the coverStartDate not provided', () => {
+    it('should return false if the coverStartDate is not provided', () => {
       const params = {
         value: 1,
         interestPercentage: 2,
