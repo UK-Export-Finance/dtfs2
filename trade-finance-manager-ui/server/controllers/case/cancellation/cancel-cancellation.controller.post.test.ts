@@ -20,7 +20,7 @@ describe('postCancelCancellation', () => {
 
   it('redirects to previous page if return=`true`', async () => {
     // Arrange
-    const previousPage = 'previousPage';
+    const previousPage = `/case/${dealId}/cancellation/reason`;
 
     const { req, res } = createMocks<PostCancelCancellationRequest>({
       params: { _id: dealId },
@@ -98,6 +98,25 @@ describe('postCancelCancellation', () => {
 
     // Assert
     expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+  });
+
+  it('does not call the api if the type is invalid (MIA)', async () => {
+    // Arrange
+    jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
+
+    const { req, res } = createMocks<PostCancelCancellationRequest>({
+      params: { _id: dealId },
+      session: {
+        user: mockUser,
+        userToken: 'a user token',
+      },
+    });
+
+    // Act
+    await postCancelCancellation(req, res);
+
+    // Assert
+    expect(api.deleteDealCancellation).toHaveBeenCalledTimes(0);
   });
 
   describe.each([DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN])('when the deal type is %s', (validDealType) => {
