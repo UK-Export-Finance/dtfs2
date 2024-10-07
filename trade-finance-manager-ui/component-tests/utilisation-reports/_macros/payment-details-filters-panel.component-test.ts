@@ -59,7 +59,7 @@ describe(component, () => {
 
     const wrapper = render(params);
 
-    wrapper.expectElement('[data-cy="payment-details--clear-filters-button"]').toExist();
+    wrapper.expectElement('[data-cy="payment-details--clear-filters-button"]').notToExist();
   });
 
   it('should not render selected filters when none are provided', () => {

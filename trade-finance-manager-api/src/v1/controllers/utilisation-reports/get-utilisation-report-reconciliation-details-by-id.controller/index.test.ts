@@ -49,7 +49,8 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       const premiumPaymentsFilters = {
         facilityId: '1234',
       };
-      req.query = { premiumPaymentsFilters };
+      const paymentDetailsFilters = {};
+      req.query = { premiumPaymentsFilters, paymentDetailsFilters };
 
       apiGetUtilisationReportReconciliationDetailsByIdSpy.mockResolvedValue(utilisationReportReconciliationDetailsResponse);
 
@@ -57,18 +58,19 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsFilters);
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsFilters, paymentDetailsFilters);
     });
 
     it('fetches report with the payment details tab filters query param when provided', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
+      const premiumPaymentsFilters = {};
       const paymentDetailsFilters: PaymentDetailsFilters = {
         facilityId: '1234',
         paymentCurrency: 'GBP',
         paymentReference: 'A sample payment reference.',
       };
-      req.query = { paymentDetailsFilters };
+      req.query = { premiumPaymentsFilters, paymentDetailsFilters };
 
       apiGetUtilisationReportReconciliationDetailsByIdSpy.mockResolvedValue(utilisationReportReconciliationDetailsResponse);
 
@@ -76,7 +78,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
       await getUtilisationReportReconciliationDetailsById(req, res);
 
       // Assert
-      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), paymentDetailsFilters);
+      expect(apiGetUtilisationReportReconciliationDetailsByIdSpy).toHaveBeenCalledWith(reportId.toString(), premiumPaymentsFilters, paymentDetailsFilters);
     });
 
     it('responds with the specific axios error code when the api throws an error', async () => {
