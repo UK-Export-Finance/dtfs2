@@ -6,23 +6,23 @@ const render = componentRenderer(component, true);
 describe(component, () => {
   const defaultParams = {
     filters: {
-      currency: [],
+      paymentCurrency: [],
       paymentReference: '',
       facilityId: '',
     },
   };
 
-  describe('Currency filter', () => {
+  describe('Payment Currency filter', () => {
     const containerSelector = '[data-cy="payment-details--filter-currency"]';
     const filters = {
-      currency: [
+      paymentCurrency: [
         { value: 'GBP', text: 'GBP', attributes: { 'data-cy': 'payment-details--filter-currency-input-GBP' } },
         { value: 'USD', text: 'USD', attributes: { 'data-cy': 'payment-details--filter-currency-input-USD' } },
         { value: 'EUR', text: 'EUR', attributes: { 'data-cy': 'payment-details--filter-currency-input-EUR' } },
       ],
     };
 
-    it('should render currency radio buttons when currency filter is provided', () => {
+    it('should render payment currency radio buttons when payment currency filter is provided', () => {
       const params = {
         ...defaultParams,
         filters,
@@ -47,7 +47,7 @@ describe(component, () => {
       wrapper.expectElement(containerSelector).toHaveAttribute('id', 'payment-details-payment-currency-filter');
     });
 
-    it('should not render currency radio buttons when currency filter is not provided', () => {
+    it('should not render payment currency radio buttons when payment currency filter is not provided', () => {
       const params = { ...defaultParams, filters: {} };
 
       const wrapper = render(params);
