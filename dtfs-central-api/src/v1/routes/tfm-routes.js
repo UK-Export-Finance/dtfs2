@@ -7,6 +7,7 @@ const {
   validatePutFacilityAmendmentPayload,
   validatePostFacilityAmendmentPayload,
   validatePutDealCancellationPayload,
+  validateDeleteDealCancellationPayload,
 } = require('./middleware/payload-validation');
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
@@ -24,6 +25,7 @@ const tfmPutAmendmentController = require('../controllers/tfm/amendments/tfm-put
 const tfmPostAmendmentController = require('../controllers/tfm/amendments/tfm-post-amendments.controller');
 const tfmPutUpdateDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-put-update-deal-cancellation.controller');
 const tfmGetDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-get-deal-cancellation.controller');
+const tfmDeleteDealCancellationController = require('../controllers/tfm/deal-cancellation/tfm-delete-deal-cancellation.controller');
 
 const tfmTeamsController = require('../controllers/tfm/users/tfm-teams.controller');
 const tfmUsersController = require('../controllers/tfm/users/tfm-users.controller');
@@ -591,22 +593,31 @@ tfmRouter
  *         description: Not found
  *       500:
  *         description: Internal server error
+ *   delete:
+ *     summary: Delete tfm deal cancellation object on MIN and AIN deal types
+ *     tags: [TFM, deals, cancellation, data fix]
+ *     description: Delete cancellation object on the deals tfm object
+ *     parameters:
+ *       - in: path
+ *         name: dealId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID of the deal to update
+ *     responses:
+ *       204:
+ *         description: No content
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 tfmRouter
   .route('/deals/:dealId/cancellation')
-  .put(
-    validateDealCancellationEnabled,
-    validation.mongoIdValidation('dealId'),
-    handleExpressValidatorResult,
-    validatePutDealCancellationPayload,
-    tfmPutUpdateDealCancellationController.updateTfmDealCancellation,
-  )
-  .get(
-    validateDealCancellationEnabled,
-    validation.mongoIdValidation('dealId'),
-    handleExpressValidatorResult,
-    tfmGetDealCancellationController.getTfmDealCancellation,
-  );
+  .all(validateDealCancellationEnabled, validation.mongoIdValidation('dealId'), handleExpressValidatorResult)
+  .put(validatePutDealCancellationPayload, tfmPutUpdateDealCancellationController.updateTfmDealCancellation)
+  .get(tfmGetDealCancellationController.getTfmDealCancellation)
+  .delete(validateDeleteDealCancellationPayload, tfmDeleteDealCancellationController.deleteTfmDealCancellation);
 
 /**
  * @openapi

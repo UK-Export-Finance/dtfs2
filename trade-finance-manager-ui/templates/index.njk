@@ -21,7 +21,6 @@
   <body class="govuk-template__body ">
 
     <script src="/assets/js/jsEnabled.js" type="text/javascript" integrity="sha512-G3pP3ak2WgWPJjJvKjAkSXa+s0+MHVrKTxZ8YklCPvT/SG9Gt91yti+2KeK9KTCEkdWUUz5dnIGDz1w3Zu7JrA==" crossorigin="anonymous"></script>
-    <script src="/assets/js/mojFrontend.js" type="text/javascript" integrity="sha512-VJYfsojYZY4stpSFP22EQ/CXqqrW9BWYWKaiEnYGmyw22rggV4DCe+Lzn8L7Gt+bRq3AyWuNYFadfrCmao0o+A==" crossorigin="anonymous"></script>
 
     {% include "_partials/skip-link.njk" %}
 
@@ -55,6 +54,8 @@
 
     <script src="/assets/js/main.js" type="text/javascript" integrity="sha512-BLhltBWOGogiNck88Bgk9ZP60WzkF0M4UDKNXASvMQ0XBcLRtMCqs77xMkkL+crGcCqpKtuOkkeuTvpTQFuzIA==" crossorigin="anonymous"></script>
     <script src="/assets/js/govukFrontend.js" type="text/javascript" integrity="sha512-BlSKFkwy/7rAHvMRdTX1Kdk/6KgF2exLAH18xCPxd2ukztWA9adhCM/PczucxxNq29j8gvfAaEcGmgg3BbJufA==" crossorigin="anonymous"></script>
+    <script src="/assets/js/mojFrontend.js" type="text/javascript" integrity="sha512-VJYfsojYZY4stpSFP22EQ/CXqqrW9BWYWKaiEnYGmyw22rggV4DCe+Lzn8L7Gt+bRq3AyWuNYFadfrCmao0o+A==" crossorigin="anonymous"></script>
     <script src="/assets/js/disableFormSubmitOnSubmission.js" type="text/javascript" integrity="sha512-tCINlYTcYERel2bdysTMl5KaemDdEyog5JSS3hYQqHS6ZIyT4ATLu4oTPerbZ+vAOn4AAzDEsRBSQVacGhoieQ==" crossorigin="anonymous"></script>
+    {% block page_scripts %}{% endblock %}
   </body>
 </html>
