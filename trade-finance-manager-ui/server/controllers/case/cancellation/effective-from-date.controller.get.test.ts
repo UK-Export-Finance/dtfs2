@@ -59,29 +59,70 @@ describe('getEffectiveFromDate', () => {
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
-  it('redirects to deal summary page if the submission type is invalid (MIA)', async () => {
-    // Arrange
-    jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
-
-    const { req, res } = createMocks<GetEffectiveFromDateRequest>({
-      params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+  describe(`when the deal type is ${DEAL_SUBMISSION_TYPE.MIA}`, () => {
+    beforeEach(() => {
+      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
     });
 
-    // Act
-    await getEffectiveFromDate(req, res);
+    it('redirects to deal summary page', async () => {
+      // Arrange
+      const { req, res } = createMocks<GetEffectiveFromDateRequest>({
+        params: { _id: dealId },
+        session: {
+          user: mockUser,
+          userToken: 'a user token',
+        },
+      });
 
-    // Assert
-    expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
+      // Act
+      await getEffectiveFromDate(req, res);
+
+      // Assert
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
+    });
+
+    it('does not get the cancellation', async () => {
+      // Arrange
+      const { req, res } = createMocks<GetEffectiveFromDateRequest>({
+        params: { _id: dealId },
+        session: {
+          user: mockUser,
+          userToken: 'a user token',
+        },
+      });
+
+      // Act
+      await getEffectiveFromDate(req, res);
+
+      // Assert
+      expect(api.getDealCancellation).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe.each([DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN])('when the deal type is %s', (validDealType) => {
-    it('renders the effective from date page without prepopulated data when it does not exist', async () => {
+    it('redirects to deal summary page if the deal cancellation is empty', async () => {
       // Arrange
       jest.mocked(api.getDealCancellation).mockResolvedValue({});
+      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
+
+      const { req, res } = createMocks<GetEffectiveFromDateRequest>({
+        params: { _id: dealId },
+        session: {
+          user: mockUser,
+          userToken: 'a user token',
+        },
+      });
+
+      // Act
+      await getEffectiveFromDate(req, res);
+
+      // Assert
+      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+    });
+
+    it('renders the effective from date page without prepopulated data when it does not exist', async () => {
+      // Arrange
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ bankRequestDate: new Date().valueOf() });
       jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
 
       const { req, res } = createMocks<GetEffectiveFromDateRequest>({
@@ -111,7 +152,7 @@ describe('getEffectiveFromDate', () => {
     it('renders the effective from page with prepopulated data when it exists', async () => {
       // Arrange
       const existingEffectiveFromDate = new Date('2024-03-21');
-      jest.mocked(api.getDealCancellation).mockResolvedValue({ effectiveFrom: existingEffectiveFromDate.valueOf() });
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ bankRequestDate: new Date().valueOf(), effectiveFrom: existingEffectiveFromDate.valueOf() });
       jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
 
       const { req, res } = createMocks<GetEffectiveFromDateRequest>({

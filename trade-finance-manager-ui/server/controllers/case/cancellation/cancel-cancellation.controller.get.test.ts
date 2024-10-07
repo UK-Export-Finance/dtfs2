@@ -8,6 +8,7 @@ import api from '../../../api';
 
 jest.mock('../../../api', () => ({
   getDeal: jest.fn(),
+  getDealCancellation: jest.fn(),
 }));
 
 const dealId = 'dealId';
@@ -57,31 +58,75 @@ describe('getCancelCancellation', () => {
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
-  it('redirects to deal summary page if the submission type is invalid (MIA)', async () => {
-    // Arrange
-    jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
-
-    const { req, res } = createMocks<GetCancelCancellationRequest>({
-      params: { _id: dealId },
-      session: {
-        user: mockUser,
-        userToken: 'a user token',
-      },
+  describe(`when the deal type is ${DEAL_SUBMISSION_TYPE.MIA}`, () => {
+    beforeEach(() => {
+      jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: DEAL_SUBMISSION_TYPE.MIA } });
     });
 
-    // Act
-    await getCancelCancellation(req, res);
+    it('redirects to deal summary page', async () => {
+      // Arrange
+      const { req, res } = createMocks<GetCancelCancellationRequest>({
+        params: { _id: dealId },
+        session: {
+          user: mockUser,
+          userToken: 'a user token',
+        },
+      });
 
-    // Assert
-    expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
+      // Act
+      await getCancelCancellation(req, res);
+
+      // Assert
+      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/deal`);
+    });
+
+    it('does not get the cancellation', async () => {
+      // Arrange
+      const { req, res } = createMocks<GetCancelCancellationRequest>({
+        params: { _id: dealId },
+        session: {
+          user: mockUser,
+          userToken: 'a user token',
+        },
+      });
+
+      // Act
+      await getCancelCancellation(req, res);
+
+      // Assert
+      expect(api.getDealCancellation).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe.each([DEAL_SUBMISSION_TYPE.AIN, DEAL_SUBMISSION_TYPE.MIN])('when the deal type is %s', (validDealType) => {
-    it('renders the cancel cancellation page', async () => {
-      const previousPage = 'previousPage';
-
-      // Arrange
+    beforeEach(() => {
       jest.mocked(api.getDeal).mockResolvedValue({ dealSnapshot: { details: { ukefDealId }, submissionType: validDealType } });
+    });
+
+    it('redirects to deal summary page if the deal cancellation is empty', async () => {
+      // Arrange
+      jest.mocked(api.getDealCancellation).mockResolvedValue({});
+
+      const { req, res } = createMocks<GetCancelCancellationRequest>({
+        params: { _id: dealId },
+        session: {
+          user: mockUser,
+          userToken: 'a user token',
+        },
+      });
+
+      // Act
+      await getCancelCancellation(req, res);
+
+      // Assert
+      expect(res._getRedirectUrl()).toBe(`/case/${dealId}/deal`);
+    });
+
+    it('renders the cancel cancellation page', async () => {
+      // Arrange
+      jest.mocked(api.getDealCancellation).mockResolvedValue({ reason: 'reason' });
+
+      const previousPage = 'previousPage';
 
       const { req, res } = createMocks<GetCancelCancellationRequest>({
         params: { _id: dealId },
